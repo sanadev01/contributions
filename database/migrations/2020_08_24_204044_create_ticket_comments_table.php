@@ -15,8 +15,8 @@ class CreateTicketCommentsTable extends Migration
     {
         Schema::create('ticket_comments', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id');
-            $table->integer('ticket_id');
+            $table->bigInteger('user_id');
+            $table->bigInteger('ticket_id');
             $table->longText('text');
             $table->timestamps();
         });

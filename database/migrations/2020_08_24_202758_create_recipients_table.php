@@ -15,21 +15,22 @@ class CreateRecipientsTable extends Migration
     {
         Schema::create('recipients', function (Blueprint $table) {
             $table->id();
-            $table->integer('order_id');
+            
+            $table->bigInteger('order_id')->unique();
+            $table->bigInteger('state_id')->nullable();
+            $table->bigInteger('country_id')->nullable();
+
             $table->string('first_name');
-            $table->string('last_name');
-            $table->string('email');
-            $table->string('phone');
-            $table->string('city');
-            $table->integer('state_id');
-            $table->integer('country_id');
-            $table->string('street_no');
-            $table->longText('address');
-            $table->longText('address2');
-            $table->string('account_type');
-            $table->integer('role_id');
-            $table->integer('cpf/cnpj/cnic');
-            $table->string('zipcode');
+            $table->string('last_name')->nullable();
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('city')->nullable();
+            $table->string('street_no')->nullable();
+            $table->longText('address')->nullable();
+            $table->longText('address2')->nullable();
+            $table->string('account_type')->nullable()->comment('individual,business');
+            $table->string('tax_id')->nullable()->comment('cpf/cnpj/cnic');
+            $table->string('zipcode')->nullable();
             $table->timestamps();
         });
     }

@@ -17,7 +17,7 @@ class CreateTicketsTable extends Migration
             $table->id();
             $table->integer('user_id');
             $table->string('subject');
-            $table->tinyInteger('status');
+            $table->boolean('open')->default(true);
             $table->timestamps();
         });
     }

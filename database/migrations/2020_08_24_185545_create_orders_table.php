@@ -15,28 +15,32 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->string('merchant');
-            $table->string('carrier');
-            $table->string('tracking_id');
-            $table->integer('weight');
-            $table->string('order_date');
-            $table->integer('length');
-            $table->integer('width');
-            $table->integer('height');
-            $table->string('measurement_unit');
-            $table->string('warehouse_number');
-            $table->string('order_value');
-            $table->string('shipping_value');
-            $table->integer('shipping_service_id');
-            $table->integer('shipping_service_name');
-            $table->integer('recipient_address_id');
-            $table->integer('user_id');
-            $table->string('tax_modality');
-            $table->integer('insurance_value');
-            $table->tinyInteger('invoice_created');
-            $table->string('status');
-            $table->tinyInteger('is_consolidated');
-            $table->tinyInteger('is_paid');
+
+            $table->bigInteger('user_id');
+            $table->bigInteger('shipping_service_id')->nullable();
+            $table->bigInteger('recipient_address_id')->nullable();
+
+            $table->string('merchant')->nullable();
+            $table->string('carrier')->nullable();
+            $table->string('tracking_id')->nullable();
+            $table->timestamp('order_date')->nullable();
+
+            $table->double('weight')->default(0);
+            $table->double('length')->default(0);
+            $table->double('width')->default(0);
+            $table->double('height')->nullable();
+
+            $table->string('measurement_unit',10)->default('kg/cm')->comment('kg/cm,lbs/in');
+            $table->string('warehouse_number',20)->nullable();
+            $table->double('order_value')->default(0);
+            $table->double('shipping_value')->default(0);
+            $table->double('insurance_value')->default(0);
+            $table->string('shipping_service_name')->nullable();
+            $table->string('tax_modality')->default('DDU')->comment('DDU,DDP');
+            $table->boolean('invoice_created')->default(false);
+            $table->string('status')->nullable();
+            $table->boolean('is_consolidated')->default(false);
+            $table->boolean('is_paid')->default(false);
             $table->timestamps();
         });
     }

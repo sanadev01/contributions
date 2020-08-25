@@ -15,14 +15,14 @@ class CreateOrderItemsTable extends Migration
     {
         Schema::create('order_items', function (Blueprint $table) {
             $table->id();
-            $table->integer('order_id');
-            $table->integer('sh_code');
-            $table->longText('description');
-            $table->integer('quantity');
-            $table->integer('value');
-            $table->tinyInteger('contains_battery');
-            $table->tinyInteger('contains_perfume');
-            $table->tinyInteger('contains_flammable_liquid');
+            $table->bigInteger('order_id');
+            $table->bigInteger('sh_code');
+            $table->string('description');
+            $table->integer('quantity')->default(0);
+            $table->double('value')->default(0);
+            $table->boolean('contains_battery')->default(false);
+            $table->boolean('contains_perfume')->default(false);
+            $table->boolean('contains_flammable_liquid')->default(false);
             $table->timestamps();
         });
     }

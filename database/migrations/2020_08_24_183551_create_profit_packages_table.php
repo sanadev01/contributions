@@ -16,7 +16,7 @@ class CreateProfitPackagesTable extends Migration
         Schema::create('profit_packages', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->longText('data');
+            $table->longText('data')->nullable();
             $table->timestamps();
         });
     }

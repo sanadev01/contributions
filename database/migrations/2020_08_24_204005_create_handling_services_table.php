@@ -15,10 +15,10 @@ class CreateHandlingServicesTable extends Migration
     {
         Schema::create('handling_services', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->integer('cost');
-            $table->integer('price');
-            $table->tinyInteger('active');
+            $table->string('name')->nullable();
+            $table->double('cost')->default(0);
+            $table->double('price')->default(0);
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }

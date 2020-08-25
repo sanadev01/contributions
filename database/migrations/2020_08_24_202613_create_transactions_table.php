@@ -15,10 +15,10 @@ class CreateTransactionsTable extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->integer('order_id');
-            $table->integer('amount');
-            $table->integer('status');
-            $table->integer('profit');
+            $table->bigInteger('order_id');
+            $table->double('amount');
+            $table->string('status')->default('created');
+            $table->double('profit')->default(0);
             $table->timestamps();
         });
     }

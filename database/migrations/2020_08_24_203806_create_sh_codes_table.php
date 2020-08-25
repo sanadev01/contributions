@@ -16,8 +16,8 @@ class CreateShCodesTable extends Migration
         Schema::create('sh_codes', function (Blueprint $table) {
             $table->id();
             $table->integer('code');
-            $table->longText('description');
-            $table->integer('chapter');
+            $table->text('description')->nullable();
+            $table->text('chapter')->nullable();
             $table->timestamps();
         });
     }

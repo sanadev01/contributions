@@ -16,15 +16,15 @@ class CreateShippingServicesTable extends Migration
         Schema::create('shipping_services', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('max_length_allowed');
-            $table->integer('max_width_allowed');
-            $table->integer('min_width_allowed');
-            $table->integer('min_length_allowed');
-            $table->integer('max_sum_of_all_sides');
-            $table->integer('contains_battery_charges');
-            $table->integer('contains_perfume_charges');
-            $table->integer('contains_flammable_liquid_charges');
-            $table->tinyInteger('active');
+            $table->double('max_length_allowed')->nullable();
+            $table->double('max_width_allowed')->nullable();
+            $table->double('min_width_allowed')->nullable();
+            $table->double('min_length_allowed')->nullable();
+            $table->double('max_sum_of_all_sides')->nullable();
+            $table->double('contains_battery_charges')->default(0);
+            $table->double('contains_perfume_charges')->default(0);
+            $table->double('contains_flammable_liquid_charges')->default(0);
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }

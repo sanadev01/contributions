@@ -15,9 +15,9 @@ class CreateRatesTable extends Migration
     {
         Schema::create('rates', function (Blueprint $table) {
             $table->id();
-            $table->integer('shipping_service_id');
-            $table->integer('country_id');
-            $table->longText('data');
+            $table->bigInteger('shipping_service_id');
+            $table->bigInteger('country_id')->default(30);
+            $table->longText('data')->nullable();
             $table->timestamps();
         });
     }
