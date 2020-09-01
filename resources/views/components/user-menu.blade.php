@@ -24,6 +24,13 @@
                 </a>
             </li>
 
+            <li class="nav-item {{ $isActive(['admin.prealerts.index','admin.prealerts.shipments.edit','admin.prealerts.shipments.create']) }}">
+                <a href="{{ route('admin.prealerts.index') }}">
+                    <i class="feather icon-alert-triangle"></i>
+                    <span class="menu-title">PreAlerts</span>
+                </a>
+            </li>
+
             <li class="{{ $isActive(['admin.rates.profit-packages.index']) }}">
                 <a href="{{ route('admin.rates.profit-packages.index') }}">
                     <i class="feather icon-circle"></i>
