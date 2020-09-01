@@ -7,13 +7,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">@lang('address.My Addresses') </h4>
-                        {{-- @user --}}
                         <a href="{{ route('admin.addresses.create') }}" class="pull-right btn btn-primary"> @lang('address.Add Address') </a>
-                        {{-- @enduser
-                        @admin --}}
-                        {{-- <a href="{{ route('numbers.format','address') }}" class="pull-right btn btn-primary"> Try to Format Numbers </a> --}}
-                        <a href="#" class="pull-right btn btn-primary"> Try to Format Numbers </a>
-                        {{-- @endadmin --}}
                     </div>
                     <div class="card-content">
                         <div class="table-responsive-md mt-1">

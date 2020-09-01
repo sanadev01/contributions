@@ -3,14 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
     use Notifiable;
-    const ROLE_ADMIN = 'admin';
-    const ROLE_USER = 'user';
+    const ROLE_ADMIN = 1;
 
     /**
      * The attributes that are mass assignable.
@@ -51,12 +51,12 @@ class User extends Authenticatable
 
     public function isAdmin()
     {
-        return $this->role == self::ROLE_ADMIN;
+        return $this->role_id == self::ROLE_ADMIN;
     }
 
     public function isUser()
     {
-        return $this->role == self::ROLE_USER;
+        return !$this->isAdmin();
     }
 
     public function addresses()
@@ -67,5 +67,11 @@ class User extends Authenticatable
     public function tickets()
     {
         return $this->hasMany(Ticket::class, 'user_id');
+    }
+
+
+    public function scopeAdmin(Builder $query)
+    {
+        return $query->where('role_id',self::ROLE_ADMIN);
     }
 }

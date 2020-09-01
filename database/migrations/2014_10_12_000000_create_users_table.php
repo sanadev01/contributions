@@ -31,6 +31,8 @@ class CreateUsersTable extends Migration
             $table->string('street_no')->nullable();
             $table->longText('address')->nullable();
             $table->longText('address2')->nullable();
+            $table->string('api_token')->nullable();
+            $table->boolean('api_enabled')->default(false);
             $table->string('account_type')->nullable()->comment('individual,business');
             $table->string('tax_id')->nullable()->comment('cpf/cnpj/cnic');
             $table->string('zipcode')->nullable();
