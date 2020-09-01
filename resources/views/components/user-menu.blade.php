@@ -4,42 +4,57 @@
     <div class="shadow-bottom"></div>
     <div class="main-menu-content ps ps--active-y">
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
-            <li class="nav-item {{ $isActive('admin.home') }}">
-                <a class="nav-link" href="#">
+            <li class="nav-item {{ $isActive('home') }}">
+                <a class="nav-link" href="{{ route('home') }}">
                     <i class="feather icon-home"></i>
                     <span data-i18n="Dashboard"> @lang('menu.dashboard') </span>
                 </a>
             </li>
-            <li class="nav-item {{ $isActive(['admin.prealerts.index','admin.prealerts.edit']) }}">
-                <a class="nav-link" href="#"><i class="feather icon-alert-triangle"></i>
-                    <span data-i18n="Apps">@lang('menu.prealerts')</span>
-                </a>
-            </li>
-            <li class="nav-item {{ $isActive(['admin.orders.index','admin.orders.show']) }}">
-                <a class="nav-link" href="#"><i class="feather icon-package"></i>
-                    <span data-i18n="Apps">@lang('menu.orders')</span>
-                </a>
-            </li>
-            <li class="nav-item {{ $isActive(['calculator.index']) }}">
-                <a class="nav-link" href="#" target="_blank">
-                    <i class="fa fa-calculator"></i>
-                    <span data-i18n="Apps">@lang('menu.calculator')</span>
-                </a>
-            </li>
-            {{-- <li class="nav-item {{ $isActive(['user.transactions.index']) }}">
-                <a class="nav-link" href="{{ route('user.transactions.index') }}">
-                    <i class="feather icon-repeat"></i>
-                    <span data-i18n="Apps">@lang('menu.transactions')</span>
-                </a>
-            </li> --}}
-            <li class="nav-item {{ $isActive(['admin.addresses.index','admin.addresses.edit','admin.addresses.create']) }}">
-                <a class="nav-link" href="#"><i class="feather icon-home"></i>
-                    <span data-i18n="Apps">@lang('menu.addresses')</span>
-                </a>
-            </li>
+           
             <li class="nav-item {{ $isActive(['admin.tickets.index','admin.tickets.show']) }}">
-                <a class="nav-link" href="#"><i class="feather icon-message-circle"></i>
+                <a class="nav-link" href="{{ route('admin.tickets.index') }}"><i class="feather icon-message-circle"></i>
                     <span data-i18n="Apps">@lang('menu.support tickets')</span>
+                </a>
+            </li>
+ 
+            <li class="nav-item {{ $isActive(['admin.roles.index']) }}">
+                <a href="{{ route('admin.roles.index') }}">
+                    <i class="fa fa-key"></i>
+                    <span class="menu-title">Roles</span>
+                </a>
+            </li>
+
+            <li class="{{ $isActive(['admin.rates.profit-packages.index']) }}">
+                <a href="{{ route('admin.rates.profit-packages.index') }}">
+                    <i class="feather icon-circle"></i>
+                    <span class="menu-title">Profit Packages</span>
+                </a>
+            </li>
+
+            <li class="{{ $isActive(['admin.services.index','admin.services.edit','admin.services.create']) }}">
+                <a href="{{ route('admin.services.index') }}">
+                    <i class="feather icon-circle"></i>
+                    <span class="menu-title">Handling Services</span>
+                </a>
+            </li>
+
+            <li class="nav-item {{ $isActive(['admin.shipping-services.index','admin.shipping-services.create']) }}">
+                <a href="{{ route('admin.shipping-services.index') }}">
+                    <i class="feather icon-truck"></i>
+                    <span class="menu-title">Shipping Services</span>
+                </a>
+            </li>
+
+            <li class="{{ $isActive(['admin.rates.bps-leve.index','admin.rates.bps-leve.create']) }}">
+                <a href="{{ route('admin.rates.bps-leve.index') }}">
+                    <i class="feather icon-circle"></i>
+                    <span class="menu-title">LEVE & BPS Rates</span>
+                </a>
+            </li>
+
+            <li class="nav-item {{ $isActive(['admin.addresses.index','admin.addresses.edit','admin.addresses.create']) }}">
+                <a class="nav-link" href="{{ route('admin.addresses.index') }}"><i class="feather icon-home"></i>
+                    <span data-i18n="Apps">@lang('menu.addresses')</span>
                 </a>
             </li>
 

@@ -11,7 +11,8 @@ return  [
     'Email' => 'Email',
     'Phone' => 'Phone *(International Format) i.e +5511992230189 Symbols,letters or spaces not accepted.',
     'Address' => 'Address',
-    'Country' => 'CountryCity',
+    'Country' => 'Country',
+    'State' => 'State',
     'City' => 'City',
     'street-no' => 'Street #',
     'UF' => 'State',
@@ -22,5 +23,8 @@ return  [
     'Back to List' => 'Back to List',
     'Save' => 'Save',
     'Edit' => 'Edit',
-    'Delete' => 'Delete'
+    'Delete' => 'Delete',
+    'First Name' => 'First Name',
+    'Last Name' => 'Last Name',
+    'Tax' => 'Tax'
 ];
