@@ -42,4 +42,7 @@ Route::namespace('Admin')
         Route::resource('bps-leve', RateController::class)->only(['create', 'store', 'index']);
     });
 
+    Route::resource('settings', SettingController::class)->only(['index', 'store']);
+
+
 });

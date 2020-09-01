@@ -49,7 +49,8 @@ class ShippingServiceController extends Controller
                 'max_sum_of_all_sides',
                 'contains_battery_charges',
                 'contains_perfume_charges',
-                'contains_flammable_liquid_charges'
+                'contains_flammable_liquid_charges',
+                'active',
             ])
         );
 
@@ -98,7 +99,8 @@ class ShippingServiceController extends Controller
                 'max_sum_of_all_sides',
                 'contains_battery_charges',
                 'contains_perfume_charges',
-                'contains_flammable_liquid_charges'
+                'contains_flammable_liquid_charges',
+                'active',
             ])
         );
 

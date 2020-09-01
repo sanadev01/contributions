@@ -39,9 +39,9 @@
                                         <td>{{ $service->min_width_allowed }}</td>
                                         <td>{{ $service->min_length_allowed }}</td>
                                         <td>{{ $service->max_sum_of_all_sides }}</td>
-                                        <td class="text-center">@if($service->contains_battery_charges == 1) <span class="badge badge-success">yes </span> @else <span class="badge badge-danger" >no</span> @endif</td>
-                                        <td class="text-center">@if($service->contains_perfume_charges == 1) <span class="badge badge-success">yes </span> @else <span class="badge badge-danger" >no</span> @endif</td>
-                                        <td class="text-center">@if($service->contains_flammable_liquid_charges == 1) <span class="badge badge-success">yes </span> @else <span class="badge badge-danger" >no</span> @endif</td>
+                                        <td>{{ $service->contains_battery_charges }}</td>
+                                        <td>{{ $service->contains_perfume_charges }}</td>
+                                        <td>{{ $service->contains_flammable_liquid_charges }}</td>
                                         <td>
                                             <a href="{{ route('admin.shipping-services.edit',$service) }}" title="Edit Service" class="btn btn-sm btn-primary mr-2">
                                                 <i class="feather icon-edit"></i>

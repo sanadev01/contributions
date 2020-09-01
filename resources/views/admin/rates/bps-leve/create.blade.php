@@ -26,7 +26,7 @@
                         </div>
                         <div class="row justify-content-center">
 
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <div class="controls">
                                         <label>Shipping Service <span class="text-danger">*</span></label>
@@ -42,8 +42,11 @@
                                 </div>
                             </div>
 
+                        </div>
 
-                            <div class="col-md-12">
+                        <div class="row justify-content-center">
+
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <div class="controls">
                                         <label>Country <span class="text-danger">*</span></label>
@@ -59,6 +62,10 @@
                                 </div>
                             </div>
 
+                        </div>
+
+                        <div class="row justify-content-center">
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="projectinput1">Select Excel File to Upload</label>
@@ -70,6 +77,7 @@
                                     @enderror
                                 </div>
                             </div>
+
                         </div>
                         <div class="row justify-content-center">
                             <div class="col-md-10">

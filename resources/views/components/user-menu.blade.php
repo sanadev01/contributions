@@ -65,6 +65,13 @@
                     <span data-i18n="Apps">@lang('menu.support tickets')</span>
                 </a>
             </li>
+
+            <li class="nav-item {{ $isActive(['admin.settings.index']) }}">
+                <a href="{{ route('admin.settings.index') }}">
+                    <i class="feather icon-settings"></i>
+                    <span class="menu-title">Settings</span>
+                </a>
+            </li>
             
 
             {{-- <x-shared-menu></x-shared-menu> --}}
