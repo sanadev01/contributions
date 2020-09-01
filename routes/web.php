@@ -24,6 +24,8 @@ Route::namespace('Admin')
     ->as('admin.')
     ->prefix('admin')->group(function () {
 
+    Route::resource('prealerts', PreAlertController::class);
+
     Route::resource('roles', RoleController::class);
     Route::resource('roles.permissions', RolePermissionController::class);
 
