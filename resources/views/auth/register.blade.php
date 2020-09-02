@@ -59,10 +59,10 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6 mb-1" >
+                            <div class="col-md-6 mb-1" id="register_last_name" >
                                 <div class="form-group mb-0">
                                     <label for="last_name" class="col-form-label text-md-right">{{ __('auth.register.Last Name') }} <span class="text-danger h4">*</span></label>
-                                    <input id="last_name" type="text" class="form-control @error('last_name') is-invalid @enderror" name="last_name" value="{{ old('last_name') }}" required autocomplete="last_name" autofocus>
+                                    <input id="last_name" type="text" class="form-control @error('last_name') is-invalid @enderror" name="last_name" value="{{ old('last_name') }}"  autocomplete="last_name" autofocus>
                                     @error('last_name')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -142,15 +142,18 @@
 @section('jquery')
 <script>
     $(document).ready(function(){
-        $('input[name="account_type"]').on('click', function(){
+        $('input[name="account_type"]').on('change', function(){
             let val = $(this).val()
 
             if(val == 'individual'){
                 $('#register_first_name').css('display', 'inline')
                 $('#register_company_name').css('display', 'none')
+                $('#register_last_name').css('display', 'inline')
             }else{
                 $('#register_first_name').css('display', 'none')
                 $('#register_company_name').css('display', 'inline')
+                $('#register_last_name').css('display', 'none')
+                
             }
         })
     })
