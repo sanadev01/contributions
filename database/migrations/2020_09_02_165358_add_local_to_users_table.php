@@ -14,7 +14,7 @@ class AddLocalToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('locale',10)->default('en');
+            $table->string('locale',10)->after('zipcode')->default('en');
         });
     }
 
