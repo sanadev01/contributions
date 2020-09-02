@@ -65,5 +65,7 @@
 
     <!-- Scripts -->
     @include('layouts.js')
+    @yield('jquery')
+
 </body>
 </html>
