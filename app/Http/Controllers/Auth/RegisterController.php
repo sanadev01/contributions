@@ -3,11 +3,16 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Mail\Admin\NewRegistration;
+use App\Mail\User\AccountCreated;
+use App\Models\Permission;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
 
 class RegisterController extends Controller
 {
@@ -47,12 +52,18 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
+
     protected function validator(array $data)
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
+            'last_name' => ['sometimes', 'required_if:account_type,'.User::ACCOUNT_TYPE_INDIVIDUAL],
+            'phone' => ['required'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'account_type' => 'required'
+        ],[
+            'phone.phone' => 'Invalid Phone number'
         ]);
     }
 
@@ -64,10 +75,29 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $locale = app()->getLocale();
+
+        $user = User::create([
             'name' => $data['name'],
+            'last_name' => isset($data['last_name']) ? $data['last_name'] : null,
+            'phone' => $data['phone'],
+            // 'pobox_id' => PoBox::first() ? PoBox::first()->id : 1,
+            'role_id' => 2,
+            'pobox_number' => User::generatePoBoxNumber(),
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'account_type' => $data['account_type'] == 'business' ? User::ACCOUNT_TYPE_BUSINESS : User::ACCOUNT_TYPE_INDIVIDUAL
         ]);
+
+
+        saveSetting('locale', $locale, $user->id);
+        return $user;
     }
+
+    public function registered(Request $request, $user)
+    {
+        Mail::to($user->email)->send(new AccountCreated($user));
+        Mail::send(new NewRegistration($user));
+    }
+    
 }

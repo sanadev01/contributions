@@ -12,13 +12,17 @@ class User extends Authenticatable
     use Notifiable;
     const ROLE_ADMIN = 1;
 
+    const ACCOUNT_TYPE_BUSINESS = 'business';
+    const ACCOUNT_TYPE_INDIVIDUAL = 'individual';
+
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'role_id',
     ];
 
     /**
@@ -69,9 +73,32 @@ class User extends Authenticatable
         return $this->hasMany(Ticket::class, 'user_id');
     }
 
+    public function settings()
+    {
+        return $this->hasMany(Setting::class, 'user_id');
+    }
 
     public function scopeAdmin(Builder $query)
     {
         return $query->where('role_id',self::ROLE_ADMIN);
+    }
+
+    public static function generatePoBoxNumber()
+    {
+        $lastUserID = self::latest()->limit(1)->get()->first()->id;
+
+        $lastUserID++;
+
+        if ($lastUserID < 10) {
+            $lastUserID = "000{$lastUserID}";
+        }
+        if ($lastUserID > 10 && $lastUserID < 100) {
+            $lastUserID = "00{$lastUserID}";
+        }
+        if ($lastUserID > 100 && $lastUserID < 1000) {
+            $lastUserID = "0{$lastUserID}";
+        }
+
+        return "HERCO {$lastUserID}";
     }
 }
