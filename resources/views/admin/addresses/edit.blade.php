@@ -128,8 +128,7 @@
                                                 <div class="help-block"></div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row mt-1">
+
                                         <div class="form-group col-12 col-sm-6 col-md-4">
                                             <div class="controls">
                                                 <label>@lang('address.Zip Code')</label>
@@ -138,18 +137,18 @@
                                             </div>
                                         </div>
 
-                                        <div class="form-group col-12 col-sm-6 col-md-2">
+                                    </div>
+                                    <div class="row mt-1">
+                                        
+                                        <div class="form-group col-12 col-sm-6 col-md-6">
                                             <div class="controls">
                                                 <label>@lang('address.Tax') <span class="text-danger"></span></label>
-                                                <select class="form-control" name="tax_id" required placeholder="Tax">
-                                                    <option value="">@lang('address.Tax')</option>
-                                                    <option @if ($address->tax_id == 'cpf') selected @endif value="cpf">cpf</option>
-                                                    <option @if ($address->tax_id == 'cnpj') selected @endif value="cnpj">cnpj</option>
-                                                    <option @if ($address->tax_id == 'cnic') selected @endif value="cnic">cnic</option>
-                                                </select>
+                                            <textarea name="tax_id" required class="form-control" id="tax_id" cols="10" rows="5" placeholder="cpf / cnpj / cnic">{{$address->tax_id}}</textarea>
                                                 <div class="help-block"></div>
                                             </div>
                                         </div>
+
+                                    </div>
 
                                 <div class="row mt-1">
                                     <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">

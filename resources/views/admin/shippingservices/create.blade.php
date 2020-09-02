@@ -88,11 +88,7 @@
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">Contains battery charges<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <select class="form-control" name="contains_battery_charges" required value="{{ old('contains_battery_charges') }}" placeholder="contains_battery_charges" >
-                                            <option value="">Contains battery charges</option>
-                                            <option value="1">Yes</option>
-                                            <option value="0">No</option>
-                                        </select>
+                                        <input type="number" required class="form-control" name="contains_battery_charges" placeholder="Contains battery changes" value="{{ old('contains_battery_charges') }}">
                                         @error('contains_battery_charges')
                                             <div class="help-block text-danger"> {{ $message }} </div>
                                         @enderror
@@ -102,11 +98,7 @@
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">Contains perfume charges<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <select class="form-control" name="contains_perfume_charges" required value="{{ old('contains_perfume_charges') }}" placeholder="Contains perfume charges" >
-                                            <option value="">Contains perfume charges</option>
-                                            <option value="1">Yes</option>
-                                            <option value="0">No</option>
-                                        </select>
+                                        <input type="number" required class="form-control" name="contains_perfume_charges" placeholder="Contains perfume charges" value="{{ old('contains_perfume_charges') }}">
                                         @error('contains_perfume_charges')
                                             <div class="help-block text-danger"> {{ $message }} </div>
                                         @enderror
@@ -116,18 +108,27 @@
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">Contains flammable liquid charges<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <select class="form-control" name="contains_flammable_liquid_charges" required value="{{ old('contains_flammable_liquid_charges') }}" placeholder="Contains flammable liquid charges" >
-                                            <option value="">Contains flammable liquid charges</option>
-                                            <option value="1">Yes</option>
-                                            <option value="0">No</option>
-                                        </select>
+                                        <input type="number" required class="form-control" name="contains_flammable_liquid_charges" placeholder="Contains perfume charges" value="{{ old('contains_flammable_liquid_charges') }}">
                                         @error('contains_flammable_liquid_charges')
                                             <div class="help-block text-danger"> {{ $message }} </div>
                                         @enderror
                                     </div>
                                 </div>
-                                
+
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">Active<span class="text-danger">*</span></label>
+                                    <div class="col-md-6">
+                                        <select class="form-control" name="active" required value="{{ old('active') }}" placeholder="Active" >
+                                            <option value="">Active</option>
+                                            <option value="1">Yes</option>
+                                            <option value="0">No</option>
+                                        </select>
+                                        @error('active')
+                                            <div class="help-block text-danger"> {{ $message }} </div>
+                                        @enderror
+                                    </div>
                                 </div>
+
                                 <div class="row mt-1">
                                     <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
                                         <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">
@@ -136,6 +137,9 @@
                                         <button type="reset" class="btn btn-outline-warning waves-effect waves-light">Reset</button>
                                     </div>
                                 </div>
+                                
+                                </div>
+
                             </form>
                         </div>
                     </div>
