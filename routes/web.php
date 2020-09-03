@@ -12,12 +12,17 @@
 */
 
 
-// Route::get('/', function () {
-//     return redirect('login');
-// });
+Route::get('/', function () {
+    return redirect('login');
+});
+
+Route::get('/home', function () {
+    return redirect()->route('admin.home');
+});
+
 Auth::routes();
 
-Route::post('logout', [\App\Http\Controllers\Auth\LoginController::class,'logout']);
+Route::post('logout', [\App\Http\Controllers\Auth\LoginController::class,'logout'])->name('logout');
 
 
 Route::namespace('Admin')
@@ -45,14 +50,15 @@ Route::namespace('Admin')
                 Route::resource('bps-leve', RateController::class)->only(['create', 'store', 'index']);
             });
 
-    Route::resource('settings', SettingController::class)->only(['index', 'store']);
-    Route::resource('profile', ProfileController::class)->only(['index', 'store']);
-    Route::resource('users', UserController::class);
+        Route::resource('settings', SettingController::class)->only(['index', 'store']);
+        Route::resource('profile', ProfileController::class)->only(['index', 'store']);
+        Route::resource('users', UserController::class)->only(['index','destroy']);
+        Route::post('users/export', UserExportController::class)->name('users.export.index');
 
-    Route::resource('users/export', UserExportController::class)->only('index')->names([
-        'index' => 'users.export.index'
-    ]);
+        Route::resource('tickets', TicketController::class);
+        Route::post('tickets/{ticket}/close', [\App\Http\Controllers\Admin\TicketController::class, 'markClose'])->name('ticket.mark-closed');
 
-    Route::post('users/{user}/login', AnonymousLoginController::class)->name('users.login');
+
+        Route::post('users/{user}/login', AnonymousLoginController::class)->name('users.login');
 
 });

@@ -7,10 +7,9 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">All Registered Users</h4>
-                        {{-- {{ route('numbers.format','user') }} --}}
-                        <a href="#" class="pull-right btn btn-primary"> Try to Format Numbers </a>
-                        <form action="{{ route('admin.users.export.index') }}">
-                            <form action="#">
+
+                        <form action="{{ route('admin.users.export.index') }}" method="POST">
+                            @csrf
                             <input type="hidden" name="search" value="{{ request('search') }}">
                             <button href="" class="btn btn-primary">
                                 Export Excel
@@ -22,7 +21,7 @@
                             <form action="" method="GET">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <input type="search" name="search" value="{{ old('search',request('search')) }}" placeholder="Search By Name, Pobox, Email">
+                                        <input type="search" class="form-control" name="search" value="{{ old('search',request('search')) }}" placeholder="Search By Name, Pobox, Email">
                                     </div>
                                     <div class="col-md-4">
                                         <button class="btn btn-primary btn-lg">

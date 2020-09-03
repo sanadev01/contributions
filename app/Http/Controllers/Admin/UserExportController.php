@@ -10,7 +10,7 @@ use App\Models\User;
 
 class UserExportController extends Controller
 {
-    public function index(Request $request, UserRepository $userRepository)
+    public function __invoke(Request $request, UserRepository $userRepository)
     {
         $exportUsers = new ExportUsers(
             $userRepository->get($request, false)
