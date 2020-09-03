@@ -87,9 +87,9 @@
                                                         {{-- <a href="{{ route('admin.users.permissions.index',$user) }}" title="Edit User Permissions" class="dropdown-item w-100">
                                                             <i class="fa fa-key"></i> Roles & Permission
                                                         </a> --}}
-                                                        {{-- <a href="{{ route('admin.users.profit-and-comission.index',$user) }}" title="Edit User Permissions" class="dropdown-item w-100">
-                                                            <i class="fa fa-cog"></i> Profit & Comission Setting
-                                                        </a> --}}
+                                                        <a href="{{ route('admin.users.setting.index',$user) }}" title="User Setting" class="dropdown-item w-100">
+                                                            <i class="fa fa-cog"></i> User Setting
+                                                        </a>
                                                         <form action="{{ route('admin.users.login',$user) }}" class="d-flex" method="post">
                                                             @csrf
                                                             <button class="dropdown-item w-100">

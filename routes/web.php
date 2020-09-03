@@ -53,6 +53,7 @@ Route::namespace('Admin')
         Route::resource('profile', ProfileController::class)->only(['index', 'store']);
         Route::resource('users', UserController::class)->only(['index','destroy']);
         Route::post('users/export', UserExportController::class)->name('users.export.index');
+        Route::resource('users.setting', UserSettingController::class)->only('index','store');
 
         Route::resource('roles', RoleController::class);
         Route::resource('roles.permissions', RolePermissionController::class);

@@ -69,21 +69,6 @@
                                 </div>
 
                                 <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">@lang('profile.package')<span class="text-danger"></span></label>
-                                    <div class="col-md-6">
-                                        <select name="package_id" class="form-control">
-                                            <option value="" selected disabled hidden>Select Package</option>
-                                            @isset($packages)
-                                                @foreach ($packages as $package)
-                                                    <option @if( auth()->user()->package_id == $package->id ) selected @endif value="{{ $package->id }}">{{ $package->name }}</option>
-                                                @endforeach
-                                            @endisset
-                                        </select>
-                                        <div class="help-block"></div>
-                                    </div>
-                                </div>
-
-                                <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('profile.address')<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <input type="text" class="form-control" name="address" value="{{ old('name',auth()->user()->address) }}" placeholder="Address"/>
