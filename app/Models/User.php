@@ -83,6 +83,11 @@ class User extends Authenticatable
         return $query->where('role_id',self::ROLE_ADMIN);
     }
 
+    public function isBusinessAccount()
+    {
+        return $this->account_type == self::ACCOUNT_TYPE_BUSINESS;
+    }
+
     public static function generatePoBoxNumber()
     {
         $lastUserID = self::latest()->limit(1)->get()->first()->id;

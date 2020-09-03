@@ -43,6 +43,7 @@ Route::namespace('Admin')
     });
 
     Route::resource('settings', SettingController::class)->only(['index', 'store']);
+    Route::resource('profile', ProfileController::class)->only(['index', 'store']);
 
 
 });

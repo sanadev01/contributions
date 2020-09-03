@@ -74,7 +74,7 @@
             </li>
             
 
-            {{-- <x-shared-menu></x-shared-menu> --}}
+            <x-shared-menu></x-shared-menu>
         </ul>
     </div>
 </div>
