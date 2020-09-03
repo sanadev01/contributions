@@ -23,12 +23,10 @@ class ProfileController extends Controller
     {   
         $countries = Country::all();
         $states = State::all();
-        $packages = ProfitPackage::all();
 
         $data = [
             'countries' => $countries, 
             'states' => $states, 
-            'packages' => $packages, 
         ];
 
         return view('admin.profile.index')->with($data);
@@ -48,7 +46,6 @@ class ProfileController extends Controller
             'name' => $request->name,
             'last_name' => $request->last_name,
             'phone' => $request->phone,
-            'package_id' => $request->package_id,
             'state_id' => $request->state_id,
             'country_id' => $request->country_id,
             'city' => $request->city,
