@@ -38,7 +38,7 @@
         }
 
     </style>
-    {{-- <livewire:styles> --}}
+    <livewire:styles>
 </head>
 <!-- END: Head-->
 
@@ -74,7 +74,7 @@
     @include('layouts.footer')
     @include('layouts.js')
     @yield('js')
-    {{-- <livewire:scripts> --}}
+    <livewire:scripts>
 
     @yield('lvjs')
 

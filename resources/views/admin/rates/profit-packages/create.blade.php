@@ -31,7 +31,7 @@
                     <hr>
                     <div class="row">
                         <div class="col-md-12">
-                            {{-- <livewire:user.profit.slabs> --}}
+                            <livewire:user.profit.slabs>
                         </div>
                     </div>
 
