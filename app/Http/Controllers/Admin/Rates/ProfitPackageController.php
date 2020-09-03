@@ -37,19 +37,32 @@ class ProfitPackageController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    {   
+
         $this->validate($request,[
             'package_name' => 'required|string|max:90',
+            'slab' => 'required|array',
+            'slab.*.min_weight' => 'required|numeric',
+            'slab.*.max_weight' => 'required|numeric',
+            'slab.*.value' => 'required|numeric'
+        ],[
+            'slab.*.min_weight.*' => 'Numeric value required',
+            'slab.*.max_weight.*' => 'Numeric value required',
+            'slab.*.value.*' => 'Numeric value required',
         ]);
+
+        foreach( $request->slab as $slab ){
+            $profitPackageslab[] = $slab ;
+        }
 
         $profitPackage = ProfitPackage::create([
             'name' => $request->package_name,
+            'data' => json_encode($profitPackageslab)
         ]);
 
-
         session()->flash('alert-success','Package Created');
-
         return redirect()->route('admin.rates.profit-packages.index');
+
     }
 
     /**
@@ -82,18 +95,32 @@ class ProfitPackageController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, ProfitPackage $profitPackage)
-    {
+    {   
         $this->validate($request,[
             'package_name' => 'required|string|max:90',
+            'slab' => 'required|array',
+            'slab.*.min_weight' => 'required|numeric',
+            'slab.*.max_weight' => 'required|numeric',
+            'slab.*.value' => 'required|numeric'
+        ],[
+            'slab.*.min_weight.*' => 'Numeric value required',
+            'slab.*.max_weight.*' => 'Numeric value required',
+            'slab.*.value.*' => 'Numeric value required',
         ]);
 
+        foreach( $request->slab as $slab ){
+            $profitPackageslab[] = $slab;
+        }
+
         $profitPackage->update([
-            'name' => $request->package_name
+            'name' => $request->package_name,
+            'data' => json_encode($profitPackageslab)
+
         ]);
 
         session()->flash('alert-success','Package Updated');
-
         return redirect()->route('admin.rates.profit-packages.index');
+
     }
 
     /**

@@ -15,4 +15,5 @@ class ProfitPackage extends Model
 
     const TYPE_DEFAULT = 'default';
     const TYPE_PACKAGE = 'package';
+
 }
