@@ -31,8 +31,6 @@ Route::namespace('Admin')
     Route::resource('addresses', AddressController::class);
     Route::resource('shipping-services', ShippingServiceController::class);
 
-    Route::resource('tickets', TicketController::class);                
-    Route::post('tickets/{ticket}/close', [\App\Http\Controllers\Admin\TicketController::class, 'markClose'])->name('ticket.mark-closed');
 
     Route::prefix('rates')
     ->namespace('Rates')
@@ -44,6 +42,9 @@ Route::namespace('Admin')
 
     Route::resource('settings', SettingController::class)->only(['index', 'store']);
     Route::resource('profile', ProfileController::class)->only(['index', 'store']);
+
+    Route::resource('tickets', TicketController::class);
+    Route::post('tickets/{ticket}/close', [\App\Http\Controllers\Admin\TicketController::class, 'markClose'])->name('ticket.mark-closed');
 
 
 });

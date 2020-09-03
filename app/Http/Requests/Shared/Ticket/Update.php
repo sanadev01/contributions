@@ -25,7 +25,7 @@ class Update extends FormRequest
     public function rules()
     {
         return [
-            'subject' => 'required|min:20'
+            'text' => 'required|min:20'
         ];
     }
 }

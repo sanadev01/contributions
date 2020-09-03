@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+// use Illuminate\Http\Request;
+use App\Models\Ticket;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Shared\Ticket\Create;
 use App\Http\Requests\Shared\Ticket\Update;
-use Illuminate\Http\Request;
-use App\Models\Ticket;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
-use Auth;
 
 class TicketController extends Controller
 {
@@ -19,9 +19,8 @@ class TicketController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        // $supportTickets  = \auth()->user()->isAdmin() ? Ticket::has('user')->get() : Auth::user()->tickets;
-        $supportTickets  = Ticket::has('user')->get();
+    {   
+        $supportTickets = \auth()->user()->isAdmin() ? Ticket::has('user')->get() : Auth::user()->tickets;
         return view('admin.tickets.index', compact('supportTickets'));
     }
 
@@ -49,7 +48,7 @@ class TicketController extends Controller
 
         $ticket->comments()->create([
             'user_id' => Auth::id(),
-            'text' => $request->detail
+            'text' => $request->text
         ]);
 
         session()->flash('alert-success', 'Ticket Generated Successfully');
@@ -67,7 +66,6 @@ class TicketController extends Controller
         if (! $ticket || (\auth()->user()->isUser() && $ticket->user_id != Auth::id())) {
             return new NotFoundHttpException('Not found');
         }
-
         return  view('admin.tickets.show', compact('ticket'));
     }
 
@@ -96,9 +94,9 @@ class TicketController extends Controller
      */
     public function markClose(Ticket $ticket)
     {
-        // if (! Auth::user()->isAdmin()) {
-        //     throw new UnauthorizedHttpException('You are not authorized to perform this action');
-        // }
+        if (! Auth::user()->isAdmin()) {
+            throw new UnauthorizedHttpException('You are not authorized to perform this action');
+        }
 
         $ticket->markClosed();
 

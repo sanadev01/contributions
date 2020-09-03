@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class TicketComment extends Model
 {
@@ -41,7 +43,7 @@ class TicketComment extends Model
 
     public function ticket()
     {
-        return $this->belongsTo(SupportTicket::class, 'ticket_id');
+        return $this->belongsTo(Ticket::class, 'ticket_id');
     }
 
     public function isSent()

@@ -2,7 +2,11 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class Ticket extends Model
 {   
@@ -15,12 +19,12 @@ class Ticket extends Model
 
     public function scopeOpen(Builder $query)
     {
-        return $query->where('open', 1);
+        return $query->where('open', '1');
     }
 
     public function scopeClosed(Builder $query)
     {
-        return $query->where('open', 0);
+        return $query->where('open', '0');
     }
 
     public function getHumanID()
@@ -35,7 +39,7 @@ class Ticket extends Model
 
     public function isOpen()
     {
-        return $this->open == 1;
+        return $this->open == '1';
     }
 
     public static function getResponseTime()
@@ -64,7 +68,7 @@ class Ticket extends Model
             $fromData = Carbon::now()->subDays(7);
         }
 
-        return SupportTicket::query()
+        return Ticket::query()
             ->where('created_at', '>=', $fromData)
             ->count();
     }
@@ -96,7 +100,7 @@ class Ticket extends Model
     public function markClosed()
     {
         return self::update([
-            'open' => 'closed'
+            'open' => '0'
         ]);
     }
 }
