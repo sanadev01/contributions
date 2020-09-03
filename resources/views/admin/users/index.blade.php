@@ -16,7 +16,7 @@
                             </button>
                         </form>
                     </div>
-                    <div class="card-content">
+                    <div class="card-content card-body">
                         <div class="filters p-2">
                             <form action="" method="GET">
                                 <div class="row">

@@ -13,12 +13,12 @@ class Slabs extends Component
 
     public function mount($profitId = null)
     {
-        $this->slabs = old('slab');
-
-        if ( empty($this->slabs) ){
+        $this->slabs = old('slab',[]);
+        if ( $profitId ){
             $profitPackage = ProfitPackage::find($profitId) ?? new ProfitPackage;
             $this->slabs = json_decode($profitPackage->data, true);
         }
+
     }
 
     public function render()

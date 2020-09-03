@@ -32,7 +32,7 @@
                     <hr>
                     <div class="row">
                         <div class="col-md-12">
-                            <livewire:user.profit.slabs :profit_id='$profitPackage->id'>
+                            <livewire:user.profit.slabs :profit_id='$profitPackage->id'/>
                         </div>
                     </div>
                     <div class="container form-actions pl-5 text-right">
