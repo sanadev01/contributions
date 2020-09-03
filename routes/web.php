@@ -12,17 +12,23 @@
 */
 
 
-Route::get('/', function () {
-    return redirect('login');
-});
+// Route::get('/', function () {
+//     return redirect('login');
+// });
 Auth::routes();
+
+Route::post('logout', [\App\Http\Controllers\Auth\LoginController::class,'logout']);
+
 
 Route::namespace('Admin')
     ->middleware(['auth'])
     ->as('admin.')
     ->group(function () {
 
-        Route::get('home', 'HomeController')->name('home');
+        Route::get('dashboard', 'HomeController')->name('home');
+        Route::resource('roles', RoleController::class);
+        Route::resource('roles.permissions', RolePermissionController::class);
+
         Route::resource('roles', RoleController::class);
         Route::resource('roles.permissions', RolePermissionController::class);
 
@@ -32,17 +38,21 @@ Route::namespace('Admin')
 
 
         Route::prefix('rates')
-        ->namespace('Rates')
-        ->as('rates.')
-        ->group(function () {
-            Route::resource('profit-packages', ProfitPackageController::class); 
-            Route::resource('bps-leve', RateController::class)->only(['create', 'store', 'index']);
-        });
+            ->namespace('Rates')
+            ->as('rates.')
+            ->group(function () {
+                Route::resource('profit-packages', ProfitPackageController::class); 
+                Route::resource('bps-leve', RateController::class)->only(['create', 'store', 'index']);
+            });
 
-        Route::resource('settings', SettingController::class)->only(['index', 'store']);
-        Route::resource('profile', ProfileController::class)->only(['index', 'store']);
+    Route::resource('settings', SettingController::class)->only(['index', 'store']);
+    Route::resource('profile', ProfileController::class)->only(['index', 'store']);
+    Route::resource('users', UserController::class);
 
-        Route::resource('tickets', TicketController::class);
-        Route::post('tickets/{ticket}/close', [\App\Http\Controllers\Admin\TicketController::class, 'markClose'])->name('ticket.mark-closed');
+    Route::resource('users/export', UserExportController::class)->only('index')->names([
+        'index' => 'users.export.index'
+    ]);
+
+    Route::post('users/{user}/login', AnonymousLoginController::class)->name('users.login');
 
 });

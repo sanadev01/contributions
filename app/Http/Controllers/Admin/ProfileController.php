@@ -23,13 +23,13 @@ class ProfileController extends Controller
     {   
         $countries = Country::all();
         $states = State::all();
-        $packages = State::all();
+        $packages = ProfitPackage::all();
 
-        $data = array(
+        $data = [
             'countries' => $countries, 
             'states' => $states, 
             'packages' => $packages, 
-        );
+        ];
 
         return view('admin.profile.index')->with($data);
     }

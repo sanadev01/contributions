@@ -6,11 +6,14 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
+
 
 class User extends Authenticatable
 {
     use Notifiable;
     const ROLE_ADMIN = 1;
+    const ROLE_USER = 2;
 
     const ACCOUNT_TYPE_BUSINESS = 'business';
     const ACCOUNT_TYPE_INDIVIDUAL = 'individual';
@@ -50,7 +53,7 @@ class User extends Authenticatable
 
     public function roles()
     {
-        return $this->belongsToMany(Role::class);
+        return $this->belongsTo(Role::class);
     }
 
     public function isAdmin()
@@ -87,6 +90,22 @@ class User extends Authenticatable
     {
         return $this->account_type == self::ACCOUNT_TYPE_BUSINESS;
     }
+
+    public function scopeUser(Builder $query)
+    {
+        return $query->where('role_id', self::ROLE_USER);
+    }
+
+    public function accountType()
+    {
+        return Str::of($this->account_type)->replace('_', ' ')->title();
+    }
+
+    public function profitPackage()
+    {
+        return $this->belongsTo(ProfitPackage::class,'package_id');
+    }
+
 
     public static function generatePoBoxNumber()
     {

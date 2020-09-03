@@ -1,0 +1,125 @@
+@extends('layouts.master')
+
+@section('page')
+    <section id="prealerts">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="mb-0">All Registered Users</h4>
+                        {{-- {{ route('numbers.format','user') }} --}}
+                        <a href="#" class="pull-right btn btn-primary"> Try to Format Numbers </a>
+                        <form action="{{ route('admin.users.export.index') }}">
+                            <form action="#">
+                            <input type="hidden" name="search" value="{{ request('search') }}">
+                            <button href="" class="btn btn-primary">
+                                Export Excel
+                            </button>
+                        </form>
+                    </div>
+                    <div class="card-content">
+                        <div class="filters p-2">
+                            <form action="" method="GET">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input type="search" name="search" value="{{ old('search',request('search')) }}" placeholder="Search By Name, Pobox, Email">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button class="btn btn-primary btn-lg">
+                                            Search
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="table-responsive-md mt-1">
+                            <table class="table mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>POBOX#</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Roles</th>
+                                        <th>Account Type</th>
+                                        <th>Package</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                @foreach($users as $user)
+                                    <tr>
+                                        <td>
+                                            {{ $user->created_at->format('Y-m-d') }}
+                                        </td>
+                                        <td>
+                                            {{ $user->pobox_number }}
+                                        </td>
+                                        <td>
+                                            {{ $user->name.$user->last_name }}
+                                        </td>
+                                        <td>
+                                            {{ $user->email }}
+                                        </td>
+                                        <td>
+                                            {{ $user->phone }}
+                                        </td>
+                                        <td>
+                                            {{-- {{ $user->roles->pluck('name') }} --}}
+                                        </td>
+                                        <td>
+                                            {{ $user->accountType() }}
+                                        </td>
+                                        <td>
+                                            {{ $user->profitPackage? $user->profitPackage->name : '' }}
+                                        </td>
+                                        <td class="d-flex">
+                                            <div class="btn-group">
+                                                <div class="dropdown">
+                                                    <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-success dropdown-toggle waves-effect waves-light">
+                                                    Action
+                                                    </button> 
+                                                    <div class="dropdown-menu dropdown-menu-right dropright">
+                                                        {{-- <a href="{{ route('admin.call-flows.edit',$user) }}" title="Edit Call Flows" class="dropdown-item w-100">
+                                                            <i class="feather icon-edit"></i> Edit
+                                                        </a> --}}
+                                                        {{-- <a href="{{ route('admin.users.permissions.index',$user) }}" title="Edit User Permissions" class="dropdown-item w-100">
+                                                            <i class="fa fa-key"></i> Roles & Permission
+                                                        </a> --}}
+                                                        {{-- <a href="{{ route('admin.users.profit-and-comission.index',$user) }}" title="Edit User Permissions" class="dropdown-item w-100">
+                                                            <i class="fa fa-cog"></i> Profit & Comission Setting
+                                                        </a> --}}
+                                                        <form action="{{ route('admin.users.login',$user) }}" class="d-flex" method="post">
+                                                            @csrf
+                                                            <button class="dropdown-item w-100">
+                                                                <i class="feather icon-lock"></i> Login
+                                                            </button>
+                                                        </form>
+                                                        <form action="{{ route('admin.users.destroy',$user) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button class="dropdown-item w-100 text-danger">
+                                                                <i class="feather icon-trash-2"></i> Delete
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="card-footer d-flex justify-content-end">
+                        {{ $users->links('pagination::bootstrap-4') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+@endsection

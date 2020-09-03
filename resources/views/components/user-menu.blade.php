@@ -53,6 +53,13 @@
                 </a>
             </li>
 
+            <li class="nav-item {{ $isActive(['admin.users.index']) }}">
+                <a href="{{ route('admin.users.index') }}">
+                    <i class="feather icon-users"></i>
+                    <span class="menu-title">Users</span>
+                </a>
+            </li>
+
             <li class="nav-item {{ $isActive(['admin.roles.index']) }}">
                 <a href="{{ route('admin.roles.index') }}">
                     <i class="fa fa-key"></i>
