@@ -5,7 +5,7 @@
     <div class="main-menu-content ps ps--active-y">
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
             <li class="nav-item {{ $isActive('home') }}">
-                <a class="nav-link" href="{{ route('home') }}">
+                <a class="nav-link" href="{{ route('admin.home') }}">
                     <i class="feather icon-home"></i>
                     <span data-i18n="Dashboard"> @lang('menu.dashboard') </span>
                 </a>

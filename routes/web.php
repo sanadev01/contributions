@@ -18,9 +18,11 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::namespace('Admin')
+    ->middleware(['auth'])
     ->as('admin.')
     ->group(function () {
-        Route::get('home', HomeController::class);
+
+        Route::get('home', 'HomeController')->name('home');
         Route::resource('roles', RoleController::class);
         Route::resource('roles.permissions', RolePermissionController::class);
 
