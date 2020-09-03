@@ -57,7 +57,7 @@
                                             <div class="card-content">
                                                 <div class="card-body">
                                                     <p class="mb-3">
-                                                        {!! $comment->content !!}
+                                                        {!! $comment->text !!}
                                                     </p>
                                                     <hr>
                                                 </div>
