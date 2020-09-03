@@ -18,11 +18,10 @@ Route::get('/', function () {
     return redirect('login');
 });
 Auth::routes();
-Route::get('/home', 'HomeController@index')->name('home');
 
 Route::namespace('Admin')
     ->as('admin.')
-    ->prefix('admin')->group(function () {
+    ->group(function () {
 
     Route::resource('roles', RoleController::class);
     Route::resource('roles.permissions', RolePermissionController::class);
