@@ -66,13 +66,13 @@
                                             {{ $user->phone }}
                                         </td>
                                         <td>
-                                            {{-- {{ $user->roles->pluck('name') }} --}}
+                                            {{ optional($user->role)->name }}
                                         </td>
                                         <td>
                                             {{ $user->accountType() }}
                                         </td>
                                         <td>
-                                            {{ $user->profitPackage? $user->profitPackage->name : '' }}
+                                            {{ optional($user->profitPackage)->name }}
                                         </td>
                                         <td class="d-flex">
                                             <div class="btn-group">
