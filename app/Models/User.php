@@ -7,11 +7,14 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
+
 
 class User extends Authenticatable
 {
     use Notifiable;
     const ROLE_ADMIN = 1;
+    const ROLE_USER = 2;
 
     const ACCOUNT_TYPE_BUSINESS = 'business';
     const ACCOUNT_TYPE_INDIVIDUAL = 'individual';
@@ -88,6 +91,17 @@ class User extends Authenticatable
     {
         return $query->where('role_id','<>',self::ROLE_ADMIN);
     }
+
+    public function accountType()
+    {
+        return Str::of($this->account_type)->replace('_', ' ')->title();
+    }
+
+    public function profitPackage()
+    {
+        return $this->belongsTo(ProfitPackage::class,'package_id');
+    }
+
 
     public static function generatePoBoxNumber()
     {

@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class Ticket extends Model
 {   
@@ -20,12 +21,12 @@ class Ticket extends Model
 
     public function scopeOpen(Builder $query)
     {
-        return $query->where('open', 1);
+        return $query->where('open', true);
     }
 
     public function scopeClosed(Builder $query)
     {
-        return $query->where('open', 0);
+        return $query->where('open', false);
     }
 
     public function getHumanID()
@@ -40,54 +41,7 @@ class Ticket extends Model
 
     public function isOpen()
     {
-        return $this->open == 1;
-    }
-
-    public static function getResponseTime()
-    {
-        $lastAdminComment = TicketComment::getLastCommentByAdmin();
-        $lastUserComment = TicketComment::getLastCommentByUser();
-
-        $responseTime = 0;
-
-        if (! $lastUserComment) {
-            $responseTime = 0;
-        }
-        if ($lastUserComment && ! $lastAdminComment) {
-            $responseTime = Carbon::now()->diffInHours($lastUserComment->created_at);
-        }
-        if ($lastUserComment && $lastAdminComment) {
-            $responseTime = $lastAdminComment->created_at->diffInHours($lastUserComment->created_at);
-        }
-
-        return $responseTime;
-    }
-
-    public static function newTickets($fromData = null)
-    {
-        if (! $fromData) {
-            $fromData = Carbon::now()->subDays(7);
-        }
-
-        return SupportTicket::query()
-            ->where('created_at', '>=', $fromData)
-            ->count();
-    }
-
-    public static function completedTickets()
-    {
-        $closedTickets = self::query()
-            ->closed()
-            ->count();
-
-        $totalTickets = self::query()
-            ->count();
-
-        if (! $totalTickets) {
-            return 0;
-        }
-
-        return  $closedTickets * 100 / $totalTickets;
+        return $this->open;
     }
 
     public function addComment(Request $request)

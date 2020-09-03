@@ -44,7 +44,7 @@
                                     <div class="form-group col-6">
                                         <div class="controls">
                                             <label>@lang('tickets.Details')</label>
-                                            <textarea class="form-control w-100" value="{{ old('detail') }}" placeholder=""  name="detail"></textarea>
+                                            <textarea class="form-control w-100" value="{{ old('text') }}" placeholder=""  name="text"></textarea>
                                             <div class="help-block"></div>
                                         </div>
                                     </div>

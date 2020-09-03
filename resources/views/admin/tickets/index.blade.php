@@ -23,35 +23,35 @@
                                 <thead>
                                 <tr>
                                     <th>@lang('tickets.TicketID')</th>
-                                    @admin
+                                    {{-- @admin --}}
                                     <th>
                                         User
                                     </th>
-                                    @endadmin
+                                    {{-- @endadmin --}}
                                     <th>@lang('tickets.Issue')</th>
                                     <th>@lang('tickets.Status')</th>
                                     <th>@lang('tickets.Detail')</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($supportTickets as $ticket)
-                                        <tr>
-                                            <td>{{ $ticket->getHumanID() }}</td>
-                                            @admin
-                                            <td>
-                                                {{ $ticket->user->name }}
-                                            </td>
-                                            @endadmin
-                                            <td>
-                                                {{ $ticket->subject }}
-                                            </td>
-                                            <td>
-                                                {{ ucfirst($ticket->open) }}
-                                            </td>
-                                            <td class="d-flex">
-                                                <a href="{{ route('admin.tickets.show',$ticket->id) }}" class="btn btn-primary mr-2" title="@lang('tickets.Detail')">
-                                                    <i class="feather icon-eye"></i>
-                                                </a>
+                                @foreach($supportTickets as $ticket)
+                                    <tr>
+                                        <td>{{ $ticket->getHumanID() }}</td>
+                                        {{-- @admin --}}
+                                        <td>
+                                            {{ $ticket->user->name }}
+                                        </td>
+                                        {{-- @endadmin --}}
+                                        <td>
+                                            {{ $ticket->subject }}
+                                        </td>
+                                        <td>
+                                             @if($ticket->open == 1) <span class="badge badge-success">open</span> @else <span class="badge badge-danger">close</span> @endif 
+                                        </td>
+                                        <td class="d-flex">
+                                            <a href="{{ route('admin.tickets.show',$ticket->id) }}" class="btn btn-primary mr-2" title="@lang('tickets.Detail')">
+                                                <i class="feather icon-eye"></i>
+                                            </a>
 
                                                 @if( auth()->user()->isAdmin() && $ticket->isOpen() )
                                                     <form action="{{ route('admin.ticket.mark-closed',$ticket) }}" method="post">

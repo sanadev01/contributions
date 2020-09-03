@@ -81,7 +81,6 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'last_name' => isset($data['last_name']) ? $data['last_name'] : null,
             'phone' => $data['phone'],
-            // 'pobox_id' => PoBox::first() ? PoBox::first()->id : 1,
             'role_id' => 2,
             'pobox_number' => User::generatePoBoxNumber(),
             'email' => $data['email'],

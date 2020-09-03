@@ -5,7 +5,7 @@
     <div class="main-menu-content ps ps--active-y">
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
             <li class="nav-item {{ $isActive('home') }}">
-                <a class="nav-link" href="{{ route('home') }}">
+                <a class="nav-link" href="{{ route('admin.home') }}">
                     <i class="feather icon-home"></i>
                     <span data-i18n="Dashboard"> @lang('menu.dashboard') </span>
                 </a>
@@ -57,6 +57,13 @@
             <li class="nav-item {{ $isActive(['admin.addresses.index','admin.addresses.edit','admin.addresses.create']) }}">
                 <a class="nav-link" href="{{ route('admin.addresses.index') }}"><i class="feather icon-home"></i>
                     <span data-i18n="Apps">@lang('menu.addresses')</span>
+                </a>
+            </li>
+
+            <li class="nav-item {{ $isActive(['admin.users.index']) }}">
+                <a href="{{ route('admin.users.index') }}">
+                    <i class="feather icon-users"></i>
+                    <span class="menu-title">Users</span>
                 </a>
             </li>
 
