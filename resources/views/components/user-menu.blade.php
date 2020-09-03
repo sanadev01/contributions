@@ -11,6 +11,13 @@
                 </a>
             </li>
            
+            <li class="nav-item {{ $isActive(['admin.parcels.index','admin.parcels.shipments.edit','admin.parcels.shipments.create']) }}">
+                <a href="{{ route('admin.parcels.index') }}">
+                    <i class="feather icon-alert-triangle"></i>
+                    <span class="menu-title">Parcels</span>
+                </a>
+            </li>
+
             <li class="nav-item has-sub sidebar-group">
                 <a href="#">
                     <i class="feather icon-dollar-sign"></i>

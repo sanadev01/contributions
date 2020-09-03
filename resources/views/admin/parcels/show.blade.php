@@ -7,11 +7,11 @@
                 <div class="card-header">
                     <h1 class="mb-0">Show details</h1>
                     @admin
-                    <a href="{{ route('admin.prealerts.index') }}" class="pull-right btn btn-primary"> Back to List </a>
+                    <a href="{{ route('admin.parcels.index') }}" class="pull-right btn btn-primary"> Back to List </a>
                     @endadmin
 
                     @user
-                    <a href="{{ route('admin.prealerts.index') }}" class="pull-right btn btn-primary"> Back to List </a>
+                    <a href="{{ route('admin.parcels.index') }}" class="pull-right btn btn-primary"> Back to List </a>
                     @enduser
                 </div>
                 <hr>

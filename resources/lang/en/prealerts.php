@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'my-prealerts' => 'My Pre Alerts',
-    'create-prealert' => 'Create Pre Alert',
+    'my-prealerts' => 'My Parcel',
+    'create-prealert' => 'Create Parcel',
     'back-to-list' => 'Back to List',
     'date' => 'Date',
     'wr' => 'wr',
@@ -10,12 +10,13 @@ return [
     'volume-weight' => 'Volume Weight',
     'merchant' => 'Merchant',
     'carrier' => 'Carrier',
+    'customer_reference' => 'External Customer Reference',
     'tracking-id' => 'Tracking ID',
     'status' => 'Status',
     'actions' => [
         'text' => 'Action',
         'details' => 'Details',
-        'edit-prealert' => 'Edit Pre Alert',
+        'edit-prealert' => 'Edit Parcel',
         'place-order' => 'Place Order',
         'delete-prealert' => 'Delete PreAlert'
     ],

@@ -2,7 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\TicketComment;
+use App\Models\User;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 
 class Ticket extends Model
 {   
@@ -87,7 +92,7 @@ class Ticket extends Model
 
     public function addComment(Request $request)
     {
-        return self::comments()->create([
+        return $this->comments()->create([
             'user_id' => Auth::id(),
             'text' => $request->get('text')
         ]);
@@ -95,8 +100,8 @@ class Ticket extends Model
 
     public function markClosed()
     {
-        return self::update([
-            'open' => 'closed'
+        return $this->update([
+            'open' => false
         ]);
     }
 }

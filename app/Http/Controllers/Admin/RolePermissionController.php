@@ -16,8 +16,8 @@ class RolePermissionController extends Controller
      */
     public function index(Role $role)
     {
-        $permissionGroups = Permission::all()->groupBy('group');
-        return view('admin.roles.permissions.index',compact('role','permissionGroups'));
+        $permissions = Permission::all();
+        return view('admin.roles.permissions.index',compact('role','permissions'));
     }
 
 
@@ -30,8 +30,6 @@ class RolePermissionController extends Controller
     public function store(Request $request, Role $role)
     {
         $role->permissions()->sync($request->permissions);
-        \Cache::forget("roles-permissions-".$role->id);
-
         session()->flash('alert-success','Permissions Updated');
         return back();
     }

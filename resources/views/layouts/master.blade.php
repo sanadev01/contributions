@@ -38,7 +38,7 @@
         }
 
     </style>
-    {{-- <livewire:styles> --}}
+    <livewire:styles>
 </head>
 <!-- END: Head-->
 
@@ -67,14 +67,13 @@
         </div>
     </div>
     <!-- END: Content-->
-    {{-- <livewire:modal-popup /> --}}
     <div class="sidenav-overlay"></div>
     <div class="drag-target"></div>
     
     @include('layouts.footer')
     @include('layouts.js')
     @yield('js')
-    {{-- <livewire:scripts> --}}
+    <livewire:scripts>
 
     @yield('lvjs')
 

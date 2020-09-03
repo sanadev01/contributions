@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Orders\PreAlertCreateRequest;
+use App\Models\Order;
+use App\Repositories\PreAlertRepository;
 use Illuminate\Http\Request;
 
 class PreAlertController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +18,7 @@ class PreAlertController extends Controller
      */
     public function index()
     {
-        return view('admin.prealerts.index');
+        return view('admin.parcels.index');
     }
 
     /**
@@ -24,9 +28,9 @@ class PreAlertController extends Controller
      */
     public function create()
     {
-        // $this->authorize('create', PreAlert::class);
+        $this->authorize('create', Order::class);
 
-        return view('admin.prealerts.create');
+        return view('admin.parcels.create');
     }
 
     /**
@@ -35,9 +39,17 @@ class PreAlertController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PreAlertCreateRequest $request, PreAlertRepository $preAlertRepository)
     {
-        //
+        $this->authorize('create', Order::class);
+
+        if ( $preAlertRepository->store($request) ){
+            session()->flash('alert-success','Parcel Added');
+            return redirect()->route('admin.parcels.index');
+        }
+
+        session()->flash('alert-danger','Error Parcel Create');
+        return back()->withInput();
     }
 
     /**

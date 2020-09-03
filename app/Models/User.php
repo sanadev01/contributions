@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Cache;
 
 class User extends Authenticatable
 {
@@ -43,14 +44,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function permissions()
+    public function role()
     {
-        return $this->belongsToMany(Permission::class);
-    }
-
-    public function roles()
-    {
-        return $this->belongsToMany(Role::class);
+        return $this->belongsTo(Role::class);
     }
 
     public function isAdmin()
@@ -87,6 +83,11 @@ class User extends Authenticatable
     {
         return $this->account_type == self::ACCOUNT_TYPE_BUSINESS;
     }
+    
+    public function scopeUser(Builder $query)
+    {
+        return $query->where('role_id','<>',self::ROLE_ADMIN);
+    }
 
     public static function generatePoBoxNumber()
     {
@@ -105,5 +106,14 @@ class User extends Authenticatable
         }
 
         return "HERCO {$lastUserID}";
+    }
+    
+    public function hasPermission($permissionIdOrSlug)
+    {
+        return $this->role->permissions()->where(function($query) use($permissionIdOrSlug){
+            return $query->where('id',$permissionIdOrSlug)
+                ->orWhere('slug',$permissionIdOrSlug);
+        })->first();;
+
     }
 }

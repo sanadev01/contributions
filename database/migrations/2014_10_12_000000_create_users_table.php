@@ -36,7 +36,7 @@ class CreateUsersTable extends Migration
             $table->string('account_type')->nullable()->comment('individual,business');
             $table->string('tax_id')->nullable()->comment('cpf/cnpj/cnic');
             $table->string('zipcode')->nullable();
-
+            $table->string('locale',10)->default('en');
             $table->rememberToken();
             $table->timestamps();
         });
