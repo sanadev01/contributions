@@ -24,7 +24,8 @@ class Create extends FormRequest
     public function rules()
     {
         return [
-            'subject' => 'required|max:191'
+            'subject' => 'required|max:191',
+            'text' => 'required|min:30'
         ];
     }
 }
