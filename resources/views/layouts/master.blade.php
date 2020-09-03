@@ -67,7 +67,6 @@
         </div>
     </div>
     <!-- END: Content-->
-    {{-- <livewire:modal-popup /> --}}
     <div class="sidenav-overlay"></div>
     <div class="drag-target"></div>
     

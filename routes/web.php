@@ -31,11 +31,10 @@ Route::namespace('Admin')
     ->group(function () {
 
         Route::get('dashboard', 'HomeController')->name('home');
-        Route::resource('roles', RoleController::class);
-        Route::resource('roles.permissions', RolePermissionController::class);
 
-        Route::resource('roles', RoleController::class);
-        Route::resource('roles.permissions', RolePermissionController::class);
+        Route::resource('parcels', PreAlertController::class);
+
+       
 
         Route::resource('services', HandlingServiceController::class)->except('show');
         Route::resource('addresses', AddressController::class);
@@ -55,10 +54,12 @@ Route::namespace('Admin')
         Route::resource('users', UserController::class)->only(['index','destroy']);
         Route::post('users/export', UserExportController::class)->name('users.export.index');
 
+        Route::resource('roles', RoleController::class);
+        Route::resource('roles.permissions', RolePermissionController::class);
+
         Route::resource('tickets', TicketController::class);
         Route::post('tickets/{ticket}/close', [\App\Http\Controllers\Admin\TicketController::class, 'markClose'])->name('ticket.mark-closed');
 
 
         Route::post('users/{user}/login', AnonymousLoginController::class)->name('users.login');
-
 });

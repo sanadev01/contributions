@@ -11,6 +11,7 @@ return [
     'volume-weight' => 'Peso cubado',
     'merchant' => 'Loja',
     'carrier' => 'Transportadora',
+    'customer_reference' => 'Referência de cliente externo',
     'tracking-id' => 'Código de rastreamento',
     'status' => 'Status',
     'actions' => [

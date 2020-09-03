@@ -8,22 +8,18 @@ class Role extends Model
 {
     protected $guarded = [];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    
     public function permissions()
     {
         return $this->belongsToMany(Permission::class);
     }
 
-    public function users()
+    public function hasPermission($permissionId)
     {
-        return $this->belongsTo(User::class);
-    }
-
-    public function hasPermissionById($permissionId)
-    {
-        $permissions = \Cache::remember( "roles-permissions-".$this->id, 60*60*60 , function () {
-            return $this->permissions->pluck('id')->toArray();
-        });
-
-        return in_array($permissionId,$permissions);
+        return $this->permissions()->where('role_id',$this->id)->where('permission_id',$permissionId)->first();
     }
 }

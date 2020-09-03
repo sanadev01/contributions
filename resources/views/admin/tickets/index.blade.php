@@ -13,9 +13,9 @@
                                 @lang('tickets.My Tickets')
                             @endif
                         </h4>
-                        @if(auth()->user()->isUser())
-                            <a href="{{ route('admin.tickets.create') }}" class="pull-right btn btn-primary"> @lang('tickets.Create New Ticket') </a>
-                        @endif
+                        @admin
+                        <a href="{{ route('admin.tickets.create') }}" class="pull-right btn btn-primary"> @lang('tickets.Create New Ticket') </a>
+                        @endadmin
                     </div>
                     <div class="card-content">
                         <div class="table-responsive-md mt-1">
@@ -53,17 +53,17 @@
                                                 <i class="feather icon-eye"></i>
                                             </a>
 
-                                            @if( auth()->user()->isAdmin() && $ticket->isOpen() )
-                                                <form action="{{ route('admin.ticket.mark-closed',$ticket) }}" method="post">
-                                                    @csrf
-                                                    <button class="btn btn-danger" title="Close Ticket">
-                                                        <i class="feather icon-check"></i>
-                                                    </button>
-                                                </form>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endforeach
+                                                @if( auth()->user()->isAdmin() && $ticket->isOpen() )
+                                                    <form action="{{ route('admin.ticket.mark-closed',$ticket) }}" method="post">
+                                                        @csrf
+                                                        <button class="btn btn-danger" title="Close Ticket">
+                                                            <i class="feather icon-check"></i>
+                                                        </button>
+                                                    </form>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>

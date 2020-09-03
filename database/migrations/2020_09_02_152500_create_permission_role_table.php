@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddLocalToUsersTable extends Migration
+class CreatePermissionRoleTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,9 @@ class AddLocalToUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('locale',10)->after('zipcode')->default('en');
+        Schema::create('permission_role', function (Blueprint $table) {
+            $table->bigInteger('role_id');
+            $table->bigInteger('permission_id');
         });
     }
 
@@ -25,8 +26,6 @@ class AddLocalToUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['product_id']);
-        });
+        Schema::dropIfExists('permission_role');
     }
 }

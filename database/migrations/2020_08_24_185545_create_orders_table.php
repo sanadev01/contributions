@@ -37,6 +37,7 @@ class CreateOrdersTable extends Migration
             $table->double('height')->nullable();
             $table->boolean('is_shipment_added')->default(false);
             $table->string('measurement_unit',10)->default('kg/cm')->comment('kg/cm,lbs/in');
+            $table->string('purchase_invoice')->nullable();
             
             $table->string('warehouse_number',20)->nullable();
             $table->double('order_value')->default(0);

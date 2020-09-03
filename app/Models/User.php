@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 
@@ -46,11 +47,6 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function permissions()
-    {
-        return $this->belongsToMany(Permission::class);
-    }
-
     public function role()
     {
         return $this->belongsTo(Role::class);
@@ -90,10 +86,10 @@ class User extends Authenticatable
     {
         return $this->account_type == self::ACCOUNT_TYPE_BUSINESS;
     }
-
+    
     public function scopeUser(Builder $query)
     {
-        return $query->where('role_id', self::ROLE_USER);
+        return $query->where('role_id','<>',self::ROLE_ADMIN);
     }
 
     public function accountType()
@@ -124,5 +120,14 @@ class User extends Authenticatable
         }
 
         return "HERCO {$lastUserID}";
+    }
+    
+    public function hasPermission($permissionIdOrSlug)
+    {
+        return $this->role->permissions()->where(function($query) use($permissionIdOrSlug){
+            return $query->where('id',$permissionIdOrSlug)
+                ->orWhere('slug',$permissionIdOrSlug);
+        })->first();;
+
     }
 }
