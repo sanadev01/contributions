@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Orders\PreAlertCreateRequest;
+use App\Http\Requests\Orders\PreAlertUpdateRequest;
 use App\Models\Order;
 use App\Repositories\PreAlertRepository;
 use Illuminate\Http\Request;
@@ -68,9 +69,10 @@ class PreAlertController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Order $parcel)
     {
-        //
+        $this->authorize('update', $parcel);
+        return view('admin.parcels.edit',compact('parcel'));
     }
 
     /**
@@ -80,9 +82,17 @@ class PreAlertController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(PreAlertUpdateRequest $request, Order $parcel, PreAlertRepository $preAlertRepository)
     {
-        //
+        $this->authorize('update', $parcel);
+
+        if ( $preAlertRepository->update($request, $parcel) ){
+            session()->flash('alert-success','Parcel Updated');
+            return redirect()->route('admin.parcels.index');
+        }
+
+        session()->flash('alert-danger','Error Parcel Update');
+        return back()->withInput();
     }
 
     /**
@@ -91,8 +101,9 @@ class PreAlertController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Order $parcel)
     {
-        //
+        $this->authorize('delete',$parcel);
+
     }
 }

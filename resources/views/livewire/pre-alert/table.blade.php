@@ -57,7 +57,7 @@
                 <th></th>
             </tr>
             @forelse($prealerts as $prealert)
-                @include('admin.parcels.components.prealert-row',['prealert'=>$prealert])
+                @include('admin.parcels.components.parcel-row',['prealert'=>$prealert])
             @empty
                 <x-tables.no-record colspan="9"></x-tables.no-record>
             @endforelse

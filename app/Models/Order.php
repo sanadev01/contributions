@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\UploadedFile;
 
 class Order extends Model
 {
@@ -33,5 +34,33 @@ class Order extends Model
         return $this->is_paid;
     }
 
+    public function purchaseInvoice()
+    {
+        return $this->belongsTo(Document::class,'purchase_invoice');
+    }
+
+    public function images()
+    {
+        return $this->belongsToMany(Document::class);
+    }
+
+    public function attachInvoice(UploadedFile $file)
+    {
+        optional($this->purchaseInvoice)->delete();
+        $invoiceFile = Document::saveDocument(
+            $file
+        );
+        
+        $invoice = Document::create([
+            'name' => $invoiceFile->getClientOriginalName(),
+            'size' => $invoiceFile->getSize(),
+            'type' => $invoiceFile->getMimeType(),
+            'path' => $invoiceFile->filename
+        ]);
+
+        return $this->update([
+            'purchase_invoice' => $invoice->id
+        ]);
+    }
 
 }

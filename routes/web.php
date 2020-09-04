@@ -64,3 +64,11 @@ Route::namespace('Admin')
 
         Route::post('users/{user}/login', AnonymousLoginController::class)->name('users.login');
 });
+
+Route::get('media/get/{document}', function (App\Models\Document $document) {
+    if (! Storage::exists($document->getStoragePath())) {
+        abort(404, 'Resource Not Found');
+    }
+
+    return Storage::response($document->getStoragePath(), $document->name);
+})->name('media.get');
