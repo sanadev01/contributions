@@ -118,7 +118,10 @@ class PreAlertRepository
         }
 
         if ($request->hasFile('images')) {
-            $order->images()->delete();
+            foreach ($order->images as $oldImage) {
+                $oldImage->delete();
+            }
+
             foreach ($request->file('images') as $image) {
                 $document = Document::saveDocument($image);
                 $order->images()->create([
