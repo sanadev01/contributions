@@ -33,6 +33,7 @@ Route::namespace('Admin')
         Route::get('dashboard', 'HomeController')->name('home');
 
         Route::resource('parcels', PreAlertController::class);
+        Route::resource('billing-information', BillingInformationController::class);
 
        
 

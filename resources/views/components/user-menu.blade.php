@@ -80,6 +80,13 @@
                 </a>
             </li>
 
+            <li class="nav-item {{ $isActive(['admin.billing-information.index','admin.billing-information.edit','admin.billing-information.create']) }}">
+                <a href="{{ route('admin.billing-information.index') }}">
+                    <i class="feather icon-alert-triangle"></i>
+                    <span class="menu-title">Billing Informations</span>
+                </a>
+            </li>
+
             <li class="nav-item {{ $isActive(['admin.settings.index']) }}">
                 <a href="{{ route('admin.settings.index') }}">
                     <i class="feather icon-settings"></i>
