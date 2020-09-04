@@ -33,3 +33,5 @@
 <link rel="stylesheet" href="{{ asset('app-assets/css/pages/invoice.css') }}">
 
 <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+
+@yield('custom-css')

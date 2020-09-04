@@ -16,6 +16,7 @@ Route::get('/', function () {
     return redirect('login');
 });
 
+Route::resource('calculator', CalculatorController::class)->only(['index']);
 Route::get('/home', function () {
     return redirect()->route('admin.home');
 });
@@ -33,8 +34,6 @@ Route::namespace('Admin')
         Route::get('dashboard', 'HomeController')->name('home');
 
         Route::resource('parcels', PreAlertController::class);
-
-       
 
         Route::resource('services', HandlingServiceController::class)->except('show');
         Route::resource('addresses', AddressController::class);
