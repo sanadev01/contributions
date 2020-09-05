@@ -44,24 +44,31 @@
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">Card No<span class="text-danger"></span></label>
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control" name="card_no" value="{{$billingInformation->card_no}}" placeholder="Card No">
+                                        <input type="text" id="card_no_input" class="form-control" readonly  placeholder="**** **** **** {{ substr ($billingInformation->card_no, -4)}}" >
                                         <div class="help-block"></div>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <a href="#" onclick="editInput('card_no_input')" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i></a>
                                     </div>
                                 </div>
 
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">Expiration<span class="text-danger"></span></label>
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control" name="expiration" value="{{$billingInformation->expiration}}" placeholder="Expiration">
+                                        <input type="text" class="form-control" value="{{$billingInformation->expiration}}" name="expiration" > 
                                         <div class="help-block"></div>
                                     </div>
+                                    
                                 </div>
 
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">CVV<span class="text-danger"></span></label>
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control" name="cvv" value="{{$billingInformation->cvv}}" placeholder="CVV">
+                                        <input type="text" id="cvv_input" readonly class="form-control" placeholder="***">
                                         <div class="help-block"></div>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <a href="#" onclick="editInput('cvv_input')" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i></a>
                                     </div>
                                 </div>
 
@@ -120,4 +127,7 @@
             </div>
         </div>
     </section>
+
+    <x-payment-input-edit></x-payment-input-edit>
+
 @endsection

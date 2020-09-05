@@ -46,15 +46,25 @@ class BillingInformationRepository
             $billingInformation->update([
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
-                'card_no' => $request->card_no,
                 'expiration' => $request->expiration,
-                'cvv' => $request->cvv,
                 'phone' => $request->phone,
                 'address' => $request->address,
                 'state' => $request->state,
                 'zipcode' => $request->zipcode,
                 'country' => $request->country
             ]);
+
+            if($request->has('card_no')){
+                $billingInformation->update([
+                    'card_no' => $request->card_no
+                ]);
+            }
+
+            if($request->has('cvv')){
+                $billingInformation->update([
+                    'cvv' => $request->cvv
+                ]);
+            }
 
             return true;
         }catch(Exception $exception){

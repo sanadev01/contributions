@@ -36,9 +36,9 @@
                                             <td>
                                                 {{ $billingInfo->first_name }} {{ $billingInfo->last_name }} 
                                             </td>
-                                            <td>{{ $billingInfo->card_no }}</td>
+                                            <td>**** **** **** {{ substr ($billingInfo->card_no, -4)}}</td>
                                             <td>{{ $billingInfo->expiration }}</td>
-                                            <td>{{ $billingInfo->cvv }}</td>
+                                            <td>***</td>
                                             <td>{{ $billingInfo->phone }}</td>
                                             <td>{{ $billingInfo->address }}</td>
                                             <td>{{ $billingInfo->state }}</td>

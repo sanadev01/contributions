@@ -42,7 +42,7 @@
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">Card No<span class="text-danger"></span></label>
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control" name="card_no" value="{{ old('card_no') }}" placeholder="Card No">
+                                        <input type="number" required class="form-control" name="card_no" value="{{ old('card_no') }}" placeholder="0000 0000 0000 0000">
                                         <div class="help-block"></div>
                                     </div>
                                 </div>
@@ -58,7 +58,7 @@
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">CVV<span class="text-danger"></span></label>
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control" name="cvv" value="{{ old('cvv') }}" placeholder="CVV">
+                                        <input type="number" required class="form-control" name="cvv" value="{{ old('cvv') }}" placeholder="CVV">
                                         <div class="help-block"></div>
                                     </div>
                                 </div>
