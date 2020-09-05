@@ -24,16 +24,16 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'first_name' => 'max:255',
-            'last_name' => 'max:255',
-            'card_no' => 'max:255',
-            'expiration' => 'max:255',
-            'cvv' => 'max:255',
-            'phone' => 'max:255',
-            'address' => 'max:255',
-            'state' => 'max:255',
-            'zipcode' => 'max:255',
-            'country' => 'max:255'
+            'card_no' => 'required',
+            'expiration' => 'date_format:m/y|after:today',
+            'cvv' => 'required|regex:/(^\d{3})/u',
+            'first_name' => 'required', 
+            'last_name' => 'required', 
+            'address' => 'required', 
+            'phone' => 'required', 
+            'state' => 'required', 
+            'zipcode' => 'required',
+            'country' => 'required', 
         ];
     }
 }

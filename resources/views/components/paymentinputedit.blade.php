@@ -1,7 +1,7 @@
 <script>
     const editInput = (id) => {
         input = document.getElementById(id)
-        input.value = ''
+        // input.value = ''
         input.readOnly=false
         input.required=true
         input.type='number'

@@ -17,7 +17,7 @@
                         @enduser
                     </div>
                     <div class="card-content card-body">
-                        <div class="table-responsive-md mt-1">
+                        <div class="table-responsive-md mt-1"> 
                             <livewire:pre-alert.table/>
                         </div>
                     </div>

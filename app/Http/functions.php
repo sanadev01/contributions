@@ -2,12 +2,18 @@
 
 use App\Models\Order;
 use App\Models\Country;
+use App\Models\State;
 use App\Models\Setting;
 use App\Services\Calculators\AbstractRateCalculator;
 
 function countries()
 {
     return Country::all();
+}
+
+function states()
+{
+    return State::all();
 }
 
 function saveSetting($key, $value, $userId = null, $admin = false)
