@@ -24,9 +24,8 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'card_no' => 'required',
             'expiration' => 'date_format:m/y|after:today',
-            'cvv' => 'required|regex:/(^\d{3})/u',
+            'cvv' => 'regex:/(^\d{3})/u',
             'first_name' => 'required', 
             'last_name' => 'required', 
             'address' => 'required', 

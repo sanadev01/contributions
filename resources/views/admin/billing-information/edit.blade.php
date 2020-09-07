@@ -27,9 +27,10 @@
                         <form class="needs-validation" novalidate='novalidate' id="payment-form" method="POST" action="{{ route('admin.billing-information.update',$billingInformation->id) }}">
                             @csrf
                             @method('PUT')
-                        <x-authorize-card billingInformationId="{{$billingInformation->id}}"></x-authorize-card>
 
-                            <div class="row mt-1">
+                            <x-authorize-card billingInformationId="{{$billingInformation->id}}"></x-authorize-card>
+
+                                <div class="row mt-1">
                                 <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
                                     <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">
                                         Save
@@ -44,7 +45,7 @@
             </div>
         </div>
     </section>
-    {{-- <x-payment-input-edit></x-payment-input-edit> --}}
+    <x-payment-input-edit></x-payment-input-edit>
 
 @endsection
 

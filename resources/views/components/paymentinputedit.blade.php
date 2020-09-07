@@ -4,9 +4,8 @@
         // input.value = ''
         input.readOnly=false
         input.required=true
-        input.type='number'
 
-        if(id == 'cvv_input'){
+        if(id == 'securitycode'){
             input.placeholder='***'
             input.name="cvv"
         }else{
