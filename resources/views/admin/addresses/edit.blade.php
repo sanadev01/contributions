@@ -35,7 +35,7 @@
                                         <div class="form-group col-12 col-sm-6 col-md-4">
                                             <div class="controls">
                                                 <label>@lang('address.Type') <span class="text-danger">*</span></label>
-                                                <select class="form-control" name="account_type" required placeholder="Account Type">
+                                                <select id="account_type" class="form-control" name="account_type" required placeholder="Account Type">
                                                     <option value="">@lang('address.Type')</option>
                                                     <option @if ($address->account_type == 'individual') selected @endif value="individual">Individual</option>
                                                     <option @if ($address->account_type == 'business') selected @endif value="business">Business</option>
@@ -165,4 +165,20 @@
             </div>
         </div>
     </section>
+@endsection
+@section('js')
+<script>
+    $(document).ready(function(){
+        $('#account_type').on('change', function(){
+            let val = $(this).val()
+            if(val == 'individual'){
+                $('#cpf_label').css('display', 'inline')
+                $('#cnpj_label').css('display', 'none')
+            }else{
+                $('#cpf_label').css('display', 'none')
+                $('#cnpj_label').css('display', 'inline')
+            }
+        })
+    })
+</script>
 @endsection

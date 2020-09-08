@@ -15,7 +15,7 @@
                                 <thead>
                                 <tr>
                                     <th>
-                                        Name
+                                        @lang('role.Name')
                                     </th>
                                     <th>
                                         Action

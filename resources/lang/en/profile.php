@@ -2,10 +2,18 @@
 
 return [
     'Edit Profile' => 'Edit Profile',
-    'Fist Name' => 'Fist Name',
+    'First Name' => 'First Name',
     'Last Name' => 'Last Name',
-    'Phone' => 'Phone ',
+    'Phone' => 'Phone * (Formato Internacional)',
     'Password' => 'Password',
     'Confirm Password' => 'Confirm Password',
-    'Save' => 'Save Changes',
+    'Address' => 'Address',
+    'Street No' => 'Street No',
+    'Country' => 'Country',
+    'State' => 'State',
+    'City' => 'City',
+    'Zipcode' => 'Zipcode',
+    'Language' => 'Language', 
+    'Reset' => 'Reset',
+    'Save Changes' => 'Save Changes',
 ];

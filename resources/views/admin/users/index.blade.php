@@ -35,15 +35,15 @@
                             <table class="table mb-0">
                                 <thead>
                                     <tr>
-                                        <th>Date</th>
-                                        <th>POBOX#</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Phone</th>
-                                        <th>Roles</th>
-                                        <th>Account Type</th>
-                                        <th>Package</th>
-                                        <th>Action</th>
+                                        <th>@lang('user.Date')</th> 
+                                        <th>@lang('user.POBOX')#</th>
+                                        <th>@lang('user.Name')</th>
+                                        <th>@lang('user.Email')</th>
+                                        <th>@lang('user.Phone')</th>
+                                        <th>@lang('user.Roles')</th>
+                                        <th>@lang('user.Account Type')</th>
+                                        <th>@lang('user.Package')</th>
+                                        <th>@lang('user.Action')</th>
                                     </tr>
                                 </thead>
                                 <tbody>

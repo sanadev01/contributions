@@ -1,7 +1,5 @@
 @extends('layouts.master')
 @section('page')
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <section>
         <div class="row">
             <div class="col-12">
@@ -35,7 +33,7 @@
                                         <div class="form-group col-12 col-sm-6 col-md-4">
                                             <div class="controls">
                                                 <label>@lang('address.Type') <span class="text-danger">*</span></label>
-                                                <select class="form-control" name="account_type" required placeholder="Account Type">
+                                                <select id="account_type" class="form-control" name="account_type" required placeholder="Account Type">
                                                     <option value="">@lang('address.Type')</option>
                                                     <option value="individual">Individual</option>
                                                     <option value="business">Business</option>
@@ -141,9 +139,10 @@
                                         
 
                                         <div class="form-group col-12 col-sm-6 col-md-6">
-                                            <div class="controls">
-                                                <label>@lang('address.Tax') <span class="text-danger"></span></label>
-                                                <textarea name="tax_id" required class="form-control" id="tax_id" cols="10" rows="5" placeholder="cpf / cnpj / cnic"></textarea>
+                                            <div class="controls"> 
+                                                <label id="cpf_label">@lang('address.CPF') <span class="text-danger"></span></label>
+                                                <label id="cnpj_label" style="display: none">@lang('address.CNPJ') <span class="text-danger"></span></label>
+                                                <input type="text" name="tax_id" required class="form-control"/>
                                                 <div class="help-block"></div>
                                             </div>
                                         </div>
@@ -176,4 +175,21 @@
             </div>
         </div>
     </section>
+@endsection
+
+@section('js')
+<script>
+    $(document).ready(function(){
+        $('#account_type').on('change', function(){
+            let val = $(this).val()
+            if(val == 'individual'){
+                $('#cpf_label').css('display', 'inline')
+                $('#cnpj_label').css('display', 'none')
+            }else{
+                $('#cpf_label').css('display', 'none')
+                $('#cnpj_label').css('display', 'inline')
+            }
+        })
+    })
+</script>
 @endsection

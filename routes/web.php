@@ -63,6 +63,8 @@ Route::namespace('Admin')
 
 
         Route::post('users/{user}/login', AnonymousLoginController::class)->name('users.login');
+
+        Route::get('language/{locale}', LanguageController::class)->name('locale.change');
 });
 
 Route::get('media/get/{document}', function (App\Models\Document $document) {
