@@ -7,7 +7,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">Billing Informations</h4>
-                        <a href="{{ route('admin.billing-information.create') }}" class="pull-right btn btn-primary"> Create Billing Information</a>
+                        <a href="{{ route('admin.billing-information.create') }}" class="pull-right btn btn-primary"> Add Billing Information</a>
                     </div>
                     <div class="card-content">
                         <div class="mt-1">
@@ -49,7 +49,7 @@
                                                     <i class="feather icon-edit"></i>
                                                 </a>
 
-                                                <form action="{{ route('admin.billing-information.destroy',$billingInfo) }}" method="post">
+                                                <form action="{{ route('admin.billing-information.destroy',$billingInfo) }}"  onsubmit="return confirmDelete()" method="post">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button class="btn btn-danger" title="Delete Billing Information">

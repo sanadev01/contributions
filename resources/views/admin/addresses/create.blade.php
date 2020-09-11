@@ -1,4 +1,7 @@
 @extends('layouts.master')
+@section('css')
+<link rel="stylesheet" href="{{ asset('app-assets/select/css/bootstrap-select.min.css') }}">
+@endsection
 @section('page')
     <section>
         <div class="row">
@@ -98,7 +101,7 @@
                                             <div class="form-group">
                                                 <div class="controls">
                                                     <label>@lang('address.Country') <span class="text-danger">*</span></label>
-                                                    <select id="country" name="country_id" class="form-control">
+                                                    <select id="country"  name="country_id" class="form-control selectpicker show-tick" data-live-search="true">
                                                         <option value="">Select @lang('address.Country')</option>
                                                         @foreach ($countries as $country)
                                                             <option value="{{ $country->id }}">{{ $country->name }}</option>
@@ -111,7 +114,7 @@
                                         <div class="form-group col-12 col-sm-6 col-md-4">
                                             <div class="controls">
                                                 <label>@lang('address.UF') <span class="text-danger">*</span></label>
-                                                <select id="state" name="state_id" class="form-control">
+                                                <select name="state_id" id="state" class="form-control selectpicker show-tick" data-live-search="true" >
                                                     <option value="">Select @lang('address.UF')</option>
                                                     {{-- @foreach ($states as $state) --}}
                                                         {{-- <option value="{{ $state->id }}">{{ $state->code }}</option> --}}
