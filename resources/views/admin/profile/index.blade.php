@@ -68,83 +68,7 @@
                                     </div>
                                 </div>
 
-                                <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">@lang('profile.address')<span class="text-danger"></span></label>
-                                    <div class="col-md-6">
-                                        <input type="text" class="form-control" name="address" value="{{ old('name',auth()->user()->address) }}" placeholder="Address"/>
-                                        <div class="help-block"></div>
-                                    </div>
-                                </div>
 
-                                <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">@lang('profile.address2')<span class="text-danger"></span></label>
-                                    <div class="col-md-6">
-                                        <input type="text" class="form-control" name="address2" value="{{ old('name',auth()->user()->address2) }}"  placeholder="Address 2"/>
-                                        <div class="help-block"></div>
-                                    </div>
-                                </div>
-
-                                <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">@lang('profile.street_no')<span class="text-danger"></span></label>
-                                    <div class="col-md-6">
-                                        <input type="text" class="form-control" name="street_no" value="{{ old('name',auth()->user()->street_no) }}" placeholder="Street No"/>
-                                        <div class="help-block"></div>
-                                    </div>
-                                </div>
-
-                                <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">@lang('profile.country')<span class="text-danger"></span></label>
-                                    <div class="col-md-6">
-                                        <select name="country_id" class="form-control">
-                                            <option value="" selected disabled hidden>Select Country</option>
-                                            @isset($countries)
-                                                @foreach ($countries as $country)
-                                                    <option @if( auth()->user()->country_id == $country->id ) selected @endif  value="{{ $country->id }}">{{ $country->name }}</option>
-                                                @endforeach
-                                            @endisset
-                                        </select>
-                                        <div class="help-block"></div>
-                                    </div>
-                                </div>
-
-                                <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">@lang('profile.state')<span class="text-danger"></span></label>
-                                    <div class="col-md-6">
-                                        <select name="state_id" class="form-control">
-                                            <option value="" selected disabled hidden>Select State</option>
-                                            @isset($states)
-                                                @foreach ($states as $state)
-                                                    <option @if( auth()->user()->state_id == $state->id ) selected @endif value="{{ $state->id }}">{{ $state->code }}</option>
-                                                @endforeach
-                                            @endisset
-                                        </select>
-                                        <div class="help-block"></div>
-                                    </div>
-                                </div>
-
-                                <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">@lang('profile.city')<span class="text-danger"></span></label>
-                                    <div class="col-md-6">
-                                        <input type="text" class="form-control" name="city" value="{{ old('name',auth()->user()->city) }}"  placeholder="City"/>
-                                        <div class="help-block"></div>
-                                    </div>
-                                </div>
-
-                                <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">@lang('profile.zipcode')<span class="text-danger"></span></label>
-                                    <div class="col-md-6">
-                                        <input type="text" class="form-control" name="zipcode" value="{{ old('name',auth()->user()->zipcode) }}"  placeholder="zipcode"/>
-                                        <div class="help-block"></div>
-                                    </div>
-                                </div>
-
-                                <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">@lang('profile.tax_id')<span class="text-danger"></span></label>
-                                    <div class="col-md-6">
-                                        <textarea name="tax_id"  class="form-control" id="tax_id" cols="10" rows="5" placeholder="cpf / cnpj / cnic">{{ old('name',auth()->user()->tax_id) }}"</textarea>
-                                        <div class="help-block"></div>
-                                    </div>
-                                </div>
 
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('profile.language')<span class="text-danger"></span></label>
@@ -152,64 +76,99 @@
                                         <select name="locale" class="form-control">
                                             <option value="" selected disabled hidden>Select Language</option>
                                             <option @if( auth()->user()->locale == 'en' ) selected @endif value="en">English</option>
+                                            <option @if( auth()->user()->locale == 'pt' ) selected @endif value="pt">Portuguese</option>
                                         </select>
                                         <div class="help-block"></div>
                                     </div>
                                 </div>
 
-                                {{-- @if( auth()->user()->isAdmin() )
                                 <h3>Pobox Information</h3>
                                 <hr>
                                     <div class="controls row mb-1 align-items-center">
                                         <label class="col-md-3 text-md-right">Pobox Address <span class="text-danger">*</span></label>
                                         <div class="col-md-6">
-                                            <textarea type="text" class="form-control" name="pobox_address" placeholder="Pobox Address">{{ old('pobox_address',$pobox->address) }}</textarea>
+                                            <textarea type="text" class="form-control" readonly placeholder="Pobox Address">{{ old( 'pobox_number',auth()->user()->pobox_number) }}</textarea>
                                             <div class="help-block"></div>
                                         </div>
                                     </div>
+
                                     <div class="controls row mb-1 align-items-center">
-                                        <label class="col-md-3 text-md-right">Pobox City <span class="text-danger">*</span></label>
+                                        <label class="col-md-3 text-md-right">@lang('profile.address')<span class="text-danger"></span></label>
                                         <div class="col-md-6">
-                                            <input type="text" class="form-control" name="pobox_city" placeholder="Pobox City" value="{{ old('pobox_city',$pobox->city) }}">
+                                            <input type="text" class="form-control" name="address" value="{{ old('name',auth()->user()->address) }}" placeholder="Address"/>
                                             <div class="help-block"></div>
                                         </div>
                                     </div>
+    
                                     <div class="controls row mb-1 align-items-center">
-                                        <label class="col-md-3 text-md-right">State <span class="text-danger">*</span></label>
+                                        <label class="col-md-3 text-md-right">@lang('profile.address2')<span class="text-danger"></span></label>
                                         <div class="col-md-6">
-                                            <select class="form-control" name="pobox_state">
-                                                <option value="">Select State</option>
-                                                @foreach (countries()->where('code','US')->first()->states as $state)
-                                                <option value="{{ $state->code }}" {{ old('pobox_state',$pobox->state)==$state->code ? 'selected':'' }}>{{ $state->code }}</option>
-                                                @endforeach
+                                            <input type="text" class="form-control" name="address2" value="{{ old('name',auth()->user()->address2) }}"  placeholder="Address 2"/>
+                                            <div class="help-block"></div>
+                                        </div>
+                                    </div>
+    
+                                    <div class="controls row mb-1 align-items-center">
+                                        <label class="col-md-3 text-md-right">@lang('profile.street_no')<span class="text-danger"></span></label>
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control" name="street_no" value="{{ old('name',auth()->user()->street_no) }}" placeholder="Street No"/>
+                                            <div class="help-block"></div>
+                                        </div>
+                                    </div>
+    
+                                    <div class="controls row mb-1 align-items-center">
+                                        <label class="col-md-3 text-md-right">@lang('profile.country')<span class="text-danger"></span></label>
+                                        <div class="col-md-6">
+                                            <select name="country_id" class="form-control">
+                                                <option value="" selected disabled hidden>Select Country</option>
+                                                @isset($countries)
+                                                    @foreach ($countries as $country)
+                                                        <option @if( auth()->user()->country_id == $country->id ) selected @endif  value="{{ $country->id }}">{{ $country->name }}</option>
+                                                    @endforeach
+                                                @endisset
                                             </select>
                                             <div class="help-block"></div>
                                         </div>
                                     </div>
+    
                                     <div class="controls row mb-1 align-items-center">
-                                        <label class="col-md-3 text-md-right">Country <span class="text-danger">*</span></label>
+                                        <label class="col-md-3 text-md-right">@lang('profile.state')<span class="text-danger"></span></label>
                                         <div class="col-md-6">
-                                            <select class="form-control" name="pobox_country" placeholder="Pobox Address">
-                                                <option value="US" {{ old('pobox_country',$pobox->country) == 'us' ? 'selected':'' }}>US</option>
+                                            <select name="state_id" class="form-control">
+                                                <option value="" selected disabled hidden>Select State</option>
+                                                @isset($states)
+                                                    @foreach ($states as $state)
+                                                        <option @if( auth()->user()->state_id == $state->id ) selected @endif value="{{ $state->id }}">{{ $state->code }}</option>
+                                                    @endforeach
+                                                @endisset
                                             </select>
                                             <div class="help-block"></div>
                                         </div>
                                     </div>
+    
                                     <div class="controls row mb-1 align-items-center">
-                                        <label class="col-md-3 text-md-right">ZipCode <span class="text-danger">*</span></label>
+                                        <label class="col-md-3 text-md-right">@lang('profile.city')<span class="text-danger"></span></label>
                                         <div class="col-md-6">
-                                            <input type="text" class="form-control" name="pobox_zipcode" placeholder="ZipCode" value="{{ old('pobox_zipcode',$pobox->zipcode) }}" />
+                                            <input type="text" class="form-control" name="city" value="{{ old('name',auth()->user()->city) }}"  placeholder="City"/>
                                             <div class="help-block"></div>
                                         </div>
                                     </div>
+    
                                     <div class="controls row mb-1 align-items-center">
-                                        <label class="col-md-3 text-md-right">Phone <span class="text-danger">*</span></label>
+                                        <label class="col-md-3 text-md-right">@lang('profile.zipcode')<span class="text-danger"></span></label>
                                         <div class="col-md-6">
-                                            <input type="text" class="form-control" name="pobox_phone" placeholder="Phone" value="{{ old('pobox_phone',$pobox->phone) }}" />
+                                            <input type="text" class="form-control" name="zipcode" value="{{ old('name',auth()->user()->zipcode) }}"  placeholder="zipcode"/>
                                             <div class="help-block"></div>
                                         </div>
                                     </div>
-                                @endif --}}
+    
+                                    <div class="controls row mb-1 align-items-center">
+                                        <label class="col-md-3 text-md-right">@lang('profile.CPF') / @lang('profile.CNPJ')<span class="text-danger"></span></label>
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control" name="tax_id" value="{{ old('name',auth()->user()->tax_id) }}"  placeholder="CPF / CNPJ"/>
+                                            <div class="help-block"></div>
+                                        </div>
+                                    </div>
 
 
                                 <div class="row mt-1">

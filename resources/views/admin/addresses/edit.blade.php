@@ -35,7 +35,7 @@
                                         <div class="form-group col-12 col-sm-6 col-md-4">
                                             <div class="controls">
                                                 <label>@lang('address.Type') <span class="text-danger">*</span></label>
-                                                <select class="form-control" name="account_type" required placeholder="Account Type">
+                                                <select class="form-control" name="account_type" id="accountType" required placeholder="Account Type">
                                                     <option value="">@lang('address.Type')</option>
                                                     <option @if ($address->account_type == 'individual') selected @endif value="individual">Individual</option>
                                                     <option @if ($address->account_type == 'business') selected @endif value="business">Business</option>
@@ -137,19 +137,15 @@
                                             </div>
                                         </div>
 
-                                    </div>
-                                    <div class="row mt-1">
-                                        
-                                        <div class="form-group col-12 col-sm-6 col-md-6">
+                                        <div class="form-group col-12 col-sm-6 col-md-4">
                                             <div class="controls">
-                                                <label>@lang('address.Tax') <span class="text-danger"></span></label>
-                                            <textarea name="tax_id" required class="form-control" id="tax_id" cols="10" rows="5" placeholder="cpf / cnpj / cnic">{{$address->tax_id}}</textarea>
+                                                <label style="display: none" id="cpf_label_id" >@lang('address.CPF') <span class="text-danger">* (Brazil Only)</span> </label>
+                                                <label id="cnpj_label_id" >@lang('address.CNPJ') <span class="text-danger">* (Brazil Only)</span> </label>
+                                                <input type="text" name="tax_id" id="tax_id" value="{{$address->tax_id}}" required class="form-control" placeholder="CNPJ"/>
                                                 <div class="help-block"></div>
                                             </div>
                                         </div>
-
                                     </div>
-
                                 <div class="row mt-1">
                                     <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
                                         <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">
@@ -165,4 +161,35 @@
             </div>
         </div>
     </section>
+@endsection
+
+@section('js')
+    <script>
+        $(document).ready(function(){
+
+            let val = $('#accountType').val();
+            if(val == 'individual'){
+                $('#cpf_label_id').css('display', 'block')
+                $('#cnpj_label_id').css('display', 'none')
+                $('#tax_id').attr('placeholder', 'CPF')
+            }else{
+                $('#cpf_label_id').css('display', 'none')
+                $('#cnpj_label_id').css('display', 'block')
+                $('#tax_id').attr('placeholder', 'CNPJ')
+            }
+
+            $('#accountType').on('change', function(){
+                let val = $(this).val();
+                if(val == 'individual'){
+                    $('#cpf_label_id').css('display', 'block')
+                    $('#cnpj_label_id').css('display', 'none')
+                    $('#tax_id').attr('placeholder', 'CPF')
+                }else{
+                    $('#cpf_label_id').css('display', 'none')
+                    $('#cnpj_label_id').css('display', 'block')
+                    $('#tax_id').attr('placeholder', 'CNPJ')
+                }
+            })
+        })
+    </script>
 @endsection

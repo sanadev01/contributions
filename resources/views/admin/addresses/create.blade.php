@@ -1,7 +1,5 @@
 @extends('layouts.master')
 @section('page')
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <section>
         <div class="row">
             <div class="col-12">
@@ -28,14 +26,13 @@
                             @endif
                             <form action="{{ route('admin.addresses.store') }}" method="post" enctype="multipart/form-data">
                                 @csrf
-                                {{-- <livewire:address.address-form /> --}}
 
                                 <div>
                                     <div class="row mt-1">
                                         <div class="form-group col-12 col-sm-6 col-md-4">
                                             <div class="controls">
                                                 <label>@lang('address.Type') <span class="text-danger">*</span></label>
-                                                <select class="form-control" name="account_type" required placeholder="Account Type">
+                                                <select class="form-control" name="account_type" id="accountType" required placeholder="Account Type">
                                                     <option value="">@lang('address.Type')</option>
                                                     <option value="individual">Individual</option>
                                                     <option value="business">Business</option>
@@ -48,7 +45,7 @@
                                         <div class="form-group col-12 col-sm-6 col-md-4">
                                             <div class="controls">
                                                 <label>@lang('address.First Name') <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="first_name" required placeholder="First Name">
+                                                <input type="text" class="form-control" name="first_name" value="{{old('first_name')}}"  placeholder="First Name">
                                                 <div class="help-block"></div>
                                             </div>
                                         </div>
@@ -56,7 +53,7 @@
                                         <div class="form-group col-12 col-sm-6 col-md-4">
                                             <div class="controls">
                                                 <label>@lang('address.Last Name') <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="last_name" required placeholder="Last Name">
+                                                <input type="text" class="form-control" name="last_name" value="{{old('last_name')}}" required placeholder="Last Name">
                                                 <div class="help-block"></div>
                                             </div>
                                         </div>
@@ -64,35 +61,35 @@
                                         <div class="form-group col-12 col-sm-6 col-md-4">
                                             <div class="controls">
                                                 <label>@lang('address.Email') <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="email" required placeholder="Email">
+                                                <input type="text" class="form-control" name="email" value="{{old('email')}}" required placeholder="Email">
                                                 <div class="help-block"></div>
                                             </div>
                                         </div>
                                         <div class="form-group col-12 col-sm-6 col-md-4">
                                             <div class="controls">
                                                 <label>@lang('address.Phone') <span class="text-danger">*(Formato internacional)</span></label>
-                                                <input type="text" class="form-control" name="phone" required placeholder="+55123456789">
+                                                <input type="text" class="form-control" name="phone" value="{{old('phone')}}" required placeholder="+55123456789">
                                                 <div class="help-block"></div>
                                             </div>
                                         </div>
                                         <div class="form-group col-12 col-sm-6 col-md-4">
                                             <div class="controls">
                                                 <label>@lang('address.Address') <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="address" required placeholder="Address"/>
+                                                <input type="text" class="form-control" name="address" value="{{old('address')}}" required placeholder="Address"/>
                                                 <div class="help-block"></div>
                                             </div>
                                         </div>
                                         <div class="form-group col-12 col-sm-6 col-md-4">
                                             <div class="controls">
                                                 <label>@lang('address.Address')2</label>
-                                                <input type="text" class="form-control"  placeholder=""  name="address2">
+                                                <input type="text" class="form-control"  placeholder="" value="{{old('address2')}}"  name="address2">
                                                 <div class="help-block"></div>
                                             </div>
                                         </div>
                                         <div class="form-group col-12 col-sm-6 col-md-4">
                                             <div class="controls">
                                                 <label>@lang('address.street-no')</label>
-                                                <input type="text" class="form-control" placeholder=""  name="street_no">
+                                                <input type="text" class="form-control" placeholder="" value="{{old('street_no')}}"  name="street_no">
                                                 <div class="help-block"></div>
                                             </div>
                                         </div>
@@ -100,9 +97,9 @@
                                             <div class="form-group">
                                                 <div class="controls">
                                                     <label>@lang('address.Country') <span class="text-danger">*</span></label>
-                                                    <select name="country_id" class="form-control">
+                                                    <select name="country_id" class="form-control" value="{{old('country_id')}}">
                                                         @foreach ($countries as $country)
-                                                            <option value="{{ $country->id }}">{{ $country->name }}</option>
+                                                            <option {{ old('country_id') == $country->id ? 'selected' : '' }} value="{{ $country->id }}">{{ $country->name }}</option>
                                                         @endforeach
                                                     </select>
                                                     <div class="help-block"></div>
@@ -112,10 +109,10 @@
                                         <div class="form-group col-12 col-sm-6 col-md-4">
                                             <div class="controls">
                                                 <label>@lang('address.UF') <span class="text-danger">*</span></label>
-                                                <select name="state_id" class="form-control">
+                                                <select name="state_id" class="form-control" value="{{old('state_id')}}">
                                                     <option value="">Select @lang('address.UF')</option>
                                                     @foreach ($states as $state)
-                                                        <option value="{{ $state->id }}">{{ $state->code }}</option>
+                                                        <option {{ old('state_id') == $state->id ? 'selected' : '' }} value="{{ $state->id }}">{{ $state->code }}</option>
                                                     @endforeach
                                                 </select>
                                                 <div class="help-block"></div>
@@ -124,7 +121,7 @@
                                         <div class="form-group col-12 col-sm-6 col-md-4">
                                             <div class="controls">
                                                 <label>@lang('address.City') <span class="text-danger">*</span></label>
-                                                <input type="text" name="city" class="form-control"  required placeholder="City"/>
+                                                <input type="text" name="city" value="{{old('city')}}" class="form-control"  required placeholder="City"/>
                                                 <div class="help-block"></div>
                                             </div>
                                         </div>
@@ -132,34 +129,23 @@
                                         <div class="form-group col-12 col-sm-6 col-md-4">
                                             <div class="controls">
                                                 <label>@lang('address.Zip Code')</label>
-                                                <input type="text" name="zipcode" required class="form-control" placeholder="Zip Code"/>
+                                                <input type="text" name="zipcode" value="{{old('zipcode')}}" required class="form-control" placeholder="Zip Code"/>
                                                 <div class="help-block"></div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row mt-1">
-                                        
 
-                                        <div class="form-group col-12 col-sm-6 col-md-6">
+                                        <div class="form-group col-12 col-sm-6 col-md-4">
                                             <div class="controls">
-                                                <label>@lang('address.Tax') <span class="text-danger"></span></label>
-                                                <textarea name="tax_id" required class="form-control" id="tax_id" cols="10" rows="5" placeholder="cpf / cnpj / cnic"></textarea>
+                                                <label style="display: none" id="cpf_label_id" >@lang('address.CPF') <span class="text-danger">* (Brazil Only)</span> </label>
+                                                <label id="cnpj_label_id" >@lang('address.CNPJ') <span class="text-danger">* (Brazil Only)</span> </label>
+                                                <input type="text" name="tax_id" id="tax_id" value="{{old('tax_id')}}" required class="form-control" placeholder="CNPJ"/>
                                                 <div class="help-block"></div>
                                             </div>
                                         </div>
-                                        
-                                
-                                        {{-- <div class="form-group col-12 col-sm-6 col-md-2">
-                                            <div class="controls">
-                                                <label>@lang('address.Default')</label>
-                                                <input type="checkbox" name="default" value="1" class="">
-                                                <div class="help-block"></div>
-                                            </div>
-                                        </div> --}}
+
                                     </div>
-                                    {{-- @include('layouts.livewire.loading') --}}
+                                    
                                 </div>
-
                                 
                                 <div class="row mt-1">
                                     <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
@@ -176,4 +162,23 @@
             </div>
         </div>
     </section>
+@endsection
+
+@section('js')
+    <script>
+        $(document).ready(function(){
+            $('#accountType').on('change', function(){
+                let val = $(this).val();
+                if(val == 'individual'){
+                    $('#cpf_label_id').css('display', 'block')
+                    $('#cnpj_label_id').css('display', 'none')
+                    $('#tax_id').attr('placeholder', 'CPF')
+                }else{
+                    $('#cpf_label_id').css('display', 'none')
+                    $('#cnpj_label_id').css('display', 'block')
+                    $('#tax_id').attr('placeholder', 'CNPJ')
+                }
+            })
+        })
+    </script>
 @endsection
