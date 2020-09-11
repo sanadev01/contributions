@@ -1,4 +1,7 @@
 @extends('layouts.master')
+@section('css')
+<link rel="stylesheet" href="{{ asset('app-assets/select/css/bootstrap-select.min.css') }}">
+@endsection
 @section('page')
     <section>
         <div class="row">
@@ -97,7 +100,7 @@
                                             <div class="form-group">
                                                 <div class="controls">
                                                     <label>@lang('address.Country') <span class="text-danger">*</span></label>
-                                                    <select name="country_id" class="form-control" value="{{old('country_id')}}">
+                                                    <select name="country_id" class="form-control selectpicker show-tick" value="{{old('country_id')}}" data-live-search="true">
                                                         @foreach ($countries as $country)
                                                             <option {{ old('country_id') == $country->id ? 'selected' : '' }} value="{{ $country->id }}">{{ $country->name }}</option>
                                                         @endforeach
@@ -109,7 +112,7 @@
                                         <div class="form-group col-12 col-sm-6 col-md-4">
                                             <div class="controls">
                                                 <label>@lang('address.UF') <span class="text-danger">*</span></label>
-                                                <select name="state_id" class="form-control" value="{{old('state_id')}}">
+                                                <select name="state_id" class="form-control selectpicker show-tick" value="{{old('state_id')}}" data-live-search="true" >
                                                     <option value="">Select @lang('address.UF')</option>
                                                     @foreach ($states as $state)
                                                         <option {{ old('state_id') == $state->id ? 'selected' : '' }} value="{{ $state->id }}">{{ $state->code }}</option>
@@ -165,20 +168,22 @@
 @endsection
 
 @section('js')
-    <script>
-        $(document).ready(function(){
-            $('#accountType').on('change', function(){
-                let val = $(this).val();
-                if(val == 'individual'){
-                    $('#cpf_label_id').css('display', 'block')
-                    $('#cnpj_label_id').css('display', 'none')
-                    $('#tax_id').attr('placeholder', 'CPF')
-                }else{
-                    $('#cpf_label_id').css('display', 'none')
-                    $('#cnpj_label_id').css('display', 'block')
-                    $('#tax_id').attr('placeholder', 'CNPJ')
-                }
-            })
+<script>
+    $(document).ready(function(){
+        $('#accountType').on('change', function(){
+            let val = $(this).val();
+            if(val == 'individual'){
+                $('#cpf_label_id').css('display', 'block')
+                $('#cnpj_label_id').css('display', 'none')
+                $('#tax_id').attr('placeholder', 'CPF')
+            }else{
+                $('#cpf_label_id').css('display', 'none')
+                $('#cnpj_label_id').css('display', 'block')
+                $('#tax_id').attr('placeholder', 'CNPJ')
+            }
         })
-    </script>
+    })
+</script>
+
+<script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
 @endsection
