@@ -64,6 +64,8 @@ Route::namespace('Admin')
 
         Route::post('users/{user}/login', AnonymousLoginController::class)->name('users.login');
 
+        Route::post('ajax/get-states', AjaxCallController::class)->name('ajax.state');
+
         Route::get('language/{locale}', LanguageController::class)->name('locale.change');
 });
 
