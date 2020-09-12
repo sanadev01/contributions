@@ -155,8 +155,8 @@
             <div class="row">
                 <div class="col-12">
                     <label for="name">@lang('billing.Country')</label>
-                    <select  id="country" name="country" required  maxlength="20" type="text" class="{{ $errors->has('country')?'border border-danger':'' }} form-control" title="{{ $errors->has('country')?  $errors->first('country'):'' }}">
-                        <option value="" disabled hidden selected>@lang('billing.Select Country')</option>
+                    <select  id="country" name="country" required  maxlength="20" type="text" class="{{ $errors->has('country')?'border border-danger':'' }} form-control selectpicker show-tick" data-live-search="true" title="{{ $errors->has('country')?  $errors->first('country'):'' }}">
+                        <option value="">@lang('billing.Select Country')</option>
                         @foreach (countries() as $country)
                             <option @isset($billingInformation) @if($billingInformation->country == $country->id) selected @endif @endisset value="{{ $country->id }}">{{ $country->name }}</option>
                         @endforeach
@@ -167,11 +167,8 @@
             <div class="row">
                 <div class="col-12">
                     <label for="name">@lang('billing.State')</label>
-                    <select id="state" name="state" required  maxlength="20" type="text" class="{{ $errors->has('state')?'border border-danger':'' }} form-control" title="{{ $errors->has('state')?  $errors->first('state'):'' }}" value="{{ old('state') }}">
-                        <option value="" disabled hidden selected>@lang('billing.Select State')</option>
-                        @foreach (states() as $state) 
-                            <option @isset($billingInformation) @if($billingInformation->state == $state->code) selected @endif @endisset value="{{ $state->code }}">{{ $state->name }}</option>
-                        @endforeach
+                    <select id="state" name="state" required  maxlength="20" type="text" class="{{ $errors->has('state')?'border border-danger':'' }} form-control selectpicker show-tick" data-live-search="true" title="{{ $errors->has('state')?  $errors->first('state'):'' }}" value="{{ old('state') }}">
+                        <option value="">@lang('billing.Select State')</option>
                     </select>
                 </div> 
             </div>
