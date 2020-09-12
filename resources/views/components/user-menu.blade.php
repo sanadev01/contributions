@@ -18,6 +18,13 @@
                 </a>
             </li>
 
+            <li class="nav-item {{ $isActive(['admin.orders.index','admin.orders.edit']) }}">
+                <a href="{{ route('admin.orders.index') }}">
+                    <i class="feather icon-truck"></i>
+                    <span class="menu-title">Orders</span>
+                </a>
+            </li>
+
             <li class="nav-item has-sub sidebar-group">
                 <a href="#">
                     <i class="feather icon-dollar-sign"></i>

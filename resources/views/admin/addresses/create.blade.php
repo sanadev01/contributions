@@ -144,19 +144,11 @@
                                         <div class="form-group col-12 col-sm-6 col-md-6">
                                             <div class="controls">
                                                 <label>@lang('address.Tax') <span class="text-danger"></span></label>
-                                                <textarea name="tax_id" required class="form-control" id="tax_id" cols="10" rows="5" placeholder="cpf / cnpj / cnic"></textarea>
+                                                <input name="tax_id" required class="form-control" id="tax_id" value="{{ old('tax_id') }}" placeholder="cpf / cnpj / cnic"/>
                                                 <div class="help-block"></div>
                                             </div>
                                         </div>
                                         
-                                
-                                        {{-- <div class="form-group col-12 col-sm-6 col-md-2">
-                                            <div class="controls">
-                                                <label>@lang('address.Default')</label>
-                                                <input type="checkbox" name="default" value="1" class="">
-                                                <div class="help-block"></div>
-                                            </div>
-                                        </div> --}}
                                     </div>
                                     {{-- @include('layouts.livewire.loading') --}}
                                 </div>

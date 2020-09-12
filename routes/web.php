@@ -11,7 +11,6 @@
 |
 */
 
-
 Route::get('/', function () {
     return redirect('login');
 });
@@ -40,6 +39,16 @@ Route::namespace('Admin')
         Route::resource('addresses', AddressController::class);
         Route::resource('shipping-services', ShippingServiceController::class);
 
+        Route::get('orders',OrderController::class)->name('orders.index');
+
+        Route::namespace('Order')->group(function () {
+            Route::resource('orders.sender',OrderSenderController::class)->only('index','store');
+            Route::resource('orders.recipient',OrderRecipientController::class)->only('index','store');
+            Route::resource('orders.services',OrderServicesController::class)->only('index','store');
+            Route::resource('orders.consolidation',ConsolidationController::class)->only('index','store');
+            Route::resource('orders.order-details', OrderItemsController::class)->only('index','store');
+            Route::resource('orders.order-invoice', OrderInvoiceController::class)->only('index','store');
+        });
 
         Route::prefix('rates')
             ->namespace('Rates')

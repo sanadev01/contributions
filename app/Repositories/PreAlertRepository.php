@@ -6,6 +6,7 @@ use App\Models\Document;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use DB;
 
 class PreAlertRepository
 {
@@ -17,7 +18,7 @@ class PreAlertRepository
             'status' => Order::STATUS_PREALERT_TRANSIT
         ]);
 
-        $data = [ 'merchant', 'carrier', 'tracking_id', 'order_date', 'user_id','status'];
+        $data = [ 'merchant', 'carrier', 'tracking_id', 'order_date','customer_reference', 'user_id','status'];
 
         if ( Auth::user()->can('addWarehouseNumber',Order::class) ){
             $request->merge([
@@ -34,6 +35,7 @@ class PreAlertRepository
             ]);
 
             $data[] = 'weight';
+            $data[] = 'is_shipment_added';
             $data[] = 'measurement_unit';
             $data[] = 'length';
             $data[] = 'width';
@@ -50,7 +52,7 @@ class PreAlertRepository
             $request->only($data)
         );
 
-        if ( Auth::user()->can('addShipmentDetails',Order::class) && !Auth::user()->can('add_parcel_warehouse_number',Order::class) ){
+        if ( !Auth::user()->isAdmin() && Auth::user()->can('addShipmentDetails',Order::class) ){
             $order->update([
                 'warehouse_number' => "TEMPWHR-{$order->id}"
             ]);
@@ -85,7 +87,7 @@ class PreAlertRepository
     {
         $data = [];
 
-        $data = [ 'merchant', 'carrier', 'tracking_id', 'order_date'];
+        $data = [ 'merchant', 'carrier', 'tracking_id','customer_reference', 'order_date'];
 
         if ( Auth::user()->can('addWarehouseNumber',Order::class) ){
             $request->merge([
@@ -138,6 +140,25 @@ class PreAlertRepository
 
     public function delete(Order $order)
     {
+        DB::beginTransaction();
 
+        try {
+            $order->items()->delete();
+            $order->subOrders()->sync([]);
+            optional($order->purchaseInvoice)->delete();
+            $order->recipient()->delete();
+            foreach ($order->images as $image) {
+                $image->delete();
+            }
+            $order->delete();
+            DB::commit();
+
+            return true;
+        } catch (\Exception $ex) {
+            DB::rollback();
+
+            dd($ex);
+            return false;
+        }
     }
 }

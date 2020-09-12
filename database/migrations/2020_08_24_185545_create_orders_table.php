@@ -19,13 +19,14 @@ class CreateOrdersTable extends Migration
             $table->bigInteger('user_id');
             $table->bigInteger('recipient_address_id')->nullable();
 
-            $table->string('sender_name')->nullable();
+            $table->string('sender_first_name')->nullable();
+            $table->string('sender_last_name')->nullable();
             $table->string('sender_email')->nullable();
             $table->string('sender_phone')->nullable();
             $table->string('sender_taxId')->nullable();
             
-            $table->string('external_reference')->nullable();
-            $table->string('internal_tracking_code')->nullable();
+            $table->string('customer_reference')->nullable();
+            $table->string('corrios_tracking_code')->nullable();
             $table->string('merchant')->nullable();
             $table->string('carrier')->nullable();
             $table->string('tracking_id')->nullable();
@@ -56,6 +57,10 @@ class CreateOrdersTable extends Migration
             $table->string('status')->nullable();
             $table->boolean('is_consolidated')->default(false);
             $table->boolean('is_paid')->default(false);
+            $table->boolean('is_received_from_sender')->default(false);
+
+            $table->text('cn23')->nullable();
+
             $table->timestamps();
         });
     }

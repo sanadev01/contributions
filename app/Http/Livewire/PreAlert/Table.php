@@ -47,7 +47,7 @@ class Table extends Component
         }
 
         return view('livewire.pre-alert.table', [
-            'prealerts' => $this->query
+            'parcels' => $this->query
             ->orderBy(
                 $this->sortBy,
                 $this->sortAsc ? 'ASC' : 'DESC'

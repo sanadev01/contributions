@@ -15,7 +15,7 @@ class DefaultRoleSeeder extends Seeder
     {
         foreach ([
             User::ROLE_ADMIN => 'admin',
-            2 => 'user'
+            2 => 'retailer'
         ] as $id => $role) {
             Role::create([
                 'id' => $id,

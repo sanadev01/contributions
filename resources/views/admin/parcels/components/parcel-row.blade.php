@@ -1,15 +1,15 @@
 <tr>
     <td>
-        {{ $prealert->created_at->format('m/d/y') }}
+        {{ $parcel->created_at->format('m/d/y') }}
     </td>
     @admin
-        <td>{{ $prealert->user->name }}</td>
-        <td>{{ $prealert->user->pobox_number }}</td>
+        <td>{{ $parcel->user->name }}</td>
+        <td>{{ $parcel->user->pobox_number }}</td>
     @endadmin
-    @if($prealert->isShipmentAdded())
+    @if($parcel->isShipmentAdded())
         <td>
             <a href="#" title="Show Details">
-                {{ $prealert->warehouse_number }}
+                {{ $parcel->warehouse_number }}
             </a>
         </td>
     @else
@@ -18,30 +18,30 @@
         </td>
     @endif
     <td>
-        @if($prealert->shipment)
-            {{ number_format($prealert->shipment->getGrossWeight(),2) }} {{ $prealert->shipment->getWeightUnit() }} <hr>
-            {{ $prealert->shipment->getWeightInOtherUnit() }}
+        @if($parcel->shipment)
+            {{ number_format($parcel->shipment->getGrossWeight(),2) }} {{ $parcel->shipment->getWeightUnit() }} <hr>
+            {{ $parcel->shipment->getWeightInOtherUnit() }}
         @else
             Un Available
         @endif
     </td>
     <td>
-        @if($prealert->shipment)
-            {{ number_format($prealert->shipment->getVolumetricWeight(),2) }} {{ $prealert->shipment->getWeightUnit() }} <hr>
-            {{ $prealert->shipment->getVolumeWeightInOtherUnit() }}
+        @if($parcel->shipment)
+            {{ number_format($parcel->shipment->getVolumetricWeight(),2) }} {{ $parcel->shipment->getWeightUnit() }} <hr>
+            {{ $parcel->shipment->getVolumeWeightInOtherUnit() }}
         @else
             Un Available
         @endif
     </td>
-    <td>{{ $prealert->merchant }}</td>
+    <td>{{ $parcel->merchant }}</td>
     <td>
-        {{ $prealert->carrier }}
+        {{ $parcel->carrier }}
     </td>
     <td class="p-1">
-        {{ $prealert->tracking_id }}
+        {{ $parcel->tracking_id }}
     </td>
     <td>
-        @if( $prealert->isShipmentAdded() )
+        @if( $parcel->isShipmentAdded() )
             <span class="btn btn-sm btn-primary" title="Shipment Is Ready Please Click on basket icon to Proceed to Order">Ready </span>
         @else
             <span class="btn btn-sm btn-danger">Transit</span>
@@ -54,36 +54,21 @@
                     Action
                 </button>
                 <div class="dropdown-menu dropdown-menu-right dropright">
-                    @user
-                        @if( $prealert->shipment )
-                            <a href="{{ route('admin.shipments.orders.create',$prealert->shipment) }}" class="dropdown-item" title="Create Order">
-                                <i class="feather icon-shopping-cart"></i> @lang('prealerts.actions.place-order')
-                            </a>
-                        @endif
-                    @enduser
-                    @if( $prealert->shipment && auth()->user()->can('update', $prealert->shipment) )
-                        <a href="{{ route('admin.parcels.shipments.edit',[ $prealert, $prealert->shipment ]) }}" class="dropdown-item btn p-1" title="Edit Shipment Details">
-                            <i class="feather icon-package"></i> Edit Shipment
-                        </a>
-                    @elseif( auth()->user()->can('create', \App\Models\Shipment::class) )
-                        <a href="{{ route('admin.parcels.shipments.create',$prealert) }}" class="dropdown-item btn p-1 " title="Add Shipment Details">
-                            <i class="feather icon-package"></i> Create Shipment
-                        </a>
-                    @endif
-                    <a href="{{ route('admin.parcels.show',$prealert) }}" class="dropdown-item btn p-1" title="Show Details" wire:click.prevent="$emit('showModal','showPrealertDetailModal',{{$prealert->id}})">
-                        <i class="feather icon-list"></i> Details
-                    </a>
 
-                    @can('update',  $prealert)
-                        <a href="{{ route('admin.parcels.edit',$prealert) }}" class="dropdown-item btn p-1" title="Edit PreAlert">
-                            <i class="feather icon-edit"></i> Edit Prealert
+                    <a href="{{ route('admin.orders.sender.index',$parcel) }}" class="dropdown-item" title="Create Order">
+                        <i class="feather icon-shopping-cart"></i> @lang('prealerts.actions.place-order')
+                    </a>
+                    
+                    @can('update',  $parcel)
+                        <a href="{{ route('admin.parcels.edit',$parcel) }}" class="dropdown-item btn" title="Edit PreAlert">
+                            <i class="feather icon-edit"></i> Edit Parcel
                         </a>
                     @endcan
-                    @can('delete', $prealert)
-                        <form method="post" action="{{ route('admin.parcels.destroy',$prealert) }}" class="d-inline-block w-100" onsubmit="return confirmDelete()">
+                    @can('delete', $parcel)
+                        <form method="post" action="{{ route('admin.parcels.destroy',$parcel) }}" class="d-inline-block w-100" onsubmit="return confirmDelete()">
                             @csrf
                             @method('DELETE')
-                            <button class="dropdown-item p-1 w-100 text-danger" title="Delete Pre Alert">
+                            <button class="dropdown-item w-100 text-danger" title="Delete Pre Alert">
                                 <i class="feather icon-trash-2"></i> Delete
                             </button>
                         </form>

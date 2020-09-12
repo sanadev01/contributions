@@ -101,9 +101,17 @@ class PreAlertController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Order $parcel)
+    public function destroy(Order $parcel, PreAlertRepository $preAlertRepository)
     {
         $this->authorize('delete',$parcel);
 
+        if ( $preAlertRepository->delete($parcel) ){
+            session()->flash('alert-success','Parcel Deleted');
+            return back();
+        }
+
+        session()->flash('alert-danger','Error While Deleting Parcel');
+        return back();
+        
     }
 }

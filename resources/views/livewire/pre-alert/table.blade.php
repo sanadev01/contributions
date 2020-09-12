@@ -56,15 +56,15 @@
                 </th>
                 <th></th>
             </tr>
-            @forelse($prealerts as $prealert)
-                @include('admin.parcels.components.parcel-row',['prealert'=>$prealert])
+            @forelse($parcels as $parcel)
+                @include('admin.parcels.components.parcel-row',['parcel'=>$parcel])
             @empty
                 <x-tables.no-record colspan="9"></x-tables.no-record>
             @endforelse
         </tbody>
     </table>
     <div class="d-flex justify-content-end my-2 pb-4">
-        {{ $prealerts->links() }}
+        {{ $parcels->links() }}
     </div>
     @include('layouts.livewire.loading')
 </div>

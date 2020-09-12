@@ -17,11 +17,6 @@ function states(){
     return $states;
 }
 
-function states()
-{
-    return State::all();
-}
-
 function saveSetting($key, $value, $userId = null, $admin = false)
 {
     if (! $userId && ! $admin) {
@@ -48,4 +43,7 @@ function cleanString($string)
 }
 
 
-
+function __default($value,$default)
+{
+    return $value ? $value : $default;
+}

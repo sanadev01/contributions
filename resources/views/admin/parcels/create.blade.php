@@ -75,8 +75,8 @@
                                     <div class="form-group col-12 col-sm-6 col-md-4">
                                         <div class="controls">
                                             <label>@lang('prealerts.customer_reference') <span class="text-danger"></span></label>
-                                            <input type="text" class="form-control" value="{{ old('external_refrence') }}" placeholder=""  name="external_refrence">
-                                            @error('external_refrence')
+                                            <input type="text" class="form-control" value="{{ old('customer_reference') }}" placeholder=""  name="customer_reference">
+                                            @error('customer_reference')
                                                 <div class="help-block text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
