@@ -77,7 +77,7 @@ class ProfileController extends Controller
         //     $pobox->save();
         // }
 
-        session()->flash('alert-success', 'Profile Updated Successfully');
+        session()->flash('alert-success', 'profile.Updated');
         return back();
     }
 }

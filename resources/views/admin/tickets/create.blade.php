@@ -34,8 +34,8 @@
                                 <div class="row mt-1 justify-content-center">
                                     <div class="form-group col-6 col-sm-6 col-md-6">
                                         <div class="controls">
-                                            <label>@lang('tickets.subject')  <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" name="subject" value="{{ old('subject') }}" placeholder="">
+                                            <label>@lang('tickets.Subject')  <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" name="subject" value="{{ old('subject') }}" placeholder="@lang('tickets.Subject')">
                                             <div class="help-block"></div>
                                         </div>
                                     </div>
@@ -54,7 +54,7 @@
                                         <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">
                                             @lang('tickets.Save')
                                         </button>
-                                        <button type="reset" class="btn btn-outline-warning waves-effect waves-light">Reset</button>
+                                        <button type="reset" class="btn btn-outline-warning waves-effect waves-light">@lang('tickets.Reset')</button>
                                     </div>
                                 </div>
                             </form>

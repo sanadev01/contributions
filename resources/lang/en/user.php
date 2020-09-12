@@ -16,4 +16,9 @@ return [
     'Export Excel' => 'Export Excel',
     'User Setting' => 'User Setting',
     'All Registered Users' => 'All Registered Users',
-];
+    'Export Excel' => 'Export Excel',
+    'Search' => 'Search',
+    'Search By Name, Pobox, Email' => 'Search By Name, Pobox, Email',
+    'Setting' => 'Setting',
+]; 
+ 

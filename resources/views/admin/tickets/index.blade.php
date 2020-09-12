@@ -8,13 +8,13 @@
                     <div class="card-header">
                         <h4 class="mb-0">
                             @if(auth()->user()->isAdmin())
-                                Support Tickets
+                                @lang('tickets.Support Tickets')
                             @else
                                 @lang('tickets.My Tickets')
                             @endif
                         </h4>
                         @admin
-                        <a href="{{ route('admin.tickets.create') }}" class="pull-right btn btn-primary"> @lang('tickets.Create New Ticket') </a>
+                            <a href="{{ route('admin.tickets.create') }}" class="pull-right btn btn-primary"> @lang('tickets.Create New Ticket') </a>
                         @endadmin
                     </div>
                     <div class="card-content">
@@ -25,7 +25,7 @@
                                     <th>@lang('tickets.TicketID')</th>
                                     {{-- @admin --}}
                                     <th>
-                                        User
+                                        @lang('tickets.User')
                                     </th>
                                     {{-- @endadmin --}}
                                     <th>@lang('tickets.Issue')</th>
@@ -46,7 +46,7 @@
                                             {{ $ticket->subject }}
                                         </td>
                                         <td>
-                                             @if($ticket->open == 1) <span class="badge badge-success">open</span> @else <span class="badge badge-danger">close</span> @endif 
+                                             @if($ticket->open == 1) <span class="badge badge-success">@lang('tickets.open')</span> @else <span class="badge badge-danger">@lang('tickets.close')</span> @endif 
                                         </td>
                                         <td class="d-flex">
                                             <a href="{{ route('admin.tickets.show',$ticket->id) }}" class="btn btn-primary mr-2" title="@lang('tickets.Detail')">
@@ -56,7 +56,7 @@
                                                 @if( auth()->user()->isAdmin() && $ticket->isOpen() )
                                                     <form action="{{ route('admin.ticket.mark-closed',$ticket) }}" method="post">
                                                         @csrf
-                                                        <button class="btn btn-danger" title="Close Ticket">
+                                                        <button class="btn btn-danger" title="@lang('tickets.Close Ticket')">
                                                             <i class="feather icon-check"></i>
                                                         </button>
                                                     </form>

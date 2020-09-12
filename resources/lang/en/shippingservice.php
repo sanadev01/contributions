@@ -14,7 +14,14 @@ return [
     'Action' => 'Action',
     'Create Shipping Service' => 'Create Shipping Service',
     'Edit Shipping Service' => 'Edit Shipping Service',
+    'Manage Shipping Services' => 'Manage Shipping Services',
     'Active' => 'Active',
     'Save Changes' => 'Save Changes',
-    'Rest' => 'Rest',
-];
+    'Reset' => 'Reset',
+    'Edit Service' => 'Edit Service',
+    'Delete Service' => 'Delete Service',
+    'Back to List' => 'Back to list',
+    'Created' => 'Shipping Service Created Successfully',
+    'Updated' => 'Shipping Service Updated Successfully',
+    'Deleted' => 'Shipping Service Deleted Successfully',
+]; 

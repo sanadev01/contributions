@@ -12,9 +12,16 @@ return [
     'Contains perfume charges' => 'Contém cargas de perfume',
     'Contains flammable liquid charges' => 'Contém cargas líquidas inflamáveis',
     'Action' => 'Açao',
-    'Create Shipping Service' => 'Create Shipping Service',
+    'Create Shipping Service' => 'Criar serviço de frete',
     'Edit Shipping Service' => 'Editar serviço de frete',
+    'Manage Shipping Services' => 'Gerenciar serviços de frete',
     'Active' => 'Ativo',
     'Save Changes' => 'Salvar alterações',
     'Reset' => 'Redefinir',
-];
+    'Edit Service' => 'Editar serviço',
+    'Delete Service' => 'Excluir serviço',
+    'Back to List' => 'De volta à lista',
+    'Created' => 'Serviço de frete criado com sucesso',
+    'Updated' => 'Serviço de frete atualizado com sucesso',
+    'Deleted' => 'Serviço de frete excluído com sucesso',
+];  

@@ -6,13 +6,13 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="mb-0">All Registered Users</h4>
+                        <h4 class="mb-0">@lang('user.All Registered Users')</h4>
 
                         <form action="{{ route('admin.users.export.index') }}" method="POST">
                             @csrf
                             <input type="hidden" name="search" value="{{ request('search') }}">
                             <button href="" class="btn btn-primary">
-                                Export Excel
+                                @lang('user.Export Excel')
                             </button>
                         </form>
                     </div>
@@ -21,11 +21,11 @@
                             <form action="" method="GET">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <input type="search" class="form-control" name="search" value="{{ old('search',request('search')) }}" placeholder="Search By Name, Pobox, Email">
+                                        <input type="search" class="form-control" name="search" value="{{ old('search',request('search')) }}" placeholder="@lang('user.Search By Name, Pobox, Email')">
                                     </div>
                                     <div class="col-md-4">
                                         <button class="btn btn-primary btn-lg">
-                                            Search
+                                            @lang('user.Search')
                                         </button>
                                     </div>
                                 </div>
@@ -78,7 +78,7 @@
                                             <div class="btn-group">
                                                 <div class="dropdown">
                                                     <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-success dropdown-toggle waves-effect waves-light">
-                                                    Action
+                                                        @lang('user.Action')
                                                     </button> 
                                                     <div class="dropdown-menu dropdown-menu-right dropright">
                                                         {{-- <a href="{{ route('admin.call-flows.edit',$user) }}" title="Edit Call Flows" class="dropdown-item w-100">
@@ -87,20 +87,20 @@
                                                         {{-- <a href="{{ route('admin.users.permissions.index',$user) }}" title="Edit User Permissions" class="dropdown-item w-100">
                                                             <i class="fa fa-key"></i> Roles & Permission
                                                         </a> --}}
-                                                        <a href="{{ route('admin.users.setting.index',$user) }}" title="User Setting" class="dropdown-item w-100">
-                                                            <i class="fa fa-cog"></i> User Setting
+                                                        <a href="{{ route('admin.users.setting.index',$user) }}" title="@lang('user.User Setting')" class="dropdown-item w-100">
+                                                            <i class="fa fa-cog"></i> @lang('user.User Setting')
                                                         </a>
                                                         <form action="{{ route('admin.users.login',$user) }}" class="d-flex" method="post">
                                                             @csrf
                                                             <button class="dropdown-item w-100">
-                                                                <i class="feather icon-lock"></i> Login
+                                                                <i class="feather icon-lock"></i> @lang('user.Login')
                                                             </button>
                                                         </form>
                                                         <form action="{{ route('admin.users.destroy',$user) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button class="dropdown-item w-100 text-danger">
-                                                                <i class="feather icon-trash-2"></i> Delete
+                                                                <i class="feather icon-trash-2"></i> @lang('user.Delete')
                                                             </button>
                                                         </form>
                                                     </div>

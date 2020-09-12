@@ -8,4 +8,5 @@ return [
     'Revoke' => 'Revogar',
     'Save Changes' => 'Salvar alterações',
     'Reset' => 'Redefinir',
+    'Settings Saved' => 'Configurações salvas',
 ];

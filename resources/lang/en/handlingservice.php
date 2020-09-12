@@ -1,12 +1,13 @@
 <?php
 
-return [
+return [ 
     'Manage Services' => 'Manage Services',
     'Name' => 'Name',
     'Cost' => 'Cost',
     'Price' => 'Price',
     'Profit' => 'Profit',
     'Action' => 'Action',
+    'USD' => 'USD',
     'Create Service' => 'Create Service',
     'Edit Service' => 'Edit Service',
     'Back to List' => 'Back to List',
@@ -14,7 +15,11 @@ return [
     'Price (USD)' => 'Price (USD)',
     'Name of Service' => 'Name of Service',
     'Cost of Service' => 'Cost of Service',
-    'Price of Servic' => 'Price of Service',
+    'Price of Service' => 'Price of Service',
     'Save Changes' => 'Save Changes',
-    'Reset' => 'Reset'
+    'Reset' => 'Reset',
+    'Delete Service' => 'Delete Service',
+    'Created' => 'Service Created Successfully',
+    'Updated' => 'Service Updated Successfully',
+    'Deleted' => 'Service Deleted Successfully',
 ];

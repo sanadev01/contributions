@@ -4,7 +4,8 @@ return [
     'Edit Profile' => 'Editar Perfil',
     'First Name' => 'Primeiro nome',
     'Last Name' => 'Último nome',
-    'Phone' => 'telefone * (Formato Internacional)',
+    'Phone' => 'telefone',
+    '* (Format Itnernational)' => '* (Formato internacional)',
     'Password' => 'Senha',
     'Confirm Password' => 'Confirme a Senha',
     'Address' => 'Endereço',
@@ -16,4 +17,12 @@ return [
     'Language' => 'Língua', 
     'Reset' => 'Redefinir',
     'Save Changes' => 'Salvar alterações',
+    'Select Country' => 'Selecione o pais',
+    'Select State' => 'Selecione o estado',
+    'Select Language' => 'Selecione o idioma',
+    'cpf / cnpj / cnic' => 'cpf / cnpj / cnic',
+    'language' => 'Língua',
+    'Save' => 'Salve ',
+    'Updated' => 'Perfil atualizado com sucesso',
 ];
+

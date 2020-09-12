@@ -70,7 +70,7 @@
                                         </div>
                                         <div class="form-group col-12 col-sm-6 col-md-4">
                                             <div class="controls">
-                                                <label>@lang('address.Phone') <span class="text-danger">*(Formato internacional)</span></label>
+                                                <label>@lang('address.Phone')</label>
                                                 <input type="text" class="form-control" value="{{$address->phone}}"  name="phone" required placeholder="+55123456789">
                                                 <div class="help-block"></div>
                                             </div>
@@ -91,8 +91,8 @@
                                         </div>
                                         <div class="form-group col-12 col-sm-6 col-md-4">
                                             <div class="controls">
-                                                <label>@lang('address.street-no')</label>
-                                                <input type="text" class="form-control" placeholder="" value="{{$address->street_no}}"  name="street_no">
+                                                <label>@lang('address.Street No')</label>
+                                                <input type="text" class="form-control" placeholder="@lang('address.Street No')" value="{{$address->street_no}}"  name="street_no">
                                                 <div class="help-block"></div>
                                             </div>
                                         </div>
@@ -155,7 +155,7 @@
                                         <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">
                                             @lang('address.Save')
                                         </button>
-                                        <button type="reset" class="btn btn-outline-warning waves-effect waves-light">Reset</button>
+                                        <button type="reset" class="btn btn-outline-warning waves-effect waves-light">@lang('address.Reset')</button>
                                     </div>
                                 </div>
                             </form>

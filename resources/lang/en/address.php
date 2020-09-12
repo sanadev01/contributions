@@ -1,13 +1,15 @@
 <?php
 
-return  [
+return  [ 
     'corios-message' => 'Fill out the fields below  according Correio’s requierements to avoid delays.',
     'My Addresses' => 'My Addresses',
     'Add Address' => 'Add Address',
     'Edit Address' => 'Edit Address',
+    'Delete Address' => 'Delete Address',
     'Default' => 'Default',
     'First Name' => 'First Name',
     'Last Name' => 'Last Name',
+    'Name' => 'Name',
     'Address Type' => 'Address Type',
     'Email' => 'Email',
     'Phone' => 'Phone *(International Format) i.e +5511992230189 Symbols,letters or spaces not accepted.',
@@ -25,4 +27,12 @@ return  [
     'Save' => 'Save',
     'Edit' => 'Edit',
     'Delete' => 'Delete',
+    'Telehone' => 'Telehone',
+    'User' => 'User',
+    'Type' => 'Type',
+    'Reset' => 'Reset',
+    'Street No' => 'Street No',
+    'Created' => 'Address Created Successfully',
+    'Updated' => 'Address Updated Successfully',
+    'Deleted' => 'Address Deleted Successfully',
 ];
