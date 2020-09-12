@@ -81,45 +81,45 @@
                                     </div>
                                 </div>
 
-                                <h3>Pobox Information</h3>
+                                <h3>@lang('profile.Pobox Information')</h3>
                                 <hr>
                                     <div class="controls row mb-1 align-items-center">
-                                        <label class="col-md-3 text-md-right">Pobox Address <span class="text-danger">*</span></label>
+                                        <label class="col-md-3 text-md-right">@lang('profile.Pobox Address')<span class="text-danger">*</span></label>
                                         <div class="col-md-6">
-                                            <textarea type="text" class="form-control" readonly placeholder="Pobox Address">{{ old( 'pobox_number',auth()->user()->pobox_number) }}</textarea>
+                                            <textarea type="text" class="form-control" readonly placeholder="@lang('profile.Pobox Address')">{{ old( 'pobox_number',auth()->user()->pobox_number) }}</textarea>
                                             <div class="help-block"></div>
                                         </div>
                                     </div>
 
                                     <div class="controls row mb-1 align-items-center">
-                                        <label class="col-md-3 text-md-right">@lang('profile.address')<span class="text-danger"></span></label>
+                                        <label class="col-md-3 text-md-right">@lang('profile.Address')<span class="text-danger"></span></label>
                                         <div class="col-md-6">
-                                            <input type="text" class="form-control" name="address" value="{{ old('name',auth()->user()->address) }}" placeholder="Address"/>
+                                            <input type="text" class="form-control" name="address" value="{{ old('name',auth()->user()->address) }}" placeholder="@lang('profile.Address')"/>
                                             <div class="help-block"></div>
                                         </div>
                                     </div>
     
                                     <div class="controls row mb-1 align-items-center">
-                                        <label class="col-md-3 text-md-right">@lang('profile.address2')<span class="text-danger"></span></label>
+                                        <label class="col-md-3 text-md-right">@lang('profile.Address')2<span class="text-danger"></span></label>
                                         <div class="col-md-6">
-                                            <input type="text" class="form-control" name="address2" value="{{ old('name',auth()->user()->address2) }}"  placeholder="Address 2"/>
+                                            <input type="text" class="form-control" name="address2" value="{{ old('name',auth()->user()->address2) }}"  placeholder="@lang('profile.Address') 2"/>
                                             <div class="help-block"></div>
                                         </div>
                                     </div>
     
                                     <div class="controls row mb-1 align-items-center">
-                                        <label class="col-md-3 text-md-right">@lang('profile.street_no')<span class="text-danger"></span></label>
+                                        <label class="col-md-3 text-md-right">@lang('profile.Street No')<span class="text-danger"></span></label>
                                         <div class="col-md-6">
-                                            <input type="text" class="form-control" name="street_no" value="{{ old('name',auth()->user()->street_no) }}" placeholder="Street No"/>
+                                            <input type="text" class="form-control" name="street_no" value="{{ old('name',auth()->user()->street_no) }}" placeholder="@lang('profile.Street No')"/>
                                             <div class="help-block"></div>
                                         </div>
                                     </div>
     
                                     <div class="controls row mb-1 align-items-center">
-                                        <label class="col-md-3 text-md-right">@lang('profile.country')<span class="text-danger"></span></label>
+                                        <label class="col-md-3 text-md-right">@lang('profile.Country')<span class="text-danger"></span></label>
                                         <div class="col-md-6">
-                                            <select name="country_id" class="form-control">
-                                                <option value="" selected disabled hidden>Select Country</option>
+                                            <select id="country" name="country_id" class="form-control">
+                                                <option value="" selected disabled hidden>@lang('profile.Select Country')</option>
                                                 @isset($countries)
                                                     @foreach ($countries as $country)
                                                         <option @if( auth()->user()->country_id == $country->id ) selected @endif  value="{{ $country->id }}">{{ $country->name }}</option>
@@ -131,10 +131,10 @@
                                     </div>
     
                                     <div class="controls row mb-1 align-items-center">
-                                        <label class="col-md-3 text-md-right">@lang('profile.state')<span class="text-danger"></span></label>
+                                        <label class="col-md-3 text-md-right">@lang('profile.State')<span class="text-danger"></span></label>
                                         <div class="col-md-6">
-                                            <select name="state_id" class="form-control">
-                                                <option value="" selected disabled hidden>Select State</option>
+                                            <select id="state" name="state_id" class="form-control">
+                                                <option value="" selected disabled hidden>@lang('profile.Select State')</option>
                                                 @isset($states)
                                                     @foreach ($states as $state)
                                                         <option @if( auth()->user()->state_id == $state->id ) selected @endif value="{{ $state->id }}">{{ $state->code }}</option>
@@ -146,23 +146,23 @@
                                     </div>
     
                                     <div class="controls row mb-1 align-items-center">
-                                        <label class="col-md-3 text-md-right">@lang('profile.city')<span class="text-danger"></span></label>
+                                        <label class="col-md-3 text-md-right">@lang('profile.City')<span class="text-danger"></span></label>
                                         <div class="col-md-6">
-                                            <input type="text" class="form-control" name="city" value="{{ old('name',auth()->user()->city) }}"  placeholder="City"/>
+                                            <input type="text" class="form-control" name="city" value="{{ old('name',auth()->user()->city) }}"  placeholder="@lang('profile.City')"/>
                                             <div class="help-block"></div>
                                         </div>
                                     </div>
     
                                     <div class="controls row mb-1 align-items-center">
-                                        <label class="col-md-3 text-md-right">@lang('profile.zipcode')<span class="text-danger"></span></label>
+                                        <label class="col-md-3 text-md-right">@lang('profile.Zipcode')<span class="text-danger"></span></label>
                                         <div class="col-md-6">
-                                            <input type="text" class="form-control" name="zipcode" value="{{ old('name',auth()->user()->zipcode) }}"  placeholder="zipcode"/>
+                                            <input type="text" class="form-control" name="zipcode" value="{{ old('name',auth()->user()->zipcode) }}"  placeholder="@lang('profile.Zipcode')"/>
                                             <div class="help-block"></div>
                                         </div>
                                     </div>
     
                                     <div class="controls row mb-1 align-items-center">
-                                        <label class="col-md-3 text-md-right">@lang('profile.CPF') / @lang('profile.CNPJ')<span class="text-danger"></span></label>
+                                        <label class="col-md-3 text-md-right">CPF / CNPJ<span class="text-danger"></span></label>
                                         <div class="col-md-6">
                                             <input type="text" class="form-control" name="tax_id" value="{{ old('name',auth()->user()->tax_id) }}"  placeholder="CPF / CNPJ"/>
                                             <div class="help-block"></div>
@@ -185,4 +185,7 @@
             </div>
         </div>
     </section>
+@endsection
+@section('js')
+    <x-get-state-list></x-get-state-list>
 @endsection

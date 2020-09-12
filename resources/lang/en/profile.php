@@ -23,6 +23,8 @@ return [
     'cpf / cnpj / cnic' => 'cpf / cnpj / cnic',
     'language' => 'Language',
     'Save' => 'Save',
+    'Pobox Information' => 'Pobox Information',
+    'Pobox Address' => 'Pobox Address',
     'Updated' => 'Profile Updated Successfully',
 ];
  
