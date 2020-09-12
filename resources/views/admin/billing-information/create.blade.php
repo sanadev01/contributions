@@ -1,6 +1,7 @@
 @extends('layouts.master')
 @section('css')
-<link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/creditcard.min.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/creditcard.min.css') }}"> 
+<link rel="stylesheet" href="{{ asset('app-assets/select/css/bootstrap-select.min.css') }}">
 @endsection
 @section('page')
     <section>
@@ -49,5 +50,6 @@
 @section('js')
     <script src="https://unpkg.com/imask"></script>
     <script src="{{ asset('app-assets/js/scripts/creditcard.js') }}"></script>
-    <x-get-state-list></x-get-state-list>
+    <script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
+    @include('layouts.states-ajax')
 @endsection

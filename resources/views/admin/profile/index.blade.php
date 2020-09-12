@@ -1,4 +1,7 @@
 @extends('layouts.master')
+@section('css')
+<link rel="stylesheet" href="{{ asset('app-assets/select/css/bootstrap-select.min.css') }}">
+@endsection
 @section('page')
     <section id="prealerts">
         <div class="row">
@@ -118,7 +121,7 @@
                                     <div class="controls row mb-1 align-items-center">
                                         <label class="col-md-3 text-md-right">@lang('profile.Country')<span class="text-danger"></span></label>
                                         <div class="col-md-6">
-                                            <select id="country" name="country_id" class="form-control">
+                                            <select id="country" name="country_id" class="form-control selectpicker show-tick" data-live-search="true">
                                                 <option value="" selected disabled hidden>@lang('profile.Select Country')</option>
                                                 @isset($countries)
                                                     @foreach ($countries as $country)
@@ -133,13 +136,8 @@
                                     <div class="controls row mb-1 align-items-center">
                                         <label class="col-md-3 text-md-right">@lang('profile.State')<span class="text-danger"></span></label>
                                         <div class="col-md-6">
-                                            <select id="state" name="state_id" class="form-control">
+                                            <select id="state" name="state_id" class="form-control selectpicker show-tick" data-live-search="true">
                                                 <option value="" selected disabled hidden>@lang('profile.Select State')</option>
-                                                @isset($states)
-                                                    @foreach ($states as $state)
-                                                        <option @if( auth()->user()->state_id == $state->id ) selected @endif value="{{ $state->id }}">{{ $state->code }}</option>
-                                                    @endforeach
-                                                @endisset
                                             </select>
                                             <div class="help-block"></div>
                                         </div>
@@ -187,5 +185,6 @@
     </section>
 @endsection
 @section('js')
-    <x-get-state-list></x-get-state-list>
+    <script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
+    @include('layouts.states-ajax')
 @endsection
