@@ -8,8 +8,8 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="mb-0">Add Billing Information</h4>
-                        <a href="{{ route('admin.billing-information.index') }}" class="pull-right btn btn-primary">Back to List </a>
+                        <h4 class="mb-0">@lang('billing.Edit Billing Information')</h4>
+                        <a href="{{ route('admin.billing-information.index') }}" class="pull-right btn btn-primary">@lang('billing.Back to List')</a>
                     </div>
                     <hr>
                     <div class="card-content card-body pl-md-5 pr-md-5" id="credit-card">
@@ -33,9 +33,9 @@
                                 <div class="row mt-1">
                                 <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
                                     <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">
-                                        Save
+                                        @lang('billing.Save')
                                     </button>
-                                    <button type="reset" class="btn btn-outline-warning waves-effect waves-light">Reset</button>
+                                    <button type="reset" class="btn btn-outline-warning waves-effect waves-light">@lang('billing.Reset')</button>
                                 </div>
                             </div>
 
@@ -52,4 +52,5 @@
 @section('js')
     <script src="https://unpkg.com/imask"></script>
     <script src="{{ asset('app-assets/js/scripts/creditcard.js') }}"></script>
+    <x-get-state-list></x-get-state-list>
 @endsection

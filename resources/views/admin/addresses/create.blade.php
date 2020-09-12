@@ -112,12 +112,9 @@
                                         </div>
                                         <div class="form-group col-12 col-sm-6 col-md-4">
                                             <div class="controls">
-                                                <label>@lang('address.UF') <span class="text-danger">*</span></label>
-                                                <select name="state_id" id="state" class="form-control selectpicker show-tick" data-live-search="true" >
+                                                <label>@lang('address.State') <span class="text-danger">*</span></label>
+                                                <select name="state_id" id="state" class="form-control" >
                                                     <option value="">Select @lang('address.State')</option>
-                                                    {{-- @foreach ($states as $state) --}}
-                                                        {{-- <option value="{{ $state->id }}">{{ $state->code }}</option> --}}
-                                                    {{-- @endforeach --}}
                                                 </select>
                                                 <div class="help-block"></div>
                                             </div>
@@ -187,5 +184,7 @@
 </script>
 
 <script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
-@endsection
+
 <x-get-state-list></x-get-state-list>
+@endsection
+

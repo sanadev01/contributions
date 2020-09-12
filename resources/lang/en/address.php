@@ -14,6 +14,7 @@ return  [
     'Email' => 'Email',
     'Phone' => 'Phone *(International Format) i.e +5511992230189 Symbols,letters or spaces not accepted.',
     'Address' => 'Address',
+    'Telefone' => 'Phone',
     'Country' => 'Country',
     'State' => 'State',
     'City' => 'City',

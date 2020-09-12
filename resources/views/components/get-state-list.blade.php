@@ -1,4 +1,3 @@
-@section('js')
     <script>
 
         $.ajaxSetup({
@@ -9,7 +8,7 @@
 
         $('#country').on('change', function(){
             
-            let country_id = 1
+            let country_id = $(this).val()
             $.ajax({ 
                type: 'POST',
                url: "{{route('admin.ajax.state')}}",
@@ -17,7 +16,7 @@
                success: function (data){
 
                     $("#state").empty();
-                    $("#state").append('<option value="">Select @lang("address.UF")</option>');
+                    $("#state").append('<option value="">Select @lang("address.State")</option>');
                     $.each(data,function(key,value){
                         $("#state").append('<option value="'+key+'">'+value+'</option>');
                     });
@@ -29,4 +28,3 @@
          });
 
     </script>
-@endsection

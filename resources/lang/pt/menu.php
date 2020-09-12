@@ -18,5 +18,5 @@ return [
     'Users' => 'Comercial',
     'Roles' => 'Funções',
     'Billing Informations' => 'Informações de pagamento',
-    'Setting' => 'Configuração',
+    'Settings' => 'Configurações',
 ];

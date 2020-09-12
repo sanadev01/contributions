@@ -6,8 +6,8 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="mb-0">Billing Informations</h4>
-                        <a href="{{ route('admin.billing-information.create') }}" class="pull-right btn btn-primary"> Add Billing Information</a>
+                        <h4 class="mb-0">@lang('billing.Billing Informations')</h4>
+                        <a href="{{ route('admin.billing-information.create') }}" class="pull-right btn btn-primary"> @lang('billing.Add Billing Information')</a>
                     </div>
                     <div class="card-content">
                         <div class="mt-1">
@@ -15,18 +15,18 @@
                                 <thead>
                                 <tr>
                                     <th>
-                                        Name
+                                        @lang('billing.Name')
                                     </th>
-                                    <th>Card No</th>
-                                    <th>Expiration</th>
-                                    <th>CVV</th>
-                                    <th>Phone</th>
-                                    <th>Address</th>
-                                    <th>State</th>
-                                    <th>Zipcode</th>
-                                    <th>Country</th>
+                                    <th>@lang('billing.Card No')</th>
+                                    <th>@lang('billing.Expiration')</th>
+                                    <th>@lang('billing.CVV')</th>
+                                    <th>@lang('billing.Phone')</th>
+                                    <th>@lang('billing.Address')</th>
+                                    <th>@lang('billing.State')</th>
+                                    <th>@lang('billing.Zipcode')</th>
+                                    <th>@lang('billing.Country')</th>
                                     <th>
-                                        Action
+                                        @lang('billing.Action')
                                     </th>
                                 </tr>
                                 </thead>
@@ -41,18 +41,18 @@
                                             <td>***</td>
                                             <td>{{ $billingInfo->phone }}</td>
                                             <td>{{ $billingInfo->address }}</td>
-                                            <td>{{ $billingInfo->state }}</td>
+                                            <td>{{ $billingInfo->state }}</td> 
                                             <td>{{ $billingInfo->zipcode }}</td>
                                             <td>{{ $billingInfo->country }}</td>
                                             <td class="d-flex">
-                                                <a href="{{ route('admin.billing-information.edit',$billingInfo) }}" class="btn btn-primary mr-2" title="Edit Billing Information">
+                                                <a href="{{ route('admin.billing-information.edit',$billingInfo) }}" class="btn btn-primary mr-2" title="@lang('billing.Edit Billing Information')">
                                                     <i class="feather icon-edit"></i>
                                                 </a>
 
                                                 <form action="{{ route('admin.billing-information.destroy',$billingInfo) }}"  onsubmit="return confirmDelete()" method="post">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button class="btn btn-danger" title="Delete Billing Information">
+                                                    <button class="btn btn-danger" title="@lang('billing.Delete Billing Information')">
                                                         <i class="feather icon-trash"></i>
                                                     </button>
                                                 </form> 
