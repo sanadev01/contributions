@@ -7,10 +7,10 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">
-                            Manage Shipping Services
+                            @lang('shippingservice.Manage Shipping Services')
                         </h4>
                         <a href="{{ route('admin.shipping-services.create') }}" class="btn btn-primary">
-                            Create Shipping Service
+                            @lang('shippingservice.Create Shipping Service')
                         </a>
                     </div>
                     <div class="card-content">
@@ -18,16 +18,16 @@
                             <table class="table table-hover-animation mb-0">
                                 <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Max length allowed</th>
-                                    <th>Max width allowed</th>
-                                    <th>Min width allowed</th>
-                                    <th>Min length allowed</th>
-                                    <th>max sum of all sides</th>
-                                    <th>Contains battery charges</th>
-                                    <th>Contains perfume charges</th>
-                                    <th>Contains flammable liquid charges</th>
-                                    <th>Action</th>
+                                    <th>@lang('shippingservice.Name')</th>
+                                    <th>@lang('shippingservice.Max length allowed')</th>
+                                    <th>@lang('shippingservice.Max width allowed')</th>
+                                    <th>@lang('shippingservice.Min width allowed')</th>
+                                    <th>@lang('shippingservice.Min length allowed')</th>
+                                    <th>@lang('shippingservice.Max sum of all sides')</th>
+                                    <th>@lang('shippingservice.Contains battery charges')</th>
+                                    <th>@lang('shippingservice.Contains perfume charges')</th>
+                                    <th>@lang('shippingservice.Contains flammable liquid charges')</th>
+                                    <th>@lang('shippingservice.Action')</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -43,13 +43,13 @@
                                         <td>{{ $service->contains_perfume_charges }}</td>
                                         <td>{{ $service->contains_flammable_liquid_charges }}</td>
                                         <td>
-                                            <a href="{{ route('admin.shipping-services.edit',$service) }}" title="Edit Service" class="btn btn-sm btn-primary mr-2">
+                                            <a href="{{ route('admin.shipping-services.edit',$service) }}" title="@lang('shippingservice.Edit Service')" class="btn btn-sm btn-primary mr-2">
                                                 <i class="feather icon-edit"></i>
                                             </a>
                                             <form action="{{ route('admin.shipping-services.destroy',$service) }}" method="POST" onsubmit="return confirmDelete()" class="d-inline-block">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button title="Delete Service" class="btn btn-sm btn-danger mr-2">
+                                                <button title="@lang('shippingservice.Delete Service')" class="btn btn-sm btn-danger mr-2">
                                                     <i class="feather icon-trash"></i>
                                                 </button>
                                             </form>
@@ -65,3 +65,4 @@
         </div>
     </section>
 @endsection
+ 

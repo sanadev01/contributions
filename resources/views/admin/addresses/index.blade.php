@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('page')
-    <section id="prealerts">
+    <section id="prealerts"> 
         <div class="row">
             <div class="col-12">
                 <div class="card">
@@ -15,7 +15,7 @@
                                 <thead>
                                 <tr>
                                     <th>
-                                        User
+                                        @lang('address.User')
                                     </th>
                                     <th>@lang('address.Name')</th>
                                     <th>@lang('address.Address') </th>
@@ -62,14 +62,14 @@
                                                 {{ $address->phone }}
                                             </td>
                                             <td class="d-flex">
-                                                <a href="{{ route('admin.addresses.edit',$address->id) }}" class="btn btn-primary mr-2" title="@lang('address.Edit')">
+                                                <a href="{{ route('admin.addresses.edit',$address->id) }}" class="btn btn-primary mr-2" title="@lang('address.Edit Address')">
                                                     <i class="feather icon-edit"></i>
                                                 </a>
 
                                                 <form action="{{ route('admin.addresses.destroy',$address->id) }}" method="post" onsubmit="return confirmDelete()">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button class="btn btn-danger" title="@lang('address.Delete')" >
+                                                    <button class="btn btn-danger" title="@lang('address.Delete Address')">
                                                         <i class="feather icon-trash"></i>
                                                     </button>
                                                 </form>

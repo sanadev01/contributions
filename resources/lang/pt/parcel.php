@@ -1,0 +1,40 @@
+<?php
+
+return [
+    'my-pracels' => 'Meu pacote',
+    'create-pracel' => 'Criar pacote',
+    'back-to-list' => 'De volta à lista',
+    'date' => 'Encontro',
+    'wr' => 'wr',
+    'gross-weight' => 'Peso bruto',
+    'volume-weight' => 'Peso do volume',
+    'merchant' => 'Comerciante',
+    'carrier' => 'Carrier',
+    'customer_reference' => 'External Customer Reference',
+    'tracking-id' => 'ID de rastreamento',
+    'status' => 'status',
+    'actions' => [
+        'text' => 'Açao',
+        'details' => 'Detalhes',
+        'edit-pracel' => 'Editar Parcela',
+        'place-order' => 'Faça a encomenda',
+        'delete-pracel' => 'Excluir pracel'
+    ],
+    'order-date' => 'Data do pedido',
+    'invoice' => 'Fatura',
+    'save-pracel' => 'Salvar Pracel',
+    'reset' => 'Redefinir',
+    'user-pobox-number' => 'Usuário POBOX Number',
+    'warehouse-number' => 'Número do Armazém',
+    'weight' => 'Peso',
+    'length' => 'comprimento',
+    'width' => 'Largura',
+    'height' => 'Altura',
+    'rate-applied' => 'A taxa será aplicada em',
+    'shipment-images' => 'Imagens de Remessa',
+    'image' => 'Imagem',
+    'back-to-list' => 'De volta à lista',
+    'user-name' => 'Nome do usuário',
+    'pobox' => 'Caixa postal',
+    'pracel-saved-alert' => 'Seu aviso foi criado com sucesso. Assim que seu pedido chegar ao nosso centro, você será notificado por e-mail dentro de 48 horas úteis, por favor aguarde.'
+];

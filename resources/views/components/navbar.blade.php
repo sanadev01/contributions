@@ -17,7 +17,7 @@
                     </ul>
                 </div>
                 <ul class="nav navbar-nav float-right">
-                   {{-- <x-lang-switcher></x-lang-switcher> --}}
+                   <x-lang-switcher></x-lang-switcher>
                     <li class="nav-item d-none d-lg-block"><a class="nav-link nav-link-expand"><i class="ficon feather icon-maximize"></i></a></li>
 
                     <x-web-search></x-web-search>

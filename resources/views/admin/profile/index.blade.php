@@ -24,30 +24,30 @@
                                 @csrf
                                 @if( auth()->user()->isBusinessAccount() )
                                     <div class="controls row mb-1 align-items-center">
-                                        <label class="col-md-3 text-md-right">Company Name <span class="text-danger">*</span></label>
+                                        <label class="col-md-3 text-md-right">@lang('profile.Company Name') <span class="text-danger">*</span></label>
                                         <div class="col-md-6">
-                                            <input type="text" class="form-control" name="name" value="{{ old('name',auth()->user()->name) }}" placeholder="Company Name">
+                                            <input type="text" class="form-control" name="name" value="{{ old('name',auth()->user()->name) }}" placeholder="@lang('profile.Company Name')">
                                             <div class="help-block"></div>
                                         </div>
                                     </div>
                                 @else
                                 <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">@lang('profile.Fist Name') <span class="text-danger">*</span></label>
+                                    <label class="col-md-3 text-md-right">@lang('profile.First Name') <span class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control" name="name" value="{{ old('name',auth()->user()->name) }}" placeholder="">
+                                        <input type="text" class="form-control" name="name" value="{{ old('name',auth()->user()->name) }}" placeholder="@lang('profile.First Name')">
                                         <div class="help-block"></div>
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('profile.Last Name') <span class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control" name="last_name" value="{{ old('last_name',auth()->user()->last_name) }}" placeholder="">
+                                        <input type="text" class="form-control" name="last_name" value="{{ old('last_name',auth()->user()->last_name) }}" placeholder="@lang('profile.Last Name')">
                                         <div class="help-block"></div>
                                     </div>
                                 </div>
                                 @endif
                                 <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">@lang('profile.Phone') <span class="text-danger">* (Formato Internacional)</span></label>
+                                    <label class="col-md-3 text-md-right">@lang('profile.Phone') <span class="text-danger">@lang('profile.* (Format International)')</span></label>
                                     <div class="col-md-6">
                                         <input type="text" class="form-control" name="phone" value="{{ old('phone',auth()->user()->phone) }}" placeholder="+55123456789">
                                         <div class="help-block"></div>
@@ -69,12 +69,11 @@
                                 </div>
 
 
-
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('profile.language')<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <select name="locale" class="form-control">
-                                            <option value="" selected disabled hidden>Select Language</option>
+                                            <option value="" selected disabled hidden>@lang('profile.Select Language')</option>
                                             <option @if( auth()->user()->locale == 'en' ) selected @endif value="en">English</option>
                                             <option @if( auth()->user()->locale == 'pt' ) selected @endif value="pt">Portuguese</option>
                                         </select>
@@ -176,7 +175,7 @@
                                         <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">
                                             @lang('profile.Save')
                                         </button>
-                                        <button type="reset" class="btn btn-outline-warning waves-effect waves-light">Reset</button>
+                                        <button type="reset" class="btn btn-outline-warning waves-effect waves-light">@lang('profile.Reset')</button>
                                     </div>
                                 </div>
                             </form>

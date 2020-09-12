@@ -41,10 +41,10 @@ class RateController extends Controller
         try {
             $importService = new ImportBPSCharges($file);
             $importService->handle();
-            session()->flash('alert-success', 'Rates Updated Successfully');
+            session()->flash('alert-success', 'bpsleve.Rates Updated Successfully');
         } catch (\Exception $exception) {
             throw $exception;
-            session()->flash('alert-danger', 'Error While Updating Rates');
+            session()->flash('alert-danger', 'bpsleve.Error While Updating Rates');
             return back();
         }
 
