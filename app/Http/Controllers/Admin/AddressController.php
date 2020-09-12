@@ -67,7 +67,7 @@ class AddressController extends Controller
             $request->only(['first_name','last_name','email', 'phone', 'city', 'street_no','address', 'address2', 'country_id', 'state_id', 'account_type', 'tax_id', 'zipcode'])
         );
 
-        session()->flash('alert-success', 'Address Saved Successfully');
+        session()->flash('alert-success', 'address.Created');
 
         return redirect()->route('admin.addresses.index');
     }
@@ -132,7 +132,7 @@ class AddressController extends Controller
         );
 
 
-        session()->flash('alert-success', 'Address Updated');
+        session()->flash('alert-success', 'address.Updated');
 
         return redirect()->route('admin.addresses.index');
     }
@@ -154,7 +154,7 @@ class AddressController extends Controller
             $address->delete();
         }
 
-        session()->flash('alert-success', 'Address Deleted Successfully');
+        session()->flash('alert-success', 'address.Deleted');
         return back();
     }
 }

@@ -54,7 +54,7 @@ class ShippingServiceController extends Controller
             ])
         );
 
-        session()->flash('alert-success', 'Shipping Service Created Successfully');
+        session()->flash('alert-success', 'shippingservice.Created');
         return  redirect()->route('admin.shipping-services.index');
     }
 
@@ -104,7 +104,7 @@ class ShippingServiceController extends Controller
             ])
         );
 
-        session()->flash('alert-success', 'Shipping Service Updated Successfully');
+        session()->flash('alert-success', 'shippingservice.Updated');
         return  redirect()->route('admin.shipping-services.index');
     }
 
@@ -118,7 +118,7 @@ class ShippingServiceController extends Controller
     {   
         $shippingService->delete();
 
-        session()->flash('alert-success', 'Shipping Service Deleted Successfully');
+        session()->flash('alert-success', 'shippingservice.Deleted');
         return  redirect()->route('admin.shipping-services.index');
     }
 }

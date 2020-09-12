@@ -6,8 +6,8 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="mb-0">Roles</h4>
-                        <a href="{{ route('admin.roles.create') }}" class="pull-right btn btn-primary"> Create Role </a>
+                        <h4 class="mb-0">@lang('role.Roles')</h4>
+                        <a href="{{ route('admin.roles.create') }}" class="pull-right btn btn-primary"> @lang('role.Create Role') </a>
                     </div>
                     <div class="card-content">
                         <div class="mt-1">
@@ -15,10 +15,10 @@
                                 <thead>
                                 <tr>
                                     <th>
-                                        Name
+                                        @lang('role.Name')
                                     </th>
                                     <th>
-                                        Action
+                                        @lang('role.Action')
                                     </th>
                                 </tr>
                                 </thead>
@@ -29,16 +29,16 @@
                                                 {{ $role->name }}
                                             </td>
                                             <td class="d-flex">
-                                                <a href="{{ route('admin.roles.edit',$role) }}" class="btn btn-primary mr-2" title="Edit Role">
+                                                <a href="{{ route('admin.roles.edit',$role) }}" class="btn btn-primary mr-2" title="@lang('role.Edit Role')">
                                                     <i class="feather icon-edit"></i>
                                                 </a>
-                                                <a href="{{ route('admin.roles.permissions.index',$role) }}" class="btn btn-primary mr-2" title="Edit Permissions">
+                                                <a href="{{ route('admin.roles.permissions.index',$role) }}" class="btn btn-primary mr-2" title="@lang('role.Edit Permissions')">
                                                     <i class="fa fa-key"></i>
                                                 </a>
                                                 <form action="{{ route('admin.roles.destroy',$role) }}" method="post">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button class="btn btn-danger" title="Delete Role">
+                                                    <button class="btn btn-danger" title="@lang('role.Delete Role')">
                                                         <i class="feather icon-trash"></i>
                                                     </button>
                                                 </form>

@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.master') 
 
 @section('page')
     <section id="prealerts">
@@ -7,10 +7,10 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">
-                            Manage Services
+                            @lang('handlingservice.Manage Services')
                         </h4>
                         <a href="{{ route('admin.services.create') }}" class="btn btn-primary">
-                            Create Service
+                            @lang('handlingservice.Create Service')
                         </a>
                     </div>
                     <div class="card-content">
@@ -18,11 +18,11 @@
                             <table class="table table-hover-animation mb-0">
                                 <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Cost</th>
-                                    <th>Price</th>
-                                    <th>Profit</th>
-                                    <th>Action</th>
+                                    <th>@lang('handlingservice.Name')</th>
+                                    <th>@lang('handlingservice.Cost')</th>
+                                    <th>@lang('handlingservice.Price')</th>
+                                    <th>@lang('handlingservice.Profit')</th>
+                                    <th>@lang('handlingservice.Action')</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -30,23 +30,23 @@
                                     <tr>
                                         <td>{{ $service->name }}</td>
                                         <td>
-                                            {{ $service->cost }} USD
+                                            {{ $service->cost }} @lang('handlingservice.USD')
                                         </td>
                                         <td>
-                                            {{ $service->price }} USD
+                                            {{ $service->price }} @lang('handlingservice.USD')
                                         </td>
                                         <td>
-                                            {{ $service->price -$service->cost  }} USD
+                                            {{ $service->price -$service->cost  }} @lang('handlingservice.USD')
                                         </td>
                                         
                                         <td>
-                                            <a href="{{ route('admin.services.edit',$service) }}" title="Edit Service" class="btn btn-sm btn-primary mr-2">
+                                            <a href="{{ route('admin.services.edit',$service) }}" title="@lang('handlingservice.Edit Service')" class="btn btn-sm btn-primary mr-2">
                                                 <i class="feather icon-edit"></i>
                                             </a>
                                             <form action="{{ route('admin.services.destroy',$service) }}" method="POST" onsubmit="return confirmDelete()" class="d-inline-block">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button title="Delete Service" class="btn btn-sm btn-danger mr-2">
+                                                <button title="@lang('handlingservice.Delete Service')" class="btn btn-sm btn-danger mr-2">
                                                     <i class="feather icon-trash"></i>
                                                 </button>
                                             </form>

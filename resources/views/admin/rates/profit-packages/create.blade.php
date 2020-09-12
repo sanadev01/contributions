@@ -1,11 +1,11 @@
 @extends('layouts.master')
 
-@section('page')
+@section('page') 
     <div class="card">
         <div class="card-header">
-            <h1 class="card-title" id="basic-layout-form">Create Profit Package</h1>
+            <h1 class="card-title" id="basic-layout-form">@lang('profitpackage.create-package')</h1>
             <a class="btn btn-primary" href="{{ route('admin.rates.profit-packages.index') }}">
-                Back to list
+                @lang('profitpackage.back to list')
             </a>
             <div class="heading-elements">
                 <ul class="list-inline mb-0">
@@ -19,12 +19,12 @@
                     @csrf
                     <div class="row justify-content-center mt-1">
                         <div class="col-md-10">
-                            <label for="">Package Name</label>
+                            <label for="">@lang('profitpackage.package-name')</label>
                             <input type="text" class="form-control" name="package_name" value="{{ old('package_name') }}">
                             @error('package_name')
                                 <div class="text-danger">
                                     {{ $message }}
-                                </div>
+                                </div> 
                             @enderror
                         </div>
                     </div>
@@ -37,7 +37,7 @@
 
                     <div class="form-actions pl-5 text-right">
                         <button type="submit" class="btn btn-primary">
-                            <i class="la la-check-square-o"></i> Save
+                            <i class="la la-check-square-o"></i> @lang('profitpackage.save')
                         </button>
                     </div>
                 </form>

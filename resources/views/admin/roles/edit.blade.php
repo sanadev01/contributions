@@ -5,8 +5,8 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="mb-0">Update Role</h4>
-                        <a href="{{ route('admin.roles.index') }}" class="pull-right btn btn-primary">Back to List </a>
+                        <h4 class="mb-0">@lang('role.Update Role')</h4>
+                        <a href="{{ route('admin.roles.index') }}" class="pull-right btn btn-primary">@lang('role.Back to List') </a>
                     </div>
                     <div class="card-content">
                         <div class="card-body">
@@ -25,18 +25,18 @@
                                 @csrf
                                 @method('PUT')
                                 <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">Role Name<span class="text-danger">*</span></label>
+                                    <label class="col-md-3 text-md-right">@lang('role.Role Name')<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control" name="role_name" value="{{ old('role_name',$role->name) }}" placeholder="Role Name">
+                                        <input type="text" class="form-control" name="role_name" value="{{ old('role_name',$role->name) }}" placeholder="@lang('role.Role Name')">
                                         <div class="help-block"></div>
                                     </div>
                                 </div>
                                 <div class="row mt-1">
                                     <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
                                         <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">
-                                            Update
+                                            @lang('role.Update')
                                         </button>
-                                        <button type="reset" class="btn btn-outline-warning waves-effect waves-light">Reset</button>
+                                        <button type="reset" class="btn btn-outline-warning waves-effect waves-light">@lang('role.Reset')</button>
                                     </div>
                                 </div>
                             </form>
