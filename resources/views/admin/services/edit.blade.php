@@ -1,13 +1,13 @@
-@extends('layouts.master')
+@extends('layouts.master') 
 @section('page')
     <section id="vue-handling-services">
         <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="mb-0">Edit Service</h4>
+                        <h4 class="mb-0">@lang('handlingservice.Edit Service')</h4>
                         <a href="{{ route('admin.services.index') }}" class="btn btn-primary">
-                            Back to List
+                            @lang('handlingservice.Back to List')
                         </a>
                     </div>
                     <div class="card-content">
@@ -28,27 +28,27 @@
                                 @method('PUT')
                                 
                                 <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">Name<span class="text-danger">*</span></label>
+                                    <label class="col-md-3 text-md-right">@lang('handlingservice.Name')<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control" name="name" value="{{ old('name',$service->name) }}" placeholder="Name of Service">
+                                        <input type="text" class="form-control" name="name" value="{{ old('name',$service->name) }}" placeholder="@lang('handlingservice.Name of Service')">
                                         @error('name')
                                         <div class="help-block text-danger"> {{ $message }} </div>
                                         @enderror
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">Cost (USD)<span class="text-danger">*</span></label>
+                                    <label class="col-md-3 text-md-right">@lang('handlingservice.Cost (USD)')<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <input type="number" step="0.001" class="form-control" name="cost" placeholder="Cost of Service" value="{{ old('cost',$service->cost) }}">
+                                        <input type="number" step="0.001" class="form-control" name="cost" placeholder="@lang('handlingservice.Cost of Service')" value="{{ old('cost',$service->cost) }}">
                                         @error('cost')
                                             <div class="help-block text-danger"> {{ $message }} </div>
                                         @enderror
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">Price (USD)<span class="text-danger">*</span></label>
+                                    <label class="col-md-3 text-md-right">@lang('handlingservice.Price (USD)')<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <input type="number" step="0.001" class="form-control" name="price" placeholder="Price of Service" value="{{ old('price',$service->price) }}">
+                                        <input type="number" step="0.001" class="form-control" name="price" placeholder="@lang('handlingservice.Price of Service')" value="{{ old('price',$service->price) }}">
                                         @error('price')
                                             <div class="help-block text-danger"> {{ $message }} </div>
                                         @enderror
@@ -58,9 +58,9 @@
                                 <div class="row mt-1">
                                     <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
                                         <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">
-                                            Save Changes
+                                            @lang('handlingservice.Save Changes')
                                         </button>
-                                        <button type="reset" class="btn btn-outline-warning waves-effect waves-light">Reset</button>
+                                        <button type="reset" class="btn btn-outline-warning waves-effect waves-light">@lang('handlingservice.Reset')</button>
                                     </div>
                                 </div>
                             </form>

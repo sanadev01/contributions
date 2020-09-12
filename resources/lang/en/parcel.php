@@ -1,0 +1,40 @@
+<?php
+
+return [
+    'my-pracels' => 'My Parcels',
+    'create-pracel' => 'Create Parcel',
+    'back-to-list' => 'Back to List',
+    'date' => 'Date',
+    'wr' => 'wr',
+    'gross-weight' => 'Gross Weight',
+    'volume-weight' => 'Volume Weight',
+    'merchant' => 'Merchant',
+    'carrier' => 'Carrier',
+    'customer_reference' => 'External Customer Reference',
+    'tracking-id' => 'Tracking ID',
+    'status' => 'Status',
+    'actions' => [
+        'text' => 'Action',
+        'details' => 'Details',
+        'edit-pracel' => 'Edit Parcel',
+        'place-order' => 'Place Order',
+        'delete-pracel' => 'Delete pracel'
+    ],
+    'order-date' => 'Order Date',
+    'invoice' => 'Invoice',
+    'save-pracel' => 'Save Pracel',
+    'reset' => 'Reset',
+    'user-pobox-number' => 'User POBOX Number',
+    'warehouse-number' => 'Warehouse Number',
+    'weight' => 'Weight',
+    'length' => 'Length',
+    'width' => 'Width',
+    'height' => 'Height',
+    'rate-applied' => 'The Rate will be applied on',
+    'shipment-images' => 'Shipment Images',
+    'image' => 'Image',
+    'back-to-list' => 'Back to List',
+    'user-name' => 'User Name',
+    'pobox' => 'pobox',
+    'pracel-saved-alert' => 'Your notice has been successfully created. As soon as your order arrives at our center you will be notified by email within 48 working hours, please wait.'
+];

@@ -1,9 +1,9 @@
 <div>
     <table class="table table-bordered">
         <tr>
-            <th>Min Weight (grams)</th>
-            <th>Max Weight (grams)</th>
-            <th>Profit (%)</th>
+            <th>@lang('profitpackage.min-weight (grams)')</th>
+            <th>@lang('profitpackage.max-weight (grams)')</th>
+            <th>@lang('profitpackage.profit')</th>
             <th></th>
         </tr>
         @foreach ($slabs as $key => $slab)
@@ -34,7 +34,7 @@
                 </td>
                 <td>
                     <button class="btn btn-danger" role="button" tabindex="-1" type="button" wire:click='removeSlab({{$key}})'>
-                        Remove Slab
+                        @lang('profitpackage.remove-slab')
                     </button>
                 </td>
             </tr>
@@ -42,7 +42,7 @@
         <tr>
             <td colspan="2">
                 <button class="btn btn-primary" role="button" type="button" wire:click='addSlab'>
-                    Add Slab
+                    @lang('profitpackage.add-slab')
                 </button>
             </td>
         </tr>

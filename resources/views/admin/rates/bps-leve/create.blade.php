@@ -1,11 +1,11 @@
 @extends('layouts.master')
 
-@section('page')
+@section('page') 
     <div class="card">
         <div class="card-header">
-            <h4 class="card-title" id="basic-layout-form">BPS Rates</h4>
+            <h4 class="card-title" id="basic-layout-form">@lang('bpsleve.BPS Rates')</h4>
             <a href="{{ route('admin.rates.bps-leve.index') }}" class="btn btn-primary pull-right">
-                Return to List
+                @lang('bpsleve.Return to List')
             </a>
             <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
             <div class="heading-elements">
@@ -21,7 +21,7 @@
                     <div class="form-body">
                         <div class="row justify-content-center">
                             <div class="col-md-10">
-                                <h4 class="form-section">Import BPS Leve Rates Excel</h4>
+                                <h4 class="form-section">@lang('bpsleve.Import BPS Leve Rates Excel')</h4>
                             </div>
                         </div>
                         <div class="row justify-content-center">
@@ -29,7 +29,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <div class="controls">
-                                        <label>Shipping Service <span class="text-danger">*</span></label>
+                                        <label>@lang('bpsleve.Shipping Service') <span class="text-danger">*</span></label>
                                         <select name="shipping_service_id" required class="form-control">
                                             @isset($shipping_services)
                                                 @foreach ($shipping_services as $service)
@@ -49,7 +49,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <div class="controls">
-                                        <label>Country <span class="text-danger">*</span></label>
+                                        <label>@lang('bpsleve.Country') <span class="text-danger">*</span></label>
                                         <select name="country_id" required class="form-control">
                                             @isset($countries)
                                                 @foreach ($countries as $country)
@@ -68,7 +68,7 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="projectinput1">Select Excel File to Upload</label>
+                                    <label for="projectinput1">@lang('bpsleve.Select Excel File to Upload')</label>
                                     <input type="file" class="form-control" name="csv_file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" required>
                                     @error('csv_file')
                                         <div class="text-danger">
@@ -83,10 +83,10 @@
                             <div class="col-md-10">
                                 <div class="alert alert-warning">
                                     <ol>
-                                        <li>* Carregar apenas arquivos do Excel</li>
-                                        <li>* Arquivo maior que 15Mb não é permitido</li>
-                                        <li>* Faça o download e preencha os dados no arquivo de exemplo abaixo para evitar erros</li>
-                                        <li class="mt-2">* Download da amostra para taxas de bps <a href="{{ asset('uploads/bps/hd-leve.xlsx') }}" class="btn btn-success btn-sm">Download</a></li>
+                                        <li>@lang('bpsleve.* Upload only Excel files')</li>
+                                        <li>@lang('bpsleve.* Files larger than 15Mb are not allowed')</li>
+                                        <li>@lang('bpsleve.* Download and fill in the data in the sample file below to avoid errors')</li>
+                                        <li class="mt-2">@lang('bpsleve.* Download the sample for bps rates') <a href="{{ asset('uploads/bps/hd-leve.xlsx') }}" class="btn btn-success btn-sm">@lang('bpsleve.Download')</a></li>
                                     </ol>
                                 </div>
                             </div>
@@ -95,10 +95,10 @@
 
                     <div class="form-actions pl-5">
                         <a href="{{ route('admin.rates.bps-leve.index') }}" class="btn btn-warning mr-1 ml-3">
-                            <i class="ft-x"></i> Cancel
+                            <i class="ft-x"></i> @lang('bpsleve.Cancel')
                         </a>
                         <button type="submit" class="btn btn-primary">
-                            <i class="la la-check-square-o"></i> Import
+                            <i class="la la-check-square-o"></i> @lang('bpsleve.Import')
                         </button>
                     </div>
                 </form>

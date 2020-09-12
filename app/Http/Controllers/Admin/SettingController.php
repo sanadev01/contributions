@@ -25,7 +25,7 @@ class SettingController extends Controller
         Setting::saveByKey('AUTHORIZE_ID', $request->AUTHORIZE_ID,null,true);
         Setting::saveByKey('AUTHORIZE_KEY', $request->AUTHORIZE_KEY,null,true);
 
-        session()->flash('alert-success', 'Settings Saved');
+        session()->flash('alert-success', 'setting.Settings Saved');
         return back();
     }
 }

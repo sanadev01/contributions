@@ -47,7 +47,7 @@ class HandlingServiceController extends Controller
             ])
         );
 
-        session()->flash('alert-success', 'Service Created Successfully');
+        session()->flash('alert-success', 'handlingservice.Created');
         return  redirect()->route('admin.services.index');
     }
 
@@ -91,7 +91,7 @@ class HandlingServiceController extends Controller
             ])
         );
 
-        session()->flash('alert-success', 'Service Updated Successfully');
+        session()->flash('alert-success', 'handlingservice.Updated');
         return  redirect()->route('admin.services.index');
     }
 
@@ -103,10 +103,9 @@ class HandlingServiceController extends Controller
      */
     public function destroy(HandlingService $service)
     {   
-        dd($service);
         $service->delete();
 
-        session()->flash('alert-success', 'Service Deleted Successfully');
+        session()->flash('alert-success', 'handlingservice.Deleted');
         return  redirect()->route('admin.services.index');
     }
 }

@@ -29,7 +29,7 @@ class Create extends FormRequest
             'last_name' => 'required',
             'address' => 'required',
             'street_no' => 'required',
-            'country_id' => 'required|integer',
+            'country_id' => 'required',
             'city' => 'required',
             'phone' => 'required',
             'state_id' => 'required',
