@@ -42,7 +42,7 @@ class RoleController extends Controller
             'name' => $request->role_name
         ]);
 
-        session()->flash('alert-success','Role Created Successfully');
+        session()->flash('alert-success','role.Created');
         return back();
     }
 
@@ -85,7 +85,7 @@ class RoleController extends Controller
             'name' => $request->role_name
         ]);
 
-        session()->flash('alert-success','Role Updated Successfully');
+        session()->flash('alert-success','role.Updated');
         return back();
     }
 
@@ -100,7 +100,7 @@ class RoleController extends Controller
         $role->permissions()->delete();
         $role->delete();
 
-        session()->flash('alert-success','Role Deleted Successfully');
+        session()->flash('alert-success','role.Deleted');
         return back();
     }
 }

@@ -24,7 +24,7 @@
                                 @csrf
                                  
                                 <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">@lang('user.package')<span class="text-danger"></span></label>
+                                    <label class="col-md-3 text-md-right">@lang('user.Package')<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <select name="package_id" class="form-control">
                                             <option value="" selected disabled hidden>Select Package</option>

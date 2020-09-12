@@ -35,7 +35,7 @@
                                 <div class="col-6">
                                     <h4 class="mb-0 pull-left">{{ $ticket->subject }}</h4>
                                     <div class="h4 pull-right">
-                                        <strong>Status</strong> <span class="border-bottom"> @if($ticket->open == 1) <span class="badge badge-success">open</span> @else <span class="badge badge-danger">close</span> @endif </span>
+                                        <strong>@lang('tickets.Status')</strong> <span class="border-bottom"> @if($ticket->open == 1) <span class="badge badge-success">@lang('tickets.open')</span> @else <span class="badge badge-danger">@lang('tickets.close')</span> @endif </span>
                                     </div>
                                 </div>
 

@@ -36,7 +36,7 @@
                                         <div class="form-group col-12 col-sm-6 col-md-4">
                                             <div class="controls">
                                                 <label>@lang('address.Type') <span class="text-danger">*</span></label>
-                                                <select class="form-control" name="account_type" required placeholder="Account Type">
+                                                <select id="account_type" class="form-control" name="account_type" required placeholder="@lang('address.Type')">
                                                     <option value="">@lang('address.Type')</option>
                                                     <option value="individual">Individual</option>
                                                     <option value="business">Business</option>
@@ -49,7 +49,7 @@
                                         <div class="form-group col-12 col-sm-6 col-md-4">
                                             <div class="controls">
                                                 <label>@lang('address.First Name') <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="first_name" required placeholder="First Name">
+                                                <input type="text" class="form-control" name="first_name" required placeholder="@lang('address.First Name')">
                                                 <div class="help-block"></div>
                                             </div>
                                         </div>
@@ -57,7 +57,7 @@
                                         <div class="form-group col-12 col-sm-6 col-md-4">
                                             <div class="controls">
                                                 <label>@lang('address.Last Name') <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="last_name" required placeholder="Last Name">
+                                                <input type="text" class="form-control" name="last_name" required placeholder="@lang('address.Last Name')">
                                                 <div class="help-block"></div>
                                             </div>
                                         </div>
@@ -65,13 +65,13 @@
                                         <div class="form-group col-12 col-sm-6 col-md-4">
                                             <div class="controls">
                                                 <label>@lang('address.Email') <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="email" required placeholder="Email">
+                                                <input type="text" class="form-control" name="email" required placeholder="@lang('address.Email')">
                                                 <div class="help-block"></div>
                                             </div>
                                         </div>
                                         <div class="form-group col-12 col-sm-6 col-md-4">
                                             <div class="controls">
-                                                <label>@lang('address.Phone') <span class="text-danger">*(Formato internacional)</span></label>
+                                                <label>@lang('address.Phone')</label>
                                                 <input type="text" class="form-control" name="phone" required placeholder="+55123456789">
                                                 <div class="help-block"></div>
                                             </div>
@@ -79,21 +79,21 @@
                                         <div class="form-group col-12 col-sm-6 col-md-4">
                                             <div class="controls">
                                                 <label>@lang('address.Address') <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="address" required placeholder="Address"/>
+                                                <input type="text" class="form-control" name="address" required placeholder="@lang('address.Address')"/>
                                                 <div class="help-block"></div>
                                             </div>
                                         </div>
                                         <div class="form-group col-12 col-sm-6 col-md-4">
                                             <div class="controls">
                                                 <label>@lang('address.Address')2</label>
-                                                <input type="text" class="form-control"  placeholder=""  name="address2">
+                                                <input type="text" class="form-control"  placeholder=""  name="@lang('address.Address')2">
                                                 <div class="help-block"></div>
                                             </div>
                                         </div>
                                         <div class="form-group col-12 col-sm-6 col-md-4">
                                             <div class="controls">
-                                                <label>@lang('address.street-no')</label>
-                                                <input type="text" class="form-control" placeholder=""  name="street_no">
+                                                <label>@lang('address.Street No')</label>
+                                                <input type="text" class="form-control" placeholder="@lang('address.Street No')"  name="street_no">
                                                 <div class="help-block"></div>
                                             </div>
                                         </div>
@@ -143,9 +143,10 @@
                                         
 
                                         <div class="form-group col-12 col-sm-6 col-md-6">
-                                            <div class="controls">
-                                                <label>@lang('address.Tax') <span class="text-danger"></span></label>
-                                                <textarea name="tax_id" required class="form-control" id="tax_id" cols="10" rows="5" placeholder="cpf / cnpj / cnic"></textarea>
+                                            <div class="controls"> 
+                                                <label id="cpf_label">@lang('address.CPF') <span class="text-danger"></span></label>
+                                                <label id="cnpj_label" style="display: none">@lang('address.CNPJ') <span class="text-danger"></span></label>
+                                                <input type="text" name="tax_id" required class="form-control"/>
                                                 <div class="help-block"></div>
                                             </div>
                                         </div>
@@ -168,7 +169,7 @@
                                         <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">
                                             @lang('address.Save')
                                         </button>
-                                        <button type="reset" class="btn btn-outline-warning waves-effect waves-light">Reset</button>
+                                        <button type="reset" class="btn btn-outline-warning waves-effect waves-light">@lang('address.Reset')</button>
                                     </div>
                                 </div>
                             </form>

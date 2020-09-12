@@ -60,7 +60,7 @@ class ProfitPackageController extends Controller
             'data' => json_encode($profitPackageslab)
         ]);
 
-        session()->flash('alert-success','Package Created');
+        session()->flash('alert-success',"profitpackage.created");
         return redirect()->route('admin.rates.profit-packages.index');
 
     }
@@ -118,7 +118,7 @@ class ProfitPackageController extends Controller
 
         ]);
 
-        session()->flash('alert-success','Package Updated');
+        session()->flash('alert-success','profitpackage.updated');
         return redirect()->route('admin.rates.profit-packages.index');
 
     }
@@ -133,9 +133,8 @@ class ProfitPackageController extends Controller
     {
         // User::where('package_id', $profitPackage->id)->update('package_id',null);
         $profitPackage->delete();
-
-        session('alert-success','Package Deleted');
-
+        session()->flash('alert-success','profitpackage.deleted');
         return back();
+        
     }
 }

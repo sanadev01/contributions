@@ -51,7 +51,7 @@ class TicketController extends Controller
             'text' => $request->text
         ]);
 
-        session()->flash('alert-success', 'Ticket Generated Successfully');
+        session()->flash('alert-success', 'tickets.Generated');
         return back();
     }
 
@@ -81,7 +81,7 @@ class TicketController extends Controller
     {
         $ticket->addComment($request);
 
-        session()->flash('alert-success', 'Comment Added');
+        session()->flash('alert-success', 'tickets.Comment');
 
         return back();
     }
@@ -100,7 +100,7 @@ class TicketController extends Controller
 
         $ticket->markClosed();
 
-        session()->flash('alert-success', 'Ticket Closed');
+        session()->flash('alert-success', 'tickets.Closed');
         return back();
     }
 }
