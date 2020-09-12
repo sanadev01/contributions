@@ -53,7 +53,6 @@
                                         @enderror
                                     </div>
                                 </div>
-                                </div>
                                 <div class="row mt-1">
                                     <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
                                         <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">
@@ -62,6 +61,8 @@
                                         <button type="reset" class="btn btn-outline-warning waves-effect waves-light">@lang('handingservice.Reset')</button>
                                     </div>
                                 </div>
+                            </div>
+
                             </form>
                         </div>
                     </div>

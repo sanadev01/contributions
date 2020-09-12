@@ -32,7 +32,7 @@
                                                 <a href="{{ route('admin.rates.profit-packages.edit',$package) }}" class="btn btn-primary mr-2" title="@lang('profitpackage.edit-profit-package')">
                                                     <i class="feather icon-edit"></i>
                                                 </a>
-                                                <form action="{{ route('admin.rates.profit-packages.destroy',$package) }}" method="post">
+                                                <form action="{{ route('admin.rates.profit-packages.destroy',$package) }}" onsubmit="return confirmDelete()" method="post">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button class="btn btn-danger" title="@lang('profitpackage.delete-profit-package')">

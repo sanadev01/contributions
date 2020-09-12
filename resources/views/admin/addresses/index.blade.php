@@ -14,43 +14,30 @@
                             <table class="table table-hover-animation mb-0">
                                 <thead>
                                 <tr>
-                                    {{-- @admin --}}
                                     <th>
                                         @lang('address.User')
                                     </th>
-                                    {{-- @endadmin --}}
-                                    {{-- <th>
-                                        @lang('address.Default')
-                                    </th> --}}
-                                    <th>@lang('address.First Name')</th>
-                                    <th>@lang('address.Last Name')</th>
+                                    <th>@lang('address.Name')</th>
                                     <th>@lang('address.Address') </th>
+                                    <th>@lang('address.Address2') </th>
                                     <th>@lang('address.Country') </th>
                                     <th>@lang('address.City') </th>
                                     <th>@lang('address.State') </th>
-                                    <th>@lang('address.Tax') </th>
-                                    <th>@lang('address.Telephone') </th>
+                                    <th>@lang('address.CPF') </th>
+                                    <th>@lang('address.CNPJ') </th>
+                                    <th>@lang('address.Telefone') </th>
                                     <th>@lang('address.Actions') </th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($addresses as $address)
                                         <tr>
-                                            {{-- @admin --}}
                                             <td>
                                                 {{ $address->user->name .' '. $address->user->last_name }}
                                             </td>
-                                            {{-- @endadmin --}}
-                                            {{-- <td class="font-large-1">
-                                                @if( $address->isDefault() )
-                                                    <i class="feather icon-check text-success"></i>
-                                                @else
-                                                    <i class="fa fa-close text-danger"></i>
-                                                @endif
-                                            </td> --}}
-                                            <td>{{ $address->first_name }}</td>
-                                            <td>{{ $address->last_name }}</td>
+                                            <td>{{ $address->first_name }} {{ $address->last_name }}</td>
                                             <td>{{ $address->address }}</td>
+                                            <td>{{ $address->address2 }}</td>
                                             <td>
                                                 {{ $address->country->name }}
                                             </td>
@@ -60,8 +47,13 @@
                                             <td>
                                                 {{ $address->state->code }}
                                             </td>
+                                            <td> 
+                                                @if ( $address->account_type == 'individual' )
+                                                    {{ $address->tax_id }}
+                                                @endif
+                                            </td>
                                             <td>
-                                                @if ( !$address->isBusiness() )
+                                                @if ( $address->account_type == 'business' )
                                                     {{ $address->tax_id }}
                                                 @endif
                                             </td>
@@ -73,15 +65,15 @@
                                                 <a href="{{ route('admin.addresses.edit',$address->id) }}" class="btn btn-primary mr-2" title="@lang('address.Edit Address')">
                                                     <i class="feather icon-edit"></i>
                                                 </a>
-                                                {{-- @if ($address->orders->count()) --}}
-                                                <form action="{{ route('admin.addresses.destroy',$address->id) }}" method="post">
+
+                                                <form action="{{ route('admin.addresses.destroy',$address->id) }}" method="post" onsubmit="return confirmDelete()">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button class="btn btn-danger" title="@lang('address.Delete Address')">
                                                         <i class="feather icon-trash"></i>
                                                     </button>
                                                 </form>
-                                                {{-- @endif --}}
+
                                             </td>
                                         </tr>
                                     @endforeach
