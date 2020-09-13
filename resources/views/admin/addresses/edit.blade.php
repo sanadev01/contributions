@@ -193,5 +193,5 @@
         })
     </script>
     <script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
-    <x-get-state-list></x-get-state-list>
+    @include('layouts.states-ajax')
 @endsection

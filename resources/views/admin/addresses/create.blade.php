@@ -113,7 +113,7 @@
                                         <div class="form-group col-12 col-sm-6 col-md-4">
                                             <div class="controls">
                                                 <label>@lang('address.State') <span class="text-danger">*</span></label>
-                                                <select name="state_id" id="state" class="form-control" >
+                                                <select name="state_id" id="state" class="form-control selectpicker show-tick" data-live-search="true">
                                                     <option value="">Select @lang('address.State')</option>
                                                 </select>
                                                 <div class="help-block"></div>
@@ -184,7 +184,6 @@
 </script>
 
 <script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
-
-<x-get-state-list></x-get-state-list>
+@include('layouts.states-ajax')
 @endsection
 
