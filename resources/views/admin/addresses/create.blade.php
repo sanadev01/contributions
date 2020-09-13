@@ -102,7 +102,7 @@
                                                     <label>@lang('address.Country') <span class="text-danger">*</span></label>
                                                     <select id="country"  name="country_id" class="form-control selectpicker show-tick" data-live-search="true">
                                                         <option value="">Select @lang('address.Country')</option>
-                                                        @foreach ($countries as $country)
+                                                        @foreach (countries() as $country)
                                                             <option {{ old('country_id') == $country->id ? 'selected' : '' }} value="{{ $country->id }}">{{ $country->name }}</option>
                                                         @endforeach
                                                     </select>

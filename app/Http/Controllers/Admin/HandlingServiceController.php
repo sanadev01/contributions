@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\HandlingService;
-use App\Http\Requests\Admin\Service\CreateService;
+use App\Http\Requests\Admin\Service\CreateService; 
+use App\Http\Requests\Admin\Service\UpdateService; 
+use App\Repositories\HandlingServiceRepository;
+
 
 class HandlingServiceController extends Controller
 {
@@ -14,9 +17,9 @@ class HandlingServiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(HandlingServiceRepository $repository)
     {
-        $services = HandlingService::all();
+        $services = $repository->get();
         return view('admin.services.index', compact('services'));
     }
 
@@ -37,18 +40,16 @@ class HandlingServiceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateService $request)
+    public function store(CreateService $request, HandlingServiceRepository $repository)
     {
-        HandlingService::create(
-            $request->only([
-                'name',
-                'cost',
-                'price',
-            ])
-        );
+        
+        if ( $repository->store($request) ){
+            session()->flash('alert-success', 'handlingservice.Created');
+            return  redirect()->route('admin.services.index');
+        }
 
-        session()->flash('alert-success', 'handlingservice.Created');
-        return  redirect()->route('admin.services.index');
+        return back()->withInput();
+
     }
 
     /**
@@ -81,18 +82,14 @@ class HandlingServiceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CreateService $request, HandlingService $service)
+    public function update(UpdateService $request, HandlingService $handlingService, HandlingServiceRepository $repository)
     {
-        $service->update(
-            $request->only([
-                'name',
-                'cost',
-                'price',
-            ])
-        );
+        if ( $repository->update($request, $handlingService) ){
+            session()->flash('alert-success', 'handlingservice.Updated');
+            return  redirect()->route('admin.services.index');
+        }
 
-        session()->flash('alert-success', 'handlingservice.Updated');
-        return  redirect()->route('admin.services.index');
+        return back()->withInput();
     }
 
     /**
@@ -101,11 +98,13 @@ class HandlingServiceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(HandlingService $service)
+    public function destroy(HandlingService $service, HandlingServiceRepository $repository)
     {   
-        $service->delete();
-
-        session()->flash('alert-success', 'handlingservice.Deleted');
-        return  redirect()->route('admin.services.index');
+         if ( $repository->delete($service) ){
+            session()->flash('alert-success', 'handlingservice.Deleted');
+            return  redirect()->route('admin.services.index');
+        }
+  
+        return back();
     }
 }

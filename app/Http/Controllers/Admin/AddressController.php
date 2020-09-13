@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -11,6 +10,7 @@ use App\Http\Requests\User\Address\Create;
 use App\Http\Requests\User\Address\Update;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use App\Repositories\AddressRepository;
 use App\Models\Address;
 use App\Models\Country;
 use App\Models\State;
@@ -22,17 +22,9 @@ class AddressController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(AddressRepository $repository) 
     {
-        $query = Address::query()->has('user');
-
-        if ( Auth::user()->isUser() ){
-            $query->where('user_id',Auth::id());
-        }
-
-        $addresses = $query
-            ->latest()
-            ->get();
+        $addresses = $repository->get();
         return view('admin.addresses.index', compact('addresses'));
     }
 
@@ -43,15 +35,7 @@ class AddressController extends Controller
      */
     public function create()
     {   
-        $countries = Country::all();
-        $states = State::all();
-
-        $data = array(
-            'countries' => $countries, 
-            'states' => $states, 
-        );
-
-        return view('admin.addresses.create')->with($data);
+        return view('admin.addresses.create');
     }
 
     /**
@@ -60,16 +44,15 @@ class AddressController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Create $request)
+    public function store(Create $request, AddressRepository $repository)
     {
+        if ( $repository->store($request) ){
+            session()->flash('alert-success', 'address.Created');
+            return redirect()->route('admin.addresses.index');
+        }
 
-        $address = Auth::user()->addresses()->create(
-            $request->only(['first_name','last_name','email', 'phone', 'city', 'street_no','address', 'address2', 'country_id', 'state_id', 'account_type', 'tax_id', 'zipcode'])
-        );
+        return back()->withInput();
 
-        session()->flash('alert-success', 'address.Created');
-
-        return redirect()->route('admin.addresses.index');
     }
     /**
      * Display the specified resource.
@@ -98,10 +81,7 @@ class AddressController extends Controller
             throw new UnauthorizedHttpException('Not Authorized');
         }
 
-        $countries = Country::all();
-        $states = State::all();
-
-        return view('admin.addresses.edit', compact('address','countries', 'states'));
+        return view('admin.addresses.edit', compact('address'));
     }
 
     /**
@@ -111,30 +91,14 @@ class AddressController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Update $request, Address $address)
+    public function update(Update $request, Address $address, AddressRepository $repository)
     {
-        // if (! $request->has('default')) {
-        //     $request->merge([
-        //         'default' => false
-        //     ]);
-        // }
+        if ($repository->update($request,$address) ){
 
-        // if ($request->has('default')) {
-        //     Auth::user()->addresses()->update([
-        //         'default' => false
-        //     ]);
-        // }
+            session()->flash('alert-success', 'address.Updated');
+            return redirect()->route('admin.addresses.index');
 
-        $address->refresh();
-
-        $address->update(
-            $request->only(['first_name','last_name','email', 'phone', 'city', 'street_no','address', 'address2', 'country_id', 'state_id', 'account_type', 'tax_id', 'zipcode'])
-        );
-
-
-        session()->flash('alert-success', 'address.Updated');
-
-        return redirect()->route('admin.addresses.index');
+        }
     }
 
     /**

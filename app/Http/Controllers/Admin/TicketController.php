@@ -10,6 +10,7 @@ use App\Http\Requests\Shared\Ticket\Create;
 use App\Http\Requests\Shared\Ticket\Update;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use App\Repositories\TicketRepository;
 
 class TicketController extends Controller
 {
@@ -18,9 +19,9 @@ class TicketController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(TicketRepository $repository)
     {   
-        $supportTickets = \auth()->user()->isAdmin() ? Ticket::has('user')->get() : Auth::user()->tickets;
+        $supportTickets = $repository->get();
         return view('admin.tickets.index', compact('supportTickets'));
     }
 
@@ -40,18 +41,12 @@ class TicketController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Create $request)
-    {
-        $ticket = Auth::user()->tickets()->create([
-            'subject' => $request->subject
-        ]);
+    public function store(Create $request, TicketRepository $repository)
+    {   
+        if($repository->store($request)){
+            session()->flash('alert-success', 'tickets.Generated');
+        }
 
-        $ticket->comments()->create([
-            'user_id' => Auth::id(),
-            'text' => $request->text
-        ]);
-
-        session()->flash('alert-success', 'tickets.Generated');
         return back();
     }
 
@@ -61,14 +56,12 @@ class TicketController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Ticket $ticket)
+    public function show(Ticket $ticket, TicketRepository $repository)
     {
-        if (! $ticket || (\auth()->user()->isUser() && $ticket->user_id != Auth::id())) {
-            return new NotFoundHttpException('Not found');
+        if($repository->show($ticket)){
+            return view('admin.tickets.show', compact('ticket'));
         }
-        return  view('admin.tickets.show', compact('ticket'));
     }
-
 
     /**
      * Update the specified resource in storage.
@@ -77,11 +70,11 @@ class TicketController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Update $request, Ticket $ticket)
-    {
-        $ticket->addComment($request);
-
-        session()->flash('alert-success', 'tickets.Comment');
+    public function update(Update $request, Ticket $ticket, TicketRepository $repository)
+    {   
+        if($repository->update($request, $ticket)){
+            session()->flash('alert-success', 'tickets.Comment');
+        }
 
         return back();
     }
@@ -92,15 +85,12 @@ class TicketController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function markClose(Ticket $ticket)
+    public function markClose(Ticket $ticket, TicketRepository $repository)
     {
-        if (! Auth::user()->isAdmin()) {
-            throw new UnauthorizedHttpException('You are not authorized to perform this action');
+        if($repository->markcLose($ticket)){
+            session()->flash('alert-success', 'tickets.Closed');
         }
 
-        $ticket->markClosed();
-
-        session()->flash('alert-success', 'tickets.Closed');
         return back();
     }
 }
