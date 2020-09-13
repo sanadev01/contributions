@@ -136,6 +136,9 @@
                                         <div class="col-md-6">
                                             <select id="state" name="state_id" class="form-control selectpicker show-tick" data-live-search="true">
                                                 <option value="" selected disabled hidden>@lang('profile.Select State')</option>
+                                                @foreach (states(auth()->user()->country_id) as $state)
+                                                    <option value="{{ $state->id }}" {{ auth()->user()->state_id == $state->id ? 'selected': '' }}> {{ $state->code }} </option>
+                                                @endforeach
                                             </select>
                                             <div class="help-block"></div>
                                         </div>

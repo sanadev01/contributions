@@ -12,10 +12,10 @@
            url: "{{route('admin.ajax.state')}}",
            data: {country_id: country_id},
            success: function (data){
-                $.each(data,function(key,value){
-                    $("#state").selectpicker('refresh');
-                    $("#state").append('<option value="'+key+'">'+value+'</option>');
+                $.each(data,function(index,state){
+                    $("#state").append('<option value="'+state.id+'">'+state.code+'</option>');
                 });
+                $("#state").selectpicker('refresh');
            }, 
            error: function(e) {
                 console.log(e);

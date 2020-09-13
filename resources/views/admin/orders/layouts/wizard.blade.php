@@ -2,6 +2,7 @@
 
 @section('css')
     <link rel="stylesheet" href="{{ asset('app-assets/css/plugins/forms/wizard.css') }}">
+    @yield('wizard-css')
 @endsection
 
 @section('page')

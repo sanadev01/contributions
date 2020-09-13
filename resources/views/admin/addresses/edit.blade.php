@@ -32,8 +32,6 @@
                             <form action="{{ route('admin.addresses.update',$address) }}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
-
-                                <div>
                                     <div class="row mt-1">
                                         <div class="form-group col-12 col-sm-6 col-md-4">
                                             <div class="controls">
@@ -59,7 +57,7 @@
                                         <div class="form-group col-12 col-sm-6 col-md-4">
                                             <div class="controls">
                                                 <label>@lang('address.Last Name') <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control"value="{{$address->last_name}}"   name="last_name" required placeholder="@lang('address.Last Name')>
+                                                <input type="text" class="form-control"value="{{$address->last_name}}"   name="last_name" required placeholder="@lang('address.Last Name')">
                                                 <div class="help-block"></div>
                                             </div>
                                         </div>
@@ -115,8 +113,11 @@
                                         <div class="form-group col-12 col-sm-6 col-md-4">
                                             <div class="controls">
                                                 <label>@lang('address.State') <span class="text-danger">*</span></label>
-                                                <select name="state_id" id="state" class="form-control">
+                                                <select name="state_id" id="state" class="form-control selectpicker show-tick">
                                                     <option value="">Select @lang('address.State')</option>
+                                                    @foreach (states($address->country_id) as $state)
+                                                        <option value="{{ $state->id }}" {{ $address->state_id == $state->id ? 'selected': '' }}> {{ $state->code }} </option>
+                                                    @endforeach
                                                 </select>
                                                 <div class="help-block"></div>
                                             </div>

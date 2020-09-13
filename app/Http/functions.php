@@ -12,7 +12,10 @@ function countries()
     return $countries;
 }
 
-function states(){
+function states($countryId=null){
+    if ( $countryId ){
+        return State::where('country_id',$countryId)->get();
+    }
     $states =  State::all();
     return $states;
 }
