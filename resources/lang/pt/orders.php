@@ -19,6 +19,9 @@ return [
     'pay-order' => 'Ordem de pagamento',
     'create-order' => 'Criar envio',
     'back-to-list' => 'Voltar',
+    'recipient' => [
+        'slect-from-list' => 'Selecione o endereço da lista',
+    ],
     'create' => [
         'shipment-and-destination' => 'Criação do envio',
         'shipping-service' => 'Escolha do serviço',

@@ -19,6 +19,9 @@ return [
     'pay-order' => 'Pay Order',
     'create-order' => 'Create Order',
     'back-to-list' => 'Back to List',
+    'recipient' => [
+        'slect-from-list' => 'Select Address From List',
+    ],
     'create' => [
         'shipment-and-destination' => 'Shipment & Destination',
         'shipping-service' => 'Shipping Service',

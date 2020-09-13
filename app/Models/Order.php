@@ -34,7 +34,7 @@ class Order extends Model
 
     public function recipient()
     {
-        return $this->belongsTo(Recipient::class);
+        return $this->hasOne(Recipient::class,'order_id');
     }
 
     public function subOrders()
