@@ -94,7 +94,7 @@
                                     <div class="controls row mb-1 align-items-center">
                                         <label class="col-md-3 text-md-right">@lang('profile.Address')<span class="text-danger"></span></label>
                                         <div class="col-md-6">
-                                            <input type="text" class="form-control" name="address" value="{{ old('name',auth()->user()->address) }}" placeholder="@lang('profile.Address')"/>
+                                            <input type="text" class="form-control" name="address" value="{{ old('address',auth()->user()->address) }}" placeholder="@lang('profile.Address')"/>
                                             <div class="help-block"></div>
                                         </div>
                                     </div>
@@ -102,7 +102,7 @@
                                     <div class="controls row mb-1 align-items-center">
                                         <label class="col-md-3 text-md-right">@lang('profile.Address')2<span class="text-danger"></span></label>
                                         <div class="col-md-6">
-                                            <input type="text" class="form-control" name="address2" value="{{ old('name',auth()->user()->address2) }}"  placeholder="@lang('profile.Address') 2"/>
+                                            <input type="text" class="form-control" name="address2" value="{{ old('address2',auth()->user()->address2) }}"  placeholder="@lang('profile.Address') 2"/>
                                             <div class="help-block"></div>
                                         </div>
                                     </div>
@@ -110,7 +110,7 @@
                                     <div class="controls row mb-1 align-items-center">
                                         <label class="col-md-3 text-md-right">@lang('profile.Street No')<span class="text-danger"></span></label>
                                         <div class="col-md-6">
-                                            <input type="text" class="form-control" name="street_no" value="{{ old('name',auth()->user()->street_no) }}" placeholder="@lang('profile.Street No')"/>
+                                            <input type="text" class="form-control" name="street_no" value="{{ old('street_no',auth()->user()->street_no) }}" placeholder="@lang('profile.Street No')"/>
                                             <div class="help-block"></div>
                                         </div>
                                     </div>
@@ -120,11 +120,9 @@
                                         <div class="col-md-6">
                                             <select id="country" name="country_id" class="form-control">
                                                 <option value="" selected disabled hidden>@lang('profile.Select Country')</option>
-                                                @isset($countries)
-                                                    @foreach ($countries as $country)
+                                                    @foreach (countries() as $country)
                                                         <option @if( auth()->user()->country_id == $country->id ) selected @endif  value="{{ $country->id }}">{{ $country->name }}</option>
                                                     @endforeach
-                                                @endisset
                                             </select>
                                             <div class="help-block"></div>
                                         </div>
@@ -135,11 +133,7 @@
                                         <div class="col-md-6">
                                             <select id="state" name="state_id" class="form-control">
                                                 <option value="" selected disabled hidden>@lang('profile.Select State')</option>
-                                                @isset($states)
-                                                    @foreach ($states as $state)
-                                                        <option @if( auth()->user()->state_id == $state->id ) selected @endif value="{{ $state->id }}">{{ $state->code }}</option>
-                                                    @endforeach
-                                                @endisset
+                                               
                                             </select>
                                             <div class="help-block"></div>
                                         </div>
@@ -148,7 +142,7 @@
                                     <div class="controls row mb-1 align-items-center">
                                         <label class="col-md-3 text-md-right">@lang('profile.City')<span class="text-danger"></span></label>
                                         <div class="col-md-6">
-                                            <input type="text" class="form-control" name="city" value="{{ old('name',auth()->user()->city) }}"  placeholder="@lang('profile.City')"/>
+                                            <input type="text" class="form-control" name="city" value="{{ old('city',auth()->user()->city) }}"  placeholder="@lang('profile.City')"/>
                                             <div class="help-block"></div>
                                         </div>
                                     </div>
@@ -156,7 +150,7 @@
                                     <div class="controls row mb-1 align-items-center">
                                         <label class="col-md-3 text-md-right">@lang('profile.Zipcode')<span class="text-danger"></span></label>
                                         <div class="col-md-6">
-                                            <input type="text" class="form-control" name="zipcode" value="{{ old('name',auth()->user()->zipcode) }}"  placeholder="@lang('profile.Zipcode')"/>
+                                            <input type="text" class="form-control" name="zipcode" value="{{ old('zipcode',auth()->user()->zipcode) }}"  placeholder="@lang('profile.Zipcode')"/>
                                             <div class="help-block"></div>
                                         </div>
                                     </div>
@@ -164,7 +158,7 @@
                                     <div class="controls row mb-1 align-items-center">
                                         <label class="col-md-3 text-md-right">CPF / CNPJ<span class="text-danger"></span></label>
                                         <div class="col-md-6">
-                                            <input type="text" class="form-control" name="tax_id" value="{{ old('name',auth()->user()->tax_id) }}"  placeholder="CPF / CNPJ"/>
+                                            <input type="text" class="form-control" name="tax_id" value="{{ old('tax_id',auth()->user()->tax_id) }}"  placeholder="CPF / CNPJ"/>
                                             <div class="help-block"></div>
                                         </div>
                                     </div>

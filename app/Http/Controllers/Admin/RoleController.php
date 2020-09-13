@@ -3,14 +3,17 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Repositories\RoleRepository;
+use App\Http\Requests\Role\CreateRequest;
+use App\Http\Requests\Role\UpdateRequest;
 use Illuminate\Http\Request;
 use App\Models\Role;
 
 class RoleController extends Controller
 {
-    public function index()
-    {
-        $roles = Role::all();
+    public function index(RoleRepository $repository)
+    {   
+        $roles = $repository->get();
         return view('admin.roles.index',compact('roles'));
     }
 
@@ -31,18 +34,12 @@ class RoleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateRequest $request, RoleRepository $repository)
     {
-        $this->validate($request,[
-            'role_name' => 'required|max:191|unique:roles,name'
-        ]);
+        if ( $repository->store($request) ){
+            session()->flash('alert-success','role.Created');
+        }
 
-
-        Role::create([
-            'name' => $request->role_name
-        ]);
-
-        session()->flash('alert-success','role.Created');
         return back();
     }
 
@@ -75,17 +72,13 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Role $role)
+    public function update(UpdateRequest $request, Role $role, RoleRepository $repository)
     {
-        $this->validate($request,[
-            'role_name' => 'required|max:191|unique:roles,name,'.$role->id
-        ]);
 
-        $role->update([
-            'name' => $request->role_name
-        ]);
+        if ( $repository->update($request, $role) ){
+            session()->flash('alert-success','role.Updated');
+        }
 
-        session()->flash('alert-success','role.Updated');
         return back();
     }
 
@@ -95,12 +88,13 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Role $role)
+    public function destroy(Role $role, RoleRepository $repository)
     {
-        $role->permissions()->delete();
-        $role->delete();
 
-        session()->flash('alert-success','role.Deleted');
+        if ( $repository->delete($role) ){
+            session()->flash('alert-success','role.Deleted');
+        }
+
         return back();
     }
 }

@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\ShippingService;
-use App\Http\Requests\Admin\Service\CreateServiceShipping;
+use App\Http\Requests\Admin\Service\CreateShippingService; 
+use App\Http\Requests\Admin\Service\UpdateShippingService; 
+use App\Repositories\ShippingServiceRepository;
 
 
 class ShippingServiceController extends Controller
@@ -15,9 +17,9 @@ class ShippingServiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(ShippingServiceRepository $repository)
     {
-        $shippingservices = ShippingService::all();
+        $shippingservices = $repository->get();
         return view('admin.shippingservices.index', compact('shippingservices'));
     }
 
@@ -37,25 +39,16 @@ class ShippingServiceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateServiceShipping $request)
+    public function store(CreateShippingService $request, ShippingServiceRepository $repository)
     {
-        ShippingService::create(
-            $request->only([
-                'name',
-                'max_length_allowed',
-                'max_width_allowed',
-                'min_width_allowed',
-                'min_length_allowed',
-                'max_sum_of_all_sides',
-                'contains_battery_charges',
-                'contains_perfume_charges',
-                'contains_flammable_liquid_charges',
-                'active',
-            ])
-        );
 
-        session()->flash('alert-success', 'shippingservice.Created');
-        return  redirect()->route('admin.shipping-services.index');
+        if ($repository->store($request) ){
+            session()->flash('alert-success', 'shippingservice.Created');
+            return  redirect()->route('admin.shipping-services.index');
+        }
+
+        return back()->withInput();
+
     }
 
     /**
@@ -87,25 +80,17 @@ class ShippingServiceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CreateServiceShipping $request, ShippingService $shippingService)
+    public function update(UpdateShippingService $request, ShippingService $shippingService, ShippingServiceRepository $repository)
     {
-        $shippingService->update(
-            $request->only([
-                'name',
-                'max_length_allowed',
-                'max_width_allowed',
-                'min_width_allowed',
-                'min_length_allowed',
-                'max_sum_of_all_sides',
-                'contains_battery_charges',
-                'contains_perfume_charges',
-                'contains_flammable_liquid_charges',
-                'active',
-            ])
-        );
+        if ($repository->update($request, $shippingService) ){
 
-        session()->flash('alert-success', 'shippingservice.Updated');
-        return  redirect()->route('admin.shipping-services.index');
+            session()->flash('alert-success', 'shippingservice.Updated');
+            return  redirect()->route('admin.shipping-services.index');
+
+        }
+
+        return back()->withInput();
+
     }
 
     /**
@@ -114,11 +99,13 @@ class ShippingServiceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ShippingService $shippingService)
+    public function destroy(ShippingService $shippingService, ShippingServiceRepository $repository)
     {   
-        $shippingService->delete();
+        if ( $repository->delete($shippingService) ){
+            session()->flash('alert-success', 'shippingservice.Deleted');
+            return  redirect()->route('admin.shipping-services.index');
+        }
 
-        session()->flash('alert-success', 'shippingservice.Deleted');
-        return  redirect()->route('admin.shipping-services.index');
+        return back();
     }
 }

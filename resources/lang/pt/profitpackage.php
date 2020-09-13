@@ -21,5 +21,5 @@ return [
     'created' => 'Pacote Criado',
     'udpated' => 'Pacote atualizado',
     'deleted' => 'Pacote Deletado',
-
+    'udpate' => 'Atualizar',
 ];

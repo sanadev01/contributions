@@ -4,7 +4,7 @@ namespace App\Http\Requests\Admin\Service;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateServiceShipping extends FormRequest
+class UpdateShippingService extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

@@ -19,7 +19,7 @@
                                     </th>
                                     <th>@lang('address.Name')</th>
                                     <th>@lang('address.Address') </th>
-                                    <th>@lang('address.Address2') </th>
+                                    <th>@lang('address.Address')2 </th>
                                     <th>@lang('address.Country') </th>
                                     <th>@lang('address.City') </th>
                                     <th>@lang('address.State') </th>

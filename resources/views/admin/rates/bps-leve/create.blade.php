@@ -51,11 +51,9 @@
                                     <div class="controls">
                                         <label>@lang('bpsleve.Country') <span class="text-danger">*</span></label>
                                         <select name="country_id" required class="form-control">
-                                            @isset($countries)
-                                                @foreach ($countries as $country)
+                                                @foreach (countries() as $country)
                                                     <option value="{{ $country->id }}">{{ $country->name }}</option>
                                                 @endforeach
-                                            @endisset
                                         </select>
                                         <div class="help-block"></div>
                                     </div>

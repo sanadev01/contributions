@@ -21,6 +21,7 @@ return [
     'back to list' => 'Back to List', 
     'created' => 'Package Created',
     'udpated' => 'Package Udpated',
+    'udpate' => 'Update',
     'deleted' => 'Package Deleted',
 ];
  

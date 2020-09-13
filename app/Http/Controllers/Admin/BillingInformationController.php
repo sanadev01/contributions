@@ -17,7 +17,7 @@ class BillingInformationController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(BillingInformationRepository $repository)
-    {
+    { 
         $billingInformation = $repository->get();
         return view('admin.billing-information.index',compact('billingInformation'));
     }

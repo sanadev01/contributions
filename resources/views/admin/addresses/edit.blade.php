@@ -104,7 +104,7 @@
                                                 <div class="controls">
                                                     <label>@lang('address.Country') <span class="text-danger">*</span></label>
                                                     <select name="country_id" id="country"  class="form-control selectpicker show-tick" data-live-search="true">
-                                                        @foreach ($countries as $country)
+                                                        @foreach (countries() as $country)
                                                             <option @if ($address->country_id == $country->id) selected @endif value="{{ $country->id }}">{{ $country->name }}</option>
                                                         @endforeach
                                                     </select>
@@ -117,9 +117,6 @@
                                                 <label>@lang('address.State') <span class="text-danger">*</span></label>
                                                 <select name="state_id" id="state" class="form-control">
                                                     <option value="">Select @lang('address.State')</option>
-                                                    @foreach ($states as $state)
-                                                        <option @if ($address->state_id == $state->id) selected @endif value="{{ $state->id }}">{{ $state->code }}</option>
-                                                    @endforeach
                                                 </select>
                                                 <div class="help-block"></div>
                                             </div>
