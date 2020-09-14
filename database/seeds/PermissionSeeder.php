@@ -54,11 +54,24 @@ class PermissionSeeder extends Seeder
                 'description' => ''
             ],
             [
-                'view_addresses' => 'View All Addresses',
-                'show_address' => 'Show Single Address',
-                'create_address' => 'Create New Address',
-                'edit_address' => 'Edit Address',
-                'delete_address' => 'Delete Address',
+                'slug' => 'view_addresses',
+                'description' => 'View All Addresses',
+            ],
+            [
+                'slug' => 'show_address',
+                'description' => 'Show Single Address',
+            ],
+            [
+                'slug' => 'create_address',
+                'description' => 'Create New Address',
+            ],
+            [
+                'slug' => 'edit_address',
+                'description' => 'Edit Address',
+            ],
+            [
+                'slug' => 'delete_address',
+                'description' => 'Delete Address',
             ]
         ];
     }
