@@ -54,19 +54,46 @@ class PermissionSeeder extends Seeder
                 'description' => ''
             ],
             [
-                'view_addresses' => 'View All Addresses',
-                'show_address' => 'Show Single Address',
-                'create_address' => 'Create New Address',
-                'edit_address' => 'Edit Address',
-                'delete_address' => 'Delete Address',
+                'slug' => 'view_addresses',
+                'description' => 'View All Addresses',
             ],
             [
-                'view_handlingServices' => 'View All Handling Services',
-                'show_handlingService' => 'Show Single Handling Service',
-                'create_handlingService' => 'Create New Handling Service',
-                'edit_handlingService' => 'Edit Handling Service',
-                'delete_handlingService' => 'Delete Handling Service',
-            ]
+                'slug' => 'show_address',
+                'description' => 'Show Single Address',
+            ],
+            [
+                'slug' => 'create_address',
+                'description' => 'Create New Address',
+            ],
+            [
+                'slug' => 'edit_address',
+                'description' => 'Edit Address',
+            ],
+            [
+                'slug' => 'delete_address',
+                'description' => 'Delete Address',
+            ],
+            [
+                'slug' => 'view_handlingServices',
+                'description' => 'View All Handling Services',
+            ],
+            [
+                'slug' => 'show_handlingService',
+                'description' => 'Show Single Handling Service',
+            ],
+            [
+                'slug' => 'create_handlingService',
+                'description' => 'Create New Handling Service',
+            ],
+            [
+                'slug' => 'edit_handlingService',
+                'description' => 'Edit Handling Service',
+            ],
+            [
+                'slug' => 'delete_handlingService',
+                'description' => 'Delete Handling Service',
+            ],
+            
         ];
     }
 }
