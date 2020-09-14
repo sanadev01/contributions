@@ -31,7 +31,7 @@ class HandlingServicePolicy
      */
     public function view(User $user, HandlingService $handlingService)
     {
-        return $user->hasPermission('handlingService') && $handlingService->user_id == $user->id;
+        return $user->hasPermission('show_handlingService') && $handlingService->user_id == $user->id;
     }
 
     /**
