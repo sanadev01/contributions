@@ -17,6 +17,11 @@ use App\Models\State;
 
 class AddressController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Address::class);
+    }
+    
     /**
      * Display a listing of the resource.
      *

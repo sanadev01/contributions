@@ -4,11 +4,13 @@ namespace App\Policies;
 
 use App\Models\Address;
 use App\Models\User;
+use App\Traits\ByPassAdminCheck;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class AddressPolicy
 {
-    use HandlesAuthorization;
+    use HandlesAuthorization,
+        ByPassAdminCheck;
 
     /**
      * Determine whether the user can view any models.
@@ -18,7 +20,7 @@ class AddressPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return $user->hasPermission('view_addresses');
     }
 
     /**
@@ -30,7 +32,7 @@ class AddressPolicy
      */
     public function view(User $user, Address $address)
     {
-        //
+        return $user->hasPermission('show_address') && $address->user_id == $user->id;
     }
 
     /**
@@ -41,7 +43,7 @@ class AddressPolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->hasPermission('create_address');
     }
 
     /**
@@ -53,7 +55,7 @@ class AddressPolicy
      */
     public function update(User $user, Address $address)
     {
-        //
+        return $user->hasPermission('edit_address') && $address->user_id == $user->id;
     }
 
     /**
@@ -65,7 +67,7 @@ class AddressPolicy
      */
     public function delete(User $user, Address $address)
     {
-        //
+        return $user->hasPermission('delete_address') && $address->user_id == $user->id;
     }
 
     /**

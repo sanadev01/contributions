@@ -52,6 +52,13 @@ class PermissionSeeder extends Seeder
             [
                 'slug' => 'edit_parcel_shipment_details',
                 'description' => ''
+            ],
+            [
+                'view_addresses' => 'View All Addresses',
+                'show_address' => 'Show Single Address',
+                'create_address' => 'Create New Address',
+                'edit_address' => 'Edit Address',
+                'delete_address' => 'Delete Address',
             ]
         ];
     }
