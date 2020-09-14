@@ -7,6 +7,7 @@ return [
     'Max width allowed' => 'Max width allowed',
     'Min width allowed' => 'Min width allowed',
     'Min length allowed' => 'Min length allowed',
+    'max_weight' => 'Max Weight',
     'max sum of all sides' => 'max sum of all sides',
     'Contains battery charges' => 'Contains battery charges',
     'Contains perfume charges' => 'Contains perfume charges',

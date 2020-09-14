@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Admin\Rates;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use Illuminate\Http\Request;
-use App\Repositories\ProfitPackageRepository;
 use App\Http\Requests\Admin\ProfitPackage\CreateRequest;
 use App\Http\Requests\Admin\ProfitPackage\UpdateRequest;
+use App\Models\ProfitPackage;
+use App\Models\User;
+use App\Repositories\ProfitPackageRepository;
+use Illuminate\Http\Request;
 
 class ProfitPackageController extends Controller
 {

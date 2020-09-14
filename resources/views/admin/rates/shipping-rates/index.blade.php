@@ -8,35 +8,25 @@
                     <div class="card-header">
                         <div class="">
                             <h4 class="mb-0 mr-3">
-                                @lang('bpsleve.LEVE & BPS Rates')
+                                @lang('shipping-rates.shipping-rates')
                             </h4>
                             <hr>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h3>@lang('bpsleve.BPS')</h3> 
-                                    {{-- <livewire:components.shipping-service-toggle :service-id="getShippingServiceID('bps')"/> --}}
-                                </div>
-                                <div class="col-md-6">
-                                    <h3>@lang('bpsleve.LEVE')</h3>
-                                    {{-- <livewire:components.shipping-service-toggle :service-id="getShippingServiceID('leve')"/> --}}
-                                </div>
-                            </div>
                         </div>
-                        <a href="{{ route('admin.rates.bps-leve.create') }}" class="pull-right btn btn-primary">
-                            @lang('bpsleve.Upload Rates')
+                        <a href="{{ route('admin.rates.shipping-rates.create') }}" class="pull-right btn btn-primary">
+                            @lang('shipping-rates.Upload Rates')
                         </a>
                     </div>
                     <hr>
                     <div class="card-content card-body">
                         <div class="row justify-content-center">
                             <div class="col-12 col-sm-4 col-md-3 col-lg-2 border col-xl-2 h4 text-center bg-primary text-white">
-                                @lang('bpsleve.Weight')
+                                @lang('shipping-rates.Weight')
                             </div>
                             <div class="col-12 col-sm-4 col-md-3 col-lg-2 border col-xl-2 h4 text-center bg-primary text-white">
-                                @lang('bpsleve.BPS') ($)
+                                @lang('shipping-rates.BPS') ($)
                             </div>
                             <div class="col-12 col-sm-4 col-md-3 col-lg-2 border col-xl-2 h4 text-center bg-primary text-white">
-                                @lang('bpsleve.LEVE') ($)
+                                @lang('shipping-rates.LEVE') ($)
                             </div>
                         </div>
                         @foreach($rates->data??[] as $rate)

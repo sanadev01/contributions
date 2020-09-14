@@ -26,13 +26,13 @@ class RateRepository
             try {
                 $importService = new ImportBPSCharges($file);
                 $importService->handle();
-                session()->flash('alert-success', 'bpsleve.Rates Updated Successfully');
+                session()->flash('alert-success', 'shipping-rates.Rates Updated Successfully');
 
                 return true;
 
             } catch (\Exception $exception) {
                 throw $exception;
-                session()->flash('alert-danger', 'bpsleve.Error While Updating Rates');
+                session()->flash('alert-danger', 'shipping-rates.Error While Updating Rates');
                 return back();
             }
 

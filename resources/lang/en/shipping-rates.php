@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'LEVE & BPS Rates' => 'LEVE & BPS Rates',
+    'shipping-rates' => 'Shipping Rates',
     'BPS' => 'BPS',
     'LEVE' => 'LEVE',
     'Weight' => 'Weight (Grams)',

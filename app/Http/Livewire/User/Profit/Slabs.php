@@ -16,7 +16,7 @@ class Slabs extends Component
         $this->slabs = old('slab',[]);
         if ( $profitId ){
             $profitPackage = ProfitPackage::find($profitId) ?? new ProfitPackage;
-            $this->slabs = json_decode($profitPackage->data, true);
+            $this->slabs = $profitPackage->data;
         }
 
     }

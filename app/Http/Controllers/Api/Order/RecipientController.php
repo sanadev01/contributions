@@ -63,6 +63,10 @@ class RecipientController extends Controller
             'country_id' => $address->country_id,
         ]);
 
+        $order->update([
+            'recipient_address_id' => $address->id
+        ]);
+
         return apiResponse(true,'Address Updated');
     }
 }

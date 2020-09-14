@@ -27,7 +27,8 @@ class ProfitPackageRepository
     
             $profitPackage = ProfitPackage::create([
                 'name' => $request->package_name,
-                'data' => json_encode($profitPackageslab)
+                'type' => $request->type,
+                'data' => $profitPackageslab
             ]);
 
             return true;
@@ -49,7 +50,8 @@ class ProfitPackageRepository
     
             $profitPackage->update([
                 'name' => $request->package_name,
-                'data' => json_encode($profitPackageslab)
+                'type' => $request->type,
+                'data' => $profitPackageslab
             ]);
 
             return true;

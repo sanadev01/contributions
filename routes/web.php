@@ -45,7 +45,6 @@ Route::namespace('Admin')
             Route::resource('orders.sender',OrderSenderController::class)->only('index','store');
             Route::resource('orders.recipient',OrderRecipientController::class)->only('index','store');
             Route::resource('orders.services',OrderServicesController::class)->only('index','store');
-            Route::resource('orders.consolidation',ConsolidationController::class)->only('index','store');
             Route::resource('orders.order-details', OrderItemsController::class)->only('index','store');
             Route::resource('orders.order-invoice', OrderInvoiceController::class)->only('index','store');
         });
@@ -55,7 +54,7 @@ Route::namespace('Admin')
             ->as('rates.')
             ->group(function () {
                 Route::resource('profit-packages', ProfitPackageController::class); 
-                Route::resource('bps-leve', RateController::class)->only(['create', 'store', 'index']);
+                Route::resource('shipping-rates', RateController::class)->only(['create', 'store', 'index']);
             });
 
         Route::resource('settings', SettingController::class)->only(['index', 'store']);

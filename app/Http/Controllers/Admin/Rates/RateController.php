@@ -13,19 +13,19 @@ class RateController extends Controller
     public function index(RateRepository $repository)
     {
         $rates = $repository->get();
-        return view('admin.rates.bps-leve.index', compact('rates'));
+        return view('admin.rates.shipping-rates.index', compact('rates'));
     }
 
     public function create()
     {   
         $shipping_services = ShippingService::all();
-        return view('admin.rates.bps-leve.create', compact('shipping_services'));
+        return view('admin.rates.shipping-rates.create', compact('shipping_services'));
     }
 
     public function store(CreateRequest $request, RateRepository $repository)
     {   
         if ( $repository->store($request) ){
-            return  redirect()->route('admin.rates.bps-leve.index');
+            return  redirect()->route('admin.rates.shipping-rates.index');
         }
     }
 

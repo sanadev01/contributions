@@ -47,6 +47,11 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
+    public function services()
+    {
+        return $this->hasMany(OrderService::class);
+    }
+
     public function getPaymentInvoice()
     {
         return !$this->paymentInvoices->isEmpty() ? $this->paymentInvoices()->first() : null;

@@ -14,7 +14,7 @@ return [
     'Profit Packages' => 'Profit Packages',
     'Handling Services' => 'Handling Services',
     'Shipping Services' => 'Shipping Services',
-    'LEVE & BPS Rates' => 'LEVE & BPS Rates',
+    'Shipping Charges' => 'Shipping Charges',
     'Users' => 'Users',
     'Roles' => 'Roles',
     'Billing Informations' => 'Billing Informations',

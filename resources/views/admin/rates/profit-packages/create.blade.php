@@ -28,6 +28,20 @@
                             @enderror
                         </div>
                     </div>
+                    <div class="row justify-content-center mt-1">
+                        <div class="col-md-10">
+                            <label for="">@lang('profitpackage.package-name')</label>
+                            <select class="form-control" name="type">
+                                <option value="custom" {{ old('package_name') == '' ? 'custom': '' }}>Custom</option>
+                                <option value="default" {{ old('package_name') == 'default' ? 'selected': '' }}>Default</option>
+                            </select>
+                            @error('package_name')
+                                <div class="text-danger">
+                                    {{ $message }}
+                                </div> 
+                            @enderror
+                        </div>
+                    </div>
                     <hr>
                     <div class="row">
                         <div class="col-md-12">

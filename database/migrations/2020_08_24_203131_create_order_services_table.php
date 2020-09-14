@@ -16,6 +16,7 @@ class CreateOrderServicesTable extends Migration
         Schema::create('order_services', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('order_id');
+            $table->bigInteger('service_id');
             $table->string('name')->nullable();
             $table->double('cost')->default(0);
             $table->double('price')->default(0);

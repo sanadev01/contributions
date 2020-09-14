@@ -52,10 +52,10 @@
                         </a>
                     </li>
         
-                    <li class="{{ $isActive(['admin.rates.bps-leve.index','admin.rates.bps-leve.create']) }}">
-                        <a href="{{ route('admin.rates.bps-leve.index') }}">
+                    <li class="{{ $isActive(['admin.rates.shipping-rates.index','admin.rates.shipping-rates.create']) }}">
+                        <a href="{{ route('admin.rates.shipping-rates.index') }}">
                             <i class="feather icon-circle"></i>
-                            <span class="menu-title">@lang('menu.LEVE & BPS Rates')</span>
+                            <span class="menu-title">@lang('menu.Shipping Charges')</span>
                         </a>
                     </li>
                 </ul>

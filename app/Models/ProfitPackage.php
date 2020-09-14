@@ -10,6 +10,10 @@ class ProfitPackage extends Model
     use JsonColumn;
     protected $guarded = [];
 
+    protected $casts = [
+        'data' => 'Array'
+    ];
+
     const SERVICE_BPS = 'bps';
     const SERVICE_PACKAGE_PLUS = 'package-plus';
 

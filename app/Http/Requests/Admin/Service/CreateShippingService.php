@@ -32,6 +32,7 @@ class CreateShippingService extends FormRequest
             'min_width_allowed' => 'required|numeric',
             'min_length_allowed' => 'required|numeric',
             'max_sum_of_all_sides' => 'required|numeric',
+            'max_weight_allowed' => 'required|numeric',
             'contains_battery_charges' => 'required|numeric',
             'contains_perfume_charges' => 'required|numeric',
             'contains_flammable_liquid_charges' => 'required|numeric',

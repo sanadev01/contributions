@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'LEVE & BPS Rates' => 'Taxas LEVE e BPS',
+    'shipping-rates' => 'Taxas de envio',
     'BPS' => 'bps',
     'LEVE' => 'leve',
     'Weight' => 'Peso (Gramas)',

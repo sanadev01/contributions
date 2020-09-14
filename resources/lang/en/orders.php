@@ -22,6 +22,9 @@ return [
     'recipient' => [
         'slect-from-list' => 'Select Address From List',
     ],
+    'services' => [
+        'handling-services' => 'Additional Services',
+    ],
     'create' => [
         'shipment-and-destination' => 'Shipment & Destination',
         'shipping-service' => 'Shipping Service',
@@ -32,7 +35,7 @@ return [
         'destination-address' => 'Destination Address',
         'select-address' => 'Select Address',
         'create-address' => 'create-address',
-        'handling-services' => 'Handling Services',
+        
         'note' => 'To create a consolidated shipment drag more than 1 available shipment to ‘’order list’’.',
         'save' => 'Save',
         'alert-success-consolidate' => 'Your Request for Consolidate Order is Received. it will take 24 hours to process your request. you will be notified',

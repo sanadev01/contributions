@@ -46,7 +46,7 @@
     <div class="actions clearfix">
         <ul role="menu" aria-label="Pagination">
             <li class="disabled" aria-disabled="true">
-                {{-- <a href="#previous" role="menuitem">Previous</a> --}}
+                {{-- <a href="{{ route('admin.orders.packages.index') }}" role="menuitem">Previous</a> --}}
             </li>
             <li aria-hidden="false" aria-disabled="false">
                 <button class="btn btn-primary">Next</button>

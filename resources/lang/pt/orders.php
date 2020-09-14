@@ -22,6 +22,9 @@ return [
     'recipient' => [
         'slect-from-list' => 'Selecione o endereço da lista',
     ],
+    'services' => [
+        'handling-services' => 'Serviços adicionais:',
+    ],
     'create' => [
         'shipment-and-destination' => 'Criação do envio',
         'shipping-service' => 'Escolha do serviço',

@@ -15,7 +15,7 @@
             </ul>
         </div>
     @endif
-    <form action="{{ route('admin.addresses.store') }}" class="wizard" method="post" enctype="multipart/form-data">
+    <form action="{{ route('admin.orders.recipient.store',$order) }}" class="wizard" method="post" enctype="multipart/form-data">
         @csrf
 
         <div>
@@ -26,7 +26,7 @@
                         <select class="form-control selectpicker show-tick" data-live-search="true" name="address_id" id="address_id" required placeholder="@lang('orders.recipient.slect-from-list')">
                             <option value="">@lang('orders.recipient.slect-from-list')</option>
                             @foreach (auth()->user()->addresses()->orderBy('first_name')->get() as $address)
-                                <option value="{{ $address->id }}">{{ "{$address->first_name} {$address->last_name} | {$address->address} {$address->address2}" }}</option>
+                                <option value="{{ $address->id }}" {{ $address->id == $order->recipient_address_id ? 'selected' : '' }}>{{ "{$address->first_name} {$address->last_name} | {$address->address} {$address->address2}" }}</option>
                             @endforeach
                         </select>
                         <div class="help-block"></div>
@@ -194,6 +194,7 @@
 
     $('#address_id').on('change',function(){
         if ( $(this).val() == undefined || $(this).val() == "" ) return;
+        $('#loading').fadeIn();
         $.post('{{ route("api.orders.recipient.update") }}',{
             address_id: $(this).val(),
             order_id: {{ $order->id }}
@@ -202,11 +203,12 @@
             if ( response.success ){
                 window.location.reload();
             }else{
+                $('#loading').fadeOut();
                 toastr.error(response.message)
             }
 
         }).catch(function(error){
-
+            $('#loading').fadeOut();
         })
     })
 

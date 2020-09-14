@@ -1,0 +1,155 @@
+<?php
+
+namespace App\Services\Calculators;
+
+use App\Models\Order;
+use App\Models\Profit;
+use App\Models\ProfitPackage;
+use App\Models\ShippingService;
+use App\Services\Converters\UnitsConverter;
+use Exception;
+use function ceil;
+
+class RatesCalculator
+{
+    protected $order;
+    protected $shippingService;
+
+    protected $length;
+    protected $width;
+    protected $height;
+
+    protected $originalWeight;
+
+    protected $weight;
+
+    protected $shipment;
+
+    protected $recipient;
+
+    protected $rates;
+
+    protected $errors;
+
+    public function __construct(Order $order,ShippingService $service)
+    {
+        $this->order = $order;
+        $this->shippingService = $service;
+
+        $this->recipient = $order->recipient;
+
+        $this->rates = $service->rates()->byCountry($this->recipient->country_id)->first();
+
+        $this->initializeDims();
+
+        $this->weight = $this->calculateWeight();
+    }
+
+    private function initializeDims()
+    {
+        if ($this->order->measurement_unit == 'lbs/in') {
+            $this->length = UnitsConverter::inToCm($this->order->length);
+            $this->width = UnitsConverter::inToCm($this->order->width);
+            $this->height = UnitsConverter::inToCm($this->order->height);
+            $this->originalWeight = UnitsConverter::poundToKg($this->order->weight);
+        } else {
+            $this->length = $this->order->length;
+            $this->width = $this->order->width;
+            $this->height = $this->order->height;
+            $this->originalWeight = $this->order->weight;
+        }
+    }
+
+    private function calculateWeight()
+    {
+        $volumnWeight = WeightCalculator::getVolumnWeight($this->length, $this->width, $this->height);
+
+        return $volumnWeight > $this->originalWeight ? $volumnWeight : $this->originalWeight;
+    }
+
+    /**
+     * @return float|int
+     */
+    public function getWeight($unit = 'kg')
+    {
+        if ($unit == 'kg') {
+            return $this->weight;
+        }
+
+        if ($unit == 'lbs') {
+            return UnitsConverter::kgToPound($this->weight);
+        }
+
+        return  'Invalid Unit';
+    }
+
+
+    public function getRate($addProfit = true)
+    {
+        $rate = 0;
+        $weight = ceil(WeightCalculator::kgToGrams($this->weight));
+
+        if ( $weight<100 ){
+            $weight = 100;
+        }
+        
+        $rate = collect($this->rates->data)->where('weight','<=',$weight)->sortByDesc('weight')->take(1)->first();
+
+        $rate = $rate['leve'];
+
+        if (! $addProfit) {
+            return $rate;
+        }
+        
+        return $rate + $this->getProfitOn($rate);
+    }
+
+    public function getProfitOn($cost)
+    {
+        $weight = ceil(WeightCalculator::kgToGrams($this->weight));
+        $user = $this->order->user;
+
+        $profitPackage = $user->profitPackage ? $user->profitPackage : ProfitPackage::where('type',ProfitPackage::TYPE_DEFAULT)->first();
+        $profitSlab = collect($profitPackage->data)->where('min_weight','<=',$weight)->where('max_weight','>=',$weight)->first();
+        $profitPercentage =  $profitSlab ? $profitSlab['value'] : ( $profitPackage ? collect($profitPackage->data)->where('max_weight','>=',29999)->first()->value: 0 );
+
+        $profitAmount =  ($profitPercentage/100) * $cost ;
+
+        return $profitAmount;
+    }
+
+    public function isAvailable()
+    {
+        try {
+
+            if ( !$this->rates ) {
+                $this->errors .= "Service not available for this Country <br>";
+                return false;
+            }
+
+            if ( $this->shippingService->max_weight_allowed < $this->weight ){
+                $this->errors .= "service is not available for more then 30KG  weight";
+                return false;
+            }
+
+            return true;
+        } catch (Exception $exception) {
+            return false;
+        }
+    }
+
+    public function weightUnit()
+    {
+        return 'Grams';
+    }
+
+    public function weightInDefaultUnit()
+    {
+        return WeightCalculator::kgToGrams($this->weight);
+    }
+
+    public function getErrors()
+    {
+        return $this->errors;
+    }
+}

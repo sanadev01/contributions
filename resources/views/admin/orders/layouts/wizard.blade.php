@@ -36,21 +36,15 @@
                                                 <span class="step">3</span> Additional services
                                             </a>
                                         </li>
-                                        @if ( $order->isConsolidated() || in_array(request()->route()->getName(),['admin.orders.consolidation.index']) )
-                                            <li role="tab" class="{{ in_array(request()->route()->getName(),['admin.orders.consolidation.index'])? 'current' : 'disabled' }}" aria-disabled="false" aria-selected="true">
-                                                <a id="steps-uid-0-t-0" href="#" aria-controls="steps-uid-0-p-0">
-                                                    <span class="step">1</span> Consolidation
-                                                </a>
-                                            </li>
-                                        @endif
+                                        
                                         <li role="tab" class="{{ in_array(request()->route()->getName(),['admin.orders.order-details.index'])? 'current' : 'disabled' }}" aria-disabled="true">
                                             <a id="steps-uid-0-t-1" href="#" aria-controls="steps-uid-0-p-1">
-                                                <span class="step">2</span> Shipping & Items
+                                                <span class="step">4</span> Shipping & Items
                                             </a>
                                         </li>
                                         <li role="tab" class="last {{ in_array(request()->route()->getName(),['admin.orders.order-invoice.index'])? 'current' : 'disabled' }}" aria-disabled="true">
                                             <a id="steps-uid-0-t-2" href="#" aria-controls="steps-uid-0-p-2">
-                                                <span class="step">3</span> Payment Invoice
+                                                <span class="step">5</span> Payment Invoice
                                             </a>
                                         </li>
                                     </ul>
