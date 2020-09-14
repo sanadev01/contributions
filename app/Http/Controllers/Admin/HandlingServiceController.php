@@ -11,7 +11,11 @@ use App\Repositories\HandlingServiceRepository;
 
 
 class HandlingServiceController extends Controller
-{
+{   
+    public function __construct()
+    {
+        $this->authorizeResource(HandlingService::class);
+    } 
     /**
      * Display a listing of the resource.
      *

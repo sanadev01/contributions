@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 
 class PermissionSeeder extends Seeder
 {
-    /**
+    /** 
      * Run the database seeds.
      *
      * @return void
@@ -59,6 +59,13 @@ class PermissionSeeder extends Seeder
                 'create_address' => 'Create New Address',
                 'edit_address' => 'Edit Address',
                 'delete_address' => 'Delete Address',
+            ],
+            [
+                'view_handlingServices' => 'View All Handling Services',
+                'show_handlingService' => 'Show Single Handling Service',
+                'create_handlingService' => 'Create New Handling Service',
+                'edit_handlingService' => 'Edit Handling Service',
+                'delete_handlingService' => 'Delete Handling Service',
             ]
         ];
     }
