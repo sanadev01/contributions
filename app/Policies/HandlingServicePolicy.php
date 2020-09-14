@@ -4,12 +4,13 @@ namespace App\Policies;
 
 use App\Models\HandlingService;
 use App\Models\User;
+use App\Traits\ByPassAdminCheck;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class HandlingServicePolicy
 {
     use HandlesAuthorization,
-    ByPassAdminCheck;
+    ByPassAdminCheck; 
 
     /**
      * Determine whether the user can view any models.

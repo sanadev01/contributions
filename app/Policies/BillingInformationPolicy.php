@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 namespace App\Policies;
 
@@ -18,7 +18,7 @@ class BillingInformationPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return $user->hasPermission('view_billingInformations');
     }
 
     /**
@@ -30,7 +30,7 @@ class BillingInformationPolicy
      */
     public function view(User $user, BillingInformation $billingInformation)
     {
-        //
+        return $user->hasPermission('show_billingInformation') && $billingInformation->user_id == $user->id;
     }
 
     /**
@@ -41,7 +41,7 @@ class BillingInformationPolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->hasPermission('create_billingInformation');
     }
 
     /**
@@ -53,7 +53,7 @@ class BillingInformationPolicy
      */
     public function update(User $user, BillingInformation $billingInformation)
     {
-        //
+        return $user->hasPermission('edit_billingInformation') && $billingInformation->user_id == $user->id;
     }
 
     /**
@@ -65,7 +65,7 @@ class BillingInformationPolicy
      */
     public function delete(User $user, BillingInformation $billingInformation)
     {
-        //
+        return $user->hasPermission('delete_billingInformation') && $billingInformation->user_id == $user->id;
     }
 
     /**

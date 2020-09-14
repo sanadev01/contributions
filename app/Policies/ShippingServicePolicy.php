@@ -4,11 +4,13 @@ namespace App\Policies;
 
 use App\Models\ShippingService;
 use App\Models\User;
+use App\Traits\ByPassAdminCheck;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ShippingServicePolicy
 {
-    use HandlesAuthorization;
+    use HandlesAuthorization,
+    ByPassAdminCheck;
 
     /**
      * Determine whether the user can view any models.
@@ -18,7 +20,7 @@ class ShippingServicePolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return $user->hasPermission('view_shippingServices');
     }
 
     /**
@@ -30,7 +32,7 @@ class ShippingServicePolicy
      */
     public function view(User $user, ShippingService $shippingService)
     {
-        //
+        return $user->hasPermission('show_shippingService') && $shippingService->user_id == $user->id;
     }
 
     /**
@@ -41,7 +43,7 @@ class ShippingServicePolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->hasPermission('create_shippingService');
     }
 
     /**
@@ -53,7 +55,7 @@ class ShippingServicePolicy
      */
     public function update(User $user, ShippingService $shippingService)
     {
-        //
+        return $user->hasPermission('edit_shippingService') && $shippingService->user_id == $user->id;
     }
 
     /**
@@ -65,7 +67,7 @@ class ShippingServicePolicy
      */
     public function delete(User $user, ShippingService $shippingService)
     {
-        //
+        return $user->hasPermission('delete_shippingService') && $shippingService->user_id == $user->id;
     }
 
     /**

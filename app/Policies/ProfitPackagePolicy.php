@@ -4,11 +4,13 @@ namespace App\Policies;
 
 use App\Models\ProfitPacakge;
 use App\Models\User;
+use App\Traits\ByPassAdminCheck;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ProfitPackagePolicy
 {
-    use HandlesAuthorization;
+    use HandlesAuthorization,
+    ByPassAdminCheck; 
 
     /**
      * Determine whether the user can view any models.
@@ -18,7 +20,7 @@ class ProfitPackagePolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return $user->hasPermission('view_profitPacakges');
     }
 
     /**
@@ -30,7 +32,7 @@ class ProfitPackagePolicy
      */
     public function view(User $user, ProfitPacakge $profitPacakge)
     {
-        //
+        return $user->hasPermission('show_profitPacakge') && $profitPacakge->user_id == $user->id;
     }
 
     /**
@@ -41,7 +43,7 @@ class ProfitPackagePolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->hasPermission('create_profitPacakge');
     }
 
     /**
@@ -53,7 +55,7 @@ class ProfitPackagePolicy
      */
     public function update(User $user, ProfitPacakge $profitPacakge)
     {
-        //
+        return $user->hasPermission('edit_profitPacakge') && $profitPacakge->user_id == $user->id;
     }
 
     /**
@@ -65,7 +67,7 @@ class ProfitPackagePolicy
      */
     public function delete(User $user, ProfitPacakge $profitPacakge)
     {
-        //
+        return $user->hasPermission('delete_profitPacakge') && $profitPacakge->user_id == $user->id;
     }
 
     /**
