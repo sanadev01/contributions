@@ -2,7 +2,7 @@
     <div class="row mt-1">
         <div class="form-group col-12 col-sm-6">
             <div class="controls">
-                <label>Weight ({{  $unit == 'kg/cm'? 'kg': 'lbs' }})  <span class="text-danger">*</span></label>
+                <label>@lang('parcel.Weight') ({{  $unit == 'kg/cm'? 'kg': 'lbs' }})  <span class="text-danger">*</span></label>
                 <input step="0.001" type="number" class="form-control" autocomplete="off" required name="weight" wire:model.debounce.500ms="weight" placeholder=""/>
                 <div class="help-block">
                     <span>{{ $weightOther }}</span>
@@ -20,7 +20,7 @@
         </div>
         <div class="form-group col-12 col-sm-6">
             <div class="controls">
-                <label>Measuring Units <span class="text-danger">*</span></label>
+                <label>@lang('parcel.Measuring Units') <span class="text-danger">*</span></label>
                 <select name="unit" class="form-control" required wire:model="unit">
                     <option value="lbs/in">lbs/in</option>
                     <option value="kg/cm">kg/cm</option>
@@ -35,7 +35,7 @@
     <div class="row mt-1">
         <div class="col-12 col-sm-6 col-md-4">
             <div class="controls">
-                <label>Length ({{ $unit == 'kg/cm' ? 'cm' : 'in' }})<span class="text-danger">*</span></label>
+                <label>@lang('parcel.Length') ({{ $unit == 'kg/cm' ? 'cm' : 'in' }})<span class="text-danger">*</span></label>
                 <input step="0.001" type="number" class="form-control" autocomplete="off" required name="length" wire:model.debounce.500ms="length" placeholder=""/>
                 <div class="help-block">
                     <span>{{ $lengthOther }}</span>
@@ -52,7 +52,7 @@
         </div>
         <div class="col-12 col-sm-6 col-md-4">
             <div class="controls">
-                <label>Width ({{ $unit == 'kg/cm' ? 'cm' : 'in' }}) <span class="text-danger">*</span></label>
+                <label>@lang('parcel.Width') ({{ $unit == 'kg/cm' ? 'cm' : 'in' }}) <span class="text-danger">*</span></label>
                 <input step="0.001" type="number" class="form-control" autocomplete="off" required name="width" wire:model.debounce.500ms="width" placeholder=""/>
                 <div class="help-block">
                     <span>{{ $widthOther }}</span>
@@ -69,7 +69,7 @@
         </div>
         <div class="col-12 col-sm-6 col-md-4">
             <div class="controls">
-                <label>Height ({{ $unit == 'kg/cm' ? 'cm' : 'in' }}) <span class="text-danger">*</span></label>
+                <label>@lang('parcel.Height') ({{ $unit == 'kg/cm' ? 'cm' : 'in' }}) <span class="text-danger">*</span></label>
                 <input step="0.001" type="number" class="form-control" autocomplete="off" required name="height" wire:model.debounce.500ms="height" placeholder=""/>
                 <div class="help-block">
                     <span>{{ $heightOther }}</span>
@@ -86,7 +86,7 @@
         </div>
         <div class="col-12 col-sm-6 col-md-4">
             <div class="controls h2 mt-2">
-                <label> <span class="text-danger">*</span> The Rate will be applied on  <strong class="text-danger h2">{{ $volumeWeight }} <span class="ml-1"> {{ $currentWeightUnit }} </span> </strong></label>
+                <label> <span class="text-danger">*</span> @lang('parcel.The Rate will be applied on')  <strong class="text-danger h2">{{ $volumeWeight }} <span class="ml-1"> {{ $currentWeightUnit }} </span> </strong></label>
             </div>
         </div>
     </div>

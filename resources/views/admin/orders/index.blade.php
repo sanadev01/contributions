@@ -5,8 +5,8 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
-                        <h4 class="mb-0">Orders</h4>
+                    <div class="card-header"> 
+                        <h4 class="mb-0">@lang('orders.orders')</h4>
                         {{-- <a href="{{ route('admin.roles.create') }}" class="pull-right btn btn-primary"> Create Role </a> --}}
                     </div>
                     <div class="card-content">
@@ -15,10 +15,10 @@
                                 <thead>
                                 <tr>
                                     <th>
-                                        Name
+                                        @lang('orders.name')
                                     </th>
                                     <th>
-                                        Action
+                                        @lang('orders.action')
                                     </th>
                                 </tr>
                                 </thead>

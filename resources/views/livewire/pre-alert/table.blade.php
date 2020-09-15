@@ -17,21 +17,21 @@
             <tr>
                 <th>
                     <a href="#" wire:click.prevent=sortBy('created_at')>
-                        @lang('prealerts.date')
+                        @lang('parcel.Date')
                     </a>
                 </th>
                 @admin
-                <th>User Name</th>
-                <th>Pobox#</th>
+                <th>@lang('parcel.User Name')</th>
+                <th>@lang('parcel.Pobox')#</th>
                 @endadmin
-                <th>@lang('prealerts.wr')</th>
-                <th>@lang('prealerts.gross-weight')</th>
-                <th>@lang('prealerts.volume-weight')</th>
-                <th>@lang('prealerts.merchant')</th>
-                <th>@lang('prealerts.carrier')</th>
-                <th>@lang('prealerts.tracking-id')</th>
-                <th>@lang('prealerts.status')</th>
-                <th>@lang('prealerts.actions.text')</th>
+                <th>@lang('parcel.wr')</th>
+                <th>@lang('parcel.Gross Weight')</th>
+                <th>@lang('parcel.Volume Weight')</th>
+                <th>@lang('parcel.Merchant')</th>
+                <th>@lang('parcel.Carrier')</th>
+                <th>@lang('parcel.Tracking ID')</th>
+                <th>@lang('parcel.Status')</th>
+                <th>@lang('parcel.Action')</th>
             </tr>
         </thead>
         <tbody>
@@ -49,9 +49,9 @@
                 <th><input class="form-control" type="text" wire:model="tracking_id"></th>
                 <th>
                     <select class="form-control" wire:model="status">
-                        <option value="">All</option>
-                        <option value="transit">Transit</option>
-                        <option value="ready">Ready</option>
+                        <option value="">@lang('parcel.All')</option>
+                        <option value="transit">@lang('parcel.Transit')</option>
+                        <option value="ready">@lang('parcel.Ready')</option>
                     </select>
                 </th>
                 <th></th>

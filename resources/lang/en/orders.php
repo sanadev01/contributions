@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'name' => 'Name',
+    'action' => 'Action',
+    'orders' => 'Orders',
     'manage-orders' => 'Manage Orders',
     'date' => 'Date',
     'order-id' => 'Order ID',

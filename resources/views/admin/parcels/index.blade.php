@@ -7,13 +7,13 @@
                 <div class="card">
                     <div class="card-header">
                         <h1 class="mb-0">
-                            @lang('prealerts.my-prealerts')
+                            @lang('parcel.My Parcels')
                         </h1>
                         @admin
-                        <a href="{{ route('admin.parcels.create') }}" class="pull-right btn btn-primary"> @lang('prealerts.create-prealert') </a>
+                        <a href="{{ route('admin.parcels.create') }}" class="pull-right btn btn-primary"> @lang('parcel.Create Parcel') </a>
                         @endadmin
                         @user
-                        <a href="{{ route('admin.parcels.create') }}" class="pull-right btn btn-primary"> @lang('prealerts.create-prealert') </a>
+                        <a href="{{ route('admin.parcels.create') }}" class="pull-right btn btn-primary"> @lang('parcel.Create Parcel') </a>
                         @enduser
                     </div>
                     <div class="card-content card-body">
