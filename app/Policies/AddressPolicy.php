@@ -44,7 +44,7 @@ class AddressPolicy
     public function create(User $user)
     {
         return $user->hasPermission('create_address');
-    }
+    } 
 
     /**
      * Determine whether the user can update the model.
