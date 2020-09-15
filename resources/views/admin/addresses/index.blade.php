@@ -7,7 +7,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">@lang('address.My Addresses') </h4>
-                        @can('create_address', App\Models\Address::class)
+                        @can('create', App\Models\Address::class)
                         <a href="{{ route('admin.addresses.create') }}" class="pull-right btn btn-primary"> @lang('address.Add Address') </a>
                         @endcan
                     </div>
