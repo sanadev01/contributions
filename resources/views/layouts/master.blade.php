@@ -34,6 +34,9 @@
             }
             *{
                 -webkit-print-color-adjust: exact;
+            },
+            .print{
+                display: block !important;
             }
         }
 

@@ -44,6 +44,7 @@ class CreateOrdersTable extends Migration
             $table->double('order_value')->default(0);
             $table->double('shipping_value')->default(0);
             $table->double('comission')->default(0);
+            $table->double('dangrous_goods')->default(0);
             $table->double('total')->default(0);
             $table->double('discount')->default(0);
             $table->double('gross_total')->default(0);

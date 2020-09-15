@@ -40,7 +40,7 @@ class OrderItemsController extends Controller
     {
         if ( $orderRepository->updateShippingAndItems($request,$order) ){
             session()->flash('alert-success','Order Placed');
-            return \back();
+            return \redirect()->route('admin.orders.order-invoice.index',$order);
         }
         session()->flash('alert-danger','Error While placing Order');
         return \back()->withInput();
