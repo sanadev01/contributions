@@ -23,7 +23,7 @@
                 <div class="form-group col-12 col-sm-6 col-md-6">
                     <div class="controls">
                         <label>@lang('orders.recipient.slect-from-list') <span class="text-danger"></span></label>
-                        <select class="form-control selectpicker show-tick" data-live-search="true" name="address_id" id="address_id" required placeholder="@lang('orders.recipient.slect-from-list')">
+                        <select class="form-control selectpicker show-tick" data-live-search="true" name="address_id" id="address_id" placeholder="@lang('orders.recipient.slect-from-list')">
                             <option value="">@lang('orders.recipient.slect-from-list')</option>
                             @foreach (auth()->user()->addresses()->orderBy('first_name')->get() as $address)
                                 <option value="{{ $address->id }}" {{ $address->id == $order->recipient_address_id ? 'selected' : '' }}>{{ "{$address->first_name} {$address->last_name} | {$address->address} {$address->address2}" }}</option>
