@@ -24,7 +24,7 @@ class OrderItemsController extends Controller
         }
 
 
-        return view('');
+        return view('admin.orders.order-details.index',compact('order','shippingServices'));
     }
 
     /**

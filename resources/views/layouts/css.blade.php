@@ -35,5 +35,24 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/extensions/toastr.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/plugins/extensions/toastr.css') }}">
 
-
+<style>
+    .border-0{
+        border-width: 0px !important;
+    }
+    .border-1{
+        border-width: 2px !important;
+    }
+    .border-2{
+        border-width: 4px !important;
+    }
+    .border-3{
+        border-width: 8px !important;
+    }
+    .border-4{
+        border-width: 16px !important;
+    }
+    .border-5{
+        border-width: 32px !important;
+    }
+</style>
 @yield('custom-css')

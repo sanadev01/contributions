@@ -32,7 +32,7 @@ class ShippingService extends Model
 
     public function getRateFor(Order $order,$withProfit=true)
     {
-        return $this->getCalculator($order)->getRate($withProfit);
+        return round($this->getCalculator($order)->getRate($withProfit),2);
     }
 
     public function getCalculator(Order $order)
