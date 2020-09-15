@@ -4,11 +4,13 @@ namespace App\Policies;
 
 use App\Models\Ticket;
 use App\Models\User;
+use App\Traits\ByPassAdminCheck;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class TicketPolicy
 {
-    use HandlesAuthorization;
+    use HandlesAuthorization,
+        ByPassAdminCheck;
 
     /**
      * Determine whether the user can view any models.

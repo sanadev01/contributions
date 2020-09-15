@@ -10,14 +10,21 @@ class SearchShCode extends Component
     public $search;
     public $codesList;
     public $name;
+    public $valid;
 
     public function mount($code= null,$name=null)
     {
         $shCode = null;
+        $this->valid = false;
+
         $this->name = $name;
         
         if ( $code ){
             $shCode = ShCode::where('code',$code)->first();
+        }
+
+        if ( $shCode ){
+            $this->valid = true;
         }
 
         $this->search = old('sh_code', optional($shCode)->code );
@@ -30,6 +37,8 @@ class SearchShCode extends Component
 
     public function updatedSearch()
     {
+        $this->valid = false;
+
         if ( !$this->search ){
             $this->codesList = [];
             return;
@@ -48,5 +57,6 @@ class SearchShCode extends Component
     {
         $this->search = $code;
         $this->codesList = [];
+        $this->valid = true;
     }
 }

@@ -10,6 +10,10 @@ class OrderItems extends Component
     public $orderId; 
     public $items;
 
+    protected $listeners = [
+        'removeItem' => 'removeItem'
+    ];
+
     public function mount($orderId)
     {
         $this->orderId = $orderId;

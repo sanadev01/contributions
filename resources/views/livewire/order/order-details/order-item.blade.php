@@ -3,7 +3,7 @@
         <div class="form-group col-12 col-sm-6 col-md-6">
             <div class="controls">
                 <label>Harmonized Code <span class="text-danger"></span></label>
-                <input type="text" class="form-control" required name="items[{{$keyId}}][sh_code]" value="{{ optional($item)['sh_code'] }}">
+                <livewire:components.search-sh-code class="form-control" required name="items[{{$keyId}}][sh_code]" :code="optional($item)['sh_code']" />
                 <div class="help-block"></div>
             </div>
         </div>
@@ -50,6 +50,12 @@
                 </select>
                 <div class="help-block"></div>
             </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-end">
+        <div class="col-4 text-right">
+            <button class="btn btn-danger" type="button" role="button" wire:click="$emit('removeItem',{{$keyId}})">Remove</button>
         </div>
     </div>
 </div>

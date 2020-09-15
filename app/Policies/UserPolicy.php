@@ -9,7 +9,7 @@ use App\Traits\ByPassAdminCheck;
 class UserPolicy
 {
     use HandlesAuthorization,
-    ByPassAdminCheck;
+        ByPassAdminCheck;
 
     /**
      * Determine whether the user can view any models.

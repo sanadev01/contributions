@@ -4,11 +4,13 @@ namespace App\Policies;
 
 use App\Models\State;
 use App\Models\User;
+use App\Traits\ByPassAdminCheck;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class StatePolicy
 {
-    use HandlesAuthorization;
+    use HandlesAuthorization,
+        ByPassAdminCheck;
 
     /**
      * Determine whether the user can view any models.

@@ -11,8 +11,8 @@ class OrderItem extends Component
 
     public function mount($keyId=0,$item=[])
     {
-        // $this->item = $item;
-        // $this->keyId = $keyId;
+        $this->item = $item;
+        $this->keyId = $keyId;
     }
 
     public function render()

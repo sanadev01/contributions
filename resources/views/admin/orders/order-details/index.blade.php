@@ -52,7 +52,6 @@
             </div>
             <hr>
             <livewire:order.order-details.order-items :order-id="$order->id"/>
-            
         </fieldset>
     </div>
     <div class="actions clearfix">

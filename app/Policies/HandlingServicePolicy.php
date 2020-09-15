@@ -10,7 +10,7 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 class HandlingServicePolicy
 {
     use HandlesAuthorization,
-    ByPassAdminCheck; 
+        ByPassAdminCheck; 
 
     /**
      * Determine whether the user can view any models.
