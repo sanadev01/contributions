@@ -4,11 +4,13 @@ namespace App\Policies;
 
 use App\Models\Setting;
 use App\Models\User;
+use App\Traits\ByPassAdminCheck;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class SettingPolicy
 {
-    use HandlesAuthorization;
+    use HandlesAuthorization,
+    ByPassAdminCheck;
 
     /**
      * Determine whether the user can view any models.
@@ -18,7 +20,7 @@ class SettingPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return $user->hasPermission('view_settings');
     }
 
     /**
@@ -30,7 +32,7 @@ class SettingPolicy
      */
     public function view(User $user, Setting $setting)
     {
-        //
+        return $user->hasPermission('show_setting') && $setting->user_id == $user->id;
     }
 
     /**
@@ -41,7 +43,7 @@ class SettingPolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->hasPermission('create_setting');
     }
 
     /**
@@ -53,7 +55,7 @@ class SettingPolicy
      */
     public function update(User $user, Setting $setting)
     {
-        //
+        return $user->hasPermission('edit_setting') && $setting->user_id == $user->id;
     }
 
     /**
@@ -65,7 +67,7 @@ class SettingPolicy
      */
     public function delete(User $user, Setting $setting)
     {
-        //
+        return $user->hasPermission('delete_setting') && $setting->user_id == $user->id;
     }
 
     /**

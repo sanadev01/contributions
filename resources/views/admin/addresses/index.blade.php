@@ -7,7 +7,9 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">@lang('address.My Addresses') </h4>
-                        <a href="{{ route('admin.addresses.create') }}" class="pull-right btn btn-primary"> @lang('address.Add Address') </a>
+                        @can('create', App\Models\Address::class)
+                            <a href="{{ route('admin.addresses.create') }}" class="pull-right btn btn-primary"> @lang('address.Add Address') </a>
+                        @endcan
                     </div>
                     <div class="card-content">
                         <div class="table-responsive-md mt-1">
@@ -62,17 +64,21 @@
                                                 {{ $address->phone }}
                                             </td>
                                             <td class="d-flex">
-                                                <a href="{{ route('admin.addresses.edit',$address->id) }}" class="btn btn-primary mr-2" title="@lang('address.Edit Address')">
-                                                    <i class="feather icon-edit"></i>
-                                                </a>
+                                                @can('update', App\Models\Address::class)
+                                                    <a href="{{ route('admin.addresses.edit',$address->id) }}" class="btn btn-primary mr-2" title="@lang('address.Edit Address')">
+                                                        <i class="feather icon-edit"></i>
+                                                    </a>
+                                                @endcan
 
-                                                <form action="{{ route('admin.addresses.destroy',$address->id) }}" method="post" onsubmit="return confirmDelete()">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button class="btn btn-danger" title="@lang('address.Delete Address')">
-                                                        <i class="feather icon-trash"></i>
-                                                    </button>
-                                                </form>
+                                                @can('destroy', App\Models\Address::class)
+                                                    <form action="{{ route('admin.addresses.destroy',$address->id) }}" method="post" onsubmit="return confirmDelete()">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button class="btn btn-danger" title="@lang('address.Delete Address')">
+                                                            <i class="feather icon-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                @endcan
 
                                             </td>
                                         </tr>

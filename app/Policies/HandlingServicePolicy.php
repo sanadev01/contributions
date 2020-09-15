@@ -4,11 +4,13 @@ namespace App\Policies;
 
 use App\Models\HandlingService;
 use App\Models\User;
+use App\Traits\ByPassAdminCheck;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class HandlingServicePolicy
 {
-    use HandlesAuthorization;
+    use HandlesAuthorization,
+    ByPassAdminCheck; 
 
     /**
      * Determine whether the user can view any models.
@@ -18,7 +20,7 @@ class HandlingServicePolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return $user->hasPermission('view_handlingServices');
     }
 
     /**
@@ -30,7 +32,7 @@ class HandlingServicePolicy
      */
     public function view(User $user, HandlingService $handlingService)
     {
-        //
+        return $user->hasPermission('show_handlingService') && $handlingService->user_id == $user->id;
     }
 
     /**
@@ -41,7 +43,7 @@ class HandlingServicePolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->hasPermission('create_handlingService');
     }
 
     /**
@@ -53,7 +55,7 @@ class HandlingServicePolicy
      */
     public function update(User $user, HandlingService $handlingService)
     {
-        //
+        return $user->hasPermission('edit_handlingService') && $handlingService->user_id == $user->id;
     }
 
     /**
@@ -65,7 +67,7 @@ class HandlingServicePolicy
      */
     public function delete(User $user, HandlingService $handlingService)
     {
-        //
+        return $user->hasPermission('delete_handlingService') && $handlingService->user_id == $user->id;
     }
 
     /**

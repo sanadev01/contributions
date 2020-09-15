@@ -4,11 +4,13 @@ namespace App\Policies;
 
 use App\Models\Rate;
 use App\Models\User;
+use App\Traits\ByPassAdminCheck;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class RatePolicy
 {
-    use HandlesAuthorization;
+    use HandlesAuthorization,
+    ByPassAdminCheck;
 
     /**
      * Determine whether the user can view any models.
@@ -18,7 +20,7 @@ class RatePolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return $user->hasPermission('view_rates');
     }
 
     /**
@@ -30,7 +32,7 @@ class RatePolicy
      */
     public function view(User $user, Rate $rate)
     {
-        //
+        return $user->hasPermission('show_rate') && $rate->user_id == $user->id;
     }
 
     /**
@@ -41,7 +43,7 @@ class RatePolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->hasPermission('create_rate');
     }
 
     /**
@@ -53,7 +55,7 @@ class RatePolicy
      */
     public function update(User $user, Rate $rate)
     {
-        //
+        return $user->hasPermission('edit_rate') && $rate->user_id == $user->id;
     }
 
     /**
@@ -65,7 +67,7 @@ class RatePolicy
      */
     public function delete(User $user, Rate $rate)
     {
-        //
+        return $user->hasPermission('delete_rate') && $rate->user_id == $user->id;
     }
 
     /**

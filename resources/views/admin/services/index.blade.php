@@ -9,9 +9,11 @@
                         <h4 class="mb-0">
                             @lang('handlingservice.Manage Services')
                         </h4>
+                        @can('create', App\Models\HandlingService::class)
                         <a href="{{ route('admin.services.create') }}" class="btn btn-primary">
                             @lang('handlingservice.Create Service')
                         </a>
+                        @endcan
                     </div>
                     <div class="card-content">
                         <div class="table-responsive-md mt-1">
@@ -40,16 +42,21 @@
                                         </td>
                                         
                                         <td>
-                                            <a href="{{ route('admin.services.edit',$service) }}" title="@lang('handlingservice.Edit Service')" class="btn btn-sm btn-primary mr-2">
-                                                <i class="feather icon-edit"></i>
-                                            </a>
-                                            <form action="{{ route('admin.services.destroy',$service) }}" method="POST" onsubmit="return confirmDelete()" class="d-inline-block">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button title="@lang('handlingservice.Delete Service')" class="btn btn-sm btn-danger mr-2">
-                                                    <i class="feather icon-trash"></i>
-                                                </button>
-                                            </form>
+                                            @can('update', App\Models\HandlingService::class)
+                                                <a href="{{ route('admin.services.edit',$service) }}" title="@lang('handlingservice.Edit Service')" class="btn btn-sm btn-primary mr-2">
+                                                    <i class="feather icon-edit"></i>
+                                                </a>
+                                            @endcan
+
+                                            @can('delete', App\Models\HandlingService::class)
+                                                <form action="{{ route('admin.services.destroy',$service) }}" method="POST" onsubmit="return confirmDelete()" class="d-inline-block">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button title="@lang('handlingservice.Delete Service')" class="btn btn-sm btn-danger mr-2">
+                                                        <i class="feather icon-trash"></i>
+                                                    </button>
+                                                </form>
+                                            @endcan
                                         </td>
                                     </tr>
                                 @endforeach

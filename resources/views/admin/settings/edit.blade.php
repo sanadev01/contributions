@@ -20,6 +20,7 @@
                                     </ul>
                                 </div>
                             @endif
+                            @can('update', App\Models\Setting::class)
                             <form action="{{ route('admin.settings.store') }}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 <div class="controls row mb-1 align-items-center">
@@ -65,6 +66,7 @@
                                     </div>
                                 </div>
                             </form>
+                            @endcan
                         </div>
                     </div>
                 </div>

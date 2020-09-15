@@ -8,10 +8,14 @@ use App\Http\Requests\Admin\ProfitPackage\UpdateRequest;
 use App\Models\ProfitPackage;
 use App\Models\User;
 use App\Repositories\ProfitPackageRepository;
-use Illuminate\Http\Request;
+use Illuminate\Http\Request; 
 
 class ProfitPackageController extends Controller
-{
+{   
+    public function __construct()
+    {
+        $this->authorizeResource(ProfitPackage::class);
+    } 
     /**
      * Display a listing of the resource.
      *
