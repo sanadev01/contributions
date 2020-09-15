@@ -9,9 +9,11 @@
                         <h4 class="mb-0">
                             @lang('shippingservice.Manage Shipping Services')
                         </h4>
-                        <a href="{{ route('admin.shipping-services.create') }}" class="btn btn-primary">
-                            @lang('shippingservice.Create Shipping Service')
-                        </a>
+                        @can('create', App\Models\ShippingService::class)
+                            <a href="{{ route('admin.shipping-services.create') }}" class="btn btn-primary">
+                                @lang('shippingservice.Create Shipping Service')
+                            </a>
+                        @endcan
                     </div>
                     <div class="card-content">
                         <div class="table-responsive-md mt-1">
@@ -43,9 +45,13 @@
                                         <td>{{ $service->contains_perfume_charges }}</td>
                                         <td>{{ $service->contains_flammable_liquid_charges }}</td>
                                         <td>
+                                            @can('update', App\Models\ShippingService::class)
                                             <a href="{{ route('admin.shipping-services.edit',$service) }}" title="@lang('shippingservice.Edit Service')" class="btn btn-sm btn-primary mr-2">
                                                 <i class="feather icon-edit"></i>
                                             </a>
+                                            @endcan
+
+                                            @can('delete', App\Models\ShippingService::class)
                                             <form action="{{ route('admin.shipping-services.destroy',$service) }}" method="POST" onsubmit="return confirmDelete()" class="d-inline-block">
                                                 @csrf
                                                 @method('DELETE')
@@ -53,6 +59,7 @@
                                                     <i class="feather icon-trash"></i>
                                                 </button>
                                             </form>
+                                            @endcan
                                         </td>
                                     </tr>
                                 @endforeach

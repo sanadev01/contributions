@@ -7,7 +7,9 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">@lang('profitpackage.profit-packages')</h4>
-                        <a href="{{ route('admin.rates.profit-packages.create') }}" class="pull-right btn btn-primary"> @lang('profitpackage.create-profit-package') </a>
+                        @can('create', App\Models\ProfitPackage::class)
+                            <a href="{{ route('admin.rates.profit-packages.create') }}" class="pull-right btn btn-primary"> @lang('profitpackage.create-profit-package') </a>
+                        @endcan
                     </div>
                     <div class="card-content">
                         <div class="mt-1">
@@ -29,16 +31,21 @@
                                                 {{ $package->name }}
                                             </td>
                                             <td class="d-flex">
-                                                <a href="{{ route('admin.rates.profit-packages.edit',$package) }}" class="btn btn-primary mr-2" title="@lang('profitpackage.edit-profit-package')">
-                                                    <i class="feather icon-edit"></i>
-                                                </a>
-                                                <form action="{{ route('admin.rates.profit-packages.destroy',$package) }}" onsubmit="return confirmDelete()" method="post">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button class="btn btn-danger" title="@lang('profitpackage.delete-profit-package')">
-                                                        <i class="feather icon-trash"></i>
-                                                    </button>
-                                                </form>
+                                                @can('update', App\Models\ProfitPackage::class)
+                                                    <a href="{{ route('admin.rates.profit-packages.edit',$package) }}" class="btn btn-primary mr-2" title="@lang('profitpackage.edit-profit-package')">
+                                                        <i class="feather icon-edit"></i>
+                                                    </a>
+                                                @endcan
+
+                                                @can('delete', App\Models\ProfitPackage::class)
+                                                    <form action="{{ route('admin.rates.profit-packages.destroy',$package) }}" onsubmit="return confirmDelete()" method="post">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button class="btn btn-danger" title="@lang('profitpackage.delete-profit-package')">
+                                                            <i class="feather icon-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                @endcan
                                             </td>
                                         </tr>
                                     @endforeach

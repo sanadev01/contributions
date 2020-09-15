@@ -96,13 +96,17 @@
                                                                 <i class="feather icon-lock"></i> @lang('user.Login')
                                                             </button>
                                                         </form>
-                                                        <form action="{{ route('admin.users.destroy',$user) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button class="dropdown-item w-100 text-danger">
-                                                                <i class="feather icon-trash-2"></i> @lang('user.Delete')
-                                                            </button>
-                                                        </form>
+
+                                                        @can('delete', App\Models\User::class)
+                                                            <form action="{{ route('admin.users.destroy',$user) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button class="dropdown-item w-100 text-danger">
+                                                                    <i class="feather icon-trash-2"></i> @lang('user.Delete')
+                                                                </button>
+                                                            </form>
+                                                        @endcan
+
                                                     </div>
                                                 </div>
                                             </div>
