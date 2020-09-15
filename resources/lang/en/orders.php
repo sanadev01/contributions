@@ -1,6 +1,6 @@
 <?php
 
-return [
+return [ 
     'name' => 'Name',
     'action' => 'Action',
     'orders' => 'Orders',
@@ -27,6 +27,9 @@ return [
     ],
     'services' => [
         'handling-services' => 'Additional Services',
+        'Step 1' => 'Step 1',
+        'Next' => 'Next',
+        'Previous' => 'Previous',
     ],
     'create' => [
         'shipment-and-destination' => 'Shipment & Destination',

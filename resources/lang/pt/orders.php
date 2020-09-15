@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'name' => 'Nome',
+    'action' => 'Açao',
+    'orders' => 'Pedidos',
     'manage-orders' => 'Meu pedidos',
     'date' => 'Date',
     'order-id' => 'Pedido',
@@ -24,6 +27,9 @@ return [
     ],
     'services' => [
         'handling-services' => 'Serviços adicionais:',
+        'Step 1' => 'Passo 1',
+        'Next' => 'Próximo',
+        'Previous' => 'Anterior',
     ],
     'create' => [
         'shipment-and-destination' => 'Criação do envio',
