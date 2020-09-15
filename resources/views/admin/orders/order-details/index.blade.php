@@ -20,7 +20,7 @@
                 <div class="form-group col-12 col-sm-6 col-md-6">
                     <div class="controls">
                         <label>WHR# <span class="text-danger"></span></label>
-                        <input name="customer_reference" class="form-control" readonly value="{{ $order->warehouse_number }}" placeholder="Customer Reference"/>
+                        <input class="form-control" readonly value="{{ $order->warehouse_number }}" placeholder="Warehouse Number"/>
                         <div class="help-block"></div>
                     </div>
                 </div>
@@ -30,10 +30,10 @@
                 <div class="form-group col-12 col-sm-6 col-md-6">
                     <div class="controls">
                         <label>Select Shipping Service <span class="text-danger"></span></label>
-                        <select class="form-control selectpicker show-tick" data-live-search="true" name="address_id" id="address_id" required placeholder="Select Shipping Service">
+                        <select class="form-control selectpicker show-tick" data-live-search="true" name="shipping_service_id" id="shipping_service_id" required placeholder="Select Shipping Service">
                             <option value="">Select Shipping Service</option>
                             @foreach ($shippingServices as $shippingService)
-                                <option value="{{ $shippingService->id }}" {{ $shippingService->id == $order->shipping_service_id ? 'selected' : '' }}>{{ "{$shippingService->name} - $". $shippingService->getRateFor($order) }}</option>
+                                <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }}>{{ "{$shippingService->name} - $". $shippingService->getRateFor($order) }}</option>
                             @endforeach
                         </select>
                         <div class="help-block"></div>
@@ -60,7 +60,7 @@
                 <a href="{{ route('admin.orders.services.index',$order) }}" role="menuitem">Previous</a>
             </li>
             <li aria-hidden="false" aria-disabled="false">
-                <button class="btn btn-primary">Next</button>
+                <button class="btn btn-primary">Place Order</button>
             </li>
         </ul>
     </div>

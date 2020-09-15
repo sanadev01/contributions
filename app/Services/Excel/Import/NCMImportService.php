@@ -25,6 +25,8 @@ class NCMImportService extends AbstractImportService
         $shCodes = collect();
 
         foreach (range(2, 1653) as $row) {
+            if ( $this->workSheet->getCell('B'.$row)->getValue() == 'SIM' ) continue;
+            
             $shCodes->push([
                 'code' => $this->workSheet->getCell('A'.$row)->getValue(),
                 'description' => $this->getDescription($row),

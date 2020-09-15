@@ -1,5 +1,5 @@
 <div class="position-relative">
-    <input type="search" autocomplete="off" class="form-control" name="{{$name}}" wire:model.debounce.500ms="search">
+    <input type="search" autocomplete="off" required class="form-control" name="{{$name}}" wire:model.debounce.500ms="search">
     @error( $name )
         <div class="help-block text-danger">{{ $message }}</div>
     @enderror

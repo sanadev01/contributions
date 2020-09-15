@@ -148,8 +148,8 @@ return [
 
     'attributes' => [],
     'ncm' => [ 
-        'invalid' => 'Invalid NCM Number',
-        'required' => 'NCM number required',
+        'invalid' => 'Número NCM inválido',
+        'required' => 'Número NCM necessário',
     ]
 
 ];

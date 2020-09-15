@@ -122,7 +122,7 @@ class Table extends Component
     public function getQuery()
     {
         $orders = Order::query()
-            ->where('status','<=',Order::STATUS_ORDER)
+            ->where('status','<',Order::STATUS_ORDER)
             ->has('user');
         if (Auth::user()->isUser()) {
             $orders->where('user_id', Auth::id());

@@ -76,6 +76,7 @@
     <livewire:scripts>
 
     @yield('lvjs')
+    @stack('lvjs-stack')
 
     <div class="position-fixed w-100 h-100 justify-content-center align-items-center" id="loading" style="z-index: 100000;top:0;right0; background-color:#ffffff75;display:flex;">
         <img src="{{ asset('images/loading.gif') }}" class="h-25" alt="">

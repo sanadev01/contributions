@@ -44,7 +44,7 @@
                                         </li>
                                         <li role="tab" class="last {{ in_array(request()->route()->getName(),['admin.orders.order-invoice.index'])? 'current' : 'disabled' }}" aria-disabled="true">
                                             <a id="steps-uid-0-t-2" href="#" aria-controls="steps-uid-0-p-2">
-                                                <span class="step">5</span> Payment Invoice
+                                                <span class="step">5</span> Invoice
                                             </a>
                                         </li>
                                     </ul>

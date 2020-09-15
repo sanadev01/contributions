@@ -11,3 +11,21 @@
 
     @include('layouts.livewire.loading')
 </div>
+
+
+@push('lvjs-stack')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+            $('body').on('change','.items input.quantity,.items input.value',function(){
+                let quantity = $(this).closest('.items').find('.quantity').val();
+                let unitValue = $(this).closest('.items').find('.value').val();
+                $(this).closest('.items').find('.total').val(
+                    parseFloat(quantity) * parseFloat(unitValue)
+                );
+               
+               
+            });
+    })
+</script>
+@endpush
