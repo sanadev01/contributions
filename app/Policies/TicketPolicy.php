@@ -18,7 +18,7 @@ class TicketPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return $user->hasPermission('view_tickets');
     }
 
     /**
@@ -30,7 +30,7 @@ class TicketPolicy
      */
     public function view(User $user, Ticket $ticket)
     {
-        //
+        return $user->hasPermission('show_ticket') && $ticket->user_id == $user->id;
     }
 
     /**
@@ -41,7 +41,7 @@ class TicketPolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->hasPermission('create_ticket');
     }
 
     /**
@@ -53,7 +53,7 @@ class TicketPolicy
      */
     public function update(User $user, Ticket $ticket)
     {
-        //
+        return $user->hasPermission('edit_ticket') && $ticket->user_id == $user->id;
     }
 
     /**
@@ -65,7 +65,7 @@ class TicketPolicy
      */
     public function delete(User $user, Ticket $ticket)
     {
-        //
+        return $user->hasPermission('delete_ticket') && $ticket->user_id == $user->id;
     }
 
     /**

@@ -4,10 +4,12 @@ namespace App\Policies;
 
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use App\Traits\ByPassAdminCheck;
 
 class UserPolicy
 {
-    use HandlesAuthorization;
+    use HandlesAuthorization,
+    ByPassAdminCheck;
 
     /**
      * Determine whether the user can view any models.
@@ -17,7 +19,7 @@ class UserPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return $user->hasPermission('view_users');
     }
 
     /**
@@ -29,7 +31,7 @@ class UserPolicy
      */
     public function view(User $user, User $model)
     {
-        //
+        return $user->hasPermission('show_user') && $model->user_id == $user->id;
     }
 
     /**
@@ -40,7 +42,7 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->hasPermission('create_user');
     }
 
     /**
@@ -52,7 +54,7 @@ class UserPolicy
      */
     public function update(User $user, User $model)
     {
-        //
+        return $user->hasPermission('edit_user') && $model->user_id == $user->id;
     }
 
     /**
@@ -64,7 +66,7 @@ class UserPolicy
      */
     public function delete(User $user, User $model)
     {
-        //
+        return $user->hasPermission('delete_user') && $model->user_id == $user->id; 
     }
 
     /**

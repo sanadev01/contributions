@@ -8,14 +8,18 @@ use App\Models\Setting;
 
 
 class SettingController extends Controller
-{
+{   
+    public function __construct()
+    {
+        $this->authorizeResource(Setting::class);
+    } 
        /**
      * @param Request $request
      */
     public function index(Request $request)
     {
         return view('admin.settings.edit');
-    }
+    } 
 
     /**
      * @param Request $request

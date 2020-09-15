@@ -6,8 +6,10 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="mb-0">@lang('billing.Billing Informations')</h4>
+                        <h4 class="mb-0">@lang('billing.Billing Informations')</h4> 
+                        @can('create', App\Models\BillingInformation::class)
                         <a href="{{ route('admin.billing-information.create') }}" class="pull-right btn btn-primary"> @lang('billing.Add Billing Information')</a>
+                        @endcan
                     </div>
                     <div class="card-content">
                         <div class="mt-1">
@@ -45,17 +47,21 @@
                                             <td>{{ $billingInfo->zipcode }}</td>
                                             <td>{{ $billingInfo->country }}</td>
                                             <td class="d-flex">
-                                                <a href="{{ route('admin.billing-information.edit',$billingInfo) }}" class="btn btn-primary mr-2" title="@lang('billing.Edit Billing Information')">
-                                                    <i class="feather icon-edit"></i>
-                                                </a>
+                                                @can('udpate', App\Models\BillingInformation::class)
+                                                    <a href="{{ route('admin.billing-information.edit',$billingInfo) }}" class="btn btn-primary mr-2" title="@lang('billing.Edit Billing Information')">
+                                                        <i class="feather icon-edit"></i>
+                                                    </a>
+                                                @endcan
 
-                                                <form action="{{ route('admin.billing-information.destroy',$billingInfo) }}"  onsubmit="return confirmDelete()" method="post">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button class="btn btn-danger" title="@lang('billing.Delete Billing Information')">
-                                                        <i class="feather icon-trash"></i>
-                                                    </button>
-                                                </form> 
+                                                @can('delete', App\Models\BillingInformation::class)
+                                                    <form action="{{ route('admin.billing-information.destroy',$billingInfo) }}"  onsubmit="return confirmDelete()" method="post">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button class="btn btn-danger" title="@lang('billing.Delete Billing Information')">
+                                                            <i class="feather icon-trash"></i>
+                                                        </button>
+                                                    </form> 
+                                                @endcan
                                             </td>
                                         </tr>
                                     @endforeach

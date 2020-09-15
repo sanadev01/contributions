@@ -4,11 +4,13 @@ namespace App\Policies;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Traits\ByPassAdminCheck;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class RolePolicy
 {
-    use HandlesAuthorization;
+    use HandlesAuthorization,
+    ByPassAdminCheck;
 
     /**
      * Determine whether the user can view any models.
@@ -18,7 +20,7 @@ class RolePolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return $user->hasPermission('view_roles');
     }
 
     /**
@@ -30,7 +32,7 @@ class RolePolicy
      */
     public function view(User $user, Role $role)
     {
-        //
+        return $user->hasPermission('show_role') && $role->user_id == $user->id;
     }
 
     /**
@@ -41,7 +43,7 @@ class RolePolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->hasPermission('create_role');
     }
 
     /**
@@ -53,7 +55,7 @@ class RolePolicy
      */
     public function update(User $user, Role $role)
     {
-        //
+        return $user->hasPermission('edit_role') && $role->user_id == $user->id;
     }
 
     /**
@@ -65,7 +67,7 @@ class RolePolicy
      */
     public function delete(User $user, Role $role)
     {
-        //
+        return $user->hasPermission('delete_role') && $role->user_id == $user->id;
     }
 
     /**

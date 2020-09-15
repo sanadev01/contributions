@@ -25,47 +25,62 @@
                 </a>
             </li>
 
+            @can('viewAny', App\Models\Rate::class)
             <li class="nav-item has-sub sidebar-group">
                 <a href="#">
                     <i class="feather icon-dollar-sign"></i>
                     <span class="menu-title" data-i18n="Dashboard">@lang('menu.Rates')</span>
                 </a>
                 <ul class="menu-content">
+
+                    @can('viewAny', App\Models\ProfitPackage::class)
                     <li class="{{ $isActive(['admin.rates.profit-packages.index']) }}">
                         <a href="{{ route('admin.rates.profit-packages.index') }}">
                             <i class="feather icon-circle"></i>
                             <span class="menu-title">@lang('menu.Profit Packages')</span>
                         </a>
                     </li>
-        
+                    @endcan
+                    
+                    @can('viewAny', App\Models\HandlingService::class)
                     <li class="{{ $isActive(['admin.services.index','admin.services.edit','admin.services.create']) }}">
                         <a href="{{ route('admin.services.index') }}">
                             <i class="feather icon-circle"></i>
                             <span class="menu-title">@lang('menu.Handling Services')</span>
                         </a>
                     </li>
-        
+                    @endcan
+                    
+                    @can('viewAny', App\Models\ShippingService::class)
                     <li class="nav-item {{ $isActive(['admin.shipping-services.index','admin.shipping-services.create']) }}">
                         <a href="{{ route('admin.shipping-services.index') }}">
                             <i class="feather icon-truck"></i>
                             <span class="menu-title">@lang('menu.Shipping Services')</span>
                         </a>
                     </li>
-        
+                    @endcan
+                    
+                    @can('viewAny', App\Models\Rate::class)
                     <li class="{{ $isActive(['admin.rates.shipping-rates.index','admin.rates.shipping-rates.create']) }}">
                         <a href="{{ route('admin.rates.shipping-rates.index') }}">
                             <i class="feather icon-circle"></i>
                             <span class="menu-title">@lang('menu.Shipping Charges')</span>
                         </a>
                     </li>
+                    @endcan
+
                 </ul>
             </li>
-            
-            <li class="nav-item {{ $isActive(['admin.addresses.index','admin.addresses.edit','admin.addresses.create']) }}">
-                <a class="nav-link" href="{{ route('admin.addresses.index') }}"><i class="feather icon-home"></i>
-                    <span data-i18n="Apps">@lang('menu.addresses')</span>
-                </a>
-            </li>
+            @endcan
+
+            @can('viewAny', App\Models\Address::class)
+                <li class="nav-item {{ $isActive(['admin.addresses.index','admin.addresses.edit','admin.addresses.create']) }}">
+                    <a class="nav-link" href="{{ route('admin.addresses.index') }}"><i class="feather icon-home"></i>
+                        <span data-i18n="Apps">@lang('menu.addresses')</span>
+                    </a>
+                </li>
+            @endcan
+
 
             <li class="nav-item {{ $isActive(['calculator.index']) }}">
                 <a class="nav-link" href="{{ route('calculator.index') }}" target="_blank">
@@ -74,19 +89,23 @@
                 </a>
             </li>
 
+            @can('viewAny', App\Models\User::class)
             <li class="nav-item {{ $isActive(['admin.users.index']) }}">
                 <a href="{{ route('admin.users.index') }}">
                     <i class="feather icon-users"></i>
                     <span class="menu-title">@lang('menu.Users')</span>
                 </a>
             </li>
+            @endcan
 
+            @can('viewAny', App\Models\Role::class)
             <li class="nav-item {{ $isActive(['admin.roles.index']) }}">
                 <a href="{{ route('admin.roles.index') }}">
                     <i class="fa fa-key"></i>
                     <span class="menu-title">@lang('menu.Roles')</span>
                 </a>
             </li>
+            @endcan
 
             <li class="nav-item {{ $isActive(['admin.tickets.index','admin.tickets.show']) }}">
                 <a class="nav-link" href="{{ route('admin.tickets.index') }}"><i class="feather icon-message-circle"></i>
@@ -94,19 +113,23 @@
                 </a>
             </li>
 
+            @can('viewAny', App\Models\BillingInformation::class)
             <li class="nav-item {{ $isActive(['admin.billing-information.index','admin.billing-information.edit','admin.billing-information.create']) }}">
                 <a href="{{ route('admin.billing-information.index') }}">
                     <i class="feather icon-alert-triangle"></i>
                     <span class="menu-title">@lang('menu.Billing Informations')</span>
                 </a>
             </li>
+            @endcan
 
+            @can('viewAny', App\Models\Setting::class)
             <li class="nav-item {{ $isActive(['admin.settings.index']) }}">
                 <a href="{{ route('admin.settings.index') }}">
                     <i class="feather icon-settings"></i>
                     <span class="menu-title">@lang('menu.Settings')</span>
                 </a>
             </li>
+            @endcan
             
 
             <x-shared-menu></x-shared-menu>

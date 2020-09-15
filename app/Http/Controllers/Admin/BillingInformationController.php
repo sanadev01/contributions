@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 namespace App\Http\Controllers\Admin;
 
@@ -10,7 +10,11 @@ use Illuminate\Http\Request;
 use App\Models\BillingInformation;
 
 class BillingInformationController extends Controller
-{
+{   
+    // public function __construct()
+    // {
+    //     $this->authorizeResource(BillingInformation::class);
+    // } 
     /**
      * Display a listing of the resource.
      *

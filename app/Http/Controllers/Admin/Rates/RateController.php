@@ -7,9 +7,15 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Admin\Rate\CreateRequest;
 use App\Models\ShippingService;
 use App\Repositories\RateRepository;
+use App\Models\Rate;
 
 class RateController extends Controller
-{
+{   
+    public function __construct()
+    {
+        $this->authorizeResource(Rate::class);
+    } 
+
     public function index(RateRepository $repository)
     {
         $rates = $repository->get();

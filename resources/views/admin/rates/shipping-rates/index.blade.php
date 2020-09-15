@@ -12,9 +12,11 @@
                             </h4>
                             <hr>
                         </div>
-                        <a href="{{ route('admin.rates.shipping-rates.create') }}" class="pull-right btn btn-primary">
-                            @lang('shipping-rates.Upload Rates')
-                        </a>
+                        @can('create', App\Models\Rate::class)
+                            <a href="{{ route('admin.rates.shipping-rates.create') }}" class="pull-right btn btn-primary">
+                                @lang('shipping-rates.Upload Rates')
+                            </a>
+                        @endcan
                     </div>
                     <hr>
                     <div class="card-content card-body">

@@ -7,11 +7,15 @@ use Illuminate\Http\Request;
 use App\Models\ShippingService;
 use App\Http\Requests\Admin\Service\CreateShippingService; 
 use App\Http\Requests\Admin\Service\UpdateShippingService; 
-use App\Repositories\ShippingServiceRepository;
+use App\Repositories\ShippingServiceRepository; 
 
 
 class ShippingServiceController extends Controller
-{
+{   
+    public function __construct()
+    {
+        $this->authorizeResource(ShippingService::class);
+    } 
     /**
      * Display a listing of the resource.
      *
