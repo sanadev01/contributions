@@ -50,4 +50,10 @@ return [
     'Transit' => 'Transit',
     'Create Order' => 'Create Order',
     'Delete' => 'Delete',
+    'Parcel Deleted' => 'Parcel Deleted',
+    'Error While Deleting Parcel' => 'Error While Deleting Parcel',
+    'Parcel Updated' => 'Parcel Updated',
+    'Error Parcel Update' => 'Error Parcel Update',
+    'Parcel Added' => 'Parcel Added',
+    'Error Parcel Create' => 'Error Parcel Create',
 ];

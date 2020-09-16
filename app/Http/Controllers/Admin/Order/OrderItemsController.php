@@ -39,10 +39,10 @@ class OrderItemsController extends Controller
     public function store(CreateRequest $request,Order $order, OrderRepository $orderRepository)
     {
         if ( $orderRepository->updateShippingAndItems($request,$order) ){
-            session()->flash('alert-success','Order Placed');
+            session()->flash('alert-success','orders.Order Placed');
             return \back();
         }
-        session()->flash('alert-danger','Error While placing Order');
+        session()->flash('alert-danger','orders.Error While placing Order');
         return \back()->withInput();
     }
 }

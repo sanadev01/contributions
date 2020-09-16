@@ -50,4 +50,10 @@ return [
     'Transit' => 'Transito',
     'Create Order' => 'Criar pedido',
     'Delete' => 'Excluir',
+    'Parcel Deleted' => 'Pacote Excluído',
+    'Error While Deleting Parcel' => 'Erro ao excluir pacote',
+    'Parcel Updated' => 'Parcela Atualizado',
+    'Error Parcel Update' => 'Atualização do pacote de erro',
+    'Parcel Added' => 'Parcela Adicionada',
+    'Error Parcel Create' => 'erroAoCriarPacote',
 ];
