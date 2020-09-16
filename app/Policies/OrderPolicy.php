@@ -119,7 +119,7 @@ class OrderPolicy
         return $user->hasPermission('print_label') && $order->user_id == $user->id && $order->isPaid();
     }
 
-    public function importExcel(User $user,Order $order)
+    public function importExcel(User $user)
     {
         return $user->hasPermission('import_excel');
     }
