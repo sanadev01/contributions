@@ -19,32 +19,14 @@ class UserSettingController extends Controller
 
     public function store(Request $request, User $user){
 
-        $this->validate($request,[
-            'package_id' => 'required'
-        ]);
-
-        if($request->has('api_enabled')) {
-            
-            $user->update([
-                'api_enabled' => 1
-            ]);
-
-        }else{
-
-            $user->update([
-                'api_enabled' => 0
-            ]);
-
-        }
-
         $user->update([
             'package_id' => $request->package_id,
             'role_id' => $request->role_id,
+            'api_enabled' => $request->has('api_enabled')
         ]);
 
         session()->flash('alert-success','user.User Setting Updated Successfully');
         return back();
-
     }
 
 }

@@ -11,8 +11,6 @@ class TokenGenerator extends Component
 {   
     
     public $userId;
-    public $token;
-
 
     public function mount($userId)
     {
@@ -21,7 +19,9 @@ class TokenGenerator extends Component
 
     public function render()
     {
-        return view('livewire.token-generator');
+        return view('livewire.token-generator',[
+            'user' => User::find($this->userId)
+        ]);
     }
 
     public function revoke()
@@ -29,9 +29,6 @@ class TokenGenerator extends Component
         User::find($this->userId)->update([
             'api_token' => md5(microtime()).'-'.Str::random(116).'-'.md5(microtime())
         ]);
-
-
-
     }
 
 }
