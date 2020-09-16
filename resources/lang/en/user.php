@@ -9,6 +9,7 @@ return [
     'Roles' => 'Roles',
     'Account Type' => 'Account Type',
     'Package' => 'Package',
+    'Role' => 'Role',
     'Action' => 'Action',
     'Login' => 'Login',
     'Delete' => 'Delete',
@@ -20,5 +21,8 @@ return [
     'Search' => 'Search',
     'Search By Name, Pobox, Email' => 'Search By Name, Pobox, Email',
     'Setting' => 'Setting',
+    'User Setting Updated Successfully' => 'User Setting Updated Successfully',
+    'Select Package' => 'Select Package',
+    'Select Role' => 'Select Role',
 ]; 
  

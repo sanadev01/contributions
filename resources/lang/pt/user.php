@@ -7,6 +7,7 @@ return [
     'Email' => 'O email',
     'Phone' => 'telefone',
     'Roles' => 'Funções',
+    'Role' => 'Função',
     'Account Type' => 'tipo de conta',
     'Package' => 'Pacote',
     'Action' => 'Açao',
@@ -20,4 +21,7 @@ return [
     'Search' => 'Procurar',
     'Search By Name, Pobox, Email' => 'Pesquisar por nome, Pobox, Email',
     'Setting' => 'Configuração',
+    'User Setting Updated Successfully' => 'Configuração do usuário atualizada com sucesso',
+    'Select Package' => 'Selecione o pacote',
+    'Select Role' => 'Selecione a função',
 ]; 
