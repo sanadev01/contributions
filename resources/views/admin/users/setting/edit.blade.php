@@ -27,7 +27,7 @@
                                     <label class="col-md-3 text-md-right">@lang('user.Package')<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <select name="package_id" class="form-control">
-                                            <option value="" selected disabled hidden>Select Package</option>
+                                            <option value="" selected disabled hidden>@lang('user.Select Package')</option>
                                             @isset($packages)
                                                 @foreach ($packages as $package)
                                                     <option @if( $user->package_id == $package->id ) selected @endif value="{{ $package->id }}">{{ $package->name }}</option>
@@ -37,6 +37,34 @@
                                         <div class="help-block"></div>
                                     </div>
                                 </div>
+
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">@lang('user.Role')<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <select name="role_id" class="form-control">
+                                            @isset($roles)
+                                                @foreach ($roles as $role)
+                                                    <option @if( $user->role_id == $role->id ) selected @endif value="{{ $role->id }}">{{ $role->name }}</option>
+                                                @endforeach
+                                            @endisset
+                                        </select>
+                                        <div class="help-block"></div>
+                                    </div>  
+                                </div>
+
+                                <br> 
+
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">Enable API<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <input type="checkbox" name="api_enabled" id="api_enabled" @if( $user->api_enabled == 1 ) checked @endif> 
+                                        <div class="help-block"></div>
+                                    </div>
+                                </div>
+
+                                <hr>
+
+                                    <livewire:token-generator :user_id="$user->id" />
 
                                 <div class="row mt-1">
                                     <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
