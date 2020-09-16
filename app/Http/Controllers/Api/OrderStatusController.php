@@ -14,7 +14,8 @@ class OrderStatusController extends Controller
 
         if ( $order ){
             $order->update([
-                'status' => $request->status
+                'status' => $request->status,
+                'is_paid' => $request->status >= Order::STATUS_PAYMENT_DONE ? true: false
             ]);
 
             return apiResponse(true,"Updated");

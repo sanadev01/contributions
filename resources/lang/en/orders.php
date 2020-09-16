@@ -17,6 +17,15 @@ return [
     'services' => [
         'handling-services' => 'Additional Services',
     ],
+    'import-excel' =>[
+        'Import Orders via Excel Sheet' => 'Import Orders via Excel Sheet',
+        'Select Excel File to Upload' => 'Select Excel File to Upload',
+        'Upload only Excel files' => 'Upload only Excel files',
+        'Files larger than 15Mb are not allowed' => 'Files larger than 15Mb are not allowed',
+        'Download and fill in the data in the sample file below to avoid errors' => 'Download and fill in the data in the sample file below to avoid errors',
+        'Download the sample' => 'Download the sample for sample',
+        'Download' => 'Download',
+    ],
     'actions' => [
         'actions' => 'Action',
         'label' => 'Print Post Label',

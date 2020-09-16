@@ -79,12 +79,12 @@
 
                     @user
                         @if( !$order->isPaid() )
-                            <a href="#" class="btn w-100 dropdown-item" title="See Shipping Cost and Move to Checkout">
+                            <button class="btn w-100 dropdown-item" title="See Shipping Cost and Move to Checkout">
                                 <i class="feather icon-dollar-sign"></i> @lang('orders.actions.pay-order')
-                            </a>
+                            </button>
                         @endif
                     @enduser
-                    <button class="btn dropdown-item w-100" title="Show Order Details">
+                    <button onclick="mw = window.open('{{route('admin.orders.order-invoice.index',$order)}}','','width=768,height=768')" class="btn dropdown-item w-100" title="Show Order Details">
                         <i class="feather icon-list"></i> @lang('orders.actions.view-order')
                     </button>
                     
@@ -94,7 +94,7 @@
                         </button>
                     @endif
 
-                    @if( $order->corrios_tracking_code && $order->isPaid() && auth()->user()->can('canPrintLable',$order))
+                    @if( $order->isPaid() && auth()->user()->can('canPrintLable',$order))
                         <a href="#" class="btn dropdown-item w-100" title="@lang('orders.actions.label')">
                             <i class="feather icon-printer"></i>@lang('orders.actions.label')
                         </a>
@@ -106,7 +106,7 @@
                         </a>
                    @endcan
                     
-                    <form action="{{ route('admin.orders.destroy',$order->id) }}" method="post">
+                    <form action="{{ route('admin.orders.destroy',$order->id) }}" method="post" onsubmit="return confirmDelete()">
                         @csrf
                         @method('DELETE')
                         <button class="btn dropdown-item w-100 text-danger" title="Delete Record">

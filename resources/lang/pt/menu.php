@@ -2,6 +2,7 @@
 
 return [
     'dashboard' => 'Painel de controle',
+    'import-excel' => 'Importação de Excel',
     'prealerts' => 'Aviso de compra',
     'orders' => 'Pedidos',
     'transactions' => 'Transações',

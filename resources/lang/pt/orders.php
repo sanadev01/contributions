@@ -17,6 +17,15 @@ return [
     'services' => [
         'handling-services' => 'Serviços adicionais:',
     ],
+    'import-excel' =>[
+        'Import Orders via Excel Sheet' => 'Importar pedidos via planilha do Excel',
+        'Select Excel File to Upload' => 'Selecione o arquivo do Excel para carregar ',
+        'Upload only Excel files' => 'Faça upload apenas de arquivos Excel',
+        'Files larger than 15Mb are not allowed' => 'Arquivos maiores que 15 MB não são permitidos',
+        'Download and fill in the data in the sample file below to avoid errors' => 'Baixe e preencha os dados no arquivo de amostra abaixo para evitar erros',
+        'Download the sample' => 'Baixe a amostra para amostra',
+        'Download' => 'Baixar',
+    ],
     'actions' => [
         'actions' => 'Ações',
         'label' => 'Imprima Etiqueta correios',

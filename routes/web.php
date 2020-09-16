@@ -33,6 +33,7 @@ Route::namespace('Admin')
         Route::get('dashboard', 'HomeController')->name('home');
 
         Route::resource('parcels', PreAlertController::class);
+        Route::resource('import-excel', ImportExcelController::class)->only(['index','store']);
         Route::resource('billing-information', BillingInformationController::class);
 
         Route::resource('services', HandlingServiceController::class)->except('show');
