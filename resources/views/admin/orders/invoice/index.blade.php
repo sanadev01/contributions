@@ -161,7 +161,14 @@
                                                 {{ $item->contains_flammable_liquid ? 'flameable' : '' }}
                                             </td>
                                         </tr>  
-                                    @endforeach                              
+                                    @endforeach
+                                    <tr class="border-top-light">
+                                        <td colspan="4" class="text-center h4">Order Value</td>
+                                        <td class="h4">
+                                            {{ $order->items()->sum(\DB::raw('quantity * value')) }} USD
+                                        </td>
+                                        <td></td>
+                                    </tr>                             
                                 </tbody>
                             </table>
                         </div>
@@ -202,7 +209,7 @@
                 </div>
             </div>
         </section>
-        <div class="actions clearfix">
+        <div class="actions clearfix no-print">
             <ul role="menu" aria-label="Pagination">
                 <li class="disabled" aria-disabled="true">
                     <a href="{{ route('admin.orders.order-details.index',$order) }}" role="menuitem">Previous</a>

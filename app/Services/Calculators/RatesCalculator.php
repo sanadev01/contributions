@@ -128,7 +128,7 @@ class RatesCalculator
             }
 
             if ( $this->shippingService->max_weight_allowed < $this->weight ){
-                $this->errors .= "service is not available for more then 30KG  weight";
+                $this->errors .= "service is not available for more then {$this->shippingService->max_weight_allowed}KG  weight";
                 return false;
             }
 

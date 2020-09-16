@@ -123,4 +123,5 @@ class Order extends Model
     {
         return $this->cn23 ? true: false;
     }
+
 }

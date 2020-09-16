@@ -23,6 +23,8 @@ class OrderItemsController extends Controller
         foreach (ShippingService::query()->active()->get() as $shippingService) {
             if ( $shippingService->isAvailableFor($order) ){
                 $shippingServices->push($shippingService);
+            }else{
+                session()->flash('alert-danger',"Shipping Service not Available Error:{$shippingService->getCalculator($order)->getErrors()}");
             }
         }
 

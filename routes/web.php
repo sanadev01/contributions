@@ -39,7 +39,7 @@ Route::namespace('Admin')
         Route::resource('addresses', AddressController::class);
         Route::resource('shipping-services', ShippingServiceController::class);
 
-        Route::get('orders',OrderController::class)->name('orders.index');
+        Route::resource('orders',OrderController::class)->only('index','destroy');
 
         Route::namespace('Order')->group(function () {
             Route::resource('orders.sender',OrderSenderController::class)->only('index','store');

@@ -37,7 +37,6 @@ class NcmValidator implements Rule
      */
     public function message()
     {
-        \Log::info('invalidating');
-        return __('validation.ncm.invalid');
+        return __('validation.ncm.invalid')." (:input)";
     }
 }

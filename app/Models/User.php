@@ -130,4 +130,9 @@ class User extends Authenticatable
         })->first();;
 
     }
+
+    public function hasRole($slug)
+    {
+        return $this->role->name == $slug;
+    }
 }
