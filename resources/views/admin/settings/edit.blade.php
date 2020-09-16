@@ -40,22 +40,8 @@
                                 </div>
 
                                 <hr>
-                                {{-- <livewire:token-generator/> --}}
-                                <div>
-                                    <div class="controls row mb-1 align-items-center">
-                                        <label class="col-md-3 text-md-right">@lang('setting.Application Token')<span class="text-danger">*</span></label>
-                                        <div class="col-md-5">
-                                            <textarea type="text" rows="4" class="form-control" name="token" required placeholder="@lang('setting.Application Token')">{{  auth()->user()->api_token  }}</textarea>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <button class="btn btn-primary" type="button" wire:click="revoke">@lang('setting.Revoke')</button>
-                                        </div>
-                                    </div>
+                                <livewire:token-generator :user-id="auth()->id()"/>
                                 
-                                    <div class="position-absolute">
-                                        {{-- @include('layouts.livewire.loading') --}}
-                                    </div>
-                                </div>
 
                                 <div class="row mt-1">
                                     <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
