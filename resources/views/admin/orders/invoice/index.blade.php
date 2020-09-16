@@ -6,116 +6,218 @@
       
             <div class="row">
                 <fieldset class="col-12 col-md-5 mb-1 mb-md-0">
-                    <div class="input-group">
-                        <div class="input-group-append" id="button-addon2">
-                            <button wire:click="sendEmail" class="btn btn-outline-primary waves-effect waves-light" type="button">Send Invoice</button>
-                        </div>
-                    </div>
+
                 </fieldset>
                 <div class="col-12 col-md-7 d-flex flex-column flex-md-row justify-content-end">
-                    <button class="btn btn-primary btn-print mb-1 mb-md-0 waves-effect waves-light" onclick="mw = window.open('https://app.homedeliverybr.com/orders/2152/receipt','','width=768,height=768');"> <i class="feather icon-file-text"></i> Print</button>
+                    <button class="btn btn-primary btn-print mb-1 mb-md-0 waves-effect waves-light" onclick="window.print();"> <i class="feather icon-file-text"></i> Print</button>
                 </div>
             </div>
         </div>
     </section>
-    <div id="invoice-wrapper">
-    <!-- invoice functionality end -->
-    <!-- invoice page -->
-    <section class="card invoice-page">
-        <div id="invoice-template" class="card-body">
-            <!-- Invoice Company Details -->
-            <div id="invoice-company-details" class="row">
-                <div class="col-sm-6 col-12 text-left pt-1">
-                    <div class="media pt-1">
-                        <img src="https://app.homedeliverybr.com/images/hd-logo.png" alt="Home Deliverybr">
+    <div id="invoice-wrapper" class="wizard print">
+        <!-- invoice functionality end -->
+        <!-- invoice page -->
+        <section class="card invoice-page">
+            <div id="invoice-template" class="card-body">
+                <!-- Invoice Company Details -->
+                <div id="invoice-company-details" class="row">
+                    <div class="col-sm-6 col-12 text-left pt-1">
+                        <div class="media pt-1">
+                            <img src="https://app.homedeliverybr.com/images/hd-logo.png" alt="Home Deliverybr">
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-12 text-right">
+                        <h1>Invoice</h1>
+                        <div class="invoice-details mt-2">
+                            <h6>INVOICE NO.</h6>
+                            <p>{{ $order->warehouse_number }}</p>
+                            <h6 class="mt-2">INVOICE DATE</h6>
+                            <p>{{ now()->format('d M Y') }}</p>
+                        </div>
                     </div>
                 </div>
-                <div class="col-sm-6 col-12 text-right">
-                    <h1>Invoice</h1>
-                    <div class="invoice-details mt-2">
-                        <h6>INVOICE NO.</h6>
-                        <p>TEMPWHR-2384</p>
-                        <h6 class="mt-2">INVOICE DATE</h6>
-                        <p>15 Sep 2020</p>
-                    </div>
-                </div>
-            </div>
-            <!--/ Invoice Company Details -->
+                <!--/ Invoice Company Details -->
 
-            <!-- Invoice Recipient Details -->
-            <div id="invoice-customer-details" class="pt-2 d-flex w-100 justify-content-between">
-                <div class="text-left w-50">
-                    <h5>Recipient</h5>
-                    <div class="recipient-info my-2">
-                        <p> Gilberto </p>
-                        <p> HERCO 0013 </p>
-                        <p>2200 NW, 129th Ave – Suite # 100<br> Miami, FL, 33182<br>United States<br>Ph#: +13058885191</p>
+                <!-- Invoice Recipient Details -->
+                <div id="invoice-customer-details" class="pt-2 d-flex w-100 justify-content-between">
+                    <div class="text-left w-50">
+                        <h5>Recipient</h5>
+                        <div class="recipient-info my-2">
+                            <p> {{ optional($order->recipient)->first_name }} {{ optional($order->recipient)->last_name }} </p>
+                            <p> HERCO 0013 </p>
+                            <p>{{ optional($order->recipient)->address }} {{ optional($order->recipient)->address2 }}<br> 
+                                {{ optional($order->recipient)->city }}, {{ optional(optional($order->recipient)->state)->code }}, {{ optional($order->recipient)->zipcode }}<br>
+                                {{ optional(optional($order->recipient)->country)->name }}<br>
+                                <i class="feather icon-phone"></i> Ph#: {{ optional($order->recipient)->phone }}
+                            </p>
+                        </div>
+                        <div class="recipient-contact pb-2">
+                            <p>
+                                <i class="feather icon-mail"></i>
+                                {{ optional($order->recipient)->email }}
+                            </p>
+                            <p>
+                                {{ optional($order->recipient)->tax_id }}
+                            </p>
+                        </div>
                     </div>
-                    <div class="recipient-contact pb-2">
-                        <p>
-                            <i class="feather icon-mail"></i>
-                            contato@importadoslaiaenvia.com
-                        </p>
-                        <p>
-                            <i class="feather icon-phone"></i>
-                            +5531996683266
-                        </p>
+                    <div class="text-righ justify-self-end">
+                        <h5>Sender</h5>
+                        <div class="company-info my-2">
+                            {{ $order->sender_first_name }} {{ $order->sender_last_name }} <br>
+                            2200 NW, 129th Ave – Suite # 100<br> Miami, FL, 33182<br>United States<br>Ph#: +13058885191
+                        </div>
+                        <div class="recipient-contact pb-2">
+                            <p>
+                                <i class="feather icon-mail"></i>
+                                {{ $order->sender_email }}
+                            </p>
+                            <p>
+                                {{ $order->sender_phone }}
+                            </p>
+                        </div>
                     </div>
                 </div>
-                <div class="text-righ justify-self-end">
-                    <h5>Home Delivery Br</h5>
-                    <div class="company-info my-2">
-                        2200 NW, 129th Ave – Suite # 100<br> Miami, FL, 33182<br>United States<br>Ph#: +13058885191
-                    </div>
-                    
-                </div>
-            </div>
-            <!--/ Invoice Recipient Details -->
+                <!--/ Invoice Recipient Details -->
 
-            <!-- Invoice Items Details -->
-            <div id="invoice-items-details" class="pt-1 invoice-items-table">
-                <div class="row">
-                    <div class="table-responsive-md col-12">
-                        <table class="table table-borderless">
-                            <thead>
-                                <tr>
-                                    <th>Service</th>
-                                    <th>Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Light Service</td>
-                                    <td>85.70 USD</td>
-                                </tr>
-                                                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-            </div>
-            <div id="invoice-total-details" class="invoice-total-table">
-                <div class="row">
-                    <div class="col-7 offset-5">
-                        <div class="table-responsive-md">
+                <!-- Invoice Items Details -->
+                <div id="invoice-items-details" class="pt-1 invoice-items-table">
+                    <div class="row">
+                        <div class="table-responsive-md col-12">
                             <table class="table table-borderless">
-                                <tbody>
-                                    
+                                <thead>
                                     <tr>
-                                        <th>TOTAL</th>
-                                        <td>85.70USD</td>
+                                        <th><h4>Service</h4></th>
+                                        <th>Amount</th>
                                     </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{{ $order->shipping_service_name }}</td>
+                                        <td>{{ $order->shipping_value }} USD</td>
+                                    </tr>                                
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
-            </div>
+                <div id="invoice-items-details" class="pt-1 invoice-items-table">
+                    <div class="row">
+                        <div class="table-responsive-md col-12">
+                            <table class="table table-borderless">
+                                <thead>
+                                    <tr>
+                                        <th><h4>Additional Services</h4></th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($order->services as $service)
+                                        <tr>
+                                            <td>{{ $service->name }}</td>
+                                            <td>{{ $service->price }} USD</td>
+                                        </tr>  
+                                    @endforeach   
+                                    <tr class="border-top-light">
+                                        <td class="text-center h4">Total</td>
+                                        <td class="h4">{{ $order->services()->sum('price') }} USD</td>
+                                    </tr>                            
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
 
-            <!-- Invoice Footer -->
-            
-            <!--/ Invoice Footer -->
+                <div id="invoice-items-details" class="pt-1 invoice-items-table">
+                    <div class="row">
+                        <div class="table-responsive-md col-12">
+                            <table class="table table-borderless">
+                                <thead>
+                                    <tr>
+                                        <th colspan="5">
+                                            <h4>Order Items</h4>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th>ShCode</th>
+                                        <th>Description</th>
+                                        <th>Quantity</th>
+                                        <th>Unit Value</th>
+                                        <th>Total</th>
+                                        <th>Battery/Perfume/Flameable</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($order->items as $item)
+                                        <tr>
+                                            <td>{{ $item->sh_code }}</td>
+                                            <td>{{ $item->description }}</td>
+                                            <td>{{ $item->quantity }}</td>
+                                            <td>{{ $item->value }} USD</td>
+                                            <td>{{ $item->value * $item->quantity }}</td>
+                                            <td>
+                                                {{ $item->contains_battery ? 'battery' : '' }}
+                                                {{ $item->contains_perfume ? 'perfume' : '' }}
+                                                {{ $item->contains_flammable_liquid ? 'flameable' : '' }}
+                                            </td>
+                                        </tr>  
+                                    @endforeach
+                                    <tr class="border-top-light">
+                                        <td colspan="4" class="text-center h4">Order Value</td>
+                                        <td class="h4">
+                                            {{ $order->items()->sum(\DB::raw('quantity * value')) }} USD
+                                        </td>
+                                        <td></td>
+                                    </tr>                             
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div id="invoice-total-details" class="invoice-total-table">
+                    <div class="row">
+                        <div class="col-7 offset-5">
+                            <div class="table-responsive-md">
+                                <table class="table table-borderless">
+                                    <tbody>
+                                        
+                                        <tr>
+                                            <th>Shipping</th>
+                                            <td>{{ $order->shipping_value }} USD</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Additional Services</th>
+                                            <td>
+                                                {{ $order->services()->sum('price') }} USD
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Dangrous Items Cost</th>
+                                            <td>
+                                                {{ $order->dangrous_goods }} USD
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>TOTAL</th>
+                                            <td> {{ $order->gross_total }} USD</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="actions clearfix no-print">
+            <ul role="menu" aria-label="Pagination">
+                <li class="disabled" aria-disabled="true">
+                    <a href="{{ route('admin.orders.order-details.index',$order) }}" role="menuitem">Previous</a>
+                </li>
+                {{-- <li aria-hidden="false" aria-disabled="false">
+                    <button class="btn btn-primary">Place Order</button>
+                </li> --}}
+            </ul>
         </div>
-    </section>
-</div>
+    </div>
 @endsection

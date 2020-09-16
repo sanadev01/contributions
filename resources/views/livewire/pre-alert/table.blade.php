@@ -12,7 +12,7 @@
             </select>
         </div>
     </div>
-    <table class="table mb-0 table-responsive-md" style="zoom:0.8">
+    <table class="table mb-0 table-responsive-md">
         <thead>
             <tr>
                 <th>

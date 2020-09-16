@@ -109,4 +109,19 @@ class OrderPolicy
         return $user->hasPermission('edit_parcel_shipment_details') && $user->id == $order->user_id;
     }
 
+    public function updateOrder(User $user,Order $order)
+    {
+        return $user->hasPermission('edit_order') && $order->user_id == $user->id && !$order->isPaid();
+    }
+
+    public function canPrintLable(User $user,Order $order)
+    {
+        return $user->hasPermission('print_label') && $order->user_id == $user->id && $order->isPaid();
+    }
+
+    public function importExcel(User $user,Order $order)
+    {
+        return $user->hasPermission('import_excel');
+    }
+
 }

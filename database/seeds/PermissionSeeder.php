@@ -54,6 +54,18 @@ class PermissionSeeder extends Seeder
                 'description' => ''
             ],
             [
+                'slug' => 'edit_order',
+                'description' => 'Edit Order Sender/ Recipient and Services'
+            ],
+            [
+                'slug' => 'print_label',
+                'description' => 'Print Label'
+            ],
+            [
+                'slug' => 'import_excel',
+                'description' => 'Can Import Order via Excel Sheet'
+            ],
+            [
                 'slug' => 'view_addresses',
                 'description' => 'View All Addresses',
             ],

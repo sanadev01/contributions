@@ -29,6 +29,7 @@ class Update extends FormRequest
             'first_name' => 'required',
             'last_name' => 'required',
             'address' => 'required',
+            'address2' => 'max:50',
             'street_no' => 'required',
             'country_id' => 'required|integer',
             'city' => 'required',

@@ -44,6 +44,7 @@ class CreateOrdersTable extends Migration
             $table->double('order_value')->default(0);
             $table->double('shipping_value')->default(0);
             $table->double('comission')->default(0);
+            $table->double('dangrous_goods')->default(0);
             $table->double('total')->default(0);
             $table->double('discount')->default(0);
             $table->double('gross_total')->default(0);
@@ -52,12 +53,16 @@ class CreateOrdersTable extends Migration
             $table->bigInteger('shipping_service_id')->nullable();
             $table->string('shipping_service_name')->nullable();
 
+            
+            $table->double('user_declared_freight')->default(0);
+            
             $table->string('tax_modality')->default('DDU')->comment('DDU,DDP');
             $table->boolean('is_invoice_created')->default(false);
             $table->string('status')->nullable();
             $table->boolean('is_consolidated')->default(false);
             $table->boolean('is_paid')->default(false);
             $table->boolean('is_received_from_sender')->default(false);
+            $table->text('error')->nullable();
 
             $table->text('cn23')->nullable();
 

@@ -24,6 +24,13 @@
                         <div class="help-block"></div>
                     </div>
                 </div>
+                <div class="form-group col-12 col-sm-6 col-md-6">
+                    <div class="controls">
+                        <label>Freight <span class="text-danger"></span></label>
+                        <input class="form-control" name="user_declared_freight" id="user_declared_freight" value="{{ old('user_declared_freight',__default($order->user_declared_freight,$order->gross_total)) }}" placeholder="Freight"/>
+                        <div class="help-block"></div>
+                    </div>
+                </div>
             </div>
             <h4 class="mt-2">@lang('orders.order-details.Service')</h4>
             <div class="row mt-1">
@@ -33,7 +40,7 @@
                         <select class="form-control selectpicker show-tick" data-live-search="true" name="shipping_service_id" id="shipping_service_id" required placeholder="Select Shipping Service">
                             <option value="">@lang('orders.order-details.Select Shipping Service')</option>
                             @foreach ($shippingServices as $shippingService)
-                                <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }}>{{ "{$shippingService->name} - $". $shippingService->getRateFor($order) }}</option>
+                                <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-cost="{{$shippingService->getRateFor($order)}}" data-services-cost="{{ $order->services()->sum('price') }}">{{ "{$shippingService->name} - $". $shippingService->getRateFor($order) }}</option>
                             @endforeach
                         </select>
                         <div class="help-block"></div>
@@ -69,4 +76,12 @@
 
 @section('js')
 <script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
+
+<script>
+    $('#shipping_service_id').on('change',function(){
+        $('#user_declared_freight').val(
+            parseFloat($('option:selected', this).attr("data-cost")) + parseFloat($('option:selected', this).attr("data-services-cost"))
+        );
+    })
+</script>
 @endsection

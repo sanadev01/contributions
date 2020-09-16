@@ -2,6 +2,7 @@
 
 return [
     'dashboard' => 'Dashboard',
+    'import-excel' => 'Excel Import',
     'prealerts' => 'PreAlerts',
     'orders' => 'Orders',
     'transactions' => 'Transactions',

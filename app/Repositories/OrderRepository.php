@@ -152,6 +152,7 @@ class OrderRepository extends Model
                 'order_value' => $orderValue,
                 'shipping_value' => $shippingCost,
                 'comission' => $commission,
+                'dangrous_goods' => $dangrousGoodsCost,
                 'total' => $total,
                 'discount' => $discount,
                 'gross_total' => $gross_total,
@@ -174,6 +175,7 @@ class OrderRepository extends Model
     {
 
     }
+    
     
 
 }

@@ -23,6 +23,8 @@ class OrderItemsController extends Controller
         foreach (ShippingService::query()->active()->get() as $shippingService) {
             if ( $shippingService->isAvailableFor($order) ){
                 $shippingServices->push($shippingService);
+            }else{
+                session()->flash('alert-danger',"Shipping Service not Available Error:{$shippingService->getCalculator($order)->getErrors()}");
             }
         }
 
@@ -40,7 +42,7 @@ class OrderItemsController extends Controller
     {
         if ( $orderRepository->updateShippingAndItems($request,$order) ){
             session()->flash('alert-success','orders.Order Placed');
-            return \back();
+            return \redirect()->route('admin.orders.order-invoice.index',$order);
         }
         session()->flash('alert-danger','orders.Error While placing Order');
         return \back()->withInput();

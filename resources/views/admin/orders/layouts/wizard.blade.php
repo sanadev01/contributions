@@ -6,8 +6,8 @@
 @endsection
 
 @section('page')
-    <section id="prealerts">
-        <div class="row"> 
+    <section >
+        <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
@@ -18,7 +18,7 @@
                         <div class="card-body">
                             <p></p>
                             <div class="number-tab-steps wizard-circle wizard clearfix" role="application" id="steps-uid-0">
-                                <div class="steps clearfix">
+                                <div class="steps clearfix no-print">
                                     <ul role="tablist">
                                         <li role="tab" class="first {{ in_array(request()->route()->getName(),['admin.orders.sender.index'])? 'current' : 'disabled' }}" aria-disabled="false" aria-selected="true">
                                             <a id="steps-uid-0-t-0" href="#" aria-controls="steps-uid-0-p-0">

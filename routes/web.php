@@ -33,13 +33,14 @@ Route::namespace('Admin')
         Route::get('dashboard', 'HomeController')->name('home');
 
         Route::resource('parcels', PreAlertController::class);
+        Route::resource('import-excel', ImportExcelController::class)->only(['index','store']);
         Route::resource('billing-information', BillingInformationController::class);
 
         Route::resource('services', HandlingServiceController::class)->except('show');
         Route::resource('addresses', AddressController::class);
         Route::resource('shipping-services', ShippingServiceController::class);
 
-        Route::get('orders',OrderController::class)->name('orders.index');
+        Route::resource('orders',OrderController::class)->only('index','destroy');
 
         Route::namespace('Order')->group(function () {
             Route::resource('orders.sender',OrderSenderController::class)->only('index','store');

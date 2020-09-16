@@ -1,0 +1,118 @@
+<?php
+
+namespace App\Services\Excel\Import;
+
+use App\Models\Order;
+use App\Models\State;
+use App\Services\Excel\AbstractImportService;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
+
+class OrderImportService extends AbstractImportService
+{
+    private $userId; 
+
+    public function __construct(UploadedFile $file,$userId)
+    {
+        $this->userId = $userId;
+
+        $filename = $this->importFile($file);
+
+        parent::__construct(
+            $this->getStoragePath($filename)
+        );
+    }
+
+    public function handle() 
+    {
+        $this->importOrders();
+    }
+
+    public function importOrders()
+    {
+        foreach (range(2, $this->noRows) as $row) {
+            $this->createOrUpdateOrder($row);
+        }
+
+    }
+
+    private function createOrUpdateOrder($row){
+        DB::beginTransaction();
+
+        try {
+            
+            $order = Order::where('customer_reference',$this->getValue("D{$row}"))->first();
+
+            if ( $order ){
+                $this->addItem($order,$row);
+                DB::commit();
+
+                return;
+            }
+
+            $order = Order::create([
+                'user_id' => $this->userId,
+                "merchant" => $this->getValue("A{$row}"),
+                "carrier" => $this->getValue("B{$row}"),
+                "tracking_id" => $this->getValue("C{$row}"),
+                "customer_reference" => $this->getValue("D{$row}"),
+                "weight" => $this->getValue("E{$row}"),
+                "length" => $this->getValue("F{$row}"),
+                "width" => $this->getValue("G{$row}"),
+                "height" => $this->getValue("H{$row}"),
+                "measurement_unit" => $this->getValue("I{$row}"),
+                "is_invoice_created" => true,
+                "is_shipment_added" => true,
+                'status' => Order::STATUS_ORDER,
+                'order_date' => now(), 
+
+                "sender_first_name" => $this->getValue("J{$row}"),
+                "sender_last_name" => $this->getValue("K{$row}"),
+                "sender_email" => $this->getValue("L{$row}"),
+                "sender_phone" => $this->getValue("M{$row}")
+            ]);
+
+            $order->recipient()->create([
+                "first_name" =>$this->getValue("N{$row}"),
+                "last_name" => $this->getValue("O{$row}"),
+                "email" => $this->getValue("P{$row}"),
+                "phone" => $this->getValue("Q{$row}"),
+                "address" => $this->getValue("R{$row}"),
+                "address2" => $this->getValue("S{$row}"),
+                "street_no" => $this->getValue("T{$row}"),
+                "zipcode" => $this->getValue("U{$row}"),
+                "city" => $this->getValue("V{$row}"),
+                "account_type" => 'individual',
+                "state_id" => optional( State::where('code',$this->getValue("W{$row}"))->first() )->id,
+                "country_id" => optional( State::where('code',$this->getValue("X{$row}"))->first() )->id,
+                "tax_id" => $this->getValue("Y{$row}")
+            ]);
+
+            $order->update([
+                'warehouse_number' => "TEMPWHR-{$order->id}"
+            ]);
+            
+            $this->addItem($order,$row);
+
+            DB::commit();
+
+        } catch (\Exception $ex) {
+            DB::rollback();
+
+            \Log::info("{$row}: ".$ex->getMessage());
+        }
+    }
+
+    public function addItem(Order $order,$row)
+    {
+        $order->items()->create([
+            "quantity" => $this->getValue("Z{$row}"),
+            "value" => $this->getValue("AA{$row}"),
+            "description" => $this->getValue("AB{$row}"),
+            "sh_code" => $this->getValue("AC{$row}"),
+            "contains_battery" => strlen($this->getValue("AD{$row}")) >0 ? true : false,
+            "contains_perfume" => strlen($this->getValue("AE{$row}")) >0 ? true : false,
+            "contains_flammable_liquid" =>  strlen($this->getValue("AF{$row}")) >0 ? true: false,
+        ]);
+    }
+}

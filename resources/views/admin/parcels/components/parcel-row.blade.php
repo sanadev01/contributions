@@ -47,7 +47,7 @@
             <span class="btn btn-sm btn-danger">@lang('parcel.Transit')</span>
         @endif
     </td>
-    <td class="d-flex" style="zoom: 1.2">
+    <td class="d-flex">
         <div class="btn-group">
             <div class="dropdown">
                 <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

@@ -18,14 +18,31 @@
                 </a>
             </li>
 
-            <li class="nav-item {{ $isActive(['admin.orders.index','admin.orders.edit']) }}">
-                <a href="{{ route('admin.orders.index') }}">
-                    <i class="feather icon-truck"></i>
-                    <span class="menu-title">Orders</span>
-                </a>
-            </li>
+            @can('viewAny', App\Models\Order::class)
+                <li class="nav-item {{ $isActive(['admin.orders.index','admin.orders.edit']) }}">
+                    <a href="{{ route('admin.orders.index') }}">
+                        <i class="feather icon-truck"></i>
+                        <span class="menu-title">@lang('menu.orders')</span>
+                    </a>
+                </li>
+            @endcan
 
-            @can('viewAny', App\Models\Rate::class)
+            @can('importExcel', App\Models\Order::class)
+                <li class="nav-item {{ $isActive(['admin.import-excel.index','admin.import-excel.edit']) }}">
+                    <a href="{{ route('admin.import-excel.index') }}">
+                        <i class="feather icon-file"></i>
+                        <span class="menu-title">@lang('menu.import-excel')</span>
+                    </a>
+                </li>
+            @endcan
+
+            @if ( 
+                auth()->user()->can('viewAny', App\Models\ProfitPackage::class) ||
+                auth()->user()->can('viewAny', App\Models\HandlingService::class) ||
+                auth()->user()->can('viewAny', App\Models\ShippingService::class) ||
+                auth()->user()->can('viewAny', App\Models\Rate::class) 
+             )
+                
             <li class="nav-item has-sub sidebar-group">
                 <a href="#">
                     <i class="feather icon-dollar-sign"></i>
@@ -71,7 +88,7 @@
 
                 </ul>
             </li>
-            @endcan
+            @endif
 
             @can('viewAny', App\Models\Address::class)
                 <li class="nav-item {{ $isActive(['admin.addresses.index','admin.addresses.edit','admin.addresses.create']) }}">

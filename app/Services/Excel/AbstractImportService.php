@@ -72,4 +72,10 @@ abstract class AbstractImportService
         $file->storeAs("excels/{$this->getService()}", $fiename);
         return $fiename;
     }
+
+    public function getValue($cell)
+    {
+        \Log::info('CELL : '.$cell);
+        return $this->workSheet->getCell($cell)->getValue();
+    }
 }
