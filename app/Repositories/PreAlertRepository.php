@@ -103,6 +103,7 @@ class PreAlertRepository
                 'status' => Order::STATUS_PREALERT_READY
             ]);
 
+            $data[] = 'status';
             $data[] = 'weight';
             $data[] = 'measurement_unit';
             $data[] = 'length';
