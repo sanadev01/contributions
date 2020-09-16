@@ -158,10 +158,10 @@
         <div class="actions clearfix">
             <ul role="menu" aria-label="Pagination">
                 <li class="disabled" aria-disabled="true">
-                    <a href="{{ route('admin.orders.sender.index',$order) }}" role="menuitem">Previous</a>
+                    <a href="{{ route('admin.orders.sender.index',$order) }}" role="menuitem">@lang('orders.recipient.Previous')</a>
                 </li>
                 <li aria-hidden="false" aria-disabled="false">
-                    <button class="btn btn-primary">Next</button>
+                    <button class="btn btn-primary">@lang('orders.recipient.Next')</button>
                 </li>
             </ul>
         </div>
@@ -211,7 +211,7 @@
             $('#loading').fadeOut();
         })
     })
-
+ 
 </script>
 @endsection
 

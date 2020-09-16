@@ -32,11 +32,11 @@ class OrderServicesController extends Controller
     public function store(Request $request,Order $order, OrderRepository $orderRepository)
     {
         if ( $orderRepository->updateHandelingServices($request,$order) ){
-            session()->flash('alert-success','Services Updated');
+            session()->flash('alert-success','orders.Services Updated');
             return redirect()->route('admin.orders.order-details.index',$order);
         }
 
-        session()->flash('alert-success','error Updateding Services');
+        session()->flash('alert-success','orders.Error Updateding Services');
         return \back();
     }
 }

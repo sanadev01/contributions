@@ -44,11 +44,11 @@ class PreAlertController extends Controller
         $this->authorize('create', Order::class);
 
         if ( $preAlertRepository->store($request) ){
-            session()->flash('alert-success','Parcel Added');
+            session()->flash('alert-success','parcel.Parcel Added');
             return redirect()->route('admin.parcels.index');
         }
 
-        session()->flash('alert-danger','Error Parcel Create');
+        session()->flash('alert-danger','parcel.Error Parcel Create');
         return back()->withInput();
     }
 
@@ -87,11 +87,11 @@ class PreAlertController extends Controller
         $this->authorize('update', $parcel);
 
         if ( $preAlertRepository->update($request, $parcel) ){
-            session()->flash('alert-success','Parcel Updated');
+            session()->flash('alert-success','parcel.Parcel Updated');
             return redirect()->route('admin.parcels.index');
         }
 
-        session()->flash('alert-danger','Error Parcel Update');
+        session()->flash('alert-danger','parcel.Error Parcel Update');
         return back()->withInput();
     }
 
@@ -106,11 +106,11 @@ class PreAlertController extends Controller
         $this->authorize('delete',$parcel);
 
         if ( $preAlertRepository->delete($parcel) ){
-            session()->flash('alert-success','Parcel Deleted');
+            session()->flash('alert-success','parcel.Parcel Deleted');
             return back();
         }
 
-        session()->flash('alert-danger','Error While Deleting Parcel');
+        session()->flash('alert-danger','parcel.Error While Deleting Parcel');
         return back();
         
     }

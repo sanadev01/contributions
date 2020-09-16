@@ -1,6 +1,9 @@
 <?php
 
-return [
+return [ 
+    'name' => 'Name',
+    'action' => 'Action',
+    'orders' => 'Orders',
     'manage-orders' => 'Manage Orders',
     'date' => 'Date',
     'order-id' => 'Order ID',
@@ -13,9 +16,51 @@ return [
     
     'recipient' => [
         'slect-from-list' => 'Select Address From List',
+        'Previous' => 'Previous', 
+        'Next' => 'Next', 
+    ],
+    'order-details' => [
+        'Sender' => 'Sender', 
+        'Recipient' => 'Recipient', 
+        'Additional services' => 'Additional services', 
+        'Shipping & Items' => 'Shipping & Items', 
+        'Invoice' => 'Invoice', 
+        'Orders' => 'Orders', 
+        'Step 1' => 'Step 1',
+        'Customer Reference' => 'Customer Reference',
+        'WHR' => 'WHR',
+        'Warehouse Number' => 'Warehouse Number',
+        'Service' => 'Service',
+        'Select Shipping Service' => 'Select Shipping Service',
+        'Tax Modality' => 'Tax Modality',
+        'Place Order' => 'Place Order',
+        'Order Items' => 'Order Items',
+        'Add Item' => 'Add Item',
+        'Previous' => 'Previous',
+        'order-item' => [
+            'Harmonized Code' => 'Harmonized Code',
+            'Description' => 'Description',
+            'Quantity' => 'Quantity',
+            'Unit Value' => 'Unit Value',
+            'Total' => 'Total',
+            'Is Contains Dangrous Goods' => 'Is Contains Dangrous Goods',
+            'Remove' => 'Remove',
+        ],
     ],
     'services' => [
         'handling-services' => 'Additional Services',
+        'Step 1' => 'Step 1',
+        'Next' => 'Next',
+        'Previous' => 'Previous',
+    ],
+    'sender' => [
+        'First Name' => 'First Name',
+        'Last Name' => 'Last Name',
+        'Email' => 'Email',
+        'Phone' => 'Phone',
+        'Tax Id' => 'Tax Id',
+        'Next' => 'Next', 
+        'Step 1' => 'Step 1', 
     ],
     'import-excel' =>[
         'Import Orders via Excel Sheet' => 'Import Orders via Excel Sheet',
@@ -115,5 +160,13 @@ return [
         'Continue to checkout' => 'Continue to checkout',
         'Save Billing Information' => 'Save Billing Information',
         'alert-success' => 'Your notice has been successfully created. As soon as your order arrives at our center you will be notified by email within 48 working hours, please wait.',
-    ]
+    ],
+    'Services Updated' => 'Services Updated',
+    'Error Updateding Services' => 'Error Updateding Services',
+    'Sender Updated' => 'Sender Updated',
+    'Sender Update Error' => 'Sender Update Error',
+    'Recipient Updated' => 'Recipient Updated',
+    'Recipient Update Error' => 'Recipient Update Error',
+    'Order Placed' => 'Order Placed',
+    'Error While placing Order' => 'Error While placing Order',
 ];

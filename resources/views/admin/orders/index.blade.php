@@ -3,7 +3,7 @@
 @section('page')
 <div class="card">
     <div class="card-header">
-        <h4 class="mb-0">Orders</h4>
+        <h4 class="mb-0">@lang('orders.orders')</h4>
         {{-- <a href="{{ route('admin.roles.create') }}" class="pull-right btn btn-primary"> Create Role </a> --}}
     </div>
     <div class="card-content">

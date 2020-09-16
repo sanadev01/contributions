@@ -29,11 +29,11 @@ class OrderRecipientController extends Controller
     public function store(CreateRequest $request, Order $order, OrderRepository $orderRepository)
     {
         if ( $orderRepository->updateRecipientAddress($request,$order) ){
-            session()->flash('alert-success',"Recipient Updated");
+            session()->flash('alert-success',"orders.Recipient Updated");
             return redirect()->route('admin.orders.services.index',$order);
         }
 
-        session()->flash('alert-danger','Recipient Update Error');
+        session()->flash('alert-danger','orders.Recipient Update Error');
         return \back();
     }
 }

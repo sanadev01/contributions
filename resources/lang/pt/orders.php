@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'name' => 'Nome',
+    'action' => 'Açao',
+    'orders' => 'Pedidos',
     'manage-orders' => 'Meu pedidos',
     'date' => 'Date',
     'order-id' => 'Pedido',
@@ -13,9 +16,50 @@ return [
     
     'recipient' => [
         'slect-from-list' => 'Selecione o endereço da lista',
+        'Previous' => 'Anterior', 
+        'Next' => 'Próximo',
+    ],
+    'order-details' => [
+        'Sender' => 'Remetente', 
+        'Recipient' => 'Destinatário', 
+        'Additional services' => 'Serviços adicionais', 
+        'Shipping & Items' => 'Frete e itens', 
+        'Invoice' => 'Fatura', 
+        'Orders' => 'Pedidos',
+        'Step 1' => 'Passo 1',
+        'Customer Reference' => 'Referência do cliente',
+        'WHR' => 'WHR',
+        'Warehouse Number' => 'Número do Armazém',
+        'Service' => 'Serviço',
+        'Select Shipping Service' => 'Selecione o serviço de frete',
+        'Tax Modality' => 'Modalidade Tributária',
+        'Place Order' => 'Faça a encomenda',
+        'Order Items' => 'Itens de ordem',
+        'Add Item' => 'Adicionar Item',
+        'Previous' => 'Anterior',
+        'order-item' => [
+            'Harmonized Code' => 'Código Harmonizado',
+            'Description' => 'Descrição',
+            'Quantity' => 'Quantidade',
+            'Unit Value' => 'Valor unitário',
+            'Total' => 'total',
+            'Is Contains Dangrous Goods' => 'Contém bens danosos',
+            'Remove' => 'Remover',
+        ],
     ],
     'services' => [
         'handling-services' => 'Serviços adicionais:',
+        'Step 1' => 'Passo 1',
+        'Next' => 'Próximo',
+        'Previous' => 'Anterior',
+    ],
+    'sender' => [
+        'First Name' => 'Primeiro nome',
+        'Last Name' => 'Último nome',
+        'Email' => 'O email',
+        'Phone' => 'telefone',
+        'Tax Id' => 'CPF',
+        'Next' => 'Próximo', 
     ],
     'import-excel' =>[
         'Import Orders via Excel Sheet' => 'Importar pedidos via planilha do Excel',
@@ -115,5 +159,13 @@ return [
         'Continue to checkout' => 'Confirmar pagamento',
         'Save Billing Information' => 'Salvar informações de cobrança',
         'alert-success' => 'O seu aviso foi criado com sucesso. Assim que sua encomenda chegar em nossa central você será notificado(a) por email em até 48 horas úteis, por favor aguarde.',
-    ]
+    ],
+    'Services Updated' => 'Serviços atualizados',
+    'Error Updateding Services' => 'Serviços de atualização de erros',
+    'Sender Updated' => 'Remetente Atualizado',
+    'Sender Update Error' => 'Erro de atualização do remetente',
+    'Recipient Updated' => 'Destinatário atualizado',
+    'Recipient Update Error' => 'Erro de atualização de destinatário',
+    'Order Placed' => 'Pedido feito',
+    'Error While placing Order' => 'Erro ao colocar o pedido',
 ];
