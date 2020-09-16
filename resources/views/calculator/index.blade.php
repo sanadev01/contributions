@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('custom-css')
+<link rel="stylesheet" href="{{ asset('app-assets/select/css/bootstrap-select.min.css') }}">
     <style>
         .number-input{
             margin-top: 3px;
@@ -26,15 +27,13 @@
 
                         <div class="card-body">
                             <div class="row mb-1">
-                                <div class="controls col-12">
+                                <div class="controls col-12"> 
                                     <label>Destination Country</label>
-                                    <select name="" id="" class="form-control">
-                                        <option value="" selected disabled hidden>Select Country</option>
-                                        @isset($countries)
-                                            @foreach ($countries as $country)
-                                                <option value="{{$country->id}}">{{$country->name}}</option>
-                                            @endforeach
-                                        @endisset
+                                    <select id="country"  name="country_id" class="form-control selectpicker show-tick" data-live-search="true">
+                                        <option value="">Select @lang('address.Country')</option>
+                                        @foreach (countries() as $country)
+                                            <option {{ old('country_id') == $country->id ? 'selected' : '' }} value="{{ $country->id }}">{{ $country->name }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -42,12 +41,8 @@
                                 <div class="controls col-12">
                                     <label>Destination State</label>
                                     <option value="" selected disabled hidden>Select State</option>
-                                    <select name="" id="" class="form-control">
-                                        @isset($states)
-                                            @foreach ($states as $state)
-                                                <option value="{{$state->id}}">{{$state->name}}</option>
-                                            @endforeach
-                                        @endisset
+                                    <select name="state_id" id="state" class="form-control selectpicker show-tick" data-live-search="true">
+                                        <option value="">Select @lang('address.State')</option>
                                     </select>
                                 </div>
                             </div>
@@ -78,7 +73,9 @@
                                     </div>
                                 </div>
                             </div>
-                    
+                            
+                            <livewire:order.shipment-info :order-id="1"/>
+
                             <div class="row mb-1">
                                 <div class="col-12 col-sm-6 col-md-4">
                                     <div class="controls">
@@ -151,4 +148,8 @@
         </div>
     </section>
     <!-- Dashboard Analytics end -->
+@endsection
+@section('jquery')
+<script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
+@include('layouts.states-ajax')
 @endsection

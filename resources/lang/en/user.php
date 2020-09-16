@@ -20,5 +20,8 @@ return [
     'Search' => 'Search',
     'Search By Name, Pobox, Email' => 'Search By Name, Pobox, Email',
     'Setting' => 'Setting',
+    'Available' => 'Available',
+    'Edit Profile' => 'Edit Profile',
+    'Logout' => 'Logout',
 ]; 
  

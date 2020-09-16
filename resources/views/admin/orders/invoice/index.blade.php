@@ -16,7 +16,7 @@
     </section>
     <div id="invoice-wrapper" class="wizard print">
         <!-- invoice functionality end -->
-        <!-- invoice page -->
+        <!-- invoice page --> 
         <section class="card invoice-page">
             <div id="invoice-template" class="card-body">
                 <!-- Invoice Company Details -->
@@ -27,11 +27,11 @@
                         </div>
                     </div>
                     <div class="col-sm-6 col-12 text-right">
-                        <h1>Invoice</h1>
+                        <h1>@lang('orders.invoice.Invoice')</h1>
                         <div class="invoice-details mt-2">
-                            <h6>INVOICE NO.</h6>
+                            <h6>@lang('orders.invoice.INVOICE NO.')</h6>
                             <p>{{ $order->warehouse_number }}</p>
-                            <h6 class="mt-2">INVOICE DATE</h6>
+                            <h6 class="mt-2">@lang('orders.invoice.INVOICE DATE')</h6>
                             <p>{{ now()->format('d M Y') }}</p>
                         </div>
                     </div>
@@ -41,7 +41,7 @@
                 <!-- Invoice Recipient Details -->
                 <div id="invoice-customer-details" class="pt-2 d-flex w-100 justify-content-between">
                     <div class="text-left w-50">
-                        <h5>Recipient</h5>
+                        <h5>@lang('orders.invoice.Recipient')</h5>
                         <div class="recipient-info my-2">
                             <p> {{ optional($order->recipient)->first_name }} {{ optional($order->recipient)->last_name }} </p>
                             <p> HERCO 0013 </p>
@@ -62,7 +62,7 @@
                         </div>
                     </div>
                     <div class="text-righ justify-self-end">
-                        <h5>Sender</h5>
+                        <h5>@lang('orders.invoice.Sender')</h5>
                         <div class="company-info my-2">
                             {{ $order->sender_first_name }} {{ $order->sender_last_name }} <br>
                             2200 NW, 129th Ave – Suite # 100<br> Miami, FL, 33182<br>United States<br>Ph#: +13058885191
@@ -87,8 +87,8 @@
                             <table class="table table-borderless">
                                 <thead>
                                     <tr>
-                                        <th><h4>Service</h4></th>
-                                        <th>Amount</th>
+                                        <th><h4>@lang('orders.invoice.Service')</h4></th>
+                                        <th>@lang('orders.invoice.Amount')</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -107,8 +107,8 @@
                             <table class="table table-borderless">
                                 <thead>
                                     <tr>
-                                        <th><h4>Additional Services</h4></th>
-                                        <th>Amount</th>
+                                        <th><h4>@lang('orders.invoice.Additional Services')</h4></th>
+                                        <th>@lang('orders.invoice.Amount')</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -119,7 +119,7 @@
                                         </tr>  
                                     @endforeach   
                                     <tr class="border-top-light">
-                                        <td class="text-center h4">Total</td>
+                                        <td class="text-center h4">@lang('orders.invoice.Total')</td>
                                         <td class="h4">{{ $order->services()->sum('price') }} USD</td>
                                     </tr>                            
                                 </tbody>
@@ -135,16 +135,16 @@
                                 <thead>
                                     <tr>
                                         <th colspan="5">
-                                            <h4>Order Items</h4>
+                                            <h4>@lang('orders.invoice.Order Items')</h4>
                                         </th>
                                     </tr>
                                     <tr>
-                                        <th>ShCode</th>
-                                        <th>Description</th>
-                                        <th>Quantity</th>
-                                        <th>Unit Value</th>
-                                        <th>Total</th>
-                                        <th>Battery/Perfume/Flameable</th>
+                                        <th>@lang('orders.invoice.ShCode')</th>
+                                        <th>@lang('orders.invoice.Description')</th>
+                                        <th>@lang('orders.invoice.Quantity')</th>
+                                        <th>@lang('orders.invoice.Unit Value')</th>
+                                        <th>@lang('orders.invoice.Total')</th>
+                                        <th>@lang('orders.invoice.Battery/Perfume/Flameable')</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -163,7 +163,7 @@
                                         </tr>  
                                     @endforeach
                                     <tr class="border-top-light">
-                                        <td colspan="4" class="text-center h4">Order Value</td>
+                                        <td colspan="4" class="text-center h4">@lang('orders.invoice.Order Value')</td>
                                         <td class="h4">
                                             {{ $order->items()->sum(\DB::raw('quantity * value')) }} USD
                                         </td>
@@ -182,23 +182,23 @@
                                     <tbody>
                                         
                                         <tr>
-                                            <th>Shipping</th>
+                                            <th>@lang('orders.invoice.Shipping')</th>
                                             <td>{{ $order->shipping_value }} USD</td>
                                         </tr>
                                         <tr>
-                                            <th>Additional Services</th>
+                                            <th>@lang('orders.invoice.Additional Services')</th>
                                             <td>
                                                 {{ $order->services()->sum('price') }} USD
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th>Dangrous Items Cost</th>
+                                            <th>@lang('orders.invoice.Dangrous Items Cost')</th>
                                             <td>
                                                 {{ $order->dangrous_goods }} USD
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th>TOTAL</th>
+                                            <th>@lang('orders.invoice.TOTAL')</th>
                                             <td> {{ $order->gross_total }} USD</td>
                                         </tr>
                                     </tbody>
@@ -212,7 +212,7 @@
         <div class="actions clearfix no-print">
             <ul role="menu" aria-label="Pagination">
                 <li class="disabled" aria-disabled="true">
-                    <a href="{{ route('admin.orders.order-details.index',$order) }}" role="menuitem">Previous</a>
+                    <a href="{{ route('admin.orders.order-details.index',$order) }}" role="menuitem">@lang('orders.invoice.Previous')</a>
                 </li>
                 {{-- <li aria-hidden="false" aria-disabled="false">
                     <button class="btn btn-primary">Place Order</button>

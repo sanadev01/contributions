@@ -20,4 +20,7 @@ return [
     'Search' => 'Procurar',
     'Search By Name, Pobox, Email' => 'Pesquisar por nome, Pobox, Email',
     'Setting' => 'Configuração',
+    'Available' => 'acessível',
+    'Edit Profile' => 'Editar Perfil',
+    'Logout' => 'Sair',
 ]; 
