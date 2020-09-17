@@ -16,10 +16,12 @@ class CreatePaymentInvoicesTable extends Migration
         Schema::create('payment_invoices', function (Blueprint $table) {
             $table->id();
 
+            $table->string('uuid',20)->nullable();
             $table->string('paid_by')->nullable();
             $table->string('order_count')->nullable();
             $table->string('total_amount')->nullable();
             $table->string('last_four_digits')->nullable();
+            $table->boolean('is_paid')->default(false);
 
             $table->timestamps();
         });

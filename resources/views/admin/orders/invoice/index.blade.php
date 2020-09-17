@@ -44,7 +44,6 @@
                         <h5>@lang('orders.invoice.Recipient')</h5>
                         <div class="recipient-info my-2">
                             <p> {{ optional($order->recipient)->first_name }} {{ optional($order->recipient)->last_name }} </p>
-                            <p> HERCO 0013 </p>
                             <p>{{ optional($order->recipient)->address }} {{ optional($order->recipient)->address2 }}<br> 
                                 {{ optional($order->recipient)->city }}, {{ optional(optional($order->recipient)->state)->code }}, {{ optional($order->recipient)->zipcode }}<br>
                                 {{ optional(optional($order->recipient)->country)->name }}<br>

@@ -14,8 +14,8 @@ class CreateOrderPaymentInvoiceTable extends Migration
     public function up()
     {
         Schema::create('order_payment_invoice', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->bigInteger('order_id');
+            $table->bigInteger('payment_invoice_id');
         });
     }
 

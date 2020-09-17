@@ -26,7 +26,7 @@
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('setting.Authorize ID')<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control" value="{{ old('AUTHORIZE_ID') }}" name="AUTHORIZE_ID" required placeholder="@lang('setting.Authorize ID')">
+                                        <input type="text" class="form-control" value="{{ old('AUTHORIZE_ID',setting('AUTHORIZE_ID')) }}" name="AUTHORIZE_ID" required placeholder="@lang('setting.Authorize ID')">
                                         <div class="help-block"></div>
                                         {{-- setting('AUTHORIZE_ID') --}}
                                     </div>
@@ -34,7 +34,7 @@
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('setting.Authorize Key')<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control" name="AUTHORIZE_KEY" value="{{ old('AUTHORIZE_KEY') }}" required placeholder="@lang('setting.Authorize Key')">
+                                        <input type="text" class="form-control" name="AUTHORIZE_KEY" value="{{ old('AUTHORIZE_KEY',setting('AUTHORIZE_KEY')) }}" required placeholder="@lang('setting.Authorize Key')">
                                         <div class="help-block"></div>
                                     </div>
                                 </div>

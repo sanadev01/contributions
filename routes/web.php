@@ -50,8 +50,19 @@ Route::namespace('Admin')
             Route::resource('orders.order-invoice', OrderInvoiceController::class)->only('index','store');
         });
 
-        Route::prefix('rates')
-            ->namespace('Rates')
+        Route::resource('payment-invoices', PaymentInvoiceController::class)->only(['index','store','destroy']);
+
+        Route::namespace('Payment')
+            ->prefix('payment-invoices')
+            ->as('payment-invoices.')
+            ->group(function(){
+                Route::resource('orders', OrdersSelectController::class)->only(['index','store']);
+                Route::resource('invoice', OrdersInvoiceController::class)->only(['show','store','edit','update']);
+                Route::resource('invoice.checkout', OrdersCheckoutController::class)->only(['index','store']);
+        });
+
+        Route::namespace('Rates')
+            ->prefix('rates')
             ->as('rates.')
             ->group(function () {
                 Route::resource('profit-packages', ProfitPackageController::class); 

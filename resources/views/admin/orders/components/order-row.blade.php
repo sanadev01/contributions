@@ -63,10 +63,10 @@
         @endif
     </td>
     <td class="font-large-1">
-        @if( !$order->isPaid() )
-            <i class="feather icon-x text-danger"></i>
-        @else
+        @if( $order->isPaid() )
             <i class="feather icon-check text-success"></i>
+        @else
+            <i class="feather icon-x text-danger"></i>
         @endif
     </td>
     <td class="d-flex no-print" >
@@ -79,9 +79,17 @@
 
                     @user
                         @if( !$order->isPaid() )
-                            <button class="btn w-100 dropdown-item" title="See Shipping Cost and Move to Checkout">
-                                <i class="feather icon-dollar-sign"></i> @lang('orders.actions.pay-order')
-                            </button>
+
+                            @if ( optional($order)->getPaymentInvoice() )
+                                <a href="{{ route('admin.payment-invoices.invoice.show',optional($order)->getPaymentInvoice()) }}" class="btn w-100 dropdown-item" title="Pay Order">
+                                    <i class="feather icon-dollar-sign"></i> @lang('orders.actions.pay-order')
+                                </a>
+                            @else
+                                <a href="{{ route('admin.payment-invoices.orders.index',['order'=>$order]) }}" class="btn w-100 dropdown-item" title="Pay Order">
+                                    <i class="feather icon-dollar-sign"></i> @lang('orders.actions.pay-order')
+                                </a>
+                            @endif
+                            
                         @endif
                     @enduser
                     <button onclick="mw = window.open('{{route('admin.orders.order-invoice.index',$order)}}','','width=768,height=768')" class="btn dropdown-item w-100" title="Show Order Details">
@@ -93,6 +101,12 @@
                             <i class="feather icon-truck"></i>@lang('orders.actions.track-order')
                         </button>
                     @endif
+
+                    @can('update',  $order)
+                        <a href="{{ route('admin.parcels.edit',$order) }}" class="dropdown-item btn" title="@lang('parcel.Edit Parcel')">
+                            <i class="feather icon-edit"></i> @lang('parcel.Edit Parcel')
+                        </a>
+                    @endcan
 
                     @if( $order->isPaid() && auth()->user()->can('canPrintLable',$order))
                         <a href="#" class="btn dropdown-item w-100" title="@lang('orders.actions.label')">

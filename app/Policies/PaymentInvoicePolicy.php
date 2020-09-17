@@ -20,7 +20,7 @@ class PaymentInvoicePolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return true;
     }
 
     /**
@@ -32,7 +32,7 @@ class PaymentInvoicePolicy
      */
     public function view(User $user, PaymentInvoice $paymentInvoice)
     {
-        //
+        return $user->id == $paymentInvoice->paid_by;
     }
 
     /**
@@ -43,7 +43,7 @@ class PaymentInvoicePolicy
      */
     public function create(User $user)
     {
-        //
+        return true;
     }
 
     /**
@@ -55,7 +55,7 @@ class PaymentInvoicePolicy
      */
     public function update(User $user, PaymentInvoice $paymentInvoice)
     {
-        //
+        return $user->id == $paymentInvoice->paid_by;
     }
 
     /**
@@ -67,7 +67,7 @@ class PaymentInvoicePolicy
      */
     public function delete(User $user, PaymentInvoice $paymentInvoice)
     {
-        //
+        return true;
     }
 
     /**

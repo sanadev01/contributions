@@ -64,13 +64,13 @@
                                                 {{ $address->phone }}
                                             </td>
                                             <td class="d-flex">
-                                                @can('update', App\Models\Address::class)
+                                                @can('update', $address)
                                                     <a href="{{ route('admin.addresses.edit',$address->id) }}" class="btn btn-primary mr-2" title="@lang('address.Edit Address')">
                                                         <i class="feather icon-edit"></i>
                                                     </a>
                                                 @endcan
 
-                                                @can('destroy', App\Models\Address::class)
+                                                @can('destroy', $address)
                                                     <form action="{{ route('admin.addresses.destroy',$address->id) }}" method="post" onsubmit="return confirmDelete()">
                                                         @csrf
                                                         @method('DELETE')

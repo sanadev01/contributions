@@ -3,6 +3,7 @@
 return [
     'dashboard' => 'Dashboard',
     'import-excel' => 'Excel Import',
+    'payment-invoice' => 'Payment Invoices',
     'prealerts' => 'PreAlerts',
     'orders' => 'Orders',
     'transactions' => 'Transactions',

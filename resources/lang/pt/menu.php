@@ -3,6 +3,7 @@
 return [
     'dashboard' => 'Painel de controle',
     'import-excel' => 'Importação de Excel',
+    'payment-invoice' => 'Faturas de Pagamento',
     'prealerts' => 'Aviso de compra',
     'orders' => 'Pedidos',
     'transactions' => 'Transações',

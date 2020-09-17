@@ -69,7 +69,7 @@ class WeightCalculator
             throw  new Exception('Invalid Unit.');
         }
 
-        $divisor = $unit == 'in' ? 166 : 6000;
+        $divisor = $unit == 'in' ? 370 : 6000;
         return ($length * $width * $heigt) / $divisor;
     }
 

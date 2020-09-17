@@ -72,6 +72,16 @@ class User extends Authenticatable
         return $this->hasMany(Ticket::class, 'user_id');
     }
 
+    public function state()
+    {
+        return $this->belongsTo(State::class);
+    }
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
+    }
+
     public function settings()
     {
         return $this->hasMany(Setting::class, 'user_id');

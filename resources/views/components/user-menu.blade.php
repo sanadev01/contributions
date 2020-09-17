@@ -36,6 +36,15 @@
                 </li>
             @endcan
 
+            @can('viewAny', App\Models\PaymentInvoice::class)
+                <li class="nav-item {{ $isActive(['admin.payment-invoices.index','admin.payment-invoices.edit']) }}">
+                    <a href="{{ route('admin.payment-invoices.index') }}">
+                        <i class="feather icon-file"></i>
+                        <span class="menu-title">@lang('menu.payment-invoice')</span>
+                    </a>
+                </li>
+            @endcan
+
             @if ( 
                 auth()->user()->can('viewAny', App\Models\ProfitPackage::class) ||
                 auth()->user()->can('viewAny', App\Models\HandlingService::class) ||

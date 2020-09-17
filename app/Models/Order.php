@@ -69,7 +69,7 @@ class Order extends Model
     
     public function isPaid()
     {
-        return $this->is_paid;
+        return  ( $this->is_paid  && !$this->getPaymentInvoice()) || ($this->getPaymentInvoice() && $this->getPaymentInvoice()->isPaid()) ;
     }
 
     public function isArrivedAtWarehouse()
