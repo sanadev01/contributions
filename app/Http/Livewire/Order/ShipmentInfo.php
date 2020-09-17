@@ -93,7 +93,7 @@ class ShipmentInfo extends Component
             $this->widthOther = UnitsConverter::inToCm($this->width);
             $this->heightOther = UnitsConverter::inToCm($this->height);
             $this->currentWeightUnit = 'lbs';
-            $volumetricWeight = WeightCalculator::getVolumnWeight($this->length,$this->width,$this->height,'in');;
+            $volumetricWeight = WeightCalculator::getVolumnWeight($this->length,$this->width,$this->height,'in');
             $this->volumeWeight = round($volumetricWeight > $this->weight ? $volumetricWeight : $this->weight,2);
         }
     }
