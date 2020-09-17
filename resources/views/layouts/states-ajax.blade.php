@@ -12,6 +12,7 @@
            url: "{{route('admin.ajax.state')}}",
            data: {country_id: country_id},
            success: function (data){
+                $("#state").html("<option value=''>No Data</option>")
                 $.each(data,function(index,state){
                     $("#state").append('<option value="'+state.id+'">'+state.code+'</option>');
                 });

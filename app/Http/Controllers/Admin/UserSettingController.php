@@ -10,6 +10,11 @@ use App\Models\Role;
 
 class UserSettingController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(User::class);
+    }
+    
     public function index(User $user)
     {   
         $packages = ProfitPackage::all();
