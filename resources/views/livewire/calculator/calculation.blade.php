@@ -40,7 +40,7 @@
         <div class="col-12 col-sm-6 col-md-4">
             <div class="controls">
                 <label>@lang('parcel.Length') ({{ $unit == 'kg/cm' ? 'cm' : 'in' }})<span class="text-danger">*</span></label>
-                <input step="0.001" type="number" class="number-input" autocomplete="off" required name="length" wire:model.debounce.500ms="length" placeholder=""/>
+                <input step="0.001" name="length" type="number" class="number-input" autocomplete="off" required name="length" wire:model.debounce.500ms="length" placeholder=""/>
                 <div class="help-block">
                     <span>{{ $lengthOther }}</span>
                     @if ( $unit != 'kg/cm' )
@@ -57,7 +57,7 @@
         <div class="col-12 col-sm-6 col-md-4">
             <div class="controls">
                 <label>@lang('parcel.Width') ({{ $unit == 'kg/cm' ? 'cm' : 'in' }}) <span class="text-danger">*</span></label>
-                <input step="0.001" type="number" class="number-input" autocomplete="off" required name="width" wire:model.debounce.500ms="width" placeholder=""/>
+                <input step="0.001" type="number" name="width" class="number-input" autocomplete="off" required name="width" wire:model.debounce.500ms="width" placeholder=""/>
                 <div class="help-block">
                     <span>{{ $widthOther }}</span>
                     @if ( $unit != 'kg/cm' )
@@ -74,7 +74,7 @@
         <div class="col-12 col-sm-6 col-md-4">
             <div class="controls">
                 <label>@lang('parcel.Height') ({{ $unit == 'kg/cm' ? 'cm' : 'in' }}) <span class="text-danger">*</span></label>
-                <input step="0.001" type="number" class="number-input" autocomplete="off" required name="height" wire:model.debounce.500ms="height" placeholder=""/>
+                <input step="0.001" type="number" name="height" class="number-input" autocomplete="off" required name="height" wire:model.debounce.500ms="height" placeholder=""/>
                 <div class="help-block">
                     <span>{{ $heightOther }}</span>
                     @if ( $unit != 'kg/cm' )

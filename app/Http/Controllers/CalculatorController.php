@@ -7,6 +7,7 @@ use App\Models\Recipient;
 use App\Models\Order;
 use App\Models\ShippingService;
 use App\Models\State;
+use App\Models\User;
 use Auth;
 
 class CalculatorController extends Controller
@@ -40,14 +41,13 @@ class CalculatorController extends Controller
                 'unit' => 'Please Select Measurement Unit ',
             ]
         );
-
         
         $recipient = new Recipient();
         $recipient->state_id = $request->state_id;
         $recipient->country_id = $request->country_id;
 
         $order = new Order();
-        $order->user = Auth::user() ? Auth::user() :  User::where('role','admin')->first();
+        $order->user = Auth::user() ? Auth::user() :  User::where('role_id',1)->first();
         $order->width = $request->width;
         $order->height = $request->height;
         $order->length = $request->length;
@@ -65,7 +65,15 @@ class CalculatorController extends Controller
             }
         }
 
-        dd($shippingServices);
+        // foreach ($shippingServices as $key => $shippingService) {
+        //      echo $shippingService->name;
+        //      echo $shippingService->getRateFor($order);
+        //      echo $order->weight;
+        // }
+
+        return view('calculator.show', compact('shippingServices','order'));
+
+        // echo $shippingServices->getRateFor($order);
 
         // In view
         // PAss order and services to view
@@ -81,48 +89,6 @@ class CalculatorController extends Controller
         // $order->weight 
         // $shippingServices->getRateFor($order); will give rate for service
 
-
-
-
-        $address = new Address();
-        $address->state = $request->state;
-        $address->country = Country::find($request->country);
-
-        $shipment = new Order();
-        $shipment->id = microtime(true);
-        $shipment->width = $request->form['width'];
-        $shipment->height = $request->form['height'];
-        $shipment->length = $request->form['length'];
-        $shipment->weight = $request->form['weight'];
-        $shipment->unit = $request->form['measurement_unit'];
-
-        $order = new Order();
-        $order->user = Auth::user() ? Auth::user() :  User::where('role','admin')->first();
-        $order->shipment = $shipment;
-        $order->address = $address;
-
-        $bpsRateService = new BpsRatesCalculator($order);
-        $packagePlusRateService = new PackagePlusRatesCalculator($order);
-
-        $availableServices = [];
-
-        if ($bpsRateService->isAvailable()) {
-            $availableServices[] = [
-                'name' => $bpsRateService->getName(),
-                'price' => round($bpsRateService->getRate(), 2).' USD',
-                'weight' => number_format($bpsRateService->getWeight(), 2)
-            ];
-        }
-
-        if ($packagePlusRateService->isAvailable()) {
-            $availableServices[] = [
-                'name' => $packagePlusRateService->getName(),
-                'price' => round($packagePlusRateService->getRate(), 2).' USD',
-                'weight' => number_format($packagePlusRateService->getWeight(), 2)
-            ];
-        }
-
-        return  $availableServices;
     }
 
 }
