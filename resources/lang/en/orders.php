@@ -45,6 +45,9 @@ return [
             'Total' => 'Total',
             'Is Contains Dangrous Goods' => 'Is Contains Dangrous Goods',
             'Remove' => 'Remove',
+            'Contains Battery' => 'Contains Battery',
+            'Contains Perfume' => 'Contains Perfume',
+            'Contains Flammable Liquid' => 'Contains Flammable Liquid',
         ],
     ],
     'services' => [

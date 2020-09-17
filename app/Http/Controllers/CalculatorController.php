@@ -65,18 +65,8 @@ class CalculatorController extends Controller
             }
         }
 
-        // foreach ($shippingServices as $key => $shippingService) {
-        //      echo $shippingService->name;
-        //      echo $shippingService->getRateFor($order);
-        //      echo $order->weight;
-        // }
 
         return view('calculator.show', compact('shippingServices','order'));
-
-        // echo $shippingServices->getRateFor($order);
-
-        // In view
-        // PAss order and services to view
 
         // if ( $request->unit == 'kg/cm' ){ 
         //     $weightInOtherUnit = UnitsConverter::kgToPound($request->weight);
