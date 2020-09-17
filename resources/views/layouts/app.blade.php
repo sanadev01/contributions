@@ -17,6 +17,8 @@
     </script>
     <!-- Styles -->
     @include('layouts.css')
+
+    <livewire:styles>
 </head>
 <body>
     <div id="app">
@@ -65,7 +67,10 @@
 
     <!-- Scripts -->
     @include('layouts.js')
+    
     @yield('jquery')
+
+    <livewire:scripts>
 
 </body>
 </html>

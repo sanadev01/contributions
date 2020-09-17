@@ -15,7 +15,7 @@ Route::get('/', function () {
     return redirect('login');
 });
 
-Route::resource('calculator', CalculatorController::class)->only(['index']);
+Route::resource('calculator', CalculatorController::class)->only(['index', 'store']);
 Route::get('/home', function () {
     return redirect()->route('admin.home');
 });
@@ -73,7 +73,7 @@ Route::namespace('Admin')
 
         Route::post('users/{user}/login', AnonymousLoginController::class)->name('users.login');
 
-        Route::post('ajax/get-states', AjaxCallController::class)->name('ajax.state');
+        Route::post('ajax/get-states', AjaxCallController::class)->name('ajax.state')->withoutMiddleware(['auth']);
 
         Route::get('language/{locale}', LanguageController::class)->name('locale.change');
 });
