@@ -13,9 +13,9 @@
                                 @lang('tickets.My Tickets')
                             @endif
                         </h4>
-                        @admin
+                        @user
                             <a href="{{ route('admin.tickets.create') }}" class="pull-right btn btn-primary"> @lang('tickets.Create New Ticket') </a>
-                        @endadmin
+                        @enduser
                     </div>
                     <div class="card-content">
                         <div class="table-responsive-md mt-1">

@@ -115,6 +115,9 @@
                                                 <label>@lang('address.State') <span class="text-danger">*</span></label>
                                                 <select name="state_id" id="state" class="form-control selectpicker show-tick" data-live-search="true">
                                                     <option value="">Select @lang('address.State')</option>
+                                                    @foreach (states(old('country_id')) as $state)
+                                                        <option {{ old('state_id') == $state->id ? 'selected' : '' }} value="{{ $state->id }}">{{ $state->name }}</option>
+                                                    @endforeach
                                                 </select>
                                                 <div class="help-block"></div>
                                             </div>

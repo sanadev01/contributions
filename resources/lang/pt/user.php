@@ -7,6 +7,7 @@ return [
     'Email' => 'O email',
     'Phone' => 'telefone',
     'Roles' => 'Funções',
+    'Role' => 'Função',
     'Account Type' => 'tipo de conta',
     'Package' => 'Pacote',
     'Action' => 'Açao',
@@ -23,4 +24,7 @@ return [
     'Available' => 'acessível',
     'Edit Profile' => 'Editar Perfil',
     'Logout' => 'Sair',
+    'User Setting Updated Successfully' => 'Configuração do usuário atualizada com sucesso',
+    'Select Package' => 'Selecione o pacote',
+    'Select Role' => 'Selecione a função',
 ]; 

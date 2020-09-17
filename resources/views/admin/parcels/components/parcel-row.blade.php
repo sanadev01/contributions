@@ -55,9 +55,11 @@
                 </button>
                 <div class="dropdown-menu dropdown-menu-right dropright">
 
-                    <a href="{{ route('admin.orders.sender.index',$parcel) }}" class="dropdown-item" title=" @lang('parcel.Create Order')">
-                        <i class="feather icon-shopping-cart"></i> @lang('prealerts.actions.place-order')
-                    </a>
+                    @if( $parcel->isShipmentAdded() )
+                        <a href="{{ route('admin.orders.sender.index',$parcel) }}" class="dropdown-item" title=" @lang('parcel.Create Order')">
+                            <i class="feather icon-shopping-cart"></i> @lang('prealerts.actions.place-order')
+                        </a>
+                    @endif
                     
                     @can('update',  $parcel)
                         <a href="{{ route('admin.parcels.edit',$parcel) }}" class="dropdown-item btn" title="@lang('parcel.Edit Parcel')">
