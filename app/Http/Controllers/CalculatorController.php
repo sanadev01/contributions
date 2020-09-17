@@ -75,9 +75,9 @@ class CalculatorController extends Controller
         }
         
         if ($request->unit == 'kg/cm' ){ 
-            $weightInOtherUnit = UnitsConverter::kgToPound($request->weight);
+            $weightInOtherUnit = UnitsConverter::kgToPound($volumeWeight);
         }else{
-            $weightInOtherUnit = UnitsConverter::poundToKg($request->weight);
+            $weightInOtherUnit = UnitsConverter::poundToKg($volumeWeight);
         }
 
         return view('calculator.show', compact('order', 'shippingServices', 'weightInOtherUnit', 'volumeWeight'));
