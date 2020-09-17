@@ -120,7 +120,7 @@
                         <select name="state_id" id="state" class="form-control selectpicker show-tick" data-live-search="true">
                             <option value="">Select @lang('address.State')</option>
                             @foreach (states(old('country_id',optional($order->recipient)->country_id)) as $state)
-                                <option value="{{ $state->id }}" {{ optional($order->recipient)->state_id == $state->id ? 'selected': '' }}> {{ $state->code }} </option>
+                                <option value="{{ $state->id }}" {{ old('state_id',optional($order->recipient)->state_id) == $state->id ? 'selected': '' }}> {{ $state->code }} </option>
                             @endforeach
                         </select>
                         <div class="help-block"></div>
