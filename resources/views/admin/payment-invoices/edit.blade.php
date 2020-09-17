@@ -44,6 +44,9 @@
                                                         <div class="card-state-icon"></div>
                                                         <label for="{{$order->id}}">
                                                             <div class="h5 py-1 px-2">
+                                                                <strong class="border-bottom-dark mr-2">Recipient:</strong> <span class="text-info">{{ optional($order->recipient)->first_name }} {{ optional($order->recipient)->last_name }}</span>
+                                                            </div>
+                                                            <div class="h5 py-1 px-2">
                                                                 <strong class="border-bottom-dark mr-2">Merchant:</strong> <span class="text-info">{{ $order->merchant }}</span>
                                                             </div>
                                                             <div class="h5 py-1 px-2">
@@ -54,6 +57,12 @@
                                                             </div>
                                                             <div class="h5 py-1 px-2">
                                                                 <strong class="border-bottom-dark mr-2">Tracking Code</strong> <span class="text-info">{{  $order->corrios_tracking_code }}</span>
+                                                            </div>
+                                                            <div class="h5 py-1 px-2">
+                                                                <strong class="border-bottom-dark mr-2">WHR#</strong> <span class="text-info">{{  $order->warehouse_number }}</span>
+                                                            </div>
+                                                            <div class="h5 py-1 px-2">
+                                                                <strong class="border-bottom-dark mr-2">Value</strong> <span class="text-info">{{  $order->gross_total }}USD</span>
                                                             </div>
                                                         </label>
                                                     </div>
@@ -75,6 +84,9 @@
                                                         <div class="card-state-icon"></div>
                                                         <label for="{{$order->id}}">
                                                             <div class="h5 py-1 px-2">
+                                                                <strong class="border-bottom-dark mr-2">Recipient:</strong> <span class="text-info">{{ optional($order->recipient)->first_name }} {{ optional($order->recipient)->last_name }}</span>
+                                                            </div>
+                                                            <div class="h5 py-1 px-2">
                                                                 <strong class="border-bottom-dark mr-2">Merchant:</strong> <span class="text-info">{{ $order->merchant }}</span>
                                                             </div>
                                                             <div class="h5 py-1 px-2">
@@ -85,6 +97,12 @@
                                                             </div>
                                                             <div class="h5 py-1 px-2">
                                                                 <strong class="border-bottom-dark mr-2">Tracking Code</strong> <span class="text-info">{{  $order->corrios_tracking_code }}</span>
+                                                            </div>
+                                                            <div class="h5 py-1 px-2">
+                                                                <strong class="border-bottom-dark mr-2">WHR#</strong> <span class="text-info">{{  $order->warehouse_number }}</span>
+                                                            </div>
+                                                            <div class="h5 py-1 px-2">
+                                                                <strong class="border-bottom-dark mr-2">Value</strong> <span class="text-info">{{  $order->gross_total }}USD</span>
                                                             </div>
                                                         </label>
                                                     </div>
