@@ -12,24 +12,34 @@
                             </h2>
                         </div>
 
-                        @csrf
+                        <div class="col-md-12">
+                            <x-flash-message></x-flash-message>
+                        </div>
+                         
                         <div class="card-body">
-                            
                             <div class="text-center">
-                            @foreach ($shippingServices as $shippingService)
-
-
-                                <p><strong>Shipping Service:</strong> {{$shippingService->name}}</p>
-                                <p><strong>Service Rate:</strong> {{$shippingService->getRateFor($order)}}</p>
-                                <p><strong>Total Weight:</strong> {{$order->weight}}</p>
-
-                                <hr>
-
-                            @endforeach
+                                @foreach ($shippingServices as $shippingService) 
+                                    <div class="card-body"><div class="row justify-content-center mb-2 full-height align-items-center"><div class="col-10"><div class="row justify-content-center"><div class="pb-1 pt-1 border-bottom-light col-md-5 bg-primary text-white">
+                                        Service Name
+                                    </div> <div class="border col-5 py-1">
+                                        {{$shippingService->name}}
+                                    </div></div> <div class="row justify-content-center"><div class="pb-1 pt-1 border-bottom-light col-md-5 bg-primary text-white">
+                                        Weight
+                                    </div> <div class="border col-5 py-1">
+                                        @if($order->measurement_unit == 'kg/cm')
+                                            @if($volumeWeight > $order->weight) {{$volumeWeight}} @else {{$order->weight}} @endif Kg ( {{$weightInOtherUnit}} lbs)
+                                        @else
+                                            @if($volumeWeight > $order->weight) {{$volumeWeight}} @else {{$order->weight}} @endif lbs ( {{$weightInOtherUnit}} kg)
+                                        @endif
+                                    </div></div> <div class="row justify-content-center"><div class="pb-1 pt-1 border-bottom-light col-md-5 bg-primary text-white">
+                                        Cost
+                                    </div> <div class="border col-5 py-1 text-danger h2">
+                                        {{$shippingService->getRateFor($order)}} USD
+                                    </div></div></div></div></div>
+                                    <hr>
+                                @endforeach
                             </div>
-
                             <br>
-
                             <div class="row">
                                 <div class="col-md-12 d-flex justify-content-center">
                                 <a href="{{route('calculator.index')}}" class="btn btn-primary btn-lg">
@@ -37,9 +47,7 @@
                                     </a>
                                 </div>
                             </div>
-
                         </div>
-
                     </div>
                 </div>
             </div>

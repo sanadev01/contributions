@@ -88,11 +88,13 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-sm-12 col-md-6">
-            <div class="controls h2 mt-2">
-                <label> <span class="text-danger">*</span> @lang('parcel.The Rate will be applied on')  <strong class="text-danger h2">{{ $volumeWeight }} <span class="ml-1"> {{ $currentWeightUnit }} </span> </strong></label>
-            </div>
+    </div>
+
+    <div class="col-12 col-sm-12 col-md-6">
+        <div class="controls h2 mt-2">
+            <label> <span class="text-danger">*</span> @lang('parcel.The Rate will be applied on')  <strong class="text-danger h2">{{ $volumeWeight }} <span class="ml-1"> {{ $currentWeightUnit }} </span> </strong></label>
         </div>
     </div>
+
     @include('layouts.livewire.loading')
 </div>

@@ -8,6 +8,8 @@ use App\Models\Order;
 use App\Models\ShippingService;
 use App\Models\State;
 use App\Models\User;
+use App\Services\Converters\UnitsConverter;
+use App\Services\Calculators\WeightCalculator;
 use Auth;
 
 class CalculatorController extends Controller
@@ -19,7 +21,6 @@ class CalculatorController extends Controller
 
     public function store(Request $request)
     {   
-
         $this->validate(
             $request,
             [
@@ -41,6 +42,14 @@ class CalculatorController extends Controller
                 'unit' => 'Please Select Measurement Unit ',
             ]
         );
+
+        if ( $request->unit == 'kg/cm' ){
+            $volumetricWeight = WeightCalculator::getVolumnWeight($request->length,$request->width,$request->height,'cm');
+            $volumeWeight = round($volumetricWeight > $request->weight ? $volumetricWeight : $request->weight,2);
+        }else{
+            $volumetricWeight = WeightCalculator::getVolumnWeight($request->length,$request->width,$request->height,'in');
+            $volumeWeight = round($volumetricWeight > $request->weight ? $volumetricWeight : $request->weight,2);
+        }
         
         $recipient = new Recipient();
         $recipient->state_id = $request->state_id;
@@ -55,7 +64,7 @@ class CalculatorController extends Controller
         $order->measurement_unit = $request->unit;
 
         $order->recipient = $recipient;
-        
+
         $shippingServices = collect();
         foreach (ShippingService::query()->active()->get() as $shippingService) {
             if ( $shippingService->isAvailableFor($order) ){
@@ -64,20 +73,14 @@ class CalculatorController extends Controller
                 session()->flash('alert-danger',"Shipping Service not Available Error:{$shippingService->getCalculator($order)->getErrors()}");
             }
         }
+        
+        if ($request->unit == 'kg/cm' ){ 
+            $weightInOtherUnit = UnitsConverter::kgToPound($request->weight);
+        }else{
+            $weightInOtherUnit = UnitsConverter::poundToKg($request->weight);
+        }
 
-
-        return view('calculator.show', compact('shippingServices','order'));
-
-        // if ( $request->unit == 'kg/cm' ){ 
-        //     $weightInOtherUnit = UnitsConverter::kgToPound($request->weight);
-        //     UnitsConverter::inToCm()
-        //     UnitsConverter::cmToIn()
-        // }else{
-        //     $weightInOtherUnit = UnitsConverter::poundToKg($request->weight);
-        // }
-        // $shippingService->name ;
-        // $order->weight 
-        // $shippingServices->getRateFor($order); will give rate for service
+        return view('calculator.show', compact('order', 'shippingServices', 'weightInOtherUnit', 'volumeWeight'));
 
     }
 
