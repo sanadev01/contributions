@@ -115,7 +115,7 @@
                                                 <label>@lang('address.State') <span class="text-danger">*</span></label>
                                                 <select name="state_id" id="state" class="form-control selectpicker show-tick">
                                                     <option value="">Select @lang('address.State')</option>
-                                                    @foreach (states($address->country_id) as $state)
+                                                    @foreach (states(old('country_id',$address->country_id)) as $state)
                                                         <option value="{{ $state->id }}" {{ $address->state_id == $state->id ? 'selected': '' }}> {{ $state->code }} </option>
                                                     @endforeach
                                                 </select>
