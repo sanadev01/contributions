@@ -90,7 +90,7 @@ class Table extends Component
             return $this->query = $this->getQuery();
         }
 
-        $this->query = $this->getQuery()->where('whr_number', 'LIKE', "%{$this->whr_number}%");
+        $this->query = $this->getQuery()->where('warehouse_number', 'LIKE', "%{$this->whr_number}%");
     }
 
     public function updatedMerchant()

@@ -11,6 +11,11 @@ use App\Models\Role;
 
 class RoleController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Role::class);
+    }
+
     public function index(RoleRepository $repository)
     {   
         $roles = $repository->get();

@@ -37,8 +37,8 @@
                                                 <label>@lang('address.Type') <span class="text-danger">*</span></label>
                                                 <select class="form-control" name="account_type" id="accountType" required placeholder="@lang('address.Type')">
                                                     <option value="">@lang('address.Type')</option>
-                                                    <option value="individual">Individual</option>
-                                                    <option value="business">Business</option>
+                                                    <option value="individual" {{ old('account_type') == 'individual' ? 'selected': '' }} >Individual</option>
+                                                    <option value="business" {{ old('account_type') == 'business' ? 'selected': '' }}>Business</option>
                                                 </select>
                                                 <div class="help-block"></div>
                                             </div>
@@ -85,7 +85,7 @@
                                         <div class="form-group col-12 col-sm-6 col-md-4">
                                             <div class="controls">
                                                 <label>@lang('address.Address')2</label>
-                                                <input type="text" class="form-control"  placeholder="" value="{{old('address2')}}"  name="@lang('address.Address')2">
+                                                <input type="text" class="form-control"  placeholder="@lang('address.Address')2" value="{{old('address2')}}"  name="address2">
                                                 <div class="help-block"></div>
                                             </div>
                                         </div>
@@ -116,7 +116,7 @@
                                                 <select name="state_id" id="state" class="form-control selectpicker show-tick" data-live-search="true">
                                                     <option value="">Select @lang('address.State')</option>
                                                     @foreach (states(old('country_id')) as $state)
-                                                        <option {{ old('state_id') == $state->id ? 'selected' : '' }} value="{{ $state->id }}">{{ $state->name }}</option>
+                                                        <option {{ old('state_id') == $state->id ? 'selected' : '' }} value="{{ $state->id }}">{{ $state->code }}</option>
                                                     @endforeach
                                                 </select>
                                                 <div class="help-block"></div>

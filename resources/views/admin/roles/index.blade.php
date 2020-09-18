@@ -7,7 +7,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">@lang('role.Roles')</h4>
-                        @can('create', App\Models\HandlingService::class)
+                        @can('create', App\Models\Role::class)
                             <a href="{{ route('admin.roles.create') }}" class="pull-right btn btn-primary"> @lang('role.Create Role') </a>
                         @endcan
                     </div>
@@ -32,19 +32,19 @@
                                             </td>
                                             <td class="d-flex">
 
-                                                @can('update', App\Models\HandlingService::class)
+                                                @can('update', $role)
                                                 <a href="{{ route('admin.roles.edit',$role) }}" class="btn btn-primary mr-2" title="@lang('role.Edit Role')">
                                                     <i class="feather icon-edit"></i>
                                                 </a>
                                                 @endcan
                                                 
-                                                @can('update', App\Models\HandlingService::class)
+                                                @can('update', $role)
                                                 <a href="{{ route('admin.roles.permissions.index',$role) }}" class="btn btn-primary mr-2" title="@lang('role.Edit Permissions')">
                                                     <i class="fa fa-key"></i>
                                                 </a>
                                                 @endcan
 
-                                                @can('delete', App\Models\HandlingService::class)
+                                                @can('delete', $role)
                                                 <form action="{{ route('admin.roles.destroy',$role) }}" method="post">
                                                     @csrf
                                                     @method('DELETE')

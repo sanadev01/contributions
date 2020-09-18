@@ -70,7 +70,7 @@
                                                     </a>
                                                 @endcan
 
-                                                @can('destroy', $address)
+                                                @can('delete', $address)
                                                     <form action="{{ route('admin.addresses.destroy',$address->id) }}" method="post" onsubmit="return confirmDelete()">
                                                         @csrf
                                                         @method('DELETE')

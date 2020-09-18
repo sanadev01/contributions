@@ -9,6 +9,11 @@ use App\Repositories\UserRepository;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(User::class);
+    }
+
     /**
      * Display a listing of the resource.
      *

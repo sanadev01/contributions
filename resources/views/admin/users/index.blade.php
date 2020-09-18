@@ -97,7 +97,7 @@
                                                             </button>
                                                         </form>
 
-                                                        @can('delete', App\Models\User::class)
+                                                        @can('delete', $user)
                                                             <form action="{{ route('admin.users.destroy',$user) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
                                                                 @csrf
                                                                 @method('DELETE')
