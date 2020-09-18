@@ -2,15 +2,20 @@
 
 namespace App\Repositories;
 
+use App\Models\BillingInformation;
 use App\Models\HandlingService;
 use App\Models\Order;
+use App\Models\PaymentInvoice;
 use App\Models\ShippingService;
+use App\Services\PaymentServices\AuthorizeNetService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class OrderRepository extends Model
 {
+    protected $error;
+
     public function updateSenderAddress(Request $request, Order $order)
     {
         $order->update([
@@ -175,7 +180,82 @@ class OrderRepository extends Model
     {
 
     }
+
+
+    public function checkout(Request $request, PaymentInvoice $paymentInvoice)
+    {
+        DB::beginTransaction();
+
+        try {
+
+            $billingInformation = null;
+
+            if ( $request->billingInfo ){
+                $billingInformation = BillingInformation::find($request->billingInfo);
+            }
+
+            if ( !$billingInformation ){
+                $billingInformation = new BillingInformation([
+                    'user_id' => Auth::id(),
+                    'first_name' => $request->first_name,
+                    'last_name' => $request->last_name,
+                    'card_no' => $request->card_no,
+                    'expiration' => $request->expiration,
+                    'cvv' => $request->cvv,
+                    'phone' => $request->phone,
+                    'address' => $request->address,
+                    'state' => State::find($request->state)->code,
+                    'zipcode' => $request->zipcode,
+                    'country' => Country::find($request->country)->name
+                ]);
+            }
+
+            if ( $request->has('save-address') ){
+                $billingInformation->save();
+            }
+
+            $authorizeNetService = new AuthorizeNetService();
+
+            $response = $authorizeNetService->makeCreditCardPayement($billingInformation,$paymentInvoice);
+
+
+            if ( !$response->success ){
+                $this->error = json_encode($response->message);
+                DB::rollBack();
+                return false;
+            }
+
+            $paymentInvoice->update([ 
+                'last_four_digits' => substr($billingInformation->card_no,-4),
+                'is_paid' => true
+            ]);
+
+            $paymentInvoice->transactions()->create([
+                'transaction_id' => $response->data->getTransId(),
+                'amount' => $paymentInvoice->total_amount
+            ]);
+
+            $paymentInvoice->orders()->update([
+                'is_paid' => true
+            ]);
+            
+            DB::commit();
+
+            return true;
+
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            $this->error = $ex->getMessage();
+            return false;
+        }
+        
+    }
     
     
+
+    public function getError()
+    {
+        return $this->error;
+    }
 
 }

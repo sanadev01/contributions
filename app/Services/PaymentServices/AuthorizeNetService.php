@@ -4,6 +4,7 @@ namespace App\Services\PaymentServices;
 
 use App\Models\BillingInformation;
 use App\Models\Order;
+use App\Models\PaymentInvoice;
 use App\Models\Setting;
 use Exception;
 use net\authorize\api\constants\ANetEnvironment;
@@ -37,12 +38,12 @@ class AuthorizeNetService
         $this->refId = 'Ref_'.date('Ymd').str_random(2);
     }
 
-    public function makeCreditCardPayement(BillingInformation $billingInformation, Order $order)
+    public function makeCreditCardPayement(BillingInformation $billingInformation, PaymentInvoice $invoice)
     {
         // Create the payment data for a credit card
         try {
             $creditCard = new CreditCardType();
-            $creditCard->setCardNumber($billingInformation->card_no);
+            $creditCard->setCardNumber(cleanString($billingInformation->card_no));
             $creditCard->setCardCode($billingInformation->cvv);
             $creditCard->setExpirationDate($billingInformation->expiration);
 
@@ -50,7 +51,7 @@ class AuthorizeNetService
             $paymentOne->setCreditCard($creditCard);
 
             $orderType = new OrderType();
-            $orderType->setInvoiceNumber('WHR#: '.$order->shipment->whr_number);
+            $orderType->setInvoiceNumber($invoice->uuid);
             $orderType->setDescription("An order From Homedeliverybr");
 
             // Set the customer's Bill To address
@@ -67,15 +68,15 @@ class AuthorizeNetService
 
             // Set the customer's identifying information
             $customerData = new CustomerDataType();
-            $customerData->setType($order->user->account_type);
-            $customerData->setId($order->user->pobox_number);
-            $customerData->setEmail($order->user->email);
+            $customerData->setType($invoice->user->account_type);
+            $customerData->setId($invoice->user->pobox_number);
+            $customerData->setEmail($invoice->user->email);
 
             // Transaction Request
             $transactionRequestType = new TransactionRequestType();
             $transactionRequestType->setTransactionType('authCaptureTransaction');
             $transactionRequestType->setAmount(
-                round($order->amount, 2)
+                round($invoice->total_amount, 2)
             );
             $transactionRequestType->setPayment($paymentOne);
             $transactionRequestType->setCustomer($customerData);
@@ -99,7 +100,7 @@ class AuthorizeNetService
             );
 
             \Log::info(
-                $order
+                $invoice
             );
 
             \Log::info(

@@ -47,13 +47,13 @@
                                             <td>{{ $billingInfo->zipcode }}</td>
                                             <td>{{ $billingInfo->country }}</td>
                                             <td class="d-flex">
-                                                @can('udpate', App\Models\BillingInformation::class)
+                                                @can('update', $billingInfo)
                                                     <a href="{{ route('admin.billing-information.edit',$billingInfo) }}" class="btn btn-primary mr-2" title="@lang('billing.Edit Billing Information')">
                                                         <i class="feather icon-edit"></i>
                                                     </a>
                                                 @endcan
 
-                                                @can('delete', App\Models\BillingInformation::class)
+                                                @can('delete', $billingInfo)
                                                     <form action="{{ route('admin.billing-information.destroy',$billingInfo) }}"  onsubmit="return confirmDelete()" method="post">
                                                         @csrf
                                                         @method('DELETE')

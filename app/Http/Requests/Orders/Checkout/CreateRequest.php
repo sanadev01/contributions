@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Admin\BillingInformation;
+namespace App\Http\Requests\Orders\Checkout;
 
 use Illuminate\Foundation\Http\FormRequest;
- 
-class UpdateRequest extends FormRequest
+
+class CreateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,9 +23,10 @@ class UpdateRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $rules = [
+            'card_no' => 'required',
             'expiration' => 'date_format:m/y|after:today',
-            'cvv' => 'regex:/(^\d{3})/u',
+            'cvv' => 'required|regex:/(^\d{3})/u',
             'first_name' => 'required', 
             'last_name' => 'required', 
             'address' => 'required', 
@@ -33,6 +34,14 @@ class UpdateRequest extends FormRequest
             'state' => 'required|exists:states,id', 
             'zipcode' => 'required',
             'country' => 'required|exists:countries,id', 
+        ];
+
+        if ( !$this->billingInfo ){
+            return $rules;
+        }
+
+        return [
+            'billingInfo' => 'required|exists:billing_information,id'
         ];
     }
 }

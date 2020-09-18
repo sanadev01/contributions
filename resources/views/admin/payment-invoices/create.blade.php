@@ -17,6 +17,8 @@
                         </a>
                     </div>
                     <div class="card-content">
+                        <p class="h5">Here you can select multiple unpaid orders to pay in one invoice.  if you want to pay one by one just select only one order and click view invoice.</p>
+                        <hr>
                         <div class="card-body">
                             @if( $errors->count() )
                                 <div class="alert alert-danger">
@@ -38,7 +40,7 @@
 
                                             @foreach ($orders as $order)
                                                 <div class="card-wrapper h-auto my-2 w-auto">
-                                                    <input class="c-card" type="checkbox" name="orders[]" id="{{$order->id}}" {{ request('order') == $order->id ? '': '' }} value="{{$order->id}}">
+                                                    <input class="c-card" type="checkbox" name="orders[]" id="{{$order->id}}" {{ request('order') == $order->id ? 'checked': '' }} value="{{$order->id}}">
                                                     <div class="card-content">
                                                         <div class="card-state-icon"></div>
                                                         <label for="{{$order->id}}">

@@ -18,6 +18,10 @@ class PaymentInvoice extends Model
         return $this->belongsTo(User::class,'paid_by');
     }
 
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class,'invoice_id');
+    }
 
     public function isPaid()
     {

@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Order;
 use App\Policies\OrderPolicy;
 use App\Models\Address;
+use App\Models\BillingInformation;
 use App\Policies\AddressPolicy;
 use App\Models\Country;
 use App\Policies\CountryPolicy;
@@ -47,6 +48,7 @@ use App\Policies\TicketPolicy;
 use App\Models\Transaction;
 use App\Policies\TransactionPolicy;
 use App\Models\User;
+use App\Policies\BillingInformationPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -81,6 +83,7 @@ class AuthServiceProvider extends ServiceProvider
         Ticket::class => TicketPolicy::class,
         Transaction::class => TransactionPolicy::class,
         User::class => UserPolicy::class,
+        BillingInformation::class => BillingInformationPolicy::class
     ];
 
     /**

@@ -127,59 +127,47 @@
     <div class="row justify-content-center">
         <div class="col-12">
             <div class="row">
-                <div class="col-12">
+                <div class="col-4">
                     <label for="name">@lang('billing.First Name')</label>
                     <input id="first_name" name="first_name" required maxlength="50" type="text" class="{{ $errors->has('first_name')?'border border-danger':'' }}" title="{{ $errors->has('first_name')?  $errors->first('first_name'):'first_name on Card' }}" value="@isset($billingInformation) {{$billingInformation->first_name}} @else {{ old('first_name') }} @endisset">
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
+                <div class="col-4">
                     <label for="name">@lang('billing.Last Name')</label>
                     <input id="last_name" name="last_name" required maxlength="50" type="text" class="{{ $errors->has('last_name')?'border border-danger':'' }}" title="{{ $errors->has('last_name')?  $errors->first('last_name'):'Name on Card' }}" value="@isset($billingInformation) {{$billingInformation->last_name}} @else {{ old('last_name') }} @endisset">
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
+                <div class="col-4">
                     <label for="name">@lang('billing.Address')</label>
                     <input id="address" name="address" required  maxlength="100" type="text" class="{{ $errors->has('address')?'border border-danger':'' }}" title="{{ $errors->has('address')?  $errors->first('address'):'Name on Card' }}" value="@isset($billingInformation) {{$billingInformation->address}} @else {{ old('address') }} @endisset">
                 </div>
             </div>
-
             <div class="row">
-                <div class="col-12">
+                <div class="col-3">
                     <label for="name">@lang('billing.Phone')</label>
                     <input id="phone" name="phone" required  maxlength="100" type="text" class="{{ $errors->has('phone')?'border border-danger':'' }}" title="{{ $errors->has('phone')?  $errors->first('phone'):'Name on Card' }}" value="@isset($billingInformation) {{$billingInformation->phone}} @else {{ old('phone') }} @endisset">
                 </div>
-            </div>
-
-            <div class="row">
-                <div class="col-12">
+                <div class="col-3">
                     <label for="name">@lang('billing.Country')</label>
                     <select  id="country" name="country" required  maxlength="20" type="text" class="{{ $errors->has('country')?'border border-danger':'' }} form-control selectpicker show-tick" data-live-search="true" title="{{ $errors->has('country')?  $errors->first('country'):'' }}">
                         <option value="">@lang('billing.Select Country')</option>
                         @foreach (countries() as $country)
-                            <option @isset($billingInformation) @if($billingInformation->country == $country->id) selected @endif @endisset value="{{ $country->id }}">{{ $country->name }}</option>
+                            <option @isset($billingInformation) @if($billingInformation->country == $country->name) selected @endif @endisset value="{{ $country->id }}">{{ $country->name }}</option>
                         @endforeach
                     </select>
                 </div>
-            </div>
-
-            <div class="row">
-                <div class="col-12">
+                <div class="col-3">
                     <label for="name">@lang('billing.State')</label>
                     <select id="state" name="state" required  maxlength="20" type="text" class="{{ $errors->has('state')?'border border-danger':'' }} form-control selectpicker show-tick" data-live-search="true" title="{{ $errors->has('state')?  $errors->first('state'):'' }}" value="{{ old('state') }}">
                         <option value="">@lang('billing.Select State')</option>
+                        @foreach (states( old('country', optional( App\Models\Country::where('name',optional($billingInformation)->country)->first() )->id ) ) as $state)
+                            <option value="{{ $state->id }}" {{ old('state', optional($billingInformation)->state ) == $state->code ? 'selected': '' }}> {{ $state->code }} </option>
+                        @endforeach
                     </select>
                 </div> 
-            </div>
-
-            <div class="row">
-                <div class="col-12">
+                <div class="col-3">
                     <label for="name">@lang('billing.Zipcode')</label>
                     <input id="zipcode" name="zipcode" required maxlength="20" type="text" class="{{ $errors->has('zipcode')?'border border-danger':'' }}" title="{{ $errors->has('zipcode')?  $errors->first('zipcode'):'Name on Card' }}" value="@isset($billingInformation) {{$billingInformation->zipcode}} @else {{ old('zipcode') }} @endisset">
                 </div>
             </div>
-
         </div>
     </div>
 </div>

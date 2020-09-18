@@ -2,10 +2,12 @@
 
 namespace App\Repositories;
 
+use App\Models\BillingInformation;
+use App\Models\Country;
+use App\Models\State;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\BillingInformation;
-use Exception;
 
 class BillingInformationRepository
 {
@@ -28,9 +30,9 @@ class BillingInformationRepository
                 'cvv' => $request->cvv,
                 'phone' => $request->phone,
                 'address' => $request->address,
-                'state' => $request->state,
+                'state' => State::find($request->state)->code,
                 'zipcode' => $request->zipcode,
-                'country' => $request->country
+                'country' => Country::find($request->country)->name
             ]);
 
             return true;
@@ -49,9 +51,9 @@ class BillingInformationRepository
                 'expiration' => $request->expiration,
                 'phone' => $request->phone,
                 'address' => $request->address,
-                'state' => $request->state,
+                'state' => State::find($request->state)->code,
                 'zipcode' => $request->zipcode,
-                'country' => $request->country
+                'country' => Country::find($request->country)->name
             ]);
 
             if($request->has('card_no')){

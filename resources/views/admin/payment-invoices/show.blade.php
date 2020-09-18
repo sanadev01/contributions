@@ -96,9 +96,9 @@
                     <div class="row justify-content-end">
                         <div class="col-12 col-md-7 text-right">
                             <button class="btn btn-info btn-lg mb-1 mb-md-0 waves-effect waves-light" onclick="window.print();"> <i class="feather icon-file-text"></i> Print</button>
-                            <a href="{{ route('admin.payment-invoices.invoice.edit',$invoice) }}" class="btn btn-primary btn-lg mb-1 mb-md-0 waves-effect waves-light" > <i class="feather icon-edit"></i> Edit</a>
-                            
+                            <a class="btn btn-primary btn-lg" href="{{ route('admin.payment-invoices.index') }}">Back to List</a>
                             @if (!$invoice->isPaid())
+                                <a href="{{ route('admin.payment-invoices.invoice.edit',$invoice) }}" class="btn btn-primary btn-lg mb-1 mb-md-0 waves-effect waves-light" > <i class="feather icon-edit"></i> Edit</a>
                                 <a href="{{ route('admin.payment-invoices.invoice.checkout.index',$invoice) }}" class="btn btn-success btn-lg mb-1 mb-md-0 waves-effect waves-light" > <i class="feather icon-credit-card"></i> Checkout</a>
                             @endif
                         </div>

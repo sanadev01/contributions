@@ -31,9 +31,9 @@ class CreateRequest extends FormRequest
             'last_name' => 'required', 
             'address' => 'required', 
             'phone' => 'required', 
-            'state' => 'required', 
+            'state' => 'required|exists:states,id', 
             'zipcode' => 'required',
-            'country' => 'required', 
+            'country' => 'required|exists:countries,id', 
         ];
     }
 }

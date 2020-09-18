@@ -34,7 +34,7 @@ h1 {
   border-radius: 3px;
   padding: 25px 25px 10px 25px;
 }
-.card-content * {
+.grid-wrapper * {
   cursor: pointer;
 }
 .card-wrapper {

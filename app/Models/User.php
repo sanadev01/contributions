@@ -72,6 +72,11 @@ class User extends Authenticatable
         return $this->hasMany(Ticket::class, 'user_id');
     }
 
+    public function billingInformations()
+    {
+        return $this->hasMany(BillingInformation::class);
+    }
+
     public function state()
     {
         return $this->belongsTo(State::class);
