@@ -21,6 +21,8 @@
                         <form action="{{ route('admin.payment-invoices.invoice.checkout.store',$invoice) }}" method="POST">
                             @csrf
                             <div class="card-body">
+                                <p class="h5 dim">Select from Saved Billing methods or create new one by clicking on create new. You can also save newly created address for future use. jus check the save address box.</p>
+                                <hr>
                                 <div class="grid-wrapper w-100">
                                     @foreach (auth()->user()->billingInformations as $billingInfo)
                                         <div class="card-wrapper h-auto my-2 w-100">

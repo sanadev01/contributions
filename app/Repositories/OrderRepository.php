@@ -236,7 +236,8 @@ class OrderRepository extends Model
             ]);
 
             $paymentInvoice->orders()->update([
-                'is_paid' => true
+                'is_paid' => true,
+                'status' => Order::STATUS_PAYMENT_DONE
             ]);
             
             DB::commit();

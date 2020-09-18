@@ -17,9 +17,9 @@
                         </a>
                     </div>
                     <div class="card-content">
-                        <p class="h5">Here you can select multiple unpaid orders to pay in one invoice.  if you want to pay one by one just select only one order and click view invoice.</p>
-                        <hr>
                         <div class="card-body">
+                            <p class="h5 dim">Here you can select multiple unpaid orders to pay in one invoice.  if you want to pay one by one just select only one order and click view invoice.</p>
+                            <hr>
                             @if( $errors->count() )
                                 <div class="alert alert-danger">
                                     <ul>

@@ -38,8 +38,14 @@ class PaymentInvoiceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(PaymentInvoice $paymentInvoice)
+    public function destroy(PaymentInvoice $paymentInvoice, PaymentInvoiceRepository $paymentInvoiceRepository)
     {
-        //
+        if ( $paymentInvoiceRepository->delete($paymentInvoice) ){
+            session()->flash('alert-success','Payment Invoice Deleted');
+            return back();
+        }
+
+        session()->flash('alert-danger','Error While deleting Payment Invoice');
+        return back();
     }
 }

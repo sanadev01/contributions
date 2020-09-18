@@ -54,9 +54,18 @@ class PaymentInvoiceRepository
         $invoice->orders()->sync($request->get('orders',[]));
 
         $invoice->update([
-            'total_amount' => $invoice->orders()->sum('gross_total')
+            'total_amount' => $invoice->orders()->sum('gross_total'),
+            'order_count' => $invoice->orders()->count()
         ]);
 
         return $invoice;
+    }
+
+    public function delete(PaymentInvoice  $paymentInvoice)
+    {
+        $paymentInvoice->orders()->sync([]);
+        $paymentInvoice->delete();
+
+        return true;
     }
 }
