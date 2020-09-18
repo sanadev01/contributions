@@ -25,7 +25,8 @@ class OrderRepository extends Model
             'sender_first_name' => $request->first_name,
             'sender_last_name' => $request->last_name,
             'sender_email' => $request->email,
-            'sender_taxId' => $request->phone,
+            'sender_phone' => $request->phone,
+            'sender_taxId' => $request->taxt_id,
         ]);
 
         return $order;

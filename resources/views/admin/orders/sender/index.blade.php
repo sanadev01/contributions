@@ -12,6 +12,11 @@
                     <div class="form-group">
                     <label for="firstName1">@lang('orders.sender.First Name') </label>
                         <input type="text" class="form-control" name="first_name" value="{{ old('first_name',__default($order->sender_first_name,optional($order->user)->name)) }}" id="firstName1">
+                        @error('first_name')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
                     </div>
                 </div>
     
@@ -19,6 +24,11 @@
                     <div class="form-group">
                         <label for="lastName1">@lang('orders.sender.Last Name')</label>
                         <input type="text" class="form-control" name="last_name" value="{{ old('last_name',__default($order->sender_last_name,optional($order->user)->last_name)) }}">
+                        @error('last_name')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
                     </div>
                 </div>
     
@@ -26,18 +36,33 @@
                     <div class="form-group">
                         <label for="emailAddress1">@lang('orders.sender.Email')</label>
                         <input type="email" class="form-control" name="email" value="{{ old('email',__default($order->sender_email,optional($order->user)->email)) }}">
+                        @error('email')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
                     </div>
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="emailAddress1">@lang('orders.sender.Phone')</label>
                         <input type="text" class="form-control" name="phone" value="{{ old('phone',__default($order->sender_phone,optional($order->user)->phone)) }}">
+                        @error('phone')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
                     </div>
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="emailAddress1">@lang('orders.sender.Tax Id')</label>
                         <input type="text" class="form-control" name="taxt_id" value="{{ old('tax_id',__default($order->sender_taxId,optional($order->user)->tax_id)) }}">
+                        @error('taxt_id')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
                     </div>
                 </div>
             </div>
