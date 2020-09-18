@@ -3,13 +3,16 @@
 namespace App\Repositories;
 
 use App\Models\BillingInformation;
+use App\Models\Country;
 use App\Models\HandlingService;
 use App\Models\Order;
 use App\Models\PaymentInvoice;
 use App\Models\ShippingService;
+use App\Models\State;
 use App\Services\PaymentServices\AuthorizeNetService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class OrderRepository extends Model
