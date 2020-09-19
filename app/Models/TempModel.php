@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class TempModel extends Model
 {
-    //
+    public $guarded = [];
 }
