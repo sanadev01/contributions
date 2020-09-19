@@ -165,7 +165,7 @@ class OrderRepository
                 'discount' => $discount,
                 'gross_total' => $gross_total,
                 'insurance_value' => $insurance,
-                'status' => Order::STATUS_ORDER
+                'status' => $order->isPaid() ? $order->status : Order::STATUS_ORDER
             ]);
 
             DB::commit();

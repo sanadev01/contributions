@@ -53,7 +53,7 @@
                     <option value="0">No</option>
                     <option value="contains_battery" {{ optional($item)['contains_battery'] == 1 ? 'selected': '' }}>@lang('orders.order-details.order-item.Contains Battery')</option>
                     <option value="contains_perfume" {{ optional($item)['contains_perfume'] == 1 ? 'selected': '' }}>@lang('orders.order-details.order-item.Contains Perfume')</option>
-                    <option value="contains_flammable_liquid" {{ optional($item)['contains_flammable_liquid'] == 1 ? 'selected': '' }}>@lang('orders.order-details.order-item.Contains Flammable Liquid')</option>
+                    {{-- <option value="contains_flammable_liquid" {{ optional($item)['contains_flammable_liquid'] == 1 ? 'selected': '' }}>@lang('orders.order-details.order-item.Contains Flammable Liquid')</option> --}}
                 </select>
                 @error("items.{$keyId}.dangrous_item")
                     <div class="help-block text-danger">{{ $message }}</div>
