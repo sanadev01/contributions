@@ -96,10 +96,6 @@ class AuthorizeNetService
             }
 
             \Log::info(
-                $billingInformation
-            );
-
-            \Log::info(
                 $invoice
             );
 

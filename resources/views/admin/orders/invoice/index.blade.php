@@ -213,9 +213,11 @@
                 <li class="disabled" aria-disabled="true">
                     <a href="{{ route('admin.orders.order-details.index',$order) }}" role="menuitem">@lang('orders.invoice.Previous')</a>
                 </li>
-                <li aria-hidden="false" aria-disabled="false">
-                    <a href="{{ route('admin.payment-invoices.orders.index',['order'=>$order]) }}" class="btn btn-primary">Pay Order Now</a>
-                </li>
+                @if ( !$order->isPaid() )
+                    <li aria-hidden="false" aria-disabled="false">
+                        <a href="{{ route('admin.payment-invoices.orders.index',['order'=>$order]) }}" class="btn btn-primary">Pay Order Now</a>
+                    </li>
+                @endif
             </ul>
         </div>
     </div>
