@@ -98,6 +98,6 @@ Route::get('media/get/{document}', function (App\Models\Document $document) {
     return Storage::response($document->getStoragePath(), $document->name);
 })->name('media.get');
 
-Route::get('order/{order}/label/get', function ($order) {
+Route::get('order/{order}/label/get', function (App\Models\Order $order) {
     return response()->download(storage_path("labels/{$order->corrios_tracking_code}.pdf"),$order->corrios_tracking_code,[],'inline');
 })->name('order.label.download');
