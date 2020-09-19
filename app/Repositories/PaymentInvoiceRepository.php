@@ -14,7 +14,7 @@ class PaymentInvoiceRepository
         $query = PaymentInvoice::query();
 
         if ( !Auth::user()->isAdmin() ){
-            $invoices->where('paid_by',Auth::id());
+            $query->where('paid_by',Auth::id());
         }
 
         if ( $request->user ){
