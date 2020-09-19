@@ -9,8 +9,9 @@
 </div>
 <div class="label mt-2">
     @if (!$error)
-        {{-- <iframe src="http://docs.google.com/gview?url={{ route('order.label.download',$order) }}&embedded=true" style="width:100%; height:700px;" frameborder="0"></iframe> --}}
-        <iframe src="{{ route('order.label.download',$order) }}" style="width:100%; height:700px;" frameborder="0"></iframe>
+        <iframe src="http://docs.google.com/gview?url={{ route('order.label.download',$order) }}&embedded=true" style="width:100%; height:700px;" frameborder="0">
+            <iframe src="{{ route('order.label.download',$order) }}" style="width:100%; height:700px;" frameborder="0"></iframe>
+        </iframe>
     @else
         <div class="alert alert-danger">
             {{ $error }}
