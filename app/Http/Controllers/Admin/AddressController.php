@@ -27,10 +27,9 @@ class AddressController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(AddressRepository $repository) 
+    public function index() 
     {
-        $addresses = $repository->get();
-        return view('admin.addresses.index', compact('addresses'));
+        return view('admin.addresses.index');
     }
 
     /**

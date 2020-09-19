@@ -14,10 +14,9 @@ class PaymentInvoiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(PaymentInvoiceRepository $paymentInvoiceRepository)
+    public function index()
     {
-        $invoices = $paymentInvoiceRepository->get();
-        return view('admin.payment-invoices.index',compact('invoices'));
+        return view('admin.payment-invoices.index');
     }
 
 

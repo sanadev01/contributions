@@ -9,15 +9,34 @@ use Illuminate\Support\Facades\Auth;
 
 class PaymentInvoiceRepository
 {
-    public function get()
+    public function get(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='asc')
     {
-        $invoices = PaymentInvoice::query();
+        $query = PaymentInvoice::query();
 
         if ( !Auth::user()->isAdmin() ){
             $invoices->where('paid_by',Auth::id());
         }
 
-        return $invoices->paginate(50);
+        if ( $request->user ){
+            $query->whereHas('user',function($query) use($request) {
+                return $query->where('pobox_number',"%{$request->user}%")
+                            ->orWhere('name','LIKE',"%{$request->user}%")
+                            ->orWhere('last_name','LIKE',"%{$request->user}%")
+                            ->orWhere('email','LIKE',"%{$request->user}%");
+            });
+        }
+
+        if ( $request->uuid ){
+            $query->where('uuid','LIKE',"%{$request->uuid}%");
+        }
+
+        if ( $request->last_four_digits ){
+            $query->where('last_four_digits','LIKE',"%{$request->last_four_digits}%");
+        }
+
+        $query->orderBy($orderBy,$orderType);
+
+        return $paginate ? $query->paginate($pageSize) : $query->get();
     }
 
     public function getUnpaidOrders()

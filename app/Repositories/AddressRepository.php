@@ -9,7 +9,7 @@ use Exception;
 
 class AddressRepository
 {
-    public function get()
+    public function get(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='asc')
     {
         $query = Address::query()->has('user');
 
@@ -17,11 +17,39 @@ class AddressRepository
             $query->where('user_id',Auth::id());
         }
 
-        $addresses = $query
-            ->latest()
-            ->get();
+        if ( $request->user ){
+            $query->whereHas('user',function($query) use($request) {
+                return $query->where('pobox_number',"%{$request->user}%")
+                            ->orWhere('name','LIKE',"%{$request->user}%")
+                            ->orWhere('last_name','LIKE',"%{$request->user}%")
+                            ->orWhere('email','LIKE',"%{$request->user}%");
+            });
+        }
 
-        return $addresses;
+        if ( $request->name ){
+            $query->where(function($query) use($request){
+                return $query->where('first_name','LIKE',"%{$request->name}%")
+                    ->orWhere('last_name','LIKE',"%{$request->name}%");
+            });
+        }
+
+        if ( $request->address ){
+            $query->where(function($query) use($request){
+                return $query->where('address','LIKE',"%{$request->address}%")
+                    ->orWhere('address2','LIKE',"%{$request->address}%");
+            });
+        }
+
+        if ( $request->phone ){
+            $query->where(function($query) use($request){
+                return $query->where('phone','LIKE',"%{$request->phone}%");
+            });
+        }
+
+        $addresses = $query
+            ->orderBy($orderBy,$orderType);
+
+        return $paginate ? $addresses->paginate($pageSize) : $addresses->get();
 
     }
 
