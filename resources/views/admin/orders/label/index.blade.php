@@ -31,9 +31,11 @@
 @section('js')
 
     <script>
-        function loadLabel(){
+        function loadLabel(updateLabel){
             setTimeout(function(){
-                $.post('{{ route("admin.orders.label.store",$order) }}')
+                $.post('{{ route("admin.orders.label.store",$order) }}',{
+                    update_label: updateLabel
+                })
                 .done(function(response){
                     window.labelLoader  = $('.label-wrapper').html();
                     $('.label-wrapper').html(response)
@@ -43,11 +45,20 @@
                 })
             },2000)
         }
+
         function reloadLabel(){
             $('.label-wrapper').html(window.labelLoader);
-            loadLabel();
+            loadLabel(false);
         }
-        loadLabel();
+
+        function updateLabel(){
+            $('.label-wrapper').html(window.labelLoader);
+            loadLabel(true);
+        }
+
+        loadLabel(false);
+
+
     </script>
 
 @endsection
