@@ -115,7 +115,8 @@
                                 </div>
                                 <div class="row justify-content-end">
                                     <div class="col-md-8 text-right">
-                                        <button class="btn btn-primary btn-lg">View Invoice</button>
+                                        <a href="{{ route('admin.orders.index') }}" class="btn btn-primary btn-lg">Add More Orders</a>
+                                        <button class="btn btn-primary btn-lg">Pay Orders</button>
                                     </div>
                                 </div>
                             </form>

@@ -3,7 +3,7 @@
         <button class="btn btn-primary" onclick="reloadLabel()">Reload</button>
         @if (!$error)
             <a href="{{ route('order.label.download',$order) }}" target="_blank" class="btn btn-primary">Download</a>
-            <button class="btn btn-primary" onload="updateLabel()">Update</button>
+            <button class="btn btn-primary" onclick="updateLabel()">Update</button>
         @endif
     </div>
 </div>

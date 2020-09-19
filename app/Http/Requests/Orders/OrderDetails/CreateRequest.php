@@ -27,6 +27,7 @@ class CreateRequest extends FormRequest
         return [
             'shipping_service_id' => 'required|exists:shipping_services,id',
             'items' => 'required|array|min:1',
+            'tax_modality' => 'required|in:ddu',
             'items.*.sh_code' => [
                 'required',
                 'digits:6',

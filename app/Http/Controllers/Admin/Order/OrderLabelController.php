@@ -21,7 +21,7 @@ class OrderLabelController extends Controller
         $labelData = null;
         $error = null;
 
-        if ( $request->update_label ){
+        if ( $request->update_label === 'true' ){
             $labelData = $labelRepository->update($order);
         }else{
             $labelData = $labelRepository->get($order);

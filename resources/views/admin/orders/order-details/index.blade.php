@@ -26,7 +26,7 @@
                 </div>
                 <div class="form-group col-12 col-sm-6 col-md-6">
                     <div class="controls">
-                        <label>Freight <span class="text-danger"></span></label>
+                        <label class="h4">Freight <span class="text-danger"></span></label>
                         <input class="form-control" name="user_declared_freight" id="user_declared_freight" value="{{ old('user_declared_freight',__default($order->user_declared_freight,$order->gross_total)) }}" placeholder="Freight"/>
                         <div class="help-block"></div>
                     </div>
@@ -49,9 +49,9 @@
                 <div class="form-group col-12 col-sm-6 col-md-6">
                     <div class="controls">
                         <label>@lang('orders.order-details.Tax Modality') <span class="text-danger"></span></label>
-                        <select class="form-control selectpicker show-tick" name="tax_modality" id="tax_modality" required placeholder="@lang('orders.order-details.Tax Modality')">
-                            <option value="ddu" {{ 'ddu' == $order->tax_modality ? 'selected' : '' }}>DDU</option>
-                            <option value="ddp" {{ 'ddp' == $order->tax_modality ? 'selected' : '' }}>DDP</option>
+                        <select class="form-control selectpicker show-tick" name="tax_modality" id="tax_modality" readonly required placeholder="@lang('orders.order-details.Tax Modality')">
+                            <option value="ddu" selected >DDU</option>
+                            {{-- <option value="ddp" {{ 'ddp' == $order->tax_modality ? 'selected' : '' }}>DDP</option> --}}
                         </select>
                         <div class="help-block"></div>
                     </div>
