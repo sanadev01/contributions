@@ -97,7 +97,7 @@
                     </button>
                     
                     @if( $order->corrios_tracking_code)
-                        <button class="btn dropdown-item w-100" title="@lang('orders.track-order')">
+                        <button class="btn dropdown-item w-100" data-target="#hd-modal" data-toggle="modal" data-modal-type="html" data-content='<p class="h4">{{ $order->corrios_tracking_code }}</p> <a href="https://www2.correios.com.br/sistemas/rastreamento/default.cfm">https://www2.correios.com.br/sistemas/rastreamento/default.cfm</a>' title="@lang('orders.track-order')">
                             <i class="feather icon-truck"></i>@lang('orders.actions.track-order')
                         </button>
                     @endif

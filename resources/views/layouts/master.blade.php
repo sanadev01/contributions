@@ -26,6 +26,12 @@
             background: rgba(231, 0, 0, 0.44) !important;
             color: #000000 !important;
         }
+        .modal-backdrop{
+            zoom: 1.4;
+        }
+        .modal-backdrop {
+            opacity : 0 !important;
+        }
         @media print
         {    
             .no-print, .no-print *
@@ -48,35 +54,37 @@
 <!-- BEGIN: Body-->
 
 <x-master-layout>
-    <div class="position-fixed w-100 h-100 justify-content-center align-items-center" id="loading" style="z-index: 100000;top:0;right0; background-color:#ffffff75;display:flex;">
-        <img src="{{ asset('images/loading.gif') }}" class="h-25" alt="">
-    </div>
-
-    <!-- BEGIN: Header-->
-    <x-nav-bar></x-nav-bar>
-
-    <x-user-menu></x-user-menu>
-
-    <!-- BEGIN: Content-->
-    <div class="app-content content">
-        <div class="content-overlay"></div>
-        <div class="header-navbar-shadow"></div>
-        <div class="content-wrapper">
-            <div class="content-body">
-                <div class="content-header row">
-                    <div class="col-md-12">
-                        <x-flash-message></x-flash-message>
+    <div class="viewport">
+        <div class="position-fixed w-100 h-100 justify-content-center align-items-center" id="loading" style="z-index: 100000;top:0;right0; background-color:#ffffff75;display:flex;">
+            <img src="{{ asset('images/loading.gif') }}" class="h-25" alt="">
+        </div>
+    
+        <!-- BEGIN: Header-->
+        <x-nav-bar></x-nav-bar>
+    
+        <x-user-menu></x-user-menu>
+    
+        <!-- BEGIN: Content-->
+        <div class="app-content content">
+            <div class="content-overlay"></div>
+            <div class="header-navbar-shadow"></div>
+            <div class="content-wrapper">
+                <div class="content-body">
+                    <div class="content-header row">
+                        <div class="col-md-12">
+                            <x-flash-message></x-flash-message>
+                        </div>
                     </div>
+                    @yield('page')
                 </div>
-                @yield('page')
             </div>
         </div>
+        <!-- END: Content-->
+        <div class="sidenav-overlay"></div>
+        <div class="drag-target"></div>
+        
+        @include('layouts.footer')
     </div>
-    <!-- END: Content-->
-    <div class="sidenav-overlay"></div>
-    <div class="drag-target"></div>
-    
-    @include('layouts.footer')
     @include('layouts.js')
     @yield('js')
     <livewire:scripts>
@@ -97,7 +105,9 @@
             },10000)
         })
     </script>
+
 </x-master-layout>
+@yield('modal')
 <!-- END: Body-->
 
 </html>
