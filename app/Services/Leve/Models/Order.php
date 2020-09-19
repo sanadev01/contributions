@@ -11,7 +11,6 @@ class Order extends BaseModel
     public $width = 0;
     public $height = 0;
     public $extent_length = 0;
-    public $order_value = 0;
     public $currency = "USD";
     public $shipment_value = 0;
     public $security_price = 0;

@@ -48,6 +48,7 @@ Route::namespace('Admin')
             Route::resource('orders.services',OrderServicesController::class)->only('index','store');
             Route::resource('orders.order-details', OrderItemsController::class)->only('index','store');
             Route::resource('orders.order-invoice', OrderInvoiceController::class)->only('index','store');
+            Route::resource('orders.label', OrderLabelController::class)->only('index','store');
         });
 
         Route::resource('payment-invoices', PaymentInvoiceController::class)->only(['index','store','destroy']);
@@ -96,3 +97,7 @@ Route::get('media/get/{document}', function (App\Models\Document $document) {
 
     return Storage::response($document->getStoragePath(), $document->name);
 })->name('media.get');
+
+Route::get('order/{order}/label/get', function ($order) {
+    return response()->download(storage_path("labels/{$order->corrios_tracking_code}.pdf"),$order->corrios_tracking_code,[],'inline');
+})->name('order.label.download');

@@ -46,6 +46,7 @@ class Client extends Model
     {
         try {
 
+            \Log::info($package->toJson());
             $response = $this->httpClient->post(
                 $this->getUrl('/packages/create'),[
                     'json' =>  $package->toArray(),
@@ -67,12 +68,14 @@ class Client extends Model
         }catch (\GuzzleHttp\Exception\ClientException $e) {
             return (Object)[
                 'success' => false,
-                'message' => $e->getResponse()->getBody()->getContents()
+                'message' => $e->getResponse()->getBody()->getContents(),
+                'data' => json_decode($e->getResponse()->getBody()->getContents())
             ];
         } catch (\Exception $ex) {
             return (Object)[
                 'success' => false,
-                'message' => $ex->getMessage()
+                'message' => $ex->getMessage(),
+                'data' => json_decode($ex->getMessage())
             ];
         }
     }

@@ -106,11 +106,21 @@ class Order extends Model
         ]);
     }
 
+    public function isMeasurmentUnitCm()
+    {
+        return $this->measurement_unit == 'kg/cm';
+    }
+
+    public function isWeightInKg()
+    {
+        return $this->measurement_unit == 'kg/cm';
+    }
 
     public function setCN23(array $data)
     {
         $this->update([
-            'cn23' => $data
+            'cn23' => $data,
+            'corrios_tracking_code' => $data['tracking_code']
         ]);
     }
 

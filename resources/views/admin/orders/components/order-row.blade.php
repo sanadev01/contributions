@@ -109,7 +109,7 @@
                     @endcan
 
                     @if( $order->isPaid() && auth()->user()->can('canPrintLable',$order))
-                        <a href="#" class="btn dropdown-item w-100" title="@lang('orders.actions.label')">
+                        <a href="{{ route('admin.orders.label.index',$order) }}" class="btn dropdown-item w-100" title="@lang('orders.actions.label')">
                             <i class="feather icon-printer"></i>@lang('orders.actions.label')
                         </a>
                     @endif
