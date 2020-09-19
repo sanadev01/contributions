@@ -19,7 +19,13 @@ class LabelRepository
     {
         $leveClient = new Client;
         if ( $order->getCN23() ){
-            return $leveClient->downloadCN23($order->getCN23()->stamp_url);
+            $data = $leveClient->downloadCN23($order->getCN23()->stamp_url);
+            if ( $data->success ){
+                return $data->data;
+            }
+
+            $this->error = $data->message;
+            return null;
         }
 
         return $this->update($order);
@@ -27,11 +33,18 @@ class LabelRepository
 
     public function update(Order $order)
     {
+        $leveClient = new Client;
         $cn23 = $this->generateLabel($order);
 
         if ( $cn23 ){
             $order->setCN23( (array) $cn23);
-            return $leveClient->downloadCN23($order->getCN23()->stamp_url);
+            $data = $leveClient->downloadCN23($order->getCN23()->stamp_url);
+            if ( $data->success ){
+                return $data->data;
+            }
+
+            $this->error = $data->message;
+            return null;
         }
 
         return null;
