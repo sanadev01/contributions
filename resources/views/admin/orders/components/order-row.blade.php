@@ -1,6 +1,6 @@
 <tr>
     <td>
-        {{ $order->created_at->format('m/d/Y') }}
+        {{ optional($order->order_date)->format('m/d/Y') }}
     </td>
     <td style="width: 200px;">
         @if( $order->warehouse_number)

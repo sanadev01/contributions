@@ -71,7 +71,7 @@ class Table extends Component
 
     public function updatedDate()
     {
-        $this->query = $this->getQuery()->where('created_at', 'LIKE', "%{$this->date}%");
+        $this->query = $this->getQuery()->where('order_date', 'LIKE', "%{$this->date}%");
     }
 
     public function updatedName()
