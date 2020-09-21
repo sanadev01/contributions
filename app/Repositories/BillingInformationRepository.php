@@ -16,10 +16,10 @@ class BillingInformationRepository
         $billingInformations = BillingInformation::query();
         
         if ( !Auth::user()->isAdmin() ){
-            $billingInformation->where('user_id',Auth::id());
+            $billingInformations->where('user_id',Auth::id());
         }
 
-        $billingInformation->latest();
+        $billingInformations->latest();
 
         return $billingInformations->paginate(10);
 
