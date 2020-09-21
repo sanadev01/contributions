@@ -25,7 +25,7 @@
 <script src="//netdna.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <!-- boostrap js cdn end -->
 
-<script src="{{ mix('js/app.js') }}"></script>
+{{-- <script src="{{ mix('js/app.js') }}"></script> --}}
 <script>
    $.ajaxSetup({
         headers: {
