@@ -140,8 +140,13 @@ class PreAlertRepository
         return $order;
     }
 
-    public function delete(Order $order)
+    public function delete(Order $order,$soft=true)
     {
+        if ( $soft ){
+            $order->delete();
+            return true;
+        }
+
         DB::beginTransaction();
 
         try {
