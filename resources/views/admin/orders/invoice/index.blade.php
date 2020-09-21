@@ -182,23 +182,23 @@
                                         
                                         <tr>
                                             <th>@lang('orders.invoice.Shipping')</th>
-                                            <td>{{ $order->shipping_value }} USD</td>
+                                            <td>{{ round($order->shipping_value,2) }} USD</td>
                                         </tr>
                                         <tr>
                                             <th>@lang('orders.invoice.Additional Services')</th>
                                             <td>
-                                                {{ $order->services()->sum('price') }} USD
+                                                {{ round($order->services()->sum('price'),2) }} USD
                                             </td>
                                         </tr>
                                         <tr>
                                             <th>@lang('orders.invoice.Dangrous Items Cost')</th>
                                             <td>
-                                                {{ $order->dangrous_goods }} USD
+                                                {{ round($order->dangrous_goods,2) }} USD
                                             </td>
                                         </tr>
                                         <tr>
                                             <th>@lang('orders.invoice.TOTAL')</th>
-                                            <td> {{ $order->gross_total }} USD</td>
+                                            <td> {{ round($order->gross_total,2) }} USD</td>
                                         </tr>
                                     </tbody>
                                 </table>
