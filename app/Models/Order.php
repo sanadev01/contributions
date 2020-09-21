@@ -11,7 +11,8 @@ class Order extends Model
     use SoftDeletes;
     protected $guarded = [];
     protected $casts = [
-       'cn23' => 'Array' 
+       'cn23' => 'Array',
+       'order_date' => 'datetime'
     ];
 
     const STATUS_PREALERT_TRANSIT = 10;
@@ -136,4 +137,22 @@ class Order extends Model
         return $this->cn23 ? true: false;
     }
 
+
+    /**
+     * Accessors
+     */
+    public function getGrossTotalAttribute($value)
+    {
+        return round($value,2);
+    }
+
+    public function getTotalAttribute($value)
+    {
+        return round($value,2);
+    }
+
+    public function getShippingValueAttribute($value)
+    {
+        return round($value,2);
+    }
 }
