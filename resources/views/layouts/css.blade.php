@@ -31,7 +31,7 @@
 <link href="{{ asset('app-assets/vendors/css/tables/datatable/datatables.min.css') }}" rel="stylesheet">
 
 <link rel="stylesheet" href="{{ asset('app-assets/css/pages/invoice.css') }}">
-<link rel="stylesheet" href="{{ mix('css/app.css') }}">
+<link rel="stylesheet" href="{{ asset('css/app.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/extensions/toastr.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/plugins/extensions/toastr.css') }}">
 
