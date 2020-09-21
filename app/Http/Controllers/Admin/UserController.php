@@ -22,7 +22,6 @@ class UserController extends Controller
     public function index(Request $request, UserRepository $userRepository)
     {
         $users = $userRepository->get($request);
-
         return view('admin.users.index', compact('users'));
     }
 

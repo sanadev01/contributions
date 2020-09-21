@@ -20,9 +20,9 @@
                    <x-lang-switcher></x-lang-switcher>
                     <li class="nav-item d-none d-lg-block"><a class="nav-link nav-link-expand"><i class="ficon feather icon-maximize"></i></a></li>
 
-                    <x-web-search></x-web-search>
+                    {{-- <x-web-search></x-web-search> --}}
                     {{--Notification--}}
-                    <x-notification></x-notification>
+                    {{-- <x-notification></x-notification> --}}
                     <x-user-profile></x-user-profile>
                 </ul>
             </div>

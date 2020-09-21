@@ -22,6 +22,7 @@ class UserRepository
 
         if ( $paginated )
             return $query->paginate(10);
+            
         return $query->get();
     }
 }
