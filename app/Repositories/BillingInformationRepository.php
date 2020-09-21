@@ -11,10 +11,15 @@ use Illuminate\Support\Facades\Auth;
 
 class BillingInformationRepository
 {
-    public function get()
+    public function get($paginate = 10)
     {
-        $billingInformations = BillingInformation::orderBy('id','desc')->get();
-        return $billingInformations;
+        $billingInformations = BillingInformation::orderBy('id','desc')->query();
+        
+        if ( !Auth::user()->isAdmin() ){
+            $billingInformation->where('user_id',Auth::id());
+        }
+
+        return $billingInformations->paginate(10);
 
     }
 
