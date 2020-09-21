@@ -85,7 +85,7 @@
                                     @endforeach   
                                     <tr class="border-top-light">
                                         <td class="text-center h4" colspan="5">@lang('orders.invoice.Total')</td>
-                                        <td class="h4">{{ $invoice->orders()->sum('gross_total') }} USD</td>
+                                        <td class="h4">{{ round($invoice->orders()->sum('gross_total'),2) }} USD</td>
                                     </tr>                            
                                 </tbody>
                             </table>
