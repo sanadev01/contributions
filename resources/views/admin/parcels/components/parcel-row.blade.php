@@ -3,8 +3,8 @@
         {{ $parcel->created_at->format('m/d/y') }}
     </td>
     @admin
-        <td>{{ $parcel->user->name }}</td>
-        <td>{{ $parcel->user->pobox_number }}</td>
+        <td>{{ optional($parcel->user)->name }}</td>
+        <td>{{ optional($parcel->user)->pobox_number }}</td>
     @endadmin
     @if($parcel->isShipmentAdded())
         <td>

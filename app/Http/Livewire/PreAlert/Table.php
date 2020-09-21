@@ -122,8 +122,8 @@ class Table extends Component
     public function getQuery()
     {
         $orders = Order::query()
-            ->where('status','<=',Order::STATUS_PREALERT_READY)
-            ->has('user');
+            ->where('status','<=',Order::STATUS_PREALERT_READY);
+            // ->has('user');
         if (Auth::user()->isUser()) {
             $orders->where('user_id', Auth::id());
         }
