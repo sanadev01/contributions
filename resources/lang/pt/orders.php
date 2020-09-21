@@ -117,7 +117,8 @@ return [
         'Upload or Create Invoice' => 'Declaração ou Comprovante de compra',
         'Please upload invoice or create one' => 'favor adicionar seu recibo de compra (invoice do local de compra) e/ou crie uma declaração',
         'Upload Invoice' => 'Adicionar recibo',
-        'Create Invoice' => 'Criar declaração'
+        'Create Invoice' => 'Criar declaração',
+        'INVOICE NO' => 'FATURA NÃO',
     ],
     'create-invoice' => [
         'Create Invoice' => 'Declaração',
