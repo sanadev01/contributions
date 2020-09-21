@@ -118,7 +118,8 @@ return [
         'Upload or Create Invoice' => 'Upload or Create Invoice',
         'Please upload invoice or create one' => 'favor adicionar seu recibo de compra (invoice do local de compra) e/ou crie uma declaração',
         'Upload Invoice' => 'Upload Invoice',
-        'Create Invoice' => 'Create Invoice'
+        'Create Invoice' => 'Create Invoice',
+        'INVOICE NO' => 'INVOICE NO',
     ],
     'create-invoice' => [
         'Create Invoice' => 'Create Invoice',

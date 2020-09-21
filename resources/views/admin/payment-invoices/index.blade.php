@@ -7,10 +7,10 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">
-                            Payment Invoices
+                            @lang('payment.Payment Invoices')
                         </h4>
                         <a href="{{ route('admin.payment-invoices.orders.index') }}" class="btn btn-primary">
-                            Create Invoice
+                            @lang('payment.Create Invoice')
                         </a>
                     </div>
                     <div class="card-content card-body">

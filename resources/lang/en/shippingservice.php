@@ -7,8 +7,8 @@ return [
     'Max width allowed' => 'Max width allowed',
     'Min width allowed' => 'Min width allowed',
     'Min length allowed' => 'Min length allowed',
-    'max_weight' => 'Max Weight',
-    'max sum of all sides' => 'max sum of all sides',
+    'Max weight' => 'Max Weight',
+    'Max sum of all sides' => 'Max sum of all sides',
     'Contains battery charges' => 'Contains battery charges',
     'Contains perfume charges' => 'Contains perfume charges',
     'Contains flammable liquid charges' => 'Contains flammable liquid charges',
@@ -23,6 +23,6 @@ return [
     'Delete Service' => 'Delete Service',
     'Back to List' => 'Back to list',
     'Created' => 'Shipping Service Created Successfully',
-    'Updated' => 'Shipping Service Updated Successfully',
+    'Updated' => 'Shipping Service Updated Successfully', 
     'Deleted' => 'Shipping Service Deleted Successfully',
 ]; 

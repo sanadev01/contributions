@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'Parcel Images' => 'Imagens do pacote',
     'Create Parcel' => 'Criar pacote',
     'Edit Parcel' => 'Editar Parcela',
     'Delete Parcel' => 'Delete Parcel',
