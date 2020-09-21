@@ -13,11 +13,13 @@ class BillingInformationRepository
 {
     public function get($paginate = 10)
     {
-        $billingInformations = BillingInformation::orderBy('id','desc')->query();
+        $billingInformations = BillingInformation::query();
         
         if ( !Auth::user()->isAdmin() ){
             $billingInformation->where('user_id',Auth::id());
         }
+
+        $billingInformation->latest();
 
         return $billingInformations->paginate(10);
 
