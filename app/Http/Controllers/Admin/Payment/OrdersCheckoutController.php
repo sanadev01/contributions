@@ -12,11 +12,19 @@ class OrdersCheckoutController extends Controller
 {
     public function index(PaymentInvoice $invoice)
     {
+        if ( $invoice->isPaid() ){
+            abort(404);
+        }
+        
         return view('admin.payment-invoices.checkout',compact('invoice'));
     }
 
     public function store(PaymentInvoice $invoice,Request $request, OrderRepository $orderRepository)
     {
+        if ( $invoice->isPaid() ){
+            abort(404);
+        }
+        
         if ( $orderRepository->checkout($request,$invoice) ){
             session()->flash('alert-success', __('orders.payment.alert-success'));
             return redirect()->route('admin.payment-invoices.index');

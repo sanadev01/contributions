@@ -19,6 +19,10 @@ class OrderItemsController extends Controller
      */
     public function index(Request $request, Order $order)
     {
+        if ( !$order->recipient ){
+            abort(404);
+        }
+
         $shippingServices = collect() ;
         foreach (ShippingService::query()->active()->get() as $shippingService) {
             if ( $shippingService->isAvailableFor($order) ){
@@ -40,6 +44,10 @@ class OrderItemsController extends Controller
      */
     public function store(CreateRequest $request,Order $order, OrderRepository $orderRepository)
     {
+        if ( !$order->recipient ){
+            abort(404);
+        }
+        
         if ( $orderRepository->updateShippingAndItems($request,$order) ){
             session()->flash('alert-success','orders.Order Placed');
             return \redirect()->route('admin.orders.order-invoice.index',$order);

@@ -10,6 +10,10 @@ class OrderInvoiceController extends Controller
 {
     public function index(Request $request, Order $order)
     {
+        if ( !$order->recipient || $order->items->isEmpty() ){
+            abort(404);
+        }
+
         return view('admin.orders.invoice.index',compact('order'));
     }
 
