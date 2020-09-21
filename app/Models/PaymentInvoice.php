@@ -32,4 +32,12 @@ class PaymentInvoice extends Model
     {
         return uniqid('PI-');
     }
+
+    /**
+     * Accessors
+     */
+    public function getTotalAmountAttribute($value)
+    {
+        return round($value,2);
+    }
 }
