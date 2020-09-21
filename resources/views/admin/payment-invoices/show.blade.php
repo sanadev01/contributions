@@ -48,10 +48,10 @@
                         </div>
                     </div>
                     <div class="text-righ justify-self-end">
-                        <h5>@lang('orders.invoice.Sender')</h5>
+                        <h5>@lang('invoice.Sender')</h5>
                         <div class="company-info my-2">
-                            Homedelivery Br <br>
-                            2200 NW, 129th Ave – Suite # 100<br> Miami, FL, 33182<br>United States<br>Ph#: +13058885191
+                            @lang('invoice.Homedelivery Br') <br>
+                            @lang('invoice.2200 NW, 129th Ave – Suite # 100')<br> @lang('invoice.Miami, FL, 33182')<br>@lang('invoice.United States')<br>@lang('invoice.Ph#: +13058885191')
                         </div>
                     </div>
                 </div>
@@ -63,13 +63,13 @@
                         <div class="table-responsive-md col-12">
                             <table class="table table-borderless">
                                 <thead>
-                                    <tr>
-                                        <th>Recipient</th>
-                                        <th>Tracking #</th>
-                                        <th>Warehouse#</th>
-                                        <th>Customer Reference#</th>
-                                        <th>Date</th>
-                                        <th>@lang('orders.invoice.Amount')</th>
+                                    <tr> 
+                                        <th>@lang('invoice.Recipient')</th>
+                                        <th>@lang('invoice.Tracking') #</th>
+                                        <th>@lang('invoice.Warehouse')#</th>
+                                        <th>@lang('invoice.Customer Reference')#</th>
+                                        <th>@lang('invoice.Date')</th>
+                                        <th>@lang('invoice.Amount')</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -95,11 +95,11 @@
                 <div class="no-print">
                     <div class="row justify-content-end">
                         <div class="col-12 col-md-7 text-right">
-                            <button class="btn btn-info btn-lg mb-1 mb-md-0 waves-effect waves-light" onclick="window.print();"> <i class="feather icon-file-text"></i> Print</button>
-                            <a class="btn btn-primary btn-lg" href="{{ route('admin.payment-invoices.index') }}">Back to List</a>
+                            <button class="btn btn-info btn-lg mb-1 mb-md-0 waves-effect waves-light" onclick="window.print();"> <i class="feather icon-file-text"></i> @lang('invoice.Print')</button>
+                            <a class="btn btn-primary btn-lg" href="{{ route('admin.payment-invoices.index') }}">@lang('invoice.Back to List')</a>
                             @if (!$invoice->isPaid())
-                                <a href="{{ route('admin.payment-invoices.invoice.edit',$invoice) }}" class="btn btn-primary btn-lg mb-1 mb-md-0 waves-effect waves-light" > <i class="feather icon-edit"></i> Edit</a>
-                                <a href="{{ route('admin.payment-invoices.invoice.checkout.index',$invoice) }}" class="btn btn-success btn-lg mb-1 mb-md-0 waves-effect waves-light" > <i class="feather icon-credit-card"></i> Checkout</a>
+                                <a href="{{ route('admin.payment-invoices.invoice.edit',$invoice) }}" class="btn btn-primary btn-lg mb-1 mb-md-0 waves-effect waves-light" > <i class="feather icon-edit"></i> @lang('invoice.Edit')</a>
+                                <a href="{{ route('admin.payment-invoices.invoice.checkout.index',$invoice) }}" class="btn btn-success btn-lg mb-1 mb-md-0 waves-effect waves-light" > <i class="feather icon-credit-card"></i> @lang('invoice.Checkout')</a>
                             @endif
                         </div>
                     </div>
