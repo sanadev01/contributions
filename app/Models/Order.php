@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\UploadedFile;
 
 class Order extends Model
 {
+    use SoftDeletes;
     protected $guarded = [];
     protected $casts = [
        'cn23' => 'Array' 

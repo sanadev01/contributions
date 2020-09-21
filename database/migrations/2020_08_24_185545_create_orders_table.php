@@ -66,6 +66,7 @@ class CreateOrdersTable extends Migration
 
             $table->text('cn23')->nullable();
 
+            $table->softDeletes();
             $table->timestamps();
         });
     }
