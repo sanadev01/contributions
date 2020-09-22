@@ -25,6 +25,10 @@ class RecipientController extends Controller
 
         $order = Order::find($request->order_id);
 
+        $order->update([
+            'recipient_address_id' => $address->id
+        ]);
+        
         if ( $order->recipient ){
 
             $order->recipient()->update([
@@ -61,10 +65,6 @@ class RecipientController extends Controller
             'zipcode' => $address->zipcode,
             'state_id' => $address->state_id,
             'country_id' => $address->country_id,
-        ]);
-
-        $order->update([
-            'recipient_address_id' => $address->id
         ]);
 
         return apiResponse(true,'Address Updated');
