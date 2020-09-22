@@ -46,6 +46,7 @@ class PaymentInvoiceRepository
                         ->where('is_paid',false)
                         ->where('is_shipment_added',true)
                         ->where('status','>=',Order::STATUS_ORDER)
+                        ->where('gross_total','>=',0)
                         ->doesntHave('paymentInvoices');
         
         return $orders->get();
