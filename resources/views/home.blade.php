@@ -19,7 +19,7 @@
                             <p class="mb-0">
                                 <strong> {{ auth()->user()->name.' '.auth()->user()->last_name }} <br> {!! auth()->user()->pobox_number !!} </strong>
                                 <br>
-                                {{-- {!! auth()->user()->pobox->getCompleteAddress()??'' !!}  <br> --}}
+                                {!! auth()->user()->getPoboxAddress()??'' !!}  <br>
                             </p>
                         </div>
                     </div>

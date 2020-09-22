@@ -18,15 +18,27 @@ class Pobox extends Model
         return $this->belongsToMany(User::class);
     }
 
+    public function state()
+    {
+        return $this->belongsTo(State::class);
+    }
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
+    }
+
     public function getCompleteAddress()
     {
         $address = '';
 
         $address .= $this->address;
         $address .= '<br>';
-        $address .= " {$this->city}, {$this->state}, {$this->zipcode}";
+        $address .= " {$this->city}, ";
+        $address .= optional($this->state)->code;
+        $address .= ", {$this->zipcode}";
         $address .= '<br>';
-        $address .= Country::where('code',$this->country)->first()->name;
+        $address .=  optional($this->country)->name;
         $address .= 'test-zubair';
         $address .= '<br>';
         $address .= 'Ph#: '.$this->phone;

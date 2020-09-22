@@ -146,6 +146,11 @@ class User extends Authenticatable
 
     }
 
+    public function getPoboxAddress()
+    {
+        return optional(Pobox::first())->getCompleteAddress();
+    }
+
     public function hasRole($slug)
     {
         return $this->role->name == $slug;
