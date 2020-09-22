@@ -28,30 +28,14 @@
                 <!-- Invoice Recipient Details -->
                 <div id="invoice-customer-details" class="pt-2 d-flex w-100 justify-content-between">
                     <div class="text-left w-50">
-                        <h5>@lang('orders.invoice.Recipient')</h5>
-                        <div class="recipient-info my-2">
-                            <p> {{ optional($invoice->user)->first_name }} {{ optional($invoice->user)->last_name }} </p>
-                            <p>{{ optional($invoice->user)->address }} {{ optional($invoice->user)->address2 }}<br> 
-                                {{ optional($invoice->user)->city }}, {{ optional(optional($invoice->user)->state)->code }}, {{ optional($invoice->user)->zipcode }}<br>
-                                {{ optional(optional($invoice->user)->country)->name }}<br>
-                                <i class="feather icon-phone"></i> Ph#: {{ optional($invoice->user)->phone }}
-                        </p>
-                        </div>
-                        <div class="recipient-contact pb-2">
-                            <p>
-                                <i class="feather icon-mail"></i>
-                                {{ optional($invoice->user)->email }}
-                            </p>
-                            <p>
-                                {{ optional($invoice->user)->tax_id }}
-                            </p>
-                        </div>
+                        
                     </div>
-                    <div class="text-righ justify-self-end">
+                    <div class="text-right justify-self-end">
                         <h5>@lang('invoice.Sender')</h5>
                         <div class="company-info my-2">
-                            @lang('invoice.Homedelivery Br') <br>
-                            @lang('invoice.2200 NW, 129th Ave – Suite # 100')<br> @lang('invoice.Miami, FL, 33182')<br>@lang('invoice.United States')<br>@lang('invoice.Ph#: +13058885191')
+                            {{ optional($invoice->user)->name }} {{ optional($invoice->user)->last_name }} <br>
+                            {{ optional($invoice->user)->email }} <br>
+                            {{ optional($invoice->user)->phone }}
                         </div>
                     </div>
                 </div>

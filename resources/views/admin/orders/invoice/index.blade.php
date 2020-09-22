@@ -44,7 +44,7 @@
                         <h5>@lang('orders.invoice.Recipient')</h5>
                         <div class="recipient-info my-2">
                             <p> {{ optional($order->recipient)->first_name }} {{ optional($order->recipient)->last_name }} </p>
-                            <p>{{ optional($order->recipient)->address }} {{ optional($order->recipient)->address2 }}<br> 
+                            <p>{{ optional($order->recipient)->address }} {{ optional($order->recipient)->address2 }} {{ optional($order->recipient)->street_no }}<br> 
                                 {{ optional($order->recipient)->city }}, {{ optional(optional($order->recipient)->state)->code }}, {{ optional($order->recipient)->zipcode }}<br>
                                 {{ optional(optional($order->recipient)->country)->name }}<br>
                                 <i class="feather icon-phone"></i> Ph#: {{ optional($order->recipient)->phone }}
@@ -135,7 +135,7 @@
                                 <tbody>
                                     <tr>
                                         <td>{{ $order->shipping_service_name }}</td>
-                                        <td>{{ $order->shipping_value }} USD</td>
+                                        <td>{{ number_format($order->shipping_value,2) }} USD</td>
                                     </tr>                                
                                 </tbody>
                             </table>
@@ -156,12 +156,12 @@
                                     @foreach ($order->services as $service)
                                         <tr>
                                             <td>{{ $service->name }}</td>
-                                            <td>{{ $service->price }} USD</td>
+                                            <td>{{ number_format($service->price,2) }} USD</td>
                                         </tr>  
                                     @endforeach   
                                     <tr class="border-top-light">
                                         <td class="text-center h4">@lang('orders.invoice.Total')</td>
-                                        <td class="h4">{{ $order->services()->sum('price') }} USD</td>
+                                        <td class="h4">{{ number_format($order->services()->sum('price'),2) }} USD</td>
                                     </tr>                            
                                 </tbody>
                             </table>
@@ -194,8 +194,8 @@
                                             <td>{{ $item->sh_code }}</td>
                                             <td>{{ $item->description }}</td>
                                             <td>{{ $item->quantity }}</td>
-                                            <td>{{ $item->value }} USD</td>
-                                            <td>{{ $item->value * $item->quantity }}</td>
+                                            <td>{{ number_format($item->value,2) }} USD</td>
+                                            <td>{{ number_format($item->value * $item->quantity,2) }}</td>
                                             <td>
                                                 {{ $item->contains_battery ? 'battery' : '' }}
                                                 {{ $item->contains_perfume ? 'perfume' : '' }}
@@ -206,7 +206,7 @@
                                     <tr class="border-top-light">
                                         <td colspan="4" class="text-center h4">@lang('orders.invoice.Order Value')</td>
                                         <td class="h4">
-                                            {{ $order->items()->sum(\DB::raw('quantity * value')) }} USD
+                                            {{ number_format($order->items()->sum(\DB::raw('quantity * value')),2) }} USD
                                         </td>
                                         <td></td>
                                     </tr>                             
@@ -224,23 +224,23 @@
                                         
                                         <tr>
                                             <th>@lang('orders.invoice.Shipping')</th>
-                                            <td>{{ round($order->shipping_value,2) }} USD</td>
+                                            <td>{{ number_format($order->shipping_value,2) }} USD</td>
                                         </tr>
                                         <tr>
                                             <th>@lang('orders.invoice.Additional Services')</th>
                                             <td>
-                                                {{ round($order->services()->sum('price'),2) }} USD
+                                                {{ number_format($order->services()->sum('price'),2) }} USD
                                             </td>
                                         </tr>
                                         <tr>
                                             <th>@lang('orders.invoice.Dangrous Items Cost')</th>
                                             <td>
-                                                {{ round($order->dangrous_goods,2) }} USD
+                                                {{ number_format($order->dangrous_goods,2) }} USD
                                             </td>
                                         </tr>
                                         <tr>
                                             <th>@lang('orders.invoice.TOTAL')</th>
-                                            <td> {{ round($order->gross_total,2) }} USD</td>
+                                            <td> {{ number_format($order->gross_total,2) }} USD</td>
                                         </tr>
                                     </tbody>
                                 </table>

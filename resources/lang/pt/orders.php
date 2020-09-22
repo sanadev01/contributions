@@ -155,7 +155,7 @@ return [
         'Security Code' => 'Código de segurança',
         'Continue to checkout' => 'Confirmar pagamento',
         'Save Billing Information' => 'Salvar informações de cobrança',
-        'alert-success' => 'O seu aviso foi criado com sucesso. Assim que sua encomenda chegar em nossa central você será notificado(a) por email em até 48 horas úteis, por favor aguarde.',
+        'alert-success' => 'Pagamento feito com sucesso',
     ],
     'Services Updated' => 'Serviços atualizados',
     'Error Updateding Services' => 'Serviços de atualização de erros',

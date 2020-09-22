@@ -40,6 +40,12 @@ class AddressRepository
             });
         }
 
+        if ( $request->street_no ){
+            $query->where(function($query) use($request){
+                return $query->where('street_no','LIKE',"%{$request->street_no}%");
+            });
+        }
+
         if ( $request->phone ){
             $query->where(function($query) use($request){
                 return $query->where('phone','LIKE',"%{$request->phone}%");

@@ -27,6 +27,7 @@
                 </th>
                 <th>@lang('address.Address') </th>
                 <th>@lang('address.Address')2 </th>
+                <th>@lang('address.Street No')</th>
                 <th>@lang('address.Country') </th>
                 <th>@lang('address.City') </th>
                 <th>@lang('address.State') </th>
@@ -42,7 +43,7 @@
                 <th><input type="search" wire:model.debounce.500ms="name" class="form-control"></th>
                 <th><input type="search" wire:model.debounce.500ms="address" class="form-control"></th>
                 <th><input type="search" wire:model.debounce.500ms="address" class="form-control"></th>
-                <th></th>
+                <th><input type="search" wire:model.debounce.500ms="streetNo" class="form-control"></th>
                 <th></th>
                 <th></th>
                 <th></th>

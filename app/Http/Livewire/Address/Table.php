@@ -16,9 +16,10 @@ class Table extends Component
     public $name;
     public $address;
     public $phone;
+    public $streetNo;
 
-    public $sortBy = 'id';
-    public $sortAsc = false;
+    public $sortBy = 'first_name';
+    public $sortAsc = true;
 
     public function render()
     {
@@ -42,7 +43,8 @@ class Table extends Component
             'user' => $this->user,
             'name' => $this->name,
             'address' => $this->address,
-            'phone' => $this->phone
+            'phone' => $this->phone,
+            'street_no' => $this->streetNo 
         ]),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc');
     }
 

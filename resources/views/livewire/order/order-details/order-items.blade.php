@@ -20,8 +20,9 @@
             $('body').on('change','.items input.quantity,.items input.value',function(){
                 let quantity = $(this).closest('.items').find('.quantity').val();
                 let unitValue = $(this).closest('.items').find('.value').val();
+                let total = parseFloat(quantity) * parseFloat(unitValue);
                 $(this).closest('.items').find('.total').val(
-                    parseFloat(quantity) * parseFloat(unitValue)
+                    isNaN(total) ? 0 : (total).toFixed(2)
                 );
                
                

@@ -8,6 +8,7 @@ use App\Mail\User\AccountCreated;
 use App\Models\Permission;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use App\Rules\PhoneNumberValidator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -58,7 +59,7 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'last_name' => ['sometimes', 'required_if:account_type,'.User::ACCOUNT_TYPE_INDIVIDUAL],
-            'phone' => ['required'],
+            'phone' => ['required', new PhoneNumberValidator()],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'account_type' => 'required'

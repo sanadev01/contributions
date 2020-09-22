@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Orders\Recipient;
 
 use App\Models\Country;
+use App\Rules\PhoneNumberValidator;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateRequest extends FormRequest
@@ -32,7 +33,9 @@ class CreateRequest extends FormRequest
             'street_no' => 'required',
             'country_id' => 'required|exists:countries,id',
             'city' => 'required',
-            'phone' => 'required',
+            'phone' => [
+                'required','max:15','min:13', new PhoneNumberValidator($this->country_id)
+            ],
             'state_id' => 'required|exists:states,id',
         ];
 

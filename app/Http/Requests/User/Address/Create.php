@@ -3,6 +3,7 @@
 namespace App\Http\Requests\User\Address;
 
 use App\Models\Country;
+use App\Rules\PhoneNumberValidator;
 use Illuminate\Foundation\Http\FormRequest;
 
 class Create extends FormRequest
@@ -32,7 +33,9 @@ class Create extends FormRequest
             'street_no' => 'required',
             'country_id' => 'required',
             'city' => 'required',
-            'phone' => 'required',
+            'phone' => [
+                'required',new PhoneNumberValidator($this->country_id)
+            ],
             'state_id' => 'required',
         ];
 

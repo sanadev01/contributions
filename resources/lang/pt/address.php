@@ -34,4 +34,6 @@ return  [
     'Created' => 'Endereço criado com sucesso',
     'Updated' => 'Endereço atualizado com sucesso',
     'Deleted' => 'Endereço excluído com sucesso',
+    'save Address' => 'Salvar endereço',
+    'duplicate_error' => 'Você selecionou um endereço da lista já salva. endereço não é salvo para evitar duplicação'
 ];

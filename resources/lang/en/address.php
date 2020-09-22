@@ -35,4 +35,6 @@ return  [
     'Created' => 'Address Created Successfully',
     'Updated' => 'Address Updated Successfully',
     'Deleted' => 'Address Deleted Successfully',
+    'save Address' => 'Save Address',
+    'duplicate_error' => 'You have selected address from already saved List. address is not saved to avoid duplication'
 ];

@@ -64,7 +64,7 @@
                                                                 <strong class="border-bottom-dark mr-2">@lang('invoice.WHR')#</strong> <span class="text-info">{{  $order->warehouse_number }}</span>
                                                             </div>
                                                             <div class="h5 py-1 px-2">
-                                                                <strong class="border-bottom-dark mr-2">@lang('invoice.Value')</strong> <span class="text-info">{{  $order->gross_total }}USD</span>
+                                                                <strong class="border-bottom-dark mr-2">@lang('invoice.Value')</strong> <span class="text-info">{{  number_format($order->gross_total,2) }} USD</span>
                                                             </div>
                                                         </label>
                                                     </div>
@@ -104,7 +104,7 @@
                                                                 <strong class="border-bottom-dark mr-2">@lang('invoice.WHR')#</strong> <span class="text-info">{{  $order->warehouse_number }}</span>
                                                             </div>
                                                             <div class="h5 py-1 px-2">
-                                                                <strong class="border-bottom-dark mr-2">@lang('invoice.Value')</strong> <span class="text-info">{{  $order->gross_total }}USD</span>
+                                                                <strong class="border-bottom-dark mr-2">@lang('invoice.Value')</strong> <span class="text-info">{{  number_format($order->gross_total,2) }} USD</span>
                                                             </div>
                                                         </label>
                                                     </div>

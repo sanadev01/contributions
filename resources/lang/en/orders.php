@@ -156,7 +156,7 @@ return [
         'Security Code' => 'Security Code',
         'Continue to checkout' => 'Continue to checkout',
         'Save Billing Information' => 'Save Billing Information',
-        'alert-success' => 'Your notice has been successfully created. As soon as your order arrives at our center you will be notified by email within 48 working hours, please wait.',
+        'alert-success' => 'Your payment done successfully',
     ],
     'Services Updated' => 'Services Updated',
     'Error Updateding Services' => 'Error Updateding Services',

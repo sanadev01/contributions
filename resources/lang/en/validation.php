@@ -150,6 +150,7 @@ return [
     'ncm' => [ 
         'invalid' => 'Invalid NCM Number',
         'required' => 'NCM number required',
-    ]
+    ],
+    'invalid_number' => 'Number should be in :country International Format'
 
 ];

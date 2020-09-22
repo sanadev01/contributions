@@ -5,6 +5,7 @@
     <td>{{ $address->first_name }} {{ $address->last_name }}</td>
     <td>{{ $address->address }}</td>
     <td>{{ $address->address2 }}</td>
+    <td>{{ $address->street_no }}</td>
     <td>
         {{ $address->country->name }}
     </td>

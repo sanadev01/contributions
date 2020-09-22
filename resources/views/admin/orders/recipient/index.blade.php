@@ -89,7 +89,7 @@
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
                         <label>@lang('address.Address')2</label>
-                        <input type="text" class="form-control"  placeholder="" value="{{old('address2',optional($order->recipient)->address2)}}"  name="@lang('address.Address')2">
+                        <input type="text" class="form-control"  placeholder="@lang('address.Address')2" value="{{old('address2',optional($order->recipient)->address2)}}"  name="address2">
                         <div class="help-block"></div>
                     </div>
                 </div>
@@ -144,13 +144,28 @@
 
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
-                        <label style="display: none" id="cpf_label_id" >@lang('address.CPF') <span class="text-danger">* (Brazil Only)</span> </label>
-                        <label id="cnpj_label_id" >@lang('address.CNPJ') <span class="text-danger">* (Brazil Only)</span> </label>
+                            <label id="cnpj_label_id" style="{{ optional($order->recipient)->account_type != 'individual' ? 'display:block' : 'display:none' }}" >@lang('address.CNPJ') <span class="text-danger">* (Brazil Only)</span> </label>
+                            <label id="cpf_label_id" style="{{ optional($order->recipient)->account_type == 'individual' ? 'display:block' : 'display:none' }}" >@lang('address.CPF') <span class="text-danger">* (Brazil Only)</span> </label>
                         <input type="text" name="tax_id" id="tax_id" value="{{old('tax_id',optional($order->recipient)->tax_id)}}" required class="form-control" placeholder="CNPJ"/>
                         <div class="help-block"></div>
                     </div>
                 </div>
 
+                <div class="col-12 my-3 p-4 ">
+                    <div class="row justify-content-end">
+                        <fieldset class="col-md-4 text-right">
+                            <div class="vs-checkbox-con vs-checkbox-primary">
+                                <input type="checkbox" name="save_address" value="false">
+                                <span class="vs-checkbox vs-checkbox-lg">
+                                    <span class="vs-checkbox--check">
+                                        <i class="vs-icon feather icon-check"></i>
+                                    </span>
+                                </span>
+                                <span class="h3 mx-2 text-primary my-0 py-0">@lang('address.save Address')</span>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
             </div>
             
         </div>
@@ -170,6 +185,9 @@
 @endsection
 
 @section('js')
+<script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
+@include('layouts.states-ajax')
+
 <script>
     $(document).ready(function(){
         $('#accountType').on('change', function(){
@@ -185,12 +203,6 @@
             }
         })
     })
-</script>
-
-<script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
-@include('layouts.states-ajax')
-
-<script>
 
     $('#address_id').on('change',function(){
         if ( $(this).val() == undefined || $(this).val() == "" ) return;

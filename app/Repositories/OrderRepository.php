@@ -37,6 +37,14 @@ class OrderRepository
             'recipient_address_id' => $request->address_id
         ]);
 
+        if ( $request->has('save_address') && !$request->address_id){
+            (new AddressRepository)->store($request);
+        }
+
+        if ( $request->has('save_address') && $request->address_id ){
+            session()->flash('alert-danger',__('address.duplicate_error'));
+        }
+
         if ( $order->recipient ){
 
             $order->recipient()->update([
@@ -75,6 +83,7 @@ class OrderRepository
             'country_id' => $request->country_id,
         ]);
 
+        $order->refresh();
 
         return $order->recipient;
     }
