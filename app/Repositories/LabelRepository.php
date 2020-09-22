@@ -66,7 +66,7 @@ class LabelRepository
         $leveOrder->height = $height > 2 ? $height : 2;
         $leveOrder->extent_length = $length > 16 ? $length : 16 ;
         $leveOrder->shipment_value = (float)$order->user_declared_freight;
-        $leveOrder->sender_name = $order->sender_name;
+        $leveOrder->sender_name = $order->sender_first_name ? "{$order->sender_first_name} {$order->sender_last_name}" : "{$order->user->name} {$order->user->last_name}";
 
 
         $address = new Address();
