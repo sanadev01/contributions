@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use LaravelJsonColumn\Traits\JsonColumn;
 
-class Pobox extends Model
+class PoBox extends Model
 {
     use JsonColumn;
 
