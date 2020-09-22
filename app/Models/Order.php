@@ -163,6 +163,11 @@ class Order extends Model
         return $this->cn23 ? true: false;
     }
 
+    public function getTempWhrNumber()
+    {
+        return "HD-{$this->id}";
+    }
+
 
     /**
      * Accessors
