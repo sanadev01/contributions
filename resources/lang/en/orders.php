@@ -114,13 +114,6 @@ return [
         'save-and-checkout' => 'Save & Checkout',
         'alert-success' => 'Your Shipping Method Is Selected Please pay the requested amount against your order',
     ],
-    'invoice' => [
-        'Upload or Create Invoice' => 'Upload or Create Invoice',
-        'Please upload invoice or create one' => 'favor adicionar seu recibo de compra (invoice do local de compra) e/ou crie uma declaração',
-        'Upload Invoice' => 'Upload Invoice',
-        'Create Invoice' => 'Create Invoice',
-        'INVOICE NO' => 'INVOICE NO',
-    ],
     'create-invoice' => [
         'Create Invoice' => 'Create Invoice',
         'consolidated-alert' => 'You have Consolidated order. please create a new invoice',
@@ -195,5 +188,24 @@ return [
         'Dangrous Items Cost' => 'Dangrous Items Cost',
         'TOTAL' => 'TOTAL',
         'Previous' => 'Previous',
+
+        'Upload or Create Invoice' => 'Upload or Create Invoice',
+        'Please upload invoice or create one' => 'favor adicionar seu recibo de compra (invoice do local de compra) e/ou crie uma declaração',
+        'Upload Invoice' => 'Upload Invoice',
+        'Create Invoice' => 'Create Invoice',
+        'INVOICE NO' => 'INVOICE NO',
+
+        'merchant' => 'Merchant',
+        'carrier' => 'Carrier',
+        'carrier_tracking' => 'Carrier Tracking',
+        'whr_number' => 'Warehouse Number',
+        'customer_reference' => 'Customer Reference',
+        'tracking_code' => 'Tracking Code',
+
+        'length' => 'Length',
+        'width' => 'Width',
+        'height' => 'Height',
+        'weight' => 'Weight',
+        'unit' => 'Unit',
     ],
 ];

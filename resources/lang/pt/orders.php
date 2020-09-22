@@ -113,13 +113,6 @@ return [
         'save-and-checkout' => 'Salvar e pagar',
         'alert-success' => 'Seu método de envio é selecionado Pague a quantia solicitada em seu pedido',
     ],
-    'invoice' => [
-        'Upload or Create Invoice' => 'Declaração ou Comprovante de compra',
-        'Please upload invoice or create one' => 'favor adicionar seu recibo de compra (invoice do local de compra) e/ou crie uma declaração',
-        'Upload Invoice' => 'Adicionar recibo',
-        'Create Invoice' => 'Criar declaração',
-        'INVOICE NO' => 'FATURA NÃO',
-    ],
     'create-invoice' => [
         'Create Invoice' => 'Declaração',
         'consolidated-alert' => 'Você possui pedido consolidado. crie uma nova fatura',
@@ -194,5 +187,24 @@ return [
         'Dangrous Items Cost' => 'Custo de itens danosos',
         'TOTAL' => 'total',
         'Previous' => 'Anterior',
+
+        'Upload or Create Invoice' => 'Declaração ou Comprovante de compra',
+        'Please upload invoice or create one' => 'favor adicionar seu recibo de compra (invoice do local de compra) e/ou crie uma declaração',
+        'Upload Invoice' => 'Adicionar recibo',
+        'Create Invoice' => 'Criar declaração',
+        'INVOICE NO' => 'FATURA NÃO',
+
+        'merchant' => 'Comerciante',
+        'carrier' => 'Transportadora',
+        'carrier_tracking' => 'Rastreamento de transportadora',
+        'whr_number' => 'Número do Armazém',
+        'customer_reference' => 'Referência do cliente',
+        'tracking_code' => 'Código de Rastreamento',
+
+        'length' => 'comprimento',
+        'width' => 'Largura',
+        'height' => 'Altura',
+        'weight' => 'Peso',
+        'unit' => 'Unidade',
     ],
 ];

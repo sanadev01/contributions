@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Services\Calculators\WeightCalculator;
+use App\Services\Converters\UnitsConverter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\UploadedFile;
@@ -117,6 +119,29 @@ class Order extends Model
     public function isWeightInKg()
     {
         return $this->measurement_unit == 'kg/cm';
+    }
+
+    public function getWeight($unit='kg')
+    {
+        $volumnWeight = WeightCalculator::getVolumnWeight($this->length,$this->width,$this->height,$this->isWeightInKg()? 'cm' : 'in');
+
+        $weight = $volumnWeight > $this->weight ? $volumnWeight : $this->weight;
+
+        if ( $unit == 'kg' && $this->isWeightInKg() ){
+            return $weight;
+        }
+
+        if ( $unit == 'lbs' && !$this->isWeightInKg() ){
+            return $weight;
+        }
+
+        if ( $unit == 'lbs' && $this->isWeightInKg() ){
+            return UnitsConverter::kgToPound($weight);
+        }
+
+        if ( $unit == 'kg' && !$this->isWeightInKg() ){
+            return UnitsConverter::poundToKg($weight);
+        }
     }
 
     public function setCN23(array $data)

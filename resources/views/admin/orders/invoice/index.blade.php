@@ -79,6 +79,48 @@
                 </div>
                 <!--/ Invoice Recipient Details -->
 
+                <!-- Invoice Shipment Details -->
+                <div id="invoice-items-details" class="pt-1 invoice-items-table">
+                    <div class="row">
+                        <div class="table-responsive-md col-12">
+                            <table class="table table-borderless">
+                                <tbody>
+                                    <tr>
+                                        <th>@lang('orders.invoice.merchant')</th>
+                                        <th>@lang('orders.invoice.carrier')</th>
+                                        <th>@lang('orders.invoice.carrier_tracking')</th>
+                                        <th>@lang('orders.invoice.whr_number')</th>
+                                        <th>@lang('orders.invoice.customer_reference')</th>
+                                        <th>@lang('orders.invoice.tracking_code')</th>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ $order->merchant }}</td>
+                                        <td>{{ $order->carrier }}</td>
+                                        <td>{{ $order->tracking_id }}</td>
+                                        <td>{{ $order->warehouse_number }} </td>
+                                        <td>{{ $order->customer_reference }} </td>
+                                        <td>{{ $order->corrios_tracking_code }} </td>
+                                    </tr>                                
+                                    <tr>
+                                        <th>@lang('orders.invoice.length')</th>
+                                        <th>@lang('orders.invoice.width')</th>
+                                        <th>@lang('orders.invoice.height')</th>
+                                        <th>@lang('orders.invoice.weight')</th>
+                                        <th colspan="2">@lang('orders.invoice.unit')</th>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ $order->length }} {{ $order->isMeasurmentUnitCm() ? 'cm' : 'in' }}</td>
+                                        <td>{{ $order->width }} {{ $order->isMeasurmentUnitCm() ? 'cm' : 'in' }}</td>
+                                        <td>{{ $order->height }} {{ $order->isMeasurmentUnitCm() ? 'cm' : 'in' }}</td>
+                                        <td>{{ $order->getWeight('lbs') }} lbs ( {{ $order->getWeight('kg') }} kg ) </td>
+                                        <td colspan="2">{{ $order->measurement_unit }} </td>
+                                    </tr>                                
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Invoice Items Details -->
                 <div id="invoice-items-details" class="pt-1 invoice-items-table">
                     <div class="row">

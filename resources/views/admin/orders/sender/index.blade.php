@@ -35,7 +35,7 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="emailAddress1">@lang('orders.sender.Email')</label>
-                        <input type="email" class="form-control" name="email" value="{{ old('email',__default($order->sender_email,optional($order->user)->email)) }}">
+                        <input type="email" class="form-control" name="email" value="{{ old('email',__default($order->sender_email,null)) }}">
                         @error('email')
                             <div class="text-danger">
                                 {{ $message }}
@@ -46,7 +46,7 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="emailAddress1">@lang('orders.sender.Phone')</label>
-                        <input type="text" class="form-control" name="phone" value="{{ old('phone',__default($order->sender_phone,optional($order->user)->phone)) }}">
+                        <input type="text" class="form-control" name="phone" value="{{ old('phone',__default($order->sender_phone,null)) }}">
                         @error('phone')
                             <div class="text-danger">
                                 {{ $message }}
@@ -57,7 +57,7 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="emailAddress1">@lang('orders.sender.Tax Id')</label>
-                        <input type="text" class="form-control" name="taxt_id" value="{{ old('tax_id',__default($order->sender_taxId,optional($order->user)->tax_id)) }}">
+                        <input type="text" class="form-control" name="taxt_id" value="{{ old('tax_id',__default($order->sender_taxId,null)) }}">
                         @error('taxt_id')
                             <div class="text-danger">
                                 {{ $message }}
