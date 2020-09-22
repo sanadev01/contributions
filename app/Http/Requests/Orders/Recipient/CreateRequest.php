@@ -25,15 +25,15 @@ class CreateRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'first_name' => 'required',
-            'last_name' => 'required',
+            'first_name' => 'required|max:50',
+            'last_name' => 'nullable|max:50',
             'address' => 'required',
-            'address2' => 'max:50',
+            'address2' => 'nullable|max:50',
             'street_no' => 'required',
-            'country_id' => 'required',
+            'country_id' => 'required|exists:countries,id',
             'city' => 'required',
             'phone' => 'required',
-            'state_id' => 'required',
+            'state_id' => 'required|exists:states,id',
         ];
 
         if (Country::where('code', 'BR')->first()->id == $this->country_id) {

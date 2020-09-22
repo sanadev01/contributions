@@ -60,7 +60,7 @@
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
                         <label>@lang('address.Last Name') <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="last_name" value="{{old('last_name',optional($order->recipient)->last_name)}}" required placeholder="@lang('address.Last Name')">
+                        <input type="text" class="form-control" name="last_name" value="{{old('last_name',optional($order->recipient)->last_name)}}" placeholder="@lang('address.Last Name')">
                         <div class="help-block"></div>
                     </div>
                 </div>
