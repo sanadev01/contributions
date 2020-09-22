@@ -164,6 +164,7 @@ class OrderRepository
                 'shipping_service_name' => $shippingService->name,
                 'tax_modality' => $request->tax_modality,
                 'is_invoice_created' => true,
+                'user_declared_freight' => $request->user_declared_freight,
                 
                 // figures
                 'order_value' => $orderValue,
