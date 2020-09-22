@@ -39,7 +39,6 @@ class PoBox extends Model
         $address .= ", {$this->zipcode}";
         $address .= '<br>';
         $address .=  optional($this->country)->name;
-        $address .= 'test-zubair';
         $address .= '<br>';
         $address .= 'Ph#: '.$this->phone;
         return $address;
