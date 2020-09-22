@@ -67,7 +67,7 @@ class ShipmentInfo extends Component
         $this->length = old('length',isset($this->order['length']) ? $this->order['length'] : 0);
         $this->width = old('width',isset($this->order['width']) ? $this->order['width'] : 0);
         $this->height = old('height',isset($this->order['height']) ? $this->order['height'] : 0);
-        $this->unit = old('unit',isset($this->order['measurement_unit']) ? $this->order['measurement_unit'] : 'kg/cm');
+        $this->unit = old('unit',isset($this->order['measurement_unit']) ? $this->order['measurement_unit'] : 'lbs/in');
         $this->calculateOtherUnits();
     }
 

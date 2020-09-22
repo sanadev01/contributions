@@ -22,8 +22,8 @@
             <div class="controls">
                 <label>@lang('parcel.Measuring Units') <span class="text-danger">*</span></label>
                 <select name="unit" class="form-control" required wire:model="unit">
-                    <option value="lbs/in">lbs/in</option>
                     <option value="kg/cm">kg/cm</option>
+                    <option value="lbs/in">lbs/in</option>
                 </select>
                 @error('unit')
                     <div class="text-danger">{{ $message }}</div>
