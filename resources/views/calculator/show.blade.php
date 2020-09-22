@@ -27,9 +27,9 @@
                                         Weight
                                     </div> <div class="border col-5 py-1">
                                         @if($order->measurement_unit == 'kg/cm')
-                                            {{$volumeWeight}} Kg ( {{$weightInOtherUnit}} lbs)
+                                            {{$chargableWeight}} Kg ( {{$weightInOtherUnit}} lbs)
                                         @else
-                                            {{$volumeWeight}} lbs ( {{$weightInOtherUnit}} kg)
+                                            {{$chargableWeight}} lbs ( {{$weightInOtherUnit}} kg)
                                         @endif
                                     </div></div> <div class="row justify-content-center"><div class="pb-1 pt-1 border-bottom-light col-md-5 bg-primary text-white">
                                         Cost

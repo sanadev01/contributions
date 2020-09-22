@@ -123,9 +123,10 @@ class Order extends Model
 
     public function getWeight($unit='kg')
     {
+        $orignalWeight =   $this->weight; //$this->isWeightInKg() ? $this->weight : UnitsConverter::poundToKg($this->weight);
         $volumnWeight = WeightCalculator::getVolumnWeight($this->length,$this->width,$this->height,$this->isWeightInKg()? 'cm' : 'in');
 
-        $weight = $volumnWeight > $this->weight ? $volumnWeight : $this->weight;
+        $weight = $volumnWeight > $orignalWeight ? $volumnWeight : $orignalWeight;
 
         if ( $unit == 'kg' && $this->isWeightInKg() ){
             return $weight;

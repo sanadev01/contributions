@@ -57,6 +57,8 @@ class WeightCalculator
 
     /**
      * Calculates Volumn weight of given Dimensions.
+     * if unit is cm return rate will be in kg
+     * if unit is in return rate will be in lbs
      *
      * @param $length
      * @param $width
@@ -69,8 +71,8 @@ class WeightCalculator
             throw  new Exception('Invalid Unit.');
         }
 
-        $divisor = $unit == 'in' ? 370 : 6000;
-        return ($length * $width * $heigt) / $divisor;
+        $divisor = $unit == 'in' ? 166 : 6000;
+        return round(($length * $width * $heigt) / $divisor,2);
     }
 
     public static function kgToOunce($kgs)

@@ -60,6 +60,10 @@ class RatesCalculator
         }
     }
 
+    /**
+     * Calculate Rates. and rate is always in kg
+     * because we converted dimensions to cm on above
+     */
     private function calculateWeight()
     {
         $volumnWeight = WeightCalculator::getVolumnWeight($this->length, $this->width, $this->height);

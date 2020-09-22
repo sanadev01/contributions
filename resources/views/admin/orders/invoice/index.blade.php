@@ -112,7 +112,7 @@
                                         <td>{{ $order->length }} {{ $order->isMeasurmentUnitCm() ? 'cm' : 'in' }}</td>
                                         <td>{{ $order->width }} {{ $order->isMeasurmentUnitCm() ? 'cm' : 'in' }}</td>
                                         <td>{{ $order->height }} {{ $order->isMeasurmentUnitCm() ? 'cm' : 'in' }}</td>
-                                        <td>{{ $order->getWeight('lbs') }} lbs ( {{ $order->getWeight('kg') }} kg ) </td>
+                                        <td>{{ $order->getWeight('kg') }} kg ( {{ $order->getWeight('lbs') }} lbs ) </td>
                                         <td colspan="2">{{ $order->measurement_unit }} </td>
                                     </tr>                                
                                 </tbody>

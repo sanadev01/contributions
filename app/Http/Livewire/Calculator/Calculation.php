@@ -20,7 +20,9 @@ class Calculation extends Component
     public $height;
     public $heightOther;
     public $unit;
+    public $unitOther;
     public $volumeWeight;
+    public $volumeWeightOther;
     public $currentWeightUnit;
 
     public function mount(Order $order = null)
@@ -83,16 +85,20 @@ class Calculation extends Component
             $this->widthOther = UnitsConverter::cmToIn($this->width);
             $this->heightOther = UnitsConverter::cmToIn($this->height);
             $this->currentWeightUnit = 'kg';
+            $this->unitOther = 'lbs';
             $volumetricWeight = WeightCalculator::getVolumnWeight($this->length,$this->width,$this->height,'cm');
             $this->volumeWeight = round($volumetricWeight > $this->weight ? $volumetricWeight : $this->weight,2);
+            $this->volumeWeightOther = UnitsConverter::kgToPound($this->volumeWeight);
         }else{
             $this->weightOther = UnitsConverter::poundToKg($this->weight);
             $this->lengthOther = UnitsConverter::inToCm($this->length);
             $this->widthOther = UnitsConverter::inToCm($this->width);
             $this->heightOther = UnitsConverter::inToCm($this->height);
             $this->currentWeightUnit = 'lbs';
+            $this->unitOther = 'kg';
             $volumetricWeight = WeightCalculator::getVolumnWeight($this->length,$this->width,$this->height,'in');;
             $this->volumeWeight = round($volumetricWeight > $this->weight ? $volumetricWeight : $this->weight,2);
+            $this->volumeWeightOther = UnitsConverter::poundToKg($this->volumeWeight);
         }
     }
 }

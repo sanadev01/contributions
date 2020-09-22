@@ -43,12 +43,13 @@ class CalculatorController extends Controller
             ]
         );
 
+        $originalWeight =  $request->weight;
         if ( $request->unit == 'kg/cm' ){
             $volumetricWeight = WeightCalculator::getVolumnWeight($request->length,$request->width,$request->height,'cm');
-            $volumeWeight = round($volumetricWeight > $request->weight ? $volumetricWeight : $request->weight,2);
+            $chargableWeight = round($volumetricWeight >  $originalWeight ? $volumetricWeight :  $originalWeight,2);
         }else{
             $volumetricWeight = WeightCalculator::getVolumnWeight($request->length,$request->width,$request->height,'in');
-            $volumeWeight = round($volumetricWeight > $request->weight ? $volumetricWeight : $request->weight,2);
+            $chargableWeight = round($volumetricWeight >  $originalWeight ? $volumetricWeight :  $originalWeight,2);
         }
         
         $recipient = new Recipient();
@@ -75,12 +76,12 @@ class CalculatorController extends Controller
         }
         
         if ($request->unit == 'kg/cm' ){ 
-            $weightInOtherUnit = UnitsConverter::kgToPound($volumeWeight);
+            $weightInOtherUnit = UnitsConverter::kgToPound($chargableWeight);
         }else{
-            $weightInOtherUnit = UnitsConverter::poundToKg($volumeWeight);
+            $weightInOtherUnit = UnitsConverter::poundToKg($chargableWeight);
         }
 
-        return view('calculator.show', compact('order', 'shippingServices', 'weightInOtherUnit', 'volumeWeight'));
+        return view('calculator.show', compact('order', 'shippingServices', 'weightInOtherUnit', 'chargableWeight'));
 
     }
 
