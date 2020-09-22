@@ -120,7 +120,7 @@ class User extends Authenticatable
 
     public static function generatePoBoxNumber()
     {
-        $lastUserID = self::latest()->limit(1)->get()->first()->id;
+        $lastUserID = self::query()->latest('id')->limit(1)->first()->id;
 
         $lastUserID++;
 
