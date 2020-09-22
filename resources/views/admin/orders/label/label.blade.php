@@ -2,14 +2,14 @@
     <div class="col-md-12 text-right">
         <button class="btn btn-primary" onclick="reloadLabel()">Reload</button>
         @if (!$error)
-            <a href="{{ route('order.label.download',$order) }}" target="_blank" class="btn btn-primary">Download</a>
+            <a href="{{ route('order.label.download',[$order,'time'=>md5(microtime())]) }}" target="_blank" class="btn btn-primary">Download</a>
             <button class="btn btn-primary" onclick="updateLabel()">Update</button>
         @endif
     </div>
 </div>
 <div class="label mt-2">
     @if (!$error)
-        <iframe src="http://docs.google.com/gview?url={{ route('order.label.download',$order) }}&embedded=true" style="width:100%; height:700px;" frameborder="0">
+        <iframe src="http://docs.google.com/gview?url={{ route('order.label.download',$order) }}&embedded=true&time{{md5(microtime())}}" style="width:100%; height:700px;" frameborder="0">
             <iframe src="{{ route('order.label.download',$order) }}" style="width:100%; height:700px;" frameborder="0"></iframe>
         </iframe>
     @else
