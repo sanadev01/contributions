@@ -23,7 +23,7 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="lastName1">@lang('orders.sender.Last Name')</label>
-                        <input type="text" class="form-control" name="last_name" required value="{{ old('last_name',__default($order->sender_last_name,optional($order->user)->last_name)) }}">
+                        <input type="text" class="form-control" name="last_name" value="{{ old('last_name',__default($order->sender_last_name,optional($order->user)->last_name)) }}">
                         @error('last_name')
                             <div class="text-danger">
                                 {{ $message }}

@@ -25,7 +25,7 @@ class CreateRequest extends FormRequest
     {
         return [
             'first_name' => 'required|max:100',
-            'last_name' => 'required|max:100',
+            'last_name' => 'max:100',
             'email' => 'required|max:100|email',
             'phone' => 'required'
         ];
