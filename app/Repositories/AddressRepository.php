@@ -52,6 +52,18 @@ class AddressRepository
             });
         }
 
+        if ( $request->city ){
+            $query->where(function($query) use($request){
+                return $query->where('city','LIKE',"%{$request->city}%");
+            });
+        }
+
+        if ( $request->state ){
+            $query->where(function($query) use($request){
+                return $query->where('state_id',"{$request->state}");
+            });
+        }
+
         $addresses = $query
             ->orderBy($orderBy,$orderType);
 

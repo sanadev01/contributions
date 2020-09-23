@@ -45,8 +45,15 @@
                 <th><input type="search" wire:model.debounce.500ms="address" class="form-control"></th>
                 <th><input type="search" wire:model.debounce.500ms="streetNo" class="form-control"></th>
                 <th></th>
-                <th></th>
-                <th></th>
+                <th><input type="search" wire:model.debounce.500ms="city" class="form-control"></th>
+                <th>
+                    <select wire:model.debounce.500ms="state" class="form-control">
+                        <option value="">All</option>
+                        @foreach (states(30) as $state)
+                            <option value="{{ $state->id }}">{{ $state->code }}</option>
+                        @endforeach
+                    </select>
+                </th>
                 <th></th>
                 <th><input type="search" wire:model.debounce.500ms="phone" class="form-control"> </th>
                 <th></th>

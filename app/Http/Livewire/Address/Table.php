@@ -17,6 +17,8 @@ class Table extends Component
     public $address;
     public $phone;
     public $streetNo;
+    public $city;
+    public $state;
 
     public $sortBy = 'first_name';
     public $sortAsc = true;
@@ -44,7 +46,9 @@ class Table extends Component
             'name' => $this->name,
             'address' => $this->address,
             'phone' => $this->phone,
-            'street_no' => $this->streetNo 
+            'street_no' => $this->streetNo,
+            'city' => $this->city,
+            'state' => $this->state,
         ]),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc');
     }
 
