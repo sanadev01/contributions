@@ -121,6 +121,27 @@ class Order extends Model
         return $this->measurement_unit == 'kg/cm';
     }
 
+    public function getOriginalWeight($unit='kg')
+    {
+        $weight = $this->weight;
+        
+        if ( $unit == 'kg' && $this->isWeightInKg() ){
+            return $weight;
+        }
+
+        if ( $unit == 'lbs' && !$this->isWeightInKg() ){
+            return $weight;
+        }
+
+        if ( $unit == 'lbs' && $this->isWeightInKg() ){
+            return UnitsConverter::kgToPound($weight);
+        }
+
+        if ( $unit == 'kg' && !$this->isWeightInKg() ){
+            return UnitsConverter::poundToKg($weight);
+        }
+    }
+
     public function getWeight($unit='kg')
     {
         $orignalWeight =   $this->weight; //$this->isWeightInKg() ? $this->weight : UnitsConverter::poundToKg($this->weight);

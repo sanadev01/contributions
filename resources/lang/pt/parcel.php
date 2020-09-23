@@ -3,7 +3,7 @@
 return [
     'Parcel Images' => 'Imagens do pacote',
     'Create Parcel' => 'Criar pacote',
-    'Edit Parcel' => 'Editar Parcela',
+    'Edit Parcel' => 'editar pacote',
     'Delete Parcel' => 'Delete Parcel',
     'User POBOX Number' => 'Número POBOX do usuário',
     'Merchant' => 'Comerciante',

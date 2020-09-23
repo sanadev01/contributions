@@ -52,7 +52,7 @@ class OrderItemsController extends Controller
             session()->flash('alert-success','orders.Order Placed');
             return \redirect()->route('admin.orders.order-invoice.index',$order);
         }
-        session()->flash('alert-danger','orders.Error While placing Order');
+        session()->flash('alert-danger','orders.Error While placing Order'." ".$orderRepository->getError());
         return \back()->withInput();
     }
 }

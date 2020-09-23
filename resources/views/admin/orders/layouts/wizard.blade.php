@@ -16,7 +16,7 @@
                     </div>
                     <div class="card-content">
                         <div class="card-body">
-                            <p></p>
+                            <p class="h4 text-danger pb-2 border-bottom mt-4">WHR# {{ optional($order)->warehouse_number }}</p>
                             <div class="number-tab-steps wizard-circle wizard clearfix" role="application" id="steps-uid-0">
                                 <div class="steps clearfix no-print">
                                     <ul role="tablist">

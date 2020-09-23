@@ -9,7 +9,7 @@
             <ul>
                 @foreach($errors->all() as $error)
                     <li>
-                        {{ $error }}
+                        {!! $error !!}
                     </li>
                 @endforeach
             </ul>
@@ -137,7 +137,7 @@
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
                         <label>@lang('address.Zip Code')</label>
-                        <input type="text" name="zipcode" value="{{old('zipcode',optional($order->recipient)->zipcode)}}" required class="form-control" placeholder="Zip Code"/>
+                        <input type="text" name="zipcode" value="{{ cleanString(old('zipcode',optional($order->recipient)->zipcode)) }}" required class="form-control" placeholder="Zip Code"/>
                         <div class="help-block"></div>
                     </div>
                 </div>

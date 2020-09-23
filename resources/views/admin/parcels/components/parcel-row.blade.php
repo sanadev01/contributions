@@ -18,17 +18,17 @@
         </td>
     @endif
     <td>
-        @if($parcel->shipment)
-            {{ number_format($parcel->shipment->getGrossWeight(),2) }} {{ $parcel->shipment->getWeightUnit() }} <hr>
-            {{ $parcel->shipment->getWeightInOtherUnit() }}
+        @if($parcel->isShipmentAdded())
+            {{ number_format($parcel->getOriginalWeight('kg'),2) }} kg <hr>
+            {{ number_format($parcel->getOriginalWeight('lbs'),2) }} lbs
         @else
         @lang('parcel.Un Available')
         @endif
     </td>
     <td>
-        @if($parcel->shipment)
-            {{ number_format($parcel->shipment->getVolumetricWeight(),2) }} {{ $parcel->shipment->getWeightUnit() }} <hr>
-            {{ $parcel->shipment->getVolumeWeightInOtherUnit() }}
+        @if($parcel->isShipmentAdded())
+            {{ number_format($parcel->getWeight('kg'),2) }} kg <hr>
+            {{ number_format($parcel->getWeight('lbs'),2) }} lbs
         @else
         @lang('parcel.Un Available')
         @endif

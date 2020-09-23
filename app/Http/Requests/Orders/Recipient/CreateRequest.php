@@ -4,6 +4,7 @@ namespace App\Http\Requests\Orders\Recipient;
 
 use App\Models\Country;
 use App\Rules\PhoneNumberValidator;
+use App\Rules\ZipCodeValidator;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateRequest extends FormRequest
@@ -37,6 +38,9 @@ class CreateRequest extends FormRequest
                 'required','max:15','min:13', new PhoneNumberValidator($this->country_id)
             ],
             'state_id' => 'required|exists:states,id',
+            'zipcode' => [
+                'required', new ZipCodeValidator($this->country_id,$this->state_id)
+            ]
         ];
 
         if (Country::where('code', 'BR')->first()->id == $this->country_id) {

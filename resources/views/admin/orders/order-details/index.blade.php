@@ -80,7 +80,7 @@
 <script>
     $('#shipping_service_id').on('change',function(){
         $('#user_declared_freight').val(
-            parseFloat($('option:selected', this).attr("data-cost")) + parseFloat($('option:selected', this).attr("data-services-cost"))
+            parseFloat($('option:selected', this).attr("data-cost"))
         );
     })
 </script>

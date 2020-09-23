@@ -151,6 +151,7 @@ return [
         'invalid' => 'Número NCM inválido',
         'required' => 'Número NCM necessário',
     ],
-    'invalid_number' => 'O número deve estar no formato internacional do :country'
+    'invalid_number' => 'O número deve estar no formato internacional do :country',
+    'invalid_zipcode' => 'O cep :input não foi encontrado para o estado selecionado. verifique o estado e o cep novamente. :link',
 
 ];

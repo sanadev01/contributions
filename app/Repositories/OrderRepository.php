@@ -183,6 +183,7 @@ class OrderRepository
             return true;
         } catch (\Exception $ex) {
             DB::rollback();
+            $this->error = $ex->getMessage();
             return false;
         }
     }
