@@ -34,6 +34,7 @@ class ZipCodeValidator implements Rule
      */
     public function passes($attribute, $value)
     {
+        return true;
         if ( !$this->country ){
             return true;
         }
