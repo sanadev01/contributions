@@ -57,8 +57,8 @@ class OrderRepository
                 'address' => $request->address,
                 'address2' => $request->address2,
                 'account_type' => $request->account_type,
-                'tax_id' => $request->tax_id,
-                'zipcode' => $request->zipcode,
+                'tax_id' => cleanString($request->tax_id),
+                'zipcode' => cleanString($request->zipcode),
                 'state_id' => $request->state_id,
                 'country_id' => $request->country_id,
             ]);
