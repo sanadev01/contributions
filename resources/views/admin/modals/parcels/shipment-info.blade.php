@@ -41,7 +41,7 @@
                             {{ $loop->index+1 }}
                         </td>
                         <td colspan="5">
-                            <a href="{{ $image->getPath() }}"> {{ $image->name }} </a>
+                            <a href="{{ $image->getPath() }}" target="__blank"> {{ $image->name }} </a>
                         </td>
                     </tr>
                 @endforeach                              
