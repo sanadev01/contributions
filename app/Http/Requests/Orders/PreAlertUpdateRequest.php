@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Orders;
 
+use App\Models\Order;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PreAlertUpdateRequest extends FormRequest
