@@ -11,6 +11,7 @@
 |
 */
 
+
 Route::get('/', function () {
     return redirect('login');
 });
@@ -51,6 +52,14 @@ Route::namespace('Admin')
             Route::resource('orders.label', OrderLabelController::class)->only('index','store');
         });
 
+        Route::namespace('Consolidation')
+            ->prefix('consolidation')
+            ->as('consolidation.')
+            ->group(function(){
+                Route::resource('parcels',SelectPackagesController::class)->only('index','store','edit','update');
+                Route::resource('parcels.services',ServicesController::class)->only('index','store');
+        });
+
         Route::resource('payment-invoices', PaymentInvoiceController::class)->only(['index','store','destroy']);
 
         Route::namespace('Payment')
@@ -66,7 +75,8 @@ Route::namespace('Admin')
             ->prefix('rates')
             ->as('rates.')
             ->group(function () {
-                Route::resource('profit-packages', ProfitPackageController::class); 
+                Route::resource('profit-packages', ProfitPackageController::class);
+                Route::resource('fixed-charges', FixedChargesController::class)->only(['index','store']);
                 Route::resource('shipping-rates', RateController::class)->only(['create', 'store', 'index']);
             });
 
@@ -88,6 +98,14 @@ Route::namespace('Admin')
         Route::post('ajax/get-states', AjaxCallController::class)->name('ajax.state')->withoutMiddleware(['auth']);
 
         Route::get('language/{locale}', LanguageController::class)->name('locale.change');
+
+        Route::namespace('Modals')
+            ->prefix('modals')
+            ->as('modals.')
+            ->group(function(){
+                Route::get('parcel/{parcel}/shipment-info', \ShipmentModalController::class)->name('parcel.shipment-info');
+                Route::get('order/{order}/invoice', \OrderInvoiceModalController::class)->name('order.invoice');
+        });
 });
 
 Route::get('media/get/{document}', function (App\Models\Document $document) {

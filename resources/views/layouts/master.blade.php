@@ -15,38 +15,6 @@
     <script>
         window.locale= "{{ app()->getLocale() }}";
     </script>
-    <style>
-        .modal{
-            background-color: #2e2e2e9e;
-        }
-        .picker__holder{
-            bottom: 100% !important;
-        }
-        .alert-warning {
-            background: rgba(231, 0, 0, 0.44) !important;
-            color: #000000 !important;
-        }
-        .modal-backdrop{
-            zoom: 1.4;
-        }
-        .modal-backdrop {
-            opacity : 0 !important;
-        }
-        @media print
-        {    
-            .no-print, .no-print *
-            {
-                display: none !important;
-            }
-            *{
-                -webkit-print-color-adjust: exact;
-            },
-            .print{
-                display: block !important;
-            }
-        }
-
-    </style>
     <livewire:styles>
 </head>
 <!-- END: Head-->
@@ -86,11 +54,7 @@
         @include('layouts.footer')
     </div>
     @include('layouts.js')
-    @yield('js')
-    <livewire:scripts>
-
-    @yield('lvjs')
-    @stack('lvjs-stack')
+    @yield('js')=
     <script>
         function confirmDelete(msg){
             return confirm(msg ?? 'Are you Sure to Delete');
@@ -105,6 +69,12 @@
             },10000)
         })
     </script>
+
+{{-- Livewire Js Section start here --}}
+    <livewire:scripts>
+
+    @yield('lvjs')
+    @stack('lvjs-stack')
 
 </x-master-layout>
 @yield('modal')

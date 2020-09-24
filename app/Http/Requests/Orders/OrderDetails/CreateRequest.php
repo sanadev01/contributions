@@ -30,7 +30,6 @@ class CreateRequest extends FormRequest
             'tax_modality' => 'required|in:ddu',
             'items.*.sh_code' => [
                 'required',
-                'digits:6',
                 'numeric',
                 new NcmValidator()
             ], 

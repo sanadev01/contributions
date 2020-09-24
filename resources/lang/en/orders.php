@@ -186,6 +186,7 @@ return [
         'Shipping' => 'Shipping',
         'Additional Services' => 'Additional Services',
         'Dangrous Items Cost' => 'Dangrous Items Cost',
+        'consolidation' => 'Consolidation',
         'TOTAL' => 'TOTAL',
         'Previous' => 'Previous',
 

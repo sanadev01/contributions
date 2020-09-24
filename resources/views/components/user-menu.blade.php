@@ -95,6 +95,15 @@
                     </li>
                     @endcan
 
+                    @can('viewAny', App\Models\Rate::class)
+                    <li class="{{ $isActive(['admin.rates.fixed-charges.index']) }}">
+                        <a href="{{ route('admin.rates.fixed-charges.index') }}">
+                            <i class="feather icon-circle"></i>
+                            <span class="menu-title">@lang('menu.Fixed Charges')</span>
+                        </a>
+                    </li>
+                    @endcan
+
                 </ul>
             </li>
             @endif

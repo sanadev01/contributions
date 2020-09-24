@@ -21,4 +21,5 @@ return [
     'Roles' => 'Funções',
     'Billing Informations' => 'Informações de pagamento',
     'Settings' => 'Configurações',
+    'Fixed Charges' => 'Cobranças Fixas',
 ];

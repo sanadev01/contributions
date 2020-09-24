@@ -9,7 +9,7 @@
     </div>
     <div class="position-absolute bg-white w-100 mt-1" style="z-index: 100">
         @if (!empty($usersList))
-            <div class="d-flex w-100 shadow-lg">
+            <div class="d-flex w-100 shadow-lg flex-column">
                 @foreach ($usersList as $user)
                     <div class="w-100 border-bottom-light p-2 cursor-pointer" wire:click="selectUser('{{$user['id']}}','{{$user['name']}}')">
                         <strong>Name:</strong> {{ $user['name'] }} <br>

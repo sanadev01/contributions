@@ -20,6 +20,6 @@ return [
     'Users' => 'Users',
     'Roles' => 'Roles',
     'Billing Informations' => 'Billing Informations',
-    'Settings' => 'Settings',
+    'Fixed Charges' => 'Fixed Charges',
 ];
  

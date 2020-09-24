@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Services\Calculators\WeightCalculator;
 use App\Services\Converters\UnitsConverter;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\UploadedFile;
@@ -19,13 +20,22 @@ class Order extends Model
 
     const STATUS_PREALERT_TRANSIT = 10;
     const STATUS_PREALERT_READY = 20;
+    
+    const STATUS_CONSOLIDATOIN_REQUEST = 25;
+    const STATUS_CONSOLIDATED = 26;
+
     const STATUS_ORDER = 30;
-    const STATUS_CONSOLIDATOIN_REQUEST = 40;
-    const STATUS_CONSOLIDATED = 50;
     const STATUS_PAYMENT_PENDING = 60;
     const STATUS_PAYMENT_DONE = 70;
     const STATUS_SHIPPED = 80;
     
+    public function scopeParcelReady(Builder $query)
+    {
+        return $query->where(function($query){
+            $query->where('status', self::STATUS_PREALERT_READY)
+                    ->orWhere('status', self::STATUS_CONSOLIDATED);
+        });
+    }
 
     public function user()
     {
@@ -40,6 +50,11 @@ class Order extends Model
     public function recipient()
     {
         return $this->hasOne(Recipient::class,'order_id');
+    }
+
+    public function parentOrder()
+    {
+        return $this->belongsToMany(Order::class,'order_orders','order_id','consolidated_with_id');
     }
 
     public function subOrders()
@@ -109,6 +124,23 @@ class Order extends Model
         return $this->update([
             'purchase_invoice' => $invoice->id
         ]);
+    }
+
+    public function syncServices(array $services)
+    {
+        $this->services()->delete();
+        foreach($services as $serviceId){
+            $service = HandlingService::find($serviceId);
+
+            if (!$service ) continue;
+
+            $this->services()->create([
+                'service_id' => $service->id,
+                'name' => $service->name,
+                'cost' => $service->cost,
+                'price' => $service->price,
+            ]);
+        }
     }
 
     public function isMeasurmentUnitCm()

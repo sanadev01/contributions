@@ -52,5 +52,7 @@ class SearchUser extends Component
         $this->search = $username;
         $this->userId = $userId;
         $this->usersList = [];
+
+        $this->emit("user:updated",$userId);
     }
 }

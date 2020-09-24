@@ -55,7 +55,7 @@ class OrderPolicy
      */
     public function update(User $user, Order $order)
     {
-        return $user->hasPermission('update_parcel') && $user->id == $order->user_id && !$order->isPaid();
+        return $user->hasPermission('update_parcel') && $user->id == $order->user_id && !$order->isPaid() && !$order->isConsolidated();
     }
 
     /**
@@ -94,6 +94,11 @@ class OrderPolicy
         //
     }
 
+    public function updateConsolidation(User $user, Order $order)
+    {
+        return $user->id == $order->user_id && !$order->isPaid() && !$order->isShipmentAdded() && $order->isConsolidated();
+    }
+
     public function addWarehouseNumber(User $user)
     {
         return $user->hasPermission('add_parcel_warehouse_number');
@@ -106,7 +111,7 @@ class OrderPolicy
 
     public function editShipmentDetails(User $user,Order $order)
     {
-        return $user->hasPermission('edit_parcel_shipment_details') && $user->id == $order->user_id;
+        return $user->hasPermission('edit_parcel_shipment_details') && $user->id == $order->user_id && !$order->isConsolidated();
     }
 
     public function updateOrder(User $user,Order $order)

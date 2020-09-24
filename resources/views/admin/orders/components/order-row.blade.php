@@ -5,7 +5,7 @@
     <td style="width: 200px;">
         @if( $order->warehouse_number)
             <span>
-                <a href="#" title="Click to see Shipment">
+                <a href="#" title="Click to see Shipment" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.parcel.shipment-info',$order) }}">
                     WRH#: {{ $order->warehouse_number }}
                 </a>
             </span>
@@ -15,7 +15,7 @@
         @endif
         <span title="Consolidation Requested For Following Shipments">
             @foreach( $order->subOrders as $subOrder)
-                <a href="#" class="mb-1 d-block">
+                <a href="#" class="mb-1 d-block" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.parcel.shipment-info',$subOrder) }}">
                     WHR#: {{ $subOrder->warehouse_number }}
                 </a>
             @endforeach
@@ -92,7 +92,7 @@
                             
                         @endif
                     @enduser
-                    <button onclick="mw = window.open('{{route('admin.orders.order-invoice.index',$order)}}','','width=768,height=768')" class="btn dropdown-item w-100" title="Show Order Details">
+                    <button data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$order) }}" class="btn dropdown-item w-100" title="Show Order Details">
                         <i class="feather icon-list"></i> @lang('orders.actions.view-order')
                     </button>
                     

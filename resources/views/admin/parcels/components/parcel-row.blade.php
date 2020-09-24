@@ -6,17 +6,23 @@
         <td>{{ optional($parcel->user)->name }}</td>
         <td>{{ optional($parcel->user)->pobox_number }}</td>
     @endadmin
-    @if($parcel->isShipmentAdded())
-        <td>
-            <a href="#" title="@lang('parcel.Show Details')">
+    <td>
+        @if($parcel->isShipmentAdded())
+            <a href="#" class="d-block" title="@lang('parcel.Show Details')" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.parcel.shipment-info',$parcel) }}">
                 {{ $parcel->warehouse_number }}
             </a>
-        </td>
-    @else
-        <td>
+        @else
             @lang('parcel.Not Created Yet')
+        @endif
+            @if ( $parcel->isConsolidated() )
+            <hr>
+                @foreach ($parcel->subOrders as $subParcel)
+                    <a href="#" class="d-block" title="@lang('parcel.Show Details')" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.parcel.shipment-info',$subParcel) }}">
+                        {{ $subParcel->warehouse_number }}
+                    </a>
+                @endforeach
+            @endif
         </td>
-    @endif
     <td>
         @if($parcel->isShipmentAdded())
             {{ number_format($parcel->getOriginalWeight('kg'),2) }} kg <hr>
@@ -41,8 +47,12 @@
         {{ $parcel->tracking_id }}
     </td>
     <td>
-        @if( $parcel->isShipmentAdded() )
+        @if(!$parcel->isConsolidated() && $parcel->isShipmentAdded() )
             <span class="btn btn-sm btn-primary" title="@lang('parcel.Shipment Is Ready Please Click on basket icon to Proceed to Order')">@lang('parcel.Ready') </span>
+        @elseif($parcel->isConsolidated() && ! $parcel->isShipmentAdded())
+            <span class="btn btn-sm btn-info">@lang('parcel.Consolidation Requested')</span>
+        @elseif($parcel->isConsolidated() && $parcel->isShipmentAdded())
+            <span class="btn btn-sm btn-warning">@lang('parcel.Consolidated')</span>
         @else
             <span class="btn btn-sm btn-danger">@lang('parcel.Transit')</span>
         @endif
@@ -66,6 +76,13 @@
                             <i class="feather icon-edit"></i> @lang('parcel.Edit Parcel')
                         </a>
                     @endcan
+
+                    @can('updateConsolidation',  $parcel)
+                        <a href="{{ route('admin.consolidation.parcels.edit',$parcel) }}" class="dropdown-item btn" title="@lang('parcel.Edit Consolidation')">
+                            <i class="feather icon-edit"></i> @lang('parcel.Edit Consolidation')
+                        </a>
+                    @endcan
+
                     @can('delete', $parcel)
                         <form method="post" action="{{ route('admin.parcels.destroy',$parcel) }}" class="d-inline-block w-100" onsubmit="return confirmDelete()">
                             @csrf

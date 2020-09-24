@@ -54,5 +54,54 @@
     .border-5{
         border-width: 32px !important;
     }
+    .modal{
+            background-color: #2e2e2e9e;
+    }
+    .picker__holder{
+        bottom: 100% !important;
+    }
+    .alert-warning {
+        background: rgba(231, 0, 0, 0.44) !important;
+        color: #000000 !important;
+    }
+    .modal-backdrop{
+        zoom: 1.4;
+    }
+    .modal-backdrop {
+        opacity : 0 !important;
+    }
+    @media print
+    {    
+        .no-print, .no-print *
+        {
+            display: none !important;
+        }
+        *{
+            -webkit-print-color-adjust: exact;
+        },
+        .print{
+            display: block !important;
+        }
+    }
+
+    ::-webkit-scrollbar-track
+    {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+        border-radius: 10px;
+        background-color: #F5F5F5;
+    }
+
+    ::-webkit-scrollbar
+    {
+        width: 12px;
+        background-color: #F5F5F5;
+    }
+
+    ::-webkit-scrollbar-thumb
+    {
+        border-radius: 10px;
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+        background-color: #555;
+    }
 </style>
 @yield('custom-css')

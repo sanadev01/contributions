@@ -10,6 +10,22 @@ use DB;
 
 class PreAlertRepository
 {
+
+    protected $error;
+
+    public function getReadyParcels(Request $request, $includeConsolidated=false)
+    {
+        $query = (new Order())->query()->parcelReady();
+
+        if ( !$includeConsolidated ){
+            $query->doesntHave('parentOrder');
+        }
+
+        $query->where('user_id',$request->user_id);
+
+        return $query->get();
+    }
+
     public function store(Request $request)
     {
         $data = [];
@@ -96,11 +112,17 @@ class PreAlertRepository
             $data[] = 'warehouse_number';
         }
 
+        $status = $order->status;
+
+        if ( $order->status < Order::STATUS_ORDER ){
+            $status = $order->isConsolidated() ? Order::STATUS_CONSOLIDATED : Order::STATUS_PREALERT_READY;
+        }
+
         if ( Auth::user()->can('addShipmentDetails',Order::class) ){
             $request->merge([
                 'measurement_unit' => $request->unit,
                 'is_shipment_added' => true,
-                'status' => Order::STATUS_PREALERT_READY
+                'status' => $status
             ]);
 
             $data[] = 'status';
@@ -143,6 +165,11 @@ class PreAlertRepository
     public function delete(Order $order,$soft=true)
     {
         if ( $soft ){
+            
+            if ( $order->isConsolidated() ){
+                $order->subOrders()->sync([]);
+            }
+
             $order->delete();
             return true;
         }
@@ -167,5 +194,55 @@ class PreAlertRepository
             dd($ex);
             return false;
         }
+    }
+
+    public function createConsolidationRequest(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $order = Order::create([
+                'user_id' => Auth::user()->isAdmin() ? $request->user_id : Auth::id(),
+                'is_consolidated' => true,
+                'merchant' => 'HD-Consolidation-Service',
+                'carrier' => 'HD-Consolidation-Service',
+                'tracking_id' => 'HD-Consolidation-Service',
+                'status' => Order::STATUS_CONSOLIDATOIN_REQUEST
+            ]);
+
+            $order->subOrders()->sync($request->parcels);
+
+            DB::commit();
+
+            return $order;
+
+        } catch (\Exception $ex) {
+            DB::rollback();
+            $this->error = $ex->getMessage();
+            return false;
+        }
+    }
+
+    public function updateConsolidationRequest(Request $request, Order $parcel)
+    {
+        try {
+            DB::beginTransaction();
+
+            $parcel->subOrders()->sync($request->parcels);
+
+            DB::commit();
+
+            return $parcel;
+
+        } catch (\Exception $ex) {
+            DB::rollback();
+            $this->error = $ex->getMessage();
+            return false;
+        }
+    }
+
+    public function getError()
+    {
+        return $this->error;
     }
 }

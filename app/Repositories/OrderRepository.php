@@ -90,21 +90,7 @@ class OrderRepository
 
     public function updateHandelingServices(Request $request, Order $order)
     {
-        $order->services()->delete();
-
-        foreach($request->get('services',[]) as $serviceId){
-            $service = HandlingService::find($serviceId);
-
-            if (!$service ) continue;
-
-            $order->services()->create([
-                'service_id' => $service->id,
-                'name' => $service->name,
-                'cost' => $service->cost,
-                'price' => $service->price,
-            ]);
-        }
-
+        $order->syncServices($request->get('services',[]));
         return true;
     }
 
@@ -152,7 +138,9 @@ class OrderRepository
 
             $dangrousGoodsCost = $battriesExtra + $pefumeExtra + $flameableExtra ;
 
-            $total = $shippingCost + $additionalServicesCost + $commission + $insurance + $dangrousGoodsCost;
+            $consolidation = $order->isConsolidated() ?  setting('CONSOLIDATION_CHARGES',0,null,true) : 0;
+
+            $total = $shippingCost + $additionalServicesCost + $commission + $insurance + $dangrousGoodsCost + $consolidation;
             
             $discount = 0; // not implemented yet
             $gross_total = $total - $discount;
@@ -167,6 +155,7 @@ class OrderRepository
                 'user_declared_freight' => $request->user_declared_freight,
                 
                 // figures
+                'consolidation' => $consolidation,
                 'order_value' => $orderValue,
                 'shipping_value' => $shippingCost,
                 'comission' => $commission,
@@ -175,7 +164,7 @@ class OrderRepository
                 'discount' => $discount,
                 'gross_total' => $gross_total,
                 'insurance_value' => $insurance,
-                'status' => $order->isPaid() ? $order->status : Order::STATUS_ORDER
+                'status' => $order->isPaid() ? ($order->status < Order::STATUS_ORDER ? Order::STATUS_ORDER : $order->status) : Order::STATUS_ORDER
             ]);
 
             DB::commit();

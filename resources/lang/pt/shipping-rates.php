@@ -21,5 +21,7 @@ return [
     'Download' => 'Baixar',
     'Rates Updated Successfully' => 'Taxas atualizadas com sucesso',
     'Error While Updating Rates' => 'Erro ao atualizar taxas',
+    'Fixed Charges' => 'Cobranças Fixas',
+    'consolidation Charges' => 'Taxas de consolidação'
 ];
  

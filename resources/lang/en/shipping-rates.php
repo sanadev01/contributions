@@ -21,5 +21,7 @@ return [
     'Download' => 'Download',
     'Rates Updated Successfully' => 'Rates Updated Successfully',
     'Error While Updating Rates' => 'Error While Updating Rates',
+    'Fixed Charges' => 'Fixed Charges',
+    'consolidation Charges' => 'Consolidation Charges',
 ];
  

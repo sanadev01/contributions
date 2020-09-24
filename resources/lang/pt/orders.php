@@ -185,6 +185,7 @@ return [
         'Shipping' => 'Remessa',
         'Additional Services' => 'Serviços adicionais',
         'Dangrous Items Cost' => 'Custo de itens danosos',
+        'consolidation' => 'Consolidação',
         'TOTAL' => 'total',
         'Previous' => 'Anterior',
 
