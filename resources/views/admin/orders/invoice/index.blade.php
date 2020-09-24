@@ -17,16 +17,16 @@
         @include('admin.modals.orders.invoice')
         <div class="actions clearfix no-print">
             <ul role="menu" aria-label="Pagination">
+                <li class="disabled" aria-disabled="true">
+                    <a href="{{ route('admin.orders.order-details.index',$order) }}" role="menuitem">@lang('orders.invoice.Previous')</a>
+                </li>
                 @if ( !$order->isPaid() )
-                    <li class="disabled" aria-disabled="true">
-                        <a href="{{ route('admin.orders.order-details.index',$order) }}" role="menuitem">@lang('orders.invoice.Previous')</a>
-                    </li>
-                    <li aria-hidden="false" aria-disabled="false">
-                        <a href="{{ route('admin.payment-invoices.orders.index',['order'=>$order]) }}" class="btn btn-primary">Pay Order Now</a>
-                    </li>
+                <li aria-hidden="false" aria-disabled="false">
+                    <a href="{{ route('admin.payment-invoices.orders.index',['order'=>$order]) }}" class="btn btn-primary">Pay Order Now</a>
+                </li>
                 @else
                 <li aria-hidden="false" aria-disabled="false">
-                    <a href="{{ route('admin.payment-invoices.index') }}" class="btn btn-primary">Back To List</a>
+                    <a href="{{ route('admin.orders.index') }}" class="btn btn-primary">Back to List / De volta à lista</a>
                 </li>
                 @endif
             </ul>

@@ -99,6 +99,11 @@ class OrderPolicy
         return $user->id == $order->user_id && !$order->isPaid() && !$order->isShipmentAdded() && $order->isConsolidated();
     }
 
+    public function canPrintConsolidationForm(User $user, Order $order)
+    {
+        return $user->isAdmin() && $order->isConsolidated();
+    }
+
     public function addWarehouseNumber(User $user)
     {
         return $user->hasPermission('add_parcel_warehouse_number');

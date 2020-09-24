@@ -33,7 +33,7 @@ return [
         'Service' => 'Service',
         'Select Shipping Service' => 'Select Shipping Service',
         'Tax Modality' => 'Tax Modality',
-        'Place Order' => 'Place Order',
+        'Place Order' => 'Save Order',
         'Order Items' => 'Order Items',
         'Add Item' => 'Add Item',
         'Previous' => 'Previous',

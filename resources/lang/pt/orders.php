@@ -33,7 +33,7 @@ return [
         'Service' => 'Serviço',
         'Select Shipping Service' => 'Selecione o serviço de frete',
         'Tax Modality' => 'Modalidade Tributária',
-        'Place Order' => 'Faça a encomenda',
+        'Place Order' => 'Salvar pedido',
         'Order Items' => 'Itens de ordem',
         'Add Item' => 'Adicionar Item',
         'Previous' => 'Anterior',

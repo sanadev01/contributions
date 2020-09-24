@@ -71,6 +71,12 @@
                         </a>
                     @endif
                     
+                    @if ( auth()->user()->can('canPrintConsolidationForm',$parcel) && $parcel->isConsolidated())
+                        <a href="#" class="dropdown-item btn" title="@lang('parcel.Print Consolidation Request')" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.parcel.consolidation-print',$parcel) }}">
+                            <i class="fa fa-print"></i> @lang('parcel.Print Consolidation Request')
+                        </a>
+                    @endif
+
                     @can('update',  $parcel)
                         <a href="{{ route('admin.parcels.edit',$parcel) }}" class="dropdown-item btn" title="@lang('parcel.Edit Parcel')">
                             <i class="feather icon-edit"></i> @lang('parcel.Edit Parcel')

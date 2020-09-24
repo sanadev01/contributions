@@ -4,6 +4,7 @@ return [
     'Parcel Images' => 'Imagens do pacote',
     'Create Parcel' => 'Criar pacote',
     'Edit Parcel' => 'editar pacote',
+    'Print Consolidation Request' => 'Imprimir pedido de consolidação',
     'Delete Parcel' => 'Delete Parcel',
     'User POBOX Number' => 'Número POBOX do usuário',
     'Merchant' => 'Comerciante',
