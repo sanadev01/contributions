@@ -30,11 +30,11 @@ class SelectPackagesController extends Controller
     {
         $consolidatedOrder = $preAlertRepository->createConsolidationRequest($request);
         if ( $consolidatedOrder ){
-            session()->flash('alert-success','Packages Selected. Please Select any Additional Services if you want');
+            session()->flash('alert-success',__('consolidation.success_message_created'));
             return \redirect()->route('admin.consolidation.parcels.services.index',$consolidatedOrder);
         }
 
-        session()->flash('alert-danger','Error while Saving Parcels. Error: '.$preAlertRepository->getError());
+        session()->flash('alert-danger',__('consolidation.error_message_created',['error'=> $preAlertRepository->getError()]));
         return back()->withInput();
     }
 
@@ -61,11 +61,11 @@ class SelectPackagesController extends Controller
     {
         $consolidatedOrder = $preAlertRepository->updateConsolidationRequest($request,$parcel);
         if ( $consolidatedOrder ){
-            session()->flash('alert-success','Request Updated. Please Select any Additional Services if you want');
+            session()->flash('alert-success',__('consolidation.success_message_updated'));
             return \redirect()->route('admin.consolidation.parcels.services.index',$consolidatedOrder);
         }
 
-        session()->flash('alert-danger','Error while Saving Parcels. Error: '.$preAlertRepository->getError());
+        session()->flash('alert-danger',__('consolidation.error_message_updated',['error'=> $preAlertRepository->getError()]));
         return back()->withInput();
     }
 

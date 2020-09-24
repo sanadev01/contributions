@@ -21,7 +21,7 @@
                         <strong class="border-bottom-dark mr-2">@lang('invoice.WHR')#</strong> <span class="text-info">{{  $parcel->warehouse_number }}</span>
                     </div>
                     <div class="h5 py-1 px-2">
-                        <strong class="border-bottom-dark mr-2">@lang('invoice.Value')</strong> <span class="text-info">{{ $parcel->getOriginalWeight('kg') }} Kg  ( {{ $parcel->getOriginalWeight('lbs') }} lbs )</span>
+                        <strong class="border-bottom-dark mr-2">@lang('invoice.weight')</strong> <span class="text-info">{{ $parcel->getOriginalWeight('kg') }} Kg  ( {{ $parcel->getOriginalWeight('lbs') }} lbs )</span>
                     </div>
                 </label>
             </div>

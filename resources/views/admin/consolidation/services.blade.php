@@ -4,7 +4,6 @@
 
 <form action="{{ route('admin.consolidation.parcels.services.index',$parcel) }}" method="POST">
     @csrf
-    <h6 id="steps-uid-0-h-0" tabindex="-1" class="title current">@lang('orders.services.Step 1')</h6>
     <fieldset role="tabpanel" aria-labelledby="steps-uid-0-h-0" class="body current p-4" aria-hidden="false">
         <div class="row justify-content-center">
             <div class="col-md-8 col-12">
@@ -29,8 +28,9 @@
             </div>
         </div>
         <div class="row justify-content-end">
-            <div class="col-md-8 text-right">
-                <button class="btn btn-primary btn-lg">@lang('consolidation.Save')</button>
+            <div class="col-md-12">
+                <a href="{{ route('admin.consolidation.parcels.edit',$parcel) }}" class="btn btn-primary btn-lg pull-left">@lang('consolidation.Previous')</a>
+                <button class="btn btn-primary btn-lg pull-right">@lang('consolidation.Save')</button>
             </div>
         </div>
     </fieldset>

@@ -38,6 +38,7 @@ return [
     'Tracking Code' => 'Tracking Code',
     'WHR' => 'WHR',
     'Value' => 'Value',
+    'weight' => 'Weight',
     'Order Available to Pay' => 'Order Available to Pay',
     'Pay Orders' => 'Pay Orders',
     'Checkout Message Detail' => 'Select from Saved Billing methods or create new one by clicking on create new. You can also save newly created address for future use. jus check the save address box.',

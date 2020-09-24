@@ -50,9 +50,9 @@
         @if(!$parcel->isConsolidated() && $parcel->isShipmentAdded() )
             <span class="btn btn-sm btn-primary" title="@lang('parcel.Shipment Is Ready Please Click on basket icon to Proceed to Order')">@lang('parcel.Ready') </span>
         @elseif($parcel->isConsolidated() && ! $parcel->isShipmentAdded())
-            <span class="btn btn-sm btn-info">@lang('parcel.Consolidation Requested')</span>
+            <span class="btn btn-sm btn-info">@lang('consolidation.Consolidation Requested')</span>
         @elseif($parcel->isConsolidated() && $parcel->isShipmentAdded())
-            <span class="btn btn-sm btn-warning">@lang('parcel.Consolidated')</span>
+            <span class="btn btn-sm btn-warning">@lang('consolidation.Consolidated')</span>
         @else
             <span class="btn btn-sm btn-danger">@lang('parcel.Transit')</span>
         @endif
@@ -72,8 +72,8 @@
                     @endif
                     
                     @if ( auth()->user()->can('canPrintConsolidationForm',$parcel) && $parcel->isConsolidated())
-                        <a href="#" class="dropdown-item btn" title="@lang('parcel.Print Consolidation Request')" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.parcel.consolidation-print',$parcel) }}">
-                            <i class="fa fa-print"></i> @lang('parcel.Print Consolidation Request')
+                        <a href="#" class="dropdown-item btn" title="@lang('consolidation.Print Consolidation Request')" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.parcel.consolidation-print',$parcel) }}">
+                            <i class="fa fa-print"></i> @lang('consolidation.Print Consolidation Request')
                         </a>
                     @endif
 
@@ -83,11 +83,11 @@
                         </a>
                     @endcan
 
-                    @can('updateConsolidation',  $parcel)
-                        <a href="{{ route('admin.consolidation.parcels.edit',$parcel) }}" class="dropdown-item btn" title="@lang('parcel.Edit Consolidation')">
-                            <i class="feather icon-edit"></i> @lang('parcel.Edit Consolidation')
+                    @if ( auth()->user()->can('updateConsolidation',$parcel) && $parcel->isConsolidated())
+                        <a href="{{ route('admin.consolidation.parcels.edit',$parcel) }}" class="dropdown-item btn" title="@lang('consolidation.Edit Consolidation')">
+                            <i class="feather icon-edit"></i> @lang('consolidation.Edit Consolidation')
                         </a>
-                    @endcan
+                    @endif
 
                     @can('delete', $parcel)
                         <form method="post" action="{{ route('admin.parcels.destroy',$parcel) }}" class="d-inline-block w-100" onsubmit="return confirmDelete()">

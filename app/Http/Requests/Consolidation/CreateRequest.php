@@ -24,7 +24,7 @@ class CreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'parcels' => 'required|array|min:1',
+            'parcels' => 'required|array|min:2',
             'parcels.*' => 'integer|exists:orders,id'
         ];
     }

@@ -38,6 +38,7 @@ return [
     'Tracking Code' => 'Código de Rastreamento',
     'WHR' => 'whr',
     'Value' => 'Valor',
+    'weight' => 'Peso',
     'Order Available to Pay' => 'Pedido disponível para pagamento',
     'Pay Orders' => 'Ordens de pagamento',
     'Checkout Message Detail' => 'Selecione um dos métodos de Faturamento salvos ou crie um novo clicando em criar novo. Você também pode salvar o endereço recém-criado para uso futuro. Basta marcar a caixa para salvar o endereço.',
