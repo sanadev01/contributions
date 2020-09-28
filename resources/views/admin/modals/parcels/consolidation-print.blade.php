@@ -63,7 +63,8 @@
                         <td>
                             {{ $loop->index+1 }}
                         </td>
-                        <td colspan="5">{{ $service->name }}</td>
+                        <td colspan="3">{{ $service->name }}</td>
+                        <td colspan="2">{{ $service->price }} USD</td>
                     </tr>
                 @endforeach           
             </tbody>

@@ -1,10 +1,10 @@
 @extends('layouts.master')
 
 @section('page')
-    <section id="prealerts"> 
+    <section> 
         <div class="row">
             <div class="col-12">
-                <div class="card">
+                <div class="card min-vh-100">
                     <div class="card-header">
                         <h4 class="mb-0">@lang('address.My Addresses') </h4>
                         @can('create', App\Models\Address::class)

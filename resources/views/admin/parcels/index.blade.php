@@ -1,10 +1,10 @@
 @extends('layouts.master')
 
 @section('page')
-    <section id="vue-prealerts-index">
+    <section>
         <div class="row">
             <div class="col-12">
-                <div class="card">
+                <div class="card min-vh-100">
                     <div class="card-header">
                         <h1 class="mb-0">
                             @lang('parcel.My Parcels')

@@ -103,5 +103,8 @@
         -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
         background-color: #555;
     }
+    .min-vh-100{
+        min-height: 100vh !important
+    }
 </style>
 @yield('custom-css')
