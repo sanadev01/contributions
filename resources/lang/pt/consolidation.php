@@ -6,7 +6,7 @@ return [
     'Consolidate Request' => 'Pedido de Consolidação',
     'Consolidation Requested' => 'Consolidação Solicitada',
     'Print Consolidation Request' => 'Imprimir pedido de consolidação',
-    'Consolidatedd' => 'Consolidado',
+    'Consolidated' => 'Consolidado',
     'Consolidation Message' => 'Selecione vários lotes para solicitar consolidação',
     'parcels' => 'Pacotes',
     'services' => 'Serviços',

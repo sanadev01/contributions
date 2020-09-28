@@ -239,4 +239,27 @@ class Order extends Model
     {
         return round($value,2);
     }
+
+    public function getStatusClass()
+    {
+        $class = "";
+
+        if ( $this->status == Order::STATUS_ORDER ){
+            $class = 'btn btn-sm btn-info';
+        }
+
+        if ( $this->status == Order::STATUS_PAYMENT_PENDING ){
+            $class = 'btn btn-sm btn-danger';
+        }
+
+        if ( $this->status == Order::STATUS_PAYMENT_DONE ){
+            $class = 'btn btn-sm btn-success';
+        }
+
+        if ( $this->status == Order::STATUS_SHIPPED ){
+            $class = 'btn btn-sm bg-secondary text-white';
+        }
+
+        return $class;
+    }
 }

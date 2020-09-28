@@ -6,7 +6,7 @@ return [
     'Consolidate Request' => 'Consolidate Request',
     'Consolidation Requested' => 'Consolidation Requested',
     'Print Consolidation Request' => 'Print Consolidation Request',
-    'Consolidatedd' => 'Consolidated',
+    'Consolidated' => 'Consolidated',
     'Consolidation Message' => 'Select Multiple Parcels to Request Consolidation',
     'parcels' => 'Parcels',
     'services' => 'Services',

@@ -42,10 +42,8 @@
         ${{ number_format($order->gross_total,2) }}
     </td>
     <td>
-        <select class="form-control {{ !auth()->user()->isAdmin() ? 'btn disabled' : ''  }}" @if (auth()->user()->isAdmin())  wire:change="$emit('updated-status',{{$order->id}},$event.target.value)" @else disabled="disabled"  @endif>
+        <select class="form-control {{ !auth()->user()->isAdmin() ? 'btn disabled' : ''  }} {{ $order->getStatusClass() }}" @if (auth()->user()->isAdmin())  wire:change="$emit('updated-status',{{$order->id}},$event.target.value)" @else disabled="disabled"  @endif>
             <option value="{{ App\Models\Order::STATUS_ORDER }}" {{ $order->status == App\Models\Order::STATUS_ORDER ? 'selected': '' }}>STATUS_ORDER</option>
-            <option value="{{ App\Models\Order::STATUS_CONSOLIDATOIN_REQUEST }}" {{ $order->status == App\Models\Order::STATUS_CONSOLIDATOIN_REQUEST ? 'selected': '' }}>STATUS_CONSOLIDATOIN_REQUEST</option>
-            <option value="{{ App\Models\Order::STATUS_CONSOLIDATED }}" {{ $order->status == App\Models\Order::STATUS_CONSOLIDATED ? 'selected': '' }}>STATUS_CONSOLIDATED</option>
             <option value="{{ App\Models\Order::STATUS_PAYMENT_PENDING }}" {{ $order->status == App\Models\Order::STATUS_PAYMENT_PENDING ? 'selected': '' }}>STATUS_PAYMENT_PENDING</option>
             <option value="{{ App\Models\Order::STATUS_PAYMENT_DONE }}" {{ $order->status == App\Models\Order::STATUS_PAYMENT_DONE ? 'selected': '' }}>STATUS_PAYMENT_DONE</option>
             <option value="{{ App\Models\Order::STATUS_SHIPPED }}" {{ $order->status == App\Models\Order::STATUS_SHIPPED ? 'selected': '' }}>STATUS_SHIPPED</option>
