@@ -212,6 +212,10 @@ class PreAlertRepository
 
             $order->subOrders()->sync($request->parcels);
 
+            $order->update([
+                'warehouse_number' => "HD-{$order->id}-C"
+            ]);
+            
             DB::commit();
 
             return $order;

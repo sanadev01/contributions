@@ -177,14 +177,6 @@ class OrderRepository
         }
     }
 
-
-
-    public function createConsolidationRequest(Request $request, Order $order)
-    {
-
-    }
-
-
     public function checkout(Request $request, PaymentInvoice $paymentInvoice)
     {
         DB::beginTransaction();
