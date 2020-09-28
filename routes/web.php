@@ -11,7 +11,6 @@
 |
 */
 
-
 Route::get('/', function () {
     return redirect('login');
 });
@@ -92,6 +91,12 @@ Route::namespace('Admin')
         Route::resource('tickets', TicketController::class);
         Route::post('tickets/{ticket}/close', [\App\Http\Controllers\Admin\TicketController::class, 'markClose'])->name('ticket.mark-closed');
 
+        Route::namespace('Reports')
+            ->as('reports.')
+            ->prefix('reports')
+            ->group(function(){
+                Route::get('user-shipments', \ShipmentPerUserReportController::class)->name('user-shipments');
+        });
 
         Route::post('users/{user}/login', AnonymousLoginController::class)->name('users.login');
 

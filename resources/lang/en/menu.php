@@ -20,6 +20,11 @@ return [
     'Users' => 'Users',
     'Roles' => 'Roles',
     'Billing Informations' => 'Billing Informations',
+    'Settings' => 'Settings',
     'Fixed Charges' => 'Fixed Charges',
+    'Reports' => [
+        'menu' => 'Reports',
+        'Shipment Report' => 'Shipment Report'
+    ],
 ];
  

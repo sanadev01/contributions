@@ -28,6 +28,7 @@ use App\Policies\ProfitPackagePolicy;
 use App\Models\Rate;
 use App\Policies\RatePolicy;
 use App\Models\Recipient;
+use App\Models\Reports;
 use App\Policies\RecipientPolicy;
 use App\Models\Role;
 use App\Policies\RolePolicy;
@@ -49,6 +50,7 @@ use App\Models\Transaction;
 use App\Policies\TransactionPolicy;
 use App\Models\User;
 use App\Policies\BillingInformationPolicy;
+use App\Policies\ReportsPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -83,7 +85,8 @@ class AuthServiceProvider extends ServiceProvider
         Ticket::class => TicketPolicy::class,
         Transaction::class => TransactionPolicy::class,
         User::class => UserPolicy::class,
-        BillingInformation::class => BillingInformationPolicy::class
+        BillingInformation::class => BillingInformationPolicy::class,
+        Reports::class => ReportsPolicy::class
     ];
 
     /**

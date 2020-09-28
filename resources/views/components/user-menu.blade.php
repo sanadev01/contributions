@@ -124,6 +124,25 @@
                 </a>
             </li>
 
+            {{-- Reports --}}
+            <li class="nav-item has-sub sidebar-group">
+                <a href="#">
+                    <i class="feather icon-file"></i>
+                    <span class="menu-title">@lang('menu.Reports.menu')</span>
+                </a>
+                <ul class="menu-content">
+
+                    @can('viewUserShipmentReport', App\Models\Reports::class)
+                    <li class="{{ $isActive(['admin.reports.user-shipments']) }}">
+                        <a href="{{ route('admin.reports.user-shipments') }}">
+                            <i class="feather icon-circle"></i>
+                            <span class="menu-title">@lang('menu.Reports.Shipment Report')</span>
+                        </a>
+                    </li>
+                    @endcan
+                </ul>
+            </li>
+
             @can('viewAny', App\Models\User::class)
             <li class="nav-item {{ $isActive(['admin.users.index']) }}">
                 <a href="{{ route('admin.users.index') }}">

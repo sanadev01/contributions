@@ -22,4 +22,8 @@ return [
     'Billing Informations' => 'Informações de pagamento',
     'Settings' => 'Configurações',
     'Fixed Charges' => 'Cobranças Fixas',
+    'Reports' => [
+        'menu' => 'Relatórios',
+        'Shipment Report' => 'Relatório de Remessa'
+    ],
 ];
