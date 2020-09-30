@@ -28,8 +28,9 @@ class AddressRepository
 
         if ( $request->name ){
             $query->where(function($query) use($request){
-                return $query->where('first_name','LIKE',"%{$request->name}%")
-                    ->orWhere('last_name','LIKE',"%{$request->name}%");
+                return $query->whereRaw("CONCAT( first_name, ' ', last_name ) LIKE '%{$request->name}%'")
+                    ->orWhere('first_name','LIKE',"%{$request->name}%" )
+                    ->orWhere('last_name','LIKE',"%{$request->name}%" );
             });
         }
 
@@ -75,6 +76,10 @@ class AddressRepository
     {   
         try{
 
+            $request->merge([
+                'phone' => "+".cleanString($request->phone)
+            ]);
+
             $address = Auth::user()->addresses()->create(
                 $request->only(['first_name','last_name','email', 'phone', 'city', 'street_no','address', 'address2', 'country_id', 'state_id', 'account_type', 'tax_id', 'zipcode'])
             );
@@ -106,6 +111,10 @@ class AddressRepository
 
             $Address->refresh();
 
+            $request->merge([
+                'phone' => "+".cleanString($request->phone)
+            ]);
+            
             $Address->update(
                 $request->only(['first_name','last_name','email', 'phone', 'city', 'street_no','address', 'address2', 'country_id', 'state_id', 'account_type', 'tax_id', 'zipcode'])
             );

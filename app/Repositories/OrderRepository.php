@@ -46,6 +46,10 @@ class OrderRepository
             session()->flash('alert-danger',__('address.duplicate_error'));
         }
 
+        $request->merge([
+            'phone' => "+".cleanString($request->phone)
+        ]);
+        
         if ( $order->recipient ){
 
             $order->recipient()->update([

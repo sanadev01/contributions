@@ -12,7 +12,7 @@ class ProfitPackageRepository
 {
     public function get()
     {   
-        $packages = ProfitPackage::get();
+        $packages = ProfitPackage::query()->orderBy('name','ASC')->get();
         return $packages;
 
     }

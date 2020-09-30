@@ -16,8 +16,8 @@ class UserShipmentReportTable extends Component
     public $start_date;
     public $end_date;
 
-    public $sortBy = 'name';
-    public $sortAsc = true;
+    public $sortBy = 'spent';
+    public $sortAsc = false;
     
     public function render()
     {
