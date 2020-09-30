@@ -89,7 +89,8 @@ class OrderImportService extends AbstractImportService
             ]);
 
             $order->update([
-                'warehouse_number' => "TEMPWHR-{$order->id}"
+                'warehouse_number' => "TEMPWHR-{$order->id}",
+                'user_declared_freight' => $this->getValue("Z{$row}")
             ]);
             
             $this->addItem($order,$row);
@@ -106,13 +107,12 @@ class OrderImportService extends AbstractImportService
     public function addItem(Order $order,$row)
     {
         $order->items()->create([
-            "quantity" => $this->getValue("Z{$row}"),
-            "value" => $this->getValue("AA{$row}"),
-            "description" => $this->getValue("AB{$row}"),
-            "sh_code" => $this->getValue("AC{$row}"),
-            "contains_battery" => strlen($this->getValue("AD{$row}")) >0 ? true : false,
-            "contains_perfume" => strlen($this->getValue("AE{$row}")) >0 ? true : false,
-            "contains_flammable_liquid" =>  strlen($this->getValue("AF{$row}")) >0 ? true: false,
+            "quantity" => $this->getValue("AA{$row}"),
+            "value" => $this->getValue("AB{$row}"),
+            "description" => $this->getValue("AC{$row}"),
+            "sh_code" => $this->getValue("AD{$row}"),
+            "contains_battery" => strlen($this->getValue("AE{$row}")) >0 ? true : false,
+            "contains_perfume" => strlen($this->getValue("AF{$row}")) >0 ? true : false
         ]);
     }
 }

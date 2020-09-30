@@ -153,7 +153,7 @@
             </div>
         </div>
 
-        <div id="invoice-items-details" class="pt-1 invoice-items-table">
+        <div id="invoice-items-details" class="pt-1 invoice-items-table border-success border-2">
             <div class="row">
                 <div class="table-responsive-md col-12">
                     <table class="table table-bordered">
@@ -191,6 +191,13 @@
                                 <td colspan="4" class="text-center h4">@lang('orders.invoice.Order Value')</td>
                                 <td class="h4">
                                     {{ number_format($order->items()->sum(\DB::raw('quantity * value')),2) }} USD
+                                </td>
+                                <td></td>
+                            </tr>                             
+                            <tr class="border-top-light">
+                                <td colspan="4" class="text-center h4">@lang('orders.invoice.Freight Declared to Custom')</td>
+                                <td class="h4">
+                                    {{ number_format($order->user_declared_freight,2) }} USD
                                 </td>
                                 <td></td>
                             </tr>                             
