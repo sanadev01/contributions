@@ -26,6 +26,10 @@ class NcmValidator implements Rule
      */
     public function passes($attribute, $value)
     {
+        if ( strlen($value) !=6 ){
+            return false;
+        }
+        
         $found = ShCode::where('code',$value)->first();
         return $found;
     }
