@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\PublicApi;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Parcel\CreateRequest;
+use App\Http\Resources\PublicApi\OrderResource;
 use App\Models\ApiLog;
 use App\Models\Order;
 use Illuminate\Http\Request;
@@ -26,6 +27,7 @@ class ParcelController extends Controller
         try {
             
             $order = Order::create([
+                'shipping_service_id' => optional($request->parcel)['service_id'],
                 'user_id' => Auth::id(),
                 "merchant" => optional($request->parcel)['merchant'],
                 "carrier" => optional($request->parcel)['carrier'],
@@ -82,10 +84,13 @@ class ParcelController extends Controller
             $order->update([
                 'warehouse_number' => "TEMPWHR-{$order->id}",
                 "order_value" => $orderValue,
+                'shipping_service_name' => $order->shippingService->name
             ]);
 
+            $order->doCalculations();
+
             DB::commit();
-            return apiResponse(true,"Parcel Created",$order);
+            return apiResponse(true,"Parcel Created", OrderResource::make($order) );
 
         } catch (\Exception $ex) {
             DB::rollback();

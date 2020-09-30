@@ -28,10 +28,11 @@ class CreateRequest extends FormRequest
     public function rules()
     {
         return [
+            "parcel.service_id" => "required|exists:shipping_services,id",
             "parcel.merchant" => "required",
             "parcel.carrier" => "required",
             "parcel.tracking_id" => "sometimes|unique:orders,tracking_id",
-            "parcel.customer_reference" => "",
+            "parcel.customer_reference" => "unique:orders,customer_reference",
             "parcel.measurement_unit" => "required|in:kg/cm,lbs/in",
             "parcel.weight" => "required|numeric|gt:0|max:30",
             "parcel.length" => "required|numeric|gt:0",
