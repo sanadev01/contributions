@@ -2,7 +2,9 @@
 
 namespace App\Services\Excel\Import;
 
+use App\Models\Country;
 use App\Models\Order;
+use App\Models\ShippingService;
 use App\Models\State;
 use App\Services\Excel\AbstractImportService;
 use Illuminate\Http\UploadedFile;
@@ -41,17 +43,25 @@ class OrderImportService extends AbstractImportService
 
         try {
             
+            if ( strlen($this->getValue("D{$row}")) <=0 ){
+                DB::commit();
+                return;
+            }
+            
             $order = Order::where('customer_reference',$this->getValue("D{$row}"))->first();
 
             if ( $order ){
                 $this->addItem($order,$row);
                 DB::commit();
-
                 return;
             }
 
+            $shippingService = ShippingService::first();
+
             $order = Order::create([
                 'user_id' => $this->userId,
+                'shipping_service_id' => $shippingService->id,
+                'shipping_service_name' => $shippingService->name,
                 "merchant" => $this->getValue("A{$row}"),
                 "carrier" => $this->getValue("B{$row}"),
                 "tracking_id" => $this->getValue("C{$row}"),
@@ -84,13 +94,13 @@ class OrderImportService extends AbstractImportService
                 "city" => $this->getValue("V{$row}"),
                 "account_type" => 'individual',
                 "state_id" => optional( State::where('code',$this->getValue("W{$row}"))->first() )->id,
-                "country_id" => optional( State::where('code',$this->getValue("X{$row}"))->first() )->id,
+                "country_id" => optional( Country::where('code',$this->getValue("X{$row}"))->first() )->id,
                 "tax_id" => $this->getValue("Y{$row}")
             ]);
 
             $order->update([
                 'warehouse_number' => "TEMPWHR-{$order->id}",
-                'user_declared_freight' => $this->getValue("Z{$row}")
+                'user_declared_freight' => $this->getValue("Z{$row}"),
             ]);
             
             $this->addItem($order,$row);
@@ -99,7 +109,6 @@ class OrderImportService extends AbstractImportService
 
         } catch (\Exception $ex) {
             DB::rollback();
-
             \Log::info("{$row}: ".$ex->getMessage());
         }
     }
@@ -114,5 +123,7 @@ class OrderImportService extends AbstractImportService
             "contains_battery" => strlen($this->getValue("AE{$row}")) >0 ? true : false,
             "contains_perfume" => strlen($this->getValue("AF{$row}")) >0 ? true : false
         ]);
+
+        $order->doCalculations();
     }
 }

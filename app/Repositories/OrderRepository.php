@@ -102,17 +102,7 @@ class OrderRepository
             
             $order->items()->delete();
 
-            $orderValue =0;
-
-            $battriesCount = 0;
-            $perfumeCount = 0;
-            $flameableCount = 0 ;
             foreach ($request->get('items',[]) as $item) {
-                $orderValue += (optional($item)['quantity'] * optional($item)['value']);
-
-                $battriesCount += optional($item)['dangrous_item'] == 'contains_battery' ? 1: 0;
-                $perfumeCount += optional($item)['dangrous_item'] == 'contains_perfume' ? 1: 0;
-                $flameableCount += optional($item)['dangrous_item'] == 'contains_flammable_liquid' ? 1: 0;
 
                 $order->items()->create([
                     'sh_code' => optional($item)['sh_code'],
@@ -125,26 +115,8 @@ class OrderRepository
                 ]);
             }
 
+            
             $shippingService = ShippingService::find($request->shipping_service_id);
-
-            $shippingCost = $shippingService->getRateFor($order);
-            $additionalServicesCost = $order->services()->sum('price');
-            $commission = 0; // not implemented yet
-            $insurance = 0; // not implemented yet
-
-            $battriesExtra = $shippingService->contains_battery_charges * $battriesCount;
-            $pefumeExtra = $shippingService->contains_perfume_charges * $perfumeCount;
-            $flameableExtra = $shippingService->contains_flammable_liquid_charges * $flameableCount;
-
-            $dangrousGoodsCost = $battriesExtra + $pefumeExtra + $flameableExtra ;
-
-            $consolidation = $order->isConsolidated() ?  setting('CONSOLIDATION_CHARGES',0,null,true) : 0;
-
-            $total = $shippingCost + $additionalServicesCost + $commission + $insurance + $dangrousGoodsCost + $consolidation;
-            
-            $discount = 0; // not implemented yet
-            $gross_total = $total - $discount;
-            
 
             $order->update([
                 'customer_reference' => $request->customer_reference,
@@ -153,19 +125,12 @@ class OrderRepository
                 'tax_modality' => $request->tax_modality,
                 'is_invoice_created' => true,
                 'user_declared_freight' => $request->user_declared_freight,
-                
-                // figures
-                'consolidation' => $consolidation,
-                'order_value' => $orderValue,
-                'shipping_value' => $shippingCost,
-                'comission' => $commission,
-                'dangrous_goods' => $dangrousGoodsCost,
-                'total' => $total,
-                'discount' => $discount,
-                'gross_total' => $gross_total,
-                'insurance_value' => $insurance,
+                'comission' => 0,
+                'insurance_value' => 0,
                 'status' => $order->isPaid() ? ($order->status < Order::STATUS_ORDER ? Order::STATUS_ORDER : $order->status) : Order::STATUS_ORDER
             ]);
+
+            $order->doCalculations();
 
             DB::commit();
 

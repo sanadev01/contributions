@@ -75,7 +75,6 @@ abstract class AbstractImportService
 
     public function getValue($cell)
     {
-        \Log::info('CELL : '.$cell);
         return $this->workSheet->getCell($cell)->getValue();
     }
 }

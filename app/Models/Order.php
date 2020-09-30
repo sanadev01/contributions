@@ -62,6 +62,11 @@ class Order extends Model
         return $this->belongsToMany(Order::class,'order_orders','consolidated_with_id','order_id');
     }
 
+    public function shippingService()
+    {
+        return $this->belongsTo(ShippingService::class,'shipping_service_id');
+    }
+
     public function items()
     {
         return $this->hasMany(OrderItem::class);
@@ -221,7 +226,35 @@ class Order extends Model
         return "HD-{$this->id}";
     }
 
+    public function doCalculations()
+    {
+        $shippingService = $this->shippingService;
 
+        $shippingCost = $shippingService->getRateFor($this);
+        $additionalServicesCost = $this->services()->sum('price');
+
+        $battriesExtra = $shippingService->contains_battery_charges * ( $this->items()->batteries()->count() );
+        $pefumeExtra = $shippingService->contains_perfume_charges * ( $this->items()->perfumes()->count() );
+
+        $dangrousGoodsCost = $battriesExtra + $pefumeExtra;
+
+        $consolidation = $this->isConsolidated() ?  setting('CONSOLIDATION_CHARGES',0,null,true) : 0;
+
+        $total = $shippingCost + $additionalServicesCost + $this->commission + $this->insurance_value + $dangrousGoodsCost + $consolidation;
+        
+        $discount = 0; // not implemented yet
+        $gross_total = $total - $discount;
+
+        $this->update([
+            'consolidation' => $consolidation,
+            'order_value' => $this->items()->sum(\DB::raw('quantity * value')),
+            'shipping_value' => $shippingCost,
+            'dangrous_goods' => $dangrousGoodsCost,
+            'total' => $total,
+            'discount' => $discount,
+            'gross_total' => $gross_total
+        ]);
+    }
     /**
      * Accessors
      */
