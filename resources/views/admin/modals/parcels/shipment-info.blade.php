@@ -33,6 +33,16 @@
                     <td colspan="2">{{ $parcel->measurement_unit }} </td>
                 </tr>
                 <tr>
+                    <th colspan="6"> Invoice / Fatura </th>
+                </tr>
+                <tr>
+                    <th colspan="6">
+                        @if ($parcel->purchaseInvoice)
+                        <a href=" {{ $parcel->purchaseInvoice->getPath() }}" target="__blank">  {{ $parcel->purchaseInvoice->name }} </a> 
+                        @endif
+                    </th>
+                </tr>
+                <tr>
                     <th colspan="6"> Images </th>
                 </tr>
                 @foreach ($parcel->images as $image)

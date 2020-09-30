@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Mail\User\PaymentPaid;
 use App\Models\BillingInformation;
 use App\Models\Country;
 use App\Models\HandlingService;
@@ -200,6 +201,12 @@ class OrderRepository
                 'status' => Order::STATUS_PAYMENT_DONE
             ]);
             
+            try {
+                \Mail::send(new PaymentPaid($paymentInvoice));
+            } catch (\Exception $ex) {
+                \Log::info('Payment Paid email send error: '.$ex->getMessage());
+            }
+
             DB::commit();
 
             return true;

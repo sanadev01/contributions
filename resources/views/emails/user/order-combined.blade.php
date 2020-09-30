@@ -1,7 +1,7 @@
 @component('mail::message')
 @lang('email.consolidation-ready.Hello')
 
-@lang('email.consolidation-ready.Your consolidation request') {{ $order->shipment->whr_number }}
+@lang('email.consolidation-ready.Your consolidation request') {{ $order->warehouse_number }}
 
 @component('mail::button', ['url' => route('login') ])
 Dashboard

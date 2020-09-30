@@ -33,7 +33,7 @@ return  [
     ],
     'payment-done' => [
         'Hello' => 'Hello',
-        'Your payment was processed' => 'Your payment was processed successfully for :whr with the card ending in :last-four-digit',
+        'Your payment was processed' => 'Your payment was processed successfully for :invoiceId with the card ending in :last-four-digit',
         'Within 48 business hours' => 'Within 48 business hours your tracking number will be available and your may access it through your dashboard.'
     ],
     'tracking-available' => [

@@ -30,6 +30,7 @@ class ConsolidationRequest extends Mailable
      */
     public function build()
     {
+        app()->setLocale($this->order->user->locale);
         return $this->markdown('emails.user.consolidation-request')
             ->subject('Consolidation Request')
             ->to($this->order->user);

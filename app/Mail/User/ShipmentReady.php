@@ -2,7 +2,7 @@
 
 namespace App\Mail\User;
 
-use App\Models\PreAlert;
+use App\Models\Order;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -11,16 +11,16 @@ class ShipmentReady extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $preAlert;
+    public $order;
 
     /**
      * Create a new message instance.
      *
      * @param PreAlert $preAlert
      */
-    public function __construct(PreAlert $preAlert)
+    public function __construct(Order $order)
     {
-        $this->preAlert = $preAlert;
+        $this->order = $order;
     }
 
     /**
@@ -30,9 +30,9 @@ class ShipmentReady extends Mailable
      */
     public function build()
     {
-        app()->setLocale($this->preAlert->user->preferredLocale());
+        app()->setLocale($this->order->user->locale);
         return $this->markdown('emails.user.shipment-ready')
-                ->subject('Shipment Received on Warehouse.')
-                ->to($this->preAlert->user);
+                ->subject('Shipment Received on Warehouse. / Remessa recebida no armazém.')
+                ->to($this->order->user);
     }
 }

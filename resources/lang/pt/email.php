@@ -33,7 +33,7 @@ return  [
     ],
     'payment-done' => [
         'Hello' => 'Olá',
-        'Your payment was processed' => 'O pagamento correspondente ao :whr foi recebido com sucesso sob o cartão :last-four-digit',
+        'Your payment was processed' => 'O pagamento correspondente ao :invoiceId foi recebido com sucesso sob o cartão :last-four-digit',
         'Within 48 business hours' => 'Em até 48 horas úteis o seu código de rastreamento estará disponível em seu painel de controle.'
     ],
     'tracking-available' => [

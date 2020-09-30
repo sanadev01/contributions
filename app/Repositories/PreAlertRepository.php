@@ -2,11 +2,15 @@
 
 namespace App\Repositories;
 
+use App\Mail\User\ConsolidationRequest;
+use App\Mail\User\OrderCombined;
+use App\Mail\User\ShipmentReady;
 use App\Models\Document;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use DB;
+use Illuminate\Support\Facades\Mail;
 
 class PreAlertRepository
 {
@@ -75,13 +79,7 @@ class PreAlertRepository
         }
 
         if ( $request->hasFile('invoiceFile') ){
-            $invoice = Document::saveDocument($image);
-                $order->purchaseInvoice()->create([
-                    'name' => $invoice->getClientOriginalName(),
-                    'size' => $invoice->getSize(),
-                    'type' => $invoice->getMimeType(),
-                    'path' => $invoice->filename
-                ]);
+            $order->attachInvoice( $request->file('invoiceFile') );
         }
 
         if ($request->hasFile('images')) {
@@ -94,6 +92,12 @@ class PreAlertRepository
                     'path' => $document->filename
                 ]);
             }
+        }
+
+        try {
+            \Mail::send(new ShipmentReady($order));
+        } catch (\Exception $ex) {
+            \Log::info('Shipment ready email send error: '.$ex->getMessage());
         }
 
         return $order;
@@ -159,6 +163,12 @@ class PreAlertRepository
             }
         }
 
+        try {
+            \Mail::send(new OrderCombined($order));
+        } catch (\Exception $ex) {
+            \Log::info('Consolidation email send error: '.$ex->getMessage());
+        }
+
         return $order;
     }
 
@@ -217,6 +227,12 @@ class PreAlertRepository
             ]);
             
             DB::commit();
+
+            try {
+                \Mail::send(new ConsolidationRequest($order));
+            } catch (\Exception $ex) {
+                \Log::info('Consolidation request email send error: '.$ex->getMessage());
+            }
 
             return $order;
 

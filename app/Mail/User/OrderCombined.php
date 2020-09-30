@@ -33,9 +33,9 @@ class OrderCombined extends Mailable
      */
     public function build()
     {
-        app()->setLocale($this->order->user->preferredLocale());
+        app()->setLocale($this->order->user->locale);
         return $this->markdown('emails.user.order-combined')
-            ->subject('Shipments Combined')
+            ->subject('Parcels Consolidated / Parcelas Consolidadas')
             ->to($this->order->user);
     }
 }

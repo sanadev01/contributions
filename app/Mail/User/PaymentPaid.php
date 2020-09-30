@@ -2,7 +2,7 @@
 
 namespace App\Mail\User;
 
-use App\Models\Order;
+use App\Models\PaymentInvoice;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -11,16 +11,16 @@ class PaymentPaid extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $order;
+    public $invoice;
 
     /**
      * Create a new message instance.
      *
      * @param Order $order
      */
-    public function __construct(Order $order)
+    public function __construct(PaymentInvoice $invoice)
     {
-        $this->order = $order;
+        $this->invoice = $invoice;
     }
 
     /**
@@ -30,10 +30,10 @@ class PaymentPaid extends Mailable
      */
     public function build()
     {
-        app()->setLocale($this->order->user->preferredLocale());
+        app()->setLocale($this->invoice->user->locale);
         return $this->markdown('emails.user.payment_paid')
             ->bcc(config('hd.email.admin_email'), config('hd.email.admin_name'))
             ->subject('Shipment Paid by User')
-            ->to($this->order->user);
+            ->to($this->invoice->user);
     }
 }
