@@ -24,6 +24,8 @@ return [
     'Fixed Charges' => 'Cobranças Fixas',
     'Reports' => [
         'menu' => 'Relatórios',
-        'Shipment Report' => 'Relatório de Remessa'
+        'Shipment Report' => 'Relatório de Remessa',
+        'Tracking Report' => 'Relatório de Rastreamento',
+        'Orders Report' => 'Relatório de pedidos',
     ],
 ];

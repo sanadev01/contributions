@@ -21,12 +21,17 @@
 <script src="{{ asset('app-assets/vendors/js/tables/datatable/datatables.min.js') }}"></script>
 
 <!-- boostrap js cdn start -->
-{{-- <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> --}}
-{{-- <script src="//netdna.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> --}}
+<script src="{{ asset('app-assets/vendors/js/pickers/pickadate/picker.js') }}"></script>
+<script src="{{ asset('app-assets/vendors/js/pickers/pickadate/picker.date.js') }}"></script>
 <!-- boostrap js cdn end -->
 
 {{-- <script src="{{ mix('js/app.js') }}"></script> --}}
 <script>
+    $('.datepicker').pickadate({
+        format: 'yyyy-m-d',
+        max: 0
+    });
+
    $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

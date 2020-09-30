@@ -96,6 +96,7 @@ Route::namespace('Admin')
             ->prefix('reports')
             ->group(function(){
                 Route::get('user-shipments', \ShipmentPerUserReportController::class)->name('user-shipments');
+                Route::resource('order-trackings', TrackingReportController::class)->only(['index','store']);
         });
 
         Route::post('users/{user}/login', AnonymousLoginController::class)->name('users.login');

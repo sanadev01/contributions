@@ -140,6 +140,15 @@
                         </a>
                     </li>
                     @endcan
+
+                    @can('downloadTrackingReport', App\Models\Reports::class)
+                    <li class="{{ $isActive(['admin.reports.order-trackings.index']) }}">
+                        <a href="{{ route('admin.reports.order-trackings.index') }}">
+                            <i class="feather icon-circle"></i>
+                            <span class="menu-title">@lang('menu.Reports.Tracking Report')</span>
+                        </a>
+                    </li>
+                    @endcan
                 </ul>
             </li>
 

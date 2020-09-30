@@ -15,4 +15,9 @@ class ReportsPolicy
     {
         return $user->hasPermission('view-user-shipment-report');
     }
+
+    public function downloadTrackingReport(User $user)
+    {
+        return $user->hasPermission('can-download-tracking-report');
+    }
 }

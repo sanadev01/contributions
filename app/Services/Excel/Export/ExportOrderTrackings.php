@@ -6,13 +6,13 @@ use Illuminate\Support\Collection;
 
 class ExportOrderTrackings extends AbstractExportService
 {
-    private $trackings;
+    private $orders;
 
     private $currentRow = 1;
 
-    public function __construct(Collection $trackings)
+    public function __construct(Collection $orders)
     {
-        $this->trackings = $trackings;
+        $this->orders = $orders;
 
         parent::__construct();
     }
@@ -30,17 +30,15 @@ class ExportOrderTrackings extends AbstractExportService
 
         $row = $this->currentRow;
 
-        foreach ($this->trackings as $tracking) {
-            $order = $tracking->order;
+        foreach ($this->orders as $order) {
             $user = $order->user;
-            $shipment = $order->shipment;
 
             $this->setCellValue('A'.$row, $user->pobox_number);
             $this->setCellValue('B'.$row, $user->name);
             $this->setCellValue('C'.$row, $user->email);
-            $this->setCellValue('D'.$row, $shipment->whr_number);
-            $this->setCellValue('E'.$row, $tracking->tracking_number);
-            $this->setCellValue('F'.$row, $tracking->link);
+            $this->setCellValue('D'.$row, $order->warehouse_number);
+            $this->setCellValue('E'.$row, $order->corrios_tracking_code);
+            $this->setCellValue('F'.$row, $order->order_date);
             $row++;
         }
 
@@ -62,10 +60,10 @@ class ExportOrderTrackings extends AbstractExportService
         $this->setCellValue('D1', 'Whr#');
 
         $this->setColumnWidth('E', 20);
-        $this->setCellValue('E1', 'Tracking ID');
+        $this->setCellValue('E1', 'Tracking Code');
 
         $this->setColumnWidth('F', 20);
-        $this->setCellValue('F1', 'Link');
+        $this->setCellValue('F1', 'Date');
 
         $this->setBackgroundColor('A1:F1', '2b5cab');
         $this->setColor('A1:F1', 'FFFFFF');

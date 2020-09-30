@@ -1,9 +1,4 @@
 @extends('layouts.master')
-
-@section('css')
-    <link rel="stylesheet" href="{{ asset('app-assets/vendors/css/pickers/pickadate/pickadate.css') }}">
-@endsection
-
 @section('page')
     <section id="prealerts">
         <div class="row">
@@ -94,7 +89,7 @@
                                                         @user
                                                         <label>@lang('parcel.Order Date') <span class="text-danger">*</span></label>
                                                         @enduser
-                                                        <input type="text" name="order_date" class="form-control order_date_picker" value="{{ old('order_date',$parcel->order_date) }}" required="" 
+                                                        <input type="text" name="order_date" class="form-control order_date_picker datepicker" value="{{ old('order_date',$parcel->order_date) }}" required="" 
                                                         placeholder="@user @lang('parcel.Order Date') @enduser @admin @lang('parcel.Arrival Date') @endadmin"
                                                         >
                                                         @error('order_date')
@@ -173,18 +168,4 @@
             </div>
         </div>
     </section>
-@endsection
-
-
-@section('js')
-    <script src="{{ asset('app-assets/vendors/js/pickers/pickadate/picker.js') }}"></script>
-    <script src="{{ asset('app-assets/vendors/js/pickers/pickadate/picker.date.js') }}"></script>
-    <script !src="">
-        if ($(".order_date_picker").length > 0) {
-            $('.order_date_picker').pickadate({
-                format: 'yyyy-m-d',
-                max: 0
-            });
-        }
-    </script>
 @endsection

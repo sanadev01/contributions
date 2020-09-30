@@ -24,7 +24,9 @@ return [
     'Fixed Charges' => 'Fixed Charges',
     'Reports' => [
         'menu' => 'Reports',
-        'Shipment Report' => 'Shipment Report'
+        'Shipment Report' => 'Shipment Report',
+        'Tracking Report' => 'Tracking Report',
+        'Orders Report' => 'Orders Report',
     ],
 ];
  
