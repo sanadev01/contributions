@@ -52,6 +52,8 @@
                         <option value="">@lang('parcel.All')</option>
                         <option value="transit">@lang('parcel.Transit')</option>
                         <option value="ready">@lang('parcel.Ready')</option>
+                        <option value="25">@lang('consolidation.Consolidation Requested')</option>
+                        <option value="26">@lang('consolidation.Consolidated')</option>
                     </select>
                 </th>
                 <th></th>

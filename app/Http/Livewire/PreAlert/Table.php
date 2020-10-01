@@ -111,11 +111,18 @@ class Table extends Component
     public function updatedStatus()
     {
         if ($this->status === 'transit') {
-            $this->query = $this->getQuery()->where('is_shipment_added',true);
+            $this->query = $this->getQuery()->where('is_shipment_added',false)->where('status','<>',Order::STATUS_CONSOLIDATOIN_REQUEST);
         }
 
         if ($this->status === 'ready') {
-            $this->query = $this->getQuery()->where('is_shipment_added',false);
+            $this->query = $this->getQuery()->where('is_shipment_added',true)->where('status','<>',Order::STATUS_CONSOLIDATOIN_REQUEST);
+        }
+
+        if ($this->status === '25') {
+            $this->query = $this->getQuery()->where('status',$this->status);
+        }
+        if ($this->status === '26') {
+            $this->query = $this->getQuery()->where('status',$this->status);
         }
     }
 
