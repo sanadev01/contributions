@@ -68,8 +68,6 @@
                     <select class="form-control" wire:model="status">
                         <option value="">All</option>
                         <option value="{{ App\Models\Order::STATUS_ORDER }}">STATUS_ORDER</option>
-                        <option value="{{ App\Models\Order::STATUS_CONSOLIDATOIN_REQUEST }}">STATUS_CONSOLIDATOIN_REQUEST</option>
-                        <option value="{{ App\Models\Order::STATUS_CONSOLIDATED }}">STATUS_CONSOLIDATED</option>
                         <option value="{{ App\Models\Order::STATUS_PAYMENT_PENDING }}">STATUS_PAYMENT_PENDING</option>
                         <option value="{{ App\Models\Order::STATUS_PAYMENT_DONE }}">STATUS_PAYMENT_DONE</option>
                         <option value="{{ App\Models\Order::STATUS_SHIPPED }}">STATUS_SHIPPED</option>
