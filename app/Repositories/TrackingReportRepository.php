@@ -9,7 +9,12 @@ class TrackingReportRepository
 {
     public function get(Request $request)
     {
-        $query = Order::query();
+        $query = Order::query()
+            ->where('status','>=',Order::STATUS_ORDER)
+            ->where(function($query){
+                $query->where('is_paid',true)
+                    ->orWhereHas('paymentInvoices');
+            });
 
         if ( $request->start_date ){
             $query->where('order_date','>=', $request->start_date);
