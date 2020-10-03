@@ -163,10 +163,12 @@ class PreAlertRepository
             }
         }
 
-        try {
-            \Mail::send(new OrderCombined($order));
-        } catch (\Exception $ex) {
-            \Log::info('Consolidation email send error: '.$ex->getMessage());
+        if( $order->isConsolidated() ){
+            try {
+                \Mail::send(new OrderCombined($order));
+            } catch (\Exception $ex) {
+                \Log::info('Consolidation email send error: '.$ex->getMessage());
+            }
         }
 
         return $order;
