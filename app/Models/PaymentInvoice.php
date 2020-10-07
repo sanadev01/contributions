@@ -25,6 +25,20 @@ class PaymentInvoice extends Model
 
     public function markPaid(bool $paid)
     {
+        if ( $paid ){
+            $this->orders()->update([
+                'is_paid' => true,
+                'status' => Order::STATUS_PAYMENT_DONE
+            ]);
+        }
+
+        if ( !$paid ){
+            $this->orders()->update([
+                'is_paid' => false,
+                'status' => Order::STATUS_PAYMENT_PENDING
+            ]);
+        }
+
         return $this->update([
             'is_paid' => $paid
         ]);
