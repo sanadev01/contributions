@@ -7,6 +7,9 @@
         <td>{{ optional($parcel->user)->pobox_number }}</td>
     @endadmin
     <td>
+        @if ( $parcel->isArrivedAtWarehouse() )
+            <i class="fa fa-star text-success p-1"></i>
+        @endif
         @if($parcel->isShipmentAdded())
             <a href="#" class="d-block" title="@lang('parcel.Show Details')" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.parcel.shipment-info',$parcel) }}">
                 {{ $parcel->warehouse_number }}

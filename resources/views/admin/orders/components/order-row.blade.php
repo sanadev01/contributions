@@ -3,6 +3,9 @@
         {{ optional($order->order_date)->format('m/d/Y') }}
     </td>
     <td style="width: 200px;">
+        @if ( $order->isArrivedAtWarehouse() )
+            <i class="fa fa-star text-success p-1"></i>
+        @endif
         @if( $order->warehouse_number)
             <span>
                 <a href="#" title="Click to see Shipment" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.parcel.shipment-info',$order) }}">
