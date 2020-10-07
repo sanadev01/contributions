@@ -93,9 +93,4 @@ class PaymentInvoicePolicy
     {
         //
     }
-
-    public function canChnageStatus(User $user, PaymentInvoice $paymentInvoice)
-    {
-        return false;
-    }
 }
