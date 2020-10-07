@@ -23,6 +23,13 @@ class PaymentInvoice extends Model
         return $this->hasMany(Transaction::class,'invoice_id');
     }
 
+    public function markPaid(bool $paid)
+    {
+        return $this->update([
+            'is_paid' => $paid
+        ]);
+    }
+
     public function isPaid()
     {
         return $this->is_paid;
