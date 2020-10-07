@@ -52,8 +52,7 @@
                                     </div>  
                                 </div>
 
-                                <h3>Api Settings</h3>
-                                <hr>
+                                <br> 
 
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">Enable API<span class="text-danger"></span></label>
@@ -62,41 +61,10 @@
                                         <div class="help-block"></div>
                                     </div>
                                 </div>
-                                <livewire:token-generator :user_id="$user->id" />
 
-                                <h3>Leve Settings</h3>
                                 <hr>
 
-                                <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">Market Place Name<span class="text-danger"></span></label>
-                                    <div class="col-md-6">
-                                        <input type="text" name="market_place_name" class="form-control" value="{{ $user->market_place_name }}"> 
-                                        <div class="help-block"></div>
-                                    </div>
-                                </div>
-
-                                <h3>Profile Settings</h3>
-                                <hr>
-                                <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">Email<span class="text-danger"></span></label>
-                                    <div class="col-md-6">
-                                        <input type="text" name="user_email" class="form-control" value="{{ $user->email }}"> 
-                                        @error('user_email')
-                                        <div class="help-block text-danger">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">Update Password<span class="text-danger"></span></label>
-                                    <div class="col-md-6">
-                                        <input type="password" name="password" class="form-control" value=""> 
-                                        @error('password')
-                                        <div class="help-block text-danger">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-
+                                    <livewire:token-generator :user_id="$user->id" />
 
                                 <div class="row mt-1">
                                     <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">

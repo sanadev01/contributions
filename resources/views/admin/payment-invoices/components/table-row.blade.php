@@ -14,18 +14,15 @@
     </td>
 
     <td>
-        <a href="{{ auth()->user()->can('canChnageStatus',$invoice) ? route('admin.payment-invoices.paid.toggle',$invoice):'#' }}" title="{{ auth()->user()->can('canChnageStatus',$invoice) ? 'Click to Toggle Status': '' }}">
-            @if ( $invoice->isPaid() )
-
+        @if ( $invoice->isPaid() )
             <span class="btn btn-sm btn-success">
                 @lang('invoice.Paid')
             </span>
-            @else
+        @else
             <span class="btn btn-sm btn-danger">
                 @lang('invoice.Pending')
             </span>
-            @endif
-        </a>
+        @endif
     </td>
     
     <td>
