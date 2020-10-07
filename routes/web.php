@@ -68,6 +68,7 @@ Route::namespace('Admin')
                 Route::resource('orders', OrdersSelectController::class)->only(['index','store']);
                 Route::resource('invoice', OrdersInvoiceController::class)->only(['show','store','edit','update']);
                 Route::resource('invoice.checkout', OrdersCheckoutController::class)->only(['index','store']);
+                Route::get('invoice/{invoice}/toggle_paid', \PaymentStatusToggleController::class)->name('paid.toggle');
         });
 
         Route::namespace('Rates')
