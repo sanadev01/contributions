@@ -49,6 +49,7 @@ return [
             'Contains Perfume' => 'Contains Perfume',
             'Contains Flammable Liquid' => 'Contains Flammable Liquid',
         ],
+        'declaration' => '<h3 class="text-danger">Disclaimer</h3> <br> <p class="h3 text-danger">By clicking on save order you agree that you have read and confirm that all information in this statement has been filled out by me and is correct and I am 100% responsible for the information contained herein.</p>'
     ],
     'services' => [
         'handling-services' => 'Additional Services',

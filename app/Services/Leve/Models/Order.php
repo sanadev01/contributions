@@ -4,7 +4,8 @@ namespace App\Services\Leve\Models;
 
 class Order extends BaseModel
 {
-    public $order_number = 0;
+    public $order_number = null;
+    public $external_reference = null;
     public $fiscal_number = 0;
     public $purchase_date = null;
     public $weight = 0;

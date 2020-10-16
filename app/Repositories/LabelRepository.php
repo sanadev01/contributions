@@ -60,6 +60,7 @@ class LabelRepository
 
         $leveOrder = new LeveOrder();
         $leveOrder->order_number = $order->warehouse_number;
+        $leveOrder->external_reference = $order->customer_reference;
         $leveOrder->purchase_date = $order->created_at->toIso8601String();
         $leveOrder->weight =  round($order->isWeightInKg() ? $order->weight  : UnitsConverter::poundToKg($order->weight),2) ;
         $leveOrder->width =  $width > 11 ? $width : 11;
