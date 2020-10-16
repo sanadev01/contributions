@@ -49,6 +49,7 @@ return [
             'Contains Perfume' => 'Contém Perfume',
             'Contains Flammable Liquid' => 'Contém líquido inflamável',
         ],
+        'declaration' => '<h3 class="text-danger">Aviso Legal</h3> <br> <p class="h3 text-danger"> Ao clicar em salvar pedido, você concorda que li e confirmo que todas as informações nesta declaração foram preenchidas por mim e estão corretas e sou 100% responsável pelas informações que aqui constam.</p>'
     ],
     'services' => [
         'handling-services' => 'Serviços adicionais:',
