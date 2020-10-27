@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\State;
 use App\Services\Converters\UnitsConverter;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class OrderCreatedController extends Controller
 {
@@ -73,6 +74,7 @@ class OrderCreatedController extends Controller
 
         } catch (\Exception $ex) {
             DB::rollback();
+            \Log::info('Error: '. $ex->getMessage());
         }
     }
 }
