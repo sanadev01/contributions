@@ -23,4 +23,14 @@ class UnitsConverter
     {
         return round($pounds / 2.205, 2);
     }
+
+    public static function gramsToKg($grams)
+    {
+        return round($grams / 1000, 2);
+    }
+
+    public static function kgToGrams($kgs)
+    {
+        return round($kgs * 1000, 2);
+    }
 }

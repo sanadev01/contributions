@@ -9,6 +9,7 @@ return [
     'transactions' => 'Transactions',
     'addresses' => 'Addresses',
     'calculator' => 'Calculator',
+    'connect' => 'Connect',
     'support tickets' => 'Support Tickets',
     'profile' => 'Profile',
     'Parcels' => 'Parcels',

@@ -43,5 +43,7 @@ class AppServiceProvider extends ServiceProvider
         Blade::directive('enduser', function () {
             return '<?php } ?>';
         });
+        
+        \URL::forceScheme('https');
     }
 }

@@ -9,6 +9,7 @@ return [
     'transactions' => 'Transações',
     'addresses' => 'Endereços',
     'calculator' => 'Calculadora',
+    'connect' => 'Conectar',
     'support tickets' => 'Assistência',
     'profile' => 'Perfil',
     'Parcels' => 'Pacotes',
