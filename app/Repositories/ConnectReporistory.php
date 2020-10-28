@@ -13,7 +13,7 @@ class ConnectReporistory extends Model
         $query = Connect::query();
         
         if ( Auth::user()->isUser() ){
-            return $query->where('user_id',Auth::id())->with(['user']);
+            return $query->where('user_id',Auth::id());
         }
 
         return $query->paginate(50);
