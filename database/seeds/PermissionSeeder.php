@@ -265,6 +265,18 @@ class PermissionSeeder extends Seeder
                 'slug' => 'delete_ticket',
                 'description' => 'Delete Ticket',
             ],
+            [
+                'slug' => 'view_connects',
+                'description' => 'List All Integrations',
+            ],
+            [
+                'slug' => 'create_connect',
+                'description' => 'Create Integrations',
+            ],
+            [
+                'slug' => 'delete_connect',
+                'description' => 'Delete Integrations',
+            ],
             
         ];
     }

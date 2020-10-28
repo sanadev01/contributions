@@ -45,6 +45,15 @@
                 </li>
             @endcan
 
+            @can('viewAny', App\Models\Connect::class)
+                <li class="nav-item {{ $isActive(['admin.connect.index']) }}">
+                    <a class="nav-link" href="{{ route('admin.connect.index') }}">
+                        <i class="fa fa-plug"></i>
+                        <span data-i18n="Apps">@lang('menu.connect')</span>
+                    </a>
+                </li>
+            @endcan
+
             @if ( 
                 auth()->user()->can('viewAny', App\Models\ProfitPackage::class) ||
                 auth()->user()->can('viewAny', App\Models\HandlingService::class) ||
@@ -107,6 +116,7 @@
                 </ul>
             </li>
             @endif
+
 
             @can('viewAny', App\Models\Address::class)
                 <li class="nav-item {{ $isActive(['admin.addresses.index','admin.addresses.edit','admin.addresses.create']) }}">

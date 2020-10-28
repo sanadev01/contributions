@@ -11,6 +11,8 @@
 |
 */
 
+use App\Models\Connect;
+
 Route::get('/', function () {
     return redirect('login');
 });
@@ -80,6 +82,15 @@ Route::namespace('Admin')
                 Route::resource('shipping-rates', RateController::class)->only(['create', 'store', 'index']);
             });
 
+        Route::namespace('Connect')
+            ->prefix('connect')
+            ->as('connect.')
+            ->group(function(){
+                Route::resource('/', ConnectController::class)->only(['index', 'create']);
+                Route::delete('connect/{connect}', [ App\Http\Controllers\Admin\Connect\ConnectController::class,'destroy'])->name('destroy');
+                Route::resource('shopify', ConnectShopifyController::class)->only(['create','store']);
+            });
+    
         Route::resource('settings', SettingController::class)->only(['index', 'store']);
         Route::resource('profile', ProfileController::class)->only(['index', 'store']);
         Route::resource('users', UserController::class)->only(['index','destroy']);
@@ -115,6 +126,20 @@ Route::namespace('Admin')
                 Route::get('order/{order}/invoice', \OrderInvoiceModalController::class)->name('order.invoice');
         });
 });
+
+Route::namespace('Admin\Webhooks')
+        ->prefix('webhooks')
+        ->as('admin.webhooks.')
+        ->group(function(){
+            
+            Route::namespace('Shopify')
+                    ->prefix('shopify')
+                    ->as('shopify.')
+                    ->group(function(){
+                        Route::get('redirect_uri', RedirectController::class)->name('redirect_uri');
+                        Route::post('shopify/order/create', OrderCreatedController::class)->name('order.create');
+                    });
+        });
 
 Route::get('media/get/{document}', function (App\Models\Document $document) {
     if (! Storage::exists($document->getStoragePath())) {
