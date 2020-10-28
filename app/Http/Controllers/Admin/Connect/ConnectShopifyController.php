@@ -4,11 +4,17 @@ namespace App\Http\Controllers\Admin\Connect;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Connect\Shopify\CreateRequest;
+use App\Models\Connect;
 use App\Services\StoreIntegrations\Shopify;
 use Illuminate\Http\Request;
 
 class ConnectShopifyController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Connect::class);
+    }
+
     public function create()
     {
         return view('admin.connects.shopify.create');

@@ -20,7 +20,7 @@ class ConnectPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return $user->hasPermission('view_connects');
     }
 
     /**
@@ -43,7 +43,7 @@ class ConnectPolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->hasPermission('create_connect');
     }
 
     /**
@@ -67,7 +67,7 @@ class ConnectPolicy
      */
     public function delete(User $user, Connect $connect)
     {
-        //
+        return $user->hasPermission('delete_connect') && $user->id == $connect->user_id;
     }
 
     /**

@@ -10,6 +10,11 @@ use Illuminate\Http\Request;
 
 class ConnectController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Connect::class);
+    }
+
     /**
      * Display a listing of the resource.
      *
