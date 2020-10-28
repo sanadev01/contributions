@@ -16,6 +16,10 @@ class ConnectReporistory extends Model
             return $query->where('user_id',Auth::id());
         }
 
+        \Log::info(
+            (clone $query)->toSql()
+        );
+        
         return $query->paginate(50);
     }
 }
