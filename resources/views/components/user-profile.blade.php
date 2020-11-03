@@ -7,7 +7,7 @@
             <span class="user-status">@lang('user.Available')</span>
         </div>
         <span>
-            <img class="round" src="{{ asset('app-assets/images/portrait/small/avatar-s-11.jpg') }}" alt="avatar" height="40" width="40">
+            <img class="round" src="{{ auth()->user()->getImage() }}" alt="avatar" height="40" width="40">
         </span>
     </a>
     <div class="dropdown-menu dropdown-menu-right">

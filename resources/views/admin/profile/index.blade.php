@@ -84,6 +84,15 @@
                                     </div>
                                 </div>
 
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">@lang('profile.Profile Picture')<span class="text-danger">*</span></label>
+                                    <div class="col-md-6">
+                                        <input type="file" accept="image/*" class="form-control" name="image" placeholder="">
+                                        <div class="help-block"></div>
+                                        <img src="{{ auth()->user()->getImage() }}" style="width: 100px; height:100px;" alt="">
+                                    </div>
+                                </div>
+
                                 <h3>@lang('profile.Pobox Information')</h3>
                                 <hr>
                                     <div class="controls row mb-1 align-items-center">

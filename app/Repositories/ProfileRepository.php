@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Document;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Profie;
@@ -38,21 +39,20 @@ class ProfileRepository
                     'password' => bcrypt($request->password)
                 ]);
             }
-    
-            // if (Auth::user()->isAdmin()) {
-            //     $pobox = PoBox::first() ?? new PoBox();
-            //     $pobox->address = $request->pobox_address;
-            //     $pobox->extra_data = [
-            //         'city' => $request->pobox_city, 
-            //         'state' => $request->pobox_state, 
-            //         'country' => $request->pobox_country, 
-            //         'zipcode' => $request->pobox_zipcode, 
-            //         'phone' => $request->pobox_phone, 
-            //     ];
-    
-            //     $pobox->save();
-            // }
-    
+
+            if ( $request->hasFile('image') ){
+                $file = Document::saveDocument($request->file('image'));
+                Auth::user()->image()->delete();
+                $image = Document::create([
+                    'name' => $file->getClientOriginalName(),
+                    'size' => $file->getSize(),
+                    'type' => $file->getMimeType(),
+                    'path' => $file->filename
+                ]);
+                Auth::user()->image()->associate($image)->save();
+
+                // dd($image);
+            }
 
             return true;
 

@@ -8,6 +8,7 @@ return [
     '* (Format International)' => '* (Format International)',
     'Password' => 'Password',
     'Confirm Password' => 'Confirm Password',
+    'Profile Picture' => 'Profile Picture',
     'Address' => 'Address',
     'Street No' => 'Street No',
     'Country' => 'Country',
