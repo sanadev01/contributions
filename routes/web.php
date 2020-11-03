@@ -11,8 +11,6 @@
 |
 */
 
-use App\Models\Connect;
-
 Route::get('/', function () {
     return redirect('login');
 });
@@ -137,6 +135,11 @@ Route::namespace('Admin\Webhooks')
                     ->as('shopify.')
                     ->group(function(){
                         Route::get('redirect_uri', RedirectController::class)->name('redirect_uri');
+
+                        Route::any('customers/redact', ShopifyRedactController::class)->name('redirect_uri');
+                        Route::any('shop/redact', ShopifyRedactController::class)->name('redirect_uri');
+                        Route::any('customers/data_request', ShopifyRedactController::class)->name('redirect_uri');
+
                         Route::post('shopify/order/create', OrderCreatedController::class)->name('order.create');
                     });
         });
