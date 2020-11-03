@@ -11,8 +11,6 @@
 |
 */
 
-use App\Models\Connect;
-
 Route::get('/', function () {
     return redirect('login');
 });
@@ -45,6 +43,7 @@ Route::namespace('Admin')
         Route::resource('orders',OrderController::class)->only('index','destroy');
 
         Route::namespace('Order')->group(function () {
+            Route::get('orders/{order}/duplicate',DuplicateOrderController::class)->name('orders.duplicate');
             Route::resource('orders.sender',OrderSenderController::class)->only('index','store');
             Route::resource('orders.recipient',OrderRecipientController::class)->only('index','store');
             Route::resource('orders.services',OrderServicesController::class)->only('index','store');
@@ -137,6 +136,11 @@ Route::namespace('Admin\Webhooks')
                     ->as('shopify.')
                     ->group(function(){
                         Route::get('redirect_uri', RedirectController::class)->name('redirect_uri');
+
+                        Route::any('customers/redact', ShopifyRedactController::class)->name('redirect_uri');
+                        Route::any('shop/redact', ShopifyRedactController::class)->name('redirect_uri');
+                        Route::any('customers/data_request', ShopifyRedactController::class)->name('redirect_uri');
+
                         Route::post('shopify/order/create', OrderCreatedController::class)->name('order.create');
                     });
         });

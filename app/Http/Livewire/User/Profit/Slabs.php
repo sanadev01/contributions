@@ -16,7 +16,7 @@ class Slabs extends Component
         $this->slabs = old('slab',[]);
         if ( $profitId ){
             $profitPackage = ProfitPackage::find($profitId) ?? new ProfitPackage;
-            $this->slabs = $profitPackage->data;
+            $this->slabs = array_unique(array_merge($profitPackage->data,$this->slabs),SORT_REGULAR);
         }
 
     }

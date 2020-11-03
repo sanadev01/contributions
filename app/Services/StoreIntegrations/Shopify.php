@@ -21,8 +21,8 @@ class Shopify{
 
     public function __construct()
     {
-        $this->key = '84287dc92ea31dbe2e570696244cd922';
-        $this->secret = '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';
+        $this->key = 'b7a4cd09325d145228a156632e865176';
+        $this->secret = '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';
 
     }
 

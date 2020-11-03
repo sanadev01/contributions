@@ -17,4 +17,5 @@ class Order extends BaseModel
     public $security_price = 0;
     public $mkt_place_name = null;
     public $sender_name = null;
+    public $hazardous_contents_labels = [];
 }

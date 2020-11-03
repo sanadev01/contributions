@@ -22,15 +22,17 @@ class NCMImportService extends AbstractImportService
 
     public function importShCodes()
     {
+        ShCode::truncate();
+
         $shCodes = collect();
 
         foreach (range(2, 1653) as $row) {
-            if ( $this->workSheet->getCell('B'.$row)->getValue() == 'SIM' ) continue;
+            if ( strlen($this->workSheet->getCell('D'.$row)->getValue()) <=0  ) continue;
             
             $shCodes->push([
-                'code' => $this->workSheet->getCell('A'.$row)->getValue(),
-                'description' => $this->getDescription($row),
-                'chapter' => $this->workSheet->getCell('D'.$row)->getValue()
+                'code' => $this->workSheet->getCell('D'.$row)->getValue(),
+                'description' => $this->getDescription($row)
+                // 'chapter' => $this->workSheet->getCell('D'.$row)->getValue()
             ]);
         }
 
@@ -44,10 +46,9 @@ class NCMImportService extends AbstractImportService
     private function getDescription($row){
         $description = "";
 
-        $description .= $this->workSheet->getCell('F'.$row)->getValue();
-        $description .= $this->workSheet->getCell('E'.$row)->getValue();
-        $description .= $this->workSheet->getCell('D'.$row)->getValue();
-        $description .= $this->workSheet->getCell('C'.$row)->getValue();
+        $description .= $this->workSheet->getCell('A'.$row)->getValue().'-------';
+        $description .= $this->workSheet->getCell('B'.$row)->getValue().'-------';
+        $description .= $this->workSheet->getCell('C'.$row)->getValue().'-------';
 
         return $description;
     }

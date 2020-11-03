@@ -53,6 +53,20 @@
                                         <th>@lang('invoice.Warehouse')#</th>
                                         <th>@lang('invoice.Customer Reference')#</th>
                                         <th>@lang('invoice.Date')</th>
+                                        @admin
+                                        <th>
+                                            Shipping
+                                        </th>
+                                        <th>
+                                            Additional Services
+                                        </th>
+                                        <th>
+                                            Conslidation
+                                        </th>
+                                        <th>
+                                            Restricted Items
+                                        </th>
+                                        @endadmin
                                         <th>@lang('invoice.Amount')</th>
                                     </tr>
                                 </thead>
@@ -64,7 +78,11 @@
                                             <td>{{ $order->warehouse_number }}</td>
                                             <td>{{ $order->customer_reference }}</td>
                                             <td>{{ optional($order->created_at)->format('Y-m-d') }}</td>
-                                            <td>{{ $order->gross_total }}</td>
+                                            <td>{{ $order->shipping_value }} USD</td>
+                                            <td>{{ $order->services()->sum( 'price' ) }} USD</td>
+                                            <td>{{ $order->consolidation }} USD</td>
+                                            <td>{{ $order->dangrous_goods??0 }} USD</td>
+                                            <td>{{ $order->gross_total }} USD</td>
                                         </tr>  
                                     @endforeach   
                                     <tr class="border-top-light">

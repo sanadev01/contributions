@@ -8,6 +8,7 @@ return [
     '* (Format Itnernational)' => '* (Formato internacional)',
     'Password' => 'Senha',
     'Confirm Password' => 'Confirme a Senha',
+    'Profile Picture' => 'Foto do perfil',
     'Address' => 'Endereço',
     'Street No' => 'Rua Não',
     'Country' => 'País',
