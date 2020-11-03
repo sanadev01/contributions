@@ -55,13 +55,20 @@ class PaymentInvoiceRepository
 
     public function createInvoice(Request $request)
     {
+        $orders = Order::find($request->get('orders',[]));
+
+        $orders = collect($orders->filter(function($order){
+            return !$order->getPaymentInvoice();
+        })->all());
+
         $invoice = PaymentInvoice::create([
             'uuid' => PaymentInvoice::generateUUID(),
             'paid_by' => Auth::id(),
-            'order_count' => count($request->get('orders',[]))
+            'order_count' => $orders->count()
         ]);
 
-        $invoice->orders()->sync($request->get('orders',[]));
+
+        $invoice->orders()->sync($orders->pluck('id')->toArray());
 
         $invoice->update([
             'total_amount' => $invoice->orders()->sum('gross_total')
@@ -72,7 +79,14 @@ class PaymentInvoiceRepository
 
     public function updateInvoice(Request $request,PaymentInvoice $invoice)
     {
-        $invoice->orders()->sync($request->get('orders',[]));
+        $orders = Order::find($request->get('orders',[]));
+        // dd($orders);
+
+        $orders = collect($orders->filter(function($order) use($invoice){
+            return !$order->getPaymentInvoice() || $order->getPaymentInvoice()->id === $invoice->id;
+        })->all());
+
+        $invoice->orders()->sync($orders->pluck('id')->toArray());
 
         $invoice->update([
             'total_amount' => $invoice->orders()->sum('gross_total'),

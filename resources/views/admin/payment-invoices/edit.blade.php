@@ -37,80 +37,66 @@
                                 <h2 class="mt-2">@lang('invoice.Orders in Invoice')</h2>
                                 <div class="row justify-content-center">
                                     <div class="col-md-12">
-                                        <div class="grid-wrapper w-auto">
-
-                                            @foreach ($invoice->orders as $order)
-                                                <div class="card-wrapper h-auto my-2 w-auto">
-                                                    <input class="c-card" type="checkbox" name="orders[]" id="{{$order->id}}" checked value="{{$order->id}}">
-                                                    <div class="card-content">
-                                                        <div class="card-state-icon"></div>
-                                                        <label for="{{$order->id}}">
-                                                            <div class="h5 py-1 px-2">
-                                                                <strong class="border-bottom-dark mr-2">@lang('invoice.Recipient'):</strong> <span class="text-info">{{ optional($order->recipient)->first_name }} {{ optional($order->recipient)->last_name }}</span>
-                                                            </div>
-                                                            <div class="h5 py-1 px-2">
-                                                                <strong class="border-bottom-dark mr-2">@lang('invoice.Merchant'):</strong> <span class="text-info">{{ $order->merchant }}</span>
-                                                            </div>
-                                                            <div class="h5 py-1 px-2">
-                                                                <strong class="border-bottom-dark mr-2">@lang('invoice.Customer Refrence'):</strong> <span class="text-info">{{ $order->customer_reference }}</span>
-                                                            </div>
-                                                            <div class="h5 py-1 px-2">
-                                                                <strong class="border-bottom-dark mr-2">@lang('invoice.Tracking ID'):</strong> <span class="text-info">{{ $order->tracking_id }}</span>
-                                                            </div>
-                                                            <div class="h5 py-1 px-2">
-                                                                <strong class="border-bottom-dark mr-2">@lang('invoice.Tracking Code')</strong> <span class="text-info">{{  $order->corrios_tracking_code }}</span>
-                                                            </div>
-                                                            <div class="h5 py-1 px-2">
-                                                                <strong class="border-bottom-dark mr-2">@lang('invoice.WHR')#</strong> <span class="text-info">{{  $order->warehouse_number }}</span>
-                                                            </div>
-                                                            <div class="h5 py-1 px-2">
-                                                                <strong class="border-bottom-dark mr-2">@lang('invoice.Value')</strong> <span class="text-info">{{  number_format($order->gross_total,2) }} USD</span>
-                                                            </div>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr>
-                                <h2 class="mt-4">@lang('invoice.Order Available to Pay')</h2>
-                                <div class="row justify-content-center">
-                                    <div class="col-md-12">
-                                        <div class="grid-wrapper w-auto">
-
-                                            @foreach ($orders as $order)
-                                                <div class="card-wrapper h-auto my-2 w-auto">
-                                                    <input class="c-card" type="checkbox" name="orders[]" id="{{$order->id}}" {{ request('order') == $order->id ? 'checked': '' }} value="{{$order->id}}">
-                                                    <div class="card-content">
-                                                        <div class="card-state-icon"></div>
-                                                        <label for="{{$order->id}}">
-                                                            <div class="h5 py-1 px-2">
-                                                                <strong class="border-bottom-dark mr-2">@lang('invoice.Recipient'):</strong> <span class="text-info">{{ optional($order->recipient)->first_name }} {{ optional($order->recipient)->last_name }}</span>
-                                                            </div>
-                                                            <div class="h5 py-1 px-2">
-                                                                <strong class="border-bottom-dark mr-2">@lang('invoice.Merchant'):</strong> <span class="text-info">{{ $order->merchant }}</span>
-                                                            </div>
-                                                            <div class="h5 py-1 px-2">
-                                                                <strong class="border-bottom-dark mr-2">@lang('invoice.Customer Refrence'):</strong> <span class="text-info">{{ $order->customer_reference }}</span>
-                                                            </div>
-                                                            <div class="h5 py-1 px-2">
-                                                                <strong class="border-bottom-dark mr-2">@lang('invoice.Tracking ID'):</strong> <span class="text-info">{{ $order->tracking_id }}</span>
-                                                            </div>
-                                                            <div class="h5 py-1 px-2">
-                                                                <strong class="border-bottom-dark mr-2">@lang('invoice.Tracking Code')</strong> <span class="text-info">{{  $order->corrios_tracking_code }}</span>
-                                                            </div>
-                                                            <div class="h5 py-1 px-2">
-                                                                <strong class="border-bottom-dark mr-2">@lang('invoice.WHR')#</strong> <span class="text-info">{{  $order->warehouse_number }}</span>
-                                                            </div>
-                                                            <div class="h5 py-1 px-2">
-                                                                <strong class="border-bottom-dark mr-2">@lang('invoice.Value')</strong> <span class="text-info">{{  number_format($order->gross_total,2) }} USD</span>
-                                                            </div>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            @endforeach
-                                        </div>
+                                        <table class="table table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>#</th>
+                                                    <th>@lang('invoice.Recipient')</th>
+                                                    <th>@lang('invoice.Merchant')</th>
+                                                    <th>@lang('invoice.Customer Refrence')</th>
+                                                    <th>@lang('invoice.Tracking ID')</th>
+                                                    <th>@lang('invoice.Tracking Code')</th>
+                                                    <th>@lang('invoice.WHR')#</th>
+                                                    <th>@lang('invoice.Value')</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($invoice->orders as $order)
+                                                    <tr class="selectable cursor-pointer {{ true? 'bg-info' : '' }}">
+                                                        <td>
+                                                            <input class="form-control" type="checkbox" name="orders[]" id="{{$order->id}}" checked value="{{$order->id}}">
+                                                        </td>
+                                                        <td>
+                                                            {{ $loop->iteration }}
+                                                        </td>
+                                                        <td>
+                                                            {{ optional($order->recipient)->first_name }} {{ optional($order->recipient)->last_name }}
+                                                        </td>
+                                                        <td>{{ $order->merchant }}</td>
+                                                        <td>{{ $order->customer_reference }}</td>
+                                                        <td>{{ $order->tracking_id }}</td>
+                                                        <td>{{  $order->corrios_tracking_code }}</td>
+                                                        <td>{{  $order->warehouse_number }}</td>
+                                                        <td>{{  number_format($order->gross_total,2) }} USD</td>
+                                                    </tr>
+                                                @endforeach
+                                                <tr>
+                                                    <td colspan="9">
+                                                        <hr>
+                                                    </td>
+                                                </tr>
+                                                @foreach ($orders as $order)
+                                                    <tr class="selectable cursor-pointer {{ request('order') == $order->id ? 'bg-info' : '' }}">
+                                                        <td>
+                                                            <input class="form-control" type="checkbox" name="orders[]" id="{{$order->id}}" {{ request('order') == $order->id ? 'checked': '' }} value="{{$order->id}}">
+                                                        </td>
+                                                        <td>
+                                                            {{ $loop->iteration }}
+                                                        </td>
+                                                        <td>
+                                                            {{ optional($order->recipient)->first_name }} {{ optional($order->recipient)->last_name }}
+                                                        </td>
+                                                        <td>{{ $order->merchant }}</td>
+                                                        <td>{{ $order->customer_reference }}</td>
+                                                        <td>{{ $order->tracking_id }}</td>
+                                                        <td>{{  $order->corrios_tracking_code }}</td>
+                                                        <td>{{  $order->warehouse_number }}</td>
+                                                        <td>{{  number_format($order->gross_total,2) }} USD</td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                                 <div class="row justify-content-end">
@@ -126,4 +112,18 @@
             </div>
         </div>
     </section>
+@endsection
+
+@section('js')
+    <script>
+        $('tr.selectable').on('click',function(){
+            if ( $(this).find('input[type="checkbox"]').attr('checked') ){
+                $(this).removeClass('bg-info');
+                $(this).find('input[type="checkbox"]').attr('checked',false)
+            }else{
+                $(this).addClass('bg-info');
+                $(this).find('input[type="checkbox"]').attr('checked',true)
+            }
+        });
+    </script>
 @endsection
