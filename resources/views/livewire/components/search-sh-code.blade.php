@@ -1,4 +1,4 @@
-<div class="position-relative">
+{{-- <div class="position-relative">
     <input type="search" autocomplete="off" required class="form-control" name="{{$name}}" wire:model.debounce.500ms="search">
     @error( $name )
         <div class="help-block text-danger">{{ $message }}</div>
@@ -21,4 +21,11 @@
         </div>
         @endif
     </div>
-</div>
+</div> --}}
+
+<select required class="form-control" name="{{$name}}" wire:model.debounce.500ms="search">
+    <option value="">Select HS code / Selecione o código HS</option>
+    @foreach ($codes as $code)
+        <option value="{{ $code->code }}">{{ $code->description }}</option>
+    @endforeach
+</select>
