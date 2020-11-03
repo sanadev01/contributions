@@ -69,6 +69,17 @@ class LabelRepository
         $leveOrder->shipment_value = $order->user_declared_freight ?  round($order->user_declared_freight,2) : round($order->shipping_value,2) ;
         $leveOrder->sender_name = $order->sender_first_name ? "{$order->sender_first_name} {$order->sender_last_name}" : "{$order->user->name} {$order->user->last_name}";
         $leveOrder->mkt_place_name = $order->user->market_place_name;
+        
+        $hazardousItems = [];
+        if ( $order->items()->where('contains_battery')->count() > 0 ){
+            $hazardousItems = ["UN3481"];
+        }
+        
+        if ( $order->items()->where('contains_perfume')->count() > 0 ){
+            $hazardousItems = array_merge(["ID8000"],$hazardousItems);
+        }
+
+        $leveOrder->hazardous_contents_labels = $hazardousItems;
 
         $address = new Address();
         $address->number= $recipientAddress->street_no ? $recipientAddress->street_no :'s/n';
