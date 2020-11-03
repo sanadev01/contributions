@@ -120,6 +120,11 @@
                             <i class="feather icon-edit"></i>@lang('orders.actions.update')
                         </a>
                    @endcan
+                   @can('updateOrder', $order)
+                        <a href="{{ route('admin.orders.duplicate',$order) }}" class="btn dropdown-item w-100" title="@lang('orders.actions.duplicate-order')">
+                            <i class="feather icon-copy"></i>@lang('orders.actions.duplicate-order')
+                        </a>
+                   @endcan
                     
                     <form action="{{ route('admin.orders.destroy',$order->id) }}" method="post" onsubmit="return confirmDelete()">
                         @csrf
