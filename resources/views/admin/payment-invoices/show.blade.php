@@ -45,7 +45,7 @@
                 <div id="invoice-items-details" class="pt-1 invoice-items-table mt-5">
                     <div class="row">
                         <div class="table-responsive-md col-12">
-                            <table class="table table-borderless">
+                            <table class="table table-borderless" id="datatable">
                                 <thead>
                                     <tr> 
                                         <th>@lang('invoice.Recipient')</th>
@@ -109,4 +109,17 @@
             </div>
         </section>
     </div>
+@endsection
+@section('js')
+    <script>
+        $(document).ready(function() {
+            table = $('#datatable').DataTable( {
+                order: [
+                    [0, 'asc']
+                ]
+            } );
+            var order = table.order();
+            var title = table.column(order[0][0]).header();
+        } );
+    </script>
 @endsection
