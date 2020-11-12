@@ -78,16 +78,16 @@
                                             <td>{{ $order->warehouse_number }}</td>
                                             <td>{{ $order->customer_reference }}</td>
                                             <td>{{ optional($order->created_at)->format('Y-m-d') }}</td>
-                                            <td>$ {{ $order->shipping_value }}</td>
-                                            <td>$ {{ $order->services()->sum( 'price' ) }}</td>
-                                            <td>$ {{ $order->consolidation }}</td>
-                                            <td>$ {{ $order->dangrous_goods??0 }}</td>
-                                            <td>$ {{ $order->gross_total }}</td>
+                                            <td>{{ $order->shipping_value }} USD</td>
+                                            <td>{{ $order->services()->sum( 'price' ) }} USD</td>
+                                            <td>{{ $order->consolidation }} USD</td>
+                                            <td>{{ $order->dangrous_goods??0 }} USD</td>
+                                            <td>{{ $order->gross_total }} USD</td>
                                         </tr>  
                                     @endforeach   
                                     <tr class="border-top-light">
                                         <td class="text-center h4" colspan="9">@lang('orders.invoice.Total')</td>
-                                        <td class="h4">$ {{ round($invoice->orders()->sum('gross_total'),2) }}</td>
+                                        <td class="h4">{{ round($invoice->orders()->sum('gross_total'),2) }} USD</td>
                                     </tr>                            
                                 </tbody>
                             </table>
