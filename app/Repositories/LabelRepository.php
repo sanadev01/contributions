@@ -71,11 +71,11 @@ class LabelRepository
         $leveOrder->mkt_place_name = $order->user->market_place_name;
         
         $hazardousItems = [];
-        if ( $order->items()->where('contains_battery')->count() > 0 ){
+        if ( $order->items()->where('contains_battery',true)->count() > 0 ){
             $hazardousItems = ["UN3481"];
         }
         
-        if ( $order->items()->where('contains_perfume')->count() > 0 ){
+        if ( $order->items()->where('contains_perfume',true)->count() > 0 ){
             $hazardousItems = array_merge(["ID8000"],$hazardousItems);
         }
 
