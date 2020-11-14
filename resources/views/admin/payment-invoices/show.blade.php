@@ -85,11 +85,12 @@
                                             <td>{{ $order->gross_total }} USD</td>
                                         </tr>  
                                     @endforeach   
-                                    <tr class="border-top-light">
-                                        <td class="text-center h4" colspan="9">@lang('orders.invoice.Total')</td>
-                                        <td class="h4">{{ round($invoice->orders()->sum('gross_total'),2) }} USD</td>
-                                    </tr>                            
                                 </tbody>
+                                        <hr>
+                                        <tr class="border-top-light">
+                                            <td class="text-center h4" style="border-top: 1px solid !important;" colspan="9">@lang('orders.invoice.Total')</td>
+                                            <td class="h4" style="border-top: 1px solid !important;">{{ round($invoice->orders()->sum('gross_total'),2) }} USD</td>
+                                        </tr>                            
                             </table>
                         </div>
                     </div>
@@ -111,15 +112,9 @@
     </div>
 @endsection
 @section('js')
-    <script>
-        $(document).ready(function() {
-            table = $('#datatable').DataTable( {
-                order: [
-                    [0, 'asc']
-                ]
-            } );
-            var order = table.order();
-            var title = table.column(order[0][0]).header();
-        } );
-    </script>
+<script>
+    $(document).ready( function () {
+        $('#datatable').DataTable();
+    } );
+</script>
 @endsection

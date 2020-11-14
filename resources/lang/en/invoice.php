@@ -45,6 +45,7 @@ return [
     'Cancel' => 'Cancel',
     'Pay' => 'Pay',
     'Save Billing Information' => 'Save Billing Information',
+    'Create New' => 'invoice.Create New',
     'Select to Add new Address You can Save address for later use.' => 'Select to Add new Address You can Save address for later use.',
     'Address' => 'Address',
     'Phone' => 'Phone',
