@@ -10,7 +10,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">
-                            @lang('invoice.Edit Invoice')
+                            @lang('invoice.Edit invoice')
                         </h4>
                         <a href="{{ route('admin.payment-invoices.index') }}" class="btn btn-primary">
                             @lang('invoice.Back to List')
@@ -100,9 +100,13 @@
                                     </div>
                                 </div>
                                 <div class="row justify-content-end">
-                                    <div class="col-md-8 text-right">
+                                    {{-- <div class="col-md-8 text-right">
                                         <a href="{{ route('admin.orders.index') }}" class="btn btn-primary btn-lg">@lang('invoice.Add More Orders')</a>
                                         <button class="btn btn-primary btn-lg">@lang('invoice.Pay Orders')</button>
+                                    </div> --}}
+                                    <div class="col-md-8 text-right">
+                                        <button class="btn btn-primary btn-lg">@lang('invoice.Update invoice')</button>
+                                        <a href="{{ route('admin.payment-invoices.invoice.checkout.index',$invoice) }}" class="btn btn-primary btn-lg">@lang('invoice.Pay Orders')</a>
                                     </div>
                                 </div>
                             </form>

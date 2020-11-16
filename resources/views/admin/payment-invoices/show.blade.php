@@ -45,7 +45,7 @@
                 <div id="invoice-items-details" class="pt-1 invoice-items-table mt-5">
                     <div class="row">
                         <div class="table-responsive-md col-12">
-                            <table class="table table-borderless">
+                            <table class="table table-borderless" id="datatable">
                                 <thead>
                                     <tr> 
                                         <th>@lang('invoice.Recipient')</th>
@@ -85,11 +85,12 @@
                                             <td>{{ $order->gross_total }} USD</td>
                                         </tr>  
                                     @endforeach   
-                                    <tr class="border-top-light">
-                                        <td class="text-center h4" colspan="5">@lang('orders.invoice.Total')</td>
-                                        <td class="h4">{{ round($invoice->orders()->sum('gross_total'),2) }} USD</td>
-                                    </tr>                            
                                 </tbody>
+                                        <hr>
+                                        <tr class="border-top-light">
+                                            <td class="text-center h4" style="border-top: 1px solid !important;" colspan="9">@lang('orders.invoice.Total')</td>
+                                            <td class="h4" style="border-top: 1px solid !important;">{{ round($invoice->orders()->sum('gross_total'),2) }} USD</td>
+                                        </tr>                            
                             </table>
                         </div>
                     </div>
@@ -109,4 +110,11 @@
             </div>
         </section>
     </div>
+@endsection
+@section('js')
+<script>
+    $(document).ready( function () {
+        $('#datatable').DataTable();
+    } );
+</script>
 @endsection
