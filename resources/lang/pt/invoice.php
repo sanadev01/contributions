@@ -4,6 +4,7 @@ return [
     'Payment Invoices' => 'Faturas de Pagamento',
     'Create invoice' => 'Criar recibo',
     'Edit invoice' => 'Editar fatura',
+    'Update invoice' => 'Atualizar',
     'Delete invoice' => 'Excluir fatura',
     'Invoice' => 'Fatura',
     'User' => 'Do utilizador',

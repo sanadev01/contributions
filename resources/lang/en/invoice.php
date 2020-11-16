@@ -4,6 +4,7 @@ return [
     'Payment Invoices' => 'Payment Invoices',
     'Create invoice' => 'Create invoice',
     'Edit invoice' => 'Edit invoice',
+    'Update invoice' => 'Update',
     'Delete invoice' => 'Delete invoice',
     'Invoice' => 'Invoice',
     'User' => 'User',
