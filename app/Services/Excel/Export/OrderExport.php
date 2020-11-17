@@ -76,13 +76,10 @@ class OrderExport extends AbstractExportService
         $this->setCellValue('H1', 'Status');
 
         $this->setColumnWidth('I', 20);
-        $this->setCellValue('I1', 'Type');
+        $this->setCellValue('I1', 'Date');
 
-        $this->setColumnWidth('K', 20);
-        $this->setCellValue('K1', 'Date');
-
-        $this->setBackgroundColor('A1:K1', '2b5cab');
-        $this->setColor('A1:K1', 'FFFFFF');
+        $this->setBackgroundColor('A1:I1', '2b5cab');
+        $this->setColor('A1:I1', 'FFFFFF');
 
         $this->currentRow++;
     }
