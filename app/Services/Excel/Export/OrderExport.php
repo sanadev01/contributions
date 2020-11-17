@@ -2,7 +2,7 @@
 
 namespace App\Services\Excel\Export;
 use Illuminate\Support\Collection;
-
+use App\Models\Order;
 use Illuminate\Database\Eloquent\Model;
 
 class OrderExport extends AbstractExportService
@@ -41,7 +41,19 @@ class OrderExport extends AbstractExportService
             $this->setCellValue('E'.$row, $order->customer_reference);
             $this->setCellValue('F'.$row, $order->corrios_tracking_code);
             $this->setCellValue('G'.$row, $order->gross_total);
-            $this->setCellValue('H'.$row, $order->status);
+            if($order->status == Order::STATUS_ORDER){
+                $this->setCellValue('H'.$row, 'ORDER');
+            }
+            if($order->status == Order::STATUS_PAYMENT_PENDING){
+                $this->setCellValue('H'.$row, 'PAYMENT_PENDING');
+            }
+            if($order->status == Order::STATUS_PAYMENT_DONE){
+                $this->setCellValue('H'.$row, 'PAYMENT_DONE');
+            }
+            if($order->status == Order::STATUS_SHIPPED){
+                $this->setCellValue('H'.$row, 'SHIPPED');
+            }
+            
             $this->setCellValue('I'.$row, $order->order_date);
             $row++;
         }

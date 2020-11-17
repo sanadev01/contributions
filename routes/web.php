@@ -108,6 +108,7 @@ Route::namespace('Admin')
             ->group(function(){
                 Route::get('user-shipments', \ShipmentPerUserReportController::class)->name('user-shipments');
                 Route::resource('order-trackings', TrackingReportController::class)->only(['index','store']);
+                Route::resource('order', OrderReportController::class)->only(['index','create']);
         });
         Route::namespace('Exports')
             ->as('exports.')
