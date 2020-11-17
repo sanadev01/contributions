@@ -15,6 +15,20 @@
             <button class="btn btn-success">
                 <i class="fa fa-print"></i>
             </button>
+            {{-- <form action="{{ route('admin.exports.order.exports') }}" method="POST">
+                @csrf
+                <input type="hidden" name="data" value="{{ $orders }}">
+                <button class="btn btn-primary">
+                    <i class="fa fa-arrow-down"></i>
+                </button>
+            </form> --}}
+            {{-- <form action="" method="get">
+
+            </form> --}}
+           
+            <a href="{{ route('admin.exports.order.exports') }}" class="btn btn-success" title="@lang('orders.import-excel.Download')">
+                <i class="fa fa-arrow-down"></i>
+            </a>
         </div>
     </div>
     <table class="table mb-0 table-responsive-md">
@@ -91,6 +105,7 @@
             </tr>
         </thead>
         <tbody>
+            
             @forelse ($orders as $order)
                 @include('admin.orders.components.order-row',['order'=>$order])    
             @empty
