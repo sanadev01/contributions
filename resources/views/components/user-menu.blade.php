@@ -159,14 +159,14 @@
                         </a>
                     </li>
                     @endcan
-                    {{-- @can('viewOrderReport', App\Models\Reports::class) --}}
+                    @can('viewOrderReport', App\Models\Reports::class)
                     <li class="{{ $isActive(['admin.reports.order.index']) }}">
                         <a href="{{ route('admin.reports.order.index') }}">
                             <i class="feather icon-circle"></i>
                             <span class="menu-title">@lang('menu.Reports.Orders Report')</span>
                         </a>
                     </li>
-                    {{-- @endcan --}}
+                    @endcan
                 </ul>
             </li>
 
