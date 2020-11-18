@@ -229,5 +229,17 @@ class OrderRepository
     {
         return $this->error;
     }
+    
+    public function getOdersForExport()
+    {
+        $orders = Order::where('status','>=',Order::STATUS_ORDER)
+        ->has('user')->get();
+        if (Auth::user()->isUser()) {
+            $orders->where('user_id', Auth::id())->get();
+        }
+        return $orders;
+    }
+
+
 
 }

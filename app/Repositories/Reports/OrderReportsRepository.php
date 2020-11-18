@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class OrderReportsRepository
 {
@@ -65,5 +66,15 @@ class OrderReportsRepository
         ->orderBy($orderBy,$orderType);
 
         return $paginate ? $query->paginate($pageSize) : $query->get();
+    }
+
+    public function getOrderReport()
+    {
+        $orders = Order::where('status','>=',Order::STATUS_ORDER)
+        ->has('user')->get();
+        if (Auth::user()->isUser()) {
+            $orders->where('user_id', Auth::id())->get();
+        }
+        return $orders;
     }
 }

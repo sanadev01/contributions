@@ -46,7 +46,7 @@ return [
     'Cancel' => 'Cancelar',
     'Pay' => 'Pagamento',
     'Save Billing Information' => 'Salvar informações de faturamento',
-    'Create New' => 'fatura.Criar Novo',
+    'Create New' => 'Criar Novo',
     'Select to Add new Address You can Save address for later use.' => 'Selecione para adicionar novo endereço. Você pode salvar o endereço para uso posterior.',
     'Address' => 'Endereço',
     'Phone' => 'telefone',

@@ -50,6 +50,7 @@ Route::namespace('Admin')
             Route::resource('orders.order-details', OrderItemsController::class)->only('index','store');
             Route::resource('orders.order-invoice', OrderInvoiceController::class)->only('index','store');
             Route::resource('orders.label', OrderLabelController::class)->only('index','store');
+            Route::get('order-exports', OrderExportController::class)->name('order.exports');
         });
 
         Route::namespace('Consolidation')
@@ -108,7 +109,10 @@ Route::namespace('Admin')
             ->group(function(){
                 Route::get('user-shipments', \ShipmentPerUserReportController::class)->name('user-shipments');
                 Route::resource('order-trackings', TrackingReportController::class)->only(['index','store']);
+                Route::resource('order', OrderReportController::class)->only(['index','create']);
         });
+       
+        
 
         Route::post('users/{user}/login', AnonymousLoginController::class)->name('users.login');
 
