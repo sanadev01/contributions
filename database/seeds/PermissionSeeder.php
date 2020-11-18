@@ -277,6 +277,10 @@ class PermissionSeeder extends Seeder
                 'slug' => 'delete_connect',
                 'description' => 'Delete Integrations',
             ],
+            [
+                'slug' => 'order_report',
+                'description' => 'Order Report Download',
+            ],
             
         ];
     }
