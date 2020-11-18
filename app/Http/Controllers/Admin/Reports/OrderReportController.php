@@ -19,9 +19,9 @@ class OrderReportController extends Controller
         return view('admin.reports.order-report');
     }
     
-    public function create(OrderReportsRepository $OrderReportsRepository) 
+    public function create(OrderReportsRepository $orderReportsRepository) 
     {
-        $orders =  $OrderReportsRepository->ordersReportsdownloads();
+        $orders =  $orderReportsRepository->getOrderReport();
         
         $ExportService = new OrderExport($orders);
         return $ExportService->handle();

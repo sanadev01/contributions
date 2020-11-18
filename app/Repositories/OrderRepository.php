@@ -230,7 +230,7 @@ class OrderRepository
         return $this->error;
     }
     
-    public function ordersdownloads()
+    public function getOdersForExport()
     {
         $orders = Order::where('status','>=',Order::STATUS_ORDER)
         ->has('user')->get();

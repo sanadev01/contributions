@@ -68,7 +68,7 @@ class OrderReportsRepository
         return $paginate ? $query->paginate($pageSize) : $query->get();
     }
 
-    public function ordersReportsdownloads()
+    public function getOrderReport()
     {
         $orders = Order::where('status','>=',Order::STATUS_ORDER)
         ->has('user')->get();

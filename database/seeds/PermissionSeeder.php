@@ -278,7 +278,7 @@ class PermissionSeeder extends Seeder
                 'description' => 'Delete Integrations',
             ],
             [
-                'slug' => 'order_report',
+                'slug' => 'order-report',
                 'description' => 'Order Report Download',
             ],
             
