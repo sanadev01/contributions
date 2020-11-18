@@ -23,7 +23,7 @@ class OrderReportController extends Controller
     {
         $orders =  $orderReportsRepository->getOrderReport();
         
-        $ExportService = new OrderExport($orders);
-        return $ExportService->handle();
+        $exportService = new OrderExport($orders);
+        return $exportService->handle();
     }
 }

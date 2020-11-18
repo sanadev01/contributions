@@ -23,6 +23,6 @@ class ReportsPolicy
     
     public function viewOrderReport(User $user)
     {
-        return $user->hasPermission('order_report');
+        return $user->hasPermission('order-report');
     }
 }

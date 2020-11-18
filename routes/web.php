@@ -110,12 +110,8 @@ Route::namespace('Admin')
                 Route::resource('order-trackings', TrackingReportController::class)->only(['index','store']);
                 Route::resource('order', OrderReportController::class)->only(['index','create']);
         });
-        Route::namespace('Exports')
-            ->as('exports.')
-            ->prefix('exports')
-            ->group(function(){
-                Route::get('order-exports', \OrderExportController::class)->name('order.exports');
-        });
+       
+        Route::get('order-exports', Exports\OrderExportController::class)->name('order.exports');
 
         Route::post('users/{user}/login', AnonymousLoginController::class)->name('users.login');
 

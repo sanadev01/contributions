@@ -13,7 +13,7 @@ class OrderExportController extends Controller
     {
         $orders = $orderRepository->getOdersForExport();
         
-        $ExportService = new OrderExport($orders);
-        return $ExportService->handle();
+        $exportService = new OrderExport($orders);
+        return $exportService->handle();
     }
 }

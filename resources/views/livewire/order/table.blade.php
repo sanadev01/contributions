@@ -13,7 +13,7 @@
         </div>
         <div class="col-11 text-right">
             
-            <a href="{{ route('admin.exports.order.exports') }}" class="btn btn-success" title="@lang('orders.import-excel.Download')">
+            <a href="{{ route('admin.order.exports') }}" class="btn btn-success" title="@lang('orders.import-excel.Download')">
                 <i class="fa fa-arrow-down"></i>
             </a>
         </div>
