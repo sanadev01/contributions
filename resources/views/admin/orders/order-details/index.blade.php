@@ -59,7 +59,7 @@
             </div>
             <hr>
             <livewire:order.order-details.order-items :order-id="$order->id"/>
-                <hr>
+            <hr>
             <div class="row mt-1">
                 <div class="form-group col-12">
                     @lang('orders.order-details.declaration')

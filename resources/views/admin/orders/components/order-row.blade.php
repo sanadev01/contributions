@@ -1,5 +1,14 @@
 <tr>
-    <td>
+    <td class="d-flex justify-content-between align-items-center">
+        <div class="vs-checkbox-con vs-checkbox-primary" wire:click="$emit('edit-order',{{$order->id}})">
+            <input type="radio" name="edit_order" class="edit-order" value="false">
+            <span class="vs-checkbox vs-checkbox-lg">
+                <span class="vs-checkbox--check">
+                    <i class="vs-icon feather icon-check"></i>
+                </span>
+            </span>
+            {{-- <span class="h3 mx-2 text-primary my-0 py-0"></span> --}}
+        </div>
         {{ optional($order->order_date)->format('m/d/Y') }}
     </td>
     <td style="width: 200px;">
