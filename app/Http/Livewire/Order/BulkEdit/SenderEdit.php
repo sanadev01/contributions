@@ -13,7 +13,7 @@ class SenderEdit extends Component
     public  $sender_phone;
     public  $sender_taxId;
 
-    public Order $order;
+    public $order;
 
     public function mount(Order $order)
     {

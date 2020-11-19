@@ -10,7 +10,7 @@ use Livewire\Component;
 
 class RecipientEdit extends Component
 {
-    public Recipient $recipient;
+    public $recipient;
 
     public $first_name;
     public $last_name;
