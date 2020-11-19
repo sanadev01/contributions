@@ -1,5 +1,14 @@
 <tr>
-    <td>
+    <td class="d-flex justify-content-between align-items-center">
+        <div class="vs-checkbox-con vs-checkbox-primary" wire:click="$emit('edit-order',{{$order->id}})">
+            <input type="radio" name="edit_order" class="edit-order" value="false">
+            <span class="vs-checkbox vs-checkbox-lg">
+                <span class="vs-checkbox--check">
+                    <i class="vs-icon feather icon-check"></i>
+                </span>
+            </span>
+            {{-- <span class="h3 mx-2 text-primary my-0 py-0"></span> --}}
+        </div>
         {{ optional($order->order_date)->format('m/d/Y') }}
     </td>
     <td style="width: 200px;">
@@ -46,10 +55,10 @@
     </td>
     <td>
         <select class="form-control {{ !auth()->user()->isAdmin() ? 'btn disabled' : ''  }} {{ $order->getStatusClass() }}" @if (auth()->user()->isAdmin())  wire:change="$emit('updated-status',{{$order->id}},$event.target.value)" @else disabled="disabled"  @endif>
-            <option value="{{ App\Models\Order::STATUS_ORDER }}" {{ $order->status == App\Models\Order::STATUS_ORDER ? 'selected': '' }}>STATUS_ORDER</option>
-            <option value="{{ App\Models\Order::STATUS_PAYMENT_PENDING }}" {{ $order->status == App\Models\Order::STATUS_PAYMENT_PENDING ? 'selected': '' }}>STATUS_PAYMENT_PENDING</option>
-            <option value="{{ App\Models\Order::STATUS_PAYMENT_DONE }}" {{ $order->status == App\Models\Order::STATUS_PAYMENT_DONE ? 'selected': '' }}>STATUS_PAYMENT_DONE</option>
-            <option value="{{ App\Models\Order::STATUS_SHIPPED }}" {{ $order->status == App\Models\Order::STATUS_SHIPPED ? 'selected': '' }}>STATUS_SHIPPED</option>
+            <option value="{{ App\Models\Order::STATUS_ORDER }}" {{ $order->status == App\Models\Order::STATUS_ORDER ? 'selected': '' }}>ORDER</option>
+            <option value="{{ App\Models\Order::STATUS_PAYMENT_PENDING }}" {{ $order->status == App\Models\Order::STATUS_PAYMENT_PENDING ? 'selected': '' }}>PAYMENT_PENDING</option>
+            <option value="{{ App\Models\Order::STATUS_PAYMENT_DONE }}" {{ $order->status == App\Models\Order::STATUS_PAYMENT_DONE ? 'selected': '' }}>PAYMENT_DONE</option>
+            <option value="{{ App\Models\Order::STATUS_SHIPPED }}" {{ $order->status == App\Models\Order::STATUS_SHIPPED ? 'selected': '' }}>SHIPPED</option>
         </select>
     </td>
     <td style="zoom: 0.8">

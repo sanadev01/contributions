@@ -18,7 +18,7 @@
         "laravel/helpers": "^1.3",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.1",
-        "livewire/livewire": "^1.3",
+        "livewire/livewire": "^2.3",
         "phpoffice/phpspreadsheet": "^1.14",
         "saqijaan/laravel-json-column-trait": "dev-master"
     },

@@ -6,6 +6,7 @@
         <h4 class="mb-0">@lang('orders.orders')</h4>
         {{-- <a href="{{ route('admin.roles.create') }}" class="pull-right btn btn-primary"> Create Role </a> --}}
     </div>
+    
     <div class="card-content">
         <div class="card-body no-print" style="overflow-y: visible">
             <livewire:order.table/>
