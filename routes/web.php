@@ -1,5 +1,7 @@
 <?php
 
+use App\Services\StoreIntegrations\Shopify;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,12 +13,24 @@
 |
 */
 
-Route::get('/', function () {
+Route::get('/', function (Shopify $shopifyClient) {
+    if (request()->has('shop')) {
+        $redirectUri = $shopifyClient->getRedirectUrl(request()->shop,[
+            'connect_name' => request()->shop,
+            'connect_store_url' => "https://".request()->shop
+        ]);
+        return redirect()->away($redirectUri);
+    }
     return redirect('login');
 });
 
 Route::resource('calculator', CalculatorController::class)->only(['index', 'store']);
 Route::get('/home', function () {
+
+    if ( session()->get('shopify.redirect') ){
+        return redirect(session()->get('shopify.redirect'));
+    }
+    
     return redirect()->route('admin.home');
 });
 
@@ -141,9 +155,9 @@ Route::namespace('Admin\Webhooks')
                     ->group(function(){
                         Route::get('redirect_uri', RedirectController::class)->name('redirect_uri');
 
-                        Route::any('customers/redact', ShopifyRedactController::class)->name('redirect_uri');
-                        Route::any('shop/redact', ShopifyRedactController::class)->name('redirect_uri');
-                        Route::any('customers/data_request', ShopifyRedactController::class)->name('redirect_uri');
+                        Route::any('customers/redact', ShopifyRedactController::class)->name('customers.redact');
+                        Route::any('shop/redact', ShopifyRedactController::class)->name('redact');
+                        Route::any('customers/data_request', ShopifyRedactController::class)->name('data_request');
 
                         Route::post('shopify/order/create', OrderCreatedController::class)->name('order.create');
                     });

@@ -31,6 +31,9 @@ class Shopify{
         if ( substr($storeUrl,-1) == '/' ){
             $storeUrl = substr($storeUrl,0, strlen($storeUrl)-1);
         }
+        if ( strpos($storeUrl,'https://')  == false ){
+            $storeUrl = 'https://'.$storeUrl;
+        }
 
         $scope = implode(',',$scopes);
         $redirectUri = route('admin.webhooks.shopify.redirect_uri');
