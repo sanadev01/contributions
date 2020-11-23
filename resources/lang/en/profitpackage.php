@@ -23,5 +23,6 @@ return [
     'udpated' => 'Package Udpated',
     'udpate' => 'Update',
     'deleted' => 'Package Deleted',
+    'download-profit-package' => 'Download',
 ];
  

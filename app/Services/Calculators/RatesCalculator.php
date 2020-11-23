@@ -29,10 +29,13 @@ class RatesCalculator
 
     protected $rates;
 
+    protected $calculateOnVolumeMetricWeight;
+
     protected $errors;
 
-    public function __construct(Order $order,ShippingService $service)
+    public function __construct(Order $order,ShippingService $service, $calculateOnVolumeMetricWeight = true )
     {
+        \Log::info($order->weight);
         $this->order = $order;
         $this->shippingService = $service;
 
@@ -42,7 +45,7 @@ class RatesCalculator
 
         $this->initializeDims();
 
-        $this->weight = $this->calculateWeight();
+        $this->weight = $calculateOnVolumeMetricWeight ? $this->calculateWeight(): $this->originalWeight;
     }
 
     private function initializeDims()
@@ -92,6 +95,7 @@ class RatesCalculator
     {
         $rate = 0;
         $weight = ceil(WeightCalculator::kgToGrams($this->weight));
+        \Log::info('geting Rate For Weight: '. $weight);
 
         if ( $weight<100 ){
             $weight = 100;

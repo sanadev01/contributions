@@ -94,6 +94,7 @@ Route::namespace('Admin')
                 Route::resource('profit-packages', ProfitPackageController::class);
                 Route::resource('fixed-charges', FixedChargesController::class)->only(['index','store']);
                 Route::resource('shipping-rates', RateController::class)->only(['create', 'store', 'index']);
+                Route::get('rates-exports/{package}', RateDownloadController::class)->name('rates.exports');
             });
 
         Route::namespace('Connect')
