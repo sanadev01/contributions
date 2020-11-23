@@ -55,6 +55,6 @@ class RateReportsRepository
         }
 
 
-        dd($profitPackageSlabRates->toArray());
+        return $profitPackageSlabRates;
     }
 }

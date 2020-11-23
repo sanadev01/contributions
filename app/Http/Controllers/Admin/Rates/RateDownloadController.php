@@ -11,7 +11,7 @@ class RateDownloadController extends Controller
     public function __invoke($packageId, RateReportsRepository $rateReportsRepository)
     {
         $rates = $rateReportsRepository->getRateReport($packageId);
-        dd($rates);
+        // dd($rates);
         $exportService = new ProfitPackageRateExport($rates);
         return $exportService->handle();
     }
