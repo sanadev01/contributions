@@ -28,7 +28,7 @@ class RateReportsRepository
         $newUser->profitPackage = $package;
         $profitPackageSlabRates = collect();
 
-        foreach($package->data as $key => $profitPackageSlab){
+        foreach($package->data as $profitPackageSlab){
             $order = new Order();
             $order->user = $newUser;
             $order->width =  0;
@@ -36,15 +36,15 @@ class RateReportsRepository
             $order->length = 0;
             $order->measurement_unit = 'kg/cm';
             $order->recipient = $recipient;
-            $originalWeight =  $profitPackageSlab['min_weight'];
+            $originalWeight =  $profitPackageSlab['max_weight'];
             $order->weight = UnitsConverter::gramsToKg($originalWeight);
     
             $shippingRates = collect();
             foreach (ShippingService::query()->active()->get() as $shippingService) {
-                
+                $shippingService->cacheCalculator = false;
                 if ( $shippingService->isAvailableFor($order) ){
-                    \Log::info($shippingService->getRateFor($order, false));
-                    $shippingRates->push($shippingService->getRateFor($order, false) );
+                    $rate = $shippingService->getRateFor($order,true,false);
+                    $shippingRates->push($rate);
                 }
             }
 

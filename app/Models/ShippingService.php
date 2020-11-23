@@ -13,6 +13,9 @@ class ShippingService extends Model
 
     protected $guarded = [];
 
+    public $cacheCalculator = true;
+
+
     protected static $calculator;
 
     public function rates()
@@ -37,9 +40,9 @@ class ShippingService extends Model
 
     public function getCalculator(Order $order, $calculateOnVolumeMetricWeight = true)
     {
-        if ( self::$calculator ) 
+        if ( self::$calculator && $this->cacheCalculator) 
             return self::$calculator;
-
+        
         self::$calculator = new RatesCalculator($order,$this, $calculateOnVolumeMetricWeight);
 
         return self::$calculator;
