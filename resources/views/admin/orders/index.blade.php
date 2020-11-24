@@ -4,7 +4,9 @@
 <div class="card min-vh-100">
     <div class="card-header">
         <h4 class="mb-0">@lang('orders.orders')</h4>
-        {{-- <a href="{{ route('admin.roles.create') }}" class="pull-right btn btn-primary"> Create Role </a> --}}
+        @can('canImportLeveOrders', App\Models\Order::class)
+            <a href="{{ route('admin.leve-order-import.index') }}" class="pull-right btn btn-primary"> Import Leve Orders </a>
+        @endcan
     </div>
     
     <div class="card-content">

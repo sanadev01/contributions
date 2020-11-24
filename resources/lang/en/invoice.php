@@ -55,5 +55,7 @@ return [
     'Checkout Message' => 'Checkout Message',
     'Paid' => 'Paid',
     'Pending' => 'Pending',
+    'PrePaid' => 'Pre-Paid',
+    'PostPaid' => 'Post-Paid',
     'Pay Invoice' => 'Pay Invoice',
 ];

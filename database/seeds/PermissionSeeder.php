@@ -281,6 +281,10 @@ class PermissionSeeder extends Seeder
                 'slug' => 'order-report',
                 'description' => 'Order Report Download',
             ],
+            [
+                'slug' => 'can_import_leve_orders',
+                'description' => 'Special Permission to Import Orders From Leve',
+            ],
             
         ];
     }

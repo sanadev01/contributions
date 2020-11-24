@@ -98,4 +98,9 @@ class PaymentInvoicePolicy
     {
         return false;
     }
+
+    public function canChnageType(User $user, PaymentInvoice $paymentInvoice)
+    {
+        return false;
+    }
 }

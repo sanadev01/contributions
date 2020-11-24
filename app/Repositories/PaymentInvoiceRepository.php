@@ -26,6 +26,14 @@ class PaymentInvoiceRepository
             });
         }
 
+        if ( $request->type ){
+            $query->where('type',$request->type);
+        }
+
+        if ( $request->is_paid !=null ){
+            $query->where('is_paid',$request->is_paid);
+        }
+
         if ( $request->uuid ){
             $query->where('uuid','LIKE',"%{$request->uuid}%");
         }

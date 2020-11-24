@@ -212,4 +212,17 @@ return [
         'weight' => 'Weight',
         'unit' => 'Unit',
     ],
+    'leve' => [
+        'Upload Rates' => 'Upload Rates',
+        'Return to List' => 'Return to List',
+        'Import Orders' => 'Import Orders',
+        'Select Excel File to Upload' => 'Select Excel File to Upload',
+        '* Upload only Excel files' => '* Upload only Excel files',
+        '* Files larger than 15Mb are not allowed' => '* Files larger than 15Mb are not allowed',
+        '* Download and fill in the data in the sample file below to avoid errors' => '* Download and fill in the data in the sample file below to avoid errors',
+        '* Download the sample for bps rates' => '* Download the sample for bps rates',
+        'Cancel' => 'Cancel',
+        'Import' => 'Import',
+        'Download' => 'Download'
+    ]
 ];

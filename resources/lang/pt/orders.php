@@ -211,4 +211,17 @@ return [
         'weight' => 'Peso',
         'unit' => 'Unidade',
     ],
+    'leve' => [
+        'Upload Rates' => 'Taxas de upload',
+        'Return to List' => 'Voltar para a lista',
+        'Import Orders' => 'Importar Pedidos',
+        'Select Excel File to Upload' => 'Selecione o arquivo Excel para carregar',
+        '* Upload only Excel files' => '* Faça upload apenas de arquivos Excel',
+        '* Files larger than 15Mb are not allowed' => '* Arquivos maiores que 15 MB não são permitidos',
+        '* Download and fill in the data in the sample file below to avoid errors' => '* Baixe e preencha os dados no arquivo de amostra abaixo para evitar erros',
+        '* Download the sample for bps rates' => '* Baixe a amostra para taxas de bps',
+        'Cancel' => 'Cancelar',
+        'Import' => 'Importar',
+        'Download' => 'Baixar',
+    ]
 ];
