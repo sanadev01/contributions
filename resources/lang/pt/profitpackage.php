@@ -22,4 +22,5 @@ return [
     'udpated' => 'Pacote atualizado',
     'deleted' => 'Pacote Deletado',
     'udpate' => 'Atualizar',
+    'download-profit-package' => 'Baixar',
 ];

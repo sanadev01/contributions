@@ -13,6 +13,9 @@ class ShippingService extends Model
 
     protected $guarded = [];
 
+    public $cacheCalculator = true;
+
+
     protected static $calculator;
 
     public function rates()
@@ -30,17 +33,17 @@ class ShippingService extends Model
         return $this->getCalculator($order)->isAvailable();
     }
 
-    public function getRateFor(Order $order,$withProfit=true)
+    public function getRateFor(Order $order,$withProfit=true, $calculateOnVolumeMetricWeight = true)
     {
-        return round($this->getCalculator($order)->getRate($withProfit),2);
+        return round($this->getCalculator($order, $calculateOnVolumeMetricWeight)->getRate($withProfit),2);
     }
 
-    public function getCalculator(Order $order)
+    public function getCalculator(Order $order, $calculateOnVolumeMetricWeight = true)
     {
-        if ( self::$calculator ) 
+        if ( self::$calculator && $this->cacheCalculator) 
             return self::$calculator;
-
-        self::$calculator = new RatesCalculator($order,$this);
+        
+        self::$calculator = new RatesCalculator($order,$this, $calculateOnVolumeMetricWeight);
 
         return self::$calculator;
     }
