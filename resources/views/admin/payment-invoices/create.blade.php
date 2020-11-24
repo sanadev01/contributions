@@ -35,7 +35,7 @@
                                         <table class="table table-bordered table-hover">
                                             <thead>
                                                 <tr>
-                                                    <th></th>
+                                                    <th><input class="form-control" type="checkbox" value="" id="checkAll"></th>
                                                     <th>#</th>
                                                     <th>@lang('invoice.Recipient')</th>
                                                     <th>@lang('invoice.Merchant')</th>
@@ -50,7 +50,7 @@
                                                 @foreach ($orders as $order)
                                                     <tr class="selectable cursor-pointer {{ request('order') == $order->id ? 'bg-info' : '' }}">
                                                         <td>
-                                                            <input class="form-control" type="checkbox" name="orders[]" id="{{$order->id}}" {{ request('order') == $order->id ? 'checked': '' }} value="{{$order->id}}">
+                                                            <input class="form-control order-select" type="checkbox" name="orders[]" id="{{$order->id}}" {{ request('order') == $order->id ? 'checked': '' }} value="{{$order->id}}">
                                                         </td>
                                                         <td>
                                                             {{ $loop->iteration }}
@@ -87,13 +87,23 @@
 @section('js')
     <script>
         $('tr.selectable').on('click',function(){
-            if ( $(this).find('input[type="checkbox"]').attr('checked') ){
+            if ( $(this).find('input[type="checkbox"]').prop('checked') == true ){
                 $(this).removeClass('bg-info');
-                $(this).find('input[type="checkbox"]').attr('checked',false)
+                $(this).find('input[type="checkbox"]').prop('checked',false)
             }else{
                 $(this).addClass('bg-info');
-                $(this).find('input[type="checkbox"]').attr('checked',true)
+                $(this).find('input[type="checkbox"]').prop('checked',true)
             }
         });
+
+        $('#checkAll').on('change',function(){
+            if ( $(this).prop('checked') == true ){
+                $('.order-select').prop('checked',true)
+                $('tr.selectable').addClass('bg-info');
+            }else{
+                $('.order-select').prop('checked',false)
+                $('tr.selectable').removeClass('bg-info');
+            }
+        })
     </script>
 @endsection

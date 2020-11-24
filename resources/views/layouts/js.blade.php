@@ -52,6 +52,6 @@
             WinPrint.focus();
             WinPrint.print();
             WinPrint.close();
-        },1000)
+        },2000)
     }
 </script>

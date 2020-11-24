@@ -10,6 +10,7 @@ use Livewire\WithPagination;
 class Table extends Component
 {
     use WithPagination;
+    protected $paginationTheme = 'bootstrap';
 
     public $search;
 

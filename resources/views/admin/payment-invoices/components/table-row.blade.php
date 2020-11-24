@@ -27,6 +27,20 @@
             @endif
         </a>
     </td>
+
+    <td>
+        <a href="{{ auth()->user()->can('canChnageType',$invoice) ? route('admin.payment-invoices.type.toggle',$invoice):'#' }}" title="{{ auth()->user()->can('canChnageStatus',$invoice) ? 'Click to Toggle Status': '' }}">
+            @if ( $invoice->isPrePaid() )
+            <span class="btn btn-sm btn-success">
+                @lang('invoice.PrePaid')
+            </span>
+            @else
+            <span class="btn btn-sm btn-warning">
+                @lang('invoice.PostPaid')
+            </span>
+            @endif
+        </a>
+    </td>
     
     <td>
         @if ( auth()->user()->can('update',$invoice) && !$invoice->isPaid())

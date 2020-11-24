@@ -63,5 +63,7 @@ return [
     'Checkout Message' => 'Mensagem de check-out',
     'Paid' => 'Pago',
     'Pending' => 'Pendente',
+    'PrePaid' => 'Pré-pago',
+    'PostPaid' => 'Pós-pago',
     'Pay Invoice' => 'Fatura de pagamento',
 ];

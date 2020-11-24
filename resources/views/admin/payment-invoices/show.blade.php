@@ -16,7 +16,7 @@
                     <div class="col-sm-6 col-12 text-right">
                         <h1>@lang('orders.invoice.Invoice')</h1>
                         <div class="invoice-details mt-2">
-                            <h6>@lang('orders.invoice.INVOICE NO.')</h6>
+                            <h6>@lang('orders.invoice.INVOICE NO')</h6>
                             <p>{{ $invoice->uuid }}</p>
                             <h6 class="mt-2">@lang('orders.invoice.INVOICE DATE')</h6>
                             <p>{{ optional($invoice->created_at)->format('d M Y') }}</p>
@@ -53,20 +53,20 @@
                                         <th>@lang('invoice.Warehouse')#</th>
                                         <th>@lang('invoice.Customer Reference')#</th>
                                         <th>@lang('invoice.Date')</th>
-                                        @admin
-                                        <th>
-                                            Shipping
-                                        </th>
-                                        <th>
-                                            Additional Services
-                                        </th>
-                                        <th>
-                                            Conslidation
-                                        </th>
-                                        <th>
-                                            Restricted Items
-                                        </th>
-                                        @endadmin
+                                        @if ( auth()->user()->isAdmin() && $invoice->isPrePaid() )
+                                            <th>
+                                                Shipping
+                                            </th>
+                                            <th>
+                                                Additional Services
+                                            </th>
+                                            <th>
+                                                Conslidation
+                                            </th>
+                                            <th>
+                                                Restricted Items
+                                            </th>
+                                        @endif
                                         <th>@lang('invoice.Amount')</th>
                                     </tr>
                                 </thead>
@@ -79,18 +79,20 @@
                                             <td>{{ $order->customer_reference }}</td>
                                             <td>{{ optional($order->created_at)->format('Y-m-d') }}</td>
                                             <td>{{ $order->shipping_value }} USD</td>
-                                            <td>{{ $order->services()->sum( 'price' ) }} USD</td>
-                                            <td>{{ $order->consolidation }} USD</td>
-                                            <td>{{ $order->dangrous_goods??0 }} USD</td>
-                                            <td>{{ $order->gross_total }} USD</td>
+                                            @if ( auth()->user()->isAdmin() && $invoice->isPrePaid() )
+                                                <td>{{ $order->services()->sum( 'price' ) }} USD</td>
+                                                <td>{{ $order->consolidation }} USD</td>
+                                                <td>{{ $order->dangrous_goods??0 }} USD</td>
+                                                <td>{{ $order->gross_total }} USD</td>
+                                            @endif
                                         </tr>  
                                     @endforeach   
+                                    <hr>
+                                    <tr class="border-top-light">
+                                        <td class="text-center h4" style="border-top: 1px solid !important;" colspan=" {{ !$invoice->isPrePaid()? '5' : '9' }}">@lang('orders.invoice.Total')</td>
+                                        <td class="h4" style="border-top: 1px solid !important;">{{ round($invoice->orders()->sum('gross_total'),2) }} USD</td>
+                                    </tr>                            
                                 </tbody>
-                                        <hr>
-                                        <tr class="border-top-light">
-                                            <td class="text-center h4" style="border-top: 1px solid !important;" colspan="9">@lang('orders.invoice.Total')</td>
-                                            <td class="h4" style="border-top: 1px solid !important;">{{ round($invoice->orders()->sum('gross_total'),2) }} USD</td>
-                                        </tr>                            
                             </table>
                         </div>
                     </div>
@@ -98,8 +100,11 @@
                 <div class="no-print">
                     <div class="row justify-content-end">
                         <div class="col-12 col-md-7 text-right">
-                            <button class="btn btn-info btn-lg mb-1 mb-md-0 waves-effect waves-light" onclick="window.print();"> <i class="feather icon-file-text"></i> @lang('invoice.Print')</button>
                             <a class="btn btn-primary btn-lg" href="{{ route('admin.payment-invoices.index') }}">@lang('invoice.Back to List')</a>
+                            <button class="btn btn-info btn-lg mb-1 mb-md-0 waves-effect waves-light" onclick="window.print();"> <i class="feather icon-file-text"></i> @lang('invoice.Print')</button>
+                            @if (!$invoice->isPrePaid())
+                                <a href="{{ route('admin.payment-invoices.postpaid.export',$invoice) }}" class="btn btn-primary btn-lg mb-1 mb-md-0 waves-effect waves-light" > <i class="feather icon-file"></i> @lang('Export')</a>
+                            @endif
                             @if (!$invoice->isPaid())
                                 <a href="{{ route('admin.payment-invoices.invoice.edit',$invoice) }}" class="btn btn-primary btn-lg mb-1 mb-md-0 waves-effect waves-light" > <i class="feather icon-edit"></i> @lang('invoice.Edit')</a>
                                 <a href="{{ route('admin.payment-invoices.invoice.checkout.index',$invoice) }}" class="btn btn-success btn-lg mb-1 mb-md-0 waves-effect waves-light" > <i class="feather icon-credit-card"></i> @lang('invoice.Checkout')</a>

@@ -281,6 +281,14 @@ class PermissionSeeder extends Seeder
                 'slug' => 'order-report',
                 'description' => 'Order Report Download',
             ],
+            [
+                'slug' => 'can_import_leve_orders',
+                'description' => 'Special Permission to Import Orders From Leve',
+            ],
+            [
+                'slug' => 'can_create_post_paid_invoices',
+                'description' => 'Allows User to create post paid invoices. User will be able to print label before payment',
+            ],
             
         ];
     }
