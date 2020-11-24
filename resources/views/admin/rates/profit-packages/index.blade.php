@@ -31,6 +31,9 @@
                                                 {{ $package->name }}
                                             </td>
                                             <td class="d-flex">
+                                                <a href="{{ route('admin.rates.rates.exports',$package) }}" class="btn btn-primary mr-2" title="@lang('profitpackage.download-profit-package')">
+                                                    <i class="feather icon-arrow-down"></i>
+                                                </a>
                                                 @can('update', App\Models\ProfitPackage::class)
                                                     <a href="{{ route('admin.rates.profit-packages.edit',$package) }}" class="btn btn-primary mr-2" title="@lang('profitpackage.edit-profit-package')">
                                                         <i class="feather icon-edit"></i>
