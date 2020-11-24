@@ -94,7 +94,15 @@ class Order extends Model
     
     public function isPaid()
     {
-        return  ( $this->is_paid  && !$this->getPaymentInvoice()) || ($this->getPaymentInvoice() && $this->getPaymentInvoice()->isPaid()) ;
+        if ( !$this->getPaymentInvoice() ){
+            return $this->is_paid;
+        }
+
+        if ( !$this->getPaymentInvoice()->isPrePaid() ){
+            return true;
+        }
+
+        return $this->getPaymentInvoice()->isPaid();
     }
 
     public function isArrivedAtWarehouse()
@@ -226,11 +234,11 @@ class Order extends Model
         return "HD-{$this->id}";
     }
 
-    public function doCalculations()
+    public function doCalculations($onVolumetricWeight=true)
     {
         $shippingService = $this->shippingService;
 
-        $shippingCost = $shippingService->getRateFor($this);
+        $shippingCost = $shippingService->getRateFor($this,true,$onVolumetricWeight);
         $additionalServicesCost = $this->services()->sum('price');
 
         $battriesExtra = $shippingService->contains_battery_charges * ( $this->items()->batteries()->count() );

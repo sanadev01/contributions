@@ -98,4 +98,15 @@ class PaymentInvoicePolicy
     {
         return false;
     }
+
+    public function canChnageType(User $user, PaymentInvoice $paymentInvoice)
+    {
+        return false;
+    }
+
+    public function canCreatePostPaidInvoices(User $user)
+    {
+        return $user->hasPermission('can_create_post_paid_invoices');
+
+    }
 }
