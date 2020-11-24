@@ -170,7 +170,7 @@ return [
     'Error While placing Order' => 'Error While placing Order',
     'invoice' => [
         'Invoice' => 'Invoice',
-        'INVOICE NO.' => 'INVOICE NO.',
+        'INVOICE NO' => 'INVOICE NO.',
         'INVOICE DATE' => 'INVOICE DATE',
         'Recipient' => 'Recipient',
         'Sender' => 'Sender',

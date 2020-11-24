@@ -78,6 +78,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
                 Route::resource('invoice.checkout', OrdersCheckoutController::class)->only(['index','store']);
                 Route::get('invoice/{invoice}/toggle_paid', \PaymentStatusToggleController::class)->name('paid.toggle');
                 Route::get('invoice/{invoice}/toggle_type', \PaymentTypeToggleController::class)->name('type.toggle');
+                Route::get('postpaid/{invoice}/export', \PostPaidInvoiceExportController::class)->name('postpaid.export');
             });
         });
 

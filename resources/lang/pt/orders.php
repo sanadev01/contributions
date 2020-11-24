@@ -169,7 +169,7 @@ return [
     'Error While placing Order' => 'Erro ao colocar o pedido',
     'invoice' => [
         'Invoice' => 'Fatura',
-        'INVOICE NO.' => 'FATURA NO.',
+        'INVOICE NO' => 'FATURA NO.',
         'INVOICE DATE' => 'DATA DA FATURA',
         'Recipient' => 'Destinatário',
         'Sender' => 'Remetente',

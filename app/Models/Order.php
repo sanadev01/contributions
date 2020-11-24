@@ -234,11 +234,11 @@ class Order extends Model
         return "HD-{$this->id}";
     }
 
-    public function doCalculations()
+    public function doCalculations($onVolumetricWeight=true)
     {
         $shippingService = $this->shippingService;
 
-        $shippingCost = $shippingService->getRateFor($this);
+        $shippingCost = $shippingService->getRateFor($this,true,$onVolumetricWeight);
         $additionalServicesCost = $this->services()->sum('price');
 
         $battriesExtra = $shippingService->contains_battery_charges * ( $this->items()->batteries()->count() );

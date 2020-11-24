@@ -72,7 +72,7 @@ class LeveOrderImportService extends AbstractImportService
                 'status' => Order::STATUS_PAYMENT_DONE,
                 'order_date' => now(), 
                 'order_value' => $this->getValue("O{$row}"), 
-                'is_paid' => true, 
+                'is_paid' => false, 
 
                 "sender_first_name" => 'Leve',
                 "sender_last_name" => 'leve',
@@ -104,7 +104,7 @@ class LeveOrderImportService extends AbstractImportService
                 'warehouse_number' => "TEMPWHR-{$order->id}"
             ]);
 
-            $order->doCalculations();
+            $order->doCalculations(false);
 
             DB::commit();
 
