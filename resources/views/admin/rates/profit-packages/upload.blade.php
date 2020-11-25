@@ -3,7 +3,7 @@
 @section('page') 
     <div class="card">
         <div class="card-header">
-            <h1 class="card-title" id="basic-layout-form">@lang('profitpackage.create-package')</h1>
+            <h1 class="card-title" id="basic-layout-form">@lang('profitpackage.upload-profit-package')</h1>
             <a class="btn btn-primary" href="{{ route('admin.rates.profit-packages.index') }}">
                 @lang('profitpackage.back to list')
             </a>
@@ -15,10 +15,10 @@
         </div>
         <div class="card-content collapse show">
             <div class="card-body">
-                <form class="form" action="{{ route('admin.rates.profit-packages.store') }}" method="POST" enctype="multipart/form-data">
+                <form class="form" action="{{ route('admin.rates.profit-packages-upload.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row justify-content-center mt-1">
-                        <div class="col-md-10">
+                        <div class="col-md-6">
                             <label for="">@lang('profitpackage.package-name')</label>
                             <input type="text" class="form-control" name="package_name" value="{{ old('package_name') }}">
                             @error('package_name')
@@ -29,13 +29,25 @@
                         </div>
                     </div>
                     <div class="row justify-content-center mt-1">
-                        <div class="col-md-10">
+                        <div class="col-md-6">
                             <label for="">@lang('profitpackage.package-type')</label>
                             <select class="form-control" name="type">
-                                <option value="custom" {{ old('package_name') == '' ? 'custom': '' }}>Custom</option>
-                                <option value="default" {{ old('package_name') == 'default' ? 'selected': '' }}>Default</option>
+                                <option value="custom" {{ old('type') == '' ? 'custom': '' }}>Custom</option>
+                                <option value="default" {{ old('type') == 'default' ? 'selected': '' }}>Default</option>
                             </select>
-                            @error('package_name')
+                            @error('type')
+                                <div class="text-danger">
+                                    {{ $message }}
+                                </div> 
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center mt-1">
+                        <div class="col-md-6">
+                            <label for="">@lang('profitpackage.package-slab')</label>
+                            <input type="file" class="form-control" name="file" value="{{ old('file') }}">
+                            @error('file')
                                 <div class="text-danger">
                                     {{ $message }}
                                 </div> 
@@ -43,15 +55,11 @@
                         </div>
                     </div>
                     <hr>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <livewire:user.profit.slabs>
-                        </div>
-                    </div>
+                   
 
                     <div class="form-actions pl-5 text-right">
                         <button type="submit" class="btn btn-primary">
-                            <i class="la la-check-square-o"></i> @lang('profitpackage.save')
+                            <i class="la la-check-square-o"></i> @lang('profitpackage.import')
                         </button>
                     </div>
                 </form>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Connect;
 use App\Services\StoreIntegrations\Shopify;
 
 /*
@@ -14,10 +15,11 @@ use App\Services\StoreIntegrations\Shopify;
 */
 
 Route::get('/', function (Shopify $shopifyClient) {
-    if (request()->has('shop')) {
+    $shop = "https://".request()->shop;
+    if (request()->has('shop') &&  !Connect::where('store_url','LIKE',"{$shop}%")->first()) {
         $redirectUri = $shopifyClient->getRedirectUrl(request()->shop,[
             'connect_name' => request()->shop,
-            'connect_store_url' => "https://".request()->shop
+            'connect_store_url' => $shop
         ]);
         return redirect()->away($redirectUri);
     }
@@ -87,6 +89,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('fixed-charges', FixedChargesController::class)->only(['index','store']);
             Route::resource('shipping-rates', RateController::class)->only(['create', 'store', 'index']);
             Route::get('rates-exports/{package}', RateDownloadController::class)->name('rates.exports');
+            Route::resource('profit-packages-upload', ProfitPackageUploadController::class)->only(['create', 'store']);
         });
 
         Route::namespace('Connect')->prefix('connect')->as('connect.')->group(function(){

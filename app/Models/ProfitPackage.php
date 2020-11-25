@@ -16,6 +16,7 @@ class ProfitPackage extends Model
 
     const SERVICE_BPS = 'bps';
     const SERVICE_PACKAGE_PLUS = 'package-plus';
+    const SERVICE_PACKAGE_PROFIT = 'package-profit';
 
     const TYPE_DEFAULT = 'default';
     const TYPE_PACKAGE = 'package';
