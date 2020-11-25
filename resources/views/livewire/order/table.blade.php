@@ -23,6 +23,7 @@
             <thead>
                 <tr>
                     <th>
+                        <span class="mr-4"> @lang('orders.edit')</span>
                         <a href="#" wire:click.prevent="sortBy('created_at')">@lang('orders.date')</a>
                     </th>
                     <th>
@@ -43,7 +44,8 @@
                 </tr>
                 <tr class="no-print">
                     <th>
-                        <input type="search" class="form-control" wire:model.debounce.1000ms="date">
+                        
+                        <input type="search" class="form-control col-md-9 ml-5" wire:model.debounce.1000ms="date">
                     </th>
                     <th>
                         <input type="search" class="form-control" wire:model.debounce.1000ms="whr_number">
