@@ -7,9 +7,14 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">@lang('profitpackage.profit-packages')</h4>
-                        @can('create', App\Models\ProfitPackage::class)
-                            <a href="{{ route('admin.rates.profit-packages.create') }}" class="pull-right btn btn-primary"> @lang('profitpackage.create-profit-package') </a>
-                        @endcan
+                        <div>
+                            @can('create', App\Models\ProfitPackage::class)
+                                <a href="{{ route('admin.rates.profit-packages.create') }}" class="btn btn-primary"> @lang('profitpackage.create-profit-package') </a>
+                            @endcan
+                            @can('create', App\Models\ProfitPackage::class)
+                                <a href="{{ route('admin.rates.profit-packages-upload.create') }}" class=" btn btn-info"> @lang('profitpackage.upload-profit-package') </a>
+                            @endcan
+                        </div>
                     </div>
                     <div class="card-content">
                         <div class="mt-1">

@@ -7,9 +7,12 @@ return [
     'profit-packages' => 'Profit Packages',
     'profit-package' => 'Profit Package',
     'create-profit-package' => 'Create Profit Package',
+    'upload-profit-package' => 'Upload Profit Package',
+    'package-slab' => 'Select Excel File to Upload',
     'edit-profit-package' => 'Edit Profit Package',
     'delete-profit-package' => 'Delete Profit Package',
     'package-name' => 'Package Name',
+    'package-type' => 'Package Type',
     'min-weight (grams)' => 'Min Weight (grams)',
     'max-weight (grams)' => 'Max Weight (grams)',   
     'profit' => 'Profit',
@@ -23,5 +26,6 @@ return [
     'udpated' => 'Package Udpated',
     'udpate' => 'Update',
     'deleted' => 'Package Deleted',
+    'import' => 'Import',
 ];
  

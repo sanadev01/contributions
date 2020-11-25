@@ -94,6 +94,7 @@ Route::namespace('Admin')
                 Route::resource('profit-packages', ProfitPackageController::class);
                 Route::resource('fixed-charges', FixedChargesController::class)->only(['index','store']);
                 Route::resource('shipping-rates', RateController::class)->only(['create', 'store', 'index']);
+                Route::resource('profit-packages-upload', ProfitPackageUploadController::class)->only(['create', 'store']);
             });
 
         Route::namespace('Connect')
