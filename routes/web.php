@@ -94,6 +94,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
 
         Route::namespace('Connect')->prefix('connect')->as('connect.')->group(function(){
             Route::resource('/', ConnectController::class)->only(['index', 'create']);
+            Route::get('/guide', \GuideController::class)->name('guide');
             Route::delete('connect/{connect}', [ App\Http\Controllers\Admin\Connect\ConnectController::class,'destroy'])->name('destroy');
             Route::resource('shopify', ConnectShopifyController::class)->only(['create','store']);
         });

@@ -11,7 +11,7 @@
                             <a href="{{ route('admin.connect.create') }}" class="pull-right btn btn-primary"> @lang('connect.New Integration') </a>
                         @endcan
                     </div>
-                    <div class="card-content">
+                    <div class="card-content card-body">
                         <div class="mt-1">
                             <table class="table mb-0">
                                 <thead>

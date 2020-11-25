@@ -32,6 +32,6 @@ class RedirectController extends Controller
         ]);
 
         session()->flash('alert-success','Store Added Successfully');
-        return \redirect()->route('admin.connect.index');
+        return \redirect()->route('admin.connect.guide');
     }
 }
