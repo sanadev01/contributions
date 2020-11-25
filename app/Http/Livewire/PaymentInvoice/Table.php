@@ -9,12 +9,15 @@ use Livewire\WithPagination;
 class Table extends Component
 {
     use WithPagination;
+    protected $paginationTheme = 'bootstrap';
 
     public $pageSize = 50;
     
     public $user;
     public $uuid;
     public $last_four_digits;
+    public $type;
+    public $is_paid;
 
     public $sortBy = 'id';
     public $sortAsc = false;
@@ -40,7 +43,9 @@ class Table extends Component
         return (new PaymentInvoiceRepository)->get(request()->merge([
             'user' => $this->user,
             'uuid' => $this->uuid,
-            'last_four_digits' => $this->last_four_digits
+            'last_four_digits' => $this->last_four_digits,
+            'type' => $this->type,
+            'is_paid' => $this->is_paid,
         ]),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc');
     }
 

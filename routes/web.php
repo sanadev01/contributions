@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Connect;
 use App\Services\StoreIntegrations\Shopify;
 
 /*
@@ -14,10 +15,11 @@ use App\Services\StoreIntegrations\Shopify;
 */
 
 Route::get('/', function (Shopify $shopifyClient) {
-    if (request()->has('shop')) {
+    $shop = "https://".request()->shop;
+    if (request()->has('shop') &&  !Connect::where('store_url','LIKE',"{$shop}%")->first()) {
         $redirectUri = $shopifyClient->getRedirectUrl(request()->shop,[
             'connect_name' => request()->shop,
-            'connect_store_url' => "https://".request()->shop
+            'connect_store_url' => $shop
         ]);
         return redirect()->away($redirectUri);
     }
@@ -39,13 +41,9 @@ Auth::routes();
 Route::post('logout', [\App\Http\Controllers\Auth\LoginController::class,'logout'])->name('logout');
 
 
-Route::namespace('Admin')
-    ->middleware(['auth'])
-    ->as('admin.')
-    ->group(function () {
+Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function () {
 
         Route::get('dashboard', 'HomeController')->name('home');
-
         Route::resource('parcels', PreAlertController::class);
         Route::resource('import-excel', ImportExcelController::class)->only(['index','store']);
         Route::resource('billing-information', BillingInformationController::class);
@@ -57,6 +55,7 @@ Route::namespace('Admin')
         Route::resource('orders',OrderController::class)->only('index','destroy');
 
         Route::namespace('Order')->group(function () {
+            Route::resource('leve-order-import', LeveOrderImportController::class)->only(['index','store']);
             Route::get('orders/{order}/duplicate',DuplicateOrderController::class)->name('orders.duplicate');
             Route::resource('orders.sender',OrderSenderController::class)->only('index','store');
             Route::resource('orders.recipient',OrderRecipientController::class)->only('index','store');
@@ -67,26 +66,25 @@ Route::namespace('Admin')
             Route::get('order-exports', OrderExportController::class)->name('order.exports');
         });
 
-        Route::namespace('Consolidation')
-            ->prefix('consolidation')
-            ->as('consolidation.')
-            ->group(function(){
-                Route::resource('parcels',SelectPackagesController::class)->only('index','store','edit','update');
-                Route::resource('parcels.services',ServicesController::class)->only('index','store');
+        Route::namespace('Consolidation')->prefix('consolidation')->as('consolidation.')->group(function(){
+            Route::resource('parcels',SelectPackagesController::class)->only('index','store','edit','update');
+            Route::resource('parcels.services',ServicesController::class)->only('index','store');
         });
 
-        Route::resource('payment-invoices', PaymentInvoiceController::class)->only(['index','store','destroy']);
-
-        Route::namespace('Payment')
-            ->prefix('payment-invoices')
-            ->as('payment-invoices.')
-            ->group(function(){
+        
+        Route::namespace('Payment')->group(function(){
+            Route::resource('payment-invoices', PaymentInvoiceController::class)->only(['index','store','destroy']);
+            Route::prefix('payment-invoices')->as('payment-invoices.')->group(function () {
                 Route::resource('orders', OrdersSelectController::class)->only(['index','store']);
                 Route::resource('invoice', OrdersInvoiceController::class)->only(['show','store','edit','update']);
                 Route::resource('invoice.checkout', OrdersCheckoutController::class)->only(['index','store']);
                 Route::get('invoice/{invoice}/toggle_paid', \PaymentStatusToggleController::class)->name('paid.toggle');
+                Route::get('invoice/{invoice}/toggle_type', \PaymentTypeToggleController::class)->name('type.toggle');
+                Route::get('postpaid/{invoice}/export', \PostPaidInvoiceExportController::class)->name('postpaid.export');
+            });
         });
 
+<<<<<<< HEAD
         Route::namespace('Rates')
             ->prefix('rates')
             ->as('rates.')
@@ -96,15 +94,20 @@ Route::namespace('Admin')
                 Route::resource('shipping-rates', RateController::class)->only(['create', 'store', 'index']);
                 Route::resource('profit-packages-upload', ProfitPackageUploadController::class)->only(['create', 'store']);
             });
+=======
+        Route::namespace('Rates')->prefix('rates')->as('rates.')->group(function () {
+            Route::resource('profit-packages', ProfitPackageController::class);
+            Route::resource('fixed-charges', FixedChargesController::class)->only(['index','store']);
+            Route::resource('shipping-rates', RateController::class)->only(['create', 'store', 'index']);
+            Route::get('rates-exports/{package}', RateDownloadController::class)->name('rates.exports');
+        });
+>>>>>>> 376ea52fb5928682a386e9aaac8f5139da645570
 
-        Route::namespace('Connect')
-            ->prefix('connect')
-            ->as('connect.')
-            ->group(function(){
-                Route::resource('/', ConnectController::class)->only(['index', 'create']);
-                Route::delete('connect/{connect}', [ App\Http\Controllers\Admin\Connect\ConnectController::class,'destroy'])->name('destroy');
-                Route::resource('shopify', ConnectShopifyController::class)->only(['create','store']);
-            });
+        Route::namespace('Connect')->prefix('connect')->as('connect.')->group(function(){
+            Route::resource('/', ConnectController::class)->only(['index', 'create']);
+            Route::delete('connect/{connect}', [ App\Http\Controllers\Admin\Connect\ConnectController::class,'destroy'])->name('destroy');
+            Route::resource('shopify', ConnectShopifyController::class)->only(['create','store']);
+        });
     
         Route::resource('settings', SettingController::class)->only(['index', 'store']);
         Route::resource('profile', ProfileController::class)->only(['index', 'store']);
@@ -118,13 +121,10 @@ Route::namespace('Admin')
         Route::resource('tickets', TicketController::class);
         Route::post('tickets/{ticket}/close', [\App\Http\Controllers\Admin\TicketController::class, 'markClose'])->name('ticket.mark-closed');
 
-        Route::namespace('Reports')
-            ->as('reports.')
-            ->prefix('reports')
-            ->group(function(){
-                Route::get('user-shipments', \ShipmentPerUserReportController::class)->name('user-shipments');
-                Route::resource('order-trackings', TrackingReportController::class)->only(['index','store']);
-                Route::resource('order', OrderReportController::class)->only(['index','create']);
+        Route::namespace('Reports')->as('reports.')->prefix('reports')->group(function(){
+            Route::get('user-shipments', \ShipmentPerUserReportController::class)->name('user-shipments');
+            Route::resource('order-trackings', TrackingReportController::class)->only(['index','store']);
+            Route::resource('order', OrderReportController::class)->only(['index','create']);
         });
        
         
@@ -135,34 +135,22 @@ Route::namespace('Admin')
 
         Route::get('language/{locale}', LanguageController::class)->name('locale.change');
 
-        Route::namespace('Modals')
-            ->prefix('modals')
-            ->as('modals.')
-            ->group(function(){
-                Route::get('parcel/{parcel}/shipment-info', \ShipmentModalController::class)->name('parcel.shipment-info');
-                Route::get('parcel/{parcel}/consolidation-print', \ConsolidationPrintController::class)->name('parcel.consolidation-print');
-                Route::get('order/{order}/invoice', \OrderInvoiceModalController::class)->name('order.invoice');
+        Route::namespace('Modals')->prefix('modals')->as('modals.')->group(function(){
+            Route::get('parcel/{parcel}/shipment-info', \ShipmentModalController::class)->name('parcel.shipment-info');
+            Route::get('parcel/{parcel}/consolidation-print', \ConsolidationPrintController::class)->name('parcel.consolidation-print');
+            Route::get('order/{order}/invoice', \OrderInvoiceModalController::class)->name('order.invoice');
         });
 });
 
-Route::namespace('Admin\Webhooks')
-        ->prefix('webhooks')
-        ->as('admin.webhooks.')
-        ->group(function(){
-            
-            Route::namespace('Shopify')
-                    ->prefix('shopify')
-                    ->as('shopify.')
-                    ->group(function(){
-                        Route::get('redirect_uri', RedirectController::class)->name('redirect_uri');
-
-                        Route::any('customers/redact', ShopifyRedactController::class)->name('customers.redact');
-                        Route::any('shop/redact', ShopifyRedactController::class)->name('redact');
-                        Route::any('customers/data_request', ShopifyRedactController::class)->name('data_request');
-
-                        Route::post('shopify/order/create', OrderCreatedController::class)->name('order.create');
-                    });
-        });
+Route::namespace('Admin\Webhooks')->prefix('webhooks')->as('admin.webhooks.')->group(function(){       
+    Route::namespace('Shopify')->prefix('shopify')->as('shopify.')->group(function(){
+        Route::get('redirect_uri', RedirectController::class)->name('redirect_uri');
+        Route::any('customers/redact', ShopifyRedactController::class)->name('customers.redact');
+        Route::any('shop/redact', ShopifyRedactController::class)->name('redact');
+        Route::any('customers/data_request', ShopifyRedactController::class)->name('data_request');
+        Route::post('shopify/order/create', OrderCreatedController::class)->name('order.create');
+    });
+});
 
 Route::get('media/get/{document}', function (App\Models\Document $document) {
     if (! Storage::exists($document->getStoragePath())) {

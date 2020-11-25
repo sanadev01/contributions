@@ -26,6 +26,14 @@ class PaymentInvoiceRepository
             });
         }
 
+        if ( $request->type ){
+            $query->where('type',$request->type);
+        }
+
+        if ( $request->is_paid !=null ){
+            $query->where('is_paid',$request->is_paid);
+        }
+
         if ( $request->uuid ){
             $query->where('uuid','LIKE',"%{$request->uuid}%");
         }
@@ -64,7 +72,8 @@ class PaymentInvoiceRepository
         $invoice = PaymentInvoice::create([
             'uuid' => PaymentInvoice::generateUUID(),
             'paid_by' => Auth::id(),
-            'order_count' => $orders->count()
+            'order_count' => $orders->count(),
+            'type' => auth()->user()->can('canCreatePostPaidInvoices', PaymentInvoice::class) ? PaymentInvoice::TYPE_POSTPAID : PaymentInvoice::TYPE_PREPAID
         ]);
 
 

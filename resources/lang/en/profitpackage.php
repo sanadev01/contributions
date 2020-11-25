@@ -26,6 +26,10 @@ return [
     'udpated' => 'Package Udpated',
     'udpate' => 'Update',
     'deleted' => 'Package Deleted',
+<<<<<<< HEAD
     'import' => 'Import',
+=======
+    'download-profit-package' => 'Download',
+>>>>>>> 376ea52fb5928682a386e9aaac8f5139da645570
 ];
  

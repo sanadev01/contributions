@@ -133,5 +133,11 @@ class OrderPolicy
     {
         return $user->hasPermission('import_excel');
     }
+    
+    public function canImportLeveOrders(User $user)
+    {
+        return $user->hasPermission('can_import_leve_orders');
+
+    }
 
 }

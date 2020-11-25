@@ -2,12 +2,12 @@
 
 namespace App\Services\Leve;
 
+use App\Services\Leve\Models\BaseModel;
 use App\Services\Leve\Models\Package;
 use Exception;
 use GuzzleHttp\Client as GuzzleHttpClient;
-use Illuminate\Database\Eloquent\Model;
 
-class Client extends Model
+class Client
 {
 
     private $httpClient;
@@ -45,8 +45,6 @@ class Client extends Model
     public function createPackage(Package $package)
     {
         try {
-
-            \Log::info($package->toJson());
             $response = $this->httpClient->post(
                 $this->getUrl('/packages/create'),[
                     'json' =>  $package->toArray(),
@@ -80,6 +78,38 @@ class Client extends Model
         }
     }
 
+    /**
+     * @param $trackingCode,
+     * @return $package,
+     */
+    public function getPackage($trackingCode)
+    {
+        try {
+
+            $response = $this->httpClient->get(
+                $this->getUrl('/operation/get-package-details/'.$trackingCode),[
+                    'headers' => $this->headers
+                ]
+            );
+
+            if ( $response->getStatusCode() == 200 ){
+                $data = json_decode($response->getBody()->getContents(),true);
+                
+                return (Object)[
+                    'success' => true,
+                    'data' => (new BaseModel($data))
+                ];
+            }
+
+            throw new Exception($response->getBody()->getContents(),500);
+
+        } catch (\Exception $ex) {
+            return (Object)[
+                'success' => false,
+                'message' => $ex->getMessage()
+            ];
+        }
+    }
 
     public function downloadCN23($url)
     {

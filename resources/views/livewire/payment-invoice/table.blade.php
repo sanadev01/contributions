@@ -20,6 +20,7 @@
                 <th>Amount</th>
                 <th>Card Last 4 Digits</th>
                 <th>Status</th>
+                <th>Type</th>
                 <th>Action</th>
             </tr>
             <tr>
@@ -36,7 +37,20 @@
                 <th>
                     <input type="search" wire:model.debounce.500ms="last_four_digits" class="form-control">
                 </th>
-                <th></th>
+                <th>
+                    <select class="form-control" wire:model="is_paid">
+                        <option value="">All</option>
+                        <option value="1">Paid</option>
+                        <option value="0">Unpaid</option>
+                    </select>
+                </th>
+                <th>
+                    <select class="form-control" wire:model="type">
+                        <option value="">All</option>
+                        <option value="prepaid">Pre-Paid</option>
+                        <option value="postpaid">Post-Paid</option>
+                    </select>
+                </th>
                 <th></th>
             </tr>
         </thead>
