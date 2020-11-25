@@ -18,8 +18,8 @@ class RateController extends Controller
 
     public function index(RateRepository $repository)
     {
-        $rates = $repository->get();
-        return view('admin.rates.shipping-rates.index', compact('rates'));
+        $shippingRates = $repository->get();
+        return view('admin.rates.shipping-rates.index', compact('shippingRates'));
     }
 
     public function create()
@@ -33,6 +33,9 @@ class RateController extends Controller
         if ( $repository->store($request) ){
             return  redirect()->route('admin.rates.shipping-rates.index');
         }
+
+        // session()->flash('alert-dange','Error while importing rates');
+        return back()->withInput();
     }
 
 }

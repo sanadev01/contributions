@@ -6,11 +6,15 @@ use App\Models\Rate;
 use Illuminate\Http\UploadedFile;
 use App\Services\Excel\AbstractImportService;
 
-class ImportBPSCharges extends AbstractImportService
+class ImportRates extends AbstractImportService
 {
-    public function __construct(UploadedFile $file)
+    protected $shippingSrviceId;
+    protected $countryId;
+
+    public function __construct(UploadedFile $file, $shippingSrviceId, $countryId)
     {
-        $this->setService(self::SERVICE_BPS);
+        $this->shippingSrviceId = $shippingSrviceId;
+        $this->countryId = $countryId;
 
         $filename = $this->importFile($file);
 
@@ -26,20 +30,19 @@ class ImportBPSCharges extends AbstractImportService
 
     public function readRatesFromFile()
     {
-        $BpsRates = [];
+        $rates = [];
 
         foreach (range(3, 70) as $row) {
-            $BpsRates[] = [
+            $rates[] = [
                 'weight' => $this->workSheet->getCell('A'.$row)->getValue(),
-                'bps' => $this->workSheet->getCell('C'.$row)->getValue(),
-                'leve' => $this->workSheet->getCell('D'.$row)->getValue()
+                'leve' => $this->workSheet->getCell('C'.$row)->getValue()
             ];
         }
 
         // $row = 16;
 
         // $data = [
-        //     'rates' => $BpsRates,
+        //     'rates' => $rates,
         //     'additional_kg' => $this->workSheet->getCell('C'.$row)->getValue(),
         //     'minimum_size' => $this->workSheet->getCell('C'.(++$row))->getValue(),
         //     'max_combine_dim' => $this->workSheet->getCell('C'.(++$row))->getValue(),
@@ -48,25 +51,21 @@ class ImportBPSCharges extends AbstractImportService
         //     'max_value' => $this->workSheet->getCell('C'.(++$row))->getValue(),
         // ];
 
-        return $this->storeRatesToDb($BpsRates);
+        return $this->storeRatesToDb($rates);
     }
 
     private function storeRatesToDb(array $data)
     {
-        // $rates = $data['rates'];
-        // unset($data['rates']);
+        $rates = Rate::where('shipping_service_id',$this->shippingSrviceId)->first();
+        
+        if ( !$rates ){
+            $rates= new Rate();
+        }
 
-        $bpsRates = Rate::first() ?? new Rate();
-
-        $bpsRates->shipping_service_id = $_POST['shipping_service_id'];
-        $bpsRates->country_id = $_POST['country_id'];
-        $bpsRates->data = $data;
-        $bpsRates->save();
-
-        // $bpsRates->updateExtraArray(
-        //     $data
-        // );
-
-        return $bpsRates;
+        $rates->shipping_service_id = $this->shippingSrviceId;
+        $rates->country_id = $this->countryId;
+        $rates->data = $data;
+        $rates->save();
+        return $rates;
     }
 }

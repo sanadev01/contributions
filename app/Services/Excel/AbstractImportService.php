@@ -8,9 +8,6 @@ use PhpOffice\PhpSpreadsheet\Reader\Exception;
 
 abstract class AbstractImportService
 {
-    const SERVICE_LIGHT_SERVICE = 'light-service';
-    const SERVICE_BPS = 'bps';
-    const SERVICE_PACKAGE_PLUS = 'package-plus';
     protected $file;
     protected $fileReader;
     protected $spreadSheet;
@@ -47,21 +44,10 @@ abstract class AbstractImportService
             true
         );
     }
-
-    public function getService()
-    {
-        return $this->service;
-    }
-
-    public function setService($service)
-    {
-        $this->service = $service;
-        return $this;
-    }
-
+    
     public function getStoragePath($filename)
     {
-        return storage_path("app/excels/{$this->service}/{$filename}");
+        return storage_path("app/excels/rates/{$filename}");
     }
 
     abstract public function handle();
@@ -69,7 +55,7 @@ abstract class AbstractImportService
     public function importFile(UploadedFile $file)
     {
         $fiename = md5(microtime()).'.'.$file->getClientOriginalExtension();
-        $file->storeAs("excels/{$this->getService()}", $fiename);
+        $file->storeAs("excels/rates", $fiename);
         return $fiename;
     }
 

@@ -20,30 +20,40 @@
                     </div>
                     <hr>
                     <div class="card-content card-body">
-                        <div class="row justify-content-center">
-                            <div class="col-12 col-sm-4 col-md-3 col-lg-2 border col-xl-2 h4 text-center bg-primary text-white">
-                                @lang('shipping-rates.Weight')
-                            </div>
-                            <div class="col-12 col-sm-4 col-md-3 col-lg-2 border col-xl-2 h4 text-center bg-primary text-white">
-                                @lang('shipping-rates.BPS') ($)
-                            </div>
-                            <div class="col-12 col-sm-4 col-md-3 col-lg-2 border col-xl-2 h4 text-center bg-primary text-white">
-                                @lang('shipping-rates.LEVE') ($)
-                            </div>
-                        </div>
-                        @foreach($rates->data??[] as $rate)
-                            <div class="row justify-content-center">
-                                <div class="col-12 col-sm-4 col-md-3 col-lg-2 border col-xl-2 text-center">
-                                    {{ isset($rate['weight'])?$rate['weight']:0 }} g
-                                </div>
-                                <div class="col-12 col-sm-4 col-md-3 col-lg-2 border col-xl-2 text-center">
-                                    {{ isset($rate['bps'])?$rate['bps']:0 }}
-                                </div>
-                                <div class="col-12 col-sm-4 col-md-3 col-lg-2 border col-xl-2 text-center">
-                                    {{ isset($rate['leve'])?$rate['leve']:0 }}
-                                </div>
-                            </div>
-                        @endforeach
+                        <table class="table table-bordered table-responsive">
+                            <tbody>
+                                @foreach ($shippingRates as $ratesData)
+                                    <tr>
+                                        <th colspan="4"><h3>Shipping Service</h3></th><th colspan="100%"><h4>{{ optional($ratesData->shippingService)->name }}</h4></th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="4"><h3>Country</h3></th><th colspan="100%"><h4>{{ optional($ratesData->country)->name }}</h4></th>
+                                    </tr>
+                                    <tr>
+                                        <th>@lang('shipping-rates.Weight')</th>
+                                        @foreach($ratesData->data??[] as $rate)
+                                            <td>
+                                                {{ isset($rate['weight'])?$rate['weight']:0 }} g
+                                            </td>
+                                        @endforeach
+                                    </tr>
+                                    <tr>
+                                        <th>@lang('shipping-rates.LEVE') ($)</th>
+                                        @foreach($ratesData->data??[] as $rate)
+                                            <td>
+                                                {{ isset($rate['leve'])?$rate['leve']:0 }}
+                                            </td>
+                                        @endforeach
+                                    </tr>
+                                    <tr>
+                                        <th colspan="100%">
+                                            <hr>
+                                        </th>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        {{ $shippingRates->links() }}
                     </div>
                 </div>
             </div>
