@@ -22,6 +22,11 @@ class ConnectShopifyController extends Controller
 
     public function store(CreateRequest $request, Shopify $shopifyClient)
     {
+        if ( Connect::where('store_url','LIKE',"%{$request->connect_store_url}%")->first() ){
+            session()->flash('alert-warning','Store is Already Added');
+            return back();
+        }
+
         $redirectUri = $shopifyClient->getRedirectUrl($request->connect_store_url,$request->all());
         return redirect()->away($redirectUri);
     }

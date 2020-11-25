@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Connect;
 use App\Services\StoreIntegrations\Shopify;
 
 /*
@@ -14,10 +15,11 @@ use App\Services\StoreIntegrations\Shopify;
 */
 
 Route::get('/', function (Shopify $shopifyClient) {
-    if (request()->has('shop')) {
+    $shop = "https://".request()->shop;
+    if (request()->has('shop') &&  !Connect::where('store_url','LIKE',"{$shop}%")->first()) {
         $redirectUri = $shopifyClient->getRedirectUrl(request()->shop,[
             'connect_name' => request()->shop,
-            'connect_store_url' => "https://".request()->shop
+            'connect_store_url' => $shop
         ]);
         return redirect()->away($redirectUri);
     }
