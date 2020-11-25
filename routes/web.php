@@ -84,24 +84,13 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             });
         });
 
-<<<<<<< HEAD
-        Route::namespace('Rates')
-            ->prefix('rates')
-            ->as('rates.')
-            ->group(function () {
-                Route::resource('profit-packages', ProfitPackageController::class);
-                Route::resource('fixed-charges', FixedChargesController::class)->only(['index','store']);
-                Route::resource('shipping-rates', RateController::class)->only(['create', 'store', 'index']);
-                Route::resource('profit-packages-upload', ProfitPackageUploadController::class)->only(['create', 'store']);
-            });
-=======
         Route::namespace('Rates')->prefix('rates')->as('rates.')->group(function () {
             Route::resource('profit-packages', ProfitPackageController::class);
             Route::resource('fixed-charges', FixedChargesController::class)->only(['index','store']);
             Route::resource('shipping-rates', RateController::class)->only(['create', 'store', 'index']);
             Route::get('rates-exports/{package}', RateDownloadController::class)->name('rates.exports');
+            Route::resource('profit-packages-upload', ProfitPackageUploadController::class)->only(['create', 'store']);
         });
->>>>>>> 376ea52fb5928682a386e9aaac8f5139da645570
 
         Route::namespace('Connect')->prefix('connect')->as('connect.')->group(function(){
             Route::resource('/', ConnectController::class)->only(['index', 'create']);

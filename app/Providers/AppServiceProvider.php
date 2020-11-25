@@ -44,6 +44,6 @@ class AppServiceProvider extends ServiceProvider
             return '<?php } ?>';
         });
         
-        // \URL::forceScheme('https');
+        \URL::forceScheme('https');
     }
 }
