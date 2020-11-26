@@ -37,7 +37,8 @@ class ExportPostPaidInvoice extends AbstractExportService
             $this->setCellValue('C'.$row, $order->corrios_tracking_code);
             $this->setCellValue('D'.$row, $order->warehouse_number);
             $this->setCellValue('E'.$row, $order->customer_reference);
-            $this->setCellValue('F'.$row, $order->shipping_value);
+            $this->setCellValue('F'.$row, round($order->weight,2));
+            $this->setCellValue('G'.$row, $order->shipping_value);
             $row++;
         }
 
@@ -62,7 +63,10 @@ class ExportPostPaidInvoice extends AbstractExportService
         $this->setCellValue('E1', 'Leve Order#');
 
         $this->setColumnWidth('F', 20);
-        $this->setCellValue('F1', 'Amount');
+        $this->setCellValue('F1', 'Weight');
+
+        $this->setColumnWidth('G', 20);
+        $this->setCellValue('G1', 'Amount');
 
         $this->setBackgroundColor('A1:F1', '2b5cab');
         $this->setColor('A1:F1', 'FFFFFF');
