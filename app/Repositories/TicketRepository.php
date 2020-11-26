@@ -13,8 +13,10 @@ class TicketRepository
     {   
         $supportTickets = \auth()->user()->isAdmin() ? Ticket::has('user')->with(['comments' => function($q){
                 $q->where('read', '0')->where('user_id', '!=', auth()->id() ); 
-            }])->get() : Auth::user()->tickets;
-        // dd($supportTickets);
+            }])->get() : Ticket::has('user')->where('user_id', auth()->id())->with(['comments' => function($q){
+                $q->where('read', '0')->where('user_id', '!=', auth()->id() ); 
+            }])->get();
+        
         return $supportTickets;
 
     }
