@@ -51,7 +51,7 @@ class LeveOrderImportService extends AbstractImportService
                 return;
             }
 
-            $shippingService = ShippingService::first();
+            $shippingService = ShippingService::find(2);
 
             $order = Order::create([
                 'user_id' => $this->userId,

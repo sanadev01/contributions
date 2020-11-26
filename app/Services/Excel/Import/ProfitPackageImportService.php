@@ -41,17 +41,18 @@ class ProfitPackageImportService extends AbstractImportService
     {
         $data   = [];
         $arrayCounter = 0;
-        
+
         foreach (range(2, $this->noRows) as $row) {
-            $wieght = preg_replace("/[^0-9.]/", "", $this->getValue("A{$row}"));
+            $weight = preg_replace("/[^0-9.]/", "", $this->getValue("A{$row}"));
             $value = preg_replace("/[^0-9.]/", "", $this->getValue("B{$row}"));
+            \Log::info("weight : {$weight}, Value: {$value}");
             if($arrayCounter == 0){
                 $data[ $arrayCounter ]['min_weight'] = 0;
             }else{
                 $minWeight = $arrayCounter - 1;
                 $data[ $arrayCounter ]['min_weight'] = $data[ $minWeight ]['max_weight'] + 1;
             }
-            $data[ $arrayCounter ]['max_weight'] = $wieght;
+            $data[ $arrayCounter ]['max_weight'] = $weight;
             $data[ $arrayCounter ]['value'] = $value;
             $arrayCounter ++;
         }

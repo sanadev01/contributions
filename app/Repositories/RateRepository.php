@@ -7,13 +7,13 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Rate;
 use App\Models\User;
 use Exception;
-use App\Services\Excel\ImportCharges\ImportBPSCharges;
+use App\Services\Excel\ImportCharges\ImportRates;
 
 class RateRepository
 {
     public function get()
     {   
-        $rates = Rate::first() ?? new Rate;
+        $rates = Rate::paginate(5);
         return $rates;
     }
 
@@ -24,7 +24,7 @@ class RateRepository
             $file = $request->file('csv_file');
 
             try {
-                $importService = new ImportBPSCharges($file);
+                $importService = new ImportRates($file, $request->shipping_service_id, $request->country_id);
                 $importService->handle();
                 session()->flash('alert-success', 'shipping-rates.Rates Updated Successfully');
 
@@ -37,7 +37,7 @@ class RateRepository
             }
 
         }catch(Exception $exception){
-            session()->flash('alert-danger','Error while Saving Rate');
+            session()->flash('alert-danger','Error while Saving Rate: '.$exception->getMessage());
             return null;
         }
     }

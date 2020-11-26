@@ -10,6 +10,7 @@ return [
     'address' => 'Address',
     'amount' => 'Amount',
     'status' => 'Status',
+    'edit' => 'Edit',
     'type' => 'Type',
     'payment-status' => 'Payment Status',
     'payment-method' => 'Payment Method',

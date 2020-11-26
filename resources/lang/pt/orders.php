@@ -10,6 +10,7 @@ return [
     'address' => 'Endereço de entrega',
     'amount' => 'Valor',
     'status' => 'Status',
+    'edit' => 'Editar',
     'type' => 'Tipo',
     'payment-status' => 'Status do pagamento',
     'payment-method' => 'Método de pagamento',

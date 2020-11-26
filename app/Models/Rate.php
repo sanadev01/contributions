@@ -17,6 +17,11 @@ class Rate extends Model
     ];
 
 
+    public function shippingService()
+    {
+        return $this->belongsTo(ShippingService::class);
+    }
+
     public function scopeByCountry(Builder $builder,$countryId)
     {
         return $builder->where('country_id',$countryId);
