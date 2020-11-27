@@ -20,4 +20,7 @@ return [
     'error_message_updated' => 'Error while Updating Request. Error: :error',
     'service_updated_success' => 'Services Saved Successfully',
     'service_updated_error' => 'Error while Saving Services. Error: :error',
+    'warning_notice' => 'Warning Notice',
+    'warning_notice_message' => 'TSA Transportation Security Administration  may  apply penalties  to be determined   per case up to  US$400,000 and criminal referral if the violation is committed by a person  or  business  according to security violations for Prohibited Items Discovered in checked cargo . A monetary civil penalty is issued  after the violation actually occurred including criminal charges',
+    'warning_notice_message_danger' => 'it is not allowed to mix products containing batteries or perfumes with other products in the same box , perfumes and products containing  batteries has to be packed separately. Batteries alone are not allowed',
 ];

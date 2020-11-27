@@ -20,4 +20,7 @@ return [
     'error_message_updated' => 'Erro ao atualizar solicitação. Erro: :error',
     'service_updated_success' => 'Serviços salvos com sucesso',
     'service_updated_error' => 'Erro ao salvar serviços. Erro: :error',
+    'warning_notice' => 'Aviso Importante',
+    'warning_notice_message' => 'O TSA Transportation Security Administration;  [órgão Federal Norte Americano] poderá aplicar penalidades a serem determinadas  caso a caso  de até  US$ 400.000 e encaminhamento criminal se a violação for cometida por uma pessoa ou  empresa de acordo com violações de segurança para Itens Proibidos Descobertos na carga despachada. Uma pena civil monetária é emitida após a violação se realmente ocorrer incluindo processos  criminal',
+    'warning_notice_message_danger' => 'não é permitido misturar produtos que contenham pilhas ou perfumes com outros produtos da mesma caixa, perfumes e produtos que contenham pilhas devem ser embalados separadamente. Baterias sozinhas não são permitidas',
 ];
