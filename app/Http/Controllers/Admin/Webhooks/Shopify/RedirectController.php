@@ -17,19 +17,23 @@ class RedirectController extends Controller
             return redirect()->route('login');
         }
 
-        $accessToken = $shopifyClient->getAccessToken($request);
+        
+        try {
+            $accessToken = $shopifyClient->getAccessToken($request);
+    
+            $connect= Connect::create(
+                $accessToken
+            );
+            $wewbhook = $shopifyClient->addWebook($connect);
 
-        $connect= Connect::create(
-            $accessToken
-        );
-
-        $wewbhook = $shopifyClient->addWebook($connect);
-
-        $connect->update([
-            'extra_data' => [
-                'webhook' => $wewbhook->webhook
-            ]
-        ]);
+            $connect->update([
+                'extra_data' => [
+                    'webhook' => $wewbhook->webhook
+                ]
+            ]);
+        } catch (\Exception $ex) {
+            //throw $th;
+        }
 
         session()->flash('alert-success','Store Added Successfully');
         return \redirect()->route('admin.connect.guide');
