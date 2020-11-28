@@ -11,9 +11,9 @@ class TicketRepository
 {
     public function get()
     {   
-        $supportTickets = \auth()->user()->isAdmin() ? Ticket::has('user')->with(['comments' => function($q){
+        $supportTickets = \auth()->user()->isAdmin() ? Ticket::has('user')->withCount(['comments' => function($q){
                 $q->where('read', '0')->where('user_id', '!=', auth()->id() ); 
-            }])->get() : Ticket::has('user')->where('user_id', auth()->id())->with(['comments' => function($q){
+            }])->get() : Ticket::has('user')->where('user_id', auth()->id())->withCount(['comments' => function($q){
                 $q->where('read', '0')->where('user_id', '!=', auth()->id() ); 
             }])->get();
         

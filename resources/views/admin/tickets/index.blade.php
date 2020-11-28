@@ -42,9 +42,10 @@
                                         <td>{{ $ticket->getHumanID() }}</td>
                                         {{-- @admin --}}
                                         <td>
-                                            @if($ticket->comments->count() > 0)
+                                            
+                                            @if($ticket->comments_count > 0)
                                                 <span class="bg-danger border border-danger text-light rounded-circle m-2 p-2">
-                                                    {{ $ticket->comments->count() }}
+                                                    {{ $ticket->comments_count }}
                                                 </span>
                                             @endif
                                         </td>
