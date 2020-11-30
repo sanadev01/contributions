@@ -16,14 +16,18 @@ class RedirectController extends Controller
             session()->put('shopify.redirect', $request->fullUrl());
             return redirect()->route('login');
         }
-
         
         try {
             $accessToken = $shopifyClient->getAccessToken($request);
     
-            $connect= Connect::create(
-                $accessToken
-            );
+            if ( !$accessToken['store_url'] ){
+                $connect= Connect::create(
+                    $accessToken
+                );
+            }else{
+                $connect = Connect::where('store_url','LIKE',"{$accessToken['store_url']}%")->first();
+                $connect->update($accessToken);
+            }
             $wewbhook = $shopifyClient->addWebook($connect);
 
             $connect->update([
@@ -31,11 +35,15 @@ class RedirectController extends Controller
                     'webhook' => $wewbhook->webhook
                 ]
             ]);
+            session()->flash('alert-success','Store Added Successfully');
         } catch (\Exception $ex) {
-            //throw $th;
+            if ( str_contains($ex->getMessage(),422) ){
+                session()->flash('alert-success','Store Updated Successfully');
+            }else{
+                session()->flash('alert-danger',$ex->getMessage());
+            }
         }
 
-        session()->flash('alert-success','Store Added Successfully');
         return \redirect()->route('admin.connect.guide');
     }
 }

@@ -16,7 +16,7 @@ use App\Services\StoreIntegrations\Shopify;
 
 Route::get('/', function (Shopify $shopifyClient) {
     $shop = "https://".request()->shop;
-    if (request()->has('shop') &&  !Connect::where('store_url','LIKE',"{$shop}%")->first()) {
+    if (request()->has('shop') ) {
         $redirectUri = $shopifyClient->getRedirectUrl(request()->shop,[
             'connect_name' => request()->shop,
             'connect_store_url' => $shop
