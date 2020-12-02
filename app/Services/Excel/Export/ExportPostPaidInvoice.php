@@ -3,6 +3,7 @@
 namespace App\Services\Excel\Export;
 
 use App\Models\PaymentInvoice;
+use App\Services\Calculators\WeightCalculator;
 use Illuminate\Support\Collection;
 
 class ExportPostPaidInvoice extends AbstractExportService
@@ -38,7 +39,9 @@ class ExportPostPaidInvoice extends AbstractExportService
             $this->setCellValue('D'.$row, $order->warehouse_number);
             $this->setCellValue('E'.$row, $order->customer_reference);
             $this->setCellValue('F'.$row, round($order->weight,2));
-            $this->setCellValue('G'.$row, $order->shipping_value);
+            $this->setCellValue('G'.$row, round(WeightCalculator::getVolumnWeight($order->length, $order->width, $order->height,'cm'),2));
+            $this->setCellValue('H'.$row, "{$order->length}x{$order->width}x{$order->height}");
+            $this->setCellValue('I'.$row, $order->shipping_value);
             $row++;
         }
 
@@ -63,13 +66,19 @@ class ExportPostPaidInvoice extends AbstractExportService
         $this->setCellValue('E1', 'Leve Order#');
 
         $this->setColumnWidth('F', 20);
-        $this->setCellValue('F1', 'Weight');
+        $this->setCellValue('F1', 'Gross Weight');
 
         $this->setColumnWidth('G', 20);
-        $this->setCellValue('G1', 'Amount');
+        $this->setCellValue('G1', 'volume Weight');
 
-        $this->setBackgroundColor('A1:F1', '2b5cab');
-        $this->setColor('A1:F1', 'FFFFFF');
+        $this->setColumnWidth('H', 20);
+        $this->setCellValue('H1', 'Dims (LxWxH)');
+
+        $this->setColumnWidth('I', 20);
+        $this->setCellValue('I1', 'Amount');
+
+        $this->setBackgroundColor('A1:I1', '2b5cab');
+        $this->setColor('A1:I1', 'FFFFFF');
 
         $this->currentRow++;
     }

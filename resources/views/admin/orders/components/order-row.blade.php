@@ -1,13 +1,22 @@
 <tr>
-    <td class="d-flex justify-content-between align-items-center">
-        <div class="vs-checkbox-con vs-checkbox-primary" wire:click="$emit('edit-order',{{$order->id}})">
-            <input type="radio" name="edit_order" class="edit-order" value="false">
+    <td>
+        <div class="vs-checkbox-con vs-checkbox-primary" >
+            <input type="checkbox" name="orders[]" class="bulk-orders" value="{{$order->id}}">
             <span class="vs-checkbox vs-checkbox-lg">
                 <span class="vs-checkbox--check">
                     <i class="vs-icon feather icon-check"></i>
                 </span>
             </span>
-            {{-- <span class="h3 mx-2 text-primary my-0 py-0"></span> --}}
+            <span class="h3 mx-2 text-primary my-0 py-0"></span>
+        </div>
+    </td>
+    <td class="d-flex justify-content-between align-items-center">
+        <div class="vs-radio-con" wire:click="$emit('edit-order',{{$order->id}})">
+            <input type="radio" name="edit_order" class="edit-order" value="false">
+            <span class="vs-radio vs-radio-lg">
+                <span class="vs-radio--border"></span>
+                <span class="vs-radio--circle"></span>
+            </span>
         </div>
         {{ optional($order->order_date)->format('m/d/Y') }}
     </td>

@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Connect;
 use App\Services\StoreIntegrations\Shopify;
 
 /*
@@ -16,7 +15,7 @@ use App\Services\StoreIntegrations\Shopify;
 
 Route::get('/', function (Shopify $shopifyClient) {
     $shop = "https://".request()->shop;
-    if (request()->has('shop') &&  !Connect::where('store_url','LIKE',"{$shop}%")->first()) {
+    if (request()->has('shop') ) {
         $redirectUri = $shopifyClient->getRedirectUrl(request()->shop,[
             'connect_name' => request()->shop,
             'connect_store_url' => $shop
@@ -64,6 +63,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('orders.order-invoice', OrderInvoiceController::class)->only('index','store');
             Route::resource('orders.label', OrderLabelController::class)->only('index','store');
             Route::get('order-exports', OrderExportController::class)->name('order.exports');
+            Route::get('bulk-action', BulkActionController::class)->name('order.bulk-action');
         });
 
         Route::namespace('Consolidation')->prefix('consolidation')->as('consolidation.')->group(function(){

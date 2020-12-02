@@ -23,6 +23,9 @@
             <thead>
                 <tr>
                     <th>
+                        Bulk
+                    </th>
+                    <th>
                         <span class="mr-4"> @lang('orders.edit')</span>
                         <a href="#" wire:click.prevent="sortBy('created_at')">@lang('orders.date')</a>
                     </th>
@@ -43,6 +46,13 @@
                     <th class="no-print">@lang('orders.actions.actions')</th>
                 </tr>
                 <tr class="no-print">
+                    <th style="min-width: 100px;">
+                        <select name="" id="bulk-actions" class="form-control">
+                            <option value="clear">Clear All</option>
+                            <option value="checkAll">Select All</option>
+                            <option value="print-label">Print Label</option>
+                        </select>
+                    </th>
                     <th>
                         
                         <input type="search" class="form-control col-md-9 ml-5" wire:model.debounce.1000ms="date">
