@@ -29,54 +29,56 @@
                 </thead>
                 <tbody>
                     @foreach ($orders as $order)
-                    <tr>
+                        @if( $order->isPaid() && auth()->user()->can('canPrintLable',$order))
+                        <tr>
 
-                        <td style="width: 200px;">
-                            @if ( $order->isArrivedAtWarehouse() )
-                                <i class="fa fa-star text-success p-1"></i>
-                            @endif
-                            @if( $order->warehouse_number)
-                                <span>
-                                    <a href="#" title="Click to see Shipment" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.parcel.shipment-info',$order) }}">
-                                        WRH#: {{ $order->warehouse_number }}
-                                    </a>
+                            <td style="width: 200px;">
+                                @if ( $order->isArrivedAtWarehouse() )
+                                    <i class="fa fa-star text-success p-1"></i>
+                                @endif
+                                @if( $order->warehouse_number)
+                                    <span>
+                                        <a href="#" title="Click to see Shipment" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.parcel.shipment-info',$order) }}">
+                                            WRH#: {{ $order->warehouse_number }}
+                                        </a>
+                                    </span>
+                                @endif
+                                @if( $order->isConsolidated() )
+                                <hr>
+                                @endif
+                                <span title="Consolidation Requested For Following Shipments">
+                                    @foreach( $order->subOrders as $subOrder)
+                                        <a href="#" class="mb-1 d-block" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.parcel.shipment-info',$subOrder) }}">
+                                            WHR#: {{ $subOrder->warehouse_number }}
+                                        </a>
+                                    @endforeach
                                 </span>
-                            @endif
-                            @if( $order->isConsolidated() )
-                            <hr>
-                            @endif
-                            <span title="Consolidation Requested For Following Shipments">
-                                @foreach( $order->subOrders as $subOrder)
-                                    <a href="#" class="mb-1 d-block" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.parcel.shipment-info',$subOrder) }}">
-                                        WHR#: {{ $subOrder->warehouse_number }}
-                                    </a>
-                                @endforeach
-                            </span>
-                        </td>
-                        @admin
-                        <td>
-                            {{ $order->user->name }} - {{ $order->user->hasRole('wholesale') ? 'W' : 'R' }}
-                        </td>
-                        @endadmin
-                        <td>
-                            {{ ucfirst($order->merchant) }}
-                        </td>
-                        <td>
-                            {{ ucfirst($order->tracking_id) }}
-                        </td>
-                        <td>
-                            {{ ucfirst($order->customer_reference) }}
-                        </td>
-                        <td>
-                            {{ $order->corrios_tracking_code }}
-                        </td>
-                        <td id="row_{{$order->id}}" class="label-area" onclick="loadLabel({{$order->id}},'#row_{{$order->id}}',false)">
-                            <div class="d-flex justify-content-center align-items-center h4 flex-column">
-                                <p><i class="fa fa-spinner fa-spin"></i></p>
-                                <p class="mt-1">Loading Label...</p>
-                            </div>
-                        </td>
-                    </tr>
+                            </td>
+                            @admin
+                            <td>
+                                {{ $order->user->name }} - {{ $order->user->hasRole('wholesale') ? 'W' : 'R' }}
+                            </td>
+                            @endadmin
+                            <td>
+                                {{ ucfirst($order->merchant) }}
+                            </td>
+                            <td>
+                                {{ ucfirst($order->tracking_id) }}
+                            </td>
+                            <td>
+                                {{ ucfirst($order->customer_reference) }}
+                            </td>
+                            <td>
+                                {{ $order->corrios_tracking_code }}
+                            </td>
+                            <td id="row_{{$order->id}}" class="label-area" onclick="loadLabel({{$order->id}},'#row_{{$order->id}}',false)">
+                                <div class="d-flex justify-content-center align-items-center h4 flex-column">
+                                    <p><i class="fa fa-spinner fa-spin"></i></p>
+                                    <p class="mt-1">Loading Label...</p>
+                                </div>
+                            </td>
+                        </tr>
+                        @endif
                     @endforeach
                 </tbody>
             </table>
