@@ -75,7 +75,6 @@ class HandlingServiceController extends Controller
      */
     public function edit(HandlingService $service)
     {
-
         return view('admin.services.edit', compact('service'));
     }
 
