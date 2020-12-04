@@ -24,10 +24,19 @@ class RedirectController extends Controller
                 $connect= Connect::create(
                     $accessToken
                 );
-            }else{
-                $connect = Connect::where('store_url','LIKE',"{$accessToken['store_url']}%")->first();
-                $connect->update($accessToken);
             }
+            
+            if ( $accessToken['store_url']){
+                $connect = Connect::where('store_url','LIKE',"{$accessToken['store_url']}%")->first();
+            }
+
+            if ( !$connect ){
+                $connect= Connect::create(
+                    $accessToken
+                );
+            }
+
+            $connect->update($accessToken);
             $wewbhook = $shopifyClient->addWebook($connect);
 
             $connect->update([
