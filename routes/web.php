@@ -154,7 +154,3 @@ Route::get('order/{order}/label/get', function (App\Models\Order $order) {
     return response()->download(storage_path("app/labels/{$order->corrios_tracking_code}.pdf"),"{$order->corrios_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.label.download');
 
-
-Route::get('zipcode/search', function(){
-    return view('zipsearch');
-})->name('zipcode.search');

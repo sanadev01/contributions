@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\HandlingService;
 use App\Http\Requests\Admin\Service\CreateService; 
 use App\Http\Requests\Admin\Service\UpdateService; 
@@ -14,7 +13,7 @@ class HandlingServiceController extends Controller
 {   
     public function __construct()
     {
-        $this->authorizeResource(HandlingService::class);
+        // $this->authorizeResource(HandlingService::class);
     } 
     /**
      * Display a listing of the resource.
