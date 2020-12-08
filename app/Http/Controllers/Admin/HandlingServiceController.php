@@ -13,8 +13,9 @@ class HandlingServiceController extends Controller
 {   
     public function __construct()
     {
-        // $this->authorizeResource(HandlingService::class);
-    } 
+        $this->authorizeResource(HandlingService::class);
+    }
+
     /**
      * Display a listing of the resource.
      *
