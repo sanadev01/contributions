@@ -18,6 +18,7 @@
                         </a>
                     </div>
                     <hr>
+                    <livewire:components.support-ticket-update  :ticket="$ticket"/>
                     <div class="card-content">
                         <div class="card-body">
                             @if( $errors->count() )
