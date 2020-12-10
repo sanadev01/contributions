@@ -50,7 +50,7 @@ return [
             'Is Contains Dangrous Goods' => 'Contém material restrito',
             'Remove' => 'Remover',
             'Contains Battery' => 'Contém Bateria',
-            'Contains Perfume' => 'Contém Perfume',
+            'Contains Perfume' => 'Contém perfume/aerosol/nail polish',
             'Contains Flammable Liquid' => 'Contém líquido inflamável',
         ],
         'declaration' => '<h3 class="text-danger">Aviso Legal</h3> <br> <p class="h3 text-danger"> Ao clicar em salvar pedido, você concorda que li e confirmo que todas as informações nesta declaração foram preenchidas por mim e estão corretas e sou 100% responsável pelas informações que aqui constam.</p>'
