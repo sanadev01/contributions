@@ -42,13 +42,13 @@
                                         </td>
                                         
                                         <td>
-                                            @can('update', App\Models\HandlingService::class)
+                                            @can('update', $service)
                                                 <a href="{{ route('admin.services.edit',$service) }}" title="@lang('handlingservice.Edit Service')" class="btn btn-sm btn-primary mr-2">
                                                     <i class="feather icon-edit"></i>
                                                 </a>
                                             @endcan
 
-                                            @can('delete', App\Models\HandlingService::class)
+                                            @can('delete', $service)
                                                 <form action="{{ route('admin.services.destroy',$service) }}" method="POST" onsubmit="return confirmDelete()" class="d-inline-block">
                                                     @csrf
                                                     @method('DELETE')

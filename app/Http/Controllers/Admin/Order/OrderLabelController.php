@@ -34,7 +34,7 @@ class OrderLabelController extends Controller
         }
         
         $error = $labelRepository->getError();
-
-        return view('admin.orders.label.label',compact('order','error'));
+        $buttonsOnly = $request->has('buttons_only');
+        return view('admin.orders.label.label',compact('order','error','buttonsOnly'));
     }
 }
