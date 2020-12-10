@@ -47,7 +47,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         Route::resource('import-excel', ImportExcelController::class)->only(['index','store']);
         Route::resource('billing-information', BillingInformationController::class);
 
-        Route::resource('services', HandlingServiceController::class)->except('show');
+        Route::resource('handling-services', HandlingServiceController::class)->except('show');
         Route::resource('addresses', AddressController::class);
         Route::resource('shipping-services', ShippingServiceController::class);
 

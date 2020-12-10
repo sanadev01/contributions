@@ -79,7 +79,7 @@
                     
                     @can('viewAny', App\Models\HandlingService::class)
                     <li class="{{ $isActive(['admin.services.index','admin.services.edit','admin.services.create']) }}">
-                        <a href="{{ route('admin.services.index') }}">
+                        <a href="{{ route('admin.handling-services.index') }}">
                             <i class="feather icon-circle"></i>
                             <span class="menu-title">@lang('menu.Handling Services')</span>
                         </a>
