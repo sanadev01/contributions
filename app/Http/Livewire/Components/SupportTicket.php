@@ -15,30 +15,21 @@ class SupportTicket extends Component
             'tickets' => $this->getQuery()
         ]);
     }
-
-
    
     public function getQuery()
     {
-        
-        if (Auth::user()->isUser()) {
-            $supportTickets = Ticket::query()
-                ->has('user')
-                ->where('user_id', auth()->id())
-                ->whereHas('comments', function($q){
-                    $q->where('read', false)
-                    ->where('user_id', '!=', auth()->id());
-                })->count();
-        }else{
-            $supportTickets = Ticket::query()
-                ->has('user')
-                ->whereHas('comments', function($q){
-                    $q->where('read', false)
-                    ->where('user_id', '!=', auth()->id());
-                })->count();
+        $supportTickets = Ticket::query()->has('user');
+
+        if ( Auth::user()->isUser() ){
+            $supportTickets->where('user_id',Auth::id());
         }
+
+        $supportTickets->whereHas('comments', function($q){
+            $q->where('read', false)
+            ->where('user_id', '!=', auth()->id());
+        });
         
-        return $supportTickets;
+        return $supportTickets->count();
 
     }
 }
