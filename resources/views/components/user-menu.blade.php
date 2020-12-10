@@ -191,6 +191,7 @@
             <li class="nav-item {{ $isActive(['admin.tickets.index','admin.tickets.show']) }}">
                 <a class="nav-link" href="{{ route('admin.tickets.index') }}"><i class="feather icon-message-circle"></i>
                     <span data-i18n="Apps">@lang('menu.support tickets')</span>
+                    <livewire:components.support-ticket/>
                 </a>
             </li>
 

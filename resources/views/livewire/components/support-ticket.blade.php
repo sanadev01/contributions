@@ -1,0 +1,1 @@
+@if($tickets > 0) <span class="bg-danger border border-danger text-light rounded-circle m-2 p-2" wire:poll>{{ $tickets }}</span> @else <span></span> @endif
