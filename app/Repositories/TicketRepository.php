@@ -5,6 +5,7 @@ namespace App\Repositories;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Ticket;
+use App\Models\TicketComment;
 use Exception;
 
 class TicketRepository
@@ -61,6 +62,11 @@ class TicketRepository
         if (! $ticket || (\auth()->user()->isUser() && $ticket->user_id != Auth::id())) {
             return new NotFoundHttpException('Not found');
         }
+    
+        $ticket->comments()->where('read', false)->where('user_id', '!=', Auth::id())->update([
+            'read' => true
+        ]);
+
         return true;
 
     }
