@@ -43,11 +43,11 @@
                                         {{-- @admin --}}
                                         <td>
                                             
-                                            @if($ticket->comments_count > 0)
-                                                <span class="bg-danger border border-danger text-light rounded-circle m-2 p-2">
+                                            {{-- @if($ticket->comments_count > 0) --}}
+                                                <span class="bg-danger border border-danger rounded-circle text-light m-2 p-2 justify-content-center align-items-center {{ $ticket->comments_count > 0 ? 'd-inline-flex' : 'd-none' }}" style="height: 25px; width:25px; top:0; right:0">
                                                     {{ $ticket->comments_count }}
                                                 </span>
-                                            @endif
+                                            {{-- @endif --}}
                                         </td>
                                         <td>
                                             {{ $ticket->user->name }}
