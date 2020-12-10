@@ -10,7 +10,7 @@
                             @lang('handlingservice.Manage Services')
                         </h4>
                         @can('create', App\Models\HandlingService::class)
-                        <a href="{{ route('admin.services.create') }}" class="btn btn-primary">
+                        <a href="{{ route('admin.handling-services.create') }}" class="btn btn-primary">
                             @lang('handlingservice.Create Service')
                         </a>
                         @endcan
@@ -43,13 +43,13 @@
                                         
                                         <td>
                                             @can('update', $service)
-                                                <a href="{{ route('admin.services.edit',$service) }}" title="@lang('handlingservice.Edit Service')" class="btn btn-sm btn-primary mr-2">
+                                                <a href="{{ route('admin.handling-services.edit',$service) }}" title="@lang('handlingservice.Edit Service')" class="btn btn-sm btn-primary mr-2">
                                                     <i class="feather icon-edit"></i>
                                                 </a>
                                             @endcan
 
                                             @can('delete', $service)
-                                                <form action="{{ route('admin.services.destroy',$service) }}" method="POST" onsubmit="return confirmDelete()" class="d-inline-block">
+                                                <form action="{{ route('admin.handling-services.destroy',$service) }}" method="POST" onsubmit="return confirmDelete()" class="d-inline-block">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button title="@lang('handlingservice.Delete Service')" class="btn btn-sm btn-danger mr-2">

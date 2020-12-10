@@ -4,10 +4,10 @@
     <td>{{ optional($invoice->user)->name }}</td>
     @endadmin
     <td>
-        {{ $invoice->order_count }}
+        {{ round($invoice->orders()->count(),2) }}
     </td>
     <td>
-        {{ $invoice->total_amount }} 
+        {{ number_format($invoice->orders()->sum('gross_total'),2) }} USD
     </td>
     <td>
         {{ $invoice->last_four_digits  }}

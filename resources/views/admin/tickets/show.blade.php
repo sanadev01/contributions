@@ -18,6 +18,7 @@
                         </a>
                     </div>
                     <hr>
+                    
                     <div class="card-content">
                         <div class="card-body">
                             @if( $errors->count() )

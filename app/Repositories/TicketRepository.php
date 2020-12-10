@@ -5,13 +5,19 @@ namespace App\Repositories;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Ticket;
+use App\Models\TicketComment;
 use Exception;
 
 class TicketRepository
 {
     public function get()
     {   
-        $supportTickets = \auth()->user()->isAdmin() ? Ticket::has('user')->get() : Auth::user()->tickets;
+        $supportTickets = \auth()->user()->isAdmin() ? Ticket::has('user')->withCount(['comments' => function($q){
+                $q->where('read', '0')->where('user_id', '!=', auth()->id() ); 
+            }])->get() : Ticket::has('user')->where('user_id', auth()->id())->withCount(['comments' => function($q){
+                $q->where('read', '0')->where('user_id', '!=', auth()->id() ); 
+            }])->get();
+        
         return $supportTickets;
 
     }
@@ -56,6 +62,11 @@ class TicketRepository
         if (! $ticket || (\auth()->user()->isUser() && $ticket->user_id != Auth::id())) {
             return new NotFoundHttpException('Not found');
         }
+    
+        $ticket->comments()->where('read', false)->where('user_id', '!=', Auth::id())->update([
+            'read' => true
+        ]);
+
         return true;
 
     }

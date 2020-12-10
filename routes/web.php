@@ -47,7 +47,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         Route::resource('import-excel', ImportExcelController::class)->only(['index','store']);
         Route::resource('billing-information', BillingInformationController::class);
 
-        Route::resource('services', HandlingServiceController::class)->except('show');
+        Route::resource('handling-services', HandlingServiceController::class)->except('show');
         Route::resource('addresses', AddressController::class);
         Route::resource('shipping-services', ShippingServiceController::class);
 
@@ -154,7 +154,3 @@ Route::get('order/{order}/label/get', function (App\Models\Order $order) {
     return response()->download(storage_path("app/labels/{$order->corrios_tracking_code}.pdf"),"{$order->corrios_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.label.download');
 
-
-Route::get('zipcode/search', function(){
-    return view('zipsearch');
-})->name('zipcode.search');

@@ -34,6 +34,25 @@
                 </div>
             </div>
         </div>
+        @user
+            <div class="row col-md-12">
+                <div class="col-md-12">
+                    <h5>@lang('consolidation.warning_notice')</h5>
+                </div>
+                <div class="col-md-12">
+                    <p>@lang('consolidation.warning_notice_message')</p>
+                    <p class="text-danger">@lang('consolidation.warning_notice_message_danger')</p>
+                </div>
+            </div>
+            <div class="row col-md-12">
+                    <div class="col-md-6">
+                        <input type="checkbox" required name="agree" value="1" id="agree">
+                        <label for="agree">I Agree to Terms</label>
+                    </div>
+                    
+                </div>
+            </div>
+        @enduser
         <div class="row justify-content-end">
             <div class="col-md-8 text-right">
                 <button class="btn btn-primary btn-lg">@lang('consolidation.Save')</button>

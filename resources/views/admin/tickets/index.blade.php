@@ -25,6 +25,9 @@
                                     <th>@lang('tickets.TicketID')</th>
                                     {{-- @admin --}}
                                     <th>
+                                        
+                                    </th>
+                                    <th>
                                         @lang('tickets.User')
                                     </th>
                                     {{-- @endadmin --}}
@@ -39,11 +42,20 @@
                                         <td>{{ $ticket->getHumanID() }}</td>
                                         {{-- @admin --}}
                                         <td>
+                                            
+                                            {{-- @if($ticket->comments_count > 0) --}}
+                                                <span class="bg-danger border border-danger rounded-circle text-light m-2 p-2 justify-content-center align-items-center {{ $ticket->comments_count > 0 ? 'd-inline-flex' : 'd-none' }}" style="height: 25px; width:25px; top:0; right:0">
+                                                    {{ $ticket->comments_count }}
+                                                </span>
+                                            {{-- @endif --}}
+                                        </td>
+                                        <td>
                                             {{ $ticket->user->name }}
                                         </td>
                                         {{-- @endadmin --}}
                                         <td>
                                             {{ $ticket->subject }}
+                                            
                                         </td>
                                         <td>
                                              @if($ticket->open == 1) <span class="badge badge-success">@lang('tickets.open')</span> @else <span class="badge badge-danger">@lang('tickets.close')</span> @endif 

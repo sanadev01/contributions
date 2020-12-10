@@ -26,7 +26,7 @@ class ConnectShopifyController extends Controller
             session()->flash('alert-warning','Store is Already Added');
             return back();
         }
-
+        
         $redirectUri = $shopifyClient->getRedirectUrl($request->connect_store_url,$request->all());
         return redirect()->away($redirectUri);
     }

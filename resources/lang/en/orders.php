@@ -11,6 +11,9 @@ return [
     'amount' => 'Amount',
     'status' => 'Status',
     'edit' => 'Edit',
+    'Edit Order' => 'Edit Order',
+    'Bulk Print' => 'Print Bulk',
+    'Download Orders' => 'Download Orders',
     'type' => 'Type',
     'payment-status' => 'Payment Status',
     'payment-method' => 'Payment Method',
@@ -47,7 +50,7 @@ return [
             'Is Contains Dangrous Goods' => 'Is Contains restricted goods',
             'Remove' => 'Remove',
             'Contains Battery' => 'Contains Battery',
-            'Contains Perfume' => 'Contains Perfume',
+            'Contains Perfume' => 'Contains perfume/aerosol/nail polish',
             'Contains Flammable Liquid' => 'Contains Flammable Liquid',
         ],
         'declaration' => '<h3 class="text-danger">Disclaimer</h3> <br> <p class="h3 text-danger">By clicking on save order you agree that you have read and confirm that all information in this statement has been filled out by me and is correct and I am 100% responsible for the information contained herein.</p>'

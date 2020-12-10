@@ -31,7 +31,7 @@ class Shopify{
         if ( substr($storeUrl,-1) == '/' ){
             $storeUrl = substr($storeUrl,0, strlen($storeUrl)-1);
         }
-        if ( strpos($storeUrl,'https://')  == false ){
+        if ( strpos($storeUrl,'https://')  === false ){
             $storeUrl = 'https://'.$storeUrl;
         }
 
