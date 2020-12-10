@@ -49,10 +49,7 @@
                         <input type="checkbox" required name="agree" value="1" id="agree">
                         <label for="agree">I Agree to Terms</label>
                     </div>
-                    <div class="col-md-6">
-                        <input type="checkbox" name="default" value="1" id="default">
-                        <label for="default">Make Default</label>
-                    </div>
+                    
                 </div>
             </div>
         @enduser
