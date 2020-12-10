@@ -233,11 +233,11 @@ class OrderRepository
     public function getOdersForExport()
     {
         $orders = Order::where('status','>=',Order::STATUS_ORDER)
-        ->has('user')->get();
+                    ->has('user');
         if (Auth::user()->isUser()) {
-            $orders->where('user_id', Auth::id())->get();
+            $orders->where('user_id', Auth::id());
         }
-        return $orders;
+        return $orders->get();
     }
 
 
