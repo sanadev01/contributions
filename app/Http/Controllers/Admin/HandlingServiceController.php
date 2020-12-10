@@ -73,9 +73,9 @@ class HandlingServiceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(HandlingService $service)
+    public function edit(HandlingService $handlingService)
     {
-        return view('admin.services.edit', compact('service'));
+        return view('admin.services.edit', compact('handlingService'));
     }
 
     /**
@@ -89,7 +89,7 @@ class HandlingServiceController extends Controller
     {
         if ( $repository->update($request, $handlingService) ){
             session()->flash('alert-success', 'handlingservice.Updated');
-            return  redirect()->route('admin.services.index');
+            return  redirect()->route('admin.handling-services.index');
         }
 
         return back()->withInput();
@@ -101,11 +101,11 @@ class HandlingServiceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(HandlingService $service, HandlingServiceRepository $repository)
+    public function destroy(HandlingService $handlingService, HandlingServiceRepository $repository)
     {   
-         if ( $repository->delete($service) ){
+         if ( $repository->delete($handlingService) ){
             session()->flash('alert-success', 'handlingservice.Deleted');
-            return  redirect()->route('admin.services.index');
+            return  redirect()->route('admin.handling-services.index');
         }
   
         return back();

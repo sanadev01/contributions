@@ -14,7 +14,7 @@
         <div class="col-11 text-right">
             
             <a href="{{ route('admin.order.exports') }}" class="btn btn-success" title="@lang('orders.import-excel.Download')">
-                <i class="fa fa-arrow-down"></i>
+                @lang('orders.Download Orders') <i class="fa fa-arrow-down"></i>
             </a>
         </div>
     </div>
@@ -23,10 +23,10 @@
             <thead>
                 <tr>
                     <th>
-                        Bulk
+                        @lang('orders.Bulk Print')
                     </th>
                     <th>
-                        <span class="mr-4"> @lang('orders.edit')</span>
+                        <span class="mr-4"> @lang('Edit Order')</span>
                         <a href="#" wire:click.prevent="sortBy('created_at')">@lang('orders.date')</a>
                     </th>
                     <th>

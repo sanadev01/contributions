@@ -1,6 +1,6 @@
 <tr>
     <td>
-        <div class="vs-checkbox-con vs-checkbox-primary" >
+        <div class="vs-checkbox-con vs-checkbox-primary" title="@lang('orders.Bulk Print')">
             <input type="checkbox" name="orders[]" class="bulk-orders" value="{{$order->id}}">
             <span class="vs-checkbox vs-checkbox-lg">
                 <span class="vs-checkbox--check">
@@ -11,7 +11,7 @@
         </div>
     </td>
     <td class="d-flex justify-content-between align-items-center">
-        <div class="vs-radio-con" wire:click="$emit('edit-order',{{$order->id}})">
+        <div class="vs-radio-con" wire:click="$emit('edit-order',{{$order->id}})" title="@lang('Edit Order')">
             <input type="radio" name="edit_order" class="edit-order" value="false">
             <span class="vs-radio vs-radio-lg">
                 <span class="vs-radio--border"></span>

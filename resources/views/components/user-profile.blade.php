@@ -1,10 +1,10 @@
-<li class="dropdown dropdown-user nav-item">
+<li class="dropdown dropdown-user nav-item" title="@lang('profile.Edit Profile')">
     <a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown">
         <div class="user-nav d-sm-flex d-none">
             <span class="user-name text-bold-600">
                 {{ auth()->user()->name }}
             </span>
-            <span class="user-status">@lang('user.Available')</span>
+            <span class="user-status">{{ auth()->user()->pobox_number }}</span>
         </div>
         <span>
             <img class="round" src="{{ auth()->user()->getImage() }}" alt="avatar" height="40" width="40">

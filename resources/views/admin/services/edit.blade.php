@@ -6,7 +6,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">@lang('handlingservice.Edit Service')</h4>
-                        <a href="{{ route('admin.services.index') }}" class="btn btn-primary">
+                        <a href="{{ route('admin.handling-services.index') }}" class="btn btn-primary">
                             @lang('handlingservice.Back to List')
                         </a>
                     </div>
@@ -23,14 +23,14 @@
                                     </ul>
                                 </div>
                             @endif
-                            <form action="{{ route('admin.services.update',$service) }}" method="post" enctype="multipart/form-data">
+                            <form action="{{ route('admin.handling-services.update',$handlingService) }}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
                                 
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('handlingservice.Name')<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control" name="name" value="{{ old('name',$service->name) }}" placeholder="@lang('handlingservice.Name of Service')">
+                                        <input type="text" class="form-control" name="name" value="{{ old('name',$handlingService->name) }}" placeholder="@lang('handlingservice.Name of Service')">
                                         @error('name')
                                         <div class="help-block text-danger"> {{ $message }} </div>
                                         @enderror
@@ -39,7 +39,7 @@
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('handlingservice.Cost (USD)')<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <input type="number" step="0.001" class="form-control" name="cost" placeholder="@lang('handlingservice.Cost of Service')" value="{{ old('cost',$service->cost) }}">
+                                        <input type="number" step="0.001" class="form-control" name="cost" placeholder="@lang('handlingservice.Cost of Service')" value="{{ old('cost',$handlingService->cost) }}">
                                         @error('cost')
                                             <div class="help-block text-danger"> {{ $message }} </div>
                                         @enderror
@@ -48,7 +48,7 @@
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('handlingservice.Price (USD)')<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <input type="number" step="0.001" class="form-control" name="price" placeholder="@lang('handlingservice.Price of Service')" value="{{ old('price',$service->price) }}">
+                                        <input type="number" step="0.001" class="form-control" name="price" placeholder="@lang('handlingservice.Price of Service')" value="{{ old('price',$handlingService->price) }}">
                                         @error('price')
                                             <div class="help-block text-danger"> {{ $message }} </div>
                                         @enderror
