@@ -4,12 +4,23 @@ use App\Models\Order;
 use App\Models\Country;
 use App\Models\State;
 use App\Models\Setting;
+use App\Models\ShippingService;
 use App\Services\Calculators\AbstractRateCalculator;
 
 function countries()
 {
     $countries =  Country::all();
     return $countries;
+}
+
+function shippingServices($includeInactive=false)
+{
+    $query = ShippingService::query();
+    if ( !$includeInactive ){
+        $query->active();
+    }
+
+    return $query->get();
 }
 
 function states($countryId=null){

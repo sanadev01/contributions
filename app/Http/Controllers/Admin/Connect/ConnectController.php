@@ -37,6 +37,32 @@ class ConnectController extends Controller
     }
 
     /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Connect $connect)
+    {
+        return view('admin.connects.edit',compact('connect'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, ConnectReporistory $connectReporistory, Connect $connect)
+    {
+        if ( $connectReporistory->update($request, $connect) ){
+            session()->flash('alert-success',__('connect.Settings Updated'));
+            return redirect()->route('admin.connect.index');
+        }
+
+        session()->flash('alert-danger',__('connect.Error While Updating Settings'));
+        return back();
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Connect  $connect
