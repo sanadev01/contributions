@@ -12,10 +12,18 @@
             </select>
         </div>
         <div class="col-11 text-right">
-            
-            <a href="{{ route('admin.order.exports') }}" class="btn btn-success" title="@lang('orders.import-excel.Download')">
-                @lang('orders.Download Orders') <i class="fa fa-arrow-down"></i>
-            </a>
+            <form action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
+                @csrf
+                <label>Start Date</label>
+                <input type="date" name="start_date" class="from-control col-2">
+
+                <label>End Date</label>
+                <input type="date" name="end_date" class="from-control col-2">
+
+                <button class="btn btn-success" title="@lang('orders.import-excel.Download')">
+                    @lang('orders.Download Orders') <i class="fa fa-arrow-down"></i>
+                </button>
+            </form>
         </div>
     </div>
     <div class="table-wrapper position-relative">

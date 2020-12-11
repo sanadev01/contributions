@@ -68,9 +68,9 @@
 
         $('body').on('submit','form',function(){
             $('#loading').fadeIn();
-            // setTimeout(function(){
-            //     $('#loading').fadeOut();
-            // },10000)
+            setTimeout(function(){
+                $('#loading').fadeOut();
+            },5000)
         })
     </script>
 
