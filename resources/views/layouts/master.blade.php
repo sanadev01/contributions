@@ -54,23 +54,27 @@
         @include('layouts.footer')
     </div>
     @include('layouts.js')
-    @yield('js')=
+    @yield('js')
     <script>
         function confirmDelete(msg){
             return confirm(msg ?? 'Are you Sure to Delete');
         }
-        $(window).on('load',function(){
-            $('#loading').fadeOut();
-        })
-        $(window).on('beforeunload',function(){
-            $('#loading').fadeIn();
+
+        $('document').ready(function(){
             setTimeout(function(){
                 $('#loading').fadeOut();
-            },10000)
+            },1000)
+        })
+
+        $('body').on('submit','form',function(){
+            $('#loading').fadeIn();
+            // setTimeout(function(){
+            //     $('#loading').fadeOut();
+            // },10000)
         })
     </script>
 
-{{-- Livewire Js Section start here --}}
+    {{-- Livewire Js Section start here --}}
     <livewire:scripts>
 
     @yield('lvjs')

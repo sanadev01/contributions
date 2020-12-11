@@ -79,7 +79,7 @@ class Order extends Model
 
     public function getPaymentInvoice()
     {
-        return !$this->paymentInvoices->isEmpty() ? $this->paymentInvoices()->first() : null;
+        return !$this->paymentInvoices->isEmpty() ? $this->paymentInvoices->first() : null;
     }
 
     public function isShipmentAdded()
