@@ -92,11 +92,12 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('profit-packages-upload', ProfitPackageUploadController::class)->only(['create', 'store']);
         });
 
-        Route::namespace('Connect')->prefix('connect')->as('connect.')->group(function(){
-            Route::resource('/', ConnectController::class)->only(['index', 'create']);
-            Route::get('/guide', \GuideController::class)->name('guide');
-            Route::delete('connect/{connect}', [ App\Http\Controllers\Admin\Connect\ConnectController::class,'destroy'])->name('destroy');
-            Route::resource('shopify', ConnectShopifyController::class)->only(['create','store']);
+        Route::namespace('Connect')->group(function(){
+            Route::resource('connect', ConnectController::class)->only(['index', 'create','edit','update','destroy']);
+            Route::prefix('connect')->as('connect.')->group(function(){
+                Route::get('/guide', \GuideController::class)->name('guide');
+                Route::resource('shopify', ConnectShopifyController::class)->only(['create','store']);
+            });
         });
     
         Route::resource('settings', SettingController::class)->only(['index', 'store']);

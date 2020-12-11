@@ -3,10 +3,10 @@
 namespace App\Repositories;
 
 use App\Models\Connect;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class ConnectReporistory extends Model
+class ConnectReporistory
 {
     public function get()
     {
@@ -17,5 +17,15 @@ class ConnectReporistory extends Model
         }
 
         return $query->paginate(50);
+    }
+
+    public function update(Request $request, Connect $connect)
+    {
+        $connect->update([
+            'store_name' => $request->connect_name,
+            'default_shipping_service' => $request->default_shipping_service
+        ]);
+
+        return true;
     }
 }

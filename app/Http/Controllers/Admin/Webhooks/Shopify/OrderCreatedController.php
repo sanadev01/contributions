@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Admin\Webhooks\Shopify;
 
 use App\Http\Controllers\Controller;
+use App\Models\Connect;
 use App\Models\Country;
 use App\Models\Order;
+use App\Models\ShippingService;
 use App\Models\State;
 use App\Services\Converters\UnitsConverter;
 use Illuminate\Http\Request;
@@ -17,6 +19,15 @@ class OrderCreatedController extends Controller
         DB::beginTransaction();
 
         try {
+            $connectId = base64_decode($request->connectId);
+            $connect = Connect::find($connectId);
+
+            $shippingService = ShippingService::find( optional($connect)->default_shipping_service );
+
+            if ( !$shippingService ){
+                $shippingService = ShippingService::query()->active()->first();
+            }
+            
             $order = Order::create([
                 'user_id' => base64_decode($request->callbackUser),
                 'sender_first_name' => optional($request->customer)['first_name'],
@@ -32,9 +43,11 @@ class OrderCreatedController extends Controller
                 'length' => 16,
                 'width' => 11,
                 'height' => 2,
+                'shipping_service_id' => optional($shippingService)->id,
+                'shipping_service_name' => optional($shippingService)->name,
                 'is_shipment_added' => true,
                 'measurement_unit' => 'kg/cm',
-                'status' => Order::STATUS_PREALERT_READY
+                'status' => Order::STATUS_ORDER
             ]);
     
             $order->update([
@@ -70,7 +83,11 @@ class OrderCreatedController extends Controller
                 ]);
             }
 
+            
             DB::commit();
+
+            $order->refresh();
+            $order->doCalculations();
 
         } catch (\Exception $ex) {
             DB::rollback();
