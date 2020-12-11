@@ -1,9 +1,9 @@
 <div>
     <div class="row">
         <div class="col-12 text-right">
-            <button class="btn btn-primary" wire:click="downloadReport">
+            <a href="{{ $downloadLink }}" class="btn btn-primary" {{ !$downloadLink ? 'disabled': '' }} target="_blank">
                 Download
-            </button>
+            </a>
         </div>
     </div>
     <div class="row my-3">

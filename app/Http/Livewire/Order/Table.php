@@ -157,7 +157,13 @@ class Table extends Component
     {
         $orders = Order::query()
             ->where('status','>=',Order::STATUS_ORDER)
-            ->has('user');
+            ->has('user')
+            ->with([
+                'paymentInvoices',
+                'user',
+                'subOrders',
+                'parentOrder'
+            ]);
         if (Auth::user()->isUser()) {
             $orders->where('user_id', Auth::id());
         }

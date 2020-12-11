@@ -9,6 +9,7 @@ use Livewire\WithPagination;
 class UserShipmentReportTable extends Component
 {
     use WithPagination;
+    protected $paginationTheme = 'bootstrap';
 
     public $pageSize = 50;
     
@@ -22,7 +23,10 @@ class UserShipmentReportTable extends Component
     public function render()
     {
         return view('livewire.reports.user-shipment-report-table',[
-            'users' => $this->getReportData()
+            'users' => $this->getReportData(),
+            'downloadLink' => route('admin.reports.user-shipments',http_build_query(
+                $this->getRequestData()->all()
+            )).'&dl=1'
         ]);
     }
 
@@ -38,13 +42,6 @@ class UserShipmentReportTable extends Component
     public function getReportData()
     {
         return (new OrderReportsRepository)->getShipmentReportOfUsers($this->getRequestData(),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc');
-    }
-
-    public function downloadReport()
-    {
-        return \redirect()->route('admin.reports.user-shipments',http_build_query(
-            $this->getRequestData()->merge(['dl'=>1])->all()
-        ));
     }
 
     public function getRequestData()
