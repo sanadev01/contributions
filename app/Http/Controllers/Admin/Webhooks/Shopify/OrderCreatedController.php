@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\ShippingService;
 use App\Models\State;
 use App\Services\Converters\UnitsConverter;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -34,7 +35,7 @@ class OrderCreatedController extends Controller
                 'sender_last_name' => optional($request->customer)['last_name'],
                 'sender_email' => optional($request->customer)['email'],
                 'sender_phone' => optional($request->customer)['phone'],
-                
+                'order_date' => Carbon::now(),
                 'customer_reference' => $request->order_number,
                 'merchant' => $request->referring_site,
                 'carrier' => '',
@@ -86,12 +87,9 @@ class OrderCreatedController extends Controller
             
             DB::commit();
 
-            $order->refresh();
-            $order->doCalculations();
-
         } catch (\Exception $ex) {
             DB::rollback();
-            \Log::info('Error: '. $ex->getMessage());
+            \Log::info($ex);
         }
     }
 }
