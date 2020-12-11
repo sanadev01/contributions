@@ -27,6 +27,10 @@ return  [
         'Your consolidation' => 'Your consolidation request was received it should take 24/48 hours to be completed.',
         'A new warehouse number' => 'A new warehouse number will be created with updated dimensions and weight so you can make your payment.',
     ],
+    'new-ticket-comment-added' => [
+        'Hello' => 'Hello',
+        'Add comment' => 'New Comment added to ticket #',
+    ],
     'consolidation-ready' => [
         'Hello' => 'Hello',
         'Your consolidation request' => 'Your consolidation request  is ready please proceed with shipment declaration and payment for ',

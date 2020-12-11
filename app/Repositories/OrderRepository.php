@@ -230,13 +230,22 @@ class OrderRepository
         return $this->error;
     }
     
-    public function getOdersForExport()
+    public function getOdersForExport($request)
     {
         $orders = Order::where('status','>=',Order::STATUS_ORDER)
-                    ->has('user');
+        ->has('user');
         if (Auth::user()->isUser()) {
             $orders->where('user_id', Auth::id());
         }
+        
+        if ( $request->start_date ){
+            $orders->where('order_date','>',$request->start_date);
+        }
+        
+        if ( $request->end_date ){
+            $orders->where('order_date','<=',$request->end_date);
+        }
+        
         return $orders->get();
     }
 

@@ -14,7 +14,7 @@ class AddShippingServiceIdToConnectsTable extends Migration
     public function up()
     {
         Schema::table('connects', function (Blueprint $table) {
-            $table->bigInteger('default_shipping_service')->default(0);
+            $table->bigInteger('default_shipping_service')->nullable();
         });
     }
 
