@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Webhooks\Shopify;
 
 use App\Http\Controllers\Controller;
 use App\Models\Connect;
+use App\Models\ShippingService;
 use App\Services\StoreIntegrations\Shopify;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -40,6 +41,7 @@ class RedirectController extends Controller
             $wewbhook = $shopifyClient->addWebook($connect);
 
             $connect->update([
+                'default_shipping_service' => optional(ShippingService::query()->active()->first())->id,
                 'extra_data' => [
                     'webhook' => $wewbhook->webhook
                 ]
