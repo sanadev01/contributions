@@ -3,7 +3,7 @@
 namespace App\Services\Excel\Export;
 use Illuminate\Support\Collection;
 use App\Models\Order;
-use Illuminate\Database\Eloquent\Model;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
 class OrderExport extends AbstractExportService
 {
@@ -33,7 +33,7 @@ class OrderExport extends AbstractExportService
 
         foreach ($this->orders as $order) {
             $user = $order->user;
-            // dd($this->orders);
+        
             $this->setCellValue('A'.$row, $order->warehouse_number);
             $this->setCellValue('B'.$row, $user->name);
             $this->setCellValue('C'.$row, $order->merchant);
@@ -41,25 +41,39 @@ class OrderExport extends AbstractExportService
             $this->setCellValue('E'.$row, $order->customer_reference);
             $this->setCellValue('F'.$row, $order->corrios_tracking_code);
             $this->setCellValue('G'.$row, $order->gross_total);
+            $this->setCellValue('H'.$row, $order->getWeight('kg'));
+            $this->setCellValue('I'.$row, $order->getWeight('lbs'));
             if($order->status == Order::STATUS_ORDER){
-                $this->setCellValue('H'.$row, 'ORDER');
+                $this->setCellValue('J'.$row, 'ORDER');
             }
             if($order->status == Order::STATUS_PAYMENT_PENDING){
-                $this->setCellValue('H'.$row, 'PAYMENT_PENDING');
+                $this->setCellValue('J'.$row, 'PAYMENT_PENDING');
             }
             if($order->status == Order::STATUS_PAYMENT_DONE){
-                $this->setCellValue('H'.$row, 'PAYMENT_DONE');
+                $this->setCellValue('J'.$row, 'PAYMENT_DONE');
             }
             if($order->status == Order::STATUS_SHIPPED){
-                $this->setCellValue('H'.$row, 'SHIPPED');
+                $this->setCellValue('J'.$row, 'SHIPPED');
             }
             
-            $this->setCellValue('I'.$row, $order->order_date);
+            $this->setCellValue('K'.$row, $order->order_date);
+            
             $row++;
         }
 
         $this->currentRow = $row;
+
+        $this->setCellValue('H'.$row, "=SUM(H1:H{$row})");
+        $this->setCellValue('I'.$row, "=SUM(I1:I{$row})");
+        $this->mergeCells("A{$row}:G{$row}");
+        $this->setBackgroundColor("A".$row, 'adfb84');
+        $this->setAlignment('A'.$row, Alignment::VERTICAL_CENTER);
+        $this->setCellValue('A'.$row, 'Total Order: '.$this->orders->count());
+
+
+
     }
+
 
     private function setExcelHeaderRow()
     {
@@ -85,13 +99,19 @@ class OrderExport extends AbstractExportService
         $this->setCellValue('G1', 'Amount');
 
         $this->setColumnWidth('H', 20);
-        $this->setCellValue('H1', 'Status');
-
+        $this->setCellValue('H1', 'Kg');
+        
         $this->setColumnWidth('I', 20);
-        $this->setCellValue('I1', 'Date');
+        $this->setCellValue('I1', 'Lbs');
+        
+        $this->setColumnWidth('J', 20);
+        $this->setCellValue('J1', 'Status');
 
-        $this->setBackgroundColor('A1:I1', '2b5cab');
-        $this->setColor('A1:I1', 'FFFFFF');
+        $this->setColumnWidth('K', 20);
+        $this->setCellValue('K1', 'Date');
+
+        $this->setBackgroundColor('A1:K1', '2b5cab');
+        $this->setColor('A1:K1', 'FFFFFF');
 
         $this->currentRow++;
     }
