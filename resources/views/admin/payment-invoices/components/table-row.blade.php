@@ -41,6 +41,10 @@
             @endif
         </a>
     </td>
+
+    <td>
+        {{ optional($invoice->created_at)->format('m/d/Y') }}
+    </td>
     
     <td>
         @if ( auth()->user()->can('update',$invoice) && !$invoice->isPaid())

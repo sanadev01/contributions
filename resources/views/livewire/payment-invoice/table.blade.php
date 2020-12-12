@@ -1,13 +1,29 @@
 <div>
-    <div class="table-actions">
-        <select wire:model='pageSize' class="form-control d-flex w-auto">
-            <option value="10">10</option>
-            <option value="30">30</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-            <option value="200">200</option>
-            <option value="500">500</option>
-        </select>
+    <div class="row">
+        <div class="col-1 table-actions">
+            <select wire:model='pageSize' class="form-control d-flex w-auto">
+                <option value="10">10</option>
+                <option value="30">30</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="200">200</option>
+                <option value="500">500</option>
+            </select>
+        </div>
+        <div class="col-11 text-right">
+            <form action="{{ route('admin.payment-invoices.exports') }}" method="GET" target="_blank">
+                @csrf
+                <label>Start Date</label>
+                <input type="date" name="start_date" class="from-control col-2">
+
+                <label>End Date</label>
+                <input type="date" name="end_date" class="from-control col-2">
+
+                <button class="btn btn-success">
+                    Download Invoice <i class="fa fa-arrow-down"></i>
+                </button>
+            </form>
+        </div>
     </div>
     <table class="table table-hover-animation mb-0">
         <thead>
@@ -21,6 +37,7 @@
                 <th>Card Last 4 Digits</th>
                 <th>Status</th>
                 <th>Type</th>
+                <th>Created At</th>
                 <th>Action</th>
             </tr>
             <tr>
