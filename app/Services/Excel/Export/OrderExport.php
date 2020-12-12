@@ -34,7 +34,9 @@ class OrderExport extends AbstractExportService
 
         foreach ($this->orders as $order) {
             $user = $order->user;
-            
+            $kgToPund   = $order->getWeight('kg');
+            $pounToKg   = $order->getWeight('lbs');
+        
             $this->setCellValue('A'.$row, $order->warehouse_number);
             $this->setCellValue('B'.$row, $user->name);
             $this->setCellValue('C'.$row, $order->merchant);
@@ -42,14 +44,12 @@ class OrderExport extends AbstractExportService
             $this->setCellValue('E'.$row, $order->customer_reference);
             $this->setCellValue('F'.$row, $order->corrios_tracking_code);
             $this->setCellValue('G'.$row, $order->gross_total);
-            if($order->isMeasurmentUnitCm()){
-                $kgToPund   = UnitsConverter::kgToPound($order->weight);
-                $this->setCellValue('H'.$row, $order->weight);
+            if($order->measurement_unit == 'kg/cm'){
+                $this->setCellValue('H'.$row, $pounToKg);
                 $this->setCellValue('I'.$row, $kgToPund );
             }else{
-                $poundToKg = UnitsConverter::poundToKg($order->weight);
-                $this->setCellValue('H'.$row, $poundToKg );
-                $this->setCellValue('I'.$row, $order->weight);
+                $this->setCellValue('H'.$row, $pounToKg );
+                $this->setCellValue('I'.$row, $kgToPund);
             }
             
             if($order->status == Order::STATUS_ORDER){
@@ -66,11 +66,22 @@ class OrderExport extends AbstractExportService
             }
             
             $this->setCellValue('K'.$row, $order->order_date);
+            
             $row++;
         }
 
         $this->currentRow = $row;
+
+        $this->setCellValue('H'.$row, "=SUM(H1:H{$row})");
+        $this->setCellValue('I'.$row, "=SUM(I1:I{$row})");
+        $this->mergeCells("A{$row}:G{$row}");
+        $this->setBackgroundColor("A".$row, 'adfb84');
+        $this->setCellValue('A'.$row, 'Total Order: '.$this->orders->count());
+
+
+
     }
+
 
     private function setExcelHeaderRow()
     {
@@ -96,10 +107,10 @@ class OrderExport extends AbstractExportService
         $this->setCellValue('G1', 'Amount');
 
         $this->setColumnWidth('H', 20);
-        $this->setCellValue('H1', 'Wieght in kg/cm');
+        $this->setCellValue('H1', 'Kg');
         
         $this->setColumnWidth('I', 20);
-        $this->setCellValue('I1', 'Wight in lbs/in');
+        $this->setCellValue('I1', 'Lbs');
         
         $this->setColumnWidth('J', 20);
         $this->setCellValue('J1', 'Status');
