@@ -3,8 +3,7 @@
 namespace App\Services\Excel\Export;
 use Illuminate\Support\Collection;
 use App\Models\Order;
-use App\Services\Converters\UnitsConverter;
-use Illuminate\Database\Eloquent\Model;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
 class OrderExport extends AbstractExportService
 {
@@ -34,8 +33,6 @@ class OrderExport extends AbstractExportService
 
         foreach ($this->orders as $order) {
             $user = $order->user;
-            $kgToPund   = $order->getWeight('kg');
-            $pounToKg   = $order->getWeight('lbs');
         
             $this->setCellValue('A'.$row, $order->warehouse_number);
             $this->setCellValue('B'.$row, $user->name);
@@ -44,14 +41,8 @@ class OrderExport extends AbstractExportService
             $this->setCellValue('E'.$row, $order->customer_reference);
             $this->setCellValue('F'.$row, $order->corrios_tracking_code);
             $this->setCellValue('G'.$row, $order->gross_total);
-            if($order->measurement_unit == 'kg/cm'){
-                $this->setCellValue('H'.$row, $pounToKg);
-                $this->setCellValue('I'.$row, $kgToPund );
-            }else{
-                $this->setCellValue('H'.$row, $pounToKg );
-                $this->setCellValue('I'.$row, $kgToPund);
-            }
-            
+            $this->setCellValue('H'.$row, $order->getWeight('kg'));
+            $this->setCellValue('I'.$row, $order->getWeight('lbs'));
             if($order->status == Order::STATUS_ORDER){
                 $this->setCellValue('J'.$row, 'ORDER');
             }
@@ -76,6 +67,7 @@ class OrderExport extends AbstractExportService
         $this->setCellValue('I'.$row, "=SUM(I1:I{$row})");
         $this->mergeCells("A{$row}:G{$row}");
         $this->setBackgroundColor("A".$row, 'adfb84');
+        $this->setAlignment('A'.$row, Alignment::VERTICAL_CENTER);
         $this->setCellValue('A'.$row, 'Total Order: '.$this->orders->count());
 
 
