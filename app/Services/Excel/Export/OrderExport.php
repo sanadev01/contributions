@@ -3,6 +3,7 @@
 namespace App\Services\Excel\Export;
 use Illuminate\Support\Collection;
 use App\Models\Order;
+use App\Services\Converters\UnitsConverter;
 use Illuminate\Database\Eloquent\Model;
 
 class OrderExport extends AbstractExportService
@@ -33,7 +34,7 @@ class OrderExport extends AbstractExportService
 
         foreach ($this->orders as $order) {
             $user = $order->user;
-            // dd($this->orders);
+            
             $this->setCellValue('A'.$row, $order->warehouse_number);
             $this->setCellValue('B'.$row, $user->name);
             $this->setCellValue('C'.$row, $order->merchant);
@@ -41,20 +42,30 @@ class OrderExport extends AbstractExportService
             $this->setCellValue('E'.$row, $order->customer_reference);
             $this->setCellValue('F'.$row, $order->corrios_tracking_code);
             $this->setCellValue('G'.$row, $order->gross_total);
-            if($order->status == Order::STATUS_ORDER){
-                $this->setCellValue('H'.$row, 'ORDER');
-            }
-            if($order->status == Order::STATUS_PAYMENT_PENDING){
-                $this->setCellValue('H'.$row, 'PAYMENT_PENDING');
-            }
-            if($order->status == Order::STATUS_PAYMENT_DONE){
-                $this->setCellValue('H'.$row, 'PAYMENT_DONE');
-            }
-            if($order->status == Order::STATUS_SHIPPED){
-                $this->setCellValue('H'.$row, 'SHIPPED');
+            if($order->isMeasurmentUnitCm()){
+                $kgToPund   = UnitsConverter::kgToPound($order->weight);
+                $this->setCellValue('H'.$row, $order->weight);
+                $this->setCellValue('I'.$row, $kgToPund );
+            }else{
+                $poundToKg = UnitsConverter::poundToKg($order->weight);
+                $this->setCellValue('H'.$row, $poundToKg );
+                $this->setCellValue('I'.$row, $order->weight);
             }
             
-            $this->setCellValue('I'.$row, $order->order_date);
+            if($order->status == Order::STATUS_ORDER){
+                $this->setCellValue('J'.$row, 'ORDER');
+            }
+            if($order->status == Order::STATUS_PAYMENT_PENDING){
+                $this->setCellValue('J'.$row, 'PAYMENT_PENDING');
+            }
+            if($order->status == Order::STATUS_PAYMENT_DONE){
+                $this->setCellValue('J'.$row, 'PAYMENT_DONE');
+            }
+            if($order->status == Order::STATUS_SHIPPED){
+                $this->setCellValue('J'.$row, 'SHIPPED');
+            }
+            
+            $this->setCellValue('K'.$row, $order->order_date);
             $row++;
         }
 
@@ -85,13 +96,19 @@ class OrderExport extends AbstractExportService
         $this->setCellValue('G1', 'Amount');
 
         $this->setColumnWidth('H', 20);
-        $this->setCellValue('H1', 'Status');
-
+        $this->setCellValue('H1', 'Wieght in kg/cm');
+        
         $this->setColumnWidth('I', 20);
-        $this->setCellValue('I1', 'Date');
+        $this->setCellValue('I1', 'Wight in lbs/in');
+        
+        $this->setColumnWidth('J', 20);
+        $this->setCellValue('J1', 'Status');
 
-        $this->setBackgroundColor('A1:I1', '2b5cab');
-        $this->setColor('A1:I1', 'FFFFFF');
+        $this->setColumnWidth('K', 20);
+        $this->setCellValue('K1', 'Date');
+
+        $this->setBackgroundColor('A1:K1', '2b5cab');
+        $this->setColor('A1:K1', 'FFFFFF');
 
         $this->currentRow++;
     }
