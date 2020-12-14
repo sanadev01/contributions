@@ -12,7 +12,7 @@ class PaymentInvoiceExportController extends Controller
     public function __invoke(Request $request, PaymentInvoiceRepository $paymentInvoiceRepository)
     {
         $paymentInvoices = $paymentInvoiceRepository->getPaymentInvoiceForExport($request);
-        // dd($paymentInvoices);
+        
         $exportService = new PaymentInvoiceExport($paymentInvoices);
         return $exportService->handle();
     }
