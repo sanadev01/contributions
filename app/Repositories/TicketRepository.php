@@ -32,10 +32,18 @@ class TicketRepository
                 'subject' => $request->subject
             ]);
     
-            $ticket->comments()->create([
+            $comment = $ticket->comments()->create([
                 'user_id' => Auth::id(),
                 'text' => $request->text
             ]);
+
+            try{
+
+                \Mail::send(new NewTicketCommentAdded($comment));
+            
+            }catch (\Exception $ex) {
+                \Log::info('Add Comment email send error: '.$ex->getMessage());
+            }
 
             return true;
 
@@ -49,11 +57,11 @@ class TicketRepository
     {
         try{
             
-            $addComment = $ticket->addComment($request);
+            $comment = $ticket->addComment($request);
             
             try {
 
-                \Mail::send(new NewTicketCommentAdded($addComment));
+                \Mail::send(new NewTicketCommentAdded($comment));
             
             } catch (\Exception $ex) {
                 \Log::info('Add Comment email send error: '.$ex->getMessage());
