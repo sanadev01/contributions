@@ -48,7 +48,7 @@ class OrderCreatedController extends Controller
                 'shipping_service_name' => optional($shippingService)->name,
                 'is_shipment_added' => true,
                 'measurement_unit' => 'kg/cm',
-                'status' => Order::STATUS_ORDER
+                'status' => Order::STATUS_NEEDS_PROCESSING
             ]);
     
             $order->update([

@@ -25,6 +25,7 @@ class Order extends Model
     const STATUS_CONSOLIDATED = 26;
 
     const STATUS_ORDER = 30;
+    const STATUS_NEEDS_PROCESSING = 32;
     const STATUS_PAYMENT_PENDING = 60;
     const STATUS_PAYMENT_DONE = 70;
     const STATUS_SHIPPED = 80;
@@ -103,6 +104,11 @@ class Order extends Model
         }
 
         return $this->getPaymentInvoice()->isPaid();
+    }
+
+    public function isNeedsProcessing()
+    {
+        return $this->status == self::STATUS_NEEDS_PROCESSING;
     }
 
     public function isArrivedAtWarehouse()
@@ -287,6 +293,10 @@ class Order extends Model
 
         if ( $this->status == Order::STATUS_ORDER ){
             $class = 'btn btn-sm btn-info';
+        }
+
+        if ( $this->status == Order::STATUS_NEEDS_PROCESSING ){
+            $class = 'btn btn-sm btn-warning';
         }
 
         if ( $this->status == Order::STATUS_PAYMENT_PENDING ){

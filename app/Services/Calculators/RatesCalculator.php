@@ -112,16 +112,46 @@ class RatesCalculator
 
     public function getProfitOn($cost)
     {
-        $weight = ceil(WeightCalculator::kgToGrams($this->weight));
-        $user = $this->order->user;
+        $profitPackage = $this->getProfitPackage();
+        
+        if ( !$profitPackage ){
+            return 0;
+        }
 
-        $profitPackage = $user->profitPackage ? $user->profitPackage : ProfitPackage::where('type',ProfitPackage::TYPE_DEFAULT)->first();
-        $profitSlab = collect($profitPackage->data)->where('min_weight','<=',$weight)->where('max_weight','>=',$weight)->first();
-        $profitPercentage =  $profitSlab ? $profitSlab['value'] : ( $profitPackage ? collect($profitPackage->data)->where('max_weight','>=',29999)->first()->value: 0 );
+        $profitPercentage =  $this->getProfitSlabValue($profitPackage);
 
         $profitAmount =  ($profitPercentage/100) * $cost ;
 
         return $profitAmount;
+    }
+
+    public function getProfitPackage()
+    {
+        $user = $this->order->user;
+        $profitPackage = $user->profitPackage;
+
+        if ( !$profitPackage ){
+            return ProfitPackage::where('type',ProfitPackage::TYPE_DEFAULT)->first();
+        }
+
+        return $profitPackage;
+    }
+
+    public function getProfitSlabValue($profitPackage)
+    {
+        $weight = ceil(WeightCalculator::kgToGrams($this->weight));
+        $profitSlab = collect($profitPackage->data)->where('min_weight','<=',$weight)->where('max_weight','>=',$weight)->first();
+
+        if ( !$profitSlab ){
+            $profitSlab = collect($profitPackage->data)->where('max_weight','>=',29999)->first();
+        }
+
+        if ( !$profitSlab ){
+            return 0;
+        }
+        
+        return optional($profitSlab)['value'];
+
     }
 
     public function isAvailable()

@@ -26,7 +26,7 @@ abstract class AbstractImportService
     {
         $this->file = $file;
         $this->fileReader = IOFactory::createReaderForFile($file);
-        $this->fileReader->setReadDataOnly(true);
+        $this->fileReader->setReadDataOnly(false);
         $this->fileReader->setLoadSheetsOnly(0);
         $this->spreadSheet = $this->fileReader->load($this->file);
         $this->workSheet = $this->spreadSheet->getSheet(0);
@@ -61,6 +61,6 @@ abstract class AbstractImportService
 
     public function getValue($cell)
     {
-        return $this->workSheet->getCell($cell)->getValue();
+        return $this->workSheet->getCell($cell)->getCalculatedValue();
     }
 }
