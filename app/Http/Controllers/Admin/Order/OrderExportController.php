@@ -9,9 +9,9 @@ use App\Repositories\OrderRepository;
 
 class OrderExportController extends Controller
 {
-    public function __invoke(OrderRepository $orderRepository)
+    public function __invoke(Request $request, OrderRepository $orderRepository)
     {
-        $orders = $orderRepository->getOdersForExport();
+        $orders = $orderRepository->getOdersForExport($request);
         
         $exportService = new OrderExport($orders);
         return $exportService->handle();

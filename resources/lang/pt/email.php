@@ -27,6 +27,10 @@ return  [
         'Your consolidation' => 'Sua solicitação de consolidação foi recebida e deve levar entre 24/48 horas para ser finalizada.',
         'A new warehouse number' => 'Em breve, você receberá um novo número de armazém com as dimensões e peso atualizados para que possa fazer o pagamento.',
     ],
+    'new-ticket-comment-added' => [
+        'Hello' => 'Olá',
+        'Add comment' => 'Novo comentário adicionado ao tíquete #',
+    ],
     'consolidation-ready' => [
         'Hello' => 'Olá',
         'Your consolidation request' => 'Sua solicitação de consolidação está pronta, prossiga com declaração e pagamento do ',

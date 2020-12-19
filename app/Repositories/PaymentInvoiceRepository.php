@@ -112,4 +112,23 @@ class PaymentInvoiceRepository
 
         return true;
     }
+
+    public function getPaymentInvoiceForExport($request)
+    {
+        $query = PaymentInvoice::query();
+
+        if ( !Auth::user()->isAdmin() ){
+            $query->where('paid_by',Auth::id());
+        }
+        
+        if ( $request->start_date ){
+            $query->where('created_at','>',$request->start_date);
+        }
+        
+        if ( $request->end_date ){
+            $query->where('created_at','<=',$request->end_date);
+        }
+        
+        return $query->get();
+    }
 }
