@@ -27,4 +27,8 @@ return [
     'User Setting Updated Successfully' => 'Configuração do usuário atualizada com sucesso',
     'Select Package' => 'Selecione o pacote',
     'Select Role' => 'Selecione a função',
+    'Commision Value' => 'Valor da Comissão',
+    'Select Commision Type' => 'Selecione o tipo de comissão',
+    'Referrer' => 'Selecione Referrer',
+    'Select Referrer' => 'Selecione Referrer',
 ]; 

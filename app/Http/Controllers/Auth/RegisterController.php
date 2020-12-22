@@ -77,7 +77,7 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         $locale = app()->getLocale();
-
+        
         $user = User::create([
             'name' => $data['name'],
             'last_name' => isset($data['last_name']) ? $data['last_name'] : null,
@@ -85,6 +85,8 @@ class RegisterController extends Controller
             'role_id' => 2,
             'pobox_number' => User::generatePoBoxNumber(),
             'email' => $data['email'],
+            'reffered_by' => User::findRef($data['reffered_by']),
+            'reffer_code' => generateRandomString(),
             'password' => Hash::make($data['password']),
             'account_type' => $data['account_type'] == 'business' ? User::ACCOUNT_TYPE_BUSINESS : User::ACCOUNT_TYPE_INDIVIDUAL
         ]);
