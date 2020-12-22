@@ -29,5 +29,10 @@ return [
         'Tracking Report' => 'Tracking Report',
         'Orders Report' => 'Orders Report',
     ],
+    'Affiliate' => [
+        'menu' => 'Affiliate',
+        'Dashboard' => 'Dashboard',
+        'Sales Commission' => 'Sales Commissions',
+    ],
 ];
  

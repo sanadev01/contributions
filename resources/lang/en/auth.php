@@ -36,6 +36,7 @@ return [
         'Email Address' => 'E-Mail Address',
         'Phone No' => 'Phone No',
         'Password' => 'Password',
+        'reffered by' => 'Reffered By',
         'Confirm Password' => 'Confirm Password',
         'Fields marked with' => 'Fields marked with <span class="text-danger h4">*</span> are required',
     ]

@@ -97,6 +97,15 @@
                                     </div>
                                 </div>
 
+                                <h3>Affiliate Settings</h3>
+                                <hr>
+                                <h4>Referrer Settings</h4>
+                                <livewire:affiliate.referrer-setting :user_id="$user->id" />
+                                
+                                <hr>
+                                <h4>Commision Settings</h4>
+                                <livewire:affiliate.commision-setting :user_id="$user->id"  />
+                                
 
                                 <div class="row mt-1">
                                     <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">

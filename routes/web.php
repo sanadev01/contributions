@@ -118,6 +118,12 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('order-trackings', TrackingReportController::class)->only(['index','store']);
             Route::resource('order', OrderReportController::class)->only(['index','create']);
         });
+        
+        Route::namespace('Affiliate')->as('affiliate.')->prefix('affiliate')->group(function(){
+            Route::get('dashboard', DashboardController::class)->name('commission-dashboard');
+            Route::resource('sales-commission', SalesCommisionController::class)->only(['index']);
+            Route::get('sale-exports', SaleExportController::class)->name('sale.exports');
+        });
        
         
 
@@ -155,4 +161,3 @@ Route::get('media/get/{document}', function (App\Models\Document $document) {
 Route::get('order/{order}/label/get', function (App\Models\Order $order) {
     return response()->download(storage_path("app/labels/{$order->corrios_tracking_code}.pdf"),"{$order->corrios_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.label.download');
-

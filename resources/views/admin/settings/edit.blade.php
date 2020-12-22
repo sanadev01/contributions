@@ -42,6 +42,27 @@
                                 <hr>
                                 <livewire:token-generator :user-id="auth()->id()"/>
                                 
+                                <h4>Commision Settings</h4>
+                                <hr>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">@lang('user.Select Commision Type')<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <select name="TYPE" class="form-control">
+                                            <option value="" selected disabled hidden>@lang('user.Select Commision Type')</option>
+                                            <option @if(setting('VALUE')) == 'flat') selected @endif value="flat">Flat</option>
+                                            <option  @if(setting('VALUE')) == 'percentage') selected @endif value="percentage">Percentage</option>
+                                        </select>
+                                        <div class="help-block"></div>
+                                    </div>
+                                </div>
+                            
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">@lang('user.Commision Value')<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <input type="text" name="VALUE" value="{{ old('VALUE', setting('VALUE')) }}" class="form-control" id="VALUE"> 
+                                    </div>  
+                                    <div class="help-block"></div>
+                                </div>
 
                                 <div class="row mt-1">
                                     <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
@@ -53,6 +74,7 @@
                                 </div>
                             </form>
                             @endcan
+                            
                         </div>
                     </div>
                 </div>

@@ -289,6 +289,10 @@ class PermissionSeeder extends Seeder
                 'slug' => 'can_create_post_paid_invoices',
                 'description' => 'Allows User to create post paid invoices. User will be able to print label before payment',
             ],
+            [
+                'slug' => 'affiliate_sale',
+                'description' => 'Affiliate Sale',
+            ],
             
         ];
     }

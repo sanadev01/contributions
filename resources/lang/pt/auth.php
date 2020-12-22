@@ -37,6 +37,7 @@ return [
         'Email Address' => 'Endereço eletrónico',
         'Phone No' => 'Telefone',
         'Password' => 'Senha',
+        'reffered by' => 'Referido por',
         'Confirm Password' => 'Confirmar Senha',
         'Fields marked with' => 'Campos marcardos com * são obrigatórios',
     ]

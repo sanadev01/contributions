@@ -115,6 +115,19 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="reffered_by" class="col-form-label text-md-right">{{ __('auth.register.reffered by') }}</label>
+                                    <input id="reffered_by" type="text" value="{{ old('reffered_by', request('ref')) }}" class="form-control @error('reffered_by') is-invalid @enderror" name="reffered_by" autocomplete="reffered_by">
+                                    @error('reffered_by')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="row justify-content-center mb-0">
                             <div class="col-md-12 text-right">
