@@ -2,6 +2,7 @@
 
 return [
     'name' => 'Nome',
+    'type' => 'Tipo',
     'action' => 'Açao',
     'create-package' => 'Criar pacote de lucro',
     'profit-packages' => 'Pacotes de lucro',
