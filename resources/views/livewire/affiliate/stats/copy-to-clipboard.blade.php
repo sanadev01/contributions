@@ -1,6 +1,6 @@
 
     <div class="card-header">
-        <h2 class="col-md-3 offset-4"> @lang('affiliatedashboard.Referral Link') <b> @lang('affiliatedashboard.OR')</b></h2>
+        <h2 class="col-md-3 offset-4"> @lang('affiliate-dashboard.Referral Link') <b> @lang('affiliate-dashboard.OR')</b></h2>
     </div>
     <div class="card-content mb-4">
         <div class="mt-1">

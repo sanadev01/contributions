@@ -9,7 +9,7 @@
         </td>
     @endadmin
     <td>
-        <button data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$sale->order) }}" class="btn" title="Show Order Details">
+        <button data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$sale->order) }}" class="btn btn-primary" title="Show Order Details">
             <i class="feather icon-list"></i> @lang('orders.actions.view-order')
         </button>
         
@@ -23,7 +23,7 @@
         
     </td>
     <td>
-        {{ $sale->commission }}
+        {{ $sale->commission? number_format($sale->commission, 2): 0 }}
         
     </td>
     
