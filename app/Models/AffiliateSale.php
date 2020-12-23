@@ -21,6 +21,6 @@ class AffiliateSale extends Model
     
     public function order()
     {
-        return $this->belongsTo(Order::class,'user_id');
+        return $this->belongsTo(Order::class,'order_id');
     }
 }
