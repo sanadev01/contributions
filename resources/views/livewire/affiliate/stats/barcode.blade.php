@@ -1,5 +1,5 @@
 <div class="card-header">
-    <h2 class="col-md-3 offset-4">@lang('affiliatedashboard.Scan Barcode')</h2>
+    <h2 class="col-md-3 offset-4">@lang('affiliate-dashboard.Scan Barcode')</h2>
 </div>
 <div class="card-content mb-4">
     <div class="mt-1">

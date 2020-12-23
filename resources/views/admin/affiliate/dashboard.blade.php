@@ -12,6 +12,11 @@
             <livewire:affiliate.stats.sale/>
             <livewire:affiliate.stats.commission/>
         </div>
+        <div class="col-md-12 row">
+            @admin
+                <livewire:affiliate.stats.admin-sale/>
+            @endadmin
+        </div>
 
         <div class="row">
             <div class="col-12">
