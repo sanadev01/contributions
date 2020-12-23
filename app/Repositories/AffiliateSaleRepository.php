@@ -64,12 +64,15 @@ class AffiliateSaleRepository
             $query->where('user_id', Auth::id());
         }
 
+        $startDate = $request->start_date . ' 00:00:00';
+        $endDate = $request->end_date.' 23:59:59';
+        
         if ( $request->start_date ){
-            $query->where('created_at','>',$request->start_date);
+            $query->where('created_at','>', $startDate);
         }
         
         if ( $request->end_date ){
-            $query->where('created_at','<=',$request->end_date);
+            $query->where('created_at','<=',$endDate);
         }
         
         return $query->get();
