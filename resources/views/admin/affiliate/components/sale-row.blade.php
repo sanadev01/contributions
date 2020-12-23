@@ -9,8 +9,8 @@
         </td>
     @endadmin
     <td>
-        <button data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$sale->order) }}" class="btn btn-primary" title="Show Order Details">
-            <i class="feather icon-list"></i> @lang('orders.actions.view-order')
+        <button data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$sale->order) }}" class="btn btn-primary" title="@lang('sales-commission.Show Order Details')">
+            <i class="feather icon-list"></i> @lang('sales-commission.view-order')
         </button>
         
     </td>
