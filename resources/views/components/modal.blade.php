@@ -20,6 +20,10 @@
     $('#hd-modal').on('shown.bs.modal', function (event) {
         var button = $(event.relatedTarget)  
         var modal = $(this)
+        button.removeData('modal-type');
+        button.removeData('url');
+        button.removeData('content');
+
         var modalType = button.data('modal-type');
         var url = button.data('url');
         
