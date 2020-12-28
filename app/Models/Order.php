@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Services\Calculators\CommissionCalculator;
 use App\Services\Calculators\WeightCalculator;
 use App\Services\Converters\UnitsConverter;
 use Illuminate\Database\Eloquent\Builder;
@@ -260,29 +259,34 @@ class Order extends Model
 
         $consolidation = $this->isConsolidated() ?  setting('CONSOLIDATION_CHARGES',0,null,true) : 0;
 
-        $commissionCalculator = new CommissionCalculator($this, $shippingCost);
         
-        $commission = $commissionCalculator->getCommission();
         
-        $total = $shippingCost + $additionalServicesCost + $commission + $this->insurance_value + $dangrousGoodsCost + $consolidation;
+        $total = $shippingCost + $additionalServicesCost + $this->insurance_value + $dangrousGoodsCost + $consolidation;
         
         $discount = 0; // not implemented yet
         $gross_total = $total - $discount;
         
-        if($commissionCalculator->hasReferrer()){
-           $referrer = $commissionCalculator->hasReferrer();
-           //$referrer->commissionSetting
-           $referrer->addAffiliateCommissionSale($this, $commissionCalculator );
-        }
+        
         $this->update([
             'consolidation' => $consolidation,
             'order_value' => $this->items()->sum(\DB::raw('quantity * value')),
             'shipping_value' => $shippingCost,
-            'comission' => $commission,
             'dangrous_goods' => $dangrousGoodsCost,
             'total' => $total,
             'discount' => $discount,
             'gross_total' => $gross_total
+        ]);
+
+    }
+
+    public function addAffiliateCommissionSale(User $referrer, $commissionCalculator)
+    {
+        return $this->affiliateSale()->create( [
+            'value' => $commissionCalculator->getValue(),
+            'type' => $commissionCalculator->getCommissionSetting()->type,
+            'commission' => $commissionCalculator->getCommission(),
+            'user_id' => $referrer->id,
+            'detail' => 'Commission from order '. $this->warehouse_number,
         ]);
 
     }

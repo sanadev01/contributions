@@ -178,10 +178,10 @@ class PreAlertRepository
     {
         if ( $soft ){
             
-            if ( $order->isConsolidated() ){
-                $order->subOrders()->sync([]);
-            }
-
+            // if ( $order->isConsolidated() ){
+            //     $order->subOrders()->sync([]);
+            // }
+            optional($order->affiliateSale)->delete();
             $order->delete();
             return true;
         }
@@ -192,6 +192,7 @@ class PreAlertRepository
             $order->items()->delete();
             $order->subOrders()->sync([]);
             optional($order->purchaseInvoice)->delete();
+            optional($order->affiliateSale)->delete();
             $order->recipient()->delete();
             foreach ($order->images as $image) {
                 $image->delete();
@@ -203,7 +204,6 @@ class PreAlertRepository
         } catch (\Exception $ex) {
             DB::rollback();
 
-            dd($ex);
             return false;
         }
     }

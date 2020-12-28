@@ -38,6 +38,7 @@
                     <th>@lang('sales-commission.Value')</th>
                     <th>@lang('sales-commission.Type')</th>
                     <th>@lang('sales-commission.Commission')</th>
+                    <th>@lang('status')</th>
                 </tr>
                 <tr class="no-print">
                     <th>
@@ -64,6 +65,7 @@
                     <th>
                         <input type="search" class="form-control" wire:model.debounce.1000ms="commission">
                     </th>
+                    <th></th>
                    
                 </tr>
             </thead>
