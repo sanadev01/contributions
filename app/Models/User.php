@@ -153,8 +153,10 @@ class User extends Authenticatable
 
     public static function findRef($reffer_code)
     {
-        $referral_id = self::query()->where('reffer_code', $reffer_code)->first();
-        return $referral_id->id;
+        if($reffer_code){
+            $referral_id = self::query()->where('reffer_code', $reffer_code)->first();
+            return $referral_id->id;
+        }
     }
 
     public static function generatePoBoxNumber()
