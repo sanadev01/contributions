@@ -48,8 +48,9 @@ class CalculateCommission
         $commissionCalculator = new CommissionCalculator($order);
         $commission = $commissionCalculator->getCommission();
 
+        $referrer = $commissionCalculator->hasReferrer();
+        
         if($commissionCalculator->hasReferrer()){
-            $referrer = $commissionCalculator->hasReferrer();
             
             $order->addAffiliateCommissionSale($referrer, $commissionCalculator, true);
         }
