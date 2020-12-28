@@ -24,7 +24,11 @@
     </td>
     <td>
         {{ $sale->commission? number_format($sale->commission, 2): 0 }}
-        
+    </td>
+    <td>
+        <span class="btn btn-sm btn-success">
+                {{ $sale->detail }}
+        </span>
     </td>
     
 </tr>

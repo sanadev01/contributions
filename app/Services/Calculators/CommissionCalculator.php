@@ -13,10 +13,10 @@ class CommissionCalculator
     private $user;
     private $referrer;
 
-    public function __construct(Order $order, $shippingCost)
+    public function __construct(Order $order)
     {
         $this->order        = $order;
-        $this->shippingCost = $shippingCost;
+        $this->shippingCost = $order->shipping_value;
         $this->user         = $order->user;
         $this->referrer     = $this->user->referrer;
         

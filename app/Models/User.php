@@ -206,27 +206,6 @@ class User extends Authenticatable
         
     }
 
-    public function addAffiliateCommissionSale(Order $order, $commissionCalculator )
-    {
-        $affiliateSetting = $order->affiliateSale;
-        
-        $data = [
-            'value' => $commissionCalculator->getValue(),
-            'type' => $commissionCalculator->getCommissionSetting()->type,
-            'commission' => $commissionCalculator->getCommission(),
-        ];
-
-        if(!$affiliateSetting){
-            return AffiliateSale::create(array_merge(
-                $data,[
-                    'user_id' => $order->user->referrer->id,
-                    'order_id' => $order->id,
-                ]
-            ));
-        }
-        return $order->affiliateSale->update($data);
-    }
-
     public static function getBarcode($reffer_code)
     {        
         return '<img src="data:image/png;base64,'.\DNS2D::getBarcodePNG(route('register',['ref'=>$reffer_code]), 'QRCODE', 10, 10).'" alt="barcode"   />';

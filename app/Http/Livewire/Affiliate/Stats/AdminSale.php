@@ -3,7 +3,7 @@
 namespace App\Http\Livewire\Affiliate\Stats;
 
 use Illuminate\Support\Facades\Auth;
-use App\Models\AffiliateSale;
+use App\Models\CommissionSetting;
 use Livewire\Component;
 
 class AdminSale extends Component
@@ -20,9 +20,11 @@ class AdminSale extends Component
         
         if (Auth::user()->isAdmin()) {
 
-            $query = AffiliateSale::query();
+            $query = CommissionSetting::query();
             $query->where('user_id', Auth::id());
-            return $query->get()->sum('commission');
+            $commission = $query->first();
+            
+            return $commission ? $commission->commission_balance : 0;
             
         }
         

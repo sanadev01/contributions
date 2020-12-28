@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Events\OrderPaid;
 use App\Mail\User\PaymentPaid;
 use App\Models\BillingInformation;
 use App\Models\Country;
@@ -204,6 +205,8 @@ class OrderRepository
                 'is_paid' => true,
                 'status' => Order::STATUS_PAYMENT_DONE
             ]);
+
+            event(new OrderPaid($paymentInvoice->orders, true));
             
             try {
                 \Mail::send(new PaymentPaid($paymentInvoice));

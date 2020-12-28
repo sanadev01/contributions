@@ -11,6 +11,7 @@ return [
     'Value' => 'Valor',
     'Type' => 'Tipo',
     'Commission' => 'Comissão',
+    'status' => 'Status',
     'Download Sales' => 'Baixar Vendas',
     'start date' => 'Data de início',
     'end date' => 'Data final',

@@ -20,6 +20,8 @@ class CreateAffiliateSalesTable extends Migration
             $table->double('value')->nullable();
             $table->string('type', 20)->nullable();
             $table->double('commission')->nullable();
+            
+            $table->softDeletes();
             $table->timestamps();
         });
     }

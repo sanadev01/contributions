@@ -2,7 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\AffiliateSale;
 use App\Models\Order;
+use App\Events\OrderPaid;
+use App\Listeners\CalculateCommission;
+use App\Observers\AffiliateSaleObserver;
 use App\Observers\OrderObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -19,6 +23,9 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
+        ],
+        OrderPaid::class =>[
+            CalculateCommission::class, 
         ],
     ];
 

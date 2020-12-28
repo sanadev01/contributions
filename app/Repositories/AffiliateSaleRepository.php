@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 class AffiliateSaleRepository
 {
     public function get(Request $request,$paginate = true,$pageSize=50){
-        $query = AffiliateSale::has('user')->with('order');
+        $query = AffiliateSale::has('user')->with('order')->has('order');
 
         if (Auth::user()->isUser()) {
             $query->where('user_id', Auth::id());
@@ -58,7 +58,7 @@ class AffiliateSaleRepository
 
     public function getSalesForExport($request)
     {   
-        $query = AffiliateSale::has('user')->with('order');
+        $query = AffiliateSale::has('user')->with('order')->has('order');
 
         if (Auth::user()->isUser()) {
             $query->where('user_id', Auth::id());
