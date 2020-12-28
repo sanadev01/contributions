@@ -48,11 +48,15 @@ class CalculateCommission
         $commissionCalculator = new CommissionCalculator($order);
         $commission = $commissionCalculator->getCommission();
 
-        $referrer = $commissionCalculator->hasReferrer();
         
+
         if($commissionCalculator->hasReferrer()){
             
+            $referrer = $commissionCalculator->hasReferrer();
+            
             $order->addAffiliateCommissionSale($referrer, $commissionCalculator, true);
+
+            $this->updateCommisionBalance($referrer);
         }
 
         $total = $order->total + $commission; 
@@ -62,7 +66,7 @@ class CalculateCommission
             'total' => $total,
         ]);
         
-        $this->updateCommisionBalance($referrer);
+        
     }
 
     private function removeCommision($order)
