@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Events\OrderPaid;
 use App\Models\AffiliateSale;
+use App\Models\CommissionSetting;
 use App\Services\Calculators\CommissionCalculator;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -72,6 +73,8 @@ class CalculateCommission
     private function removeCommision($order)
     {
         $commission = $order->affiliateSale->commission;
+        $this->updateCommisionBalance($order->affiliateSale->user);
+
         $order->affiliateSale()->delete();
 
         $total = $order->total - $commission; 
@@ -81,15 +84,31 @@ class CalculateCommission
             'total' => $total,
         ]);
         
-        $this->updateCommisionBalance($order->affiliateSale->user);
+        
     }
 
     private function updateCommisionBalance($referrer)
     {
         $commissionSetting = $referrer->commissionSetting;
-        
-        $commissionSetting->update([
+
+        if(!$commissionSetting){
+            return $this->addCommisionSetting($referrer);
+        }
+
+        return $commissionSetting->update([
             'commission_balance' => AffiliateSale::query()->where('user_id', $referrer->id)->sum('commission')
         ]);
     }
+
+    private function addCommisionSetting($referrer)
+    {
+        return CommissionSetting::create([
+            'user_id' => $referrer->id,
+            'value' => setting('VALUE',$default = null, $userId = null, $admin = true),
+            'type' => setting('TYPE',$default = null, $userId = null, $admin = true),
+            'commission_balance' => AffiliateSale::query()->where('user_id', $referrer->id)->sum('commission')
+        ]);
+    }
+
+
 }
