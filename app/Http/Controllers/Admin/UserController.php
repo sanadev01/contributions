@@ -88,6 +88,13 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        if($user->commissionSetting){
+            $user->commissionSetting->delete();
+        }
+
+        if($user->affiliateSales){
+            $user->affiliateSales()->delete();
+        }
         $user->delete();
         session()->flash('alert-success','User Deleted');
         return back();
