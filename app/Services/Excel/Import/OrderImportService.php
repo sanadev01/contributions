@@ -71,7 +71,7 @@ class OrderImportService extends AbstractImportService
                 "measurement_unit" => $this->getValue("I{$row}"),
                 "is_invoice_created" => true,
                 "is_shipment_added" => true,
-                'status' => Order::STATUS_NEEDS_PROCESSING,
+                'status' => Order::STATUS_ORDER,
                 'order_date' => now(), 
 
                 "sender_first_name" => $this->getValue("J{$row}"),
