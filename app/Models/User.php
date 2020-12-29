@@ -213,11 +213,15 @@ class User extends Authenticatable
         return '<img src="data:image/png;base64,'.\DNS2D::getBarcodePNG(route('register',['ref'=>$reffer_code]), 'QRCODE', 10, 10).'" alt="barcode"   />';
     }
 
-    public static function getRefferCode(){
-        $user = User::find(auth()->id());
-        return $user->update([
-            'reffer_code' => generateRandomString()
-        ]);
+    public function getRefferCode(){
+
+        if ( !$this->reffer_code ){
+            $this->update([
+                'reffer_code' => generateRandomString()
+            ]);
+        }
+
+        return $this->reffer_code;
     }
 
 }

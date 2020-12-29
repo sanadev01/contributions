@@ -8,8 +8,14 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function __invoke(){
 
+    public function __construct()
+    {
+        $this->authorizeResource(AffiliateSale::class);
+    }
+
+    public function index(){
+        
         return view('admin.affiliate.dashboard');
     }
 }
