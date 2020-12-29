@@ -3,23 +3,20 @@
 namespace App\Http\Livewire\Affiliate\Stats;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class CopyToClipboard extends Component
 {
     public $user;
+    public $reffer_code;
 
     public function mount()
     {
-        
-        if(!auth()->user()->reffer_code){
-            User::getRefferCode();
-        }
+        $this->reffer_code = Auth::user()->getRefferCode();
     }
     public function render()
     {
-        return view('livewire.affiliate.stats.copy-to-clipboard',[
-            'reffer_code' => User::find(auth()->id())->reffer_code
-        ]);
+        return view('livewire.affiliate.stats.copy-to-clipboard');
     }
 }

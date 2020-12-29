@@ -1,26 +1,21 @@
-
-    <div class="card-header">
-        <h2 class="col-md-3 offset-4"> @lang('affiliate-dashboard.Referral Link') <b> @lang('affiliate-dashboard.OR')</b></h2>
-    </div>
-    <div class="card-content mb-4">
-        <div class="mt-1">
-            <div class="controls row mb-1 align-items-center">
-                <div class="col-md-4 offset-3">
-                    <input type="text" class="form-control" id="link" name="link" value="{{ route('register',['ref'=>$reffer_code] ) }}" readonly>
-                    <div class="help-block"></div>
-                </div>
-                <div class="col-md-2">
-                    <div class="">
-                        <button onclick="copyToClipboard()" class="btn btn-primary">
-                            Copy
-                        </button>
-                    </div>
-                </div>
-            </div>
-            
+<div>
+    <div class="row text-center">
+        <div class="col-md-12">
+            <h2> @lang('affiliate-dashboard.Referral Link') <b> @lang('affiliate-dashboard.OR')</b></h2>
         </div>
     </div>
-    <livewire:affiliate.stats.barcode :reffer_code="$reffer_code"/>
+    
+    <div class="row mb-1 justify-content-center">
+        <div class="col-md-6">
+            <div class="d-flex">
+                <input type="text" class="form-control w-75" id="link" name="link" value="{{ route('register',['ref'=>$reffer_code] ) }}" readonly>
+                <button onclick="copyToClipboard()" class="btn btn-primary w-25">
+                    Copy
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 @section('js')
 
     <script>
