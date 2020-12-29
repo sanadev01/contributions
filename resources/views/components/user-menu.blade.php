@@ -179,8 +179,8 @@
                     </a>
                     <ul class="menu-content">
 
-                        <li class="{{ $isActive(['admin.affiliate.commission-dashboard']) }}">
-                            <a href="{{ route('admin.affiliate.commission-dashboard') }}">
+                        <li class="{{ $isActive(['admin.affiliate.dashboard.index']) }}">
+                            <a href="{{ route('admin.affiliate.dashboard.index') }}">
                                 <i class="feather icon-circle"></i>
                                 <span class="menu-title">@lang('menu.Affiliate.Dashboard')</span>
                             </a>
