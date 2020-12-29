@@ -73,10 +73,11 @@ class CalculateCommission
     private function removeCommision($order)
     {
         $commission = $order->affiliateSale->commission;
-        $this->updateCommisionBalance($order->affiliateSale->user);
-
+        $user = $order->affiliateSale->user;
         $order->affiliateSale()->delete();
-
+        
+        $this->updateCommisionBalance($user);
+        
         $total = $order->total - $commission; 
         
         $order->update([
@@ -90,7 +91,7 @@ class CalculateCommission
     private function updateCommisionBalance($referrer)
     {
         $commissionSetting = $referrer->commissionSetting;
-
+       
         if(!$commissionSetting){
             return $this->addCommisionSetting($referrer);
         }
