@@ -8,23 +8,25 @@
     <!-- Dashboard Analytics Start -->
     
     <section id="dashboard-analytics">
-        <div class="col-md-12 row">
+        <div class="row justify-content-center">
             <livewire:affiliate.stats.sale/>
             <livewire:affiliate.stats.commission/>
         </div>
-        <div class="col-md-12 row">
-            @admin
-                <livewire:affiliate.stats.admin-sale/>
-            @endadmin
+        @admin
+        <div class="row justify-content-center">
+            <livewire:affiliate.stats.admin-sale/>
         </div>
+        @endadmin
 
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
+        <div class="card">
+            <div class="card-content">
+                <div class="card-body">
                     <livewire:affiliate.stats.copy-to-clipboard/>
-                </div>    
-            </div>    
-        </div>    
+                    <div class="my-5"></div>
+                    <livewire:affiliate.stats.barcode />
+                </div>
+            </div>
+        </div>   
     </section>
     <!-- Dashboard Analytics end -->
 @endsection
