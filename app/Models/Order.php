@@ -25,6 +25,7 @@ class Order extends Model
     const STATUS_CONSOLIDATED = 26;
 
     const STATUS_ORDER = 30;
+    const STATUS_NEEDS_PROCESSING = 32;
     const STATUS_PAYMENT_PENDING = 60;
     const STATUS_PAYMENT_DONE = 70;
     const STATUS_SHIPPED = 80;
@@ -67,6 +68,11 @@ class Order extends Model
         return $this->belongsTo(ShippingService::class,'shipping_service_id');
     }
 
+    public function affiliateSale()
+    {
+        return $this->hasOne(AffiliateSale::class,'order_id');
+    }
+
     public function items()
     {
         return $this->hasMany(OrderItem::class);
@@ -103,6 +109,11 @@ class Order extends Model
         }
 
         return $this->getPaymentInvoice()->isPaid();
+    }
+
+    public function isNeedsProcessing()
+    {
+        return $this->status == self::STATUS_NEEDS_PROCESSING;
     }
 
     public function isArrivedAtWarehouse()
@@ -248,11 +259,14 @@ class Order extends Model
 
         $consolidation = $this->isConsolidated() ?  setting('CONSOLIDATION_CHARGES',0,null,true) : 0;
 
-        $total = $shippingCost + $additionalServicesCost + $this->commission + $this->insurance_value + $dangrousGoodsCost + $consolidation;
+        
+        
+        $total = $shippingCost + $additionalServicesCost + $this->insurance_value + $dangrousGoodsCost + $consolidation;
         
         $discount = 0; // not implemented yet
         $gross_total = $total - $discount;
-
+        
+        
         $this->update([
             'consolidation' => $consolidation,
             'order_value' => $this->items()->sum(\DB::raw('quantity * value')),
@@ -262,6 +276,19 @@ class Order extends Model
             'discount' => $discount,
             'gross_total' => $gross_total
         ]);
+
+    }
+
+    public function addAffiliateCommissionSale(User $referrer, $commissionCalculator)
+    {
+        return $this->affiliateSale()->create( [
+            'value' => $commissionCalculator->getValue(),
+            'type' => $commissionCalculator->getCommissionSetting()->type,
+            'commission' => $commissionCalculator->getCommission(),
+            'user_id' => $referrer->id,
+            'detail' => 'Commission from order '. $this->warehouse_number,
+        ]);
+
     }
     /**
      * Accessors
@@ -287,6 +314,10 @@ class Order extends Model
 
         if ( $this->status == Order::STATUS_ORDER ){
             $class = 'btn btn-sm btn-info';
+        }
+
+        if ( $this->status == Order::STATUS_NEEDS_PROCESSING ){
+            $class = 'btn btn-sm btn-warning';
         }
 
         if ( $this->status == Order::STATUS_PAYMENT_PENDING ){

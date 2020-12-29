@@ -27,5 +27,9 @@ return [
     'User Setting Updated Successfully' => 'User Setting Updated Successfully',
     'Select Package' => 'Select Package',
     'Select Role' => 'Select Role',
+    'Commision Value' => 'Commision Value',
+    'Select Commision Type' => 'Select Commision Type',
+    'Referrer' => 'Referrer',
+    'Select Referrer' => 'Select Referrer',
 ]; 
  

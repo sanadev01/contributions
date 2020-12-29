@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Address;
+use App\Models\AffiliateSale;
 use App\Models\BillingInformation;
 use App\Models\Connect;
 use App\Models\Country;
@@ -29,6 +30,7 @@ use App\Models\TicketComment;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Policies\AddressPolicy;
+use App\Policies\AffiliateSalePolicy;
 use App\Policies\BillingInformationPolicy;
 use App\Policies\ConnectPolicy;
 use App\Policies\CountryPolicy;
@@ -89,7 +91,8 @@ class AuthServiceProvider extends ServiceProvider
         User::class => UserPolicy::class,
         BillingInformation::class => BillingInformationPolicy::class,
         Reports::class => ReportsPolicy::class,
-        Connect::class => ConnectPolicy::class
+        Connect::class => ConnectPolicy::class,
+        AffiliateSale::class => AffiliateSalePolicy::class
     ];
 
     /**

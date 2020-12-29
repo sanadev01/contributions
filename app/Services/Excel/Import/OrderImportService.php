@@ -39,23 +39,21 @@ class OrderImportService extends AbstractImportService
     }
 
     private function createOrUpdateOrder($row){
-        DB::beginTransaction();
-
         try {
             
             if ( strlen($this->getValue("D{$row}")) <=0 ){
-                DB::commit();
                 return;
             }
             
             $order = Order::where('customer_reference',$this->getValue("D{$row}"))->first();
-
+            
             if ( $order ){
                 $this->addItem($order,$row);
-                DB::commit();
+                $order->doCalculations();
                 return;
             }
-
+            
+            DB::beginTransaction();
             $shippingService = ShippingService::first();
 
             $order = Order::create([
@@ -104,11 +102,11 @@ class OrderImportService extends AbstractImportService
             ]);
             
             $this->addItem($order,$row);
-
+            // $order->doCalculations();
             DB::commit();
-
         } catch (\Exception $ex) {
             DB::rollback();
+            \Log::info($ex);
             \Log::info("{$row}: ".$ex->getMessage());
         }
     }
@@ -123,7 +121,5 @@ class OrderImportService extends AbstractImportService
             "contains_battery" => strlen($this->getValue("AE{$row}")) >0 ? true : false,
             "contains_perfume" => strlen($this->getValue("AF{$row}")) >0 ? true : false
         ]);
-
-        $order->doCalculations();
     }
 }

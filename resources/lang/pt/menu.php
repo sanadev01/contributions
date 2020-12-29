@@ -29,4 +29,9 @@ return [
         'Tracking Report' => 'Relatório de Rastreamento',
         'Orders Report' => 'Relatório de pedidos',
     ],
+    'Affiliate' => [
+        'menu' => 'Relatórios',
+        'Dashboard' => 'Painel de controle',
+        'Sales Commission' => 'Comissões de venda',
+    ],
 ];

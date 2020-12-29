@@ -48,7 +48,7 @@ class ImportExcelController extends Controller
         $importExcelService = new OrderImportService($request->file('excel_file'),\Auth::id());
         $importExcelService->handle();
 
-        session()->flash('alert-success','Import Successfullt');
+        session()->flash('alert-success','Import Successfull');
 
         return redirect()->route('admin.orders.index');
 

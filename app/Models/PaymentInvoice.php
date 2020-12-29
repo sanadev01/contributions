@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\OrderPaid;
 use Illuminate\Database\Eloquent\Model;
 
 class PaymentInvoice extends Model
@@ -31,6 +32,8 @@ class PaymentInvoice extends Model
             'is_paid' => $paid,
             'status' =>  $paid ? Order::STATUS_PAYMENT_DONE: Order::STATUS_PAYMENT_PENDING
         ]);
+
+        event(new OrderPaid($this->orders, $paid));
 
         return $this->update([
             'is_paid' => $paid

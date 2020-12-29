@@ -8,6 +8,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
+use App\Models\CommissionSetting;
+use App\Models\Order;
+use App\Models\AffiliateSale;
 
 
 class User extends Authenticatable
@@ -28,7 +31,7 @@ class User extends Authenticatable
     protected $fillable = [
         'pobox_number', 'package_id', 'state_id', 'country_id', 'role_id','name', 'email', 'last_name', 
         'password', 'phone', 'city', 'street_no', 'address', 'address2', 'account_type', 'tax_id', 'zipcode', 
-        'api_token', 'api_enabled', 'locale','market_place_name','image_id'
+        'api_token', 'api_enabled', 'locale','market_place_name','image_id','reffered_by', 'reffer_code'
     ];
 
     /**
@@ -79,6 +82,11 @@ class User extends Authenticatable
         return $this->hasMany(Ticket::class, 'user_id');
     }
 
+    public function affiliateSales()
+    {
+        return $this->hasMany(AffiliateSale::class, 'user_id');
+    }
+
     public function billingInformations()
     {
         return $this->hasMany(BillingInformation::class);
@@ -87,6 +95,20 @@ class User extends Authenticatable
     public function state()
     {
         return $this->belongsTo(State::class);
+    }
+
+    public function referrals()
+    {
+        return $this->hasMany(User::class, 'reffered_by');
+    }
+    public function referrer()
+    {
+        return $this->belongsTo(User::class, 'reffered_by');
+    }
+    
+    public function commissionSetting()
+    {
+        return $this->hasOne(CommissionSetting::class, 'user_id');
     }
 
     public function country()
@@ -129,6 +151,13 @@ class User extends Authenticatable
         return $this->belongsTo(ProfitPackage::class,'package_id');
     }
 
+    public static function findRef($reffer_code)
+    {
+        if($reffer_code){
+            $referral_id = self::query()->where('reffer_code', $reffer_code)->first();
+            return $referral_id->id;
+        }
+    }
 
     public static function generatePoBoxNumber()
     {
@@ -148,6 +177,7 @@ class User extends Authenticatable
 
         return "HERCO {$lastUserID}";
     }
+    
     
     public function hasPermission($permissionIdOrSlug)
     {
@@ -177,4 +207,17 @@ class User extends Authenticatable
         return $this->image->getPath();
         
     }
+
+    public static function getBarcode($reffer_code)
+    {        
+        return '<img src="data:image/png;base64,'.\DNS2D::getBarcodePNG(route('register',['ref'=>$reffer_code]), 'QRCODE', 10, 10).'" alt="barcode"   />';
+    }
+
+    public static function getRefferCode(){
+        $user = User::find(auth()->id());
+        return $user->update([
+            'reffer_code' => generateRandomString()
+        ]);
+    }
+
 }

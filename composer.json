@@ -20,7 +20,8 @@
         "laravel/ui": "^2.1",
         "livewire/livewire": "^2.3",
         "phpoffice/phpspreadsheet": "^1.14",
-        "saqijaan/laravel-json-column-trait": "dev-master"
+        "saqijaan/laravel-json-column-trait": "dev-master",
+        "milon/barcode": "^7.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.5",

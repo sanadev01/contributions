@@ -170,6 +170,33 @@
                 </ul>
             </li>
 
+            {{-- Affiliate --}}
+            @can('viewAny', App\Models\AffiliateSale::class)
+                <li class="nav-item has-sub sidebar-group">
+                    <a href="#">
+                        <i class="feather icon-percent"></i>
+                        <span class="menu-title">@lang('menu.Affiliate.menu')</span>
+                    </a>
+                    <ul class="menu-content">
+
+                        <li class="{{ $isActive(['admin.affiliate.commission-dashboard']) }}">
+                            <a href="{{ route('admin.affiliate.commission-dashboard') }}">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title">@lang('menu.Affiliate.Dashboard')</span>
+                            </a>
+                        </li>
+                        
+                        <li class="{{ $isActive(['admin.affiliate.sales-commission.index']) }}">
+                            <a href="{{ route('admin.affiliate.sales-commission.index') }}">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title">@lang('menu.Affiliate.Sales Commission')</span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </li>
+            @endcan
+
             @can('viewAny', App\Models\User::class)
             <li class="nav-item {{ $isActive(['admin.users.index']) }}">
                 <a href="{{ route('admin.users.index') }}">

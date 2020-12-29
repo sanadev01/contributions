@@ -25,6 +25,9 @@
                                         @lang('profitpackage.name')
                                     </th>
                                     <th>
+                                        @lang('profitpackage.type')
+                                    </th>
+                                    <th>
                                         @lang('profitpackage.action')
                                     </th>
                                 </tr>
@@ -34,6 +37,9 @@
                                         <tr>
                                             <td>
                                                 {{ $package->name }}
+                                            </td>
+                                            <td>
+                                                {{ $package->type }}
                                             </td>
                                             <td class="d-flex">
                                                 <a href="{{ route('admin.rates.rates.exports',$package) }}" class="btn btn-primary mr-2" title="@lang('profitpackage.download-profit-package')">
