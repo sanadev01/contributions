@@ -124,8 +124,10 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('sales-commission', SalesCommisionController::class)->only(['index']);
             Route::get('sale-exports', SaleExportController::class)->name('sale.exports');
         });
-       
         
+        Route::namespace('Activity')->as('activity.')->prefix('activity')->group(function(){
+            Route::resource('log', ActivityLogController::class)->only('index');
+        });
 
         Route::post('users/{user}/login', AnonymousLoginController::class)->name('users.login');
 

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Events\OrderPaid;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class PaymentInvoice extends Model
 {
@@ -11,6 +12,11 @@ class PaymentInvoice extends Model
     const TYPE_PREPAID= 'prepaid';
     const TYPE_POSTPAID= 'postpaid';
 
+    use LogsActivity;
+    protected static $logAttributes = ['*'];
+    protected static $logOnlyDirty = true;
+    protected static $submitEmptyLogs = false;
+    
     public function orders()
     {
         return $this->belongsToMany(Order::class);
