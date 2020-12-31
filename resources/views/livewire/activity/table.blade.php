@@ -42,7 +42,7 @@
             </div>
         </div>
         <div class="table-wrapper position-relative">
-            <table class="table mb-0 table-responsive" id="">
+            <table class="table mb-0 table-responsive-lg" id="">
                 <thead>
                     <tr>
                         <th>@lang('activity.Created at')</th>
