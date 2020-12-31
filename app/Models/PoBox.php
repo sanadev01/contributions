@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use LaravelJsonColumn\Traits\JsonColumn;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class PoBox extends Model
 {
@@ -12,6 +13,11 @@ class PoBox extends Model
     protected $casts = [
         'extra_data' => 'Array'
     ];
+
+    use LogsActivity;
+    protected static $logAttributes = ['*'];
+    protected static $logOnlyDirty = true;
+    protected static $submitEmptyLogs = false;
 
     public function users()
     {

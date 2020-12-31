@@ -34,5 +34,6 @@ return [
         'Dashboard' => 'Dashboard',
         'Sales Commission' => 'Sales Commissions',
     ],
+    'activity' => 'Activity',
 ];
  

@@ -2,17 +2,25 @@
 
 namespace App\Models;
 
-use App\Services\Calculators\WeightCalculator;
-use App\Services\Converters\UnitsConverter;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use App\Services\Converters\UnitsConverter;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Services\Calculators\WeightCalculator;
 
 class Order extends Model
 {
+    
     use SoftDeletes;
     protected $guarded = [];
+
+    use LogsActivity;
+    protected static $logAttributes = ['*'];
+    protected static $logOnlyDirty = true;
+    protected static $submitEmptyLogs = false;
+    
     protected $casts = [
        'cn23' => 'Array',
        'order_date' => 'datetime'

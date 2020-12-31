@@ -293,6 +293,10 @@ class PermissionSeeder extends Seeder
                 'slug' => 'affiliate_sale',
                 'description' => 'Affiliate Sale',
             ],
+            [
+                'slug' => 'activity_log',
+                'description' => 'Show Activity Logs',
+            ],
             
         ];
     }

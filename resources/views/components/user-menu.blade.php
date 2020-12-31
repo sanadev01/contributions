@@ -231,6 +231,15 @@
             </li>
             @endcan
 
+            @can('viewAny', Spatie\Activitylog\Models\Activity::class)
+            <li class="nav-item {{ $isActive(['admin.activity.log.index']) }}">
+                <a href="{{ route('admin.activity.log.index') }}">
+                    <i class="feather icon-activity"></i>
+                    <span class="menu-title">@lang('menu.activity')</span>
+                </a>
+            </li>
+            @endcan
+
             @can('viewAny', App\Models\Setting::class)
             <li class="nav-item {{ $isActive(['admin.settings.index']) }}">
                 <a href="{{ route('admin.settings.index') }}">
@@ -239,8 +248,7 @@
                 </a>
             </li>
             @endcan
-            
-
+        
             <x-shared-menu></x-shared-menu>
         </ul>
     </div>

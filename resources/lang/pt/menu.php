@@ -34,4 +34,5 @@ return [
         'Dashboard' => 'Painel de controle',
         'Sales Commission' => 'Comissões de venda',
     ],
+    'activity' => 'Atividade',
 ];
