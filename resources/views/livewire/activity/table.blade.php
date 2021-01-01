@@ -42,12 +42,10 @@
             </div>
         </div>
         <div class="table-wrapper position-relative">
-            <table class="table mb-0 table-responsive-lg" id="">
+            <table class="table mb-0 table-responsive table-striped" id="">
                 <thead>
                     <tr>
                         <th>@lang('activity.Created at')</th>
-                        <th>@lang('activity.Name')</th>
-                        <th>@lang('activity.Description')</th>
                         <th>@lang('activity.Content')</th>
                     </tr>
                 </thead>
