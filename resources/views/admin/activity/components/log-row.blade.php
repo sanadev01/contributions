@@ -5,38 +5,21 @@
     </td>
 
     <td>
-        <strong>Username: </strong> {{ optional($activity->causer)->name }}, 
-        <strong>Description: </strong> {{ optional($activity)->description }},
+        <strong>Username: </strong> {{ optional($activity->causer)->name }}<br> 
+        <strong>Description: </strong> {{ optional($activity)->description }}<br>
         <strong>Model: </strong> {{ optional($activity)->subject_type }}
-        @if( optional($activity)->description == 'updated')
-            <h4>old value</h4>
-            <div class="d-flex">
-                @foreach ( optional($activity->changes)['old'] ? optional($activity->properties)['old'] : [] as $key =>  $item)
-                <div class="column-flex">
-                    <div class="pr-2" style="width: 100px;">
-                        <strong>{{ $key }}</strong>
-                    </div>
-                    <div class="pr-2" style="width: 100px;">
-                        {{ $item }}
-                    </div>
-                </div>
-                @endforeach
-            </div>
+        <div class="old p-3">
+            <h4> Values After Change</h4>
             <hr>
-        @endif
-        <h4>{{ optional($activity)->description == 'deleted' ? 'Deleted Value' : 'New Value'}}</h4>
-        <div class="d-flex">
-            @foreach ( optional($activity)->changes['attributes'] as $key => $item)
-            <div class="column-flex">
-                @if($activity->description != 'updated')
-                <div class="pr-2" style="width: 100px;">
-                    <strong>{{ $key }}</strong>
-                </div>
-                @endif
-                <div class="pr-2" style="width: 100px;">
-                    {{ $item }}
-                </div>
-            </div>
+            @foreach ( optional($activity->changes)['attributes'] ? optional($activity->properties)['attributes'] : [] as $key =>  $value)
+            <span class="mx-3"><span class="key text-success">{{ $key }}</span> => {{ $value }}</span>
+            @endforeach
+        </div>
+        <div class="old p-3 mt-3">
+            <h4> Values before Change</h4>
+            <hr>
+            @foreach ( optional($activity->changes)['old'] ? optional($activity->properties)['old'] : [] as $key =>  $value)
+            <span class="mx-3"><span class="key text-danger">{{ $key }}</span> => {{ $value }}</span>
             @endforeach
         </div>
     </td>
