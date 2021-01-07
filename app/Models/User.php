@@ -102,6 +102,16 @@ class User extends Authenticatable
         return $this->hasMany(AffiliateSale::class, 'user_id');
     }
 
+    public function importOrders()
+    {
+        return $this->hasMany(ImportOrder::class, 'user_id');
+    }
+    
+    public function importedOrders()
+    {
+        return $this->hasMany(ImportedOrder::class, 'user_id');
+    }
+
     public function billingInformations()
     {
         return $this->hasMany(BillingInformation::class);

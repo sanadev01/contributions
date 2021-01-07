@@ -77,6 +77,7 @@ return [
         'Download and fill in the data in the sample file below to avoid errors' => 'Baixe e preencha os dados no arquivo de amostra abaixo para evitar erros',
         'Download the sample' => 'Baixe a amostra para amostra',
         'Download' => 'Baixar',
+        'Excel File Name' => 'Nome do arquivo Excel',
     ],
     'actions' => [
         'actions' => 'Ações',
