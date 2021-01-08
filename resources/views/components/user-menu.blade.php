@@ -28,15 +28,6 @@
             @endcan
 
             @can('importExcel', App\Models\Order::class)
-                <li class="nav-item {{ $isActive(['admin.import-excel.index','admin.import-excel.edit']) }}">
-                    <a href="{{ route('admin.import-excel.index') }}">
-                        <i class="feather icon-file"></i>
-                        <span class="menu-title">@lang('menu.import-excel')</span>
-                    </a>
-                </li>
-            @endcan
-
-            @can('importExcel', App\Models\Order::class)
                 <li class="nav-item">
                     <a href="{{ route('admin.import-excel.index') }}">
                         <i class="feather icon-file"></i>
