@@ -78,6 +78,7 @@ return [
         'Download and fill in the data in the sample file below to avoid errors' => 'Download and fill in the data in the sample file below to avoid errors',
         'Download the sample' => 'Download the sample for sample',
         'Download' => 'Download',
+        'Excel File Name' => 'Excel File Name',
     ],
     'actions' => [
         'actions' => 'Action',

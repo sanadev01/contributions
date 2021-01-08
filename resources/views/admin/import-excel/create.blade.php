@@ -4,8 +4,8 @@
     <div class="card">
         <div class="card-header">
             <h4 class="card-title" id="basic-layout-form"></h4>
-            <a href="{{ route('admin.rates.shipping-rates.index') }}" class="btn btn-primary pull-right">
-                @lang('shipping-rates.Return to List')
+            <a href="{{ route('admin.import.import-excel.index') }}" class="btn btn-primary pull-right">
+                @lang('Return to List')
             </a>
             <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
             <div class="heading-elements">
@@ -16,7 +16,18 @@
         </div>
         <div class="card-content collapse show">
             <div class="card-body">
-                <form class="form" action="{{ route('admin.import-excel.store') }}" method="POST" enctype="multipart/form-data">
+                @if( $errors->count() )
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach($errors->all() as $error)
+                                <li>
+                                    {{ $error }}
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                <form class="form" action="{{ route('admin.import.import-excel.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="form-body">
                         <div class="row justify-content-center">
@@ -26,7 +37,20 @@
                         </div>
 
                         <div class="row justify-content-center">
-
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="projectinput1">@lang('orders.import-excel.Excel File Name')</label>
+                                    <input type="text" class="form-control" name="excel_name" required>
+                                    @error('excel_name')
+                                        <div class="text-danger">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row justify-content-center">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="projectinput1">@lang('orders.import-excel.Select Excel File to Upload')</label>
@@ -38,7 +62,6 @@
                                     @enderror
                                 </div>
                             </div>
-
                         </div>
                         <div class="row justify-content-center">
                             <div class="col-md-10">
