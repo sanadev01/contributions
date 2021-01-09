@@ -85,7 +85,9 @@
                     <th>
                         <input type="search" class="form-control" wire:model.debounce.1000ms="tracking_code">
                     </th>
-                    <th></th>
+                    <th>
+                        <input type="search" class="form-control" wire:model.debounce.1000ms="amount">
+                    </th>
                     <th>
                         <select class="form-control" wire:model="status">
                             <option value="">All</option>
