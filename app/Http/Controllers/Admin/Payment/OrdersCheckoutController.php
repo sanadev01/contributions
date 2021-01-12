@@ -12,6 +12,8 @@ class OrdersCheckoutController extends Controller
 {
     public function index(PaymentInvoice $invoice)
     {
+        $this->authorize('view',$invoice);
+
         if ( $invoice->isPaid() ){
             abort(404);
         }
@@ -21,6 +23,8 @@ class OrdersCheckoutController extends Controller
 
     public function store(PaymentInvoice $invoice,Request $request, OrderRepository $orderRepository)
     {
+        $this->authorize('view',$invoice);
+        
         if ( $invoice->isPaid() ){
             abort(404);
         }

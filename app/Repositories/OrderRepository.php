@@ -20,6 +20,17 @@ class OrderRepository
 {
     protected $error;
 
+    public function getOrderByIds(array $ids)
+    {
+        $query = Order::query();
+
+        if ( Auth::user()->isUser() ){
+            $query->where('user_id',Auth::id());
+        }
+
+        return $query->whereIn('id',$ids)->get();
+    }
+
     public function updateSenderAddress(Request $request, Order $order)
     {
         $order->update([

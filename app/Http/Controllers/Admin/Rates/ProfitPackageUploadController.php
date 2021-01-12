@@ -17,6 +17,8 @@ class ProfitPackageUploadController extends Controller
      */
     public function create()
     {
+        $this->authorize('create',ProfitPackage::class);
+
         return view('admin.rates.profit-packages.upload');
     }
 
@@ -28,7 +30,7 @@ class ProfitPackageUploadController extends Controller
      */
     public function store(Request $request)
     {   
-      
+        $this->authorize('create',ProfitPackage::class);
         $this->validate($request,[
             'package_name' => 'required',
             'type' => 'required',

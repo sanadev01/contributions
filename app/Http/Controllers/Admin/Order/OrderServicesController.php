@@ -17,6 +17,8 @@ class OrderServicesController extends Controller
      */
     public function index(Order $order)
     {
+        $this->authorize('editServices',$order);
+        
         $order->load('services');
         $services = HandlingService::query()->active()->get();
         return view('admin.orders.services.index',compact('order','services'));
@@ -31,6 +33,8 @@ class OrderServicesController extends Controller
      */
     public function store(Request $request,Order $order, OrderRepository $orderRepository)
     {
+        $this->authorize('editServices',$order);
+        
         if ( $orderRepository->updateHandelingServices($request,$order) ){
             session()->flash('alert-success','orders.Services Updated');
             return redirect()->route('admin.orders.order-details.index',$order);

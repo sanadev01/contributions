@@ -11,10 +11,11 @@ use App\Models\BillingInformation;
 
 class BillingInformationController extends Controller
 {   
-    // public function __construct()
-    // {
-    //     $this->authorizeResource(BillingInformation::class);
-    // } 
+    public function __construct()
+    {
+        $this->authorizeResource(BillingInformation::class);
+    } 
+    
     /**
      * Display a listing of the resource.
      *

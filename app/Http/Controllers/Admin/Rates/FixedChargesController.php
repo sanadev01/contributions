@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Rates;
 
 use App\Http\Controllers\Controller;
+use App\Models\Rate;
 use Illuminate\Http\Request;
 
 class FixedChargesController extends Controller
@@ -14,6 +15,8 @@ class FixedChargesController extends Controller
      */
     public function index()
     {
+        $this->authorize('updatefixedRates',Rate::class);
+
         return view('admin.rates.fixed-charges.index');
     }
 
@@ -25,6 +28,8 @@ class FixedChargesController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('updatefixedRates',Rate::class);
+        
         saveSetting("consolidation_charges",$request->consolidation_charges);
         session()->flash('alert-success','Charges Saved');
         return back();
