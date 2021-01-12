@@ -3,15 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 // use Illuminate\Http\Request;
-use App\Models\Ticket;
 use App\Http\Controllers\Controller;
-use App\Http\Livewire\Components\SupportTicket;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Shared\Ticket\Create;
 use App\Http\Requests\Shared\Ticket\Update;
+use App\Models\Ticket;
+use App\Repositories\TicketRepository;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
-use App\Repositories\TicketRepository;
 
 class TicketController extends Controller
 {
@@ -22,7 +21,7 @@ class TicketController extends Controller
      */
     public function index(TicketRepository $repository)
     {   
-        $this->authorize('viewAny',SupportTicket::class);
+        $this->authorize('viewAny',Ticket::class);
 
         $supportTickets = $repository->get();
         return view('admin.tickets.index', compact('supportTickets'));
@@ -35,7 +34,7 @@ class TicketController extends Controller
      */
     public function create()
     {
-        $this->authorize('create',SupportTicket::class);
+        $this->authorize('create',Ticket::class);
         return view('admin.tickets.create');
     }
 
@@ -47,7 +46,7 @@ class TicketController extends Controller
      */
     public function store(Create $request, TicketRepository $repository)
     {   
-        $this->authorize('create',SupportTicket::class);
+        $this->authorize('create',Ticket::class);
 
         if($repository->store($request)){
             session()->flash('alert-success', 'tickets.Generated');
