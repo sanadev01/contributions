@@ -9,6 +9,11 @@ use Illuminate\Http\Request;
 
 class PaymentInvoiceController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(PaymentInvoice::class);    
+    }
+
     /**
      * Display a listing of the resource.
      *

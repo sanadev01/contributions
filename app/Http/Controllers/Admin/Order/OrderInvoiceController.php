@@ -10,6 +10,8 @@ class OrderInvoiceController extends Controller
 {
     public function index(Request $request, Order $order)
     {
+        $this->authorize('viewInvoice',$order);
+        
         if ( !$order->recipient || $order->items->isEmpty() ){
             abort(404);
         }

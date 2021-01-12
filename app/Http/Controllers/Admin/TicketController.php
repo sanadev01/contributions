@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 // use Illuminate\Http\Request;
 use App\Models\Ticket;
 use App\Http\Controllers\Controller;
+use App\Http\Livewire\Components\SupportTicket;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Shared\Ticket\Create;
 use App\Http\Requests\Shared\Ticket\Update;
@@ -21,6 +22,8 @@ class TicketController extends Controller
      */
     public function index(TicketRepository $repository)
     {   
+        $this->authorize('viewAny',SupportTicket::class);
+
         $supportTickets = $repository->get();
         return view('admin.tickets.index', compact('supportTickets'));
     }
@@ -32,6 +35,7 @@ class TicketController extends Controller
      */
     public function create()
     {
+        $this->authorize('create',SupportTicket::class);
         return view('admin.tickets.create');
     }
 
@@ -43,6 +47,8 @@ class TicketController extends Controller
      */
     public function store(Create $request, TicketRepository $repository)
     {   
+        $this->authorize('create',SupportTicket::class);
+
         if($repository->store($request)){
             session()->flash('alert-success', 'tickets.Generated');
         }
@@ -58,6 +64,8 @@ class TicketController extends Controller
      */
     public function show(Ticket $ticket, TicketRepository $repository)
     {
+        $this->authorize('view',$ticket);
+
         if($repository->show($ticket)){
             return view('admin.tickets.show', compact('ticket'));
         }
@@ -72,6 +80,8 @@ class TicketController extends Controller
      */
     public function update(Update $request, Ticket $ticket, TicketRepository $repository)
     {   
+        $this->authorize('update',$ticket);
+
         if($repository->update($request, $ticket)){
             session()->flash('alert-success', 'tickets.Comment');
         }

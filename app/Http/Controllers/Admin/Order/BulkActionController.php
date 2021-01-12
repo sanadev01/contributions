@@ -4,14 +4,15 @@ namespace App\Http\Controllers\Admin\Order;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Repositories\OrderRepository;
 use Illuminate\Http\Request;
 
 class BulkActionController extends Controller
 {
-    public function __invoke(Request $request)
+    public function __invoke(Request $request, OrderRepository $orderRepository)
     {
         $orderIds = json_decode($request->get('data'),true);
-        $orders = Order::find($orderIds);
+        $orders = $orderRepository->getOrderByIds($orderIds);
         
         return view('admin.orders.label.bulk-print',compact('orders'));
     }

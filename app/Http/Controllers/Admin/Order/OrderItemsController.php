@@ -19,6 +19,8 @@ class OrderItemsController extends Controller
      */
     public function index(Request $request, Order $order)
     {
+        $this->authorize('editItems',$order);
+
         if ( !$order->recipient ){
             abort(404);
         }
@@ -44,6 +46,8 @@ class OrderItemsController extends Controller
      */
     public function store(CreateRequest $request,Order $order, OrderRepository $orderRepository)
     {
+        $this->authorize('editItems',$order);
+
         if ( !$order->recipient ){
             abort(404);
         }

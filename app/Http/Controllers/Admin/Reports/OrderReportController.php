@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Admin\Reports;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\Reports;
 use App\Repositories\Reports\OrderReportsRepository;
 use App\Services\Excel\Export\OrderExport;
+use Illuminate\Http\Request;
 
 class OrderReportController extends Controller
 {
@@ -16,11 +17,13 @@ class OrderReportController extends Controller
     */
     public function index() 
     {
+        $this->authorize('viewOrderReport',Reports::class);
         return view('admin.reports.order-report');
     }
     
     public function create(OrderReportsRepository $orderReportsRepository) 
     {
+        $this->authorize('viewOrderReport',Reports::class);
         $orders =  $orderReportsRepository->getOrderReport();
         
         $exportService = new OrderExport($orders);

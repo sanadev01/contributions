@@ -17,6 +17,8 @@ class OrderSenderController extends Controller
      */
     public function index(Order $order)
     {
+        $this->authorize('editSender',$order);
+
         return view('admin.orders.sender.index',compact('order'));
     }
 
@@ -28,6 +30,8 @@ class OrderSenderController extends Controller
      */
     public function store(CreateRequest $request,Order $order,OrderRepository $orderRepository)
     {
+        $this->authorize('editSender',$order);
+        
         if ( $orderRepository->updateSenderAddress($request,$order) ){
             session()->flash('alert-success','orders.Sender Updated');
             return redirect()->route('admin.orders.recipient.index',$order);
