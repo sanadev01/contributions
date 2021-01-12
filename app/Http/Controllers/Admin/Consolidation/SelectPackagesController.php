@@ -47,6 +47,8 @@ class SelectPackagesController extends Controller
      */
     public function edit(Order $parcel)
     {
+        $this->authorize('updateConsolidation',$parcel);
+
         return view('admin.consolidation.edit',compact('parcel'));
     }
 
@@ -59,6 +61,8 @@ class SelectPackagesController extends Controller
      */
     public function update(Request $request, Order $parcel, PreAlertRepository $preAlertRepository)
     {
+        $this->authorize('updateConsolidation',$parcel);
+        
         $consolidatedOrder = $preAlertRepository->updateConsolidationRequest($request,$parcel);
         if ( $consolidatedOrder ){
             session()->flash('alert-success',__('consolidation.success_message_updated'));

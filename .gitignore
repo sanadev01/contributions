@@ -1,3 +1,4 @@
 /vendor
 .env
 .credentials
+node_modules

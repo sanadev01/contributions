@@ -11,6 +11,8 @@ class PostPaidInvoiceExportController extends Controller
 {
     public function __invoke(PaymentInvoice $invoice)
     {
+        $this->authorize('view',$invoice);
+        
         $exportService = new ExportPostPaidInvoice($invoice);
         return $exportService->handle();
     }

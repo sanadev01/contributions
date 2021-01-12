@@ -11,6 +11,8 @@ class DuplicateOrderController extends Controller
 {
     public function __invoke(Order $order, DuplicateOrderRepository $duplicateOrderRepository)
     {
+        $this->authorize('duplicateOrder',$order);
+        
         $copy = $duplicateOrderRepository->makeDuplicate($order);
 
         session()->flash('alert-success','Order Duplicated');

@@ -93,4 +93,9 @@ class RatePolicy
     {
         //
     }
+
+    public function updatefixedRates()
+    {
+        return false;
+    }
 }

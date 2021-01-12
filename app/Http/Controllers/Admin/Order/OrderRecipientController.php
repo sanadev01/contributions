@@ -17,6 +17,7 @@ class OrderRecipientController extends Controller
      */
     public function index(Order $order)
     {
+        $this->authorize('editReceipient',$order);
         return view('admin.orders.recipient.index',compact('order'));
     }
 
@@ -28,6 +29,7 @@ class OrderRecipientController extends Controller
      */
     public function store(CreateRequest $request, Order $order, OrderRepository $orderRepository)
     {
+        $this->authorize('editReceipient',$order);
         if ( $orderRepository->updateRecipientAddress($request,$order) ){
             session()->flash('alert-success',"orders.Recipient Updated");
             return redirect()->route('admin.orders.services.index',$order);

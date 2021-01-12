@@ -67,7 +67,7 @@ class PaymentInvoicePolicy
      */
     public function delete(User $user, PaymentInvoice $paymentInvoice)
     {
-        return true;
+        return  $user->id == $paymentInvoice->paid_by;;
     }
 
     /**

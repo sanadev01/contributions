@@ -63,7 +63,7 @@ class PaymentInvoiceRepository
 
     public function createInvoice(Request $request)
     {
-        $orders = Order::find($request->get('orders',[]));
+        $orders = (new OrderRepository)->getOrderByIds($request->get('orders',[]));
 
         $orders = collect($orders->filter(function($order){
             return !$order->getPaymentInvoice();
