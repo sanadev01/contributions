@@ -1,0 +1,201 @@
+<?php
+
+namespace App\Repositories;
+
+use App\Models\Order;
+use App\Models\ImportOrder;
+use Illuminate\Http\Request;
+use App\Models\ImportedOrder;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Auth;
+use App\Services\Excel\Import\OrderImportService;
+
+class ImportOrderRepository
+{
+    public function store($request)
+    {
+        $importExcelService = new OrderImportService($request->file('excel_file'),$request);
+        $importOrder = $importExcelService->handle();
+        $findErrors = $importExcelService->getErrors();
+        if($findErrors){
+            $this->delete($importOrder);
+        }
+        return  $findErrors;
+        
+    }
+
+    public function get(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='DESC')
+    {
+
+        $query = ImportOrder::query()->has('user');
+        
+        if ( Auth::user()->isUser() ){
+            $query->where('user_id',Auth::id());
+        }
+        
+        if ( $request->date ){
+            $query->where(function($query) use($request){
+                return $query->where('created_at', 'LIKE', "%{$request->date}%");
+            });
+        }
+        if ( $request->file_name ){
+            $query->where(function($query) use($request){
+                return $query->where('file_name', 'LIKE', "%{$request->file_name}%");
+            });
+        }
+        if ( $request->total ){
+            $query->where(function($query) use($request){
+                return $query->where('total_orders', $request->total);
+            });
+        }
+        
+        if ( $request->name ){
+            $query->whereHas('user',function($query) use($request) {
+                return $query->where('name', 'LIKE', "%{$request->name}%");
+            });
+        }
+        
+        $importOrders = $query
+        ->orderBy($orderBy,$orderType);
+
+        return $paginate ? $importOrders->paginate($pageSize) : $importOrders->get();
+    }
+
+    public function delete(ImportOrder $importOrder)
+    {
+        
+        $importOrder->delete();
+        if($importOrder->importOrders){
+            $importOrder->importOrders()->delete();
+        }
+        return true;
+    }
+
+    public function getImportedOrder(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='DESC')
+    {
+        $query = ImportedOrder::query()->has('user');
+        
+        if ( Auth::user()->isUser() ){
+            $query->where('user_id',Auth::id());
+        }
+        
+        if ( $request->date ){
+            $query->where(function($query) use($request){
+                return $query->where('created_at', 'LIKE', "%{$request->date}%");
+            });
+        }
+        
+        if ( $request->client ){
+            $query->where(function($query) use($request){
+                return $query->where('merchant', 'LIKE', "%{$request->client}%");
+            });
+        }
+        
+        if ( $request->carrier ){
+            $query->where(function($query) use($request){
+                return $query->where('carrier', 'LIKE', "%{$request->carrier}%");
+            });
+        }
+        
+        if ( $request->tracking ){
+            $query->where(function($query) use($request){
+                return $query->where('tracking_id', 'LIKE', "%{$request->tracking}%");
+            });
+        }
+        
+        if ( $request->reference ){
+            $query->where(function($query) use($request){
+                return $query->where('customer_reference', 'LIKE', "%{$request->reference}%");
+            });
+        }
+       
+        if ( $request->name ){
+            $query->whereHas('user',function($query) use($request) {
+                return $query->where('name', 'LIKE', "%{$request->name}%");
+            });
+        }
+        
+        $importedOrders = $query
+        ->orderBy($orderBy,$orderType);
+
+        return $paginate ? $importedOrders->paginate($pageSize) : $importedOrders->get();
+    }
+
+    public function importedOrderDelete(ImportedOrder $importedOrder)
+    {
+        $importedOrder->delete();
+        return true;
+    }
+
+
+    public function storeOrder(ImportedOrder $importedOrder)
+    {
+        
+        $order = Order::create([
+            'user_id' => $importedOrder->user_id,
+            'shipping_service_id' => $importedOrder->shipping_service_id,
+            'shipping_service_name' => $importedOrder->shipping_service_name,
+            "merchant" => $importedOrder->merchant,
+            "carrier" => $importedOrder->carrier,
+            "tracking_id" => $importedOrder->tracking_id,
+            "customer_reference" => $importedOrder->customer_reference,
+
+            "weight" => $importedOrder->weight,
+            "length" => $importedOrder->length,
+            "width" => $importedOrder->width,
+            "height" => $importedOrder->height,
+            "measurement_unit" => $importedOrder->measurement_unit,
+            "is_invoice_created" => $importedOrder->is_invoice_created,
+            "is_shipment_added" => $importedOrder->is_shipment_added,
+            'status' => $importedOrder->status,
+            'order_date' => $importedOrder->order_date, 
+
+            "sender_first_name" => $importedOrder->sender_first_name,
+            "sender_last_name" => $importedOrder->sender_last_name,
+            "sender_email" => $importedOrder->sender_email,
+            "sender_phone" => $importedOrder->sender_phone,
+
+        ]);
+
+
+        $order->recipient()->create([
+            "first_name" =>$importedOrder->recipient['first_name'],
+            "last_name" => $importedOrder->recipient['last_name'],
+            "email" => $importedOrder->recipient['email'],
+            "phone" => $importedOrder->recipient['phone'],
+            "address" => $importedOrder->recipient['address'],
+            "address2" => $importedOrder->recipient['address2'],
+            "street_no" => $importedOrder->recipient['street_no'],
+            "zipcode" => $importedOrder->recipient['zipcode'],
+            "city" => $importedOrder->recipient['city'],
+            "account_type" => $importedOrder->recipient['account_type'],
+            "state_id" => $importedOrder->recipient['state_id'],
+            "country_id" => $importedOrder->recipient['country_id'],
+            "tax_id" => $importedOrder->recipient['tax_id'],
+        ]);
+
+        $order->update([
+            'warehouse_number' => "TEMPWHR-{$order->id}",
+            'user_declared_freight' => $importedOrder->user_declared_freight?$importedOrder->user_declared_freight:0 ,
+        ]);
+
+        foreach($importedOrder->items as $item){
+            $this->addItem($order,$item);
+        }
+        
+        $order->doCalculations();
+    }
+
+    public function addItem($order, $item)
+    {
+        $order->items()->create([
+            "quantity" => $item['quantity'],
+            "value" => $item['value'],
+            "description" => $item['description'],
+            "sh_code" => $item['sh_code'],
+            "contains_battery" => $item['contains_battery'],
+            "contains_perfume" => $item['contains_perfume'],
+        ]);
+    }
+
+}

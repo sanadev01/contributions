@@ -3,6 +3,11 @@
 return [
     'dashboard' => 'Painel de controle',
     'import-excel' => 'Importação de Excel',
+    'import-excel-order' => [
+        'excel' => 'Importação de Excel',
+        'upload' => 'Pedidos de importação',
+        'order' => 'Pedidos importados',
+    ],
     'payment-invoice' => 'Faturas de Pagamento',
     'prealerts' => 'Aviso de compra',
     'orders' => 'Pedidos',
@@ -34,4 +39,5 @@ return [
         'Dashboard' => 'Painel de controle',
         'Sales Commission' => 'Comissões de venda',
     ],
+    'activity' => 'Atividade',
 ];

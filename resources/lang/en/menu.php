@@ -3,6 +3,11 @@
 return [
     'dashboard' => 'Dashboard',
     'import-excel' => 'Excel Import',
+    'import-excel-order' => [
+        'excel' => 'Excel Import',
+        'upload' => 'Import Orders',
+        'order' => 'Imported Orders',
+    ],
     'payment-invoice' => 'Payment Invoices',
     'prealerts' => 'PreAlerts',
     'orders' => 'Orders',
@@ -34,5 +39,6 @@ return [
         'Dashboard' => 'Dashboard',
         'Sales Commission' => 'Sales Commissions',
     ],
+    'activity' => 'Activity',
 ];
  

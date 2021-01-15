@@ -2,18 +2,23 @@
 
 namespace App\Models;
 
-use App\Models\TicketComment;
-use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\TicketComment;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Ticket extends Model
 {   
     protected $guarded = [];
-
+    use LogsActivity;
+    protected static $logAttributes = ['*'];
+    protected static $logOnlyDirty = true;
+    protected static $submitEmptyLogs = false;
+    
     public function comments()
     {
         return $this->hasMany(TicketComment::class, 'ticket_id');

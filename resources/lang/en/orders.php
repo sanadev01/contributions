@@ -78,6 +78,7 @@ return [
         'Download and fill in the data in the sample file below to avoid errors' => 'Download and fill in the data in the sample file below to avoid errors',
         'Download the sample' => 'Download the sample for sample',
         'Download' => 'Download',
+        'Excel File Name' => 'Excel File Name',
     ],
     'actions' => [
         'actions' => 'Action',
@@ -228,5 +229,6 @@ return [
         'Cancel' => 'Cancel',
         'Import' => 'Import',
         'Download' => 'Download'
-    ]
+    ],
+    'update-label' => 'Are you sure you want make change on the tracking number, if you proceed tracking will be change'
 ];

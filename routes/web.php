@@ -44,12 +44,17 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
 
         Route::get('dashboard', 'HomeController')->name('home');
         Route::resource('parcels', PreAlertController::class);
-        Route::resource('import-excel', ImportExcelController::class)->only(['index','store']);
         Route::resource('billing-information', BillingInformationController::class);
-
+        Route::resource('import-excel', ImportExcelController::class)->only(['index','store']);
+        
         Route::resource('handling-services', HandlingServiceController::class)->except('show');
         Route::resource('addresses', AddressController::class);
         Route::resource('shipping-services', ShippingServiceController::class);
+        
+        Route::namespace('Import')->prefix('import')->as('import.')->group(function () {
+            Route::resource('import-excel', ImportExcelController::class)->only(['index','create','store','show','destroy']);
+            Route::resource('import-order', ImportOrderController::class)->only(['index','store', 'edit','destroy']);
+        });
 
         Route::resource('orders',OrderController::class)->only('index','destroy');
 
@@ -124,8 +129,10 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('sales-commission', SalesCommisionController::class)->only(['index']);
             Route::get('sale-exports', SaleExportController::class)->name('sale.exports');
         });
-       
         
+        Route::namespace('Activity')->as('activity.')->prefix('activity')->group(function(){
+            Route::resource('log', ActivityLogController::class)->only('index');
+        });
 
         Route::post('users/{user}/login', AnonymousLoginController::class)->name('users.login');
 

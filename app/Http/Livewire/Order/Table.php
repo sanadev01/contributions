@@ -30,6 +30,7 @@ class Table extends Component
     public $tracking_id = '';
     public $customer_reference = '';
     public $tracking_code = '';
+    public $amount = '';
     public $status = '';
     public $orderType = null;
     public $paymentStatus = null;
@@ -106,6 +107,11 @@ class Table extends Component
     public function updatedCarrier()
     {
         $this->query = $this->getQuery()->where('carrier', 'LIKE', "%{$this->carrier}%");
+    }
+    
+    public function updatedAmount()
+    {
+        $this->query = $this->getQuery()->where('gross_total', 'LIKE', "%{$this->amount}%");
     }
 
     

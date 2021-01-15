@@ -2,16 +2,23 @@
 
 namespace App\Models;
 
-use App\Services\Calculators\RatesCalculator;
 use Illuminate\Database\Eloquent\Model;
 use LaravelJsonColumn\Traits\JsonColumn;
 use Illuminate\Database\Eloquent\Builder;
+use Spatie\Activitylog\Traits\LogsActivity;
+use App\Services\Calculators\RatesCalculator;
 
 class ShippingService extends Model
 {
     use JsonColumn;
+    use LogsActivity;
 
     protected $guarded = [];
+    
+    protected static $logAttributes = ['*'];
+    
+    protected static $logOnlyDirty = true;
+    protected static $submitEmptyLogs = false;
 
     public $cacheCalculator = false;
 

@@ -90,6 +90,11 @@
                                                         <a href="{{ route('admin.users.setting.index',$user) }}" title="@lang('user.User Setting')" class="dropdown-item w-100">
                                                             <i class="fa fa-cog"></i> @lang('user.User Setting')
                                                         </a>
+
+                                                        <a href="{{ route('admin.activity.log.index', [ 'id'=> $user ]) }}" title="Check User Activity" class="dropdown-item w-100">
+                                                            <i class="feather icon-activity"></i> Activity Logs
+                                                        </a>
+                                                        
                                                         <form action="{{ route('admin.users.login',$user) }}" class="d-flex" method="post">
                                                             @csrf
                                                             <button class="dropdown-item w-100">

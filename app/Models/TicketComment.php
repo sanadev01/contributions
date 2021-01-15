@@ -5,11 +5,17 @@ namespace App\Models;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class TicketComment extends Model
 {
     protected $guarded = [];
 
+    use LogsActivity;
+    protected static $logAttributes = ['*'];
+    protected static $logOnlyDirty = true;
+    protected static $submitEmptyLogs = false;
+    
     public function scopebyAdmin(Builder $query)
     {
         $query->whereIn('user_id', User::select('id')->admin());

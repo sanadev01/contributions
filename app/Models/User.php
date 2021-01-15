@@ -2,15 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
-use App\Models\CommissionSetting;
 use App\Models\Order;
+use Illuminate\Support\Str;
 use App\Models\AffiliateSale;
+use App\Models\CommissionSetting;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Builder;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\Traits\CausesActivity;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 
 class User extends Authenticatable
@@ -21,6 +23,19 @@ class User extends Authenticatable
 
     const ACCOUNT_TYPE_BUSINESS = 'business';
     const ACCOUNT_TYPE_INDIVIDUAL = 'individual';
+
+    use LogsActivity;
+    
+    use CausesActivity;
+    
+    protected static $ignoreChangedAttributes = ['password','api_token','api_enabled'];
+    protected static $logAttributes = [
+        'pobox_number', 'package_id', 'state_id', 'country_id', 'role_id','name', 'email', 'last_name', 
+        'phone', 'city', 'street_no', 'address', 'address2', 'account_type', 'tax_id', 'zipcode', 
+        'locale','market_place_name','image_id','reffered_by', 'reffer_code'
+    ];
+    protected static $logOnlyDirty = true;
+    protected static $submitEmptyLogs = false;
 
 
     /**
@@ -85,6 +100,16 @@ class User extends Authenticatable
     public function affiliateSales()
     {
         return $this->hasMany(AffiliateSale::class, 'user_id');
+    }
+
+    public function importOrders()
+    {
+        return $this->hasMany(ImportOrder::class, 'user_id');
+    }
+    
+    public function importedOrders()
+    {
+        return $this->hasMany(ImportedOrder::class, 'user_id');
     }
 
     public function billingInformations()

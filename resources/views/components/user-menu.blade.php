@@ -28,11 +28,25 @@
             @endcan
 
             @can('importExcel', App\Models\Order::class)
-                <li class="nav-item {{ $isActive(['admin.import-excel.index','admin.import-excel.edit']) }}">
+                <li class="nav-item">
                     <a href="{{ route('admin.import-excel.index') }}">
                         <i class="feather icon-file"></i>
-                        <span class="menu-title">@lang('menu.import-excel')</span>
+                        <span class="menu-title">@lang('menu.import-excel-order.excel')</span>
                     </a>
+                    <ul class="menu-content">
+                        <li class="{{ $isActive(['admin.import.import-excel.index','admin.import.import-excel.show','admin.import.import-excel.create']) }}">
+                            <a href="{{ route('admin.import.import-excel.index') }}">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title">@lang('menu.import-excel-order.upload')</span>
+                            </a>
+                        </li>
+                        <li class="{{ $isActive(['admin.import.import-order.index']) }}">
+                            <a href="{{ route('admin.import.import-order.index') }}">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title">@lang('menu.import-excel-order.order')</span>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
             @endcan
 
@@ -192,7 +206,6 @@
                                 <span class="menu-title">@lang('menu.Affiliate.Sales Commission')</span>
                             </a>
                         </li>
-                        
                     </ul>
                 </li>
             @endcan
@@ -231,6 +244,15 @@
             </li>
             @endcan
 
+            @can('viewAny', Spatie\Activitylog\Models\Activity::class)
+            <li class="nav-item {{ $isActive(['admin.activity.log.index']) }}">
+                <a href="{{ route('admin.activity.log.index') }}">
+                    <i class="feather icon-activity"></i>
+                    <span class="menu-title">@lang('menu.activity')</span>
+                </a>
+            </li>
+            @endcan
+
             @can('viewAny', App\Models\Setting::class)
             <li class="nav-item {{ $isActive(['admin.settings.index']) }}">
                 <a href="{{ route('admin.settings.index') }}">
@@ -239,8 +261,7 @@
                 </a>
             </li>
             @endcan
-            
-
+        
             <x-shared-menu></x-shared-menu>
         </ul>
     </div>
