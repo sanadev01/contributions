@@ -229,5 +229,6 @@ return [
         'Cancel' => 'Cancel',
         'Import' => 'Import',
         'Download' => 'Download'
-    ]
+    ],
+    'update-label' => 'Are you sure you want make change on the tracking number, if you proceed tracking will be change'
 ];

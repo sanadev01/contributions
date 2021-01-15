@@ -1,5 +1,22 @@
 @extends('layouts.master')
+@section('css')
+<style>
 
+body,
+.modal-open .page-container,
+.modal-open .page-container .navbar-fixed-top,
+.modal-open .modal-container {
+	overflow-y: scroll;
+}
+
+@media (max-width: 979px) {
+	.modal-open .page-container .navbar-fixed-top{
+		overflow-y: visible;
+	}
+}
+
+</style>
+@endsection
 @section('page')
 <div class="card">
     <div class="card-header">
@@ -7,6 +24,7 @@
         <a href="{{ route('admin.orders.index') }}" class="btn btn-primary pull-right">
             @lang('shipping-rates.Return to List')
         </a>
+
         <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
         <div class="heading-elements">
             <ul class="list-inline mb-0">
@@ -26,6 +44,23 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="confirm" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+        
+          <h4 class="modal-title">Confirm!</h4>
+        </div>
+        <div class="modal-body">
+          <p><h5>@lang('orders.update-label')</h5></p>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-primary" onclick="updateLabel({{$order->id}},'#row_{{$order->id}}')">Yes</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+        </div>
+      </div>
+    </div>
+  </div>
 @endsection
 
 @section('js')
@@ -52,6 +87,7 @@
         }
 
         function updateLabel(){
+            $('#confirm').modal('hide');
             $('.label-wrapper').html(window.labelLoader);
             loadLabel(true);
         }

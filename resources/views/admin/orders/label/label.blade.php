@@ -3,7 +3,8 @@
         <button class="btn btn-primary" onclick="reloadLabel({{$order->id}},'#row_{{$order->id}}')">Reload</button>
         @if (!$error)
             <button onclick="window.open('{{ route('order.label.download',[$order,'time'=>md5(microtime())]) }}','','top:0,left:0,width:600px;height:700px;')" class="btn btn-primary">Download</button>
-            <button class="btn btn-primary" onclick="updateLabel({{$order->id}},'#row_{{$order->id}}')">Update</button>
+            <!-- <button class="btn btn-primary" onclick="updateLabel({{$order->id}},'#row_{{$order->id}}')">Update</button> -->
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#confirm">Update</button>
         @endif
     </div>
 </div>
