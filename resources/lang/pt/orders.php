@@ -228,5 +228,6 @@ return [
         'Cancel' => 'Cancelar',
         'Import' => 'Importar',
         'Download' => 'Baixar',
-    ]
+    ],
+    'update-label' => 'Você tem certeza que quer mudar o número do rastreo Se você continuar o rastreo anterior sera alterado Quer continuar?'
 ];
