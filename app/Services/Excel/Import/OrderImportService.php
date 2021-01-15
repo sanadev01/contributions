@@ -78,7 +78,7 @@ class OrderImportService extends AbstractImportService
                 return;
             }
 
-            $this->validationRow($row);
+            $this->validationRow($row, false);
             
             if($this->errors == null){
 
@@ -148,7 +148,7 @@ class OrderImportService extends AbstractImportService
     public function addItem($order,$row)
     {
         $this->validationRow($row, true);
-
+        
         $item =[
             "quantity" => $this->getValue("AA{$row}"),
             "value" => $this->getValue("AB{$row}"),
@@ -189,7 +189,8 @@ class OrderImportService extends AbstractImportService
 
     public function rules($row, $item): array
     {
-        if($item){
+        if($item == true){
+            
             return [
                 'quantity' => 'required',
                 'value' => 'required',
@@ -198,90 +199,92 @@ class OrderImportService extends AbstractImportService
             ];
         }
 
-        return [
-            'merchant' => 'required',
-            'carrier' => 'required',
-            'tracking_id' => 'required',
-            'customer_reference' => 'required',
-            'weight' => 'required|numeric|gt:0',
-            'measurement_unit' => 'required|in:kg/cm,lbs/in',
-            'length' => 'required|numeric|gt:0',
-            'width' => 'required|numeric|gt:0',
-            'height' => 'required|numeric|gt:0',
+        if($item == false){
+            return [
+                'merchant' => 'required',
+                'carrier' => 'required',
+                'tracking_id' => 'required',
+                'customer_reference' => 'required',
+                'weight' => 'required|numeric|gt:0',
+                'measurement_unit' => 'required|in:kg/cm,lbs/in',
+                'length' => 'required|numeric|gt:0',
+                'width' => 'required|numeric|gt:0',
+                'height' => 'required|numeric|gt:0',
 
-            'sender_first_name' => 'required',
-            'sender_last_name' => 'nullable',
-            'sender_email' => 'required',
-            'sender_phone' => 'required',
-            
-            
-            'first_name' => 'required|max:100',
-            'last_name' => 'max:100',
-            'email' => 'nullable|max:100',
-            'address' => 'required',
-            'address2' => 'nullable|max:50',
-            'street_no' => 'required',
-            'city' => 'required',
-            'state_id' => 'required|exists:states,id',
-            'country_id' => 'required|exists:countries,id',
-
-            'phone' => [
-                'required','max:15','min:13', new PhoneNumberValidator(optional( Country::where('code',$this->getValue("X{$row}"))->first() )->id)
-            ],
-            'zipcode' => [
-                'required', new ZipCodeValidator(optional( Country::where('code',$this->getValue("X{$row}"))->first() )->id,optional( State::where('code',$this->getValue("W{$row}"))->first() )->id)
-            ],
+                'sender_first_name' => 'required',
+                'sender_last_name' => 'nullable',
+                'sender_email' => 'required',
+                'sender_phone' => 'required',
                 
-        ];
+                
+                'first_name' => 'required|max:100',
+                'last_name' => 'max:100',
+                'email' => 'nullable|max:100',
+                'address' => 'required',
+                'address2' => 'nullable|max:50',
+                'street_no' => 'required',
+                'city' => 'required',
+                'state_id' => 'required|exists:states,id',
+                'country_id' => 'required|exists:countries,id',
 
+                'phone' => [
+                    'required','max:15','min:13', new PhoneNumberValidator(optional( Country::where('code',$this->getValue("X{$row}"))->first() )->id)
+                ],
+                'zipcode' => [
+                    'required', new ZipCodeValidator(optional( Country::where('code',$this->getValue("X{$row}"))->first() )->id,optional( State::where('code',$this->getValue("W{$row}"))->first() )->id)
+                ],
+                    
+            ];
+        }
     }
 
     public function validationMessages($row, $item)
     {
-        if($item){
+        if($item == true){
             return [
-                'quantity' => 'sh code is required at row ' . $row,
-                'value' => 'value is required at row ' . $row,
-                'description' => 'Product name required at row ' . $row,
-                'sh_code' => 'NCM is required at row ' . $row,
+                'quantity.required' => 'Quantity is required at row ' . $row,
+                'value.required' => 'Value is required at row ' . $row,
+                'description.required' => 'Product name required at row ' . $row,
+                'sh_code.required' => 'NCM is required at row ' . $row,
             ];
         }
 
-        return [
-            'merchant.required' => 'merchant is required at row '.$row,
-            'carrier.required' => 'carrier is required at row '.$row,
-            'tracking_id.required' => 'tracking id is required at row '.$row,
-            'customer_reference.required' => 'customer reference is required at row '.$row,
-            'measurement_unit.required' => 'measurement unit is required at row '.$row,
-            'weight.required' => 'weight is required at row '.$row,
-            'length.required' => 'length is required at row '.$row,
-            'width.required' => 'width is required at row '.$row,
-            'height.required' => 'height is required at row '.$row,
+        if($item == false){
+            return [
+                'merchant.required' => 'merchant is required at row '.$row,
+                'carrier.required' => 'carrier is required at row '.$row,
+                'tracking_id.required' => 'tracking id is required at row '.$row,
+                'customer_reference.required' => 'customer reference is required at row '.$row,
+                'measurement_unit.required' => 'measurement unit is required at row '.$row,
+                'weight.required' => 'weight is required at row '.$row,
+                'length.required' => 'length is required at row '.$row,
+                'width.required' => 'width is required at row '.$row,
+                'height.required' => 'height is required at row '.$row,
 
-            'sender_first_name.required' => 'Sender first name is required at row '.$row,
-            'sender_last_name.nullable' => 'Sender last name is required at row '.$row,
-            'sender_email.required' => 'Sender Email is required at row '.$row,
-            'sender_phone.required' => 'Sender phone is required at row '.$row,
-            
-            'first_name.required' => 'First Name is required at row '.$row,
-            'last_name.required' => 'Last Name is required at row '.$row,
-            'email.nullable' => 'Email is not valid at row '.$row,
-            'phone.required' => 'Phone is required at row '.$row,
-            'address.required' => 'Sender phone is required at row '.$row,
-            'address2.nullable' => 'Address2 is not more then 50 character at row '.$row,
-            'street_no.required' => 'Sender phone is required at row '.$row,
-            'city.required' => 'Sender phone is required at row '.$row,
-            'state_id.required' => 'Sender phone is required at row '.$row,
-            'country_id.required' => 'Sender phone is required at row '.$row,
-            'zipcode.required' => 'Sender phone is required at row '.$row,
-        ];
-
+                'sender_first_name.required' => 'Sender first name is required at row '.$row,
+                'sender_last_name.nullable' => 'Sender last name is required at row '.$row,
+                'sender_email.required' => 'Sender Email is required at row '.$row,
+                'sender_phone.required' => 'Sender phone is required at row '.$row,
+                
+                'first_name.required' => 'First Name is required at row '.$row,
+                'last_name.required' => 'Last Name is required at row '.$row,
+                'email.nullable' => 'Email is not valid at row '.$row,
+                'phone.required' => 'Phone is required at row '.$row,
+                'address.required' => 'Sender phone is required at row '.$row,
+                'address2.nullable' => 'Address2 is not more then 50 character at row '.$row,
+                'street_no.required' => 'Sender phone is required at row '.$row,
+                'city.required' => 'Sender phone is required at row '.$row,
+                'state_id.required' => 'Sender phone is required at row '.$row,
+                'country_id.required' => 'Sender phone is required at row '.$row,
+                'zipcode.required' => 'Sender phone is required at row '.$row,
+            ];
+        }
         
     }
     
     public function validationData($row, $item)
     {
-        if($item){
+        if($item == true){
             return [
                 "quantity" => $this->getValue("AA{$row}"),
                 "value" => $this->getValue("AB{$row}"),
@@ -290,39 +293,42 @@ class OrderImportService extends AbstractImportService
             ];
         }
 
-        return [
-            "merchant" => $this->getValue("A{$row}"),
-            "carrier" => $this->getValue("B{$row}"),
-            "tracking_id" => $this->getValue("C{$row}"),
-            "customer_reference" => $this->getValue("D{$row}"),
-            "measurement_unit" => $this->getValue("I{$row}"),
-            "weight" => $this->getValue("E{$row}"),
-            "length" => $this->getValue("F{$row}"),
-            "width" => $this->getValue("G{$row}"),
-            "height" => $this->getValue("H{$row}"),
+        if($item == false){
+            return [
+                "merchant" => $this->getValue("A{$row}"),
+                "carrier" => $this->getValue("B{$row}"),
+                "tracking_id" => $this->getValue("C{$row}"),
+                "customer_reference" => $this->getValue("D{$row}"),
+                "measurement_unit" => $this->getValue("I{$row}"),
+                "weight" => $this->getValue("E{$row}"),
+                "length" => $this->getValue("F{$row}"),
+                "width" => $this->getValue("G{$row}"),
+                "height" => $this->getValue("H{$row}"),
 
-            "sender_first_name" => $this->getValue("J{$row}"),
-            "sender_last_name" => $this->getValue("K{$row}"),
-            "sender_email" => $this->getValue("L{$row}"),
-            "sender_phone" => $this->getValue("M{$row}"),
+                "sender_first_name" => $this->getValue("J{$row}"),
+                "sender_last_name" => $this->getValue("K{$row}"),
+                "sender_email" => $this->getValue("L{$row}"),
+                "sender_phone" => $this->getValue("M{$row}"),
 
-            "first_name" =>$this->getValue("N{$row}"),
-            "last_name" => $this->getValue("O{$row}"),
-            "email" => $this->getValue("P{$row}"),
-            "phone" => $this->getValue("Q{$row}"),
-            "address" => $this->getValue("R{$row}"),
-            "address2" => $this->getValue("S{$row}"),
-            "street_no" => $this->getValue("T{$row}"),
-            "city" => $this->getValue("V{$row}"),
-            "state_id" => optional( State::where('code',$this->getValue("W{$row}"))->first() )->id,
-            "country_id" => optional( Country::where('code',$this->getValue("X{$row}"))->first() )->id,
-            "zipcode" => $this->getValue("U{$row}"),
-        ];
+                "first_name" =>$this->getValue("N{$row}"),
+                "last_name" => $this->getValue("O{$row}"),
+                "email" => $this->getValue("P{$row}"),
+                "phone" => $this->getValue("Q{$row}"),
+                "address" => $this->getValue("R{$row}"),
+                "address2" => $this->getValue("S{$row}"),
+                "street_no" => $this->getValue("T{$row}"),
+                "city" => $this->getValue("V{$row}"),
+                "state_id" => optional( State::where('code',$this->getValue("W{$row}"))->first() )->id,
+                "country_id" => optional( Country::where('code',$this->getValue("X{$row}"))->first() )->id,
+                "zipcode" => $this->getValue("U{$row}"),
+            ];
+        }
 
     }
 
-    public function validationRow($row, $item = false)
+    public function validationRow($row, $item)
     {
+        
         $validator = Validator::make($this->validationData($row, $item), $this->rules($row,$item ), $this->validationMessages($row,$item));
         if ($validator->fails()) {
             foreach ($validator->errors()->messages() as $messages) {
