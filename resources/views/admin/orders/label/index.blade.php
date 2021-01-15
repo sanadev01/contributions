@@ -1,22 +1,5 @@
 @extends('layouts.master')
-@section('css')
-<style>
 
-body,
-.modal-open .page-container,
-.modal-open .page-container .navbar-fixed-top,
-.modal-open .modal-container {
-	overflow-y: scroll;
-}
-
-@media (max-width: 979px) {
-	.modal-open .page-container .navbar-fixed-top{
-		overflow-y: visible;
-	}
-}
-
-</style>
-@endsection
 @section('page')
 <div class="card">
     <div class="card-header">
