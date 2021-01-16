@@ -1,6 +1,8 @@
 <tr>
     <td>{{optional($order->created_at)->format('m/d/Y')}}</td>
-    <td>{{$order->user->name}}</td>
+    @admin
+        <td>{{$order->user->name}}</td>
+    @endadmin
     <td>{{$order->file_name}}</td>
     <td>{{$order->total_orders}}</td>
     <td class="d-flex no-print" >
