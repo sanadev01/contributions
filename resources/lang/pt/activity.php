@@ -4,11 +4,11 @@
         'Created at' => "Criado em",
         'Name' => "Nome",
         'Date' => "Date",
-        'Model' => "Modelo",
+        'Model' => "Módulo",
         'Description' => "Descrição",
         'Content' => "Conteúdo",
         'Search' => "Pesquisa",
-        'Select Model' => "Selecione o modelo",
+        'Select Model' => "Selecione o Módulo",
     ];
     
     
