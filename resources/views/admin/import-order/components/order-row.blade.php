@@ -1,6 +1,8 @@
 <tr>
     <td>{{optional($order->created_at)->format('m/d/Y')}}</td>
-    <td>{{$order->user->name}}</td>
+    @admin
+        <td>{{$order->user->name}}</td>
+    @endadmin
     <td>{{$order->merchant}}</td>
     <td>{{$order->carrier}}</td>
     <td>{{$order->customer_reference}}</td>
