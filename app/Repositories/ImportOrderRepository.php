@@ -16,11 +16,11 @@ class ImportOrderRepository
     {
         $importExcelService = new OrderImportService($request->file('excel_file'),$request);
         $importOrder = $importExcelService->handle();
-        $findErrors = $importExcelService->getErrors();
-        if($findErrors){
-            $this->delete($importOrder);
-        }
-        return  $findErrors;
+        // $findErrors = $importExcelService->getErrors();
+        // if($findErrors){
+        //     $this->delete($importOrder);
+        // }
+        // return  $findErrors;
         
     }
 

@@ -12,6 +12,7 @@ class ImportOrder extends Model
         'file_name', 
         'upload_path', 
         'total_orders', 
+        'total_errors', 
     ];
 
     
