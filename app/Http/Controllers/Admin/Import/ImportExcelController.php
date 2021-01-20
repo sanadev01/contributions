@@ -71,7 +71,7 @@ class ImportExcelController extends Controller
     public function show(ImportOrder $importExcel)
     {
         $orders = $importExcel;
-        return view('admin.import-excel.show', compact('orders'));
+        return view('admin.import-order.index', compact('orders'));
     }
 
     /**

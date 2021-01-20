@@ -47,14 +47,18 @@ class OrderImportService extends AbstractImportService
     public function importOrders($importOrder)
     {
         $totalOrder = 0;
+        $totalerror = 0;
         foreach (range(2, $this->noRows) as $row) {
             
-           $total = $this->createOrUpdateOrder($row, $importOrder);
-           $total? $totalOrder++: $totalOrder;
+            $total = $this->createOrUpdateOrder($row, $importOrder);
+            $total? $totalOrder++: $totalerror++;
+            unset($this->errors);
+            $this->errors = array();
         }
 
         $importOrder->update([
-            'total_orders' => $totalOrder
+            'total_orders' => $totalOrder,
+            'total_error' => $totalerror
         ]);
         
     }
@@ -80,7 +84,7 @@ class OrderImportService extends AbstractImportService
 
             $this->validationRow($row, false);
             
-            if($this->errors == null){
+            // if($this->errors == null){
 
                 DB::beginTransaction();
                 $shippingService = ShippingService::first();
@@ -112,6 +116,7 @@ class OrderImportService extends AbstractImportService
                 
                 
                     'user_declared_freight' => $this->getValue("Z{$row}"),
+                    'error' => $this->errors,
 
                     'recipient' => [
                         "first_name" =>$this->getValue("N{$row}"),
@@ -135,8 +140,8 @@ class OrderImportService extends AbstractImportService
                 // $order->doCalculations();
                 DB::commit();
                 return true;
-            }
-            return;
+            // }
+            // return;
             
         } catch (\Exception $ex) {
             DB::rollback();
@@ -147,6 +152,7 @@ class OrderImportService extends AbstractImportService
 
     public function addItem($order,$row)
     {
+        
         $this->validationRow($row, true);
         
         $item =[
@@ -200,7 +206,7 @@ class OrderImportService extends AbstractImportService
         }
 
         if($item == false){
-            return [
+            $rules = [
                 'merchant' => 'required',
                 'carrier' => 'required',
                 'tracking_id' => 'required',
@@ -214,7 +220,9 @@ class OrderImportService extends AbstractImportService
                 'sender_first_name' => 'required',
                 'sender_last_name' => 'nullable',
                 'sender_email' => 'required',
-                'sender_phone' => 'required',
+                'sender_phone' => [
+                    'required','max:15','min:13', new PhoneNumberValidator(optional( Country::where('code',$this->getValue("X{$row}"))->first() )->id)
+                ],
                 
                 
                 'first_name' => 'required|max:100',
@@ -233,14 +241,23 @@ class OrderImportService extends AbstractImportService
                 'zipcode' => [
                     'required', new ZipCodeValidator(optional( Country::where('code',$this->getValue("X{$row}"))->first() )->id,optional( State::where('code',$this->getValue("W{$row}"))->first() )->id)
                 ],
-                    
+
             ];
+
+            if (Country::where('code', 'BR')->first()->id == optional( Country::where('code',$this->getValue("X{$row}"))->first() )->id ) {
+                $rules['recipient_tax_id'] = ['required', "in:cpf,cnpj,CPF,CNPJ"];
+            }
+
+            return $rules;
+
         }
     }
 
     public function validationMessages($row, $item)
     {
+        
         if($item == true){
+            
             return [
                 'quantity.required' => 'Quantity is required at row ' . $row,
                 'value.required' => 'Value is required at row ' . $row,
@@ -277,6 +294,7 @@ class OrderImportService extends AbstractImportService
                 'state_id.required' => 'Sender phone is required at row '.$row,
                 'country_id.required' => 'Sender phone is required at row '.$row,
                 'zipcode.required' => 'Sender phone is required at row '.$row,
+                'recipient_tax_id.required' => 'CPF/CNPJ Required for Brazil at row '.$row,
             ];
         }
         
@@ -284,7 +302,9 @@ class OrderImportService extends AbstractImportService
     
     public function validationData($row, $item)
     {
+        
         if($item == true){
+            
             return [
                 "quantity" => $this->getValue("AA{$row}"),
                 "value" => $this->getValue("AB{$row}"),
@@ -321,6 +341,7 @@ class OrderImportService extends AbstractImportService
                 "state_id" => optional( State::where('code',$this->getValue("W{$row}"))->first() )->id,
                 "country_id" => optional( Country::where('code',$this->getValue("X{$row}"))->first() )->id,
                 "zipcode" => $this->getValue("U{$row}"),
+                "recipient_tax_id" => $this->getValue("Y{$row}"),
             ];
         }
 

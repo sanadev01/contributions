@@ -28,25 +28,11 @@
             @endcan
 
             @can('importExcel', App\Models\Order::class)
-                <li class="nav-item">
-                    <a href="{{ route('admin.import-excel.index') }}">
+                <li class="{{ $isActive(['admin.import.import-excel.index','admin.import.import-excel.show','admin.import.import-excel.create']) }}">
+                    <a href="{{ route('admin.import.import-excel.index') }}">
                         <i class="feather icon-file"></i>
                         <span class="menu-title">@lang('menu.import-excel-order.excel')</span>
                     </a>
-                    <ul class="menu-content">
-                        <li class="{{ $isActive(['admin.import.import-excel.index','admin.import.import-excel.show','admin.import.import-excel.create']) }}">
-                            <a href="{{ route('admin.import.import-excel.index') }}">
-                                <i class="feather icon-circle"></i>
-                                <span class="menu-title">@lang('menu.import-excel-order.upload')</span>
-                            </a>
-                        </li>
-                        <li class="{{ $isActive(['admin.import.import-order.index']) }}">
-                            <a href="{{ route('admin.import.import-order.index') }}">
-                                <i class="feather icon-circle"></i>
-                                <span class="menu-title">@lang('menu.import-excel-order.order')</span>
-                            </a>
-                        </li>
-                    </ul>
                 </li>
             @endcan
 
