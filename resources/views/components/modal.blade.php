@@ -33,18 +33,21 @@
             )
             return;
         }
-
+        
         currentModalRequest = $.get(url)
         .done(function(data){
             modal.find('.modal-body').html(
                 data
             )
+            window.livewire.rescan();
         })
+        
         .fail(function(error){
             modal.find('.modal-body').html(
                 error
             )
         })
+        
     })
 
     $('#hd-modal').on('hide.bs.modal',function(){

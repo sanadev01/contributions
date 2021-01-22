@@ -46,6 +46,7 @@ class ImportExcelController extends Controller
         
         $this->validate($request,[
             'excel_name' => 'nullable',
+            'format' => 'required',
             'excel_file' => 'required|file'
         ]);
 

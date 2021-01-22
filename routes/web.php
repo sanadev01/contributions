@@ -144,7 +144,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::get('parcel/{parcel}/shipment-info', \ShipmentModalController::class)->name('parcel.shipment-info');
             Route::get('parcel/{parcel}/consolidation-print', \ConsolidationPrintController::class)->name('parcel.consolidation-print');
             Route::get('order/{order}/invoice', \OrderInvoiceModalController::class)->name('order.invoice');
-            Route::get('order/{order}/error', \ImportOrderModalController::class)->name('order.error');
+            Route::resource('order/error', \ImportOrderModalController::class)->only(['show', 'edit']);
         });
 });
 

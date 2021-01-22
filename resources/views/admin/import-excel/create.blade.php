@@ -40,8 +40,26 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="projectinput1">@lang('orders.import-excel.Excel File Name')</label>
-                                    <input type="text" class="form-control" name="excel_name" required>
+                                    <input type="text" class="form-control" name="excel_name" placeholder="Enter file name" required>
                                     @error('excel_name')
+                                        <div class="text-danger">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row justify-content-center">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="projectinput1">@lang('orders.import-excel.Excel File Format')</label>
+                                    <select class="form-control" name="format">
+                                        <option value=""> Select Format </option>
+                                        <option value="homedelivery"> Homedelivery Format </option>
+                                        <option value="shopify"> Shopify Format </option>
+                                    </select>
+                                    @error('format')
                                         <div class="text-danger">
                                             {{ $message }}
                                         </div>

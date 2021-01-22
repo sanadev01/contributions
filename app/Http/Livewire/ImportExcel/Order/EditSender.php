@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\ImportExcel\Order;
 
 use App\Models\ImportedOrder;
+use App\Rules\PhoneNumberValidator;
 use Livewire\Component;
 
 class EditSender extends Component
@@ -35,7 +36,10 @@ class EditSender extends Component
             'sender_first_name' => 'required|max:100',
             'sender_last_name' => 'max:100',
             'sender_email' => 'nullable|max:100|email',
-            'sender_phone' => 'nullable|max:15'
+            'sender_phone' => 'nullable|max:15',
+            'sender_phone' => [
+                'nullable','max:15','min:13', new PhoneNumberValidator(30)
+            ],
         ]);
 
         $this->order->update($data);

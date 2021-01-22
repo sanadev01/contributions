@@ -52,7 +52,11 @@
                                 <input type="search" class="form-control" wire:model.debounce.1000ms="tracking">
                             </th>
                             <th>
-                                
+                                <select class="form-control" name="type" wire:model.debounce.1000ms="type">
+                                    <option value="">Select Order</option>
+                                    <option value="good">Good</option>
+                                    <option value="error">Error</option>
+                                </select>
                             </th>
                            
                         </tr>
@@ -65,7 +69,7 @@
                         @endforelse
                     </tbody>
                 </table>
-                <livewire:import-excel.order.modal/>
+                
             </div>
             <div class="d-flex justify-content-end my-2 pb-4 mx-2">
                 {{ $importedOrders->links() }}

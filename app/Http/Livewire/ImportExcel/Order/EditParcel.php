@@ -31,9 +31,8 @@ class EditParcel extends Component
     public $volumeWeight;
     public $currentWeightUnit;
 
-    public function mount()
+    public function mount($order)
     {
-        $order = ImportedOrder::find(8);
         $this->order = $order;
         $this->fillData();
     }
@@ -43,7 +42,7 @@ class EditParcel extends Component
         return view('livewire.import-excel.order.edit-parcel');
     }
 
-    public function parcel()
+    public function save()
     {
         $data = $this->validate([
             'merchant' => 'required',
@@ -88,12 +87,12 @@ class EditParcel extends Component
 
     private function fillData()
     {
-        $this->merchant = old('merchant' );
-        $this->carrier = old('carrier');
-        $this->tracking_id = old('tracking_id');
-        $this->customer_reference = old('customer_reference');
-        $this->order_date = old('order_date');
-        $this->whr_number = old('whr_number');
+        $this->merchant = optional($this->order)->merchant;
+        $this->carrier = optional($this->order)->carrier;
+        $this->tracking_id = optional($this->order)->tracking_id;
+        $this->customer_reference = optional($this->order)->customer_reference;
+        $this->order_date = optional($this->order)->order_date;
+        $this->whr_number = optional($this->order)->whr_number;
         $this->weight = old('weight', isset($this->order->weight) ? $this->order->weight : 0 );
         $this->length = old('length',isset($this->order->length) ? $this->order->length : 0);
         $this->width = old('width',isset($this->order->width) ? $this->order->width : 0);

@@ -13,14 +13,14 @@ class EditItem extends Component
     public $order; 
     public $items; 
     public $shCodes = [];
-    public $shippingServices; 
     public $customer_reference;
     public $user_declared_freight;
-    public $shipping_service_id;
 
     public function mount($order)
     {
         $this->order = $order;   
+        $this->customer_reference = $order->customer_reference;   
+        $this->user_declared_freight = $order->user_declared_freight;   
         $this->items = $this->order->items;   
         $this->shCodes = ShCode::all()->toArray();
         
@@ -37,23 +37,17 @@ class EditItem extends Component
             return;
         }
 
+        $data = $this->validate([
+            'customer_reference' => 'required',
+            'user_declared_freight' => 'regex:/^[0-9]+(\.[0-9][0-9]?)?$/',
+        ]);
+        
         $this->order->update([
+            'customer_reference' => $data['customer_reference'],
+            'user_declared_freight' => $data['user_declared_freight'],
             'items' => $this->items,
         ]);
     }
-    
-    // public function getShippingServices()
-    // {
-    //     // $shippingServices = collect() ;
-    //     // foreach (ShippingService::query()->active()->get() as $shippingService) {
-    //     //     if ( $shippingService->isAvailableFor($this->order) ){
-    //     //         $shippingServices->push($shippingService);
-    //     //     }else{
-    //     //         session()->flash('alert-danger',"Shipping Service not Available Error:{$shippingService->getCalculator($this->order)->getErrors()}");
-    //     //     }
-    //     // }
-    //     // return $shippingServices;
-    // }
 
     function validateItems()
     {

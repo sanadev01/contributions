@@ -179,7 +179,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-sm-6 col-md-4">
+                <div class="col-12 col-sm-6 col-md-6">
                     <div class="controls h2 mt-2">
                         <label> <span class="text-danger">*</span> @lang('parcel.The Rate will be applied on')  <strong class="text-danger h2">{{ $volumeWeight }} <span class="ml-1"> {{ $currentWeightUnit }} </span> </strong></label>
                     </div>
@@ -189,12 +189,16 @@
 
             <div class="row mt-1">
                 <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
-                    <button type="" class="btn btn-primary" wire:click.prevent="parcel">
-                        @lang('parcel.Save Parcel')
+                    <button type="" class="btn btn-primary" wire:click.prevent="save">
+                        Save
                     </button>
                 </div>
             </div>
         </fieldset>
+        <div wire:loading>
+            <div class="position-absolute bg-white d-flex justify-content-center align-items-center w-100 h-100" style="top: 0; right:0;">
+                <i class="fa fa-spinner fa-spin"></i>
+            </div>
+        </div>
     </div>
-    @include('layouts.livewire.loading')
 </div>
