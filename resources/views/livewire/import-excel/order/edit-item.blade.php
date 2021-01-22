@@ -1,44 +1,37 @@
 <div>
     <div class="border p-2 position-relative">
-            <h2 class="bg-white shadow-sm p-2" data-toggle="collapse" data-target="#itemsCollapse">Shipping & Items</h2>
-
-            <fieldset role="tabpanel" aria-labelledby="steps-uid-0-h-0" class="body current p-4" aria-hidden="false">
-                <div class="row">
-                    <div class="form-group col-12 col-sm-6 col-md-6">
-                        <div class="controls">
-                            <label>@lang('orders.order-details.Customer Reference') <span class="text-danger"></span></label>
-                            <input name="customer_reference" class="form-control"  placeholder="@lang('orders.order-details.Customer Reference')"/>
-                            <div class="help-block"></div>
+            <h2 class="bg-white shadow-sm p-2" data-toggle="collapse" data-target="#shippingCollapse">Shipping & Items</h2>
+            <div id="shippingCollapse" class="collapse show">
+                <fieldset role="tabpanel" aria-labelledby="steps-uid-0-h-0" class="body current p-4" aria-hidden="false">
+                    <div class="row">
+                        <div class="form-group col-12 col-sm-6 col-md-6">
+                            <div class="controls">
+                                <label>@lang('orders.order-details.Customer Reference') <span class="text-danger"></span></label>
+                                <input name="customer_reference" class="form-control"  placeholder="@lang('orders.order-details.Customer Reference')" wire:model.defer="customer_reference"/>
+                                @error("customer_reference")
+                                    <div class="help-block text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group col-12 col-sm-6 col-md-6">
-                        <div class="controls">
-                            <label>@lang('orders.order-details.WHR')# <span class="text-danger"></span></label>
-                            <input class="form-control" readonly placeholder="@lang('orders.order-details.Warehouse Number')"/>
-                            <div class="help-block"></div>
+                        <div class="form-group col-12 col-sm-6 col-md-6">
+                            <div class="controls">
+                                <label>@lang('orders.order-details.WHR')# <span class="text-danger"></span></label>
+                                <input class="form-control" readonly placeholder="@lang('orders.order-details.Warehouse Number')" wire:model.defer="whr"/>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group col-12 col-sm-6 col-md-6">
-                        <div class="controls">
-                            <label class="h4">Freight <span class="text-danger"></span></label>
-                            <input class="form-control" name="user_declared_freight" id="user_declared_freight" value="{{ old('user_declared_freight',__default($order->user_declared_freight,$order->gross_total)) }}" placeholder="Freight"/>
-                            <div class="help-block"></div>
+                        <div class="form-group col-12 col-sm-6 col-md-6">
+                            <div class="controls">
+                                <label class="h4">Freight <span class="text-danger"></span></label>
+                                <input class="form-control" name="user_declared_freight" id="user_declared_freight" placeholder="Freight" wire:model.defer="user_declared_freight"/>
+                                @error("user_declared_freight")
+                                    <div class="help-block text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
+                        
                     </div>
-                    <div class="form-group col-12 col-sm-6 col-md-6">
-                        <div class="controls">
-                            <label  class="h4">@lang('orders.order-details.Service')<span class="text-danger"></span></label>
-                            <select class="form-control selectpicker show-tick" data-live-search="true" name="shipping_service_id" id="shipping_service_id" required placeholder="Select Shipping Service">
-                                <option value="">@lang('orders.order-details.Select Shipping Service')</option>
-                                {{-- @foreach ($shippingServices as $shippingService)
-                                    <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-cost="{{$shippingService->getRateFor($order)}}" data-services-cost="{{ $order->services()->sum('price') }}">{{ "{$shippingService->name} - $". $shippingService->getRateFor($order) }}</option>
-                                @endforeach --}}
-                            </select>
-                            <div class="help-block"></div>
-                        </div>
-                    </div>
-                </div>
-            </fieldset>
+                </fieldset>
+            </div>
 
             <h3 class="bg-white shadow-sm p-2" data-toggle="collapse" data-target="#itemsCollapse">@lang('orders.order-details.Order Items')</h3>
             <div id="itemsCollapse" class="collapse show">

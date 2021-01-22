@@ -9,18 +9,21 @@ use App\Models\ImportedOrder;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Excel\Import\OrderImportService;
+use App\Services\Excel\Import\ShopifyOrderImportService;
 
 class ImportOrderRepository
 {
     public function store($request)
     {
-        $importExcelService = new OrderImportService($request->file('excel_file'),$request);
+        if($request->format == 'homedelivery'){
+            $importExcelService = new OrderImportService($request->file('excel_file'),$request);
+            $importOrder = $importExcelService->handle();
+            return;
+        }
+
+        $importExcelService = new ShopifyOrderImportService($request->file('excel_file'),$request);
         $importOrder = $importExcelService->handle();
-        // $findErrors = $importExcelService->getErrors();
-        // if($findErrors){
-        //     $this->delete($importOrder);
-        // }
-        // return  $findErrors;
+        return;
         
     }
 
@@ -71,12 +74,18 @@ class ImportOrderRepository
         return true;
     }
 
-    public function getImportedOrder(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='DESC')
+    public function getImportedOrder(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='DESC', $orderId)
     {
         $query = ImportedOrder::query()->has('user');
         
         if ( Auth::user()->isUser() ){
             $query->where('user_id',Auth::id());
+        }
+        
+        if (  $orderId ){
+            $query->where(function($query) use($orderId){
+                return $query->where('import_id',  $orderId);
+            });
         }
         
         if ( $request->date ){
@@ -106,6 +115,17 @@ class ImportOrderRepository
         if ( $request->reference ){
             $query->where(function($query) use($request){
                 return $query->where('customer_reference', 'LIKE', "%{$request->reference}%");
+            });
+        }
+        
+        if ( $request->type == 'error'){
+            $query->where(function($query) use($request){
+                return $query->where('error', '!=', null);
+            });
+        }
+        if($request->type == 'good'){
+            $query->where(function($query) use($request){
+                return $query->where('error', null);
             });
         }
        

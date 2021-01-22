@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Services\Excel\AbstractImportService;
 
-class OrderImportService extends AbstractImportService
+class ShopifyOrderImportService extends AbstractImportService
 {
     private $userId; 
     private $request;
@@ -53,7 +53,7 @@ class OrderImportService extends AbstractImportService
                 $order->error ? $totalError++ : $totalOrder++;
             }
         }
-
+        
         $importOrder->update([
             'total_orders' => $totalOrder,
             'total_errors' => $totalError

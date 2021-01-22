@@ -4,7 +4,16 @@
         <td>{{$order->user->name}}</td>
     @endadmin
     <td>{{$order->file_name}}</td>
-    <td>{{$order->total_orders}}</td>
+    <td>
+        <a href="{{ route('admin.import.import-excel.show',[$order->id, 'type'=>'good']) }}" type="button" class="btn btn-success btn-sm">
+            Pass: {{ $order->importOrders->where('error', null)->count() }}
+        </a>
+        
+        <a href="{{ route('admin.import.import-excel.show',[$order->id, 'type'=>'error']) }}" type="button" class="btn btn-danger btn-sm">
+            Error: {{ $order->importOrders->where('error', '!=', null)->count() }}
+        </a>
+    
+    </td>
     <td class="d-flex no-print" >
         <div class="btn-group">
             <div class="dropdown">

@@ -7,7 +7,7 @@
                     <div class="form-group">
                     <label for="firstName1">@lang('orders.sender.First Name') </label>
                         <input type="text" class="form-control" name="first_name" required wire:model.defer="sender_first_name" id="firstName1">
-                        @error('first_name')
+                        @error('sender_first_name')
                             <div class="text-danger">
                                 {{ $message }}
                             </div>
@@ -19,7 +19,7 @@
                     <div class="form-group">
                         <label for="lastName1">@lang('orders.sender.Last Name')</label>
                         <input type="text" class="form-control" name="last_name" wire:model.defer="sender_last_name">
-                        @error('last_name')
+                        @error('sender_last_name')
                             <div class="text-danger">
                                 {{ $message }}
                             </div>
@@ -31,7 +31,7 @@
                     <div class="form-group">
                         <label for="emailAddress1">@lang('orders.sender.Email')</label>
                         <input type="email" class="form-control" name="email" wire:model.defer="sender_email">
-                        @error('email')
+                        @error('sender_email')
                             <div class="text-danger">
                                 {{ $message }}
                             </div>
@@ -42,7 +42,7 @@
                     <div class="form-group">
                         <label for="emailAddress1">@lang('orders.sender.Phone')</label>
                         <input type="text" class="form-control" name="phone" wire:model.defer="sender_phone">
-                        @error('phone')
+                        @error('sender_phone')
                             <div class="text-danger">
                                 {{ $message }}
                             </div>
@@ -53,7 +53,7 @@
                     <div class="form-group">
                         <label for="emailAddress1">@lang('orders.sender.Tax Id')</label>
                         <input type="text" class="form-control" name="taxt_id" wire:model.defer="sender_taxId">
-                        @error('taxt_id')
+                        @error('sender_taxId')
                             <div class="text-danger">
                                 {{ $message }}
                             </div>

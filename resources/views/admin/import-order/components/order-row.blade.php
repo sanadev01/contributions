@@ -9,8 +9,8 @@
     <td>{{$order->tracking_id}}</td>
     <td>
         @if($order->error)
-            <a href="#" title="Click to see error" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.order.error',$order) }}">
-                See Error
+            <a href="#" title="Click to see error" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.error.show',$order) }}">
+                Show Error
             </a>
         @endif
     </td>
@@ -25,11 +25,12 @@
                         <a href="{{ route('admin.import.import-order.edit',$order->id) }}" class="btn dropdown-item w-100" title="Move to Order">
                             <i class="feather icon-arrow-right-circle"></i> Move to Order
                         </a>
-                   @else
-                        <a wire:click="$emit('edit-order',{{$order->id}})" class="btn dropdown-item w-100 edit-order" title="Fix Error">
-                            <i class="feather icon-alert-circle"></i> Fix Error
+                    @else
+                        <a href="#" title="Click to see error"  class="btn dropdown-item w-100 edit-order" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.error.edit',$order) }}">
+                            Fix Error
                         </a>
                     @endif
+            
                    <form action="{{ route('admin.import.import-order.destroy',$order->id) }}" method="post" onsubmit="return confirmDelete()">
                         @csrf
                         @method('DELETE')

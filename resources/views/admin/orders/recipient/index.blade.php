@@ -26,7 +26,7 @@
                         <select class="form-control selectpicker show-tick" data-live-search="true" name="address_id" id="address_id" placeholder="@lang('orders.recipient.slect-from-list')">
                             <option value="">@lang('orders.recipient.slect-from-list')</option>
                             @foreach (auth()->user()->addresses()->orderBy('first_name')->get() as $address)
-                                <option value="{{ $address->id }}" {{ $address->id == $order->recipient_address_id ? 'selected' : '' }}>{{ "{$address->first_name} {$address->last_name} | {$address->address} {$address->address2}" }}</option>
+                                <option value="{{ $address->id }}" {{ $address->id == $order->recipient_address_id ? 'selected' : '' }}>{!! "<strong>{$address->first_name}</strong> {$address->last_name} | {$address->address} {$address->address2}" !!}</option>
                             @endforeach
                         </select>
                         <div class="help-block"></div>
