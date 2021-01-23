@@ -29,7 +29,7 @@ class CreateImportedOrdersTable extends Migration
             $table->double('width')->nullable();
             $table->double('height')->nullable();
             $table->boolean('is_shipment_added')->default(false);
-            $table->string('measurement_unit',10)->default('kg/cm')->comment('kg/cm,lbs/in');
+            $table->string('measurement_unit',10)->nullable()->default('kg/cm')->comment('kg/cm,lbs/in');
             $table->string('is_invoice_created')->nullable();
             $table->string('status')->nullable();
             $table->string('order_date')->nullable();
