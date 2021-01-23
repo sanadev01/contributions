@@ -49,7 +49,7 @@ class HandlingServiceController extends Controller
         
         if ( $repository->store($request) ){
             session()->flash('alert-success', 'handlingservice.Created');
-            return  redirect()->route('admin.services.index');
+            return  redirect()->route('admin.handling-services.index');
         }
 
         return back()->withInput();
