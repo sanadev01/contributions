@@ -27,6 +27,7 @@ class ImportedOrder extends Component
     {
         $this->order = $orders;
         $this->orderId = $this->order->id;
+        $this->type = $this->type? $this->type : request('type');
     }
 
     public function render()

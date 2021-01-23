@@ -4,7 +4,7 @@
 <div class="card min-vh-100">
     <div class="card-header">
         <h4 class="mb-0">{{$orders->file_name }} @lang('orders.orders')</h4>
-        <a href="{{ route('admin.import.import-excel.index') }}" class="pull-right btn btn-primary"> Back to List </a>
+        <a href="{{ route('admin.import.import-excel.index') }}" class="pull-right btn btn-primary"> @lang('orders.leve.Return to List') </a>
     </div>
     <div class="card-content">
         <div class="card-body no-print" style="overflow-y: visible">

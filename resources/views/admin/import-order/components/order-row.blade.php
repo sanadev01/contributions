@@ -10,7 +10,7 @@
     <td>
         @if($order->error)
             <a href="#" title="Click to see error" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.error.show',$order) }}">
-                Show Error
+                @lang('orders.import-excel.Show Error')
             </a>
         @endif
     </td>
@@ -22,12 +22,12 @@
                 </button>
                 <div class="dropdown-menu dropdown-menu-right dropright">
                     @if(!$order->error)
-                        <a href="{{ route('admin.import.import-order.edit',$order->id) }}" class="btn dropdown-item w-100" title="Move to Order">
-                            <i class="feather icon-arrow-right-circle"></i> Move to Order
+                        <a href="{{ route('admin.import.import-order.edit',$order->id) }}" class="btn dropdown-item w-100" title="@lang('orders.import-excel.Move to Order')">
+                            <i class="feather icon-arrow-right-circle"></i>@lang('orders.import-excel.Move to Order') 
                         </a>
                     @else
                         <a href="#" title="Click to see error"  class="btn dropdown-item w-100 edit-order" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.error.edit',$order) }}">
-                            Fix Error
+                            <i class="feather icon-arrow"> </i>@lang('orders.import-excel.Fix Error')
                         </a>
                     @endif
             
@@ -35,7 +35,7 @@
                         @csrf
                         @method('DELETE')
                         <button class="btn dropdown-item w-100 text-danger" title="Delete Record">
-                            <i class="feather icon-trash"></i> Delete
+                            <i class="feather icon-trash"></i> @lang('orders.import-excel.Delete')
                         </button>
                     </form>
                 </div>

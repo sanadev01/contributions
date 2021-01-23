@@ -1,6 +1,6 @@
 <div>
     <div class="border p-2 position-relative">
-            <h2 class="bg-white shadow-sm p-2" data-toggle="collapse" data-target="#shippingCollapse">Shipping & Items</h2>
+            <h2 class="bg-white shadow-sm p-2" data-toggle="collapse" data-target="#shippingCollapse">@lang('orders.import-excel.Shipping & Items')</h2>
             <div id="shippingCollapse" class="collapse show">
                 <fieldset role="tabpanel" aria-labelledby="steps-uid-0-h-0" class="body current p-4" aria-hidden="false">
                     <div class="row">
@@ -22,7 +22,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-6">
                             <div class="controls">
                                 <label class="h4">Freight <span class="text-danger"></span></label>
-                                <input class="form-control" name="user_declared_freight" id="user_declared_freight" placeholder="Freight" wire:model.defer="user_declared_freight"/>
+                                <input class="form-control" name="user_declared_freight" placeholder="Freight" wire:model.defer="user_declared_freight"/>
                                 @error("user_declared_freight")
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror

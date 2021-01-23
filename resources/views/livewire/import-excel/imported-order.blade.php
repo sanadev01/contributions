@@ -52,10 +52,10 @@
                                 <input type="search" class="form-control" wire:model.debounce.1000ms="tracking">
                             </th>
                             <th>
-                                <select class="form-control" name="type" wire:model.debounce.1000ms="type">
-                                    <option value="">Select Order</option>
-                                    <option value="good">Good</option>
-                                    <option value="error">Error</option>
+                                <select type="search" class="form-control" name="type" wire:model.debounce.1000ms="type">
+                                    <option value="">@lang('orders.import-excel.Select Order')</option>
+                                    <option value="good">@lang('orders.import-excel.Good')</option>
+                                    <option value="error">@lang('orders.import-excel.Error')</option>
                                 </select>
                             </th>
                            

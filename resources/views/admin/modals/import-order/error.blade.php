@@ -1,6 +1,6 @@
 <section class="card invoice-page border border-danger">
     <div class="col-12 row text-danger">
-        <h2>Order Errors</h2>
+        <h2>@lang('orders.import-excel.Order Errors')</h2>
     </div>
     @foreach ($order->error as $item)
      

@@ -90,9 +90,9 @@
                         <label>@lang('address.State') <span class="text-danger">*</span></label>
                         <select name="state_id" id="state" class="form-control selectpicker show-tick" wire:model.defer="state_id" data-live-search="true">
                             <option value="">Select @lang('address.State')</option>
-                            {{-- @foreach (states($order->recipient['country_id']) as $state)
+                            @foreach (states($order->recipient['country_id']) as $state)
                                 <option value="{{ $state->id }}"> {{ $state->code }} </option>
-                            @endforeach --}}
+                            @endforeach
                         </select>
                         @error('state_id')
                         <div class="help-block text-danger"> {{ $message }} </div>

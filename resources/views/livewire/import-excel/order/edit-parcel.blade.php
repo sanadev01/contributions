@@ -1,6 +1,6 @@
 <div>
     <div class="border p-2 position-relative">
-        <h3 class="bg-white shadow-sm p-2" data-toggle="collapse" data-target="#parcelCollapse">Parcel</h3>
+        <h3 class="bg-white shadow-sm p-2" data-toggle="collapse" data-target="#parcelCollapse"> @lang('orders.import-excel.Parcel')</h3>
         <fieldset  id="parcelCollapse" class="collapse show" aria-expanded="false" role="tabpanel" aria-labelledby="steps-uid-0-h-0" aria-hidden="false">
             @admin
             <div class="row mt-1">
@@ -190,7 +190,7 @@
             <div class="row mt-1">
                 <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
                     <button type="" class="btn btn-primary" wire:click.prevent="save">
-                        Save
+                        @lang('orders.create.save')
                     </button>
                 </div>
             </div>

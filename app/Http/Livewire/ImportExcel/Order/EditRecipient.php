@@ -55,10 +55,15 @@ class EditRecipient extends Component
 
     public function save()
     {
-        $data = $this->validate($this->rules());
+        $data = $this->validate($this->rules(), $this->messages());
+
+        $error = $this->order->error;
+        $remainError = array_diff($error, $this->messages());
+        $error = $remainError ? $remainError : null;
 
         $this->order->update([
             'recipient' => $data,
+            'error' => $error,
         ]);
     }
 
@@ -91,5 +96,23 @@ class EditRecipient extends Component
         }
 
         return $rules;
+    }
+
+    public function messages()
+    {
+        return [
+            'first_name.required' => 'first Name is required',
+            'last_name.required' => 'last Name is required',
+            'email.nullable' => 'email is not valid',
+            'phone.required' => 'phone is required',
+            'address.required' => 'address is required',
+            'address2.nullable' => 'Address2 is not more then 50 character',
+            'street_no.required' => 'house street no is required',
+            'city.required' => 'city is required',
+            'state_id.required' => 'state id is required',
+            'country_id.required' => 'country is required',
+            'zipcode.required' => 'zipcode is required',
+            'tax_id.required' => 'The selected recipient tax id is invalid.',
+        ];
     }
 }

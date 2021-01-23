@@ -36,17 +36,28 @@ class EditItem extends Component
         if ( !$this->validateItems() ){
             return;
         }
+        
 
         $data = $this->validate([
             'customer_reference' => 'required',
             'user_declared_freight' => 'regex:/^[0-9]+(\.[0-9][0-9]?)?$/',
         ]);
+
+        $error = $this->order->error;
+        if($error){
+            $remainError = array_diff($error, $this->messages());
+            $error = $remainError ? $remainError : null;
+        }
+
         
         $this->order->update([
             'customer_reference' => $data['customer_reference'],
             'user_declared_freight' => $data['user_declared_freight'],
             'items' => $this->items,
+            'error' => $error,
         ]);
+        
+        return redirect()->route('admin.import.import-excel.show', $this->order->import_id);
     }
 
     function validateItems()
@@ -75,5 +86,15 @@ class EditItem extends Component
         }
 
         return !$errors;
+    }
+    
+    public function messages()
+    {
+        return [
+            'quantity.required' => 'quantity is required',
+            'value.required' => 'value is required',
+            'description.required' => 'Product name description required',
+            'sh_code.required' => 'NCM sh code is required',
+        ];
     }
 }
