@@ -195,7 +195,7 @@ class ImportOrderRepository
         ]);
 
         $order->update([
-            'warehouse_number' => "TEMPWHR-{$order->id}",
+            'warehouse_number' => "HD-{$order->id}",
             'user_declared_freight' => $importedOrder->user_declared_freight?$importedOrder->user_declared_freight:0 ,
         ]);
 

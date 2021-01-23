@@ -55,9 +55,9 @@
                                 <div class="form-group">
                                     <label for="projectinput1">@lang('orders.import-excel.Excel File Format')</label>
                                     <select class="form-control" name="format">
-                                        <option value=""> Select Format </option>
-                                        <option value="homedelivery"> Homedelivery Format </option>
-                                        <option value="shopify"> Shopify Format </option>
+                                        <option value="">  @lang('orders.import-excel.Select Format')</option>
+                                        <option value="homedelivery">  @lang('orders.import-excel.Homedelivery Format')</option>
+                                        <option value="shopify">  @lang('orders.import-excel.Shopify Format')</option>
                                     </select>
                                     @error('format')
                                         <div class="text-danger">

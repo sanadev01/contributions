@@ -131,7 +131,7 @@ class ShopifyOrderImportService extends AbstractImportService
                         "city" => $this->getValue("V{$row}"),
                         "account_type" => 'individual',
                         "state_id" => optional( State::where('code',$this->getValue("W{$row}"))->first() )->id,
-                        "country_id" => optional( Country::where('code',$this->getValue("X{$row}"))->first() )->id,
+                        "country_id" => optional( Country::where('name',$this->getValue("X{$row}"))->first() )->id,
                         "tax_id" => $this->getValue("Y{$row}"),
                     ],
 
@@ -225,7 +225,7 @@ class ShopifyOrderImportService extends AbstractImportService
                 'sender_last_name' => 'nullable',
                 'sender_email' => 'required',
                 'sender_phone' => [
-                    'required','max:15','min:13', new PhoneNumberValidator(optional( Country::where('code',$this->getValue("X{$row}"))->first() )->id)
+                    'required','max:15','min:13', new PhoneNumberValidator(optional( Country::where('name',$this->getValue("X{$row}"))->first() )->id)
                 ],
                 
                 
@@ -240,15 +240,15 @@ class ShopifyOrderImportService extends AbstractImportService
                 'country_id' => 'required|exists:countries,id',
 
                 'phone' => [
-                    'required','max:15','min:13', new PhoneNumberValidator(optional( Country::where('code',$this->getValue("X{$row}"))->first() )->id)
+                    'required','max:15','min:13', new PhoneNumberValidator(optional( Country::where('name',$this->getValue("X{$row}"))->first() )->id)
                 ],
                 'zipcode' => [
-                    'required', new ZipCodeValidator(optional( Country::where('code',$this->getValue("X{$row}"))->first() )->id,optional( State::where('code',$this->getValue("W{$row}"))->first() )->id)
+                    'required', new ZipCodeValidator(optional( Country::where('name',$this->getValue("X{$row}"))->first() )->id,optional( State::where('code',$this->getValue("W{$row}"))->first() )->id)
                 ],
 
             ];
 
-            if (Country::where('code', 'BR')->first()->id == optional( Country::where('code',$this->getValue("X{$row}"))->first() )->id ) {
+            if (Country::where('code', 'BR')->first()->id == optional( Country::where('name',$this->getValue("X{$row}"))->first() )->id ) {
                 $rules['recipient_tax_id'] = ['required', "in:cpf,cnpj,CPF,CNPJ"];
             }
 
@@ -262,42 +262,42 @@ class ShopifyOrderImportService extends AbstractImportService
         if($item == true){
             
             return [
-                'quantity.required' => 'Quantity is required at row ' . $row,
-                'value.required' => 'Value is required at row ' . $row,
-                'description.required' => 'Product name required at row ' . $row,
-                'sh_code.required' => 'NCM is required at row ' . $row,
+                'quantity.required' => 'quantity is required',
+                'value.required' => 'value is required',
+                'description.required' => 'Product name description required',
+                'sh_code.required' => 'NCM sh code is required',
             ];
         }
 
         if($item == false){
             return [
-                'merchant.required' => 'merchant is required at row '.$row,
-                'carrier.required' => 'carrier is required at row '.$row,
-                'tracking_id.required' => 'tracking id is required at row '.$row,
-                'customer_reference.required' => 'customer reference is required at row '.$row,
-                'measurement_unit.required' => 'measurement unit is required at row '.$row,
-                'weight.required' => 'weight is required at row '.$row,
-                'length.required' => 'length is required at row '.$row,
-                'width.required' => 'width is required at row '.$row,
-                'height.required' => 'height is required at row '.$row,
+                'merchant.required' => 'merchant is required',
+                'carrier.required' => 'carrier is required',
+                'tracking_id.required' => 'tracking id is required',
+                'customer_reference.required' => 'customer reference is required',
+                'measurement_unit.required' => 'measurement unit is required',
+                'weight.required' => 'weight is required',
+                'length.required' => 'length is required',
+                'width.required' => 'width is required',
+                'height.required' => 'height is required',
 
-                'sender_first_name.required' => 'Sender first name is required at row '.$row,
-                'sender_last_name.nullable' => 'Sender last name is required at row '.$row,
-                'sender_email.required' => 'Sender Email is required at row '.$row,
-                'sender_phone.required' => 'Sender phone is required at row '.$row,
+                'sender_first_name.required' => 'sender first name is required',
+                'sender_last_name.nullable' => 'sender last name is required',
+                'sender_email.required' => 'sender Email is required',
+                'sender_phone.required' => 'sender phone is required',
                 
-                'first_name.required' => 'First Name is required at row '.$row,
-                'last_name.required' => 'Last Name is required at row '.$row,
-                'email.nullable' => 'Email is not valid at row '.$row,
-                'phone.required' => 'Phone is required at row '.$row,
-                'address.required' => 'Sender phone is required at row '.$row,
-                'address2.nullable' => 'Address2 is not more then 50 character at row '.$row,
-                'street_no.required' => 'Sender phone is required at row '.$row,
-                'city.required' => 'Sender phone is required at row '.$row,
-                'state_id.required' => 'Sender phone is required at row '.$row,
-                'country_id.required' => 'Sender phone is required at row '.$row,
-                'zipcode.required' => 'Sender phone is required at row '.$row,
-                'recipient_tax_id.required' => 'CPF/CNPJ Required for Brazil at row '.$row,
+                'first_name.required' => 'first Name is required',
+                'last_name.required' => 'last Name is required',
+                'email.nullable' => 'email is not valid',
+                'phone.required' => 'phone is required',
+                'address.required' => 'address is required',
+                'address2.nullable' => 'Address2 is not more then 50 character',
+                'street_no.required' => 'house street no is required',
+                'city.required' => 'city is required',
+                'state_id.required' => 'state id is required',
+                'country_id.required' => 'country is required',
+                'zipcode.required' => 'zipcode is required',
+                'recipient_tax_id.required' => 'The selected recipient tax id is invalid.',
             ];
         }
     }
@@ -340,7 +340,7 @@ class ShopifyOrderImportService extends AbstractImportService
                 "street_no" => $this->getValue("T{$row}"),
                 "city" => $this->getValue("V{$row}"),
                 "state_id" => optional( State::where('code',$this->getValue("W{$row}"))->first() )->id,
-                "country_id" => optional( Country::where('code',$this->getValue("X{$row}"))->first() )->id,
+                "country_id" => optional( Country::where('name',$this->getValue("X{$row}"))->first() )->id,
                 "zipcode" => $this->getValue("U{$row}"),
                 "recipient_tax_id" => $this->getValue("Y{$row}"),
             ];

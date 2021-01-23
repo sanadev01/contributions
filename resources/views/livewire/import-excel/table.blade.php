@@ -20,11 +20,11 @@
                     <tr>
                         <th>Date</th>
                         @admin
-                            <th>User</th>
+                            <th>@lang('orders.import-excel.User')</th>
                         @endadmin
-                        <th>File Name</th>
+                        <th>@lang('orders.import-excel.File Name')</th>
                         <th>Total</th>
-                        <th>Action</th>
+                        <th>@lang('orders.actions.actions')</th>
                     </tr>
                     <tr class="no-print">
                         <th>

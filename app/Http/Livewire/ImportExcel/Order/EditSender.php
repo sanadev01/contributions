@@ -32,16 +32,47 @@ class EditSender extends Component
 
     public function save()
     {
-        $data = $this->validate([
+        $data = $this->validate($this->rules(), $this->messages());
+
+        $error = $this->order->error;
+        $remainError = array_diff($error, $this->messages());
+        $error = $remainError ? $remainError : null;
+
+        $this->order->update([
+            'sender_first_name' => $data['sender_first_name'],
+            'sender_last_name' => $data['sender_last_name'],
+            'sender_email' => $data['sender_email'],
+            'sender_phone' => $data['sender_phone'],
+            'error' => $error,
+        ]);
+    }
+
+        /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        $rules = [
             'sender_first_name' => 'required|max:100',
             'sender_last_name' => 'max:100',
             'sender_email' => 'nullable|max:100|email',
-            'sender_phone' => 'nullable|max:15',
             'sender_phone' => [
                 'nullable','max:15','min:13', new PhoneNumberValidator(30)
             ],
-        ]);
+        ];
 
-        $this->order->update($data);
+        return $rules;
+    }
+
+    public function messages()
+    {
+        return [
+            'sender_first_name.required' => 'sender first name is required',
+            'sender_last_name.nullable' => 'sender last name is required',
+            'sender_email.required' => 'sender Email is required',
+            'sender_phone.required' => 'sender phone is required',
+        ];
     }
 }

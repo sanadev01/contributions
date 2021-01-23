@@ -44,7 +44,7 @@ class EditParcel extends Component
 
     public function save()
     {
-        $data = $this->validate([
+        $rules = [
             'merchant' => 'required',
             'carrier' => 'required',
             'tracking_id' => 'required',
@@ -55,9 +55,37 @@ class EditParcel extends Component
             'length' => 'required',
             'width' => 'required',
             'height' => 'required',
+        ];
+        $customMessages = [
+            'merchant.required' => 'merchant is required',
+            'carrier.required' => 'carrier is required',
+            'tracking_id.required' => 'tracking id is required',
+            'customer_reference.required' => 'customer reference is required',
+            'measurement_unit.required' => 'measurement unit is required',
+            'weight.required' => 'weight is required',
+            'length.required' => 'length is required',
+            'width.required' => 'width is required',
+            'height.required' => 'height is required',
+        ];
+    
+        $data = $this->validate($rules, $customMessages);
+
+        $error = $this->order->error;
+        $remainError = array_diff($error, $customMessages);
+        $error = $remainError ? $remainError : null;
+        $this->order->update([
+            'merchant' => $data['merchant'],
+            'carrier' => $data['carrier'],
+            'tracking_id' => $data['tracking_id'],
+            'customer_reference' => $data['customer_reference'],
+            'order_date' => $data['order_date'],
+            'weight' => $data['weight'],
+            'measurement_unit' => $data['unit'],
+            'length' => $data['length'],
+            'width' => $data['width'],
+            'height' => $data['height'],
+            'error' => $error,
         ]);
-        
-        $this->order->update($data);
     }
     
     public function updatedUnit()
