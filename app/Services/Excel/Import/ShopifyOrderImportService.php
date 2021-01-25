@@ -103,7 +103,7 @@ class ShopifyOrderImportService extends AbstractImportService
                     "length" => $this->getValue("F{$row}")?$this->getValue("F{$row}"):0,
                     "width" => $this->getValue("G{$row}")?$this->getValue("G{$row}"):0,
                     "height" => $this->getValue("H{$row}")?$this->getValue("H{$row}"):0,
-                    "measurement_unit" => $this->getValue("I{$row}")?$this->getValue("I{$row}"):'kg/cm',
+                    "measurement_unit" => $this->getValue("I{$row}")?$this->getValue("I{$row}"):'lbs/in',
                     "is_invoice_created" => true,
                     "is_shipment_added" => true,
                     'status' => Order::STATUS_ORDER,
