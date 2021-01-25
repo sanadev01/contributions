@@ -6,7 +6,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">@lang('handlingservice.Create Service')</h4>
-                        <a href="{{ route('admin.services.index') }}" class="btn btn-primary">
+                        <a href="{{ route('admin.handling-services.index') }}" class="btn btn-primary">
                             @lang('handlingservice.Back to List')
                         </a>
                     </div>
@@ -23,7 +23,7 @@
                                     </ul>
                                 </div>
                             @endif
-                            <form action="{{ route('admin.services.store') }}" method="post" enctype="multipart/form-data">
+                            <form action="{{ route('admin.handling-services.store') }}" method="post" enctype="multipart/form-data">
                                 @csrf
 
                                 <div class="controls row mb-1 align-items-center">

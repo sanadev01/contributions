@@ -17,11 +17,19 @@ class ImportedOrder extends Component
     public $tracking = '';
     public $reference = '';
     public $carrier = '';
+    public $type = '';
+    public $orderId = '';
    
     public $sortBy = 'id';
     public $sortDesc = true;
 
-    
+    public function mount($orders)
+    {
+        $this->order = $orders;
+        $this->orderId = $this->order->id;
+        $this->type = $this->type? $this->type : request('type');
+    }
+
     public function render()
     {
         return view('livewire.import-excel.imported-order',[
@@ -31,6 +39,7 @@ class ImportedOrder extends Component
 
     public function getImportedOrder()
     {
+        
         return (new ImportOrderRepository)->getImportedOrder(request()->merge([
             'date' => $this->date,
             'name' => $this->name,
@@ -38,6 +47,7 @@ class ImportedOrder extends Component
             'tracking' => $this->tracking,
             'reference' => $this->reference,
             'carrier' => $this->carrier,
-        ]),true,$this->pageSize,$this->sortBy,$this->sortDesc ? 'DESC' : 'asc');
+            'type' => $this->type,
+        ]),true,$this->pageSize,$this->sortBy,$this->sortDesc ? 'DESC' : 'asc', $this->orderId);
     }
 }

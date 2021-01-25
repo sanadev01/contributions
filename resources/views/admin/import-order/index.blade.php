@@ -4,17 +4,16 @@
 <div class="card min-vh-100">
     <div class="card-header">
         <h4 class="mb-0">@lang('orders.orders')</h4>
-            {{-- <a href="{{ route('admin.import.import-excel.create') }}" class="pull-right btn btn-primary"> Import Orders </a> --}}
+        <a href="{{ route('admin.import.import-excel.index') }}" class="pull-right btn btn-primary"> @lang('orders.import-excel.Return to Back') </a>
     </div>
     <div class="card-content">
         <div class="card-body no-print" style="overflow-y: visible">
-            <livewire:import-excel.imported-order/>
+            <livewire:import-excel.imported-order :orders="$orders"/>
         </div>
     </div>
    
 </div>
 @endsection
 
-@section('modal')
-    <x-modal/>
-@endsection
+
+

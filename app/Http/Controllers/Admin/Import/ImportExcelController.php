@@ -46,6 +46,7 @@ class ImportExcelController extends Controller
         
         $this->validate($request,[
             'excel_name' => 'nullable',
+            'format' => 'required',
             'excel_file' => 'required|file'
         ]);
 
@@ -71,7 +72,7 @@ class ImportExcelController extends Controller
     public function show(ImportOrder $importExcel)
     {
         $orders = $importExcel;
-        return view('admin.import-excel.show', compact('orders'));
+        return view('admin.import-order.index', compact('orders'));
     }
 
     /**

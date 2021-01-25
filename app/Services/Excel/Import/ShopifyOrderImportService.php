@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Services\Excel\AbstractImportService;
 
-class OrderImportService extends AbstractImportService
+class ShopifyOrderImportService extends AbstractImportService
 {
     private $userId; 
     private $request;
@@ -53,7 +53,7 @@ class OrderImportService extends AbstractImportService
                 $order->error ? $totalError++ : $totalOrder++;
             }
         }
-
+        
         $importOrder->update([
             'total_orders' => $totalOrder,
             'total_errors' => $totalError
@@ -82,7 +82,7 @@ class OrderImportService extends AbstractImportService
                 $this->validationRow($row, false);
             
                 // if($this->errors == null){
-
+                \Log::info('sender number shopify'.$this->getValue("M{$row}"));
                 DB::beginTransaction();
                 $shippingService = ShippingService::first();
                 
@@ -103,7 +103,7 @@ class OrderImportService extends AbstractImportService
                     "length" => $this->getValue("F{$row}")?$this->getValue("F{$row}"):0,
                     "width" => $this->getValue("G{$row}")?$this->getValue("G{$row}"):0,
                     "height" => $this->getValue("H{$row}")?$this->getValue("H{$row}"):0,
-                    "measurement_unit" => $this->getValue("I{$row}")?$this->getValue("I{$row}"):'kg/cm',
+                    "measurement_unit" => $this->getValue("I{$row}")?$this->getValue("I{$row}"):'lbs/in',
                     "is_invoice_created" => true,
                     "is_shipment_added" => true,
                     'status' => Order::STATUS_ORDER,
@@ -131,7 +131,7 @@ class OrderImportService extends AbstractImportService
                         "city" => $this->getValue("V{$row}"),
                         "account_type" => 'individual',
                         "state_id" => optional( State::where('code',$this->getValue("W{$row}"))->first() )->id,
-                        "country_id" => optional( Country::where('code',$this->getValue("X{$row}"))->first() )->id,
+                        "country_id" => optional( Country::where('name',$this->getValue("X{$row}"))->first() )->id,
                         "tax_id" => $this->getValue("Y{$row}"),
                     ],
 
@@ -225,7 +225,7 @@ class OrderImportService extends AbstractImportService
                 'sender_last_name' => 'nullable',
                 'sender_email' => 'required',
                 'sender_phone' => [
-                    'required','max:15','min:13', new PhoneNumberValidator(optional( Country::where('code',$this->getValue("X{$row}"))->first() )->id)
+                    'required','max:15','min:13', new PhoneNumberValidator(optional( Country::where('name',$this->getValue("X{$row}"))->first() )->id)
                 ],
                 
                 
@@ -240,15 +240,15 @@ class OrderImportService extends AbstractImportService
                 'country_id' => 'required|exists:countries,id',
 
                 'phone' => [
-                    'required','max:15','min:13', new PhoneNumberValidator(optional( Country::where('code',$this->getValue("X{$row}"))->first() )->id)
+                    'required','max:15','min:13', new PhoneNumberValidator(optional( Country::where('name',$this->getValue("X{$row}"))->first() )->id)
                 ],
                 'zipcode' => [
-                    'required', new ZipCodeValidator(optional( Country::where('code',$this->getValue("X{$row}"))->first() )->id,optional( State::where('code',$this->getValue("W{$row}"))->first() )->id)
+                    'required', new ZipCodeValidator(optional( Country::where('name',$this->getValue("X{$row}"))->first() )->id,optional( State::where('code',$this->getValue("W{$row}"))->first() )->id)
                 ],
 
             ];
 
-            if (Country::where('code', 'BR')->first()->id == optional( Country::where('code',$this->getValue("X{$row}"))->first() )->id ) {
+            if (Country::where('code', 'BR')->first()->id == optional( Country::where('name',$this->getValue("X{$row}"))->first() )->id ) {
                 $rules['recipient_tax_id'] = ['required', "in:cpf,cnpj,CPF,CNPJ"];
             }
 
@@ -340,7 +340,7 @@ class OrderImportService extends AbstractImportService
                 "street_no" => $this->getValue("T{$row}"),
                 "city" => $this->getValue("V{$row}"),
                 "state_id" => optional( State::where('code',$this->getValue("W{$row}"))->first() )->id,
-                "country_id" => optional( Country::where('code',$this->getValue("X{$row}"))->first() )->id,
+                "country_id" => optional( Country::where('name',$this->getValue("X{$row}"))->first() )->id,
                 "zipcode" => $this->getValue("U{$row}"),
                 "recipient_tax_id" => $this->getValue("Y{$row}"),
             ];

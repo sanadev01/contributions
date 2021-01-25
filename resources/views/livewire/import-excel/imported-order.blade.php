@@ -27,6 +27,7 @@
                             <th>Carrier Tracking</th>
                             <th>Referência do Cliente</th>
                             <th>Tracking Code</th>
+                            <th>Errors</th>
                             <th>@lang('Action')</th>
                         </tr>
                         <tr class="no-print">
@@ -50,6 +51,13 @@
                             <th>
                                 <input type="search" class="form-control" wire:model.debounce.1000ms="tracking">
                             </th>
+                            <th>
+                                <select type="search" class="form-control" name="type" wire:model.debounce.1000ms="type">
+                                    <option value="">@lang('orders.import-excel.Select Order')</option>
+                                    <option value="good">@lang('orders.import-excel.Good')</option>
+                                    <option value="error">@lang('orders.import-excel.Error')</option>
+                                </select>
+                            </th>
                            
                         </tr>
                     </thead>
@@ -57,10 +65,11 @@
                         @forelse ($importedOrders as $order)
                             @include('admin.import-order.components.order-row',['order'=>$order])    
                         @empty
-                            <x-tables.no-record colspan="7"></x-tables.no-record>
+                            <x-tables.no-record colspan="8"></x-tables.no-record>
                         @endforelse
                     </tbody>
                 </table>
+                
             </div>
             <div class="d-flex justify-content-end my-2 pb-4 mx-2">
                 {{ $importedOrders->links() }}
@@ -71,3 +80,7 @@
     </div>
     
 </div>
+
+@section('modal')
+    <x-modal/>
+@endsection

@@ -6,21 +6,25 @@ use App\Models\Order;
 use App\Models\ImportOrder;
 use Illuminate\Http\Request;
 use App\Models\ImportedOrder;
+use App\Models\ShippingService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Excel\Import\OrderImportService;
+use App\Services\Excel\Import\ShopifyOrderImportService;
 
 class ImportOrderRepository
 {
     public function store($request)
     {
-        $importExcelService = new OrderImportService($request->file('excel_file'),$request);
-        $importOrder = $importExcelService->handle();
-        $findErrors = $importExcelService->getErrors();
-        if($findErrors){
-            $this->delete($importOrder);
+        if($request->format == 'homedelivery'){
+            $importExcelService = new OrderImportService($request->file('excel_file'),$request);
+            $importOrder = $importExcelService->handle();
+            return;
         }
-        return  $findErrors;
+
+        $importExcelService = new ShopifyOrderImportService($request->file('excel_file'),$request);
+        $importOrder = $importExcelService->handle();
+        return;
         
     }
 
@@ -71,12 +75,18 @@ class ImportOrderRepository
         return true;
     }
 
-    public function getImportedOrder(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='DESC')
+    public function getImportedOrder(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='DESC', $orderId)
     {
         $query = ImportedOrder::query()->has('user');
         
         if ( Auth::user()->isUser() ){
             $query->where('user_id',Auth::id());
+        }
+        
+        if (  $orderId ){
+            $query->where(function($query) use($orderId){
+                return $query->where('import_id',  $orderId);
+            });
         }
         
         if ( $request->date ){
@@ -108,6 +118,17 @@ class ImportOrderRepository
                 return $query->where('customer_reference', 'LIKE', "%{$request->reference}%");
             });
         }
+        
+        if ( $request->type == 'error'){
+            $query->where(function($query) use($request){
+                return $query->where('error', '!=', null);
+            });
+        }
+        if($request->type == 'good'){
+            $query->where(function($query) use($request){
+                return $query->where('error', null);
+            });
+        }
        
         if ( $request->name ){
             $query->whereHas('user',function($query) use($request) {
@@ -130,6 +151,7 @@ class ImportOrderRepository
 
     public function storeOrder(ImportedOrder $importedOrder)
     {
+        $shippingService = ShippingService::find($importedOrder->shipping_service_id);
         
         $order = Order::create([
             'user_id' => $importedOrder->user_id,
@@ -159,42 +181,47 @@ class ImportOrderRepository
 
 
         $order->recipient()->create([
-            "first_name" =>$importedOrder->recipient['first_name'],
-            "last_name" => $importedOrder->recipient['last_name'],
-            "email" => $importedOrder->recipient['email'],
-            "phone" => $importedOrder->recipient['phone'],
-            "address" => $importedOrder->recipient['address'],
-            "address2" => $importedOrder->recipient['address2'],
-            "street_no" => $importedOrder->recipient['street_no'],
-            "zipcode" => $importedOrder->recipient['zipcode'],
-            "city" => $importedOrder->recipient['city'],
-            "account_type" => $importedOrder->recipient['account_type'],
-            "state_id" => $importedOrder->recipient['state_id'],
-            "country_id" => $importedOrder->recipient['country_id'],
-            "tax_id" => $importedOrder->recipient['tax_id'],
+            "first_name" =>optional($importedOrder->recipient)['first_name'],
+            "last_name" => optional($importedOrder->recipient)['last_name'],
+            "email" => optional($importedOrder->recipient)['email'],
+            "phone" => optional($importedOrder->recipient)['phone'],
+            "address" => optional($importedOrder->recipient)['address'],
+            "address2" => optional($importedOrder->recipient)['address2'],
+            "street_no" => optional($importedOrder->recipient)['street_no'],
+            "zipcode" => optional($importedOrder->recipient)['zipcode'],
+            "city" => optional($importedOrder->recipient)['city'],
+            "account_type" => optional($importedOrder->recipient)['account_type'],
+            "state_id" => optional($importedOrder->recipient)['state_id'],
+            "country_id" => optional($importedOrder->recipient)['country_id'],
+            "tax_id" => optional($importedOrder->recipient)['tax_id'],
         ]);
 
-        $order->update([
-            'warehouse_number' => "TEMPWHR-{$order->id}",
-            'user_declared_freight' => $importedOrder->user_declared_freight?$importedOrder->user_declared_freight:0 ,
-        ]);
+        $shippingPrice = $shippingService->getRateFor($order);
+        
+       
 
         foreach($importedOrder->items as $item){
             $this->addItem($order,$item);
         }
-        
+
         $order->doCalculations();
+        
+        $order->update([
+            'warehouse_number' => "HD-{$order->id}",
+            'user_declared_freight' => $importedOrder->user_declared_freight?$importedOrder->user_declared_freight:$shippingPrice,
+        ]);
+        
     }
 
     public function addItem($order, $item)
     {
         $order->items()->create([
-            "quantity" => $item['quantity'],
-            "value" => $item['value'],
-            "description" => $item['description'],
-            "sh_code" => $item['sh_code'],
-            "contains_battery" => $item['contains_battery'],
-            "contains_perfume" => $item['contains_perfume'],
+            "quantity" => optional($item)['quantity'],
+            "value" => optional($item)['value'],
+            "description" => optional($item)['description'],
+            "sh_code" => optional($item)['sh_code'],
+            "contains_battery" => optional($item)['contains_battery'],
+            "contains_perfume" => optional($item)['contains_perfume'],
         ]);
     }
 
