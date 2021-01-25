@@ -117,11 +117,22 @@
                         </div>
                     </div>
                 @endforeach
-                <div class="row mt-3">
-                    <div class="col-12 text-right">
-                        <button class="btn btn-primary" wire:click="save">
-                            @lang('orders.create.save')
-                        </button>
+                <div class="row">
+                    <div class="row col-12 text-right">
+                        <div class="col-11 text-right">
+                                @if(!$order->error)
+                                    <div class="text-right">
+                                        <a href="{{ route('admin.import.import-excel.show', $order->import_id) }}" class="btn btn-success">
+                                            Error Fixed
+                                        </a>
+                                    </div>
+                                @endif
+                            </div>
+                        <div class="col-1 text-right">
+                            <button class="btn btn-primary" wire:click="save">
+                                @lang('orders.create.save')
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div wire:loading>

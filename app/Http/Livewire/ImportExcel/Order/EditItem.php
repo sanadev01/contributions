@@ -49,15 +49,17 @@ class EditItem extends Component
             $error = $remainError ? $remainError : null;
         }
 
-        
         $this->order->update([
             'customer_reference' => $data['customer_reference'],
             'user_declared_freight' => $data['user_declared_freight'],
             'items' => $this->items,
             'error' => $error,
         ]);
-        
-        return redirect()->route('admin.import.import-excel.show', $this->order->import_id);
+
+        if(!$error){
+            return redirect()->route('admin.import.import-excel.show', $this->order->import_id);
+        }
+
     }
 
     function validateItems()
