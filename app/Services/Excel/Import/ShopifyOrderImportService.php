@@ -82,7 +82,7 @@ class ShopifyOrderImportService extends AbstractImportService
                 $this->validationRow($row, false);
             
                 // if($this->errors == null){
-
+                \Log::info('sender number shopify'.$this->getValue("M{$row}"));
                 DB::beginTransaction();
                 $shippingService = ShippingService::first();
                 
