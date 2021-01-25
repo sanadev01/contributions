@@ -47,7 +47,7 @@
                     <th>Carrier Tracking</th>
                     <th>Referência do Cliente</th>
                     <th>Tracking Code</th>
-                    <th>@lang('orders.amount')</th>
+                    <th><a href="#" wire:click.prevent="sortBy('gross_total')">@lang('orders.amount')</a></th>
                     <th>@lang('orders.status')</th>
                     <th>@lang('orders.type')</th>
                     <th>@lang('orders.payment-status')</th>
