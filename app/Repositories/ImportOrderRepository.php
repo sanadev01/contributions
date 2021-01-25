@@ -179,19 +179,19 @@ class ImportOrderRepository
 
 
         $order->recipient()->create([
-            "first_name" =>$importedOrder->recipient['first_name'],
-            "last_name" => $importedOrder->recipient['last_name'],
-            "email" => $importedOrder->recipient['email'],
-            "phone" => $importedOrder->recipient['phone'],
-            "address" => $importedOrder->recipient['address'],
-            "address2" => $importedOrder->recipient['address2'],
-            "street_no" => $importedOrder->recipient['street_no'],
-            "zipcode" => $importedOrder->recipient['zipcode'],
-            "city" => $importedOrder->recipient['city'],
-            "account_type" => $importedOrder->recipient['account_type'],
-            "state_id" => $importedOrder->recipient['state_id'],
-            "country_id" => $importedOrder->recipient['country_id'],
-            "tax_id" => $importedOrder->recipient['tax_id'],
+            "first_name" =>optional($importedOrder->recipient)['first_name'],
+            "last_name" => optional($importedOrder->recipient)['last_name'],
+            "email" => optional($importedOrder->recipient)['email'],
+            "phone" => optional($importedOrder->recipient)['phone'],
+            "address" => optional($importedOrder->recipient)['address'],
+            "address2" => optional($importedOrder->recipient)['address2'],
+            "street_no" => optional($importedOrder->recipient)['street_no'],
+            "zipcode" => optional($importedOrder->recipient)['zipcode'],
+            "city" => optional($importedOrder->recipient)['city'],
+            "account_type" => optional($importedOrder->recipient)['account_type'],
+            "state_id" => optional($importedOrder->recipient)['state_id'],
+            "country_id" => optional($importedOrder->recipient)['country_id'],
+            "tax_id" => optional($importedOrder->recipient)['tax_id'],
         ]);
 
         $order->update([
@@ -209,12 +209,12 @@ class ImportOrderRepository
     public function addItem($order, $item)
     {
         $order->items()->create([
-            "quantity" => $item['quantity'],
-            "value" => $item['value'],
-            "description" => $item['description'],
-            "sh_code" => $item['sh_code'],
-            "contains_battery" => $item['contains_battery'],
-            "contains_perfume" => $item['contains_perfume'],
+            "quantity" => optional($item)['quantity'],
+            "value" => optional($item)['value'],
+            "description" => optional($item)['description'],
+            "sh_code" => optional($item)['sh_code'],
+            "contains_battery" => optional($item)['contains_battery'],
+            "contains_perfume" => optional($item)['contains_perfume'],
         ]);
     }
 
