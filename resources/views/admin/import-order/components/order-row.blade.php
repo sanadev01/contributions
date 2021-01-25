@@ -27,7 +27,7 @@
                         </a>
                     @else
                         <a href="#" title="Click to see error"  class="btn dropdown-item w-100 edit-order" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.error.edit',$order) }}">
-                            <i class="feather icon-arrow"> </i>@lang('orders.import-excel.Fix Error')
+                            <i class="feather icon-circle"> </i>@lang('orders.import-excel.Fix Error')
                         </a>
                     @endif
             
