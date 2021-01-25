@@ -58,8 +58,11 @@ class EditRecipient extends Component
         $data = $this->validate($this->rules(), $this->messages());
 
         $error = $this->order->error;
-        $remainError = array_diff($error, $this->messages());
-        $error = $remainError ? $remainError : null;
+        
+        if($error){
+            $remainError = array_diff($error, $this->messages());
+            $error = $remainError ? $remainError : null;
+        }
 
         $this->order->update([
             'recipient' => $data,

@@ -71,8 +71,11 @@ class EditParcel extends Component
         $data = $this->validate($rules, $customMessages);
 
         $error = $this->order->error;
-        $remainError = array_diff($error, $customMessages);
-        $error = $remainError ? $remainError : null;
+        if($error){
+            $remainError = array_diff($error, $customMessages);
+            $error = $remainError ? $remainError : null;
+        }
+
         $this->order->update([
             'merchant' => $data['merchant'],
             'carrier' => $data['carrier'],
