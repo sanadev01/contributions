@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\ImportOrder;
 use Illuminate\Http\Request;
 use App\Models\ImportedOrder;
+use App\Models\ShippingService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Excel\Import\OrderImportService;
@@ -150,6 +151,7 @@ class ImportOrderRepository
 
     public function storeOrder(ImportedOrder $importedOrder)
     {
+        $shippingService = ShippingService::find($importedOrder->shipping_service_id);
         
         $order = Order::create([
             'user_id' => $importedOrder->user_id,
@@ -194,16 +196,21 @@ class ImportOrderRepository
             "tax_id" => optional($importedOrder->recipient)['tax_id'],
         ]);
 
-        $order->update([
-            'warehouse_number' => "HD-{$order->id}",
-            'user_declared_freight' => $importedOrder->user_declared_freight?$importedOrder->user_declared_freight:0 ,
-        ]);
+        $shippingPrice = $shippingService->getRateFor($order);
+        
+       
 
         foreach($importedOrder->items as $item){
             $this->addItem($order,$item);
         }
-        
+
         $order->doCalculations();
+        
+        $order->update([
+            'warehouse_number' => "HD-{$order->id}",
+            'user_declared_freight' => $importedOrder->user_declared_freight?$importedOrder->user_declared_freight:$shippingPrice,
+        ]);
+        
     }
 
     public function addItem($order, $item)
