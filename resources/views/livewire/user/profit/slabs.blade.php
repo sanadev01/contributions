@@ -34,7 +34,7 @@
                     @enderror
                 </td>
                 <td>
-                    <input type="text" class="form-control" value="@if($slab['max_weight']) {{ $this->getSaleRate($profitPackage, $slab['max_weight']) }} @endif">
+                    <input type="text" class="form-control" readonly value="@if($slab['max_weight']) {{ $this->getSaleRate($profitPackage, $slab['max_weight']) }} @endif">
                     {{-- @error("slab.$key.rate")
                         <div class="text-danger">
                             {{ $message }}
