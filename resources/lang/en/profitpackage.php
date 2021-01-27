@@ -19,15 +19,15 @@ return [
     'profit' => 'Profit',
     'back-to-list ' => 'Back to list',
     'save' => 'Save',
-    'udpate' => 'Update',
+    'update' => 'Update',
     'add-slab' => 'Add Slab',
     'remove-slab' => 'Remove Slab',
     'back to list' => 'Back to List', 
     'created' => 'Package Created',
     'udpated' => 'Package Udpated',
-    'udpate' => 'Update',
     'deleted' => 'Package Deleted',
     'import' => 'Import',
+    'selling' => 'Selling',
     'download-profit-package' => 'Download',
 ];
  
