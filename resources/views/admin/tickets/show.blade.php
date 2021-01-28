@@ -1,4 +1,7 @@
 @extends('layouts.master')
+@section('css')
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+@endsection
 @section('page')
     <section id="prealerts">
         <div class="row">
@@ -42,56 +45,48 @@
 
                             </div>
                             <hr>
-                            <div class="row justify-content-center">
-                                <div class="col-md-6">
-                                    @foreach($ticket->comments as $comment)
-                                        <div class="card" style="background-color: {{ $comment->isSent() ? '#dcdcdc': '' }}">
-                                            <div class="card-header">
-                                                <div class="icon d-flex pull-left align-items-center">
-                                                    <i class="feather icon-user rounded bg-dark text-white rounded-circle p-1 mr-2"></i>
-                                                    <h4>{{ $comment->user->name }}</h4>
-                                                </div>
-                                                <div class="date">
-                                                    <h5>{{ $comment->created_at->format('M d Y g:i a') }}</h5>
-                                                </div>
-                                            </div>
-                                            <div class="card-content">
-                                                <div class="card-body">
-                                                    <p class="mb-3">
-                                                        {!! $comment->text !!}
-                                                    </p>
-                                                    <hr>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-
+                            <livewire:support-ticket.show-ticket :ticket="$ticket"/>
                             @if( $ticket->isOpen() )
 
                                 <form novalidate="" action="{{ route('admin.tickets.update',$ticket->id) }}" class="" method="post"
-                                  enctype="multipart/form-data">
-                                @csrf
-                                @method('PUT')
-                                <div class="row justify-content-center">
-                                    <div class="form-group col-6">
-                                        <div class="controls">
-                                            <textarea class="form-control w-100" value="{{ old('detail') }}"
-                                                      placeholder="" name="text"></textarea>
-                                            <div class="help-block"></div>
+                                    enctype="multipart/form-data">
+                                    @csrf
+                                    @method('PUT')
+                                    <div class="row">
+                                        <div class="form-group col-6 offset-3">
+                                            <div class="controls">
+                                                <textarea id="summernote" class="form-control w-100" value="{{ old('detail') }}"
+                                                        placeholder="" name="text"></textarea>
+                                                <div class="help-block"></div>
+                                            </div>
+                                        </div>
+                                        @admin 
+                                            <livewire:support-ticket.note :ticket="$ticket"/>
+                                        @endadmin
+                                        
+                                    </div>
+                                    <div class="row mt-1">
+                                        <div class="col-5 offset-3">
+                                            <section class="section-preview">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text" id="inputGroupFileAddon01">Attche File</span>
+                                                    </div>
+                                                    <div class="custom-file">
+                                                        <input type="file" class="custom-file-input" id="inputGroupFile02" name="file" aria-describedby="inputGroupFileAddon01">
+                                                        <label class="custom-file-label" for="inputGroupFile02">Choose file</label>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                        </div>
+                                        <div class="col-3">
+                                            <button type="submit"
+                                                class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">
+                                                @lang('tickets.Reply')
+                                            </button>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row mt-1 justify-content-center">
-                                    <div class="col-6 d-flex">
-                                        <button type="submit"
-                                                class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">
-                                            @lang('tickets.Reply')
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
+                                </form>
 
                             @endif
 
@@ -101,4 +96,14 @@
             </div>
         </div>
     </section>
+@endsection
+@section('js')
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#summernote').summernote({
+                height: 200,
+            });
+        });  
+    </script>
 @endsection

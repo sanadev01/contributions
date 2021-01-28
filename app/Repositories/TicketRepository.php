@@ -2,13 +2,16 @@
 
 namespace App\Repositories;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Ticket;
-use App\Models\TicketComment;
-use App\Mail\User\NewTicketCommentAdded;
-use Illuminate\Support\Facades\Mail;
 use Exception;
+use App\Models\User;
+use App\Models\Ticket;
+use App\Models\Document;
+use Illuminate\Http\Request;
+use App\Models\TicketComment;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\User\NewTicketCommentAdded;
 
 class TicketRepository
 {
@@ -25,7 +28,8 @@ class TicketRepository
     }
 
     public function store(Request $request)
-    {   
+    {
+        
         try{
 
             $ticket = Auth::user()->tickets()->create([
@@ -36,7 +40,13 @@ class TicketRepository
                 'user_id' => Auth::id(),
                 'text' => $request->text
             ]);
-
+            
+            $user = User::whereHas('role', function($q){$q->where('id',1)->orWhere('name', 'admin');})->first();
+            $comment = $ticket->comments()->create([
+                'user_id' => $user ? $user->id: 1,
+                'text' => 'your ticket will be responded maximum 24 hours during business hours'
+            ]);
+            
             try{
 
                 \Mail::send(new NewTicketCommentAdded($comment));
@@ -59,6 +69,17 @@ class TicketRepository
             
             $comment = $ticket->addComment($request);
             
+            if($request->file('file')){
+                $document = Document::saveDocument($request->file('file'));
+                $comment->images()->create([
+                    'name' => $document->getClientOriginalName(),
+                    'size' => $document->getSize(),
+                    'type' => $document->getMimeType(),
+                    'path' => $document->filename
+                ]);
+            }
+
+
             try {
 
                 \Mail::send(new NewTicketCommentAdded($comment));
@@ -97,6 +118,18 @@ class TicketRepository
         return true;
 
     }
+
+    // public function importFile(UploadedFile $file)
+    // {
+    //     $fiename = md5(microtime()).'.'.$file->getClientOriginalExtension();
+    //     $file->storeAs("comments/", $fiename);
+    //     return $fiename;
+    // }
+
+    // public function getStoragePath($filename)
+    // {
+    //     return storage_path("app/comments/{$filename}");
+    // }
 
 
 }

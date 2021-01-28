@@ -1,6 +1,6 @@
 @component('mail::message')
-@lang('email.new-ticket-comment-added.Hello')
-
+@lang('email.new-ticket-comment-added.Hello')! {{ $ticketComment->ticket->name }}
+<br>
 @lang('email.new-ticket-comment-added.Add comment') {{ $ticketComment->ticket->getHumanID() }}
 <br>
 {{ $ticketComment->text }}

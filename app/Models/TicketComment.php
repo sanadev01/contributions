@@ -56,4 +56,9 @@ class TicketComment extends Model
     {
         return $this->user_id == Auth::id();
     }
+
+    public function images()
+    {
+        return $this->belongsToMany(Document::class);
+    }
 }
