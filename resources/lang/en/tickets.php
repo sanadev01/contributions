@@ -24,4 +24,6 @@ return [
     'Generated' => 'Ticket Generated Successfully',
     'Comment' => 'Comment Added',
     'Closed' => 'Ticket Closed',
+    'Save Note' => 'Save Note',
+    'Notes' => 'Notes',
 ];
