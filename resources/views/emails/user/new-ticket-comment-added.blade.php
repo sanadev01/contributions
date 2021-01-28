@@ -3,7 +3,7 @@
 <br>
 @lang('email.new-ticket-comment-added.Add comment') {{ $ticketComment->ticket->getHumanID() }}
 <br>
-{{ $ticketComment->text }}
+{!! $ticketComment->text !!}
 
 @component('mail::button', ['url' => route('login')])
 Dashboard
