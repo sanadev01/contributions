@@ -1,9 +1,10 @@
 @component('mail::message')
-@lang('email.new-ticket-comment-added.Hello')
-
+@lang('email.new-ticket-comment-added.Hello')! {{ $ticketComment->ticket->user->name }}
+<br>
 @lang('email.new-ticket-comment-added.Add comment') {{ $ticketComment->ticket->getHumanID() }}
 <br>
-{{ $ticketComment->text }}
+
+{!! $ticketComment->text !!}
 
 @component('mail::button', ['url' => route('login')])
 Dashboard
