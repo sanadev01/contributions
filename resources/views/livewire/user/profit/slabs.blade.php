@@ -25,23 +25,9 @@
                         </div>
                     @enderror
                 </td>
+                    <livewire:user.profit.slab-field :slab="$slab" :key="$key"/>
                 <td>
-                    <input type="text" value="{{ $slab['value'] }}" class="form-control" name="slab[{{$key}}][value]">
-                    @error("slab.$key.value")
-                        <div class="text-danger">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </td>
-                <td>
-                    <input type="text" class="form-control" readonly value="@if($slab['max_weight']) {{ $this->getSaleRate($profitPackage, $slab['max_weight']) }} @endif">
-                    {{-- @error("slab.$key.rate")
-                        <div class="text-danger">
-                            {{ $message }}
-                        </div>
-                    @enderror --}}
-                </td>
-                <td>
+                    {{ $key }}
                     <button class="btn btn-danger" role="button" tabindex="-1" type="button" wire:click='removeSlab({{$key}})'>
                         @lang('profitpackage.remove-slab')
                     </button>

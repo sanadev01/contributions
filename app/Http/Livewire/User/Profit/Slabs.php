@@ -15,6 +15,7 @@ class Slabs extends Component
     public $profitId;
     public $slabs;
     public $profitPackage;
+    public $profit;
 
     public function mount($profitId = null)
     {
@@ -25,12 +26,11 @@ class Slabs extends Component
             $this->profitPackage = $profitPackage;
         }
 
-
     }
 
     public function render()
     {
-        
+        // dd($this->profit);
         return view('livewire.user.profit.slabs');
     }
 
