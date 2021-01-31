@@ -8,31 +8,8 @@
             <th></th>
         </tr>
         @foreach ($slabs as $key => $slab)
-            <tr>
-                <td>
-                    <input type="number" class="form-control" name="slab[{{$key}}][min_weight]" value="{{ $slab['min_weight'] }}">
-                    @error("slab.$key.min_weight")
-                        <div class="text-danger">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </td>
-                <td>
-                    <input type="number" class="form-control" name="slab[{{$key}}][max_weight]" value="{{ $slab['max_weight'] }}">
-                    @error("slab.$key.max_weight")
-                        <div class="text-danger">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </td>
-                    <livewire:user.profit.slab-field :slab="$slab" :key="$key"/>
-                <td>
-                    {{ $key }}
-                    <button class="btn btn-danger" role="button" tabindex="-1" type="button" wire:click='removeSlab({{$key}})'>
-                        @lang('profitpackage.remove-slab')
-                    </button>
-                </td>
-            </tr>
+            <livewire:user.profit.slab-field :slab="$slab" :key="$key" :index="$key"/>
+
         @endforeach
         <tr>
             <td colspan="2">
@@ -42,5 +19,5 @@
             </td>
         </tr>
     </table>
-@include('layouts.livewire.loading')    
+@include('layouts.livewire.loading')
 </div>

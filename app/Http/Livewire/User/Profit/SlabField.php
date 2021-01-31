@@ -11,12 +11,12 @@ class SlabField extends Component
     public $key;
     public $profit;
 
-    public function mount($slab)
+    public function mount($slab,$index)
     {
         $this->slab = $slab;
-        // dd($this->profit);
+        $this->key = $index;
     }
-    
+
     public function render()
     {
         // dd($this->profit);
