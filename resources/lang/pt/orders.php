@@ -99,6 +99,7 @@ return [
         'Select Format' => 'Selecione o formato',
         'Homedelivery Format' => 'Formato Homedelivery',
         'Shopify Format' => 'Formato Shopify',
+        'Xml Format' => 'Formato Xml',
         'Excel File Format' => 'Formato de arquivo do Excel',
     ],
     'actions' => [

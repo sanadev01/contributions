@@ -100,6 +100,7 @@ return [
         'Select Format' => 'Select Format',
         'Homedelivery Format' => 'Homedelivery Format',
         'Shopify Format' => 'Shopify Format',
+        'Xml Format' => 'Xml Format',
         'Excel File Format' => 'Excel File Format',
 
     ],
