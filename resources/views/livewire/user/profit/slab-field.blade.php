@@ -17,8 +17,8 @@
     </td>
 
      <td>
-         {{-- <input type="text" class="form-control" wire:model.debounce.500ms="profit"> --}}
-         <input type="text" value="{{ $slab['value'] }}" class="form-control" name="slab[{{$key}}][value]" wire:model.debounce.500ms="profit">
+        
+         <input type="text" value="{{ $slab['value'] }}" class="form-control rate" data-key="{{$key}}" id="profit_{{$key}}" name="slab[{{$key}}][value]">
          @error("slab.$key.value")
          <div class="text-danger">
              {{ $message }}
@@ -26,7 +26,10 @@
          @enderror
      </td>
      <td>
-         <input type="text" class="form-control" readonly >
+         <input type="text" class="form-control shipping" name="shipping" value="{{$this->getSaleRate($package, $slab['max_weight'], false) }}" id="shipping_{{$key}}" data-key="{{$key}}">
+     </td>
+     <td>
+         <input type="text" class="form-control selling" id="selling_{{$key}}"  value="{{ $sale }}"  data-key="{{$key}}">
      </td>
 
     <td>

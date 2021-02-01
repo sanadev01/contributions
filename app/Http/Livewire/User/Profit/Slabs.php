@@ -48,31 +48,4 @@ class Slabs extends Component
         unset($this->slabs[$index]);
     }
 
-    public function getSaleRate($package, $weight)
-    {
-        $recipient = new Recipient();
-        $recipient->state_id = 508;//$request->state_id;
-        $recipient->country_id = 30;//$request->country_id;
-        
-        $newUser = Auth::user();
-        $newUser->profitPackage = $package;
-
-        $order = new Order();
-        $order->user = $newUser;
-        $order->width =  0;
-        $order->height = 0;
-        $order->length = 0;
-        $order->measurement_unit = 'kg/cm';
-        $order->recipient = $recipient;
-        $order->weight = UnitsConverter::gramsToKg($weight);
-
-        foreach (ShippingService::query()->active()->get() as $shippingService) {
-            $shippingService->cacheCalculator = false;
-            if ( $shippingService->isAvailableFor($order) ){
-                $rate = $shippingService->getRateFor($order,true,false);
-                return $rate;
-            }
-        }
-
-    }
 }
