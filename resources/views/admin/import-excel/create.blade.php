@@ -58,6 +58,7 @@
                                         <option value="">  @lang('orders.import-excel.Select Format')</option>
                                         <option value="homedelivery">  @lang('orders.import-excel.Homedelivery Format')</option>
                                         <option value="shopify">  @lang('orders.import-excel.Shopify Format')</option>
+                                        <option value="xml">  @lang('orders.import-excel.Xml Format')</option>
                                     </select>
                                     @error('format')
                                         <div class="text-danger">

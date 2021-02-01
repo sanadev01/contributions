@@ -10,6 +10,7 @@ use App\Models\ShippingService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Excel\Import\OrderImportService;
+use App\Services\Excel\Import\XmlOrderImportService;
 use App\Services\Excel\Import\ShopifyOrderImportService;
 
 class ImportOrderRepository
@@ -19,6 +20,13 @@ class ImportOrderRepository
         if($request->format == 'homedelivery'){
             $importExcelService = new OrderImportService($request->file('excel_file'),$request);
             $importOrder = $importExcelService->handle();
+            return;
+        }
+       
+        if($request->format == 'xml'){
+            $importXmlService = new XmlOrderImportService($request);
+            $importOrder = $importXmlService->handle();
+            
             return;
         }
 
