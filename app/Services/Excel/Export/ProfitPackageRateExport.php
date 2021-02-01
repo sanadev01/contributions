@@ -32,8 +32,9 @@ class ProfitPackageRateExport extends AbstractExportService
 
         foreach ($this->rates as $rate) {
             $this->setCellValue('A'.$row, $rate['weight'] . ' g');
-            $this->setCellValue('B'.$row, $rate['value'] . ' %');
-            $this->setCellValue('C'.$row, $rate['rates'][0] . ' $');
+            $this->setCellValue('B'.$row, $rate['profit'] );
+            $this->setCellValue('C'.$row, $rate['shipping'][0] );
+            $this->setCellValue('D'.$row, "=B$row*(C$row/100)+B$row");
             $row++;
         }
         $this->currentRow = $row;
@@ -42,16 +43,19 @@ class ProfitPackageRateExport extends AbstractExportService
     private function setExcelHeaderRow()
     {
         $this->setColumnWidth('A', 20);
-        $this->setCellValue('A1', 'Weight');
+        $this->setCellValue('A1', 'weight');
 
         $this->setColumnWidth('B', 20);
-        $this->setCellValue('B1', 'Profit');
+        $this->setCellValue('B1', 'profit');
         
         $this->setColumnWidth('C', 20);
-        $this->setCellValue('C1', 'Rate');
+        $this->setCellValue('C1', 'shipping');
+        
+        $this->setColumnWidth('D', 20);
+        $this->setCellValue('D1', 'rates');
 
-        $this->setBackgroundColor('A1:C1', '2b5cab');
-        $this->setColor('A1:C1', 'FFFFFF');
+        $this->setBackgroundColor('A1:D1', '2b5cab');
+        $this->setColor('A1:D1', 'FFFFFF');
 
         $this->currentRow++;
     }
