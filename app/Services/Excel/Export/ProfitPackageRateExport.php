@@ -34,7 +34,7 @@ class ProfitPackageRateExport extends AbstractExportService
             $this->setCellValue('A'.$row, $rate['weight'] . ' g');
             $this->setCellValue('B'.$row, $rate['profit'] );
             $this->setCellValue('C'.$row, $rate['shipping'][0] );
-            $this->setCellValue('D'.$row, "=B$row*(C$row/100)+B$row");
+            $this->setCellValue('D'.$row, "=C$row*(B$row/100)+C$row");
             $row++;
         }
         $this->currentRow = $row;
