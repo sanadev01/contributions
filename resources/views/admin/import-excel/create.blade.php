@@ -91,7 +91,7 @@
                                         <li>@lang('orders.import-excel.Download and fill in the data in the sample file below to avoid errors')</li>
                                         <li class="mt-2">@lang('orders.import-excel.Download the sample') Homedelivery <a href="{{ asset('uploads/order-import.xlsx') }}" class="btn btn-success btn-sm">@lang('orders.import-excel.Download')</a></li>
                                         <li class="mt-2">@lang('orders.import-excel.Download the sample') Shopify <a href="{{ asset('uploads/shopify-format.xlsx') }}" class="btn btn-success btn-sm">@lang('orders.import-excel.Download')</a></li>
-                                        <li class="mt-2">@lang('orders.import-excel.Download the sample') Xml <a href="{{ asset('uploads/xml-format.xlsx') }}" class="btn btn-success btn-sm">@lang('orders.import-excel.Download')</a></li>
+                                        <li class="mt-2">@lang('orders.import-excel.Download the sample') Xml <a href="{{ asset('uploads/xml-format.xml') }}" class="btn btn-success btn-sm">@lang('orders.import-excel.Download')</a></li>
                                     </ol>
                                 </div>
                             </div>
