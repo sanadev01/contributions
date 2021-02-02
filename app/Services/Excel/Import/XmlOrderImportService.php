@@ -6,7 +6,6 @@ use App\Models\Order;
 use App\Models\State;
 use App\Models\Country;
 use App\Models\ImportOrder;
-use Illuminate\Support\Arr;
 use App\Models\ImportedOrder;
 use App\Models\ShippingService;
 use App\Rules\ZipCodeValidator;
@@ -15,7 +14,6 @@ use Illuminate\Support\Facades\DB;
 use App\Rules\PhoneNumberValidator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use App\Services\Excel\AbstractImportService;
 
 class XmlOrderImportService
 {
@@ -46,14 +44,20 @@ class XmlOrderImportService
 
     public function importOrder($data,$importOrder)
     {
-        foreach($data as $items){
-            $this->createOrUpdateOrder($items,$importOrder);
+        foreach($data['Orders'] as $items){
+            if(isset($items['Merchant'])){
+                $this->createOrUpdateOrder($items,$importOrder);
+            }else{
+                foreach($items as $records){
+                    $this->createOrUpdateOrder($records,$importOrder);
+                }
+            }
         }
     }
 
     private function createOrUpdateOrder($items, $importOrder)
     {
-
+        
         try {
                 unset($this->errors);
                 $this->errors = array();
@@ -67,54 +71,56 @@ class XmlOrderImportService
                 if(!empty($this->errors)){
                     $orderError = $this->errors;
                 }
-                
+
                 $order = ImportedOrder::create([
-                    'user_id' => $this->userId,
-                    'import_id' => $importOrder->id,
-                    'shipping_service_id' => $shippingService->id,
+                    'user_id'               => $this->userId,
+                    'import_id'             => $importOrder->id,
+                    'shipping_service_id'   => $shippingService->id,
                     'shipping_service_name' => $shippingService->name,
-                    "merchant" => null,
-                    "carrier" => null,
-                    "tracking_id" => null,
-                    "customer_reference" => null,
-                    "weight" => 0,
-                    "length" => 0,
-                    "width" => 0,
-                    "height" => 0,
-                    "measurement_unit" => 'kg/cm',
-                    "is_invoice_created" => true,
-                    "is_shipment_added" => true,
-                    'status' => Order::STATUS_ORDER,
-                    'order_date' => now(), 
-
-                    "sender_first_name" => $items['Sender']['FirstName'],
-                    "sender_last_name" => $items['Sender']['LastName'],
-                    "sender_email" => $items['Sender']['OrderedEmailAddresses']['Address']?$items['Sender']['OrderedEmailAddresses']['Address']:null,
-                    "sender_phone" => $items['Sender']['OrderedPhoneNumbers']['Number']?$items['Sender']['OrderedPhoneNumbers']['Number']:null,
-
-                
-                    'user_declared_freight' => 0,
-                    'error' => $orderError,
-
+                    "merchant"              => $items['Merchant']?$items['Merchant']:null,
+                    "carrier"               => $items['Carrier']?$items['Carrier']:null,
+                    "tracking_id"           => $items['TrackingId']?$items['TrackingId']:null,
+                    "customer_reference"    => $items['CustomerRefrence']?$items['CustomerRefrence']:null,
+                    "weight"                => $items['Weight']?$items['Weight']:null,
+                    "length"                => $items['Length']?$items['Length']:null,
+                    "width"                 => $items['Width']?$items['Width']:null,
+                    "height"                => $items['Height']?$items['Height']:null,
+                    "measurement_unit"      => $items['MeasurmentUnit']?$items['MeasurmentUnit']:null,
+                    "is_invoice_created"    => true,
+                    "is_shipment_added"     => true,
+                    'status'                => Order::STATUS_ORDER,
+                    'order_date'            => now(), 
+                    "sender_first_name"     => $items['SenderFirstName']?$items['SenderFirstName']:null,
+                    "sender_last_name"      => $items['SenderLastName']?$items['SenderLastName']:null,
+                    "sender_email"          => $items['SenderEmail']?$items['SenderEmail']:null,
+                    "sender_phone"          => $items['SenderPhone']?$items['SenderPhone']:null,
+                    'user_declared_freight' => $items['FreightToCustom']?$items['FreightToCustom']:null,
+                    'error'                 => $orderError,
                     'recipient' => [
-                        "first_name" => $items['Recipient']['AddressFields']['FirstName']?$items['Recipient']['AddressFields']['FirstName']:null,
-                        "last_name" => $items['Recipient']['AddressFields']['LastName']?$items['Recipient']['AddressFields']['LastName']:null,
-                        "email" => $items['Recipient']['AddressFields']['OrderedEmailAddresses']['Address']?$items['Recipient']['AddressFields']['OrderedEmailAddresses']['Address']:null,
-                        "phone" => $items['Recipient']['AddressFields']['OrderedPhoneNumbers']['Number']?$items['Recipient']['AddressFields']['OrderedPhoneNumbers']['Number']:null,
-                        "address" => $items['Recipient']['AddressFields']['MultilineAddress']['Line'][0]?$items['Recipient']['AddressFields']['MultilineAddress']['Line'][0]:null,
-                        "address2" => $items['Recipient']['AddressFields']['MultilineAddress']['Line'][1]?$items['Recipient']['AddressFields']['MultilineAddress']['Line'][1]:null,
-                        "street_no" => $items['Recipient']['AddressFields']['MultilineAddress']['Line'][2]?$items['Recipient']['AddressFields']['MultilineAddress']['Line'][2]:null,
-                        "zipcode" => $items['Recipient']['AddressFields']['PostalCode']?$items['Recipient']['AddressFields']['PostalCode']:null,
-                        "city" => $items['Recipient']['AddressFields']['City']?$items['Recipient']['AddressFields']['City']:null,
-                        "account_type" => 'individual',
-                        "state_id" => null,
-                        "country_id" => optional( Country::where('code',$items['Recipient']['AddressFields']['Country'])->first() )->id,
-                        "tax_id" => '',
+                        "first_name"        => $items['RecipientFirstName']?$items['RecipientFirstName']:null,
+                        "last_name"         => $items['RecipientLastName']?$items['RecipientLastName']:null,
+                        "email"             => $items['RecipientEmail']?$items['RecipientEmail']:null,
+                        "phone"             => $items['RecipientPhone']?$items['RecipientPhone']:null,
+                        "address"           => $items['RecipientAddress']?$items['RecipientAddress']:null,
+                        "address2"          => $items['RecipientAddress2']?$items['RecipientAddress2']:null,
+                        "street_no"         => $items['RecipientHouseNo']?$items['RecipientHouseNo']:null,
+                        "zipcode"           => $items['RecipientZipcode']?$items['RecipientZipcode']:null,
+                        "city"              => $items['RecipientCity']?$items['RecipientCity']:null,
+                        "account_type"      => 'individual',
+                        "state_id"          => optional( State::where('code',$items['RecipientStateAbbrivation']?$items['RecipientStateAbbrivation']:null)->first() )->id,
+                        "country_id"        => optional( Country::where('code',$items['RecipientCountryCodeIso']?$items['RecipientCountryCodeIso']:null)->first() )->id,
+                        "tax_id"            => $items['RecipientTaxId']?$items['RecipientTaxId']:null,
                     ],
 
                 ]);
                 
-                $order = $this->addItem($order,optional($items['CustomsInfo']['Contents'])['Item']);
+                if(isset($items['OrderItem']['ProductQuantity'])){
+                    $order = $this->addItem($order,$items['OrderItem']);
+                }else{
+                    foreach($items['OrderItem'] as $itemValue){
+                        $order = $this->addItem($order,$itemValue);
+                    }
+                }
                 
                 // $order->doCalculations();
                 DB::commit();
@@ -130,31 +136,32 @@ class XmlOrderImportService
 
     public function addItem($order,$orderItems)
     {
-        foreach($orderItems as $value){
-            $this->validationRow($value, true);
-            
-            $item =[
-                "quantity" => $value['Quantity']?$value['Quantity']:null,
-                "value" => $value['Value']?$value['Value']:null,
-                "description" => $value['Description']?$value['Description']:null,
-                "sh_code" => null,
-            ];
-
-            $items = $order->items ? $order->items : [];
+        $this->validationRow($orderItems, true);
         
-            array_push($items, $item);
-            
-            $orderError = null;
-            if(!empty($this->errors)){
-                $orderError = $this->errors;
-            }
+        $item =[
+            "quantity"          => $orderItems['ProductQuantity']?$orderItems['ProductQuantity']:null,
+            "value"             => $orderItems['ProductValue']?$orderItems['ProductValue']:null,
+            "description"       => $orderItems['ProductDescription']?$orderItems['ProductDescription']:null,
+            "sh_code"           => $orderItems['NCM']?$orderItems['NCM']:null,
+            "contains_perfume"  => $orderItems['Perfume']? true : false,
+            "contains_battery"  => $orderItems['Battery']? true : false,
+        ];
 
-            $order->update([
-                'items' => $items,
-                'error' => $orderError,
-            ]);
-        }    
-            return $order;
+        $items = $order->items ? $order->items : [];
+    
+        array_push($items, $item);
+        
+        $orderError = null;
+        if(!empty($this->errors)){
+            $orderError = $this->errors;
+        }
+
+        $order->update([
+            'items' => $items,
+            'error' => $orderError,
+        ]);
+
+        return $order;
     }
 
     public function storeImportOrder()
@@ -200,7 +207,7 @@ class XmlOrderImportService
                 'sender_last_name' => 'nullable',
                 'sender_email' => 'required',
                 'sender_phone' => [
-                    'required','max:15','min:13', new PhoneNumberValidator(optional( Country::where('code',$items['Recipient']['AddressFields']['Country'])->first() )->id)
+                    'required','max:15','min:13', new PhoneNumberValidator(optional( Country::where('code',$items['RecipientCountryCodeIso']?$items['RecipientCountryCodeIso']:null)->first() )->id)
                 ],
                 
                 
@@ -215,15 +222,15 @@ class XmlOrderImportService
                 'country_id' => 'required|exists:countries,id',
                 
                 'phone' => [
-                    'required','max:15','min:13', new PhoneNumberValidator(optional( Country::where('code',$items['Recipient']['AddressFields']['Country'])->first() )->id)
+                    'required','max:15','min:13', new PhoneNumberValidator(optional( Country::where('code',$items['RecipientCountryCodeIso']?$items['RecipientCountryCodeIso']:null)->first() )->id)
                 ],
                 'zipcode' => [
-                    'required', new ZipCodeValidator(optional( Country::where('code',$items['Recipient']['AddressFields']['Country'])->first() )->id,optional( State::where('code',$items['Recipient']['AddressFields']['PostalCode'])->first() )->id)
+                    'required', new ZipCodeValidator(optional( Country::where('code',$items['RecipientCountryCodeIso']?$items['RecipientCountryCodeIso']:null)->first() )->id,optional( State::where('code',$items['RecipientStateAbbrivation']?$items['RecipientStateAbbrivation']:null)->first() )->id)
                 ],
 
             ];
 
-            if (Country::where('code', 'BR')->first()->id == optional( Country::where('code',$items['Recipient']['AddressFields']['Country'])->first() )->id ) {
+            if (Country::where('code', 'BR')->first()->id == optional( Country::where('code',$items['RecipientCountryCodeIso']?$items['RecipientCountryCodeIso']:null)->first() )->id ) {
                 $rules['recipient_tax_id'] = ['required', "in:cpf,cnpj,CPF,CNPJ"];
             }
 
@@ -279,48 +286,48 @@ class XmlOrderImportService
     
     public function validationData($isItem, $items)
     {
+        
         if($isItem == true){
             
             return [
-                "quantity" => $items['Quantity'],
-                "value" => $items['Value'],
-                "description" => $items['Description'],
-                "sh_code" => null,
+                "quantity"      => $items['ProductQuantity']?$items['ProductQuantity']:null,
+                "value"         => $items['ProductValue']?$items['ProductValue']:null,
+                "description"   => $items['ProductDescription']?$items['ProductDescription']:null,
+                "sh_code"       => $items['NCM']?$items['NCM']:null,
             ];
         }
 
         if($isItem == false){
             return [
-                "merchant" => null,
-                "carrier" => null,
-                "tracking_id" => null,
-                "customer_reference" => null,
-                "measurement_unit" => 'kg/cm',
-                "weight" => 0,
-                "length" => 0,
-                "width" => 0,
-                "height" => 0,
+                "merchant"          => $items['Merchant']?$items['Merchant']:null,
+                "carrier"           => $items['Carrier']?$items['Carrier']:null,
+                "tracking_id"       => $items['TrackingId']?$items['TrackingId']:null,
+                "customer_reference"=> $items['CustomerRefrence']?$items['CustomerRefrence']:null,
+                "height"            => $items['Height']?$items['Height']:null,
+                "weight"            => $items['Weight']?$items['Weight']:null,
+                "length"            => $items['Length']?$items['Length']:null,
+                "width"             => $items['Width']?$items['Width']:null,
+                "measurement_unit"  => $items['MeasurmentUnit']?$items['MeasurmentUnit']:null,
 
-                "sender_first_name" => $items['Sender']['FirstName'],
-                "sender_last_name" => $items['Sender']['LastName'],
-                "sender_email" => $items['Sender']['OrderedEmailAddresses']['Address'],
-                "sender_phone" => $items['Sender']['OrderedPhoneNumbers']['Number'],
+                "sender_first_name" => $items['SenderFirstName']?$items['SenderFirstName']:null,
+                "sender_last_name"  => $items['SenderLastName']?$items['SenderLastName']:null,
+                "sender_email"      => $items['SenderEmail']?$items['SenderEmail']:null,
+                "sender_phone"      => $items['SenderPhone']?$items['SenderPhone']:null,
 
-                "first_name" =>$items['Recipient']['AddressFields']['FirstName'],
-                "last_name" => $items['Recipient']['AddressFields']['LastName'],
-                "email" => $items['Recipient']['AddressFields']['OrderedEmailAddresses']['Address'],
-                "phone" => $items['Recipient']['AddressFields']['OrderedPhoneNumbers']['Number'],
-                "address" => $items['Recipient']['AddressFields']['MultilineAddress']['Line'][0],
-                "address2" => $items['Recipient']['AddressFields']['MultilineAddress']['Line'][1],
-                "street_no" => $items['Recipient']['AddressFields']['MultilineAddress']['Line'][2],
-                "zipcode" => $items['Recipient']['AddressFields']['PostalCode'],
-                "city" => $items['Recipient']['AddressFields']['City'],
+                "first_name"    => $items['RecipientFirstName']?$items['RecipientFirstName']:null,
+                "last_name"     => $items['RecipientLastName']?$items['RecipientLastName']:null,
+                "email"         => $items['RecipientEmail']?$items['RecipientEmail']:null,
+                "phone"         => $items['RecipientPhone']?$items['RecipientPhone']:null,
+                "address"       => $items['RecipientAddress']?$items['RecipientAddress']:null,
+                "address2"      => $items['RecipientAddress2']?$items['RecipientAddress2']:null,
+                "street_no"     => $items['RecipientHouseNo']?$items['RecipientHouseNo']:null,
+                "zipcode"       => $items['RecipientZipcode']?$items['RecipientZipcode']:null,
+                "city"          => $items['RecipientCity']?$items['RecipientCity']:null,
 
                 
-                "state_id" => null,
-                "country_id" => null,
-                "zipcode" => null,
-                "recipient_tax_id" => null,
+                "state_id" => optional( State::where('code', $items['RecipientStateAbbrivation']?$items['RecipientStateAbbrivation']:null )->first() )->id,
+                "country_id" => optional( Country::where('code',$items['RecipientCountryCodeIso']?$items['RecipientCountryCodeIso']:null )->first() )->id,
+                "recipient_tax_id" => $items['RecipientTaxId']?$items['RecipientTaxId']:null,
             ];
         }
 
