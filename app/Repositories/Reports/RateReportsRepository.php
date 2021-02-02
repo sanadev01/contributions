@@ -41,19 +41,22 @@ class RateReportsRepository
             $order->weight = UnitsConverter::gramsToKg($originalWeight);
     
             $shippingRates = collect();
-            // $shippingValue = collect();
+            $shippingValue = collect();
             foreach (ShippingService::query()->active()->get() as $shippingService) {
                 $shippingService->cacheCalculator = false;
                 if ( $shippingService->isAvailableFor($order) ){
                     $rate = $shippingService->getRateFor($order,true,false);
+                    $value = $shippingService->getRateFor($order,false,false);
                     $shippingRates->push($rate);
+                    $shippingValue->push($value);
                 }
             }
 
             $profitPackageSlabRates->push([
                 'weight' => $originalWeight,
+                'profit'  => $profitValue,
+                'shipping'  => $shippingValue,
                 'rates'  => $shippingRates,
-                'value'  => $profitValue,
             ]);
         }
 

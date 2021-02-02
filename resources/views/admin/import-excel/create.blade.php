@@ -58,6 +58,7 @@
                                         <option value="">  @lang('orders.import-excel.Select Format')</option>
                                         <option value="homedelivery">  @lang('orders.import-excel.Homedelivery Format')</option>
                                         <option value="shopify">  @lang('orders.import-excel.Shopify Format')</option>
+                                        <option value="xml">  @lang('orders.import-excel.Xml Format')</option>
                                     </select>
                                     @error('format')
                                         <div class="text-danger">
@@ -72,7 +73,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="projectinput1">@lang('orders.import-excel.Select Excel File to Upload')</label>
-                                    <input type="file" class="form-control" name="excel_file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" required>
+                                    <input type="file" class="form-control" name="excel_file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel, text/xml" required>
                                     @error('excel_file')
                                         <div class="text-danger">
                                             {{ $message }}
