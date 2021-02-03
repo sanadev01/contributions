@@ -1,4 +1,4 @@
-<tr @if( $order->user->hasRole('retailer') &&  $order->status == App\Models\Order::STATUS_PAYMENT_PENDING) class="bg-danger text-white" @endif>
+<tr @if( $order->user->hasRole('retailer') &&  !$order->isPaid()) class="bg-danger text-white" @endif>
     <td>
         
         <div class="vs-checkbox-con vs-checkbox-primary" title="@lang('orders.Bulk Print')">
@@ -87,7 +87,7 @@
         @if( $order->isPaid() )
             <i class="feather icon-check text-success"></i>
         @else
-            <i class="feather icon-x text-danger"></i>
+            <i class="feather icon-x  @if( $order->user->hasRole('retailer') &&  !$order->isPaid()) text-white @else text-danger @endif"></i>
         @endif
     </td>
     <td class="d-flex no-print" >
