@@ -1,5 +1,6 @@
-<tr>
+<tr @if( $order->user->hasRole('retailer') &&  $order->status == App\Models\Order::STATUS_PAYMENT_PENDING) class="bg-danger text-white" @endif>
     <td>
+        
         <div class="vs-checkbox-con vs-checkbox-primary" title="@lang('orders.Bulk Print')">
             <input type="checkbox" name="orders[]" class="bulk-orders" value="{{$order->id}}">
             <span class="vs-checkbox vs-checkbox-lg">
