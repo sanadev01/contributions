@@ -101,6 +101,9 @@ return [
         'Shopify Format' => 'Formato Shopify',
         'Xml Format' => 'Formato Xml',
         'Excel File Format' => 'Formato de arquivo do Excel',
+        'Files Tempelate' => 'Modelo de arquivos [arquivos com mais de 15 MB não permitidos]',
+        'Choose the format' => 'Escolha o formato',
+        'Orders-uploaded' => 'Arquivos enviados do pedido',
     ],
     'actions' => [
         'actions' => 'Ações',
