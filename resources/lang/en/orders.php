@@ -102,6 +102,8 @@ return [
         'Shopify Format' => 'Shopify Format',
         'Xml Format' => 'Xml Format',
         'Excel File Format' => 'Excel File Format',
+        'Files Tempelate' => 'Files Template [files large than 15mb not allowed]',
+        'Choose the format' => 'Choose the format',
 
     ],
     'actions' => [
