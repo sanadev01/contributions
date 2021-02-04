@@ -15,7 +15,7 @@
             </div>
         </div>
     
-        <div class="card-content collapse show">
+        {{-- <div class="card-content collapse show">
             <div class="row">
                 
                 <div class="row col-12">
@@ -45,7 +45,7 @@
                     </a>
                 </div>
             </div>
-        </div>
+        </div> --}}
         <div class="card-body">
             @if( $errors->count() )
                 <div class="alert alert-danger">
@@ -113,20 +113,61 @@
                             </div>
                         </div>
                     </div>
-                    {{-- <div class="row justify-content-center">
+                    <div class="row justify-content-center">
                         <div class="col-md-10">
-                            <div class="alert alert-warning">
+                            <div class="alert" style="background: #ffcaca !important;">
                                 <ol>
-                                    <li>@lang('orders.import-excel.Upload only Excel files')</li>
+                                    {{-- <li>@lang('orders.import-excel.Upload only Excel files')</li>
                                     <li>@lang('orders.import-excel.Files larger than 15Mb are not allowed')</li>
-                                    <li>@lang('orders.import-excel.Download and fill in the data in the sample file below to avoid errors')</li>
                                     <li class="mt-2">@lang('orders.import-excel.Download the sample') Homedelivery <a href="{{ asset('uploads/order-import.xlsx') }}" class="btn btn-success btn-sm">@lang('orders.import-excel.Download')</a></li>
                                     <li class="mt-2">@lang('orders.import-excel.Download the sample') Shopify <a href="{{ asset('uploads/shopify-format.xlsx') }}" class="btn btn-success btn-sm">@lang('orders.import-excel.Download')</a></li>
-                                    <li class="mt-2">@lang('orders.import-excel.Download the sample') Xml <a href="{{ asset('uploads/xml-format.xml') }}" class="btn btn-success btn-sm">@lang('orders.import-excel.Download')</a></li>
+                                    <li class="mt-2">@lang('orders.import-excel.Download the sample') Xml <a href="{{ asset('uploads/xml-format.xml') }}" class="btn btn-success btn-sm">@lang('orders.import-excel.Download')</a></li> --}}
+                                    
+                                    <li>@lang('orders.import-excel.Files Tempelate')</li>
+                                    <li>@lang('orders.import-excel.Download and fill in the data in the sample file below to avoid errors')</li>
+                                    <li>@lang('orders.import-excel.Choose the format')</li>
                                 </ol>
+                                <div class="row col-12">
+                                    <div class="col-2">
+                                        <div class="row">
+                                            <div class="col-12 d-flex justify-content-center">
+                                                Homedelivery Template
+                                            </div>
+                                            <div class="col-12 d-flex justify-content-center">
+                                                <a href="{{ asset('uploads/order-import.xlsx') }}" class="btn btn-success">
+                                                    <i class="feather icon-download"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="row">
+                                            <div class="col-12 d-flex justify-content-center">
+                                                Shopify Template
+                                            </div>
+                                            <div class="col-12 d-flex justify-content-center">
+                                                <a href="{{ asset('uploads/shopify-format.xlsx') }}" class="btn btn-success">
+                                                    <i class="feather icon-download"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="row">
+                                            <div class="col-12 d-flex justify-content-center">
+                                                XML Template
+                                            </div>
+                                            <div class="col-12 d-flex justify-content-center">
+                                                <a href="{{ asset('uploads/xml-format.xml') }}" class="btn btn-success">
+                                                    <i class="feather icon-download"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div> --}}
+                    </div>
                 </div>
 
                 <div class="form-actions pl-5">
