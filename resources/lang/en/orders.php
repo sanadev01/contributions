@@ -104,6 +104,7 @@ return [
         'Excel File Format' => 'Excel File Format',
         'Files Tempelate' => 'Files Template [files large than 15mb not allowed]',
         'Choose the format' => 'Choose the format',
+        'Orders-uploaded' => "Order's Uploaded files",
 
     ],
     'actions' => [
