@@ -40,4 +40,5 @@ return [
         'Sales Commission' => 'Comissões de venda',
     ],
     'activity' => 'Atividade',
+    'Print Label' => 'Imprimir etiqueta em massa',
 ];

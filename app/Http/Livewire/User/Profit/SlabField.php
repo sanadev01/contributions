@@ -25,11 +25,11 @@ class SlabField extends Component
     {
         $this->slab = $slab;
         $this->key = $index;
-        $this->profit = $slab['value'];
-        $this->weight = $slab['max_weight'];
+        $this->profit = $slab['value']?$slab['value']:0;
+        $this->weight = $slab['max_weight']?$slab['max_weight']:0;
         $this->package = $package;
-         $this->sale = $this->getSaleRate($this->package, $this->weight, true);
-         $this->shipping = $this->getSaleRate($this->package, $this->weight, false);
+        $this->sale = $this->getSaleRate($this->package, $this->weight, true);
+        $this->shipping = $this->getSaleRate($this->package, $this->weight, false);
         
     }
 

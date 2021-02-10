@@ -255,5 +255,18 @@ return [
         'Import' => 'Importar',
         'Download' => 'Baixar',
     ],
-    'update-label' => 'Você tem certeza que quer mudar o número do rastreo Se você continuar o rastreo anterior sera alterado Quer continuar?'
+    'update-label' => 'Você tem certeza que quer mudar o número do rastreo Se você continuar o rastreo anterior sera alterado Quer continuar?',
+    'print-label' => [
+        'Scan Packages' => 'Scan Packages',
+        'Scan Package' => 'Scan Package',
+        'Barcode' => 'Código de barras',
+        'Client' => 'Cliente',
+        'Dimensions' => 'Dimensões',
+        'Kg' => 'Kg',
+        'Reference' => 'Referência',
+        'Recpient' => 'Destinatário',
+        'Action' => 'Açao',
+        'Remove' => 'Remover',
+        'Add Row' => 'Adicionar linha',
+    ]
 ];

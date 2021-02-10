@@ -26,7 +26,7 @@
          @enderror
      </td>
      <td>
-         <input type="text" class="form-control shipping" name="shipping" value="{{$this->getSaleRate($package, $slab['max_weight'], false) }}" id="shipping_{{$key}}" data-key="{{$key}}">
+         <input type="text" class="form-control shipping" name="shipping" value="@if($slab['max_weight']) {{$this->getSaleRate($package, $slab['max_weight'], false) }} @endif" id="shipping_{{$key}}" data-key="{{$key}}">
      </td>
      <td>
          <input type="text" class="form-control selling" id="selling_{{$key}}"  value="{{ $sale }}"  data-key="{{$key}}">
