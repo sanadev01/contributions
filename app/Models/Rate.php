@@ -1,0 +1,38 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use LaravelJsonColumn\Traits\JsonColumn;
+use Illuminate\Database\Eloquent\Builder;
+use Spatie\Activitylog\Traits\LogsActivity;
+
+class Rate extends Model
+{
+    use JsonColumn;
+    use LogsActivity;
+    protected static $logAttributes = ['*'];
+    protected static $logOnlyDirty = true;
+    protected static $submitEmptyLogs = false;
+    protected $guarded = [];
+
+    protected $casts = [
+        'data' => 'Array',
+    ];
+
+
+    public function shippingService()
+    {
+        return $this->belongsTo(ShippingService::class);
+    }
+
+    public function scopeByCountry(Builder $builder,$countryId)
+    {
+        return $builder->where('country_id',$countryId);
+    }
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class, 'country_id');
+    }
+}

@@ -1,0 +1,27 @@
+<?php
+
+return [ 
+    'My Tickets' => 'My Tickets',
+    'User' => 'User',
+    'TicketID' => 'TicketID',
+    'Issue' => 'Issue',
+    'Status' => 'Status',
+    'Detail' => 'Detail',
+    'Create New Ticket' => 'Create New Ticket',
+    'Issue' => 'Issue',
+    'Details' => 'Details',
+    'Save' => 'Save',
+    'Back To List' => 'Back To List',
+    'Support Tickets' => 'Support Tickets',
+    'Status' => 'Status',
+    'Reply' => 'Reply',
+    'note' => 'Our team will process each ticket and reply between 24 and 48 business hours.',
+    'open' => 'open',
+    'close' => 'close',
+    'Subject' => 'Subject',
+    'Reset' => 'Reset',
+    'Close Ticket' => 'Close Ticket',
+    'Generated' => 'Ticket Generated Successfully',
+    'Comment' => 'Comment Added',
+    'Closed' => 'Ticket Closed',
+];
