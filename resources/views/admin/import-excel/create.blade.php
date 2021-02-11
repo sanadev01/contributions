@@ -14,97 +14,172 @@
                 </ul>
             </div>
         </div>
-        <div class="card-content collapse show">
-            <div class="card-body">
-                @if( $errors->count() )
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach($errors->all() as $error)
-                                <li>
-                                    {{ $error }}
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-                <form class="form" action="{{ route('admin.import.import-excel.store') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <div class="form-body">
-                        <div class="row justify-content-center">
-                            <div class="col-md-10">
-                                <h4 class="form-section">@lang('orders.import-excel.Import Orders via Excel Sheet')</h4>
-                            </div>
-                        </div>
-
-                        <div class="row justify-content-center">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="projectinput1">@lang('orders.import-excel.Excel File Name')</label>
-                                    <input type="text" class="form-control" name="excel_name" placeholder="Enter file name" required>
-                                    @error('excel_name')
-                                        <div class="text-danger">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="row justify-content-center">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="projectinput1">@lang('orders.import-excel.Excel File Format')</label>
-                                    <select class="form-control" name="format">
-                                        <option value="">  @lang('orders.import-excel.Select Format')</option>
-                                        <option value="homedelivery">  @lang('orders.import-excel.Homedelivery Format')</option>
-                                        <option value="shopify">  @lang('orders.import-excel.Shopify Format')</option>
-                                    </select>
-                                    @error('format')
-                                        <div class="text-danger">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="row justify-content-center">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="projectinput1">@lang('orders.import-excel.Select Excel File to Upload')</label>
-                                    <input type="file" class="form-control" name="excel_file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" required>
-                                    @error('excel_file')
-                                        <div class="text-danger">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row justify-content-center">
-                            <div class="col-md-10">
-                                <div class="alert alert-warning">
-                                    <ol>
-                                        <li>@lang('orders.import-excel.Upload only Excel files')</li>
-                                        <li>@lang('orders.import-excel.Files larger than 15Mb are not allowed')</li>
-                                        <li>@lang('orders.import-excel.Download and fill in the data in the sample file below to avoid errors')</li>
-                                        <li class="mt-2">@lang('orders.import-excel.Download the sample') <a href="{{ asset('uploads/order-import.xlsx') }}" class="btn btn-success btn-sm">@lang('orders.import-excel.Download')</a></li>
-                                    </ol>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-actions pl-5">
-                        <a href="{{ route('admin.rates.shipping-rates.index') }}" class="btn btn-warning mr-1 ml-3">
-                            <i class="ft-x"></i> @lang('shipping-rates.Cancel')
-                        </a>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="la la-check-square-o"></i> @lang('shipping-rates.Import')
-                        </button>
-                    </div>
-                </form>
+    
+        {{-- <div class="card-content collapse show">
+            <div class="row">
+                
+                <div class="row col-12">
+                    <h5 class="col-4 offset-8" id="basic-layout-form">@lang('orders.import-excel.Files Tempelate')</h5>
+                    <h5 class="col-4 offset-8" id="basic-layout-form">@lang('orders.import-excel.Choose the format')</h5>
+                </div>
+                <div class="row col-12">
+                    <p class="col-1 offset-8 d-flex justify-content-center" id="basic-layout-form">Homedeliverybr Template</p>
+                    <p class="col-1 d-flex justify-content-center" id="basic-layout-form">Shopify Template</p>
+                    <p class="col-1 d-flex justify-content-center" id="basic-layout-form">XML Template</p>
+                </div>
             </div>
+            <div class="row col-12">
+                <div class="col-1 d-flex justify-content-center offset-8">
+                    <a href="{{ asset('uploads/order-import.xlsx') }}" class="btn btn-success">
+                        <i class="feather icon-download"></i>
+                    </a>
+                </div>
+                <div class="col-1 d-flex justify-content-center">
+                    <a href="{{ asset('uploads/shopify-format.xlsx') }}" class="btn btn-success">
+                        <i class="feather icon-download"></i>
+                    </a>
+                </div>
+                <div class="col-1 d-flex justify-content-center">
+                    <a href="{{ asset('uploads/xml-format.xml') }}" class="btn btn-success">
+                        <i class="feather icon-download"></i>
+                    </a>
+                </div>
+            </div>
+        </div> --}}
+        <div class="card-body">
+            @if( $errors->count() )
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li>
+                                {{ $error }}
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            <form class="form" action="{{ route('admin.import.import-excel.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="form-body">
+                    <div class="row justify-content-center">
+                        <div class="col-md-10">
+                            <h4 class="form-section">@lang('orders.import-excel.Import Orders via Excel Sheet')</h4>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="projectinput1">@lang('orders.import-excel.Excel File Name')</label>
+                                <input type="text" class="form-control" name="excel_name" placeholder="Enter file name" required>
+                                @error('excel_name')
+                                    <div class="text-danger">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="projectinput1">@lang('orders.import-excel.Excel File Format')</label>
+                                <select class="form-control" name="format">
+                                    <option value="">  @lang('orders.import-excel.Select Format')</option>
+                                    <option value="homedelivery">  @lang('orders.import-excel.Homedelivery Format')</option>
+                                    <option value="shopify">  @lang('orders.import-excel.Shopify Format')</option>
+                                    <option value="xml">  @lang('orders.import-excel.Xml Format')</option>
+                                </select>
+                                @error('format')
+                                    <div class="text-danger">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="projectinput1">@lang('orders.import-excel.Select Excel File to Upload')</label>
+                                <input type="file" class="form-control" name="excel_file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel, text/xml" required>
+                                @error('excel_file')
+                                    <div class="text-danger">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-10">
+                            <div class="alert" style="background: #ffcaca !important;">
+                                <ol>
+                                    {{-- <li>@lang('orders.import-excel.Upload only Excel files')</li>
+                                    <li>@lang('orders.import-excel.Files larger than 15Mb are not allowed')</li>
+                                    <li class="mt-2">@lang('orders.import-excel.Download the sample') Homedelivery <a href="{{ asset('uploads/order-import.xlsx') }}" class="btn btn-success btn-sm">@lang('orders.import-excel.Download')</a></li>
+                                    <li class="mt-2">@lang('orders.import-excel.Download the sample') Shopify <a href="{{ asset('uploads/shopify-format.xlsx') }}" class="btn btn-success btn-sm">@lang('orders.import-excel.Download')</a></li>
+                                    <li class="mt-2">@lang('orders.import-excel.Download the sample') Xml <a href="{{ asset('uploads/xml-format.xml') }}" class="btn btn-success btn-sm">@lang('orders.import-excel.Download')</a></li> --}}
+                                    
+                                    <li>@lang('orders.import-excel.Files Tempelate')</li>
+                                    <li>@lang('orders.import-excel.Download and fill in the data in the sample file below to avoid errors')</li>
+                                    <li>@lang('orders.import-excel.Choose the format')</li>
+                                </ol>
+                                <div class="row col-12">
+                                    <div class="col-2">
+                                        <div class="row">
+                                            <div class="col-12 d-flex justify-content-center">
+                                                Homedelivery Template
+                                            </div>
+                                            <div class="col-12 d-flex justify-content-center">
+                                                <a href="{{ asset('uploads/order-import.xlsx') }}" class="btn btn-success">
+                                                    <i class="feather icon-download"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="row">
+                                            <div class="col-12 d-flex justify-content-center">
+                                                Shopify Template
+                                            </div>
+                                            <div class="col-12 d-flex justify-content-center">
+                                                <a href="{{ asset('uploads/shopify-format.xlsx') }}" class="btn btn-success">
+                                                    <i class="feather icon-download"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="row">
+                                            <div class="col-12 d-flex justify-content-center">
+                                                XML Template
+                                            </div>
+                                            <div class="col-12 d-flex justify-content-center">
+                                                <a href="{{ asset('uploads/xml-format.xml') }}" class="btn btn-success">
+                                                    <i class="feather icon-download"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions pl-5">
+                    <a href="{{ route('admin.rates.shipping-rates.index') }}" class="btn btn-warning mr-1 ml-3">
+                        <i class="ft-x"></i> @lang('shipping-rates.Cancel')
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="la la-check-square-o"></i> @lang('shipping-rates.Import')
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
+   
 @endsection

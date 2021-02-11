@@ -59,3 +59,24 @@
         </div>
     </div>
 @endsection
+@section('js')
+<script>
+    $(document).ready(function(){
+      $(".rate").keyup(function(){
+        var profit = $(this).val();
+        var key = $(this).data('key');
+        var shipping = $('#shipping_'+key).val();
+        var result = (parseFloat(shipping) * (parseFloat(profit) / 100)) + parseFloat(shipping);
+        $('#selling_'+key).val(result.toFixed(2));
+      });
+      $(".selling").keyup(function(){
+          var selling = $(this).val();
+          var key = $(this).data('key');
+          var shipping = $('#shipping_'+key).val();
+         var result = ((parseFloat(selling) - parseFloat(shipping)) * 100) / parseFloat(shipping);
+         $('#profit_'+key).val(result.toFixed(2));
+  
+      });
+    });
+    </script>
+@endsection

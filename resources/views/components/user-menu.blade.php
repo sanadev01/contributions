@@ -69,7 +69,7 @@
                 <ul class="menu-content">
 
                     @can('viewAny', App\Models\ProfitPackage::class)
-                    <li class="{{ $isActive(['admin.rates.profit-packages.index']) }}">
+                    <li class="{{ $isActive(['admin.rates.profit-packages.index','admin.rates.profit-packages.create','admin.rates.profit-packages.edit','admin.rates.profit-packages-upload.create']) }}">
                         <a href="{{ route('admin.rates.profit-packages.index') }}">
                             <i class="feather icon-circle"></i>
                             <span class="menu-title">@lang('menu.Profit Packages')</span>

@@ -23,4 +23,6 @@ return [
     'Generated' => 'Ingresso gerado com sucesso',
     'Comment' => 'Comentário adicionado',
     'Closed' => 'Ingresso fechado',
+    'Save Note' => 'Salvar nota',
+    'Notes' => 'Notas',
 ];

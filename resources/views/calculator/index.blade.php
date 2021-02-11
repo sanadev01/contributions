@@ -49,7 +49,7 @@
                                             <option {{ old('country_id') == $country->id ? 'selected' : '' }} value="{{ $country->id }}">{{ $country->name }}</option>
                                         @endforeach
                                     </select>
-                                </div>  
+                                </div>
                             </div>
                             <div class="row mb-1">
                                 <div class="controls col-12">

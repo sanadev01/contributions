@@ -10,7 +10,7 @@ use App\Models\ShippingService;
 use App\Services\Calculators\RatesCalculator;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Calculators\WeightCalculator;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Resources\CollectsResources;
 
 class RateReportsRepository
@@ -37,23 +37,28 @@ class RateReportsRepository
             $order->measurement_unit = 'kg/cm';
             $order->recipient = $recipient;
             $originalWeight =  $profitPackageSlab['max_weight'];
+            $profitValue =  $profitPackageSlab['value'];
             $order->weight = UnitsConverter::gramsToKg($originalWeight);
     
             $shippingRates = collect();
+            $shippingValue = collect();
             foreach (ShippingService::query()->active()->get() as $shippingService) {
                 $shippingService->cacheCalculator = false;
                 if ( $shippingService->isAvailableFor($order) ){
                     $rate = $shippingService->getRateFor($order,true,false);
+                    $value = $shippingService->getRateFor($order,false,false);
                     $shippingRates->push($rate);
+                    $shippingValue->push($value);
                 }
             }
 
             $profitPackageSlabRates->push([
                 'weight' => $originalWeight,
+                'profit'  => $profitValue,
+                'shipping'  => $shippingValue,
                 'rates'  => $shippingRates,
             ]);
         }
-
 
         return $profitPackageSlabRates;
     }

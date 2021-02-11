@@ -12,7 +12,6 @@ class Recipient extends Model
     protected static $logAttributes = ['*'];
     protected static $logOnlyDirty = true;
     protected static $submitEmptyLogs = false;
-
     public function country()
     {
         return $this->belongsTo(Country::class);

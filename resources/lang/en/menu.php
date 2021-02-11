@@ -4,7 +4,7 @@ return [
     'dashboard' => 'Dashboard',
     'import-excel' => 'Excel Import',
     'import-excel-order' => [
-        'excel' => 'Excel Import',
+        'excel' => 'Upload Files',
         'upload' => 'Import Orders',
         'order' => 'Imported Orders',
     ],

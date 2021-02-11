@@ -4,7 +4,7 @@ return [
     'dashboard' => 'Painel de controle',
     'import-excel' => 'Importação de Excel',
     'import-excel-order' => [
-        'excel' => 'Importação de Excel',
+        'excel' => 'Upload arquivos',
         'upload' => 'Pedidos de importação',
         'order' => 'Pedidos importados',
     ],

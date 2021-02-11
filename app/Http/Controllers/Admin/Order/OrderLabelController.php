@@ -14,7 +14,6 @@ class OrderLabelController extends Controller
     public function index(Request $request, Order $order)
     {
         $this->authorize('canPrintLable',$order);
-
         return view('admin.orders.label.index',compact('order'));
     }
 
