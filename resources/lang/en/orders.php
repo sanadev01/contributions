@@ -257,5 +257,18 @@ return [
         'Import' => 'Import',
         'Download' => 'Download'
     ],
-    'update-label' => 'Are you sure you want make change on the tracking number, if you proceed tracking will be change'
+    'update-label' => 'Are you sure you want make change on the tracking number, if you proceed tracking will be change',
+    'print-label' => [
+        'Scan Packages' => 'Scan Packages',
+        'Scan Package' => 'Scan Package',
+        'Barcode' => 'Barcode',
+        'Client' => 'Client',
+        'Dimensions' => 'Dimensions',
+        'Kg' => 'Kg',
+        'Reference' => 'Reference',
+        'Recpient' => 'Recpient',
+        'Action' => 'Action',
+        'Remove' => 'Remove',
+        'Add Row' => 'Add Row',
+    ]
 ];
