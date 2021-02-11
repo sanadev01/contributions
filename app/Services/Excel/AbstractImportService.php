@@ -61,6 +61,8 @@ abstract class AbstractImportService
 
     public function getValue($cell)
     {
-        return $this->workSheet->getCell($cell)->getCalculatedValue();
+        // return $this->workSheet->getCell($cell)->getCalculatedValue();
+        return $this->workSheet->getCell($cell)->getFormattedValue();
+        
     }
 }

@@ -32,9 +32,9 @@ class ProfitPackageRateExport extends AbstractExportService
 
         foreach ($this->rates as $rate) {
             $this->setCellValue('A'.$row, $rate['weight'] . ' g');
-            $this->setCellValue('B'.$row, $rate['profit'] );
-            $this->setCellValue('C'.$row, $rate['shipping'][0] );
-            $this->setCellValue('D'.$row, "=C$row*(B$row/100)+C$row");
+            $this->setCellValue('B'.$row, $rate['shipping'][0] );
+            $this->setCellValue('C'.$row, $rate['profit'] );
+            $this->setCellValue('D'.$row, "=B$row*(C$row/100)+B$row");
             $row++;
         }
         $this->currentRow = $row;
@@ -44,12 +44,12 @@ class ProfitPackageRateExport extends AbstractExportService
     {
         $this->setColumnWidth('A', 20);
         $this->setCellValue('A1', 'weight');
-
+        
         $this->setColumnWidth('B', 20);
-        $this->setCellValue('B1', 'profit');
+        $this->setCellValue('B1', 'cost');
         
         $this->setColumnWidth('C', 20);
-        $this->setCellValue('C1', 'shipping');
+        $this->setCellValue('C1', 'profit');
         
         $this->setColumnWidth('D', 20);
         $this->setCellValue('D1', 'rates');
