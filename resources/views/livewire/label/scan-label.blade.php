@@ -32,16 +32,17 @@
                     {{ $package['kg'] }}
                 </td>
                 <td>
-                    @if ($order)
+                    @if ($package['reference'])
                         HD-{{ $package['reference'] }}
                     @endif 
                 </td>
                 <td>
                     {{ $package['recpient'] }}
                 </td>
-            
+               
                 <td>
-                    @if( $order )
+                    
+                    @if( $package['client'] )
                         <a href="{{ route('admin.label.scan.show',$order) }}" class="btn btn-success mr-2" title="@lang('orders.import-excel.Download')">
                             <i class="feather icon-download"></i>@lang('orders.import-excel.Download')
                         </a>
@@ -63,3 +64,45 @@
     </table>
 @include('layouts.livewire.loading')
 </div>
+
+{{-- 
+@push('lvjs-stack')
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            function loadLabel(orderId,referenceId,updateLabel){
+                setTimeout(function(){
+                    var url = '{{ route("admin.orders.label.store","__order__") }}';
+                    $.post(url.replace("__order__",orderId),{
+                        update_label: updateLabel,
+                        buttons_only: true
+                    })
+                    .done(function(response){
+                        window.labelLoader  = $(referenceId).html();
+                        $(referenceId).html(response)
+                    })
+                    .fail(function(error){
+                        $(referenceId).text(error.message);
+                    })
+                },2000)
+            }
+
+            function reloadLabel(orderId,referenceId){
+                $(referenceId).html(window.labelLoader);
+                loadLabel(orderId,referenceId,false);
+            }
+
+            function updateLabel(orderId,referenceId){
+                $(referenceId).html(window.labelLoader);
+                loadLabel(orderId,referenceId,true);
+            }
+
+            $(document).ready(function(){
+                setTimeout(()=>{
+                    $('.label-area').each(function(){
+                        $(this).click();
+                    })
+                },200)
+            })
+        })
+    </script>
+@endpush --}}
