@@ -32,16 +32,17 @@
                     {{ $package['kg'] }}
                 </td>
                 <td>
-                    @if ($order)
+                    @if ($package['reference'])
                         HD-{{ $package['reference'] }}
                     @endif 
                 </td>
                 <td>
                     {{ $package['recpient'] }}
                 </td>
-            
+               
                 <td>
-                    @if( $order )
+                    
+                    @if( $package['client'] )
                         <a href="{{ route('admin.label.scan.show',$order) }}" class="btn btn-success mr-2" title="@lang('orders.import-excel.Download')">
                             <i class="feather icon-download"></i>@lang('orders.import-excel.Download')
                         </a>

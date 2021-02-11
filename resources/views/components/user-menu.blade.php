@@ -35,14 +35,14 @@
                     </a>
                 </li>
             @endcan
-            @can('labelPrint', App\Models\Order::class)
+            {{-- @can('labelPrint', App\Models\Order::class)
                 <li class="{{ $isActive(['admin.label.scan.create','admin.import.import-excel.show']) }}">
                     <a href="{{ route('admin.label.scan.create') }}">
                         <i class="feather icon-file"></i>
                         <span class="menu-title">@lang('menu.Print Label')</span>
                     </a>
                 </li>
-            @endcan
+            @endcan --}}
             @can('viewAny', App\Models\PaymentInvoice::class)
                 <li class="nav-item {{ $isActive(['admin.payment-invoices.index','admin.payment-invoices.edit']) }}">
                     <a href="{{ route('admin.payment-invoices.index') }}">
