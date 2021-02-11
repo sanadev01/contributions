@@ -2,54 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c8727ccf-90da-46c1-90b9-36a4d24260af" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/commandlinetools/Laravel_1_31_21__3_10_AM.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Http/Livewire/SupportTicket/Note.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Http/Livewire/SupportTicket/ShowTicket.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Http/Livewire/User/Profit/SlabField.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Services/Excel/Import/XmlOrderImportService.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2021_01_28_073050_create_document_ticket_comment_table.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2021_01_28_121228_add_note_to_tickets_table.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/uploads/shopify-format.xlsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/uploads/xml-format.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/js/app.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/js/components/ExampleComponent.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/livewire/support-ticket/note.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/livewire/support-ticket/show-ticket.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/livewire/user/profit/slab-field.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/Feature/ExampleTest.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/Unit/ExampleTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/Order/OrderLabelController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/Order/OrderLabelController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Livewire/User/Profit/Slabs.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Livewire/User/Profit/Slabs.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/hd-label-logo.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Models/Order.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Order.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/Recipient.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Recipient.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/TicketComment.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/TicketComment.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Providers/AppServiceProvider.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Providers/AppServiceProvider.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Repositories/ImportOrderRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Repositories/ImportOrderRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Repositories/Reports/RateReportsRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Repositories/Reports/RateReportsRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Repositories/TicketRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Repositories/TicketRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Services/Excel/Export/ProfitPackageRateExport.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Services/Excel/Export/ProfitPackageRateExport.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/lang/en/menu.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/lang/en/menu.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/lang/en/orders.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/lang/en/orders.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/lang/en/profitpackage.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/lang/en/profitpackage.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/lang/en/tickets.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/lang/en/tickets.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/lang/pt/menu.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/lang/pt/menu.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/lang/pt/orders.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/lang/pt/orders.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/lang/pt/profitpackage.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/lang/pt/profitpackage.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/lang/pt/tickets.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/lang/pt/tickets.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/import-excel/create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/import-excel/create.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/import-excel/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/import-excel/index.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/orders/components/order-row.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/orders/components/order-row.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/orders/label/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/orders/label/index.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/rates/profit-packages/edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/rates/profit-packages/edit.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/tickets/show.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/tickets/show.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/calculator/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/calculator/index.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/components/user-menu.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/components/user-menu.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/emails/user/new-ticket-comment-added.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/emails/user/new-ticket-comment-added.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/livewire/user/profit/slabs.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/livewire/user/profit/slabs.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Services/Correios/Services/Brazil/CN23LabelMaker.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Services/Correios/Services/Brazil/CN23LabelMaker.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/labels/brazil/cn23/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/labels/brazil/cn23/index.blade.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,6 +26,14 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/app/Services/Correios/Services/Brazil/Client.php" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" />

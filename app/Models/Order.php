@@ -232,6 +232,16 @@ class Order extends Model implements Package
         }
     }
 
+    public function hasBattery()
+    {
+        return $this->items()->where('contains_battery',true)->count() > 0;
+    }
+
+    public function hasPerfume()
+    {
+        return $this->items()->where('contains_perfume',true)->count() > 0;
+    }
+
     public function setCN23(array $data)
     {
         $this->update([

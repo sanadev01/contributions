@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <style>
-        
+
         @page {
             size: 10cm 15cm;
             margin: 0px;
@@ -249,7 +249,12 @@
         <div class="origin">
             <h4>Origem:</h4>
             {{ $order->sender_first_name }} <br>
-            {{ $order->warehouse_number }}
+            <strong>WHR#:</strong>{{ $order->warehouse_number }} <br>
+            <strong>CR#:</strong>{{ $order->customer_reference }} <br>
+            <strong>Weight</strong> {{ $order->getOriginalWeight('kg') }}kg|{{ $order->getOriginalWeight('lbs') }}lbs
+            <br>
+            <strong>{{ $order->length }} x {{ $order->width }} x {{$order->height}} ({{$order->isWeightInKg() ? 'cm' :'in'}})</strong>
+
         </div>
     </div>
     <div class="serivce-zipcode">
@@ -278,7 +283,7 @@
         Nome legível: _______________________________________________ <br>
         Documento: ___________________Rúbrica:______________________
     </div>
-    
+
     @include('labels.brazil.cn23.items')
 
     @if ($hasSumplimentary)

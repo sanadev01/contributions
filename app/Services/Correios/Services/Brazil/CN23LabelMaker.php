@@ -26,7 +26,7 @@ class CN23LabelMaker implements HasLableExport
     {
         $this->hasSuplimentary = false;
         $this->corriosLogo = \public_path('images/correios.png');
-        $this->partnerLogo =  public_path('images/hd-2x2.5.png');
+        $this->partnerLogo =  public_path('images/hd-label-logo.png');
         $this->packetType = 'Packet <br> Standard';
         $this->contractNumber = 'Client <br>  9912501576/2020 <br> – SE/RJ';
         $this->service = 1;
