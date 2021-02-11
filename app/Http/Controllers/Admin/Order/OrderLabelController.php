@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Order;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\ShippingService;
 use App\Repositories\CorrieosBrazilLabelRepository;
 use App\Repositories\LabelRepository;
 use Illuminate\Http\Request;
@@ -22,7 +23,9 @@ class OrderLabelController extends Controller
         $this->authorize('canPrintLable',$order);
 
 
-        return $this->handleCorreiosLabels($request,$order);
+        if($order->shippingService->api == ShippingService::API_CORREIOS){
+            return $this->handleCorreiosLabels($request,$order);
+        }
 
         $labelData = null;
         $error = null;

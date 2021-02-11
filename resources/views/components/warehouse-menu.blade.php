@@ -6,14 +6,14 @@
     </a>
     <ul class="menu-content">
 
-        <li class="{{ $isActive(['warehouse.containers.index']) }}">
+        <li class="{{ $isActive(['warehouse.containers.index','warehouse.containers.edit','warehouse.containers.packages.index']) }}">
             <a href="{{ route('warehouse.containers.index') }}">
                 <i class="feather icon-circle"></i>
                 <span class="menu-title">@lang('menu.Warehouse.Containers')</span>
             </a>
         </li>
 
-        <li class="{{ $isActive(['warehouse.delivery_bill.index']) }}">
+        <li class="{{ $isActive(['warehouse.delivery_bill.index','warehouse.delivery_bill.edit','warehouse.delivery_bill.show']) }}">
             <a href="{{ route('warehouse.delivery_bill.index') }}">
                 <i class="feather icon-circle"></i>
                 <span class="menu-title">@lang('menu.Warehouse.Delivery Bill')</span>
