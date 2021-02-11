@@ -175,4 +175,10 @@ class OrderPolicy
 
     }
 
+    public function labelPrint(User $user)
+    {
+        return $user->hasPermission('print_label');
+
+    }
+
 }

@@ -40,5 +40,6 @@ return [
         'Sales Commission' => 'Sales Commissions',
     ],
     'activity' => 'Activity',
+    'Print Label' => 'Print Label Bulk',
 ];
  

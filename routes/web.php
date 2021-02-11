@@ -130,6 +130,10 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::get('sale-exports', SaleExportController::class)->name('sale.exports');
         });
         
+        Route::namespace('Label')->as('label.')->prefix('label')->group(function(){
+            Route::resource('scan', PrintLabelController::class)->only('create','show');
+        });
+        
         Route::namespace('Activity')->as('activity.')->prefix('activity')->group(function(){
             Route::resource('log', ActivityLogController::class)->only('index');
         });
