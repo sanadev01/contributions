@@ -7,6 +7,7 @@
             <a class="btn btn-primary" href="{{ route('admin.rates.profit-packages.index') }}">
                 @lang('profitpackage.back to list')
             </a>
+           
             <div class="heading-elements">
                 <ul class="list-inline mb-0">
                     <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
@@ -14,6 +15,11 @@
             </div>
         </div>
         <div class="card-content collapse show">
+            <div class="col-12 mb-5">
+                <a class="btn btn-success pull-right mt-3 mr-1" href="{{ asset('uploads/profit-sample.xlsx') }}">
+                    <i class="fa fa-arrow-down"></i> Download Sample
+                </a>
+            </div>
             <div class="card-body">
                 <form class="form" action="{{ route('admin.rates.profit-packages-upload.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
