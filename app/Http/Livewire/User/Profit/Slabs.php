@@ -53,7 +53,6 @@ class Slabs extends Component
 
     public function getSaleRate($package, $weight, $isRate)
     {
-        
         $recipient = new Recipient();
         $recipient->state_id = 508;//$request->state_id;
         $recipient->country_id = 30;//$request->country_id;
