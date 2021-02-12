@@ -16,7 +16,7 @@
             </ul>
         </div>
     @endif
-    <form action="{{ route('admin.consolidation.parcels.update',$parcel) }}" method="post" enctype="multipart/form-data">
+    <form action="{{ route('admin.consolidation.parcels.update',$parcel) }}" method="post" enctype="multipart/form-data" onsubmit="return validate(this);">
         @csrf
         @method('PUT')
         <div class="row justify-content-center my-3">
@@ -54,4 +54,21 @@
             </div>
         </div>
     </form>
+@endsection
+@section('js')
+
+    <script>
+        function validate(form) {
+        
+        if(!valid) {
+            alert('Please correct the errors in the form!');
+            return false;
+        }
+        else {
+            return confirm('Do you really want to submit the form?');
+        }
+        }
+
+    </script>
+
 @endsection
