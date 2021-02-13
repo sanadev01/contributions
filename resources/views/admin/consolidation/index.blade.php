@@ -53,9 +53,10 @@
                 </div>
             </div>
         @enduser
+        
         <div class="row justify-content-end">
             <div class="col-md-8 text-right">
-                <button class="btn btn-primary btn-lg" type="button" data-toggle="modal" data-target="#confirm">@lang('consolidation.Save')</button>
+                <button class="btn btn-primary btn-lg" type="button" onclick="getWhr()" data-toggle="modal" data-target="#confirm">@lang('consolidation.Save')</button>
             </div>
         </div>
         <div class="modal fade" id="confirm" role="dialog">
@@ -86,9 +87,14 @@
                 <div class="modal-body" style="font-size: 15px;">
                     <p>
                         @lang('consolidation.Authorization')
+                        <p id="total">
+
+                        </p>
                     </p>
                     <p>
                         @lang('consolidation.description')
+                        <span id="result"></span>
+                        @lang('consolidation.description-2')
                     </p>
                     <p>
                         @lang('consolidation.conditions')
@@ -104,16 +110,25 @@
                     </p>
                 </div>
                 <div class="modal-footer">
-                <button type="submit" class="btn btn-primary"> @lang('consolidation.Authoriz')</button>
+                <button type="submit" class="btn btn-primary" id="save"> @lang('consolidation.Authoriz')</button>
                   <button type="button" class="btn btn-secondary" data-dismiss="modal"> @lang('consolidation.Cancel')</button>
                 </div>
               </div>
             </div>
-          </div>
+        </div>
     </form>
 @endsection
 @section('js')
 
-   
+    <script>
+        function getWhr(){
+            $('input[name="parcels[]"]:checked').each(function() {
+                $("#result").append('HD-' + this.value + ',');
+            });
+        }
+        $('#save').click(function() {
+            $('#confirm').modal('hide');
+        });
+    </script>
 
 @endsection

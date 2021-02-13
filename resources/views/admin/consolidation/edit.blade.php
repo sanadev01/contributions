@@ -16,7 +16,7 @@
             </ul>
         </div>
     @endif
-    <form action="{{ route('admin.consolidation.parcels.update',$parcel) }}" method="post" enctype="multipart/form-data" onsubmit="return validate(this);">
+    <form action="{{ route('admin.consolidation.parcels.update',$parcel) }}" method="post" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="row justify-content-center my-3">
@@ -50,25 +50,77 @@
         @enduser
         <div class="row justify-content-end">
             <div class="col-md-8 text-right">
-                <button class="btn btn-primary btn-lg">@lang('consolidation.Save')</button>
+                <button class="btn btn-primary btn-lg" type="button" onclick="getWhr()" data-toggle="modal" data-target="#confirm">@lang('consolidation.Save')</button>
+            </div>
+        </div>
+        <div class="modal fade" id="confirm" role="dialog">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                    <div class="col-8">
+                        <h4>
+                            {{ auth()->user()->name }}
+                            <br>
+                            {{ auth()->user()->pobox_number }}
+                        </h4>
+                        <h5>
+                            2200 NW, 129th Ave – Suite # 100<br>
+                            Miami, FL, 33182<br>
+                            United States<br>
+                            Ph#: +13058885191<br>
+                        </h5>
+                        <h4 class="font-weight-bold">
+                            To <br>
+                            RCO FREIGHT dba HomeDeliverybr
+                        </h4>
+                        <h5>
+                            Date: {{ \Carbon\Carbon::now()->format('d,M,Y') }}
+                        </h5>
+                    </div>
+                </div>
+                <div class="modal-body" style="font-size: 15px;">
+                    <p>
+                        @lang('consolidation.Authorization')
+                        <p id="total">
+
+                        </p>
+                    </p>
+                    <p>
+                        @lang('consolidation.description')
+                        <span id="result"></span>
+                        @lang('consolidation.description-2')
+                    </p>
+                    <p>
+                        @lang('consolidation.conditions')
+                    </p>
+                    <p class="mt-5">
+                        Thank you very much.<br><br>
+                        Respectfully yours<br><br>
+                        <h4>
+                            {{ auth()->user()->name }}
+                            <br>
+                            {{ auth()->user()->pobox_number }}
+                        </h4>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" id="save"> @lang('consolidation.Authoriz')</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal"> @lang('consolidation.Cancel')</button>
+                </div>
+              </div>
             </div>
         </div>
     </form>
 @endsection
 @section('js')
-
     <script>
-        function validate(form) {
-        
-        if(!valid) {
-            alert('Please correct the errors in the form!');
-            return false;
+        function getWhr(){
+            $('input[name="parcels[]"]:checked').each(function() {
+                $("#result").append('HD-' + this.value + ',');
+            });
         }
-        else {
-            return confirm('Do you really want to submit the form?');
-        }
-        }
-
+        $('#save').click(function() {
+            $('#confirm').modal('hide');
+        });
     </script>
-
 @endsection
