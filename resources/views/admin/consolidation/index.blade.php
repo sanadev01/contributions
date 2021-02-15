@@ -87,9 +87,6 @@
                 <div class="modal-body" style="font-size: 15px;">
                     <p>
                         @lang('consolidation.Authorization')
-                        <p id="total">
-
-                        </p>
                     </p>
                     <p>
                         @lang('consolidation.description')

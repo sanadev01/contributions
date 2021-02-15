@@ -35,14 +35,14 @@
                     </a>
                 </li>
             @endcan
-            {{-- @can('labelPrint', App\Models\Order::class)
+            @can('labelPrint', App\Models\Order::class)
                 <li class="{{ $isActive(['admin.label.scan.create','admin.import.import-excel.show']) }}">
                     <a href="{{ route('admin.label.scan.create') }}">
                         <i class="feather icon-file"></i>
                         <span class="menu-title">@lang('menu.Print Label')</span>
                     </a>
                 </li>
-            @endcan --}}
+            @endcan
             @can('viewAny', App\Models\PaymentInvoice::class)
                 <li class="nav-item {{ $isActive(['admin.payment-invoices.index','admin.payment-invoices.edit']) }}">
                     <a href="{{ route('admin.payment-invoices.index') }}">
@@ -177,6 +177,37 @@
                 </ul>
             </li>
 
+            {{-- Inventory --}}
+            {{-- @can('viewAny', App\Models\Product::class) --}}
+                <li class="nav-item has-sub sidebar-group">
+                    <a href="#">
+                        <i class="feather icon-shopping-cart"></i>
+                        <span class="menu-title">Inventory Management</span>
+                    </a>
+                    <ul class="menu-content">
+
+                        <li class="{{ $isActive(['admin.inventory.product.index','admin.inventory.product.create','admin.inventory.product.edit']) }}">
+                            <a href="{{ route('admin.inventory.product.index') }}">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title">Products</span>
+                            </a>
+                        </li>
+                        <li class="{{ $isActive(['admin.inventory.product.show']) }}">
+                            <a href="{{ route('admin.inventory.product.show','approved') }}">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title">Approved Products</span>
+                            </a>
+                        </li>
+                        <li class="">
+                            <a href="{{ route('admin.inventory.product.show','pending') }}">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title">Pending Products</span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </li>
+            {{-- @endcan --}}
             {{-- Affiliate --}}
             @can('viewAny', App\Models\AffiliateSale::class)
                 <li class="nav-item has-sub sidebar-group">

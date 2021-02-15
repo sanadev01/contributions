@@ -101,6 +101,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(AffiliateSale::class, 'user_id');
     }
+    
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'user_id');
+    }
 
     public function importOrders()
     {
