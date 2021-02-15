@@ -77,7 +77,7 @@
                         </h5>
                         <h4 class="font-weight-bold">
                             To <br>
-                            RCO FREIGHT dba HomeDeliverybr
+                            HERCO FREIGHT dba HomeDeliverybr
                         </h4>
                         <h5>
                             Date: {{ \Carbon\Carbon::now()->format('d,M,Y') }}
