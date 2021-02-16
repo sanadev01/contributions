@@ -30,15 +30,15 @@
             @can('importExcel', App\Models\Order::class)
                 <li class="{{ $isActive(['admin.import.import-excel.index','admin.import.import-excel.show','admin.import.import-excel.create']) }}">
                     <a href="{{ route('admin.import.import-excel.index') }}">
-                        <i class="feather icon-file"></i>
+                        <i class="feather icon-upload"></i>
                         <span class="menu-title">@lang('menu.import-excel-order.excel')</span>
                     </a>
                 </li>
             @endcan
             @can('labelPrint', App\Models\Order::class)
-                <li class="{{ $isActive(['admin.label.scan.create','admin.import.import-excel.show']) }}">
+                <li class="{{ $isActive(['admin.label.scan.create']) }}">
                     <a href="{{ route('admin.label.scan.create') }}">
-                        <i class="feather icon-file"></i>
+                        <i class="feather icon-printer"></i>
                         <span class="menu-title">@lang('menu.Print Label')</span>
                     </a>
                 </li>
@@ -192,14 +192,14 @@
                                 <span class="menu-title">Products</span>
                             </a>
                         </li>
-                        <li class="{{ $isActive(['admin.inventory.product.show']) }}">
-                            <a href="{{ route('admin.inventory.product.show','approved') }}">
+                        <li class="{{ $isActive(['admin.inventory.status.approved']) }}">
+                            <a href="{{ route('admin.inventory.status.approved','approved') }}">
                                 <i class="feather icon-circle"></i>
                                 <span class="menu-title">Approved Products</span>
                             </a>
                         </li>
-                        <li class="">
-                            <a href="{{ route('admin.inventory.product.show','pending') }}">
+                        <li class="{{ $isActive(['admin.inventory.status.pending']) }}">
+                            <a href="{{ route('admin.inventory.status.pending','pending') }}">
                                 <i class="feather icon-circle"></i>
                                 <span class="menu-title">Pending Products</span>
                             </a>

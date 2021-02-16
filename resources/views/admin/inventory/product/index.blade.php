@@ -15,3 +15,7 @@
 </div>
 @endsection
 
+@section('modal')
+    <x-modal/>
+@endsection
+

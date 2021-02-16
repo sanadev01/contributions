@@ -43,7 +43,7 @@
                 <td>
                     
                     @if( $package['client'] )
-                        <a href="{{ route('admin.label.scan.show',$order) }}" class="btn btn-success mr-2" title="@lang('orders.import-excel.Download')">
+                        <a href="{{ route('admin.label.scan.show',$order) }}" target="_blank" class="btn btn-success mr-2" title="@lang('orders.import-excel.Download')">
                             <i class="feather icon-download"></i>@lang('orders.import-excel.Download')
                         </a>
                     @endif

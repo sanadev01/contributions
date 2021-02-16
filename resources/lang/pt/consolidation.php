@@ -26,5 +26,8 @@ return [
     'description' => 'Autorizo ​​a HERCO FREIGHT dba HomedeliveryBR a abrir caixas para verificar o conteúdo e substituir itens; consolidar itens ou caixas ou devolver o pedido ao vendedor, para WHR#',
     'description-2' => 'em meu nome',
     'conditions' => 'Ao usar HERCO FREIGHT dba HomedeliveryBR, concordo com seus termos e condições',
-    'Authorization' => 'Caixas de abertura de autorização ref WHR',
+    'Authorization' => 'Autorização para abertura de caixas ref. WHR#',
+    'thank you' => 'Obrigado',
+    'Respectfully' => 'Atenciosamento',
+    'Cancel' => 'Cancel',
 ];

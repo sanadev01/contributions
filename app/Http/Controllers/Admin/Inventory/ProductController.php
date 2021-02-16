@@ -6,6 +6,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Repositories\Inventory\ProductRepository;
+use App\Http\Requests\Product\ProductCreateRequest;
 
 class ProductController extends Controller
 {
@@ -36,16 +37,8 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, ProductRepository $repository)
+    public function store(ProductCreateRequest $request, ProductRepository $repository)
     {
-        $this->validate($request,[
-            "name"          => "required",
-            "price"         => "required",
-            "sku"           => "required",
-            // "status"        => "required",
-            "description"   => "required",
-        ]);
-        
         if ( $repository->store($request) ){
             session()->flash('alert-success','Product Saved Successfull');
             return redirect()->back();
@@ -59,9 +52,9 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($status)
+    public function show(Product $product)
     {
-        return view('admin.inventory.product.index',compact('status'));
+        return view('admin.modals.product.product',compact('product'));
     }
 
     /**
@@ -82,16 +75,8 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product, ProductRepository $repository)
+    public function update(ProductCreateRequest $request, Product $product, ProductRepository $repository)
     {
-        $this->validate($request,[
-            "name"          => "required",
-            "price"         => "required",
-            "sku"           => "required",
-            // "status"        => "required",
-            "description"   => "required",
-        ]);
-
         if ($repository->update($request,$product) ){
             session()->flash('alert-success','Product Update');
             return redirect()->route('admin.inventory.product.index');
@@ -127,6 +112,11 @@ class ProductController extends Controller
             return apiResponse(true,"Updated");
         }
         return apiResponse(false,"Error while update");
+    }
+
+    public function status($status)
+    {
+        return view('admin.inventory.product.index',compact('status'));
     }
 
 }

@@ -2,9 +2,7 @@
 
 namespace App\Repositories\Inventory;
 
-use App\Models\Order;
 use App\Models\Product;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -22,12 +20,6 @@ class ProductRepository
         if ( $request->date ){
             $query->where(function($query) use($request){
                 return $query->where('created_at', 'LIKE', "%{$request->date}%");
-            });
-        }
-        
-        if ( $request->isStatus ){
-            $query->where(function($query) use($request){
-                return $query->where('status', "{$request->isStatus}");
             });
         }
 
@@ -71,28 +63,69 @@ class ProductRepository
 
     public function store(Request $request)
     {
-        $product = new Product();
+        $product                = new Product();
+        $product->user_id       = Auth::user()->isAdmin()? $request->user_id: auth()->id();
+        $product->name          = $request->name;
+        $product->price         = $request->price;
+        $product->sku           = $request->sku;
+        $product->status        = 'pending';
 
-        $product->user_id = auth()->id();
-        $product->name = $request->name;
-        $product->price = $request->price;
-        $product->sku = $request->sku;
-        $product->status = 'pending';
-        $product->description = $request->description;
+        $product->merchant      = $request->merchant;
+        $product->carrier       = $request->carrier;
+        $product->tracking_id   = $request->tracking_id;
+
+        $product->order_date    = $request->order_date;
+        $product->sh_code       = $request->sh_code;
+        $product->description   = $request->description;
+        $product->quantity      = $request->quantity;
+
+        $product->weight        = $request->weight;
+        $product->length        = $request->length;
+        $product->width         = $request->width ;
+        $product->height        = $request->height;
+        
+        $product->warehouse_number= $request->whr_number;
+        $product->measurement_unit= $request->unit;
+        
         $product->save();
+
+        if ( $request->hasFile('invoiceFile') ){
+            $product->attachInvoice( $request->file('invoiceFile') );
+        }
         
         return true;
     }
    
     public function update(Request $request, Product $product)
     {
-        $product->user_id = auth()->id();
-        $product->name = $request->name;
-        $product->price = $request->price;
-        $product->sku = $request->sku;
-        $product->status = 'pending';
-        $product->description = $request->description;
+        $product->user_id       = Auth::user()->isAdmin()? $request->user_id: auth()->id();
+        $product->name          = $request->name;
+        $product->price         = $request->price;
+        $product->sku           = $request->sku;
+        $product->status        = 'pending';
+
+        $product->merchant      = $request->merchant;
+        $product->carrier       = $request->carrier;
+        $product->tracking_id   = $request->tracking_id;
+
+        $product->order_date    = $request->order_date;
+        $product->sh_code       = $request->sh_code;
+        $product->description   = $request->description;
+        $product->quantity      = $request->quantity;
+
+        $product->weight        = $request->weight;
+        $product->length        = $request->length;
+        $product->width         = $request->width ;
+        $product->height        = $request->height;
+        
+        $product->warehouse_number= $request->whr_number;
+        $product->measurement_unit= $request->unit;
+        
         $product->save();
+
+        if ( $request->hasFile('invoiceFile') ){
+            $product->attachInvoice( $request->file('invoiceFile') );
+        }
         
         return true;
     }
