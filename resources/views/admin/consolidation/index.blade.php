@@ -86,22 +86,19 @@
                 </div>
                 <div class="modal-body" style="font-size: 15px;">
                     <p>
-                        @lang('consolidation.Authorization')
-                        <p id="total">
-
-                        </p>
+                        @lang('consolidation.Authorization') <span class="result"></span>
                     </p>
                     <p>
                         @lang('consolidation.description')
-                        <span id="result"></span>
+                        <span class="result"></span>
                         @lang('consolidation.description-2')
                     </p>
                     <p>
                         @lang('consolidation.conditions')
                     </p>
                     <p class="mt-5">
-                        Thank you very much.<br><br>
-                        Respectfully yours<br><br>
+                        @lang('consolidation.thank you')<br><br>
+                        @lang('consolidation.Respectfully')<br><br>
                         <h4>
                             {{ auth()->user()->name }}
                             <br>
@@ -123,7 +120,7 @@
     <script>
         function getWhr(){
             $('input[name="parcels[]"]:checked').each(function() {
-                $("#result").append('HD-' + this.value + ',');
+                $(".result").append('HD-' + this.value + ',');
             });
         }
         $('#save').click(function() {

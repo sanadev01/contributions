@@ -27,7 +27,9 @@ return [
     'description-2' => 'on my behalf',
     'conditions' => 'By using HERCO FREIGHT dba HomedeliveryBR, I agree with their terms and conditions',
     'Authoriz' => 'Authoriz',
-    'Authorization' => 'Authorization Opening Boxes ref WHR',
+    'Authorization' => 'Authorization Opening Boxes ref WHR#',
+    'thank you' => 'Thank you very much',
+    'Respectfully' => 'Respectfully yours',
     'Cancel' => 'Cancel',
     
     

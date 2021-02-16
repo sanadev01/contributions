@@ -30,7 +30,7 @@
             @can('importExcel', App\Models\Order::class)
                 <li class="{{ $isActive(['admin.import.import-excel.index','admin.import.import-excel.show','admin.import.import-excel.create']) }}">
                     <a href="{{ route('admin.import.import-excel.index') }}">
-                        <i class="feather icon-file"></i>
+                        <i class="feather icon-upload"></i>
                         <span class="menu-title">@lang('menu.import-excel-order.excel')</span>
                     </a>
                 </li>
@@ -38,7 +38,7 @@
             @can('labelPrint', App\Models\Order::class)
                 <li class="{{ $isActive(['admin.label.scan.create','admin.import.import-excel.show']) }}">
                     <a href="{{ route('admin.label.scan.create') }}">
-                        <i class="feather icon-file"></i>
+                        <i class="feather icon-printer"></i>
                         <span class="menu-title">@lang('menu.Print Label')</span>
                     </a>
                 </li>
