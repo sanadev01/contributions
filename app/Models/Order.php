@@ -12,7 +12,7 @@ use App\Services\Calculators\WeightCalculator;
 
 class Order extends Model
 {
-    
+
     use SoftDeletes;
     protected $guarded = [];
 
@@ -20,7 +20,7 @@ class Order extends Model
     protected static $logAttributes = ['*'];
     protected static $logOnlyDirty = true;
     protected static $submitEmptyLogs = false;
-    
+
     protected $casts = [
        'cn23' => 'Array',
        'order_date' => 'datetime'
@@ -28,7 +28,7 @@ class Order extends Model
 
     const STATUS_PREALERT_TRANSIT = 10;
     const STATUS_PREALERT_READY = 20;
-    
+
     const STATUS_CONSOLIDATOIN_REQUEST = 25;
     const STATUS_CONSOLIDATED = 26;
 
@@ -37,7 +37,7 @@ class Order extends Model
     const STATUS_PAYMENT_PENDING = 60;
     const STATUS_PAYMENT_DONE = 70;
     const STATUS_SHIPPED = 80;
-    
+
     public function scopeParcelReady(Builder $query)
     {
         return $query->where(function($query){
@@ -105,7 +105,7 @@ class Order extends Model
     {
         return $this->is_consolidated;
     }
-    
+
     public function isPaid()
     {
         if ( !$this->getPaymentInvoice() ){
@@ -145,7 +145,7 @@ class Order extends Model
         $invoiceFile = Document::saveDocument(
             $file
         );
-        
+
         $invoice = Document::create([
             'name' => $invoiceFile->getClientOriginalName(),
             'size' => $invoiceFile->getSize(),
@@ -188,7 +188,7 @@ class Order extends Model
     public function getOriginalWeight($unit='kg')
     {
         $weight = $this->weight;
-        
+
         if ( $unit == 'kg' && $this->isWeightInKg() ){
             return $weight;
         }
@@ -267,14 +267,14 @@ class Order extends Model
 
         $consolidation = $this->isConsolidated() ?  setting('CONSOLIDATION_CHARGES',0,null,true) : 0;
 
-        
-        
+
+
         $total = $shippingCost + $additionalServicesCost + $this->insurance_value + $dangrousGoodsCost + $consolidation;
-        
+
         $discount = 0; // not implemented yet
         $gross_total = $total - $discount;
-        
-        
+
+
         $this->update([
             'consolidation' => $consolidation,
             'order_value' => $this->items()->sum(\DB::raw('quantity * value')),
@@ -282,7 +282,8 @@ class Order extends Model
             'dangrous_goods' => $dangrousGoodsCost,
             'total' => $total,
             'discount' => $discount,
-            'gross_total' => $gross_total
+            'gross_total' => $gross_total,
+            'user_declared_freight' => $this->user_declared_freight >0 ? $this->user_declared_freight : $shippingCost
         ]);
 
     }
