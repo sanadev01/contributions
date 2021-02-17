@@ -23,9 +23,9 @@ class ParcelController extends Controller
     public function store(CreateRequest $request)
     {
         DB::beginTransaction();
-        
+
         try {
-            
+
             $order = Order::create([
                 'shipping_service_id' => optional($request->parcel)['service_id'],
                 'user_id' => Auth::id(),
@@ -42,13 +42,14 @@ class ParcelController extends Controller
                 "order_date" => now(),
                 "is_shipment_added" => true,
                 'status' => Order::STATUS_ORDER,
-    
+                'user_declared_freight' => $request->get('shipment_value',0),
+
                 "sender_first_name" => optional($request->sender)['sender_first_name'],
                 "sender_last_name" => optional($request->sender)['sender_last_name'],
                 "sender_email" => optional($request->sender)['sender_email'],
                 "sender_taxId" => optional($request->sender)['sender_taxId'],
             ]);
-    
+
             $order->recipient()->create([
                 "first_name" => optional($request->recipient)['first_name'],
                 "last_name" => optional($request->recipient)['last_name'],
@@ -64,7 +65,7 @@ class ParcelController extends Controller
                 "state_id" => optional($request->recipient)['state_id'],
                 "country_id" => optional($request->recipient)['country_id']
             ]);
-    
+
             foreach ($request->get('products',[]) as $product) {
                 $order->items()->create([
                     "sh_code" => optional($product)['sh_code'],
