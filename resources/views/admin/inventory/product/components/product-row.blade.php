@@ -22,11 +22,11 @@
                 <div class="dropdown-menu dropdown-menu-right dropright">
                     
                     <button data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.inventory.product.show',$product) }}" class="btn dropdown-item w-100" title="Show Product Details">
-                        <i class="feather icon-list"></i> @lang('orders.actions.view-order')
+                        <i class="feather icon-list"></i> View Product
                     </button>
 
                     @if ($product->status == 'approved')
-                        <a href="{{ route('admin.inventory.product.edit',$product) }}" title="Edit" class="dropdown-item w-100">
+                        <a href="{{ route('admin.inventory.product-order.show',$product) }}" title="Edit" class="dropdown-item w-100">
                             <i class="feather icon-truck"></i> Order
                         </a>
                     @endif

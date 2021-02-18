@@ -2,8 +2,10 @@
 
 namespace App\Repositories\Inventory;
 
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class ProductRepository
@@ -139,4 +141,59 @@ class ProductRepository
         }
         return $query->get();
     }
+
+    public function storeOrder($productOrder)
+    {
+        DB::beginTransaction();
+
+        try {
+            
+            $order = $productOrder->orders()->create([
+                "user_id" => $productOrder->user_id,
+                "merchant" => $productOrder->merchant,
+                "carrier" => $productOrder->carrier,
+                "tracking_id" => $productOrder->tracking_id,
+
+                "weight" => $productOrder->weight,
+                "length" => $productOrder->length,
+                "width" => $productOrder->width,
+                "height" => $productOrder->height,
+                "measurement_unit" => $productOrder->measurement_unit,
+                "status" => Order::STATUS_NEEDS_PROCESSING,
+                "order_date" => now(),
+
+            ]);
+
+            $order->update([
+                "warehouse_number" => "HD-{$order->id}",
+            ]);
+
+            $this->addItem($order, $productOrder);
+
+            $productOrder->update([
+                "quantity" => $productOrder->quantity -1,
+            ]);
+
+            DB::commit();
+
+            return $order;
+
+        } catch (\Exception $ex) {
+            DB::rollback();
+            $this->error = $ex->getMessage();
+            return false;
+        }
+    }
+
+    public function addItem($order, $productOrder)
+    {
+        $order->items()->create([
+            "quantity" => 1,
+            "value" => $productOrder->price,
+            "description" => $productOrder->description,
+            "sh_code" => $productOrder->sh_code,
+        ]);
+    }
+
+
 }

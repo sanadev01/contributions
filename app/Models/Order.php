@@ -139,6 +139,11 @@ class Order extends Model
         return $this->belongsToMany(Document::class);
     }
 
+    public function products()
+    {
+        return $this->belongsToMany(Product::class);
+    }
+
     public function attachInvoice(UploadedFile $file)
     {
         optional($this->purchaseInvoice)->delete();

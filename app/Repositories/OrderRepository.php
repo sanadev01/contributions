@@ -118,7 +118,7 @@ class OrderRepository
         try {
             
             $order->items()->delete();
-
+            dd($order->products);
             foreach ($request->get('items',[]) as $item) {
 
                 $order->items()->create([

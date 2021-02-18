@@ -69,4 +69,9 @@ class Product extends Model
             'invoice_file' => $invoice->id
         ]);
     }
+    
+    public function orders()
+    {
+        return $this->belongsToMany(Order::class);
+    }
 }
