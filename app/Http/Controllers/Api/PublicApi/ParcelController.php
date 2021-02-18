@@ -42,7 +42,7 @@ class ParcelController extends Controller
                 "order_date" => now(),
                 "is_shipment_added" => true,
                 'status' => Order::STATUS_ORDER,
-                'user_declared_freight' => $request->get('shipment_value',0),
+                'user_declared_freight' => optional($request->parcel)['shipment_value']??0,
 
                 "sender_first_name" => optional($request->sender)['sender_first_name'],
                 "sender_last_name" => optional($request->sender)['sender_last_name'],
