@@ -49,10 +49,10 @@ class ProfitPackageRateExport extends AbstractExportService
         $this->setCellValue('B1', 'cost');
         
         $this->setColumnWidth('C', 20);
-        $this->setCellValue('C1', 'profit');
+        $this->setCellValue('C1', 'profit percentage');
         
         $this->setColumnWidth('D', 20);
-        $this->setCellValue('D1', 'rates');
+        $this->setCellValue('D1', 'selling rate');
 
         $this->setBackgroundColor('A1:D1', '2b5cab');
         $this->setColor('A1:D1', 'FFFFFF');
