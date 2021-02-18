@@ -3,8 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c8727ccf-90da-46c1-90b9-36a4d24260af" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Api/PublicApi/ParcelController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Api/PublicApi/ParcelController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/CalculatorController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/CalculatorController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Requests/Api/Parcel/CreateRequest.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Requests/Api/Parcel/CreateRequest.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
