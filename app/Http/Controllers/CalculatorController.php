@@ -15,12 +15,12 @@ use Auth;
 class CalculatorController extends Controller
 {
     public function index()
-    {   
+    {
         return view('calculator.index');
     }
 
     public function store(Request $request)
-    {   
+    {
         $this->validate(
             $request,
             [
@@ -51,7 +51,7 @@ class CalculatorController extends Controller
             $volumetricWeight = WeightCalculator::getVolumnWeight($request->length,$request->width,$request->height,'in');
             $chargableWeight = round($volumetricWeight >  $originalWeight ? $volumetricWeight :  $originalWeight,2);
         }
-        
+
         $recipient = new Recipient();
         $recipient->state_id = $request->state_id;
         $recipient->country_id = $request->country_id;
@@ -63,7 +63,6 @@ class CalculatorController extends Controller
         $order->length = $request->length;
         $order->weight = $request->weight;
         $order->measurement_unit = $request->unit;
-
         $order->recipient = $recipient;
 
         $shippingServices = collect();
@@ -74,8 +73,8 @@ class CalculatorController extends Controller
                 session()->flash('alert-danger',"Shipping Service not Available Error:{$shippingService->getCalculator($order)->getErrors()}");
             }
         }
-        
-        if ($request->unit == 'kg/cm' ){ 
+
+        if ($request->unit == 'kg/cm' ){
             $weightInOtherUnit = UnitsConverter::kgToPound($chargableWeight);
         }else{
             $weightInOtherUnit = UnitsConverter::poundToKg($chargableWeight);
