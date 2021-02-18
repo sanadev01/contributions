@@ -28,13 +28,15 @@ class UserSettingController extends Controller
             'user_email' => 'required|unique:users,email,'.$user->id,
             'password' => 'nullable|min:8',
         ]);
-
+        
         $user->update([
             'package_id' => $request->package_id,
             'role_id' => $request->role_id,
             'api_enabled' => $request->has('api_enabled'),
             'market_place_name' => $request->market_place_name,
-            'email' => $request->user_email
+            'email' => $request->user_email,
+            'battery' => $request->has('battery'),
+            'perfume' => $request->has('perfume')
         ]);
 
         if ( $request->password ){
