@@ -99,7 +99,7 @@ class RatesCalculator
             $weight = 100;
         }
         
-        $rate = collect($this->rates->data)->where('weight','>=',$weight)->sortBy('weight')->take(1)->first();
+        $rate = collect($this->rates->data)->where('weight','<=',$weight)->sortByDesc('weight')->take(1)->first();
 
         $rate = $rate['leve'];
 
