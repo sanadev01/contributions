@@ -263,8 +263,8 @@ class Order extends Model
         $battriesExtra = $shippingService->contains_battery_charges * ( $this->items()->batteries()->count() );
         $pefumeExtra = $shippingService->contains_perfume_charges * ( $this->items()->perfumes()->count() );
 
-        $dangrousGoodsCost = $battriesExtra + $pefumeExtra;
-
+        $dangrousGoodsCost = $this->user->perfume? 0 : $battriesExtra; + $this->user->battery ? 0 : $pefumeExtra;
+       
         $consolidation = $this->isConsolidated() ?  setting('CONSOLIDATION_CHARGES',0,null,true) : 0;
 
 
