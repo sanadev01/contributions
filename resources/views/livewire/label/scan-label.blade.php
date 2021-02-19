@@ -43,10 +43,12 @@
                
                 <td>
                     
-                    @if( $package['client'] )
-                        <a href="{{route('admin.label.scan.show',$order)}}" target="_blank" class="btn btn-success mr-2" onclick="addClass({{$key}})" title="@lang('orders.import-excel.Download')">
-                            <i class="feather icon-download"></i>@lang('orders.import-excel.Download')
-                        </a>
+                    @if( !$error )
+                        @if( $package['client'] )
+                            <a href="{{route('admin.label.scan.show',$order)}}" target="_blank" class="btn btn-success mr-2" onclick="addClass({{$key}})" title="@lang('orders.import-excel.Download')">
+                                <i class="feather icon-download"></i>@lang('orders.import-excel.Download')
+                            </a>
+                        @endif
                     @endif
                     <button class="btn btn-danger" role="button" tabindex="-1" type="button" wire:click='removeRow({{$key}})'>
                         @lang('orders.print-label.Remove')

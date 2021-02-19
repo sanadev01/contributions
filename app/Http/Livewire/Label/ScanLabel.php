@@ -12,13 +12,15 @@ class ScanLabel extends Component
 {
     public $packagesRows;
     public $tracking = '';
+    public $error = '';
     public $order = [];
 
     public function mount()
     {
         
         $this->packagesRows = old('package',[]);
-        $this->tracking  = $this->tracking;
+        // $this->tracking  = $this->tracking;
+        
     }
 
     public function render()
@@ -47,7 +49,7 @@ class ScanLabel extends Component
     {
         $order = Order::where('corrios_tracking_code', $trackingCode)->first();
         $this->order = $order;
-
+        
         if($this->order){
             $this->packagesRows[$index]['tracking_code'] = $trackingCode;
             $this->packagesRows[$index]['client'] = $this->order->merchant;
@@ -64,6 +66,12 @@ class ScanLabel extends Component
     {
         $order = Order::where('corrios_tracking_code', $this->tracking)->first();
         $this->order = $order;
+        
+        if($this->order->status == Order::STATUS_CANCEL){
+            $this->error = 'Order is Canceled';
+        }else{
+            $this->error = '';
+        }
         if($this->order){
             array_push($this->packagesRows,[
                 'tracking_code' => $this->tracking,
