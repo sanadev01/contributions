@@ -43,7 +43,7 @@
                 </td>
 
                 <td>
-                    <input type="text" class="form-control selling" id="selling_{{$key}}"  value="@if($slab['max_weight']){{ number_format($cost * ($slab['value'] /100) + $cost, 2) }}@endif"  data-key="{{$key}}">
+                    <input type="text" class="form-control selling" id="selling_{{$key}}"  value="@if($slab['max_weight']){{ number_format(($cost * ($slab['value'] /100)) + $cost, 2) }}@endif"  data-key="{{$key}}">
                 </td>
             
                 <td>
