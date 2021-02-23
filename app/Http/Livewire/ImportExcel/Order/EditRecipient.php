@@ -3,9 +3,10 @@
 namespace App\Http\Livewire\ImportExcel\Order;
 
 use App\Models\Country;
-use App\Rules\PhoneNumberValidator;
-use App\Rules\ZipCodeValidator;
 use Livewire\Component;
+use App\Rules\ZipCodeValidator;
+use App\Rules\PhoneNumberValidator;
+use Illuminate\Support\Facades\Validator;
 
 class EditRecipient extends Component
 {
@@ -30,7 +31,7 @@ class EditRecipient extends Component
     public function mount($order)
     {
         $this->orderId = $order;
-
+        
         $this->order = $order;
         $this->recipient = $order->recipient;
         $this->first_name = optional($this->recipient)['first_name'];
@@ -55,7 +56,8 @@ class EditRecipient extends Component
 
     public function save()
     {
-        $data = $this->validate($this->rules(), $this->messages());
+        
+        $data = Validator::make($this->rules(), $this->messages());
 
         $error = $this->order->error;
         
@@ -63,6 +65,20 @@ class EditRecipient extends Component
             $remainError = array_diff($error, $this->messages());
             $error = $remainError ? $remainError : null;
         }
+        $data =[
+           'first_name' => $this->first_name,
+           'last_name' => $this->last_name,
+           'email' => $this->email,
+           'phone' => $this->phone,
+           'address' => $this->address,
+           'address2' => $this->address2,
+           'street_no' => $this->street_no,
+           'country_id' => $this->country_id,
+           'state_id' => $this->state_id,
+           'city' => $this->city,
+           'zipcode' => $this->zipcode,
+           'tax_id' => $this->tax_id,
+        ];
 
         $this->order->update([
             'recipient' => $data,
@@ -93,9 +109,9 @@ class EditRecipient extends Component
                 'required', new ZipCodeValidator($this->country_id,$this->state_id)
             ]
         ];
-
+        
         if (Country::where('code', 'BR')->first()->id == $this->country_id) {
-            $rules['cpf'] = 'sometimes|cpf|required_if:country_id,'.Country::where('code', 'BR')->first()->id;
+            $rules['tax_id'] = 'sometimes|cpf|required_if:country_id,'.Country::where('code', 'BR')->first()->id;
         }
 
         return $rules;

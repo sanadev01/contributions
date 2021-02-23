@@ -36,7 +36,7 @@
                 </li>
             @endcan
             @can('labelPrint', App\Models\Order::class)
-                <li class="{{ $isActive(['admin.label.scan.create','admin.import.import-excel.show']) }}">
+                <li class="{{ $isActive(['admin.label.scan.create']) }}">
                     <a href="{{ route('admin.label.scan.create') }}">
                         <i class="feather icon-printer"></i>
                         <span class="menu-title">@lang('menu.Print Label')</span>
