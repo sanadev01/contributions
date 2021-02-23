@@ -95,7 +95,7 @@ class EditRecipient extends Component
         ];
 
         if (Country::where('code', 'BR')->first()->id == $this->country_id) {
-            $rules['tax_id'] = ['required', "in:cpf,cnpj,CPF,CNPJ"];
+            $rules['cpf'] = 'sometimes|cpf|required_if:country_id,'.Country::where('code', 'BR')->first()->id;
         }
 
         return $rules;
