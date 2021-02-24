@@ -128,6 +128,7 @@ return [
         'Use to add City'=> "Use para adicionar cidade",
         'Use to add State abbrivation (SE etc)'=> "Use para adicionar abrivação de estado (SE etc)",
         'Use to add country code iso (BR)'=> "Use para adicionar o código do país iso (BR)",
+        'Use to add country code iso (Brazil)'=> "Use para adicionar o código do país iso (Brazil)",
         'Use to add customer tax id'=> "Use para adicionar a identificação fiscal do cliente",
         'Use to add Freight Rate'=> "Use para adicionar taxa de frete",
         'Use to add Product quantity'=> "Use para adicionar a quantidade do produto",

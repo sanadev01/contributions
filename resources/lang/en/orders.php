@@ -129,6 +129,7 @@ return [
         'Use to add City' => "Use to add City",
         'Use to add State abbrivation (SE etc)' => "Use to add State abbrivation (SE etc)",
         'Use to add country code iso (BR)' => "Use to add country code iso (BR)",
+        'Use to add country code iso (Brazil)' => "Use to add country code iso (Brazil)",
         'Use to add customer tax id' => "Use to add customer tax id",
         'Use to add Freight Rate' => "Use to add Freight Rate",
         'Use to add Product quantity' => "Use to add Product quantity",
