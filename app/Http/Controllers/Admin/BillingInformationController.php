@@ -1,28 +1,29 @@
-<?php 
+<?php
 
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\BillingInformation\CreateRequest; 
+use App\Http\Requests\Admin\BillingInformation\CreateRequest;
 use App\Http\Requests\Admin\BillingInformation\UpdateRequest;
 use App\Repositories\BillingInformationRepository;
 use Illuminate\Http\Request;
 use App\Models\BillingInformation;
 
 class BillingInformationController extends Controller
-{   
+{
     public function __construct()
     {
         $this->authorizeResource(BillingInformation::class);
-    } 
-    
+    }
+
     /**
      * Display a listing of the resource.
      *
+     * @param BillingInformationRepository $repository
      * @return \Illuminate\Http\Response
      */
     public function index(BillingInformationRepository $repository)
-    { 
+    {
         $billingInformation = $repository->get();
         return view('admin.billing-information.index',compact('billingInformation'));
     }
@@ -40,7 +41,8 @@ class BillingInformationController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param CreateRequest $request
+     * @param BillingInformationRepository $repository
      * @return \Illuminate\Http\Response
      */
     public function store(CreateRequest $request, BillingInformationRepository $repository)
@@ -67,7 +69,7 @@ class BillingInformationController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param BillingInformation $billingInformation
      * @return \Illuminate\Http\Response
      */
     public function edit(BillingInformation $billingInformation)
@@ -78,8 +80,9 @@ class BillingInformationController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param UpdateRequest $request
+     * @param BillingInformation $billingInformation
+     * @param BillingInformationRepository $repository
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateRequest $request, BillingInformation $billingInformation, BillingInformationRepository $repository)
@@ -95,8 +98,9 @@ class BillingInformationController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param BillingInformation $billingInformation
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
     public function destroy(BillingInformation $billingInformation)
     {
