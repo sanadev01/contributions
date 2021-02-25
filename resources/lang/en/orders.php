@@ -137,6 +137,12 @@ return [
         'Use to add Product name ' => "Use to add Product name ",
         'Use to add NCM/Sh Code' => "Use to add NCM/Sh Code",
         'Use to add Yes Or No' => "Use to add Yes Or No",
+        'instructions homedelivery'=> "Read the instructions here about the Homedelivery data",
+        'instructions shopify'=> "Read the instructions here about the Shopify data",
+        'instructions xml'=> "Read the instructions here about how to make the XML file",
+        'Download the Homedelivery'=> "Download the Homedelivery sample file",
+        'Download the Shopify'=> "Download the Shopify sample file",
+        'Download the XML'=> "Download the XML sample file",
 
     ],
     'actions' => [

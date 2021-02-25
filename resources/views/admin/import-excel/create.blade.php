@@ -105,12 +105,13 @@
                                             <ol>
                                                 <li>
                                                     <a href="#" data-toggle="modal" data-target="#homedeliveryModal">
-                                                        Read the instructions here about the Homedelivery data
+                                                        @lang('orders.import-excel.instructions homedelivery')
+
                                                     </a>
                                                 </li>
                                                 <li>
                                                     <a href="{{ asset('uploads/order-import.xlsx') }}">
-                                                        Download the Shopify sample file
+                                                        @lang('orders.import-excel.Download the Homedelivery')
                                                     </a>
                                                 </li>
                                             </ol>
@@ -124,12 +125,13 @@
                                             <ol>
                                                 <li>
                                                     <a href="#" data-toggle="modal" data-target="#shopifyModal">
-                                                        Read the instructions here about Shopify data
+                                                        @lang('orders.import-excel.instructions shopify')
+                                                        
                                                     </a>
                                                 </li>
                                                 <li>
                                                     <a href="{{ asset('uploads/shopify-format.xlsx') }}">
-                                                        Download the Shopify sample file
+                                                        @lang('orders.import-excel.Download the Shopify')
                                                     </a>
                                                 </li>
                                             </ol>
@@ -143,12 +145,12 @@
                                             <ol>
                                                 <li>
                                                     <a href="#" data-toggle="modal" data-target="#xmlModal">
-                                                        Read the instructions here about how to make the XML file
+                                                        @lang('orders.import-excel.instructions xml')
                                                     </a>
                                                 </li>
                                                 <li>
                                                     <a href="{{ asset('uploads/xml-format.xml') }}" target="_blank">
-                                                        Download the XML sample file
+                                                        @lang('orders.import-excel.Download the XML')
                                                     </a>
                                                 </li>
                                             </ol>
