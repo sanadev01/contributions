@@ -131,7 +131,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         });
         
         Route::namespace('Label')->as('label.')->prefix('label')->group(function(){
-            Route::resource('scan', PrintLabelController::class)->only('create','show');
+            Route::resource('scan', PrintLabelController::class)->only('create','show','store');
         });
         
         Route::namespace('Activity')->as('activity.')->prefix('activity')->group(function(){

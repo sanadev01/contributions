@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin\Label;
 
+use File;
+use ZipArchive;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -38,9 +40,36 @@ class PrintLabelController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, LabelRepository $labelRepository)
     {
-       //
+        
+        $zip = new ZipArchive();
+        $tempFile = tmpfile();
+        $tempFileUri = storage_path('app/labels/label.zip');
+        unlink($tempFileUri);
+        if ($zip->open($tempFileUri, ZipArchive::CREATE) === TRUE) {
+
+            foreach($request->order as $orderId){
+                $order = Order::find($orderId);
+                $labelData = $labelRepository->get($order);
+            
+                if ( $labelData ){
+                    Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
+                }
+                $relativeNameInZipFile = storage_path("app/labels/{$order->corrios_tracking_code}.pdf");
+                if (! $zip->addFile($relativeNameInZipFile, basename($relativeNameInZipFile))) {
+                    echo 'Could not add file to ZIP: ' . $relativeNameInZipFile;
+                }
+                
+            }
+
+            $zip->close();
+        } else {
+            echo 'Could not open ZIP file.';
+        }
+
+        return response()->download($tempFileUri);
+
     }
 
     /**
