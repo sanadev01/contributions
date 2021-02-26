@@ -13,12 +13,14 @@ class ScanLabel extends Component
     public $packagesRows;
     public $tracking = '';
     public $order = [];
+    public $newOrder = [];
 
     public function mount()
     {
         
         $this->packagesRows = old('package',[]);
         $this->tracking  = $this->tracking;
+        $this->newOrder  = $this->newOrder;
     }
 
     public function render()
@@ -64,7 +66,9 @@ class ScanLabel extends Component
     {
         $order = Order::where('corrios_tracking_code', $this->tracking)->first();
         $this->order = $order;
+
         if($this->order){
+            
             array_push($this->packagesRows,[
                 'tracking_code' => $this->tracking,
                 'client' => $this->order->merchant,
@@ -73,28 +77,39 @@ class ScanLabel extends Component
                 'reference' => $this->order->id,
                 'recpient' => $this->order->recipient->first_name,
             ]);
+            
+            array_push($this->newOrder,$this->order);
         }
             
         $this->tracking = '';
     }
 
-    public function printLabel(Request $request, Order $scan, LabelRepository $labelRepository)
+    public function printLabel(LabelRepository $labelRepository)
     {
-        
-        $order = $scan;
+        foreach($this->newOrder as $order){
+
+            // dd($order);
+            $this->getOrder($order, $labelRepository);
+            
+        }
+    }
+    public function getOrder(Order $order, LabelRepository $labelRepository)
+    {
+    //    dd($order);
         $labelData = null;
 
-        if ( $request->update_label === 'true' ){
-            $labelData = $labelRepository->update($order);
-        }else{
+        // if ( $request->update_label === 'true' ){
+        //     $labelData = $labelRepository->update($order);
+        // }else{
             $labelData = $labelRepository->get($order);
-        }
+        // }
 
-        $order->refresh();
+        // $order->refresh();
 
         if ( $labelData ){
             Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
         }
         return redirect()->route('order.label.download',[$order,'time'=>md5(microtime())]);
+      
     }
 }
