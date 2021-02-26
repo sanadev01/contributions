@@ -45,7 +45,8 @@ class PrintLabelController extends Controller
         
         $zip = new ZipArchive();
         $tempFileUri = storage_path('app/labels/label.zip');
-        if( $tempFileUri){
+        
+        if(file_exists($tempFileUri)){
             unlink($tempFileUri);
         }
 
