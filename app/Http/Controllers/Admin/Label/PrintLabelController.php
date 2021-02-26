@@ -44,9 +44,11 @@ class PrintLabelController extends Controller
     {
         
         $zip = new ZipArchive();
-        $tempFile = tmpfile();
         $tempFileUri = storage_path('app/labels/label.zip');
-        unlink($tempFileUri);
+        if( $tempFileUri){
+            unlink($tempFileUri);
+        }
+
         if ($zip->open($tempFileUri, ZipArchive::CREATE) === TRUE) {
 
             foreach($request->order as $orderId){
