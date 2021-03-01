@@ -80,9 +80,9 @@ class PaymentInvoice extends Model
         return $this->type == 'prepaid';
     }
 
-    public static function generateUUID()
+    public static function generateUUID($prefix='PI-')
     {
-        return uniqid('PI-');
+        return uniqid($prefix);
     }
 
     /**

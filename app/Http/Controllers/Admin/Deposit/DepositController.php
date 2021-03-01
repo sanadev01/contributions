@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Deposit;
 
 
 use App\Http\Controllers\Controller;
+use App\Repositories\DepositRepository;
 use App\Repositories\OrderRepository;
 use Illuminate\Http\Request;
 
@@ -20,14 +21,14 @@ class DepositController extends Controller
         return view('admin.deposit.create');
     }
 
-    public function store(Request $request, OrderRepository $orderRepository)
+    public function store(Request $request, DepositRepository $depositRepository)
     {
-        if ( $orderRepository->checkout($request) ){
+        if ( $depositRepository->store($request) ){
             session()->flash('alert-success', __('orders.payment.alert-success'));
-            return redirect()->route('admin.payment-invoices.index');
+            return redirect()->route('admin.deposit.index');
         }
 
-        session()->flash('alert-danger',$orderRepository->getError());
+        session()->flash('alert-danger',$depositRepository->getError());
         return \back()->withInput();
 
     }

@@ -25,7 +25,7 @@
                                 <div class="row justify-content-center">
                                     <div class="col-md-4">
                                         <label>Amount</label>
-                                        <input type="number" min="0" class="form-control" name="amount" placeholder="Enter Amount to Deposit">
+                                        <input type="number" min="0" class="form-control" required name="amount" placeholder="Enter Amount to Deposit">
                                     </div>
                                 </div>
                                 <hr>

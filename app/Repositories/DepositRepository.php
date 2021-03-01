@@ -4,20 +4,59 @@
 namespace App\Repositories;
 
 
-use App\Events\OrderPaid;
-use App\Mail\User\PaymentPaid;
-use App\Models\BillingInformation;
-use App\Models\Country;
 use App\Models\Order;
 use App\Models\State;
-use App\Services\PaymentServices\AuthorizeNetService;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Country;
+use App\Models\Deposit;
+use App\Events\OrderPaid;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Mail\User\PaymentPaid;
+use App\Models\PaymentInvoice;
+use App\Models\BillingInformation;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Model;
+use App\Services\PaymentServices\AuthorizeNetService;
 
 class DepositRepository
 {
+    protected $error;
+
+    public function get(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='asc')
+    {
+        $query = Deposit::query();
+
+        if ( !Auth::user()->isAdmin() ){
+            $query->where('user_id',Auth::id());
+        }
+
+        if ( $request->user ){
+            $query->whereHas('user',function($query) use($request) {
+                return $query->where('pobox_number',"%{$request->user}%")
+                            ->orWhere('name','LIKE',"%{$request->user}%")
+                            ->orWhere('last_name','LIKE',"%{$request->user}%")
+                            ->orWhere('email','LIKE',"%{$request->user}%");
+            });
+        }
+
+        if ( $request->type ){
+            $query->where('is_credit',$request->type);
+        }
+
+        if ( $request->uuid ){
+            $query->where('uuid','LIKE',"%{$request->uuid}%");
+        }
+
+        if ( $request->last_four_digits ){
+            $query->where('last_four_digits','LIKE',"%{$request->last_four_digits}%");
+        }
+
+        $query->orderBy($orderBy,$orderType);
+        $query->latest('id');
+
+        return $paginate ? $query->paginate($pageSize) : $query->get(); 
+    }
+
     public function store(Request $request)
     {
         DB::beginTransaction();
@@ -52,7 +91,8 @@ class DepositRepository
 
             $authorizeNetService = new AuthorizeNetService();
 
-            $response = $authorizeNetService->makeCreditCardPayement($billingInformation,$paymentInvoice);
+            $transactionID = PaymentInvoice::generateUUID('DP-');
+            $response = $authorizeNetService->makeCreditCardPaymentWithoutInvoice($billingInformation,$transactionID,$request->amount,Auth::user());
 
 
             if ( !$response->success ){
@@ -61,28 +101,16 @@ class DepositRepository
                 return false;
             }
 
-            $paymentInvoice->update([
-                'last_four_digits' => substr($billingInformation->card_no,-4),
-                'is_paid' => true
-            ]);
 
-            $paymentInvoice->transactions()->create([
+            Deposit::create([
+                'uuid' => $transactionID,
                 'transaction_id' => $response->data->getTransId(),
-                'amount' => $paymentInvoice->total_amount
+                'amount' => $request->amount,
+                'user_id' => Auth::id(),
+                'balance' => Deposit::getCurrentBalance() + $request->amount,
+                'is_credit' => true,
+                'last_four_digits' => substr($billingInformation->card_no,-4)
             ]);
-
-            $paymentInvoice->orders()->update([
-                'is_paid' => true,
-                'status' => Order::STATUS_PAYMENT_DONE
-            ]);
-
-            event(new OrderPaid($paymentInvoice->orders, true));
-
-            try {
-                \Mail::send(new PaymentPaid($paymentInvoice));
-            } catch (\Exception $ex) {
-                \Log::info('Payment Paid email send error: '.$ex->getMessage());
-            }
 
             DB::commit();
 
@@ -95,4 +123,10 @@ class DepositRepository
         }
     }
 
+
+    public function getError()
+    {
+        return $this->error;
+    }
+    
 }

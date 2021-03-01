@@ -43,6 +43,7 @@ Route::prefix('v1')->group(function(){
         // Authenticated Routes
         Route::middleware(['auth:api','checkPermission'])->group(function (){
             Route::resource('parcels', 'ParcelController')->only('store','destroy','update');
+            Route::get('parcel/{order}/cn23',OrderLabelController::class);
         });
     
         Route::get('countries', CountryController::class);
