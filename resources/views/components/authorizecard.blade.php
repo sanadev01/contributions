@@ -119,12 +119,12 @@
             @else
                 <input id="securitycode" required type="text" name="cvv" class="{{ $errors->has('cvv')?'border border-danger':'' }}" title="{{ $errors->has('cvv')?  $errors->first('cvv'):'Security Code' }}" value="@isset($billingInformation) {{$billingInformation->cvv}} @else {{ old('cvv') }} @endisset" inputmode="numeric">
             @endisset
-                
+
             </div>
         </div>
     </div>
     <hr>
-    <div class="row justify-content-center">
+    <div class="row justify-content-center px-4">
         <div class="col-12">
             <div class="row">
                 <div class="col-4">
@@ -162,7 +162,7 @@
                             <option value="{{ $state->id }}" {{ old('state', optional($billingInformation)->state ) == $state->code ? 'selected': '' }}> {{ $state->code }} </option>
                         @endforeach
                     </select>
-                </div> 
+                </div>
                 <div class="col-3">
                     <label for="name">@lang('billing.Zipcode')</label>
                     <input id="zipcode" name="zipcode" required maxlength="20" type="text" class="{{ $errors->has('zipcode')?'border border-danger':'' }}" title="{{ $errors->has('zipcode')?  $errors->first('zipcode'):'Name on Card' }}" value="@isset($billingInformation) {{$billingInformation->zipcode}} @else {{ old('zipcode') }} @endisset">

@@ -18,9 +18,9 @@ use App\Services\Excel\AbstractImportService;
 
 class OrderImportService extends AbstractImportService
 {
-    private $userId; 
+    private $userId;
     private $request;
-    private $errors = []; 
+    private $errors = [];
 
     public function __construct(UploadedFile $file,$request)
     {
@@ -28,16 +28,16 @@ class OrderImportService extends AbstractImportService
         $this->request = $request;
 
         $filename = $this->importFile($file);
-        
+
         parent::__construct(
             $this->getStoragePath($filename)
         );
     }
 
-    public function handle() 
+    public function handle()
     {
         $importOrder = $this->storeImportOrder();
-        
+
         $this->importOrders($importOrder);
         return $importOrder;
     }
@@ -47,7 +47,7 @@ class OrderImportService extends AbstractImportService
         $totalOrder = 0;
         $totalError = 0;
         foreach (range(2, $this->noRows) as $row) {
-            
+
             $order = $this->createOrUpdateOrder($row, $importOrder);
             if($order){
                 $order->error ? $totalError++ : $totalOrder++;
@@ -58,7 +58,7 @@ class OrderImportService extends AbstractImportService
             'total_orders' => $totalOrder,
             'total_errors' => $totalError
         ]);
-        
+
     }
 
     private function createOrUpdateOrder($row, $importOrder){
@@ -66,12 +66,12 @@ class OrderImportService extends AbstractImportService
                 if ( strlen($this->getValue("D{$row}")) <=0 ){
                     return;
                 }
-                
+
                 $findOrder = ImportedOrder::where('customer_reference',$this->getValue("D{$row}"))->first();
 
                 if ( $findOrder ){
                     $order = $this->addItem($findOrder,$row);
-                    
+
                     // $order->doCalculations();
                     return $order;
                 }
@@ -80,12 +80,12 @@ class OrderImportService extends AbstractImportService
                 $this->errors = array();
 
                 $this->validationRow($row, false);
-            
+
                 // if($this->errors == null){
 
                 DB::beginTransaction();
                 $shippingService = ShippingService::first();
-                
+
                 $orderError = null;
                 if(!empty($this->errors)){
                     $orderError = $this->errors;
@@ -107,15 +107,15 @@ class OrderImportService extends AbstractImportService
                     "is_invoice_created" => true,
                     "is_shipment_added" => true,
                     'status' => Order::STATUS_ORDER,
-                    'order_date' => now(), 
+                    'order_date' => now(),
 
                     "sender_first_name" => $this->getValue("J{$row}"),
                     "sender_last_name" => $this->getValue("K{$row}"),
                     "sender_email" => $this->getValue("L{$row}"),
                     "sender_phone" => $this->getValue("M{$row}"),
-                
-                
-                
+
+
+
                     'user_declared_freight' => $this->getValue("Z{$row}"),
                     'error' => $orderError,
 
@@ -136,14 +136,14 @@ class OrderImportService extends AbstractImportService
                     ],
 
                 ]);
-                
+
                 $order = $this->addItem($order,$row);
-                
+
                 // $order->doCalculations();
                 DB::commit();
                 return $order;
-            
-            
+
+
         } catch (\Exception $ex) {
             DB::rollback();
             \Log::info($ex);
@@ -154,7 +154,7 @@ class OrderImportService extends AbstractImportService
     public function addItem($order,$row)
     {
         $this->validationRow($row, true);
-        
+
         $item =[
             "quantity" => $this->getValue("AA{$row}"),
             "value" => $this->getValue("AB{$row}"),
@@ -163,11 +163,11 @@ class OrderImportService extends AbstractImportService
             "contains_battery" => strlen($this->getValue("AE{$row}")) >0 ? true : false,
             "contains_perfume" => strlen($this->getValue("AF{$row}")) >0 ? true : false
         ];
-        
+
         $items = $order->items ? $order->items : [];
-       
+
         array_push($items, $item);
-        
+
         $orderError = null;
         if(!empty($this->errors)){
             $orderError = $this->errors;
@@ -177,10 +177,10 @@ class OrderImportService extends AbstractImportService
             'items' => $items,
             'error' => $orderError,
         ]);
-        
+
         return $order;
     }
- 
+
     public function storeImportOrder()
     {
         $importOrder = ImportOrder::create([
@@ -227,8 +227,8 @@ class OrderImportService extends AbstractImportService
                 'sender_phone' => [
                     'required','max:15','min:13', new PhoneNumberValidator(optional( Country::where('code',$this->getValue("X{$row}"))->first() )->id)
                 ],
-                
-                
+
+
                 'first_name' => 'required|max:100',
                 'last_name' => 'max:100',
                 'email' => 'nullable|max:100',
@@ -261,7 +261,7 @@ class OrderImportService extends AbstractImportService
     public function validationMessages($row, $item)
     {
         if($item == true){
-            
+
             return [
                 'quantity.required' => 'quantity is required',
                 'value.required' => 'value is required',
@@ -286,7 +286,7 @@ class OrderImportService extends AbstractImportService
                 'sender_last_name.nullable' => 'sender last name is required',
                 'sender_email.required' => 'sender Email is required',
                 'sender_phone.required' => 'sender phone is required',
-                
+
                 'first_name.required' => 'first Name is required',
                 'last_name.required' => 'last Name is required',
                 'email.nullable' => 'email is not valid',
@@ -302,11 +302,11 @@ class OrderImportService extends AbstractImportService
             ];
         }
     }
-    
+
     public function validationData($row, $item)
     {
         if($item == true){
-            
+
             return [
                 "quantity" => $this->getValue("AA{$row}"),
                 "value" => $this->getValue("AB{$row}"),
@@ -315,51 +315,45 @@ class OrderImportService extends AbstractImportService
             ];
         }
 
-        if($item == false){
-            return [
-                "merchant" => $this->getValue("A{$row}"),
-                "carrier" => $this->getValue("B{$row}"),
-                "tracking_id" => $this->getValue("C{$row}"),
-                "customer_reference" => $this->getValue("D{$row}"),
-                "measurement_unit" => $this->getValue("I{$row}"),
-                "weight" => $this->getValue("E{$row}"),
-                "length" => $this->getValue("F{$row}"),
-                "width" => $this->getValue("G{$row}"),
-                "height" => $this->getValue("H{$row}"),
+        return [
+            "merchant" => $this->getValue("A{$row}"),
+            "carrier" => $this->getValue("B{$row}"),
+            "tracking_id" => $this->getValue("C{$row}"),
+            "customer_reference" => $this->getValue("D{$row}"),
+            "measurement_unit" => $this->getValue("I{$row}"),
+            "weight" => $this->getValue("E{$row}"),
+            "length" => $this->getValue("F{$row}"),
+            "width" => $this->getValue("G{$row}"),
+            "height" => $this->getValue("H{$row}"),
 
-                "sender_first_name" => $this->getValue("J{$row}"),
-                "sender_last_name" => $this->getValue("K{$row}"),
-                "sender_email" => $this->getValue("L{$row}"),
-                "sender_phone" => $this->getValue("M{$row}"),
+            "sender_first_name" => $this->getValue("J{$row}"),
+            "sender_last_name" => $this->getValue("K{$row}"),
+            "sender_email" => $this->getValue("L{$row}"),
+            "sender_phone" => $this->getValue("M{$row}"),
 
-                "first_name" =>$this->getValue("N{$row}"),
-                "last_name" => $this->getValue("O{$row}"),
-                "email" => $this->getValue("P{$row}"),
-                "phone" => $this->getValue("Q{$row}"),
-                "address" => $this->getValue("R{$row}"),
-                "address2" => $this->getValue("S{$row}"),
-                "street_no" => $this->getValue("T{$row}"),
-                "city" => $this->getValue("V{$row}"),
-                "state_id" => optional( State::where('code',$this->getValue("W{$row}"))->first() )->id,
-                "country_id" => optional( Country::where('code',$this->getValue("X{$row}"))->first() )->id,
-                "zipcode" => $this->getValue("U{$row}"),
-                "recipient_tax_id" => $this->getValue("Y{$row}"),
-            ];
-        }
+            "first_name" =>$this->getValue("N{$row}"),
+            "last_name" => $this->getValue("O{$row}"),
+            "email" => $this->getValue("P{$row}"),
+            "phone" => $this->getValue("Q{$row}"),
+            "address" => $this->getValue("R{$row}"),
+            "address2" => $this->getValue("S{$row}"),
+            "street_no" => $this->getValue("T{$row}"),
+            "city" => $this->getValue("V{$row}"),
+            "state_id" => optional( State::where('code',$this->getValue("W{$row}"))->first() )->id,
+            "country_id" => optional( Country::where('code',$this->getValue("X{$row}"))->first() )->id,
+            "zipcode" => $this->getValue("U{$row}"),
+            "recipient_tax_id" => $this->getValue("Y{$row}"),
+        ];
 
     }
 
     public function validationRow($row, $item)
     {
         $validator = Validator::make($this->validationData($row, $item), $this->rules($row,$item ), $this->validationMessages($row,$item));
-        if ($validator->fails()) {
-            foreach ($validator->errors()->messages() as $messages) {
-                foreach ($messages as $error) {
-                    // accumulating errors:
-                    $this->errors[] = $error;
-                }
-            }
-            $this->errors;
+        if (!$validator->fails()) {
+            return true;
         }
+
+        $this->errors = collect($validator->errors()->messages())->flatten()->toArray();
     }
 }

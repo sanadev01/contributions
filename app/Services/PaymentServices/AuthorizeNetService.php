@@ -2,20 +2,21 @@
 
 namespace App\Services\PaymentServices;
 
-use App\Models\BillingInformation;
-use App\Models\Order;
-use App\Models\PaymentInvoice;
-use App\Models\Setting;
 use Exception;
-use net\authorize\api\constants\ANetEnvironment;
-use net\authorize\api\contract\v1\CreateTransactionRequest;
-use net\authorize\api\contract\v1\CreditCardType;
-use net\authorize\api\contract\v1\CustomerAddressType;
-use net\authorize\api\contract\v1\CustomerDataType;
-use net\authorize\api\contract\v1\MerchantAuthenticationType;
+use App\Models\User;
+use App\Models\Order;
+use App\Models\Setting;
+use App\Models\PaymentInvoice;
+use App\Models\BillingInformation;
 use net\authorize\api\contract\v1\OrderType;
 use net\authorize\api\contract\v1\PaymentType;
+use net\authorize\api\constants\ANetEnvironment;
+use net\authorize\api\contract\v1\CreditCardType;
+use net\authorize\api\contract\v1\CustomerDataType;
+use net\authorize\api\contract\v1\CustomerAddressType;
 use net\authorize\api\contract\v1\TransactionRequestType;
+use net\authorize\api\contract\v1\CreateTransactionRequest;
+use net\authorize\api\contract\v1\MerchantAuthenticationType;
 use net\authorize\api\controller\CreateTransactionController;
 
 class AuthorizeNetService
@@ -161,5 +162,16 @@ class AuthorizeNetService
                 'message' => $ex->getMessage()
             ];
         }
+    }
+
+
+    public function makeCreditCardPaymentWithoutInvoice(BillingInformation $billingInformation, $uuid, $amount,User $user)
+    {
+        $invoice = new PaymentInvoice;
+        $invoice->total_amount = $amount;
+        $invoice->uuid = $uuid;
+        $invoice->user = $user;
+
+        return $this->makeCreditCardPayement($billingInformation, $invoice);
     }
 }
