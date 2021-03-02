@@ -95,6 +95,8 @@ class ParcelController extends Controller
                     'is_paid' => true,
                     'status' => Order::STATUS_PAYMENT_DONE
                 ]);
+
+                chargeAmount($order->gross_total);
             }
 
             DB::commit();
