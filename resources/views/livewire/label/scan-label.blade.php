@@ -1,6 +1,12 @@
 <div>
+    <div class="row mb-3 col-12">
+        @if( $orderStatus )
+            <div class="alert alert-danger">
+                {{ $orderStatus }}
+            </div>
+        @endif
+    </div>
     <div class="row mb-5">
-
         <label> @lang('orders.print-label.Scan Package') </label>
         <input type="text" class="form-control col-3" wire:model.debounce.500ms="tracking">
         <form action="{{ route('admin.label.scan.store') }}" method="post">
@@ -79,6 +85,6 @@
             </td>
         </tr> --}}
     </table>
-</form>
+    </form>
 @include('layouts.livewire.loading')
 </div>
