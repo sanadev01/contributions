@@ -125,6 +125,14 @@
             @endif
 
 
+            {{-- @can('viewAny', App\Models\Address::class) --}}
+                <li class="nav-item {{ $isActive(['admin.rates.shipping-rates.index']) }}">
+                    <a class="nav-link" href="{{ route('admin.rates.user-rates.index') }}"><i class="feather icon-dollar-sign"></i>
+                        <span data-i18n="Apps">@lang('Rates')</span>
+                    </a>
+                </li>
+            {{-- @endcan --}}
+            
             @can('viewAny', App\Models\Address::class)
                 <li class="nav-item {{ $isActive(['admin.addresses.index','admin.addresses.edit','admin.addresses.create']) }}">
                     <a class="nav-link" href="{{ route('admin.addresses.index') }}"><i class="feather icon-home"></i>
