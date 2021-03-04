@@ -70,10 +70,12 @@ class ScanLabel extends Component
         $order = Order::where('corrios_tracking_code', $this->tracking)->first();
         $this->order = $order;
         $this->orderStatus = '';
-        if($this->order->status == 35){
+
+        if($this->order->status == Order::STATUS_CANCEL){
             $this->orderStatus = 'Order Cancel';
             return $this->tracking = '';
         }
+        
         if($this->order){
             
             array_push($this->packagesRows,[
