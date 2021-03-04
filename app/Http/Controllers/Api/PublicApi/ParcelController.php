@@ -90,6 +90,15 @@ class ParcelController extends Controller
 
             $order->doCalculations();
 
+            if ( getBalance() >= $order->gross_total ){
+                $order->update([
+                    'is_paid' => true,
+                    'status' => Order::STATUS_PAYMENT_DONE
+                ]);
+
+                chargeAmount($order->gross_total);
+            }
+
             DB::commit();
             return apiResponse(true,"Parcel Created", OrderResource::make($order) );
 

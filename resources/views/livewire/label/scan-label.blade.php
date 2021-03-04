@@ -1,6 +1,18 @@
 <div>
-    <label> @lang('orders.print-label.Scan Package') </label>
-    <input type="text" class="form-control col-3 mb-5" wire:model.debounce.500ms="tracking">
+    <div class="row mb-5">
+
+        <label> @lang('orders.print-label.Scan Package') </label>
+        <input type="text" class="form-control col-3" wire:model.debounce.500ms="tracking">
+        <form action="{{ route('admin.label.scan.store') }}" method="post">
+            @csrf
+            @foreach ($packagesRows as $key => $package)
+            <input type="hidden" name="order[]" value="{{ $package['reference'] }}">
+            @endforeach
+            <button type="submit" class=" offset-7 btn btn-success mr-2 pull-right" title="@lang('orders.import-excel.Download')">
+                <i class="feather icon-download"></i>@lang('orders.import-excel.Download') All
+            </button>
+        
+    </div>
     <table class="table table-bordered">
         <tr>
             <th>@lang('orders.print-label.Barcode')</th>
@@ -12,6 +24,7 @@
             <th>@lang('orders.print-label.Action')</th>
         </tr>
         @foreach ($packagesRows as $key => $package)
+        
             <tr id="{{ $key }}">
                 <td>
                     {{ $package['tracking_code'] }}
@@ -50,6 +63,7 @@
                             </a>
                         @endif
                     @endif
+                    
                     <button class="btn btn-danger" role="button" tabindex="-1" type="button" wire:click='removeRow({{$key}})'>
                         @lang('orders.print-label.Remove')
                     </button>
@@ -65,5 +79,6 @@
             </td>
         </tr> --}}
     </table>
+</form>
 @include('layouts.livewire.loading')
 </div>
