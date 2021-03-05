@@ -223,9 +223,9 @@ class OrderImportService extends AbstractImportService
 
                 'sender_first_name' => 'required',
                 'sender_last_name' => 'nullable',
-                'sender_email' => 'required',
+                'sender_email' => 'nullable',
                 'sender_phone' => [
-                    'required','max:15','min:13', new PhoneNumberValidator(optional( Country::where('code',$this->getValue("X{$row}"))->first() )->id)
+                    'nullable','max:15','min:13', new PhoneNumberValidator(optional( Country::where('code',$this->getValue("X{$row}"))->first() )->id)
                 ],
 
 
