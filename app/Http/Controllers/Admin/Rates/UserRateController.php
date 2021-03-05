@@ -16,6 +16,7 @@ class UserRateController extends Controller
      */
     public function index(RateReportsRepository $rateReportsRepository)
     {
+        $this->authorize('userSellingRates',ProfitPackage::class);
         if(auth()->user()->package_id){
             $packageId = auth()->user()->package_id;
         }else{
