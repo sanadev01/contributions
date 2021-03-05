@@ -67,37 +67,40 @@ class ScanLabel extends Component
     
     public function updatedTracking()
     {
-        $order = Order::where('corrios_tracking_code', $this->tracking)->first();
-        $this->order = $order;
-        $this->orderStatus = '';
-        
-        if($this->order){
-
-            if($this->order->status == Order::STATUS_CANCEL){
-                $this->orderStatus = 'Order Cancel';
-                return $this->tracking = '';
-            }
-
-            if($this->order->status == Order::STATUS_REJECTED){
-                $this->orderStatus = 'Order Rejected';
-                return $this->tracking = '';
-            }
-
-            if($this->order->status == Order::STATUS_RELEASE){
-                $this->orderStatus = 'Order Release';
-                return $this->tracking = '';
-            }
+        if($this->tracking){
             
-            array_push($this->packagesRows,[
-                'tracking_code' => $this->tracking,
-                'client' => $this->order->merchant,
-                'dimensions' => $this->order->length . ' x ' . $this->order->length . ' x ' . $this->order->height,
-                'kg' => $this->order->weight,
-                'reference' => $this->order->id,
-                'recpient' => $this->order->recipient->first_name,
-            ]);
+            $order = Order::where('corrios_tracking_code', $this->tracking)->first();
+            $this->order = $order;
+            $this->orderStatus = '';
             
-            array_push($this->newOrder,$this->order);
+            if($this->order){
+                
+                if($this->order->status == Order::STATUS_CANCEL){
+                    $this->orderStatus = 'Order Cancel';
+                    return $this->tracking = '';
+                }
+                
+                if($this->order->status == Order::STATUS_REJECTED){
+                    $this->orderStatus = 'Order Rejected';
+                    return $this->tracking = '';
+                }
+                
+                if($this->order->status == Order::STATUS_RELEASE){
+                    $this->orderStatus = 'Order Release';
+                    return $this->tracking = '';
+                }
+                
+                array_push($this->packagesRows,[
+                    'tracking_code' => $this->tracking,
+                    'client' => $this->order->merchant,
+                    'dimensions' => $this->order->length . ' x ' . $this->order->length . ' x ' . $this->order->height,
+                    'kg' => $this->order->weight,
+                    'reference' => $this->order->id,
+                    'recpient' => $this->order->recipient->first_name,
+                ]);
+                    
+                array_push($this->newOrder,$this->order);
+            }
         }
             
         $this->tracking = '';
