@@ -205,9 +205,9 @@ class XmlOrderImportService
 
                 'sender_first_name' => 'required',
                 'sender_last_name' => 'nullable',
-                'sender_email' => 'required',
+                'sender_email' => 'nullable',
                 'sender_phone' => [
-                    'required','max:15','min:13', new PhoneNumberValidator(optional( Country::where('code',$items['RecipientCountryCodeIso']?$items['RecipientCountryCodeIso']:null)->first() )->id)
+                    'nullable','max:15','min:13', new PhoneNumberValidator(optional( Country::where('code',$items['RecipientCountryCodeIso']?$items['RecipientCountryCodeIso']:null)->first() )->id)
                 ],
                 
                 
@@ -231,7 +231,7 @@ class XmlOrderImportService
             ];
 
             if (Country::where('code', 'BR')->first()->id == optional( Country::where('code',$items['RecipientCountryCodeIso']?$items['RecipientCountryCodeIso']:null)->first() )->id ) {
-                $rules['recipient_tax_id'] = ['required', "in:cpf,cnpj,CPF,CNPJ"];
+                $rules['cpf'] = 'sometimes|cpf|required_if:country_id,'.Country::where('code', 'BR')->first()->id;
             }
 
             return $rules;
@@ -265,8 +265,8 @@ class XmlOrderImportService
 
                 'sender_first_name.required' => 'sender first name is required',
                 'sender_last_name.nullable' => 'sender last name is required',
-                'sender_email.required' => 'sender Email is required',
-                'sender_phone.required' => 'sender phone is required',
+                'sender_email.nullable' => 'sender Email is invalid',
+                'sender_phone.nullable' => 'sender phone is invalid',
                 
                 'first_name.required' => 'first Name is required',
                 'last_name.required' => 'last Name is required',

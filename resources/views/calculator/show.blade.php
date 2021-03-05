@@ -34,7 +34,11 @@
                                     </div></div> <div class="row justify-content-center"><div class="pb-1 pt-1 border-bottom-light col-md-5 bg-primary text-white">
                                         Cost
                                     </div> <div class="border col-5 py-1 text-danger h2">
-                                        {{$shippingService->getRateFor($order)}} USD
+                                        
+                                        {{$shippingService->getRateFor($order,true,true)}} USD
+                                       
+                                        <br>
+                                       
                                     </div></div></div></div></div>
                                     <hr>
                                 @endforeach

@@ -9,7 +9,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class CreateRequest extends FormRequest
 {
     use HasJsonResponse;
-    
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -38,11 +38,12 @@ class CreateRequest extends FormRequest
             "parcel.length" => "required|numeric|gt:0",
             "parcel.width" => "required|numeric|gt:0",
             "parcel.height" => "required|numeric|gt:0",
+            "parcel.shipment_value" => "required|numeric|gt:0",
 
             "sender.sender_first_name" => "required|max:100",
             "sender.sender_last_name" => "required|max:100",
             "sender.sender_email" => "required|email",
-            "sender.sender_taxId" => "required",
+            "sender.sender_taxId" => "nullable",
 
             "recipient.first_name" => "required",
             "recipient.last_name" => "required",

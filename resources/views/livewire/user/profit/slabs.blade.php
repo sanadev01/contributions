@@ -26,10 +26,14 @@
                     @enderror
                 </td>
                 @php
-                    $cost = $this->getSaleRate($this->profitPackage, $slab['max_weight'], false);
+                $weight = $slab['min_weight'];
+                if($weight < 100 ){
+                    $weight = 100;
+                }
+                    $cost = $this->getSaleRate($this->profitPackage, $weight, false);
                 @endphp
                 <td>
-                    <input type="text" class="form-control shipping" name="shipping" value="@if($slab['max_weight']){{ $cost }}@endif" id="shipping_{{$key}}" data-key="{{$key}}">
+                    <input type="text" class="form-control shipping" name="shipping" value="@if($weight){{ $cost }}@endif" id="shipping_{{$key}}" data-key="{{$key}}">
                 </td>
 
                 <td>
@@ -43,7 +47,7 @@
                 </td>
 
                 <td>
-                    <input type="text" class="form-control selling" id="selling_{{$key}}"  value="@if($slab['max_weight']){{ number_format($cost * ($slab['value'] /100) + $cost, 2) }}@endif"  data-key="{{$key}}">
+                    <input type="text" class="form-control selling" id="selling_{{$key}}"  value="@if($slab['max_weight']){{ number_format(($cost * ($slab['value'] /100)) + $cost, 2) }}@endif"  data-key="{{$key}}">
                 </td>
             
                 <td>

@@ -106,6 +106,38 @@
                                 <h4>Commision Settings</h4>
                                 <livewire:affiliate.commision-setting :user_id="$user->id"  />
                                 
+                                <h3>Waiver Fee Settings</h3>
+                                <hr>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right" for="battery">Waive battery fee<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="vs-checkbox-con vs-checkbox-primary" title="Waive battery fee">
+                                            <input type="checkbox" name="battery" id="battery" @if( $user->battery == 1 ) checked @endif>
+                                            <span class="vs-checkbox vs-checkbox-lg">
+                                                <span class="vs-checkbox--check">
+                                                    <i class="vs-icon feather icon-check"></i>
+                                                </span>
+                                            </span>
+                                            <span class="h3 mx-2 text-primary my-0 py-0"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">Waive perfume/aerosol/nail polish fee<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="vs-checkbox-con vs-checkbox-primary" title="Waive perfume/aerosol/nail polish fee">
+                                            <input type="checkbox" name="perfume" id="perfume" @if( $user->perfume == 1 ) checked @endif>
+                                            <span class="vs-checkbox vs-checkbox-lg">
+                                                <span class="vs-checkbox--check">
+                                                    <i class="vs-icon feather icon-check"></i>
+                                                </span>
+                                            </span>
+                                            <span class="h3 mx-2 text-primary my-0 py-0"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                               
 
                                 <div class="row mt-1">
                                     <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
