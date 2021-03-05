@@ -117,12 +117,12 @@
         }
         .right-block .barcode_zipcode img{
             width: 3cm;
-            height: 2cm;
+            height: 2.65cm;
             display: block;
         }
         .complain_address{
             position: absolute;
-            top: 7.8cm;
+            top: 8.45cm;
             text-align: center;
             font-size: 7px;
             width: 9cm;
@@ -130,7 +130,7 @@
         }
         .tracking_code{
             position: absolute;
-            top: 8.2cm;
+            top: 8.85cm;
             left: 0.2cm;
             display: block;
             text-align: center;
@@ -140,20 +140,20 @@
             position: absolute;
             display: block;
             left: 0.7cm;
-            width: 8cm;
-            height: 2.3cm;
+            width: 7.9cm;
+            height: 2.65cm;
         }
         .empty-lines{
             font-size: 9px;
             position: absolute;
-            top: 10.6cm;
+            top: 11.45cm;
             width: 9.4cm;
             text-align: center;
             left: 0.2cm;
         }
         .items-table{
             position: absolute;
-            top: 11.2cm;
+            top: 11.90cm;
             font-size: 7px;
             font-weight: bold;
             width: auto;

@@ -57,13 +57,14 @@
                                                         @lang('user.Action')
                                                     </button>
                                                     <div class="dropdown-menu dropdown-menu-right dropright">
+                                                        <a href="{{ route('warehouse.containers.packages.index',$container) }}" class="dropdown-item w-100">
+                                                            <i class="feather icon-box"></i> @lang('warehouse.actions.Packages')
+                                                        </a>
                                                         @if( !$container->isRegistered() )
                                                             <a href="{{ route('warehouse.containers.edit',$container) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
                                                             </a>
-                                                            <a href="{{ route('warehouse.containers.packages.index',$container) }}" class="dropdown-item w-100">
-                                                                <i class="feather icon-box"></i> @lang('warehouse.actions.Packages')
-                                                            </a>
+                                                            
                                                             <a href="{{ route('warehouse.container.register',$container) }}" class="dropdown-item w-100">
                                                                 <i class="feather icon-box"></i> Register Unit
                                                             </a>
