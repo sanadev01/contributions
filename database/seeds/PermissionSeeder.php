@@ -297,6 +297,10 @@ class PermissionSeeder extends Seeder
                 'slug' => 'activity_log',
                 'description' => 'Show Activity Logs',
             ],
+            [
+                'slug' => 'user_selling_rates',
+                'description' => 'Allows User see profit Package rates',
+            ],
             
         ];
     }
