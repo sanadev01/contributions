@@ -284,8 +284,8 @@ class OrderImportService extends AbstractImportService
 
                 'sender_first_name.required' => 'sender first name is required',
                 'sender_last_name.nullable' => 'sender last name is required',
-                'sender_email.required' => 'sender Email is required',
-                'sender_phone.required' => 'sender phone is required',
+                'sender_email.nullable' => 'sender Email is required',
+                'sender_phone.nullable' => 'sender phone is required',
 
                 'first_name.required' => 'first Name is required',
                 'last_name.required' => 'last Name is required',
