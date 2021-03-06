@@ -1,7 +1,7 @@
 <div>
     <table class="table table-bordered">
         <tr>
-            <th>@lang('profitpackage.min-weight (grams)')</th>
+            {{-- <th>@lang('profitpackage.min-weight (grams)')</th> --}}
             <th>@lang('profitpackage.max-weight (grams)')</th>
             <th>Cost</th>
             <th>@lang('profitpackage.profit')</th>
