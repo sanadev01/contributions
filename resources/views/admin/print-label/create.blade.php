@@ -25,7 +25,6 @@
 @section('js')
 <script>
     function addClass(id){
-        
         $("#"+id).css({"background-color": "#77ff77"});
     }
     </script>

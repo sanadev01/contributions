@@ -2,6 +2,7 @@
 
 use App\Models\Order;
 use App\Models\Country;
+use App\Models\Deposit;
 use App\Models\State;
 use App\Models\Setting;
 use App\Models\ShippingService;
@@ -82,4 +83,14 @@ function generateRandomString($length = 30)
         throw new RuntimeException('Unable to generate random string.');
     }
     return substr(str_replace(array('/', '+', '='), '', base64_encode($bytes)), 0, $length);
+}
+
+function getBalance()
+{
+    return Deposit::getCurrentBalance();
+}
+
+function chargeAmount($amount,$order=null)
+{
+    Deposit::chargeAmount($amount);
 }

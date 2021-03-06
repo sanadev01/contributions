@@ -223,9 +223,9 @@ class ShopifyOrderImportService extends AbstractImportService
 
                 'sender_first_name' => 'required',
                 'sender_last_name' => 'nullable',
-                'sender_email' => 'required',
+                'sender_email' => 'nullable',
                 'sender_phone' => [
-                    'required','max:15','min:13', new PhoneNumberValidator(optional( Country::where('name',$this->getValue("X{$row}"))->first() )->id)
+                    'nullable','max:15','min:13', new PhoneNumberValidator(optional( Country::where('name',$this->getValue("X{$row}"))->first() )->id)
                 ],
                 
                 
@@ -249,7 +249,8 @@ class ShopifyOrderImportService extends AbstractImportService
             ];
 
             if (Country::where('code', 'BR')->first()->id == optional( Country::where('name',$this->getValue("X{$row}"))->first() )->id ) {
-                $rules['recipient_tax_id'] = ['required', "in:cpf,cnpj,CPF,CNPJ"];
+                // $rules['recipient_tax_id'] = ['required', "in:cpf,cnpj,CPF,CNPJ"];
+                $rules['cpf'] = 'sometimes|cpf|required_if:country_id,'.Country::where('code', 'BR')->first()->id;
             }
 
             return $rules;

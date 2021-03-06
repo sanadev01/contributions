@@ -93,4 +93,10 @@ class ProfitPackagePolicy
     {
         //
     }
+
+    public function userSellingRates(User $user)
+    {
+        return $user->hasPermission('user_selling_rates');
+
+    }
 }

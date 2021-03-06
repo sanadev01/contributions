@@ -10,7 +10,7 @@
                     <span data-i18n="Dashboard"> @lang('menu.dashboard') </span>
                 </a>
             </li>
-           
+
             <li class="nav-item {{ $isActive(['admin.parcels.index','admin.parcels.shipments.edit','admin.parcels.shipments.create']) }}">
                 <a href="{{ route('admin.parcels.index') }}">
                     <i class="feather icon-alert-triangle"></i>
@@ -36,7 +36,7 @@
                 </li>
             @endcan
             @can('labelPrint', App\Models\Order::class)
-                <li class="{{ $isActive(['admin.label.scan.create','admin.import.import-excel.show']) }}">
+                <li class="{{ $isActive(['admin.label.scan.create']) }}">
                     <a href="{{ route('admin.label.scan.create') }}">
                         <i class="feather icon-printer"></i>
                         <span class="menu-title">@lang('menu.Print Label')</span>
@@ -61,13 +61,13 @@
                 </li>
             @endcan
 
-            @if ( 
+            @if (
                 auth()->user()->can('viewAny', App\Models\ProfitPackage::class) ||
                 auth()->user()->can('viewAny', App\Models\HandlingService::class) ||
                 auth()->user()->can('viewAny', App\Models\ShippingService::class) ||
-                auth()->user()->can('viewAny', App\Models\Rate::class) 
+                auth()->user()->can('viewAny', App\Models\Rate::class)
              )
-                
+
             <li class="nav-item has-sub sidebar-group">
                 <a href="#">
                     <i class="feather icon-dollar-sign"></i>
@@ -83,7 +83,7 @@
                         </a>
                     </li>
                     @endcan
-                    
+
                     @can('viewAny', App\Models\HandlingService::class)
                     <li class="{{ $isActive(['admin.services.index','admin.services.edit','admin.services.create']) }}">
                         <a href="{{ route('admin.handling-services.index') }}">
@@ -92,7 +92,7 @@
                         </a>
                     </li>
                     @endcan
-                    
+
                     @can('viewAny', App\Models\ShippingService::class)
                     <li class="nav-item {{ $isActive(['admin.shipping-services.index','admin.shipping-services.create']) }}">
                         <a href="{{ route('admin.shipping-services.index') }}">
@@ -101,7 +101,7 @@
                         </a>
                     </li>
                     @endcan
-                    
+
                     @can('viewAny', App\Models\Rate::class)
                     <li class="{{ $isActive(['admin.rates.shipping-rates.index','admin.rates.shipping-rates.create']) }}">
                         <a href="{{ route('admin.rates.shipping-rates.index') }}">
@@ -124,7 +124,16 @@
             </li>
             @endif
 
-
+            @if(auth()->user()->isUser())
+                @can('userSellingRates', App\Models\ProfitPackage::class)
+                    <li class="nav-item {{ $isActive(['admin.rates.user-rates.index']) }}">
+                        <a class="nav-link" href="{{ route('admin.rates.user-rates.index') }}"><i class="feather icon-dollar-sign"></i>
+                            <span data-i18n="Apps">@lang('menu.Rates')</span>
+                        </a>
+                    </li>
+                @endcan
+            @endif
+            
             @can('viewAny', App\Models\Address::class)
                 <li class="nav-item {{ $isActive(['admin.addresses.index','admin.addresses.edit','admin.addresses.create']) }}">
                     <a class="nav-link" href="{{ route('admin.addresses.index') }}"><i class="feather icon-home"></i>
@@ -192,7 +201,7 @@
                                 <span class="menu-title">@lang('menu.Affiliate.Dashboard')</span>
                             </a>
                         </li>
-                        
+
                         <li class="{{ $isActive(['admin.affiliate.sales-commission.index']) }}">
                             <a href="{{ route('admin.affiliate.sales-commission.index') }}">
                                 <i class="feather icon-circle"></i>
@@ -237,6 +246,15 @@
             </li>
             @endcan
 
+            @can('viewAny', App\Models\BillingInformation::class)
+                <li class="nav-item {{ $isActive(['admin.deposit.index','admin.deposit.edit','admin.deposit.create']) }}">
+                    <a href="{{ route('admin.deposit.index') }}">
+                        <i class="feather icon-credit-card"></i>
+                        <span class="menu-title">@lang('menu.Balance')</span>
+                    </a>
+                </li>
+            @endcan
+
             @can('viewAny', Spatie\Activitylog\Models\Activity::class)
             <li class="nav-item {{ $isActive(['admin.activity.log.index']) }}">
                 <a href="{{ route('admin.activity.log.index') }}">
@@ -254,7 +272,7 @@
                 </a>
             </li>
             @endcan
-        
+
             <x-shared-menu></x-shared-menu>
         </ul>
     </div>

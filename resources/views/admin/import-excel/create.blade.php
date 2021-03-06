@@ -15,37 +15,6 @@
             </div>
         </div>
     
-        {{-- <div class="card-content collapse show">
-            <div class="row">
-                
-                <div class="row col-12">
-                    <h5 class="col-4 offset-8" id="basic-layout-form">@lang('orders.import-excel.Files Tempelate')</h5>
-                    <h5 class="col-4 offset-8" id="basic-layout-form">@lang('orders.import-excel.Choose the format')</h5>
-                </div>
-                <div class="row col-12">
-                    <p class="col-1 offset-8 d-flex justify-content-center" id="basic-layout-form">Homedeliverybr Template</p>
-                    <p class="col-1 d-flex justify-content-center" id="basic-layout-form">Shopify Template</p>
-                    <p class="col-1 d-flex justify-content-center" id="basic-layout-form">XML Template</p>
-                </div>
-            </div>
-            <div class="row col-12">
-                <div class="col-1 d-flex justify-content-center offset-8">
-                    <a href="{{ asset('uploads/order-import.xlsx') }}" class="btn btn-success">
-                        <i class="feather icon-download"></i>
-                    </a>
-                </div>
-                <div class="col-1 d-flex justify-content-center">
-                    <a href="{{ asset('uploads/shopify-format.xlsx') }}" class="btn btn-success">
-                        <i class="feather icon-download"></i>
-                    </a>
-                </div>
-                <div class="col-1 d-flex justify-content-center">
-                    <a href="{{ asset('uploads/xml-format.xml') }}" class="btn btn-success">
-                        <i class="feather icon-download"></i>
-                    </a>
-                </div>
-            </div>
-        </div> --}}
         <div class="card-body">
             @if( $errors->count() )
                 <div class="alert alert-danger">
@@ -127,41 +96,65 @@
                                     <li>@lang('orders.import-excel.Download and fill in the data in the sample file below to avoid errors')</li>
                                     <li>@lang('orders.import-excel.Choose the format')</li>
                                 </ol>
-                                <div class="row col-12">
-                                    <div class="col-2">
-                                        <div class="row">
-                                            <div class="col-12 d-flex justify-content-center">
-                                                Homedelivery Template
-                                            </div>
-                                            <div class="col-12 d-flex justify-content-center">
-                                                <a href="{{ asset('uploads/order-import.xlsx') }}" class="btn btn-success">
-                                                    <i class="feather icon-download"></i>
-                                                </a>
-                                            </div>
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="col-12 d-flex justify-content-left">
+                                            <strong>Homedelivery Template</strong>
+                                        </div>
+                                        <div class="col-12 d-flex justify-content-left">
+                                            <ol>
+                                                <li>
+                                                    <a href="#" data-toggle="modal" data-target="#homedeliveryModal">
+                                                        @lang('orders.import-excel.instructions homedelivery')
+
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ asset('uploads/order-import.xlsx') }}">
+                                                        @lang('orders.import-excel.Download the Homedelivery')
+                                                    </a>
+                                                </li>
+                                            </ol>
                                         </div>
                                     </div>
-                                    <div class="col-2">
-                                        <div class="row">
-                                            <div class="col-12 d-flex justify-content-center">
-                                                Shopify Template
-                                            </div>
-                                            <div class="col-12 d-flex justify-content-center">
-                                                <a href="{{ asset('uploads/shopify-format.xlsx') }}" class="btn btn-success">
-                                                    <i class="feather icon-download"></i>
-                                                </a>
-                                            </div>
+                                    <div class="row">
+                                        <div class="col-12 d-flex justify-content-left">
+                                            <strong>Shopify Template</strong>
+                                        </div>
+                                        <div class="col-12 d-flex justify-content-left">
+                                            <ol>
+                                                <li>
+                                                    <a href="#" data-toggle="modal" data-target="#shopifyModal">
+                                                        @lang('orders.import-excel.instructions shopify')
+                                                        
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ asset('uploads/shopify-format.xlsx') }}">
+                                                        @lang('orders.import-excel.Download the Shopify')
+                                                    </a>
+                                                </li>
+                                            </ol>
                                         </div>
                                     </div>
-                                    <div class="col-2">
-                                        <div class="row">
-                                            <div class="col-12 d-flex justify-content-center">
-                                                XML Template
-                                            </div>
-                                            <div class="col-12 d-flex justify-content-center">
-                                                <a href="{{ asset('uploads/xml-format.xml') }}" class="btn btn-success">
-                                                    <i class="feather icon-download"></i>
-                                                </a>
-                                            </div>
+                                    <div class="row">
+                                        <div class="col-12 d-flex justify-content-left">
+                                            <strong>XML Template</strong>
+                                        </div>
+                                        <div class="col-12 d-flex justify-content-left">
+                                            <ol>
+                                                <li>
+                                                    <a href="#" data-toggle="modal" data-target="#xmlModal">
+                                                        @lang('orders.import-excel.instructions xml')
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ asset('uploads/xml-format.xml') }}" target="_blank">
+                                                        @lang('orders.import-excel.Download the XML')
+                                                    </a>
+                                                </li>
+                                            </ol>
+                                            
                                         </div>
                                     </div>
                                 </div>
@@ -181,5 +174,156 @@
             </form>
         </div>
     </div>
-   
+    <div class="modal fade bd-example-modal-lg" id="homedeliveryModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Homedelivery Sheet Instructions</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            
+            
+            <div class="modal-body">
+                <strong>merchant (Required)</strong>                        @lang('orders.import-excel.Use to add customer merchant Name')
+                <br><strong>carrier (Required)</strong>                     @lang('orders.import-excel.Use to add customer carrier')
+                <br><strong>tracking id (Required)</strong>                 @lang('orders.import-excel.Use to add customer tracking id ')
+                <br><strong>customer refrence# (OPtional)</strong>          @lang('orders.import-excel.Use to add customer refrence')
+                <br><strong>weight (Required)</strong>                      @lang('orders.import-excel.Use to add greater then 0')
+                <br><strong>length (Required)</strong>                      @lang('orders.import-excel.Use to add greater then 0')
+                <br><strong>width (Required)</strong>                       @lang('orders.import-excel.Use to add greater then 0')
+                <br><strong>height (Required)</strong>                      @lang('orders.import-excel.Use to add greater then 0')
+                <br><strong>measurment unit (Required)</strong>             @lang('orders.import-excel.Use to add kg/cm or lbs/in')
+                <br><strong>sender first_name (Required)</strong>           @lang('orders.import-excel.Use to add sender First Name')
+                <br><strong>sender last name (Required)</strong>            @lang('orders.import-excel.Use to add sender Last Name')
+                <br><strong>sender_email (Optional)</strong>                @lang('orders.import-excel.Use to add sender Email')
+                <br><strong>sender_phone (Optional)</strong>                @lang('orders.import-excel.Use to add sender phone')
+                <br><strong>recipient first_name (Required)</strong>        @lang('orders.import-excel.Use to add recipient first name')
+                <br><strong>recipient last_name (OPtional)</strong>         @lang('orders.import-excel.Use to add recipient last name')
+                <br><strong>recipient_email (OPtional)</strong>             @lang('orders.import-excel.Use to add recipient email')
+                <br><strong>recipient_phone (Required)</strong>             @lang('orders.import-excel.Use to add recipient phone')
+                <br><strong>recipient_address (Required)</strong>           @lang('orders.import-excel.Use to add recipient address')
+                <br><strong>recipient_address_2 (OPtional)</strong>         @lang('orders.import-excel.Use to add recipient address 2')
+                <br><strong>recipient_house_number (Required)</strong>      @lang('orders.import-excel.Use to add recipient house/Street number')
+                <br><strong>recipient_zipcode (Required)</strong>           @lang('orders.import-excel.Use to add Zipcode')
+                <br><strong>recipient_city (Required)</strong>              @lang('orders.import-excel.Use to add City')
+                <br><strong>recipient_state_abbrivation (Required)</strong> @lang('orders.import-excel.Use to add State abbrivation (SE etc)')
+                <br><strong>recipient_country_code_iso (Required)</strong>  @lang('orders.import-excel.Use to add country code iso (BR)')
+                <br><strong>recepient_tax_id (Required)</strong>            @lang('orders.import-excel.Use to add customer tax id')
+                <br><strong>Freight To Custom (Required)</strong>           @lang('orders.import-excel.Use to add Freight Rate')
+                <br><strong>product quantity (Required)</strong>            @lang('orders.import-excel.Use to add Product quantity')
+                <br><strong>value (Required)</strong>                       @lang('orders.import-excel.Use to add product Price')
+                <br><strong>product name (Required)</strong>                @lang('orders.import-excel.Use to add Product name ')
+                <br><strong>NCM (Required)</strong>                         @lang('orders.import-excel.Use to add NCM/Sh Code')
+                <br><strong>perfume (Optional)</strong>                     @lang('orders.import-excel.Use to add Yes Or No')
+                <br><strong>battery (Optional)</strong>                     @lang('orders.import-excel.Use to add Yes Or No')
+            </div> 				
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="modal fade bd-example-modal-lg" id="shopifyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Shopify Sheet Instructions</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <strong>merchant (Required)</strong>                        @lang('orders.import-excel.Use to add customer merchant Name')
+                <br><strong>carrier (Required)</strong>                     @lang('orders.import-excel.Use to add customer carrier')
+                <br><strong>tracking id (Required)</strong>                 @lang('orders.import-excel.Use to add customer tracking id ')
+                <br><strong>customer refrence# (OPtional)</strong>          @lang('orders.import-excel.Use to add customer refrence')
+                <br><strong>weight (Required)</strong>                      @lang('orders.import-excel.Use to add greater then 0')
+                <br><strong>length (Required)</strong>                      @lang('orders.import-excel.Use to add greater then 0')
+                <br><strong>width (Required)</strong>                       @lang('orders.import-excel.Use to add greater then 0')
+                <br><strong>height (Required)</strong>                      @lang('orders.import-excel.Use to add greater then 0')
+                <br><strong>measurment unit (Required)</strong>             @lang('orders.import-excel.Use to add kg/cm or lbs/in')
+                <br><strong>sender first_name (Required)</strong>           @lang('orders.import-excel.Use to add sender First Name')
+                <br><strong>sender last name (Required)</strong>            @lang('orders.import-excel.Use to add sender Last Name')
+                <br><strong>sender_email (Optional)</strong>                @lang('orders.import-excel.Use to add sender Email')
+                <br><strong>sender_phone (Optional)</strong>                @lang('orders.import-excel.Use to add sender phone')using format +5518981424963
+                <br><strong>recipient first_name (Required)</strong>        @lang('orders.import-excel.Use to add recipient first name')
+                <br><strong>recipient last_name (OPtional)</strong>         @lang('orders.import-excel.Use to add recipient last name')
+                <br><strong>recipient_email (OPtional)</strong>             @lang('orders.import-excel.Use to add recipient email')
+                <br><strong>recipient_phone (Required)</strong>             @lang('orders.import-excel.Use to add recipient phone')using format +5518981424963
+                <br><strong>recipient_address (Required)</strong>           @lang('orders.import-excel.Use to add recipient address')
+                <br><strong>recipient_address_2 (OPtional)</strong>         @lang('orders.import-excel.Use to add recipient address 2')
+                <br><strong>recipient_house_number (Required)</strong>      @lang('orders.import-excel.Use to add recipient house/Street number')
+                <br><strong>recipient_zipcode (Required)</strong>           @lang('orders.import-excel.Use to add Zipcode')
+                <br><strong>recipient_city (Required)</strong>              @lang('orders.import-excel.Use to add City')
+                <br><strong>recipient_state_abbrivation (Required)</strong> @lang('orders.import-excel.Use to add State abbrivation (SE etc)')
+                <br><strong>recipient_country_code_iso (Required)</strong>  @lang('orders.import-excel.Use to add country code iso (Brazil)')
+                <br><strong>recepient_tax_id (Required)</strong>            @lang('orders.import-excel.Use to add customer tax id')
+                <br><strong>Freight To Custom (Required)</strong>           @lang('orders.import-excel.Use to add Freight Rate')
+                <br><strong>product quantity (Required)</strong>            @lang('orders.import-excel.Use to add Product quantity')
+                <br><strong>value (Required)</strong>                       @lang('orders.import-excel.Use to add product Price')
+                <br><strong>product name (Required)</strong>                @lang('orders.import-excel.Use to add Product name ')
+                <br><strong>NCM (Required)</strong>                         @lang('orders.import-excel.Use to add NCM/Sh Code')
+                <br><strong>perfume (Optional)</strong>                     @lang('orders.import-excel.Use to add Yes Or No')
+                <br><strong>battery (Optional)</strong>                     @lang('orders.import-excel.Use to add Yes Or No')
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="modal fade bd-example-modal-lg" id="xmlModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">XML Instructions</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <strong>Merchant (Required)</strong>@lang('orders.import-excel.Use to add customer merchant Name')
+                <br><strong>Carrier (Required)</strong>@lang('orders.import-excel.Use to add customer carrier')
+                <br><strong>TrackingId (Required)</strong>                @lang('orders.import-excel.Use to add customer tracking id ')
+                <br><strong>CustomerRefrence refrence# (OPtional)</strong>@lang('orders.import-excel.Use to add customer refrence')
+                <br><strong>Weight (Required)</strong>                    @lang('orders.import-excel.Use to add greater then 0')
+                <br><strong>Length (Required)</strong>                    @lang('orders.import-excel.Use to add greater then 0')
+                <br><strong>Width (Required)</strong>                     @lang('orders.import-excel.Use to add greater then 0')
+                <br><strong>Height (Required)</strong>                    @lang('orders.import-excel.Use to add greater then 0')
+                <br><strong>MeasurmentUnit (Required)</strong>            @lang('orders.import-excel.Use to add kg/cm or lbs/in')
+                <br><strong>SenderFirstName (Required)</strong>           @lang('orders.import-excel.Use to add sender First Name')
+                <br><strong>SenderLastName (Required)</strong>            @lang('orders.import-excel.Use to add sender Last Name')
+                <br><strong>SenderPhone (Optional)</strong>               @lang('orders.import-excel.Use to add sender phone')
+                <br><strong>SenderEmail (Optional)</strong>               @lang('orders.import-excel.Use to add sender Email')
+                <br><strong>RecipientFirstName (Required)</strong>        @lang('orders.import-excel.Use to add recipient first name')
+                <br><strong>RecipientLastName (Required)</strong>         @lang('orders.import-excel.Use to add recipient last name')
+                <br><strong>RecipientEmail (OPtional)</strong>            @lang('orders.import-excel.Use to add recipient email')
+                <br><strong>RecipientPhone (OPtional)</strong>            @lang('orders.import-excel.Use to add recipient phone')
+                <br><strong>RecipientAddress (Required)</strong>          @lang('orders.import-excel.Use to add recipient address')
+                <br><strong>RecipientAddress2 (Required)</strong>         @lang('orders.import-excel.Use to add recipient address 2')
+                <br><strong>RecipientHouseNo (OPtional)</strong>          @lang('orders.import-excel.Use to add recipient house/Street number')
+                <br><strong>RecipientZipcode (Required)</strong>          @lang('orders.import-excel.Use to add Zipcode')
+                <br><strong>RecipientCity (Required)</strong>             @lang('orders.import-excel.Use to add City')
+                <br><strong>RecipientStateAbbrivation (Required)</strong> @lang('orders.import-excel.Use to add State abbrivation (SE etc)')
+                <br><strong>RecipientCountryCodeIso (Required)</strong>   @lang('orders.import-excel.Use to add country code iso (BR)')
+                <br><strong>RecipientTaxId (Required)</strong>            @lang('orders.import-excel.Use to add customer tax id')
+                <br><strong>FreightToCustom (Required)</strong>           @lang('orders.import-excel.Use to add Freight Rate')
+                <br><strong>ProductQuantity (Required)</strong>           @lang('orders.import-excel.Use to add Product quantity')
+                <br><strong>ProductValue (Required)</strong>              @lang('orders.import-excel.Use to add product Price')
+                <br><strong>ProductDescription (Required)</strong>        @lang('orders.import-excel.Use to add Product name ')
+                <br><strong>NCM (Required)</strong>                       @lang('orders.import-excel.Use to add NCM/Sh Code')
+                <br><strong>Perfume (Optional)</strong>                   @lang('orders.import-excel.Use to add Yes Or No')
+                <br><strong>Battery (Optional)</strong>                   @lang('orders.import-excel.Use to add Yes Or No')
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              
+            </div>
+          </div>
+        </div>
+    </div>
 @endsection
