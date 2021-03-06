@@ -9,14 +9,14 @@
         </tr>
         @foreach ($slabs as $key => $slab)
             <tr>
-                <td>
-                    <input type="number" class="form-control" name="slab[{{$key}}][min_weight]" value="{{ $slab['min_weight'] }}">
+                {{-- <td> --}}
+                    <input type="hidden" class="form-control" name="slab[{{$key}}][min_weight]" value="{{ $slab['min_weight'] }}">
                     {{-- @error("slab.$key.min_weight")
                     <div class="text-danger">
                         {{ $message }}
                     </div>
-                    @enderror--}}
-                </td> 
+                    @enderror
+                </td> --}}
                 <td>
                     <input type="number" class="form-control" name="slab[{{$key}}][max_weight]" value="{{ $slab['max_weight'] }}">
                     @error("slab.$key.max_weight")
