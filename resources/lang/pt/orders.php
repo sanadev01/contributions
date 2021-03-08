@@ -107,8 +107,7 @@ return [
         'Use to add customer merchant Name'=> "Use para adicionar o nome do comerciante do cliente",
         'Use to add customer carrier'=> "Use para adicionar operadora de cliente",
         'Use to add customer tracking id '=> "Use para adicionar identificação de rastreamento de cliente",
-        'Use to add customer refrence'=> "
-        A referência do cliente é usada para especificar os itens no pedido; se você tiver mais de 1 item para importar, use o número de referência do cliente em todos os itens para fazer o sistema entender que esse item está relacionado a este pedido.",
+        'Use to add customer refrence'=> "A referência do cliente é usada para especificar os itens no pedido; se você tiver mais de 1 item para importar, use o número de referência do cliente em todos os itens para fazer o sistema entender que esse item está relacionado a este pedido.",
         'Use to add greater then 0'=> "Use para adicionar maior que 0",
         'Use to add kg/cm or lbs/in'=> "Use para adicionar kg / cm ou lbs / in",
         'Use to add sender First Name'=> "Use para adicionar o nome do remetente",
