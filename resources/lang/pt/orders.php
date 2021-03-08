@@ -113,7 +113,7 @@ return [
         'Use to add sender First Name'=> "Use para adicionar o nome do remetente",
         'Use to add sender Last Name'=> "Use para adicionar o sobrenome do remetente",
         'Use to add sender Email'=> "Use para adicionar o e-mail do remetente",
-        'Use to add sender phone'=> "Use para adicionar telefone remetente",
+        'Use to add sender phone'=> "Use para adicionar o telefone do remetente no máximo 15 dígitos",
         'Use to add recipient first name'=> "Use para adicionar o nome do destinatário",
         'Use to add recipient last name'=> "Use para adicionar o sobrenome do destinatário",
         'Use to add recipient email'=> "Use para adicionar e-mail de destinatário",

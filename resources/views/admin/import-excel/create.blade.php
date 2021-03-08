@@ -202,7 +202,7 @@
                 <br><strong>recipient first_name (Required)</strong>        @lang('orders.import-excel.Use to add recipient first name')
                 <br><strong>recipient last_name (OPtional)</strong>         @lang('orders.import-excel.Use to add recipient last name')
                 <br><strong>recipient_email (OPtional)</strong>             @lang('orders.import-excel.Use to add recipient email')
-                <br><strong>recipient_phone (Required)</strong>             @lang('orders.import-excel.Use to add recipient phone')
+                <br><strong>recipient_phone (Required)</strong>             @lang('orders.import-excel.Use to add recipient phone')using format +5518981424963
                 <br><strong>recipient_address (Required)</strong>           @lang('orders.import-excel.Use to add recipient address')
                 <br><strong>recipient_address_2 (OPtional)</strong>         @lang('orders.import-excel.Use to add recipient address 2')
                 <br><strong>recipient_house_number (Required)</strong>      @lang('orders.import-excel.Use to add recipient house/Street number')
@@ -248,7 +248,7 @@
                 <br><strong>sender first_name (Required)</strong>           @lang('orders.import-excel.Use to add sender First Name')
                 <br><strong>sender last name (Required)</strong>            @lang('orders.import-excel.Use to add sender Last Name')
                 <br><strong>sender_email (Optional)</strong>                @lang('orders.import-excel.Use to add sender Email')
-                <br><strong>sender_phone (Optional)</strong>                @lang('orders.import-excel.Use to add sender phone')using format +5518981424963
+                <br><strong>sender_phone (Optional)</strong>                @lang('orders.import-excel.Use to add sender phone')
                 <br><strong>recipient first_name (Required)</strong>        @lang('orders.import-excel.Use to add recipient first name')
                 <br><strong>recipient last_name (OPtional)</strong>         @lang('orders.import-excel.Use to add recipient last name')
                 <br><strong>recipient_email (OPtional)</strong>             @lang('orders.import-excel.Use to add recipient email')
@@ -302,7 +302,7 @@
                 <br><strong>RecipientFirstName (Required)</strong>        @lang('orders.import-excel.Use to add recipient first name')
                 <br><strong>RecipientLastName (Required)</strong>         @lang('orders.import-excel.Use to add recipient last name')
                 <br><strong>RecipientEmail (OPtional)</strong>            @lang('orders.import-excel.Use to add recipient email')
-                <br><strong>RecipientPhone (OPtional)</strong>            @lang('orders.import-excel.Use to add recipient phone')
+                <br><strong>RecipientPhone (OPtional)</strong>            @lang('orders.import-excel.Use to add recipient phone')using format +5518981424963
                 <br><strong>RecipientAddress (Required)</strong>          @lang('orders.import-excel.Use to add recipient address')
                 <br><strong>RecipientAddress2 (Required)</strong>         @lang('orders.import-excel.Use to add recipient address 2')
                 <br><strong>RecipientHouseNo (OPtional)</strong>          @lang('orders.import-excel.Use to add recipient house/Street number')
