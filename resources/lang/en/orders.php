@@ -117,7 +117,7 @@ return [
         'Use to add sender First Name' => "Use to add sender First Name",
         'Use to add sender Last Name' => "Use to add sender Last Name",
         'Use to add sender Email' => "Use to add sender Email",
-        'Use to add sender phone' => "Use to add sender phone",
+        'Use to add sender phone' => "Use to add sender phone max 15 digits",
         'Use to add recipient first name' => "Use to add recipient first name",
         'Use to add recipient last name' => "Use to add recipient last name",
         'Use to add recipient email' => "Use to add recipient email",
