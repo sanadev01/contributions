@@ -12,7 +12,7 @@ class OrderLabelController extends Controller
 {
     public function __invoke(Request $request, Order $order, LabelRepository $labelRepository)
     {
-        $this->authorize('canPrintLable',$order);
+        $this->authorize('canPrintLableViaApi',$order);
         
         if ( !$order->isPaid() &&  getBalance() < $order->gross_total){
             return apiResponse(false,"Not Enough Balance. Please Recharge your account.");
