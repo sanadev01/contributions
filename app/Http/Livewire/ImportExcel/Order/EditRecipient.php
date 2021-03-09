@@ -12,6 +12,7 @@ class EditRecipient extends Component
 {
     public $orderId; 
     public $order;
+    public $edit;
 
     public $recipient;
 
@@ -28,9 +29,11 @@ class EditRecipient extends Component
     public $zipcode;
     public $tax_id;
 
-    public function mount($order)
+    public function mount($order, $edit= '')
     {
+        
         $this->orderId = $order;
+        $this->edit = $edit;
         
         $this->order = $order;
         $this->recipient = $order->recipient;

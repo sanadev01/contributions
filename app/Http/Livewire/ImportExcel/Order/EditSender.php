@@ -8,7 +8,8 @@ use Livewire\Component;
 
 class EditSender extends Component
 {
-    public $order; 
+    public $order;
+    public $edit;
 
     public $sender_first_name;
     public $sender_last_name;
@@ -16,9 +17,11 @@ class EditSender extends Component
     public $sender_phone;
     public $sender_taxId;
 
-    public function mount($order)
+    public function mount($order, $edit= '')
     {
         $this->order = $order;
+        $this->edit = $edit;
+        
         $this->sender_first_name = old('sender_first_name',  $this->order->sender_first_name );
         $this->sender_last_name = old('sender_last_name', $this->order->sender_last_name);
         $this->sender_email = old('sender_email', $this->order->sender_email);
