@@ -60,7 +60,7 @@ class EditRecipient extends Component
     public function save()
     {
         
-        $data = $this->validate($this->rules(), $this->messages());
+        $data = Validator::make($this->rules(), $this->messages());
         
         $error = $this->order->error;
         
@@ -114,7 +114,7 @@ class EditRecipient extends Component
         ];
         
         if (Country::where('code', 'BR')->first()->id == $this->country_id) {
-            $rules['tax_id'] = 'sometimes|required_if:country_id,'.Country::where('code', 'BR')->first()->id;
+            $rules['tax_id'] = 'sometimes|cpf|required_if:country_id,'.Country::where('code', 'BR')->first()->id;
         }
 
         return $rules;
@@ -127,7 +127,7 @@ class EditRecipient extends Component
             'last_name.required' => 'last Name is required',
             'email.nullable' => 'email is not valid',
             'phone.required' => 'The phone must be at least 13 characters.',
-            'phone*.required' => 'Number should be in Brazil International Format',
+            'phone.*.required' => 'Number should be in Brazil International Format',
             'address.required' => 'address is required',
             'address2.nullable' => 'Address2 is not more then 50 character',
             'street_no.required' => 'house street no is required',
