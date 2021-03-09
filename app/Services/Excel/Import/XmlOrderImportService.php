@@ -333,9 +333,11 @@ class XmlOrderImportService
     public function validationRow($items, $isItem)
     {
         $validator = Validator::make($this->validationData($isItem, $items), $this->rules($isItem, $items), $this->validationMessages($isItem));
+        
         if ($validator->fails()) {
             foreach ($validator->errors()->messages() as $messages) {
                 foreach ($messages as $error) {
+                    
                     // accumulating errors:
                     $this->errors[] = $error;
                 }

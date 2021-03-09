@@ -61,7 +61,7 @@ class EditRecipient extends Component
     {
         
         $data = Validator::make($this->rules(), $this->messages());
-
+        
         $error = $this->order->error;
         
         if($error){
@@ -126,7 +126,8 @@ class EditRecipient extends Component
             'first_name.required' => 'first Name is required',
             'last_name.required' => 'last Name is required',
             'email.nullable' => 'email is not valid',
-            'phone.required' => 'phone is required',
+            'phone.required' => 'The phone must be at least 13 characters.',
+            'phone.*.required' => 'Number should be in Brazil International Format',
             'address.required' => 'address is required',
             'address2.nullable' => 'Address2 is not more then 50 character',
             'street_no.required' => 'house street no is required',
