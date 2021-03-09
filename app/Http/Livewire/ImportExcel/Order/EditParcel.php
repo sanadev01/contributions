@@ -11,6 +11,7 @@ class EditParcel extends Component
 {
     public $orderId; 
     public $order;
+    public $edit;
 
     public $merchant;
     public $carrier;
@@ -31,8 +32,9 @@ class EditParcel extends Component
     public $volumeWeight;
     public $currentWeightUnit;
 
-    public function mount($order)
+    public function mount($order, $edit= '')
     {
+        $this->edit = $edit;
         $this->order = $order;
         $this->fillData();
     }
