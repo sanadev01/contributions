@@ -126,7 +126,7 @@ return [
         'Use to add State abbrivation (SE etc)'=> "Use para adicionar abrivação de estado (SE etc)",
         'Use to add country code iso (BR)'=> "Use para adicionar o código do país iso (BR)",
         'Use to add country code iso (Brazil)'=> "Use para adicionar o código do país iso (Brazil)",
-        'Use to add customer tax id'=> "para adicionar o ID fiscal do cliente (CPF/CNPJ)",
+        'Use to add customer tax id'=> "Use para adicionar a identificação fiscal do cliente (CPF / CNPJ) apenas para o Brazil usando o formato 000.000.000-00",
         'Use to add Freight Rate'=> "Use para adicionar taxa de frete",
         'Use to add Product quantity'=> "Use para adicionar a quantidade do produto",
         'Use to add product Price'=> "Use para adicionar o preço do produto",
