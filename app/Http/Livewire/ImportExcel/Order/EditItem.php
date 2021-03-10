@@ -41,7 +41,7 @@ class EditItem extends Component
         
 
         $data = $this->validate([
-            'customer_reference' => 'required',
+            'customer_reference' => 'nullable',
             'user_declared_freight' => 'regex:/^[0-9]+(\.[0-9][0-9]?)?$/',
         ]);
 

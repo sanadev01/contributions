@@ -130,7 +130,7 @@ return [
         'Use to add State abbrivation (SE etc)' => "Use to add State abbrivation (SE etc)",
         'Use to add country code iso (BR)' => "Use to add country code iso (BR)",
         'Use to add country code iso (Brazil)' => "Use to add country code iso (Brazil)",
-        'Use to add customer tax id' => "Use to add customer tax id (CPF/CNPJ)",
+        'Use to add customer tax id' => "Use to add customer tax id (CPF/CNPJ) only for Brazil useing Format 000.000.000-00",
         'Use to add Freight Rate' => "Use to add Freight Rate",
         'Use to add Product quantity' => "Use to add Product quantity",
         'Use to add product Price' => "Use to add product Price",

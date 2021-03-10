@@ -228,7 +228,7 @@ class XmlOrderImportService
             ];
 
             if (Country::where('code', 'BR')->first()->id == optional( Country::where('code',$items['RecipientCountryCodeIso']?$items['RecipientCountryCodeIso']:null)->first() )->id ) {
-                $rules['RecipientTaxId'] = 'sometimes|cpf|required_if:country_id,'.Country::where('code', 'BR')->first()->id;
+                $rules['RecipientTaxId'] = 'required';
             }
 
             return $rules;
