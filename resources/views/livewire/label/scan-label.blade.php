@@ -14,12 +14,14 @@
         <div class="col-7 d-flex justify-content-end">
             <form action="{{ route('admin.label.scan.store') }}" method="post">
                 @csrf
-            @foreach ($packagesRows as $key => $package)
-                <input type="hidden" name="order[]" value="{{ $package['reference'] }}">
-            @endforeach
-            <button type="submit" class="btn btn-success mr-2" title="@lang('orders.import-excel.Download')">
-                <i class="feather icon-download"></i> @lang('orders.import-excel.Download') All
-            </button>
+                @foreach ($packagesRows as $key => $package)
+                    <input type="hidden" name="order[]" value="{{ $package['reference'] }}">
+                @endforeach
+                <button type="submit" class="btn btn-success mr-2" title="@lang('orders.import-excel.Download')">
+                    <i class="feather icon-download"></i> @lang('orders.import-excel.Download') All
+                </button>
+                
+            </form>
         </div>
     </div>
     <table class="table table-bordered">
@@ -88,6 +90,5 @@
             </td>
         </tr> --}}
     </table>
-    </form>
 @include('layouts.livewire.loading')
 </div>

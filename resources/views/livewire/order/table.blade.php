@@ -92,9 +92,9 @@
                         <select class="form-control" wire:model="status">
                             <option value="">All</option>
                             <option value="{{ App\Models\Order::STATUS_ORDER }}">ORDER</option>
-                            <option value="{{ App\Models\Order::STATUS_CANCEL }}">CANCEL</option>
+                            <option value="{{ App\Models\Order::STATUS_CANCEL }}">CANCELLED</option>
                             <option value="{{ App\Models\Order::STATUS_REJECTED }}">REJECTED</option>
-                            <option value="{{ App\Models\Order::STATUS_RELEASE }}">RELEASE</option>
+                            <option value="{{ App\Models\Order::STATUS_RELEASE }}">RELEASED</option>
                             <option value="{{ App\Models\Order::STATUS_PAYMENT_PENDING }}">PAYMENT_PENDING</option>
                             <option value="{{ App\Models\Order::STATUS_PAYMENT_DONE }}">PAYMENT_DONE</option>
                             <option value="{{ App\Models\Order::STATUS_SHIPPED }}">SHIPPED</option>
