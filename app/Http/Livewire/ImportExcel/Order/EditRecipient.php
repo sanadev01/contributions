@@ -57,28 +57,15 @@ class EditRecipient extends Component
 
     public function render()
     {
+        
         return view('livewire.import-excel.order.edit-recipient');
     }
 
     public function save()
     {
-        // $dataa =[
-        //     'first_name' => $this->first_name,
-        //     'last_name' => $this->last_name,
-        //     'email' => $this->email,
-        //     'phone' => $this->phone,
-        //     'address' => $this->address,
-        //     'address2' => $this->address2,
-        //     'street_no' => $this->street_no,
-        //     'country_id' => $this->country_id,
-        //     'state_id' => $this->state_id,
-        //     'city' => $this->city,
-        //     'zipcode' => $this->zipcode,
-        //     'tax_id' => $this->tax_id,
-        // ];
+        
         $data = $this->validate($this->rules(), $this->messages());
-        // $data = Validator::make($dataa, $this->rules(), $this->messages())->validate();
-        // dd($data);
+       
         $error = $this->order->error;
        
         if($error){
@@ -147,7 +134,7 @@ class EditRecipient extends Component
 
     public function messages()
     {
-        return [
+        $message = [
             'first_name.required' => 'first Name is required',
             'last_name.required' => 'last Name is required',
             'email.nullable' => 'email is not valid',
@@ -165,5 +152,11 @@ class EditRecipient extends Component
             'tax_id.required' => 'The selected recipient tax id is invalid.',
             'tax_id.*.required' => 'The recipient tax id field is required.',
         ];
+
+        if(app()->getLocale() == 'pt'){
+            $message['phone.*.required'] = 'O número deve estar no formato internacional do Brazil';
+        }
+
+        return $message;
     }
 }
