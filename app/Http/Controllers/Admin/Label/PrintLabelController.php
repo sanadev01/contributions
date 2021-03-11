@@ -42,36 +42,39 @@ class PrintLabelController extends Controller
      */
     public function store(Request $request, LabelRepository $labelRepository)
     {
-        
-        $zip = new ZipArchive();
-        $tempFileUri = storage_path('app/labels/label.zip');
-        
-        if(file_exists($tempFileUri)){
-            unlink($tempFileUri);
-        }
+        if($request->order){
 
-        if ($zip->open($tempFileUri, ZipArchive::CREATE) === TRUE) {
-
-            foreach($request->order as $orderId){
-                $order = Order::find($orderId);
-                $labelData = $labelRepository->get($order);
+            $zip = new ZipArchive();
+            $tempFileUri = storage_path('app/labels/label.zip');
             
-                if ( $labelData ){
-                    Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
-                }
-                $relativeNameInZipFile = storage_path("app/labels/{$order->corrios_tracking_code}.pdf");
-                if (! $zip->addFile($relativeNameInZipFile, basename($relativeNameInZipFile))) {
-                    echo 'Could not add file to ZIP: ' . $relativeNameInZipFile;
-                }
-                
+            if(file_exists($tempFileUri)){
+                unlink($tempFileUri);
             }
 
-            $zip->close();
-        } else {
-            echo 'Could not open ZIP file.';
-        }
+            if ($zip->open($tempFileUri, ZipArchive::CREATE) === TRUE) {
 
-        return response()->download($tempFileUri);
+                foreach($request->order as $orderId){
+                    $order = Order::find($orderId);
+                    $labelData = $labelRepository->get($order);
+                
+                    if ( $labelData ){
+                        Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
+                    }
+                    $relativeNameInZipFile = storage_path("app/labels/{$order->corrios_tracking_code}.pdf");
+                    if (! $zip->addFile($relativeNameInZipFile, basename($relativeNameInZipFile))) {
+                        echo 'Could not add file to ZIP: ' . $relativeNameInZipFile;
+                    }
+                    
+                }
+
+                $zip->close();
+            } else {
+                echo 'Could not open ZIP file.';
+            }
+
+            return response()->download($tempFileUri);
+        }
+        return back();
 
     }
 
