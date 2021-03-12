@@ -26,7 +26,7 @@ return [
     'Users' => 'Comercial',
     'Roles' => 'Funções',
     'Billing Informations' => 'Informações de pagamento',
-    'Balance' => 'Equilíbrio',
+    'Balance' => 'Saldo da Conta',
     'Settings' => 'Configurações',
     'Fixed Charges' => 'Cobranças Fixas',
     'Reports' => [

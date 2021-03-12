@@ -26,6 +26,8 @@
             @admin
             <th>User</th>
             @endadmin
+            <th>Tracking Code</th>
+            <th>WHR#</th>
             <th>Card Last 4 Digits</th>
             <th>Debit/Credit</th>
             <th>Balance</th>
@@ -41,9 +43,14 @@
             </th>
             @endadmin
             <th>
+                <input type="search" wire:model.debounce.500ms="trackingCode" class="form-control">
+            </th>
+            <th>
+                <input type="search" wire:model.debounce.500ms="warehouseNumber" class="form-control">
+            </th>
+            <th>
                 <input type="search" wire:model.debounce.500ms="card" class="form-control">
             </th>
-
             <th>
                 <select name="" class="form-control" wire:model="type">
                     <option value="">All</option>
@@ -60,6 +67,20 @@
                 @admin
                 <td>{{ optional($deposit->user)->name }}</td>
                 @endadmin
+                <td>
+                    @if($deposit->hasOrder())
+                        <button data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->orders()->first()) }}" class="btn dropdown-item w-100" title="Show Order Details">
+                            {{ $deposit->orders()->first()->corrios_tracking_code }}
+                        </button>
+                    @endif
+                </td>
+                <td>
+                    @if($deposit->hasOrder())
+                        <button data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->orders()->first()) }}" class="btn dropdown-item w-100" title="Show Order Details">
+                            {{ $deposit->orders()->first()->warehouse_number }}
+                        </button>
+                    @endif
+                </td>
                 <td>
                     {{ $deposit->last_four_digits  }}
                 </td>

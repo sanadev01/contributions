@@ -17,6 +17,8 @@ class TableComponent extends Component
     public $uuid;
     public $last_four_digits;
     public $is_paid;
+    public $trackingCode;
+    public $warehouseNumber;
     public $type;
 
     public $sortBy = 'id';
@@ -46,6 +48,8 @@ class TableComponent extends Component
             'last_four_digits' => $this->last_four_digits,
             'type' => $this->type,
             'is_paid' => $this->is_paid,
+            'warehouseNumber' => $this->warehouseNumber,
+            'trackingCode' => $this->trackingCode,
         ]),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc');
     }
 

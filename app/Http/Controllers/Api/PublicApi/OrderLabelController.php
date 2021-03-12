@@ -24,7 +24,7 @@ class OrderLabelController extends Controller
                 'status' => Order::STATUS_PAYMENT_DONE
             ]);
 
-            chargeAmount($order->gross_total);
+            chargeAmount($order->gross_total,$order);
         }
 
 
