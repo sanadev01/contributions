@@ -29,7 +29,6 @@ class OrderLabelController extends Controller
 
 
         $labelData = null;
-        $error = null;
 
         if ( $request->update_label === 'true' ){
             $labelData = $labelRepository->update($order);
@@ -43,8 +42,8 @@ class OrderLabelController extends Controller
             Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
         }
 
-        if ( $error ){
-            return apiResponse(false,$error);
+        if ( $labelRepository->getError() ){
+            return apiResponse(false,$labelRepository->getError());
         }
 
         return apiResponse(true,"Lable Generated successfully.",[
