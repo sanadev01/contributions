@@ -53,19 +53,9 @@ class CalculatorController extends Controller
         if ( $request->unit == 'kg/cm' ){
             $volumetricWeight = WeightCalculator::getVolumnWeight($request->length,$request->width,$request->height,'cm');
             $chargableWeight = round($volumetricWeight >  $originalWeight ? $volumetricWeight :  $originalWeight,2);
-
-            if($chargableWeight > 30){
-                session()->flash('alert-danger',"You Weight is more then 30 kg/cm Please Contact customer service center");
-                return back();
-            }
         }else{
             $volumetricWeight = WeightCalculator::getVolumnWeight($request->length,$request->width,$request->height,'in');
             $chargableWeight = round($volumetricWeight >  $originalWeight ? $volumetricWeight :  $originalWeight,2);
-
-            if($chargableWeight > 66.15){
-                session()->flash('alert-danger',"You Weight is more then 66.15 lbs/in Please Contact customer service center");
-                return back();
-            }
         }
 
         $recipient = new Recipient();
