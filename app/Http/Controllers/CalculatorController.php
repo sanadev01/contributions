@@ -21,35 +21,51 @@ class CalculatorController extends Controller
 
     public function store(Request $request)
     {
-        $this->validate(
-            $request,
-            [
-                'country_id' => 'required|numeric|exists:countries,id',
-                'state_id' => 'required|exists:states,id',
-                'weight' => 'sometimes|numeric',
-                'height' => 'sometimes|numeric',
-                'width' => 'sometimes|numeric',
-                'length' => 'sometimes|numeric',
-                'unit' => 'required|in:lbs/in,kg/cm',
-            ],
-            [
-                'country_id' => 'Please Select A country',
-                'state_id' => 'Please Select A state',
-                'weight' => 'Please Enter weight',
-                'height' => 'Please Enter height',
-                'width' => 'Please Enter width',
-                'length' => 'Please Enter length',
-                'unit' => 'Please Select Measurement Unit ',
-            ]
-        );
+        $rules = [
+            'country_id' => 'required|numeric|exists:countries,id',
+            'state_id' => 'required|exists:states,id',
+            'height' => 'sometimes|numeric',
+            'width' => 'sometimes|numeric',
+            'length' => 'sometimes|numeric',
+            'unit' => 'required|in:lbs/in,kg/cm',
+        ];
+        if($request->unit == 'kg/cm'){
+            $rules['weight'] = 'sometimes|numeric|max:30';
+        }else{
+            $rules['weight'] = 'sometimes|numeric|max:66.15';
+        }
+
+
+        $message = [
+            'country_id' => 'Please Select A country',
+            'state_id' => 'Please Select A state',
+            'weight' => 'Please Enter weight',
+            'weight.max' => 'weight exceed the delivery of Correios',
+            'height' => 'Please Enter height',
+            'width' => 'Please Enter width',
+            'length' => 'Please Enter length',
+            'unit' => 'Please Select Measurement Unit ',
+        ];
+        
+        $this->validate($request, $rules, $message);
 
         $originalWeight =  $request->weight;
         if ( $request->unit == 'kg/cm' ){
             $volumetricWeight = WeightCalculator::getVolumnWeight($request->length,$request->width,$request->height,'cm');
             $chargableWeight = round($volumetricWeight >  $originalWeight ? $volumetricWeight :  $originalWeight,2);
+
+            if($chargableWeight > 30){
+                session()->flash('alert-danger',"You Weight is more then 30 kg/cm Please Contact customer service center");
+                return back();
+            }
         }else{
             $volumetricWeight = WeightCalculator::getVolumnWeight($request->length,$request->width,$request->height,'in');
             $chargableWeight = round($volumetricWeight >  $originalWeight ? $volumetricWeight :  $originalWeight,2);
+
+            if($chargableWeight > 66.15){
+                session()->flash('alert-danger',"You Weight is more then 66.15 lbs/in Please Contact customer service center");
+                return back();
+            }
         }
 
         $recipient = new Recipient();

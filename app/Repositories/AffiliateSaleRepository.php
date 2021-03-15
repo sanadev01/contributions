@@ -15,9 +15,17 @@ class AffiliateSaleRepository
             $query->where('user_id', Auth::id());
         }
 
-        if ( $request->date ){
-            $query->where(function($query) use($request){
-                return $query->where('created_at', 'LIKE', "%{$request->date}%");
+        if ( $request->start ){
+            $startDate = $request->start . ' 00:00:00';
+            $query->where(function($query) use($startDate){
+                return $query->where('created_at','>',$startDate);
+            });
+        }
+        
+        if ( $request->end ){
+            $endDate = $request->end.' 23:59:59';
+            $query->where(function($query) use($endDate){
+                return $query->where('created_at','<=', $endDate);
             });
         }
 
@@ -26,10 +34,37 @@ class AffiliateSaleRepository
                 return $query->where('name', 'LIKE', "%{$request->name}%");
             });
         }
+        if ( $request->user ){
+            $query->whereHas('user',function($query) use($request) {
+                return $query->where('name', 'LIKE', "%{$request->user}%");
+            });
+        }
 
         if ( $request->order ){
             $query->where(function($query) use($request){
                 return $query->where('order_id', 'LIKE', "%{$request->order}%");
+            });
+        }
+       
+        if ( $request->whr ){
+            $query->whereHas('order',function($query) use($request){
+                return $query->where('warehouse_number', 'LIKE', "%{$request->whr}%");
+            });
+        }
+        if ( $request->reference ){
+            $query->whereHas('order',function($query) use($request){
+                return $query->where('customer_reference', 'LIKE', "%{$request->reference}%");
+            });
+        }
+
+        if ( $request->tracking ){
+            $query->whereHas('order',function($query) use($request){
+                return $query->where('tracking_id', 'LIKE', "%{$request->tracking}%");
+            });
+        }
+        if ( $request->weight ){
+            $query->whereHas('order',function($query) use($request){
+                return $query->where('weight', 'LIKE', "%{$request->weight}%");
             });
         }
 
