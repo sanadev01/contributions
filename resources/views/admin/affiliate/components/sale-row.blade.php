@@ -22,7 +22,7 @@
         </td>
     @endadmin
     <td>
-        {{ $sale->order->user->name }}
+        {{ optional($sale->order->user)->name }}
     </td>
     <td>
         <button data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$sale->order) }}" class="btn btn-primary" title="@lang('sales-commission.Show Order Details')">
