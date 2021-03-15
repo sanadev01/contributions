@@ -1,5 +1,13 @@
 @extends('layouts.master')
-
+@section('css')
+    <style>
+       .btn-cancelled {
+            color: #fff!important;
+            background-color: #5a0000!important;
+            border-color: #5a0000!important;
+        }
+    </style>
+@endsection
 @section('page')
 <div class="card min-vh-100">
     <div class="card-header">
