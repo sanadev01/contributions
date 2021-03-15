@@ -1,16 +1,18 @@
 
 <tr>
-    <td>
-        <div class="vs-checkbox-con vs-checkbox-primary" title="@lang('orders.Bulk Print')">
-            <input type="checkbox" name="sales[]" class="bulk-sales" value="{{$sale->id}}">
-            <span class="vs-checkbox vs-checkbox-lg">
-                <span class="vs-checkbox--check">
-                    <i class="vs-icon feather icon-check"></i>
+    @admin
+        <td>
+            <div class="vs-checkbox-con vs-checkbox-primary" title="@lang('orders.Bulk Print')">
+                <input type="checkbox" name="sales[]" class="bulk-sales" value="{{$sale->id}}">
+                <span class="vs-checkbox vs-checkbox-lg">
+                    <span class="vs-checkbox--check">
+                        <i class="vs-icon feather icon-check"></i>
+                    </span>
                 </span>
-            </span>
-            <span class="h3 mx-2 text-primary my-0 py-0"></span>
-        </div>
-    </td>
+                <span class="h3 mx-2 text-primary my-0 py-0"></span>
+            </div>
+        </td>
+    @endadmin
     <td>
         {{ optional($sale->created_at)->format('m/d/Y') }}
     </td>

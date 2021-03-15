@@ -1,10 +1,12 @@
 <div class="p-2">
-    <div class="row">
-        <div class="col-12 text-right mb-3">
-            <p class="mr-2 h5">Paid Commission:<span class="text-success h4"> $ {{ number_format($sales->where('is_paid', true)->sum('value'), 2) }}</span></p>
-            <p class="mr-2 h5">UnPaid Commission:<span class="text-danger h4"> $ {{ number_format($sales->where('is_paid', false)->sum('value'), 2) }}</span></p>
+    @admin
+        <div class="row">
+            <div class="col-12 text-right mb-3">
+                <p class="mr-2 h5">Paid Commission:<span class="text-success h4"> $ {{ number_format($sales->where('is_paid', true)->sum('value'), 2) }}</span></p>
+                <p class="mr-2 h5">UnPaid Commission:<span class="text-danger h4"> $ {{ number_format($sales->where('is_paid', false)->sum('value'), 2) }}</span></p>
+            </div>
         </div>
-    </div>
+    @endadmin
     <div class="row mb-2 no-print">
         <div class="col-1">
             <select class="form-control" wire:model="pageSize">
@@ -36,13 +38,15 @@
         <table class="table mb-0 table-responsive-md" id="">
             <thead>
                 <tr>
-                    <th style="min-width: 100px;">
-                        <select name="" id="bulk-actions" class="form-control">
-                            <option value="clear">Clear All</option>
-                            <option value="checkAll">Select All</option>
-                            <option value="pay-commission">Pay Commission</option>
-                        </select>
-                    </th>
+                    @admin
+                        <th style="min-width: 100px;">
+                            <select name="" id="bulk-actions" class="form-control">
+                                <option value="clear">Clear All</option>
+                                <option value="checkAll">Select All</option>
+                                <option value="pay-commission">Pay Commission</option>
+                            </select>
+                        </th>
+                    @endadmin
                     <th>@lang('sales-commission.Date')</th>
                     @admin
                         <th>@lang('sales-commission.User')</th>
@@ -60,7 +64,9 @@
                     <th>@lang('status')</th>
                 </tr>
                 <tr class="no-print">
-                    <th></th>
+                    @admin
+                        <th></th>
+                    @endadmin
                     <th>
                         <div class="row">
                             <input type="date" class="form-control col-md-6" wire:model.debounce.1000ms="start">
