@@ -19,7 +19,7 @@
     
     <div class="card-content">
         <div class="card-body no-print" style="overflow-y: visible">
-            <livewire:order.table/>
+            <livewire:order.table :userType="$userType"/>
         </div>
     </div>
     <form action="{{ route('admin.order.bulk-action') }}" method="GET" id="bulk_actions_form">

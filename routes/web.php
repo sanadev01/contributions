@@ -56,7 +56,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('import-order', ImportOrderController::class)->only(['index','store', 'edit','destroy']);
         });
 
-        Route::resource('orders',OrderController::class)->only('index','destroy');
+        Route::resource('orders',OrderController::class)->only('index','destroy', 'show');
 
         Route::namespace('Order')->group(function () {
             Route::resource('leve-order-import', LeveOrderImportController::class)->only(['index','store']);
