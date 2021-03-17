@@ -15,6 +15,8 @@ class Table extends Component
     public $search;
 
     public $pageSize = 50;
+    // public $wholeSales = '';
+    // public $retail = '';
 
     private $query;
 
@@ -33,6 +35,7 @@ class Table extends Component
     public $amount = '';
     public $status = '';
     public $orderType = null;
+    public $userType = null;
     public $paymentStatus = null;
 
     /**
@@ -41,8 +44,9 @@ class Table extends Component
     public $sortAsc = false;
     public $sortBy = 'id';
 
-    public function mount()
+    public function mount($userType = null)
     {
+        $this->userType = $userType;
         $this->query = $this->getQuery();
     }
 
@@ -174,6 +178,14 @@ class Table extends Component
             $orders->where('user_id', Auth::id());
         }
 
+        if($this->userType){
+            $orders = $orders->whereHas('user', function ($queryUser) {
+                $queryUser->whereHas('role', function ($queryRole) {
+                    return $queryRole->where('name', $this->userType);
+                });
+            });
+        }
+        
         return $orders;
     }
 
