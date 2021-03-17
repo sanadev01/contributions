@@ -29,6 +29,11 @@ class Deposit extends Model
         return $this->belongsToMany(Order::class);
     }
 
+    public function firstOrder()
+    {
+        return $this->orders()->first();
+    }
+
     public function hasOrder()
     {
         return $this->orders()->count();

@@ -59,6 +59,15 @@ class DepositRepository
             $query->where('uuid','LIKE',"%{$request->uuid}%");
         }
 
+        if ( $request->dateFrom ){
+            $query->where('created_at','>=',$request->dateFrom);
+        }
+
+        if ( $request->dateTo ){
+            $query->where('created_at','<=',$request->dateTo);
+        }
+
+
         if ( $request->last_four_digits ){
             $query->where('last_four_digits','LIKE',"%{$request->last_four_digits}%");
         }
