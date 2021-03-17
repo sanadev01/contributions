@@ -15,8 +15,6 @@ class Table extends Component
     public $search;
 
     public $pageSize = 50;
-    // public $wholeSales = '';
-    // public $retail = '';
 
     private $query;
 
@@ -185,7 +183,7 @@ class Table extends Component
                 });
             });
         }
-        
+
         return $orders;
     }
 
