@@ -72,7 +72,7 @@ class ExportDepositReport extends AbstractExportService
         $this->setColumnWidth('H', 20);
         $this->setCellValue('H1', 'Credit/Debit');
 
-        $this->setBackgroundColor('A1:F1', '2b5cab');
+        $this->setBackgroundColor('A1:H1', '2b5cab');
         $this->setColor('A1:H1', 'FFFFFF');
 
         $this->currentRow++;
