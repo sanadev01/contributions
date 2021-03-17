@@ -24,15 +24,38 @@ class Deposit extends Model
         return $lastTransaction->balance;
     }
 
-    public static function chargeAmount($amount)
+    public function orders()
     {
-        return self::create([
+        return $this->belongsToMany(Order::class);
+    }
+
+    public function firstOrder()
+    {
+        return $this->orders()->first();
+    }
+
+    public function hasOrder()
+    {
+        return $this->orders()->count();
+    }
+
+    public static function chargeAmount($amount,Order $order=null)
+    {
+
+        $deposit = self::create([
             'uuid' => PaymentInvoice::generateUUID('DP-'),
             'amount' => $amount,
             'user_id' => Auth::id(),
             'balance' => Deposit::getCurrentBalance() - $amount,
             'is_credit' => false,
         ]);
+
+        if ( $order ){
+            $order->deposits()->sync($deposit->id);
+        }
+
+        return $deposit;
+        
     }
 
 

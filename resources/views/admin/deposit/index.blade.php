@@ -24,3 +24,8 @@
     </section>
 @endsection
 
+@section('modal')
+    <x-modal/>
+@endsection
+
+
