@@ -39,6 +39,18 @@ class DepositRepository
             });
         }
 
+        if ( $request->warehouseNumber ){
+            $query->whereHas('orders',function($query) use($request){
+                return $query->where('warehouse_number','LIKE',"%{$request->warehouseNumber}%");
+            });
+        }
+
+        if ( $request->trackingCode ){
+            $query->whereHas('orders',function($query) use($request){
+                return $query->where('corrios_tracking_code','LIKE',"%{$request->trackingCode}%");
+            });
+        }
+
         if ( $request->type ){
             $query->where('is_credit',$request->type);
         }
@@ -46,6 +58,15 @@ class DepositRepository
         if ( $request->uuid ){
             $query->where('uuid','LIKE',"%{$request->uuid}%");
         }
+
+        if ( $request->dateFrom ){
+            $query->where('created_at','>=',$request->dateFrom);
+        }
+
+        if ( $request->dateTo ){
+            $query->where('created_at','<=',$request->dateTo);
+        }
+
 
         if ( $request->last_four_digits ){
             $query->where('last_four_digits','LIKE',"%{$request->last_four_digits}%");

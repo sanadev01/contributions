@@ -19,7 +19,7 @@
             </li>
 
             @can('viewAny', App\Models\Order::class)
-                <li class="nav-item {{ $isActive(['admin.orders.index','admin.orders.edit']) }}">
+                <li class="nav-item {{ $isActive(['admin.orders.index','admin.orders.edit','admin.orders.show']) }}">
                     <a href="{{ route('admin.orders.index') }}">
                         <i class="feather icon-truck"></i>
                         <span class="menu-title">@lang('menu.orders')</span>

@@ -12,7 +12,7 @@ class OrderLabelController extends Controller
 {
     public function __invoke(Request $request, Order $order, LabelRepository $labelRepository)
     {
-        $this->authorize('canPrintLable',$order);
+        $this->authorize('canPrintLableViaApi',$order);
         
         if ( !$order->isPaid() &&  getBalance() < $order->gross_total){
             return apiResponse(false,"Not Enough Balance. Please Recharge your account.");
@@ -24,12 +24,11 @@ class OrderLabelController extends Controller
                 'status' => Order::STATUS_PAYMENT_DONE
             ]);
 
-            chargeAmount($order->gross_total);
+            chargeAmount($order->gross_total,$order);
         }
 
 
         $labelData = null;
-        $error = null;
 
         if ( $request->update_label === 'true' ){
             $labelData = $labelRepository->update($order);
@@ -43,8 +42,8 @@ class OrderLabelController extends Controller
             Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
         }
 
-        if ( $error ){
-            return apiResponse(false,$error);
+        if ( $labelRepository->getError() ){
+            return apiResponse(false,$labelRepository->getError());
         }
 
         return apiResponse(true,"Lable Generated successfully.",[

@@ -22,4 +22,9 @@ class Recipient extends Model
     {
         return $this->belongsTo(State::class);
     }
+
+    public function fullName()
+    {
+        return $this->first_name.' '.$this->last_name;
+    }
 }

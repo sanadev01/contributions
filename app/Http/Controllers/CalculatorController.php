@@ -21,27 +21,33 @@ class CalculatorController extends Controller
 
     public function store(Request $request)
     {
-        $this->validate(
-            $request,
-            [
-                'country_id' => 'required|numeric|exists:countries,id',
-                'state_id' => 'required|exists:states,id',
-                'weight' => 'sometimes|numeric',
-                'height' => 'sometimes|numeric',
-                'width' => 'sometimes|numeric',
-                'length' => 'sometimes|numeric',
-                'unit' => 'required|in:lbs/in,kg/cm',
-            ],
-            [
-                'country_id' => 'Please Select A country',
-                'state_id' => 'Please Select A state',
-                'weight' => 'Please Enter weight',
-                'height' => 'Please Enter height',
-                'width' => 'Please Enter width',
-                'length' => 'Please Enter length',
-                'unit' => 'Please Select Measurement Unit ',
-            ]
-        );
+        $rules = [
+            'country_id' => 'required|numeric|exists:countries,id',
+            'state_id' => 'required|exists:states,id',
+            'height' => 'sometimes|numeric',
+            'width' => 'sometimes|numeric',
+            'length' => 'sometimes|numeric',
+            'unit' => 'required|in:lbs/in,kg/cm',
+        ];
+        if($request->unit == 'kg/cm'){
+            $rules['weight'] = 'sometimes|numeric|max:30';
+        }else{
+            $rules['weight'] = 'sometimes|numeric|max:66.15';
+        }
+
+
+        $message = [
+            'country_id' => 'Please Select A country',
+            'state_id' => 'Please Select A state',
+            'weight' => 'Please Enter weight',
+            'weight.max' => 'weight exceed the delivery of Correios',
+            'height' => 'Please Enter height',
+            'width' => 'Please Enter width',
+            'length' => 'Please Enter length',
+            'unit' => 'Please Select Measurement Unit ',
+        ];
+        
+        $this->validate($request, $rules, $message);
 
         $originalWeight =  $request->weight;
         if ( $request->unit == 'kg/cm' ){

@@ -11,13 +11,15 @@ class EditItem extends Component
 {
     public $orderId; 
     public $order; 
+    public $edit; 
     public $items; 
     public $shCodes = [];
     public $customer_reference;
     public $user_declared_freight;
 
-    public function mount($order)
+    public function mount($order, $edit= '')
     {
+        $this->edit = $edit;   
         $this->order = $order;   
         $this->customer_reference = $order->customer_reference;   
         $this->user_declared_freight = $order->user_declared_freight;   
@@ -39,7 +41,7 @@ class EditItem extends Component
         
 
         $data = $this->validate([
-            'customer_reference' => 'required',
+            'customer_reference' => 'nullable',
             'user_declared_freight' => 'regex:/^[0-9]+(\.[0-9][0-9]?)?$/',
         ]);
 

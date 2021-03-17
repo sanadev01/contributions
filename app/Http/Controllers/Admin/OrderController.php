@@ -9,9 +9,15 @@ use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
-    public function index()
+    public function index($userType = null)
     {
-        return view('admin.orders.index');
+        return view('admin.orders.index', compact('userType'));
+    }
+    
+    public function show($order = null)
+    {
+        $userType = $order;
+        return view('admin.orders.index', compact('userType'));
     }
 
 

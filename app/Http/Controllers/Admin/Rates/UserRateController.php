@@ -24,7 +24,7 @@ class UserRateController extends Controller
         }
 
         $rates = $rateReportsRepository->getRateReport($packageId);
-        return view('admin.rates.profit-packages.user-profit-package.index', compact('rates'));
+        return view('admin.rates.profit-packages.user-profit-package.index', compact('rates','packageId'));
     }
     
 }

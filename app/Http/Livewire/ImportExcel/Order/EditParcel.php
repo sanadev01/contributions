@@ -11,6 +11,7 @@ class EditParcel extends Component
 {
     public $orderId; 
     public $order;
+    public $edit;
 
     public $merchant;
     public $carrier;
@@ -31,8 +32,9 @@ class EditParcel extends Component
     public $volumeWeight;
     public $currentWeightUnit;
 
-    public function mount($order)
+    public function mount($order, $edit= '')
     {
+        $this->edit = $edit;
         $this->order = $order;
         $this->fillData();
     }
@@ -48,7 +50,7 @@ class EditParcel extends Component
             'merchant' => 'required',
             'carrier' => 'required',
             'tracking_id' => 'required',
-            'customer_reference' => 'required',
+            'customer_reference' => 'nullable',
             'order_date' => 'required',
             'weight' => 'required',
             'unit' => 'required',
@@ -60,7 +62,7 @@ class EditParcel extends Component
             'merchant.required' => 'merchant is required',
             'carrier.required' => 'carrier is required',
             'tracking_id.required' => 'tracking id is required',
-            'customer_reference.required' => 'customer reference is required',
+            'customer_reference.nullable' => 'customer reference is required',
             'measurement_unit.required' => 'measurement unit is required',
             'weight.required' => 'weight is required',
             'length.required' => 'length is required',

@@ -96,6 +96,11 @@ class Order extends Model
         return $this->hasMany(OrderService::class);
     }
 
+    public function deposits()
+    {
+        return $this->belongsToMany(Deposit::class);
+    }
+
     public function getPaymentInvoice()
     {
         return !$this->paymentInvoices->isEmpty() ? $this->paymentInvoices->first() : null;
@@ -331,17 +336,17 @@ class Order extends Model
         }
 
         if ( $this->status == Order::STATUS_NEEDS_PROCESSING ){
-            $class = 'btn btn-sm btn-warning';
+            $class = 'btn btn-sm btn-warning text-dark';
         }
         
         if ( $this->status == Order::STATUS_CANCEL ){
-            $class = 'btn btn-sm btn-dark';
+            $class = 'btn btn-sm btn-cancelled bg-cancelled';
         }
         if ( $this->status == Order::STATUS_REJECTED ){
-            $class = 'btn btn-sm btn-light';
+            $class = 'btn btn-sm btn-cancelled bg-cancelled';
         }
         if ( $this->status == Order::STATUS_RELEASE ){
-            $class = 'btn btn-sm btn-primary';
+            $class = 'btn btn-sm btn-warning';
         }
 
         if ( $this->status == Order::STATUS_PAYMENT_PENDING ){

@@ -56,7 +56,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('import-order', ImportOrderController::class)->only(['index','store', 'edit','destroy']);
         });
 
-        Route::resource('orders',OrderController::class)->only('index','destroy');
+        Route::resource('orders',OrderController::class)->only('index','destroy', 'show');
 
         Route::namespace('Order')->group(function () {
             Route::resource('leve-order-import', LeveOrderImportController::class)->only(['index','store']);
@@ -127,7 +127,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
 
         Route::namespace('Affiliate')->as('affiliate.')->prefix('affiliate')->group(function(){
             Route::resource('dashboard', DashboardController::class)->only('index');
-            Route::resource('sales-commission', SalesCommisionController::class)->only(['index']);
+            Route::resource('sales-commission', SalesCommisionController::class)->only(['index','create']);
             Route::get('sale-exports', SaleExportController::class)->name('sale.exports');
         });
 
@@ -151,7 +151,8 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::get('parcel/{parcel}/shipment-info', \ShipmentModalController::class)->name('parcel.shipment-info');
             Route::get('parcel/{parcel}/consolidation-print', \ConsolidationPrintController::class)->name('parcel.consolidation-print');
             Route::get('order/{order}/invoice', \OrderInvoiceModalController::class)->name('order.invoice');
-            Route::resource('order/error', \ImportOrderModalController::class)->only(['show', 'edit']);
+            Route::get('order/{error}/edit/{edit?}', [\App\Http\Controllers\Admin\Modals\ImportOrderModalController::class,'edit'])->name('order.error.edit');
+            Route::get('order/{error}/show', [\App\Http\Controllers\Admin\Modals\ImportOrderModalController::class,'show'])->name('order.error.show');
         });
 });
 

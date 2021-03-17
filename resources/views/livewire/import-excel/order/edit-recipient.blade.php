@@ -36,7 +36,7 @@
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
                         <label>@lang('address.Phone')</label>
-                        <input type="text" class="form-control" name="phone" wire:model.defer="phone" required placeholder="+55123456789">
+                        <input type="text" class="form-control" min="13" max="15" name="phone" wire:model.defer="phone" required placeholder="+55123456789123">
                         @error('phone')
                         <div class="help-block text-danger"> {{ $message }} </div>
                         @enderror
@@ -124,7 +124,7 @@
                             {{-- <label id="cnpj_label_id" style="{{ optional($recipient)->account_type == 'individual' ? 'display:block' : 'display:none' }}" >@lang('address.CNPJ') <span class="text-danger">* (Brazil Only)</span> </label>
                             <label id="cpf_label_id" style="{{ optional($recipient)->account_type != 'individual' ? 'display:block' : 'display:none' }}" >@lang('address.CPF') <span class="text-danger">* (Brazil Only)</span> </label> --}}
                             <label id="cpf_label_id">@lang('address.CPF') <span class="text-danger">* (Brazil Only)</span> </label>
-                            <input type="text" name="tax_id" id="tax_id" wire:model.defer="tax_id" required class="form-control" placeholder="CNPJ"/>
+                            <input type="text" name="tax_id" id="tax_id" wire:model.defer="tax_id" required class="form-control" placeholder="000.000.000-00"/>
                         @error('tax_id')
                         <div class="help-block text-danger"> {{ $message }} </div>
                         @enderror
@@ -133,6 +133,7 @@
             </div>
             <div class="row col-12 text-right">
                 <div class="col-11 text-right">
+                    @if(!$edit)
                         @if(!$order->error)
                         <div class="text-right">
                             <a href="{{ route('admin.import.import-excel.show', $order->import_id) }}" class="btn btn-success">
@@ -140,7 +141,8 @@
                             </a>
                         </div>
                         @endif
-                    </div>
+                    @endif
+                </div>
                 <div class="col-1 text-right">
                     <button class="btn btn-primary" wire:click="save">
                         @lang('orders.create.save')

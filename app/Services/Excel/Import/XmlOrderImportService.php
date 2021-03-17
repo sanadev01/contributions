@@ -196,7 +196,7 @@ class XmlOrderImportService
                 'merchant' => 'required',
                 'carrier' => 'required',
                 'tracking_id' => 'required',
-                'customer_reference' => 'required',
+                'customer_reference' => 'nullable',
                 'weight' => 'required|numeric|gt:0',
                 'measurement_unit' => 'required|in:kg/cm,lbs/in',
                 'length' => 'required|numeric|gt:0',
@@ -206,10 +206,7 @@ class XmlOrderImportService
                 'sender_first_name' => 'required',
                 'sender_last_name' => 'nullable',
                 'sender_email' => 'nullable',
-                'sender_phone' => [
-                    'nullable','max:15','min:13', new PhoneNumberValidator(optional( Country::where('code',$items['RecipientCountryCodeIso']?$items['RecipientCountryCodeIso']:null)->first() )->id)
-                ],
-                
+                'sender_phone' => 'nullable|max:15',
                 
                 'first_name' => 'required|max:100',
                 'last_name' => 'max:100',
@@ -231,7 +228,7 @@ class XmlOrderImportService
             ];
 
             if (Country::where('code', 'BR')->first()->id == optional( Country::where('code',$items['RecipientCountryCodeIso']?$items['RecipientCountryCodeIso']:null)->first() )->id ) {
-                $rules['RecipientTaxId'] = 'sometimes|cpf|required_if:country_id,'.Country::where('code', 'BR')->first()->id;
+                $rules['recipient_tax_id'] = 'required';
             }
 
             return $rules;
@@ -256,7 +253,7 @@ class XmlOrderImportService
                 'merchant.required' => 'merchant is required',
                 'carrier.required' => 'carrier is required',
                 'tracking_id.required' => 'tracking id is required',
-                'customer_reference.required' => 'customer reference is required',
+                'customer_reference.nullable' => 'customer reference is invalid',
                 'measurement_unit.required' => 'measurement unit is required',
                 'weight.required' => 'weight is required',
                 'length.required' => 'length is required',
@@ -266,12 +263,15 @@ class XmlOrderImportService
                 'sender_first_name.required' => 'sender first name is required',
                 'sender_last_name.nullable' => 'sender last name is required',
                 'sender_email.required' => 'sender Email is required',
-                'sender_phone.required' => 'sender phone is required',
+                'sender_phone.nullable' => 'sender phone is invalid',
                 
                 'first_name.required' => 'first Name is required',
                 'last_name.required' => 'last Name is required',
                 'email.nullable' => 'email is not valid',
                 'phone.required' => 'phone is required',
+                'phone.min' => 'The phone may not be less than 13 characters.',
+                'phone.max' => 'The phone may not be greater than 15 characters.',
+                'phone.*.required' => 'Number should be in Brazil International Format',
                 'address.required' => 'address is required',
                 'address2.nullable' => 'Address2 is not more then 50 character',
                 'street_no.required' => 'house street no is required',
@@ -336,9 +336,11 @@ class XmlOrderImportService
     public function validationRow($items, $isItem)
     {
         $validator = Validator::make($this->validationData($isItem, $items), $this->rules($isItem, $items), $this->validationMessages($isItem));
+        
         if ($validator->fails()) {
             foreach ($validator->errors()->messages() as $messages) {
                 foreach ($messages as $error) {
+                    
                     // accumulating errors:
                     $this->errors[] = $error;
                 }

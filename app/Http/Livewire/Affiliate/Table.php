@@ -20,9 +20,15 @@ class Table extends Component
 
     private $query;
 
-    public $date;
+    public $start;
+    public $end;
     public $name;
     public $order;
+    public $user;
+    public $whr;
+    public $reference;
+    public $tracking;
+    public $weight;
     public $value;
     public $saleType;
     public $commission;
@@ -37,10 +43,16 @@ class Table extends Component
     public function getSales()
     {
         return (new AffiliateSaleRepository)->get(request()->merge([
-            'date' => $this->date,
+            'start' => $this->start,
+            'end' => $this->end,
             'name' => $this->name,
             'order' => $this->order,
             'value' => $this->value,
+            'user' => $this->user,
+            'whr' => $this->whr,
+            'reference' => $this->reference,
+            'tracking' => $this->tracking,
+            'weight' => $this->weight,
             'saleType' => $this->saleType,
             'commission' => $this->commission,
         ]),true,$this->pageSize);
