@@ -1,5 +1,17 @@
 @extends('layouts.master')
-
+@section('css')
+    <style>
+        td.details-control {
+            background-image: url("{{ URL::asset('images/plus.png') }}");
+            cursor: pointer;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        tr.shown td.details-control {
+            background-image: url("{{ URL::asset('images/minus.png')}}");
+        }
+    </style>
+@endsection
 @section('page')
     <section>
         <div class="row">
@@ -17,4 +29,62 @@
             </div>
         </div>
     </section>
+@endsection
+@section('js')
+    <script>
+        /* Formatting function for row details - modify as you need */
+        function format ( d ) {
+            
+            // `d` is the original data object for the row
+            return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+                '<tr>'+
+                    '<td>Full name:</td>'+
+                    '<td>'+d+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td>Extension number:</td>'+
+                    '<td>'+d+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td>Extra info:</td>'+
+                    '<td>And any further details here (images etc)...</td>'+
+                '</tr>'+
+            '</table>';
+        }
+        
+        $(document).ready(function() {
+
+            var table = $('#example').DataTable( {
+                "searching": false,
+                paging: false,
+                "ordering": false
+            } );
+            
+            // Add event listener for opening and closing details
+            $('#example tbody').on('click', 'td.details-control', function () {
+                var id = $(this).closest("tr").find(".user_id").val();
+                var tr = $(this).closest('tr');
+                var row = table.row( tr );
+               
+                if ( row.child.isShown() ) {
+                    // This row is already open - close it
+                    row.child.hide();
+                    tr.removeClass('shown');
+                }
+                else {
+                    $.ajax({
+                        url: "{{route('admin.reports.user-shipments.create')}}",
+                        type: 'GET',
+                        data: {id:id},
+                        dataType: 'JSON',
+                        success: function (data) { 
+                            row.child( format(data) ).show();
+                            tr.addClass('shown'); 
+                        }
+                    });
+                }
+            } );
+        } );
+
+    </script>
 @endsection

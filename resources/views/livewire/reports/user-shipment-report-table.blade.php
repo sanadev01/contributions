@@ -16,9 +16,12 @@
             <input type="date" class="form-control" wire:model='end_date'>
         </div>
     </div>
-    <table class="table mb-0">
+    <table class="table mb-0" id="example">
         <thead>
             <tr>
+                <th>
+                    
+                </th>
                 <th>
                     <a href="#" wire:click="sortBy('name')">
                         Name
@@ -82,6 +85,9 @@
             </tr>
             <tr>
                 <th>
+                    
+                </th>
+                <th>
                     <input type="search" class="form-control" wire:model.debounce.500ms="user">
                 </th>
                 <th>
@@ -104,6 +110,10 @@
         <tbody>
             @foreach($users as $user)
                 <tr>
+
+                    <td class="details-control">
+                        <input type="hidden" class="user_id" value="{{$user->id}}">
+                    </td>
                     <td>
                         {{ $user->name }} {{ $user->last_name }}
                     </td>

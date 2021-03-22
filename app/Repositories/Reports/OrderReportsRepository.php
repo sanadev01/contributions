@@ -77,4 +77,89 @@ class OrderReportsRepository
         }
         return $orders;
     }
+   
+    public function getShipmentReportOfUsersByWeight(Request $request)
+    {
+        $query = Order::where('status','>=',Order::STATUS_ORDER)
+        ->has('user')->where('user_id', $request->id);
+
+        $record = collect();
+        foreach($this->getWeight() as $weight){
+
+            $query->select(DB::raw('CASE WHEN measurement_unit = "kg/cm" THEN weight ELSE (weight/2.205) END as weight'));
+            $query->whereBetween('weight', [$weight['min_weight'], $weight['max_weight']]);
+            $orders = $query->get()->count();
+            
+            $record->push([
+                'orders' => $orders,
+                'min_weight' => $weight['min_weight'],
+                'max_weight' => $weight['max_weight'],
+            ]);
+        }
+        dd($record);
+        
+
+    }
+     public function getWeight(){
+        return [
+            [
+                'min_weight' => '0',
+                'max_weight' => '1'
+            ],
+            [
+                'min_weight' => '1.01',
+                'max_weight' => '2'
+            ],
+            [
+                'min_weight' => '2.01',
+                'max_weight' => '3'
+            ],
+            [
+                'min_weight' => '3.01',
+                'max_weight' => '4'
+            ],
+            [
+                'min_weight' => '4.01',
+                'max_weight' => '5'
+            ],
+            [
+                'min_weight' => '5.01',
+                'max_weight' => '6'
+            ],
+            [
+                'min_weight' => '6.01',
+                'max_weight' => '7'
+            ],
+            [
+                'min_weight' => '7.01',
+                'max_weight' => '8'
+            ],
+            [
+                'min_weight' => '8.01',
+                'max_weight' => '9'
+            ],
+            [
+                'min_weight' => '9.01',
+                'max_weight' => '10'
+            ],
+            [
+                'min_weight' => '11',
+                'max_weight' => '15'
+            ],
+            [
+                'min_weight' => '15.01',
+                'max_weight' => '20'
+            ],
+            [
+                'min_weight' => '21',
+                'max_weight' => '25'
+            ],
+            [
+                'min_weight' => '25.01',
+                'max_weight' => '30'
+            ],
+            
+        ];
+
+     }
 }
