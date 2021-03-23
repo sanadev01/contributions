@@ -109,7 +109,7 @@ class PreAlertRepository
 
         $data = [ 'merchant', 'carrier', 'tracking_id','customer_reference','user_id', 'order_date'];
 
-        if ( !Auth::user()->isAdmin() && $order->status<=Order::STATUS_ORDER){
+        if ( !Auth::user()->isAdmin() && $order->status<Order::STATUS_ORDER){
             $request->merge([
                 'user_id' => Auth::id()
             ]);
