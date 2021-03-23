@@ -92,5 +92,5 @@ function getBalance()
 
 function chargeAmount($amount,$order=null)
 {
-    Deposit::chargeAmount($amount);
+    Deposit::chargeAmount($amount,$order);
 }
