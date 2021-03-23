@@ -107,7 +107,13 @@ class PreAlertRepository
     {
         $data = [];
 
-        $data = [ 'merchant', 'carrier', 'tracking_id','customer_reference', 'order_date'];
+        $data = [ 'merchant', 'carrier', 'tracking_id','customer_reference','user_id', 'order_date'];
+
+        if ( !Auth::user()->isAdmin() && $order->status<=Order::STATUS_ORDER){
+            $request->merge([
+                'user_id' => Auth::id()
+            ]);
+        }
 
         if ( Auth::user()->can('addWarehouseNumber',Order::class) ){
             $request->merge([
