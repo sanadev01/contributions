@@ -2,8 +2,8 @@
     @admin
         <div class="row">
             <div class="col-12 text-right mb-3">
-                <p class="mr-2 h5">Paid Commission:<span class="text-success h4"> $ {{ number_format($sales->where('is_paid', true)->sum('value'), 2) }}</span></p>
-                <p class="mr-2 h5">UnPaid Commission:<span class="text-danger h4"> $ {{ number_format($sales->where('is_paid', false)->sum('value'), 2) }}</span></p>
+                <p class="mr-2 h5">Paid Commission:<span class="text-success h4"> $ {{ number_format($balance->where('is_paid', true)->sum('value'), 2) }}</span></p>
+                <p class="mr-2 h5">UnPaid Commission:<span class="text-danger h4"> $ {{ number_format($balance->where('is_paid', false)->sum('value'), 2) }}</span></p>
             </div>
         </div>
     @endadmin
