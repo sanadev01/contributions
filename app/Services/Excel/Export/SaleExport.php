@@ -36,7 +36,7 @@ class SaleExport extends AbstractExportService
         
             $this->setCellValue('A'.$row, $user->name . $user->pobox_number);
             $this->setCellValue('B'.$row, 'HD-'.$sale->order_id);
-            $this->setCellValue('C'.$row, $sale->value);
+            $this->setCellValue('C'.$row, number_format($sale->value, 2));
             $this->setCellValue('D'.$row, $sale->type);
             $this->setCellValue('E'.$row, $sale->order->corrios_tracking_code);
             $this->setCellValue('F'.$row, $sale->created_at->format('m/d/Y'));
