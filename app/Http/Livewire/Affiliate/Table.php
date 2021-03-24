@@ -33,11 +33,6 @@ class Table extends Component
     public $saleType;
     public $commission;
 
-    public function mount()
-   {
-    $query = AffiliateSale::has('user')->with('order')->has('order')->get();
-   }
-
     public function render()
     {
         return view('livewire.affiliate.table',[

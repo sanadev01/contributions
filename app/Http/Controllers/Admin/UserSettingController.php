@@ -25,8 +25,6 @@ class UserSettingController extends Controller
 
     public function store(Request $request, User $user)
     {
-        
-        
         $this->validate($request,[
             'user_email' => 'required|unique:users,email,'.$user->id,
             'password' => 'nullable|min:8',

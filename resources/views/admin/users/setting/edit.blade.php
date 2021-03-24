@@ -109,9 +109,8 @@
 
                                 <h3>Affiliate Settings</h3>
                                 <hr>
+                                
                                 <h4>Referrer Settings</h4>
-                                {{-- <livewire:affiliate.referrer-setting :user_id="$user->id" /> --}}
-
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('user.Referrer')<span class="text-danger"></span></label>
                                     <div class="col-md-6">
@@ -125,6 +124,7 @@
                                     </div>
                                 </div>
                                 <hr>
+
                                 <h4>Commision Settings</h4>
                                 <livewire:affiliate.commision-setting :user_id="$user->id"  />
                                 
