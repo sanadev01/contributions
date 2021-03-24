@@ -1,4 +1,14 @@
 @extends('layouts.master')
+@section('css')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+<style>
+    .dropdown .btn:not(.btn-sm):not(.btn-lg), .dropdown .btn:not(.btn-sm):not(.btn-lg).dropdown-toggle {
+        background-color: white !important;
+        border: 1px solid #ced4da;
+        color: #495057 !important;
+    }
+</style>
+@endsection
 @section('page')
     <section id="prealerts">
         <div class="row">
@@ -100,8 +110,20 @@
                                 <h3>Affiliate Settings</h3>
                                 <hr>
                                 <h4>Referrer Settings</h4>
-                                <livewire:affiliate.referrer-setting :user_id="$user->id" />
-                                
+                                {{-- <livewire:affiliate.referrer-setting :user_id="$user->id" /> --}}
+
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">@lang('user.Referrer')<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <select name="referrer_id[]" class="form-control selectpicker" multiple data-live-search="true">
+                                            <option value="" disabled>@lang('user.Select Referrer')</option>
+                                            @foreach ($users as $userRefferer)
+                                                <option value="{{ $userRefferer->id }}" @if ($userRefferer->reffered_by == $user->id) selected @endif>{{ $userRefferer->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <div class="help-block"></div>
+                                    </div>
+                                </div>
                                 <hr>
                                 <h4>Commision Settings</h4>
                                 <livewire:affiliate.commision-setting :user_id="$user->id"  />
@@ -154,4 +176,13 @@
             </div>
         </div>
     </section>
+@endsection
+@section('js')
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+<script>
+    $(function () {
+        $('.selectpicker').selectpicker();
+    });
+</script>
 @endsection

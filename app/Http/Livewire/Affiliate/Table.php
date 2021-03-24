@@ -33,10 +33,16 @@ class Table extends Component
     public $saleType;
     public $commission;
 
+    public function mount()
+   {
+    $query = AffiliateSale::has('user')->with('order')->has('order')->get();
+   }
+
     public function render()
     {
         return view('livewire.affiliate.table',[
-            'sales' => $this->getSales()
+            'sales' => $this->getSales(),
+            'balance' => $this->getBalance()
         ]);
     }
 
@@ -56,6 +62,11 @@ class Table extends Component
             'saleType' => $this->saleType,
             'commission' => $this->commission,
         ]),true,$this->pageSize);
+    }
+    
+    public function getBalance()
+    {
+        return AffiliateSale::has('user')->has('order')->get();
     }
     
     public function updating()
