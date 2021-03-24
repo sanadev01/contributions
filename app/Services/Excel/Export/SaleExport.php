@@ -34,11 +34,11 @@ class SaleExport extends AbstractExportService
         foreach ($this->sales as $sale) {
             $user = $sale->user;
         
-            $this->setCellValue('A'.$row, $user->name);
-            $this->setCellValue('B'.$row, $sale->order_id);
+            $this->setCellValue('A'.$row, $user->name . $user->pobox_number);
+            $this->setCellValue('B'.$row, 'HD-'.$sale->order_id);
             $this->setCellValue('C'.$row, $sale->value);
             $this->setCellValue('D'.$row, $sale->type);
-            $this->setCellValue('E'.$row, $sale->commission);
+            $this->setCellValue('E'.$row, $sale->order->corrios_tracking_code);
             $this->setCellValue('F'.$row, $sale->created_at->format('m/d/Y'));
             
             $row++;
@@ -57,16 +57,16 @@ class SaleExport extends AbstractExportService
         $this->setCellValue('A1', 'Name');
 
         $this->setColumnWidth('B', 20);
-        $this->setCellValue('B1', 'Order ID#');
+        $this->setCellValue('B1', 'WHR#');
 
         $this->setColumnWidth('C', 20);
-        $this->setCellValue('C1', 'Value');
+        $this->setCellValue('C1', 'Commission Value');
 
         $this->setColumnWidth('D', 20);
         $this->setCellValue('D1', 'Type');
 
         $this->setColumnWidth('E', 20);
-        $this->setCellValue('E1', 'Commission');
+        $this->setCellValue('E1', 'Tracking Code');
 
         $this->setColumnWidth('F', 20);
         $this->setCellValue('F1', 'Date');

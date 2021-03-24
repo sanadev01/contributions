@@ -51,6 +51,11 @@ class AffiliateSaleRepository
                 return $query->where('warehouse_number', 'LIKE', "%{$request->whr}%");
             });
         }
+        if ( $request->corrios_tracking ){
+            $query->whereHas('order',function($query) use($request){
+                return $query->where('corrios_tracking_code', 'LIKE', "%{$request->corrios_tracking}%");
+            });
+        }
         if ( $request->reference ){
             $query->whereHas('order',function($query) use($request){
                 return $query->where('customer_reference', 'LIKE', "%{$request->reference}%");
