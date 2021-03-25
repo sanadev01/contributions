@@ -18,7 +18,7 @@ return [
     'support tickets' => 'Assistência',
     'profile' => 'Perfil',
     'Parcels' => 'Pacotes',
-    'Rates' => 'Cotações',
+    'Rates' => 'Minhas tarifas',
     'Profit Packages' => 'Pacotes de lucro',
     'Handling Services' => 'Serviços de Manuseio',
     'Shipping Services' => 'Serviços de Frete',
