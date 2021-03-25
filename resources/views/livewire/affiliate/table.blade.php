@@ -2,8 +2,8 @@
     @admin
         <div class="row">
             <div class="col-12 text-right mb-3">
-                <p class="mr-2 h5">Paid Commission:<span class="text-success h4"> $ {{ number_format($sales->where('is_paid', true)->sum('value'), 2) }}</span></p>
-                <p class="mr-2 h5">UnPaid Commission:<span class="text-danger h4"> $ {{ number_format($sales->where('is_paid', false)->sum('value'), 2) }}</span></p>
+                <p class="mr-2 h5">Paid Commission:<span class="text-success h4"> $ {{ number_format($balance->where('is_paid', true)->sum('value'), 2) }}</span></p>
+                <p class="mr-2 h5">UnPaid Commission:<span class="text-danger h4"> $ {{ number_format($balance->where('is_paid', false)->sum('value'), 2) }}</span></p>
             </div>
         </div>
     @endadmin
@@ -53,7 +53,8 @@
                     @endadmin
                     <th>Commission From</th>
                     <th>@lang('sales-commission.Order ID')</th>
-                    <th>Whr#</th>
+                    <th>WHR#</th>
+                    <th>Tracking Code</th>
                     <th>Customer Reference</th>
                     <th>Carrier Tracking#</th>
                     <th>Weight</th>
@@ -90,6 +91,9 @@
                         <input type="search" class="form-control" wire:model.debounce.1000ms="whr">
                     </th>
                     <th>
+                        <input type="search" class="form-control" wire:model.debounce.1000ms="corrios_tracking">
+                    </th>
+                    <th>
                         <input type="search" class="form-control" wire:model.debounce.1000ms="reference">
                     </th>
                     <th>
@@ -121,7 +125,7 @@
                 @forelse ($sales as $sale)
                     @include('admin.affiliate.components.sale-row',['sale'=>$sale])    
                 @empty
-                    <x-tables.no-record colspan="12"></x-tables.no-record>
+                    <x-tables.no-record colspan="15"></x-tables.no-record>
                 @endforelse
             </tbody>
         </table>

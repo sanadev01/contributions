@@ -34,6 +34,9 @@
         {{ $sale->order->warehouse_number }}
     </td>
     <td>
+        {{ $sale->order->corrios_tracking_code }}
+    </td>
+    <td>
         {{ $sale->order->customer_reference }}
     </td>
     <td>

@@ -19,7 +19,8 @@ class UserSettingController extends Controller
     {   
         $packages = ProfitPackage::all();
         $roles = Role::orderBy('id', 'desc')->get();
-        return view('admin.users.setting.edit', compact('packages', 'user', 'roles'));
+        $users = User::user()->get();
+        return view('admin.users.setting.edit', compact('packages', 'user', 'roles', 'users'));
     }
 
     public function store(Request $request, User $user)
@@ -42,6 +43,28 @@ class UserSettingController extends Controller
         if ( $request->password ){
             $user->update([
                 'password' => bcrypt($request->password)
+            ]);
+        }
+
+        $ids = [];
+        foreach($user->referrals as $referrer){
+            array_push($ids,$referrer->id);
+        }
+
+        $newIds = [];
+        foreach($request->referrer_id as $id){
+            array_push($newIds,$id);
+            if(!in_array($id, $ids)){
+                User::find($id)->update([
+                    'reffered_by' => $user->id
+                ]);
+            }
+        }
+        
+        $diffence = array_diff($ids,$newIds);
+        foreach($diffence as $id){
+            User::find($id)->update([
+                'reffered_by' => null
             ]);
         }
 

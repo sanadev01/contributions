@@ -26,6 +26,7 @@ class Table extends Component
     public $order;
     public $user;
     public $whr;
+    public $corrios_tracking;
     public $reference;
     public $tracking;
     public $weight;
@@ -36,7 +37,8 @@ class Table extends Component
     public function render()
     {
         return view('livewire.affiliate.table',[
-            'sales' => $this->getSales()
+            'sales' => $this->getSales(),
+            'balance' => $this->getBalance()
         ]);
     }
 
@@ -50,12 +52,18 @@ class Table extends Component
             'value' => $this->value,
             'user' => $this->user,
             'whr' => $this->whr,
+            'corrios_tracking' => $this->corrios_tracking,
             'reference' => $this->reference,
             'tracking' => $this->tracking,
             'weight' => $this->weight,
             'saleType' => $this->saleType,
             'commission' => $this->commission,
         ]),true,$this->pageSize);
+    }
+    
+    public function getBalance()
+    {
+        return AffiliateSale::has('user')->has('order')->get();
     }
     
     public function updating()
