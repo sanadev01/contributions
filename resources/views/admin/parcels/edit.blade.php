@@ -40,7 +40,7 @@
                                 <div class="row mt-1">
                                     <div class="form-group col-12 col-sm-6 col-md-4">
                                         <div class="controls">
-                                            <label>@lang('parcel.Sender') <span class="text-danger">*</span></label>
+                                            <label>Sender ( inside USA ) Remetente ( dentro dos EUA ) <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" name="merchant" value="{{ old('merchant',$parcel->merchant) }}" placeholder="">
                                             @error('merchant')
                                                 <div class="help-block text-danger">{{ $message }}</div>
@@ -49,7 +49,7 @@
                                     </div>
                                     <div class="form-group col-12 col-sm-6 col-md-4">
                                         <div class="controls">
-                                            <label>@lang('parcel.Carrier') <span class="text-danger">*</span></label>
+                                            <label>Carrier ( inside USA ) Transportadora ( dentro dos EUA ) <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" value="{{ old('carrier',$parcel->carrier) }}" placeholder=""  name="carrier">
                                             @error('carrier')
                                                 <div class="help-block text-danger">{{ $message }}</div>
@@ -58,7 +58,7 @@
                                     </div>
                                     <div class="form-group col-12 col-sm-6 col-md-4">
                                         <div class="controls">
-                                            <label>@lang('parcel.Tracking')<span class="text-danger">*</span></label>
+                                            <label>Tracking ( inside USA ) Rastreio ( dentro dos EUA ) <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" name="tracking_id" value="{{ old('tracking_id',$parcel->tracking_id) }}" placeholder="">
                                             @error('tracking_id')
                                                 <div class="help-block text-danger">{{ $message }}</div>
