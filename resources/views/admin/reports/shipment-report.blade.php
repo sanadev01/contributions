@@ -33,21 +33,20 @@
 @section('js')
     <script>
         /* Formatting function for row details - modify as you need */
-        function format ( d ) {
-            
+        function format ( data ) {
             // `d` is the original data object for the row
             return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
                 '<tr>'+
                     '<td>Full name:</td>'+
-                    '<td>'+d+'</td>'+
+                    '<td>'+data.max_weight+'</td>'+
                 '</tr>'+
                 '<tr>'+
                     '<td>Extension number:</td>'+
-                    '<td>'+d+'</td>'+
+                    '<td>'+data.min_weight+'</td>'+
                 '</tr>'+
                 '<tr>'+
                     '<td>Extra info:</td>'+
-                    '<td>And any further details here (images etc)...</td>'+
+                    '<td>'+data.min_weight+'</td>'+
                 '</tr>'+
             '</table>';
         }
@@ -77,9 +76,13 @@
                         type: 'GET',
                         data: {id:id},
                         dataType: 'JSON',
-                        success: function (data) { 
-                            row.child( format(data) ).show();
-                            tr.addClass('shown'); 
+                        success: function (result) {
+                            result.forEach(function(entry) {
+                                console.log(entry.max_weight);
+                                row.child( format(entry) ).show();
+                                tr.addClass('shown');
+                            });
+                             
                         }
                     });
                 }

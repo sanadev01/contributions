@@ -25,6 +25,7 @@ class ShipmentPerUserReportController extends Controller
 
     public function create(Request $request, OrderReportsRepository $orderReportsRepository)
     {
-        $users = $orderReportsRepository->getShipmentReportOfUsersByWeight($request);
+        $userOrders = $orderReportsRepository->getShipmentReportOfUsersByWeight($request);
+        return $userOrders;
     }
 }

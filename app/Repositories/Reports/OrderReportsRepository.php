@@ -82,24 +82,23 @@ class OrderReportsRepository
     {
         $query = Order::where('status','>=',Order::STATUS_ORDER)
         ->has('user')->where('user_id', $request->id);
-
+        
+        $query->select(DB::raw('CASE WHEN measurement_unit = "kg/cm" THEN weight ELSE (weight/2.205) END as kgweight'));
         $record = collect();
         foreach($this->getWeight() as $weight){
-
-            $query->select(DB::raw('CASE WHEN measurement_unit = "kg/cm" THEN weight ELSE (weight/2.205) END as weight'));
-            $query->whereBetween('weight', [$weight['min_weight'], $weight['max_weight']]);
-            $orders = $query->get()->count();
+            $orders = $query->get();
+            $ordersCount = $orders->whereBetween('kgweight', [$weight['min_weight'], $weight['max_weight']]);
             
             $record->push([
-                'orders' => $orders,
+                'orders' => $ordersCount->count(),
                 'min_weight' => $weight['min_weight'],
                 'max_weight' => $weight['max_weight'],
             ]);
         }
-        dd($record);
-        
 
+        return $record;
     }
+    
      public function getWeight(){
         return [
             [
