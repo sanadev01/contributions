@@ -2,9 +2,10 @@
 
 namespace App\Services\Correios\Services\Brazil;
 
-use App\Models\Order;
-use App\Services\Correios\Contracts\HasLableExport;
 use Exception;
+use App\Models\Order;
+use Picqer\Barcode\BarcodeGeneratorPNG;
+use App\Services\Correios\Contracts\HasLableExport;
 
 class CN23LabelMaker implements HasLableExport
 {
@@ -131,6 +132,7 @@ class CN23LabelMaker implements HasLableExport
             'items' => $this->items,
             'suplimentaryItems' => $this->sumplementryItems,
             'hasSumplimentary' => $this->hasSuplimentary,
+            'barcodeNew' => new BarcodeGeneratorPNG(),
         ];
     }
 }
