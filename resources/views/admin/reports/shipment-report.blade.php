@@ -35,20 +35,26 @@
         /* Formatting function for row details - modify as you need */
         function format ( data ) {
             // `d` is the original data object for the row
-            return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+                
+            var html = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+                
                 '<tr>'+
-                    '<td>Full name:</td>'+
-                    '<td>'+data.max_weight+'</td>'+
+                    '<th>Min Weight</th>'+
+                    '<th>Max Weight</th>'+
+                    '<th>Order</th>'+
+                    
                 '</tr>'+
-                '<tr>'+
-                    '<td>Extension number:</td>'+
-                    '<td>'+data.min_weight+'</td>'+
-                '</tr>'+
-                '<tr>'+
-                    '<td>Extra info:</td>'+
-                    '<td>'+data.min_weight+'</td>'+
-                '</tr>'+
+                '<tbody id="result">'+
+                   
+                '</tbody>'+
             '</table>';
+            data.forEach(function(entry) {      
+                var tdata = '<td>'+data.max_weight+'</td>'+
+                '<td>'+data.min_weight+'</td>'+
+                '<td>'+data.min_weight+'</td>';
+                
+            $('#tbody').append(tdata);
+            });
         }
         
         $(document).ready(function() {
@@ -77,12 +83,8 @@
                         data: {id:id},
                         dataType: 'JSON',
                         success: function (result) {
-                            result.forEach(function(entry) {
-                                console.log(entry.max_weight);
-                                row.child( format(entry) ).show();
-                                tr.addClass('shown');
-                            });
-                             
+                            row.child( format(result) ).show();
+                            tr.addClass('shown');
                         }
                     });
                 }
