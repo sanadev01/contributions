@@ -55,9 +55,9 @@ class UserSettingController extends Controller
         if($request->referrer_id){
             foreach($request->referrer_id as $id){
                 array_push($newIds,$id);
-            if(!in_array($id, $ids)){
-                User::find($id)->update([
-                    'reffered_by' => $user->id
+                if(!in_array($id, $ids)){
+                    User::find($id)->update([
+                        'reffered_by' => $user->id
                     ]);
                 }
             }
