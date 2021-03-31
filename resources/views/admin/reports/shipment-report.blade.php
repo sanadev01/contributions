@@ -36,25 +36,15 @@
         function format ( data ) {
             // `d` is the original data object for the row
                 
-            var html = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
-                
+            var html = '<table cellpadding="5" cellspacing="0" border="0" class="tbodyrow" style="padding-left:50px;">'+
                 '<tr>'+
                     '<th>Min Weight</th>'+
                     '<th>Max Weight</th>'+
                     '<th>Order</th>'+
-                    
                 '</tr>'+
-                '<tbody id="result">'+
-                   
-                '</tbody>'+
             '</table>';
-            data.forEach(function(entry) {      
-                var tdata = '<td>'+data.max_weight+'</td>'+
-                '<td>'+data.min_weight+'</td>'+
-                '<td>'+data.min_weight+'</td>';
-                
-            $('#tbody').append(tdata);
-            });
+            
+            return html;
         }
         
         $(document).ready(function() {
@@ -85,6 +75,15 @@
                         success: function (result) {
                             row.child( format(result) ).show();
                             tr.addClass('shown');
+                            result.forEach(function(entry) {
+                                var tdata = '<tr>'+
+                                '<td>'+entry.min_weight+'</td>'+
+                                '<td>'+entry.max_weight+'</td>'+
+                                '<td>'+entry.orders+'</td>'+
+                                '</tr>';
+                                
+                                $('.tbodyrow').append(tdata);
+                            });
                         }
                     });
                 }
