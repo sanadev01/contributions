@@ -70,7 +70,7 @@ class OrderReportsRepository
 
     public function getOrderReport()
     {
-        $orders = Order::where('status','>=',Order::STATUS_PAYMENT_PENDING)
+        $orders = Order::where('status','>',Order::STATUS_PAYMENT_PENDING)
         ->has('user')->get();
         if (Auth::user()->isUser()) {
             $orders->where('user_id', Auth::id())->get();
@@ -80,82 +80,81 @@ class OrderReportsRepository
    
     public function getShipmentReportOfUsersByWeight(Request $request)
     {
-        $query = Order::where('status','>=',Order::STATUS_PAYMENT_PENDING)
+        $query = Order::where('status','>',Order::STATUS_PAYMENT_PENDING)
         ->has('user')->where('user_id', $request->id);
         
         $query->select(DB::raw('CASE WHEN measurement_unit = "kg/cm" THEN weight ELSE (weight/2.205) END as kgweight'));
         $record = collect();
+        $orders = $query->get();
         foreach($this->getWeight() as $weight){
-            $orders = $query->get();
             $ordersCount = $orders->whereBetween('kgweight', [$weight['min_weight'], $weight['max_weight']]);
-            
             $record->push([
                 'orders' => $ordersCount->count(),
                 'min_weight' => $weight['min_weight'],
                 'max_weight' => $weight['max_weight'],
             ]);
         }
-
+       
         return $record;
     }
     
      public function getWeight(){
         return [
             [
-                'min_weight' => '0',
-                'max_weight' => '1'
+                'min_weight' => '0.00',
+                'max_weight' => '1.00'
             ],
             [
                 'min_weight' => '1.01',
-                'max_weight' => '2'
+                'max_weight' => '2.00'
             ],
             [
                 'min_weight' => '2.01',
-                'max_weight' => '3'
+                'max_weight' => '3.00'
             ],
             [
                 'min_weight' => '3.01',
-                'max_weight' => '4'
+                'max_weight' => '4.00'
             ],
             [
                 'min_weight' => '4.01',
-                'max_weight' => '5'
+                'max_weight' => '5.00'
             ],
             [
                 'min_weight' => '5.01',
-                'max_weight' => '6'
+                'max_weight' => '6.00'
             ],
             [
                 'min_weight' => '6.01',
-                'max_weight' => '7'
+                'max_weight' => '7.00'
             ],
             [
                 'min_weight' => '7.01',
-                'max_weight' => '8'
+                'max_weight' => '8.00'
             ],
             [
                 'min_weight' => '8.01',
-                'max_weight' => '9'
+                'max_weight' => '9.00'
             ],
             [
                 'min_weight' => '9.01',
-                'max_weight' => '10'
+                'max_weight' => '10.00'
             ],
             [
-                'min_weight' => '11',
-                'max_weight' => '15'
+                'min_weight' => '10.01',
+                'max_weight' => '15.00'
             ],
             [
                 'min_weight' => '15.01',
-                'max_weight' => '20'
+                'max_weight' => '20.00'
             ],
             [
-                'min_weight' => '21',
-                'max_weight' => '25'
+                'min_weight' => '20.01',
+                'max_weight' => '25.00'
             ],
             [
                 'min_weight' => '25.01',
-                'max_weight' => '30'
+                'max_weight' => '30.00'
             ],
             
         ];
