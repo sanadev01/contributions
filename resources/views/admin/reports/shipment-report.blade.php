@@ -32,29 +32,21 @@
 @endsection
 @section('js')
     <script>
-        /* Formatting function for row details - modify as you need */
-        function format ( data ) {
-            // `d` is the original data object for the row
-                
-            var html = '<table cellpadding="5" cellspacing="0" border="0" class="tbodyrow" style="padding-left:50px;">'+
+        function format () {
+            return '<table cellpadding="5" cellspacing="0" border="0" class="tbodyrow" style="padding-left:50px; background: #d8d8d878;">'+
                 '<tr>'+
                     '<th>Min Weight</th>'+
                     '<th>Max Weight</th>'+
                     '<th>Order</th>'+
                 '</tr>'+
             '</table>';
-            
-            return html;
         }
-        
         $(document).ready(function() {
-
             var table = $('#example').DataTable( {
                 "searching": false,
                 paging: false,
                 "ordering": false
             } );
-            
             // Add event listener for opening and closing details
             $('#example tbody').on('click', 'td.details-control', function () {
                 var id = $(this).closest("tr").find(".user_id").val();
@@ -62,7 +54,6 @@
                 var row = table.row( tr );
                
                 if ( row.child.isShown() ) {
-                    // This row is already open - close it
                     row.child.hide();
                     tr.removeClass('shown');
                 }
@@ -81,14 +72,12 @@
                                 '<td>'+entry.max_weight+'</td>'+
                                 '<td>'+entry.orders+'</td>'+
                                 '</tr>';
-                                
                                 $('.tbodyrow').append(tdata);
                             });
                         }
                     });
                 }
-            } );
-        } );
-
+            });
+        });
     </script>
 @endsection
