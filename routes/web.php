@@ -120,7 +120,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         Route::post('tickets/{ticket}/close', [\App\Http\Controllers\Admin\TicketController::class, 'markClose'])->name('ticket.mark-closed');
 
         Route::namespace('Reports')->as('reports.')->prefix('reports')->group(function(){
-            Route::get('user-shipments', \ShipmentPerUserReportController::class)->name('user-shipments');
+            Route::resource('user-shipments', \ShipmentPerUserReportController::class)->only(['index','create']);
             Route::resource('order-trackings', TrackingReportController::class)->only(['index','store']);
             Route::resource('order', OrderReportController::class)->only(['index','create']);
         });
