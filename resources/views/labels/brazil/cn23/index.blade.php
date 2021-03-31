@@ -116,13 +116,13 @@ div<!DOCTYPE html>
             text-align: center;
         }
         .right-block .barcode_zipcode img{
-            width: 3cm;
+            width: 2.8cm;
             height: 2.3cm;
             display: block;
         }
         .right-block .zipcode-label{
             position: absolute;
-            right: 30px;
+            right: 26px;
             top: 7px;
             font-size: 17px;
             text-align: center;
