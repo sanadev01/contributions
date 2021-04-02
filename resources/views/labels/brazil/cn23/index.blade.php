@@ -1,4 +1,4 @@
-div<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -18,17 +18,19 @@ div<!DOCTYPE html>
         }
         img.corrioes-lable{
             width: 2cm;
-            height: 2cm;
+            height: 2.5cm;
             position: absolute;
             top: 0.3cm;
             left: 0.1cm;
+            object-fit: contain;
         }
         img.partner-logo{
             position: absolute;
             top: 0.3cm;
             left: 2.3cm;
             width: 2cm;
-            height: 2cm;
+            height: 2.5cm;
+            object-fit: contain;
         }
         .service-type{
             position: absolute;
@@ -122,9 +124,9 @@ div<!DOCTYPE html>
         }
         .right-block .zipcode-label{
             position: absolute;
-            right: 26px;
-            top: 7px;
-            font-size: 17px;
+            right: 35px;
+            top: 14px;
+            font-size: 12px;
             text-align: center;
             font-weight: bold;
         }
@@ -229,8 +231,9 @@ div<!DOCTYPE html>
         
         .barcode-label{
             position: absolute;
-            top: 10.66cm;
+            top: 10.82cm;
             width: 9.4cm;
+            font-size: 12px;
             text-align: center;
             left: 0.2cm;
             font-weight: bold;
