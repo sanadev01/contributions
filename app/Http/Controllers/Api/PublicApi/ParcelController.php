@@ -66,7 +66,15 @@ class ParcelController extends Controller
                 "country_id" => optional($request->recipient)['country_id']
             ]);
 
+            $isBattery = false;
+            $isPerfume = false;
             foreach ($request->get('products',[]) as $product) {
+                if(optional($product)['is_battery']){
+                    $isBattery = true;
+                }
+                if(optional($product)['is_perfume']){
+                    $isPerfume = true;
+                }
                 $order->items()->create([
                     "sh_code" => optional($product)['sh_code'],
                     "description" => optional($product)['description'],
@@ -76,6 +84,10 @@ class ParcelController extends Controller
                     "contains_perfume" => optional($product)['is_perfume'],
                     "contains_flammable_liquid" => optional($product)['is_flameable'],
                 ]);
+            }
+            if( $isBattery === true && $isPerfume === true){
+                DB::rollback();
+                return apiResponse(false,"please don't use battery and perfume in one parcel");
             }
 
             $orderValue = collect($request->get('products',[]))->sum(function($item){
