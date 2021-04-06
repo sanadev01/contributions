@@ -86,8 +86,9 @@ class ParcelController extends Controller
                 ]);
             }
             if( $isBattery === true && $isPerfume === true){
-                DB::rollback();
-                return apiResponse(false,"please don't use battery and perfume in one parcel");
+                // DB::rollback();
+                // return apiResponse(false,"please don't use battery and perfume in one parcel");
+                throw new \Exception("please don't use battery and perfume in one parcels",500);
             }
 
             $orderValue = collect($request->get('products',[]))->sum(function($item){
