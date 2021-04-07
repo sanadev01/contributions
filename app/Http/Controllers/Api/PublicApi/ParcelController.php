@@ -86,7 +86,7 @@ class ParcelController extends Controller
                 ]);
             }
             if( $isBattery === true && $isPerfume === true){
-                throw new \Exception("please don't use battery and perfume in one parcels",500);
+                throw new \Exception("Please don't use battery and perfume in one parcels",500);
             }
 
             $orderValue = collect($request->get('products',[]))->sum(function($item){
