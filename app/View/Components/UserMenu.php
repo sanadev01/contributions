@@ -29,15 +29,6 @@ class UserMenu extends Component
         return view('components.user-menu');
     }
 
-    public function menu()
-    {
-        if (Auth::user()->isAdmin()) {
-            return 'components.admin-menu';
-        }
-
-        return 'components.user-menu';
-    }
-
     public function isActive($route)
     {
         if (is_array($route)) {

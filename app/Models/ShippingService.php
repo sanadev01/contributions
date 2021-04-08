@@ -13,10 +13,13 @@ class ShippingService extends Model
     use JsonColumn;
     use LogsActivity;
 
+    const API_CORREIOS = 'api_correios';
+    const API_LEVE = 'api_leve';
+
     protected $guarded = [];
-    
+
     protected static $logAttributes = ['*'];
-    
+
     protected static $logOnlyDirty = true;
     protected static $submitEmptyLogs = false;
 
@@ -48,9 +51,9 @@ class ShippingService extends Model
 
     public function getCalculator(Order $order, $calculateOnVolumeMetricWeight = true)
     {
-        // if ( self::$calculator && $this->cacheCalculator) 
+        // if ( self::$calculator && $this->cacheCalculator)
         //     return self::$calculator;
-        
+
         self::$calculator = new RatesCalculator($order,$this, $calculateOnVolumeMetricWeight);
 
         return self::$calculator;

@@ -59,6 +59,7 @@ use App\Policies\TicketPolicy;
 use App\Policies\TransactionPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -107,6 +108,8 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        Gate::define('do_warehouse_operations',function(User $user){
+            return $user->isAdmin() || $user->hasPermission('warehouse_operations');
+        });
     }
 }

@@ -12,7 +12,6 @@ class Recipient extends Model
     protected static $logAttributes = ['*'];
     protected static $logOnlyDirty = true;
     protected static $submitEmptyLogs = false;
-    
     public function country()
     {
         return $this->belongsTo(Country::class);
@@ -23,6 +22,15 @@ class Recipient extends Model
         return $this->belongsTo(State::class);
     }
 
+    public function getFullName()
+    {
+        return $this->first_name.' '.$this->last_name;
+    }
+
+    public function getDocumentType()
+    {
+        return $this->account_type == 'individual' ? 'CPF' : 'CNPJ';
+    }
     public function fullName()
     {
         return $this->first_name.' '.$this->last_name;

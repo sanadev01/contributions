@@ -34,6 +34,7 @@ class RateController extends Controller
             return  redirect()->route('admin.rates.shipping-rates.index');
         }
 
+        
         // session()->flash('alert-dange','Error while importing rates');
         return back()->withInput();
     }

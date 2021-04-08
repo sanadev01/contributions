@@ -35,6 +35,11 @@ return [
         'Tracking Report' => 'Tracking Report',
         'Orders Report' => 'Orders Report',
     ],
+    'Warehouse' => [
+        'menu' => 'Warehouse',
+        'Containers' => 'Containers',
+        'Delivery Bill' => 'Delivery Bill',
+    ],
     'Affiliate' => [
         'menu' => 'Affiliate',
         'Dashboard' => 'Dashboard',

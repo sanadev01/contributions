@@ -35,6 +35,11 @@ return [
         'Tracking Report' => 'Relatório de Rastreamento',
         'Orders Report' => 'Relatório de pedidos',
     ],
+    'Warehouse' => [
+        'menu' => 'Armazém',
+        'Containers' => 'Recipientes',
+        'Delivery Bill' => 'Fatura de entrega',
+    ],
     'Affiliate' => [
         'menu' => 'Relatórios',
         'Dashboard' => 'Painel de controle',

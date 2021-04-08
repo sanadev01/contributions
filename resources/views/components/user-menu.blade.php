@@ -212,6 +212,8 @@
                 </li>
             @endcan
 
+            @include('components.warehouse-menu')
+
             @can('viewAny', App\Models\User::class)
             <li class="nav-item {{ $isActive(['admin.users.index']) }}">
                 <a href="{{ route('admin.users.index') }}">

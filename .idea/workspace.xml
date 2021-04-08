@@ -2,6 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c8727ccf-90da-46c1-90b9-36a4d24260af" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/database/migrations/2021_02_11_032744_add_api_to_shipping_services_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/Order/OrderLabelController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/Order/OrderLabelController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/ShippingService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/ShippingService.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/components/warehouse-menu.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/components/warehouse-menu.blade.php" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/Deposit/DepositController.php" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/app/Http/Livewire/Deposit/TableComponent.php" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/app/Repositories/DepositRepository.php" afterDir="false" />

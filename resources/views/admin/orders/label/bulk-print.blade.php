@@ -97,6 +97,23 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="confirm" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h4 class="modal-title">Confirm!</h4>
+            </div>
+            <div class="modal-body">
+                <p><h5>@lang('orders.update-label')</h5></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="updateLabel({{$order->id}},'#row_{{$order->id}}')">Yes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('js')
@@ -126,6 +143,7 @@
 
         function updateLabel(orderId,referenceId){
             $(referenceId).html(window.labelLoader);
+            console.log('updating')
             loadLabel(orderId,referenceId,true);
         }
 
