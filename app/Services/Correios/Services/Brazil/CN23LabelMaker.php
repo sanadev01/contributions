@@ -29,7 +29,7 @@ class CN23LabelMaker implements HasLableExport
         $this->partnerLogo =  public_path('images/hd-label-logo.png');
         $this->packetType = 'Packet <br> Standard';
         $this->contractNumber = 'Client <br>  9912501576/2020 <br> – SE/RJ';
-        $this->service = 1;
+        $this->service = 2;
         $this->returnAddress = 'Rua Barão Do Triunfo 520[11:30 15.andar Cj. 151 Brooklyn São Paulo SP CEP 04602-001';
         $this->complainAddress = 'Em caso de duvidas entrar em contato com seu redirecionador our homedelivery@homedeliverybr.com';
     }

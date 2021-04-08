@@ -259,7 +259,7 @@
     </div>
     <div class="serivce-zipcode">
         <div class="left-block">
-            <strong>Service: </strong> 1 <br>
+            <strong>Service: </strong> {{ $service }} <br>
             <div class="return-address">
                 <strong>DEVOLUCÃO:</strong>
                 <p>
