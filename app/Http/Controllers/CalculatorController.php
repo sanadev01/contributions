@@ -15,33 +15,39 @@ use Auth;
 class CalculatorController extends Controller
 {
     public function index()
-    {   
+    {
         return view('calculator.index');
     }
 
     public function store(Request $request)
-    {   
-        $this->validate(
-            $request,
-            [
-                'country_id' => 'required|numeric|exists:countries,id', 
-                'state_id' => 'required|exists:states,id',
-                'weight' => 'sometimes|numeric',
-                'height' => 'sometimes|numeric',
-                'width' => 'sometimes|numeric',
-                'length' => 'sometimes|numeric',
-                'unit' => 'required|in:lbs/in,kg/cm',
-            ],
-            [
-                'country_id' => 'Please Select A country',
-                'state_id' => 'Please Select A state',
-                'weight' => 'Please Enter weight',
-                'height' => 'Please Enter height',
-                'width' => 'Please Enter width',
-                'length' => 'Please Enter length',
-                'unit' => 'Please Select Measurement Unit ',
-            ]
-        );
+    {
+        $rules = [
+            'country_id' => 'required|numeric|exists:countries,id',
+            'state_id' => 'required|exists:states,id',
+            'height' => 'sometimes|numeric',
+            'width' => 'sometimes|numeric',
+            'length' => 'sometimes|numeric',
+            'unit' => 'required|in:lbs/in,kg/cm',
+        ];
+        if($request->unit == 'kg/cm'){
+            $rules['weight'] = 'sometimes|numeric|max:30';
+        }else{
+            $rules['weight'] = 'sometimes|numeric|max:66.15';
+        }
+
+
+        $message = [
+            'country_id' => 'Please Select A country',
+            'state_id' => 'Please Select A state',
+            'weight' => 'Please Enter weight',
+            'weight.max' => 'weight exceed the delivery of Correios',
+            'height' => 'Please Enter height',
+            'width' => 'Please Enter width',
+            'length' => 'Please Enter length',
+            'unit' => 'Please Select Measurement Unit ',
+        ];
+        
+        $this->validate($request, $rules, $message);
 
         $originalWeight =  $request->weight;
         if ( $request->unit == 'kg/cm' ){
@@ -51,7 +57,6 @@ class CalculatorController extends Controller
             $volumetricWeight = WeightCalculator::getVolumnWeight($request->length,$request->width,$request->height,'in');
             $chargableWeight = round($volumetricWeight >  $originalWeight ? $volumetricWeight :  $originalWeight,2);
         }
-         
         $recipient = new Recipient();
         $recipient->state_id = $request->state_id;
         $recipient->country_id = $request->country_id;
@@ -63,7 +68,6 @@ class CalculatorController extends Controller
         $order->length = $request->length;
         $order->weight = $request->weight;
         $order->measurement_unit = $request->unit;
-
         $order->recipient = $recipient;
 
         $shippingServices = collect();
@@ -74,8 +78,8 @@ class CalculatorController extends Controller
                 session()->flash('alert-danger',"Shipping Service not Available Error:{$shippingService->getCalculator($order)->getErrors()}");
             }
         }
-        
-        if ($request->unit == 'kg/cm' ){ 
+
+        if ($request->unit == 'kg/cm' ){
             $weightInOtherUnit = UnitsConverter::kgToPound($chargableWeight);
         }else{
             $weightInOtherUnit = UnitsConverter::poundToKg($chargableWeight);

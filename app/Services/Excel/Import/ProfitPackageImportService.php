@@ -33,6 +33,7 @@ class ProfitPackageImportService extends AbstractImportService
     public function handle() 
     {
         $data = $this->importProfitPackage();
+        
         $this->createOrUpdateOrder($data);
        
     }
@@ -44,7 +45,8 @@ class ProfitPackageImportService extends AbstractImportService
 
         foreach (range(2, $this->noRows) as $row) {
             $weight = preg_replace("/[^0-9.]/", "", $this->getValue("A{$row}"));
-            $value = preg_replace("/[^0-9.]/", "", $this->getValue("B{$row}"));
+            $value = preg_replace("/[^0-9.]/", "", $this->getValue("C{$row}"));
+            
             \Log::info("weight : {$weight}, Value: {$value}");
             if($arrayCounter == 0){
                 $data[ $arrayCounter ]['min_weight'] = 0;

@@ -26,6 +26,7 @@ return [
     'Users' => 'Users',
     'Roles' => 'Roles',
     'Billing Informations' => 'Billing Informations',
+    'Balance' => 'Balance',
     'Settings' => 'Settings',
     'Fixed Charges' => 'Fixed Charges',
     'Reports' => [
@@ -45,4 +46,5 @@ return [
         'Sales Commission' => 'Sales Commissions',
     ],
     'activity' => 'Activity',
+    'Print Label' => 'Print Bulk Label',
 ];

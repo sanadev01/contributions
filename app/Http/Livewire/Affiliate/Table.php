@@ -20,9 +20,16 @@ class Table extends Component
 
     private $query;
 
-    public $date;
+    public $start;
+    public $end;
     public $name;
     public $order;
+    public $user;
+    public $whr;
+    public $corrios_tracking;
+    public $reference;
+    public $tracking;
+    public $weight;
     public $value;
     public $saleType;
     public $commission;
@@ -30,20 +37,33 @@ class Table extends Component
     public function render()
     {
         return view('livewire.affiliate.table',[
-            'sales' => $this->getSales()
+            'sales' => $this->getSales(),
+            'balance' => $this->getBalance()
         ]);
     }
 
     public function getSales()
     {
         return (new AffiliateSaleRepository)->get(request()->merge([
-            'date' => $this->date,
+            'start' => $this->start,
+            'end' => $this->end,
             'name' => $this->name,
             'order' => $this->order,
             'value' => $this->value,
+            'user' => $this->user,
+            'whr' => $this->whr,
+            'corrios_tracking' => $this->corrios_tracking,
+            'reference' => $this->reference,
+            'tracking' => $this->tracking,
+            'weight' => $this->weight,
             'saleType' => $this->saleType,
             'commission' => $this->commission,
         ]),true,$this->pageSize);
+    }
+    
+    public function getBalance()
+    {
+        return AffiliateSale::has('user')->has('order')->get();
     }
     
     public function updating()

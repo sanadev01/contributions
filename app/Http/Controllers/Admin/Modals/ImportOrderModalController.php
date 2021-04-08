@@ -8,10 +8,10 @@ use Illuminate\Http\Request;
 
 class ImportOrderModalController extends Controller
 {
-    public function edit(ImportedOrder $error)
+    public function edit(ImportedOrder $error, $edit = '')
     {
         $order = $error;
-        return view('admin.modals.import-order.edit',compact('order'));
+        return view('admin.modals.import-order.edit',compact('order', 'edit'));
     }
 
     public function show(ImportedOrder $error)

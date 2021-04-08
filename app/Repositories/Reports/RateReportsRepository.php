@@ -36,9 +36,10 @@ class RateReportsRepository
             $order->length = 0;
             $order->measurement_unit = 'kg/cm';
             $order->recipient = $recipient;
-            $originalWeight =  $profitPackageSlab['max_weight'];
+            $originalWeightMax =  $profitPackageSlab['max_weight'];
+            $originalWeight =  $profitPackageSlab['min_weight'];
             $profitValue =  $profitPackageSlab['value'];
-            $order->weight = UnitsConverter::gramsToKg($originalWeight);
+            $order->weight = UnitsConverter::gramsToKg($originalWeightMax);
     
             $shippingRates = collect();
             $shippingValue = collect();
@@ -53,7 +54,7 @@ class RateReportsRepository
             }
 
             $profitPackageSlabRates->push([
-                'weight' => $originalWeight,
+                'weight' => $originalWeightMax,
                 'profit'  => $profitValue,
                 'shipping'  => $shippingValue,
                 'rates'  => $shippingRates,

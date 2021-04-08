@@ -164,6 +164,11 @@ class OrderPolicy
         return $user->hasPermission('print_label') && $order->user_id == $user->id && $order->isPaid();
     }
 
+    public function canPrintLableViaApi(User $user,Order $order)
+    {
+        return $user->hasPermission('print_label') && $order->user_id == $user->id;
+    }
+
     public function importExcel(User $user)
     {
         return $user->hasPermission('import_excel');
@@ -172,6 +177,12 @@ class OrderPolicy
     public function canImportLeveOrders(User $user)
     {
         return $user->hasPermission('can_import_leve_orders');
+
+    }
+
+    public function labelPrint(User $user)
+    {
+        return $user->hasPermission('print_label');
 
     }
 

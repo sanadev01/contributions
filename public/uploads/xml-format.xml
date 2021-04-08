@@ -3,7 +3,7 @@
 <Structure>
 <Orders>
     <Item>
-        <Merchant></Merchant>
+        <Merchant>new xml</Merchant>
         <Carrier>fedex</Carrier>
         <TrackingId>29873928</TrackingId>
         <CustomerRefrence>123</CustomerRefrence>
@@ -37,14 +37,14 @@
             <ProductDescription>CYCLE BICYCLE COMPUTER</ProductDescription>
             <NCM>233847</NCM>
             <Perfume>yes</Perfume>
-            <Battery></Battery>
+            <Battery>yes</Battery>
         </OrderItem>
         <OrderItem>
             <ProductQuantity>2</ProductQuantity>
             <ProductValue>3</ProductValue>
             <ProductDescription>CYCLE BICYCLE COMPUTER</ProductDescription>
             <NCM>233848</NCM>
-            <Perfume></Perfume>
+            <Perfume>yes</Perfume>
             <Battery>yes</Battery>
         </OrderItem>
     </Item>
@@ -83,14 +83,14 @@
             <ProductDescription>CYCLE BICYCLE COMPUTER</ProductDescription>
             <NCM>233847</NCM>
             <Perfume>yes</Perfume>
-            <Battery></Battery>
+            <Battery>yes</Battery>
         </OrderItem>
         <OrderItem>
             <ProductQuantity>2</ProductQuantity>
             <ProductValue>3</ProductValue>
             <ProductDescription>CYCLE BICYCLE COMPUTER</ProductDescription>
             <NCM>233848</NCM>
-            <Perfume></Perfume>
+            <Perfume>yes</Perfume>
             <Battery>yes</Battery>
         </OrderItem>
     </Item>

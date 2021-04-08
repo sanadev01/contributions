@@ -23,9 +23,9 @@ class ParcelController extends Controller
     public function store(CreateRequest $request)
     {
         DB::beginTransaction();
-        
+
         try {
-            
+
             $order = Order::create([
                 'shipping_service_id' => optional($request->parcel)['service_id'],
                 'user_id' => Auth::id(),
@@ -42,13 +42,14 @@ class ParcelController extends Controller
                 "order_date" => now(),
                 "is_shipment_added" => true,
                 'status' => Order::STATUS_ORDER,
-    
+                'user_declared_freight' => optional($request->parcel)['shipment_value']??0,
+
                 "sender_first_name" => optional($request->sender)['sender_first_name'],
                 "sender_last_name" => optional($request->sender)['sender_last_name'],
                 "sender_email" => optional($request->sender)['sender_email'],
                 "sender_taxId" => optional($request->sender)['sender_taxId'],
             ]);
-    
+
             $order->recipient()->create([
                 "first_name" => optional($request->recipient)['first_name'],
                 "last_name" => optional($request->recipient)['last_name'],
@@ -64,8 +65,16 @@ class ParcelController extends Controller
                 "state_id" => optional($request->recipient)['state_id'],
                 "country_id" => optional($request->recipient)['country_id']
             ]);
-    
+
+            $isBattery = false;
+            $isPerfume = false;
             foreach ($request->get('products',[]) as $product) {
+                if(optional($product)['is_battery']){
+                    $isBattery = true;
+                }
+                if(optional($product)['is_perfume']){
+                    $isPerfume = true;
+                }
                 $order->items()->create([
                     "sh_code" => optional($product)['sh_code'],
                     "description" => optional($product)['description'],
@@ -75,6 +84,9 @@ class ParcelController extends Controller
                     "contains_perfume" => optional($product)['is_perfume'],
                     "contains_flammable_liquid" => optional($product)['is_flameable'],
                 ]);
+            }
+            if( $isBattery === true && $isPerfume === true){
+                throw new \Exception("Please don't use battery and perfume in one parcels",500);
             }
 
             $orderValue = collect($request->get('products',[]))->sum(function($item){
@@ -88,6 +100,15 @@ class ParcelController extends Controller
             ]);
 
             $order->doCalculations();
+
+            if ( getBalance() >= $order->gross_total ){
+                $order->update([
+                    'is_paid' => true,
+                    'status' => Order::STATUS_PAYMENT_DONE
+                ]);
+
+                chargeAmount($order->gross_total,$order);
+            }
 
             DB::commit();
             return apiResponse(true,"Parcel Created", OrderResource::make($order) );

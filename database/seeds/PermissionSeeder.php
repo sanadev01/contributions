@@ -365,6 +365,7 @@ class PermissionSeeder extends Seeder
                 'group' => 'activity',
                 'description' => 'Show Activity Logs',
             ],
+
             /**
              * warehouse-operations
              */
@@ -393,6 +394,10 @@ class PermissionSeeder extends Seeder
                 'group' => 'Warehouse Bag',
                 'description' => 'Warehouse Operations | Delete Bag',
             ],
+            [
+                'slug' => 'user_selling_rates',
+                'description' => 'Allows User see profit Package rates',
+            ]
             
         ];
     }

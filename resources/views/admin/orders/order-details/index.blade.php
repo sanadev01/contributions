@@ -89,5 +89,20 @@
             parseFloat($('option:selected', this).attr("data-cost"))
         );
     })
+   
+    function change(id){
+        var id = "dangrous_"+id;  
+        value = $('#'+id).val();
+        if(value == 'contains_battery'){
+            $(".dangrous").children("option[value^='contains_perfume']").hide()
+        }
+        if(value == 'contains_perfume'){
+            $(".dangrous").children("option[value^='contains_battery']").hide()
+        }
+        if(value == 0){
+            $(".dangrous").children("option[value^='contains_battery']").show();
+            $(".dangrous").children("option[value^='contains_perfume']").show();
+        }
+    }
 </script>
 @endsection

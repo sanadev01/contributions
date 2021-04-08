@@ -1,8 +1,10 @@
-cd /home/homeqdba/repositories/hd-v2/
+cd /var/repos/hd
+git reset --hard
+git fetch
 git checkout master
-git pull
-cd /home/homeqdba/public_html/calculator
-cp -R /home/homeqdba/repositories/hd-v2/* /home/homeqdba/public_html/calculator/
+git pull origin master
+rsync -av /var/repos/hd/ /var/www/hd
+cd /var/www/hd
 composer install --no-interaction
 php artisan migrate --force
 php artisan cache:clear --no-interaction

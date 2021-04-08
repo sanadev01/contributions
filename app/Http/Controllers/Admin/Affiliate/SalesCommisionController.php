@@ -17,4 +17,15 @@ class SalesCommisionController extends Controller
     {
         return view('admin.affiliate.sales-commission');
     }
+    
+    public function create(Request $request)
+    {
+        foreach(json_decode($request->data) as $saleId){
+            $sale = AffiliateSale::find($saleId);
+            $sale->is_paid = true;
+            $sale->save();
+        }
+        session()->flash('alert-success','Commission has been paid');
+        return redirect()->route('admin.affiliate.sales-commission.index');
+    }
 }

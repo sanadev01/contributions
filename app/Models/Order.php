@@ -34,6 +34,11 @@ class Order extends Model implements Package
 
     const STATUS_ORDER = 30;
     const STATUS_NEEDS_PROCESSING = 32;
+
+    const STATUS_CANCEL = 35;
+    const STATUS_REJECTED = 38;
+    const STATUS_RELEASE = 40;
+
     const STATUS_PAYMENT_PENDING = 60;
     const STATUS_PAYMENT_DONE = 70;
     const STATUS_SHIPPED = 80;
@@ -94,6 +99,11 @@ class Order extends Model implements Package
     {
         return $this->belongsToMany(Container::class);
     }
+    
+    public function deposits()
+    {
+        return $this->belongsToMany(Deposit::class);
+    }
 
     public function getPaymentInvoice()
     {
@@ -109,6 +119,7 @@ class Order extends Model implements Package
     {
         return $this->is_consolidated;
     }
+    
     public function isPaid()
     {
         if ( !$this->getPaymentInvoice() ){
@@ -275,7 +286,7 @@ class Order extends Model implements Package
         $battriesExtra = $shippingService->contains_battery_charges * ( $this->items()->batteries()->count() );
         $pefumeExtra = $shippingService->contains_perfume_charges * ( $this->items()->perfumes()->count() );
 
-        $dangrousGoodsCost = $battriesExtra + $pefumeExtra;
+        $dangrousGoodsCost = (isset($this->user->perfume) && $this->user->perfume == 1 ? 0 : $pefumeExtra) + (isset($this->user->battery) && $this->user->battery == 1 ? 0 : $battriesExtra);
 
         $consolidation = $this->isConsolidated() ?  setting('CONSOLIDATION_CHARGES',0,null,true) : 0;
 
@@ -294,7 +305,8 @@ class Order extends Model implements Package
             'dangrous_goods' => $dangrousGoodsCost,
             'total' => $total,
             'discount' => $discount,
-            'gross_total' => $gross_total
+            'gross_total' => $gross_total,
+            'user_declared_freight' => $this->user_declared_freight >0 ? $this->user_declared_freight : $shippingCost
         ]);
 
     }
@@ -337,6 +349,16 @@ class Order extends Model implements Package
         }
 
         if ( $this->status == Order::STATUS_NEEDS_PROCESSING ){
+            $class = 'btn btn-sm btn-warning text-dark';
+        }
+        
+        if ( $this->status == Order::STATUS_CANCEL ){
+            $class = 'btn btn-sm btn-cancelled bg-cancelled';
+        }
+        if ( $this->status == Order::STATUS_REJECTED ){
+            $class = 'btn btn-sm btn-cancelled bg-cancelled';
+        }
+        if ( $this->status == Order::STATUS_RELEASE ){
             $class = 'btn btn-sm btn-warning';
         }
 

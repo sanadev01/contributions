@@ -23,4 +23,11 @@ return [
     'warning_notice' => 'Aviso Importante',
     'warning_notice_message' => 'O TSA Transportation Security Administration;  [órgão Federal Norte Americano] poderá aplicar penalidades a serem determinadas  caso a caso  de até  US$ 400.000 e encaminhamento criminal se a violação for cometida por uma pessoa ou  empresa de acordo com violações de segurança para Itens Proibidos Descobertos na carga despachada. Uma pena civil monetária é emitida após a violação se realmente ocorrer incluindo processos  criminal',
     'warning_notice_message_danger' => 'não é permitido misturar produtos que contenham pilhas ou perfumes com outros produtos da mesma caixa, perfumes e produtos que contenham pilhas devem ser embalados separadamente. Baterias sozinhas não são permitidas',
+    'description' => 'Autorizo ​​a HERCO FREIGHT dba HomedeliveryBR a abrir caixas para verificar o conteúdo e substituir itens; consolidar itens ou caixas ou devolver o pedido ao vendedor, para WHR#',
+    'description-2' => 'em meu nome',
+    'conditions' => 'Ao usar HERCO FREIGHT dba HomedeliveryBR, concordo com seus termos e condições',
+    'Authorization' => 'Autorização para abertura de caixas ref. WHR#',
+    'thank you' => 'Obrigado',
+    'Respectfully' => 'Atenciosamento',
+    'Cancel' => 'Cancel',
 ];

@@ -1,5 +1,19 @@
 <div class="p-2" >
     <div class="row mb-2 no-print">
+        @admin
+            <div class="col-12">
+                <div class="p-1 mb-3">
+                    <ul class="nav nav-pills">
+                        <li class="nav-item">
+                            <a class="nav-link @if($userType == 'wholesale') active @endif" href="{{ route('admin.orders.show','wholesale') }}">Wholesales</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @if($userType == 'retailer') active @endif" href="{{ route('admin.orders.show','retailer') }}">Retail</a>
+                        </li>
+                    </ul>
+                </div>        
+            </div> 
+        @endadmin       
         <div class="col-1">
             <select class="form-control" wire:model="pageSize">
                 <option value="1">1</option>
@@ -92,6 +106,9 @@
                         <select class="form-control" wire:model="status">
                             <option value="">All</option>
                             <option value="{{ App\Models\Order::STATUS_ORDER }}">ORDER</option>
+                            <option value="{{ App\Models\Order::STATUS_CANCEL }}">CANCELLED</option>
+                            <option value="{{ App\Models\Order::STATUS_REJECTED }}">REJECTED</option>
+                            <option value="{{ App\Models\Order::STATUS_RELEASE }}">RELEASED</option>
                             <option value="{{ App\Models\Order::STATUS_PAYMENT_PENDING }}">PAYMENT_PENDING</option>
                             <option value="{{ App\Models\Order::STATUS_PAYMENT_DONE }}">PAYMENT_DONE</option>
                             <option value="{{ App\Models\Order::STATUS_SHIPPED }}">SHIPPED</option>
@@ -118,7 +135,7 @@
                 @forelse ($orders as $order)
                     @include('admin.orders.components.order-row',['order'=>$order])    
                 @empty
-                    <x-tables.no-record colspan="9"></x-tables.no-record>
+                    <x-tables.no-record colspan="12"></x-tables.no-record>
                 @endforelse
             </tbody>
         </table>

@@ -18,7 +18,7 @@ return [
     'support tickets' => 'Assistência',
     'profile' => 'Perfil',
     'Parcels' => 'Pacotes',
-    'Rates' => 'Cotações',
+    'Rates' => 'Minhas tarifas',
     'Profit Packages' => 'Pacotes de lucro',
     'Handling Services' => 'Serviços de Manuseio',
     'Shipping Services' => 'Serviços de Frete',
@@ -26,6 +26,7 @@ return [
     'Users' => 'Comercial',
     'Roles' => 'Funções',
     'Billing Informations' => 'Informações de pagamento',
+    'Balance' => 'Saldo da Conta',
     'Settings' => 'Configurações',
     'Fixed Charges' => 'Cobranças Fixas',
     'Reports' => [
@@ -45,4 +46,5 @@ return [
         'Sales Commission' => 'Comissões de venda',
     ],
     'activity' => 'Atividade',
+    'Print Label' => 'Imprimir etiqueta em massa',
 ];

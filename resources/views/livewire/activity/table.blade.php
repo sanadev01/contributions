@@ -24,7 +24,7 @@
                 <input type="search" class="form-control" wire:model.defer="name">
             </div>
 
-            <div class="col-3">
+            <div class="col-2">
                 <label>@lang('activity.Model')</label>
                 <select class="form-control" wire:model.defer="model">
                     <option value="">@lang('Select Model')</option>
@@ -33,7 +33,10 @@
                     @endforeach
                 </select>
             </div>
-
+            <div class="col-3">
+                <label>@lang('activity.Content')</label>
+                <input type="search" class="form-control" wire:model.defer="content">
+            </div>
             <div class="col-1 pt-4">
                 <button class="btn btn-success" title="search" wire:click.prevent="getActivities">
                     @lang('activity.Search') <i class="fa fa-search"></i>

@@ -31,4 +31,8 @@ class Recipient extends Model
     {
         return $this->account_type == 'individual' ? 'CPF' : 'CNPJ';
     }
+    public function fullName()
+    {
+        return $this->first_name.' '.$this->last_name;
+    }
 }

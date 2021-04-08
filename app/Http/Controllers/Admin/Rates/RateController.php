@@ -38,5 +38,10 @@ class RateController extends Controller
         // session()->flash('alert-dange','Error while importing rates');
         return back()->withInput();
     }
+    
+    public function show($id, RateRepository $repository)
+    {   
+        return $id;
+    }
 
 }
