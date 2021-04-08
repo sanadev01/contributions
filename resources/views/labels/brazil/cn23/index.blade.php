@@ -18,17 +18,19 @@
         }
         img.corrioes-lable{
             width: 2cm;
-            height: 2cm;
+            height: 2.5cm;
             position: absolute;
             top: 0.3cm;
             left: 0.1cm;
+            object-fit: contain;
         }
         img.partner-logo{
             position: absolute;
             top: 0.3cm;
             left: 2.3cm;
             width: 2cm;
-            height: 2cm;
+            height: 2.5cm;
+            object-fit: contain;
         }
         .service-type{
             position: absolute;
@@ -116,9 +118,17 @@
             text-align: center;
         }
         .right-block .barcode_zipcode img{
-            width: 3cm;
-            height: 2.65cm;
+            width: 2.8cm;
+            height: 2.3cm;
             display: block;
+        }
+        .right-block .zipcode-label{
+            position: absolute;
+            right: 35px;
+            top: 14px;
+            font-size: 12px;
+            text-align: center;
+            font-weight: bold;
         }
         .complain_address{
             position: absolute;
@@ -140,20 +150,20 @@
             position: absolute;
             display: block;
             left: 0.7cm;
-            width: 7.9cm;
-            height: 2.65cm;
+            width: 8cm;
+            height: 2.3cm;
         }
         .empty-lines{
             font-size: 9px;
             position: absolute;
-            top: 11.45cm;
+            top: 11.47cm;
             width: 9.4cm;
             text-align: center;
             left: 0.2cm;
         }
         .items-table{
             position: absolute;
-            top: 11.90cm;
+            top: 11.96cm;
             font-size: 7px;
             font-weight: bold;
             width: auto;
@@ -218,6 +228,16 @@
             /* display:table-column; */
             display: block;
         }
+        
+        .barcode-label{
+            position: absolute;
+            top: 10.82cm;
+            width: 9.4cm;
+            font-size: 12px;
+            text-align: center;
+            left: 0.2cm;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -269,16 +289,20 @@
         </div>
         <div class="right-block">
             <div class="barcode_zipcode">
-                <img src="data:image/png;base64,{{DNS1D::getBarcodePNG($recipient->zipcode, 'C128',1,94,[0,0,0],true)}}" alt="barcode"   />
+                {{-- <img src="data:image/png;base64,{{DNS1D::getBarcodePNG(cleanString($recipient->zipcode), 'C128',1,94,[0,0,0],true)}}" alt="barcode"   /> --}}
+                <img src="data:image/png;base64,{{ base64_encode($barcodeNew->getBarcode(cleanString($recipient->zipcode), $barcodeNew::TYPE_CODE_128, 1,94, [0,0,0]))}}" alt="barcode"   />
             </div>
+            <p class="zipcode-label">{{ cleanString($recipient->zipcode) }}</p>
         </div>
     </div>
     <div class="complain_address">
         {{ $complainAddress }}
     </div>
     <div class="tracking_code">
-        <img src="data:image/png;base64,{{DNS1D::getBarcodePNG($order->corrios_tracking_code, 'C128',1,94,[0,0,0],true)}}" alt="barcode"   />
+        {{-- <img src="data:image/png;base64,{{DNS1D::getBarcodePNG($order->corrios_tracking_code, 'C128',1,94,[0,0,0],true)}}" alt="barcode"   /> --}}
+        <img src="data:image/png;base64,{{ base64_encode($barcodeNew->getBarcode($order->corrios_tracking_code, $barcodeNew::TYPE_CODE_128, 1,94, [0,0,0]))}}" alt="barcode"   />
     </div>
+    <p class="barcode-label">{{$order->corrios_tracking_code}}</p>
     <div class="empty-lines">
         Nome legível: _______________________________________________ <br>
         Documento: ___________________Rúbrica:______________________

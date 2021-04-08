@@ -23,9 +23,9 @@ class OrderLabelController extends Controller
         $this->authorize('canPrintLable',$order);
 
 
-        if($order->shippingService->api == ShippingService::API_CORREIOS){
+        // if($order->shippingService->api == ShippingService::API_CORREIOS){
             return $this->handleCorreiosLabels($request,$order);
-        }
+        // }
 
         $labelData = null;
         $error = null;

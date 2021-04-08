@@ -2,9 +2,10 @@
 
 namespace App\Services\Correios\Services\Brazil;
 
-use App\Models\Order;
-use App\Services\Correios\Contracts\HasLableExport;
 use Exception;
+use App\Models\Order;
+use Picqer\Barcode\BarcodeGeneratorPNG;
+use App\Services\Correios\Contracts\HasLableExport;
 
 class CN23LabelMaker implements HasLableExport
 {
@@ -25,8 +26,8 @@ class CN23LabelMaker implements HasLableExport
     public function __construct()
     {
         $this->hasSuplimentary = false;
-        $this->corriosLogo = \public_path('images/correios.png');
-        $this->partnerLogo =  public_path('images/hd-label-logo.png');
+        $this->corriosLogo = \public_path('images/correios-1.png');
+        $this->partnerLogo =  public_path('images/hd-label-logo-1.png');
         $this->packetType = 'Packet <br> Standard';
         $this->contractNumber = 'Client <br>  9912501576/2020 <br> – SE/RJ';
         $this->service = 2;
@@ -131,6 +132,7 @@ class CN23LabelMaker implements HasLableExport
             'items' => $this->items,
             'suplimentaryItems' => $this->sumplementryItems,
             'hasSumplimentary' => $this->hasSuplimentary,
+            'barcodeNew' => new BarcodeGeneratorPNG(),
         ];
     }
 }
