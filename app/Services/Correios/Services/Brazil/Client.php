@@ -23,7 +23,7 @@ class Client{
 
     protected $client;
 
-    private $baseUri = 'https://apihom.correios.com.br';
+    private $baseUri = 'https://api.correios.com.br';
     private $username = 'hercofreight';
     private $password = '150495ca';
     private $numero = '0075745313';
