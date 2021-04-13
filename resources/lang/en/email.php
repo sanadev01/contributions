@@ -22,6 +22,20 @@ return  [
         'Please log in' => 'Please log in to your account’s dashboard ,created your order, generate your shipment declaration and make a payment. Don’t forget to create/select the correct destination address prior to making your payment.',
         'In this simple process' => 'In this simple process you will also have the option of consolidation and purchasing additional services.',
     ],
+    'package-ready' => [
+        'Hello' => 'Hello',
+        'Your package arrived' => 'Your package has arrived at our warehouse and the status is ‘’ready’’. Now may now create an order/place order with the ‘’actions’’ button or the ‘’orders’’ tab.',
+        'Additional service' => 'Additional service requests and information changes must be done prior to payment.',
+        'contact-us' => 'Our team is available to assist you via email homedelivery@homedeliverybr.com Whatsapp +1(305)888-5191 or though the ‘’support tickets’’ tab.',
+        'Regards' => 'Regards,',
+        'HD-team' => 'Home DeliveryBR team',
+    ],
+    'package-transit' => [
+        'Hello' => 'Hello',
+        'Your package created' => 'Your package has been created in our system and as soon as it arrives in our facility you’ll be notified via email. Until then, be sure to follow your purchase’s tracking number.',
+        'Regards' => 'Regards,',
+        'HD-team' => 'Home DeliveryBR team',
+    ],
     'consolidation-request' => [
         'Hello' => 'Hello',
         'Your consolidation' => 'Your consolidation request was received it should take 24/48 hours to be completed.',

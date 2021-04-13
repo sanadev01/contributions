@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Mail\User\ConsolidationRequest;
 use App\Mail\User\OrderCombined;
+use App\Mail\User\ShipmentTransit;
 use App\Mail\User\ShipmentReady;
 use App\Models\Document;
 use App\Models\Order;
@@ -93,12 +94,20 @@ class PreAlertRepository
                 ]);
             }
         }
-
-        try {
-            \Mail::send(new ShipmentReady($order));
-        } catch (\Exception $ex) {
-            \Log::info('Shipment ready email send error: '.$ex->getMessage());
+        if($order->status == Order::STATUS_PREALERT_TRANSIT){
+            try {
+                \Mail::send(new ShipmentTransit($order));
+            } catch (\Exception $ex) {
+                \Log::info('Shipment transit email send error: '.$ex->getMessage());
+            }
+        }else{
+            try {
+                \Mail::send(new ShipmentReady($order));
+            } catch (\Exception $ex) {
+                \Log::info('Shipment ready email send error: '.$ex->getMessage());
+            }
         }
+        
 
         return $order;
     }
@@ -169,6 +178,20 @@ class PreAlertRepository
             }
         }
 
+        if($order->status == Order::STATUS_PREALERT_TRANSIT){
+            try {
+                \Mail::send(new ShipmentTransit($order));
+            } catch (\Exception $ex) {
+                \Log::info('Shipment transit email send error: '.$ex->getMessage());
+            }
+        }else{
+            try {
+                \Mail::send(new ShipmentReady($order));
+            } catch (\Exception $ex) {
+                \Log::info('Shipment ready email send error: '.$ex->getMessage());
+            }
+        }
+        
         if( $order->isConsolidated() ){
             try {
                 \Mail::send(new OrderCombined($order));
