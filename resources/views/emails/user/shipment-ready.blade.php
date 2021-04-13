@@ -14,6 +14,6 @@ Dashboard
 @endcomponent
 
 @lang('email.package-ready.contact-us')<br>
-@lang('email.package-ready.Regards')
+@lang('email.package-ready.Regards')<br>
 @lang('email.package-ready.HD-team') <br>
 @endcomponent
