@@ -9,6 +9,6 @@
 Dashboard
 @endcomponent
 
-@lang('email.package-transit.Regards')
+@lang('email.package-transit.Regards')<br>
 @lang('email.package-transit.HD-team')
 @endcomponent
