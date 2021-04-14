@@ -48,7 +48,7 @@
                                                         <a href="{{ route('warehouse.delivery_bill.show',$deliveryBill) }}" class="dropdown-item w-100">
                                                             <i class="fa fa-list"></i> Show Containers
                                                         </a>
-                                                        @if( $deliveryBill->isRegistered() && !$deliveryBill->isReady())
+                                                        @if( $deliveryBill->isRegistered() && $deliveryBill->isReady())
                                                             <a href="{{ route('warehouse.delivery_bill.download',$deliveryBill) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-cloud-download"></i> GET CN38
                                                             </a>
