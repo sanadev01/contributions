@@ -35,7 +35,7 @@ class CN38LabelMaker implements HasLableExport{
         $this->logo = public_path('images/hd-1cm.png');
         $this->deliveryBillNo = '';
         $this->officeOfOrigin = public_path('images/hd-1cm.png');
-        $this->contractNo = '';
+        $this->contractNo = '9912501576';
         $this->airLine = '';
         $this->flightNo = '';
         $this->date = '';

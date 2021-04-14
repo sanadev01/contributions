@@ -14,7 +14,7 @@ class DeliveryBillDownloadController extends Controller
     {
             $labelPrinter = new CN38LabelMaker();
             $labelPrinter->setDeliveryBillNo($deliveryBill->cnd38_code)
-                        ->setContractNo('9912472154')
+                        ->setContractNo('9912501576')
                         ->setDate(Carbon::now()->format('Y-m-d'))
                         ->setTime(Carbon::now()->format('h:i'))
                         ->setService(2)
