@@ -34,7 +34,7 @@
                                         <td>
                                             {{ $deliveryBill->request_id }}
                                         </td>
-                                        <td>{{ $deliveryBill->dispatch_number }}</td>
+                                        <td>{{ $deliveryBill->cnd38_code }}</td>
                                         <td>
                                             {{ $deliveryBill->origin_country }}
                                         </td>
