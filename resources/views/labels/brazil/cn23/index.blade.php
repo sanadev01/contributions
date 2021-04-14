@@ -16,28 +16,41 @@
             font-family: Arial, Helvetica, sans-serif;
             box-sizing:border-box !important;
         }
-        img.corrioes-lable{
-            width: 2cm;
-            height: 2.5cm;
-            position: absolute;
-            top: 0.3cm;
-            left: 0.1cm;
-            object-fit: contain;
-        }
+
         img.partner-logo{
+            width: 2cm;
+            height: 2.5cm;
             position: absolute;
-            top: 0.3cm;
-            left: 2.3cm;
+            top: 2.5mm;
+            left: 2.5mm;
+            object-fit: contain;
+        }
+
+        img.corrioes-lable{
+            position: absolute;
+            top: 2.5mm;
+            left: 2.7cm;
             width: 2cm;
             height: 2.5cm;
             object-fit: contain;
         }
+
+        p.screening-code{
+            position: absolute;
+            top: 5mm;
+            left: 5cm;
+            width: 2cm;
+            height: 2.5cm;
+            font-size: 15pt;
+            object-fit: contain;
+        }
+        
         .service-type{
             position: absolute;
-            top: 0.3cm;
-            left: 4.6cm;
-            width: 1.8cm;
-            height: 1.8cm;
+            top: 2.5mm;
+            right: 2.5mm;
+            width: 20mm;
+            height: 20mm;
             display: block;
             background-color: black;
             border-radius: 0.9cm;
@@ -48,36 +61,78 @@
             font-size: 10px;
             position: absolute;
         }
+        .service-info-wrapper{
+            position: absolute;
+            left: 2.5mm;
+            top: 23mm;
+            font-size: 8pt;
+            width: 100%;
+        }
         .service-info{
             position: absolute;
-            left: 6.7cm;
-            top: 0.3cm;
+            left: 65mm;
+            top:22mm;
         }
         .service-name{
             text-align: center;
             font-weight: bold;
-            font-size: 12px;
+            font-size: 10pt;
         }
         .contract-code{
-            font-size: 8px;
+            font-size: 8pt;
             text-align: center;
         }
-        .address{
+
+        .tracking_code{
+            position: absolute;
+            top: 3.5cm;
+            display: block;
+            text-align: center;
+            width: 9.3cm;
+        }
+        .tracking_code img{
+            position: absolute;
+            display: block;
+            left: 6.25mm;
+            width: 79.5mm;
+            height: 18mm;
+        }
+
+        .barcode-label{
             position: absolute;
             top: 2.7cm;
+            width: 9.4cm;
+            font-size: 10pt;
+            text-align: center;
+            left: 0.2cm;
+            font-weight: bold;
+        }
+        .empty-lines{
+            font-size: 9px;
+            position: absolute;
+            top: 53mm;
+            width: 9.4cm;
+            text-align: center;
+            left: 0.2cm;
+        }
+
+        .address{
+            position: absolute;
+            top: 6cm;
             display: block;
             border: 2px solid black;
-            padding-top: 20px;
-            padding-left: 5px;
-            padding-right: 5px;
+            padding: 1mm;
             width: 9.3cm;
             font-size: 7px;
             left: 0.2cm;
             right: 0;
+            height: 26mm;
         }
         .destination{
-            width: 5cm;
+            width: 4cm;
             display: inline-block;
+            font-size: 10pt;
+            font-family: Arial;
         }
         .destination h4{
             margin: 0px !important;
@@ -91,76 +146,56 @@
         }
         .serivce-zipcode{
             font-size: 8px;
-            top: 5.8cm;
+            top: 100mm;
             position: absolute;
             left: 0.2cm;
             width: 9.6cm;
             padding: 5px;
         }
         .serivce-zipcode .left-block{
-            width: 4cm;
+            width: 6cm;
             display: inline-block;
+            font-family: Arial;
+            font-size: 8pt;
         }
         .return-address{
             color: rgb(124, 124, 124);
         }
         .right-block{
             display: inline-block;
-            width: 4.5cm;
+            width: 3cm;
             position: relative;
+            text-align: left;
+        }
+        .barcode_zipcode{
+            position: absolute;
+            top: 6.4cm;
+            display: block;
+            right: 10mm;
             text-align: center;
         }
-        .right-block .barcode_zipcode{
-            display: block;
-            position: absolute;
-            right: 10px;
-            top: -60px;
-            text-align: center;
-        }
-        .right-block .barcode_zipcode img{
-            width: 2.8cm;
-            height: 2.3cm;
+        .barcode_zipcode img{
+            width: 40mm;
+            height: 18mm;
             display: block;
         }
-        .right-block .zipcode-label{
+        .zipcode-label{
             position: absolute;
-            right: 35px;
-            top: 14px;
-            font-size: 12px;
+            right: 20mm;
+            top: 80mm;
+            font-size: 10pt;
             text-align: center;
             font-weight: bold;
         }
         .complain_address{
             position: absolute;
-            top: 8.45cm;
+            top: 90mm;
             text-align: center;
             font-size: 7px;
             width: 9cm;
             left: 0.2cm;
         }
-        .tracking_code{
-            position: absolute;
-            top: 8.85cm;
-            left: 0.2cm;
-            display: block;
-            text-align: center;
-            width: 9.3cm;
-        }
-        .tracking_code img{
-            position: absolute;
-            display: block;
-            left: 0.7cm;
-            width: 8cm;
-            height: 2.3cm;
-        }
-        .empty-lines{
-            font-size: 9px;
-            position: absolute;
-            top: 11.47cm;
-            width: 9.4cm;
-            text-align: center;
-            left: 0.2cm;
-        }
+        
         .items-table{
             position: absolute;
             top: 11.96cm;
@@ -229,24 +264,25 @@
             display: block;
         }
         
-        .barcode-label{
-            position: absolute;
-            top: 10.82cm;
-            width: 9.4cm;
-            font-size: 12px;
-            text-align: center;
-            left: 0.2cm;
-            font-weight: bold;
-        }
     </style>
 </head>
 <body>
     <div class="cn23-text">
         CN23
     </div>
-    <img class="corrioes-lable" src="{{ $corriosLogo }}" alt="">
     <img class="partner-logo" src="{{ $partnerLogo }}">
+    <img class="corrioes-lable" src="{{ $corriosLogo }}" alt="">
+    <p class="screening-code">CJA01</p>
     <div class="service-type"></div>
+    <div class="service-info-wrapper">
+        <div class="order-infoline">
+            <strong>Order#:</strong>{{ $order->warehouse_number }} 
+            {{-- <strong>CR#:</strong>{{ $order->customer_reference }} --}}
+            {{-- <strong>Weight</strong> {{ $order->getOriginalWeight('kg') }}kg|{{ $order->getOriginalWeight('lbs') }}lbs |  --}}
+            {{-- <strong>{{ $order->length }} x {{ $order->width }} x {{$order->height}} ({{$order->isWeightInKg() ? 'cm' :'in'}})</strong> --}}
+        </div>
+        <strong>Service: </strong> {{ $service }} <br>
+    </div>
     <div class="service-info">
         <div class="service-name">
             {!! $packetType !!}
@@ -254,49 +290,6 @@
         <div class="contract-code">
             {!! $contractNumber !!}
         </div>
-    </div>
-    <div class="address">
-        <div class="destination">
-            <h4><strong>DESTINATARIO:</strong></h4>
-            <strong>NAME:</strong> {{ $recipient->first_name }} {{ $recipient->last_name }} <br>
-            <strong>ADDRESS:</strong> {{ $recipient->address }} {{ $recipient->address2 }}, {{ $recipient->stree_no }}, {{ $recipient->city }}<br>
-            <strong>ZIP CODE:</strong> {{ $recipient->zipcode }} <br>
-            <strong>CITY/STATE:</strong> {{ $recipient->state->name }} <br>
-            <strong>COUNTRY:</strong> {{ $recipient->country->name }}  <br>
-            <strong>PHONE:</strong> {{ $recipient->phone }} <br>
-            <strong>email:</strong> {{ $recipient->email }} <br>
-        </div>
-        <div class="origin">
-            <h4>Origem:</h4>
-            {{ $order->sender_first_name }} <br>
-            <strong>WHR#:</strong>{{ $order->warehouse_number }} <br>
-            <strong>CR#:</strong>{{ $order->customer_reference }} <br>
-            <strong>Weight</strong> {{ $order->getOriginalWeight('kg') }}kg|{{ $order->getOriginalWeight('lbs') }}lbs
-            <br>
-            <strong>{{ $order->length }} x {{ $order->width }} x {{$order->height}} ({{$order->isWeightInKg() ? 'cm' :'in'}})</strong>
-
-        </div>
-    </div>
-    <div class="serivce-zipcode">
-        <div class="left-block">
-            <strong>Service: </strong> {{ $service }} <br>
-            <div class="return-address">
-                <strong>DEVOLUCÃO:</strong>
-                <p>
-                    {{ $returnAddress }}
-                </p>
-            </div>
-        </div>
-        <div class="right-block">
-            <div class="barcode_zipcode">
-                {{-- <img src="data:image/png;base64,{{DNS1D::getBarcodePNG(cleanString($recipient->zipcode), 'C128',1,94,[0,0,0],true)}}" alt="barcode"   /> --}}
-                <img src="data:image/png;base64,{{ base64_encode($barcodeNew->getBarcode(cleanString($recipient->zipcode), $barcodeNew::TYPE_CODE_128, 1,94, [0,0,0]))}}" alt="barcode"   />
-            </div>
-            <p class="zipcode-label">{{ cleanString($recipient->zipcode) }}</p>
-        </div>
-    </div>
-    <div class="complain_address">
-        {{ $complainAddress }}
     </div>
     <div class="tracking_code">
         {{-- <img src="data:image/png;base64,{{DNS1D::getBarcodePNG($order->corrios_tracking_code, 'C128',1,94,[0,0,0],true)}}" alt="barcode"   /> --}}
@@ -306,6 +299,48 @@
     <div class="empty-lines">
         Nome legível: _______________________________________________ <br>
         Documento: ___________________Rúbrica:______________________
+    </div>
+    <div class="address">
+        <div class="destination">
+            <h4><strong>DESTINATARIO:</strong></h4>
+            {{ $recipient->first_name }} {{ $recipient->last_name }} <br>
+            {{ $recipient->address }} {{ $recipient->address2 }}, {{ $recipient->stree_no }}, {{ $recipient->city }}, {{ $recipient->zipcode }} <br>
+            {{ $recipient->state->name }}
+            {{ $recipient->country->name }}
+            {{-- <strong>PHONE:</strong> {{ $recipient->phone }} <br>
+            <strong>email:</strong> {{ $recipient->email }} <br> --}}
+        </div>
+    </div>
+    <div class="barcode_zipcode">
+        {{-- <img src="data:image/png;base64,{{DNS1D::getBarcodePNG(cleanString($recipient->zipcode), 'C128',1,94,[0,0,0],true)}}" alt="barcode"   /> --}}
+        <img src="data:image/png;base64,{{ base64_encode($barcodeNew->getBarcode(cleanString($recipient->zipcode), $barcodeNew::TYPE_CODE_128, 1,94, [0,0,0]))}}" alt="barcode"   />
+    </div>
+    <p class="zipcode-label">{{ cleanString($recipient->zipcode) }}</p>
+    <div class="serivce-zipcode">
+        <div class="left-block">
+            <div class="return-address">
+                <strong>DEVOLUCÃO:</strong>
+                <p>
+                    {!! $returnAddress !!}
+                </p>
+                <strong>Order#:</strong>{{ $order->warehouse_number }} <br>
+                <strong>CR#:</strong>{{ $order->customer_reference }} <br>
+                <strong>Weight</strong> {{ $order->getOriginalWeight('kg') }}kg|{{ $order->getOriginalWeight('lbs') }}lbs <br>
+                <strong>{{ $order->length }} x {{ $order->width }} x {{$order->height}} ({{$order->isWeightInKg() ? 'cm' :'in'}})</strong>
+            </div>
+        </div>
+        <div class="right-block">
+            <h2>Remetente:</h2>
+            {{ $order->sender_first_name }} {{ $order->sender_last_name }} <br>
+            {{ optional($order)->user->pobox_number }}, 
+            2200 NW, 129th Ave – Suite # 100 <br>
+            Miami, FL, 33182 <br>
+            United States <br>
+            Ph#: +13058885191
+        </div>
+    </div>
+    <div class="complain_address">
+        {{ $complainAddress }}
     </div>
 
     @include('labels.brazil.cn23.items')

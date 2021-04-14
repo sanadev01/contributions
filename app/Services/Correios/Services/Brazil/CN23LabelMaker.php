@@ -28,11 +28,11 @@ class CN23LabelMaker implements HasLableExport
         $this->hasSuplimentary = false;
         $this->corriosLogo = \public_path('images/correios-1.png');
         $this->partnerLogo =  public_path('images/hd-label-logo-1.png');
-        $this->packetType = 'Packet <br> Standard';
-        $this->contractNumber = 'Client <br>  9912501576/2020 <br> – SE/RJ';
+        $this->packetType = 'Packet Standard';
+        $this->contractNumber = 'Contrato:  9912501576';
         $this->service = 2;
-        $this->returnAddress = 'Rua Barão Do Triunfo 520[11:30 15.andar Cj. 151 Brooklyn São Paulo SP CEP 04602-001';
-        $this->complainAddress = 'Em caso de duvidas entrar em contato com seu redirecionador our homedelivery@homedeliverybr.com';
+        $this->returnAddress = 'Rua Barão do Triunfo 427 <br> 15and CJ 151 Brooklyn <br> 04602/001 São Paulo, Brazil';
+        $this->complainAddress = 'Em caso de problemas com o produto, entre em contato com o remetente';
     }
 
     public function setOrder(Order $order)

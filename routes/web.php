@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\Order;
 use App\Services\StoreIntegrations\Shopify;
+use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 
 /*
 |--------------------------------------------------------------------------
@@ -180,3 +182,14 @@ Route::get('order/{order}/label/get', function (App\Models\Order $order) {
     }
     return response()->download(storage_path("app/labels/{$order->corrios_tracking_code}.pdf"),"{$order->corrios_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.label.download');
+
+
+Route::get('test-label',function(){
+    $labelPrinter = new CN23LabelMaker();
+
+    $order = Order::find(53654);
+    $labelPrinter->setOrder($order);
+    $labelPrinter->setService(2);
+
+    return $labelPrinter->download();
+});
