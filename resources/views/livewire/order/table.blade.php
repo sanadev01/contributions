@@ -4,11 +4,11 @@
             <div class="col-12">
                 <div class="p-1 mb-3">
                     <ul class="nav nav-pills">
-                        <li class="nav-item">
-                            <a class="nav-link @if($userType == 'wholesale') active @endif" href="{{ route('admin.orders.show','wholesale') }}">Wholesales</a>
+                        <li class="nav-item mr-1" style="background: #b1daf7;">
+                            <a class="nav-link @if($userType == 'wholesale') active text-white @endif" href="{{ route('admin.orders.show','wholesale') }}"><span style="font-size: 22px;">Wholesales</span></a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link @if($userType == 'retailer') active @endif" href="{{ route('admin.orders.show','retailer') }}">Retail</a>
+                        <li class="nav-item" style="background: #b1daf7;">
+                            <a class="nav-link @if($userType == 'retailer') active text-white @endif" href="{{ route('admin.orders.show','retailer') }}"><span style="font-size: 22px;">Retail</span></a>
                         </li>
                     </ul>
                 </div>        
