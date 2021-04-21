@@ -68,8 +68,8 @@
                             tr.addClass('shown');
                             result.forEach(function(entry) {
                                 var tdata = '<tr>'+
-                                '<td>'+entry.min_weight+'</td>'+
-                                '<td>'+entry.max_weight+'</td>'+
+                                '<td>'+entry.min_weight+ ' kg ('+ parseFloat(entry.min_weight * 2.205).toFixed(2) + ' lbs)'+'</td>'+
+                                '<td>'+entry.max_weight+ ' kg ('+ parseFloat(entry.max_weight * 2.205).toFixed(2) + ' lbs)'+'</td>'+
                                 '<td>'+entry.orders+'</td>'+
                                 '</tr>';
                                 $('.tbodyrow').append(tdata);

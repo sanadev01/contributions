@@ -78,10 +78,10 @@ class OrderReportsRepository
         return $orders;
     }
    
-    public function getShipmentReportOfUsersByWeight(Request $request)
+    public function getShipmentReportOfUsersByWeight($id)
     {
         $query = Order::where('status','>',Order::STATUS_PAYMENT_PENDING)
-        ->has('user')->where('user_id', $request->id);
+        ->has('user')->where('user_id', $id);
         
         $query->select(DB::raw('CASE WHEN measurement_unit = "kg/cm" THEN weight ELSE (weight/2.205) END as kgweight'));
         $record = collect();
