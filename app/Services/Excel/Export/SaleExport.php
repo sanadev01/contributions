@@ -38,7 +38,7 @@ class SaleExport extends AbstractExportService
             if ( Auth::user()->isAdmin() ){
                 $this->setCellValue('A'.$row, $user->name . $user->pobox_number);
             }
-            $this->setCellValue('B'.$row, $commissionUser->name . $commissionUser->pobox_number);
+            $this->setCellValue('B'.$row, optional($commissionUser)->name . optional($commissionUser)->pobox_number);
             $this->setCellValue('C'.$row, 'HD-'.$sale->order_id);
             $this->setCellValue('D'.$row, number_format($sale->value, 2));
             $this->setCellValue('E'.$row, $sale->type);
