@@ -37,8 +37,8 @@ class ShipmentReport extends AbstractExportService
             $this->setCellValue('B'.$row, $user->name);
             $this->setCellValue('C'.$row, $user->email);
             $this->setCellValue('D'.$row, $user->order_count);
-            $this->setCellValue('E'.$row, number_format($user->weight,2).' Kg');
-            $this->setCellValue('F'.$row, number_format($user->spent,2).' USD');
+            $this->setCellValue('E'.$row, number_format($user->weight,2));
+            $this->setCellValue('F'.$row, number_format($user->spent,2));
             $this->setCellValue('G'.$row, $report[0]['orders']);
             $this->setCellValue('H'.$row, $report[1]['orders']);
             $this->setCellValue('I'.$row, $report[2]['orders']);
@@ -74,10 +74,10 @@ class ShipmentReport extends AbstractExportService
         $this->setCellValue('D1', '# of Shipments');
 
         $this->setColumnWidth('E', 20);
-        $this->setCellValue('E1', 'Weight');
+        $this->setCellValue('E1', 'Weight in Kg');
 
         $this->setColumnWidth('F', 20);
-        $this->setCellValue('F1', 'Spent');
+        $this->setCellValue('F1', 'Spent USD');
 
         $this->setColumnWidth('G', 20);
         $this->setCellValue('G1', '0.00 - 1.00 Kg');
