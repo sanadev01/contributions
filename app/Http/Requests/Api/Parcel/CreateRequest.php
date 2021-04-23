@@ -75,7 +75,7 @@ class CreateRequest extends FormRequest
             "products.*.is_flameable" => "required|in:0,1",
         ];
 
-        if($request->parcel['measurement_unit'] == 'kg/cm'){
+        if(optional($request->parcel)['measurement_unit'] == 'kg/cm'){
             $rules["parcel.weight"] = "required|numeric|gt:0|max:30";
         }else{
             $rules["parcel.weight"] = "required|numeric|gt:0|max:66.15";

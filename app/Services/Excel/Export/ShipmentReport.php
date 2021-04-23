@@ -86,7 +86,7 @@ class ShipmentReport extends AbstractExportService
         $this->setCellValue('H1', '1.01 - 2.00 Kg');
 
         $this->setColumnWidth('I', 20);
-        $this->setCellValue('I1', '2.01 -3.00 Kg');
+        $this->setCellValue('I1', '2.01 - 3.00 Kg');
 
         $this->setColumnWidth('J', 20);
         $this->setCellValue('J1', '3.01 - 4.00 Kg');
