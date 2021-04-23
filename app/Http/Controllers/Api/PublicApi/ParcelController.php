@@ -33,13 +33,13 @@ class ParcelController extends Controller
             $volumetricWeight = WeightCalculator::getVolumnWeight($length,$width,$height,'cm');
             $volumeWeight = round($volumetricWeight > $weight ? $volumetricWeight : $weight,2);
             if($volumeWeight > 30){
-                return apiResponse(false,"Your Weight is Exceed from limit of Shipping Services");
+                return apiResponse(false," Your ". $volumeWeight ." kg/cm weight has exceeded the limit. Please check the weight and dimensions. Weight shouldn't be greater than 30 kg/cm");
             }
         }else{
             $volumetricWeight = WeightCalculator::getVolumnWeight($length,$width,$height,'in');;
             $volumeWeight = round($volumetricWeight > $weight ? $volumetricWeight : $weight,2);
             if($volumeWeight > 65.15){
-                return apiResponse(false,"Your Weight is Exceed from limit of Shipping Services");
+                return apiResponse(false," Your ". $volumeWeight ." lbs/in weight has exceeded the limit. Please check the weight and dimensions. Weight shouldn't be greater than 66.15 lbs/in");
             }
         }
 
