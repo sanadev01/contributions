@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\Api\PublicApi;
 
+use App\Models\Order;
+use App\Models\ApiLog;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Services\Converters\UnitsConverter;
+use App\Services\Calculators\WeightCalculator;
 use App\Http\Requests\Api\Parcel\CreateRequest;
 use App\Http\Resources\PublicApi\OrderResource;
-use App\Models\ApiLog;
-use App\Models\Order;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class ParcelController extends Controller
 {
@@ -22,6 +24,25 @@ class ParcelController extends Controller
      */
     public function store(CreateRequest $request)
     {
+        $weight = optional($request->parcel)['weight']??0;
+        $length = optional($request->parcel)['length']??0;
+        $width = optional($request->parcel)['width']??0;
+        $height = optional($request->parcel)['height']??0;
+
+        if ( optional($request->parcel)['measurement_unit'] == 'kg/cm' ){
+            $volumetricWeight = WeightCalculator::getVolumnWeight($length,$width,$height,'cm');
+            $volumeWeight = round($volumetricWeight > $weight ? $volumetricWeight : $weight,2);
+            if($volumeWeight > 30){
+                throw new \Exception("Your Weight is Exceed from limit of Shipping Services",500);
+            }
+        }else{
+            $volumetricWeight = WeightCalculator::getVolumnWeight($length,$width,$height,'in');;
+            $volumeWeight = round($volumetricWeight > $weight ? $volumetricWeight : $weight,2);
+            if($volumeWeight > 65.15){
+                throw new \Exception("Your Weight is Exceed from limit of Shipping Services",500);
+            }
+        }
+
         DB::beginTransaction();
 
         try {
