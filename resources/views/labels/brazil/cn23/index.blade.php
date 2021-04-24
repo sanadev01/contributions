@@ -52,8 +52,6 @@
             width: 20mm;
             height: 20mm;
             display: block;
-            background-color: black;
-            border-radius: 0.9cm;
         }
         .cn23-text{
             right: 0.1cm;
@@ -64,14 +62,14 @@
         .service-info-wrapper{
             position: absolute;
             left: 2.5mm;
-            top: 23mm;
+            top: 24mm;
             font-size: 8pt;
             width: 100%;
         }
         .service-info{
             position: absolute;
             left: 65mm;
-            top:22mm;
+            top:23mm;
         }
         .service-name{
             text-align: center;
@@ -131,7 +129,7 @@
         .destination{
             width: 4cm;
             display: inline-block;
-            font-size: 10pt;
+            font-size: 8pt;
             font-family: Arial;
         }
         .destination h4{
@@ -273,14 +271,9 @@
     <img class="partner-logo" src="{{ $partnerLogo }}">
     <img class="corrioes-lable" src="{{ $corriosLogo }}" alt="">
     <p class="screening-code">CJA01</p>
-    <div class="service-type"></div>
+    <img src="{{ $serviceLogo }}" class="service-type"/>
     <div class="service-info-wrapper">
-        <div class="order-infoline">
-            <strong>Order#:</strong>{{ $order->warehouse_number }} 
-            {{-- <strong>CR#:</strong>{{ $order->customer_reference }} --}}
-            {{-- <strong>Weight</strong> {{ $order->getOriginalWeight('kg') }}kg|{{ $order->getOriginalWeight('lbs') }}lbs |  --}}
-            {{-- <strong>{{ $order->length }} x {{ $order->width }} x {{$order->height}} ({{$order->isWeightInKg() ? 'cm' :'in'}})</strong> --}}
-        </div>
+        <div class="order-infoline"></div>
         <strong>Service: </strong> {{ $service }} <br>
     </div>
     <div class="service-info">
@@ -292,7 +285,6 @@
         </div>
     </div>
     <div class="tracking_code">
-        {{-- <img src="data:image/png;base64,{{DNS1D::getBarcodePNG($order->corrios_tracking_code, 'C128',1,94,[0,0,0],true)}}" alt="barcode"   /> --}}
         <img src="data:image/png;base64,{{ base64_encode($barcodeNew->getBarcode($order->corrios_tracking_code, $barcodeNew::TYPE_CODE_128, 1,94, [0,0,0]))}}" alt="barcode"   />
     </div>
     <p class="barcode-label">{{$order->corrios_tracking_code}}</p>
@@ -307,12 +299,9 @@
             {{ $recipient->address }} {{ $recipient->address2 }}, {{ $recipient->stree_no }}, {{ $recipient->city }}, {{ $recipient->zipcode }} <br>
             {{ $recipient->state->name }}
             {{ $recipient->country->name }}
-            {{-- <strong>PHONE:</strong> {{ $recipient->phone }} <br>
-            <strong>email:</strong> {{ $recipient->email }} <br> --}}
         </div>
     </div>
     <div class="barcode_zipcode">
-        {{-- <img src="data:image/png;base64,{{DNS1D::getBarcodePNG(cleanString($recipient->zipcode), 'C128',1,94,[0,0,0],true)}}" alt="barcode"   /> --}}
         <img src="data:image/png;base64,{{ base64_encode($barcodeNew->getBarcode(cleanString($recipient->zipcode), $barcodeNew::TYPE_CODE_128, 1,94, [0,0,0]))}}" alt="barcode"   />
     </div>
     <p class="zipcode-label">{{ cleanString($recipient->zipcode) }}</p>
@@ -328,6 +317,7 @@
         <div class="right-block">
             <h2>Remetente:</h2>
             {{ $order->sender_first_name }} {{ $order->sender_last_name }} <br>
+            {{ $order->sender_email }} <br>
             <strong>Order#:</strong>{{ $order->warehouse_number }} <br>
             <strong>CR#:</strong>{{ $order->customer_reference }} <br>
             <strong>Weight</strong> {{ $order->getOriginalWeight('kg') }}kg|{{ $order->getOriginalWeight('lbs') }}lbs <br>

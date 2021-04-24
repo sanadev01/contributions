@@ -11,6 +11,7 @@ use App\Services\Converters\UnitsConverter;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Services\Calculators\WeightCalculator;
+use App\Services\Correios\Models\Package as ModelsPackage;
 
 class Order extends Model implements Package
 {
@@ -375,5 +376,16 @@ class Order extends Model implements Package
         }
 
         return $class;
+    }
+
+
+    public function getDistributionModality(): int
+    {
+        return ModelsPackage::SERVICE_CLASS_STANDARD;
+    }
+
+    public function getService(): int
+    {
+        return 2;
     }
 }

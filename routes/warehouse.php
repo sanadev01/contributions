@@ -10,13 +10,8 @@ use App\Http\Controllers\Warehouse\DeliveryBillRegisterController;
 use App\Http\Controllers\Warehouse\DeliveryBillStatusUpdateController;
 use App\Http\Controllers\Warehouse\UnitRegisterController;
 use App\Models\Order;
-use App\Services\Converters\UnitsConverter;
-use App\Services\Correios\Contracts\PacketItem;
 use App\Services\Correios\Models\Package;
-use App\Services\Correios\Services\Brazil\Client;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
-use App\Services\Correios\Services\Brazil\CN35LabelMaker;
-use App\Services\Correios\Services\Brazil\CN38LabelMaker;
 use Illuminate\Support\Facades\Route;
 
 
@@ -37,22 +32,6 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
 
 });
 
-// Route::get('test-pdf', function () {
-//     $labelPrinter = new LabelMaker;
-//     $labelPrinter->setCorrieosLogo();
-//     $labelPrinter->setPartnerLogo();
-//     $labelPrinter->setServiceLogo();
-
-//     $recipient = new Recipient;
-//     $recipient->recipientName = 'Admin';
-//     $recipient->recipientPhoneNumber = '+8156912324';
-//     $recipient->recipientAddress = 'hiad, streest 5 ,aasdfhsd';
-//     $recipient->recipientZipCode = '912324';
-//     $recipient->recipientState = 'SP';
-//     $labelPrinter->setDestination($recipient);
-
-//     $labelPrinter->download();
-// });
 
 Route::get('test', function () {
 
@@ -68,11 +47,18 @@ Route::get('test', function () {
     //             ->setUnitCode('USLEVEBRSAODANX10793001005172');
 
 
-    $order = Order::find(53654);
+    // $order = Order::find(53654);
 
-    $client = new Client();
+    // $client = new Client();
 
 
-    echo $client->createPackage($order);
+    // echo $client->createPackage($order);
+
+    // $order = Order::find(53654);
+    
+    // $labelPrinter = new CN23LabelMaker();
+    // $labelPrinter->setOrder($order);
+    // $labelPrinter->setPacketType(Package::SERVICE_CLASS_STANDARD);
+    // return $labelPrinter->download();
 
 });

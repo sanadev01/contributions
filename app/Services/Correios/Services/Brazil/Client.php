@@ -23,7 +23,7 @@ class Client{
 
     protected $client;
 
-    private $baseUri = 'https://apihom.correios.com.br';
+    private $baseUri = 'https://api.correios.com.br';
     private $username = 'hercofreight';
     private $password = '150495ca';
     private $numero = '0075745313';
@@ -69,6 +69,8 @@ class Client{
         $packet->recipientState = $order->recipient->state->code;
 //    $packet->recipientPhoneNumber = $order->recipient->phone;
         $packet->recipientEmail = $order->recipient->email;
+        $packet->distributionModality = $order->getDistributionModality();
+        $packet->taxPaymentMethod = $order->getService() == 1 ? 'DDP' : 'DDU';
         $packet->totalWeight =  ceil($order->isWeightInKg() ? $order->weight  : UnitsConverter::poundToKg($order->weight));
 
         $width = round($order->isMeasurmentUnitCm() ? $order->width : UnitsConverter::inToCm($order->width));

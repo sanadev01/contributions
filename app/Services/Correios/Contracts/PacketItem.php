@@ -4,7 +4,7 @@
 namespace App\Services\Correios\Contracts;
 
 
-class PacketItem implements Package
+class PacketItem
 {
     public $hsCode = null;
     public $description = null;
