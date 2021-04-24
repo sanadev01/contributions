@@ -43,7 +43,8 @@ class SaleExport extends AbstractExportService
             $this->setCellValue('D'.$row, number_format($sale->value, 2));
             $this->setCellValue('E'.$row, $sale->type);
             $this->setCellValue('F'.$row, $sale->order->corrios_tracking_code);
-            $this->setCellValue('G'.$row, $sale->created_at->format('m/d/Y'));
+            $this->setCellValue('G'.$row, $sale->is_paid? 'paid': 'unpaid');
+            $this->setCellValue('H'.$row, $sale->created_at->format('m/d/Y'));
             
             $row++;
         }
@@ -51,7 +52,7 @@ class SaleExport extends AbstractExportService
         $this->currentRow = $row;
 
         $this->setCellValue('D'.$row, "=SUM(D1:D{$row})");
-        $this->setBackgroundColor("A{$row}:G{$row}", 'adfb84');
+        $this->setBackgroundColor("A{$row}:H{$row}", 'adfb84');
     }
 
 
@@ -74,14 +75,18 @@ class SaleExport extends AbstractExportService
         $this->setColumnWidth('E', 20);
         $this->setCellValue('E1', 'Type');
 
+        
         $this->setColumnWidth('F', 20);
         $this->setCellValue('F1', 'Tracking Code');
-
+        
         $this->setColumnWidth('G', 20);
-        $this->setCellValue('G1', 'Date');
+        $this->setCellValue('G1', 'Paid/unpaid');
+        
+        $this->setColumnWidth('H', 20);
+        $this->setCellValue('H1', 'Date');
 
-        $this->setBackgroundColor('A1:G1', '2b5cab');
-        $this->setColor('A1:G1', 'FFFFFF');
+        $this->setBackgroundColor('A1:H1', '2b5cab');
+        $this->setColor('A1:H1', 'FFFFFF');
 
         $this->currentRow++;
     }
