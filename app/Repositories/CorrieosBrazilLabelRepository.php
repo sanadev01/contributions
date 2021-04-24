@@ -21,7 +21,7 @@ class CorrieosBrazilLabelRepository
 
             $labelPrinter->setOrder($order);
             $labelPrinter->setService(2);
-            return $labelPrinter->saveAs(storage_path("app/labels/{$order->corrios_tracking_code}.pdf"));
+            $labelPrinter->saveAs(storage_path("app/labels/{$order->corrios_tracking_code}.pdf"));
         }
 
         return $this->update($order);
@@ -32,11 +32,12 @@ class CorrieosBrazilLabelRepository
         $cn23 = $this->generateLabel($order);
 
         if ( $cn23 ){
+            $order->setCN23( (array) $cn23);
             $labelPrinter = new CN23LabelMaker();
 
             $labelPrinter->setOrder($order);
             $labelPrinter->setService(2);
-            return $labelPrinter->saveAs(storage_path("app/labels/{$order->corrios_tracking_code}.pdf"));
+            $labelPrinter->saveAs(storage_path("app/labels/{$order->corrios_tracking_code}.pdf"));
         }
 
         return null;

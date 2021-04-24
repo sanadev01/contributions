@@ -146,7 +146,7 @@
         }
         .serivce-zipcode{
             font-size: 8px;
-            top: 100mm;
+            top: 97mm;
             position: absolute;
             left: 0.2cm;
             width: 9.6cm;
@@ -323,20 +323,15 @@
                 <p>
                     {!! $returnAddress !!}
                 </p>
-                <strong>Order#:</strong>{{ $order->warehouse_number }} <br>
-                <strong>CR#:</strong>{{ $order->customer_reference }} <br>
-                <strong>Weight</strong> {{ $order->getOriginalWeight('kg') }}kg|{{ $order->getOriginalWeight('lbs') }}lbs <br>
-                <strong>{{ $order->length }} x {{ $order->width }} x {{$order->height}} ({{$order->isWeightInKg() ? 'cm' :'in'}})</strong>
             </div>
         </div>
         <div class="right-block">
             <h2>Remetente:</h2>
             {{ $order->sender_first_name }} {{ $order->sender_last_name }} <br>
-            {{ optional($order)->user->pobox_number }}, 
-            2200 NW, 129th Ave – Suite # 100 <br>
-            Miami, FL, 33182 <br>
-            United States <br>
-            Ph#: +13058885191
+            <strong>Order#:</strong>{{ $order->warehouse_number }} <br>
+            <strong>CR#:</strong>{{ $order->customer_reference }} <br>
+            <strong>Weight</strong> {{ $order->getOriginalWeight('kg') }}kg|{{ $order->getOriginalWeight('lbs') }}lbs <br>
+            <strong>{{ $order->length }} x {{ $order->width }} x {{$order->height}} ({{$order->isWeightInKg() ? 'cm' :'in'}})</strong>
         </div>
     </div>
     <div class="complain_address">
