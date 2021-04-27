@@ -127,7 +127,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
 
         Route::namespace('Affiliate')->as('affiliate.')->prefix('affiliate')->group(function(){
             Route::resource('dashboard', DashboardController::class)->only('index');
-            Route::resource('sales-commission', SalesCommisionController::class)->only(['index','create']);
+            Route::resource('sales-commission', SalesCommisionController::class)->only(['index','create','destroy']);
             Route::get('sale-exports', SaleExportController::class)->name('sale.exports');
         });
 

@@ -63,6 +63,9 @@
                     <th>@lang('sales-commission.Commission')</th>
                     <th>@lang('Is Paid')</th>
                     <th>@lang('status')</th>
+                    @admin
+                        <th>@lang('Action')</th>
+                    @endadmin
                 </tr>
                 <tr class="no-print">
                     @admin
@@ -118,7 +121,9 @@
                     </th>
                     <th></th>
                     <th></th>
-                   
+                    @admin
+                        <th></th>
+                    @endadmin
                 </tr>
             </thead>
             <tbody>

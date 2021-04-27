@@ -361,6 +361,11 @@ class PermissionSeeder extends Seeder
                 'description' => 'Affiliate Sale',
             ],
             [
+                'slug' => 'delete_affiliate_sale',
+                'group' => 'Affiliate Sale',
+                'description' => 'Delete Affiliate Sale'
+            ],
+            [
                 'slug' => 'activity_log',
                 'group' => 'activity',
                 'description' => 'Show Activity Logs',
