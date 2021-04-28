@@ -35,7 +35,6 @@ class SalesCommisionController extends Controller
     
     public function destroy(AffiliateSale $sales_commission)
     {
-        dd(2131);
         $sales_commission->delete();
         session()->flash('alert-success','Commission has been Deleted');
         return redirect()->route('admin.affiliate.sales-commission.index');
