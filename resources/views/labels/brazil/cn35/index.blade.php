@@ -56,7 +56,9 @@
             <tr style="height: 1cm !important;position: relative;">
                 <td class="column1" style="text-align: center;font-size:28px;font-weight:bold;">{!! $companyName !!}</td>
                 <td rowspan="2" colspan="2">
-                    <div style="display:block;font-weight:bold;font-size:50px;text-align:center;vertical-align:middle;">
+                    <img class="corrioes-lable" src="{{\public_path('images/correios-1.png')}}" style="display:block;width:30mm;height:30mm;font-weight:bold;font-size:25px;text-align:center;vertical-align:middle;position:absolute;top:0px;left:220px;" alt="">
+                    <div style="display:block;width:20mm;height:20mm;border-radius: 1cm;background:black;font-weight:bold;font-size:25px;text-align:center;vertical-align:middle;position:absolute;top:15px;left:370px;"></div>
+                    <div style="display:block;width:400px;font-weight:bold;font-size:35px;text-align:center;vertical-align:middle;position:absolute;top:30px;left:440px;">
                         {{ $packetType }}
                     </div>
                 </td>
@@ -80,6 +82,10 @@
                 </td>
                 <td colspan="2" style="text-align: center;font-size:12px;">
                     {!! $officeAddress !!}
+
+                    <div style="position: absolute;top:125px;left:700px;font-size:25px;font-weight:bold;">
+                        CJA01
+                    </div>
                 </td>
             </tr>
             <tr>

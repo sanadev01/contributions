@@ -7,6 +7,10 @@ namespace App\Services\Correios\Models;
 class Package implements \App\Services\Correios\Contracts\Package
 {
 
+    const SERVICE_CLASS_STANDARD = 33162;
+    const SERVICE_CLASS_EXPRESS = 33170;
+    const SERVICE_CLASS_MINI = 33197;
+
     public $customerControlCode = "";
     public $senderName = "HERCO";
     public $senderAddress = "2200 NW, 129th Ave – Suite # 100";
@@ -33,7 +37,7 @@ class Package implements \App\Services\Correios\Contracts\Package
     public $packagingLength = 0;
     public $packagingWidth = 0;
     public $packagingHeight = 0;
-    public $distributionModality = 33162;
+    public $distributionModality = self::SERVICE_CLASS_STANDARD;
     public $taxPaymentMethod = "DDU";
     public $currency = "USD";
     public $freightPaidValue = 0;
@@ -44,6 +48,17 @@ class Package implements \App\Services\Correios\Contracts\Package
     public function __toString()
     {
         return json_encode($this);
+    }
+
+
+    public function getDistributionModality(): int
+    {
+        return self::SERVICE_CLASS_STANDARD;
+    }
+
+    public function getService(): int
+    {
+        return 2;
     }
 
 }
