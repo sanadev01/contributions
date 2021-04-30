@@ -69,6 +69,8 @@ class Client{
         $packet->recipientState = $order->recipient->state->code;
 //    $packet->recipientPhoneNumber = $order->recipient->phone;
         $packet->recipientEmail = $order->recipient->email;
+        $packet->distributionModality = $order->getDistributionModality();
+        $packet->taxPaymentMethod = $order->getService() == 1 ? 'DDP' : 'DDU';
         $packet->totalWeight =  ceil($order->isWeightInKg() ? $order->weight  : UnitsConverter::poundToKg($order->weight));
 
         $width = round($order->isMeasurmentUnitCm() ? $order->width : UnitsConverter::inToCm($order->width));

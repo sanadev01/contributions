@@ -6,6 +6,7 @@ use Exception;
 use App\Models\Order;
 use Picqer\Barcode\BarcodeGeneratorPNG;
 use App\Services\Correios\Contracts\HasLableExport;
+use App\Services\Correios\Models\Package;
 
 class CN23LabelMaker implements HasLableExport
 {
@@ -17,6 +18,7 @@ class CN23LabelMaker implements HasLableExport
     private $packetType;
     private $contractNumber;
     private $service;
+    private $serviceLogo;
     private $returnAddress;
     private $complainAddress;
     private $items;
@@ -28,11 +30,13 @@ class CN23LabelMaker implements HasLableExport
         $this->hasSuplimentary = false;
         $this->corriosLogo = \public_path('images/correios-1.png');
         $this->partnerLogo =  public_path('images/hd-label-logo-1.png');
-        $this->packetType = 'Packet <br> Standard';
-        $this->contractNumber = 'Client <br>  9912501576/2020 <br> – SE/RJ';
+        $this->packetType = 'Packet Standard';
+        $this->contractNumber = 'Contrato:  9912501576';
         $this->service = 2;
-        $this->returnAddress = 'Rua Barão Do Triunfo 520[11:30 15.andar Cj. 151 Brooklyn São Paulo SP CEP 04602-001';
-        $this->complainAddress = 'Em caso de duvidas entrar em contato com seu redirecionador our homedelivery@homedeliverybr.com';
+        $this->returnAddress = 'Blue Line Ag. De Cargas Ltda. <br>
+        Rua Barao Do Triunfo, 520 - CJ 152 - Brooklin Paulista
+        CEP 04602-001 - São Paulo - SP- Brasil';
+        $this->complainAddress = 'Em caso de problemas com o produto, entre em contato com o remetente';
     }
 
     public function setOrder(Order $order)
@@ -50,9 +54,25 @@ class CN23LabelMaker implements HasLableExport
         return $this;
     }
 
-    public function setPacketType($packetType)
+    public function setPacketType(int $packetType)
     {
-        $this->packetType = $packetType;
+        switch($packetType):
+            case Package::SERVICE_CLASS_EXPRESS:
+                $this->packetType = 'Packet Express';
+                $this->serviceLogo = public_path('images/express-package.png');
+            break;
+            case Package::SERVICE_CLASS_MINI:
+                $this->packetType = 'Packet Mini';
+                $this->serviceLogo = public_path('images/mini-package.png');
+            break;
+            case Package::SERVICE_CLASS_STANDARD:
+            default:
+                $this->packetType = 'Packet Standard';
+                $this->serviceLogo = public_path('images/standard-package.png');
+            break;
+        endswitch;
+
+        return $this;
     }
 
     public function setPartnerLogo($logoPath)
@@ -124,6 +144,7 @@ class CN23LabelMaker implements HasLableExport
             'recipient' => $this->recipient,
             'corriosLogo' => $this->corriosLogo,
             'partnerLogo' => $this->partnerLogo,
+            'serviceLogo' => $this->serviceLogo,
             'packetType' => $this->packetType,
             'contractNumber' => $this->contractNumber,
             'returnAddress' => $this->returnAddress,
