@@ -296,7 +296,7 @@
         <div class="destination">
             <h4><strong>DESTINATARIO:</strong></h4>
             {{ $recipient->first_name }} {{ $recipient->last_name }} <br>
-            {{ $recipient->address }} {{ $recipient->address2 }}, {{ $recipient->stree_no }}, {{ $recipient->city }}, {{ $recipient->zipcode }} <br>
+            {{ $recipient->address }} {{ $recipient->address2 }}, {{ $recipient->street_no }}, {{ $recipient->city }}, {{ $recipient->zipcode }} <br>
             {{ $recipient->state->name }}
             {{ $recipient->country->name }}
         </div>
