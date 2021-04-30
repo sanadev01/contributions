@@ -67,7 +67,7 @@ class AffiliateSalePolicy
      */
     public function delete(User $user, AffiliateSale $affiliateSale)
     {
-        //
+        return $user->hasPermission('delete_affiliate_sale') && $user->id == $affiliateSale->user->id;
     }
 
     /**
