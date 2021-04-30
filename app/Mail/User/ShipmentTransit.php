@@ -32,7 +32,7 @@ class ShipmentTransit extends Mailable
     {
         app()->setLocale($this->order->user->locale);
         return $this->markdown('emails.user.shipment-transit')
-                ->subject('Shipment Received on Warehouse. / Remessa recebida no armazém.')
+                ->subject('Parcel is created as Transit. / O pacote é criado como trânsitog.')
                 ->to($this->order->user);
     }
 }
