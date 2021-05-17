@@ -261,7 +261,36 @@
             /* display:table-column; */
             display: block;
         }
-        
+        .perfume{
+            top: 90mm;
+            position:absolute;
+            right: 2.5mm;
+            background-color: black;
+            color: white;
+            font-weight: bold;
+            display: block;
+            width: 4mm;
+            height: 5mm;
+            padding: 0.5mm;
+            box-sizing: border-box;
+            text-align: center;
+            border-radius: 1mm;
+        }
+        .battery{
+            border-radius: 1mm;
+            top: 90mm;
+            position:absolute;
+            right: 2.5mm;
+            border: 1px solid black;
+            color: black;
+            font-weight: bold;
+            display: block;
+            width: 4mm;
+            height: 5mm;
+            padding: 0.5mm;
+            box-sizing: border-box;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -296,11 +325,17 @@
         <div class="destination">
             <h4><strong>DESTINATARIO:</strong></h4>
             {{ $recipient->first_name }} {{ $recipient->last_name }} <br>
-            {{ $recipient->address }} {{ $recipient->address2 }}, {{ $recipient->street_no }}, {{ $recipient->city }}, {{ $recipient->zipcode }} <br>
+            {{ $recipient->address }}, {{ $recipient->street_no }}, {{ $recipient->address2 }}, {{ $recipient->city }}, {{ $recipient->zipcode }} <br>
             {{ $recipient->state->name }}
             {{ $recipient->country->name }}
         </div>
     </div>
+    @if($order->hasBattery())
+    <div class="battery">B</div>
+    @endif
+    @if($order->hasPerfume())
+    <div class="perfume">P</div>
+    @endif
     <div class="barcode_zipcode">
         <img src="data:image/png;base64,{{ base64_encode($barcodeNew->getBarcode(cleanString($recipient->zipcode), $barcodeNew::TYPE_CODE_128, 1,94, [0,0,0]))}}" alt="barcode"   />
     </div>
