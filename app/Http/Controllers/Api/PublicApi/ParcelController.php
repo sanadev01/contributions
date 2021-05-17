@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\Api\PublicApi;
 
+use App\Models\Order;
+use App\Models\ApiLog;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Services\Converters\UnitsConverter;
+use App\Services\Calculators\WeightCalculator;
 use App\Http\Requests\Api\Parcel\CreateRequest;
 use App\Http\Resources\PublicApi\OrderResource;
-use App\Models\ApiLog;
-use App\Models\Order;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class ParcelController extends Controller
 {
@@ -22,6 +24,25 @@ class ParcelController extends Controller
      */
     public function store(CreateRequest $request)
     {
+        $weight = optional($request->parcel)['weight']??0;
+        $length = optional($request->parcel)['length']??0;
+        $width = optional($request->parcel)['width']??0;
+        $height = optional($request->parcel)['height']??0;
+
+        if ( optional($request->parcel)['measurement_unit'] == 'kg/cm' ){
+            $volumetricWeight = WeightCalculator::getVolumnWeight($length,$width,$height,'cm');
+            $volumeWeight = round($volumetricWeight > $weight ? $volumetricWeight : $weight,2);
+            if($volumeWeight > 30){
+                return apiResponse(false,"Your ". $volumeWeight ." kg/cm weight has exceeded the limit. Please check the weight and dimensions. Weight shouldn't be greater than 30 kg/cm");
+            }
+        }else{
+            $volumetricWeight = WeightCalculator::getVolumnWeight($length,$width,$height,'in');;
+            $volumeWeight = round($volumetricWeight > $weight ? $volumetricWeight : $weight,2);
+            if($volumeWeight > 65.15){
+                return apiResponse(false,"Your ". $volumeWeight ." lbs/in weight has exceeded the limit. Please check the weight and dimensions. Weight shouldn't be greater than 66.15 lbs/in");
+            }
+        }
+
         DB::beginTransaction();
 
         try {
@@ -66,7 +87,15 @@ class ParcelController extends Controller
                 "country_id" => optional($request->recipient)['country_id']
             ]);
 
+            $isBattery = false;
+            $isPerfume = false;
             foreach ($request->get('products',[]) as $product) {
+                if(optional($product)['is_battery']){
+                    $isBattery = true;
+                }
+                if(optional($product)['is_perfume']){
+                    $isPerfume = true;
+                }
                 $order->items()->create([
                     "sh_code" => optional($product)['sh_code'],
                     "description" => optional($product)['description'],
@@ -76,6 +105,9 @@ class ParcelController extends Controller
                     "contains_perfume" => optional($product)['is_perfume'],
                     "contains_flammable_liquid" => optional($product)['is_flameable'],
                 ]);
+            }
+            if( $isBattery === true && $isPerfume === true){
+                throw new \Exception("Please don't use battery and perfume in one parcels",500);
             }
 
             $orderValue = collect($request->get('products',[]))->sum(function($item){

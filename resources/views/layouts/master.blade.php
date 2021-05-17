@@ -77,6 +77,7 @@
     {{-- Livewire Js Section start here --}}
     <livewire:scripts>
 
+    @stack('js')
     @yield('lvjs')
     @stack('lvjs-stack')
 

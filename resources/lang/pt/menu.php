@@ -18,7 +18,7 @@ return [
     'support tickets' => 'Assistência',
     'profile' => 'Perfil',
     'Parcels' => 'Pacotes',
-    'Rates' => 'Cotações',
+    'Rates' => 'Minhas tarifas',
     'Profit Packages' => 'Pacotes de lucro',
     'Handling Services' => 'Serviços de Manuseio',
     'Shipping Services' => 'Serviços de Frete',
@@ -34,6 +34,11 @@ return [
         'Shipment Report' => 'Relatório de Remessa',
         'Tracking Report' => 'Relatório de Rastreamento',
         'Orders Report' => 'Relatório de pedidos',
+    ],
+    'Warehouse' => [
+        'menu' => 'Armazém',
+        'Containers' => 'Recipientes',
+        'Delivery Bill' => 'Fatura de entrega',
     ],
     'Affiliate' => [
         'menu' => 'Relatórios',

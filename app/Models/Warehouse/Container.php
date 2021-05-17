@@ -1,0 +1,79 @@
+<?php
+
+namespace App\Models\Warehouse;
+
+use App\Http\Resources\Warehouse\Container\PackageResource;
+use App\Models\Order;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
+
+class Container extends Model implements \App\Services\Correios\Contracts\Container
+{
+    use SoftDeletes;
+
+    protected $guarded = [];
+
+
+    public function scopeRegistered(Builder $builder)
+    {
+        return $builder->whereNotNull('unit_code');
+    }
+
+    public function orders()
+    {
+        return $this->belongsToMany(Order::class);
+    }
+
+    public function deliveryBills()
+    {
+        return $this->belongsToMany(DeliveryBill::class);
+    }
+
+    public function getOrdersCollections()
+    {
+        return PackageResource::collection($this->orders);
+    }
+
+    public function getContainerType()
+    {
+        return $this->unit_type == 1 ? 'Bag' : 'Box';
+    }
+
+    public function getServiceSubClass()
+    {
+        return $this->services_subclass_code == 'NX' ? 'Packet Standard service' : 'Packet Express service';
+    }
+
+    public function getServiceCode()
+    {
+        return $this->services_subclass_code == 'NX' ? 2 : 1;
+    }
+
+    public function getDestinationAriport()
+    {
+        return $this->destination_operator_name == 'SAOD' ? 'GRU' : 'CWB';
+    }
+
+    public function getWeight(): float
+    {
+        return round($this->orders()->sum(DB::raw('CASE WHEN orders.measurement_unit = "kg/cm" THEN orders.weight ELSE (orders.weight/2.205) END')),2);
+    }
+
+    public function getPiecesCount(): int
+    {
+        return $this->orders()->count();
+    }
+
+    public function getUnitCode()
+    {
+        return $this->unit_code;
+    }
+
+    public function isRegistered()
+    {
+        return $this->unit_code;
+    }
+
+}

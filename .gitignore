@@ -1,4 +1,4 @@
 /vendor
 .env
 .credentials
-node_modules
+/node_modules

@@ -24,7 +24,7 @@ class UserShipmentReportTable extends Component
     {
         return view('livewire.reports.user-shipment-report-table',[
             'users' => $this->getReportData(),
-            'downloadLink' => route('admin.reports.user-shipments',http_build_query(
+            'downloadLink' => route('admin.reports.user-shipments.index',http_build_query(
                 $this->getRequestData()->all()
             )).'&dl=1'
         ]);

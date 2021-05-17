@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\Order;
 use App\Services\StoreIntegrations\Shopify;
+use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 
 /*
 |--------------------------------------------------------------------------
@@ -120,14 +122,14 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         Route::post('tickets/{ticket}/close', [\App\Http\Controllers\Admin\TicketController::class, 'markClose'])->name('ticket.mark-closed');
 
         Route::namespace('Reports')->as('reports.')->prefix('reports')->group(function(){
-            Route::get('user-shipments', \ShipmentPerUserReportController::class)->name('user-shipments');
+            Route::resource('user-shipments', \ShipmentPerUserReportController::class)->only(['index','create']);
             Route::resource('order-trackings', TrackingReportController::class)->only(['index','store']);
             Route::resource('order', OrderReportController::class)->only(['index','create']);
         });
 
         Route::namespace('Affiliate')->as('affiliate.')->prefix('affiliate')->group(function(){
             Route::resource('dashboard', DashboardController::class)->only('index');
-            Route::resource('sales-commission', SalesCommisionController::class)->only(['index','create']);
+            Route::resource('sales-commission', SalesCommisionController::class)->only(['index','create','destroy']);
             Route::get('sale-exports', SaleExportController::class)->name('sale.exports');
         });
 
@@ -180,3 +182,14 @@ Route::get('order/{order}/label/get', function (App\Models\Order $order) {
     }
     return response()->download(storage_path("app/labels/{$order->corrios_tracking_code}.pdf"),"{$order->corrios_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.label.download');
+
+
+Route::get('test-label',function(){
+    $labelPrinter = new CN23LabelMaker();
+
+    $order = Order::find(53654);
+    $labelPrinter->setOrder($order);
+    $labelPrinter->setService(2);
+
+    return $labelPrinter->download();
+});

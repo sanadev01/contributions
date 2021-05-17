@@ -57,7 +57,6 @@ class CalculatorController extends Controller
             $volumetricWeight = WeightCalculator::getVolumnWeight($request->length,$request->width,$request->height,'in');
             $chargableWeight = round($volumetricWeight >  $originalWeight ? $volumetricWeight :  $originalWeight,2);
         }
-
         $recipient = new Recipient();
         $recipient->state_id = $request->state_id;
         $recipient->country_id = $request->country_id;

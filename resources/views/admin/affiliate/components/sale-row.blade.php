@@ -34,6 +34,9 @@
         {{ $sale->order->warehouse_number }}
     </td>
     <td>
+        {{ $sale->order->corrios_tracking_code }}
+    </td>
+    <td>
         {{ $sale->order->customer_reference }}
     </td>
     <td>
@@ -66,5 +69,26 @@
                 {{ $sale->detail }}
         </span>
     </td>
-    
+    @admin
+        <td class="d-flex">
+            <div class="btn-group">
+                <div class="dropdown">
+                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        @lang('parcel.Action')
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right dropright">
+                        @can('delete', $sale)
+                            <form method="post" action="{{ route('admin.affiliate.sales-commission.destroy',$sale) }}" class="d-inline-block w-100" onsubmit="return confirmDelete()">
+                                @csrf
+                                @method('DELETE')
+                                <button class="dropdown-item w-100 text-danger" title="@lang('parcel.Delete Parcel')">
+                                    <i class="feather icon-trash-2"></i> @lang('parcel.Delete')
+                                </button>
+                            </form>
+                        @endcan
+                    </div>
+                </div>
+            </div>
+        </td>
+    @endadmin 
 </tr>

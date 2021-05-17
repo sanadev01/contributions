@@ -7,6 +7,7 @@ use ZipArchive;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Repositories\CorrieosBrazilLabelRepository;
 use App\Repositories\LabelRepository;
 use Illuminate\Support\Facades\Storage;
 
@@ -40,7 +41,7 @@ class PrintLabelController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, LabelRepository $labelRepository)
+    public function store(Request $request, CorrieosBrazilLabelRepository $labelRepository)
     {
         if($request->order){
 
@@ -84,7 +85,7 @@ class PrintLabelController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, Order $scan, LabelRepository $labelRepository)
+    public function show(Request $request, Order $scan, CorrieosBrazilLabelRepository $labelRepository)
     {
         $order = $scan;
     
@@ -101,6 +102,7 @@ class PrintLabelController extends Controller
         if ( $labelData ){
             Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
         }
+
         return redirect()->route('order.label.download',[$order,'time'=>md5(microtime())]);
     }
 

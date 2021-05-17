@@ -53,7 +53,8 @@
                     @endadmin
                     <th>Commission From</th>
                     <th>@lang('sales-commission.Order ID')</th>
-                    <th>Whr#</th>
+                    <th>WHR#</th>
+                    <th>Tracking Code</th>
                     <th>Customer Reference</th>
                     <th>Carrier Tracking#</th>
                     <th>Weight</th>
@@ -62,6 +63,9 @@
                     <th>@lang('sales-commission.Commission')</th>
                     <th>@lang('Is Paid')</th>
                     <th>@lang('status')</th>
+                    @admin
+                        <th>@lang('Action')</th>
+                    @endadmin
                 </tr>
                 <tr class="no-print">
                     @admin
@@ -90,6 +94,9 @@
                         <input type="search" class="form-control" wire:model.debounce.1000ms="whr">
                     </th>
                     <th>
+                        <input type="search" class="form-control" wire:model.debounce.1000ms="corrios_tracking">
+                    </th>
+                    <th>
                         <input type="search" class="form-control" wire:model.debounce.1000ms="reference">
                     </th>
                     <th>
@@ -114,14 +121,16 @@
                     </th>
                     <th></th>
                     <th></th>
-                   
+                    @admin
+                        <th></th>
+                    @endadmin
                 </tr>
             </thead>
             <tbody>
                 @forelse ($sales as $sale)
                     @include('admin.affiliate.components.sale-row',['sale'=>$sale])    
                 @empty
-                    <x-tables.no-record colspan="12"></x-tables.no-record>
+                    <x-tables.no-record colspan="15"></x-tables.no-record>
                 @endforelse
             </tbody>
         </table>

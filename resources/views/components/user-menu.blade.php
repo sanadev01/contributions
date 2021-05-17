@@ -160,7 +160,7 @@
 
                     @can('viewUserShipmentReport', App\Models\Reports::class)
                     <li class="{{ $isActive(['admin.reports.user-shipments']) }}">
-                        <a href="{{ route('admin.reports.user-shipments') }}">
+                        <a href="{{ route('admin.reports.user-shipments.index') }}">
                             <i class="feather icon-circle"></i>
                             <span class="menu-title">@lang('menu.Reports.Shipment Report')</span>
                         </a>
@@ -211,6 +211,8 @@
                     </ul>
                 </li>
             @endcan
+
+            @include('components.warehouse-menu')
 
             @can('viewAny', App\Models\User::class)
             <li class="nav-item {{ $isActive(['admin.users.index']) }}">

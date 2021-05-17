@@ -2,15 +2,18 @@
 
 namespace App\Models;
 
+use App\Services\Correios\Contracts\Package;
 use Illuminate\Http\UploadedFile;
+use App\Models\Warehouse\Container;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use App\Services\Converters\UnitsConverter;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Services\Calculators\WeightCalculator;
+use App\Services\Correios\Models\Package as ModelsPackage;
 
-class Order extends Model
+class Order extends Model implements Package
 {
 
     use SoftDeletes;
@@ -20,7 +23,6 @@ class Order extends Model
     protected static $logAttributes = ['*'];
     protected static $logOnlyDirty = true;
     protected static $submitEmptyLogs = false;
-
     protected $casts = [
        'cn23' => 'Array',
        'order_date' => 'datetime'
@@ -28,7 +30,6 @@ class Order extends Model
 
     const STATUS_PREALERT_TRANSIT = 10;
     const STATUS_PREALERT_READY = 20;
-
     const STATUS_CONSOLIDATOIN_REQUEST = 25;
     const STATUS_CONSOLIDATED = 26;
 
@@ -42,7 +43,6 @@ class Order extends Model
     const STATUS_PAYMENT_PENDING = 60;
     const STATUS_PAYMENT_DONE = 70;
     const STATUS_SHIPPED = 80;
-
     public function scopeParcelReady(Builder $query)
     {
         return $query->where(function($query){
@@ -96,6 +96,11 @@ class Order extends Model
         return $this->hasMany(OrderService::class);
     }
 
+    public function containers()
+    {
+        return $this->belongsToMany(Container::class);
+    }
+    
     public function deposits()
     {
         return $this->belongsToMany(Deposit::class);
@@ -115,7 +120,7 @@ class Order extends Model
     {
         return $this->is_consolidated;
     }
-
+    
     public function isPaid()
     {
         if ( !$this->getPaymentInvoice() ){
@@ -155,7 +160,6 @@ class Order extends Model
         $invoiceFile = Document::saveDocument(
             $file
         );
-
         $invoice = Document::create([
             'name' => $invoiceFile->getClientOriginalName(),
             'size' => $invoiceFile->getSize(),
@@ -200,19 +204,19 @@ class Order extends Model
         $weight = $this->weight;
 
         if ( $unit == 'kg' && $this->isWeightInKg() ){
-            return $weight;
+            return round($weight,2);
         }
 
         if ( $unit == 'lbs' && !$this->isWeightInKg() ){
-            return $weight;
+            return round($weight);
         }
 
         if ( $unit == 'lbs' && $this->isWeightInKg() ){
-            return UnitsConverter::kgToPound($weight);
+            return round(UnitsConverter::kgToPound($weight),2);
         }
 
         if ( $unit == 'kg' && !$this->isWeightInKg() ){
-            return UnitsConverter::poundToKg($weight);
+            return round(UnitsConverter::poundToKg($weight),2);
         }
     }
 
@@ -238,6 +242,16 @@ class Order extends Model
         if ( $unit == 'kg' && !$this->isWeightInKg() ){
             return UnitsConverter::poundToKg($weight);
         }
+    }
+
+    public function hasBattery()
+    {
+        return $this->items()->where('contains_battery',true)->count() > 0;
+    }
+
+    public function hasPerfume()
+    {
+        return $this->items()->where('contains_perfume',true)->count() > 0;
     }
 
     public function setCN23(array $data)
@@ -362,5 +376,16 @@ class Order extends Model
         }
 
         return $class;
+    }
+
+
+    public function getDistributionModality(): int
+    {
+        return ModelsPackage::SERVICE_CLASS_STANDARD;
+    }
+
+    public function getService(): int
+    {
+        return 2;
     }
 }

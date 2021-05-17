@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class ShipmentPerUserReportController extends Controller
 {
-    public function __invoke(Request $request, OrderReportsRepository $orderReportsRepository)
+    public function index(Request $request, OrderReportsRepository $orderReportsRepository)
     {
         $this->authorize('viewUserShipmentReport',Reports::class);
         
@@ -21,5 +21,11 @@ class ShipmentPerUserReportController extends Controller
         }
 
         return view('admin.reports.shipment-report');
+    }
+
+    public function create(Request $request, OrderReportsRepository $orderReportsRepository)
+    {
+        $userOrders = $orderReportsRepository->getShipmentReportOfUsersByWeight($request->id);
+        return $userOrders;
     }
 }

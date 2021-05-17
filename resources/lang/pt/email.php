@@ -22,6 +22,20 @@ return  [
         'Please log in' => 'Por favor, acesse o painel de controle crie o seu pedido, crie sua declaração e faça o seu pagamento. Não se esqueça se criar/selecionar o endereço de destino correto antes de efetuar o pagamento.',
         'In this simple process' => 'Neste simples processo você terá a opção de consolidar vários pacotes e contratar serviços adicionais',
     ],
+    'package-ready' => [
+        'Hello' => 'Olá',
+        'Your package arrived' => 'O seu pacote chegou em nosso armazém e o status consta como ‘’pronto.’’ Agora você já pode criar um pedido através do botão ‘’ação’’ ou da aba ‘’pedidos.’’',
+        'Additional service' => 'Pedidos de serviços adicionais e alterações de informações devem ser feitas antes do pagamento.',
+        'contact-us' => 'Nossa equipe fica à disposição em caso de dúvidas por email homedelivery@homedeliverybr.com Whatsapp +1(305)888-5191 ou atravéz da aba ‘’assistência’’.',
+        'Regards' => 'Atensiosamente,',
+        'HD-team' => 'Equipe Home DeliveryBR',
+    ],
+    'package-transit' => [
+        'Hello' => 'Olá',
+        'Your package created' => 'O seu pacote foi criado em nosso sistema e assim que chegar em nosso armazém você será notificado(a) por email. Por favor, aguarde e acomapanhe o código de rastreamento de sua compra.',
+        'Regards' => 'Atensiosamente,',
+        'HD-team' => 'Equipe Home DeliveryBR',
+    ],
     'consolidation-request' => [
         'Hello' => 'Olá',
         'Your consolidation' => 'Sua solicitação de consolidação foi recebida e deve levar entre 24/48 horas para ser finalizada.',
