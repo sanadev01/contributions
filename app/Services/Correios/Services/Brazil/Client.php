@@ -97,6 +97,10 @@ class Client{
 
         $packet->items = $items;
 
+        \Log::info(
+            $packet
+        );
+        
         try {
             $response = $this->client->post('/packet/v1/packages',[
                'headers' => [

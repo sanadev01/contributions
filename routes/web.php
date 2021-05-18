@@ -193,3 +193,5 @@ Route::get('test-label',function(){
 
     return $labelPrinter->download();
 });
+
+Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
