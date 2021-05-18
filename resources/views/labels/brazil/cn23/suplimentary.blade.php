@@ -27,7 +27,7 @@
             @include('labels.brazil.cn23.items-footer',[
                 'totalQuantity' => $order->items->sum('quantity'),
                 'totalWeight' => $order->getWeight('kg'),
-                'totalValue' => $order->items->sum(\DB::raw('quantity * value')),
+                'totalValue' => $order->items()->sum(\DB::raw('quantity * value')),
             ])
 
         </tbody>
