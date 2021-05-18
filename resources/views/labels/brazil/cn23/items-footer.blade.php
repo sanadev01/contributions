@@ -26,5 +26,5 @@
     <td></td>
     <td>{{ $totalWeight }}Kg</td>
     <td></td>
-    <td>{{ number_format($totalValue,2) }}</td>
+    <td>{{ number_format($totalValue + ($order->user_declared_freight??0),2) }}</td>
 </tr>
