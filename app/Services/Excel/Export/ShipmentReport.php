@@ -37,8 +37,8 @@ class ShipmentReport extends AbstractExportService
             $this->setCellValue('B'.$row, $user->name);
             $this->setCellValue('C'.$row, $user->email);
             $this->setCellValue('D'.$row, $user->order_count);
-            $this->setCellValue('E'.$row, number_format($user->weight,2));
-            $this->setCellValue('F'.$row, number_format($user->spent,2));
+            $this->setCellValue('E'.$row, round($user->weight,2));
+            $this->setCellValue('F'.$row, round($user->spent,2));
             $this->setCellValue('G'.$row, $report[0]['orders']);
             $this->setCellValue('H'.$row, $report[1]['orders']);
             $this->setCellValue('I'.$row, $report[2]['orders']);
