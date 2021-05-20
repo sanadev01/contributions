@@ -15,6 +15,7 @@
         *{
             font-family: Arial, Helvetica, sans-serif;
             box-sizing:border-box !important;
+            font-weight: bold;
         }
 
         img.partner-logo{
@@ -130,7 +131,7 @@
             width: 4cm;
             display: inline-block;
             font-size: 8pt;
-            font-family: Arial;
+            /* font-family: Arial; */
         }
         .destination h4{
             margin: 0px !important;

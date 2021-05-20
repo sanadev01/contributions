@@ -35,4 +35,14 @@ class Recipient extends Model
     {
         return $this->first_name.' '.$this->last_name;
     }
+
+    public function getRecipientInfo()
+    {
+        return $this->getFullName(). '/' .$this->tax_id;
+    }
+
+    public function getAddress()
+    {
+        return $this->address. ' '. $this->address2;
+    }
 }
