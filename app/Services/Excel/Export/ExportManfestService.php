@@ -100,9 +100,9 @@ class ExportManfestService extends AbstractCsvExportService
         }
 
         if ( $container->getDestinationAriport() ==  "GRU"){
-            return $rateSlab->cwb;
+            return $rateSlab->gru;
         }
 
-        return $rateSlab->gru;
+        return $rateSlab->cwb;
     }
 }
