@@ -12,6 +12,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Services\Calculators\WeightCalculator;
 use App\Services\Correios\Models\Package as ModelsPackage;
+use Illuminate\Support\Facades\DB;
 
 class Order extends Model implements Package
 {
@@ -54,6 +55,11 @@ class Order extends Model implements Package
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function getSenderFullName()
+    {
+        return $this->sender_first_name.' '.$this->sender_last_name;
     }
 
     public function paymentInvoices()
@@ -387,5 +393,10 @@ class Order extends Model implements Package
     public function getService(): int
     {
         return 2;
+    }
+
+    public function getOrderValue()
+    {
+        return $this->items()->sum(DB::raw('quantity * value'));
     }
 }

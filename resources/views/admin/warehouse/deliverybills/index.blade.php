@@ -52,7 +52,10 @@
                                                             <a href="{{ route('warehouse.delivery_bill.download',$deliveryBill) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-cloud-download"></i> GET CN38
                                                             </a>
-                                                        @endif
+                                                            @endif
+                                                            <a href="{{ route('warehouse.delivery_bill.manifest',$deliveryBill) }}" class="dropdown-item w-100">
+                                                                <i class="fa fa-cloud-download"></i> Download Manifest
+                                                            </a>
 
                                                         @if( $deliveryBill->isRegistered() && !$deliveryBill->isReady())
                                                             <a href="{{ route('warehouse.delivery_bill.status.refresh',$deliveryBill) }}" class="dropdown-item w-100">
