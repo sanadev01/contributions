@@ -127,7 +127,14 @@
 
                                 <h4>Commission Settings</h4>
                                 <livewire:affiliate.commision-setting :user_id="$user->id"  />
-                                
+                                <h4>Referrer Commission Settings</h4>
+                                <div class="controls row mb-1 align-items-center">
+                                    <div class="col-md-3"></div>
+                                    <div class="col-md-6">
+                                        {{-- <livewire:affiliate.user-commission :user_id="$user->id" /> --}}
+                                    </div>
+                                    <div class="col-md-3"></div>
+                                </div>
                                 <h3>Waiver Fee Settings</h3>
                                 <hr>
                                 <div class="controls row mb-1 align-items-center">

@@ -12,6 +12,7 @@ class CommisionSetting extends Component
     
     public $type;
     public $value;
+    public $referrer_id;
     public $user_id;
     private $commissionSetting;
 
@@ -29,17 +30,19 @@ class CommisionSetting extends Component
 
     public function render()
     {
-        return view('livewire.affiliate.commision-setting');
+        return view('livewire.affiliate.commision-setting',[
+            'users' => User::where('reffered_by', $this->user_id)->get()
+        ]);
     }
 
     public function save()
     {
         $data = $this->validate([
             'user_id' => 'required',
+            'referrer_id' => 'required',
             'type'  => 'required',
             'value' => 'required',
         ]);
-        
         $commissionSetting = $this->getQuery();
        
         if(!$commissionSetting){
@@ -51,6 +54,6 @@ class CommisionSetting extends Component
 
     public function getQuery()
     {
-        return CommissionSetting::where('user_id', $this->user_id)->first();
+        return CommissionSetting::where('user_id', $this->user_id)->where('referrer_id', $this->referrer_id)->first();
     }
 }

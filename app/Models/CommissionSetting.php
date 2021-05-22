@@ -14,6 +14,7 @@ class CommissionSetting extends Model
     
     protected $fillable = [
         'user_id', 
+        'referrer_id', 
         'type', 
         'value',
         'commission_balance',
