@@ -18,7 +18,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="mb-0">Shipment Report</h4>
+                        <h4 class="mb-0">@lang('report.shipment-report')</h4>
                     </div>
                     <div class="card-content">
                         <div class="card-body">
@@ -27,28 +27,37 @@
                                 <div class="row">
                                     <div class="col-12 text-right">
                                         <a href="{{ $downloadLink }}" class="btn btn-primary" {{ !$downloadLink ? 'disabled': '' }} target="_blank">
-                                            Download
+                                            @lang('report.download')
                                         </a>
                                     </div>
                                 </div>
                                 <div class="row my-1 ml-1">
-                                    <form action="{{ route('admin.reports.user-shipments.index') }}" class="form-inline">
-                                        <label class="my-1 mr-2" for="start_date">Start Date</label>
-                                        <input type="date" name="start_date" id="start_date" class="my-1 mr-sm-2">
-
-                                        <label class="my-1 mr-2" for="end_date">End Date</label>
-                                        <input type="date" name="end_date" id="end_date"  class="form-control my-1 mr-sm-2">
-                                        
-                                        <label class="my-1 mr-2" for="name">Name</label>
-                                        <input type="text" name="name" id="user" placeholder="Search by Name" class="form-control my-1 mr-sm-2">
-
-                                        <label class="my-1 mr-2" for="pobox_number">Pobox Number</label>
-                                        <input type="text" name="pobox_number" id="pobox_number" placeholder="Search by PoBox Number" class="form-control my-1 mr-sm-2">
-
-                                        <label class="my-1 mr-2" for="email">Email</label>
-                                        <input type="email" name="email" id="email" placeholder="Search by Email" class="form-control my-1 mr-sm-2">
-                                    
-                                        <button type="submit" class="btn btn-primary my-1 mr-sm-2">Search</button>
+                                    <form action="{{ route('admin.reports.user-shipments.index') }}" class="col-md-12">
+                                        <div class="form-row">
+                                            <div class="form-group col-md-2">
+                                                <label for="start_date">@lang('report.start-date')</label>
+                                                <input type="date" name="start_date" id="start_date" class="form-control">
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <label for="end_date">@lang('report.end-date')</label>
+                                                <input type="date" name="end_date" id="end_date" class="form-control">
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <label for="name">@lang('report.name')</label>
+                                                <input type="text" type="text" name="name" id="user" placeholder="@lang('report.search-by') @lang('report.name')" class="form-control">
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <label for="pobox_number">@lang('report.pobox-number')</label>
+                                                <input type="text" name="pobox_number" id="pobox_number" placeholder="@lang('report.search-by') @lang('report.pobox-number')" class="form-control">
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <label for="email">@lang('report.email')</label>
+                                                <input type="email" name="email" id="email" placeholder="@lang('report.search-by') @lang('report.email')" class="form-control">
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <button type="submit" class="btn btn-primary" style="margin-top: 1.8rem; !important">@lang('report.search')</button>
+                                            </div>
+                                        </div>    
                                     </form>
                                 </div>    
                                 {{-- <div class="row my-3">
@@ -67,8 +76,8 @@
                                             <th>
                                                 
                                             </th>
-                                            <th>
-                                                <a href="#" wire:click="sortBy('name')">
+                                            <th>                                              
+                                                <a href="{{ route('admin.reports.sortBy',['sortBy'=>'name', 'sortAsc' => $sortAsc]) }}">
                                                     Name
                                                 </a>
                                                 @if ( $sortBy == 'name' && $sortAsc )
@@ -78,7 +87,7 @@
                                                 @endif
                                             </th>
                                             <th>
-                                                <a href="#" wire:click="sortBy('pobox_number')">
+                                                <a href="{{ route('admin.reports.sortBy',['sortBy'=>'pobox_number', 'sortAsc' => $sortAsc]) }}">
                                                     Pobox Number
                                                 </a>
                                                 @if ( $sortBy == 'pobox_number' && $sortAsc )
@@ -88,7 +97,7 @@
                                                 @endif
                                             </th>
                                             <th>
-                                                <a href="#" wire:click="sortBy('email')">
+                                                <a href="{{ route('admin.reports.sortBy',['sortBy'=>'email', 'sortAsc' => $sortAsc]) }}">
                                                     Email
                                                 </a>
                                                 @if ( $sortBy == 'email' && $sortAsc )
@@ -98,7 +107,7 @@
                                                 @endif
                                             </th>
                                             <th>
-                                                <a href="#" wire:click="sortBy('order_count')">
+                                                <a href="{{ route('admin.reports.sortBy',['sortBy'=>'order_count', 'sortAsc' => $sortAsc]) }}">
                                                     Shipment Count
                                                 </a>
                                                 @if ( $sortBy == 'order_count' && $sortAsc )
@@ -108,7 +117,7 @@
                                                 @endif
                                             </th>
                                             <th>
-                                                <a href="#" wire:click="sortBy('weight')">
+                                                <a href="{{ route('admin.reports.sortBy',['sortBy'=>'weight', 'sortAsc' => $sortAsc]) }}">
                                                     Weight
                                                 </a>
                                                 @if ( $sortBy == 'weight' && $sortAsc )
@@ -118,7 +127,7 @@
                                                 @endif
                                             </th>
                                             <th>
-                                                <a href="#" wire:click="sortBy('spent')">
+                                                <a href="{{ route('admin.reports.sortBy',['sortBy'=>'spent', 'sortAsc' => $sortAsc]) }}">
                                                     Spent
                                                 </a>
                                                 @if ( $sortBy == 'spent' && $sortAsc )
