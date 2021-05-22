@@ -19,7 +19,10 @@
                                     <th>@lang('warehouse.containers.Dispatch Number')</th>
                                     <th>@lang('warehouse.containers.Seal No')</th>
                                     <th>
-                                        Weight (Kg) / Pieces
+                                        Weight (Kg)
+                                    </th>
+                                    <th>
+                                        Pieces
                                     </th>
                                     <th>
                                         @lang('warehouse.containers.Origin Country')
@@ -27,6 +30,12 @@
                                     <th>@lang('warehouse.containers.Destination Airport')</th>
                                     <th>@lang('warehouse.containers.Container Type')</th>
                                     <th>@lang('warehouse.containers.Distribution Service Class')</th>
+                                    <th>
+                                        Unit Code
+                                    </th>
+                                    <th>
+                                        Status
+                                    </th>
                                     <th>@lang('warehouse.actions.Action')</th>
                                 </tr>
                                 </thead>
@@ -36,7 +45,10 @@
                                         <td>{{ $container->dispatch_number }}</td>
                                         <td>{{ $container->seal_no }}</td>
                                         <td>
-                                            {{ $container->getWeight() }} KG / {{  $container->getPiecesCount() }}
+                                            {{ $container->getWeight() }} KG }}
+                                        </td>
+                                        <td>
+                                            {{  $container->getPiecesCount() }}
                                         </td>
                                         <td>
                                             {{ $container->origin_country }}
@@ -49,6 +61,21 @@
                                         </td>
                                         <td>
                                             {{ $container->getServiceSubClass() }}
+                                        </td>
+                                        <td>
+                                            {{ $container->getUnitCode() }}
+                                        </td>
+                                        <td>
+                                            @if(!$container->isRegistered())
+                                                <div class="btn btn-info">
+                                                    New
+                                                </div>
+                                            @endif
+                                            @if($container->isRegistered())
+                                                <div class="btn btn-success">
+                                                    Registered
+                                                </div>
+                                            @endif
                                         </td>
                                         <td class="d-flex">
                                             <div class="btn-group">
