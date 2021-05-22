@@ -18,12 +18,15 @@
             {{ order.weight_kg }} Kg
         </td>
         <td v-if="order.code == undefined || order.code == 200">
+            {{ order.pobox }}
+        </td>
+        <td v-if="order.code == undefined || order.code == 200">
             {{ order.sender_name }}
         </td>
         <td v-if="order.code == undefined || order.code == 200">
             {{ order.customer_reference }}
         </td>
-        <td>
+        <td v-if="canDelete">
             <button class="btn btn-danger" @click="$emit('remove-order',order,index)">
                 Remove
             </button>
@@ -33,7 +36,7 @@
 
 <script>
 export default {
-    props: ['order','index'],
+    props: ['order','index','canDelete'],
     computed: {
         getBgClass(){
             return {
