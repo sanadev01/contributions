@@ -13,7 +13,7 @@
                     </div>
                     <div class="card-content card-body">
                         <div class="mt-1">
-                            <scanner-table :container='@json($container)' :orders-collection='@json($container->getOrdersCollections())'/>
+                            <scanner-table :container='@json($container)' :edit-mode="{{$container->isRegistered() ? 'false':'true'}}" :orders-collection='@json($container->getOrdersCollections())'/>
                         </div>
                     </div>
                 </div>
