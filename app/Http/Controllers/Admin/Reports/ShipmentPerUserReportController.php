@@ -14,6 +14,7 @@ class ShipmentPerUserReportController extends Controller
 
     public function index(Request $request, OrderReportsRepository $orderReportsRepository)
     {
+            
         $this->authorize('viewUserShipmentReport',Reports::class);
         
         $pageSize = 50;
@@ -26,11 +27,19 @@ class ShipmentPerUserReportController extends Controller
             $shipmentReport = new ShipmentReport($users);
             return $shipmentReport->handle();
         }
-        request()->merge([
-            'sort_by' => $sortBy, 
-            'sort_order' => $sortAsc ? 'asc' : 'desc'
-        ]);    
 
+        // if request does not have sortby then merge following into request
+        if (!$request->exists('sortBy')) {
+            request()->merge([
+                'sort_by' => $sortBy, 
+                'sort_order' => $sortAsc ? 'asc' : 'desc'
+            ]); 
+        } else {
+            $sortBy = $request->sortBy;
+            $sortAsc = $request->sortAsc;
+        }
+           
+        // case where request has search attribute
         if ($request->exists('name') || $request->exists('pobox_number') || $request->exists('email')) 
         {
             request()->merge([
@@ -48,12 +57,18 @@ class ShipmentPerUserReportController extends Controller
         
         // For displaying records
         $users = $orderReportsRepository->getShipmentReportOfUsers($request,true,$pageSize, $sortBy, $sortAsc ? 'asc' : 'desc');
-
+        
+        // checking ascending order
+        if($sortAsc == true) {
+            $sortAsc = false;
+        } else {
+            $sortAsc = true;
+        }
         return view('admin.reports.shipment-report')->with([
             'users' => $users,
             'sortBy' => $sortBy,
             'sortAsc' => $sortAsc,
-            'downloadLink' => $downloadLink
+            'downloadLink' => $downloadLink,
 
         ]);
     }
