@@ -6,21 +6,22 @@
                 <th>WHR#</th>
                 <th>Weight</th>
                 <th>Volume Weight</th>
+                <th>POBOX#</th>
                 <th>Sender</th>
                 <th>Customer Reference</th>
                 <th>Action</th>
             </tr>
         </thead>
         <tbody>
-            <scanner-table-row v-for="(order,index) in orders" :key="order.id" :order="order" :index="index" v-on:remove-order="removeOrder"/>
+            <scanner-table-row v-for="(order,index) in orders" :can-delete="editMode" :key="order.id" :order="order" :index="index" v-on:remove-order="removeOrder"/>
             <tr>
-                <td colspan="7" class="h2 text-right px-5">
+                <td colspan="8" class="h2 text-right px-5">
                     <span class="text-danger font-weight-bold">Weight :</span> {{ totalWeight }}
                     <span class="mx-3 text-danger font-weight-bold">Packages:</span> {{ totalPackages }}
                 </td>
             </tr>
-            <tr>
-                <td colspan="7">
+            <tr v-if="editMode">
+                <td colspan="8">
                     <input type="text" class="w-100 text-center" style="height:50px;font-size:30px;" v-on:keyup.enter="addOrder">
                 </td>
             </tr>
@@ -32,7 +33,20 @@
 import ScannerTableRow from '../components/ScannerTableRow';
 export default {
     name: 'ScannerTable',
-    props: ['container','ordersCollection'],
+    props: {
+        container : {
+            type: Object,
+            required: true
+        },
+        ordersCollection: {
+            type: Array,
+            required: true
+        },
+        editMode :{
+            type:Boolean,
+            default: true
+        }
+    },
     components: {
         ScannerTableRow
     },

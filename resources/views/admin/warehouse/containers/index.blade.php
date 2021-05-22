@@ -45,7 +45,7 @@
                                         <td>{{ $container->dispatch_number }}</td>
                                         <td>{{ $container->seal_no }}</td>
                                         <td>
-                                            {{ $container->getWeight() }} KG }}
+                                            {{ $container->getWeight() }} KG
                                         </td>
                                         <td>
                                             {{  $container->getPiecesCount() }}
