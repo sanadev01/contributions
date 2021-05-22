@@ -130,7 +130,7 @@
         .destination{
             width: 4cm;
             display: inline-block;
-            font-size: 8pt;
+            font-size: 7pt;
             /* font-family: Arial; */
         }
         .destination h4{
