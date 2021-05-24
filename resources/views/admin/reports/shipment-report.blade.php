@@ -63,16 +63,7 @@
                                         </div>    
                                     </form>
                                 </div>    
-                                {{-- <div class="row my-3">
-                                    <div class="col-md-4">
-                                        <label for="">Start Date</label>
-                                        <input type="date" class="form-control">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="">End Date</label>
-                                        <input type="date" class="form-control">
-                                    </div>
-                                </div> --}}
+
                                 <table class="table mb-0" id="example">
                                     <thead>
                                         <tr>
@@ -80,9 +71,9 @@
                                                 
                                             </th>
                                             <th>
-                                                @if(request()->has('name') && !(request()->has('start_date') || request()->has('end_date') ))
+                                                @if(request()->has('name') && (request('start_date') == '' || request('end_date') == '' ))
                                                     <a href="{{ route('admin.reports.sortBy',['sortBy'=>'name', 'sortAsc' => $sortAsc, 'name' => request('name')]) }}">
-                                                        Names
+                                                        Name
                                                     </a>
                                                 @elseif(request()->has('start_date') && !(request()->has('end_date')))
                                                     <a href="{{ route('admin.reports.sortBy',['sortBy'=>'name', 'sortAsc' => $sortAsc, 'start_date' => request('start_date')]) }}">
@@ -159,29 +150,7 @@
                                                 @endif
                                             </th>
                                         </tr>
-                                        {{-- <tr>
-                                            <th>
-                                                
-                                            </th>
-                                            <th>
-                                                <input type="search" class="form-control" wire:model.debounce.500ms="user">
-                                            </th>
-                                            <th>
-                                                <input type="search" class="form-control"  wire:model.debounce.500ms="user">
-                                            </th>
-                                            <th>
-                                                <input type="search" class="form-control"  wire:model.debounce.500ms="user">
-                                            </th>
-                                            <th>
-                                                
-                                            </th>
-                                            <th>
-                                                
-                                            </th>
-                                            <th>
-                                                
-                                            </th>
-                                        </tr> --}}
+                                       
                                     </thead>
                                     <tbody>
                                         @foreach($users as $user)
