@@ -91,7 +91,7 @@ class AffiliateSaleRepository
             });
         }
 
-        $sales = $query;
+        $sales = $query->orderBy('id','desc');
 
         return $paginate ? $sales->paginate($pageSize) : $sales->get();
     }
