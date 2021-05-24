@@ -125,7 +125,7 @@
                                 </div>
                                 <hr>
 
-                                <h4>Commision Settings</h4>
+                                <h4>Commission Settings</h4>
                                 <livewire:affiliate.commision-setting :user_id="$user->id"  />
                                 
                                 <h3>Waiver Fee Settings</h3>

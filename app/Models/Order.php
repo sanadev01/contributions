@@ -313,7 +313,8 @@ class Order extends Model implements Package
             'total' => $total,
             'discount' => $discount,
             'gross_total' => $gross_total,
-            'user_declared_freight' => $this->user_declared_freight >0 ? $this->user_declared_freight : $shippingCost
+            'user_declared_freight' => $this->user_declared_freight
+            // 'user_declared_freight' => $this->user_declared_freight >0 ? $this->user_declared_freight : $shippingCost
         ]);
 
     }
