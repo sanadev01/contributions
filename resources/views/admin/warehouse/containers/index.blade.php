@@ -71,9 +71,15 @@
                                                     New
                                                 </div>
                                             @endif
-                                            @if($container->isRegistered())
-                                                <div class="btn btn-success">
+                                            @if($container->isRegistered() && !$container->isShipped())
+                                                <div class="btn btn-primary">
                                                     Registered
+                                                </div>
+                                            @endif
+
+                                            @if($container->isShipped())
+                                                <div class="btn btn-success">
+                                                    Shipped
                                                 </div>
                                             @endif
                                         </td>
@@ -87,7 +93,7 @@
                                                         <a href="{{ route('warehouse.containers.packages.index',$container) }}" class="dropdown-item w-100">
                                                             <i class="feather icon-box"></i> @lang('warehouse.actions.Packages')
                                                         </a>
-                                                        @if( !$container->isRegistered() )
+                                                        @if( !$container->isRegistered() || !$container->isShipped() )
                                                             <a href="{{ route('warehouse.containers.edit',$container) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
                                                             </a>
