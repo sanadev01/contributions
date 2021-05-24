@@ -34,11 +34,19 @@ class ContainerController extends Controller
 
     public function edit(Container $container)
     {
+        if ( $container->isRegistered() ){
+            abort(405);
+        }
+
         return view('admin.warehouse.containers.edit',compact('container'));
     }
 
     public function update(UpdateContainerRequest $updateContainerRequest, Container $container, ContainerRepository $containerRepository)
     {
+        if ( $container->isRegistered() ){
+            abort(405);
+        }
+        
         if ( $container = $containerRepository->update($container, $updateContainerRequest) ){
             session()->flash('alert-success', 'Container Saved Please Scann Packages');
             return redirect()->route('warehouse.containers.index');

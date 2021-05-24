@@ -82,4 +82,8 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         return $this->unit_code;
     }
 
+    public function isShipped()
+    {
+        return $this->deliveryBills()->count() > 0;
+    }
 }

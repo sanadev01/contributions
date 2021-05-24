@@ -17,7 +17,7 @@ class ContainerRepository extends AbstractRepository{
             $query->where('user_id',Auth::id());
         }
 
-        $query->whereDoesntHave('deliveryBills');
+        // $query->whereDoesntHave('deliveryBills');
 
         return $query->latest()->paginate();
     }
