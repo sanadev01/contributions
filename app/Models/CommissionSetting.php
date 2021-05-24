@@ -24,6 +24,11 @@ class CommissionSetting extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+    
+    public function referrer()
+    {
+        return $this->belongsTo(User::class, 'referrer_id');
+    }
 
 
 }

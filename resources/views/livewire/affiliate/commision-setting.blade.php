@@ -2,6 +2,7 @@
     <div class="controls row mb-1 align-items-center">
         <label class="col-md-3 text-md-right">@lang('user.Select Referrer')<span class="text-danger"></span></label>
         <div class="col-md-6">
+            
             <select class="form-control" wire:model.defer="referrer_id">
                 <option value="">Select referrer</option>
                 @foreach ($users as $userReferrer)
@@ -50,6 +51,38 @@
         <button type="" class="btn btn-primary" wire:click.prevent="save">
             Save Commision
         </button>
+    </div>
+
+    <h4 class="ml-5">Referrals</h4>
+    <div class="controls row mb-1 align-items-center">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <table class="table table-responsive">
+                <thead>
+                    <tr>
+                        <th>Referral</th>
+                        <th>Type</th>
+                        <th>Commission</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($CommissionSettings as $userRefferer)
+                        <tr>
+                            <td>{{ $userRefferer->referrer ? $userRefferer->referrer->name : "Default" }}</td>
+                            <td>{{ $userRefferer->type }}</td>
+                            <td>{{ $userRefferer->value }}</td>
+                                
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="3" class="text-danger">No Record found</td>
+                        </tr>
+                    @endforelse
+                    
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-3"></div>
     </div>
     @include('layouts.livewire.loading')
 </div>

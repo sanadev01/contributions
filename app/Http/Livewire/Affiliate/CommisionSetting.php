@@ -31,7 +31,8 @@ class CommisionSetting extends Component
     public function render()
     {
         return view('livewire.affiliate.commision-setting',[
-            'users' => User::where('reffered_by', $this->user_id)->get()
+            'users' => User::where('reffered_by', $this->user_id)->get(),
+            'CommissionSettings' => CommissionSetting::where('user_id', $this->user_id)->get()
         ]);
     }
 
