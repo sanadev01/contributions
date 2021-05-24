@@ -22,7 +22,7 @@ class PackageResource extends JsonResource
             'corrios_tracking_code' => $this->corrios_tracking_code,
             'warehouse_number' => $this->warehouse_number,
             'sender_name' => $this->getSenderFullName(),
-            'pobox' => optional($this->user)->pobox_number,
+            'pobox' => optional($this->user)->pobox_number.' / '.optional($this->user)->getFullName(),
             'customer_reference' => $this->customer_reference,
             'code' => $this->code,
             'error' => $this->error,
