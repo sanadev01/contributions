@@ -10,6 +10,7 @@
                             @lang('warehouse.containers.Packages Inside Container')
                         </h4>
                         <a href="{{ route('warehouse.containers.index') }}" class="pull-right btn btn-primary"> @lang('warehouse.containers.List Containers') </a>
+                        <a href="{{ route('warehouse.containers.packages.create',$container) }}" class="pull-right btn btn-success"> <i class="fa fa-arrow-down"></i> Download </a>
                     </div>
                     <div class="card-content card-body">
                         <div class="mt-1">

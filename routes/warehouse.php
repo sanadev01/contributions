@@ -20,7 +20,7 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
 
     Route::get('order/{order}/download-cn23', CN23DownloadController::class)->name('cn23.download');
     Route::resource('containers', ContainerController::class);
-    Route::resource('containers.packages', ContainerPackageController::class)->only('index','destroy');
+    Route::resource('containers.packages', ContainerPackageController::class)->only('index','destroy', 'create');
     Route::post('containers/{container}/packages/{barcode}', [ContainerPackageController::class,'store'])->name('containers.packages.store');
 
     Route::get('container/{container}/register', UnitRegisterController::class)->name('container.register');
