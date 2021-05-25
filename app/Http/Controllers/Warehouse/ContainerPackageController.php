@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Warehouse;
 
-use App\Http\Controllers\Controller;
 use App\Models\Order;
-use App\Models\Warehouse\Container;
-use App\Repositories\Warehouse\ContainerPackageRepository;
 use Illuminate\Http\Request;
+use App\Models\Warehouse\Container;
+use App\Http\Controllers\Controller;
+use App\Services\Excel\Export\ContainerOrderExport;
+use App\Repositories\Warehouse\ContainerPackageRepository;
 
 class ContainerPackageController extends Controller
 {
@@ -18,6 +19,18 @@ class ContainerPackageController extends Controller
     public function index(Container $container)
     {
         return view('admin.warehouse.containers.scan',compact('container'));
+    }
+   
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create(Container $container)
+    {
+        $orders = $container->orders;
+        $exportService = new ContainerOrderExport($orders);
+        return $exportService->handle();
     }
 
     /**

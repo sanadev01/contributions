@@ -110,7 +110,7 @@
                                 <h3>Affiliate Settings</h3>
                                 <hr>
                                 
-                                <h4>Referrer Settings</h4>
+                                <h4 class="ml-5">Referrer Settings</h4>
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('user.Referrer')<span class="text-danger"></span></label>
                                     <div class="col-md-6">
@@ -124,8 +124,8 @@
                                     </div>
                                 </div>
                                 <hr>
-
-                                <h4>Commision Settings</h4>
+                                
+                                <h4 class="ml-5">Commission Settings</h4>
                                 <livewire:affiliate.commision-setting :user_id="$user->id"  />
                                 
                                 <h3>Waiver Fee Settings</h3>

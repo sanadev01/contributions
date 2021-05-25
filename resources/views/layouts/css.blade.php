@@ -107,5 +107,12 @@
     .min-vh-100{
         min-height: 100vh !important
     }
+    
+    @media only screen and (max-width: 768px) {
+        #main-menu-navigation {
+        height:500px; 
+        overflow-y: scroll;
+        }
+    }
 </style>
 @yield('custom-css')

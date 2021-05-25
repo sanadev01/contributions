@@ -12,16 +12,35 @@ class OrderReportsRepository
 {
     protected $error;
 
-    public function getShipmentReportOfUsers(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='asc')
+    public function getShipmentReportOfUsers(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType = 'asc')
     {
+        // case where request has search attribute
+        if ($request->exists('name') || $request->exists('pobox_number') || $request->exists('email') || $request->exists('start_date') || $request->exists('end_date')) 
+        {
+            request()->merge([
+                'name' => $request->name,
+                'pobox_number' => $request->pobox_number,
+                'email' => $request->email,
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
+            ]);
+        
+        }
+        
         $query = User::query();
             $query->with(['orders']);
 
-        if ( $request->user ){
-            $query->where('name','LIKE',"%{$request->user}%")
-                    ->orWhere('last_name','LIKE',"%{$request->user}%")
-                    ->orWhere('pobox_number','LIKE',"%{$request->user}%")
-                    ->orWhere('email','LIKE',"%{$request->user}%");
+        if ( $request->name){
+            
+            $query->where('name', 'LIKE', '%'.$request->name. '%');
+        }
+        if ( $request->pobox_number){
+            
+            $query->where('pobox_number', $request->pobox_number);
+        }
+        if ( $request->email){
+           
+            $query->where('email', $request->email);
         }
 
         $query->withCount(['orders as order_count'=> function($query) use ($request){

@@ -20,11 +20,24 @@ class ProfitPackageRepository
     public function store(Request $request)
     {   
         try{
+            
+            $data = $request->slab;
+            $arrayCounter = 0;
 
             foreach( $request->slab as $slab ){
+            
+                if($arrayCounter == 0){
+                    $slab['min_weight'] = 0;
+                } else {
+                    $minWeight = $arrayCounter - 1;
+                    $prev_maxWeight = $data[ $minWeight ]['max_weight'];
+                    $slab['min_weight'] = $prev_maxWeight + 1;
+                }
+
+                $arrayCounter ++;
                 $profitPackageslab[] = $slab ;
             }
-    
+            
             $profitPackage = ProfitPackage::create([
                 'name' => $request->package_name,
                 'type' => $request->type,
@@ -43,9 +56,22 @@ class ProfitPackageRepository
     {   
         
         try{
+            
+            $data = $request->slab;
+            $arrayCounter = 0;
 
             foreach( $request->slab as $slab ){
-                $profitPackageslab[] = $slab;
+            
+                if($arrayCounter == 0){
+                    $slab['min_weight'] = 0;
+                } else {
+                    $minWeight = $arrayCounter - 1;
+                    $prev_maxWeight = $data[ $minWeight ]['max_weight'];
+                    $slab['min_weight'] = $prev_maxWeight + 1;
+                }
+
+                $arrayCounter ++;
+                $profitPackageslab[] = $slab ;
             }
     
             $profitPackage->update([
