@@ -40,7 +40,7 @@
             </form>
         </div>
     </div>
-    <div class="table-responsive">
+    <div class="table-responsive order-table">
         <table class="table mb-0 table-responsive-md" id="order-table">
             <thead>
                 <tr>
