@@ -69,7 +69,7 @@
                     
                     @if( !$error )
                         @if( $package['client'] )
-                            <a href="{{route('admin.label.scan.show',$order)}}" target="_blank" class="btn btn-success mr-2" onclick="addClass({{$key}})" title="@lang('orders.import-excel.Download')">
+                            <a href="{{route('admin.label.scan.show',$package['reference'])}}" target="_blank" class="btn btn-success mr-2" onclick="addClass({{$key}})" title="@lang('orders.import-excel.Download')">
                                 <i class="feather icon-download"></i>@lang('orders.import-excel.Download')
                             </a>
                         @endif
