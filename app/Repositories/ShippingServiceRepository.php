@@ -33,6 +33,8 @@ class ShippingServiceRepository
                     'contains_perfume_charges',
                     'contains_flammable_liquid_charges',
                     'active',
+                    'service_sub_class',
+                    'delivery_time',
                 ])
             );
 
@@ -62,6 +64,8 @@ class ShippingServiceRepository
                     'contains_perfume_charges',
                     'contains_flammable_liquid_charges',
                     'active',
+                    'service_sub_class',
+                    'delivery_time',
                 ])
             );
 

@@ -29,6 +29,7 @@
                                     <th>@lang('shippingservice.Contains battery charges')</th>
                                     <th>@lang('shippingservice.Contains perfume charges')</th>
                                     <th>@lang('shippingservice.Contains flammable liquid charges')</th>
+                                    <th>Sub Class</th>
                                     <th>@lang('shippingservice.Action')</th>
                                 </tr>
                                 </thead>
@@ -44,6 +45,7 @@
                                         <td>{{ $service->contains_battery_charges }}</td>
                                         <td>{{ $service->contains_perfume_charges }}</td>
                                         <td>{{ $service->contains_flammable_liquid_charges }}</td>
+                                        <td>{{ $service->service_sub_class }}</td>
                                         <td>
                                             @can('update', App\Models\ShippingService::class)
                                             <a href="{{ route('admin.shipping-services.edit',$service) }}" title="@lang('shippingservice.Edit Service')" class="btn btn-sm btn-primary mr-2">
