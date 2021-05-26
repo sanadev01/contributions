@@ -31,7 +31,7 @@ class RatesCalculator
 
     protected $calculateOnVolumeMetricWeight;
 
-    protected $errors;
+    protected static $errors;
 
     public function __construct(Order $order,ShippingService $service, $calculateOnVolumeMetricWeight = true )
     {
@@ -159,17 +159,18 @@ class RatesCalculator
         try {
 
             if ( !$this->rates ) {
-                $this->errors .= "Service not available for this Country <br>";
+                self::$errors .= "Service not available for this Country <br>";
                 return false;
             }
 
             if ( $this->shippingService->max_weight_allowed < $this->weight ){
-                $this->errors .= "service is not available for more then {$this->shippingService->max_weight_allowed}KG  weight";
+                self::$errors .= "service is not available for more then {$this->shippingService->max_weight_allowed}KG  weight";
                 return false;
             }
 
             return true;
         } catch (Exception $exception) {
+            self::$errors .= "Error: ".$exception->getMessage();
             return false;
         }
     }
@@ -186,6 +187,6 @@ class RatesCalculator
 
     public function getErrors()
     {
-        return $this->errors;
+        return self::$errors;
     }
 }
