@@ -151,7 +151,7 @@ return [
         'track-order' => 'Acompanhar Pedido',
         'pay-order' => 'Ordem de pagamento',
         'create-order' => 'Criar envio',
-        'duplicate-order' => 'Pedido de cópia',
+        'duplicate-order' => 'Pedido Duplicado',
         'back-to-list' => 'Voltar',
     ],
     'create' => [
