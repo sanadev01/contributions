@@ -63,6 +63,7 @@
                         <th>Referral</th>
                         <th>Type</th>
                         <th>Commission</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -71,6 +72,11 @@
                             <td>{{ $userRefferer->referrer ? $userRefferer->referrer->name : "Default" }}</td>
                             <td>{{ $userRefferer->type }}</td>
                             <td>{{ $userRefferer->value }}</td>
+                            <td>
+                                <button type="" class="btn btn-danger" wire:click.prevent="remove({{ $userRefferer }})">
+                                    Remove
+                                </button>
+                            </td>
                                 
                         </tr>
                     @empty

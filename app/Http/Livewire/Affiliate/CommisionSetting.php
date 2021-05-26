@@ -57,4 +57,14 @@ class CommisionSetting extends Component
     {
         return CommissionSetting::where('user_id', $this->user_id)->where('referrer_id', $this->referrer_id)->first();
     }
+    
+    public function remove(CommissionSetting $commissionSetting)
+    {
+        if($commissionSetting->referrer){
+            $commissionSetting->referrer->update([
+                'reffered_by' => null
+            ]);
+        }
+        $commissionSetting->delete();
+    }
 }
