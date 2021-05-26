@@ -388,7 +388,7 @@ class Order extends Model implements Package
 
     public function getDistributionModality(): int
     {
-        return ModelsPackage::SERVICE_CLASS_STANDARD;
+        return __default( optional($this->shippingService)->service_sub_class ,ModelsPackage::SERVICE_CLASS_STANDARD );
     }
 
     public function getService(): int
