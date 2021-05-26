@@ -17,7 +17,7 @@ class DeliveryBillRepository extends AbstractRepository
     {
         $query = DeliveryBill::query();
 
-        return $query->paginate(50);
+        return $query->latest()->paginate(50);
     }
 
     public function getContainers()
