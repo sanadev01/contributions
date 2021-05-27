@@ -27,5 +27,13 @@
     function addClass(id){
         $("#"+id).css({"background-color": "#77ff77"});
     }
-    </script>
+    
+    function removeCss(){
+        $("#removeModal").removeClass('show');
+        $("#removeModal").removeClass('d-block');
+        $("#removeModal").addClass('hide');
+        $("#removeModal").addClass('d-none');
+    }
+    
+</script>
 @endsection
