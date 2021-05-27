@@ -144,7 +144,7 @@
                             <i class="feather icon-edit"></i>@lang('orders.actions.update')
                         </a>
                    @endcan
-                   @can('updateOrder', $order)
+                   @can('copyOrder', $order)
                         <a href="{{ route('admin.orders.duplicate',$order) }}" class="dropdown-item" title="@lang('orders.actions.duplicate-order')">
                             <i class="feather icon-copy"></i>@lang('orders.actions.duplicate-order')
                         </a>
