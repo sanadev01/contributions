@@ -8,9 +8,11 @@
     @endif
     <div class="col-12 row mb-5">
         <div class="form-group row col-5">
-            <label class="col-2 text-right"> @lang('orders.print-label.Scan Package') </label>
-            <input type="text" class="form-control col-8" wire:model.debounce.500ms="tracking">
+            <label class="col-2 text-right"> @lang('orders.print-label.Scan Package')</label>
+            <input type="text" @if (count($packagesRows) == 10) readonly @endif class="form-control col-8" wire:model.debounce.500ms="tracking">
+            <span class="text-danger offset-2"> @lang('orders.print-label.Scan Package Message') {{ count($packagesRows)}} / 10</span>
         </div>
+        
         <div class="col-7 d-flex justify-content-end">
             <form action="{{ route('admin.label.scan.store') }}" method="post">
                 @csrf
@@ -90,5 +92,30 @@
             </td>
         </tr> --}}
     </table>
+    
+    @if (count($packagesRows) == 2)
+      <!-- Modal -->
+        <div class="modal fade show d-block" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title text-danger" id="exampleModalLabel">You have reached your labels print limit</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="removeCss()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body d-flex justify-content-center">
+                   <i class="feather icon-x-circle text-danger display-1"> </i>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="removeCss()" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+            </div>
+        </div>
+    @endif
+
+  
+
 @include('layouts.livewire.loading')
 </div>
