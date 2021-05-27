@@ -93,7 +93,7 @@
         </tr> --}}
     </table>
     
-    @if (count($packagesRows) == 2)
+    @if (isset(count($packagesRows)) == 10)
       <!-- Modal -->
         <div class="modal fade show d-block" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
             <div class="modal-dialog" role="document">
