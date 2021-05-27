@@ -402,7 +402,12 @@ class PermissionSeeder extends Seeder
             [
                 'slug' => 'user_selling_rates',
                 'description' => 'Allows User see profit Package rates',
-            ]
+            ],
+            [
+                'slug' => 'duplicate_order',
+                'group' => 'Order',
+                'description' => 'User can Duplicate Order'
+            ],
             
         ];
     }

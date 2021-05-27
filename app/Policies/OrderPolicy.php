@@ -158,6 +158,11 @@ class OrderPolicy
     {
         return $user->hasPermission('edit_order') && $order->user_id == $user->id && !$order->isPaid();
     }
+    
+    public function copyOrder(User $user,Order $order)
+    {
+        return $user->hasPermission('duplicate_order') && $order->user_id == $user->id;
+    }
 
     public function canPrintLable(User $user,Order $order)
     {
