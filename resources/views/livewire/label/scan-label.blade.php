@@ -93,19 +93,24 @@
         </tr> --}}
     </table>
     
-    @if (count($packagesRows) == 10)
+    @if (count($packagesRows) == 2)
       <!-- Modal -->
         <div class="modal fade show d-block" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
             <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                <h5 class="modal-title text-danger" id="exampleModalLabel">You have reached your labels print limit</h5>
+                <h3 class="modal-title text-danger" id="exampleModalLabel"><b>STOP</b></h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="removeCss()">
                     <span aria-hidden="true">&times;</span>
                 </button>
                 </div>
-                <div class="modal-body d-flex justify-content-center">
-                   <i class="feather icon-x-circle text-danger display-1"> </i>
+                <div class="modal-body">
+                    <div class="row justify-content-center">
+                        <i class="feather icon-x-circle text-danger display-1"> </i>
+                    </div>
+                    <div class="row justify-content-center">
+                        <p class="h3 text-danger" style="text-align: center !important;">You have reached your labels print limit</p>
+                    </div>
                 </div>
                 <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" onclick="removeCss()" data-dismiss="modal">Close</button>
