@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\CommissionSetting;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\ProfitPackage;
@@ -68,6 +69,11 @@ class UserSettingController extends Controller
             User::find($id)->update([
                 'reffered_by' => null
             ]);
+
+            $commissionSetting = CommissionSetting::where('user_id', $user->id)->where('referrer_id', $id)->first();
+            if($commissionSetting){
+                $commissionSetting->delete();
+            }
         }
 
         session()->flash('alert-success','user.User Setting Updated Successfully');

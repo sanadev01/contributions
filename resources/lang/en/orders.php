@@ -156,7 +156,7 @@ return [
         'track-order' => 'Track Order',
         'pay-order' => 'Pay Order',
         'create-order' => 'Create Order',
-        'duplicate-order' => 'Copy Order',
+        'duplicate-order' => 'Duplicate Order',
         'back-to-list' => 'Back to List',
     ],
     'create' => [

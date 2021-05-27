@@ -141,6 +141,31 @@
                                     </div>
                                 </div>
 
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">Shipping Service Sub Class<span class="text-danger">*</span></label>
+                                    <div class="col-md-6">
+                                        <select class="form-control" name="service_sub_class" required value="{{ old('service_sub_class') }}" placeholder="service_sub_class" >
+                                            <option value="">Select</option>
+                                            @foreach (config('shippingServices.brazil.sub_classess') as $key => $item)
+                                                <option value="{{$key}}" {{ old('service_sub_class',$shippingService->service_sub_class) == $key ? 'selected' : '' }}>{{$item}}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('service_sub_class')
+                                            <div class="help-block text-danger"> {{ $message }} </div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">Delivery Time Notes<span class="text-danger">*</span></label>
+                                    <div class="col-md-6">
+                                        <textarea type="text" required class="form-control" name="delivery_time" placeholder="Delivery Time">{{ old('delivery_time',$shippingService->delivery_time) }}</textarea>
+                                        @error('delivery_time')
+                                            <div class="help-block text-danger"> {{ $message }} </div>
+                                        @enderror
+                                    </div>
+                                </div>
+
                                 <div class="row mt-1">
                                     <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
                                         <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">

@@ -26,7 +26,7 @@ class OrderItemsController extends Controller
         }
 
         $shippingServices = collect() ;
-        foreach (ShippingService::query()->active()->get() as $shippingService) {
+        foreach (ShippingService::query()->has('rates')->active()->get() as $shippingService) {
             if ( $shippingService->isAvailableFor($order) ){
                 $shippingServices->push($shippingService);
             }else{

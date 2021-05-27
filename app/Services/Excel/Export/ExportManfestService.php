@@ -40,7 +40,9 @@ class ExportManfestService extends AbstractCsvExportService
             'WHR#',
             'Customer paid',
             'Airport/ GRU/CWB',
-            'Value paid to Leve'
+            'Value paid to Corrieos',
+            'Bag',
+            'POBOX / NAME'
         ];
     }
 
@@ -70,7 +72,9 @@ class ExportManfestService extends AbstractCsvExportService
                 $package->warehouse_number,
                 $package->gross_total,
                 $container->getDestinationAriport(),
-                $this->getValuePaidToCorrieos($container,$package)
+                $this->getValuePaidToCorrieos($container,$package),
+                $container->dispatch_number,
+                optional($package->user)->pobox_number.' / '.optional($package->user)->getFullName()
             ];
 
             $i=0;

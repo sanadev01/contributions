@@ -14,6 +14,7 @@ class CommissionSetting extends Model
     
     protected $fillable = [
         'user_id', 
+        'referrer_id', 
         'type', 
         'value',
         'commission_balance',
@@ -22,6 +23,11 @@ class CommissionSetting extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+    
+    public function referrer()
+    {
+        return $this->belongsTo(User::class, 'referrer_id');
     }
 
 

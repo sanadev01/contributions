@@ -250,4 +250,8 @@ class User extends Authenticatable
         return $this->reffer_code;
     }
 
+    public function getFullName()
+    {
+        return $this->name . ' '. $this->last_name;
+    }
 }

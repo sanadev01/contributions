@@ -34,25 +34,28 @@
                                 <div class="row my-1 ml-1">
                                     <form action="{{ route('admin.reports.user-shipments.index') }}" class="col-md-12">
                                         <div class="form-row">
+                                            {{-- sorting attribute --}}
+                                            <input type="hidden" value="name" name="sortBy" id="sortBy" class="form-control">
+                                            <input type="hidden" value="{{$sortAsc}}" name="sortAsc" id="sortAsc" class="form-control">
                                             <div class="form-group col-md-2">
                                                 <label for="start_date">@lang('report.start-date')</label>
-                                                <input type="date" name="start_date" id="start_date" class="form-control">
+                                                <input type="date" name="start_date" value="{{old('start_date', request('start_date'))}}" id="start_date" class="form-control">
                                             </div>
                                             <div class="form-group col-md-2">
                                                 <label for="end_date">@lang('report.end-date')</label>
-                                                <input type="date" name="end_date" id="end_date" class="form-control">
+                                                <input type="date" name="end_date" value="{{old('end_date', request('end_date'))}}" id="end_date" class="form-control">
                                             </div>
                                             <div class="form-group col-md-2">
                                                 <label for="name">@lang('report.name')</label>
-                                                <input type="text" type="text" name="name" id="user" placeholder="@lang('report.search-by') @lang('report.name')" class="form-control">
+                                                <input type="text" type="text" name="name" value="{{old('name', request('name'))}}" id="user" placeholder="@lang('report.search-by') @lang('report.name')" class="form-control">
                                             </div>
                                             <div class="form-group col-md-2">
                                                 <label for="pobox_number">@lang('report.pobox-number')</label>
-                                                <input type="text" name="pobox_number" id="pobox_number" placeholder="@lang('report.search-by') @lang('report.pobox-number')" class="form-control">
+                                                <input type="text" name="pobox_number" value="{{old('pobox_number', request('pobox_number'))}}" id="pobox_number" placeholder="@lang('report.search-by') @lang('report.pobox-number')" class="form-control">
                                             </div>
                                             <div class="form-group col-md-2">
                                                 <label for="email">@lang('report.email')</label>
-                                                <input type="email" name="email" id="email" placeholder="@lang('report.search-by') @lang('report.email')" class="form-control">
+                                                <input type="email" name="email" id="email" value="{{old('email', request()->get('email'))}}" placeholder="@lang('report.search-by') @lang('report.email')" class="form-control">
                                             </div>
                                             <div class="form-group col-md-2">
                                                 <button type="submit" class="btn btn-primary" style="margin-top: 1.8rem; !important">@lang('report.search')</button>
@@ -60,29 +63,39 @@
                                         </div>    
                                     </form>
                                 </div>    
-                                {{-- <div class="row my-3">
-                                    <div class="col-md-4">
-                                        <label for="">Start Date</label>
-                                        <input type="date" class="form-control">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="">End Date</label>
-                                        <input type="date" class="form-control">
-                                    </div>
-                                </div> --}}
+
                                 <table class="table mb-0" id="example">
                                     <thead>
                                         <tr>
                                             <th>
                                                 
                                             </th>
-                                            <th>                                              
-                                                <a href="{{ route('admin.reports.sortBy',['sortBy'=>'name', 'sortAsc' => $sortAsc]) }}">
-                                                    Name
-                                                </a>
-                                                @if ( $sortBy == 'name' && $sortAsc )
+                                            <th>
+                                                @if(request()->has('name') && (request('start_date') == '' || request('end_date') == '' ))
+                                                    <a href="{{ route('admin.reports.sortBy',['sortBy'=>'name', 'sortAsc' => $sortAsc, 'name' => request('name')]) }}">
+                                                        Name
+                                                    </a>
+                                                @elseif(request()->has('start_date') && !(request()->has('end_date')))
+                                                    <a href="{{ route('admin.reports.sortBy',['sortBy'=>'name', 'sortAsc' => $sortAsc, 'start_date' => request('start_date')]) }}">
+                                                        Name
+                                                    </a>
+                                                @elseif(request()->has('end_date') && !request()->has('start_date'))
+                                                    <a href="{{ route('admin.reports.sortBy',['sortBy'=>'name', 'sortAsc' => $sortAsc, 'end_date' => request('end_date')]) }}">
+                                                        Name
+                                                    </a>
+                                                @elseif(request()->has('end_date') && request()->has('start_date'))
+                                                    <a href="{{ route('admin.reports.sortBy',['sortBy'=>'name', 'sortAsc' => $sortAsc, 'start_date' => request('start_date'), 'end_date' => request('end_date')]) }}">
+                                                        Name
+                                                    </a>
+                                                @else
+                                                    <a href="{{ route('admin.reports.sortBy',['sortBy'=>'name', 'sortAsc' => $sortAsc]) }}">
+                                                        Name
+                                                    </a>
+                                                @endif
+                                                
+                                                @if ( $sortBy == 'name' && $sortAsc == 'asc' )
                                                     <i class="fa fa-arrow-down ml-2"></i>
-                                                @elseif( $sortBy =='name' && !$sortAsc )
+                                                @elseif( $sortBy =='name' && $sortAsc == 'desc' )
                                                     <i class="fa fa-arrow-up ml-2"></i>
                                                 @endif
                                             </th>
@@ -90,9 +103,9 @@
                                                 <a href="{{ route('admin.reports.sortBy',['sortBy'=>'pobox_number', 'sortAsc' => $sortAsc]) }}">
                                                     Pobox Number
                                                 </a>
-                                                @if ( $sortBy == 'pobox_number' && $sortAsc )
+                                                @if ( $sortBy == 'pobox_number' && $sortAsc == 'asc' )
                                                     <i class="fa fa-arrow-down ml-2"></i>
-                                                @elseif( $sortBy =='pobox_number' && !$sortAsc )
+                                                @elseif( $sortBy =='pobox_number' && $sortAsc == 'desc' )
                                                     <i class="fa fa-arrow-up ml-2"></i>
                                                 @endif
                                             </th>
@@ -100,9 +113,9 @@
                                                 <a href="{{ route('admin.reports.sortBy',['sortBy'=>'email', 'sortAsc' => $sortAsc]) }}">
                                                     Email
                                                 </a>
-                                                @if ( $sortBy == 'email' && $sortAsc )
+                                                @if ( $sortBy == 'email' && $sortAsc == 'asc' )
                                                     <i class="fa fa-arrow-down ml-2"></i>
-                                                @elseif( $sortBy =='email' && !$sortAsc )
+                                                @elseif( $sortBy =='email' && $sortAsc == 'desc' )
                                                     <i class="fa fa-arrow-up ml-2"></i>
                                                 @endif
                                             </th>
@@ -110,9 +123,9 @@
                                                 <a href="{{ route('admin.reports.sortBy',['sortBy'=>'order_count', 'sortAsc' => $sortAsc]) }}">
                                                     Shipment Count
                                                 </a>
-                                                @if ( $sortBy == 'order_count' && $sortAsc )
+                                                @if ( $sortBy == 'order_count' && $sortAsc == 'asc' )
                                                     <i class="fa fa-arrow-down ml-2"></i>
-                                                @elseif( $sortBy =='order_count' && !$sortAsc )
+                                                @elseif( $sortBy =='order_count' && $sortAsc == 'desc' )
                                                     <i class="fa fa-arrow-up ml-2"></i>
                                                 @endif
                                             </th>
@@ -120,9 +133,9 @@
                                                 <a href="{{ route('admin.reports.sortBy',['sortBy'=>'weight', 'sortAsc' => $sortAsc]) }}">
                                                     Weight
                                                 </a>
-                                                @if ( $sortBy == 'weight' && $sortAsc )
+                                                @if ( $sortBy == 'weight' && $sortAsc == 'asc' )
                                                     <i class="fa fa-arrow-down ml-2"></i>
-                                                @elseif( $sortBy =='weight' && !$sortAsc )
+                                                @elseif( $sortBy =='weight' && $sortAsc == 'desc' )
                                                     <i class="fa fa-arrow-up ml-2"></i>
                                                 @endif
                                             </th>
@@ -130,36 +143,14 @@
                                                 <a href="{{ route('admin.reports.sortBy',['sortBy'=>'spent', 'sortAsc' => $sortAsc]) }}">
                                                     Spent
                                                 </a>
-                                                @if ( $sortBy == 'spent' && $sortAsc )
+                                                @if ( $sortBy == 'spent' && $sortAsc == 'asc' )
                                                     <i class="fa fa-arrow-down ml-2"></i>
-                                                @elseif( $sortBy =='spent' && !$sortAsc )
+                                                @elseif( $sortBy =='spent' && $sortAsc == 'desc' )
                                                     <i class="fa fa-arrow-up ml-2"></i>
                                                 @endif
                                             </th>
                                         </tr>
-                                        {{-- <tr>
-                                            <th>
-                                                
-                                            </th>
-                                            <th>
-                                                <input type="search" class="form-control" wire:model.debounce.500ms="user">
-                                            </th>
-                                            <th>
-                                                <input type="search" class="form-control"  wire:model.debounce.500ms="user">
-                                            </th>
-                                            <th>
-                                                <input type="search" class="form-control"  wire:model.debounce.500ms="user">
-                                            </th>
-                                            <th>
-                                                
-                                            </th>
-                                            <th>
-                                                
-                                            </th>
-                                            <th>
-                                                
-                                            </th>
-                                        </tr> --}}
+                                       
                                     </thead>
                                     <tbody>
                                         @foreach($users as $user)

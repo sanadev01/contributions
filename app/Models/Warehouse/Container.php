@@ -4,6 +4,7 @@ namespace App\Models\Warehouse;
 
 use App\Http\Resources\Warehouse\Container\PackageResource;
 use App\Models\Order;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -15,6 +16,11 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     protected $guarded = [];
 
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function scopeRegistered(Builder $builder)
     {
@@ -76,4 +82,8 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         return $this->unit_code;
     }
 
+    public function isShipped()
+    {
+        return $this->deliveryBills()->count() > 0;
+    }
 }
