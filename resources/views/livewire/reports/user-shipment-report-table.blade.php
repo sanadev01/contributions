@@ -88,13 +88,13 @@
                     
                 </th>
                 <th>
-                    <input type="search" class="form-control" wire:model.debounce.500ms="user">
+                    <input type="search" class="form-control" wire:model.debounce.500ms="name">
                 </th>
                 <th>
-                    <input type="search" class="form-control"  wire:model.debounce.500ms="user">
+                    <input type="search" class="form-control"  wire:model.debounce.500ms="pobox_number">
                 </th>
                 <th>
-                    <input type="search" class="form-control"  wire:model.debounce.500ms="user">
+                    <input type="search" class="form-control"  wire:model.debounce.500ms="email">
                 </th>
                 <th>
                     
