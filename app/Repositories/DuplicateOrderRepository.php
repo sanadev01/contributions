@@ -45,6 +45,8 @@ class DuplicateOrderRepository extends Model
         $copy = $order->replicate();
         $copy->order_date = Carbon::now();
         $copy->save();
+        $copy->warehouse_number = $copy->getTempWhrNumber();
+        $copy->save();
 
         return $copy;
     }

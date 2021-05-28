@@ -4,6 +4,7 @@ return [
     'Parcel Images' => 'Parcel Images',
     'Create Parcel' => 'Create Parcel',
     'Edit Parcel' => 'Edit Parcel',
+    'Duplicate Parcel' => 'Duplicate Parcel',
     'Delete Parcel' => 'Delete Parcel',
     'User POBOX Number' => 'User POBOX Number',
     'Merchant' => 'Merchant',

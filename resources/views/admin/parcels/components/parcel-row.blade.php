@@ -88,7 +88,7 @@
                     
                     @can('duplicatePreAlert',  $parcel)
                         <a href="{{ route('admin.parcel.duplicate',$parcel) }}" class="dropdown-item btn" title="@lang('parcel.Edit Parcel')">
-                            <i class="feather icon-edit"></i> @lang('parcel.Copy Parcel')
+                            <i class="feather icon-edit"></i> @lang('parcel.Duplicate Parcel')
                         </a>
                     @endcan
 
