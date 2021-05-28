@@ -128,6 +128,11 @@ class OrderPolicy
     {
         return  $order->user_id == $user->id;
     }
+    
+    public function duplicatePreAlert(User $user, Order $order)
+    {
+        return  $user->hasPermission('duplicate_preAlert') && $order->user_id == $user->id;
+    }
 
     public function updateConsolidation(User $user, Order $order)
     {

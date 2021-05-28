@@ -46,6 +46,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
 
         Route::get('dashboard', 'HomeController')->name('home');
         Route::resource('parcels', PreAlertController::class);
+        Route::get('parcel/{order}/duplicate',DuplicatePreAlertController::class)->name('parcel.duplicate');
         Route::resource('billing-information', BillingInformationController::class);
         // Route::resource('import-excel', ImportExcelController::class)->only(['index','store']);
 

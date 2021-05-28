@@ -408,6 +408,11 @@ class PermissionSeeder extends Seeder
                 'group' => 'Order',
                 'description' => 'User can Duplicate Order'
             ],
+            [
+                'slug' => 'duplicate_preAlert',
+                'group' => 'Parcel',
+                'description' => 'User can Duplicate PreAlert'
+            ],
             
         ];
     }

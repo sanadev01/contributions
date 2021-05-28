@@ -14,6 +14,11 @@ class DuplicateOrderRepository extends Model
     {
         return $this->makeOrderCopy($order);
     }
+    
+    public function makeDuplicatePreAlert(Order $order)
+    {
+        return $this->makePreAlertCopy($order);
+    }
 
     private function makeOrderCopy(Order $order)
     {
@@ -32,6 +37,15 @@ class DuplicateOrderRepository extends Model
 
         $this->makeRecipientCopy($order,$copy);
         $this->makeServicesCopy($order,$copy);
+        return $copy;
+    }
+    
+    private function makePreAlertCopy(Order $order)
+    {
+        $copy = $order->replicate();
+        $copy->order_date = Carbon::now();
+        $copy->save();
+
         return $copy;
     }
 
