@@ -127,7 +127,6 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('order-trackings', TrackingReportController::class)->only(['index','store']);
             Route::resource('order', OrderReportController::class)->only(['index','create']);
 
-            Route::get('/user-shipments/{sort?}', [\App\Http\Controllers\Admin\Reports\ShipmentPerUserReportController::class,'index'])->name('sortBy');
         });
 
         Route::namespace('Affiliate')->as('affiliate.')->prefix('affiliate')->group(function(){
