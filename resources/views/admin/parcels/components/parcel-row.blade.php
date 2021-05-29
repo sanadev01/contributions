@@ -85,6 +85,12 @@
                             <i class="feather icon-edit"></i> @lang('parcel.Edit Parcel')
                         </a>
                     @endcan
+                    
+                    @can('duplicatePreAlert',  $parcel)
+                        <a href="{{ route('admin.parcel.duplicate',$parcel) }}" class="dropdown-item btn" title="@lang('parcel.Edit Parcel')">
+                            <i class="feather icon-edit"></i> @lang('parcel.Duplicate Parcel')
+                        </a>
+                    @endcan
 
                     @if ( auth()->user()->can('updateConsolidation',$parcel) && $parcel->isConsolidated())
                         <a href="{{ route('admin.consolidation.parcels.edit',$parcel) }}" class="dropdown-item btn" title="@lang('consolidation.Edit Consolidation')">

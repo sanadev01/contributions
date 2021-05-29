@@ -13,7 +13,9 @@ class UserShipmentReportTable extends Component
 
     public $pageSize = 50;
     
-    public $user;
+    public $name;
+    public $pobox_number;
+    public $email;
     public $start_date;
     public $end_date;
 
@@ -47,7 +49,9 @@ class UserShipmentReportTable extends Component
     public function getRequestData()
     {
         return request()->merge([
-            'user' => $this->user,
+            'name' => $this->name,
+            'pobox_number' => $this->pobox_number,
+            'email' => $this->email,
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,
             'sort_by' => $this->sortBy, 

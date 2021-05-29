@@ -46,6 +46,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
 
         Route::get('dashboard', 'HomeController')->name('home');
         Route::resource('parcels', PreAlertController::class);
+        Route::get('parcel/{order}/duplicate',DuplicatePreAlertController::class)->name('parcel.duplicate');
         Route::resource('billing-information', BillingInformationController::class);
         // Route::resource('import-excel', ImportExcelController::class)->only(['index','store']);
 
@@ -127,7 +128,6 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('order-trackings', TrackingReportController::class)->only(['index','store']);
             Route::resource('order', OrderReportController::class)->only(['index','create']);
 
-            Route::get('/user-shipments/{sort?}', [\App\Http\Controllers\Admin\Reports\ShipmentPerUserReportController::class,'index'])->name('sortBy');
         });
 
         Route::namespace('Affiliate')->as('affiliate.')->prefix('affiliate')->group(function(){
