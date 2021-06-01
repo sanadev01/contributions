@@ -33,6 +33,16 @@ class ContainerPackageRepository extends AbstractRepository{
 
     public function addOrderToContainer(Container $container,string $barcode)
     {
+        // $serviceCode = ;
+        if($container->services_subclass_code  != substr($barcode,0,2)){
+            return [
+                'order' => [
+                    'corrios_tracking_code' => $barcode,
+                    'error' => 'Order Not Found. Please Check Packet Service',
+                    'code' => 404
+                ],
+            ];
+        }
         $order = Order::where('corrios_tracking_code',strtoupper($barcode))->first();
         if ( !$order ){
             return [

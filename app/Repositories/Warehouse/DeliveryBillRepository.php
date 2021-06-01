@@ -36,6 +36,26 @@ class DeliveryBillRepository extends AbstractRepository
     public function store(Request $request)
     {
         try {
+
+            $isNX = false;
+            $isIX = false;
+            $isXP = false;
+            foreach($request->get('container',[]) as $containerId){
+                $container = Container::find($containerId)->services_subclass_code;
+                if($container  == "NX"){
+                    $isNX = true;
+                }
+                if($container  == "IX"){
+                    $isIX = true;
+                }
+                if($container  == "XP"){
+                    $isXP = true;
+                }
+            }
+            if( ($isNX === true && $isIX === true) || ($isNX === true && $isXP === true) || ($isIX === true && $isXP === true)){
+                throw new \Exception("Please don't use diffirent type of Container in one Delivery Bill",500);
+            }
+
             $deliveryBill = DeliveryBill::create([
                 'name' => 'Delivery BillL: '.Carbon::now()->format('m-d-Y'),
             ]);
