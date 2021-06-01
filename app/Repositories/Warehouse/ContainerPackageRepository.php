@@ -33,7 +33,6 @@ class ContainerPackageRepository extends AbstractRepository{
 
     public function addOrderToContainer(Container $container,string $barcode)
     {
-        // $serviceCode = ;
         if($container->services_subclass_code  != substr($barcode,0,2)){
             return [
                 'order' => [
