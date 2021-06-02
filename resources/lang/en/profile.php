@@ -4,6 +4,7 @@ return [
     'Edit Profile' => 'Edit Profile',
     'First Name' => 'First Name',
     'Last Name' => 'Last Name',
+    'Email' => 'Email',
     'Phone' => 'Phone',
     '* (Format International)' => '* (Format International)',
     'Password' => 'Password',
