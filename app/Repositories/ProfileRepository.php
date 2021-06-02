@@ -23,6 +23,7 @@ class ProfileRepository
                 'name' => $request->name,
                 'last_name' => $request->last_name,
                 'phone' => $request->phone,
+                'email' => $request->email,
                 'state_id' => $request->state_id,
                 'country_id' => $request->country_id,
                 'city' => $request->city,
