@@ -5,13 +5,15 @@ namespace App\Http\Controllers\Api\PublicApi;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Repositories\LabelRepository;
+// use App\Repositories\LabelRepository;
 use Illuminate\Support\Facades\Storage;
+use App\Repositories\CorrieosBrazilLabelRepository;
 
 class OrderLabelController extends Controller
 {
-    public function __invoke(Request $request, Order $order, LabelRepository $labelRepository)
+    public function __invoke(Request $request, Order $order, CorrieosBrazilLabelRepository $labelRepository)
     {
+        
         $this->authorize('canPrintLableViaApi',$order);
         
         if ( !$order->isPaid() &&  getBalance() < $order->gross_total){
