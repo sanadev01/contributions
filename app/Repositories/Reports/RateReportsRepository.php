@@ -39,8 +39,10 @@ class RateReportsRepository
             $originalWeightMax =  $profitPackageSlab['max_weight'];
             $originalWeight =  $profitPackageSlab['min_weight'];
             $profitValue =  $profitPackageSlab['value'];
-            $order->weight = UnitsConverter::gramsToKg($originalWeightMax);
-    
+            if($originalWeight < 100 ){
+                $originalWeight = 100;
+            }
+            $order->weight = UnitsConverter::gramsToKg($originalWeight);
             $shippingRates = collect();
             $shippingValue = collect();
             foreach (ShippingService::query()->active()->get() as $shippingService) {
@@ -54,7 +56,7 @@ class RateReportsRepository
             }
 
             $profitPackageSlabRates->push([
-                'weight' => $originalWeightMax,
+                'weight' => $originalWeight,
                 'profit'  => $profitValue,
                 'shipping'  => $shippingValue,
                 'rates'  => $shippingRates,
