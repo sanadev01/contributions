@@ -26,10 +26,10 @@
                     @enderror
                 </td>
                 @php
-                $weight = $slab['max_weight'];
-                // if($weight < 100 ){
-                //     $weight = 100;
-                // }
+                $weight = $slab['min_weight'];
+                if($weight < 100 ){
+                    $weight = 100;
+                }
                     $cost = $this->getSaleRate($this->profitPackage, $weight, false);
                 @endphp
                 <td>
