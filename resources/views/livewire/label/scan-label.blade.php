@@ -9,7 +9,7 @@
     <div class="col-12 row mb-5">
         <div class="form-group row col-5">
             <label class="col-2 text-right"> @lang('orders.print-label.Scan Package')</label>
-            <input type="text" @if (count($packagesRows) == 10) readonly @endif class="form-control col-8" wire:model.debounce.500ms="tracking">
+            <input type="text" @if (count($packagesRows) == 50) readonly @endif class="form-control col-8" wire:model.debounce.500ms="tracking">
             <span class="text-danger offset-2"> @lang('orders.print-label.Scan Package Message') {{ count($packagesRows)}} / 10</span>
         </div>
         
@@ -93,7 +93,7 @@
         </tr> --}}
     </table>
     
-    @if (count($packagesRows) == 10)
+    @if (count($packagesRows) == 50)
       <!-- Modal -->
         <div class="modal fade show d-block" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
             <div class="modal-dialog" role="document">
