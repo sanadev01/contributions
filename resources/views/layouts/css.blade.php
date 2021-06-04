@@ -108,22 +108,35 @@
     .min-vh-100{
         min-height: 100vh !important
     }
-
-    #main-menu-navigation {
-        height:500px; 
-        overflow-y: scroll;
-    }
     
-    @media only screen and (min-width: 600px) {
-    #main-menu-navigation {
-            height:900px; 
+    /* Extra small devices (phones, 600px and down) */
+    @media only screen and (max-width: 600px) {
+        #main-menu-navigation {
+            height:500px; 
             overflow-y: scroll;
         }
     }
 
-    @media only screen and (max-width: 1326px) {
+   /* Small devices (portrait tablets and large phones, 600px and up) */
+    @media only screen and (min-width: 600px) {
         #main-menu-navigation {
             height:500px; 
+            overflow-y: scroll;
+        }
+    }
+
+    /* Medium devices (landscape tablets, 768px and up) */
+    @media only screen and (min-width: 768px) {
+        #main-menu-navigation {
+            height:530px; 
+            overflow-y: scroll;
+        }
+    }
+
+    /* Extra large devices (large laptops and desktops, 1200px and up) */
+    @media only screen and (min-width: 1200px) {
+        #main-menu-navigation {
+            height:752px; 
             overflow-y: scroll;
         }
     }
