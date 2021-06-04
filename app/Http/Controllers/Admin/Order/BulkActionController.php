@@ -12,6 +12,7 @@ class BulkActionController extends Controller
     public function __invoke(Request $request, OrderRepository $orderRepository)
     {
         $orderIds = json_decode($request->get('data'),true);
+        
         $orders = $orderRepository->getOrderByIds($orderIds);
         
         return view('admin.orders.label.bulk-print',compact('orders'));
