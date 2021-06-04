@@ -3,8 +3,9 @@
 namespace App\Http\Requests\Orders\Recipient;
 
 use App\Models\Country;
-use App\Rules\PhoneNumberValidator;
 use App\Rules\ZipCodeValidator;
+use App\Rules\PhoneNumberValidator;
+use App\Rules\CorreosStreetValidator;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateRequest extends FormRequest

@@ -294,7 +294,7 @@ return [
     'print-label' => [
         'Scan Packages' => 'Scan Packages',
         'Scan Package' => 'Scan Package',
-        'Scan Package Message' => 'A impressão de etiquetas em massa está limitada apenas a 10 etiquetas de uma vez, Remanescente:',
+        'Scan Package Message' => 'A impressão de etiquetas em massa está limitada apenas a 50 etiquetas de uma vez, Remanescente:',
         'Barcode' => 'Código de barras',
         'Client' => 'Cliente',
         'Dimensions' => 'Dimensões',

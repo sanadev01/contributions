@@ -56,12 +56,16 @@ class PrintLabelController extends Controller
 
                 foreach($request->order as $orderId){
                     $order = Order::find($orderId);
-                    $labelData = $labelRepository->get($order);
-                
-                    if ( $labelData ){
-                        Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
-                    }
                     $relativeNameInZipFile = storage_path("app/labels/{$order->corrios_tracking_code}.pdf");
+                    if(!file_exists($relativeNameInZipFile)){
+                        $labelData = $labelRepository->get($order);
+                    
+                        if ( $labelData ){
+                            Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
+                        }
+                        $relativeNameInZipFile = storage_path("app/labels/{$order->corrios_tracking_code}.pdf");
+                    }
+                    
                     if (! $zip->addFile($relativeNameInZipFile, basename($relativeNameInZipFile))) {
                         echo 'Could not add file to ZIP: ' . $relativeNameInZipFile;
                     }
