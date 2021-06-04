@@ -57,6 +57,13 @@
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">@lang('profile.Email') <span class="text-danger">*</span></label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" name="email" value="{{ old('email',auth()->user()->email) }}" placeholder="user@user.com">
+                                        <div class="help-block"></div>
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('profile.Password')<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
                                         <input type="password" class="form-control" name="password" placeholder="">

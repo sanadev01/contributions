@@ -49,12 +49,25 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     public function getServiceSubClass()
     {
-        return $this->services_subclass_code == 'NX' ? 'Packet Standard service' : 'Packet Express service';
+        if($this->services_subclass_code == 'NX'){
+            return  'Packet Standard service';
+        }elseif($this->services_subclass_code == 'IX'){
+            return 'Packet Express service';
+        }else{
+            return 'Packet Mini service';
+        }
     }
 
     public function getServiceCode()
     {
-        return $this->services_subclass_code == 'NX' ? 2 : 1;
+        if($this->services_subclass_code == 'NX'){
+            return  2;
+        }elseif($this->services_subclass_code == 'IX'){
+            return 1;
+        }else{
+            return 3;
+        }
+        // return $this->services_subclass_code == 'NX' ? 2 : 1;
     }
 
     public function getDestinationAriport()

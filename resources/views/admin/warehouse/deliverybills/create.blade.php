@@ -20,6 +20,7 @@
                                         </th>
                                         <th>Dispatch Code</th>
                                         <th>Seal #</th>
+                                        <th>Distribution Service Class</th>
                                         <th>Weight/Pieces</th>
                                     </tr>
 
@@ -33,6 +34,9 @@
                                             </td>
                                             <td>
                                                 {{ $container->seal_no }}
+                                            </td>
+                                            <td>
+                                                {{ $container->getServiceSubClass() }}
                                             </td>
                                             <td>
                                                 {{ $container->getWeight() }} KG / {{  $container->getPiecesCount() }}
