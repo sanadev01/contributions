@@ -36,7 +36,7 @@ class CorreosStreetValidator implements Rule
         {
             $correios = new Client;
             $response = $correios->zipcode()->find($value);
-            
+            // dd($response);
             $this->correos_api_street = optional($response)['street'];
             
             if($this->street_no != $this->correos_api_street)
@@ -46,7 +46,7 @@ class CorreosStreetValidator implements Rule
                 return true;
             }
         } 
-
+        
         return true;
        
         
