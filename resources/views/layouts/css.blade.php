@@ -116,7 +116,7 @@
     
     @media only screen and (min-width: 600px) {
     #main-menu-navigation {
-            height:630px; 
+            height:900px; 
             overflow-y: scroll;
         }
     }
