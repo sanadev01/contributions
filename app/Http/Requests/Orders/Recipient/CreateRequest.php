@@ -5,7 +5,7 @@ namespace App\Http\Requests\Orders\Recipient;
 use App\Models\Country;
 use App\Rules\ZipCodeValidator;
 use App\Rules\PhoneNumberValidator;
-use App\Rules\CorreosStreetValidator;
+use App\Rules\CorreosAddresstValidator;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateRequest extends FormRequest
@@ -40,7 +40,7 @@ class CreateRequest extends FormRequest
             ],
             'state_id' => 'required|exists:states,id',
             'zipcode' => [
-                'required', new ZipCodeValidator($this->country_id,$this->state_id)
+                'required',  new CorreosAddresstValidator($this->country_id,$this->address), new ZipCodeValidator($this->country_id,$this->state_id)
             ]
         ];
 
