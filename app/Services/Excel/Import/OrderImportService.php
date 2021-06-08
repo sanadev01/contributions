@@ -113,6 +113,7 @@ class OrderImportService extends AbstractImportService
                     "sender_last_name" => $this->getValue("K{$row}"),
                     "sender_email" => $this->getValue("L{$row}"),
                     "sender_phone" => $this->getValue("M{$row}"),
+                    "correios_tracking_code" => $this->getValue("AG{$row}"),
 
 
 

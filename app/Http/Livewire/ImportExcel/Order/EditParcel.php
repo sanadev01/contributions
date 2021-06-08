@@ -17,6 +17,7 @@ class EditParcel extends Component
     public $carrier;
     public $tracking_id;
     public $customer_reference;
+    public $correios_tracking_code;
     public $order_date;
     public $whr_number;
     public $weight;
@@ -51,6 +52,7 @@ class EditParcel extends Component
             'carrier' => 'required',
             'tracking_id' => 'required',
             'customer_reference' => 'nullable',
+            'correios_tracking_code' => 'nullable',
             'order_date' => 'required',
             'weight' => 'required',
             'unit' => 'required',
@@ -63,6 +65,7 @@ class EditParcel extends Component
             'carrier.required' => 'carrier is required',
             'tracking_id.required' => 'tracking id is required',
             'customer_reference.nullable' => 'customer reference is required',
+            'correios_tracking_code.nullable' => 'correios tracking code required',
             'measurement_unit.required' => 'measurement unit is required',
             'weight.required' => 'weight is required',
             'length.required' => 'length is required',
@@ -89,6 +92,7 @@ class EditParcel extends Component
             'length' => $data['length'],
             'width' => $data['width'],
             'height' => $data['height'],
+            'correios_tracking_code' => optional($data)['correios_tracking_code'],
             'error' => $error,
         ]);
     }
@@ -124,6 +128,7 @@ class EditParcel extends Component
         $this->carrier = optional($this->order)->carrier;
         $this->tracking_id = optional($this->order)->tracking_id;
         $this->customer_reference = optional($this->order)->customer_reference;
+        $this->correios_tracking_code = optional($this->order)->correios_tracking_code;
         $this->order_date = optional($this->order)->order_date;
         $this->whr_number = optional($this->order)->whr_number;
         $this->weight = old('weight', isset($this->order->weight) ? $this->order->weight : 0 );

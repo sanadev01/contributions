@@ -61,6 +61,12 @@ class DeliveryBillRepository extends AbstractRepository
             ]);
 
             $deliveryBill->containers()->sync($request->get('container',[]));
+            
+            foreach($deliveryBill->containers()->get() as $containers){
+                $containers->orders()->update([
+                    'status' =>  80,
+                ]);
+            }
 
             return $deliveryBill;
         }catch (\Exception $exception){
@@ -73,8 +79,32 @@ class DeliveryBillRepository extends AbstractRepository
     {
         try {
 
-            $deliveryBill->containers()->sync($request->get('container',[]));
+            $isNX = false;
+            $isIX = false;
+            $isXP = false;
+            foreach($request->get('container',[]) as $containerId){
+                $container = Container::find($containerId)->services_subclass_code;
+                if($container  == "NX"){
+                    $isNX = true;
+                }
+                if($container  == "IX"){
+                    $isIX = true;
+                }
+                if($container  == "XP"){
+                    $isXP = true;
+                }
+            }
+            if( ($isNX === true && $isIX === true) || ($isNX === true && $isXP === true) || ($isIX === true && $isXP === true)){
+                throw new \Exception("Please don't use diffirent type of Container in one Delivery Bill",500);
+            }
 
+            $deliveryBill->containers()->sync($request->get('container',[]));
+            
+            foreach($deliveryBill->containers()->get() as $containers){
+                $containers->orders()->update([
+                    'status' =>  80,
+                ]);
+            }
             return $deliveryBill;
         }catch (\Exception $exception){
             $this->error = $exception->getMessage();
