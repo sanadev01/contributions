@@ -60,4 +60,5 @@ return [
     'Error Parcel Update' => 'Atualização do pacote de erro',
     'Parcel Added' => 'Parcela Adicionada',
     'Error Parcel Create' => 'erroAoCriarPacote',
+    'correios tracking code' => 'Código de Rastreamento dos Correios',
 ];

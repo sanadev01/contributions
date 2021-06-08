@@ -76,6 +76,16 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="form-group col-12 col-sm-6 col-md-4">
+                    <div class="controls">
+                        <label>@lang('parcel.correios tracking code')<span class="text-danger"></span></label>
+                        <input type="text" class="form-control" placeholder=""  name="correios_tracking_code" wire:model.defer.500ms="correios_tracking_code">
+                        @error('customer_reference')
+                            <div class="help-block text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
                 
             </div>
 
