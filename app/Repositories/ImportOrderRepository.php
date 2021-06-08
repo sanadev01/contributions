@@ -184,6 +184,7 @@ class ImportOrderRepository
             "sender_last_name" => $importedOrder->sender_last_name,
             "sender_email" => $importedOrder->sender_email,
             "sender_phone" => $importedOrder->sender_phone,
+            "user_declared_freight" => $importedOrder->user_declared_freight,
 
         ]);
 
