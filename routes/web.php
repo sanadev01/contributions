@@ -56,7 +56,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
 
         Route::namespace('Import')->prefix('import')->as('import.')->group(function () {
             Route::resource('import-excel', ImportExcelController::class)->only(['index','create','store','show','destroy']);
-            Route::resource('import-order', ImportOrderController::class)->only(['index','store', 'edit','destroy']);
+            Route::resource('import-order', ImportOrderController::class)->only(['index','store','show', 'edit','destroy']);
         });
 
         Route::resource('orders',OrderController::class)->only('index','destroy', 'show');
