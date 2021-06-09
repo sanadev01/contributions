@@ -46,9 +46,11 @@ class ImportOrderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id,ImportOrderRepository $repository)
     {
-        //
+        $repository->storeOrderAll($id);
+        session()->flash('alert-success','All Order Moved successfully');
+        return back();
     }
 
     /**

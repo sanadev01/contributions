@@ -139,6 +139,8 @@ return [
         'Download the Homedelivery'=> "Baixe o arquivo de amostra Homedelivery",
         'Download the Shopify'=> "Baixe o arquivo de amostra do Shopify",
         'Download the XML'=> "Baixe o arquivo de amostra XML",
+        'Move All'=> "Mover todos os pedidos",
+
     ],
     'actions' => [
         'actions' => 'Ações',
