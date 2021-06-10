@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Api\Order;
 
-use App\Http\Controllers\Controller;
-use App\Models\Address;
 use App\Models\Order;
+use App\Models\Address;
 use Illuminate\Http\Request;
+use FlyingLuscas\Correios\Client;
+use App\Http\Controllers\Controller;
 
 class RecipientController extends Controller
 {
@@ -16,7 +17,7 @@ class RecipientController extends Controller
      * @param  \App\Models\Address  $address
      * @return \Illuminate\Http\Response
      */
-    public function __invoke(Request $request)
+    public function update(Request $request)
     {
         $address = Address::find($request->address_id);
         if ( !$address ){
@@ -68,5 +69,16 @@ class RecipientController extends Controller
         ]);
 
         return apiResponse(true,'Address Updated');
+    }
+
+    public function zipcode(Request $request)
+    {
+        $correios = new Client;
+        $response = $correios->zipcode()->find($request->zipcode);
+        
+        if(optional($response)['error']){
+            return apiResponse(false,'zip code not found / CEP não encontrado');
+        }
+        return apiResponse(true,'Zipcode success',$response);
     }
 }

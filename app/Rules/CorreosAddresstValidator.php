@@ -39,7 +39,7 @@ class CorreosAddresstValidator implements Rule
              
              $this->correos_api_street_address = optional($response)['street'];
              
-             if($this->address != $this->correos_api_street_address)
+             if(strtolower($this->address) != strtolower($this->correos_api_street_address))
              {
                  return false;
              } else {
