@@ -19,7 +19,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
-Route::post('orders/recipient/update', Api\Order\RecipientController::class)->name('api.orders.recipient.update');
+Route::post('orders/recipient/update', [App\Http\Controllers\Api\Order\RecipientController::class, 'update'])->name('api.orders.recipient.update');
+Route::get('orders/recipient/zipcode', [App\Http\Controllers\Api\Order\RecipientController::class, 'zipcode'])->name('api.orders.recipient.zipcode');
 
 Route::post('order/update/status',Api\OrderStatusController::class)->name('api.order.status.update');
 
