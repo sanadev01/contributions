@@ -1,6 +1,9 @@
 @extends('admin.orders.layouts.wizard')
 @section('wizard-css')
 <link rel="stylesheet" href="{{ asset('app-assets/select/css/bootstrap-select.min.css') }}">
+<style>
+    p{margin-bottom: 0px;}
+</style>
 @endsection
 @section('wizard-form')
 <div class="card-body">
@@ -82,7 +85,7 @@
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
                         <label>@lang('address.Address') <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="address" value="{{old('address',optional($order->recipient)->address)}}" required placeholder="@lang('address.Address')"/>
+                        <input type="text" class="form-control" id="address" name="address" value="{{old('address',optional($order->recipient)->address)}}" required placeholder="@lang('address.Address')"/>
                         <div class="help-block"></div>
                     </div>
                 </div>
@@ -129,7 +132,7 @@
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
                         <label>@lang('address.City') <span class="text-danger">*</span></label>
-                        <input type="text" name="city" value="{{old('city',optional($order->recipient)->city)}}" class="form-control"  required placeholder="City"/>
+                        <input type="text" id="city" name="city" value="{{old('city',optional($order->recipient)->city)}}" class="form-control"  required placeholder="City"/>
                         <div class="help-block"></div>
                     </div>
                 </div>
@@ -137,7 +140,7 @@
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
                         <label>@lang('address.Zip Code')</label>
-                        <input type="text" name="zipcode" value="{{ cleanString(old('zipcode',optional($order->recipient)->zipcode)) }}" required class="form-control" placeholder="Zip Code"/>
+                        <input type="text" name="zipcode"  id="zipcode" value="{{ cleanString(old('zipcode',optional($order->recipient)->zipcode)) }}" required class="form-control" placeholder="Zip Code"/>
                         <div class="help-block"></div>
                     </div>
                 </div>
@@ -148,6 +151,13 @@
                             <label id="cpf_label_id" style="{{ optional($order->recipient)->account_type == 'individual' ? 'display:block' : 'display:none' }}" >@lang('address.CPF') <span class="text-danger">* (Brazil Only)</span> </label>
                         <input type="text" name="tax_id" id="tax_id" value="{{old('tax_id',optional($order->recipient)->tax_id)}}" required class="form-control" placeholder="CNPJ"/>
                         <div class="help-block"></div>
+                    </div>
+                </div>
+                
+                <div class="form-group col-12 offset-4">
+                    <div class="controls">
+                        <div class="help-block" id="zipcode_response">
+                        </div>
                     </div>
                 </div>
 
@@ -216,6 +226,28 @@
                 window.location.reload();
             }else{
                 $('#loading').fadeOut();
+                toastr.error(response.message)
+            }
+
+        }).catch(function(error){
+            $('#loading').fadeOut();
+        })
+    })
+    
+    $('#zipcode').on("change", function(){
+        if ( $(this).val() == undefined || $(this).val() == "" ) return;
+        $('#loading').fadeIn();
+        $.get('{{ route("api.orders.recipient.zipcode") }}',{
+            zipcode: $(this).val(),
+        })
+        .then(function(response){
+            console.log(response.data);
+            if ( response.success ){
+                $('#loading').fadeOut();
+                $('#zipcode_response').empty().append("<p><b>According to your zipcode, your address should be this</b></p><p><span style='color: red;'>Address: </span><span>"+response.data.street+"</span></p><p><span style='color: red;'>City: </span><span>"+response.data.city+"</span></p><p><span style='color: red;'>State: </span><span>"+response.data.uf+"</span></p>");
+            }else{
+                $('#loading').fadeOut();
+                $('#zipcode_response').empty().append("<p style='color: red;'>"+response.message+"</p>");
                 toastr.error(response.message)
             }
 

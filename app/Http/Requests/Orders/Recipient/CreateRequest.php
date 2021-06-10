@@ -40,9 +40,9 @@ class CreateRequest extends FormRequest
             ],
             'state_id' => 'required|exists:states,id',
             'zipcode' => [
-                // 'required', new ZipCodeValidator($this->country_id,$this->state_id)
+                'required', new ZipCodeValidator($this->country_id,$this->state_id)
 
-                'required',  new CorreosAddresstValidator($this->country_id,$this->address), new ZipCodeValidator($this->country_id,$this->state_id)
+                // 'required',  new CorreosAddresstValidator($this->country_id,$this->address), new ZipCodeValidator($this->country_id,$this->state_id)
             ]
         ];
 
