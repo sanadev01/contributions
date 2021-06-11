@@ -28,6 +28,9 @@ class AccrualRate extends Model
 
     public static function getRateSlabFor($weight): AccrualRate
     {
+        if($weight < 0.1){
+            $weight = 0.1;
+        }
         $weightToGrams = UnitsConverter::kgToGrams($weight);
 
         return self::where('weight','<=',$weightToGrams)->orderBy('id','DESC')->take(1)->first();
