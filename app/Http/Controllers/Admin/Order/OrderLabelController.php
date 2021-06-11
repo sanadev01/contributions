@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\Admin\Order;
 
-use App\Http\Controllers\Controller;
 use App\Models\Order;
-use App\Models\ShippingService;
-use App\Repositories\CorrieosBrazilLabelRepository;
-use App\Repositories\LabelRepository;
 use Illuminate\Http\Request;
+use App\Models\ShippingService;
+use App\Facades\CorreosChileFacade;
+use App\Http\Controllers\Controller;
+use App\Repositories\LabelRepository;
 use Illuminate\Support\Facades\Storage;
+use App\Repositories\CorrieosChileLabelRepository;
+use App\Repositories\CorrieosBrazilLabelRepository;
 
 class OrderLabelController extends Controller
 {
@@ -47,9 +49,32 @@ class OrderLabelController extends Controller
         return view('admin.orders.label.label',compact('order','error','buttonsOnly'));
     }
 
+   
+
     public function handleCorreiosLabels(Request $request, Order $order)
     {
         $error = null;
+
+        $chile_labelRepository = new CorrieosChileLabelRepository();
+
+        // Check conditions for type of label and if label has already been generated or not
+        if($order->shipping_service_name == 'Correos Chile SRP' && $order->chile_response == null)
+        {
+            // This executes when to generate SRP label 
+            $order = $chile_labelRepository->generat_ChileSRPLabel($order);
+            
+
+        } elseif ($order->shipping_service_name == 'Correos Chile SRM' &&  $order->chile_response == null)
+        {
+            // This executes when to generate SRM label 
+           $order = $chile_labelRepository->generat_ChileSRMLabel($order);
+
+        } elseif($order->chile_response != null)
+        {
+            //  This executes when label has already been generated
+            return $chile_labelRepository->showChileLabel($order);
+
+        } 
 
         $labelRepository = new CorrieosBrazilLabelRepository();
 
@@ -65,4 +90,5 @@ class OrderLabelController extends Controller
         $buttonsOnly = $request->has('buttons_only');
         return view('admin.orders.label.label',compact('order','error','buttonsOnly'));
     }
+    
 }
