@@ -6,6 +6,12 @@
     </a>
     <ul class="menu-content">
 
+        <li class="{{ $isActive(['warehouse.search.package']) }}">
+            <a href="{{ route('warehouse.search.package') }}">
+                <i class="feather icon-circle"></i>
+                <span class="menu-title">Search packages</span>
+            </a>
+        </li>
         <li class="{{ $isActive(['warehouse.containers.index','warehouse.containers.create','warehouse.containers.edit','warehouse.containers.packages.index']) }}">
             <a href="{{ route('warehouse.containers.index') }}">
                 <i class="feather icon-circle"></i>
