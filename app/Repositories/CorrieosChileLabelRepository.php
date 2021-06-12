@@ -23,12 +23,14 @@ class CorrieosChileLabelRepository
             //storing response in orders table
             $order->update([
                 'chile_response' => json_encode($response->data),
+                'corrios_tracking_code' => $response->data->NumeroEnvio,
             ]);
             
             $this->printLabel($order);
         } else {
-            $this->chile_errors = explode("\n", $response->message);
-            $this->getChileErrors();
+            
+            $this->chile_errors =  $response->message;
+            return null;
         }
     }
 
@@ -43,17 +45,18 @@ class CorrieosChileLabelRepository
             //storing response in orders table
             $order->update([
                 'chile_response' => json_encode($response->data),
+                'corrios_tracking_code' => $response->data->NumeroEnvio,
             ]);
             $this->printLabel($order);
         } else {
-            $this->chile_errors = explode("\n", $response->message);
-            $this->getChileErrors();
+            
+            $this->chile_errors =  $response->message;
+            return null;
         }
     }
 
     public function getChileErrors()
-    {
-        
+    {   
         return $this->chile_errors;
     }
 
@@ -61,14 +64,6 @@ class CorrieosChileLabelRepository
     {
         $labelPrinter = new CorreosChileLabelMaker();
         $labelPrinter->setOrder($order);
-        return $labelPrinter->saveAs(storage_path("app/labels/testing.pdf"));
-    }
-
-    public function showChileLabel($order)
-    {
-        $labelPrinter = new CorreosChileLabelMaker();
-        $labelPrinter->setOrder($order);
-        
-        return $labelPrinter->render();
+        $labelPrinter->saveLabel();
     }
 }

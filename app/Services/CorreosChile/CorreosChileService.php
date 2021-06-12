@@ -50,7 +50,7 @@ class CorreosChileService
             'NombreDestinatario' => $order->recipient->first_name.' '.$order->recipient->last_name, //Recipient Full Name
             'DireccionDestinatario' => $order->recipient->street_no.' '.$order->recipient->address,           //Recipient Address (street + number + complement address)
             'PaisDestinatario' => '056',                            //Destination Country (Default "056")
-            // 'CodigoPostalDestinatario' => '',                    //Recipient Postal Code
+            // 'CodigoPostalDestinatario' => '',                    //Recipient Postal Code e.g 8340604
             'ComunaDestinatario' => $order->recipient->city,        //Recipient area/devision/city
             'RutDestinatario' => '',                                //optional
             'PersonaContactoDestinatario' => $order->recipient->first_name,    //Recipient Person

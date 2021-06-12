@@ -3,6 +3,7 @@ namespace App\Services\CorreosChile;
 
 use App\Models\Order;
 use Barryvdh\DomPDF\PDF;
+use Illuminate\Support\Facades\Storage;
 use Picqer\Barcode\BarcodeGeneratorPNG;
 
 
@@ -16,34 +17,20 @@ class CorreosChileLabelMaker
         $this->order = $order;
     }
 
-    public function saveAs($path)
-    {
-        if ( !file_exists(dirname($path)) ){
-            mkdir(dirname($path),0775,true);
-        }
-
-        $chile_response = json_decode($this->order->chile_response);
-        $description = $this->itemsDescription( $this->order->items);
-
-        return \PDF::loadView('labels.chile.index')->with([
-            'order' => $this->order,
-            'chile_response' => $chile_response,
-            'description' => $description,
-        ])->save($path);
-    }
-
-    public function render()
+    public function saveLabel()
     {
         $chile_response = json_decode($this->order->chile_response);
         $description = $this->itemsDescription( $this->order->items);
         
-        return view('labels.chile.index')->with([
-            'order' => $this->order,
-            'chile_response' => $chile_response,
-            'description' => $description,
-        ]);
-       
+         $pdf = \PDF::loadView('labels.chile.index', [
+             'order' => $this->order,
+             'chile_response' => $chile_response,
+             'description' => $description,
+         ]);
+        
+        Storage::put("labels/{$chile_response->NumeroEnvio}.pdf", $pdf->output());
     }
+    
     public function getViewData()
     {
         $chile_response = json_decode($this->order->chile_response);
