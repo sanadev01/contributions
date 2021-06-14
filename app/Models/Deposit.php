@@ -46,7 +46,7 @@ class Deposit extends Model
             'uuid' => PaymentInvoice::generateUUID('DP-'),
             'amount' => $amount,
             'user_id' => Auth::id(),
-            'balance' => self::getCurrentBalance() - $amount,
+            'balance' => Deposit::getCurrentBalance() - $amount,
             'is_credit' => false,
         ]);
 

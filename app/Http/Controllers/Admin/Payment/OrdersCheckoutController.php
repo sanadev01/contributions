@@ -39,12 +39,12 @@ class OrdersCheckoutController extends Controller
                 return back();
             }
             
-            // foreach($invoice->orders as $order){
-            //     if ( !$order->isPaid() &&  getBalance() >= $order->gross_total ){
-            //         chargeAmount($order->gross_total,$order);
-            //     }
-            // }
-            chargeAmount($invoice->total_amount);
+            foreach($invoice->orders as $order){
+                if ( !$order->isPaid() &&  getBalance() >= $order->gross_total ){
+                    chargeAmount($order->gross_total,$order);
+                }
+            }
+            // chargeAmount($invoice->total_amount);
             $invoice->update([
                 'is_paid' => true
             ]);
