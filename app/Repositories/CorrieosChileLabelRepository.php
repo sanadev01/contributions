@@ -65,5 +65,7 @@ class CorrieosChileLabelRepository
         $labelPrinter = new CorreosChileLabelMaker();
         $labelPrinter->setOrder($order);
         $labelPrinter->saveLabel();
+
+        return true;
     }
 }

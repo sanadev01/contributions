@@ -66,7 +66,7 @@ class OrderLabelController extends Controller
             $order->refresh();
             $error = $chile_labelRepository->getChileErrors();
 
-            return $this->renderChileLabel($request, $order, $error);
+            return $this->renderLabel($request, $order, $error);
             
 
         } elseif ($order->shipping_service_name == 'Correos Chile SRM' &&  $order->chile_response == null)
@@ -79,7 +79,7 @@ class OrderLabelController extends Controller
             
             return $this->renderLabel($request, $order, $error);
 
-        } elseif($order->chile_response != null)
+        } elseif($order->chile_response != null && $request->update_label === 'false')
         {
             //  This executes when label has already been generated
 
@@ -91,6 +91,25 @@ class OrderLabelController extends Controller
         $labelRepository = new CorrieosBrazilLabelRepository();
 
         if ( $request->update_label === 'true' ){
+            
+            if($order->shipping_service_name == 'Correos Chile SRP'){
+                // This executes when to generate SRP label 
+                $chile_labelRepository->generat_ChileSRPLabel($order);
+
+                $order->refresh();
+                $error = $chile_labelRepository->getChileErrors();
+
+                return $this->renderLabel($request, $order, $error);
+
+            } elseif ($order->shipping_service_name == 'Correos Chile SRM') {
+                // This executes when to generate SRM label 
+                $chile_labelRepository->generat_ChileSRMLabel($order);
+                
+                $order->refresh();
+                $error = $chile_labelRepository->getChileErrors();
+                
+                return $this->renderLabel($request, $order, $error);
+            }
             $labelRepository->update($order);
         }else{
             $labelRepository->get($order);

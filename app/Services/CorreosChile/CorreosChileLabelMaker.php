@@ -21,11 +21,13 @@ class CorreosChileLabelMaker
     {
         $chile_response = json_decode($this->order->chile_response);
         $description = $this->itemsDescription( $this->order->items);
-        
+        $date = \Carbon\Carbon::parse($this->order->updated_at)->format('d/m/Y H:i');
+
          $pdf = \PDF::loadView('labels.chile.index', [
              'order' => $this->order,
              'chile_response' => $chile_response,
              'description' => $description,
+             'date' => $date,
          ]);
         
         Storage::put("labels/{$chile_response->NumeroEnvio}.pdf", $pdf->output());
