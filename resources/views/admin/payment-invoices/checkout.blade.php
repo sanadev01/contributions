@@ -27,7 +27,7 @@
                                 
                                 
                                     <div class="controls row mb-1 align-items-center">
-                                        <label class="col-md-3 text-md-right" for="balance">Pay By HD Account<span class="text-danger"></span></label>
+                                        <label class="col-md-3 text-md-right" style="font-size: 18px;" for="balance">Pay From HD Account (USD: {{ getBalance() }})<span class="text-danger"></span></label>
                                         <div class="col-md-6">
                                             <div class="vs-checkbox-con vs-checkbox-primary" title="Pay By HD Account">
                                                 <input type="radio" name="pay" onclick="checkPay();" value="1" required class="col-md-1" id="balance">
@@ -41,7 +41,7 @@
                                         </div>
                                     </div>
                                     <div class="controls row mb-1 align-items-center">
-                                        <label class="col-md-3 text-md-right" for="card">Pay By Card<span class="text-danger"></span></label>
+                                        <label class="col-md-3 text-md-right" style="font-size: 18px;" for="card">Pay From Card<span class="text-danger"></span></label>
                                         <div class="col-md-6">
                                             <div class="vs-checkbox-con vs-checkbox-primary" title="Pay By Card">
                                                 <input type="radio" name="pay" onclick="checkPay();" value="0" required class="col-md-1" id="card">
@@ -55,9 +55,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div id="ifBalance" style="display:none">
+                                {{-- <div id="ifBalance" style="display:none">
                                     Your Current Balance is : {{ getBalance() }}
-                                </div>
+                                </div> --}}
                                 <div  id="ifCard" style="display:none">
                                     <div class="grid-wrapper w-100">
                                         @foreach (auth()->user()->billingInformations as $billingInfo)
@@ -162,14 +162,14 @@
         function checkPay() {
             
             if(document.getElementById('balance').checked){
-                document.getElementById('ifBalance').style.display = 'block';
+                // document.getElementById('ifBalance').style.display = 'block';
                 document.getElementById('ifCard').style.display = 'none';
                 $('form').attr('novalidate','novalidate');
             }
 
             if (document.getElementById('card').checked) {
                 document.getElementById('ifCard').style.display = 'block';
-                document.getElementById('ifBalance').style.display = 'none';
+                // document.getElementById('ifBalance').style.display = 'none';
                 $('.billingInfo-wrapper').fadeIn();
                 $('form').removeAttr('novalidate');
             }
