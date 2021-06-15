@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\PaymentInvoice;
 use PhpParser\Node\Stmt\Foreach_;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Repositories\OrderRepository;
 use App\Services\PaymentServices\AuthorizeNetService;
 
@@ -40,12 +41,11 @@ class OrdersCheckoutController extends Controller
             }
             
             foreach($invoice->orders as $order){
-                \Log::info(Deposit::getCurrentBalance());
                 if ( !$order->isPaid() &&  getBalance() >= $order->gross_total ){
                     chargeAmount($order->gross_total,$order);
                 }
             }
-            // chargeAmount($invoice->total_amount);
+
             $invoice->update([
                 'is_paid' => true
             ]);
