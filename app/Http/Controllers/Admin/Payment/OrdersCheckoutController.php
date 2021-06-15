@@ -40,6 +40,7 @@ class OrdersCheckoutController extends Controller
             }
             
             foreach($invoice->orders as $order){
+                \Log::info(Deposit::getCurrentBalance());
                 if ( !$order->isPaid() &&  getBalance() >= $order->gross_total ){
                     chargeAmount($order->gross_total,$order);
                 }
