@@ -28,6 +28,7 @@ class CorreosChileLabelMaker
              'chile_response' => $chile_response,
              'description' => $description,
              'date' => $date,
+             'barcodeNew' => new BarcodeGeneratorPNG(),
          ]);
         
         Storage::put("labels/{$chile_response->NumeroEnvio}.pdf", $pdf->output());
