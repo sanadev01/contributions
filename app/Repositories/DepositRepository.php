@@ -60,11 +60,11 @@ class DepositRepository
         }
 
         if ( $request->dateFrom ){
-            $query->where('created_at','>=',$request->dateFrom);
+            $query->where('created_at','>=',$request->dateFrom. ' 00:00:00');
         }
 
         if ( $request->dateTo ){
-            $query->where('created_at','<=',$request->dateTo);
+            $query->where('created_at','<=',$request->dateTo. ' 23:59:59');
         }
 
 
