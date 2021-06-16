@@ -6,6 +6,11 @@
             background-color: #5a0000!important;
             border-color: #5a0000!important;
         }
+       .btn-refund {
+            color: #fff!important;
+            background-color:red!important;
+            border-color: red!important;
+        }
     </style>
 @endsection
 @section('page')
