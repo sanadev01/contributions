@@ -1,6 +1,10 @@
 <?php
 
+use App\Models\Order;
+use App\Models\Deposit;
+use App\Models\PaymentInvoice;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Auth;
 
 class BalanceSeeder extends Seeder
 {
@@ -10,11 +14,6 @@ class BalanceSeeder extends Seeder
      * @return void
      */
     public function run()
-    {
-        
-    }
-    
-    public function orders()
     {
         $orders = [
             [
@@ -684,7 +683,37 @@ class BalanceSeeder extends Seeder
             ],
             
         ];
-    }
 
+        foreach($orders as $order ){
+            if(optional($order)['order_id']){
+
+                $findOrder = Order::find(optional($order)['order_id']);
+                if($findOrder){
+
+                
+                    $lastTransaction = Deposit::query()->where('user_id',$findOrder->user_id)->latest('id')->first();
+                    if ( !$lastTransaction ){
+                        $getCurrentBalance = 0;
+                    }
+                    $getCurrentBalance = $lastTransaction->balance;
+                    
+                    if($findOrder){
+                        $deposit = Deposit::create([
+                            'uuid' => PaymentInvoice::generateUUID('DP-'),
+                            'amount' => $order['amount'],
+                            'user_id' => $findOrder->user_id,
+                            'balance' => $getCurrentBalance - $order['amount'],
+                            'is_credit' => false,
+                        ]);
+                
+                        if ( $findOrder ){
+                            $findOrder->deposits()->sync($deposit->id);
+                        }
+                    }
+                }
+            }
+
+        }
+    }
     
 }
