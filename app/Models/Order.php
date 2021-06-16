@@ -41,6 +41,8 @@ class Order extends Model implements Package
     const STATUS_REJECTED = 38;
     const STATUS_RELEASE = 40;
 
+    const STATUS_REFUND = 50;
+
     const STATUS_PAYMENT_PENDING = 60;
     const STATUS_PAYMENT_DONE = 70;
     const STATUS_SHIPPED = 80;
@@ -143,6 +145,16 @@ class Order extends Model implements Package
     public function isNeedsProcessing()
     {
         return $this->status == self::STATUS_NEEDS_PROCESSING;
+    }
+    
+    public function isShipped()
+    {
+        return $this->status == self::STATUS_SHIPPED;
+    }
+    
+    public function isRefund()
+    {
+        return $this->status == self::STATUS_REFUND;
     }
 
     public function isArrivedAtWarehouse()
@@ -380,6 +392,10 @@ class Order extends Model implements Package
 
         if ( $this->status == Order::STATUS_SHIPPED ){
             $class = 'btn btn-sm bg-secondary text-white';
+        }
+        
+        if ( $this->status == Order::STATUS_REFUND ){
+            $class = 'btn btn-sm btn-refund text-white';
         }
 
         return $class;
