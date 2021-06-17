@@ -82,8 +82,10 @@ class OrderLabelController extends Controller
         } elseif($order->chile_response != null && $request->update_label === 'false')
         {
             //  This executes when label has already been generated
+            $chile_labelRepository->printLabel($order);
 
-            return $this->renderLabel($request, $order, $error);
+            $buttonsOnly = $request->has('buttons_only');
+            return view('admin.orders.label.label',compact('order','error' ,'buttonsOnly'));
 
         } 
         // End Correos Chile Label Logic

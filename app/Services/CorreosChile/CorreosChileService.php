@@ -26,7 +26,7 @@ class CorreosChileService
         $request_body = $this->make_body_attributes($order, $serviceType);
         
         $correos_chile_api_response = $this->AdmitShipment($request_body);
-
+        
         return $correos_chile_api_response;
     }
 
@@ -41,7 +41,7 @@ class CorreosChileService
             'DireccionRemitente' => $order->sender_address,      //Sender address
             'PaisRemitente' => '056',                           //Default “056” sender Country code(chile)    
             // 'CodigoPostalRemitente' => '',                   //Sender Postal Code
-            'ComunaRemitente' => $order->sender_city,           //Sender area/devision/city
+            'ComunaRemitente' => 'santiago',                    //Sender area/devision/city
             // 'RutRemitente' => '1-9',                            
             'PersonaContactoRemitente' => $order->sender_first_name,    //Sender Contact/person
             'TelefonoContactoRemitente' => $order->sender_phone,        //Sender Telephone
