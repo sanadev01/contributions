@@ -20,8 +20,8 @@
     </style>
 </head>
 <body style="margin-bottom: 0px !important;">
-    <div style="border: 0.8px solid black; margin: 0.07cm; border-right: 0.8px solid black;">
-      <table style="width:100%; height:7cm; border-width: none;" cellspacing="0" border="1" cellpadding="0">
+    <div >
+      <table style="width:100%; height:7cm;  margin: 0.07cm;" cellspacing="0" border="1" cellpadding="0">
         <tr style="height: 0.283cm; font-size: 9px !important;">
             <td rowspan="3">
                 <img src="{{ asset('images/chile-logo.png') }}" alt="" style="height: 0.85cm;">
@@ -129,36 +129,36 @@
             <td colspan="9" style="padding: 0px !important;">
                 <table cellspacing="0" cellpadding="0" style="margin: 0px !important;">
                     <tr>
-                        <td style="border-right: 1px solid; width: 58px; text-align: center;">
+                        <td style="border-right: 1px solid; height:0.2cm; width: 58px; text-align: center;">
                             <small style="font-size: 7px;">SDP</small>
                         </td>
-                        <td style="border-right: 1px solid; width: 150px; text-align: center;">
+                        <td style="border-right: 1px solid; height:0.2cm; width: 150px; text-align: center;">
                             <small style="font-size: 7px;">PLANTA DESTINO :</small>
                         </td>
-                        <td style="border-right: 1px solid; width: 70px; text-align: center;">
+                        <td style="border-right: 1px solid; height:0.2cm; width: 70px; text-align: center;">
                             <small style="font-size: 7px;">SUCURSAL :</small>
                         </td>
-                        <td style="border-right: 1px solid; width: 60px; text-align: center;">
+                        <td style="border-right: 1px solid; height:0.2cm; width: 60px; text-align: center;">
                             <small style="font-size: 5px;">CDP/CUARTEL</small>    
                         </td>
                     </tr>
                 </table>
             </td>
         </tr>
-        <tr>
+        <tr style="height: 0.6cm">
             <td colspan="9" style="padding: 0px !important;">
                 <table cellspacing="0" cellpadding="0" style="margin: 0px !important;">
                     <tr>
-                        <td style="border-right: 1px solid; width: 58px; text-align: center;">
+                        <td style="border-right: 1px solid; height:0.6cm; width: 58px; text-align: center;">
                             <small style="font-size: 7px;"></small>    
                         </td>
-                        <td style="border-right: 1px solid; width: 150px; text-align: center;">
+                        <td style="border-right: 1px solid; height:0.6cm; width: 150px; text-align: center;">
                             <small style="font-size: 7px;">{{$chile_response->NombreDelegacionDestino}}</small>
                         </td>
-                        <td style="border-right: 1px solid;  width: 70px; text-align: center;">
+                        <td style="border-right: 1px solid;  height:0.6cm; width: 70px; text-align: center;">
                             <small style="font-size: 7px;"></small>
                         </td>
-                        <td style="border-right: 1px solid; width: 60px; text-align: center;">
+                        <td style="border-right: 1px solid; height:0.6cm; width: 60px; text-align: center;">
                             <small style="font-size: 7px;"></small>
                         </td>
                     </tr>
@@ -166,6 +166,3 @@
             </td>
         </tr>
       </table>
-    </div> 
-</body>
-</html>
