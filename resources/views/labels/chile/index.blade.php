@@ -52,7 +52,7 @@
                 <small style="font-size: 3px;">{{$date}}</small><br />
                 <small style="font-size: 12px !important;">{{$chile_response->AbreviaturaServicio}}</small>
             </td>
-            <td colspan="8" style="height: 0.5px !important;"><small style="font-size: 7px;">Referencia : {{$order->customer_reference}}</small></td>
+            <td colspan="8" style="height: 0.5px !important; line-height: 2px !important;"><small style="font-size: 7px;">Referencia : {{$order->customer_reference}}</small></td>
         </tr>
         <tr style="height: 0.33cm !important; line-height: 5px !important;">
             <td colspan="6">
@@ -69,10 +69,10 @@
                 <img src="data:image/png;base64,{{ base64_encode($barcodeNew->getBarcode($order->corrios_tracking_code, $barcodeNew::TYPE_CODE_128, 1,94, [0,0,0]))}}" alt="barcode" style="height: 2.1cm !important; width: 6.5cm !important; margin: 0.4cm 1.4cm 0.4cm 1.3cm !important;"   />
             </td>
         </tr>
-        <tr style="height: 0.5cm !important;">
-            <td colspan="2" style="text-align: center; line-height: 10px;"><small style="font-size: 7px;">Encaminamiento</small><br /><small style="font-size: 7px;">{{$chile_response->CodigoEncaminamiento}}</small></td>
-            <td colspan="5"><small style="font-size: 7px;">N Envio :</small><br /> <small style="font-size: 7px; font-weight: bold;">{{$chile_response->NumeroEnvio}}</small></td>
-            <td colspan="2" style="text-align: center; font-size: 7px;"><small style="font-size: 7px;">Bulto(s)</small><br>001</td>
+        <tr style="line-height: 8px;">
+            <td colspan="1" style="text-align: center;"><small style="font-size: 7px;">Encaminamiento</small><br /><small style="font-size: 7px;">{{$chile_response->CodigoEncaminamiento}}</small></td>
+            <td colspan="6"><small style="font-size: 7px; display: block !important">N Envio :</small> <small style="font-size: 12px; font-weight: bold; padding-left: 33px;">{{$chile_response->NumeroEnvio}}</small></td>
+            <td colspan="2" style="text-align: center;"><small style="font-size: 7px;">Bulto(s)</small><br /><small style="font-size: 9px !important">001</small></td>
         </tr>
         <tr style="height: 1cm !important;">
             <td colspan="9">
@@ -125,7 +125,7 @@
                 </table>
             </td>
         </tr>
-        <tr style="height: 0.2cm !important">
+        <tr>
             <td colspan="9" style="padding: 0px !important;">
                 <table cellspacing="0" cellpadding="0" style="margin: 0px !important;">
                     <tr>
@@ -145,7 +145,7 @@
                 </table>
             </td>
         </tr>
-        <tr style="height: 0.6cm !important;">
+        <tr>
             <td colspan="9" style="padding: 0px !important;">
                 <table cellspacing="0" cellpadding="0" style="margin: 0px !important;">
                     <tr>
