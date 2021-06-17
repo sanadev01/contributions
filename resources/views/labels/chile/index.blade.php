@@ -47,16 +47,16 @@
                 <small style="margin-left: 2rem; font-size: 7px">Tel : {{$order->sender_phone}}</small>
             </td>
         </tr>
-        <tr style="height: 0.33cm !important; font-size: 9px !important;">
-            <td rowspan="2" style="text-align: center;">
-                <small style="font-size: 7px;">{{$date}}</small><br />
-                {{$chile_response->AbreviaturaServicio}}
+        <tr style="height: 0.33cm !important;">
+            <td rowspan="2" style="text-align: center; font-size: 6px !important;">
+                <small style="font-size: 3px;">{{$date}}</small><br />
+                <small style="font-size: 12px !important;">{{$chile_response->AbreviaturaServicio}}</small>
             </td>
             <td colspan="8" style="height: 0.5px !important;"><small style="font-size: 7px;">Referencia : {{$order->customer_reference}}</small></td>
         </tr>
-        <tr style="height: 0.33cm !important;">
-            <td colspan="6" style="height: 0.5px !important;">
-                <small style="font-size: 6px;">Description Del Production :</small><br>
+        <tr style="height: 0.33cm !important; line-height: 5px !important;">
+            <td colspan="6">
+                <small style="font-size: 5px; font-weight: bold !important">Description Del Production :</small><br>
                 <small style="font-size: 7px;">{{$description}}</small>
             </td>
             <td colspan="2" style="border-right: none;">
@@ -66,11 +66,11 @@
         </tr>
         <tr style="height: 3cm;">
             <td colspan="9">
-                <img src="data:image/png;base64,{{ base64_encode($barcodeNew->getBarcode($order->corrios_tracking_code, $barcodeNew::TYPE_CODE_128, 1,94, [0,0,0]))}}" alt="barcode" style="margin-left: 1.3cm; height: 2.1cm; width: 6.5cm; margin-right: 1.4cm; margin-top: 0.5cm; margin-bottom: 0.5cm;"   />
+                <img src="data:image/png;base64,{{ base64_encode($barcodeNew->getBarcode($order->corrios_tracking_code, $barcodeNew::TYPE_CODE_128, 1,94, [0,0,0]))}}" alt="barcode" style="height: 2.1cm !important; width: 6.5cm !important; margin: 0.4cm 1.4cm 0.4cm 1.3cm !important;"   />
             </td>
         </tr>
         <tr style="height: 0.5cm !important;">
-            <td colspan="2"><small style="font-size: 7px;">Encaminamiento</small><br /><small style="font-size: 7px;">{{$chile_response->CodigoEncaminamiento}}</small></td>
+            <td colspan="2" style="text-align: center; line-height: 10px;"><small style="font-size: 7px;">Encaminamiento</small><br /><small style="font-size: 7px;">{{$chile_response->CodigoEncaminamiento}}</small></td>
             <td colspan="5"><small style="font-size: 7px;">N Envio :</small><br /> <small style="font-size: 7px; font-weight: bold;">{{$chile_response->NumeroEnvio}}</small></td>
             <td colspan="2" style="text-align: center; font-size: 7px;"><small style="font-size: 7px;">Bulto(s)</small><br>001</td>
         </tr>
