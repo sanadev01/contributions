@@ -22,7 +22,7 @@
 <body style="margin-bottom: 0px !important;">
     <div >
       <table style="width:100%; height:7cm;  margin: 0.07cm;" cellspacing="0" border="1" cellpadding="0">
-        <tr style="height: 0.283cm; font-size: 9px !important;">
+        <tr style="height: 0.283cm; font-size: 7px !important;">
             <td rowspan="3">
                 <img src="{{ asset('images/chile-logo.png') }}" alt="" style="height: 0.85cm;">
             </td>
@@ -37,14 +37,18 @@
             <td style="text-align: center;"><small>SAB</small></td>
             <td style="text-align: center;"><small>FIVPS</small></td>
         </tr>
-        <tr style="height: 0.283cm; font-size: 9px !important;">
-            <td colspan="8" style="font-size: 7px;">DE: <small style="font-size: 7px;">{{$order->sender_first_name}}  {{$order->sender_last_name}}</small></td>
+        <tr style="height: 0.283cm; font-size: 7px !important;">
+            <td colspan="8" style="font-size: 7px; padding-bottom: 2px !important">DE: <small style="font-size: 7px;">{{$order->sender_first_name}}  {{$order->sender_last_name}}</small></td>
         </tr>
-        <tr style="height: 0.283cm; font-size: 9px !important;">
-            <td colspan="8" style="border-right: none;">
-                <small style="font-size: 7px;">RUT :</small>
-                <small style="font-size: 7px;">CTA :</small>
-                <small style="margin-left: 2rem; font-size: 7px">Tel : {{$order->sender_phone}}</small>
+        <tr style="height: 0.283cm; font-size: 7px !important;">
+            <td colspan="3" style="border-right: none !important; border-left: none !important;">
+                <small style="font-size: 7px; font-weight: bold !important">RUT :</small>
+            </td>
+            <td colspan="2" style="border-right: none !important; border-left: none !important;">
+                <small style="font-size: 7px; font-weight: bold !important">CTA :</small>
+            </td>
+            <td colspan="3" style="border-right: none !important; border-left: none !important;">
+                <small style="font-size: 7px; font-weight: bold !important">Tel : </small><small>{{$order->sender_phone}}</small>
             </td>
         </tr>
         <tr style="height: 0.33cm !important;">
@@ -52,16 +56,16 @@
                 <small style="font-size: 3px;">{{$date}}</small><br />
                 <small style="font-size: 12px !important;">{{$chile_response->AbreviaturaServicio}}</small>
             </td>
-            <td colspan="8" style="height: 0.5px !important; line-height: 2px !important;"><small style="font-size: 7px;">Referencia : {{$order->customer_reference}}</small></td>
+            <td colspan="8" style="height: 0.5px !important; line-height: 3.3px !important; padding-top: 1.5px !important;"><small style="font-size: 7px;">Referencia : {{$order->customer_reference}}</small></td>
         </tr>
         <tr style="height: 0.33cm !important; line-height: 5px !important;">
             <td colspan="6">
-                <small style="font-size: 5px; font-weight: bold !important">Description Del Production :</small><br>
-                <small style="font-size: 7px;">{{$description}}</small>
+                <small style="font-size: 6px !important; font-weight: bold !important;">Description Del Production :</small><br>
+                <small style="font-size: 6px !important; line-height: 6px !important;">{{$description}}</small>
             </td>
             <td colspan="2" style="border-right: none;">
-                <small style="font-size: 5px; font-weight: bold !important;">Valor Declarado USD:</small>
-                <small style="font-size: 6px !important;">{{$order->order_value}}</small>
+                <small style="font-size: 5px; font-weight: bold !important;">Valor Declarado USD:</small><br />
+                <small style="font-size: 6px !important; margin: 19px !important;">{{$order->order_value}}</small>
             </td>
         </tr>
         <tr style="height: 3cm;">
@@ -69,10 +73,10 @@
                 <img src="data:image/png;base64,{{ base64_encode($barcodeNew->getBarcode($order->corrios_tracking_code, $barcodeNew::TYPE_CODE_128, 1,94, [0,0,0]))}}" alt="barcode" style="height: 2.1cm !important; width: 6.5cm !important; margin: 0.4cm 1.4cm 0.4cm 1.3cm !important;"   />
             </td>
         </tr>
-        <tr style="line-height: 8px;">
+        <tr style="line-height: 10px;">
             <td colspan="1" style="text-align: center;"><small style="font-size: 7px;">Encaminamiento</small><br /><small style="font-size: 7px;">{{$chile_response->CodigoEncaminamiento}}</small></td>
             <td colspan="6"><small style="font-size: 7px; display: block !important">N Envio :</small> <small style="font-size: 12px; font-weight: bold; padding-left: 33px;">{{$chile_response->NumeroEnvio}}</small></td>
-            <td colspan="2" style="text-align: center;"><small style="font-size: 7px;">Bulto(s)</small><br /><small style="font-size: 9px !important">001</small></td>
+            <td colspan="2" style="text-align: center;"><small style="font-size: 7px;">Bulto(s)</small><br /><small style="font-size: 10px !important">001</small></td>
         </tr>
         <tr style="height: 1cm !important;">
             <td colspan="9">
@@ -153,7 +157,7 @@
                             <small style="font-size: 7px;"></small>    
                         </td>
                         <td style="border-right: 1px solid; height:0.6cm; width: 150px; text-align: center;">
-                            <small style="font-size: 7px;">{{$chile_response->NombreDelegacionDestino}}</small>
+                            <small style="font-size: 13px; font-style: italic !important; font-weight: normal bold !important">{{$chile_response->NombreDelegacionDestino}}</small>
                         </td>
                         <td style="border-right: 1px solid;  height:0.6cm; width: 70px; text-align: center;">
                             <small style="font-size: 7px;"></small>
