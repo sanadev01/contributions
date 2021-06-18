@@ -58,8 +58,8 @@ class CreateRequest extends FormRequest
             "recipient.account_type" => "required|in:individual,business",
             "recipient.tax_id" => "required",
             "recipient.zipcode" => "required",
-            "recipient.state_id" => "required|exists:states,id",
-            "recipient.country_id" => "required|exists:countries,id",
+            // "recipient.state_id" => "required|exists:states,id",
+            // "recipient.country_id" => "required|exists:countries,id",
 
             "products" => "required|array|min:1",
 
@@ -79,6 +79,16 @@ class CreateRequest extends FormRequest
             $rules["parcel.weight"] = "required|numeric|gt:0|max:30";
         }else{
             $rules["parcel.weight"] = "required|numeric|gt:0|max:66.15";
+        }
+        if (is_numeric( optional($request->recipient)['country_id'])){
+            $rules["recipient.country_id"] = "required|exists:countries,id";
+        }else{
+            $rules["recipient.country_id"] = "required|exists:countries,code";
+        }
+        if (is_numeric( optional($request->recipient)['state_id'])){
+            $rules["recipient.state_id"] = "required|exists:states,id";
+        }else{
+            $rules["recipient.state_id"] = "required|exists:states,code";
         }
 
         return $rules;
