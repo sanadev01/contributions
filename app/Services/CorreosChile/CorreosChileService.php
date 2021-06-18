@@ -37,11 +37,11 @@ class CorreosChileService
             'CodigoAdmision' =>  $this->codigoAdmision,         //ID transaction (Internal Client), with this data the XML Response is returned.
             'ClienteRemitente' => $this->clienteRemitente,      //ID Code SAP Customer. Delivered by CorreosChile
             // 'CentroRemitente' => '',                            
-            'NombreRemitente' => $order->sender_first_name.' '.$order->sender_last_name,     //Sender Name
-            'DireccionRemitente' => $order->sender_address,      //Sender address
+            'NombreRemitente' => 'homedeliverybr.com',          //Sender Name
+            'DireccionRemitente' => 'av. El parque 1307',      //Sender address
             'PaisRemitente' => '056',                           //Default “056” sender Country code(chile)    
-            // 'CodigoPostalRemitente' => '',                   //Sender Postal Code
-            'ComunaRemitente' => 'santiago',                    //Sender area/devision/city
+            'CodigoPostalRemitente' => '9031244',                   //Sender Postal Code
+            'ComunaRemitente' => 'Pudahuel',                    //Sender area/devision/city
             // 'RutRemitente' => '1-9',                            
             'PersonaContactoRemitente' => $order->sender_first_name,    //Sender Contact/person
             'TelefonoContactoRemitente' => $order->sender_phone,        //Sender Telephone

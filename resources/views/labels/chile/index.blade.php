@@ -23,11 +23,11 @@
     <div >
       <table style="width:100%; height:7cm;  margin: 0.07cm;" cellspacing="0" border="1" cellpadding="0">
         <tr style="height: 0.283cm; font-size: 7px !important;">
-            <td rowspan="3">
-                <img src="{{ asset('images/chile-logo.png') }}" alt="" style="height: 0.85cm;">
+            <td rowspan="3" style="text-align: center">
+                <img src="{{ asset('images/corrieos-chile-logo.png') }}" alt="" style="height: 0.85cm;">
             </td>
-            <td>
-                <small style="text-align: center;">A.R.</small>
+            <td style="text-align: center;">
+                <small>A.R.</small>
             </td>
             <td style="text-align: center;"><small>RDOC</small></td>
             <td style="text-align: center;"><small>A.TEL</small></td>
@@ -154,7 +154,7 @@
                 <table cellspacing="0" cellpadding="0" style="margin: 0px !important;">
                     <tr>
                         <td style="border-right: 1px solid; height:0.6cm; width: 58px; text-align: center;">
-                            <small style="font-size: 7px;"></small>    
+                            <small style="font-size: 13px; font-weight: normal bold !important">{{ $chile_response->SDP ?? '' }}</small>    
                         </td>
                         <td style="border-right: 1px solid; height:0.6cm; width: 150px; text-align: center;">
                             <small style="font-size: 13px; font-style: italic !important; font-weight: normal bold !important">{{$chile_response->NombreDelegacionDestino}}</small>
@@ -163,7 +163,7 @@
                             <small style="font-size: 7px;"></small>
                         </td>
                         <td style="border-right: 1px solid; height:0.6cm; width: 60px; text-align: center;">
-                            <small style="font-size: 7px;"></small>
+                            <small style="font-size: 13px; font-weight: normal bold !important">{{$chile_response->CUARTEL ?? ''}} / {{$chile_response->SECTOR ?? ''}}</small>
                         </td>
                     </tr>
                 </table>
