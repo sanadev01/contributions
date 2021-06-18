@@ -39,5 +39,8 @@ return [
         'Edit' => 'Edit',
         'Delete' => 'Delete',
         'Packages' => 'Packages',
-    ]
+    ],
+    'chileContainers' => [
+        'Containers' => 'Chile Containers',
+    ],
 ];
