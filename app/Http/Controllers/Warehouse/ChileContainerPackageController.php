@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Warehouse;
 use Illuminate\Http\Request;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
+use App\Services\Excel\Export\ContainerOrderExport;
+use App\Repositories\Warehouse\ChileContainerPackageRepository;
 
 class ChileContainerPackageController extends Controller
 {
@@ -16,7 +18,10 @@ class ChileContainerPackageController extends Controller
     public function index($id)
     {
         $container = Container::find($id);
-        return view('admin.warehouse.chileContainers.scan',compact('container'));
+        $ordersCollection = json_encode($container->getOrdersCollections());
+        $editMode = $container->isRegistered() ? 'false':'true';
+        
+        return view('admin.warehouse.chileContainers.scan',compact('container', 'ordersCollection', 'editMode'));
     }
 
     /**
@@ -24,9 +29,12 @@ class ChileContainerPackageController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($id)
     {
-        //
+        $container = Container::find($id);
+        $orders = $container->orders;
+        $exportService = new ContainerOrderExport($orders);
+        return $exportService->handle();
     }
 
     /**
@@ -35,9 +43,11 @@ class ChileContainerPackageController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store($container, $order)
     {
-        //
+        $chile_containerPackageRepository = new ChileContainerPackageRepository();
+
+        return $chile_containerPackageRepository->addOrderToContainer($container,$order);
     }
 
     /**
@@ -80,8 +90,14 @@ class ChileContainerPackageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($container, $id)
     {
-        //
+        $chile_containerPackageRepository = new ChileContainerPackageRepository();
+        try {
+            //code...
+            return $chile_containerPackageRepository->removeOrderFromContainer($container,$id);
+        } catch (\Exception $ex) {
+            \Log::info($ex);
+        }
     }
 }

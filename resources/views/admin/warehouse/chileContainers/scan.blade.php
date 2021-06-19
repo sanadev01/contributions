@@ -11,12 +11,12 @@
                         </h4>
                         <div>
                             <a href="{{ route('warehouse.chile_containers.index') }}" class="btn btn-primary"> @lang('warehouse.containers.List Containers') </a>
-                            <a href="#" class="btn btn-success"> <i class="fa fa-arrow-down"></i> Download </a>
+                            <a href="{{ route('warehouse.chile_container.packages.create',$container) }}" class="btn btn-success"> <i class="fa fa-arrow-down"></i> Download </a>
                         </div>
                     </div>
                     <div class="card-content card-body">
                         <div class="mt-1">
-                            <scanner-table :container='@json($container)' :edit-mode="{{$container->isRegistered() ? 'false':'true'}}" :orders-collection='@json($container->getOrdersCollections())'/>
+                            <livewire:chile-container.packages :container="$container" :editMode="$editMode" :ordersCollection="$ordersCollection">
                         </div>
                     </div>
                 </div>

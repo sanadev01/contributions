@@ -98,9 +98,6 @@
                                                                 <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
                                                             </a>
                                                             
-                                                            <a href="{{ route('warehouse.container.register',$container) }}" class="dropdown-item w-100">
-                                                                <i class="feather icon-box"></i> Register Unit
-                                                            </a>
                                                             <form action="{{ route('warehouse.chile_containers.destroy',$container) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
                                                                 @csrf
                                                                 @method('DELETE')
@@ -108,11 +105,6 @@
                                                                     <i class="feather icon-trash-2"></i> @lang('warehouse.actions.Delete')
                                                                 </button>
                                                             </form>
-                                                        @endif
-                                                        @if( $container->isRegistered() )
-                                                            <a href="{{ route('warehouse.container.download',$container) }}" class="dropdown-item w-100">
-                                                                <i class="feather icon-box"></i> Get CN35
-                                                            </a>
                                                         @endif
                                                     </div>
                                                 </div>
