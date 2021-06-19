@@ -40,11 +40,13 @@ class SaleExport extends AbstractExportService
             }
             $this->setCellValue('B'.$row, optional($commissionUser)->name . optional($commissionUser)->pobox_number);
             $this->setCellValue('C'.$row, 'HD-'.$sale->order_id);
-            $this->setCellValue('D'.$row, number_format($sale->value, 2));
-            $this->setCellValue('E'.$row, $sale->type);
-            $this->setCellValue('F'.$row, $sale->order->corrios_tracking_code);
-            $this->setCellValue('G'.$row, $sale->is_paid? 'paid': 'unpaid');
-            $this->setCellValue('H'.$row, $sale->created_at->format('m/d/Y'));
+            $this->setCellValue('D'.$row, $sale->order->corrios_tracking_code);
+            $this->setCellValue('E'.$row, $sale->order->customer_reference);
+            $this->setCellValue('F'.$row, $sale->type);
+            $this->setCellValue('G'.$row, number_format($sale->value, 2));
+            $this->setCellValue('H'.$row, number_format($sale->commission, 2));
+            $this->setCellValue('I'.$row, $sale->is_paid? 'paid': 'unpaid');
+            $this->setCellValue('J'.$row, $sale->created_at->format('m/d/Y'));
             
             $row++;
         }
@@ -70,23 +72,28 @@ class SaleExport extends AbstractExportService
         $this->setCellValue('C1', 'WHR#');
 
         $this->setColumnWidth('D', 20);
-        $this->setCellValue('D1', 'Commission Value');
+        $this->setCellValue('D1', 'Tracking Code');
 
         $this->setColumnWidth('E', 20);
-        $this->setCellValue('E1', 'Type');
-
+        $this->setCellValue('E1', 'Customer Ref#');
         
         $this->setColumnWidth('F', 20);
-        $this->setCellValue('F1', 'Tracking Code');
+        $this->setCellValue('F1', 'Type');
         
         $this->setColumnWidth('G', 20);
-        $this->setCellValue('G1', 'Paid/unpaid');
+        $this->setCellValue('G1', 'Commission Value');
         
         $this->setColumnWidth('H', 20);
-        $this->setCellValue('H1', 'Date');
+        $this->setCellValue('H1', 'Commission');
+        
+        $this->setColumnWidth('I', 20);
+        $this->setCellValue('I1', 'Paid/unpaid');
 
-        $this->setBackgroundColor('A1:H1', '2b5cab');
-        $this->setColor('A1:H1', 'FFFFFF');
+        $this->setColumnWidth('J', 20);
+        $this->setCellValue('J1', 'Date');
+
+        $this->setBackgroundColor('A1:J1', '2b5cab');
+        $this->setColor('A1:J1', 'FFFFFF');
 
         $this->currentRow++;
     }
