@@ -145,6 +145,24 @@ class DepositRepository
     }
 
 
+    public function adminAdd(Request $request)
+    {
+        $lastTransaction = Deposit::query()->where('user_id',$request->user_id)->latest('id')->first();
+        if ( !$lastTransaction ){
+            $balance =  0;
+        }else{
+            $balance = $lastTransaction->balance;
+        }
+        Deposit::create([
+            'uuid' => PaymentInvoice::generateUUID('DP-'),
+            'amount' => $request->amount,
+            'user_id' => $request->user_id,
+            'balance' => $balance + $request->amount,
+            'is_credit' => true,
+            'last_four_digits' => 'Admin'
+        ]);
+    }
+
     public function getError()
     {
         return $this->error;
