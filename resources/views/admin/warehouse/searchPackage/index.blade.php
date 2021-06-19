@@ -16,7 +16,7 @@
                     </div>
                     <div class="card-content card-body">
                         <div class="mt-1">
-                            
+                            <livewire:warehouse.search-package>
                         </div>
                     </div>
                 </div>
