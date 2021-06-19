@@ -25,9 +25,9 @@
         {{ optional($sale->order->user)->name }}
     </td>
     <td>
-        <button data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$sale->order) }}" class="btn btn-primary" title="@lang('sales-commission.Show Order Details')">
-            <i class="feather icon-list"></i> @lang('sales-commission.view-order')
-        </button>
+        <a href="#" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$sale->order) }}" title="@lang('sales-commission.Show Order Details')">
+            @lang('sales-commission.view-order')
+        </a>
         
     </td>
     <td>
@@ -64,11 +64,11 @@
             <i class="feather icon-x text-danger"></i>
         @endif
     </td>
-    <td>
-        <span class="btn btn-sm btn-success">
+    {{-- <td>
+        <span class="btn-success">
                 {{ $sale->detail }}
         </span>
-    </td>
+    </td> --}}
     @admin
         <td class="d-flex">
             <div class="btn-group">
