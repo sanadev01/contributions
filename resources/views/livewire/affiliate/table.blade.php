@@ -62,7 +62,7 @@
                     <th>@lang('sales-commission.Type')</th>
                     <th>@lang('sales-commission.Commission')</th>
                     <th>@lang('Is Paid')</th>
-                    <th>@lang('status')</th>
+                    {{-- <th>@lang('status')</th> --}}
                     @admin
                         <th>@lang('Action')</th>
                     @endadmin

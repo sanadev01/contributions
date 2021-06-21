@@ -4,7 +4,7 @@
             <strong>Statement From: </strong> {{ $dateFrom }} - {{ $dateTo }} <br>
             {{-- <strong>Total Deposit:</strong> {{ 0 }} <br>
             <strong>Total Debit: </strong>  {{ 0 }} <br> --}}
-            <strong>Balance: </strong> {{ getBalance() }} USD
+            <strong>Balance: <span style="font-size: 16px;">{{ getBalance() }} USD </span></strong>
         </div>
     </div>
     <div class="row justify-content-end">
@@ -112,8 +112,12 @@
                 <th>
                     @if( $deposit->isCredit() )
                         <i class="fa fa-arrow-up text-success"></i>
+                        <br>
+                         <span class="text-success">$ {{ $deposit->amount }}</span>
                     @else
                         <i class="fa fa-arrow-down text-danger"></i>
+                        <br>
+                         <span class="text-danger">$ {{ $deposit->amount }}</span>
                     @endif
                 </th>
                 <td>
