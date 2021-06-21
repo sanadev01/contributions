@@ -53,7 +53,7 @@
                         
                         @if( !$error )
                             @if( $package['client'] )
-                                <a href="{{ route('warehouse.search_package.show', $package['reference']) }}" target="_blank" class="btn btn-success mr-2" onclick="addClass({{$key}})" title="@lang('orders.import-excel.Download')">
+                                <a href="{{ route('warehouse.search_package.show', $package['reference']) }}" class="btn btn-success mr-2" onclick="addClass({{$key}})" title="@lang('orders.import-excel.Download')">
                                     <i class="fa fa-search"></i> Find
                                 </a>
                             @endif

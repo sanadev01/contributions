@@ -10,7 +10,7 @@
                             Search @lang('warehouse.containers.Packages Inside Container')
                         </h4>
                         <div>
-                            <a href="{{ route('warehouse.search_package.index') }}" class="btn btn-primary"> @lang('Search Packages') </a>
+                            <a href="{{ route('warehouse.search_package.index') }}" class="btn btn-primary"> <i class="fa fa-search"></i> @lang('Search Packages') </a>
                         </div>
                     </div>
                     <div class="card-content card-body">
