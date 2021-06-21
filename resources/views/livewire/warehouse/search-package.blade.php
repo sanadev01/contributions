@@ -38,7 +38,7 @@
                         {{ $package['dimensions'] }}
                     </td>
                     <td>
-                        {{ $package['kg'].' '. $package['unit'] }}
+                        {{ $package['kg'].' kg ('. $package['lbs'] }} lbs)
                     </td>
                     <td>
                         @if ($package['reference'])

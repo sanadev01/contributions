@@ -41,7 +41,8 @@ class SearchPackage extends Component
             $this->packagesRows[$index]['tracking_code'] = $trackingCode;
             $this->packagesRows[$index]['client'] = $this->order->merchant;
             $this->packagesRows[$index]['dimensions'] = $this->order->length . ' x ' . $this->order->length . ' x ' . $this->order->height ;
-            $this->packagesRows[$index]['kg'] = $this->order->weight;
+            $this->packagesRows[$index]['kg'] = $this->order->$order->getWeight('kg');
+            $this->packagesRows[$index]['lbs'] = $this->order->$order->getWeight('lbs');
             $this->packagesRows[$index]['unit'] = $this->order->measurement_unit;
             $this->packagesRows[$index]['reference'] = $this->order->warehouse_number;
             $this->packagesRows[$index]['recpient'] = $this->order->recipient->first_name.' '.$this->order->recipient->last_name;
@@ -79,7 +80,8 @@ class SearchPackage extends Component
                     'tracking_code' => $this->tracking,
                     'client' => $this->order->merchant,
                     'dimensions' => $this->order->length . ' x ' . $this->order->length . ' x ' . $this->order->height,
-                    'kg' => $this->order->weight,
+                    'kg' => $this->order->getWeight('kg'),
+                    'lbs' => $this->order->getWeight('lbs'),
                     'unit' => $this->order->measurement_unit,
                     'reference' => $this->order->warehouse_number,
                     'recpient' => $this->order->recipient->first_name.' '.$this->order->recipient->last_name,
