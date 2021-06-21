@@ -21,7 +21,7 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
 
     Route::get('order/{order}/download-cn23', CN23DownloadController::class)->name('cn23.download');
 
-    Route::get('search/package', SearchPackageController::class)->name('search.package');
+    Route::resource('search_package', SearchPackageController::class)->only('index', 'show');
     
     Route::resource('containers', ContainerController::class);
     Route::resource('containers.packages', ContainerPackageController::class)->only('index','destroy', 'create');

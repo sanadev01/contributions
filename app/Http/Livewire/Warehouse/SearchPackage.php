@@ -42,8 +42,9 @@ class SearchPackage extends Component
             $this->packagesRows[$index]['client'] = $this->order->merchant;
             $this->packagesRows[$index]['dimensions'] = $this->order->length . ' x ' . $this->order->length . ' x ' . $this->order->height ;
             $this->packagesRows[$index]['kg'] = $this->order->weight;
-            $this->packagesRows[$index]['reference'] = $this->order->id;
-            $this->packagesRows[$index]['recpient'] = $this->order->recipient->first_name;
+            $this->packagesRows[$index]['unit'] = $this->order->measurement_unit;
+            $this->packagesRows[$index]['reference'] = $this->order->warehouse_number;
+            $this->packagesRows[$index]['recpient'] = $this->order->recipient->first_name.' '.$this->order->recipient->last_name;
             
             $this->addRow();
         }
@@ -79,8 +80,9 @@ class SearchPackage extends Component
                     'client' => $this->order->merchant,
                     'dimensions' => $this->order->length . ' x ' . $this->order->length . ' x ' . $this->order->height,
                     'kg' => $this->order->weight,
-                    'reference' => $this->order->id,
-                    'recpient' => $this->order->recipient->first_name,
+                    'unit' => $this->order->measurement_unit,
+                    'reference' => $this->order->warehouse_number,
+                    'recpient' => $this->order->recipient->first_name.' '.$this->order->recipient->last_name,
                 ]);
                     
                 array_push($this->newOrder,$this->order);

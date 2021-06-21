@@ -17,14 +17,13 @@
         </div>
         <table class="table table-bordered">
             <tr>
-                <th>Order ID</th>
                 <th>Tracking No</th>
-                <th>Dispatch Number</th>
-                <th>Seal No</th>
-                <th>Origin Country</th>
-                <th>Destination Airport</th>
-                <th>Container Type</th>
-                <th>Status</th>
+                <th>Client</th>
+                <th>Dimensions</th>
+                <th>Weight</th>
+                <th>Reference</th>
+                <th>Recpient</th>
+                <th>Action</th>
             </tr>
             @foreach ($packagesRows as $key => $package)
             
@@ -39,11 +38,11 @@
                         {{ $package['dimensions'] }}
                     </td>
                     <td>
-                        {{ $package['kg'] }}
+                        {{ $package['kg'].' '. $package['unit'] }}
                     </td>
                     <td>
                         @if ($package['reference'])
-                            HD-{{ $package['reference'] }}
+                            {{ $package['reference'] }}
                         @endif 
                     </td>
                     <td>
@@ -54,8 +53,8 @@
                         
                         @if( !$error )
                             @if( $package['client'] )
-                                <a href="{{route('admin.label.scan.show',$package['reference'])}}" target="_blank" class="btn btn-success mr-2" onclick="addClass({{$key}})" title="@lang('orders.import-excel.Download')">
-                                    <i class="feather icon-download"></i>@lang('orders.import-excel.Download')
+                                <a href="{{ route('warehouse.search_package.show', $package['reference']) }}" target="_blank" class="btn btn-success mr-2" onclick="addClass({{$key}})" title="@lang('orders.import-excel.Download')">
+                                    <i class="fa fa-search"></i> Find
                                 </a>
                             @endif
                         @endif

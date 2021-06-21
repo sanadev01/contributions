@@ -7,7 +7,7 @@
     <ul class="menu-content">
 
         <li class="{{ $isActive(['warehouse.search.package']) }}">
-            <a href="{{ route('warehouse.search.package') }}">
+            <a href="{{ route('warehouse.search_package.index') }}">
                 <i class="feather icon-circle"></i>
                 <span class="menu-title">Search packages</span>
             </a>
