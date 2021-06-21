@@ -47,7 +47,7 @@
             <td colspan="2" style="border-right: none !important; border-left: none !important;">
                 <small style="font-size: 7px; font-weight: bold !important">CTA :</small>
             </td>
-            <td colspan="3" style="border-right: none !important; border-left: none !important;">
+            <td colspan="3" style="border-right: 1px solid !important; border-left: none !important;">
                 <small style="font-size: 7px; font-weight: bold !important">Tel : </small><small>{{$order->sender_phone}}</small>
             </td>
         </tr>
@@ -63,14 +63,14 @@
                 <small style="font-size: 6px !important; font-weight: bold !important;">Description Del Production :</small><br>
                 <small style="font-size: 6px !important; line-height: 6px !important;">{{$description}}</small>
             </td>
-            <td colspan="2" style="border-right: none;">
+            <td colspan="2" style="border-right: 1px solid;">
                 <small style="font-size: 5px; font-weight: bold !important;">Valor Declarado USD:</small><br />
                 <small style="font-size: 6px !important; margin: 19px !important;">{{$order->order_value}}</small>
             </td>
         </tr>
         <tr style="height: 3cm;">
             <td colspan="9">
-                <img src="data:image/png;base64,{{ base64_encode($barcodeNew->getBarcode($order->corrios_tracking_code, $barcodeNew::TYPE_CODE_128, 1,94, [0,0,0]))}}" alt="barcode" style="height: 2.1cm !important; width: 6.5cm !important; margin: 0.4cm 1.4cm 0.4cm 1.3cm !important;"   />
+                <img src="data:image/png;base64,{{ base64_encode($barcodeNew->getBarcode($bar_code, $barcodeNew::TYPE_CODE_128, 1,94, [0,0,0]))}}" alt="barcode" style="height: 2.1cm !important; width: 6.5cm !important; margin: 0.4cm 1.4cm 0.4cm 1.3cm !important;"   />
             </td>
         </tr>
         <tr style="line-height: 10px;">

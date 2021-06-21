@@ -93,11 +93,16 @@
                                                         <a href="{{ route('warehouse.chile_container.packages.index',$container) }}" class="dropdown-item w-100">
                                                             <i class="feather icon-box"></i> @lang('warehouse.actions.Packages')
                                                         </a>
-                                                        @if( !$container->isRegistered() || !$container->isShipped() )
+                                                        {{-- @if( !$container->isRegistered() || !$container->isShipped() ) --}}
                                                             <a href="{{ route('warehouse.chile_containers.edit',$container) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
                                                             </a>
-                                                            
+                                                            <a href="{{ route('warehouse.download.manifest_txt',$container) }}" class="dropdown-item w-100">
+                                                                <i class="fa fa-arrow-down"></i> Download Manifest txt
+                                                            </a>
+                                                            <a href="{{ route('warehouse.download.manifest_excel',$container) }}" class="dropdown-item w-100">
+                                                                <i class="fa fa-arrow-down"></i> Download Manifest excel
+                                                            </a>
                                                             <form action="{{ route('warehouse.chile_containers.destroy',$container) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
                                                                 @csrf
                                                                 @method('DELETE')
@@ -105,7 +110,7 @@
                                                                     <i class="feather icon-trash-2"></i> @lang('warehouse.actions.Delete')
                                                                 </button>
                                                             </form>
-                                                        @endif
+                                                        {{-- @endif --}}
                                                     </div>
                                                 </div>
                                             </div>

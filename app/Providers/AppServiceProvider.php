@@ -21,8 +21,7 @@ class AppServiceProvider extends ServiceProvider
 
             // Api Credentials(currently credentials of testing environment are beign used)
             $wsdlUrl = config('correoschile.url');
-            // $usuario = config('correoschile.userId');              //CorreosChile user Id
-            $usuario = 'PRUEBA WS 1';
+            $usuario = config('correoschile.userId');              //CorreosChile user Id
             $contrasena = config('correoschile.correosKey');  //CorreosChile Key
             $codigoAdmision = config('correoschile.transactionId');   // ID transaction (Internal Client), with this data the XML Response is returned.
             $clienteRemitente = config('correoschile.codeId');       // ID Code SAP Customer. Delivered by CorreosChile

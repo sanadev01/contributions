@@ -37,6 +37,8 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     // Routes for Chile Containers
     Route::resource('chile_containers', ChileContainerController::class);
     Route::resource('chile_container.packages', ChileContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('chile_container/{container}/download_txt_manifest', [ChileContainerController::class, 'download_txtManifest'])->name('download.manifest_txt');
+    Route::get('chile_container/{container}/download_excel_manifest', [ChileContainerController::class, 'download_exceltManifest'])->name('download.manifest_excel');
     
 });
 

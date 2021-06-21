@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
 use App\Repositories\Warehouse\ChileContainerRepository;
+use App\Services\CorreosChile\ExportTxtChileManifestService;
+use App\Services\CorreosChile\ExportExcelChileManifestService;
 use App\Http\Requests\Warehouse\ChileContainer\CreateContainerRequest;
 use App\Http\Requests\Warehouse\ChileContainer\UpdateContainerRequest;
 
@@ -120,4 +122,17 @@ class ChileContainerController extends Controller
         session()->flash('alert-danger', $chile_containerRepository->getError());
         return back()->withInput();
     }
+
+    public function download_txtManifest(Container $container)
+    {
+        $exportChileManifestService = new ExportTxtChileManifestService($container);
+        return $exportChileManifestService->handle();
+    }
+
+    public function download_exceltManifest(Container $container)
+    {
+        $exportChileManifestService = new ExportExcelChileManifestService($container);
+        return $exportChileManifestService->handle();
+    }
+
 }
