@@ -67,6 +67,8 @@ return [
         'Email' => 'Email',
         'Phone' => 'Phone',
         'Tax Id' => 'Tax Id',
+        'Address' => 'Address',
+        'City' => 'City',
         'Next' => 'Next', 
         'Step 1' => 'Step 1', 
     ],

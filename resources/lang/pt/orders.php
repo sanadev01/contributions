@@ -67,6 +67,8 @@ return [
         'Email' => 'O email',
         'Phone' => 'telefone',
         'Tax Id' => 'CPF',
+        'Address' => 'Morada',
+        'City' => 'cidade',
         'Next' => 'Próximo', 
     ],
     'import-excel' =>[

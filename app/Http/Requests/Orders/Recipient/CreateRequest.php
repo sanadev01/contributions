@@ -36,7 +36,7 @@ class CreateRequest extends FormRequest
             'country_id' => 'required|exists:countries,id',
             'city' => 'required',
             'phone' => [
-                'required','max:15','min:13', new PhoneNumberValidator($this->country_id)
+                'required','max:15','min:11', new PhoneNumberValidator($this->country_id)
             ],
             'state_id' => 'required|exists:states,id',
             'zipcode' => [

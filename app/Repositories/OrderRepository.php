@@ -39,6 +39,8 @@ class OrderRepository
             'sender_email' => $request->email,
             'sender_phone' => $request->phone,
             'sender_taxId' => $request->taxt_id,
+            'sender_address' => $request->sender_address,
+            'sender_city' => $request->sender_city,
         ]);
 
         return $order;

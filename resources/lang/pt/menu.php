@@ -39,6 +39,7 @@ return [
         'menu' => 'Armazém',
         'Containers' => 'Recipientes',
         'Delivery Bill' => 'Fatura de entrega',
+        'Chile Containers' => 'Chile Recipientes',
     ],
     'Affiliate' => [
         'menu' => 'Relatórios',

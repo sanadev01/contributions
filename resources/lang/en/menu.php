@@ -39,6 +39,7 @@ return [
         'menu' => 'Warehouse',
         'Containers' => 'Containers',
         'Delivery Bill' => 'Delivery Bill',
+        'Chile Containers' => 'Chile Containers',
     ],
     'Affiliate' => [
         'menu' => 'Affiliate',

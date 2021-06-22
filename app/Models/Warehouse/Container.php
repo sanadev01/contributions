@@ -53,8 +53,12 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return  'Packet Standard service';
         }elseif($this->services_subclass_code == 'IX'){
             return 'Packet Express service';
-        }else{
+        }elseif($this->services_subclass_code == 'XP'){
             return 'Packet Mini service';
+        }elseif($this->services_subclass_code == 'SRM'){
+            return 'SRM service';
+        }else{
+            return 'SRP service';
         }
     }
 
@@ -64,15 +68,26 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return  2;
         }elseif($this->services_subclass_code == 'IX'){
             return 1;
-        }else{
+        }elseif($this->services_subclass_code == 'IX'){
             return 3;
+        }elseif($this->services_subclass_code == 'SRM') {
+            return 4;
+        }else {
+            return 5;
         }
         // return $this->services_subclass_code == 'NX' ? 2 : 1;
     }
 
     public function getDestinationAriport()
     {
-        return $this->destination_operator_name == 'SAOD' ? 'GRU' : 'CWB';
+        if($this->destination_operator_name == 'SAOD'){
+            return 'GRU';
+        }elseif($this->destination_operator_name == 'CRBA') {
+            return 'CWB';
+        }else {
+            return 'Pudahuel';
+        }
+        // return $this->destination_operator_name == 'SAOD' ? 'GRU' : 'CWB';
     }
 
     public function getWeight(): float

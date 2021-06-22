@@ -65,6 +65,28 @@
                         @enderror
                     </div>
                 </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="sender_address">@lang('orders.sender.Address')<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="sender_address" value="{{ old('sender_address',__default($order->sender_address,null)) }}" required>
+                        @error('taxt_id')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="sender_city">@lang('orders.sender.City')<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="sender_city" value="{{ old('sender_city',__default($order->sender_city,null)) }}" required>
+                        @error('taxt_id')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                </div>
             </div>
         </fieldset>
     </div>
