@@ -235,26 +235,51 @@
     })
     
     $('#zipcode').on("change", function(){
-        if ( $(this).val() == undefined || $(this).val() == "" ) return;
-        $('#loading').fadeIn();
-        $.get('{{ route("api.orders.recipient.zipcode") }}',{
-            zipcode: $(this).val(),
-        })
-        .then(function(response){
-            console.log(response.data);
-            if ( response.success ){
+        let country_id = $("#country").val();
+        if(country_id == '30')
+        {
+            if ( $(this).val() == undefined || $(this).val() == "" ) return;
+            $('#loading').fadeIn();
+            $.get('{{ route("api.orders.recipient.zipcode") }}',{
+                zipcode: $(this).val(),
+            })
+            .then(function(response){
+                console.log(response.data);
+                if ( response.success ){
+                    $('#loading').fadeOut();
+                    $('#zipcode_response').empty().append("<p><b>According to your zipcode, your address should be this</b></p><p><span style='color: red;'>Address: </span><span>"+response.data.street+"</span></p><p><span style='color: red;'>City: </span><span>"+response.data.city+"</span></p><p><span style='color: red;'>State: </span><span>"+response.data.uf+"</span></p>");
+                }else{
+                    $('#loading').fadeOut();
+                    $('#zipcode_response').empty().append("<p style='color: red;'>"+response.message+"</p>");
+                    toastr.error(response.message)
+                }
+            
+            }).catch(function(error){
                 $('#loading').fadeOut();
-                $('#zipcode_response').empty().append("<p><b>According to your zipcode, your address should be this</b></p><p><span style='color: red;'>Address: </span><span>"+response.data.street+"</span></p><p><span style='color: red;'>City: </span><span>"+response.data.city+"</span></p><p><span style='color: red;'>State: </span><span>"+response.data.uf+"</span></p>");
-            }else{
-                $('#loading').fadeOut();
-                $('#zipcode_response').empty().append("<p style='color: red;'>"+response.message+"</p>");
-                toastr.error(response.message)
-            }
-
-        }).catch(function(error){
-            $('#loading').fadeOut();
-        })
+            })
+        }
     })
+
+    $(document).ready(function(){
+        $('#country').on('change', function(){
+            let val = $(this).val();
+            if(val == '46'){
+                $('#cpf').css('display', 'none')
+            }else {
+                $('#cpf').css('display', 'block')
+            }
+        });
+        $('#country').ready(function() {
+            let val = $('#country').val();
+            if(val == '46'){
+                $('#cpf').css('display', 'none')
+            }else {
+                $('#cpf').css('display', 'block')
+            }
+        });
+    })
+
+
  
 </script>
 @endsection

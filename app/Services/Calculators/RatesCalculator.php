@@ -159,7 +159,7 @@ class RatesCalculator
         try {
 
             if ( !$this->rates ) {
-                self::$errors .= "Service not available for this Country <br>";
+                // self::$errors .= "Service not available for this Country <br>";
                 return false;
             }
 

@@ -3,6 +3,11 @@
 <link rel="stylesheet" href="{{ asset('app-assets/select/css/bootstrap-select.min.css') }}">
 @endsection
 @section('wizard-form')
+@if ($error)
+    <div class="alert alert-danger" role="alert">
+        {{$error}}
+    </div>
+@endif
 <form action="{{ route('admin.orders.order-details.store',$order) }}" method="POST" class="wizard">
     @csrf
     <div class="content clearfix">

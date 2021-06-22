@@ -10,6 +10,7 @@ use App\Http\Controllers\Warehouse\CN35DownloadController;
 use App\Http\Controllers\Warehouse\DeliveryBillController;
 use App\Http\Controllers\Warehouse\UnitRegisterController;
 use App\Http\Controllers\Warehouse\SearchPackageController;
+use App\Http\Controllers\Warehouse\ChileContainerController;
 use App\Http\Controllers\Warehouse\ContainerPackageController;
 use App\Http\Controllers\Warehouse\ManifestDownloadController;
 use App\Http\Controllers\Warehouse\DeliveryBillDownloadController;
