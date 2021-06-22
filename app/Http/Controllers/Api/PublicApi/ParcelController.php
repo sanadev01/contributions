@@ -12,6 +12,8 @@ use App\Services\Converters\UnitsConverter;
 use App\Services\Calculators\WeightCalculator;
 use App\Http\Requests\Api\Parcel\CreateRequest;
 use App\Http\Resources\PublicApi\OrderResource;
+use App\Models\Country;
+use App\Models\State;
 
 class ParcelController extends Controller
 {
@@ -24,6 +26,7 @@ class ParcelController extends Controller
      */
     public function store(CreateRequest $request)
     {
+        
         $weight = optional($request->parcel)['weight']??0;
         $length = optional($request->parcel)['length']??0;
         $width = optional($request->parcel)['width']??0;
@@ -41,6 +44,20 @@ class ParcelController extends Controller
             if($volumeWeight > 65.15){
                 return apiResponse(false,"Your ". $volumeWeight ." lbs/in weight has exceeded the limit. Please check the weight and dimensions. Weight shouldn't be greater than 66.15 lbs/in");
             }
+        }
+
+        $countryID = optional($request->recipient)['country_id'];
+        $stateID = optional($request->recipient)['state_id'];
+        
+        if (!is_numeric( optional($request->recipient)['state_id'])){
+
+            $state = State::where('code', optional($request->recipient)['state_id'])->orwhere('id', optional($request->recipient)['state_id'])->first();
+            $stateID = $state->id;
+        }
+        if (!is_numeric( optional($request->recipient)['country_id'])){
+
+            $country = Country::where('code', optional($request->recipient)['country_id'])->orwhere('id', optional($request->recipient)['country_id'])->first();
+            $countryID = $country->id;
         }
 
         DB::beginTransaction();
@@ -83,8 +100,8 @@ class ParcelController extends Controller
                 "account_type" => optional($request->recipient)['account_type'],
                 "tax_id" => optional($request->recipient)['tax_id'],
                 "zipcode" => optional($request->recipient)['zipcode'],
-                "state_id" => optional($request->recipient)['state_id'],
-                "country_id" => optional($request->recipient)['country_id']
+                "state_id" => $stateID,
+                "country_id" =>$countryID 
             ]);
 
             $isBattery = false;
@@ -122,14 +139,14 @@ class ParcelController extends Controller
 
             $order->doCalculations();
 
-            if ( getBalance() >= $order->gross_total ){
-                $order->update([
-                    'is_paid' => true,
-                    'status' => Order::STATUS_PAYMENT_DONE
-                ]);
+            // if ( getBalance() >= $order->gross_total ){
+            //     $order->update([
+            //         'is_paid' => true,
+            //         'status' => Order::STATUS_PAYMENT_DONE
+            //     ]);
 
-                chargeAmount($order->gross_total,$order);
-            }
+            //     chargeAmount($order->gross_total,$order);
+            // }
 
             DB::commit();
             return apiResponse(true,"Parcel Created", OrderResource::make($order) );

@@ -4,11 +4,12 @@
 namespace App\Http\Controllers\Admin\Deposit;
 
 
-use App\Http\Controllers\Controller;
-use App\Repositories\DepositRepository;
-use App\Repositories\OrderRepository;
-use App\Services\Excel\Export\ExportDepositReport;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Repositories\OrderRepository;
+use App\Repositories\DepositRepository;
+use App\Services\Excel\Export\ExportDepositReport;
 
 class DepositController extends Controller
 {
@@ -30,6 +31,18 @@ class DepositController extends Controller
 
     public function store(Request $request, DepositRepository $depositRepository)
     {
+        if(Auth::user()->isAdmin()){
+            
+            if($request->adminpay){
+                $request->validate([
+                    'user_id' => 'required',
+                    'amount' => 'required',
+                ]);
+                $depositRepository->adminAdd($request);
+                session()->flash('alert-success', __('orders.payment.alert-success'));
+                return redirect()->route('admin.deposit.index');
+            }
+        }
         if ( $depositRepository->store($request) ){
             session()->flash('alert-success', __('orders.payment.alert-success'));
             return redirect()->route('admin.deposit.index');

@@ -144,6 +144,7 @@ class EditRecipient extends Component
             'phone.max' => 'The phone may not be greater than 15 characters.',
             'address.required' => 'address is required',
             'address2.nullable' => 'Address2 is not more then 50 character',
+            'address2.*.nullable' => 'The address2 may not be greater than 50 characters.',
             'street_no.required' => 'house street no is required',
             'city.required' => 'city is required',
             'state_id.required' => 'state id is required',

@@ -16,7 +16,7 @@ class Deposit extends Model
 
     public static function getCurrentBalance($user=null)
     {
-        $lastTransaction = self::query()->where('user_id',$user ? $user->id:  Auth::id())->latest()->first();
+        $lastTransaction = self::query()->where('user_id',$user ? $user->id:  Auth::id())->latest('id')->first();
         if ( !$lastTransaction ){
             return 0;
         }

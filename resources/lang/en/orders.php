@@ -145,6 +145,7 @@ return [
         'Download the Homedelivery'=> "Download the Homedelivery sample file",
         'Download the Shopify'=> "Download the Shopify sample file",
         'Download the XML'=> "Download the XML sample file",
+        'Move All'=> "Move All Orders",
 
     ],
     'actions' => [

@@ -66,4 +66,5 @@ return [
     'PrePaid' => 'Pré-pago',
     'PostPaid' => 'Pós-pago',
     'Pay Invoice' => 'Fatura de pagamento',
+    'Paid with Balance' => 'Pago com Saldo',
 ];

@@ -60,11 +60,11 @@ class DepositRepository
         }
 
         if ( $request->dateFrom ){
-            $query->where('created_at','>=',$request->dateFrom);
+            $query->where('created_at','>=',$request->dateFrom. ' 00:00:00');
         }
 
         if ( $request->dateTo ){
-            $query->where('created_at','<=',$request->dateTo);
+            $query->where('created_at','<=',$request->dateTo. ' 23:59:59');
         }
 
 
@@ -144,6 +144,24 @@ class DepositRepository
         }
     }
 
+
+    public function adminAdd(Request $request)
+    {
+        $lastTransaction = Deposit::query()->where('user_id',$request->user_id)->latest('id')->first();
+        if ( !$lastTransaction ){
+            $balance =  0;
+        }else{
+            $balance = $lastTransaction->balance;
+        }
+        Deposit::create([
+            'uuid' => PaymentInvoice::generateUUID('DP-'),
+            'amount' => $request->amount,
+            'user_id' => $request->user_id,
+            'balance' => $balance + $request->amount,
+            'is_credit' => true,
+            'last_four_digits' => 'Admin'
+        ]);
+    }
 
     public function getError()
     {
