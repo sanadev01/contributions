@@ -29,9 +29,9 @@ class Packages extends Component
         // condition to check service type
         if($container->services_subclass_code == 'SRM')
         {
-            $this->service = 'Correos Chile SRM';
+            $this->service = 'SRM';
         } else {
-            $this->service = 'Correos Chile SRP';
+            $this->service = 'SRP';
         }
     }
 

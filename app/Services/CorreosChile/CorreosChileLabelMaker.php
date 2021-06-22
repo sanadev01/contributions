@@ -53,7 +53,7 @@ class CorreosChileLabelMaker
 
     public function get_code_for_generating_barcode()
     {
-        if($this->order->shipping_service_name == 'Correos Chile SRP'){
+        if($this->order->shipping_service_name == 'SRP'){
             $this->serviceType = 28;    //Product
         } else {
             $this->serviceType = 32;    //Product

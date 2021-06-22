@@ -142,11 +142,11 @@
                     </div>
                 </div>
 
-                <div class="form-group col-12 col-sm-6 col-md-4">
+                <div class="form-group col-12 col-sm-6 col-md-4" id="cpf">
                     <div class="controls">
                             <label id="cnpj_label_id" style="{{ optional($order->recipient)->account_type != 'individual' ? 'display:block' : 'display:none' }}" >@lang('address.CNPJ') <span class="text-danger">* (Brazil Only)</span> </label>
                             <label id="cpf_label_id" style="{{ optional($order->recipient)->account_type == 'individual' ? 'display:block' : 'display:none' }}" >@lang('address.CPF') <span class="text-danger">* (Brazil Only)</span> </label>
-                        <input type="text" name="tax_id" id="tax_id" value="{{old('tax_id',optional($order->recipient)->tax_id)}}" required class="form-control" placeholder="CNPJ"/>
+                        <input type="text" name="tax_id" id="tax_id" value="{{old('tax_id',optional($order->recipient)->tax_id)}}" class="form-control" placeholder="CNPJ"/>
                         <div class="help-block"></div>
                     </div>
                 </div>
@@ -222,6 +222,25 @@
         }).catch(function(error){
             $('#loading').fadeOut();
         })
+    })
+
+    $(document).ready(function(){
+        $('#country').on('change', function(){
+            let val = $(this).val();
+            if(val == '46'){
+                $('#cpf').css('display', 'none')
+            }else {
+                $('#cpf').css('display', 'block')
+            }
+        });
+        $('#country').ready(function() {
+            let val = $('#country').val();
+            if(val == '46'){
+                $('#cpf').css('display', 'none')
+            }else {
+                $('#cpf').css('display', 'block')
+            }
+        });
     })
  
 </script>
