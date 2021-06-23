@@ -9,9 +9,9 @@
         <fieldset id="steps-uid-0-p-0" role="tabpanel" aria-labelledby="steps-uid-0-h-0" class="body current" aria-hidden="false">
             <div class="row mb-1">
                 <div class="col-md-3">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="chile" id="chile">
-                        <label class="form-check-label" for="chile">
+                    <div>
+                        <input class="chileCheckBox" type="checkbox" value="chile" id="chile">
+                        <label for="chile">
                             Chile
                         </label>
                     </div>

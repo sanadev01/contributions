@@ -161,5 +161,15 @@
     .table-responsive.order-table {
         padding-bottom: 3rem;
     }
+    .chileCheckBox {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0;
+    padding: 0;
+    width: 22px;
+    height: 22px;
+    border: none;
+    cursor: pointer;
+    }
 </style>
 @yield('custom-css')
