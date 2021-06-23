@@ -1,6 +1,8 @@
 <?php
 namespace App\Services\CorreosChile;
 
+
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
 
@@ -9,30 +11,36 @@ use Illuminate\Support\Facades\Response;
 class ExportTxtChileManifestService
 {
     private $container;
-    
+    private $clienteRemitente;
+
     public function __construct($container)
     {
         $this->container = $container;
-
+        $this->clienteRemitente = config('correoschile.codeId');
     }
 
     public function handle()
     {
-        $this->prepareTextFile();
-        return $this->download();
+        $filename = $this->prepareTextFile();
+        return $this->download($filename);
     }
 
     private function prepareTextFile()
     {
         $initial = '';
         $orders = $this->container->orders;
+
+        $current_date = (Carbon::now())->toDateTimeString();
+        $combine_date_time = str_replace(['-','', ' ',':'],'',$current_date); 
+        $filename = $this->clienteRemitente.'_'.$combine_date_time;
+        
         try {
            
-            Storage::put("manifests/txt/{$this->container->seal_no}_manifest.txt", $initial);
+            Storage::put("manifests/txt/$filename.txt", $initial);
        } catch (\Exception $e) {
             return $e->getMessage();
        }
-        $file = fopen("../storage/app/manifests/txt/{$this->container->seal_no}_manifest.txt", 'a');//opens file in append mode  
+        $file = fopen("../storage/app/manifests/txt/$filename.txt", 'a');//opens file in append mode  
         foreach ($orders as $order)
         {
             $chile_response = json_decode($order->chile_response);
@@ -44,6 +52,7 @@ class ExportTxtChileManifestService
 
         }
         fclose($file);
+        return $filename;
     }
 
     private function combineChileResponseFields($chile_response)
@@ -51,10 +60,9 @@ class ExportTxtChileManifestService
         return $chile_response->CodigoEncaminamiento.$chile_response->NumeroEnvio.'001';
     }
 
-    public function download()
+    public function download($filename)
     {
-        $filename = $this->container->seal_no.'_manifest.txt';
-        $path = storage_path().'/'.'app'.'/manifests/txt/'.$filename;
+        $path = storage_path().'/'.'app'.'/manifests/txt/'.$filename.''.'.txt';
         
         if (file_exists($path)) {
             return Response::download($path);

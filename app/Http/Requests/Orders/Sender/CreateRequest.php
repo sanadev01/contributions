@@ -28,8 +28,8 @@ class CreateRequest extends FormRequest
             'last_name' => 'max:100',
             'email' => 'nullable|max:100|email',
             'phone' => 'nullable|max:15',
-            'sender_address' => 'required',
-            'sender_city' => 'required'
+            'sender_address' => 'sometimes|required',
+            'sender_city' => 'sometimes|required'
         ];
     }
 }
