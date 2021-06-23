@@ -37,7 +37,7 @@ class CorreosChileService
             'CodigoAdmision' =>  $this->codigoAdmision,         //ID transaction (Internal Client), with this data the XML Response is returned.
             'ClienteRemitente' => $this->clienteRemitente,      //ID Code SAP Customer. Delivered by CorreosChile
             // 'CentroRemitente' => '',                            
-            'NombreRemitente' => 'homedeliverybr.com',          //Sender Name
+            'NombreRemitente' => 'HERCO INC',                   //Sender Name
             'DireccionRemitente' => 'av. El parque 1307',      //Sender address
             'PaisRemitente' => '056',                           //Default “056” sender Country code(chile)    
             'CodigoPostalRemitente' => '9031244',                   //Sender Postal Code
@@ -45,14 +45,14 @@ class CorreosChileService
             // 'RutRemitente' => '1-9',                            
             'PersonaContactoRemitente' => $order->sender_first_name,    //Sender Contact/person
             'TelefonoContactoRemitente' => $order->sender_phone,        //Sender Telephone
-            'ClienteDestinatario' => '',                            //optional
-            'CentroDestinatario' => '',                             //optional
+            // 'ClienteDestinatario' => '',                            //optional
+            // 'CentroDestinatario' => '',                             //optional
             'NombreDestinatario' => $order->recipient->first_name.' '.$order->recipient->last_name, //Recipient Full Name
             'DireccionDestinatario' => $order->recipient->street_no.' '.$order->recipient->address,           //Recipient Address (street + number + complement address)
             'PaisDestinatario' => '056',                            //Destination Country (Default "056")
             // 'CodigoPostalDestinatario' => '',                    //Recipient Postal Code e.g 8340604
             'ComunaDestinatario' => $order->recipient->city,        //Recipient area/devision/city
-            'RutDestinatario' => '',                                //optional
+            // 'RutDestinatario' => '',                                //optional
             'PersonaContactoDestinatario' => $order->recipient->first_name,    //Recipient Person
             'TelefonoContactoDestinatario' => $order->recipient->phone,        //Recipient Contact Number
             'CodigoServicio' => $serviceType,                                  //Service Type (SRP SERVICE CODE 28/SRM SERVICE CODE 32)
@@ -97,7 +97,14 @@ class CorreosChileService
     {
         try
         {
-            $client = new SoapClient($this->wsdlUrl, array('trace' => 1, 'exception' => 0));
+            $context = stream_context_create(array(
+                'ssl' => array(
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true
+                )
+            ));
+            $client = new SoapClient($this->wsdlUrl, array('trace' => 1, 'exception' => 0, 'stream_context' => $context));
             $result = $client->__soapCall('admitirEnvio', array(
                 'admitirEnvio' => array(
                     'usuario' => $this->usuario,

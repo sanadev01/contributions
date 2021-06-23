@@ -38,14 +38,14 @@
             <td style="text-align: center;"><small>FIVPS</small></td>
         </tr>
         <tr style="height: 0.283cm; font-size: 7px !important;">
-            <td colspan="8" style="font-size: 7px; padding-bottom: 2px !important">DE: <small style="font-size: 7px;">{{$order->sender_first_name}}  {{$order->sender_last_name}}</small></td>
+            <td colspan="8" style="font-size: 7px; padding-bottom: 2px !important">DE: <small style="font-size: 7px;">HERCO INC</small></td>
         </tr>
         <tr style="height: 0.283cm; font-size: 7px !important;">
             <td colspan="3" style="border-right: none !important; border-left: none !important;">
                 <small style="font-size: 7px; font-weight: bold !important">RUT :</small>
             </td>
             <td colspan="2" style="border-right: none !important; border-left: none !important;">
-                <small style="font-size: 7px; font-weight: bold !important">CTA :</small>
+                <small style="font-size: 7px; font-weight: bold !important">CTA :</small><small>{{$clienteRemitente}}</small>
             </td>
             <td colspan="3" style="border-right: 1px solid !important; border-left: none !important;">
                 <small style="font-size: 7px; font-weight: bold !important">Tel : </small><small>{{$order->sender_phone}}</small>

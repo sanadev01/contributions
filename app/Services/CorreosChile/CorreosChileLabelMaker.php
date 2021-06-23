@@ -25,13 +25,15 @@ class CorreosChileLabelMaker
         $chile_response = json_decode($this->order->chile_response);
         $description = $this->itemsDescription( $this->order->items);
         $date = \Carbon\Carbon::parse($this->order->updated_at)->format('d/m/Y H:i');
-        $bar_code = $this->get_code_for_generating_barcode();
-       
+        $bar_code = $this->get_code_for_generating_barcode($chile_response);
+        $clienteRemitente = config('correoschile.codeId');
+
         $pdf = \PDF::loadView('labels.chile.index', [
             'order' => $this->order,
             'chile_response' => $chile_response,
             'description' => $description,
             'date' => $date,
+            'clienteRemitente' => $clienteRemitente,
             'barcodeNew' => new BarcodeGeneratorPNG(),
             'bar_code' => $bar_code,
         ]);
@@ -51,22 +53,11 @@ class CorreosChileLabelMaker
         return $description;
     }
 
-    public function get_code_for_generating_barcode()
-    {
-        if($this->order->shipping_service_name == 'SRP'){
-            $this->serviceType = 28;    //Product
-        } else {
-            $this->serviceType = 32;    //Product
-        }
-
-        $this->normalization_code = 1;  //Normalization Code
-        $destination_postal_code = $this->order->recipient->zipcode; //Recepient Postal Code
-        $fix_digit = 7;                 //Fix Number, always 7
-        $this->customerId = '0002';       //Customer Id 
-        $tracking_code  = $this->order->corrios_tracking_code;
-        $second_fix_digit = '001';
+    public function get_code_for_generating_barcode($chile_response)
+    { 
+        $bultos = '001';
         
-       return $combine_code = $this->normalization_code.''.$this->serviceType.''.$destination_postal_code.''.$fix_digit.''.$this->customerId.''.$tracking_code.''.$second_fix_digit;
+        return $combine_code = $chile_response->CodigoEncaminamiento.''.$chile_response->NumeroEnvio.''.$bultos;
 
     }
 

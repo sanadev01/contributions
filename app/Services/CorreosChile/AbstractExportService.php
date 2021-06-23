@@ -2,6 +2,7 @@
 
 namespace App\Services\CorreosChile;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -17,6 +18,8 @@ abstract class AbstractExportService
 
     protected $container;
 
+    private $clienteRemitente;
+
     public function __construct($container)
     {
         
@@ -26,6 +29,7 @@ abstract class AbstractExportService
         $this->path = 'manifests/excel';
 
         $this->container = $container;
+        $this->clienteRemitente = config('correoschile.codeId');
 
         if (! file_exists(storage_path('app/'.$this->path))) {
             mkdir(storage_path('app/'.$this->path), 0777, true);
@@ -38,7 +42,9 @@ abstract class AbstractExportService
     {
         $excelWriter = new Xlsx($this->spreadSheet);
 
-        $filename = $this->container->seal_no.'_manifest'.'.xlsx';
+        $current_date = (Carbon::now())->toDateTimeString();
+        $combine_date_time = str_replace(['-','', ' ',':'],'',$current_date); 
+        $filename = $this->clienteRemitente.'_'.$combine_date_time.'.xlsx';
 
         $excelWriter->save(
             storage_path("app/{$this->path}/{$filename}")

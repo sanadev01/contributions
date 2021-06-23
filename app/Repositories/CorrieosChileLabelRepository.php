@@ -12,10 +12,44 @@ class CorrieosChileLabelRepository
 {
     protected $chile_errors;
 
-    public function generat_ChileSRPLabel($order)
+    public function handle($order)
+    {
+        if(($order->shipping_service_name == 'SRP' || $order->shipping_service_name == 'SRM') && $order->chile_response == null)
+        {
+
+            $this->generat_ChileLabel($order);
+
+        }elseif($order->chile_response != null)
+        {
+
+            $this->printLabel($order);
+        }
+
+    }
+
+    public function update($order)
+    {
+        $this->generat_ChileLabel($order);
+    }
+
+    public function generat_ChileLabel($order)
+    {
+        if($order->shipping_service_name == 'SRP')
+        {
+            $this->getSRP($order);
+
+        } else {
+        
+            $this->getSRM($order);
+        }
+
+        return $order->refresh();
+    }
+
+    public function getSRP($order)
     {
         $serviceType = 28;      //service code defined by correos chile
-        $order = Order::with('recipient', 'items')->find($order->id);
+
         $response = CorreosChileFacade::generateLabel($order, $serviceType);
 
         if($response->success == true)
@@ -34,10 +68,10 @@ class CorrieosChileLabelRepository
         }
     }
 
-    public function generat_ChileSRMLabel($order)
+    public function getSRM($order)
     {
         $serviceType = 32;      //service code defined by correos chile
-        $order = Order::with('recipient', 'items')->find($order->id);
+        
         $response = CorreosChileFacade::generateLabel($order, $serviceType);
 
         if($response->success == true)
