@@ -97,14 +97,13 @@ class CorreosChileService
     {
         try
         {
-            $context = stream_context_create(array(
-                'ssl' => array(
-                'verify_peer' => false,
-                'verify_peer_name' => false,
-                'allow_self_signed' => true
+            $opts = array(
+                'ssl' => array('ciphers' => 'RC4-SHA'),
+                'http' => array(
+                    'user_agent' => 'PHPSoapClient'
                 )
-            ));
-            $client = new SoapClient($this->wsdlUrl, array('trace' => 1, 'exception' => 0, 'stream_context' => $context));
+            );
+            $client = new SoapClient($this->wsdlUrl, array('trace' => 1, 'exception' => 0, 'stream_context' => stream_context_create($opts)));
             $result = $client->__soapCall('admitirEnvio', array(
                 'admitirEnvio' => array(
                     'usuario' => $this->usuario,
