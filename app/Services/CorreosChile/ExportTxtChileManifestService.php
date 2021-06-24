@@ -11,12 +11,12 @@ use Illuminate\Support\Facades\Response;
 class ExportTxtChileManifestService
 {
     private $container;
-    private $clienteRemitente;
+    private $clienteId;
 
     public function __construct($container)
     {
         $this->container = $container;
-        $this->clienteRemitente = config('correoschile.codeId');
+        $this->clienteId = config('correoschile.codeId');
     }
 
     public function handle()
@@ -32,7 +32,7 @@ class ExportTxtChileManifestService
 
         $current_date = (Carbon::now())->toDateTimeString();
         $combine_date_time = str_replace(['-','', ' ',':'],'',$current_date); 
-        $filename = $this->clienteRemitente.'_'.$combine_date_time;
+        $filename = $this->clienteId.'_'.$combine_date_time;
         
         try {
            

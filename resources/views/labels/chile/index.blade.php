@@ -51,14 +51,14 @@
                 <small style="font-size: 7px; font-weight: bold !important">Tel : </small><small>{{$order->sender_phone}}</small>
             </td>
         </tr>
-        <tr style="height: 0.33cm !important;">
+        <tr style="height: 0.33cm !important; max-height: 0.33cm !important;">
             <td rowspan="2" style="text-align: center; font-size: 6px !important;">
                 <small style="font-size: 3px;">{{$date}}</small><br />
                 <small style="font-size: 12px !important;">{{$chile_response->AbreviaturaServicio}}</small>
             </td>
             <td colspan="8" style="height: 0.5px !important; line-height: 3.3px !important; padding-top: 1.5px !important;"><small style="font-size: 7px;">Referencia : {{$order->customer_reference}}</small></td>
         </tr>
-        <tr style="height: 0.33cm !important; line-height: 5px !important;">
+        <tr style="height: 0.33cm !important; line-height: 5px !important; max-height: 0.33cm !important;">
             <td colspan="6">
                 <small style="font-size: 6px !important; font-weight: bold !important;">Description Del Production :</small><br>
                 <small style="font-size: 6px !important; line-height: 6px !important;">{{$description}}</small>
