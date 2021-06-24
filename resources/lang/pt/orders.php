@@ -69,7 +69,8 @@ return [
         'Tax Id' => 'CPF',
         'Address' => 'Morada',
         'City' => 'cidade',
-        'Next' => 'Próximo', 
+        'Next' => 'Próximo',
+        'Select Country' => 'Selecione pais', 
     ],
     'import-excel' =>[
         'Import Orders via Excel Sheet' => 'Importar pedidos via planilha do Excel',

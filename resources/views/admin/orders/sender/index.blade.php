@@ -9,9 +9,9 @@
         <fieldset id="steps-uid-0-p-0" role="tabpanel" aria-labelledby="steps-uid-0-h-0" class="body current" aria-hidden="false">
             <div class="row mb-1">
                 <div class="col-md-3 form-group">
+                    <label for="country">@lang('orders.sender.Select Country')</label>
                     <select class="form-control countrySelect" aria-label="Default select example">
-                        <option selected>Select Country</option>
-                        <option value="brazil">Brazil</option>
+                        <option value="brazil" selected>Brazil</option>
                         <option value="chile">Chile</option>
                     </select>
                 </div>
