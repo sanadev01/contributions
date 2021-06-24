@@ -16,7 +16,7 @@ class CorreosChileLabelMaker
 
     public function setOrder($order)
     {
-        $order = Order::with('recipient', 'items')->find($order->id);
+        
         $this->order = $order;
     }
 
@@ -57,7 +57,7 @@ class CorreosChileLabelMaker
     { 
         $bultos = '001';
         
-        return $combine_code = $chile_response->CodigoEncaminamiento.''.$chile_response->NumeroEnvio.''.$bultos;
+        return $combine_code = $chile_response->CodigoEncaminamiento.$chile_response->NumeroEnvio.$bultos;
 
     }
 

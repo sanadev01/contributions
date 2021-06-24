@@ -8,13 +8,12 @@
         <h6 id="steps-uid-0-h-0" tabindex="-1" class="title current">@lang('orders.sender.Step 1')</h6>
         <fieldset id="steps-uid-0-p-0" role="tabpanel" aria-labelledby="steps-uid-0-h-0" class="body current" aria-hidden="false">
             <div class="row mb-1">
-                <div class="col-md-3">
-                    <div>
-                        <input class="chileCheckBox" type="checkbox" value="chile" id="chile">
-                        <label for="chile">
-                            Chile
-                        </label>
-                    </div>
+                <div class="col-md-3 form-group">
+                    <select class="form-control countrySelect" aria-label="Default select example">
+                        <option selected>Select Country</option>
+                        <option value="brazil">Brazil</option>
+                        <option value="chile">Chile</option>
+                    </select>
                 </div>
                 
             </div>
@@ -121,8 +120,10 @@
         $("[name='sender_address']").prop( "disabled", true );
         $("[name='sender_city']").prop('disabled',true);
         
-        $('input[type="checkbox"]').click(function(){
-            if($(this).is(":checked")){
+        $('.countrySelect').change(function () {
+            let selected = $('.countrySelect').val();
+            
+            if(selected == 'chile') {
                 $('#address').css('display', 'block');
                 $('#city').css('display', 'block'); 
 
@@ -131,18 +132,18 @@
 
                 $("[name='sender_address']").prop('required',true);
                 $("[name='sender_city']").prop('required',true);
-            }
-            else if($(this).is(":not(:checked)")){
+            } else {
                 $('#address').css('display', 'none');
-                $('#city').css('display', 'none');
+                $('#city').css('display', 'none'); 
 
-                $("[name='sender_address']").prop( "disabled", false );
-                $("[name='sender_city']").prop('disabled',false);
+                $("[name='sender_address']").prop( 'disabled', true );
+                $("[name='sender_city']").prop('disabled', true);
 
                 $("[name='sender_address']").prop('required',false);
-                $("[name='sender_city']").prop('required',false);
+                $("[name='sender_city']").prop('required', false);
             }
         });
+
     })
 
 

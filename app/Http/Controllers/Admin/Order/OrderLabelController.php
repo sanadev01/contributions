@@ -56,6 +56,8 @@ class OrderLabelController extends Controller
         $error = null;
 
         $chile_labelRepository = new CorrieosChileLabelRepository();
+
+        $labelRepository = new CorrieosBrazilLabelRepository();
         
         if($order->recipient->country_id == 46 && $request->update_label === 'false')
         {
@@ -65,8 +67,6 @@ class OrderLabelController extends Controller
             return $this->renderLabel($request, $order, $error);
         }
         
-
-        $labelRepository = new CorrieosBrazilLabelRepository();
 
         if ( $request->update_label === 'true' ){
             
