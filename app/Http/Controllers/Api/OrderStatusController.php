@@ -16,7 +16,7 @@ class OrderStatusController extends Controller
         $order = Order::find($request->order_id);
 
         if ( $order ){
-            if($request->status == Order::STATUS_REFUND && $order->status != Order::STATUS_REFUND && $order->status == Order::STATUS_PAYMENT_DONE){
+            if($request->status == Order::STATUS_REFUND && $order->status == Order::STATUS_PAYMENT_DONE){
                 $deposit = Deposit::create([
                     'uuid' => PaymentInvoice::generateUUID('DP-'),
                     'amount' => $order->gross_total,
@@ -30,17 +30,21 @@ class OrderStatusController extends Controller
                 }
             }
             
-            if($request->status >= Order::STATUS_PAYMENT_DONE && $order->status == Order::STATUS_REFUND ){
-                $deposit = Deposit::create([
-                    'uuid' => PaymentInvoice::generateUUID('DP-'),
-                    'amount' => $order->gross_total,
-                    'user_id' => $order->user_id,
-                    'balance' => Deposit::getCurrentBalance($order->user) - $order->gross_total,
-                    'is_credit' => false,
-                ]);
-        
-                if ( $order ){
-                    $order->deposits()->sync($deposit->id);
+            if($request->status == Order::STATUS_PAYMENT_DONE){
+                if(Deposit::getCurrentBalance($order->user) >= $order->gross_total){
+                    $deposit = Deposit::create([
+                        'uuid' => PaymentInvoice::generateUUID('DP-'),
+                        'amount' => $order->gross_total,
+                        'user_id' => $order->user_id,
+                        'balance' => Deposit::getCurrentBalance($order->user) - $order->gross_total,
+                        'is_credit' => false,
+                    ]);
+            
+                    if ( $order ){
+                        $order->deposits()->sync($deposit->id);
+                    }
+                }else{
+                    return apiResponse(false,"Not Enough Balance. Please Add Balance to ".$order->user->name.' '. $order->user->pobox_number ." account.");
                 }
             }
             $order->update([
