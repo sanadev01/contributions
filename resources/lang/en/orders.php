@@ -70,7 +70,8 @@ return [
         'Address' => 'Address',
         'City' => 'City',
         'Next' => 'Next', 
-        'Step 1' => 'Step 1', 
+        'Step 1' => 'Step 1',
+        'Select Country' => 'Select Country', 
     ],
     'import-excel' =>[
         'Import Orders via Excel Sheet' => 'Import Orders via Excel Sheet',
