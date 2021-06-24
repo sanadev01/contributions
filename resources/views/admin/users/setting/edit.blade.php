@@ -61,6 +61,17 @@
                                         <div class="help-block"></div>
                                     </div>  
                                 </div>
+                                
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">@lang('user.status')<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <select name="status" class="form-control">
+                                            <option value="active" @if($user->status == 'active') selected @endif>Active</option>
+                                            <option value="suspended" @if($user->status == 'suspended') selected @endif>Suspended</option>
+                                        </select>
+                                        <div class="help-block"></div>
+                                    </div>  
+                                </div>
 
                                 <h3>Api Settings</h3>
                                 <hr>
@@ -158,8 +169,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-                               
 
                                 <div class="row mt-1">
                                     <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">

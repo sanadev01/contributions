@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\CommissionSetting;
-use Illuminate\Http\Request;
-use App\Models\User;
-use App\Models\ProfitPackage;
 use App\Models\Role;
+use App\Models\User;
+use App\Models\Deposit;
+use Illuminate\Http\Request;
+use App\Models\ProfitPackage;
+use App\Models\PaymentInvoice;
+use App\Models\CommissionSetting;
+use App\Http\Controllers\Controller;
 
 class UserSettingController extends Controller
 {
@@ -34,6 +36,7 @@ class UserSettingController extends Controller
         $user->update([
             'package_id' => $request->package_id,
             'role_id' => $request->role_id,
+            'status' => $request->status,
             'api_enabled' => $request->has('api_enabled'),
             'market_place_name' => $request->market_place_name,
             'email' => $request->user_email,
@@ -74,6 +77,26 @@ class UserSettingController extends Controller
             if($commissionSetting){
                 $commissionSetting->delete();
             }
+        }
+
+        if($request->status == 'suspended'){
+            $lastTransaction = Deposit::where('user_id', $user->id)->latest('id')->first();
+            if($lastTransaction){
+                if($lastTransaction->balance > 0){
+                    $deposit = Deposit::create([
+                        'uuid' => PaymentInvoice::generateUUID('DP-'),
+                        'amount' => $lastTransaction->balance,
+                        'user_id' => $user->id,
+                        'last_four_digits' => 'Account Suspended',
+                        'balance' => $lastTransaction->balance - $lastTransaction->balance,
+                        'is_credit' => false,
+                    ]);
+                }
+            }
+            $user->update([
+                'status' => $request->status,
+                'api_enabled' => false
+            ]);
         }
 
         session()->flash('alert-success','user.User Setting Updated Successfully');

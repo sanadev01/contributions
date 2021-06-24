@@ -2,6 +2,11 @@
 
 @section('content')
 <div class="container">
+    <div class="content-header row">
+        <div class="col-md-12">
+            <x-flash-message></x-flash-message>
+        </div>
+    </div>
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
