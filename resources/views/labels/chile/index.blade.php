@@ -154,7 +154,7 @@
                 <table cellspacing="0" cellpadding="0" style="margin: 0px !important;">
                     <tr>
                         <td style="border-right: 1px solid; height:0.6cm; width: 58px; text-align: center;">
-                            <small style="font-size: 13px; font-weight: normal bold !important">{{ $chile_response->SDP ?? '' }}</small>    
+                            <small style="font-size: 13px; font-weight: normal bold !important">00{{ $chile_response->SDP ?? '' }}</small>    
                         </td>
                         <td style="border-right: 1px solid; height:0.6cm; width: 150px; text-align: center;">
                             <small style="font-size: 13px; font-style: italic !important; font-weight: normal bold !important">{{$chile_response->NombreDelegacionDestino}}</small>
@@ -163,7 +163,7 @@
                             <small style="font-size: 7px;"></small>
                         </td>
                         <td style="border-right: 1px solid; height:0.6cm; width: 60px; text-align: center;">
-                            <small style="font-size: 13px; font-weight: normal bold !important">{{$chile_response->CUARTEL ?? ''}} / {{$chile_response->SECTOR ?? ''}}</small>
+                            <small style="font-size: 13px; font-weight: normal bold !important">{{$chile_response->Cuartel ?? ''}} / {{$chile_response->Sector ?? ''}}</small>
                         </td>
                     </tr>
                 </table>
