@@ -161,8 +161,8 @@ class OrderImportService extends AbstractImportService
             "value" => $this->getValue("AB{$row}"),
             "description" => $this->getValue("AC{$row}"),
             "sh_code" => $this->getValue("AD{$row}"),
-            "contains_battery" => strlen($this->getValue("AE{$row}")) >0 ? true : false,
-            "contains_perfume" => strlen($this->getValue("AF{$row}")) >0 ? true : false
+            "contains_battery" => strtolower($this->getValue("AE{$row}")) == 'yes' ? true : false,
+            "contains_perfume" => strtolower($this->getValue("AF{$row}")) == 'yes' ? true : false
         ];
 
         $items = $order->items ? $order->items : [];
