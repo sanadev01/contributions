@@ -11,6 +11,7 @@ return [
     'Package' => 'Package',
     'Role' => 'Role',
     'Action' => 'Action',
+    'status' => 'Status',
     'Login' => 'Login',
     'Delete' => 'Delete',
     'Search' => 'Search',

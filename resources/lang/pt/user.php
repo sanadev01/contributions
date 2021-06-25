@@ -11,6 +11,7 @@ return [
     'Account Type' => 'tipo de conta',
     'Package' => 'Pacote',
     'Action' => 'Açao',
+    'status' => 'Status',
     'Login' => 'Conecte-se',
     'Delete' => 'Excluir',
     'Search' => 'Procurar',
