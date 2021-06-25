@@ -17,6 +17,7 @@ return [
     'connect' => 'Connect',
     'support tickets' => 'Support Tickets',
     'profile' => 'Profile',
+    'API Documents' => 'API Documents',
     'Parcels' => 'Parcels',
     'Rates' => 'Rates',
     'Profit Packages' => 'Profit Packages',

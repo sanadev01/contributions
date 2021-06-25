@@ -17,6 +17,7 @@ return [
     'connect' => 'Conectar',
     'support tickets' => 'Assistência',
     'profile' => 'Perfil',
+    'API Documents' => 'Documentos API',
     'Parcels' => 'Pacotes',
     'Rates' => 'Minhas tarifas',
     'Profit Packages' => 'Pacotes de lucro',

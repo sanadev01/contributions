@@ -89,6 +89,11 @@ class ScanLabel extends Component
                     $this->orderStatus = 'Order Release';
                     return $this->tracking = '';
                 }
+
+                if($this->order->status == Order::STATUS_REFUND){
+                    $this->orderStatus = 'Order Refund';
+                    return $this->tracking = '';
+                }
                 
                 array_push($this->packagesRows,[
                     'tracking_code' => $this->tracking,
