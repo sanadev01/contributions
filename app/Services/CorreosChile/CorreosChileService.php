@@ -32,7 +32,7 @@ class CorreosChileService
 
     public function make_body_attributes($order, $serviceType)
     {
-
+        
         $orderArray = [
             'CodigoAdmision' =>  $this->codigoAdmision,         //ID transaction (Internal Client), with this data the XML Response is returned.
             'ClienteRemitente' => $this->clienteRemitente,      //ID Code SAP Customer. Delivered by CorreosChile
@@ -50,7 +50,7 @@ class CorreosChileService
             'NombreDestinatario' => $order->recipient->first_name.' '.$order->recipient->last_name, //Recipient Full Name
             'DireccionDestinatario' => $order->recipient->street_no.' '.$order->recipient->address,           //Recipient Address (street + number + complement address)
             'PaisDestinatario' => '056',                            //Destination Country (Default "056")
-            // 'CodigoPostalDestinatario' => '',                    //Recipient Postal Code e.g 8340604
+            'CodigoPostalDestinatario' => $order->recipient->zipcode, //Recipient Postal Code e.g 8340604
             'ComunaDestinatario' => $order->recipient->city,        //Recipient area/devision/city
             // 'RutDestinatario' => '',                                //optional
             'PersonaContactoDestinatario' => $order->recipient->first_name,    //Recipient Person
