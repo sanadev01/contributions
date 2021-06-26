@@ -21,6 +21,7 @@ class OrderStatusController extends Controller
                     'uuid' => PaymentInvoice::generateUUID('DP-'),
                     'amount' => $order->gross_total,
                     'user_id' => $order->user_id,
+                    'last_four_digits' => 'credit from cancelation, refund',
                     'balance' => Deposit::getCurrentBalance($order->user) + $order->gross_total,
                     'is_credit' => true,
                 ]);
