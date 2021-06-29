@@ -2,13 +2,18 @@
 
 namespace App\Models\Warehouse;
 
-use App\Services\Converters\UnitsConverter;
-use App\Services\Correios\Models\Package;
 use Illuminate\Database\Eloquent\Model;
+use App\Services\Correios\Models\Package;
+use App\Services\Converters\UnitsConverter;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class AccrualRate extends Model
 {
-
+    use LogsActivity;
+    protected static $logAttributes = ['*'];
+    protected static $logOnlyDirty = true;
+    protected static $submitEmptyLogs = false;
+    
     public function getServiceName()
     {
         if ( $this->service == Package::SERVICE_CLASS_STANDARD ){
