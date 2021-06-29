@@ -2,20 +2,25 @@
 
 namespace App\Models\Warehouse;
 
-use App\Http\Resources\Warehouse\Container\PackageResource;
-use App\Models\Order;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Order;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Http\Resources\Warehouse\Container\PackageResource;
 
 class Container extends Model implements \App\Services\Correios\Contracts\Container
 {
     use SoftDeletes;
 
     protected $guarded = [];
-
+    
+    use LogsActivity;
+    protected static $logAttributes = ['*'];
+    protected static $logOnlyDirty = true;
+    protected static $submitEmptyLogs = false;
 
     public function user()
     {
