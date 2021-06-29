@@ -56,7 +56,7 @@ class RateReportsRepository
             }
 
             $profitPackageSlabRates->push([
-                'weight' => $originalWeight,
+                'weight' => $originalWeightMax,
                 'profit'  => $profitValue,
                 'shipping'  => $shippingValue,
                 'rates'  => $shippingRates,
