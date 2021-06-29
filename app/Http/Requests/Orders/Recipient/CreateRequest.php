@@ -40,8 +40,7 @@ class CreateRequest extends FormRequest
             ],
             'state_id' => 'required|exists:states,id',
             'zipcode' => [
-                'required', new ZipCodeValidator($this->country_id,$this->state_id)
-
+                'required'
                 // 'required',  new CorreosAddresstValidator($this->country_id,$this->address), new ZipCodeValidator($this->country_id,$this->state_id)
             ]
         ];
@@ -49,6 +48,7 @@ class CreateRequest extends FormRequest
         if (Country::where('code', 'BR')->first()->id == $this->country_id) {
             $rules['cpf'] = 'sometimes|cpf|required_if:country_id,'.Country::where('code', 'BR')->first()->id;
             $rules['cnpj'] = 'sometimes|cnpj|required_if:country_id,'.Country::where('code', 'BR')->first()->id;
+            $rules['zipcode'] = ['required', new ZipCodeValidator($this->country_id,$this->state_id)];
         }
 
         return $rules;

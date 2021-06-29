@@ -99,7 +99,7 @@
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
                         <label>@lang('address.Street No')</label>
-                        <input type="text" class="form-control" placeholder="@lang('address.Street No')" value="{{old('street_no',optional($order->recipient)->street_no)}}"  name="street_no">
+                        <input type="text" class="form-control" placeholder="@lang('address.Street No')" value="{{old('street_no',optional($order->recipient)->street_no)}}"  name="street_no" id="street_no">
                         <div class="help-block"></div>
                     </div>
                 </div>
@@ -118,7 +118,7 @@
                     </div>
                 </div>
                 <div class="form-group col-12 col-sm-6 col-md-4">
-                    <div class="controls">
+                    <div class="controls" id="div_state" style="display: none">
                         <label>@lang('address.State') <span class="text-danger">*</span></label>
                         <select name="state_id" id="state" class="form-control selectpicker show-tick" data-live-search="true">
                             <option value="">Select @lang('address.State')</option>
@@ -128,12 +128,38 @@
                         </select>
                         <div class="help-block"></div>
                     </div>
+                    {{-- Chile Regions --}}
+                    <div class="controls" id="div_region" style="display: none">
+                        <label>Regions <span class="text-danger">*</span></label>
+                        <select name="state_id" id="region" class="form-control selectpicker show-tick" data-live-search="true" data-value="{{ old('state_id', optional($order->recipient)->state_id) }}">
+                            <option value="">Select Region</option>
+                        </select>
+                        <div class="help-block"></div>
+                    </div>
+                </div>
+                <div class="form-group col-12 offset-4">
+                    <div class="controls">
+                        <div class="help-block" id="regions_response">
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group col-12 col-sm-6 col-md-4">
-                    <div class="controls">
+                    <div class="controls" id="div_city" style="display: none">
                         <label>@lang('address.City') <span class="text-danger">*</span></label>
                         <input type="text" id="city" name="city" value="{{old('city',optional($order->recipient)->city)}}" class="form-control"  required placeholder="City"/>
                         <div class="help-block"></div>
+                    </div>
+                    {{-- Chile Communes --}}
+                    <div class="controls" id="div_communes" style="display: none">
+                        <label>Communes <span class="text-danger">*</span></label>
+                        <select name="city" id="commune" class="form-control selectpicker show-tick" data-live-search="true" data-value="{{ old('city', optional($order->recipient)->city) }}">
+                            <option value="">Select Commune</option>
+                        </select>
+                        <div class="help-block"></div>
+                    </div>
+                    <div class="controls">
+                        <div class="help-block" id="communes_response" style="display: none">
+                        </div>
                     </div>
                 </div>
 
@@ -261,20 +287,322 @@
     })
 
     $(document).ready(function(){
-        $('#country').on('change', function(){
-            let val = $(this).val();
+        let old_city = $('#commune').data('value');
+        // For getting Chile Regions
+        $('#country').ready(function() {
+            $('#regions_response').css('display', 'none');
+            let val = $('#country').val();
+            const old_state_id = $('#region').data('value');
+
             if(val == '46'){
                 $('#cpf').css('display', 'none')
+                $('#div_state').css('display', 'none')
+                $('#div_city').css('display', 'none')
+                
+                $('#div_region').css('display', 'block')
+                $('#div_communes').css('display', 'block')
+
+                $('#state').prop('disabled', true);
+                $('#city').prop('disabled', true);
+
+                $('#region').prop('disabled', false);
+                $('#commune').prop('disable', false);
+
+                $('#loading').fadeIn();
+                $.get('{{ route("api.orders.recipient.chile_regions") }}')
+                .then(function(response){
+                    if(response.success == true)
+                    {
+                        $('#region').attr('disabled', false);
+                        $.each(response.data,function(key, value)
+                        {
+                            $('#region').append('<option value="'+value.Identificador+'">'+value.Nombre+'</option>');
+                            $('#region').selectpicker('refresh');
+                            if(old_state_id != undefined || old_state_id != '')
+                            {
+                                $('#region').val(old_state_id);
+                            }
+                        });
+                        $('#loading').fadeOut();
+                    }else{
+                        $('#loading').fadeOut();
+                        $('#regions_response').css('display', 'block');
+                        $('#regions_response').empty().append("<p style='color: red;'>"+response.message+"</p>");
+                        toastr.error(response.message)
+                    }
+                    
+                }).catch(function(error){
+                    console.log(error);
+                })
+                // Fetch Communes
+                if(old_state_id != undefined || old_state_id != '')
+                {
+                    $('#loading').fadeIn();
+                    $('#communes_response').css('display', 'none');
+                    $.get('{{ route("api.orders.recipient.chile_comunes") }}',{
+                        region_code: old_state_id,
+                    })
+                    .then(function(response){
+                        if(response.success == true)
+                        {
+                            $('#commune').attr('disabled', false);
+                            $.each(response.data,function(key, value)
+                            {
+                                $('#commune').append('<option value="'+value.NombreComuna+'">'+value.NombreComuna+'</option>');
+                                $('#commune').selectpicker('refresh');
+                                if(old_city != undefined || old_city != '')
+                                {
+                                    $('#commune').val(old_city);
+                                }
+                            });
+                            $('#loading').fadeOut();
+                        }else{
+                            $('#loading').fadeOut();
+                            $('#communes_response').css('display', 'block');
+                            $('#communes_response').empty().append("<p style='color: red;'>"+response.message+"</p>");
+                            toastr.error(response.message)
+                        }
+                    }).catch(function(error){
+                        console.log(error);
+                    })
+                }    
+
             }else {
                 $('#cpf').css('display', 'block')
+                $('#div_state').css('display', 'block')
+                $('#div_city').css('display', 'block')
+
+                $('#div_region').css('display', 'none')
+
+                $('#state').prop('disabled', false);
+                $('#city').prop('disabled', false);
+
+                $('#region').prop('disabled', true);
+                $('#commune').prop('disable', true);
             }
         });
-        $('#country').ready(function() {
-            let val = $('#country').val();
+
+        $('#country').on('change', function(){
+            $('#regions_response').css('display', 'none');
+            let val = $(this).val();
+            const old_state_id = $('#region').data('value');
+
             if(val == '46'){
                 $('#cpf').css('display', 'none')
+                $('#div_state').css('display', 'none')
+                $('#div_city').css('display', 'none')
+
+                $('#div_region').css('display', 'block')
+                $('#div_communes').css('display', 'block')
+
+                $('#state').prop('disabled', true);
+                $('#city').prop('disabled', true);
+
+                $('#region').prop('disabled', false);
+                $('#commune').prop('disable', false);
+
+                $('#loading').fadeIn();
+                $.get('{{ route("api.orders.recipient.chile_regions") }}')
+                .then(function(response){
+                    if(response.success == true)
+                    {
+                        $('#region').attr('disabled', false);
+                        $.each(response.data,function(key, value)
+                        {
+                            $('#region').append('<option value="'+value.Identificador+'">'+value.Nombre+'</option>');
+                            $('#region').selectpicker('refresh');
+                            if(old_state_id != undefined || old_state_id != '')
+                            {
+                                $('#region').val(old_state_id);
+                            }
+                        });
+                    }else {
+                        $('#loading').fadeOut();
+                        $('#regions_response').css('display', 'block');
+                        $('#regions_response').empty().append("<p style='color: red;'>"+response.message+"</p>");
+                        toastr.error(response.message)
+                    }
+                }).catch(function(error){
+                   console.log(error);
+                })
+                // Fetch Communes
+                if(old_state_id != undefined || old_state_id != '')
+                {
+                    $('#loading').fadeIn();
+                    $('#communes_response').css('display', 'none');
+                    $.get('{{ route("api.orders.recipient.chile_comunes") }}',{
+                        region_code: old_state_id,
+                    })
+                    .then(function(response){
+                        if(response.success == true)
+                        {
+                            $('#commune').attr('disabled', false);
+                            $.each(response.data,function(key, value)
+                            {
+                                $('#commune').append('<option value="'+value.NombreComuna+'">'+value.NombreComuna+'</option>');
+                                $('#commune').selectpicker('refresh');
+                            });
+                            if(old_city != undefined || old_city != '')
+                            {
+                                $('#commune').val(old_city);
+                            }
+                            $('#loading').fadeOut();
+                        }else{
+                            $('#loading').fadeOut();
+                            $('#communes_response').css('display', 'block');
+                            $('#communes_response').empty().append("<p style='color: red;'>"+response.message+"</p>");
+                            toastr.error(response.message)
+                        }
+                    }).catch(function(error){
+                        console.log(error);
+                    })
+                }
+
             }else {
                 $('#cpf').css('display', 'block')
+                $('#div_state').css('display', 'block')
+                $('#div_city').css('display', 'block')
+
+                $('#div_region').css('display', 'none')
+                $('#div_communes').css('display', 'none')
+
+                $('#state').prop('disabled', false);
+                $('#city').prop('disabled', false);
+
+                $('#region').prop('disabled', true);
+                $('#commune').prop('disable', true);
+            }
+        });
+
+        // For getting Chile Communes based on selected region
+        $('#region').on('change', function(){
+            const old_state_id = $('#region').data('value');
+            $('#communes_response').css('display', 'none');
+            if ( $(this).val() == undefined || $(this).val() == "" ) return;
+            let region_code = $('#region').val();
+            
+            $('#loading').fadeIn();
+            $.get('{{ route("api.orders.recipient.chile_comunes") }}',{
+                region_code: $(this).val(),
+            })
+            .then(function(response){
+                if(response.success == true)
+                {
+                    $('#commune').attr('disabled', false);
+                    $.each(response.data,function(key, value)
+                    {
+                        $('#commune').append('<option value="'+value.NombreComuna+'">'+value.NombreComuna+'</option>');
+                        $('#commune').selectpicker('refresh');
+                    });
+                    if((old_state_id != undefined || old_state_id != '') && (old_city != undefined || old_city != '') && region_code == old_state_id)
+                    {
+                        $('#commune').val(old_city);
+                    }else{
+                        $('#commune').val('');
+                    }
+                    $('#loading').fadeOut();
+                }else{
+                    $('#loading').fadeOut();
+                    $('#communes_response').css('display', 'block');
+                    $('#communes_response').empty().append("<p style='color: red;'>"+response.message+"</p>");
+                    toastr.error(response.message)
+                }
+            }).catch(function(error){
+                console.log(error);
+            })
+        });
+
+        // For validating Address and Zipcode
+        $('#commune').on('change', function(){
+            let commune = $(this).val();
+            let address = $('#address').val();
+            let street_no = $('#street_no').val();
+            let country = $('#country').val();
+            let direction = address.concat(" ",street_no);
+            
+            if ( address == undefined || address == "" || street_no == undefined || street_no == "" ) return;
+
+            if(country == '46')
+            {
+                $('#loading').fadeIn();
+
+                $.get('{{ route("api.orders.recipient.normalize_address") }}',{
+                    coummne: commune,
+                    direction: direction,
+                })
+                .then(function(response){
+                    if ( response.success == true ){
+                        $('#loading').fadeOut();
+                        $('#zipcode').val(response.data.CodigoPostal);
+                        $('#zipcode_response').empty().append("<p><b>According to your Coummune, your zipcode should be this</b></p><p><span style='color: red;'>zipcode: </span><span>"+response.data.CodigoPostal);
+                    }else{
+                        $('#loading').fadeOut();
+                        $('#zipcode_response').empty().append("<p style='color: red;'>"+response.message+"</p>");
+                        toastr.error(response.message)
+                    }
+                }).catch(function(error){
+                    console.log(error);
+                })
+            }
+        });
+
+        $('#address').on('change', function(){
+            let address = $(this).val();
+            let country = $('#country').val();
+            let commune = $('#commune').val();
+            let street_no = $('#street_no').val();
+            let direction = address.concat(" ",street_no);
+
+            if(country == '46' && commune != undefined && commune != "" && address.length > 5 && street_no.length > 0 && direction.length > 5)
+            {
+                $('#loading').fadeIn();
+                $.get('{{ route("api.orders.recipient.normalize_address") }}',{
+                    coummne: commune,
+                    direction: direction,
+                })
+                .then(function(response){
+                    if ( response.success == true ){
+                        $('#zipcode').val(response.data.CodigoPostal);
+                        $('#zipcode_response').empty().append("<p><b>According to your Coummune, your zipcode should be this</b></p><p><span style='color: red;'>zipcode: </span><span>"+response.data.CodigoPostal);
+                        $('#loading').fadeOut();
+                    }else{
+                        $('#loading').fadeOut();
+                        $('#zipcode_response').empty().append("<p style='color: red;'>"+response.message+"</p>");
+                        toastr.error(response.message)
+                    }
+                }).catch(function(error){
+                    console.log(error);
+                })
+            }
+        });
+
+        $('#street_no').on('change', function(){
+            let address = $('#address').val();
+            let country = $('#country').val();
+            let commune = $('#commune').val();
+            let street_no = $(this).val();
+            let direction = address.concat(" ",street_no);
+
+            if(country == '46' && commune != undefined && commune != "" && address.length > 5 && street_no.length > 0 && direction.length > 5)
+            {
+                $('#loading').fadeIn();
+                $.get('{{ route("api.orders.recipient.normalize_address") }}',{
+                    coummne: commune,
+                    direction: direction,
+                })
+                .then(function(response){
+                    if ( response.success == true ){
+                        $('#zipcode').val(response.data.CodigoPostal);
+                        $('#zipcode_response').empty().append("<p><b>According to your Coummune, your zipcode should be this</b></p><p><span style='color: red;'>zipcode: </span><span>"+response.data.CodigoPostal);
+                        $('#loading').fadeOut();
+                    }else{
+                        $('#loading').fadeOut();
+                        $('#zipcode_response').empty().append("<p style='color: red;'>"+response.message+"</p>");
+                        toastr.error(response.message)
+                    }
+                }).catch(function(error){
+                    console.log(error);
+                })
             }
         });
     })

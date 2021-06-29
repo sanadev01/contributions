@@ -48,7 +48,7 @@ class CorreosChileService
             // 'ClienteDestinatario' => '',                            //optional
             // 'CentroDestinatario' => '',                             //optional
             'NombreDestinatario' => $order->recipient->first_name.' '.$order->recipient->last_name, //Recipient Full Name
-            'DireccionDestinatario' => $order->recipient->street_no.' '.$order->recipient->address,           //Recipient Address (street + number + complement address)
+            'DireccionDestinatario' => $order->recipient->address.' '.$order->recipient->street_no,           //Recipient Address (street + number + complement address)
             'PaisDestinatario' => '056',                            //Destination Country (Default "056")
             'CodigoPostalDestinatario' => $order->recipient->zipcode, //Recipient Postal Code e.g 8340604
             'ComunaDestinatario' => $order->recipient->city,        //Recipient area/devision/city
