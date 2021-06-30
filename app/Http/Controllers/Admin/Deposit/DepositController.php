@@ -35,8 +35,9 @@ class DepositController extends Controller
             
             if($request->adminpay){
                 $request->validate([
-                    'user_id' => 'required',
-                    'amount' => 'required',
+                    'user_id'     => 'required',
+                    'description' => 'required',
+                    'amount'      => 'required',
                 ]);
                 $depositRepository->adminAdd($request);
                 session()->flash('alert-success', __('orders.payment.alert-success'));
