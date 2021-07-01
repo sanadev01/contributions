@@ -58,6 +58,15 @@
                                             <label>Select User</label>
                                             <livewire:components.search-user />
                                         </div>
+                                        <div class="col-md-4 balanceuser" @admin @if(old('adminpay') == 0) style="display: none" @endif  @endadmin>
+                                            <label>Description</label>
+                                            <input type="text" class="form-control" required name="description" placeholder="Enter Description">
+                                            @error('description')
+                                                <div class="text-danger">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
                                     @endadmin
                                     <div class="col-md-4">
                                         <label>Amount</label>

@@ -65,7 +65,7 @@ class ExportManfestService extends AbstractCsvExportService
                 ($package->recipient)->getRecipientInfo(),
                 ($package->recipient)->getAddress(),
                 1,
-                $package->getWeight('kg'),
+                $package->getOriginalWeight('kg'),
                 7 => 'contents',
                 8 => 'ncm',
                 $package->getOrderValue(),
