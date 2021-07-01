@@ -30,6 +30,13 @@ class OrderController extends Controller
     public function destroy(Order $order, PreAlertRepository $preAlertRepository)
     {
         $this->authorize('delete',$order);
+        
+        if($order->user->hasRole('retailer') && !$order->isPaid()){
+            if ( $preAlertRepository->returnToParcel($order) ){
+                session()->flash('alert-success','Order Deleted');
+                return back();
+            }
+        }
 
         if ( $preAlertRepository->delete($order) ){
             session()->flash('alert-success','Parcel Deleted');

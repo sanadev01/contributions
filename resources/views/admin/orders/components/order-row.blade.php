@@ -158,7 +158,7 @@
                         @csrf
                         @method('DELETE')
                         <button class="dropdown-item text-danger" title="Delete Record">
-                            <i class="feather icon-trash"></i> Delete
+                            <i class="feather icon-trash"></i>@if( $order->user->hasRole('retailer') &&  !$order->isPaid()) Remove Order @else Delete @endif  
                         </button>
                     </form>
                 </div>

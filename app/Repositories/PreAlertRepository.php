@@ -207,6 +207,7 @@ class PreAlertRepository
 
     public function delete(Order $order,$soft=true)
     {
+        dd('delete');
         if ( $soft ){
             
             // if ( $order->isConsolidated() ){
@@ -290,6 +291,47 @@ class PreAlertRepository
         } catch (\Exception $ex) {
             DB::rollback();
             $this->error = $ex->getMessage();
+            return false;
+        }
+    }
+
+    public function returnToParcel(Order $order)
+    {
+        try{
+                $order->items()->delete();
+                $order->recipient()->delete();
+                optional($order->purchaseInvoice)->delete();
+                $order = $order->update([
+                "user_id"               => $order->user_id,
+                "merchant"              => $order->merchant,
+                "carrier"               => $order->carrier,
+                "tracking_id"           => $order->tracking_id,
+                "status"                => Order::STATUS_PREALERT_TRANSIT,
+                "order_date"            => $order->order_date,
+                'warehouse_number'      => $order->warehouse_number,
+                "shipping_service_id"   => null,
+                "shipping_service_name" => '',
+                "customer_reference"    => '',
+                "weight"                => 0,
+                "length"                => 0,
+                "width"                 => 0,
+                "height"                => 0,
+                "measurement_unit"      => 'kg/cm',
+                "is_invoice_created"    => 0,
+                "is_shipment_added"     => 0,
+                "sender_first_name"     => '',
+                "sender_last_name"      => '',
+                "sender_email"          => '',
+                "sender_phone"          => '',
+                "user_declared_freight" => 0,
+
+            ]);
+            
+            return true;
+
+        } catch (\Exception $ex) {
+            DB::rollback();
+
             return false;
         }
     }
