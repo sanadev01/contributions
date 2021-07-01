@@ -66,7 +66,7 @@
         $('#country').ready(function() {
             $('#regions_response').css('display', 'none');
             let val = $('#country').val();
-            const old_state_id = $('#region').data('value');
+            const old_region = $('#region').data('value');
 
             if(val == '46'){
                 $('#cpf').css('display', 'none')
@@ -91,9 +91,9 @@
                         {
                             $('#region').append('<option value="'+value.Identificador+'">'+value.Nombre+'</option>');
                             $('#region').selectpicker('refresh');
-                            if(old_state_id != undefined || old_state_id != '')
+                            if(old_region != undefined || old_region != '')
                             {
-                                $('#region').val(old_state_id);
+                                $('#region').val(old_region);
                             }
                         });
                         $('#loading').fadeOut();
@@ -108,12 +108,12 @@
                     console.log(error);
                 })
                 // Fetch Communes
-                if(old_state_id != undefined || old_state_id != '')
+                if(old_region != undefined || old_region != '')
                 {
                     $('#loading').fadeIn();
                     $('#communes_response').css('display', 'none');
                     $.get('{{ route("api.orders.recipient.chile_comunes") }}',{
-                        region_code: old_state_id,
+                        region_code: old_region,
                     })
                     .then(function(response){
                         if(response.success == true)
@@ -158,7 +158,7 @@
         $('#country').on('change', function(){
             $('#regions_response').css('display', 'none');
             let val = $(this).val();
-            const old_state_id = $('#region').data('value');
+            const old_region = $('#region').data('value');
 
             if(val == '46'){
                 $('#cpf').css('display', 'none')
@@ -184,9 +184,9 @@
                         {
                             $('#region').append('<option value="'+value.Identificador+'">'+value.Nombre+'</option>');
                             $('#region').selectpicker('refresh');
-                            if(old_state_id != undefined || old_state_id != '')
+                            if(old_region != undefined || old_region != '')
                             {
-                                $('#region').val(old_state_id);
+                                $('#region').val(old_region);
                             }
                         });
                     }else {
@@ -199,12 +199,12 @@
                    console.log(error);
                 })
                 // Fetch Communes
-                if(old_state_id != undefined || old_state_id != '')
+                if(old_region != undefined || old_region != '')
                 {
                     $('#loading').fadeIn();
                     $('#communes_response').css('display', 'none');
                     $.get('{{ route("api.orders.recipient.chile_comunes") }}',{
-                        region_code: old_state_id,
+                        region_code: old_region,
                     })
                     .then(function(response){
                         if(response.success == true)
@@ -249,7 +249,7 @@
 
         // For getting Chile Communes based on selected region
         $('#region').on('change', function(){
-            const old_state_id = $('#region').data('value');
+            const old_region = $('#region').data('value');
             $('#communes_response').css('display', 'none');
             if ( $(this).val() == undefined || $(this).val() == "" ) return;
             let region_code = $('#region').val();
@@ -267,7 +267,7 @@
                         $('#commune').append('<option value="'+value.NombreComuna+'">'+value.NombreComuna+'</option>');
                         $('#commune').selectpicker('refresh');
                     });
-                    if((old_state_id != undefined || old_state_id != '') && (old_city != undefined || old_city != '') && region_code == old_state_id)
+                    if((old_region != undefined || old_region != '') && (old_city != undefined || old_city != '') && region_code == old_region)
                     {
                         $('#commune').val(old_city);
                     }else{
