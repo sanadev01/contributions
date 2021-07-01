@@ -16,6 +16,32 @@
             font-family: Arial, Helvetica, sans-serif;
             box-sizing:border-box !important;
         }
+
+        .circle {
+            width: 0.5cm !important;
+            height: 0.5cm !important;
+            line-height: 100px;
+            border-radius: 50%; /* the magic */
+            -moz-border-radius: 50%;
+            -webkit-border-radius: 50%;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 700;
+            margin: 2px auto 6px;
+            background-color: green;
+        }
+        .square {
+            height: 0.5cm !important; 
+            width: 0.5cm !important; 
+            background-color: red; 
+            margin: auto !important; 
+            position: absolute; 
+            top: 1.9px !important; 
+            left: 1.9px !important; 
+            right: 0 !important; 
+            bottom: 0 !important; 
+            margin: auto !important;
+        }
         
     </style>
 </head>
@@ -94,6 +120,15 @@
                         <td>
                             {{$order->recipient->first_name}} {{$order->recipient->last_name}}
                         </td>
+                        <td rowspan="3">
+                            <div style="background-color: grey !important; height: 0.6cm !important; width: 0.6cm !important; position: relative !important; float: right !important; margin-top: 4px !important;">
+                                @if($order->recipient->region == '214')   {{-- 214 is region code of Santiago metropolitan region--}}
+                                    <div class="circle"></div>
+                                @else
+                                    <div class="square"></div>
+                                @endif
+                            </div>
+                        </td>
                     </tr>
                     <tr>
                         <td style="font-weight: bold;">
@@ -123,7 +158,13 @@
                             
                         </td>
                         <td>
-                            
+                            {{-- <div style="display: flex !important; justify-content: center !important; height: 100% !important;">
+                                @if($order->recipient->region == '214')
+                                    <div class="circle">Santiago</div>
+                                @else
+                                    <div class="square">Other</div>
+                                @endif        
+                            </div>    --}}
                         </td>
                     </tr>
                 </table>

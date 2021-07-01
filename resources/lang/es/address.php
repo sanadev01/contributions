@@ -13,7 +13,7 @@ return  [
     'Address Type' => 'Tipo de dirección',
     'Email' => 'Email',
     'Phone' => 'Teléfono *(Formato internacional) i.e +56123456789 No se aceptan símbolos, letras o espacios.',
-    'Address' => 'dirección',
+    'Address' => 'nombre de la calle',
     'Telefone' => 'Teléfono',
     'Country' => 'País',
     'State' => 'región',

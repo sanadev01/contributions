@@ -131,7 +131,7 @@
                     {{-- Chile Regions --}}
                     <div class="controls" id="div_region" style="display: none">
                         <label>Regions <span class="text-danger">*</span></label>
-                        <select name="state_id" id="region" class="form-control selectpicker show-tick" data-live-search="true" data-value="{{ old('state_id', optional($order->recipient)->state_id) }}">
+                        <select name="region" id="region" class="form-control selectpicker show-tick" data-live-search="true" data-value="{{ old('region', optional($order->recipient)->region) }}">
                             <option value="">Select Region</option>
                         </select>
                         <div class="help-block"></div>

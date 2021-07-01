@@ -80,6 +80,7 @@ class OrderRepository
                 'zipcode' => cleanString($request->zipcode),
                 'state_id' => $request->state_id,
                 'country_id' => $request->country_id,
+                'region' => $request->region,
             ]);
 
             return $order->recipient;
@@ -100,6 +101,7 @@ class OrderRepository
             'zipcode' => $request->zipcode,
             'state_id' => $request->state_id,
             'country_id' => $request->country_id,
+            'region' => $request->region,
         ]);
 
         $order->refresh();
