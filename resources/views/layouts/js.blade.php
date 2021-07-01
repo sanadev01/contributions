@@ -27,6 +27,12 @@
 
 {{-- <script src="{{ mix('js/app.js') }}"></script> --}}
 <script>
+    // script to adjust sidebar height as per screen resolution
+    var body_height = $('body').css('height').replace('px','');
+    var logo_height = $(".main-menu .navbar-header").css('height').replace('px','');
+    var remaining_height = parseInt(body_height)-parseInt(logo_height);
+    $('.navigation-main').css('height',remaining_height+"px");
+    
     $('.datepicker').pickadate({
         format: 'yyyy-m-d',
         max: 0
