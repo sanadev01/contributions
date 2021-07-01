@@ -207,7 +207,6 @@ class PreAlertRepository
 
     public function delete(Order $order,$soft=true)
     {
-        dd('delete');
         if ( $soft ){
             
             // if ( $order->isConsolidated() ){
