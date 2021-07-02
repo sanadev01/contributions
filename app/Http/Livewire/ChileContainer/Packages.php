@@ -19,6 +19,8 @@ class Packages extends Component
     public $error;
     public $num_of_Packages = 0;
     public $totalweight;
+    public $containerDestination;
+    public $orderRegion;
 
     public function mount($container = null, $ordersCollection = null, $editMode = null)
     {
@@ -33,6 +35,13 @@ class Packages extends Component
         } else {
             $this->service = 'SRP';
         }
+        
+        if($container->destination_operator_name == 'MR')
+        {
+            $this->containerDestination = 'Santiago';     
+        }else{
+            $this->containerDestination = 'notSantiago';
+        }
     }
 
     public function render()
@@ -40,7 +49,7 @@ class Packages extends Component
         $this->getPackages($this->container->id);
         $this->totalPackages();
         $this->totalWeight();
-
+        
         return view('livewire.chile-container.packages');
     }
     public function getPackages($id)
@@ -61,24 +70,44 @@ class Packages extends Component
     public function saveOrder()
     {
         $chile_ContainerPackageController = new ChileContainerPackageController;
-
         $order = Order::where('corrios_tracking_code', $this->barcode)->where('shipping_service_name' , $this->service)->first();
         
-        if($order == null) {
-            $this->error = 'Order Not Found against this tracking code. Please Check Packet Service';
-            return $this->barcode = '';
+        if($order != null)
+        {
+           
+            if($order->recipient->region != '214')   //214 is Code of Santigao Region defined by Correos Chile
+            {
+                $this->orderRegion = 'notSantiago';
+            }else{
+                $this->orderRegion = 'Santiago';
+            }
 
-        } elseif(!$order->containers->isEmpty()) {
 
-            $this->error = 'Order Already in Container'; 
-            return $this->barcode = '';
+            if($this->orderRegion != $this->containerDestination) {
+                
+                $this->error = 'Order does not belong to this container, please check packet destination';
+                return $this->barcode = '';
+    
+            }
             
-        } else {
+            
+            if(!$order->containers->isEmpty()) {
+    
+                $this->error = 'Order is already present in Container'; 
+                return $this->barcode = '';
+                
+            }
+
             $order = $chile_ContainerPackageController->store($this->container, $order);
 
             $this->error = '';
             return $this->barcode = '';
+            
         }
+
+        $this->error = 'Order does not belong to this container. Please Check Packet Service';
+        return $this->barcode = '';
+        
         
     }
 

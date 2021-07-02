@@ -41,7 +41,8 @@
                                     <div class="col-md-6">
                                         <select class="form-control" name="destination_operator_name">
                                             <option value="">@lang('warehouse.containers.Destination Airport')</option>
-                                            <option value="Pudahuel" {{ old('destination_operator_name') == 'Pudahuel' ? 'selected' : '' }}>Pudahuel</option>
+                                            <option value="MR" {{ old('destination_operator_name') == 'MR' ? 'selected' : '' }}>MR (Santiago)</option>
+                                            <option value="RM" {{ old('destination_operator_name') == 'RM' ? 'selected' : '' }}>RM (Other Region)</option>
                                         </select>
                                         @error('destination_operator_name')
                                             <div class="help-block text-danger"> {{ $message }} </div>

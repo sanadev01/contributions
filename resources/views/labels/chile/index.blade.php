@@ -121,7 +121,7 @@
                             {{$order->recipient->first_name}} {{$order->recipient->last_name}}
                         </td>
                         <td rowspan="3">
-                            <div style="background-color: grey !important; height: 0.6cm !important; width: 0.6cm !important; position: relative !important; float: right !important; margin-top: 4px !important;">
+                            <div style="height: 0.6cm !important; width: 0.6cm !important; position: relative !important; float: right !important; margin-top: 4px !important;">
                                 @if($order->recipient->region == '214')   {{-- 214 is region code of Santiago metropolitan region--}}
                                     <div class="circle"></div>
                                 @else
@@ -158,13 +158,7 @@
                             
                         </td>
                         <td>
-                            {{-- <div style="display: flex !important; justify-content: center !important; height: 100% !important;">
-                                @if($order->recipient->region == '214')
-                                    <div class="circle">Santiago</div>
-                                @else
-                                    <div class="square">Other</div>
-                                @endif        
-                            </div>    --}}
+                            
                         </td>
                     </tr>
                 </table>

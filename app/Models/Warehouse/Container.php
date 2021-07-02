@@ -89,8 +89,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'GRU';
         }elseif($this->destination_operator_name == 'CRBA') {
             return 'CWB';
+        }elseif($this->destination_operator_name == 'MR') {
+            return 'Santiago';
         }else {
-            return 'Pudahuel';
+            return 'Other Region';
         }
         // return $this->destination_operator_name == 'SAOD' ? 'GRU' : 'CWB';
     }
