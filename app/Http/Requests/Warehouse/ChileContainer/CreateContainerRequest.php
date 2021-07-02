@@ -25,7 +25,7 @@ class CreateContainerRequest extends FormRequest
     {
         return [
             'unit_type' => 'required|integer|in:1,2',
-            'destination_operator_name' => 'required|in:Pudahuel',
+            'destination_operator_name' => 'required|in:MR,RM',
             'services_subclass_code' => 'required',
             'seal_no' => 'required|unique:containers,seal_no',
         ];
