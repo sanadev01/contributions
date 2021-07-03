@@ -40,7 +40,7 @@
                                 <div class="row mt-1">
                                     <div class="form-group col-12 col-sm-6 col-md-4">
                                         <div class="controls">
-                                            <label>Sender ( inside USA ) Remetente ( dentro dos EUA ) <span class="text-danger">*</span></label>
+                                            <label>@lang('parcel.Sender Inside') <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" name="merchant" value="{{ old('merchant') }}" placeholder="">
                                             @error('merchant')
                                                 <div class="help-block text-danger">{{ $message }}</div>
@@ -49,7 +49,7 @@
                                     </div>
                                     <div class="form-group col-12 col-sm-6 col-md-4">
                                         <div class="controls">
-                                            <label>Carrier ( inside USA ) Transportadora ( dentro dos EUA ) <span class="text-danger">*</span></label>
+                                            <label>@lang('parcel.Carrier Inside') <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" value="{{ old('carrier') }}" placeholder=""  name="carrier">
                                             @error('carrier')
                                                 <div class="help-block text-danger">{{ $message }}</div>
