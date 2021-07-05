@@ -75,6 +75,9 @@
                 $('#div_region').css('display', 'block')
                 $('#div_communes').css('display', 'block')
 
+                $('#label_address').css('display', 'none')
+                $('#label_chile_address').css('display', 'inline-block')
+
                 $('#state').prop('disabled', true);
                 $('#city').attr('disabled', true);
 
@@ -147,6 +150,9 @@
 
                 $('#div_region').css('display', 'none')
 
+                $('#label_address').css('display', 'inline-block')
+                $('#label_chile_address').css('display', 'none')
+
                 $('#state').prop('disabled', false);
                 $('#city').attr('disabled', false);
 
@@ -167,6 +173,9 @@
 
                 $('#div_region').css('display', 'block')
                 $('#div_communes').css('display', 'block')
+
+                $('#label_address').css('display', 'none')
+                $('#label_chile_address').css('display', 'inline-block')
 
                 $('#state').prop('disabled', true);
                 $('#city').attr('disabled', true);
@@ -238,6 +247,9 @@
 
                 $('#div_region').css('display', 'none')
                 $('#div_communes').css('display', 'none')
+
+                $('#label_address').css('display', 'inline-block')
+                $('#label_chile_address').css('display', 'none')
 
                 $('#state').prop('disabled', false);
                 $('#city').attr('disabled', false);

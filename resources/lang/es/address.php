@@ -14,6 +14,7 @@ return  [
     'Email' => 'Email',
     'Phone' => 'Teléfono *(Formato internacional) i.e +56123456789 No se aceptan símbolos, letras o espacios.',
     'Address' => 'nombre de la calle',
+    'Chile Address' => 'Ingrese la dirección postal en Chile',
     'Address2' => 'Dirección (opcional)',
     'Telefone' => 'Teléfono',
     'Country' => 'País',

@@ -64,7 +64,7 @@
                         @enderror
                     </div>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-6" id="tax_id">
                     <div class="form-group">
                         <label for="emailAddress1">@lang('orders.sender.Tax Id')</label>
                         <input type="text" class="form-control" name="taxt_id" value="{{ old('tax_id',__default($order->sender_taxId,null)) }}">
@@ -125,19 +125,23 @@
             
             if(selected == 'chile') {
                 $('#address').css('display', 'block');
-                $('#city').css('display', 'block'); 
+                $('#city').css('display', 'block');
+                $('#tax_id').css('display', 'none'); 
 
                 $("[name='sender_address']").prop( "disabled", false );
                 $("[name='sender_city']").prop('disabled',false);
+                $("[name='taxt_id']").prop('disabled', true);
 
                 $("[name='sender_address']").prop('required',true);
                 $("[name='sender_city']").prop('required',true);
             } else {
                 $('#address').css('display', 'none');
                 $('#city').css('display', 'none'); 
+                $('#tax_id').css('display', 'block');
 
                 $("[name='sender_address']").prop( 'disabled', true );
                 $("[name='sender_city']").prop('disabled', true);
+                $("[name='taxt_id']").prop('disabled', false);
 
                 $("[name='sender_address']").prop('required',false);
                 $("[name='sender_city']").prop('required', false);
