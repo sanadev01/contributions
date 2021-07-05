@@ -77,7 +77,7 @@
                 </div>
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
-                        <label>@lang('address.Phone')</label>
+                        <label>@lang('address.Phone') <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="phone" value="{{old('phone',optional($order->recipient)->phone)}}" required placeholder="+55123456789">
                         <div class="help-block"></div>
                     </div>
@@ -91,14 +91,14 @@
                 </div>
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
-                        <label>@lang('address.Address')2</label>
-                        <input type="text" class="form-control"  placeholder="@lang('address.Address')2" value="{{old('address2',optional($order->recipient)->address2)}}"  name="address2">
+                        <label>@lang('address.Address2')</label>
+                        <input type="text" class="form-control"  placeholder="@lang('address.Address2')" value="{{old('address2',optional($order->recipient)->address2)}}"  name="address2">
                         <div class="help-block"></div>
                     </div>
                 </div>
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
-                        <label>@lang('address.Street No')</label>
+                        <label>@lang('address.Street No') <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" placeholder="@lang('address.Street No')" value="{{old('street_no',optional($order->recipient)->street_no)}}"  name="street_no" id="street_no">
                         <div class="help-block"></div>
                     </div>
@@ -165,7 +165,7 @@
 
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
-                        <label>@lang('address.Zip Code')</label>
+                        <label>@lang('address.Zip Code') <span class="text-danger">*</span></label>
                         <input type="text" name="zipcode"  id="zipcode" value="{{ cleanString(old('zipcode',optional($order->recipient)->zipcode)) }}" required class="form-control" placeholder="Zip Code"/>
                         <div class="help-block"></div>
                     </div>

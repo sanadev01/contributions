@@ -91,7 +91,7 @@
             </td>
             <td colspan="2" style="border-right: 1px solid;">
                 <small style="font-size: 5px; font-weight: bold !important;">Valor Declarado USD:</small><br />
-                <small style="font-size: 6px !important; margin: 19px !important;">{{$order->order_value}}</small>
+                <small style="font-size: 6px !important; margin: 19px !important; line-height: 6px !important;">{{ number_format($order->order_value, 2)}}</small>
             </td>
         </tr>
         <tr style="height: 3cm;">
@@ -198,7 +198,7 @@
                             <small style="font-size: 7px;"></small>
                         </td>
                         <td style="border-right: 1px solid; height:0.6cm; width: 60px; text-align: center;">
-                            <small style="font-size: 13px; font-weight: normal bold !important">{{$chile_response->Cuartel ?? ''}} / {{$chile_response->Sector ?? ''}}</small>
+                            <small style="font-size: 13px; font-weight: normal bold !important">{{$chile_response->Sector ?? ''}} / {{$chile_response->Cuartel ?? ''}}</small>
                         </td>
                     </tr>
                 </table>
