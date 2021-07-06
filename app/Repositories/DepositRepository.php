@@ -21,7 +21,7 @@ use App\Services\PaymentServices\AuthorizeNetService;
 class DepositRepository
 {
     protected $error;
-
+    protected $fileName;
     public function get(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='asc')
     {
         $query = Deposit::query();
@@ -153,13 +153,18 @@ class DepositRepository
         }else{
             $balance = $lastTransaction->balance;
         }
+        if ($request->has('attachment')) {
+            $this->fileName = time().'.'.$request->attachment->extension();
+            $request->attachment->storeAs('deposits', $this->fileName);
+        }
         Deposit::create([
             'uuid' => PaymentInvoice::generateUUID('DP-'),
             'amount' => $request->amount,
             'user_id' => $request->user_id,
             'balance' => $balance + $request->amount,
             'is_credit' => true,
-            'last_four_digits' => Auth::user()->name .': '.$request->description
+            'last_four_digits' => Auth::user()->name .': '.$request->description,
+            'attachment' => $this->fileName,
         ]);
     }
 

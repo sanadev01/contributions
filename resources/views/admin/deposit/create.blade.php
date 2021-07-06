@@ -18,7 +18,7 @@
                         </a>
                     </div>
                     <div class="card-content">
-                        <form action="{{ route('admin.deposit.store') }}" method="POST" @admin onSubmit="return confirm('Are you sure! you want to add balance to User account') " @endadmin>
+                        <form action="{{ route('admin.deposit.store') }}" method="POST" enctype="multipart/form-data" @admin onSubmit="return confirm('Are you sure! you want to add balance to User account') " @endadmin>
                             @csrf
                             <div class="card-body">
                                 @admin
@@ -60,7 +60,7 @@
                                         </div>
                                         <div class="col-md-4 balanceuser" @admin @if(old('adminpay') == 0) style="display: none" @endif  @endadmin>
                                             <label>Description</label>
-                                            <input type="text" class="form-control" required name="description" placeholder="Enter Description">
+                                            <textarea class="form-control" required name="description" placeholder="Enter Description"  rows="7"></textarea>
                                             @error('description')
                                                 <div class="text-danger">
                                                     {{ $message }}
@@ -77,6 +77,11 @@
                                             </div>
                                         @enderror
                                     </div>
+                                    @admin
+                                    <div class="col-md-4 balanceuser"  style="display: none;">
+                                        <input type="file" class="form-control-file" name="attachment" style="padding: 0px !important; border: 0px !important;">
+                                    </div>
+                                    @endadmin
                                 </div>
                                 <hr>
                                 <div class="billingInfo-div" @admin @if(old('adminpay')) style="display: none" @endif @endadmin>
@@ -194,6 +199,4 @@
             }
         }
     </script>
-
-
 @endsection
