@@ -2,6 +2,7 @@
 
 use App\Models\Order;
 use App\Services\StoreIntegrations\Shopify;
+use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 
 /*
@@ -141,7 +142,8 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         });
 
         Route::resource('deposit', Deposit\DepositController::class)->only('create','store','index');
-
+        Route::get('download-deposit-attachment/{attachment?}', [DepositController::class,'downloadAttachment'])->name('download_attachment');
+        
         Route::namespace('Activity')->as('activity.')->prefix('activity')->group(function(){
             Route::resource('log', ActivityLogController::class)->only('index');
         });
