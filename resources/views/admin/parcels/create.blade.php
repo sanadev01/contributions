@@ -58,7 +58,7 @@
                                     </div>
                                     <div class="form-group col-12 col-sm-6 col-md-4">
                                         <div class="controls">
-                                            <label>Tracking ( inside USA ) Rastreio ( dentro dos EUA ) <span class="text-danger">*</span></label>
+                                            <label>@lang('parcel.Tracking Inside') <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" name="tracking_id" value="{{ old('tracking_id') }}" placeholder="">
                                             @error('tracking_id')
                                                 <div class="help-block text-danger">{{ $message }}</div>

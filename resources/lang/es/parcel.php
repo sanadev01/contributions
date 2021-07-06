@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'Parcel Images' => 'Terreno Imagenes',
+    'Parcel Images' => 'Seleccionar archivo (foto/documento)',
     'Create Parcel' => 'Crear un paquete',
     'Edit Parcel' => 'Editar Terreno',
     'Duplicate Parcel' => 'Duplicada Terreno',
@@ -15,11 +15,11 @@ return [
     'Carrier' => 'Transportador',
     'Tracking' => 'Seguimiento',
     'External Customer Reference' => 'Referencia externa suya o de su cliente',
-    'Arrival Date' => 'Fecha de llegada',
+    'Arrival Date' => 'Fecha de orden',
     'Order Date' => 'Fecha de orden',
     'Invoice' => 'incluir factura de compra (opcional)',
     'Warehouse Number' => 'Número de almacén',
-    'Weight' => 'Peso (Kgs)',
+    'Weight' => 'Peso (Kgs)(lbs)',
     'Measuring Units' => 'unidad de medida',
     'Length' => 'Largo',
     'Width' => 'Ancho',
