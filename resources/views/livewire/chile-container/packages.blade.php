@@ -58,11 +58,13 @@
                     <span class="mx-3 text-danger font-weight-bold">Packages:</span> {{$num_of_Packages}}
                 </td>
             </tr>
+            @if($editMode == true)
             <tr>
                 <td colspan="8">
                     <input type="text" wire:model.debounce.500ms="barcode" class="w-100 text-center" style="height:50px;font-size:30px;">
                 </td>
             </tr>
+            @endif
         </tbody>
     </table>
 </div>

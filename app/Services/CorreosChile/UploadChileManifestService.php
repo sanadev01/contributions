@@ -1,0 +1,96 @@
+<?php
+namespace App\Services\CorreosChile;
+
+
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Response;
+
+
+
+class UploadChileManifestService
+{
+    private $container;
+    private $clienteId;
+
+    public function __construct($container)
+    {
+        $this->container = $container;
+        $this->clienteId = config('correoschile.codeId');
+    }
+
+    public function handle()
+    {
+        $filename = $this->prepareTextFile();
+        $chile_upload_response = $this->upload($filename);
+
+        if($chile_upload_response == true)
+        {
+            return $this->updateContainer();
+
+        } else {
+            return false;
+        }
+    }
+
+    private function prepareTextFile()
+    {
+        $initial = '';
+        $orders = $this->container->orders;
+
+        $current_date = (Carbon::now())->toDateTimeString();
+        $combine_date_time = str_replace(['-','', ' ',':'],'',$current_date); 
+        $filename = $this->clienteId.'_'.$combine_date_time;
+        
+        try {
+
+            Storage::put("manifests/uploads/$filename.txt", $initial);
+
+       } catch (\Exception $e) {
+
+            return $e->getMessage();
+       }
+        $file = fopen("../storage/app/manifests/uploads/$filename.txt", 'a');//opens file in append mode  
+        foreach ($orders as $order)
+        {
+            $chile_response = json_decode($order->chile_response);
+            fwrite($file,  $this->combineChileResponseFields($chile_response));  
+            fwrite($file, '|');
+            fwrite($file, $this->container->seal_no);
+            fwrite($file, '|');
+            fwrite($file, 'LS1293842224'."\n");
+
+        }
+        fclose($file);
+        return $filename;
+    }
+
+    private function combineChileResponseFields($chile_response)
+    {
+        return $chile_response->CodigoEncaminamiento.$chile_response->NumeroEnvio.'001';
+    }
+
+    public function upload($filename)
+    {
+        $content = Storage::get("manifests/uploads/$filename.txt");
+
+        try {
+            Storage::disk('correos-chile')->put("/entrada/manifests/$filename.txt", $content);
+            return true;
+
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function updateContainer()
+    {
+        $container = $this->container;
+        $container->update([
+            'response' => true,
+        ]);
+
+        return true;
+    }
+
+}

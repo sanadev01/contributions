@@ -19,7 +19,7 @@ class ChileContainerPackageController extends Controller
     {
         $container = Container::find($id);
         $ordersCollection = json_encode($container->getOrdersCollections());
-        $editMode = $container->isRegistered() ? 'false':'true';
+        $editMode = ($container->response == 0) ? true : false;
         
         return view('admin.warehouse.chileContainers.scan',compact('container', 'ordersCollection', 'editMode'));
     }
