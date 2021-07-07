@@ -128,7 +128,7 @@
                                         <select name="referrer_id[]" class="form-control selectpicker" multiple data-live-search="true">
                                             <option value="" disabled>@lang('user.Select Referrer')</option>
                                             @foreach ($users as $userRefferer)
-                                                <option value="{{ $userRefferer->id }}" @if ($userRefferer->reffered_by == $user->id) selected @endif>{{ $userRefferer->name }}</option>
+                                                <option value="{{ $userRefferer->id }}" @if ($userRefferer->reffered_by == $user->id) selected @endif>{{ $userRefferer->name }} | {{ $userRefferer->pobox_number }}</option>
                                             @endforeach
                                         </select>
                                         <div class="help-block"></div>

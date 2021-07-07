@@ -35,6 +35,7 @@ return [
         'Shipment Report' => 'Relatório de Remessa',
         'Tracking Report' => 'Relatório de Rastreamento',
         'Orders Report' => 'Relatório de pedidos',
+        'Commission Report' => 'Relatório de Comissão',
     ],
     'Warehouse' => [
         'menu' => 'Armazém',
@@ -44,7 +45,7 @@ return [
     'Affiliate' => [
         'menu' => 'Relatórios',
         'Dashboard' => 'Painel de controle',
-        'Sales Commission' => 'Comissões de venda',
+        'Sales Commission' => 'Extrato de Comissoes',
     ],
     'activity' => 'Atividade',
     'Print Label' => 'Imprimir etiqueta em massa',

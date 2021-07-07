@@ -14,6 +14,10 @@ class AffiliateSaleRepository
         if (Auth::user()->isUser()) {
             $query->where('user_id', Auth::id());
         }
+        
+        if ($request->user_id) {
+            $query->where('user_id', $request->user_id);
+        }
 
         if ( $request->start ){
             $startDate = $request->start . ' 00:00:00';
@@ -35,9 +39,11 @@ class AffiliateSaleRepository
             });
         }
         if ( $request->user ){
-            $query->whereHas('user',function($query) use($request) {
-                return $query->where('name', 'LIKE', "%{$request->user}%");
-            });
+            $query->whereHas('order',function($query) use($request) {
+                return $query->whereHas('user',function($query) use($request) {
+                   return $query->where('name', 'LIKE', "%{$request->user}%");
+               });
+           });
         }
 
         if ( $request->order ){
@@ -102,6 +108,10 @@ class AffiliateSaleRepository
 
         if (Auth::user()->isUser()) {
             $query->where('user_id', Auth::id());
+        }
+        
+        if ($request->user_id) {
+            $query->where('user_id', $request->user_id);
         }
 
         $startDate = $request->start_date . ' 00:00:00';

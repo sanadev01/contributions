@@ -35,6 +35,7 @@ return [
         'Shipment Report' => 'Shipment Report',
         'Tracking Report' => 'Tracking Report',
         'Orders Report' => 'Orders Report',
+        'Commission Report' => 'Commission Report',
     ],
     'Warehouse' => [
         'menu' => 'Warehouse',
@@ -44,7 +45,7 @@ return [
     'Affiliate' => [
         'menu' => 'Affiliate',
         'Dashboard' => 'Dashboard',
-        'Sales Commission' => 'Sales Commissions',
+        'Sales Commission' => 'Comission Statement',
     ],
     'activity' => 'Activity',
     'Print Label' => 'Print Bulk Label',

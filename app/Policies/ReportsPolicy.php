@@ -25,4 +25,9 @@ class ReportsPolicy
     {
         return $user->hasPermission('order-report');
     }
+    
+    public function viewComissionReport(User $user)
+    {
+        return $user->hasPermission('commission-report');
+    }
 }
