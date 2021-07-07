@@ -17,6 +17,8 @@ return [
     'type' => 'Type',
     'payment-status' => 'Payment Status',
     'payment-method' => 'Payment Method',
+    'Delete' => 'Delete',
+    'Remove' => 'Remove Order',
     
     'recipient' => [
         'slect-from-list' => 'Select Address From List',

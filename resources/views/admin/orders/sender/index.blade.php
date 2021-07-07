@@ -20,7 +20,7 @@
             <div class="row">
                 <div class="col-sm-6">
                     <div class="form-group">
-                    <label for="firstName1">@lang('orders.sender.First Name') </label>
+                    <label for="firstName1">@lang('orders.sender.First Name') <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="first_name" required value="{{ old('first_name',__default($order->sender_first_name,optional($order->user)->name)) }}" id="firstName1">
                         @error('first_name')
                             <div class="text-danger">
@@ -55,7 +55,7 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label for="emailAddress1">@lang('orders.sender.Phone')</label>
+                        <label for="emailAddress1">@lang('orders.sender.Phone')<span class="text-danger" id="chile_phone" style="display: none;">*</span></label>
                         <input type="text" class="form-control" name="phone" value="{{ old('phone',__default($order->sender_phone,null)) }}">
                         @error('phone')
                             <div class="text-danger">
@@ -127,6 +127,7 @@
                 $('#address').css('display', 'block');
                 $('#city').css('display', 'block');
                 $('#tax_id').css('display', 'none'); 
+                $('#chile_phone').css('display', 'inline-block');
 
                 $("[name='sender_address']").prop( "disabled", false );
                 $("[name='sender_city']").prop('disabled',false);
@@ -138,6 +139,7 @@
                 $('#address').css('display', 'none');
                 $('#city').css('display', 'none'); 
                 $('#tax_id').css('display', 'block');
+                $('#chile_phone').css('display', 'none');
 
                 $("[name='sender_address']").prop( 'disabled', true );
                 $("[name='sender_city']").prop('disabled', true);
