@@ -67,7 +67,7 @@ class DepositController extends Controller
         }
         else
         {
-            exit('Requested file does not exist on our server!');
+            abort(404);
         }   
     }
 }
