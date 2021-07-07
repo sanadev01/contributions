@@ -192,15 +192,16 @@
                         </a>
                     </li>
                     @endcan
-                    
-                    @can('viewComissionReport', App\Models\Reports::class)
-                    <li class="{{ $isActive(['admin.reports.commission.index','admin.reports.commission.show']) }}">
-                        <a href="{{ route('admin.reports.commission.index') }}">
-                            <i class="feather icon-circle"></i>
-                            <span class="menu-title">@lang('menu.Reports.Commission Report')</span>
-                        </a>
-                    </li>
-                    @endcan
+                    @admin
+                        @can('viewComissionReport', App\Models\Reports::class)
+                        <li class="{{ $isActive(['admin.reports.commission.index','admin.reports.commission.show']) }}">
+                            <a href="{{ route('admin.reports.commission.index') }}">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title">@lang('menu.Reports.Commission Report')</span>
+                            </a>
+                        </li>
+                        @endcan
+                    @endadmin
                 </ul>
             </li>
 
