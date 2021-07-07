@@ -31,9 +31,6 @@
                                     <th>@lang('warehouse.containers.Container Type')</th>
                                     <th>@lang('warehouse.containers.Distribution Service Class')</th>
                                     <th>
-                                        Unit Code
-                                    </th>
-                                    <th>
                                         Status
                                     </th>
                                     <th>@lang('warehouse.actions.Action')</th>
@@ -63,23 +60,14 @@
                                             {{ $container->getServiceSubClass() }}
                                         </td>
                                         <td>
-                                            {{ $container->getUnitCode() }}
-                                        </td>
-                                        <td>
-                                            @if(!$container->isRegistered())
+                                            @if($container->response == 0)
                                                 <div class="btn btn-info">
                                                     New
                                                 </div>
                                             @endif
-                                            @if($container->isRegistered() && !$container->isShipped())
+                                            @if($container->response != 0)
                                                 <div class="btn btn-primary">
                                                     Registered
-                                                </div>
-                                            @endif
-
-                                            @if($container->isShipped())
-                                                <div class="btn btn-success">
-                                                    Shipped
                                                 </div>
                                             @endif
                                         </td>
@@ -93,24 +81,29 @@
                                                         <a href="{{ route('warehouse.chile_container.packages.index',$container) }}" class="dropdown-item w-100">
                                                             <i class="feather icon-box"></i> @lang('warehouse.actions.Packages')
                                                         </a>
-                                                        {{-- @if( !$container->isRegistered() || !$container->isShipped() ) --}}
+                                                        @if( $container->response == 0 )
                                                             <a href="{{ route('warehouse.chile_containers.edit',$container) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
                                                             </a>
-                                                            <a href="{{ route('warehouse.download.manifest_txt',$container) }}" class="dropdown-item w-100">
-                                                                <i class="fa fa-arrow-down"></i> Download Manifest txt
+                                                            <a href="{{ route('warehouse.upload.manifest',$container) }}" class="dropdown-item w-100" id="upload_manifest">
+                                                                <i class="fa fa-arrow-up"></i> Upload Manifest To Correos Chile
                                                             </a>
-                                                            <a href="{{ route('warehouse.download.manifest_excel',$container) }}" class="dropdown-item w-100">
-                                                                <i class="fa fa-arrow-down"></i> Download Manifest excel
-                                                            </a>
-                                                            <form action="{{ route('warehouse.chile_containers.destroy',$container) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button class="dropdown-item w-100 text-danger">
-                                                                    <i class="feather icon-trash-2"></i> @lang('warehouse.actions.Delete')
-                                                                </button>
-                                                            </form>
-                                                        {{-- @endif --}}
+                                                        @endif
+                                                        <a href="{{ route('warehouse.download.manifest_txt',$container) }}" class="dropdown-item w-100">
+                                                            <i class="fa fa-arrow-down"></i> Download Manifest txt
+                                                        </a>
+                                                        <a href="{{ route('warehouse.download.manifest_excel',$container) }}" class="dropdown-item w-100">
+                                                            <i class="fa fa-arrow-down"></i> Download Manifest excel
+                                                        </a>
+                                                        @if( $container->response == 0 )
+                                                        <form action="{{ route('warehouse.chile_containers.destroy',$container) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button class="dropdown-item w-100 text-danger">
+                                                                <i class="feather icon-trash-2"></i> @lang('warehouse.actions.Delete')
+                                                            </button>
+                                                        </form>
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </div>
@@ -128,4 +121,14 @@
             </div>
         </div>
     </section>
+@endsection
+@section('js')
+<script>
+    $(document).ready(function(){
+        $('#upload_manifest').click(function(){
+                $('#loading').fadeIn();
+            }); 
+        });
+</script>
+
 @endsection

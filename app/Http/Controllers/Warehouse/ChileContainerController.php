@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
 use App\Repositories\Warehouse\ChileContainerRepository;
+use App\Services\CorreosChile\UploadChileManifestService;
 use App\Services\CorreosChile\ExportTxtChileManifestService;
 use App\Services\CorreosChile\ExportExcelChileManifestService;
 use App\Http\Requests\Warehouse\ChileContainer\CreateContainerRequest;
@@ -72,7 +73,7 @@ class ChileContainerController extends Controller
     {
         $container = Container::find($container);
 
-        if ( $container->isRegistered() ){
+        if ( $container->response != 0 ){
             abort(405);
         }
 
@@ -90,7 +91,7 @@ class ChileContainerController extends Controller
     {
         $container = Container::find($updateContainerRequest->id);
 
-        if ( $container->isRegistered() ){
+        if ( $container->response != 0 ){
             abort(405);
         }
         
@@ -111,8 +112,8 @@ class ChileContainerController extends Controller
     public function destroy($container, ChileContainerRepository $chile_containerRepository)
     {
         $container = Container::find($container);
-        if ( $container->isRegistered() ){
-            abort(403,'Cannot Delete Container registered on Correios.');
+        if ( $container->respone != 0 ){
+            abort(403,'Cannot Delete Container registered on Correios Chile.');
         }
         if ( $container = $chile_containerRepository->delete($container) ){
             session()->flash('alert-success', 'Container Deleted');
@@ -133,6 +134,28 @@ class ChileContainerController extends Controller
     {
         $exportChileManifestService = new ExportExcelChileManifestService($container);
         return $exportChileManifestService->handle();
+    }
+
+    public function upload_ManifestToChile(Container $container)
+    {
+
+        if($container->response == 0)
+        {
+            $uploadChileManifestService = new UploadChileManifestService($container);
+            $response = $uploadChileManifestService->handle();
+
+            if($response == true)
+            {
+                session()->flash('alert-success', 'Manifest Uploaded to Correos Chile Successfully!');
+                return back();
+            }
+            session()->flash('alert-danger', 'Could Not Upload to Correos Chile, FAILED!');
+            return back();
+        }
+
+        session()->flash('alert-danger', 'Manifest already uploaded to Correos Chile');
+        return back();
+        
     }
 
 }
