@@ -413,6 +413,11 @@ class PermissionSeeder extends Seeder
                 'group' => 'Parcel',
                 'description' => 'User can Duplicate PreAlert'
             ],
+            [
+                'slug' => 'commission-report',
+                'group' => 'Reports',
+                'description' => 'User can see Commission Reports'
+            ],
             
         ];
     }

@@ -128,6 +128,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('user-shipments', \ShipmentPerUserReportController::class)->only(['index','create']);
             Route::resource('order-trackings', TrackingReportController::class)->only(['index','store']);
             Route::resource('order', OrderReportController::class)->only(['index','create']);
+            Route::resource('commission', CommissionReportController::class)->only(['index','show']);
 
         });
 
