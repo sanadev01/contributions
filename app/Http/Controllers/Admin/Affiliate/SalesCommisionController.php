@@ -30,13 +30,13 @@ class SalesCommisionController extends Controller
             $sale->save();
         }
         session()->flash('alert-success','Commission has been paid');
-        return redirect()->route('admin.affiliate.sales-commission.index');
+        return redirect()->back();
     }
     
     public function destroy(AffiliateSale $sales_commission)
     {
         $sales_commission->delete();
         session()->flash('alert-success','Commission has been Deleted');
-        return redirect()->route('admin.affiliate.sales-commission.index');
+        return redirect()->back();
     }
 }
