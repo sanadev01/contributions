@@ -75,7 +75,7 @@ class UploadChileManifestService
         $content = Storage::get("manifests/uploads/$filename.txt");
 
         try {
-            Storage::disk('correos-chile')->put("/entrada/manifests/$filename.txt", $content);
+            Storage::disk('correos-chile')->put("/entrada/aprocesar/$filename.txt", $content);
             return true;
 
         } catch (\Exception $e) {
