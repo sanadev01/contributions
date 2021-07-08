@@ -22,19 +22,38 @@
                     <option value="300">300</option>
                 </select>
             </div>
-            <div class="col-11 text-right">
+            <div class="col-11">
                 <form action="{{ route('admin.affiliate.sale.exports') }}" method="GET" target="_blank">
                     @csrf
                     <input type="hidden" name="user_id" value="{{ $user->id }}">
-                    <label>@lang('sales-commission.start date')</label>
-                    <input type="date" name="start_date" class="from-control col-2">
-    
-                    <label>@lang('sales-commission.end date')</label>
-                    <input type="date" name="end_date" class="from-control col-2">
-    
-                    <button class="btn btn-success" title="@lang('sales-commission.Download Sales')">
-                        @lang('sales-commission.Download Sales') <i class="fa fa-arrow-down"></i>
-                    </button>
+
+                    <div class="row mt-1">
+                        <div class="form-group col-10 col-sm-6 col-md-3">
+                            <div class="row">
+                                <label class="col-md-3 control-label">@lang('sales-commission.start date')</label>
+                                <input type="date" name="start_date" class="form-control col-md-8">
+                            </div>
+                        </div>
+                        <div class="form-group col-12 col-sm-6 col-md-3">
+                            <div class="row">
+                                <label class="col-md-3 control-label">@lang('sales-commission.end date')</label>
+                                <input type="date" name="end_date" class="form-control col-md-8">
+                            </div>
+                        </div>
+                        <div class="form-group col-12 col-sm-6 col-md-3">
+                            <div class="row">
+                                <label class="col-md-3 control-label">Status</label>
+                                <select class="form-control col-md-8" name="status">
+                                    <option value="">All</option>
+                                    <option value="paid">Paid</option>
+                                    <option value="unpaid">Unpaid</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="btn btn-success" title="@lang('sales-commission.Download Sales')">
+                            @lang('sales-commission.Download Sales') <i class="fa fa-arrow-down"></i>
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>

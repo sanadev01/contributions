@@ -125,6 +125,14 @@ class AffiliateSaleRepository
             $query->where('created_at','<=',$endDate);
         }
         
+        if ( $request->status == 'paid' ){
+            $query->where('is_paid', true);
+        }
+        
+        if ( $request->status == 'unpaid' ){
+            $query->where('is_paid',false);
+        }
+        
         return $query->get();
     }
 
