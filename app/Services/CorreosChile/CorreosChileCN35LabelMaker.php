@@ -100,6 +100,13 @@ class CorreosChileCN35LabelMaker implements HasLableExport
         return $this;
     }
 
+    public function get_code_for_generating_barcode()
+    { 
+
+        return $combine_code = $this->seal_no.'/'.$this->dispatchDate;
+
+    }
+
 
     public function render()
     {
@@ -129,6 +136,7 @@ class CorreosChileCN35LabelMaker implements HasLableExport
             'weight' => $this->weight,
             'service' => $this->service,
             'seal_no' => $this->seal_no,
+            'bar_code' => $this->get_code_for_generating_barcode(),
         ];
     }
 
