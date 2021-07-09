@@ -102,8 +102,8 @@ class CorreosChileCN35LabelMaker implements HasLableExport
 
     public function get_code_for_generating_barcode()
     { 
-
-        return $combine_code = $this->seal_no.'/'.$this->dispatchDate;
+        $date = str_replace("-", "", $this->dispatchDate);
+        return $combine_code = $this->seal_no.$date;
 
     }
 
