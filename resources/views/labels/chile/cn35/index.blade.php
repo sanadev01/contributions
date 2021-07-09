@@ -56,7 +56,7 @@
             <tr style="height: 1cm !important;position: relative;">
                 <td class="column1" style="text-align: center;font-size:28px;font-weight:bold;">{!! $companyName !!}</td>
                 <td rowspan="2" colspan="2">
-                    <img src="{{ asset('images/corrieos-chile-logo.png') }}" alt="Correos Chile" style="height: 1.8cm;">
+                    <img src="{{ asset('images/corrieosChile-logo.png') }}" alt="Correos Chile" style="height: 1.8cm;">
                 </td>
             </tr>
             <tr>
@@ -78,9 +78,9 @@
                 </td>
                 <td colspan="2" style="text-align: center;font-size:12px;">
                     <div style="height: 1.6cm !important;">
-                        <img style="width: 14cm; height:1.5cm;display:block; margin-top: 5px !important;" src="data:image/png;base64,{{DNS1D::getBarcodePNG($seal_no, 'C128',1,100,[0,0,0])}}" alt="barcode"   />
+                        <img style="width: 14cm; height:1.5cm;display:block; margin-top: 5px !important;" src="data:image/png;base64,{{DNS1D::getBarcodePNG($bar_code, 'C128',1,100,[0,0,0])}}" alt="barcode"   />
                     </div>
-                    {{$seal_no}}
+                    {{$bar_code}}
                 </td>
             </tr>
             <tr>
