@@ -28,4 +28,6 @@ return [
     'import' => 'Importar',
     'selling' => 'Vendendo',
     'download-profit-package' => 'Baixar',
+    'Shipping Service' => 'Serviço de entrega',
+    'Select Service' => 'Selecione  Serviço',
 ];
