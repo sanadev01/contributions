@@ -60,7 +60,7 @@
 
                                 <h3>Profit Package Settings</h3>
                                 <hr> 
-                                {{-- <div class="controls row mb-1 align-items-center">
+                                <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('user.Package')<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <select name="package_id[]" class="form-control selectpicker" multiple data-live-search="true">
@@ -73,7 +73,7 @@
                                         </select>
                                         <div class="help-block"></div>
                                     </div>
-                                </div> --}}
+                                </div>
                                 <h4 class="ml-5">Profit Services Settings</h4>
                                 <livewire:profit.profit-setting :user_id="$user->id"  />
 

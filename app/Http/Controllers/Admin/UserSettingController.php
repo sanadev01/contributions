@@ -34,7 +34,7 @@ class UserSettingController extends Controller
         ]);
         
         $user->update([
-            // 'package_id' => $request->package_id,
+            'package_id' => $request->package_id,
             'role_id' => $request->role_id,
             'status' => $request->status,
             'api_enabled' => $request->has('api_enabled'),
