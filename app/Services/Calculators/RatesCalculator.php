@@ -127,7 +127,8 @@ class RatesCalculator
     public function getProfitPackage()
     {
         $user = $this->order->user;
-        $shippingServiceId = $this->order->shippingService->id;
+        
+        $shippingServiceId = $this->shippingService->id;
         
         $profitSetting = $this->order->user->profitSettings()->where('user_id',$user->id)->where('service_id',$shippingServiceId)->first();
         if($profitSetting){
