@@ -29,5 +29,7 @@ return [
     'import' => 'Import',
     'selling' => 'Selling',
     'download-profit-package' => 'Download',
+    'Shipping Service' => 'Shipping Service',
+    'Select Service' => 'Select Service',
 ];
  
