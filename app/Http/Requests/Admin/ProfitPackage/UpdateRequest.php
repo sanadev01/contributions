@@ -24,6 +24,7 @@ class UpdateRequest extends FormRequest
     public function rules()
     {   
         return [
+            'shipping_service_id' => 'required',
             'package_name' => 'required|string|max:90',
             'slab' => 'required|array',
             'slab.*.min_weight' => 'required|numeric',
@@ -35,6 +36,7 @@ class UpdateRequest extends FormRequest
     public function messages()
     {
         return [
+            'shipping_service_id' => 'shipping service must be selected',
             'slab.*.min_weight.*' => 'Numeric value required',
             'slab.*.max_weight.*' => 'Numeric value required',
             'slab.*.value.*' => 'Numeric value required',

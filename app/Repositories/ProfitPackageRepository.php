@@ -12,7 +12,7 @@ class ProfitPackageRepository
 {
     public function get()
     {   
-        $packages = ProfitPackage::query()->orderBy('name','ASC')->get();
+        $packages = ProfitPackage::query()->with('shipping_service')->orderBy('name','ASC')->get();
         return $packages;
 
     }
@@ -40,6 +40,7 @@ class ProfitPackageRepository
             
             $profitPackage = ProfitPackage::create([
                 'name' => $request->package_name,
+                'shipping_service_id' => $request->shipping_service_id,
                 'type' => $request->type,
                 'data' => $profitPackageslab
             ]);
@@ -76,6 +77,7 @@ class ProfitPackageRepository
     
             $profitPackage->update([
                 'name' => $request->package_name,
+                'shipping_service_id' => $request->shipping_service_id,
                 'type' => $request->type,
                 'data' => $profitPackageslab
             ]);
