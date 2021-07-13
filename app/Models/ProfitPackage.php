@@ -28,7 +28,7 @@ class ProfitPackage extends Model
     const TYPE_DEFAULT = 'default';
     const TYPE_PACKAGE = 'package';
 
-    public function shipping_service()
+    public function shippingService()
     {
         return $this->belongsTo(ShippingService::class);
     }

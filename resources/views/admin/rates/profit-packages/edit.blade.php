@@ -50,7 +50,7 @@
                                 <option value="" selected>@lang('profitpackage.Select Service')</option>
                                 @isset($shipping_services)
                                     @foreach ($shipping_services as $service)
-                                    <option value="{{ $service->id }}">{{ $service->name }}</option>
+                                    <option value="{{ $service->id }}" {{ $profitPackage->shipping_service_id == $service->id  ? 'selected' : ''}}>{{ $service->name }}</option>
                                     @endforeach
                                 @endisset
                             </select>
