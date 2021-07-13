@@ -36,7 +36,7 @@
                                 <div class="controls row align-items-center" style="margin-bottom: 2.25rem !important;">
                                     <label class="col-md-3 text-md-right">@lang('user.Default Package')<span class="text-danger"></span></label>
                                     <div class="col-md-6">
-                                        <select name="package_id[]" class="form-control selectpicker" data-live-search="true">
+                                        <select name="package_id" class="form-control selectpicker" data-live-search="true">
                                             <option value="" disabled hidden>@lang('user.Select Package')</option>
                                             @isset($packages)
                                                 @foreach ($packages as $package)
