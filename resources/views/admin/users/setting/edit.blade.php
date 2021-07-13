@@ -33,6 +33,20 @@
                             <form action="{{ route('admin.users.setting.store', $user->id) }}" method="post" enctype="multipart/form-data">
                                 @csrf
 
+                                <div class="controls row align-items-center" style="margin-bottom: 2.25rem !important;">
+                                    <label class="col-md-3 text-md-right">@lang('user.Default Package')<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <select name="package_id[]" class="form-control selectpicker" data-live-search="true">
+                                            <option value="" disabled hidden>@lang('user.Select Package')</option>
+                                            @isset($packages)
+                                                @foreach ($packages as $package)
+                                                    <option @if( $user->package_id == $package->id ) selected @endif value="{{ $package->id }}">{{ $package->name }}</option>
+                                                @endforeach
+                                            @endisset
+                                        </select>
+                                        <div class="help-block"></div>
+                                    </div>
+                                </div>
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('user.Role')<span class="text-danger"></span></label>
                                     <div class="col-md-6">
@@ -60,21 +74,7 @@
 
                                 <h3>Profit Package Settings</h3>
                                 <hr> 
-                                <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">@lang('user.Package')<span class="text-danger"></span></label>
-                                    <div class="col-md-6">
-                                        <select name="package_id[]" class="form-control selectpicker" multiple data-live-search="true">
-                                            <option value="" disabled hidden>@lang('user.Select Package')</option>
-                                            @isset($packages)
-                                                @foreach ($packages as $package)
-                                                    <option @if( $user->package_id == $package->id ) selected @endif value="{{ $package->id }}">{{ $package->name }}</option>
-                                                @endforeach
-                                            @endisset
-                                        </select>
-                                        <div class="help-block"></div>
-                                    </div>
-                                </div>
-                                <h4 class="ml-5">Profit Services Settings</h4>
+                                <h4 class="ml-5">Multi Profit Services Settings</h4>
                                 <livewire:profit.profit-setting :user_id="$user->id"  />
 
                                 <h3>Api Settings</h3>
