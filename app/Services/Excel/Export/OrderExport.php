@@ -41,30 +41,31 @@ class OrderExport extends AbstractExportService
             $this->setCellValue('E'.$row, $order->customer_reference);
             $this->setCellValue('F'.$row, $order->corrios_tracking_code);
             $this->setCellValue('G'.$row, $order->gross_total);
-            $this->setCellValue('H'.$row, $order->getWeight('kg'));
-            $this->setCellValue('I'.$row, $order->getWeight('lbs'));
+            $this->setCellValue('H'.$row, $this->checkValue(number_format($order->dangrous_goods,2)));
+            $this->setCellValue('I'.$row, $order->getWeight('kg'));
+            $this->setCellValue('J'.$row, $order->getWeight('lbs'));
             if($order->status == Order::STATUS_ORDER){
-                $this->setCellValue('J'.$row, 'ORDER');
+                $this->setCellValue('K'.$row, 'ORDER');
             }
             if($order->status == Order::STATUS_PAYMENT_PENDING){
-                $this->setCellValue('J'.$row, 'PAYMENT_PENDING');
+                $this->setCellValue('K'.$row, 'PAYMENT_PENDING');
             }
             if($order->status == Order::STATUS_PAYMENT_DONE){
-                $this->setCellValue('J'.$row, 'PAYMENT_DONE');
+                $this->setCellValue('K'.$row, 'PAYMENT_DONE');
             }
             if($order->status == Order::STATUS_SHIPPED){
-                $this->setCellValue('J'.$row, 'SHIPPED');
+                $this->setCellValue('K'.$row, 'SHIPPED');
             }
             
-            $this->setCellValue('K'.$row, $order->order_date);
+            $this->setCellValue('L'.$row, $order->order_date);
             
             $row++;
         }
 
         $this->currentRow = $row;
 
-        $this->setCellValue('H'.$row, "=SUM(H1:H{$row})");
         $this->setCellValue('I'.$row, "=SUM(I1:I{$row})");
+        $this->setCellValue('J'.$row, "=SUM(J1:J{$row})");
         $this->mergeCells("A{$row}:G{$row}");
         $this->setBackgroundColor("A{$row}:K{$row}", 'adfb84');
         $this->setAlignment('A'.$row, Alignment::VERTICAL_CENTER);
@@ -98,21 +99,33 @@ class OrderExport extends AbstractExportService
         $this->setColumnWidth('G', 20);
         $this->setCellValue('G1', 'Amount');
 
-        $this->setColumnWidth('H', 20);
-        $this->setCellValue('H1', 'Kg');
-        
+        $this->setColumnWidth('H', 25);
+        $this->setCellValue('H1', 'Battery/Perfume/Flameable');
+
         $this->setColumnWidth('I', 20);
-        $this->setCellValue('I1', 'Lbs');
+        $this->setCellValue('I1', 'Kg');
         
         $this->setColumnWidth('J', 20);
-        $this->setCellValue('J1', 'Status');
-
+        $this->setCellValue('J1', 'Lbs');
+        
         $this->setColumnWidth('K', 20);
-        $this->setCellValue('K1', 'Date');
+        $this->setCellValue('K1', 'Status');
 
-        $this->setBackgroundColor('A1:K1', '2b5cab');
-        $this->setColor('A1:K1', 'FFFFFF');
+        $this->setColumnWidth('L', 20);
+        $this->setCellValue('L1', 'Date');
+
+        $this->setBackgroundColor('A1:L1', '2b5cab');
+        $this->setColor('A1:L1', 'FFFFFF');
 
         $this->currentRow++;
+    }
+
+    private function checkValue($value)
+    {
+        if($value == 0){
+            return '';
+        }
+
+        return $value;
     }
 }

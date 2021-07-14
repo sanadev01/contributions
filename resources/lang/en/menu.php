@@ -23,7 +23,7 @@ return [
     'Profit Packages' => 'Profit Packages',
     'Handling Services' => 'Handling Services',
     'Shipping Services' => 'Shipping Services',
-    'Shipping Charges' => 'Shipping Charges',
+    'Shipping Rates' => 'Shipping Rates (Cost) Upload',
     'Users' => 'Users',
     'Roles' => 'Roles',
     'Billing Informations' => 'Billing Informations',

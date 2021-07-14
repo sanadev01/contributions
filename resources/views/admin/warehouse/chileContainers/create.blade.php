@@ -37,10 +37,10 @@
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center my-2">
-                                    <label class="col-md-3 text-md-right">@lang('warehouse.containers.Destination Airport')<span class="text-danger">*</span></label>
+                                    <label class="col-md-3 text-md-right">@lang('warehouse.containers.Sorting')<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
                                         <select class="form-control" name="destination_operator_name">
-                                            <option value="">@lang('warehouse.containers.Destination Airport')</option>
+                                            <option value="">@lang('warehouse.containers.Sorting')</option>
                                             <option value="MR" {{ old('destination_operator_name') == 'MR' ? 'selected' : '' }}>MR (Santiago)</option>
                                             <option value="RM" {{ old('destination_operator_name') == 'RM' ? 'selected' : '' }}>RM (Other Region)</option>
                                         </select>
