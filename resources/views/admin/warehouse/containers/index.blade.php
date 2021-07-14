@@ -16,6 +16,13 @@
                             <table class="table mb-0">
                                 <thead>
                                 <tr>
+                                    <th style="min-width: 100px;">
+                                        <select name="" id="bulk-actions" class="form-control">
+                                            <option value="clear">Clear All</option>
+                                            <option value="checkAll">Select All</option>
+                                            <option value="assign-awb">Assign AWB</option>
+                                        </select>
+                                    </th>
                                     <th>@lang('warehouse.containers.Dispatch Number')</th>
                                     <th>@lang('warehouse.containers.Seal No')</th>
                                     <th>
@@ -34,6 +41,9 @@
                                         Unit Code
                                     </th>
                                     <th>
+                                        AWB#
+                                    </th>
+                                    <th>
                                         Status
                                     </th>
                                     <th>@lang('warehouse.actions.Action')</th>
@@ -42,6 +52,17 @@
                                 <tbody>
                                 @foreach($containers as $container)
                                     <tr>
+                                        <td>
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="@lang('orders.Bulk Print')">
+                                                <input type="checkbox" name="containers[]" class="bulk-container" value="{{$container->id}}">
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                                <span class="h3 mx-2 text-primary my-0 py-0"></span>
+                                            </div>
+                                        </td>
                                         <td>{{ $container->dispatch_number }}</td>
                                         <td>{{ $container->seal_no }}</td>
                                         <td>
@@ -64,6 +85,9 @@
                                         </td>
                                         <td>
                                             {{ $container->getUnitCode() }}
+                                        </td>
+                                        <td>
+                                            {{ $container->awb }}
                                         </td>
                                         <td>
                                             @if(!$container->isRegistered())
@@ -129,6 +153,60 @@
                     </div>
                 </div>
             </div>
+
+            <div class="modal fade" id="confirm" role="dialog">
+                <div class="modal-dialog modal-lg">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="col-8">
+                            <h4>
+                               Are you Sure!
+                            </h4>
+                        </div>
+                    </div>
+                    <form action="{{ route('warehouse.container.awb') }}" method="GET" id="bulk_sale_form">
+                        <div class="modal-body" style="font-size: 15px;">
+                            <p>
+                                Are you Sure want to Assign AWB number to Selected Containers  {{-- <span class="result"></span> --}}
+                            </p>
+                            <input type="text" name="awb" required class="form-control" value="">
+                            <input type="hidden" name="command" id="command" value="">
+                            <input type="hidden" name="data" id="data" value="">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" id="save"> Yes Pay</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"> @lang('consolidation.Cancel')</button>
+                        </div>
+                    </form>
+                  </div>
+                </div>
+            </div>
+
+
         </div>
     </section>
+@endsection
+
+@section('js')
+    <script>
+        $('body').on('change','#bulk-actions',function(){
+            if ( $(this).val() == 'clear' ){
+                $('.bulk-container').prop('checked',false)
+            }else if ( $(this).val() == 'checkAll' ){
+                $('.bulk-container').prop('checked',true)
+            }else if ( $(this).val() == 'assign-awb' ){
+                var containerIds = [];
+                $.each($(".bulk-container:checked"), function(){
+                    containerIds.push($(this).val());
+                    
+                    // $(".result").append('HD-' + this.value + ',');
+                });
+                
+                $('#bulk_sale_form #command').val('assign-awb');
+                $('#bulk_sale_form #data').val(JSON.stringify(containerIds));
+                $('#confirm').modal('show');
+                // $('#bulk_sale_form').submit();
+            }
+        })
+    </script>
 @endsection
