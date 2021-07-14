@@ -99,7 +99,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     public function getWeight(): float
     {
-        return round($this->orders()->sum(DB::raw('CASE WHEN orders.measurement_unit = "kg/cm" THEN orders.weight ELSE (orders.weight/2.205) END')),2);
+        return round($this->orders()->sum(DB::raw('CASE WHEN orders.measurement_unit = "kg/cm" THEN orders.weight ELSE ROUND((orders.weight/2.205), 2) END')),2);
     }
 
     public function getPiecesCount(): int
