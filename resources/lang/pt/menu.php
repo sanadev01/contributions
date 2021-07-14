@@ -23,7 +23,7 @@ return [
     'Profit Packages' => 'Pacotes de lucro',
     'Handling Services' => 'Serviços de Manuseio',
     'Shipping Services' => 'Serviços de Frete',
-    'Shipping Charges' => 'Custos de envio',
+    'Shipping Rates' => 'Upload de taxas de frete (custo)',
     'Users' => 'Comercial',
     'Roles' => 'Funções',
     'Billing Informations' => 'Informações de pagamento',

@@ -10,6 +10,7 @@ return [
         'Origin Country' => 'Origin Country',
         'Origin Airport' => 'Origin Airport',
         'Destination Airport' => 'Destination Airport',
+        'Sorting' => 'Sorting',
         'Distribution Service Class' => 'Distribution Service Class',
         'Container Type' => 'Container Type',
         'Seal No' => 'Seal No',
