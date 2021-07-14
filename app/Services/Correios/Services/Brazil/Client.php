@@ -55,6 +55,14 @@ class Client{
 
     public function createPackage(Package $order)
     {
+        
+        if($order->isWeightInKg()) {
+            $weight = UnitsConverter::kgToGrams($order->weight);
+        }else{
+            $kg = UnitsConverter::poundToKg($order->weight);
+            $weight = UnitsConverter::kgToGrams($kg);
+        }
+
         $packet = new \App\Services\Correios\Models\Package();
 
         $packet->customerControlCode = $order->id;
@@ -71,7 +79,7 @@ class Client{
         $packet->recipientEmail = $order->recipient->email;
         $packet->distributionModality = $order->getDistributionModality();
         $packet->taxPaymentMethod = $order->getService() == 1 ? 'DDP' : 'DDU';
-        $packet->totalWeight =  ceil($order->isWeightInKg() ? $order->weight  : UnitsConverter::poundToKg($order->weight));
+        $packet->totalWeight =  ceil($weight);
 
         $width = round($order->isMeasurmentUnitCm() ? $order->width : UnitsConverter::inToCm($order->width));
         $height = round($order->isMeasurmentUnitCm() ? $order->height : UnitsConverter::inToCm($order->height));
