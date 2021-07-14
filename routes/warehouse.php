@@ -3,6 +3,7 @@
 use App\Models\Order;
 use Illuminate\Support\Facades\Route;
 use App\Services\Correios\Models\Package;
+use App\Http\Controllers\Warehouse\AwbController;
 use App\Http\Controllers\Warehouse\ContainerController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Warehouse\CN23DownloadController;
@@ -24,6 +25,7 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::resource('search_package', SearchPackageController::class)->only('index', 'show');
     
     Route::resource('containers', ContainerController::class);
+    Route::get('awb/', AwbController::class)->name('container.awb');
     Route::resource('containers.packages', ContainerPackageController::class)->only('index','destroy', 'create');
     Route::post('containers/{container}/packages/{barcode}', [ContainerPackageController::class,'store'])->name('containers.packages.store');
 
