@@ -41,7 +41,7 @@ class OrderExport extends AbstractExportService
             $this->setCellValue('E'.$row, $order->customer_reference);
             $this->setCellValue('F'.$row, $order->corrios_tracking_code);
             $this->setCellValue('G'.$row, $order->gross_total);
-            $this->setCellValue('H'.$row, number_format($order->dangrous_goods,2));
+            $this->setCellValue('H'.$row, $this->checkValue(number_format($order->dangrous_goods,2)));
             $this->setCellValue('I'.$row, $order->getWeight('kg'));
             $this->setCellValue('J'.$row, $order->getWeight('lbs'));
             if($order->status == Order::STATUS_ORDER){
@@ -118,5 +118,14 @@ class OrderExport extends AbstractExportService
         $this->setColor('A1:L1', 'FFFFFF');
 
         $this->currentRow++;
+    }
+
+    private function checkValue($value)
+    {
+        if($value == 0){
+            return '';
+        }
+
+        return $value;
     }
 }
