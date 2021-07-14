@@ -62,6 +62,10 @@
                                         <th>Destination Airport</th>
                                         <td>{{ $order->containers[0]->destination_operator_name }}</td>
                                     </tr>
+                                    <tr>
+                                        <th>AWB#</th>
+                                        <td>{{ $order->containers[0]->awb }}</td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>

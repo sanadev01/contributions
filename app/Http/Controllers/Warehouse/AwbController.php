@@ -1,0 +1,21 @@
+<?php
+
+namespace App\Http\Controllers\Warehouse;
+
+use Illuminate\Http\Request;
+use App\Models\Warehouse\Container;
+use App\Http\Controllers\Controller;
+
+class AwbController extends Controller
+{
+    public function __invoke(Request $request)
+    {
+        foreach(json_decode($request->data) as $containerId){
+            $container       = Container::find($containerId);
+            $container->awb  = $request->awb;
+            $container->save();
+        }
+        session()->flash('alert-success','AWB number assigned');
+        return redirect()->route('warehouse.containers.index');
+    }
+}
