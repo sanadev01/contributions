@@ -55,6 +55,7 @@ class Client{
 
     public function createPackage(Package $order)
     {
+        
         if($order->isWeightInKg()) {
             $weight = UnitsConverter::kgToGrams($order->weight);
         }else{
