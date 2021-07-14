@@ -2,7 +2,7 @@
     <div class="card">
         <div class="card-header d-flex align-items-start pb-0">
             <div>
-                <h2 class="text-bold-700 mb-0">{{ $sales }}</h2>
+                <h1 class="text-bold-700 mb-0">{{ $sales }}</h1>
                 <p>@lang('affiliate-dashboard.Sales')</p>
             </div>
             <div class="avatar bg-rgba-success p-50 m-0">

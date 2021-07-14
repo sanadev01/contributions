@@ -20,49 +20,7 @@
                     </div>
                     <hr>
                     <div class="card-content card-body">
-                        <table class="table table-bordered table-responsive-md">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        Service
-                                    </th>
-
-                                    <th>
-                                        Weight (Grams)
-                                    </th>
-
-                                    <th>
-                                        CWB
-                                    </th>
-
-                                    <th>
-                                        GRU
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($shippingRates as $rate)
-                                    <tr>
-                                        <th>
-                                            {{ $rate->getServiceName() }}
-                                        </th>
-
-                                        <th>
-                                            {{ $rate->weight }}
-                                        </th>
-
-                                        <th>
-                                            ${{ $rate->cwb }}
-                                        </th>
-
-                                        <th>
-                                            ${{ $rate->gru }}
-                                        </th>
-                                    </tr>
-                                    
-                                @endforeach
-                            </tbody>
-                        </table>
+                        <livewire:accrual-rate.table />
                     </div>
                 </div>
             </div>

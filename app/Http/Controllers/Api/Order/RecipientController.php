@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\Order;
 
+use Exception;
+use SoapClient;
 use App\Models\Order;
 use App\Models\Address;
 use Illuminate\Http\Request;
@@ -10,6 +12,16 @@ use App\Http\Controllers\Controller;
 
 class RecipientController extends Controller
 {
+    private $usuario;
+    private $contrasena;
+
+
+    public function __construct()
+    {
+        $this->usuario = config('correoschile.userId');
+        $this->contrasena = config('correoschile.correosKey');
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -81,4 +93,108 @@ class RecipientController extends Controller
         }
         return apiResponse(true,'Zipcode success',$response);
     }
+
+    public function chileRegions()
+    {
+        return $regions = $this->getAllRegions();
+        
+    }
+
+    public function chileCommunes(Request $request)
+    {
+
+        return $communes = $this->getCommunesByRegion($request->region_code);
+    }
+
+    public function normalizeAddress(Request $request)
+    {
+       return $this->validateChileAddress($request->coummne, $request->direction);
+
+    }
+
+    function getAllRegions() 
+    {
+        $wsdlUrl = config('correoschile.regions_url');
+
+        $client = new SoapClient($wsdlUrl, array('trace' => 1, 'exception' => 0));
+        try
+        {
+            $result = $client->__soapCall('listarTodasLasRegiones', array(
+                'listarTodasLasRegiones' => array(
+                    'usuario' => $this->usuario,
+                    'contrasena' => $this->contrasena
+                )), null, null);
+            return (Array)[
+                'success' => true,
+                'message' => "Regions Fetched",
+                'data'    => $result->listarTodasLasRegionesResult->RegionTO,
+            ];
+        } 
+        catch (Exception $e) 
+        {
+            return (Array)[
+                'success' => false,
+                'message' => 'could not Load Regions plaease reload',
+            ];
+        }
+    }
+
+    public function getCommunesByRegion($region_code)
+    {
+        $wsdlUrl = config('correoschile.communas_url');
+        
+        try 
+        {
+            $client = new SoapClient($wsdlUrl, array('trace' => 1, 'exception' => 0));
+            $result = $client->__soapCall('listarComunasSegunRegion', array(
+                'listarComunasSegunRegion' => array(
+                    'usuario' => $this->usuario,
+                    'contrasena' => $this->contrasena,
+                    'codigoRegion' => $region_code
+            )), null, null);
+            return (Array)[
+                'success' => true,
+                'message' => "Communes Fetched",
+                'data'    => $result->listarComunasSegunRegionResult->ComunaTO,
+            ];
+        }
+        catch (Exception $e) 
+        {
+            return (Array)[
+                'success' => false,
+                'message' => 'could not load Communes, please select region',
+            ];
+        }
+    }
+
+    function validateChileAddress($commune, $direction)
+    {
+        $wsdlUrl = config('correoschile.normalize_address_url');
+        $id = '.';
+        
+        try
+        {
+            $client = new SoapClient($wsdlUrl, array('trace' => 1, 'exception' => 0));
+            $result = $client->__soapCall('normalizarDireccion', array(
+                'normalizarDireccion' => array(
+                    'usuario' => $this->usuario,
+                    'contrasena' => $this->contrasena,
+                    'id' => $id,
+                    'direccion' => trim($direction),
+                    'comuna' => trim($commune)
+                )), null, null);
+            return (Array)[
+                'success' => true,
+                'message' => 'Address Validated',
+                'data'    => $result->normalizarDireccionResult,
+            ];
+        }
+        catch (Exception $e) {
+            return (Array)[
+                'success' => false,
+                'message' => 'According to Correos Chile Your Address or House No is Inavalid',
+            ];
+        }
+    }
+
 }

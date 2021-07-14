@@ -38,7 +38,7 @@
                                         @endforeach
                                     </tr>
                                     <tr>
-                                        <th>@lang('shipping-rates.LEVE') ($)</th>
+                                        <th>@lang('shipping-rates.Rates') ($)</th>
                                         @foreach($ratesData->data??[] as $rate)
                                             <td>
                                                 {{ isset($rate['leve'])?$rate['leve']:0 }}

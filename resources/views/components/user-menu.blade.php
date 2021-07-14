@@ -106,7 +106,7 @@
                     <li class="{{ $isActive(['admin.rates.shipping-rates.index','admin.rates.shipping-rates.create']) }}">
                         <a href="{{ route('admin.rates.shipping-rates.index') }}">
                             <i class="feather icon-circle"></i>
-                            <span class="menu-title">@lang('menu.Shipping Charges')</span>
+                            <span class="menu-title" style="font-size: 13px !important; font-weight: 500 !important;">@lang('menu.Shipping Rates')</span>
                         </a>
                     </li>
                     @endcan
@@ -192,6 +192,16 @@
                         </a>
                     </li>
                     @endcan
+                    @admin
+                        @can('viewComissionReport', App\Models\Reports::class)
+                        <li class="{{ $isActive(['admin.reports.commission.index','admin.reports.commission.show']) }}">
+                            <a href="{{ route('admin.reports.commission.index') }}">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title">@lang('menu.Reports.Commission Report')</span>
+                            </a>
+                        </li>
+                        @endcan
+                    @endadmin
                 </ul>
             </li>
 

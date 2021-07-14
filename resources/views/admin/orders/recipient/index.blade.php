@@ -77,29 +77,30 @@
                 </div>
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
-                        <label>@lang('address.Phone')</label>
+                        <label>@lang('address.Phone') <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="phone" value="{{old('phone',optional($order->recipient)->phone)}}" required placeholder="+55123456789">
                         <div class="help-block"></div>
                     </div>
                 </div>
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
-                        <label>@lang('address.Address') <span class="text-danger">*</span></label>
+                        <label id="label_address">@lang('address.Address') <span class="text-danger">*</span></label>
+                        <label id="label_chile_address" style="display: none;">@lang('address.Chile Address')<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="address" name="address" value="{{old('address',optional($order->recipient)->address)}}" required placeholder="@lang('address.Address')"/>
                         <div class="help-block"></div>
                     </div>
                 </div>
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
-                        <label>@lang('address.Address')2</label>
-                        <input type="text" class="form-control"  placeholder="@lang('address.Address')2" value="{{old('address2',optional($order->recipient)->address2)}}"  name="address2">
+                        <label>@lang('address.Address2')</label>
+                        <input type="text" class="form-control"  placeholder="@lang('address.Address2')" value="{{old('address2',optional($order->recipient)->address2)}}"  name="address2">
                         <div class="help-block"></div>
                     </div>
                 </div>
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
-                        <label>@lang('address.Street No')</label>
-                        <input type="text" class="form-control" placeholder="@lang('address.Street No')" value="{{old('street_no',optional($order->recipient)->street_no)}}"  name="street_no">
+                        <label>@lang('address.Street No') <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" placeholder="@lang('address.Street No')" value="{{old('street_no',optional($order->recipient)->street_no)}}"  name="street_no" id="street_no">
                         <div class="help-block"></div>
                     </div>
                 </div>
@@ -118,7 +119,7 @@
                     </div>
                 </div>
                 <div class="form-group col-12 col-sm-6 col-md-4">
-                    <div class="controls">
+                    <div class="controls" id="div_state" style="display: none">
                         <label>@lang('address.State') <span class="text-danger">*</span></label>
                         <select name="state_id" id="state" class="form-control selectpicker show-tick" data-live-search="true">
                             <option value="">Select @lang('address.State')</option>
@@ -128,28 +129,54 @@
                         </select>
                         <div class="help-block"></div>
                     </div>
+                    {{-- Chile Regions --}}
+                    <div class="controls" id="div_region" style="display: none">
+                        <label>Regions <span class="text-danger">*</span></label>
+                        <select name="region" id="region" class="form-control selectpicker show-tick" data-live-search="true" data-value="{{ old('region', optional($order->recipient)->region) }}">
+                            <option value="">Select Region</option>
+                        </select>
+                        <div class="help-block"></div>
+                    </div>
+                </div>
+                <div class="form-group col-12 offset-4">
+                    <div class="controls">
+                        <div class="help-block" id="regions_response">
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group col-12 col-sm-6 col-md-4">
-                    <div class="controls">
+                    <div class="controls" id="div_city" style="display: none">
                         <label>@lang('address.City') <span class="text-danger">*</span></label>
                         <input type="text" id="city" name="city" value="{{old('city',optional($order->recipient)->city)}}" class="form-control"  required placeholder="City"/>
                         <div class="help-block"></div>
+                    </div>
+                    {{-- Chile Communes --}}
+                    <div class="controls" id="div_communes" style="display: none">
+                        <label>Communes <span class="text-danger">*</span></label>
+                        <select name="city" id="commune" class="form-control selectpicker show-tick" data-live-search="true" data-value="{{ old('city', optional($order->recipient)->city) }}">
+                            <option value="">Select Commune</option>
+                        </select>
+                        <div class="help-block"></div>
+                    </div>
+                    <div class="controls">
+                        <div class="help-block" id="communes_response" style="display: none">
+                        </div>
                     </div>
                 </div>
 
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
-                        <label>@lang('address.Zip Code')</label>
+                        <label>@lang('address.Zip Code') <span class="text-danger">*</span></label>
                         <input type="text" name="zipcode"  id="zipcode" value="{{ cleanString(old('zipcode',optional($order->recipient)->zipcode)) }}" required class="form-control" placeholder="Zip Code"/>
                         <div class="help-block"></div>
                     </div>
                 </div>
 
-                <div class="form-group col-12 col-sm-6 col-md-4">
+                <div class="form-group col-12 col-sm-6 col-md-4" id="cpf">
                     <div class="controls">
                             <label id="cnpj_label_id" style="{{ optional($order->recipient)->account_type != 'individual' ? 'display:block' : 'display:none' }}" >@lang('address.CNPJ') <span class="text-danger">* (Brazil Only)</span> </label>
                             <label id="cpf_label_id" style="{{ optional($order->recipient)->account_type == 'individual' ? 'display:block' : 'display:none' }}" >@lang('address.CPF') <span class="text-danger">* (Brazil Only)</span> </label>
-                        <input type="text" name="tax_id" id="tax_id" value="{{old('tax_id',optional($order->recipient)->tax_id)}}" required class="form-control" placeholder="CNPJ"/>
+                        <input type="text" name="tax_id" id="tax_id" value="{{old('tax_id',optional($order->recipient)->tax_id)}}" class="form-control" placeholder="CNPJ"/>
                         <div class="help-block"></div>
                     </div>
                 </div>
@@ -198,64 +225,7 @@
 <script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
 @include('layouts.states-ajax')
 
-<script>
-    $(document).ready(function(){
-        $('#accountType').on('change', function(){
-            let val = $(this).val();
-            if(val == 'individual'){
-                $('#cpf_label_id').css('display', 'block')
-                $('#cnpj_label_id').css('display', 'none')
-                $('#tax_id').attr('placeholder', 'CPF')
-            }else{
-                $('#cpf_label_id').css('display', 'none')
-                $('#cnpj_label_id').css('display', 'block')
-                $('#tax_id').attr('placeholder', 'CNPJ')
-            }
-        })
-    })
+@include('admin.orders.recipient.script')
 
-    $('#address_id').on('change',function(){
-        if ( $(this).val() == undefined || $(this).val() == "" ) return;
-        $('#loading').fadeIn();
-        $.post('{{ route("api.orders.recipient.update") }}',{
-            address_id: $(this).val(),
-            order_id: {{ $order->id }}
-        })
-        .then(function(response){
-            if ( response.success ){
-                window.location.reload();
-            }else{
-                $('#loading').fadeOut();
-                toastr.error(response.message)
-            }
-
-        }).catch(function(error){
-            $('#loading').fadeOut();
-        })
-    })
-    
-    $('#zipcode').on("change", function(){
-        if ( $(this).val() == undefined || $(this).val() == "" ) return;
-        $('#loading').fadeIn();
-        $.get('{{ route("api.orders.recipient.zipcode") }}',{
-            zipcode: $(this).val(),
-        })
-        .then(function(response){
-            console.log(response.data);
-            if ( response.success ){
-                $('#loading').fadeOut();
-                $('#zipcode_response').empty().append("<p><b>According to your zipcode, your address should be this</b></p><p><span style='color: red;'>Address: </span><span>"+response.data.street+"</span></p><p><span style='color: red;'>City: </span><span>"+response.data.city+"</span></p><p><span style='color: red;'>State: </span><span>"+response.data.uf+"</span></p>");
-            }else{
-                $('#loading').fadeOut();
-                $('#zipcode_response').empty().append("<p style='color: red;'>"+response.message+"</p>");
-                toastr.error(response.message)
-            }
-
-        }).catch(function(error){
-            $('#loading').fadeOut();
-        })
-    })
- 
-</script>
 @endsection
 

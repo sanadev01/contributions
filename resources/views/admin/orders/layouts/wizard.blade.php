@@ -31,20 +31,30 @@
                                                 <span class="step">2</span> @lang('orders.order-details.Recipient')
                                             </a>
                                         </li>
-                                        {{-- <li role="tab" class="{{ in_array(request()->route()->getName(),['admin.orders.services.index'])? 'current' : 'disabled' }}" aria-disabled="true">
-                                            <a id="steps-uid-0-t-2" href="#" aria-controls="steps-uid-0-p-2">
-                                                <span class="step">3</span> @lang('orders.order-details.Additional services')
-                                            </a>
-                                        </li> --}}
+                                        @if ($order->user->hasRole('retailer'))
+                                            <li role="tab" class="{{ in_array(request()->route()->getName(),['admin.orders.services.index'])? 'current' : 'disabled' }}" aria-disabled="true">
+                                                <a id="steps-uid-0-t-2" href="#" aria-controls="steps-uid-0-p-2">
+                                                    <span class="step">3</span> @lang('orders.order-details.Additional services')
+                                                </a>
+                                            </li>
+                                        @endif
                                         
                                         <li role="tab" class="{{ in_array(request()->route()->getName(),['admin.orders.order-details.index'])? 'current' : 'disabled' }}" aria-disabled="true">
                                             <a id="steps-uid-0-t-1" href="#" aria-controls="steps-uid-0-p-1">
-                                                <span class="step">3</span> @lang('orders.order-details.Shipping & Items')
+                                                @if ($order->user->hasRole('retailer'))
+                                                    <span class="step">4</span> @lang('orders.order-details.Shipping & Items')
+                                                @else
+                                                    <span class="step">3</span> @lang('orders.order-details.Shipping & Items')
+                                                @endif    
                                             </a>
                                         </li>
                                         <li role="tab" class="last {{ in_array(request()->route()->getName(),['admin.orders.order-invoice.index'])? 'current' : 'disabled' }}" aria-disabled="true">
                                             <a id="steps-uid-0-t-2" href="#" aria-controls="steps-uid-0-p-2">
-                                                <span class="step">4</span> @lang('orders.order-details.Invoice')
+                                                @if ($order->user->hasRole('retailer'))
+                                                    <span class="step">5</span> @lang('orders.order-details.Invoice')
+                                                @else
+                                                    <span class="step">4</span> @lang('orders.order-details.Invoice')
+                                                @endif    
                                             </a>
                                         </li>
                                     </ul>

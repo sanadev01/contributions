@@ -13,7 +13,7 @@
         {{ $address->city }}
     </td>
     <td>
-        {{ $address->state->code }}
+        {{ $address->state->code ?? '' }}
     </td>
     <td> 
         @if ( $address->account_type == 'individual' )

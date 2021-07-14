@@ -53,8 +53,8 @@ class SaleExport extends AbstractExportService
 
         $this->currentRow = $row;
 
-        $this->setCellValue('D'.$row, "=SUM(D1:D{$row})");
-        $this->setBackgroundColor("A{$row}:H{$row}", 'adfb84');
+        $this->setCellValue('H'.$row, "=SUM(H1:H{$row})");
+        $this->setBackgroundColor("A{$row}:J{$row}", 'adfb84');
     }
 
 

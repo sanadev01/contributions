@@ -67,7 +67,10 @@ return [
         'Email' => 'O email',
         'Phone' => 'telefone',
         'Tax Id' => 'CPF',
-        'Next' => 'Próximo', 
+        'Address' => 'Morada',
+        'City' => 'cidade',
+        'Next' => 'Próximo',
+        'Select Country' => 'Selecione pais', 
     ],
     'import-excel' =>[
         'Import Orders via Excel Sheet' => 'Importar pedidos via planilha do Excel',

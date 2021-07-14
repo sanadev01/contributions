@@ -54,6 +54,7 @@
             <th>Tracking Code</th>
             <th>WHR#</th>
             <th>Card Last 4 Digits</th>
+            <th>Attachment</th>
             <th>Debit/Credit</th>
             <th>Balance</th>
             <th>Created At</th>
@@ -108,6 +109,13 @@
                 </td>
                 <td>
                     {{ $deposit->last_four_digits  }}
+                </td>
+                <td>
+                    @if($deposit->attachment != null)
+                        <a href="{{route('admin.download_attachment', [$deposit->attachment])}}">Download</a>
+                    @else
+                        Not Found
+                    @endif    
                 </td>
                 <th>
                     @if( $deposit->isCredit() )

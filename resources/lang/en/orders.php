@@ -17,6 +17,8 @@ return [
     'type' => 'Type',
     'payment-status' => 'Payment Status',
     'payment-method' => 'Payment Method',
+    'Delete' => 'Delete',
+    'Remove' => 'Remove Order',
     
     'recipient' => [
         'slect-from-list' => 'Select Address From List',
@@ -67,8 +69,11 @@ return [
         'Email' => 'Email',
         'Phone' => 'Phone',
         'Tax Id' => 'Tax Id',
+        'Address' => 'Address',
+        'City' => 'City',
         'Next' => 'Next', 
-        'Step 1' => 'Step 1', 
+        'Step 1' => 'Step 1',
+        'Select Country' => 'Select Country', 
     ],
     'import-excel' =>[
         'Import Orders via Excel Sheet' => 'Import Orders via Excel Sheet',
