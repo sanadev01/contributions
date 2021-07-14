@@ -22,10 +22,10 @@ class AwbController extends Controller
                 $container->save();
             }
             session()->flash('alert-success','AWB number assigned');
-            return redirect()->route('warehouse.containers.index');
+            return redirect()->back();
         }
         session()->flash('alert-danger','Please select Containers');
-        return redirect()->route('warehouse.containers.index');
+        return redirect()->back();
 
     }
 }
