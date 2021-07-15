@@ -24,5 +24,7 @@ return [
     'Fixed Charges' => 'Fixed Charges',
     'consolidation Charges' => 'Consolidation Charges',
     'Rates' => 'Rates',
+    'Country' => 'Country',
+    'Select Country' => 'Select Country',
 ];
  

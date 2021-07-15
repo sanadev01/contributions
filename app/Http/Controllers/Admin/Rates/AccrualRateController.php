@@ -34,7 +34,7 @@ class AccrualRateController extends Controller
         try{
 
             $file = $request->file('csv_file');
-            $importService = new ImportAccrualRates($file, $request->service_id);
+            $importService = new ImportAccrualRates($file, $request->service_id, $request->country_id);
             $importService->handle();
             session()->flash('alert-success', 'Accrual Rates Updated Successfully');
 

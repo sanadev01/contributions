@@ -10,23 +10,42 @@ class Table extends Component
     public $shippingRates;
     public $selectedService;
     public $weight;
+    public $selectedCountry;
     
     
     public function render()
     {
-        if($this->selectedService && !$this->weight)
+        //Filter by country
+        if($this->selectedCountry && !$this->selectedService && !$this->weight)
+        {
+            $this->shippingRates = $this->getShippingRatesByCountry();
+        }   
+        //Filter by Service
+        elseif($this->selectedService && !$this->weight && !$this->selectedCountry)
         {
             $this->shippingRates = $this->getShippingRatesByServiceName();
-
-        }elseif($this->weight && !$this->selectedService)
+        }
+        //Filter by Weight
+        elseif($this->weight && !$this->selectedService && !$this->selectedCountry)
         {
             $this->shippingRates = $this->getShippingRatesByWeight();
-
-        }elseif($this->selectedService && $this->weight)
+        }
+        //Filter by Country and Service
+        elseif($this->selectedCountry && $this->selectedService && !$this->weight)
+        {
+            $this->shippingRates = $this->getShippingRatesByServiceName_and_ByCountry();
+        }
+        //Filter by Weight and Service
+        elseif($this->selectedService && $this->weight && !$this->selectedCountry)
         {
             $this->shippingRates = $this->getShippingRatesByServiceName_and_ByWeight();
-        }else {
-
+        }
+        // Filter by Country Weight and Service
+        elseif($this->selectedCountry && $this->weight && $this->selectedService)
+        {
+            $this->shippingRates = $this->getShippingRatesByCountry_and_ByService_and_ByWeight();
+        }
+        else{
             $this->shippingRates = $this->getAllShippingRates();
         }
 
@@ -38,6 +57,11 @@ class Table extends Component
     public function getAllShippingRates()
     {
         return AccrualRate::all();
+    }
+
+    public function getShippingRatesByCountry()
+    {
+        return AccrualRate::where('country_id', $this->selectedCountry)->get();
     }
 
     public function getShippingRatesByServiceName()
@@ -53,5 +77,15 @@ class Table extends Component
     public function getShippingRatesByServiceName_and_ByWeight()
     {
         return AccrualRate::where('service', $this->selectedService)->where('weight', 'LIKE', "%{$this->weight}%")->get();
+    }
+
+    public function getShippingRatesByServiceName_and_ByCountry()
+    {
+        return AccrualRate::where('service', $this->selectedService)->where('country_id', $this->selectedCountry)->get();
+    }
+
+    public function getShippingRatesByCountry_and_ByService_and_ByWeight()
+    {
+        return AccrualRate::where('country_id', $this->selectedCountry)->where('service', $this->selectedService)->where('weight', 'LIKE', "%{$this->weight}%")->get();
     }
 }

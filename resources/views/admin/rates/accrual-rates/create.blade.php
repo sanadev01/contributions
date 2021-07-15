@@ -29,11 +29,29 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <div class="controls">
+                                        <label>@lang('shipping-rates.Country') <span class="text-danger">*</span></label>
+                                        <select name="country_id" id="country" required class="form-control">
+                                            <option value="" selected>@lang('shipping-rates.Select Country')</option>
+                                            <option value="30">Brazil</option>
+                                            <option value="46">Chile</option>
+                                        </select>
+                                        <div class="help-block"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="controls">
                                         <label>@lang('shipping-rates.Shipping Service') <span class="text-danger">*</span></label>
-                                        <select name="service_id" required class="form-control">
+                                        <select name="service_id" id="service" required class="form-control">
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_STANDARD}}">Standard</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_EXPRESS}}">Express</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_MINI}}">Mini</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_SRP}}">SRP</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_SRM}}">SRM</option>
                                         </select>
                                         <div class="help-block"></div>
                                     </div>
@@ -82,4 +100,27 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('js')
+<script>
+    $(document).ready(function(){ 
+        $('#country').change(function () {
+            let selected = $('#country').val();
+            
+            if(selected == '46') {
+                $('#service').children("option[value=" + '33162' + "]").hide();
+                $('#service').children("option[value=" + '33170' + "]").hide();
+                $('#service').children("option[value=" + '33197' + "]").hide();
+            } else {
+                $('#service').children("option[value=" + '28' + "]").hide();
+                $('#service').children("option[value=" + '32' + "]").hide();
+            }
+        });
+
+    })
+
+
+ 
+</script>
 @endsection
