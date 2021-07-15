@@ -38,6 +38,7 @@ return [
         'Phone No' => 'Telefone',
         'Password' => 'Senha',
         'reffered by' => 'Referido por',
+        'How you come to know' => 'Como você conheceu a Entrega em Domicílio BR?',
         'Confirm Password' => 'Confirmar Senha',
         'Fields marked with' => 'Campos marcardos com * são obrigatórios',
     ]

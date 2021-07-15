@@ -17,7 +17,7 @@
     </script>
     <!-- Styles -->
     @include('layouts.css')
-
+    @yield('css')
     <livewire:styles>
 </head>
 <body>

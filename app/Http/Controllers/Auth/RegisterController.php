@@ -77,7 +77,7 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         $locale = app()->getLocale();
-        
+        \Log::info($data['come_from']);
         $user = User::create([
             'name' => $data['name'],
             'last_name' => isset($data['last_name']) ? $data['last_name'] : null,
@@ -87,6 +87,7 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'reffered_by' => User::findRef($data['reffered_by']),
             'reffer_code' => generateRandomString(),
+            'come_from' => $data['come_from'],
             'password' => Hash::make($data['password']),
             'account_type' => $data['account_type'] == 'business' ? User::ACCOUNT_TYPE_BUSINESS : User::ACCOUNT_TYPE_INDIVIDUAL
         ]);
