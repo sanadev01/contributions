@@ -77,7 +77,7 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         $locale = app()->getLocale();
-        \Log::info($data['come_from']);
+        
         $user = User::create([
             'name' => $data['name'],
             'last_name' => isset($data['last_name']) ? $data['last_name'] : null,

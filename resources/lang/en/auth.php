@@ -36,7 +36,7 @@ return [
         'Email Address' => 'E-Mail Address',
         'Phone No' => 'Phone No',
         'Password' => 'Password',
-        'reffered by' => 'Reffered By',
+        'reffered by' => 'Reffered Code',
         'How you come to know' => 'How you come to know about Home Delivery BR?',
         'Confirm Password' => 'Confirm Password',
         'Fields marked with' => 'Fields marked with <span class="text-danger h4">*</span> are required',
