@@ -8,45 +8,29 @@ use App\Models\Warehouse\AccrualRate;
 class Table extends Component
 {
     public $shippingRates;
-    public $selectedService;
     public $weight;
     public $selectedCountry;
+    public $service;
     
+    public function mount($shippingService)
+    {
+        $this->service = $shippingService;
+    }
     
     public function render()
     {
-        //Filter by country
-        if($this->selectedCountry && !$this->selectedService && !$this->weight)
+        if($this->selectedCountry && !$this->weight)
         {
-            $this->shippingRates = $this->getShippingRatesByCountry();
-        }   
-        //Filter by Service
-        elseif($this->selectedService && !$this->weight && !$this->selectedCountry)
+            $this->searchByCountry();
+        }elseif(!$this->selectedCountry && $this->weight)
         {
-            $this->shippingRates = $this->getShippingRatesByServiceName();
+            $this->searchByWeight();
+        }elseif($this->selectedCountry && $this->weight)
+        {
+            $this->searchByCountryAndWeight();
         }
-        //Filter by Weight
-        elseif($this->weight && !$this->selectedService && !$this->selectedCountry)
-        {
-            $this->shippingRates = $this->getShippingRatesByWeight();
-        }
-        //Filter by Country and Service
-        elseif($this->selectedCountry && $this->selectedService && !$this->weight)
-        {
-            $this->shippingRates = $this->getShippingRatesByServiceName_and_ByCountry();
-        }
-        //Filter by Weight and Service
-        elseif($this->selectedService && $this->weight && !$this->selectedCountry)
-        {
-            $this->shippingRates = $this->getShippingRatesByServiceName_and_ByWeight();
-        }
-        // Filter by Country Weight and Service
-        elseif($this->selectedCountry && $this->weight && $this->selectedService)
-        {
-            $this->shippingRates = $this->getShippingRatesByCountry_and_ByService_and_ByWeight();
-        }
-        else{
-            $this->shippingRates = $this->getAllShippingRates();
+        else {
+            $this->getShippingRates();
         }
 
         return view('livewire.accrual-rate.table', [
@@ -54,38 +38,25 @@ class Table extends Component
         ]);
     }
 
-    public function getAllShippingRates()
+    public function getShippingRates()
     {
-        return AccrualRate::all();
+        
+        return $this->shippingRates = AccrualRate::where('service', $this->service)->get();
     }
 
-    public function getShippingRatesByCountry()
+    public function searchByCountry()
     {
-        return AccrualRate::where('country_id', $this->selectedCountry)->get();
+        $this->shippingRates = AccrualRate::where('service', $this->service)->where('country_id', $this->selectedCountry)->get();
     }
 
-    public function getShippingRatesByServiceName()
+    public function searchByWeight()
     {
-        return AccrualRate::where('service', $this->selectedService)->get();
+        $this->shippingRates = AccrualRate::where('service', $this->service)->where('weight', 'LIKE', "%{$this->weight}%")->get();
     }
 
-    public function getShippingRatesByWeight()
+    public function searchByCountryAndWeight()
     {
-        return AccrualRate::where('weight', 'LIKE', "%{$this->weight}%")->get();
+        $this->shippingRates = AccrualRate::where('service', $this->service)->where('country_id', $this->selectedCountry)->where('weight', 'LIKE', "%{$this->weight}%")->get();
     }
 
-    public function getShippingRatesByServiceName_and_ByWeight()
-    {
-        return AccrualRate::where('service', $this->selectedService)->where('weight', 'LIKE', "%{$this->weight}%")->get();
-    }
-
-    public function getShippingRatesByServiceName_and_ByCountry()
-    {
-        return AccrualRate::where('service', $this->selectedService)->where('country_id', $this->selectedCountry)->get();
-    }
-
-    public function getShippingRatesByCountry_and_ByService_and_ByWeight()
-    {
-        return AccrualRate::where('country_id', $this->selectedCountry)->where('service', $this->selectedService)->where('weight', 'LIKE', "%{$this->weight}%")->get();
-    }
 }

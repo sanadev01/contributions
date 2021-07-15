@@ -3,11 +3,11 @@
         <thead>
             <tr>
                 <th>
-                    Country
+                    Service
                 </th>
 
                 <th>
-                    Service
+                    Country
                 </th>
 
                 <th>
@@ -24,20 +24,13 @@
             </tr>
             <tr>
                 <th>
+                    
+                </th>
+                <th style="width: 25% !important;">
                     <select class="form-control" wire:model="selectedCountry">
                         <option value="" selected>ALL</option>
                         <option value="30">Brazil</option>
                         <option value="46">Chile</option>
-                    </select>
-                </th>
-                <th style="width: 28% !important;">
-                    <select class="form-control" wire:model="selectedService">
-                        <option value="" selected>ALL</option>
-                        <option value="33162">Standard</option>
-                        <option value="33170">Express</option>
-                        <option value="33197">Mini</option>
-                        <option value="28">SRP</option>
-                        <option value="32">SRM</option>
                     </select>
                 </th>
                 <th style="width: 30% !important;">
@@ -55,10 +48,10 @@
             @foreach ($shippingRates as $rate)
                 <tr>
                     <th>
-                        {{$rate->country->name}}
+                        {{ $rate->getServiceName() }}
                     </th>
                     <th>
-                        {{ $rate->getServiceName() }}
+                        {{$rate->country->name}}
                     </th>
 
                     <th>
