@@ -21,7 +21,8 @@ class ChileCN35DownloadController extends Controller
                     ->setDestinationAirport($container->getDestinationAriport())
                     ->setWeight($container->getWeight())
                     ->setItemsCount($container->getPiecesCount())
-                    ->setsealNumber($container->seal_no);
+                    ->setsealNumber($container->seal_no)
+                    ->setAwbNumber($container->awb);
 
         return $cn35Maker->download();
     }
