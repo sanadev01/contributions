@@ -43,6 +43,7 @@
                                         <th>@lang('user.Roles')</th>
                                         <th>@lang('user.Account Type')</th>
                                         <th>@lang('user.Package')</th>
+                                        <th>@lang('user.Referral')</th>
                                         <th>@lang('user.Action')</th>
                                     </tr>
                                 </thead>
@@ -73,6 +74,9 @@
                                         </td>
                                         <td>
                                             {{ optional($user->profitPackage)->name }}
+                                        </td>
+                                        <td>
+                                            {{ $user->come_from }}
                                         </td>
                                         <td class="d-flex">
                                             <div class="btn-group">
