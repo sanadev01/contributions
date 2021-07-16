@@ -33,4 +33,5 @@ return [
     'Referrer' => 'Selecione Referrer',
     'Select Referrer' => 'Selecione Referrer',
     'Default Package' => 'Pacote Único Padrão',
+    'Referral' => 'Referência',
 ]; 

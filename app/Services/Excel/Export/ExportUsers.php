@@ -35,6 +35,7 @@ class ExportUsers extends AbstractExportService
             $this->setCellValue('B'.$row, $user->name);
             $this->setCellValue('C'.$row, $user->email);
             $this->setCellValue('D'.$row, $user->accountType());
+            $this->setCellValue('E'.$row, $user->come_from);
             $row++;
         }
 
@@ -54,9 +55,12 @@ class ExportUsers extends AbstractExportService
 
         $this->setColumnWidth('D', 20);
         $this->setCellValue('D1', 'Account Type');
+        
+        $this->setColumnWidth('E', 20);
+        $this->setCellValue('E1', 'Referral');
 
-        $this->setBackgroundColor('A1:D1', '2b5cab');
-        $this->setColor('A1:D1', 'FFFFFF');
+        $this->setBackgroundColor('A1:E1', '2b5cab');
+        $this->setColor('A1:E1', 'FFFFFF');
 
         $this->currentRow++;
     }
