@@ -99,6 +99,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('fixed-charges', FixedChargesController::class)->only(['index','store']);
             Route::resource('shipping-rates', RateController::class)->only(['create', 'store', 'index']);
             Route::resource('accrual-rates', AccrualRateController::class)->only(['create', 'store', 'index']);
+            Route::get('accrual-rates/{accrual_rate?}', [\App\Http\Controllers\Admin\Rates\AccrualRateController::class, 'showRates'])->name('show-accrual-rates');
             Route::resource('user-rates', UserRateController::class)->only(['index']);
             Route::get('rates-exports/{package}', RateDownloadController::class)->name('rates.exports');
             Route::resource('profit-packages-upload', ProfitPackageUploadController::class)->only(['create', 'store']);

@@ -7,6 +7,10 @@
                 </th>
 
                 <th>
+                    Country
+                </th>
+
+                <th>
                     Weight (Grams)
                 </th>
 
@@ -19,22 +23,24 @@
                 </th>
             </tr>
             <tr>
-                <th style="width: 28% !important;">
-                    <select class="form-control" wire:model="selectedService">
+                <th style="width: 20% !important;">
+                    
+                </th>
+                <th style="width: 20% !important;">
+                    <select class="form-control" wire:model="selectedCountry">
                         <option value="" selected>ALL</option>
-                        <option value="33162">Standard</option>
-                        <option value="33170">Express</option>
-                        <option value="33197">Mini</option>
+                        <option value="30">Brazil</option>
+                        <option value="46">Chile</option>
                     </select>
                 </th>
-                <th style="width: 30% !important;">
+                <th style="width: 20% !important;">
                     <input type="search" class="form-control" wire:model.debounce.500ms="weight">
                 </th>
-                <th>
-                    
+                <th style="width: 20% !important;">
+                    <input type="search" class="form-control" wire:model.debounce.500ms="cwb">
                 </th>
-                <th>
-                    
+                <th style="width: 20% !important;">
+                    <input type="search" class="form-control" wire:model.debounce.500ms="gru">
                 </th>
             </tr>
         </thead>
@@ -43,6 +49,9 @@
                 <tr>
                     <th>
                         {{ $rate->getServiceName() }}
+                    </th>
+                    <th>
+                        {{$rate->country->name}}
                     </th>
 
                     <th>

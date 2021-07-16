@@ -24,5 +24,7 @@ return [
     'Fixed Charges' => 'Cobranças Fixas',
     'consolidation Charges' => 'Taxas de consolidação',
     'Rates' => 'Cotações',
+    'Country' => 'País',
+    'Select Country' => 'Selecione o pais',
 ];
  

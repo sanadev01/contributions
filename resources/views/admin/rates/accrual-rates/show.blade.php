@@ -13,14 +13,14 @@
                             <hr>
                         </div>
                         @can('create', App\Models\Rate::class)
-                            <a href="{{ route('admin.rates.accrual-rates.create') }}" class="pull-right btn btn-primary">
-                                @lang('shipping-rates.Upload Rates')
+                            <a href="{{ route('admin.rates.accrual-rates.index') }}" class="pull-right btn btn-primary">
+                                @lang('shipping-rates.Return to List')
                             </a>
                         @endcan
                     </div>
                     <hr>
                     <div class="card-content card-body">
-                        <livewire:accrual-rate.index-table />
+                        @livewire('accrual-rate.table', ['shippingService' => $service])
                     </div>
                 </div>
             </div>
