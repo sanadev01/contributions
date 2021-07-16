@@ -34,7 +34,7 @@ class OrderLabelController extends Controller
         $labelData = null;
 
         // For Correos Chile
-        if($order->recipient->country_id == 46 && $request->update_label == 'false')
+        if($order->recipient->country_id == 46)
         {
             $chile_labelRepository->handle($order);
 
