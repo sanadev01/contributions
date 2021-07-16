@@ -16,6 +16,7 @@ class CorreosChileCN35LabelMaker implements HasLableExport
     private $weight;
     private $service;
     private $seal_no;
+    private $awb;
 
     public function __construct()
     {
@@ -100,6 +101,12 @@ class CorreosChileCN35LabelMaker implements HasLableExport
         return $this;
     }
 
+    public function setAwbNumber(string $awb = null)
+    {
+        $this->awb = $awb;
+        return $this;
+    }
+
     public function get_code_for_generating_barcode()
     { 
         $date = str_replace("-", "", $this->dispatchDate);
@@ -137,6 +144,7 @@ class CorreosChileCN35LabelMaker implements HasLableExport
             'service' => $this->service,
             'seal_no' => $this->seal_no,
             'bar_code' => $this->get_code_for_generating_barcode(),
+            'awb' => $this->awb,
         ];
     }
 
