@@ -47,6 +47,7 @@
                                     <div class="controls">
                                         <label>@lang('shipping-rates.Shipping Service') <span class="text-danger">*</span></label>
                                         <select name="service_id" id="service" required class="form-control">
+                                            <option value="" selected>Select Service</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_STANDARD}}">Standard</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_EXPRESS}}">Express</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_MINI}}">Mini</option>
@@ -112,9 +113,16 @@
                 $('#service').children("option[value=" + '33162' + "]").hide();
                 $('#service').children("option[value=" + '33170' + "]").hide();
                 $('#service').children("option[value=" + '33197' + "]").hide();
+
+                $('#service').children("option[value=" + '28' + "]").show();
+                $('#service').children("option[value=" + '32' + "]").show();
             } else {
                 $('#service').children("option[value=" + '28' + "]").hide();
                 $('#service').children("option[value=" + '32' + "]").hide();
+
+                $('#service').children("option[value=" + '33162' + "]").show();
+                $('#service').children("option[value=" + '33170' + "]").show();
+                $('#service').children("option[value=" + '33197' + "]").show();
             }
         });
 

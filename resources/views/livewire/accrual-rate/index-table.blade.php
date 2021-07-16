@@ -16,7 +16,7 @@
                 <th>
                     {{$service['name']}}
                 <th>
-                    <a href="{{ route('admin.rates.accrual-rates.show',$service['value']) }}" class="btn btn-success btn-sm">
+                    <a href="{{ route('admin.rates.show-accrual-rates',$service['value']) }}" class="btn btn-success btn-sm">
                         View
                     </a>
                 </th>

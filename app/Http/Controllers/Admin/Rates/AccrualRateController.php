@@ -15,7 +15,7 @@ class AccrualRateController extends Controller
 {   
     public function __construct()
     {
-        // $this->authorizeResource(Rate::class);
+        $this->authorizeResource(Rate::class);
     } 
 
     public function index()
@@ -46,7 +46,7 @@ class AccrualRateController extends Controller
         }
     }
 
-    public function show($service)
+    public function showRates($service)
     {
         return view('admin.rates.accrual-rates.show', compact('service'));
     }
