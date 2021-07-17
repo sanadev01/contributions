@@ -201,7 +201,9 @@ class PreAlertRepository
                 \Log::info('Consolidation email send error: '.$ex->getMessage());
             }
         }
-
+        if( $order->status == Order::STATUS_ORDER ){
+            $order->doCalculations();
+        }
         return $order;
     }
 
