@@ -22,6 +22,9 @@ return [
     'Rates Updated Successfully' => 'Taxas atualizadas com sucesso',
     'Error While Updating Rates' => 'Erro ao atualizar taxas',
     'Fixed Charges' => 'Cobranças Fixas',
-    'consolidation Charges' => 'Taxas de consolidação'
+    'consolidation Charges' => 'Taxas de consolidação',
+    'Rates' => 'Cotações',
+    'Country' => 'País',
+    'Select Country' => 'Selecione o pais',
 ];
  
