@@ -44,20 +44,22 @@ class OrderExport extends AbstractExportService
             $this->setCellValue('H'.$row, $this->checkValue(number_format($order->dangrous_goods,2)));
             $this->setCellValue('I'.$row, $order->getWeight('kg'));
             $this->setCellValue('J'.$row, $order->getWeight('lbs'));
+            $this->setCellValue('K'.$row, $order->length. ' X '. $order->width.' X '.$order->height);
+
             if($order->status == Order::STATUS_ORDER){
-                $this->setCellValue('K'.$row, 'ORDER');
+                $this->setCellValue('L'.$row, 'ORDER');
             }
             if($order->status == Order::STATUS_PAYMENT_PENDING){
-                $this->setCellValue('K'.$row, 'PAYMENT_PENDING');
+                $this->setCellValue('L'.$row, 'PAYMENT_PENDING');
             }
             if($order->status == Order::STATUS_PAYMENT_DONE){
-                $this->setCellValue('K'.$row, 'PAYMENT_DONE');
+                $this->setCellValue('L'.$row, 'PAYMENT_DONE');
             }
             if($order->status == Order::STATUS_SHIPPED){
-                $this->setCellValue('K'.$row, 'SHIPPED');
+                $this->setCellValue('L'.$row, 'SHIPPED');
             }
             
-            $this->setCellValue('L'.$row, $order->order_date);
+            $this->setCellValue('M'.$row, $order->order_date);
             
             $row++;
         }
@@ -67,7 +69,7 @@ class OrderExport extends AbstractExportService
         $this->setCellValue('I'.$row, "=SUM(I1:I{$row})");
         $this->setCellValue('J'.$row, "=SUM(J1:J{$row})");
         $this->mergeCells("A{$row}:G{$row}");
-        $this->setBackgroundColor("A{$row}:K{$row}", 'adfb84');
+        $this->setBackgroundColor("A{$row}:L{$row}", 'adfb84');
         $this->setAlignment('A'.$row, Alignment::VERTICAL_CENTER);
         $this->setCellValue('A'.$row, 'Total Order: '.$this->orders->count());
 
@@ -103,19 +105,23 @@ class OrderExport extends AbstractExportService
         $this->setCellValue('H1', 'Battery/Perfume/Flameable');
 
         $this->setColumnWidth('I', 20);
-        $this->setCellValue('I1', 'Kg');
+        $this->setCellValue('I1', 'Weight(Kg)');
         
         $this->setColumnWidth('J', 20);
-        $this->setCellValue('J1', 'Lbs');
+        $this->setCellValue('J1', 'Weight(Lbs)');
         
         $this->setColumnWidth('K', 20);
-        $this->setCellValue('K1', 'Status');
+        $this->sheet->getStyle('K')->getAlignment()->setHorizontal('center');
+        $this->setCellValue('K1', 'Dimesnsions');
 
         $this->setColumnWidth('L', 20);
-        $this->setCellValue('L1', 'Date');
+        $this->setCellValue('L1', 'Status');
 
-        $this->setBackgroundColor('A1:L1', '2b5cab');
-        $this->setColor('A1:L1', 'FFFFFF');
+        $this->setColumnWidth('M', 20);
+        $this->setCellValue('M1', 'Date');
+
+        $this->setBackgroundColor('A1:M1', '2b5cab');
+        $this->setColor('A1:M1', 'FFFFFF');
 
         $this->currentRow++;
     }
