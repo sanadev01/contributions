@@ -40,7 +40,7 @@ class SearchPackage extends Component
         if($this->order){
             $this->packagesRows[$index]['tracking_code'] = $trackingCode;
             $this->packagesRows[$index]['client'] = $this->order->merchant;
-            $this->packagesRows[$index]['dimensions'] = $this->order->length . ' x ' . $this->order->length . ' x ' . $this->order->height ;
+            $this->packagesRows[$index]['dimensions'] = $this->order->length . ' x ' . $this->order->width . ' x ' . $this->order->height ;
             $this->packagesRows[$index]['kg'] = $this->order->$order->getWeight('kg');
             $this->packagesRows[$index]['lbs'] = $this->order->$order->getWeight('lbs');
             $this->packagesRows[$index]['unit'] = $this->order->measurement_unit;
@@ -79,7 +79,7 @@ class SearchPackage extends Component
                 array_push($this->packagesRows,[
                     'tracking_code' => $this->tracking,
                     'client' => $this->order->merchant,
-                    'dimensions' => $this->order->length . ' x ' . $this->order->length . ' x ' . $this->order->height,
+                    'dimensions' => $this->order->length . ' x ' . $this->order->width . ' x ' . $this->order->height,
                     'kg' => $this->order->getWeight('kg'),
                     'lbs' => $this->order->getWeight('lbs'),
                     'unit' => $this->order->measurement_unit,
