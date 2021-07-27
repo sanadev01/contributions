@@ -55,6 +55,7 @@
             <th>WHR#</th>
             <th>Card Last 4 Digits</th>
             <th>Attachment</th>
+            <th>Description</th>
             <th>Debit/Credit</th>
             <th>Balance</th>
             <th>Created At</th>
@@ -76,6 +77,12 @@
             </th>
             <th>
                 <input type="search" wire:model.debounce.500ms="card" class="form-control">
+            </th>
+            <th>
+
+            </th>
+            <th>
+
             </th>
             <th>
                 <select name="" class="form-control" wire:model="type">
@@ -102,9 +109,11 @@
                 </td>
                 <td>
                     @if($deposit->order_id != null)
-                        <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->getOrder($deposit->order_id)) }}" class="w-100" title="Show Order Details">
-                            {{ $deposit->getOrder($deposit->order_id)->warehouse_number }}
-                        </a>
+                        @if($deposit->getOrder($deposit->order_id))
+                            <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->getOrder($deposit->order_id)) }}" class="w-100" title="Show Order Details">
+                                {{ $deposit->getOrder($deposit->order_id)->warehouse_number }}
+                            </a>
+                        @endif    
                     @endif    
                     {{-- @if($deposit->hasOrder())
                         <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->orders()->first()) }}" class="w-100" title="Show Order Details">
@@ -121,6 +130,13 @@
                     @else
                         Not Found
                     @endif    
+                </td>
+                <td>
+                    @if($deposit->description != null)
+                    <button data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.deposit.description',$deposit->description) }}" class="btn btn-primary">
+                        View
+                    </button>
+                    @endif
                 </td>
                 <th>
                     @if( $deposit->isCredit() )

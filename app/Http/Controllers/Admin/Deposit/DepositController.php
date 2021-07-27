@@ -70,4 +70,9 @@ class DepositController extends Controller
             abort(404);
         }   
     }
+
+    public function showDescription($description)
+    {
+        return view('admin.modals.deposits.description',compact('description'));
+    }
 }

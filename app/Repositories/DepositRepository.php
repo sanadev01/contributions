@@ -163,8 +163,9 @@ class DepositRepository
             'user_id' => $request->user_id,
             'balance' => $balance + $request->amount,
             'is_credit' => true,
-            'last_four_digits' => Auth::user()->name .': '.$request->description,
+            'last_four_digits' => Auth::user()->name,
             'attachment' => $this->fileName,
+            'description' => $request->description,
         ]);
     }
 
