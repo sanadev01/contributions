@@ -145,6 +145,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
 
         Route::resource('deposit', Deposit\DepositController::class)->only('create','store','index');
         Route::get('download-deposit-attachment/{attachment?}', [DepositController::class,'downloadAttachment'])->name('download_attachment');
+        Route::get('view-deposit-description/{description?}', [DepositController::class,'showDescription'])->name('deposit.description');
         
         Route::namespace('Activity')->as('activity.')->prefix('activity')->group(function(){
             Route::resource('log', ActivityLogController::class)->only('index');

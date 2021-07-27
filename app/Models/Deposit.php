@@ -73,6 +73,6 @@ class Deposit extends Model
 
     public function getOrder($orderId)
     {
-        return Order::where('id', $orderId)->first();
+        return Order::find($orderId);
     }
 }
