@@ -26,7 +26,7 @@
                     @enderror
                 </td>
                 @php
-                $weight = $slab['min_weight'];
+                $weight = $slab['max_weight'];
                 if($weight < 100 ){
                     $weight = 100;
                 }
