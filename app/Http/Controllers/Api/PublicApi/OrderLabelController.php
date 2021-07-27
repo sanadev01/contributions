@@ -21,16 +21,6 @@ class OrderLabelController extends Controller
             return apiResponse(false,"Not Enough Balance. Please Recharge your account.");
         }
 
-        if ( !$order->isPaid() &&  getBalance() >= $order->gross_total ){
-            $order->update([
-                'is_paid' => true,
-                'status' => Order::STATUS_PAYMENT_DONE
-            ]);
-
-            chargeAmount($order->gross_total,$order);
-        }
-
-
         $labelData = null;
 
         // For Correos Chile
@@ -65,6 +55,14 @@ class OrderLabelController extends Controller
 
         if ( $labelRepository->getError() ){
             return apiResponse(false,$labelRepository->getError());
+        }
+
+        if ( !$order->isPaid() &&  getBalance() >= $order->gross_total ){
+            $order->update([
+                'is_paid' => true,
+                'status' => Order::STATUS_PAYMENT_DONE
+            ]);
+            chargeAmount($order->gross_total,$order);
         }
 
         return apiResponse(true,"Lable Generated successfully.",[
