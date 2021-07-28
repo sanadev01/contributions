@@ -134,9 +134,10 @@
                         <td style="font-weight: bold;">
                             Dir. :
                         </td>
-                        <td style="font-weight: bold;">
+                        <td style="font-weight: bold; @if (strlen($chile_response->DireccionDestino) > 26) width: 50% !important; font-size: 6px !important; @endif">
                             {{$chile_response->DireccionDestino}}
                         </td>
+                        
                         <td>
                             Tel.:
                         </td>
