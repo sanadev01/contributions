@@ -1,7 +1,7 @@
 <div>
     <table class="table table-bordered">
         <tr>
-            {{-- <th>@lang('profitpackage.min-weight (grams)')</th> --}}
+            <th>@lang('profitpackage.min-weight (grams)')</th>
             <th>@lang('profitpackage.max-weight (grams)')</th>
             <th>Cost</th>
             <th>@lang('profitpackage.profit')</th>
@@ -9,14 +9,14 @@
         </tr>
         @foreach ($slabs as $key => $slab)
             <tr>
-                {{-- <td> --}}
-                    <input type="hidden" class="form-control" name="slab[{{$key}}][min_weight]" value="{{ $slab['min_weight'] }}">
-                    {{-- @error("slab.$key.min_weight")
+                <td>
+                    <input type="number" class="form-control" name="slab[{{$key}}][min_weight]" value="{{ $slab['min_weight'] }}">
+                    @error("slab.$key.min_weight")
                     <div class="text-danger">
                         {{ $message }}
                     </div>
                     @enderror
-                </td> --}}
+                </td>
                 <td>
                     <input type="number" class="form-control" name="slab[{{$key}}][max_weight]" value="{{ $slab['max_weight'] }}">
                     @error("slab.$key.max_weight")
@@ -26,7 +26,7 @@
                     @enderror
                 </td>
                 @php
-                $weight = $slab['min_weight'];
+                $weight = $slab['max_weight'];
                 if($weight < 100 ){
                     $weight = 100;
                 }
