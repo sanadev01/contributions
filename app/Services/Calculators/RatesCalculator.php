@@ -102,7 +102,7 @@ class RatesCalculator
         $rate = collect($this->rates->data)->where('weight','<=',$weight)->sortByDesc('weight')->take(1)->first();
 
         $rate = $rate['leve'];
-
+        \Log::info('rate: '.$rate);
         if (! $addProfit) {
             return $rate;
         }
@@ -119,7 +119,7 @@ class RatesCalculator
         }
 
         $profitPercentage =  $this->getProfitSlabValue($profitPackage);
-
+        \Log::info('profit: '.$profitPercentage);
         $profitAmount =  ($profitPercentage/100) * $cost ;
 
         return $profitAmount;
@@ -140,8 +140,8 @@ class RatesCalculator
     public function getProfitSlabValue($profitPackage)
     {
         $weight = ceil(WeightCalculator::kgToGrams($this->weight));
-        $profitSlab = collect($profitPackage->data)->where('min_weight','<=',$weight)->where('max_weight','>=',$weight)->first();
-
+        $profitSlab = collect($profitPackage->data)->where('max_weight','<=',$weight)->sortByDesc('min_weight')->first();
+       
         if ( !$profitSlab ){
             $profitSlab = collect($profitPackage->data)->where('max_weight','>=',29999)->first();
         }

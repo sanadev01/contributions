@@ -37,7 +37,7 @@ class RateReportsRepository
             $order->measurement_unit = 'kg/cm';
             $order->recipient = $recipient;
             $originalWeightMax =  $profitPackageSlab['max_weight'];
-            $originalWeight =  $profitPackageSlab['min_weight'];
+            $originalWeight =  $profitPackageSlab['max_weight'];
             $profitValue =  $profitPackageSlab['value'];
             if($originalWeight < 100 ){
                 $originalWeight = 100;
