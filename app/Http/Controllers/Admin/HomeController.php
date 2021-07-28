@@ -39,7 +39,20 @@ class HomeController extends Controller
 
         try
         {
-            $client = new SoapClient($api_url, array('trace' => 1, 'exception' => 0));
+            $opts = array(
+                    'http' => array(
+                        'user_agent' => 'PHPSoapClient'
+                    )
+            );
+            $context = stream_context_create($opts);
+            $soapClientOptions = array(
+                        'stream_context' => $context,
+                        'cache_wsdl' => WSDL_CACHE_NONE,
+                        'trace' => 1, 
+                        'exception' => 0
+                        );
+            
+            $client = new SoapClient($api_url, $soapClientOptions);
             $result = $client->__soapCall('Normalizar', array(
                 'Normalizar' => array(
                     'usuario' => 'internacional',
