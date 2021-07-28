@@ -134,9 +134,18 @@
                         <td style="font-weight: bold;">
                             Dir. :
                         </td>
-                        <td style="font-weight: bold;">
-                            {{$chile_response->DireccionDestino}}
-                        </td>
+                        @php
+                            $count = strlen($chile_response->DireccionDestino);
+                        @endphp
+                        @if ($count > 26)
+                            <td style="font-weight: bold; width: 50% !important; font-size: 6px !important;">
+                                {{$chile_response->DireccionDestino}}
+                            </td>
+                        @else
+                            <td style="font-weight: bold;">
+                                {{$chile_response->DireccionDestino}}
+                            </td>
+                        @endif
                         <td>
                             Tel.:
                         </td>
