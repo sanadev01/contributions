@@ -117,7 +117,7 @@
                         <td>
                             Para :
                         </td>
-                        <td>
+                        <td style="@if (strlen($order->recipient->first_name.' '.$order->recipient->last_name) > 23) font-size: 5px !important; @endif">
                             {{$order->recipient->first_name}} {{$order->recipient->last_name}}
                         </td>
                         <td rowspan="3">
