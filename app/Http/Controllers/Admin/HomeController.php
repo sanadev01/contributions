@@ -37,21 +37,31 @@ class HomeController extends Controller
         $api_url = 'http://cpinternacional.correos.cl:8008/ServEx.svc';
         $direction = '1;calle tres 1302;la reina';
 
+        
         try
         {
             $opts = array(
                     'http' => array(
                         'user_agent' => 'PHPSoapClient'
-                    )
+                    ),
+                    'ssl' => array(
+                        'ciphers'     => 'RC4-SHA',
+                        'verify_peer' => false, 
+                        'verify_peer_name' => false 
+                    ),
             );
             $context = stream_context_create($opts);
             $soapClientOptions = array(
                         'stream_context' => $context,
-                        'cache_wsdl' => WSDL_CACHE_NONE,
-                        'trace' => 1, 
-                        'exception' => 0
+                        'encoding'           => 'UTF-8',
+                        'verifypeer'         => false,
+                        'verifyhost'         => false,
+                        'soap_version'       => SOAP_1_2,
+                        'trace'              => 1,
+                        'exceptions'         => 1,
+                        'connection_timeout' => 180,
                         );
-            
+
             $client = new SoapClient($api_url, $soapClientOptions);
             $result = $client->__soapCall('Normalizar', array(
                 'Normalizar' => array(
