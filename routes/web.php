@@ -203,6 +203,3 @@ Route::get('test-label',function(){
 });
 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
-
-Route::get('test-chile-address', [\App\Http\Controllers\Admin\HomeController::class,'ChileAddress'])->name('test.chile.address');
-Route::get('chile-test-address', [\App\Http\Controllers\Admin\HomeController::class,'testChile'])->name('chile.test.address');
