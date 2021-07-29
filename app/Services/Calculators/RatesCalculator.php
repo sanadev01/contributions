@@ -104,9 +104,13 @@ class RatesCalculator
         foreach($rates as $rate){
             $secRate[] = $rate;
         }
-        
-        // $rate = $rate['leve'];
-        $rate = $secRate[1]['leve'];
+        if($this->order->id){
+            $rate = $secRate[1]['leve'];
+        }else{
+            $rate = collect($this->rates->data)->where('weight','<=',$weight)->sortByDesc('weight')->take(1)->first();
+            $rate = $rate['leve'];
+        }
+
         \Log::info('rate: '.$rate);
         if (! $addProfit) {
             return $rate;
