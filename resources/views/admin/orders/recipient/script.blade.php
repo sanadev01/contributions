@@ -318,8 +318,8 @@
                 .then(function(response){
                     if ( response.success == true ){
                         $('#loading').fadeOut();
-                        $('#zipcode').val(response.data.CodigoPostal);
-                        $('#zipcode_response').empty().append("<p><b>According to your Coummune, your zipcode should be this</b></p><p><span style='color: red;'>zipcode: </span><span>"+response.data.CodigoPostal);
+                        $('#zipcode').val(response.data.cpostal);
+                        $('#zipcode_response').empty().append("<p><b>According to your Coummune, your zipcode should be this</b></p><p><span style='color: red;'>zipcode: </span><span>"+response.data.cpostal);
                     }else{
                         $('#loading').fadeOut();
                         $('#zipcode_response').empty().append("<p style='color: red;'>"+response.message+"</p>");
@@ -377,8 +377,8 @@
                 })
                 .then(function(response){
                     if ( response.success == true ){
-                        $('#zipcode').val(response.data.CodigoPostal);
-                        $('#zipcode_response').empty().append("<p><b>According to your Coummune, your zipcode should be this</b></p><p><span style='color: red;'>zipcode: </span><span>"+response.data.CodigoPostal);
+                        $('#zipcode').val(response.data.cpostal);
+                        $('#zipcode_response').empty().append("<p><b>According to your Coummune, your zipcode should be this</b></p><p><span style='color: red;'>zipcode: </span><span>"+response.data.cpostal);
                         $('#loading').fadeOut();
                     }else{
                         $('#loading').fadeOut();
