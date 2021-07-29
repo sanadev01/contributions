@@ -42,8 +42,11 @@ class HomeController extends Controller
         try
         {
             $client = new Client();
-            $response = $client->request('POST', $api_url, ['Content-Type' => 'text/xml; charset=UTF8'],
+            $response = $client->request('POST', $api_url, 
             [
+                'headers' => [
+                    'Content-Type' => 'text/xml; charset=utf-8',
+                ],
                 'form_params' => [
                     'usuario' => 'internacional',
                     'password' => 'QRxYTu#v',
