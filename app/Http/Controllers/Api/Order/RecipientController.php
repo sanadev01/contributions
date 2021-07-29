@@ -108,7 +108,7 @@ class RecipientController extends Controller
 
     public function normalizeAddress(Request $request)
     {
-       return $this->validateChileAddress($request->coummne, $request->direction);
+       return $this->validateChileAddress($request->coummne, $request->address);
 
     }
 
@@ -167,27 +167,33 @@ class RecipientController extends Controller
         }
     }
 
-    function validateChileAddress($commune, $direction)
+    function validateChileAddress($commune, $address)
     {
         $wsdlUrl = config('correoschile.normalize_address_url');
-        $id = '.';
-        
+        $direction = '1;'.$address.';'.$commune;
+
         try
         {
-            $client = new SoapClient($wsdlUrl, array('trace' => 1, 'exception' => 0));
-            $result = $client->__soapCall('normalizarDireccion', array(
-                'normalizarDireccion' => array(
-                    'usuario' => $this->usuario,
-                    'contrasena' => $this->contrasena,
-                    'id' => $id,
+            $options = array(
+                'soap_version' => SOAP_1_1,
+                'exceptions' => true,
+                'trace' => 1,
+                'connection_timeout' => 180,
+                'cache_wsdl' => WSDL_CACHE_MEMORY,
+            );
+
+            $client = new SoapClient($wsdlUrl, $options);
+            $result = $client->__soapCall('Normalizar', array(
+                'Normalizar' => array(
+                    'usuario' => 'internacional',
+                    'password' => 'QRxYTu#v',
                     'direccion' => trim($direction),
-                    'comuna' => trim($commune)
                 )), null, null);
             return (Array)[
-                'success' => true,
-                'message' => 'Address Validated',
-                'data'    => $result->normalizarDireccionResult,
-            ];
+                        'success' => true,
+                        'message' => 'Address Validated',
+                        'data'    => $result->Normalizar,
+                    ];
         }
         catch (Exception $e) {
             return (Array)[
@@ -195,6 +201,30 @@ class RecipientController extends Controller
                 'message' => 'According to Correos Chile Your Address or House No is Inavalid',
             ];
         }
+        
+        // try
+        // {
+        //     $client = new SoapClient($wsdlUrl, array('trace' => 1, 'exception' => 0));
+        //     $result = $client->__soapCall('normalizarDireccion', array(
+        //         'normalizarDireccion' => array(
+        //             'usuario' => $this->usuario,
+        //             'contrasena' => $this->contrasena,
+        //             'id' => $id,
+        //             'direccion' => trim($direction),
+        //             'comuna' => trim($commune)
+        //         )), null, null);
+        //     return (Array)[
+        //         'success' => true,
+        //         'message' => 'Address Validated',
+        //         'data'    => $result->normalizarDireccionResult,
+        //     ];
+        // }
+        // catch (Exception $e) {
+        //     return (Array)[
+        //         'success' => false,
+        //         'message' => 'According to Correos Chile Your Address or House No is Inavalid',
+        //     ];
+        // }
     }
 
 }

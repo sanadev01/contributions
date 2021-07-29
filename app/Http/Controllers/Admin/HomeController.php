@@ -110,10 +110,17 @@ class HomeController extends Controller
                     'password' => 'QRxYTu#v',
                     'direccion' => trim($direction),
                 )), null, null);
-            dd($result);
+            return (Array)[
+                'success' => true,
+                'message' => 'Address Validated',
+                'data'    => $result->Normalizar,
+            ];
         }
         catch (Exception $e) {
-           dd($e);
+            return (Array)[
+                'success' => false,
+                'message' => 'According to Correos Chile Your Address or House No is Inavalid',
+            ];
         }
     }
 

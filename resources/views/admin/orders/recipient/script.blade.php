@@ -301,11 +301,11 @@
         $('#commune').on('change', function(){
             let commune = $(this).val();
             let address = $('#address').val();
-            let street_no = $('#street_no').val();
+            // let street_no = $('#street_no').val();
             let country = $('#country').val();
-            let direction = address.concat(" ",street_no);
+            // let direction = address.concat(" ",street_no);
             
-            if ( address == undefined || address == "" || street_no == undefined || street_no == "" ) return;
+            if ( address == undefined || address == "" ) return;
 
             if(country == '46')
             {
@@ -313,7 +313,7 @@
 
                 $.get('{{ route("api.orders.recipient.normalize_address") }}',{
                     coummne: commune,
-                    direction: direction,
+                    address: address,
                 })
                 .then(function(response){
                     if ( response.success == true ){
@@ -335,20 +335,20 @@
             let address = $(this).val();
             let country = $('#country').val();
             let commune = $('#commune').val();
-            let street_no = $('#street_no').val();
-            let direction = address.concat(" ",street_no);
+            // let street_no = $('#street_no').val();
+            // let direction = address.concat(" ",street_no);
 
-            if(country == '46' && commune != undefined && commune != "" && address.length > 5 && street_no.length > 0 && direction.length > 5)
+            if(country == '46' && commune != undefined && commune != "" && address.length > 5)
             {
                 $('#loading').fadeIn();
                 $.get('{{ route("api.orders.recipient.normalize_address") }}',{
                     coummne: commune,
-                    direction: direction,
+                    address: address,
                 })
                 .then(function(response){
                     if ( response.success == true ){
-                        $('#zipcode').val(response.data.CodigoPostal);
-                        $('#zipcode_response').empty().append("<p><b>According to your Coummune, your zipcode should be this</b></p><p><span style='color: red;'>zipcode: </span><span>"+response.data.CodigoPostal);
+                        $('#zipcode').val(response.data.cpostal);
+                        $('#zipcode_response').empty().append("<p><b>According to your Coummune, your zipcode should be this</b></p><p><span style='color: red;'>zipcode: </span><span>"+response.data.cpostal);
                         $('#loading').fadeOut();
                     }else{
                         $('#loading').fadeOut();
