@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Exception;
 use SoapClient;
 use App\Models\User;
+use SimpleXMLElement;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -38,6 +39,15 @@ class HomeController extends Controller
         $api_url = 'http://cpinternacional.correos.cl:8008/ServEx.svc';
         $direction = '1;calle tres 1302;la reina';
 
+        $body = [
+            'internacional' => 'usuario',
+            'QRxYTu#v' => 'password',
+            trim($direction) => 'direccion',
+        ];
+
+        $xml = new SimpleXMLElement('<Normalizer/>');
+        array_walk_recursive($body, array ($xml, 'addChild'));
+        $xml_body = $xml->asXML();
 
         try
         {
@@ -47,17 +57,33 @@ class HomeController extends Controller
                 'headers' => [
                     'Content-Type' => 'text/xml; charset=utf-8',
                 ],
-                'form_params' => [
-                    'usuario' => 'internacional',
-                    'password' => 'QRxYTu#v',
-                    'direccion' => trim($direction),
-                ]
+                'body' => $xml_body,
             ]);
             dd($response);
             
         }
         catch (Exception $e) {
             dd($e);
+        }
+    }
+
+    public function testChile()
+    {
+        $api_url = 'http://cpinternacional.correos.cl:8008/ServEx.svc';
+        $direction = '1;calle tres 1302;la reina';
+        try
+        {
+            $client = new SoapClient($api_url, array('trace' => 1, 'exception' => 0));
+            $result = $client->__soapCall('Normalizar', array(
+                'Normalizar' => array(
+                    'usuario' => 'internacional',
+                    'password' => 'QRxYTu#v',
+                    'direccion' => trim($direction),
+                )), null, null);
+            dd($result);
+        }
+        catch (Exception $e) {
+           dd($e);
         }
     }
 
