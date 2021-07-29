@@ -202,29 +202,6 @@ class RecipientController extends Controller
             ];
         }
         
-        // try
-        // {
-        //     $client = new SoapClient($wsdlUrl, array('trace' => 1, 'exception' => 0));
-        //     $result = $client->__soapCall('normalizarDireccion', array(
-        //         'normalizarDireccion' => array(
-        //             'usuario' => $this->usuario,
-        //             'contrasena' => $this->contrasena,
-        //             'id' => $id,
-        //             'direccion' => trim($direction),
-        //             'comuna' => trim($commune)
-        //         )), null, null);
-        //     return (Array)[
-        //         'success' => true,
-        //         'message' => 'Address Validated',
-        //         'data'    => $result->normalizarDireccionResult,
-        //     ];
-        // }
-        // catch (Exception $e) {
-        //     return (Array)[
-        //         'success' => false,
-        //         'message' => 'According to Correos Chile Your Address or House No is Inavalid',
-        //     ];
-        // }
     }
 
 }

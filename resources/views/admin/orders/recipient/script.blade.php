@@ -72,6 +72,8 @@
                 $('#cpf').css('display', 'none')
                 $('#div_state').css('display', 'none')
                 $('#div_city').css('display', 'none')
+                $('#div_street_number').css('display', 'none')
+
                 $('#div_region').css('display', 'block')
                 $('#div_communes').css('display', 'block')
 
@@ -147,6 +149,7 @@
                 $('#cpf').css('display', 'block')
                 $('#div_state').css('display', 'block')
                 $('#div_city').css('display', 'block')
+                $('#div_street_number').css('display', 'block')
 
                 $('#div_region').css('display', 'none')
 
@@ -170,6 +173,7 @@
                 $('#cpf').css('display', 'none')
                 $('#div_state').css('display', 'none')
                 $('#div_city').css('display', 'none')
+                $('#div_street_number').css('display', 'none')
 
                 $('#div_region').css('display', 'block')
                 $('#div_communes').css('display', 'block')
@@ -244,6 +248,7 @@
                 $('#cpf').css('display', 'block')
                 $('#div_state').css('display', 'block')
                 $('#div_city').css('display', 'block')
+                $('#div_street_number').css('display', 'block')
 
                 $('#div_region').css('display', 'none')
                 $('#div_communes').css('display', 'none')
@@ -316,11 +321,15 @@
                     address: address,
                 })
                 .then(function(response){
-                    if ( response.success == true ){
+                    if ( response.success == true && response.data.cpostal != 0){
                         $('#loading').fadeOut();
                         $('#zipcode').val(response.data.cpostal);
                         $('#zipcode_response').empty().append("<p><b>According to your Coummune, your zipcode should be this</b></p><p><span style='color: red;'>zipcode: </span><span>"+response.data.cpostal);
-                    }else{
+                    }else if(response.success == true && response.data.cpostal == 0)
+                    {
+                        $('#zipcode_response').empty().append("<p style='color: red;'><b>According to your Coummune, your address or street is Invalid</b></p><p><span style='color: red;'>zipcode: </span><span>");
+                    }
+                    else{
                         $('#loading').fadeOut();
                         $('#zipcode_response').empty().append("<p style='color: red;'>"+response.message+"</p>");
                         toastr.error(response.message)
@@ -335,9 +344,6 @@
             let address = $(this).val();
             let country = $('#country').val();
             let commune = $('#commune').val();
-            // let street_no = $('#street_no').val();
-            // let direction = address.concat(" ",street_no);
-
             if(country == '46' && commune != undefined && commune != "" && address.length > 5)
             {
                 $('#loading').fadeIn();
@@ -346,11 +352,16 @@
                     address: address,
                 })
                 .then(function(response){
-                    if ( response.success == true ){
+                    if ( response.success == true && response.data.cpostal != 0){
                         $('#zipcode').val(response.data.cpostal);
                         $('#zipcode_response').empty().append("<p><b>According to your Coummune, your zipcode should be this</b></p><p><span style='color: red;'>zipcode: </span><span>"+response.data.cpostal);
                         $('#loading').fadeOut();
-                    }else{
+                    }
+                    else if(response.success == true && response.data.cpostal == 0)
+                    {
+                        $('#zipcode_response').empty().append("<p style='color: red;'><b>According to your Coummune, your address or street is Invalid</b></p><p><span style='color: red;'>zipcode: </span><span>");
+                    }
+                    else{
                         $('#loading').fadeOut();
                         $('#zipcode_response').empty().append("<p style='color: red;'>"+response.message+"</p>");
                         toastr.error(response.message)
@@ -376,11 +387,16 @@
                     direction: direction,
                 })
                 .then(function(response){
-                    if ( response.success == true ){
+                    if ( response.success == true && response.data.cpostal != 0){
                         $('#zipcode').val(response.data.cpostal);
                         $('#zipcode_response').empty().append("<p><b>According to your Coummune, your zipcode should be this</b></p><p><span style='color: red;'>zipcode: </span><span>"+response.data.cpostal);
                         $('#loading').fadeOut();
-                    }else{
+                    }
+                    else if(response.success == true && response.data.cpostal == 0)
+                    {
+                        $('#zipcode_response').empty().append("<p style='color: red;'><b>According to your Coummune, your address or street is Invalid</b></p><p><span style='color: red;'>zipcode: </span><span>");
+                    }
+                    else{
                         $('#loading').fadeOut();
                         $('#zipcode_response').empty().append("<p style='color: red;'>"+response.message+"</p>");
                         toastr.error(response.message)

@@ -32,7 +32,7 @@ class CreateRequest extends FormRequest
             'last_name' => 'nullable|max:50',
             'address' => 'required',
             'address2' => 'nullable|max:50',
-            'street_no' => 'required',
+            'street_no' => 'sometimes',
             'country_id' => 'required|exists:countries,id',
             'city' => 'required',
             'phone' => [
