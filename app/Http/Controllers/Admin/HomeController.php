@@ -37,7 +37,7 @@ class HomeController extends Controller
     public function ChileAddress()
     {
         $api_url = 'http://cpinternacional.correos.cl:8008/ServEx.svc';
-        $direction = '1;calle tres 1302;la reina';
+        $direction = '1;Estado 10;santiago';
 
         try
         {
@@ -91,7 +91,7 @@ class HomeController extends Controller
 
     public function testChile()
     {
-        $api_url = 'http://cpinternacional.correos.cl:8008/ServEx.svc';
+        $api_url = 'http://cpinternacional.correos.cl:8008/ServEx.svc?WSDL';
         $direction = '1;calle tres 1302;la reina';
         try
         {
