@@ -78,7 +78,7 @@
                 <div class="col-sm-6" id="address" style="display: none">
                     <div class="form-group">
                         <label for="sender_address">@lang('orders.sender.Address')<span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="sender_address" value="{{ old('sender_address',__default($order->sender_address,null)) }}">
+                        <input type="text" class="form-control" name="sender_address" value="{{ old('sender_address',__default($order->sender_address,optional($order->user)->address)) }}">
                         @error('taxt_id')
                             <div class="text-danger">
                                 {{ $message }}
@@ -89,7 +89,7 @@
                 <div class="col-sm-6" id="city" style="display: none">
                     <div class="form-group">
                         <label for="sender_city">@lang('orders.sender.City')<span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="sender_city" value="{{ old('sender_city',__default($order->sender_city,null)) }}">
+                        <input type="text" class="form-control" name="sender_city" value="{{ old('sender_city',__default($order->sender_city,optional($order->user)->city)) }}">
                         @error('taxt_id')
                             <div class="text-danger">
                                 {{ $message }}

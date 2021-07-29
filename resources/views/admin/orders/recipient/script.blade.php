@@ -328,6 +328,7 @@
                     }else if(response.success == true && response.data.cpostal == 0)
                     {
                         $('#zipcode_response').empty().append("<p style='color: red;'><b>According to your Coummune, your address or street is Invalid</b></p><p><span style='color: red;'>zipcode: </span><span>");
+                        $('#loading').fadeOut();
                     }
                     else{
                         $('#loading').fadeOut();
@@ -360,6 +361,7 @@
                     else if(response.success == true && response.data.cpostal == 0)
                     {
                         $('#zipcode_response').empty().append("<p style='color: red;'><b>According to your Coummune, your address or street is Invalid</b></p><p><span style='color: red;'>zipcode: </span><span>");
+                        $('#loading').fadeOut();
                     }
                     else{
                         $('#loading').fadeOut();
@@ -395,6 +397,7 @@
                     else if(response.success == true && response.data.cpostal == 0)
                     {
                         $('#zipcode_response').empty().append("<p style='color: red;'><b>According to your Coummune, your address or street is Invalid</b></p><p><span style='color: red;'>zipcode: </span><span>");
+                        $('#loading').fadeOut();
                     }
                     else{
                         $('#loading').fadeOut();
