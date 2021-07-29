@@ -192,7 +192,7 @@ class RecipientController extends Controller
             return (Array)[
                         'success' => true,
                         'message' => 'Address Validated',
-                        'data'    => $result->Normalizar,
+                        'data'    => $result->NormalizarResult,
                     ];
         }
         catch (Exception $e) {

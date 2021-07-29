@@ -56,7 +56,7 @@ class HomeController extends Controller
                     'password' => 'QRxYTu#v',
                     'direccion' => trim($direction),
                 )), null, null);
-            dd($result);
+            dd($result->NormalizarResult);
         }
         catch (Exception $e) {
            dd($e);
@@ -113,7 +113,7 @@ class HomeController extends Controller
             return (Array)[
                 'success' => true,
                 'message' => 'Address Validated',
-                'data'    => $result->Normalizar,
+                'data'    => $result->NormalizarResult,
             ];
         }
         catch (Exception $e) {
