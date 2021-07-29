@@ -97,14 +97,7 @@
                         <div class="help-block"></div>
                     </div>
                 </div>
-                <div class="form-group col-12 col-sm-6 col-md-4">
-                    <div class="controls">
-                        <label>@lang('address.Street No') <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" placeholder="@lang('address.Street No')" value="{{old('street_no',optional($order->recipient)->street_no)}}"  name="street_no" id="street_no">
-                        <div class="help-block"></div>
-                    </div>
-                </div>
-                <div class="col-12 col-sm-4">
+                <div class="col-12 col-sm-6 col-md-4">
                     <div class="form-group">
                         <div class="controls">
                             <label>@lang('address.Country') <span class="text-danger">*</span></label>
@@ -138,12 +131,12 @@
                         <div class="help-block"></div>
                     </div>
                 </div>
-                <div class="form-group col-12 offset-4">
+                {{-- <div class="form-group col-12 offset-4">
                     <div class="controls">
                         <div class="help-block" id="regions_response">
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls" id="div_city" style="display: none">
                         <label>@lang('address.City') <span class="text-danger">*</span></label>
@@ -163,7 +156,13 @@
                         </div>
                     </div>
                 </div>
-
+                <div class="form-group col-12 col-sm-6 col-md-4" id="div_street_number">
+                    <div class="controls">
+                        <label>@lang('address.Street No') <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" placeholder="@lang('address.Street No')" value="{{old('street_no',optional($order->recipient)->street_no)}}"  name="street_no" id="street_no">
+                        <div class="help-block"></div>
+                    </div>
+                </div>
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
                         <label>@lang('address.Zip Code') <span class="text-danger">*</span></label>
