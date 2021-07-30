@@ -149,8 +149,8 @@
                         <td>
                             Obs.:
                         </td>
-                        <td>
-                            
+                        <td style="@if(strlen($order->recipient->address2) > 30) font-size: 6px !important; @endif">
+                            {{$order->recipient->address2}}
                         </td>
                         <td>
                             
