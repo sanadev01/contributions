@@ -99,9 +99,18 @@ class RatesCalculator
             $weight = 100;
         }
         
-        $rate = collect($this->rates->data)->where('weight','<=',$weight)->sortByDesc('weight')->take(1)->first();
+        $rates = collect($this->rates->data)->where('weight','<=',$weight)->sortByDesc('weight')->take(2);
+        $secRate = [];
+        foreach($rates as $rate){
+            $secRate[] = $rate;
+        }
+        if($this->order->id){
+            $rate = $secRate[1]['leve'];
+        }else{
+            $rate = collect($this->rates->data)->where('weight','<=',$weight)->sortByDesc('weight')->take(1)->first();
+            $rate = $rate['leve'];
+        }
 
-        $rate = $rate['leve'];
         \Log::info('rate: '.$rate);
         if (! $addProfit) {
             return $rate;
