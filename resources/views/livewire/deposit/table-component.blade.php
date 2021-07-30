@@ -113,6 +113,8 @@
                             <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->getOrder($deposit->order_id)) }}" class="w-100" title="Show Order Details">
                                 {{ $deposit->getOrder($deposit->order_id)->warehouse_number }}
                             </a>
+                        @else
+                            <p class="font-italic text-danger">{{$deposit->order_id}} : Order Deleted</p> 
                         @endif    
                     @endif    
                     {{-- @if($deposit->hasOrder())
