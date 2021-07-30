@@ -16,7 +16,7 @@
         </div>
         <div class="card-content collapse show">
             <div class="col-12 mb-5">
-                <a class="btn btn-success pull-right mt-3 mr-1" href="{{ asset('uploads/profit-sample.xlsx') }}">
+                <a class="btn btn-success pull-right mt-3 mr-1" href="{{ asset('uploads/profit-sample-by-s.xlsx') }}">
                     <i class="fa fa-arrow-down"></i> Download Sample
                 </a>
             </div>
