@@ -51,12 +51,16 @@ class ProfitPackageImportService extends AbstractImportService
             if($arrayCounter == 0){
                 $data[ $arrayCounter ]['min_weight'] = 0;
             }else{
-                $minWeight = $arrayCounter - 1;
-                $data[ $arrayCounter ]['min_weight'] = $data[ $minWeight ]['max_weight'] + 1;
+                if($weight){
+                    $minWeight = $arrayCounter - 1;
+                    $data[ $arrayCounter ]['min_weight'] = $data[ $minWeight ]['max_weight'] + 1;
+                }
             }
-            $data[ $arrayCounter ]['max_weight'] = $weight;
-            $data[ $arrayCounter ]['value'] = $value;
-            $arrayCounter ++;
+            if($weight){
+                $data[ $arrayCounter ]['max_weight'] = $weight;
+                $data[ $arrayCounter ]['value'] = $value;
+                $arrayCounter ++;
+            }
         }
         return $data;
 

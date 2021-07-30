@@ -68,7 +68,7 @@ class Slabs extends Component
         $order->measurement_unit = 'kg/cm';
         $order->recipient = $recipient;
         $order->weight = UnitsConverter::gramsToKg($weight);
-
+        \Log::info($order->weight);
         foreach (ShippingService::query()->active()->get() as $shippingService) {
             $shippingService->cacheCalculator = false;
             if ( $shippingService->isAvailableFor($order) ){

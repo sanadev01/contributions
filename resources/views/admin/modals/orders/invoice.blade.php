@@ -197,7 +197,11 @@
                             <tr class="border-top-light">
                                 <td colspan="4" class="text-center h4">@lang('orders.invoice.Freight Declared to Custom')</td>
                                 <td class="h4">
-                                    {{ number_format($order->user_declared_freight,2) }} USD
+                                    @if (number_format($order->user_declared_freight,2) == 0.01)
+                                        0.00 USD
+                                    @else
+                                        {{ number_format($order->user_declared_freight,2) }} USD
+                                    @endif
                                 </td>
                                 <td></td>
                             </tr>                             
