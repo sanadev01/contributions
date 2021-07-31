@@ -11,8 +11,8 @@
                 <div class="col-md-3 form-group">
                     <label for="country">@lang('orders.sender.Select Country')</label>
                     <select class="form-control countrySelect" aria-label="Default select example">
-                        <option value="brazil" selected>Brazil</option>
-                        <option value="chile">Chile</option>
+                        <option value="brazil" {{ optional($order->recipient)->country_id == 30 ? 'selected' : ''}}>Brazil</option>
+                        <option value="chile" {{ optional($order->recipient)->country_id == 46 ? 'selected' : ''}}>Chile</option>
                     </select>
                 </div>
                 
@@ -119,6 +119,35 @@
     $(document).ready(function(){
         $("[name='sender_address']").prop( "disabled", true );
         $("[name='sender_city']").prop('disabled',true);
+
+        let selected = $('.countrySelect').val();
+
+        if(selected == 'chile') {
+                $('#address').css('display', 'block');
+                $('#city').css('display', 'block');
+                $('#tax_id').css('display', 'none'); 
+                $('#chile_phone').css('display', 'inline-block');
+
+                $("[name='sender_address']").prop( "disabled", false );
+                $("[name='sender_city']").prop('disabled',false);
+                $("[name='taxt_id']").prop('disabled', true);
+
+                $("[name='sender_address']").prop('required',true);
+                $("[name='sender_city']").prop('required',true);
+        } else 
+        {
+                $('#address').css('display', 'none');
+                $('#city').css('display', 'none'); 
+                $('#tax_id').css('display', 'block');
+                $('#chile_phone').css('display', 'none');
+
+                $("[name='sender_address']").prop( 'disabled', true );
+                $("[name='sender_city']").prop('disabled', true);
+                $("[name='taxt_id']").prop('disabled', false);
+
+                $("[name='sender_address']").prop('required',false);
+                $("[name='sender_city']").prop('required', false);
+        }
         
         $('.countrySelect').change(function () {
             let selected = $('.countrySelect').val();
