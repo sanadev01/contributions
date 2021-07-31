@@ -23,6 +23,7 @@ class OrderResource extends JsonResource
             "customer_reference" => $this->customer_reference,
             "measurement_unit" => $this->measurement_unit,
             "weight" => $this->weight,
+            "Volumetric_weight" => $this->volumetricWeight($this->length, $this->width, $this->height),
             "length" => $this->length,
             "width" => $this->width,
             "height" => $this->height,
@@ -45,5 +46,11 @@ class OrderResource extends JsonResource
             "recipient" => OrderRecipientResource::make($this->recipient),
             "products" => OrderItemResource::collection($this->items)
         ];
+    }
+
+    public function volumetricWeight($length, $width, $height)
+    {
+        $divisor = 6000;
+        return round(($length * $width * $height) / $divisor,2);
     }
 }
