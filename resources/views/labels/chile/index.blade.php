@@ -82,7 +82,7 @@
                 <small style="font-size: 3px;">{{$date}}</small><br />
                 <small style="font-size: 12px !important;">{{$chile_response->AbreviaturaServicio}}</small>
             </td>
-            <td colspan="8" style="height: 0.5px !important; line-height: 3.3px !important; padding-top: 1.5px !important;"><small style="font-size: 7px;">Referencia : {{$order->customer_reference}} <span style="margin-left: 50px !important;">{{$order->warehouse_number}}<span></small></td>
+            <td colspan="8" style="height: 0.5px !important; line-height: 3.3px !important; padding-top: 1.5px !important;"><small style="font-size: 7px;">Referencia : @if (strlen($order->customer_reference) > 27) {{str_limit($order->customer_reference, 26)}} @else {{ $order->customer_reference}} @endif <span style="margin-left: 35px !important;">{{$order->warehouse_number}}<span></small></td>
         </tr>
         <tr style="height: 0.33cm !important; line-height: 5px !important; max-height: 0.33cm !important;">
             <td colspan="6">
