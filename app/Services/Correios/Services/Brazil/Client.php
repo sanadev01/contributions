@@ -55,14 +55,13 @@ class Client{
 
     public function createPackage(Package $order)
     {
-        
         if($order->isWeightInKg()) {
-            $weight = UnitsConverter::kgToGrams($order->weight);
+            $weight = UnitsConverter::kgToGrams($order->getWeight('kg'));
         }else{
-            $kg = UnitsConverter::poundToKg($order->weight);
+            $kg = UnitsConverter::poundToKg($order->getWeight('lbs'));
             $weight = UnitsConverter::kgToGrams($kg);
         }
-
+        
         $packet = new \App\Services\Correios\Models\Package();
 
         $packet->customerControlCode = $order->id;

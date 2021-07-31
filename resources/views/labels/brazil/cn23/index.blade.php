@@ -356,7 +356,7 @@
             {{ $order->sender_email }} <br>
             <strong>Order#:</strong>{{ $order->warehouse_number }} <br>
             <strong>CR#:</strong>{{ $order->customer_reference }} <br>
-            <strong>Weight</strong> {{ $order->getOriginalWeight('kg') }}kg|{{ $order->getOriginalWeight('lbs') }}lbs <br>
+            <strong>Weight</strong> {{ $order->getWeight('kg') }}kg|{{ $order->getWeight('lbs') }}lbs <br>
             <strong>{{ $order->length }} x {{ $order->width }} x {{$order->height}} ({{$order->isWeightInKg() ? 'cm' :'in'}})</strong>
         </div>
     </div>
