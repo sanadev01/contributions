@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 
+use App\Services\USPS\UspsService;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
@@ -27,6 +28,16 @@ class AppServiceProvider extends ServiceProvider
             $clienteRemitente = config('correoschile.codeId');       // ID Code SAP Customer. Delivered by CorreosChile
 
             return new CorreosChileService($wsdlUrl, $usuario, $contrasena, $codigoAdmision, $clienteRemitente);
+        });
+
+        $this->app->singleton('USPS_service', function() {
+
+            // Api Credentials(currently credentials of testing environment are being used)
+            $api_url = config('usps.url');
+            $email = config('usps.email');           
+            $password = config('usps.password');
+
+            return new UspsService($api_url, $email, $password);
         });
     }
 
