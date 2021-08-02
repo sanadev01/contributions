@@ -48,23 +48,23 @@
                                     </tr>
                                     <tr>
                                         <th>Dispatch Number</th>
-                                        <td>{{ $order->containers[0]->dispatch_number }}</td>
+                                        <td>{{ optional(optional($order->containers)[0])->dispatch_number }}</td>
                                     </tr>
                                     <tr>
                                         <th>Seal</th>
-                                        <td>{{ $order->containers[0]->seal_no }}</td>
+                                        <td>{{ optional(optional($order->containers)[0])->seal_no }}</td>
                                     </tr>
                                     <tr>
                                         <th>Container Type</th>
-                                        <td>{{ $order->containers[0]->getContainerType() }}</td>
+                                        <td>{{ optional(optional($order->containers)[0])->getContainerType() }}</td>
                                     </tr>
                                     <tr>
                                         <th>Destination Airport</th>
-                                        <td>{{ $order->containers[0]->destination_operator_name }}</td>
+                                        <td>{{ optional(optional($order->containers)[0])->destination_operator_name }}</td>
                                     </tr>
                                     <tr>
                                         <th>AWB#</th>
-                                        <td>{{ $order->containers[0]->awb }}</td>
+                                        <td>{{ optional(optional($order->containers)[0])->awb }}</td>
                                     </tr>
                                 </tbody>
                             </table>
