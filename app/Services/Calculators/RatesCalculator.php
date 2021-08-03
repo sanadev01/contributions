@@ -165,7 +165,6 @@ class RatesCalculator
 
     public function isAvailable()
     {
-        \Log::info($this->rates);
         try {
 
             if ( !$this->rates ) {
