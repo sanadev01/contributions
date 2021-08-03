@@ -3,6 +3,11 @@
 <link rel="stylesheet" href="{{ asset('app-assets/select/css/bootstrap-select.min.css') }}">
 @endsection
 @section('wizard-form')
+@if ($error)
+    <div class="alert alert-danger" role="alert">
+        {{$error}}
+    </div>
+@endif
 <form action="{{ route('admin.orders.order-details.store',$order) }}" method="POST" class="wizard">
     @csrf
     <div class="content clearfix">
@@ -71,7 +76,11 @@
     <div class="actions clearfix">
         <ul role="menu" aria-label="Pagination">
             <li class="disabled" aria-disabled="true">
-                <a href="{{ route('admin.orders.recipient.index',$order) }}" role="menuitem">@lang('orders.order-details.Previous')</a>
+                @if ($order->user->hasRole('retailer'))
+                    <a href="{{ route('admin.orders.services.index',$order) }}" role="menuitem">@lang('orders.order-details.Previous')</a>
+                @else
+                    <a href="{{ route('admin.orders.recipient.index',$order) }}" role="menuitem">@lang('orders.order-details.Previous')</a>
+                @endif    
             </li>
             <li aria-hidden="false" aria-disabled="false">
                 <button class="btn btn-primary">@lang('orders.order-details.Place Order')</button>

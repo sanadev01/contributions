@@ -40,7 +40,7 @@
                                 <div class="row mt-1">
                                     <div class="form-group col-12 col-sm-6 col-md-4">
                                         <div class="controls">
-                                            <label>Sender ( inside USA ) Remetente ( dentro dos EUA ) <span class="text-danger">*</span></label>
+                                            <label>@lang('parcel.Sender Inside')<span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" name="merchant" value="{{ old('merchant',$parcel->merchant) }}" placeholder="">
                                             @error('merchant')
                                                 <div class="help-block text-danger">{{ $message }}</div>
@@ -49,7 +49,7 @@
                                     </div>
                                     <div class="form-group col-12 col-sm-6 col-md-4">
                                         <div class="controls">
-                                            <label>Carrier ( inside USA ) Transportadora ( dentro dos EUA ) <span class="text-danger">*</span></label>
+                                            <label>@lang('parcel.Carrier Inside') <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" value="{{ old('carrier',$parcel->carrier) }}" placeholder=""  name="carrier">
                                             @error('carrier')
                                                 <div class="help-block text-danger">{{ $message }}</div>
@@ -58,7 +58,7 @@
                                     </div>
                                     <div class="form-group col-12 col-sm-6 col-md-4">
                                         <div class="controls">
-                                            <label>Tracking ( inside USA ) Rastreio ( dentro dos EUA ) <span class="text-danger">*</span></label>
+                                            <label>@lang('parcel.Tracking Inside') <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" name="tracking_id" value="{{ old('tracking_id',$parcel->tracking_id) }}" placeholder="">
                                             @error('tracking_id')
                                                 <div class="help-block text-danger">{{ $message }}</div>
@@ -102,7 +102,7 @@
                                     </div>
                                     <div class="form-group col-12 col-sm-6 col-md-4">
                                         <div class="controls">
-                                            <label>@lang('prealerts.invoice')</label>
+                                            <label>@lang('parcel.Invoice')</label>
                                             <input type="file" name="invoiceFile" {{ auth()->user()->isUser() ? 'required': ''  }} class="form-control" placeholder="@lang('parcel.Choose Invoice File')">
                                             @error('record')
                                                 <div class="help-block text-danger">{{ $message }}</div>
@@ -158,7 +158,7 @@
                                         <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">
                                             @lang('parcel.Save Parcel')
                                         </button>
-                                        <button type="reset" class="btn btn-outline-warning waves-effect waves-light">@lang('parcel.Reset')</button>
+                                        <button type="reset" class="btn btn-outline-danger waves-effect waves-light">@lang('parcel.Reset')</button>
                                     </div>
                                 </div>
                             </form>

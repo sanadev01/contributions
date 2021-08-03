@@ -174,7 +174,7 @@
                             <input type="hidden" name="data" id="data" value="">
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary" id="save"> Yes Pay</button>
+                            <button type="submit" class="btn btn-primary" id="save"> Yes Add</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal"> @lang('consolidation.Cancel')</button>
                         </div>
                     </form>

@@ -146,7 +146,7 @@
                                     <div class="col-md-6">
                                         <select class="form-control" name="service_sub_class" required value="{{ old('service_sub_class') }}" placeholder="service_sub_class" >
                                             <option value="">Select</option>
-                                            @foreach (config('shippingServices.brazil.sub_classess') as $key => $item)
+                                            @foreach (config('shippingServices.correios.sub_classess') as $key => $item)
                                                 <option value="{{$key}}" {{ old('service_sub_class',$shippingService->service_sub_class) == $key ? 'selected' : '' }}>{{$item}}</option>
                                             @endforeach
                                         </select>

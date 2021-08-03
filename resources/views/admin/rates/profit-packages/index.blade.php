@@ -25,6 +25,9 @@
                                         @lang('profitpackage.name')
                                     </th>
                                     <th>
+                                        @lang('profitpackage.Shipping Service')
+                                    </th>
+                                    <th>
                                         @lang('profitpackage.type')
                                     </th>
                                     <th>
@@ -37,6 +40,9 @@
                                         <tr>
                                             <td>
                                                 {{ $package->name }}
+                                            </td>
+                                            <td>
+                                                {{ $package->shipping_service_id ? $package->shippingService->name : '' }}
                                             </td>
                                             <td>
                                                 {{ $package->type }}

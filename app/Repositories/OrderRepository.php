@@ -39,6 +39,8 @@ class OrderRepository
             'sender_email' => $request->email,
             'sender_phone' => $request->phone,
             'sender_taxId' => $request->taxt_id,
+            'sender_address' => $request->sender_address,
+            'sender_city' => $request->sender_city,
         ]);
 
         return $order;
@@ -78,6 +80,7 @@ class OrderRepository
                 'zipcode' => cleanString($request->zipcode),
                 'state_id' => $request->state_id,
                 'country_id' => $request->country_id,
+                'region' => $request->region,
             ]);
 
             return $order->recipient;
@@ -98,6 +101,7 @@ class OrderRepository
             'zipcode' => $request->zipcode,
             'state_id' => $request->state_id,
             'country_id' => $request->country_id,
+            'region' => $request->region,
         ]);
 
         $order->refresh();

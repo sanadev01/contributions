@@ -23,7 +23,7 @@ class TableComponent extends Component
     public $type;
     public $dateFrom;
     public $dateTo;
-
+    public $attachment;
     public $sortBy = 'id';
     public $sortAsc = false;
     
@@ -70,7 +70,8 @@ class TableComponent extends Component
             'dateFrom' => $this->dateFrom,
             'dateTo' => $this->dateTo,
             'sortBy' => $this->sortBy,
-            'sortOrder' => $this->sortAsc ? 'Asc' : 'DESC'
+            'sortOrder' => $this->sortAsc ? 'Asc' : 'DESC',
+            'attachment' => $this->attachment,
         ]);
     }
 

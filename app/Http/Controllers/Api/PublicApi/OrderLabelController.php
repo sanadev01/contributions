@@ -7,11 +7,12 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 // use App\Repositories\LabelRepository;
 use Illuminate\Support\Facades\Storage;
+use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
 
 class OrderLabelController extends Controller
 {
-    public function __invoke(Request $request, Order $order, CorrieosBrazilLabelRepository $labelRepository)
+    public function __invoke(Request $request, Order $order, CorrieosBrazilLabelRepository $labelRepository, CorrieosChileLabelRepository $chile_labelRepository)
     {
         
         $this->authorize('canPrintLableViaApi',$order);
@@ -22,6 +23,24 @@ class OrderLabelController extends Controller
 
         $labelData = null;
 
+        // For Correos Chile
+        if($order->recipient->country_id == 46)
+        {
+            $chile_labelRepository->handle($order);
+
+            $error = $chile_labelRepository->getChileErrors();
+
+            if(!$error)
+            {
+                return apiResponse(true,"Lable Generated successfully.",[
+                    'url' => route('order.label.download',$order),
+                    'tracking_code' => $order->corrios_tracking_code
+                ]);
+            }
+
+            return apiResponse(false, $error);
+            
+        }
         if ( $request->update_label === 'true' ){
             $labelData = $labelRepository->update($order);
         }else{

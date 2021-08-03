@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Deposit;
 
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\OrderRepository;
@@ -52,5 +53,26 @@ class DepositController extends Controller
         session()->flash('alert-danger',$depositRepository->getError());
         return \back()->withInput();
 
+    }
+
+    public function downloadAttachment($attachment)
+    {
+        $file_path = storage_path().'/app/deposits/'. $attachment;
+
+        if (file_exists($file_path))
+        {
+            return Response::download($file_path, $attachment, [
+                'Content-Length: '. filesize($file_path)
+            ]);
+        }
+        else
+        {
+            abort(404);
+        }   
+    }
+
+    public function showDescription($description)
+    {
+        return view('admin.modals.deposits.description',compact('description'));
     }
 }

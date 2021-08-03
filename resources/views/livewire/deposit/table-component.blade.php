@@ -54,6 +54,8 @@
             <th>Tracking Code</th>
             <th>WHR#</th>
             <th>Card Last 4 Digits</th>
+            <th>Attachment</th>
+            <th>Description</th>
             <th>Debit/Credit</th>
             <th>Balance</th>
             <th>Created At</th>
@@ -75,6 +77,12 @@
             </th>
             <th>
                 <input type="search" wire:model.debounce.500ms="card" class="form-control">
+            </th>
+            <th>
+
+            </th>
+            <th>
+
             </th>
             <th>
                 <select name="" class="form-control" wire:model="type">
@@ -100,14 +108,37 @@
                     @endif
                 </td>
                 <td>
-                    @if($deposit->hasOrder())
+                    @if($deposit->order_id != null)
+                        @if($deposit->getOrder($deposit->order_id))
+                            <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->getOrder($deposit->order_id)) }}" class="w-100" title="Show Order Details">
+                                {{ $deposit->getOrder($deposit->order_id)->warehouse_number }}
+                            </a>
+                        @else
+                            <p class="font-italic text-danger">{{$deposit->order_id}} : Order Deleted</p> 
+                        @endif    
+                    @endif    
+                    {{-- @if($deposit->hasOrder())
                         <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->orders()->first()) }}" class="w-100" title="Show Order Details">
                             {{ $deposit->orders()->first()->warehouse_number }}
                         </a>
-                    @endif
+                    @endif --}}
                 </td>
                 <td>
                     {{ $deposit->last_four_digits  }}
+                </td>
+                <td>
+                    @if($deposit->attachment != null)
+                        <a target="_blank" href="{{route('admin.download_attachment', [$deposit->attachment])}}">Download</a>
+                    @else
+                        Not Found
+                    @endif    
+                </td>
+                <td>
+                    @if($deposit->description != null)
+                    <button data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.deposit.description',$deposit->description) }}" class="btn btn-primary">
+                        Description View
+                    </button>
+                    @endif
                 </td>
                 <th>
                     @if( $deposit->isCredit() )

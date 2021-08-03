@@ -25,6 +25,7 @@ class CreateRequest extends FormRequest
     {
         return [
             'package_name' => 'required|string|max:90',
+            'shipping_service_id' => 'required',
             'slab' => 'required|array',
             'slab.*.min_weight' => 'required|numeric',
             'slab.*.max_weight' => 'required|numeric',
@@ -35,6 +36,7 @@ class CreateRequest extends FormRequest
     public function messages()
     {
         return [
+            'shipping_service_id' => 'shipping service must be selected',
             'slab.*.min_weight.*' => 'Numeric value required',
             'slab.*.max_weight.*' => 'Numeric value required',
             'slab.*.value.*' => 'Numeric value required',

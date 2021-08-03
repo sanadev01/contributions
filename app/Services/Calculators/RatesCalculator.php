@@ -111,11 +111,10 @@ class RatesCalculator
             $rate = $rate['leve'];
         }
 
-        \Log::info('rate: '.$rate);
+        
         if (! $addProfit) {
             return $rate;
         }
-        
         return $rate + $this->getProfitOn($rate);
     }
 
@@ -128,7 +127,7 @@ class RatesCalculator
         }
 
         $profitPercentage =  $this->getProfitSlabValue($profitPackage);
-        \Log::info('profit: '.$profitPercentage);
+        
         $profitAmount =  ($profitPercentage/100) * $cost ;
 
         return $profitAmount;
@@ -137,7 +136,15 @@ class RatesCalculator
     public function getProfitPackage()
     {
         $user = $this->order->user;
-        $profitPackage = $user->profitPackage;
+        
+        $shippingServiceId = $this->shippingService->id;
+        
+        $profitSetting = $this->order->user->profitSettings()->where('user_id',$user->id)->where('service_id',$shippingServiceId)->first();
+        if($profitSetting){
+            $profitPackage =$profitSetting->profitPackage;
+        }else{
+            $profitPackage = $user->profitPackage;
+        }
 
         if ( !$profitPackage ){
             return ProfitPackage::where('type',ProfitPackage::TYPE_DEFAULT)->first();
@@ -168,7 +175,7 @@ class RatesCalculator
         try {
 
             if ( !$this->rates ) {
-                self::$errors .= "Service not available for this Country <br>";
+                // self::$errors .= "Service not available for this Country <br>";
                 return false;
             }
 
