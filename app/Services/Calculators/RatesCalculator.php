@@ -111,7 +111,7 @@ class RatesCalculator
             $rate = $rate['leve'];
         }
 
-        \Log::info('rate: '.$rate);
+        
         if (! $addProfit) {
             return $rate;
         }
@@ -128,7 +128,7 @@ class RatesCalculator
         }
 
         $profitPercentage =  $this->getProfitSlabValue($profitPackage);
-        \Log::info('profit: '.$profitPercentage);
+        
         $profitAmount =  ($profitPercentage/100) * $cost ;
 
         return $profitAmount;
