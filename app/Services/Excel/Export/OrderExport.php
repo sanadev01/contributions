@@ -44,11 +44,7 @@ class OrderExport extends AbstractExportService
             $this->setCellValue('H'.$row, $this->checkValue(number_format($order->dangrous_goods,2)));
             $this->setCellValue('I'.$row, $order->getWeight('kg'));
             $this->setCellValue('J'.$row, $order->getWeight('lbs'));
-<<<<<<< HEAD
             $this->setCellValue('K'.$row, $this->getVolumnWeight($order->length, $order->width, $order->height,$this->isWeightInKg($order->measurement_unit)));
-=======
-            $this->setCellValue('K'.$row, $this->getVolumnWeight($order->length, $order->width, $order->height));
->>>>>>> 9a9c9fc39816297421380bbe922924238a90f4bf
             $this->setCellValue('L'.$row, $order->length. ' X '. $order->width.' X '.$order->height);
 
             if($order->status == Order::STATUS_ORDER){
