@@ -16,7 +16,6 @@ class GetRateController extends Controller
 {
     public function __invoke(Request $request)
     {
-        // try{
             $rules = [
                 'country_id' => 'required|numeric|exists:countries,id',
                 'state_id' => 'required|exists:states,id',
@@ -44,6 +43,8 @@ class GetRateController extends Controller
             ];
             
             $this->validate($request, $rules, $message);
+            
+        try{
 
             $originalWeight =  $request->weight;
             if ( $request->unit == 'kg/cm' ){
@@ -98,8 +99,8 @@ class GetRateController extends Controller
                 ]);
             }
             return apiResponse(true,$getRate->count().' Services Rate Found against your Weight',$getRate);
-        // } catch (\Exception $ex) {
-        //    return apiResponse(false,$ex->getMessage());
-        // }
+        } catch (\Exception $ex) {
+           return apiResponse(false,$ex->getMessage());
+        }
     }
 }
