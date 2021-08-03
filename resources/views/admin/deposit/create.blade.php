@@ -79,9 +79,6 @@
                                     </div>
                                     @admin
                                     <div class="col-md-4 balanceuser"  style="display: none;">
-                                        {{-- <input type="file" class="form-control-file" name="attachment" style="padding: 0px !important; border: 0px !important;">
-                                    </div> --}}
-                                    {{-- <div style="position:relative;"> --}}
                                         <label>Receipt or Docs</label>
                                         <a class='btn' href='javascript:;'>
                                             <i class="fa fa-paperclip" style="font-size: 38px;"></i>
@@ -89,7 +86,6 @@
                                         </a>
                                         &nbsp;
                                         <span class='label label-info' id="upload-file-info"></span>
-                                    {{-- </div> --}}
                                     </div>
                                     @endadmin
                                 </div>
