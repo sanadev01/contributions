@@ -23,7 +23,7 @@ class OrderResource extends JsonResource
             "customer_reference" => $this->customer_reference,
             "measurement_unit" => $this->measurement_unit,
             "weight" => $this->weight,
-            "Volumetric_weight" => $this->volumetricWeight($this->length, $this->width, $this->height),
+            "Volumetric_weight" => $this->volumetricWeight($this->length, $this->width, $this->height,$this->isWeightInKg($this->measurement_unit)),
             "length" => $this->length,
             "width" => $this->width,
             "height" => $this->height,
@@ -48,9 +48,14 @@ class OrderResource extends JsonResource
         ];
     }
 
-    public function volumetricWeight($length, $width, $height)
+    public function isWeightInKg($measurement_unit)
     {
-        $divisor = 6000;
+        return $measurement_unit == 'kg/cm' ? 'cm' : 'in';
+    }
+
+    public function getVolumnWeight($length, $width, $height, $unit)
+    {
+        $divisor = $unit == 'in' ? 166 : 6000;
         return round(($length * $width * $height) / $divisor,2);
     }
 }
