@@ -114,10 +114,10 @@
                         <td style="font-weight: bold;">
                             {{$chile_response->ComunaDestino}}
                         </td>
-                        <td>
+                        <td style="text-align: right !important;">
                             Para :
                         </td>
-                        <td style="@if (strlen($order->recipient->first_name.' '.$order->recipient->last_name) > 15) font-size: 4.6px !important; @endif">
+                        <td style="@if (strlen($order->recipient->first_name.' '.$order->recipient->last_name) > 15) font-size: 6px !important; @endif">
                             {{$order->recipient->first_name}} {{$order->recipient->last_name}}
                         </td>
                         <td rowspan="3">
@@ -134,14 +134,14 @@
                         <td style="font-weight: bold;">
                             Dir. :
                         </td>
-                        <td style="font-weight: bold; @if (strlen($chile_response->DireccionDestino) > 26) width: 40% !important; font-size: 6px !important; @endif">
-                            {{$chile_response->DireccionDestino}}
+                        <td style="font-weight: bold; @if (strlen($chile_response->DireccionDestino) > 20)  font-size: 5px !important; @endif">
+                            {{ str_limit($chile_response->DireccionDestino, 30) }}
                         </td>
                         
-                        <td>
+                        <td style="text-align: right !important;">
                             Tel.:
                         </td>
-                        <td>
+                        <td style="text-align: left !important;">
                             {{$order->recipient->phone}}
                         </td>
                     </tr>
@@ -149,17 +149,8 @@
                         <td>
                             Obs.:
                         </td>
-                        <td style="@if(strlen($order->recipient->address2) > 30) font-size: 6px !important; @endif">
-                            {{$order->recipient->address2}}
-                        </td>
-                        <td>
-                            
-                        </td>
-                        <td>
-                            
-                        </td>
-                        <td>
-                            
+                        <td colspan="6" style="@if(strlen($order->recipient->address2) > 30) font-size: 6px !important; @endif">
+                            {{str_limit($order->recipient->address2, 70)}}
                         </td>
                     </tr>
                 </table>
