@@ -44,7 +44,7 @@ class OrderExport extends AbstractExportService
             $this->setCellValue('H'.$row, $this->checkValue(number_format($order->dangrous_goods,2)));
             $this->setCellValue('I'.$row, $order->getWeight('kg'));
             $this->setCellValue('J'.$row, $order->getWeight('lbs'));
-            $this->setCellValue('K'.$row, $this->getVolumnWeight($order->length, $order->width, $order->height));
+            $this->setCellValue('K'.$row, $this->getVolumnWeight($order->length, $order->width, $order->height,$this->isWeightInKg($order->measurement_unit)));
             $this->setCellValue('L'.$row, $order->length. ' X '. $order->width.' X '.$order->height);
 
             if($order->status == Order::STATUS_ORDER){
@@ -139,9 +139,14 @@ class OrderExport extends AbstractExportService
         return $value;
     }
 
-    public function getVolumnWeight($length, $width, $height)
+    public function isWeightInKg($measurement_unit)
     {
-        $divisor = 6000;
+        return $measurement_unit == 'kg/cm' ? 'cm' : 'in';
+    }
+
+    public function getVolumnWeight($length, $width, $height, $unit)
+    {
+        $divisor = $unit == 'in' ? 166 : 6000;
         return round(($length * $width * $height) / $divisor,2);
     }
 }
