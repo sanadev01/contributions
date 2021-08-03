@@ -57,6 +57,7 @@ Route::prefix('v1')->group(function(){
         Route::get('shipping-services', ServicesController::class);
         Route::get('shcodes/{search}', ShCodeController::class);
         Route::get('order/tracking/{search}', OrderTrackingController::class);
+        Route::get('services-rates', GetRateController::class);
     });
 
 
