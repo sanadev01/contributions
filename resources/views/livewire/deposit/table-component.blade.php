@@ -128,7 +128,7 @@
                 </td>
                 <td>
                     @if($deposit->attachment != null)
-                        <a href="{{route('admin.download_attachment', [$deposit->attachment])}}">Download</a>
+                        <a target="_blank" href="{{route('admin.download_attachment', [$deposit->attachment])}}">Download</a>
                     @else
                         Not Found
                     @endif    
@@ -136,7 +136,7 @@
                 <td>
                     @if($deposit->description != null)
                     <button data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.deposit.description',$deposit->description) }}" class="btn btn-primary">
-                        View
+                        Description View
                     </button>
                     @endif
                 </td>

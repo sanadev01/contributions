@@ -46,10 +46,9 @@ class ExportTxtChileManifestService
             $chile_response = json_decode($order->chile_response);
             fwrite($file,  $this->combineChileResponseFields($chile_response));  
             fwrite($file, '|');
-            fwrite($file, $this->container->seal_no);
+            fwrite($file, $this->container->awb);
             fwrite($file, '|');
-            fwrite($file, 'LS1293842224'."\n");
-
+            fwrite($file, $this->container->seal_no."\n");
         }
         fclose($file);
         return $filename;

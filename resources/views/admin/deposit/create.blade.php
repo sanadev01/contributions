@@ -79,7 +79,13 @@
                                     </div>
                                     @admin
                                     <div class="col-md-4 balanceuser"  style="display: none;">
-                                        <input type="file" class="form-control-file" name="attachment" style="padding: 0px !important; border: 0px !important;">
+                                        <label>Receipt or Docs</label>
+                                        <a class='btn' href='javascript:;'>
+                                            <i class="fa fa-paperclip" style="font-size: 38px;"></i>
+                                            <input type="file" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' name="attachment" size="40"  onchange='$("#upload-file-info").html($(this).val());'>
+                                        </a>
+                                        &nbsp;
+                                        <span class='label label-info' id="upload-file-info"></span>
                                     </div>
                                     @endadmin
                                 </div>

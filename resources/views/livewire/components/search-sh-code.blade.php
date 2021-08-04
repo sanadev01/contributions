@@ -26,6 +26,10 @@
 <select required class="form-control" name="{{$name}}" wire:model.debounce.500ms="search">
     <option value="">Select HS code / Selecione o código HS</option>
     @foreach ($codes as $code)
-        <option value="{{ $code->code }}">{{ $code->description }}</option>
+        <option value="{{ $code->code }}">
+            @if(app()->getLocale() == 'en'){{ optional(explode('-------',$code->description))[0] }}@endif
+            @if(app()->getLocale() == 'pt'){{ optional(explode('-------',$code->description))[1] }}@endif
+            @if(app()->getLocale() == 'es'){{ optional(explode('-------',$code->description))[2] }}@endif
+        </option>
     @endforeach
 </select>

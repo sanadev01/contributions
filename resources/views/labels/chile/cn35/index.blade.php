@@ -138,7 +138,7 @@
                         <div style="height: 1.6cm !important; margin-bottom: 4px !important;">
                             <img style="width: 6cm; height:1.5cm;display:block; margin-bottom: 4px !important;" src="data:image/png;base64,{{DNS1D::getBarcodePNG($awb, 'C128',1,100,[0,0,0])}}" alt="barcode"   />
                         </div>
-                        {{$awb}} 
+                        <span style="font-weight: bold; text-transform: uppercase;">{{$awb}}</span> 
                     @endif
                 </td>
             </tr>
