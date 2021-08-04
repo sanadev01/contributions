@@ -418,6 +418,11 @@ class PermissionSeeder extends Seeder
                 'group' => 'Reports',
                 'description' => 'User can see Commission Reports'
             ],
+            [
+                'slug' => 'update_label',
+                'group' => 'Order',
+                'description' => 'User can update label'
+            ]
             
         ];
     }
