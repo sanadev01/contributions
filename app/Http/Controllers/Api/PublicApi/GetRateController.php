@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\PublicApi;
 
 use App\Models\User;
 use App\Models\Order;
+use App\Models\State;
+use App\Models\Country;
 use App\Models\Recipient;
 use Illuminate\Http\Request;
 use App\Models\ShippingService;
@@ -17,19 +19,35 @@ class GetRateController extends Controller
     public function __invoke(Request $request)
     {
             $rules = [
-                'country_id' => 'required|numeric|exists:countries,id',
-                'state_id' => 'required|exists:states,id',
                 'height' => 'sometimes|numeric',
                 'width' => 'sometimes|numeric',
                 'length' => 'sometimes|numeric',
                 'unit' => 'required|in:lbs/in,kg/cm',
             ];
-            if($request->unit == 'kg/cm'){
-                $rules['weight'] = 'sometimes|numeric|max:30';
-            }else{
-                $rules['weight'] = 'sometimes|numeric|max:66.15';
-            }
 
+            if($request->unit == 'kg/cm'){
+                if($request->country_id == 30 || $request->country_id == "BR"){
+                    $rules['weight'] = 'sometimes|numeric|max:30';    
+                }else{
+                    $rules['weight'] = 'sometimes|numeric|max:50';
+                }
+            }else{
+                if($request->country_id == 30 || $request->country_id == "BR"){
+                    $rules['weight'] = 'sometimes|numeric|max:66.15';    
+                }else{
+                    $rules['weight'] = 'sometimes|numeric|max:110.231';
+                }
+            }
+            if (is_numeric( $request->country_id)){
+                $rules["country_id"] = "required|exists:countries,id";
+            }else{
+                $rules["country_id"] = "required|exists:countries,code";
+            }
+            if (is_numeric( $request->state_id)){
+                $rules["state_id"] = "required|exists:states,id";
+            }else{
+                $rules["state_id"] = "required|exists:states,code";
+            }
 
             $message = [
                 'country_id' => 'Please Select A country',
@@ -45,6 +63,19 @@ class GetRateController extends Controller
             $this->validate($request, $rules, $message);
             
         try{
+            $countryID = $request->country_id;
+            $stateID = $request->state_id;
+            
+            if (!is_numeric( $request->country_id)){
+                
+                $country = Country::where('code', $request->country_id)->orwhere('id', $request->country_id)->first();
+                $countryID = $country->id;
+            }
+            if (!is_numeric( $request->state_id)){
+
+                $state = State::where('country_id', $countryID)->where('code', $request->state_id)->orwhere('id', $request->state_id)->first();
+                $stateID = $state->id;
+            }
 
             $originalWeight =  $request->weight;
             if ( $request->unit == 'kg/cm' ){
@@ -55,8 +86,8 @@ class GetRateController extends Controller
                 $chargableWeight = round($volumetricWeight >  $originalWeight ? $volumetricWeight :  $originalWeight,2);
             }
             $recipient = new Recipient();
-            $recipient->state_id = $request->state_id;
-            $recipient->country_id = $request->country_id;
+            $recipient->state_id = $stateID;
+            $recipient->country_id = $countryID;
 
             $order = new Order();
             $order->user = Auth::user() ? Auth::user() :  User::where('role_id',1)->first();
