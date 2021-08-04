@@ -70,8 +70,11 @@ class Packages extends Component
     public function saveOrder()
     {
         $chile_ContainerPackageController = new ChileContainerPackageController;
-        $order = Order::where('corrios_tracking_code', $this->barcode)->where('shipping_service_name' , $this->service)->first();
         
+        $tracking_number = strlen($this->barcode) > 12 ? substr(substr($this->barcode, 11), 0, -3) : $this->barcode;
+
+        $order = Order::where('corrios_tracking_code', $tracking_number)->where('shipping_service_name' , $this->service)->first();
+
         if($order != null)
         {
            

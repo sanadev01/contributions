@@ -81,6 +81,9 @@
                                             {{ $container->getServiceSubClass() }}
                                         </td>
                                         <td>
+                                            @if ( !$container->awb)
+                                                <span class="text-danger font-italic">Awb Number Required</span>
+                                            @endif
                                             {{ $container->awb }}
                                         </td>
                                         <td>
@@ -109,19 +112,25 @@
                                                             <a href="{{ route('warehouse.chile_containers.edit',$container) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
                                                             </a>
-                                                            <a href="{{ route('warehouse.upload.manifest',$container) }}" class="dropdown-item w-100" id="upload_manifest">
-                                                                <i class="fa fa-arrow-up"></i> Upload Manifest To Correos Chile
+                                                            @if ($container->awb != null)
+                                                                <a href="{{ route('warehouse.upload.manifest',$container) }}" class="dropdown-item w-100" id="upload_manifest">
+                                                                    <i class="fa fa-arrow-up"></i> Upload Manifest To Correos Chile
+                                                                </a>
+                                                            @endif
+                                                        @endif
+
+                                                        @if ( $container->awb != null )
+                                                            <a href="{{ route('warehouse.download.manifest_txt',$container) }}" class="dropdown-item w-100">
+                                                                <i class="fa fa-arrow-down"></i> Download Manifest txt
                                                             </a>
                                                         @endif
-                                                        <a href="{{ route('warehouse.download.manifest_txt',$container) }}" class="dropdown-item w-100">
-                                                            <i class="fa fa-arrow-down"></i> Download Manifest txt
-                                                        </a>
-                                                        <a href="{{ route('warehouse.download.manifest_excel',$container) }}" class="dropdown-item w-100">
-                                                            <i class="fa fa-arrow-down"></i> Download Manifest excel
-                                                        </a>
+        
                                                         @if ( $container->response != 0)
                                                             <a href="{{ route('warehouse.download.chile_cn35',$container) }}" class="dropdown-item w-100">
                                                                 <i class="feather icon-box"></i> Get CN35
+                                                            </a>
+                                                            <a href="{{ route('warehouse.download.manifest_excel',$container) }}" class="dropdown-item w-100">
+                                                                <i class="fa fa-cloud-download"></i> Download Manifest(US Customs)
                                                             </a>
                                                         @endif
                                                         @if( $container->response == 0 )
