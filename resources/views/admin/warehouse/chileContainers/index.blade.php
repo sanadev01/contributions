@@ -123,15 +123,14 @@
                                                             <a href="{{ route('warehouse.download.manifest_txt',$container) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-arrow-down"></i> Download Manifest txt
                                                             </a>
-                                                        @endif
-        
-                                                        @if ( $container->response != 0)
-                                                            <a href="{{ route('warehouse.download.chile_cn35',$container) }}" class="dropdown-item w-100">
-                                                                <i class="feather icon-box"></i> Get CN35
-                                                            </a>
-                                                            <a href="{{ route('warehouse.download.manifest_excel',$container) }}" class="dropdown-item w-100">
-                                                                <i class="fa fa-cloud-download"></i> Download Manifest(US Customs)
-                                                            </a>
+                                                            @if ( $container->response != 0)
+                                                                <a href="{{ route('warehouse.download.chile_cn35',$container) }}" class="dropdown-item w-100">
+                                                                    <i class="feather icon-box"></i> Get CN35
+                                                                </a>
+                                                                <a href="{{ route('warehouse.download.manifest_excel',$container) }}" class="dropdown-item w-100">
+                                                                    <i class="fa fa-cloud-download"></i> Download Manifest(US Customs)
+                                                                </a>
+                                                            @endif
                                                         @endif
                                                         @if( $container->response == 0 )
                                                         <form action="{{ route('warehouse.chile_containers.destroy',$container) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
