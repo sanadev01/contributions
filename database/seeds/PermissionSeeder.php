@@ -413,6 +413,11 @@ class PermissionSeeder extends Seeder
                 'group' => 'Parcel',
                 'description' => 'User can Duplicate PreAlert'
             ],
+            [
+                'slug' => 'update_label',
+                'group' => 'Order',
+                'description' => 'User can update label'
+            ],
             
         ];
     }
