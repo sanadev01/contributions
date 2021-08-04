@@ -414,15 +414,15 @@ class PermissionSeeder extends Seeder
                 'description' => 'User can Duplicate PreAlert'
             ],
             [
-                'slug' => 'update_label',
-                'group' => 'Order',
-                'description' => 'User can update label'
-            ],
-            [
                 'slug' => 'commission-report',
                 'group' => 'Reports',
                 'description' => 'User can see Commission Reports'
             ],
+            [
+                'slug' => 'update_label',
+                'group' => 'Order',
+                'description' => 'User can update label'
+            ]
             
         ];
     }
