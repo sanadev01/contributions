@@ -14,6 +14,7 @@ return  [
     'Email' => 'Email',
     'Phone' => 'Phone *(International Format) i.e +5511992230189 Symbols,letters or spaces not accepted.',
     'Address' => 'Address',
+    'Chile Address' => 'Enter street address in Chile',
     'Telefone' => 'Phone',
     'Country' => 'Country',
     'State' => 'State',

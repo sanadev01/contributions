@@ -48,6 +48,19 @@
                             @enderror
                         </div>
                     </div>
+                    <div class="row justify-content-center mt-1">
+                        <div class="col-md-6">
+                            <label for="">@lang('profitpackage.Shipping Service')</label>
+                            <select name="shipping_service_id" required class="form-control">
+                                <option value="" selected>@lang('profitpackage.Select Service')</option>
+                                @isset($shipping_services)
+                                    @foreach ($shipping_services as $service)
+                                        <option value="{{ $service->id }}">{{ $service->name }}</option>
+                                    @endforeach
+                                @endisset
+                            </select>
+                        </div>
+                    </div>
 
                     <div class="row justify-content-center mt-1">
                         <div class="col-md-6">

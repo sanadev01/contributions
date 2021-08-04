@@ -87,7 +87,7 @@ class ParcelController extends Controller
                 "sender_email" => optional($request->sender)['sender_email'],
                 "sender_taxId" => optional($request->sender)['sender_taxId'],
             ]);
-
+            
             $order->recipient()->create([
                 "first_name" => optional($request->recipient)['first_name'],
                 "last_name" => optional($request->recipient)['last_name'],
@@ -103,7 +103,19 @@ class ParcelController extends Controller
                 "state_id" => $stateID,
                 "country_id" =>$countryID 
             ]);
+            
+            if($countryID == 46){
 
+                $order->update([
+                    "sender_address" => optional($request->sender)['sender_address'],
+                    "sender_city" => optional($request->sender)['sender_city'],
+                ]);
+                $order->recipient()->update([
+                    "region" => optional($request->recipient)['region'],
+                ]);
+            }
+            
+            
             $isBattery = false;
             $isPerfume = false;
             foreach ($request->get('products',[]) as $product) {

@@ -32,6 +32,10 @@ class OrderRecipientController extends Controller
         $this->authorize('editReceipient',$order);
         if ( $orderRepository->updateRecipientAddress($request,$order) ){
             session()->flash('alert-success',"orders.Recipient Updated");
+            if ($order->user->hasRole('retailer'))
+            {
+                return redirect()->route('admin.orders.services.index',$order);
+            }
             return redirect()->route('admin.orders.order-details.index',$order);
         }
 

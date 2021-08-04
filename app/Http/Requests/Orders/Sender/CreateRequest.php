@@ -27,7 +27,9 @@ class CreateRequest extends FormRequest
             'first_name' => 'required|max:100',
             'last_name' => 'max:100',
             'email' => 'nullable|max:100|email',
-            'phone' => 'nullable|max:15'
+            'phone' => 'nullable|max:15',
+            'sender_address' => 'sometimes|required',
+            'sender_city' => 'sometimes|required'
         ];
     }
 }

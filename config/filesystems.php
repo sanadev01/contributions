@@ -64,6 +64,14 @@ return [
             'url' => env('AWS_URL'),
             'endpoint' => env('AWS_ENDPOINT'),
         ],
+        'correos-chile' => [
+				
+            'driver' => 'sftp',
+            'host' => env('Correos_Chile_SFTP_HOST'),
+            'username' => env('Correos_Chile_SFTP_User_Name'),
+            'password' => env('Correos_Chile_SFTP_Password'),
+            'port'     => 22
+        ],
 
     ],
 

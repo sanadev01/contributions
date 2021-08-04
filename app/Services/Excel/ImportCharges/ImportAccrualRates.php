@@ -10,10 +10,12 @@ use App\Services\Excel\AbstractImportService;
 class ImportAccrualRates extends AbstractImportService
 {
     protected $service;
+    protected $country_id;
 
-    public function __construct(UploadedFile $file, $service)
+    public function __construct(UploadedFile $file, $service, $country_id)
     {
         $this->service = $service;
+        $this->country_id = $country_id;
 
         $filename = $this->importFile($file);
 
@@ -32,12 +34,19 @@ class ImportAccrualRates extends AbstractImportService
         $rates = [];
 
         foreach (range(3, 70) as $row) {
-            $rates[] = [
-                'service' => $this->service,
-                'weight' => round($this->getValueOrDefault('A'.$row),2),
-                'cwb' => round($this->getValueOrDefault('C'.$row),2),
-                'gru' => round($this->getValueOrDefault('D'.$row),2)
-            ];
+
+            $weight = round($this->getValueOrDefault('A'.$row),2);
+            
+            if(($this->country_id == 30 && $weight <= 30000) || ($this->country_id == 46 && $weight <= 50000))
+            {
+                $rates[] = [
+                    'service' => $this->service,
+                    'country_id' => $this->country_id,
+                    'weight' => round($this->getValueOrDefault('A'.$row),2),
+                    'cwb' => round($this->getValueOrDefault('C'.$row),2),
+                    'gru' => round($this->getValueOrDefault('D'.$row),2)
+                ];
+            }    
         }
 
         return $this->storeRatesToDb($rates);
