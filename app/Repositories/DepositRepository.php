@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\State;
 use App\Models\Country;
 use App\Models\Deposit;
+use App\Models\Document;
 use App\Events\OrderPaid;
 use Illuminate\Http\Request;
 use App\Mail\User\PaymentPaid;
@@ -153,11 +154,15 @@ class DepositRepository
         }else{
             $balance = $lastTransaction->balance;
         }
-        if ($request->has('attachment')) {
-            $this->fileName = time().'.'.$request->attachment->extension();
-            $request->attachment->storeAs('deposits', $this->fileName);
-        }
-        Deposit::create([
+        // dd($request->attachment);
+        // if ($request->has('attachment')) {
+            
+        //     $this->fileName = time().'.'.$request->attachment->extension();
+        //     $request->attachment->storeAs('deposits', $this->fileName);
+        // }
+
+        
+        $deposit = Deposit::create([
             'uuid' => PaymentInvoice::generateUUID('DP-'),
             'amount' => $request->amount,
             'user_id' => $request->user_id,
@@ -167,6 +172,18 @@ class DepositRepository
             'attachment' => $this->fileName,
             'description' => $request->description,
         ]);
+
+        if ($request->hasFile('attachment')) {
+            foreach ($request->file('attachment') as $attach) {
+                $document = Document::saveDocument($attach);
+                $deposit->depositAttchs()->create([
+                    'name' => $document->getClientOriginalName(),
+                    'size' => $document->getSize(),
+                    'type' => $document->getMimeType(),
+                    'path' => $document->filename
+                ]);
+            }
+        }
     }
 
     public function getError()
