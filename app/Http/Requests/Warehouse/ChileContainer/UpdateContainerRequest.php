@@ -26,6 +26,7 @@ class UpdateContainerRequest extends FormRequest
     {
         return [
             'unit_type' => 'required|integer|in:1,2',
+            'origin_operator_name' => 'sometimes|in:MIA,HKG,JFK,ORD',
             'destination_operator_name' => 'required|in:MR,RM',
             'seal_no' => 'required|unique:containers,seal_no,'.$request->id,
         ];

@@ -31,7 +31,7 @@ class ChileContainerRepository {
                 'dispatch_number' => 0,
                 'origin_country' => 'CL',
                 'seal_no' => $request->seal_no,
-                'origin_operator_name' => 'HERC',
+                'origin_operator_name' => $request->origin_operator_name ? $request->origin_operator_name : 'HERC',
                 'postal_category_code' => 'A',
                 'destination_operator_name' => $request->destination_operator_name,
                 'unit_type' => $request->unit_type,
@@ -54,6 +54,7 @@ class ChileContainerRepository {
     {
         try {
             return  $container->update([
+                'origin_operator_name' => $request->origin_operator_name ? $request->origin_operator_name : 'HERC',
                 'destination_operator_name' => $request->destination_operator_name,
                 'seal_no' => $request->seal_no,
                 'unit_type' => $request->unit_type

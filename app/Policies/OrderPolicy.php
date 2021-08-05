@@ -178,6 +178,11 @@ class OrderPolicy
     {
         return $user->hasPermission('print_label') && $order->user_id == $user->id;
     }
+    
+    public function canPrintLableUpdate(User $user,Order $order)
+    {
+        return $user->hasPermission('update_label') && $order->user_id == $user->id;
+    }
 
     public function importExcel(User $user)
     {
