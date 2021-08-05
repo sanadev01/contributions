@@ -73,9 +73,9 @@ class ChileContainerController extends Controller
     {
         $container = Container::find($container);
 
-        if ( $container->response != 0 ){
-            abort(405);
-        }
+        // if ( $container->response != 0 ){
+        //     abort(405);
+        // }
 
         return view('admin.warehouse.chileContainers.edit',compact('container'));
     }
@@ -91,9 +91,9 @@ class ChileContainerController extends Controller
     {
         $container = Container::find($updateContainerRequest->id);
 
-        if ( $container->response != 0 ){
-            abort(405);
-        }
+        // if ( $container->response != 0 ){
+        //     abort(405);
+        // }
         
         if ( $container = $chile_containerRepository->update($container, $updateContainerRequest) ){
             session()->flash('alert-success', 'Container Saved Please Scann Packages');
