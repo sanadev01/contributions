@@ -39,6 +39,21 @@
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center my-2">
+                                    <label class="col-md-3 text-md-right">@lang('warehouse.containers.Origin Airport')<span class="text-danger">*</span></label>
+                                    <div class="col-md-6">
+                                        <select class="form-control" name="origin_operator_name">
+                                            <option value="">@lang('warehouse.containers.Origin Airport')</option>
+                                            <option value="MIA" {{ old('origin_operator_name', $container->origin_operator_name) == 'MIA' ? 'selected' : '' }}>MIA</option>
+                                            <option value="HKG" {{ old('origin_operator_name', $container->origin_operator_name) == 'HKG' ? 'selected' : '' }}>HKG</option>
+                                            <option value="JFK" {{ old('origin_operator_name', $container->origin_operator_name) == 'JFK' ? 'selected' : '' }}>JFK</option>
+                                            <option value="ORD" {{ old('origin_operator_name', $container->origin_operator_name) == 'ORD' ? 'selected' : '' }}>ORD</option>
+                                        </select>
+                                        @error('origin_operator_name')
+                                            <div class="help-block text-danger"> {{ $message }} </div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center my-2">
                                     <label class="col-md-3 text-md-right">@lang('warehouse.containers.Sorting')<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
                                         <select class="form-control" name="destination_operator_name">

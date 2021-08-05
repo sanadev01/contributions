@@ -78,7 +78,7 @@
                 </td>
                 <td colspan="2" style="text-align: center;font-size:12px;">
                     <div style="height: 1.6cm !important;">
-                        <img style="width: 10cm; height:1.5cm;display:block; margin-top: 5px !important;" src="data:image/png;base64,{{DNS1D::getBarcodePNG($bar_code, 'C128',1,100,[0,0,0])}}" alt="barcode"   />
+                        <img style="width: 7cm; height:1.5cm;display:block; margin-top: 5px !important;" src="data:image/png;base64,{{DNS1D::getBarcodePNG($bar_code, 'C128',1,100,[0,0,0])}}" alt="barcode"   />
                     </div>
                     {{$bar_code}}
                 </td>
@@ -121,7 +121,7 @@
                     <div class="">
                         aeropuerto de destino <br/>
                         <small><i>(Airport of Offloading)</i></small> <br/>
-                        <strong>{{$destinationAirport}}</strong>
+                        <strong>SCL-{{$destinationAirport}}</strong>
                     </div>
                 </td>
             </tr>
