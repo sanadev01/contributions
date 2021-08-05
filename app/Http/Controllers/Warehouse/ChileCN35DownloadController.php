@@ -17,7 +17,7 @@ class ChileCN35DownloadController extends Controller
                     ->setService($container->getServiceCode())
                     ->setDispatchDate(Carbon::now()->format('Y-m-d'))
                     ->setSerialNumber(1)
-                    ->setOriginAirport('MIA')
+                    ->setOriginAirport($container->origin_operator_name ? $container->origin_operator_name :'MIA')
                     ->setDestinationAirport($container->getDestinationAriport())
                     ->setWeight($container->getWeight())
                     ->setItemsCount($container->getPiecesCount())
