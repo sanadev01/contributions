@@ -13,6 +13,7 @@
                     <select class="form-control countrySelect" aria-label="Default select example">
                         <option value="brazil" {{ optional($order->recipient)->country_id == 30 ? 'selected' : ''}}>Brazil</option>
                         <option value="chile" {{ optional($order->recipient)->country_id == 46 ? 'selected' : ''}}>Chile</option>
+                        <option value="US" {{ optional($order->recipient)->country_id == 250 ? 'selected' : ''}}>US</option>
                     </select>
                 </div>
                 
