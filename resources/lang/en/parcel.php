@@ -2,6 +2,8 @@
 
 return [
     'Parcel Images' => 'Parcel Images',
+    'Parcel Images and Docs' => 'Parcel Images and Docs',
+    'Select File' => 'Select Files',
     'Create Parcel' => 'Create Parcel',
     'Edit Parcel' => 'Edit Parcel',
     'Duplicate Parcel' => 'Duplicate Parcel',
