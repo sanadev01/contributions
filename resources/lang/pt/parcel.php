@@ -2,6 +2,8 @@
 
 return [
     'Parcel Images' => 'Imagens do pacote',
+    'Parcel Images and Docs' => 'Imagens e documentos do pacote',
+    'Select File' => 'Selecionar arquivos',
     'Create Parcel' => 'Criar pacote',
     'Edit Parcel' => 'editar pacote',
     'Duplicate Parcel' => 'Pacote Duplicado',

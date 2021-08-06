@@ -132,12 +132,12 @@
 
                                 @can('addShipmentDetails', App\Models\Order::class)
                                     <livewire:order.shipment-info :order="$parcel" />
-                                    <h4 class="mt-2">@lang('parcel.Parcel Images')</h4>
+                                    <h4 class="mt-2">@lang('parcel.Parcel Images and Docs')</h4>
                                     <div class="row mt-1">
                                         <div class="col-12 col-sm-6 col-md-4">
                                             <div class="controls">
-                                                <label>@lang('parcel.Images') <span class="text-danger">*</span></label>
-                                                <input type="file" accept="image/*" multiple name="images[]">
+                                                <label>@lang('parcel.Select File') <span class="text-danger">*</span></label>
+                                                <input type="file" accept=".xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf" multiple name="images[]">
                                                 {{-- @error('record')
                                                     <div class="help-block text-danger">{{ $message }}</div>
                                                 @enderror --}}

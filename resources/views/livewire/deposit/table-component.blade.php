@@ -127,11 +127,14 @@
                     {{ $deposit->last_four_digits  }}
                 </td>
                 <td>
-                    @if($deposit->attachment != null)
-                        <a target="_blank" href="{{route('admin.download_attachment', [$deposit->attachment])}}">Download</a>
+                    @if($deposit->depositAttchs)
+                    @foreach ($deposit->depositAttchs as $attachedFile )
+                        <a target="_blank" href="{{ $attachedFile->getPath() }}">Download</a><br>
+                        {{-- <a target="_blank" href="{{route('admin.download_attachment', [$deposit->attachment])}}">Download</a> --}}
+                    @endforeach
                     @else
                         Not Found
-                    @endif    
+                    @endif
                 </td>
                 <td>
                     @if($deposit->description != null)
