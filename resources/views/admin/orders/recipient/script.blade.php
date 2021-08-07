@@ -423,16 +423,20 @@
 
             if($('#country').val() == '250'){
                 $('#div_street_number').css('display', 'none')
+                $('#cpf').css('display', 'none')
             }else{
                 $('#div_street_number').css('display', 'block')
+                $('#cpf').css('display', 'none')
             }
         });
 
         $('#country').ready(function() {
             if($('#country').val() == '250'){
                 $('#div_street_number').css('display', 'none')
+                $('#cpf').css('display', 'none')
             }else{
                 $('#div_street_number').css('display', 'block')
+                $('#cpf').css('display', 'none')
             }
         });
 

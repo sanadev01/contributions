@@ -8,6 +8,8 @@ return [
             33197 => 'Packet Mini',
             28 => 'SRP',
             32 => 'SRM',
+            3440 => 'Priority',
+            3441 => 'FirstClass',
         ]
     ]
 ];
