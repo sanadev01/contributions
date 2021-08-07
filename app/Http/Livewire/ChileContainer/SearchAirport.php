@@ -12,6 +12,11 @@ class SearchAirport extends Component
     public $message ;
     public $textClass;
     
+    public function mount($origin_operator_name = null)
+    {
+        $this->search = $origin_operator_name;
+    }
+
     public function render()
     {
         return view('livewire.chile-container.search-airport');
