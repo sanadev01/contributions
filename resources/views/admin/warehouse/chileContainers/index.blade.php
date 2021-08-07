@@ -120,9 +120,6 @@
                                                         @endif
 
                                                         @if ( $container->awb != null )
-                                                            <a href="{{ route('warehouse.upload.manifest',$container) }}" class="dropdown-item w-100" id="upload_manifest">
-                                                                <i class="fa fa-arrow-up"></i> Upload Manifest To Correos Chile
-                                                            </a>
                                                             <a href="{{ route('warehouse.download.manifest_txt',$container) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-arrow-down"></i> Download Manifest txt
                                                             </a>

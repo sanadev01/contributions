@@ -138,10 +138,9 @@ class ChileContainerController extends Controller
 
     public function upload_ManifestToChile(Container $container)
     {
-        
-        if($container->response == 1)
+
+        if($container->response == 0)
         {
-            
             $uploadChileManifestService = new UploadChileManifestService($container);
             $response = $uploadChileManifestService->handle();
 
