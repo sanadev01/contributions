@@ -105,7 +105,11 @@ class RatesCalculator
             $secRate[] = $rate;
         }
         if($this->order->id){
-            $rate = $secRate[1]['leve'];
+            if(optional($secRate)[1]){
+                $rate = $secRate[1]['leve'];
+            }else{
+                $rate = $secRate[0]['leve'];
+            }
         }else{
             $rate = collect($this->rates->data)->where('weight','<=',$weight)->sortByDesc('weight')->take(1)->first();
             $rate = $rate['leve'];
