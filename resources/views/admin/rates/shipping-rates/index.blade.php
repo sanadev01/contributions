@@ -24,7 +24,7 @@
                             <tbody>
                                 @foreach ($shippingRates as $ratesData)
                                     <tr>
-                                        <th colspan="4"><h3>Shipping Service</h3></th><th colspan="100%"><h4>{{ optional($ratesData->shippingService)->name }}</h4></th>
+                                        <th colspan="4"><h3>Service Name</h3></th><th colspan="100%"><h4>{{ optional($ratesData->shippingService)->name }}</h4></th>
                                     </tr>
                                     <tr>
                                         <th colspan="4"><h3>Country</h3></th><th colspan="100%"><h4>{{ optional($ratesData->country)->name }}</h4></th>
