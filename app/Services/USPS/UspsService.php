@@ -26,29 +26,29 @@ class UspsService
         
         return $usps_response;
     }
-
+    
     public function make_request_attributes($order)
     {
         $request_body = [
             'request_id' => 'XHA829122',
             'from_address' => [
-                'company_name' => 'Ikonic',
-                'line1' => '247 High St',
-                'city' => 'Palo Alto',
-                'state_province' => 'CA',
-                'postal_code' => '94301',
-                'phone_number' => '+6503915169',
-                'sms' => 'SMS4440404',
-                'email' => 'harry@redbrick247.com',
+                'company_name' => 'HERCO',
+                'line1' => '2200 NW 129TH AVE',
+                'city' => 'Miami',
+                'state_province' => 'FL',
+                'postal_code' => '33182',
+                'phone_number' => '+13058885191',
+                'sms' => '+17867024093',
+                'email' => 'homedelivery@homedeliverybr.com',
                 'country_code' => 'US',
             ],
             'to_address' => [
                 'first_name' => $order->recipient->first_name,
                 'last_name' => $order->recipient->last_name,
                 'line1' => $order->recipient->address.' '.$order->recipient->street_no,
-                'city' => 'Palo Alto',    //City validation required
+                'city' => $order->recipient->city,    //City validation required
                 'state_province' => $order->recipient->state->code,
-                'postal_code' => '94301',  //Zip validation required
+                'postal_code' => $order->recipient->zipcode,  //Zip validation required
                 'phone_number' => $order->recipient->phone,
                 'country_code' => 'US', 
             ],
@@ -65,7 +65,7 @@ class UspsService
             'image_resolution' => 300,
             'usps' => [
                 'shape' => 'Parcel',
-                'mail_class' => 'Priority',
+                'mail_class' => $order->shipping_service_name == 'Priority' ? 'Priority' : 'FirstClass',
                 'image_size' => '4x6',
             ],
         ];
