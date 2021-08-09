@@ -101,7 +101,7 @@
                     <div class="row justify-content-end">
                         <div class="col-12 col-md-7 text-right">
                             <a class="btn btn-primary btn-lg" href="{{ route('admin.payment-invoices.index') }}">@lang('invoice.Back to List')</a>
-                            <button class="btn btn-info btn-lg mb-1 mb-md-0 waves-effect waves-light" onclick="window.print();"> <i class="feather icon-file-text"></i> @lang('invoice.Print')</button>
+                            <button class="btn btn-info btn-lg mb-1 mb-md-0 waves-effect waves-light" onclick="print('.invoice-page');"> <i class="feather icon-file-text"></i> @lang('invoice.Print')</button>
                             @if (!$invoice->isPrePaid())
                                 <a href="{{ route('admin.payment-invoices.postpaid.export',$invoice) }}" class="btn btn-primary btn-lg mb-1 mb-md-0 waves-effect waves-light" > <i class="feather icon-file"></i> @lang('Export')</a>
                             @endif
