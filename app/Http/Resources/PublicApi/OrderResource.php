@@ -23,7 +23,7 @@ class OrderResource extends JsonResource
             "customer_reference" => $this->customer_reference,
             "measurement_unit" => $this->measurement_unit,
             "weight" => $this->weight,
-            "Volumetric_weight" => $this->volumetricWeight($this->length, $this->width, $this->height,$this->isWeightInKg($this->measurement_unit)),
+            "Volumetric_weight" => $this->getVolumnWeight($this->length, $this->width, $this->height,$this->isWeightInKg($this->measurement_unit)),
             "length" => $this->length,
             "width" => $this->width,
             "height" => $this->height,
