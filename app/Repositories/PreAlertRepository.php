@@ -2,16 +2,17 @@
 
 namespace App\Repositories;
 
-use App\Mail\User\ConsolidationRequest;
-use App\Mail\User\OrderCombined;
-use App\Mail\User\ShipmentTransit;
-use App\Mail\User\ShipmentReady;
-use App\Models\Document;
-use App\Models\Order;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use DB;
+use App\Models\Order;
+use App\Models\Document;
+use App\Facades\USPSFacade;
+use Illuminate\Http\Request;
+use App\Mail\User\OrderCombined;
+use App\Mail\User\ShipmentReady;
+use App\Mail\User\ShipmentTransit;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\User\ConsolidationRequest;
 
 class PreAlertRepository
 {
@@ -214,6 +215,16 @@ class PreAlertRepository
             // if ( $order->isConsolidated() ){
             //     $order->subOrders()->sync([]);
             // }
+            if($order->recipient->country_id == 250 && $order->api_response != null)
+            {
+                $response = USPSFacade::deleteUSPSLabel($order->corrios_tracking_code);
+                
+                if($response->success == false)
+                {
+                    return false;
+                }
+            }
+
             optional($order->affiliateSale)->delete();
             $order->delete();
             return true;
@@ -298,6 +309,16 @@ class PreAlertRepository
 
     public function returnToParcel(Order $order)
     {
+        if($order->recipient->country_id == 250 && $order->api_response != null)
+        {
+            $response = USPSFacade::deleteUSPSLabel($order->corrios_tracking_code);
+            
+            if($response->success == false)
+            {
+                return false;
+            }
+        }
+        
         try{
                 $order->items()->delete();
                 $order->recipient()->delete();

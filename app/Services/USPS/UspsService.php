@@ -11,9 +11,10 @@ class UspsService
     protected $email;
     protected $password;
 
-    public function __construct($api_url, $email, $password)
+    public function __construct($api_url, $delete_usps_label_url, $email, $password)
     {
         $this->api_url = $api_url;
+        $this->delete_usps_label_url = $delete_usps_label_url;
         $this->email = $email;
         $this->password = $password;
     }
@@ -82,15 +83,11 @@ class UspsService
 
             if($response->status() == 201)
             {
-
                 return (Object)[
                     'success' => true,
                     'message' => 'Label has been generated',
                     'data'    => $response->json(),
                 ];    
-                // dd($response);
-                // $label = $response['base64_labels'][0];
-                // $pdf = base64_decode($label);
             }elseif($response->status() == 401)
             {
                 return (Object)[
@@ -108,6 +105,33 @@ class UspsService
             
         } catch (Exception $e) {
 
+            return (object) [
+                'success' => false,
+                'message' => $e->getMessage(),
+            ];
+        }
+    }
+
+    public function deleteUSPSLabel($tracking_number)
+    {
+        try {
+            
+            $response =  Http::withBasicAuth($this->email, $this->password)->delete($this->delete_usps_label_url.$tracking_number);
+            
+            if($response->status() == 204)
+            {
+                return (Object)[
+                    'success' => true,
+                    'message' => 'Label has been deleted',
+                ];
+            }
+            
+            return (Object)[
+                'success' => false,
+                'message' => $response->json()['message'],
+            ];
+
+        } catch (Exception $e) {
             return (object) [
                 'success' => false,
                 'message' => $e->getMessage(),
