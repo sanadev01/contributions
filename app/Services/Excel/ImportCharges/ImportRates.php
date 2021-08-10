@@ -35,7 +35,7 @@ class ImportRates extends AbstractImportService
         foreach (range(3, 70) as $row) {
             $rates[] = [
                 'weight' => $this->workSheet->getCell('A'.$row)->getValue(),
-                'leve' => $this->workSheet->getCell('C'.$row)->getValue()
+                'leve' => round($this->workSheet->getCell('C'.$row)->getValue(),2)
             ];
         }
 

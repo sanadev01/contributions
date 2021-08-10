@@ -62,6 +62,7 @@ class CalculatorController extends Controller
         $recipient->country_id = $request->country_id;
 
         $order = new Order();
+        $order->id = 1;
         $order->user = Auth::user() ? Auth::user() :  User::where('role_id',1)->first();
         $order->width = $request->width;
         $order->height = $request->height;
