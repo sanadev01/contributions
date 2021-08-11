@@ -346,6 +346,8 @@ class PreAlertRepository
                 "sender_email"          => '',
                 "sender_phone"          => '',
                 "user_declared_freight" => 0,
+                "api_response" => '',
+                "corrios_tracking_code" => '',
 
             ]);
             
