@@ -18,7 +18,7 @@
                         </a>
                     </div>
                     <div class="card-content">
-                        <form action="{{ route('admin.deposit.store') }}" method="POST" @admin onSubmit="return confirm('Are you sure! you want to add balance to User account') " @endadmin>
+                        <form action="{{ route('admin.deposit.store') }}" method="POST" enctype="multipart/form-data" @admin onSubmit="return confirm('Are you sure! you want to add balance to User account') " @endadmin>
                             @csrf
                             <div class="card-body">
                                 @admin
@@ -60,7 +60,7 @@
                                         </div>
                                         <div class="col-md-4 balanceuser" @admin @if(old('adminpay') == 0) style="display: none" @endif  @endadmin>
                                             <label>Description</label>
-                                            <input type="text" class="form-control" required name="description" placeholder="Enter Description">
+                                            <textarea class="form-control" required name="description" placeholder="Enter Description"  rows="7"></textarea>
                                             @error('description')
                                                 <div class="text-danger">
                                                     {{ $message }}
@@ -77,6 +77,17 @@
                                             </div>
                                         @enderror
                                     </div>
+                                    @admin
+                                    <div class="col-md-4 balanceuser"  style="display: none;">
+                                        <label>Receipt or Docs</label>
+                                        <a class='btn' href='javascript:;'>
+                                            <i class="fa fa-paperclip" style="font-size: 38px;"></i>
+                                            <input type="file" multiple name="attachment[]" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' size="40"  onchange='$("#upload-file-info").html($(this).val());'>
+                                        </a>
+                                        &nbsp;
+                                        <span class='label label-info' id="upload-file-info"></span>
+                                    </div>
+                                    @endadmin
                                 </div>
                                 <hr>
                                 <div class="billingInfo-div" @admin @if(old('adminpay')) style="display: none" @endif @endadmin>
@@ -194,6 +205,4 @@
             }
         }
     </script>
-
-
 @endsection
