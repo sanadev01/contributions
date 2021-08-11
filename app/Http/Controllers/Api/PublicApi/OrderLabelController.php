@@ -32,6 +32,14 @@ class OrderLabelController extends Controller
 
             if(!$error)
             {
+                if ( !$order->isPaid() &&  getBalance() >= $order->gross_total ){
+                    $order->update([
+                        'is_paid' => true,
+                        'status' => Order::STATUS_PAYMENT_DONE
+                    ]);
+                    chargeAmount($order->gross_total,$order);
+                }
+                
                 return apiResponse(true,"Lable Generated successfully.",[
                     'url' => route('order.label.download',$order),
                     'tracking_code' => $order->corrios_tracking_code
