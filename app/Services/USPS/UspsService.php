@@ -41,7 +41,7 @@ class UspsService
                 'phone_number' => '+13058885191',
                 'sms' => '+17867024093',
                 'email' => 'homedelivery@homedeliverybr.com',
-                'country_code' => 'US',
+                'country_code' => $order->sender_country->code,
             ],
             'to_address' => [
                 'first_name' => $order->recipient->first_name,

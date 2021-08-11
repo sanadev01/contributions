@@ -416,4 +416,9 @@ class Order extends Model implements Package
     {
         return $this->items()->sum(DB::raw('quantity * value'));
     }
+
+    public function sender_country()
+    {
+        return $this->belongsTo(Country::class, 'sender_country_id');
+    }
 }
