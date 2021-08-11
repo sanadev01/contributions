@@ -35,6 +35,11 @@ class Deposit extends Model
         return $this->belongsToMany(Order::class);
     }
 
+    public function depositAttchs()
+    {
+        return $this->belongsToMany(Document::class);
+    }
+
     public function firstOrder()
     {
         return $this->orders()->first();
@@ -52,6 +57,7 @@ class Deposit extends Model
             'uuid' => PaymentInvoice::generateUUID('DP-'),
             'amount' => $amount,
             'user_id' => Auth::id(),
+            'order_id' => $order->id,
             'balance' => Deposit::getCurrentBalance() - $amount,
             'is_credit' => false,
         ]);
@@ -68,5 +74,10 @@ class Deposit extends Model
     public function isCredit()
     {
         return $this->is_credit;
+    }
+
+    public function getOrder($orderId)
+    {
+        return Order::find($orderId);
     }
 }
