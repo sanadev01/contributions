@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Admin\Rates;
 
+use App\Models\User;
+use App\Models\ProfitPackage;
+use Illuminate\Http\Request; 
+use App\Models\ShippingService;
 use App\Http\Controllers\Controller;
+use App\Repositories\ProfitPackageRepository;
 use App\Http\Requests\Admin\ProfitPackage\CreateRequest;
 use App\Http\Requests\Admin\ProfitPackage\UpdateRequest;
-use App\Models\ProfitPackage;
-use App\Models\User;
-use App\Repositories\ProfitPackageRepository;
-use Illuminate\Http\Request; 
 
 class ProfitPackageController extends Controller
 {   
@@ -34,7 +35,8 @@ class ProfitPackageController extends Controller
      */
     public function create()
     {
-        return view('admin.rates.profit-packages.create');
+        $shipping_services = ShippingService::all();
+        return view('admin.rates.profit-packages.create' , compact('shipping_services'));
     }
 
     /**
@@ -72,7 +74,8 @@ class ProfitPackageController extends Controller
      */
     public function edit(ProfitPackage $profitPackage)
     {
-        return view('admin.rates.profit-packages.edit',compact('profitPackage'));
+        $shipping_services = ShippingService::all();
+        return view('admin.rates.profit-packages.edit',compact('profitPackage', 'shipping_services'));
     }
 
     /**

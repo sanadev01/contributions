@@ -57,6 +57,7 @@ class Deposit extends Model
             'uuid' => PaymentInvoice::generateUUID('DP-'),
             'amount' => $amount,
             'user_id' => Auth::id(),
+            'order_id' => $order->id,
             'balance' => Deposit::getCurrentBalance() - $amount,
             'is_credit' => false,
         ]);
@@ -73,5 +74,10 @@ class Deposit extends Model
     public function isCredit()
     {
         return $this->is_credit;
+    }
+
+    public function getOrder($orderId)
+    {
+        return Order::find($orderId);
     }
 }

@@ -13,6 +13,8 @@ class ExportManfestService extends AbstractCsvExportService
     private $deliveryBill;
     private $csvData = [];
     private $row = 0;
+    private $total_customerpaid;
+    private $total_paid_to_correios;
 
     public function __construct(DeliveryBill $deliveryBill)
     {
@@ -40,7 +42,7 @@ class ExportManfestService extends AbstractCsvExportService
             'WHR#',
             'Customer paid',
             'Airport/ GRU/CWB',
-            'Value paid to Corrieos',
+            'Value paid to Correios',
             'Bag',
             'POBOX / NAME'
         ];
@@ -92,7 +94,30 @@ class ExportManfestService extends AbstractCsvExportService
             }
 
             $this->row++;
+
+            $this->total_customerpaid +=  $package->gross_total;
+            $this->total_paid_to_correios += $this->getValuePaidToCorrieos($container,$package);
         }
+
+        $this->csvData[$this->row] = [
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            'Total',
+            $this->total_customerpaid,
+            '',
+            $this->total_paid_to_correios,
+            '',
+            '',
+        ];
+
     }
 
     protected function getValuePaidToCorrieos(Container $container, Order $order)

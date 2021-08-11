@@ -6,5 +6,5 @@ return [
     'My Commission' => 'My Commission',
     'Referral Link' => 'Referral Link',
     'OR' => 'OR',
-    'Scan Barcode' => 'Scan Barcode',
+    'Scan Barcode' => 'Your referral QR',
 ];

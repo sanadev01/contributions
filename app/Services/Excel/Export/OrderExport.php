@@ -44,22 +44,23 @@ class OrderExport extends AbstractExportService
             $this->setCellValue('H'.$row, $this->checkValue(number_format($order->dangrous_goods,2)));
             $this->setCellValue('I'.$row, $order->getWeight('kg'));
             $this->setCellValue('J'.$row, $order->getWeight('lbs'));
-            $this->setCellValue('K'.$row, $order->length. ' X '. $order->width.' X '.$order->height);
+            $this->setCellValue('K'.$row, $this->getVolumnWeight($order->length, $order->width, $order->height,$this->isWeightInKg($order->measurement_unit)));
+            $this->setCellValue('L'.$row, $order->length. ' X '. $order->width.' X '.$order->height);
 
             if($order->status == Order::STATUS_ORDER){
-                $this->setCellValue('L'.$row, 'ORDER');
+                $this->setCellValue('M'.$row, 'ORDER');
             }
             if($order->status == Order::STATUS_PAYMENT_PENDING){
-                $this->setCellValue('L'.$row, 'PAYMENT_PENDING');
+                $this->setCellValue('M'.$row, 'PAYMENT_PENDING');
             }
             if($order->status == Order::STATUS_PAYMENT_DONE){
-                $this->setCellValue('L'.$row, 'PAYMENT_DONE');
+                $this->setCellValue('M'.$row, 'PAYMENT_DONE');
             }
             if($order->status == Order::STATUS_SHIPPED){
-                $this->setCellValue('L'.$row, 'SHIPPED');
+                $this->setCellValue('M'.$row, 'SHIPPED');
             }
             
-            $this->setCellValue('M'.$row, $order->order_date);
+            $this->setCellValue('N'.$row, $order->order_date);
             
             $row++;
         }
@@ -109,19 +110,22 @@ class OrderExport extends AbstractExportService
         
         $this->setColumnWidth('J', 20);
         $this->setCellValue('J1', 'Weight(Lbs)');
-        
+
         $this->setColumnWidth('K', 20);
-        $this->sheet->getStyle('K')->getAlignment()->setHorizontal('center');
-        $this->setCellValue('K1', 'Dimesnsions');
+        $this->setCellValue('K1', 'Metric Weight(kg)');
 
         $this->setColumnWidth('L', 20);
-        $this->setCellValue('L1', 'Status');
+        $this->sheet->getStyle('L')->getAlignment()->setHorizontal('center');
+        $this->setCellValue('L1', 'Dimesnsions');
 
         $this->setColumnWidth('M', 20);
-        $this->setCellValue('M1', 'Date');
+        $this->setCellValue('M1', 'Status');
 
-        $this->setBackgroundColor('A1:M1', '2b5cab');
-        $this->setColor('A1:M1', 'FFFFFF');
+        $this->setColumnWidth('N', 20);
+        $this->setCellValue('N1', 'Date');
+
+        $this->setBackgroundColor('A1:N1', '2b5cab');
+        $this->setColor('A1:N1', 'FFFFFF');
 
         $this->currentRow++;
     }
@@ -133,5 +137,16 @@ class OrderExport extends AbstractExportService
         }
 
         return $value;
+    }
+
+    public function isWeightInKg($measurement_unit)
+    {
+        return $measurement_unit == 'kg/cm' ? 'cm' : 'in';
+    }
+
+    public function getVolumnWeight($length, $width, $height, $unit)
+    {
+        $divisor = $unit == 'in' ? 166 : 6000;
+        return round(($length * $width * $height) / $divisor,2);
     }
 }
