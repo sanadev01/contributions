@@ -2,6 +2,7 @@
 
 use App\Models\Order;
 use App\Services\StoreIntegrations\Shopify;
+use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 
 /*
