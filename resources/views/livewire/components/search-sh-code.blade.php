@@ -22,8 +22,9 @@
         @endif
     </div>
 </div> --}}
+<div>
 
-<select required class="form-control" name="{{$name}}" wire:model.debounce.500ms="search">
+<select required class="form-control" name="{{$name}}" wire:model.debounce.500ms="search" id="sh_code">
     <option value="">Select HS code / Selecione o código HS</option>
     @foreach ($codes as $code)
         <option value="{{ $code->code }}">
@@ -33,3 +34,37 @@
         </option>
     @endforeach
 </select>
+
+<!-- Modal -->
+<div class="modal fade" id="booksModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Books & Collections</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Dummy Text Here
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">Ok</button>
+        </div>
+      </div>
+    </div>
+</div>
+
+<script>
+    window.addEventListener('checkShCode', event => {
+        
+        let code = event.detail.sh_code;
+        
+        if(code == 490700) 
+        {
+            $('#booksModal').modal('show');
+        }
+    })
+</script>
+
+</div>
