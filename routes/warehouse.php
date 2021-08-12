@@ -18,6 +18,7 @@ use App\Http\Controllers\Warehouse\ManifestDownloadController;
 use App\Http\Controllers\Warehouse\ChileCN35DownloadController;
 use App\Http\Controllers\Warehouse\DeliveryBillDownloadController;
 use App\Http\Controllers\Warehouse\DeliveryBillRegisterController;
+use App\Http\Controllers\Warehouse\USPSContainerPackageController;
 use App\Http\Controllers\Warehouse\ChileContainerPackageController;
 use App\Http\Controllers\Warehouse\DeliveryBillStatusUpdateController;
 
@@ -52,7 +53,7 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     
     // Routes for USPS Container
     Route::resource('usps_containers', USPSContainerController::class);
-    Route::resource('usps_container.packages', USPSContainerController::class)->only('index','destroy', 'create');
+    Route::resource('usps_container.packages', USPSContainerPackageController::class)->only('index','destroy', 'create');
 });
 
 

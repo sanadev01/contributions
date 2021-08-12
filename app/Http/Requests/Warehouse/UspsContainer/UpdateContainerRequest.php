@@ -27,7 +27,7 @@ class UpdateContainerRequest extends FormRequest
         return [
             'unit_type' => 'required|integer|in:1,2',
             'origin_operator_name' => 'sometimes',
-            'destination_operator_name' => 'required|in:SAOD,CRBA',
+            'destination_operator_name' => 'required|in:MIA',
             'seal_no' => 'required|unique:containers,seal_no,'.$request->input('id'),
         ];
     }
