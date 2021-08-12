@@ -6,7 +6,7 @@ use App\Models\Warehouse\Container;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class ChileContainerRepository {
+class USPSContainerRepository {
 
     protected $error;
     
@@ -18,21 +18,20 @@ class ChileContainerRepository {
             $query->where('user_id',Auth::id());
         }
 
-        // $query->whereDoesntHave('deliveryBills');
-        
         return $query->where(function($query) {
-                        $query->where('services_subclass_code','SRP')
-                                ->orWhere('services_subclass_code','SRM');
-                    })->latest()->paginate();
+			                    $query->where('services_subclass_code','Priority')
+						        ->orWhere('services_subclass_code','FirstClass');
+                            })->latest()->paginate();
+
     }
 
-    public function store(Request $request)
+    public function store($request)
     {
         try {
             $container =  Container::create([
                 'user_id' => Auth::id(),
                 'dispatch_number' => 0,
-                'origin_country' => 'CL',
+                'origin_country' => 'US',
                 'seal_no' => $request->seal_no,
                 'origin_operator_name' => $request->origin_operator_name ? $request->origin_operator_name : 'HERC',
                 'postal_category_code' => 'A',
@@ -53,7 +52,7 @@ class ChileContainerRepository {
         }
     }
 
-    public function update(Container $container, Request $request)
+    public function update(Container $container, $request)
     {
         try {
             return  $container->update([
