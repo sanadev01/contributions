@@ -8,13 +8,16 @@ use Illuminate\Support\Facades\Storage;
 class UspsService
 {
     protected $api_url;
+    protected $delete_usps_label_url;
+    protected $create_manifest_url;
     protected $email;
     protected $password;
 
-    public function __construct($api_url, $delete_usps_label_url, $email, $password)
+    public function __construct($api_url, $delete_usps_label_url, $create_manifest_url, $email, $password)
     {
         $this->api_url = $api_url;
         $this->delete_usps_label_url = $delete_usps_label_url;
+        $this->create_manifest_url = $create_manifest_url;
         $this->email = $email;
         $this->password = $password;
     }
@@ -136,6 +139,54 @@ class UspsService
                 'success' => false,
                 'message' => $e->getMessage(),
             ];
+        }
+    }
+
+    public function generateManifest($container)
+    {
+
+        $data = [
+            'request_id' => 'XHA829122',
+            'image_format' => 'pdf',
+            'image_resolution' => 300,
+            'usps' => [
+                'tracking_numbers' => $container->orders->pluck('corrios_tracking_code')->toArray(),
+            ],
+        ];
+        
+        try {
+
+            $response = Http::withBasicAuth($this->email, $this->password)->post($this->create_manifest_url, $data);
+           
+            if($response->status() == 201)
+            {
+                return (Object)[
+                    'success' => true,
+                    'message' => 'Manifest has been generated',
+                    'data'    => $response->json(),
+                ];    
+            }elseif($response->status() == 401)
+            {
+                return (Object)[
+                    'success' => false,
+                    'message' => $response->json()['error'],
+                ];    
+            }elseif ($response->status() !== 201) 
+            {
+
+                return (object) [
+                    'success' => false,
+                    'message' => $response->json()['message'],
+                ];
+            }
+
+        } catch (Exception $e) {
+
+            return (object) [
+                'success' => false,
+                'message' => $e->getMessage(),
+            ];
+
         }
     }
 }

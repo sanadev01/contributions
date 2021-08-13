@@ -24,6 +24,14 @@ class USPSLabelMaker
         Storage::put("labels/{$this->order->corrios_tracking_code}.pdf", base64_decode($base64_pdf));
     }
     
+    public function getContainerCN35($unit_response_list)
+    {
+        $response = json_decode($unit_response_list);
+        $manifest_number = $response->usps[0]->manifest_number;
+        $base64_manifest = $response->usps[0]->base64_manifest;
+        
+        Storage::put("manifests/usps/{$manifest_number}.pdf", base64_decode($base64_manifest)); 
+    }
     
 
 }

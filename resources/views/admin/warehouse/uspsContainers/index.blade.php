@@ -112,21 +112,22 @@
                                                             <a href="{{ route('warehouse.usps_containers.edit',$container) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
                                                             </a>
-                                                            @if ($container->awb != null)
-                                                                <a href="{{ route('warehouse.usps_containers.register',$container) }}" class="dropdown-item w-100" id="upload_manifest">
-                                                                    <i class="fa fa-arrow-up"></i> Register Unit
-                                                                </a>
-                                                            @endif
+                                                            
+                                                            <a href="{{ route('warehouse.usps_container.register',$container) }}" class="dropdown-item w-100" id="register_unit">
+                                                                <i class="feather icon-box"></i> Register Unit
+                                                            </a>
+                                                            <form action="{{ route('warehouse.usps_containers.destroy',$container) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button class="dropdown-item w-100 text-danger">
+                                                                    <i class="feather icon-trash-2"></i> @lang('warehouse.actions.Delete')
+                                                                </button>
+                                                            </form>
                                                         @endif
-
-                                                        @if( $container->response == 0 )
-                                                        <form action="{{ route('warehouse.usps_containers.destroy',$container) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button class="dropdown-item w-100 text-danger">
-                                                                <i class="feather icon-trash-2"></i> @lang('warehouse.actions.Delete')
-                                                            </button>
-                                                        </form>
+                                                        @if ( $container->response != 0 )
+                                                            <a href="{{ route('warehouse.usps_container.download',$container) }}" class="dropdown-item w-100">
+                                                                <i class="feather icon-box"></i> Get CN35
+                                                            </a>
                                                         @endif
                                                     </div>
                                                 </div>

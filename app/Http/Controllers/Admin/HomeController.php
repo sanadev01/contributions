@@ -32,14 +32,5 @@ class HomeController extends Controller
 
         return view('home');   
     }
-
-    public function uspsApi()
-    {
-        $order = Order::with('recipient', 'items')->find(2541);
-        $response = USPSFacade::generateLabel($order);
-        dd($response);
-    }
     
-    
-
 }
