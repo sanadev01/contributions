@@ -31,9 +31,12 @@ class SearchAirport extends Component
 
             $response = $response->json();
 
-            if($response['status'] == '200')
+            if($response['status'] == '200' && ($response['country_code'] != null || $response['country'] != null))
             {
                 $this->airport = $response;
+            }else {
+                $this->message = 'Airport not found';
+                $this->textClass = 'text-danger';
             }
 
             if($response['status'] != '200')
