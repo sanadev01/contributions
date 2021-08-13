@@ -62,7 +62,7 @@
         
         let code = event.detail.sh_code;
         
-        if(code == 490700) 
+        if(code == 490199) 
         {
             $('#warningModal').modal('show');
         }
