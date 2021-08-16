@@ -250,6 +250,15 @@
                 </a>
             </li>
             @endcan
+            
+            @admin
+            <li class="nav-item {{ $isActive(['admin.shcode.index','admin.shcode.create','admin.shcode.edit']) }}">
+                <a href="{{ route('admin.shcode.index') }}">
+                    <i class="fa fa-codepen"></i>
+                    <span class="menu-title">SH Codes</span>
+                </a>
+            </li>
+            @endadmin
 
             <li class="nav-item {{ $isActive(['admin.tickets.index','admin.tickets.show']) }}">
                 <a class="nav-link" href="{{ route('admin.tickets.index') }}"><i class="feather icon-message-circle"></i>
