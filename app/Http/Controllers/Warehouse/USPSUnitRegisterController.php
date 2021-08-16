@@ -17,22 +17,28 @@ class USPSUnitRegisterController extends Controller
      */
     public function __invoke(Container $container)
     {
-        $response = USPSFacade::generateManifest($container);
-
-        if($response->success == true)
+        if (count($container->orders) > 0)
         {
-            //storing response in container table
-            $container->update([
-                'unit_code' => $response->data['usps'][0]['manifest_number'],
-                'unit_response_list' => json_encode($response->data),
-                'response' => true,
-            ]);
-             
-            session()->flash('alert-success','Package Registration success. You can print Label now');
+            $response = USPSFacade::generateManifest($container);
+
+            if($response->success == true)
+            {
+                //storing response in container table
+                $container->update([
+                    'unit_code' => $response->data['usps'][0]['manifest_number'],
+                    'unit_response_list' => json_encode($response->data),
+                    'response' => true,
+                ]);
+
+                session()->flash('alert-success','Package Registration success. You can print Label now');
+                return back();
+            }
+
+            session()->flash('alert-danger',$response->message);
             return back();
         }
-        
-        session()->flash('alert-danger',$response->message);
+
+        session()->flash('alert-danger', 'Container does not have any packages/orders');
         return back();
     }
 }

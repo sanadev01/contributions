@@ -34,7 +34,7 @@ class UspsService
     public function make_request_attributes($order)
     {
         $request_body = [
-            'request_id' => 'XHA829122',
+            'request_id' => 'HD-'.$order->id,
             'from_address' => [
                 'company_name' => 'HERCO',
                 'line1' => '2200 NW 129TH AVE',
@@ -69,7 +69,7 @@ class UspsService
             'image_resolution' => 300,
             'usps' => [
                 'shape' => 'Parcel',
-                'mail_class' => $order->shipping_service_name == 'Priority' ? 'Priority' : 'FirstClass',
+                'mail_class' => $order->shipping_service_name,
                 'image_size' => '4x6',
             ],
         ];
@@ -146,7 +146,7 @@ class UspsService
     {
 
         $data = [
-            'request_id' => 'XHA829122',
+            'request_id' => 'HD-'.$container->seal_no,
             'image_format' => 'pdf',
             'image_resolution' => 300,
             'usps' => [

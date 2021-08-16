@@ -113,9 +113,12 @@
                                                                 <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
                                                             </a>
                                                             
-                                                            <a href="{{ route('warehouse.usps_container.register',$container) }}" class="dropdown-item w-100" id="register_unit">
-                                                                <i class="feather icon-box"></i> Register Unit
-                                                            </a>
+                                                            @if(count($container->orders) > 0)
+                                                                <a href="{{ route('warehouse.usps_container.register',$container) }}" class="dropdown-item w-100" id="register_unit">
+                                                                    <i class="feather icon-box"></i> Register Unit
+                                                                </a>
+                                                            @endif
+                                                            
                                                             <form action="{{ route('warehouse.usps_containers.destroy',$container) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
                                                                 @csrf
                                                                 @method('DELETE')

@@ -1,9 +1,8 @@
 <?php
 namespace App\Services\USPS;
 
-use App\Models\Order;
-use Barryvdh\DomPDF\PDF;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Response;
 
 
 class USPSLabelMaker
@@ -30,8 +29,14 @@ class USPSLabelMaker
         $manifest_number = $response->usps[0]->manifest_number;
         $base64_manifest = $response->usps[0]->base64_manifest;
         
-        Storage::put("manifests/usps/{$manifest_number}.pdf", base64_decode($base64_manifest)); 
+        Storage::put("manifests/usps/{$manifest_number}.pdf", base64_decode($base64_manifest));
+
+        $path = storage_path().'/'.'app'.'/manifests/usps/'.$manifest_number.''.'.pdf';
+        
+        if (file_exists($path)) {
+            return Response::download($path);
+        }
+        
     }
-    
 
 }
