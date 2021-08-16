@@ -11,5 +11,7 @@ class ShCode extends Model
     protected static $logAttributes = ['*'];
     protected static $logOnlyDirty = true;
     protected static $submitEmptyLogs = false;
-    
+    protected $fillable = [
+        'code','description'
+    ];
 }
