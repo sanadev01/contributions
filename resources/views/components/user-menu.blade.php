@@ -242,7 +242,7 @@
             @endcan
             
             @admin
-            <li class="nav-item {{ $isActive(['admin.shcode.index']) }}">
+            <li class="nav-item {{ $isActive(['admin.shcode.index','admin.shcode.create','admin.shcode.edit']) }}">
                 <a href="{{ route('admin.shcode.index') }}">
                     <i class="fa fa-codepen"></i>
                     <span class="menu-title">SH Codes</span>

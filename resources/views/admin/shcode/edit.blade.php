@@ -5,7 +5,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="mb-0">@lang('role.Update Role')</h4>
+                        <h4 class="mb-0">Update ShCode</h4>
                         <a href="{{ route('admin.roles.index') }}" class="pull-right btn btn-primary">@lang('role.Back to List') </a>
                     </div>
                     <div class="card-content">

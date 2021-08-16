@@ -6,7 +6,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="mb-0">@lang('role.Roles')</h4>
+                        <h4 class="mb-0">ShCodes</h4>
                         
                         <a href="{{ route('admin.shcode.create') }}" class="pull-right btn btn-primary"> Create ShCode </a>
                         
