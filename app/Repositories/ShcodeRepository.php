@@ -32,19 +32,20 @@ class ShcodeRepository
         }
     }
 
-    public function update(Request $request,ShCode $role)
+    public function update(Request $request,ShCode $shcode)
     {   
         
         try{
             
-            $role->update([
-                'name' => $request->role_name
+            $shcode->update([
+                'code' => $request->code,
+                'description' => $request->en.'-------'.$request->pt.'-------'.$request->sp,
             ]);
 
             return true;
 
         }catch(Exception $exception){
-            session()->flash('alert-danger','Error while Role');
+            session()->flash('alert-danger','Error while shcode');
             return null;
         }
     }
