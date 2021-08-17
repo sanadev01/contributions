@@ -9,6 +9,7 @@ use App\Facades\CorreosChileFacade;
 use App\Http\Controllers\Controller;
 use App\Repositories\LabelRepository;
 use Illuminate\Support\Facades\Storage;
+use App\Repositories\USPSLabelRepository;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
 
@@ -58,6 +59,8 @@ class OrderLabelController extends Controller
         $chile_labelRepository = new CorrieosChileLabelRepository();
 
         $labelRepository = new CorrieosBrazilLabelRepository();
+
+        $usps_labelRepository = new USPSLabelRepository();
         
         if($order->recipient->country_id == 46 && $request->update_label === 'false')
         {
@@ -66,8 +69,15 @@ class OrderLabelController extends Controller
             $error = $chile_labelRepository->getChileErrors();
             return $this->renderLabel($request, $order, $error);
         }
-        
 
+        if($order->recipient->country_id == 250 && $request->update_label === 'false')
+        {
+            $usps_labelRepository->handle($order);
+
+            $error = $usps_labelRepository->getUSPSErrors();
+            return $this->renderLabel($request, $order, $error);
+        }
+        
         if ( $request->update_label === 'true' ){
             
             if($order->recipient->country_id == 46)
@@ -78,6 +88,14 @@ class OrderLabelController extends Controller
                 return $this->renderLabel($request, $order, $error);
             }
             
+            if($order->recipient->country_id == 250)
+            {
+                $usps_labelRepository->update($order);
+
+                $error = $chile_labelRepository->getChileErrors();
+                return $this->renderLabel($request, $order, $error);
+            }
+
             $labelRepository->update($order);
         } else{
             $labelRepository->get($order);

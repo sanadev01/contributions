@@ -42,6 +42,7 @@ return [
         'Containers' => 'Containers',
         'Delivery Bill' => 'Delivery Bill',
         'Chile Containers' => 'Chile Containers',
+        'USPS Containers' => 'USPS Containers',
     ],
     'Affiliate' => [
         'menu' => 'Affiliate',

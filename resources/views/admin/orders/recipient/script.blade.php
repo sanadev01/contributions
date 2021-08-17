@@ -411,6 +411,77 @@
         });
     })
 
+    // USPS Logics
+
+    $(document).ready(function(){
+        $('#address').on('change', function(){
+            window.validate_us_address();
+        });
+
+        $('#country').on('change', function() {
+            window.validate_us_address();
+
+            if($('#country').val() == '250'){
+                $('#div_street_number').css('display', 'none')
+                $('#cpf').css('display', 'none')
+            }else{
+                $('#div_street_number').css('display', 'block')
+                $('#cpf').css('display', 'none')
+            }
+        });
+
+        $('#country').ready(function() {
+            if($('#country').val() == '250'){
+                $('#div_street_number').css('display', 'none')
+                $('#cpf').css('display', 'none')
+            }else{
+                $('#div_street_number').css('display', 'block')
+                $('#cpf').css('display', 'none')
+            }
+        });
+
+        $('#state').on('change', function() {
+            window.validate_us_address();
+        });
+
+        $('#city').on('change', function() {
+            window.validate_us_address();
+        });
+
+    })
+
+    validate_us_address = function()
+    {
+        let country = $('#country').val();
+        let address = $('#address').val();
+        let state = $('#state option:selected').text();
+        let city = $('#city').val();
+
+        if(country == '250' && state != undefined && address.length > 4 && city.length >= 4)
+            {
+                $('#loading').fadeIn();
+                $.get('{{ route("api.orders.recipient.us_address") }}',{
+                    address: address,
+                    state: state,
+                    city: city,
+                }).then(function(response){
+                    
+                    if ( response.success == true && response.zipcode != 0){
+                        $('#loading').fadeOut();
+                        $('#zipcode').val(response.zipcode);
+                        $('#zipcode_response').empty().append("<p><b>According to your given Addrees, your zip code should be this</b></p><p><span style='color: red;'>Zipcode: </span><span>"+response.zipcode+"</span></p>");
+                    }else {
+                        $('#loading').fadeOut();
+                        $('#zipcode_response').empty().append("<p style='color: red;'><b>According to USPS,</b></p><p><span style='color: red;'></span><span>"+response.message+"</span></p>");
+                    }
+
+                }).catch(function(error){
+                    console.log(error);
+                    $('#loading').fadeOut();
+                    $('#zipcode_response').empty().append("<p style='color: red;'><b>According to USPS, your address is Invalid</b></p>");
+                })
+            }
+    }
 
  
 </script>

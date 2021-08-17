@@ -11,6 +11,7 @@
         "php": "^7.2.5",
         "authorizenet/authorizenet": "^2.0",
         "barryvdh/laravel-dompdf": "^0.9.0",
+        "doctrine/dbal": "^2.12.1",
         "fideloper/proxy": "^4.2",
         "flyingluscas/correios-php": "^2.4",
         "fruitcake/laravel-cors": "^2.0",

@@ -14,12 +14,12 @@ class CorrieosChileLabelRepository
 
     public function handle($order)
     {
-        if(($order->shipping_service_name == 'SRP' || $order->shipping_service_name == 'SRM') && $order->chile_response == null)
+        if(($order->shipping_service_name == 'SRP' || $order->shipping_service_name == 'SRM') && $order->api_response == null)
         {
 
             $this->generat_ChileLabel($order);
 
-        }elseif($order->chile_response != null)
+        }elseif($order->api_response != null)
         {
 
             $this->printLabel($order);
@@ -56,7 +56,7 @@ class CorrieosChileLabelRepository
         {
             //storing response in orders table
             $order->update([
-                'chile_response' => json_encode($response->data),
+                'api_response' => json_encode($response->data),
                 'corrios_tracking_code' => $response->data->NumeroEnvio,
             ]);
             
@@ -78,7 +78,7 @@ class CorrieosChileLabelRepository
         {
             //storing response in orders table
             $order->update([
-                'chile_response' => json_encode($response->data),
+                'api_response' => json_encode($response->data),
                 'corrios_tracking_code' => $response->data->NumeroEnvio,
             ]);
             $this->printLabel($order);

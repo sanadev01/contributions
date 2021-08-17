@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 
+use App\Services\USPS\UspsService;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
@@ -36,6 +37,18 @@ class AppServiceProvider extends ServiceProvider
             $clienteRemitente = '61001';
 
             return new CorreosChileService($wsdlUrl, $usuario, $contrasena, $codigoAdmision, $clienteRemitente);
+        });
+
+        $this->app->singleton('USPS_service', function() {
+
+            // Api Credentials(currently credentials of testing environment are being used)
+            $api_url = config('usps.url');
+            $delete_usps_label_url = config('usps.delete_label_url');
+            $create_manifest_url = config('usps.create_manifest_url');
+            $email = config('usps.email');           
+            $password = config('usps.password');
+
+            return new UspsService($api_url, $delete_usps_label_url, $create_manifest_url, $email, $password);
         });
     }
 
