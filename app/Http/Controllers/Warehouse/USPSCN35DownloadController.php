@@ -18,7 +18,7 @@ class USPSCN35DownloadController extends Controller
     public function __invoke(Container $container)
     {
         $labelPrinter = new USPSLabelMaker();
-        $labelPrinter->getContainerCN35($container->unit_response_list);
+        return $labelPrinter->getContainerCN35($container->unit_response_list);
         
     }
 }

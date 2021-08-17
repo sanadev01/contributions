@@ -45,9 +45,11 @@
                     {{ $order->customer_reference }}
                 </td>
                 <td>
-                    <button wire:click="removeOrder({{ $order->id }}, '{{$key}}')" class="btn btn-danger">
-                        Remove
-                    </button>
+                    @if ($editMode == true)
+                        <button wire:click="removeOrder({{ $order->id }}, '{{$key}}')" class="btn btn-danger">
+                            Remove
+                        </button>
+                    @endif
                 </td>
             </tr>
             @endforeach

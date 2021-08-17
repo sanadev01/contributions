@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Warehouse;
 use Illuminate\Http\Request;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
+use App\Services\Excel\Export\ContainerOrderExport;
 use App\Repositories\Warehouse\UspsContainerPackageRepository;
 
 class USPSContainerPackageController extends Controller
@@ -29,9 +30,12 @@ class USPSContainerPackageController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($id)
     {
-        //
+        $container = Container::find($id);
+        $orders = $container->orders;
+        $exportService = new ContainerOrderExport($orders);
+        return $exportService->handle();
     }
 
     /**
