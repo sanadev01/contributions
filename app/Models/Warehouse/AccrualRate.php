@@ -2,6 +2,7 @@
 
 namespace App\Models\Warehouse;
 
+use App\Models\Country;
 use Illuminate\Database\Eloquent\Model;
 use App\Services\Correios\Models\Package;
 use App\Services\Converters\UnitsConverter;
@@ -28,6 +29,14 @@ class AccrualRate extends Model
             return "Mini";
         }
 
+        if ( $this->service == Package::SERVICE_CLASS_SRP ){
+            return "SRP";
+        }
+
+        if ( $this->service == Package::SERVICE_CLASS_SRM ){
+            return "SRM";
+        }
+
         return '';
     }
 
@@ -39,5 +48,10 @@ class AccrualRate extends Model
         $weightToGrams = UnitsConverter::kgToGrams($weight);
 
         return self::where('weight','<=',$weightToGrams)->orderBy('id','DESC')->take(1)->first();
+    }
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
     }
 }

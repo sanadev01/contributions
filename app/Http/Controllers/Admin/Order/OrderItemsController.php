@@ -26,16 +26,20 @@ class OrderItemsController extends Controller
         }
 
         $shippingServices = collect() ;
+        $error = null;
+
         foreach (ShippingService::query()->has('rates')->active()->get() as $shippingService) {
             if ( $shippingService->isAvailableFor($order) ){
                 $shippingServices->push($shippingService);
-            }else{
+            }elseif($shippingService->getCalculator($order)->getErrors() != null){
                 session()->flash('alert-danger',"Shipping Service not Available Error:{$shippingService->getCalculator($order)->getErrors()}");
             }
         }
+        if($shippingServices->isEmpty()){
+            $error = "Shipping Service not Available for the Country you have selected";
+        }
 
-
-        return view('admin.orders.order-details.index',compact('order','shippingServices'));
+        return view('admin.orders.order-details.index',compact('order','shippingServices', 'error'));
     }
 
     /**

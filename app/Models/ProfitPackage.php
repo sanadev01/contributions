@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\ShippingService;
 use Illuminate\Database\Eloquent\Model;
 use LaravelJsonColumn\Traits\JsonColumn;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -26,5 +27,10 @@ class ProfitPackage extends Model
 
     const TYPE_DEFAULT = 'default';
     const TYPE_PACKAGE = 'package';
+
+    public function shippingService()
+    {
+        return $this->belongsTo(ShippingService::class);
+    }
 
 }

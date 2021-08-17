@@ -71,6 +71,7 @@ class ProfitPackageImportService extends AbstractImportService
         
         try {
             $profitPackage = ProfitPackage::create([
+                "shipping_service_id" => $this->request->shipping_service_id,
                 "name" => $this->request->package_name,
                 "type" => $this->request->type,
                 "data" => $data,

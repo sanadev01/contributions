@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\ProfitPackage;
 use Illuminate\Database\Eloquent\Model;
 use LaravelJsonColumn\Traits\JsonColumn;
 use Illuminate\Database\Eloquent\Builder;
@@ -57,5 +58,10 @@ class ShippingService extends Model
         self::$calculator = new RatesCalculator($order,$this, $calculateOnVolumeMetricWeight);
 
         return self::$calculator;
+    }
+
+    public function profitPackages()
+    {
+        return $this->hasMany(ProfitPackage::class);
     }
 }

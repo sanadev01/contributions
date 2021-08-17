@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\Order;
 
+use Exception;
+use SoapClient;
 use App\Models\Order;
 use App\Models\Address;
 use Illuminate\Http\Request;
@@ -10,6 +12,16 @@ use App\Http\Controllers\Controller;
 
 class RecipientController extends Controller
 {
+    private $usuario;
+    private $contrasena;
+
+
+    public function __construct()
+    {
+        $this->usuario = config('correoschile.userId');
+        $this->contrasena = config('correoschile.correosKey');
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -81,4 +93,115 @@ class RecipientController extends Controller
         }
         return apiResponse(true,'Zipcode success',$response);
     }
+
+    public function chileRegions()
+    {
+        return $regions = $this->getAllRegions();
+        
+    }
+
+    public function chileCommunes(Request $request)
+    {
+
+        return $communes = $this->getCommunesByRegion($request->region_code);
+    }
+
+    public function normalizeAddress(Request $request)
+    {
+       return $this->validateChileAddress($request->coummne, $request->address);
+
+    }
+
+    function getAllRegions() 
+    {
+        $wsdlUrl = config('correoschile.regions_url');
+
+        $client = new SoapClient($wsdlUrl, array('trace' => 1, 'exception' => 0));
+        try
+        {
+            $result = $client->__soapCall('listarTodasLasRegiones', array(
+                'listarTodasLasRegiones' => array(
+                    'usuario' => $this->usuario,
+                    'contrasena' => $this->contrasena
+                )), null, null);
+            return (Array)[
+                'success' => true,
+                'message' => "Regions Fetched",
+                'data'    => $result->listarTodasLasRegionesResult->RegionTO,
+            ];
+        } 
+        catch (Exception $e) 
+        {
+            return (Array)[
+                'success' => false,
+                'message' => 'could not Load Regions plaease reload',
+            ];
+        }
+    }
+
+    public function getCommunesByRegion($region_code)
+    {
+        $wsdlUrl = config('correoschile.communas_url');
+        
+        try 
+        {
+            $client = new SoapClient($wsdlUrl, array('trace' => 1, 'exception' => 0));
+            $result = $client->__soapCall('listarComunasSegunRegion', array(
+                'listarComunasSegunRegion' => array(
+                    'usuario' => $this->usuario,
+                    'contrasena' => $this->contrasena,
+                    'codigoRegion' => $region_code
+            )), null, null);
+            return (Array)[
+                'success' => true,
+                'message' => "Communes Fetched",
+                'data'    => $result->listarComunasSegunRegionResult->ComunaTO,
+            ];
+        }
+        catch (Exception $e) 
+        {
+            return (Array)[
+                'success' => false,
+                'message' => 'could not load Communes, please select region',
+            ];
+        }
+    }
+
+    function validateChileAddress($commune, $address)
+    {
+        $wsdlUrl = config('correoschile.normalize_address_url');
+        $direction = '1;'.$address.';'.$commune;
+
+        try
+        {
+            $options = array(
+                'soap_version' => SOAP_1_1,
+                'exceptions' => true,
+                'trace' => 1,
+                'connection_timeout' => 180,
+                'cache_wsdl' => WSDL_CACHE_MEMORY,
+            );
+
+            $client = new SoapClient($wsdlUrl, $options);
+            $result = $client->__soapCall('Normalizar', array(
+                'Normalizar' => array(
+                    'usuario' => 'internacional',
+                    'password' => 'QRxYTu#v',
+                    'direccion' => trim($direction),
+                )), null, null);
+            return (Array)[
+                        'success' => true,
+                        'message' => 'Address Validated',
+                        'data'    => $result->NormalizarResult,
+                    ];
+        }
+        catch (Exception $e) {
+            return (Array)[
+                'success' => false,
+                'message' => 'According to Correos Chile Your Address or House No is Inavalid',
+            ];
+        }
+        
+    }
+
 }
