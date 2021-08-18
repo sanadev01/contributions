@@ -92,7 +92,7 @@ class OrderLabelController extends Controller
             {
                 $usps_labelRepository->update($order);
 
-                $error = $chile_labelRepository->getChileErrors();
+                $error = $usps_labelRepository->getUSPSErrors();
                 return $this->renderLabel($request, $order, $error);
             }
 
