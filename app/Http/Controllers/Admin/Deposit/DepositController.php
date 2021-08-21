@@ -4,12 +4,13 @@
 namespace App\Http\Controllers\Admin\Deposit;
 
 
+use App\Models\Deposit;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\OrderRepository;
 use App\Repositories\DepositRepository;
+use Illuminate\Support\Facades\Response;
 use App\Services\Excel\Export\ExportDepositReport;
 
 class DepositController extends Controller
@@ -71,8 +72,19 @@ class DepositController extends Controller
         }   
     }
 
-    public function showDescription($description)
+    public function showDescription(Deposit $deposit)
     {
-        return view('admin.modals.deposits.description',compact('description'));
+        return view('admin.modals.deposits.description',compact('deposit'));
+    }
+    
+    public function updateDescription(Request $request, Deposit $deposit)
+    {
+        if($deposit){
+            $deposit->update([
+                'description' => $request->description
+            ]);
+        }
+        session()->flash('alert-success', 'Description Updated');
+        return redirect()->route('admin.deposit.index');
     }
 }
