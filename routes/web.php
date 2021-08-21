@@ -29,6 +29,7 @@ Route::get('/', function (Shopify $shopifyClient) {
 });
 
 Route::resource('calculator', CalculatorController::class)->only(['index', 'store']);
+Route::resource('tracking', TrackingController::class)->only(['index', 'show']);
 Route::get('/home', function () {
 
     if ( session()->get('shopify.redirect') ){
