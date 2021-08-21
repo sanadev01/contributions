@@ -138,7 +138,7 @@
                 </td>
                 <td>
                     @if($deposit->description != null)
-                    <button data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.deposit.description',$deposit->description) }}" class="btn btn-primary">
+                    <button data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.deposit.description',$deposit) }}" class="btn btn-primary">
                         Description View
                     </button>
                     @endif
