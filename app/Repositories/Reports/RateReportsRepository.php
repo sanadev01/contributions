@@ -82,7 +82,7 @@ class RateReportsRepository
     {
         $shippingService = ShippingService::find($serviceId);
         // dd($shippingService->rates[0]->country_id);
-        $package = ProfitPackage::find(2);
+        $package = ProfitPackage::find(9);
         
         $recipient = new Recipient();
         $recipient->state_id = 508;//$request->state_id;
