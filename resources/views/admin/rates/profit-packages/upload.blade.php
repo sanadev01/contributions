@@ -16,12 +16,28 @@
         </div>
         <div class="card-content collapse show">
             <div class="col-12 mb-5">
-                <a class="btn btn-success pull-right mt-3 mr-1" href="{{ asset('uploads/profit-sample-by-s.xlsx') }}">
+                <div class="btn-group pull-right">
+                    <div class="dropdown">
+                        <button type="button" class="btn btn-success pull-right mt-3 mr-1 dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Download Samples
+                        </button>
+                        <div class="dropdown-menu overlap-menu" aria-labelledby="dropdownMenuLink">
+                            @isset($shipping_services)
+                                @foreach ($shipping_services as $service)
+                                <a class="dropdown-item" href="{{ route('admin.rates.rates.exports',['package' => 10,'service' => $service->id]) }}">
+                                    <i class="fa fa-arrow-down"></i> {{ $service->name }} Download Sample
+                                </a>
+                                @endforeach
+                            @endisset
+                        </div>
+                    </div>
+                </div>
+                {{-- <a class="btn btn-success pull-right mt-3 mr-1" href="{{ asset('uploads/profit-sample-by-s.xlsx') }}">
                     <i class="fa fa-arrow-down"></i> Download Sample
-                </a>
+                </a> --}}
             </div>
             <div class="card-body">
-                <form class="form" action="{{ route('admin.rates.profit-packages-upload.store') }}" method="POST" enctype="multipart/form-data">
+                <form class="form mt-4" action="{{ route('admin.rates.profit-packages-upload.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row justify-content-center mt-1">
                         <div class="col-md-6">
