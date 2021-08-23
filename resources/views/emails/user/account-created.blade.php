@@ -13,7 +13,6 @@
 @lang('email.welcome.Your Home DeliveryBR address') <br>
 {{ $user->name }} {{ $user->last_name }} <br>
 @lang('email.welcome.Address line 1:'){!! $user->pobox? $user->pobox->address : '' !!} <br>
-{{-- @lang('email.welcome.Address line 2:'){{ $user->pobox_number }} <br> --}}
 @lang('email.welcome.City:') {!! $user->pobox? $user->pobox->city : '' !!} <br>
 @lang('email.welcome.State:') {!! $user->pobox? $user->pobox->state : '' !!} <br>
 @lang('email.welcome.Zip code:'){!! $user->pobox? $user->pobox->zipcode : '' !!} <br>
