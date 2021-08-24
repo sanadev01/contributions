@@ -2,6 +2,15 @@
     $('#country').on('change', function(){
         
         let country_id = $(this).val()
+        if(country_id == 46)
+        {
+          return getChileRegions();
+        }
+          $.ajaxSetup({
+               headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+               }
+          });
         $.ajax({ 
            type: 'POST',
            url: "{{route('admin.ajax.state')}}",
@@ -18,4 +27,23 @@
            }
         });
      });
+
+    function getChileRegions()
+     {    
+          $.get('{{ route("api.orders.recipient.chile_regions") }}')
+          .then(function(response){
+               if(response.success == true)
+               {
+                    $.each(response.data,function(key, value)
+                    {
+                         $("#state").append('<option value="'+value.Identificador+'">'+value.Nombre+'</option>');
+                         $('#state').selectpicker('refresh');
+                    });
+               }else {
+                    toastr.error(response.message)
+               }
+          }).catch(function(error){
+               console.log(error);
+          })
+     }
 </script>

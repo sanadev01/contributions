@@ -11,11 +11,11 @@
                                 Rate Calculated
                             </h2>
                         </div>
-
-                        <div class="col-md-12">
-                            <x-flash-message></x-flash-message>
-                        </div>
-                         
+                        @if ($shippingServices->isEmpty())
+                            <div class="col-md-12">
+                                <x-flash-message></x-flash-message>
+                            </div>
+                        @endif
                         <div class="card-body">
                             <div class="text-center">
                                 @foreach ($shippingServices as $shippingService) 
