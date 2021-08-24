@@ -56,6 +56,9 @@ class Slabs extends Component
         $recipient = new Recipient();
         $recipient->state_id = 508;//$request->state_id;
         $recipient->country_id = 30;//$request->country_id;
+        if(optional(optional($package->shippingService)->rates)[0]){
+            $recipient->country_id = optional(optional(optional($package->shippingService)->rates)[0])->country_id;//$request->country_id;
+        }
         
         $newUser = Auth::user();
         $newUser->profitPackage = $package;
@@ -68,12 +71,20 @@ class Slabs extends Component
         $order->measurement_unit = 'kg/cm';
         $order->recipient = $recipient;
         $order->weight = UnitsConverter::gramsToKg($weight);
-        \Log::info($order->weight);
-        foreach (ShippingService::query()->active()->get() as $shippingService) {
+        if($package->shippingService){
+            $shippingService = $package->shippingService;
             $shippingService->cacheCalculator = false;
             if ( $shippingService->isAvailableFor($order) ){
-                $rate = $shippingService->getRateFor($order,$isRate,false);
-                return $rate;
+                    $rate = $shippingService->getRateFor($order,$isRate,false);
+                    return $rate;
+                }
+        }else{
+            foreach (ShippingService::query()->active()->get() as $shippingService) {
+                $shippingService->cacheCalculator = false;
+                if ( $shippingService->isAvailableFor($order) ){
+                    $rate = $shippingService->getRateFor($order,$isRate,false);
+                    return $rate;
+                }
             }
         }
 
