@@ -31,14 +31,24 @@ class OrderItemsController extends Controller
         foreach (ShippingService::query()->has('rates')->active()->get() as $shippingService) {
             if ( $shippingService->isAvailableFor($order) ){
                 $shippingServices->push($shippingService);
-            }elseif($shippingService->getCalculator($order)->getErrors() != null){
+            }elseif($shippingService->getCalculator($order)->getErrors() != null && $shippingServices->isEmpty()){
                 session()->flash('alert-danger',"Shipping Service not Available Error:{$shippingService->getCalculator($order)->getErrors()}");
             }
         }
+        
         if($shippingServices->isEmpty()){
             $error = "Shipping Service not Available for the Country you have selected";
         }
 
+        if($shippingServices->contains('service_sub_class', '3440') || $shippingServices->contains('service_sub_class', '3441'))
+        {
+            if($order->user->usps != 1)
+            {
+                $error = "USPS is not enabled for this user";
+                $shippingServices = collect() ;
+            }
+        }
+        
         return view('admin.orders.order-details.index',compact('order','shippingServices', 'error'));
     }
 
