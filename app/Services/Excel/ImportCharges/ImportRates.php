@@ -31,8 +31,12 @@ class ImportRates extends AbstractImportService
     public function readRatesFromFile()
     {
         $rates = [];
-
-        foreach (range(3, 70) as $row) {
+        if($this->countryId == 46){
+            $limit = 110;
+        }else{
+            $limit = 70;
+        }
+        foreach (range(3, $limit) as $row) {
             $rates[] = [
                 'weight' => $this->workSheet->getCell('A'.$row)->getValue(),
                 'leve' => round($this->workSheet->getCell('C'.$row)->getValue(),2)
