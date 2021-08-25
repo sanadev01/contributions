@@ -54,6 +54,15 @@ class OrderItemsController extends Controller
             $error = "Shipping Service not Available for the Country you have selected";
         }
 
+        if($shippingServices->contains('service_sub_class', '3440') || $shippingServices->contains('service_sub_class', '3441'))
+        {
+            if($order->user->usps != 1)
+            {
+                $error = "USPS is not enabled for this user";
+                $shippingServices = collect() ;
+            }
+        }
+        
         return view('admin.orders.order-details.index',compact('order','shippingServices', 'error'));
     }
 
