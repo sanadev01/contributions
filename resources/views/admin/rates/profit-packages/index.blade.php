@@ -42,7 +42,7 @@
                                                 {{ $package->name }}
                                             </td>
                                             <td>
-                                                {{ $package->shipping_service_id ? $package->shippingService->name : '' }}
+                                                {{ optional($package->shippingService)->name }}
                                             </td>
                                             <td>
                                                 {{ $package->type }}
