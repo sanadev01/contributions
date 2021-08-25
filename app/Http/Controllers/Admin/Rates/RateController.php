@@ -2,34 +2,38 @@
 
 namespace App\Http\Controllers\Admin\Rates;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Http\Requests\Admin\Rate\CreateRequest;
-use App\Models\ShippingService;
-use App\Repositories\RateRepository;
 use App\Models\Rate;
+use Illuminate\Http\Request;
+use App\Models\ShippingService;
+use App\Http\Controllers\Controller;
+use App\Repositories\RateRepository;
+use App\Http\Requests\Admin\Rate\CreateRequest;
+use App\Services\Excel\Export\ShippingServiceRateExport;
 
 class RateController extends Controller
 {   
     public function __construct()
     {
-        $this->authorizeResource(Rate::class);
+        // $this->authorizeResource(Rate::class);
     } 
 
     public function index(RateRepository $repository)
     {
+        $this->authorizeResource(Rate::class);
         $shippingRates = $repository->get();
         return view('admin.rates.shipping-rates.index', compact('shippingRates'));
     }
 
     public function create()
     {   
+        $this->authorizeResource(Rate::class);
         $shipping_services = ShippingService::all();
         return view('admin.rates.shipping-rates.create', compact('shipping_services'));
     }
 
     public function store(CreateRequest $request, RateRepository $repository)
     {   
+        $this->authorizeResource(Rate::class);
         if ( $repository->store($request) ){
             return  redirect()->route('admin.rates.shipping-rates.index');
         }
@@ -39,9 +43,16 @@ class RateController extends Controller
         return back()->withInput();
     }
     
-    public function show($id, RateRepository $repository)
+    public function show(ShippingService $shipping_rate, RateRepository $repository)
     {   
-        return $id;
+        if(optional($shipping_rate->rates)[0]){
+            $rates = optional(optional($shipping_rate->rates)[0])->data;
+            $exportService = new ShippingServiceRateExport($rates);
+            return $exportService->handle();
+        }
+        $defaultRate = public_path('uploads/bps/hd-leve.xlsx');
+        return response()->download($defaultRate);
+
     }
 
 }
