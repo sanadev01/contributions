@@ -42,7 +42,8 @@
                                                 {{ $package->name }}
                                             </td>
                                             <td>
-                                                {{ $package->shipping_service_id ? optional($package->shippingService)->name : '' }}
+                                                {{ $package->shipping_service_id }}
+                                                {{ optional($package->shippingService)->name }}
                                             </td>
                                             <td>
                                                 {{ $package->type }}
