@@ -32,7 +32,7 @@ class ImportRates extends AbstractImportService
     {
         $rates = [];
         if($this->countryId == 46){
-            $limit = 110;
+            $limit = 74;
         }else{
             $limit = 70;
         }
