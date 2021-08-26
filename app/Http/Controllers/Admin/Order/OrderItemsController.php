@@ -44,7 +44,7 @@ class OrderItemsController extends Controller
             foreach (ShippingService::query()->has('rates')->active()->get() as $shippingService) {
                 if ( $shippingService->isAvailableFor($order) ){
                     $shippingServices->push($shippingService);
-                }elseif($shippingService->getCalculator($order)->getErrors() != null){
+                }elseif($shippingService->getCalculator($order)->getErrors() != null && $shippingServices->isEmpty()){
                     session()->flash('alert-danger',"Shipping Service not Available Error:{$shippingService->getCalculator($order)->getErrors()}");
                 }
             }

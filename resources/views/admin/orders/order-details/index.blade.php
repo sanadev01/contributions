@@ -56,7 +56,7 @@
                         <select class="form-control selectpicker show-tick" data-live-search="true" name="shipping_service_id" id="usps_shipping_service" required placeholder="Select Shipping Service">
                             <option value="">@lang('orders.order-details.Select Shipping Service')</option>
                             @foreach ($shippingServices as $shippingService)
-                                <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} >{{ "{$shippingService->name}"}}</option>
+                                <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-service-code="{{$shippingService->service_sub_class}}">{{ "{$shippingService->name}"}}</option>
                             @endforeach
                         </select>
                         @endif
@@ -137,7 +137,7 @@
     }
 
     function getUspsRates(){
-        const service = $('#usps_shipping_service option:selected').text();
+        const service = $('#usps_shipping_service option:selected').attr('data-service-code');
         var order_id = $('#order_id').val();
         
         $('#loading').fadeIn();

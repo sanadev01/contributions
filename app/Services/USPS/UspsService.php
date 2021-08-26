@@ -245,21 +245,26 @@ class UspsService
                 'country_code' => $order->sender_country->code,
             ],
             'to_address' => [
-                'first_name' => $order->recipient->first_name,
-                'last_name' => $order->recipient->last_name,
+                'company_name' => 'HERCO',
                 'line1' => $order->recipient->address.' '.$order->recipient->street_no,
                 'city' => $order->recipient->city,    //City validation required
                 'state_province' => $order->recipient->state->code,
                 'postal_code' => $order->recipient->zipcode,  //Zip validation required
-                'phone_number' => $order->recipient->phone,
+                'phone_number' => '+13058885191',
                 'country_code' => 'US', 
             ],
             'weight' => (float)$order->weight,
             'weight_unit' => 'kg',
+            'dimensions' => [
+                'width' => (float)$order->width,
+                'length' => (float)$order->length,
+                'height' => (float)$order->height,
+            ],
+            'dimensions_unit' => 'cm',
             'image_format' => 'pdf',
             'usps' => [
                 'shape' => 'Parcel',
-                'mail_class' => $service,
+                'mail_class' => ($service == 3440) ? 'Priority' : 'FirstClass',
                 'image_size' => '4x6',
             ],
         ];
