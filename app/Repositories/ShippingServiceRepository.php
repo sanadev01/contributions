@@ -78,7 +78,9 @@ class ShippingServiceRepository
     }
     
 
-    public function delete(ShippingService $shippingService){
+    public function delete(ShippingService $shippingService)
+    {
+        $shippingService->rates()->delete();
 
         $shippingService->delete();
         return true;
