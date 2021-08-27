@@ -5,6 +5,7 @@ namespace App\Repositories;
 
 
 use App\Models\Order;
+use App\Models\OrderTracking;
 use App\Facades\CorreosChileFacade;
 use App\Services\CorreosChile\CorreosChileLabelMaker;
 
@@ -51,7 +52,7 @@ class CorrieosChileLabelRepository
         $serviceType = 28;      //service code defined by correos chile
 
         $response = CorreosChileFacade::generateLabel($order, $serviceType);
-
+        
         if($response->success == true)
         {
             //storing response in orders table
@@ -59,6 +60,8 @@ class CorrieosChileLabelRepository
                 'api_response' => json_encode($response->data),
                 'corrios_tracking_code' => $response->data->NumeroEnvio,
             ]);
+
+            $this->addOrderTracking($order);
             
             $this->printLabel($order);
         } else {
@@ -81,6 +84,9 @@ class CorrieosChileLabelRepository
                 'api_response' => json_encode($response->data),
                 'corrios_tracking_code' => $response->data->NumeroEnvio,
             ]);
+
+            $this->addOrderTracking($order);
+            
             $this->printLabel($order);
         } else {
             
@@ -99,6 +105,21 @@ class CorrieosChileLabelRepository
         $labelPrinter = new CorreosChileLabelMaker();
         $labelPrinter->setOrder($order);
         $labelPrinter->saveLabel();
+
+        return true;
+    }
+
+    public function addOrderTracking($order)
+    {
+        if($order->status == Order::STATUS_PAYMENT_DONE)
+        {
+            OrderTracking::create([
+                'order_id' => $order->id,
+                'status_code' => $order->status,
+                'description' => 'Order Placed',
+                'country' => $order->recipient->country->name,
+            ]);
+        }    
 
         return true;
     }

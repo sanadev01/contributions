@@ -6,6 +6,7 @@ namespace App\Repositories;
 
 use App\Models\Order;
 use App\Facades\USPSFacade;
+use App\Models\OrderTracking;
 use App\Services\USPS\USPSLabelMaker;
 
 
@@ -43,7 +44,9 @@ class USPSLabelRepository
                 'api_response' => json_encode($response->data),
                 'corrios_tracking_code' => $response->data['usps']['tracking_numbers'][0],
             ]);
-             
+            // store order status in order tracking
+            $this->addOrderTracking($order);
+
             $this->printLabel($order);
 
         } else {
@@ -66,6 +69,21 @@ class USPSLabelRepository
     public function getUSPSErrors()
     {
         return $this->usps_errors;
+    }
+
+    public function addOrderTracking($order)
+    {
+        if($order->status == Order::STATUS_PAYMENT_DONE)
+        {
+            OrderTracking::create([
+                'order_id' => $order->id,
+                'status_code' => $order->status,
+                'description' => 'Order Placed',
+                'country' => $order->recipient->country->name,
+            ]);
+        }    
+
+        return true;
     }
  
 

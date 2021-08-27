@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Label;
 use App\Models\Order;
 use Livewire\Component;
 use Illuminate\Http\Request;
+use App\Models\OrderTracking;
 use App\Repositories\LabelRepository;
 use Illuminate\Support\Facades\Storage;
 
@@ -45,6 +46,7 @@ class ScanLabel extends Component
 
     public function removeRow($index)
     {
+        $this->removeOrderTracking($this->packagesRows[$index]['tracking_code']);
         unset($this->packagesRows[$index]);
     }
     
@@ -103,8 +105,10 @@ class ScanLabel extends Component
                     'reference' => $this->order->id,
                     'recpient' => $this->order->recipient->first_name,
                 ]);
-                    
+                
                 array_push($this->newOrder,$this->order);
+
+                $this->addOrderTracking($this->order);
             }
         }
             
@@ -138,5 +142,30 @@ class ScanLabel extends Component
         }
         return redirect()->route('order.label.download',[$order,'time'=>md5(microtime())]);
       
+    }
+
+    public function addOrderTracking($order)
+    {
+        OrderTracking::create([
+            'order_id' => $order->id,
+            'status_code' => Order::STATUS_ARRIVE_AT_WAREHOUSE,
+            'description' => 'Freight arrived at Homedelivery',
+            'country' => 'United States',
+            'city' => 'Miami'
+        ]);
+
+        return true;
+    }
+
+    public function removeOrderTracking($tracking_code)
+    {
+        $order = Order::where('corrios_tracking_code', $tracking_code)->first();
+
+        $order_tracking = OrderTracking::where('order_id', $order->id)->latest()->first();
+
+        $order_tracking->delete();
+
+        return true;
+
     }
 }

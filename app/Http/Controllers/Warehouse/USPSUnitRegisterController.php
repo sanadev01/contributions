@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Warehouse;
 
+use App\Models\Order;
 use App\Facades\USPSFacade;
 use Illuminate\Http\Request;
+use App\Models\OrderTracking;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
 
@@ -30,6 +32,7 @@ class USPSUnitRegisterController extends Controller
                     'response' => true,
                 ]);
 
+                $this->addOrderTracking($container);
                 session()->flash('alert-success','Package Registration success. You can print Label now');
                 return back();
             }
@@ -41,4 +44,23 @@ class USPSUnitRegisterController extends Controller
         session()->flash('alert-danger', 'Container does not have any packages/orders');
         return back();
     }
+
+    public function addOrderTracking($container)
+    {
+        $orders = $container->orders;
+
+        foreach ($orders as $order)
+        {
+            OrderTracking::create([
+                'order_id' => $order->id,
+                'status_code' => Order::STATUS_SHIPPED,
+                'description' => 'Homedelivery sent parcel to airport with CN35',
+                'country' => 'United States',
+                'city' => 'Miami'
+            ]);
+        }
+
+        return true;
+    }
+
 }

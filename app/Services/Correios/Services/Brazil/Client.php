@@ -2,22 +2,24 @@
 
 namespace App\Services\Correios\Services\Brazil;
 
+use Carbon\Carbon;
+use App\Models\Order;
+use App\Models\OrderTracking;
+use Illuminate\Support\Facades\Cache;
 use App\Models\Warehouse\DeliveryBill;
+use GuzzleHttp\Client as GuzzleClient;
 use App\Services\Converters\UnitsConverter;
+use App\Services\Correios\Contracts\Package;
+use App\Services\Correios\Contracts\Container;
+use App\Services\Correios\Models\PackageError;
+use App\Services\Correios\Contracts\PacketItem;
 use App\Services\Correios\Contracts\CN23Response;
 use App\Services\Correios\Contracts\CN35Response;
 use App\Services\Correios\Contracts\CN38Response;
-use App\Services\Correios\Contracts\Container;
-use App\Services\Correios\Contracts\ContainerResponse;
-use App\Services\Correios\Contracts\Package;
-use App\Services\Correios\Contracts\Package as PackageAlias;
 use App\Services\Correios\Contracts\PackageResponse;
-use App\Services\Correios\Contracts\PacketItem;
 use App\Services\Correios\Contracts\SendHttpRequests;
-use App\Services\Correios\Models\PackageError;
-use Carbon\Carbon;
-use GuzzleHttp\Client as GuzzleClient;
-use Illuminate\Support\Facades\Cache;
+use App\Services\Correios\Contracts\ContainerResponse;
+use App\Services\Correios\Contracts\Package as PackageAlias;
 
 class Client{
 
@@ -130,8 +132,11 @@ class Client{
                         "tracking_code" => $trackingNumber,
                         "stamp_url" => route('warehouse.cn23.download',$order->id),
                         'leve' => false
-                    ]
+                    ],
                 ]);
+
+                // store order status in order tracking
+                $this->addOrderTracking($order);
             }
             return null;
         }catch (\GuzzleHttp\Exception\ClientException $e) {
@@ -220,6 +225,21 @@ class Client{
         catch (\Exception $exception){
             return new PackageError($exception->getMessage());
         }
+    }
+
+    public function addOrderTracking($order)
+    {
+        if($order->status == Order::STATUS_PAYMENT_DONE)
+        {
+            OrderTracking::create([
+                'order_id' => $order->id,
+                'status_code' => $order->status,
+                'description' => 'Order Placed',
+                'country' => $order->recipient->country->name,
+            ]);
+        }    
+
+        return true;
     }
 
 }
