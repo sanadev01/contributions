@@ -426,7 +426,7 @@
                 $('#cpf').css('display', 'none')
             }else{
                 $('#div_street_number').css('display', 'block')
-                $('#cpf').css('display', 'none')
+                $('#cpf').css('display', 'block')
             }
         });
 
