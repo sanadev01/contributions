@@ -76,7 +76,6 @@ class TableComponent extends Component
             'attachment' => $this->attachment,
             'description' => $this->description,
             'balance' => $this->balance,
-            // 'date' => $this->date,
         ]);
     }
 
