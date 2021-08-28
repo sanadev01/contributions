@@ -26,6 +26,8 @@ class TableComponent extends Component
     public $attachment;
     public $sortBy = 'id';
     public $sortAsc = false;
+    public $description;
+    public $balance;
     
     public function mount()
     {
@@ -72,6 +74,9 @@ class TableComponent extends Component
             'sortBy' => $this->sortBy,
             'sortOrder' => $this->sortAsc ? 'Asc' : 'DESC',
             'attachment' => $this->attachment,
+            'description' => $this->description,
+            'balance' => $this->balance,
+            // 'date' => $this->date,
         ]);
     }
 
