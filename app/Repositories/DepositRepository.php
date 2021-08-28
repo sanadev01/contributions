@@ -73,6 +73,14 @@ class DepositRepository
             $query->where('last_four_digits','LIKE',"%{$request->last_four_digits}%");
         }
 
+        if ( $request->description ){
+            $query->where('description','LIKE',"%{$request->description}%");
+        }
+
+        if ( $request->balance ){
+            $query->where('balance','LIKE',"%{$request->balance}%");
+        }
+
         $query->orderBy($orderBy,$orderType);
         $query->latest('id');
 
