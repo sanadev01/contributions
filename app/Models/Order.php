@@ -307,7 +307,15 @@ class Order extends Model implements Package
     {
         $shippingService = $this->shippingService;
 
-        $shippingCost = $shippingService->getRateFor($this,true,$onVolumetricWeight);
+        if($this->recipient->country_id == 250)
+        {
+            $shippingCost = $this->user_declared_freight;
+
+        } else {
+            $shippingCost = $shippingService->getRateFor($this,true,$onVolumetricWeight);
+        }
+
+        
         $additionalServicesCost = $this->services()->sum('price');
 
         $battriesExtra = $shippingService->contains_battery_charges * ( $this->items()->batteries()->count() );
