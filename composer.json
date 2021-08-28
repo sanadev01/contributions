@@ -15,6 +15,7 @@
         "fideloper/proxy": "^4.2",
         "flyingluscas/correios-php": "^2.4",
         "fruitcake/laravel-cors": "^2.0",
+        "geekcom/validator-docs": "^3.5",
         "giggsey/libphonenumber-for-php": "^8.12",
         "guzzlehttp/guzzle": "^6.3",
         "laravel/framework": "^7.24",
