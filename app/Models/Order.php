@@ -290,6 +290,36 @@ class Order extends Model implements Package
         return $this->cn23 ? true: false;
     }
 
+    /**
+     * Sinerlog modification
+     * This function sets sinerlog tran id
+     */
+    public function setSinerlogTrxId($trxId){
+        $this->update([
+            'sinerlog_tran_id' => $trxId
+        ]);
+    }
+
+    /**
+     * Sinerlog modification
+     * This function sets sinerlog freight price
+     */
+    public function setSinerlogFreight($freight){
+        $this->update([
+            'sinerlog_freight' => $freight
+        ]);
+    }
+
+    /**
+     * Sinerlog modification
+     * This function sets sinerlog url label
+     */
+    public function setSinerlogLabelURL($url){
+        $this->update([
+            'sinerlog_url_label' => $url
+        ]);
+    }    
+
     public function getTempWhrNumber()
     {
         return "HD-{$this->id}";

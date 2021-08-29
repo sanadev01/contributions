@@ -12,6 +12,10 @@ use Illuminate\Support\Facades\Storage;
 use App\Repositories\USPSLabelRepository;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
+/**
+ * Use for Sinerlog integration
+ */
+use App\Repositories\SinerlogLabelRepository;
 
 class OrderLabelController extends Controller
 {
@@ -25,10 +29,22 @@ class OrderLabelController extends Controller
     {
         $this->authorize('canPrintLable',$order);
 
-        
-        // if($order->shippingService->api == ShippingService::API_CORREIOS){
+        $labelSinerlogRep = new SinerlogLabelRepository(); 
+
+        /**
+         * Sinerlog modification
+         * Checks if shipping service ia a Sinerlog service
+         */
+        if(
+            $order->recipient->country_id == 30 
+            && 
+            ($order->shipping_service_id == 6 || $order->shipping_service_id == 7 || $order->shipping_service_id == 8)
+        ){
+            return $this->handleSinerlogLabels($request,$order);
+        }
+        else {
             return $this->handleCorreiosLabels($request,$order);
-        // }
+        }         
 
         $labelData = null;
         $error = null;
@@ -108,6 +124,32 @@ class OrderLabelController extends Controller
         return $this->renderLabel($request, $order, $error);
     }
     
+
+    /**
+     * Sinerlog modification
+     * Function to handle Sinerlog label
+     */
+    public function handleSinerlogLabels(Request $request, Order $order)
+    {
+        $error = null;
+        /**
+         * Variable to handle Sinerlog label creation
+         */
+        $labelSinerlogRep = new SinerlogLabelRepository();       
+
+        if (!$order->hasCN23()){          
+            $renderLabel = $labelSinerlogRep->update($order);
+        } else{
+            $renderLabel = $labelSinerlogRep->get($order);
+        }
+
+        $order->refresh();
+
+        $error = $labelSinerlogRep->getError();
+        
+        return $this->renderSinerlogLabel($request, $order, $error, $renderLabel);
+    }
+
     public function renderLabel($request, $order, $error)
     {
 
@@ -115,4 +157,15 @@ class OrderLabelController extends Controller
 
         return view('admin.orders.label.label',compact('order','error' ,'buttonsOnly'));
     }
+
+    /**
+     * Sinerlog modification
+     * Function to render Sinerlog label
+     */
+    public function renderSinerlogLabel($request, $order, $error, $renderLabel)
+    {
+        $buttonsOnly = $request->has('buttons_only');
+
+        return view('admin.orders.label.label',compact('order','error', 'renderLabel' ,'buttonsOnly'));
+    }    
 }
