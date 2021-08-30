@@ -2,17 +2,18 @@
 
 namespace App\Models;
 
-use App\Services\Correios\Contracts\Package;
+use App\Models\OrderTracking;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 use App\Models\Warehouse\Container;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use App\Services\Converters\UnitsConverter;
 use Spatie\Activitylog\Traits\LogsActivity;
+use App\Services\Correios\Contracts\Package;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Services\Calculators\WeightCalculator;
 use App\Services\Correios\Models\Package as ModelsPackage;
-use Illuminate\Support\Facades\DB;
 
 class Order extends Model implements Package
 {
@@ -45,7 +46,14 @@ class Order extends Model implements Package
 
     const STATUS_PAYMENT_PENDING = 60;
     const STATUS_PAYMENT_DONE = 70;
+    const STATUS_ARRIVE_AT_WAREHOUSE = 73;
+    const STATUS_INSIDE_CONTAINER = 75;
     const STATUS_SHIPPED = 80;
+
+    const BRAZIL = 30;
+    const CHILE = 46;
+    const USPS = 250;
+
     public function scopeParcelReady(Builder $query)
     {
         return $query->where(function($query){
@@ -299,7 +307,15 @@ class Order extends Model implements Package
     {
         $shippingService = $this->shippingService;
 
-        $shippingCost = $shippingService->getRateFor($this,true,$onVolumetricWeight);
+        if($this->recipient->country_id == 250)
+        {
+            $shippingCost = $this->user_declared_freight;
+
+        } else {
+            $shippingCost = $shippingService->getRateFor($this,true,$onVolumetricWeight);
+        }
+
+        
         $additionalServicesCost = $this->services()->sum('price');
 
         $battriesExtra = $shippingService->contains_battery_charges * ( $this->items()->batteries()->count() );
@@ -420,5 +436,10 @@ class Order extends Model implements Package
     public function sender_country()
     {
         return $this->belongsTo(Country::class, 'sender_country_id');
+    }
+
+    public function trackings()
+    {
+        return $this->hasMany(OrderTracking::class, 'order_id');
     }
 }

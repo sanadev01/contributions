@@ -62,7 +62,7 @@ class OrderLabelController extends Controller
 
         $usps_labelRepository = new USPSLabelRepository();
         
-        if($order->recipient->country_id == 46 && $request->update_label === 'false')
+        if($order->recipient->country_id == Order::CHILE && $request->update_label === 'false')
         {
             $chile_labelRepository->handle($order, $request);
 
@@ -70,7 +70,7 @@ class OrderLabelController extends Controller
             return $this->renderLabel($request, $order, $error);
         }
 
-        if($order->recipient->country_id == 250 && $request->update_label === 'false')
+        if($order->recipient->country_id == Order::USPS && $request->update_label === 'false')
         {
             $usps_labelRepository->handle($order);
 
@@ -80,7 +80,7 @@ class OrderLabelController extends Controller
         
         if ( $request->update_label === 'true' ){
             
-            if($order->recipient->country_id == 46)
+            if($order->recipient->country_id == Order::CHILE)
             {
                 $chile_labelRepository->update($order, $request);
 
@@ -88,7 +88,7 @@ class OrderLabelController extends Controller
                 return $this->renderLabel($request, $order, $error);
             }
             
-            if($order->recipient->country_id == 250)
+            if($order->recipient->country_id == Order::USPS)
             {
                 $usps_labelRepository->update($order);
 

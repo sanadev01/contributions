@@ -28,6 +28,7 @@ Route::get('/', function (Shopify $shopifyClient) {
     return redirect('login');
 });
 
+Route::resource('usps-calculator', USPSCalculatorController::class)->only(['index', 'store']);
 Route::resource('calculator', CalculatorController::class)->only(['index', 'store']);
 Route::resource('tracking', TrackingController::class)->only(['index', 'show']);
 Route::get('/home', function () {
