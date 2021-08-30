@@ -21,7 +21,7 @@ class UspsService
         $this->create_manifest_url = $create_manifest_url;
         $this->email = $email;
         $this->password = $password;
-        $this->get_price_url = $get_price_url;
+        $this->get_price_url = 'https://api-sandbox.myibservices.com/v1/price.json';
     }
 
     public function generateLabel($order)

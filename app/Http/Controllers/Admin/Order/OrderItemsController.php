@@ -30,7 +30,7 @@ class OrderItemsController extends Controller
         $shippingServices = collect() ;
         $error = null;
 
-        if($order->recipient->country_id == Order::BRAZIL)
+        if($order->recipient->country_id == Order::USPS)
         {
             $usps_shippingService = new USPSShippingService($order);
 
