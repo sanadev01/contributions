@@ -14,7 +14,7 @@ class AddSinerlogFieldsOrdersTable extends Migration
     public function up()
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->string('sinerlog_tran_id',191)->nullable()->after('chile_response');
+            $table->string('sinerlog_tran_id',191)->nullable()->after('api_response');
             $table->double('sinerlog_freight')->nullable()->after('sinerlog_tran_id');
             $table->string('sinerlog_url_label',500)->nullable()->after('sinerlog_freight');
         });
