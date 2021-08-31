@@ -65,6 +65,7 @@ class DeliveryBillRepository extends AbstractRepository
             foreach($deliveryBill->containers()->get() as $containers){
                 $containers->orders()->update([
                     'status' =>  80,
+                    'api_tracking_status' => 'HD-Shipped',
                 ]);
             }
 

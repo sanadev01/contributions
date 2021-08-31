@@ -49,6 +49,7 @@ class Order extends Model implements Package
     const STATUS_ARRIVE_AT_WAREHOUSE = 73;
     const STATUS_INSIDE_CONTAINER = 75;
     const STATUS_SHIPPED = 80;
+    const STATUS_BRAZIL_POSTED = 01;
 
     const BRAZIL = 30;
     const CHILE = 46;
