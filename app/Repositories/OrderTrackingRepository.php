@@ -32,13 +32,13 @@ class OrderTrackingRepository
         {
             return (Object)[
                 'success' => true,
-                'trackings' => $order->trackings->toArray(),
+                'trackings' => $order->trackings,
             ];
         }
 
         return (Object)[
             'success' => false,
-            'trackings' => $order->trackings->toArray(),
+            'trackings' => null,
         ];
     }
 

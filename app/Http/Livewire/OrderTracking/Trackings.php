@@ -25,7 +25,11 @@ class Trackings extends Component
         {
             $order_tracking_repository = new OrderTrackingRepository($this->trackingNumber);
             $response = $order_tracking_repository->handle();
-            $this->tracking = last($response->trackings);
+            if( $response->success == true )
+            {
+                $this->tracking = $response->trackings->last();
+            }
+
         }
 
     }
