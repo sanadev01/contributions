@@ -24,8 +24,8 @@ class Trackings extends Component
         if ( $this->trackingNumber != null && $this->trackingNumber != '' &&  strlen($this->trackingNumber) >= 12 )
         {
             $order_tracking_repository = new OrderTrackingRepository($this->trackingNumber);
-            $tracking = $order_tracking_repository->handle();
-            $this->tracking = $tracking;
+            $response = $order_tracking_repository->handle();
+            $this->tracking = last($response->trackings);
         }
 
     }
