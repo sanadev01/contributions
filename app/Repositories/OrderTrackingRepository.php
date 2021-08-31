@@ -30,46 +30,11 @@ class OrderTrackingRepository
         
         if( $order != null )
         {
-            $this->order = $order;
-
             return (Object)[
                 'success' => true,
-                'homedelivery_trackings' => $order->trackings->toArray(),
-                'api_tracking' => $this->api_trackings(),
+                'trackings' => $order->trackings->toArray(),
             ];
         }
     }
 
-    public function api_trackings()
-    {
-        if($this->order->recipient->country_id == Order::BRAZIL)
-        {
-            $response = CorreiosBrazilTrackingFacade::trackOrder($this->trackingNumber);
-
-            if($response->success == true)
-            {
-                return $response->data;
-            }
-        }
-        
-        if($this->order->recipient->country_id == Order::CHILE)
-        {
-            $response = CorreiosChileTrackingFacade::trackOrder($this->trackingNumber);
-
-            if($response->success == true)
-            {
-                return $response->data;
-            }
-        }
-
-        if($this->order->recipient->country_id == Order::USPS)
-        {
-            $response = USPSTrackingFacade::trackOrder($this->trackingNumber);
-
-            if($response->success == true)
-            {
-                return $response->data;
-            }
-        }
-    }
 }
