@@ -10,7 +10,7 @@
         <div class="row">
             <div class="form-group col-12 row">
                 <label class="col-2 text-right"  style="font-size: 30px;" > Tracking Code</label>
-                <input type="text" placeholder="Enter Tracking Number or order ID" class="form-control col-8 w-100 text-center border border-primary" style="height: 50px; font-size: 30px;" wire:model.debounce.500ms="tracking">
+                <input type="text" placeholder="Enter Tracking Number or order ID" class="form-control col-8 w-100 text-center border border-primary" style="height: 50px; font-size: 30px;" wire:model.debounce.1000ms="tracking">
                 {{-- <span class="text-danger offset-2"> @lang('orders.print-label.Scan Package Message') {{ count($packagesRows)}} / 50</span> --}}
             </div>
             

@@ -35,6 +35,11 @@ class OrderTrackingRepository
                 'trackings' => $order->trackings->toArray(),
             ];
         }
+
+        return (Object)[
+            'success' => false,
+            'trackings' => $order->trackings->toArray(),
+        ];
     }
 
 }

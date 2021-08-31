@@ -10,10 +10,13 @@ use App\Repositories\OrderTrackingRepository;
 class Trackings extends Component
 {
     public $trackingNumber = '';
+    public $tracking;
 
     public function render()
-    {
-        return view('livewire.order-tracking.trackings');
+    {   
+        return view('livewire.order-tracking.trackings',[
+            'tracking' => $this->tracking,
+        ]);
     }
 
     public function trackOrder()
@@ -21,8 +24,8 @@ class Trackings extends Component
         if ( $this->trackingNumber != null && $this->trackingNumber != '' &&  strlen($this->trackingNumber) >= 12 )
         {
             $order_tracking_repository = new OrderTrackingRepository($this->trackingNumber);
-            $trackings = $order_tracking_repository->handle();
-            dd( $trackings );
+            $tracking = $order_tracking_repository->handle();
+            $this->tracking = $tracking;
         }
 
     }
