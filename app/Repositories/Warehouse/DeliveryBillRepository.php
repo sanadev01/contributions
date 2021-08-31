@@ -4,12 +4,14 @@
 namespace App\Repositories\Warehouse;
 
 
+use Carbon\Carbon;
+use App\Models\Order;
+use Illuminate\Http\Request;
+use App\Models\OrderTracking;
 use App\Models\Warehouse\Container;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Warehouse\DeliveryBill;
 use App\Repositories\AbstractRepository;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class DeliveryBillRepository extends AbstractRepository
 {
@@ -67,6 +69,11 @@ class DeliveryBillRepository extends AbstractRepository
                     'status' =>  80,
                     'api_tracking_status' => 'HD-Shipped',
                 ]);
+
+                foreach($containers->orders as $order)
+                { 
+                    $this->addOrderTracking($order->id);
+                }
             }
 
             return $deliveryBill;
@@ -126,5 +133,19 @@ class DeliveryBillRepository extends AbstractRepository
             $this->error = $exception->getMessage();
             return null;
         }
+    }
+
+    public function addOrderTracking($order_id)
+    {
+        OrderTracking::create([
+            'order_id' => $order_id,
+            'status_code' => Order::STATUS_SHIPPED,
+            'type' => 'HD',
+            'description' => 'Homedelivery sent parcel to airport with CN35',
+            'country' => 'United States',
+            'city' => 'Miami'
+        ]);
+
+        return true;
     }
 }
