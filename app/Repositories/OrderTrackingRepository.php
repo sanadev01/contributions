@@ -28,16 +28,25 @@ class OrderTrackingRepository
     {
         $order = Order::where('corrios_tracking_code', $this->trackingNumber)->first();
         
-        if( $order != null )
-        {
+        if($order){
+            if(!$order->trackings->isEmpty()){
+                return (Object)[
+                    'success' => true,
+                    'status' => 200,
+                    'trackings' => $order->trackings,
+                ];
+            }
             return (Object)[
-                'success' => true,
-                'trackings' => $order->trackings,
+                'success' => false,
+                'status' => 201,
+                'trackings' => null,
             ];
+
         }
 
         return (Object)[
             'success' => false,
+            'status' => 404,
             'trackings' => null,
         ];
     }

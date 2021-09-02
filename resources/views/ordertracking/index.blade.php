@@ -9,8 +9,8 @@
 
 .top {
     padding-top: 40px;
-    padding-left: 8% !important;
-    padding-right: 7% !important
+    padding-left: 10% !important;
+    padding-right: 6% !important
 }
 
 #progressbar {
@@ -24,7 +24,7 @@
 #progressbar li {
     list-style-type: none;
     font-size: 13px;
-    width: 16%;
+    width: 20%;
     float: left;
     position: relative;
     font-weight: 400
@@ -68,8 +68,7 @@
 
 #progressbar li:nth-child(2):after,
 #progressbar li:nth-child(3):after,
-#progressbar li:nth-child(4):after,
-#progressbar li:nth-child(5):after {
+#progressbar li:nth-child(4):after {
     left: -50%
 }
 
@@ -136,4 +135,9 @@
             </div>
         </div>
     </div>
+@endsection
+@section('js')
+<script>
+    
+</script>
 @endsection
