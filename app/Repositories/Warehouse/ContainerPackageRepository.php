@@ -88,6 +88,7 @@ class ContainerPackageRepository extends AbstractRepository{
         OrderTracking::create([
             'order_id' => $id,
             'status_code' => Order::STATUS_INSIDE_CONTAINER,
+            'type' => 'HD',
             'description' => 'Parcel inside Homedelivery Container',
             'country' => 'United States',
             'city' => 'Miami'

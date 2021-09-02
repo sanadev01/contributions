@@ -52,6 +52,7 @@ class BrazilTrackingRepository
         OrderTracking::create([
             'order_id' => $order_id,
             'status_code' => $correios_brazil_response->status,
+            'type' => $correios_brazil_response->tipo,
             'description' => $correios_brazil_response->descricao,
             'country' => 'Brazil',
             'created_at' => strtotime($date_time),
