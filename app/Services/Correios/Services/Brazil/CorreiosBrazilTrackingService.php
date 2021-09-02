@@ -2,8 +2,9 @@
 
 namespace App\Services\Correios\Services\Brazil;
 
-use SoapClient;
 use Exception;
+use SoapClient;
+use Illuminate\Support\Facades\Log;
 
 class CorreiosBrazilTrackingService{
 
@@ -46,6 +47,7 @@ class CorreiosBrazilTrackingService{
             
         }
         catch (Exception $e) {
+            Log::info($e->getMessage());
             return (Object)[
                 'success' => false,
                 'error' => $e->getMessage(),

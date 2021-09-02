@@ -126,7 +126,7 @@ class Client{
             $trackingNumber = $data->packageResponseList[0]->trackingNumber;
 
             if ( $trackingNumber ){
-                return $order->update([
+                $order->update([
                     'corrios_tracking_code' => $trackingNumber,
                     'cn23' => [
                         "tracking_code" => $trackingNumber,
@@ -136,7 +136,7 @@ class Client{
                 ]);
 
                 // store order status in order tracking
-                $this->addOrderTracking($order);
+                return $this->addOrderTracking($order);
             }
             return null;
         }catch (\GuzzleHttp\Exception\ClientException $e) {
