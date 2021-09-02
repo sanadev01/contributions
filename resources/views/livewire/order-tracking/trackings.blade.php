@@ -54,8 +54,8 @@
                                         <li class="@if($tracking->status_code >=  70) active @endif step0"></li>
                                         <li class="@if($tracking->status_code >=  73) active @endif step0"></li>
                                         {{-- <li class="@if($tracking->status_code >=  75) active @endif step0"></li> --}}
+                                        <li class="@if($tracking->status_code >=  75) active @endif step0"></li>
                                         <li class="@if($tracking->status_code >=  80) active @endif step0"></li>
-                                        <li class="step0"></li>
                                         <li class="step0"></li>
                                     @else
                                         <li class="active step0"></li>

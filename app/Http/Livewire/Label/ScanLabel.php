@@ -149,6 +149,7 @@ class ScanLabel extends Component
         OrderTracking::create([
             'order_id' => $order->id,
             'status_code' => Order::STATUS_ARRIVE_AT_WAREHOUSE,
+            'type' => 'HD',
             'description' => 'Freight arrived at Homedelivery',
             'country' => 'United States',
             'city' => 'Miami'
