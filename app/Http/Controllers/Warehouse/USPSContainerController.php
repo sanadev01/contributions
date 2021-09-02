@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Warehouse;
 use Illuminate\Http\Request;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
+use App\Services\USPS\ExportExcelUSPSManifestService;
 use App\Repositories\Warehouse\USPSContainerRepository;
 use App\Http\Requests\Warehouse\UspsContainer\CreateContainerRequest;
 use App\Http\Requests\Warehouse\UspsContainer\UpdateContainerRequest;
@@ -119,5 +120,11 @@ class USPSContainerController extends Controller
 
         session()->flash('alert-danger', $usps_containerRepository->getError());
         return back()->withInput();        
+    }
+
+    public function download_exceltManifest(Container $container)
+    {
+        $exportChileManifestService = new ExportExcelUSPSManifestService($container);
+        return $exportChileManifestService->handle();
     }
 }

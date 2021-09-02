@@ -16,6 +16,7 @@ use App\Services\Calculators\WeightCalculator;
 
 class USPSCalculatorController extends Controller
 {
+    public $error;
     /**
      * Display a listing of the resource.
      *
@@ -119,11 +120,13 @@ class USPSCalculatorController extends Controller
             if($response->success == true)
             {
                 array_push($shipping_rates , ['name'=> $shippingService->name , 'rate'=> $response->data['total_amount']]);
+            }else {
+                $this->error = $response->message;
             }
         }
 
         if($shipping_rates == null){
-            session()->flash('alert-danger','Shipping Service not Available for the Origin Country you have selected');
+            session()->flash('alert-danger', $this->error);
         }
 
         if ($request->unit == 'kg/cm' ){

@@ -54,7 +54,7 @@
                                     <label>Destination Country</label>
                                     <select id="destination_country"  name="destination_country" class="form-control selectpicker show-tick" data-live-search="true" required>
                                         <option value="">Select @lang('address.Country')</option>
-                                        <option  {{ old('destination_country') == 250 ? 'selected' : ''}} value="250">United States</option>
+                                        <option value="250" selected>United States</option>
                                     </select>
                                 </div>
                             </div>

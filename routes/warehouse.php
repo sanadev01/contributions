@@ -58,6 +58,7 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::resource('usps_container.packages', USPSContainerPackageController::class)->only('index','destroy', 'create');
     Route::get('usps_container/{container}/register', USPSUnitRegisterController::class)->name('usps_container.register');
     Route::get('usps_container/{container}/download', USPSCN35DownloadController::class)->name('usps_container.download');
+    Route::get('usps_container/{container}/download_excel_manifest', [USPSContainerController::class, 'download_exceltManifest'])->name('download.usps_manifest_excel');
 });
 
 

@@ -131,6 +131,9 @@
                                                             <a href="{{ route('warehouse.usps_container.download',$container) }}" class="dropdown-item w-100">
                                                                 <i class="feather icon-box"></i> Get CN35
                                                             </a>
+                                                            <a href="{{ route('warehouse.download.usps_manifest_excel',$container) }}" class="dropdown-item w-100">
+                                                                <i class="fa fa-cloud-download"></i> Download Manifest
+                                                            </a>
                                                         @endif
                                                     </div>
                                                 </div>

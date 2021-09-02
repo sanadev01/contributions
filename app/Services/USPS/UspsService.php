@@ -4,6 +4,7 @@ namespace App\Services\USPS;
 use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use App\Services\Calculators\WeightCalculator;
 
 class UspsService
 {
@@ -13,6 +14,7 @@ class UspsService
     protected $email;
     protected $password;
     protected $get_price_url;
+    protected $chargableWeight;
 
     public function __construct($api_url, $delete_usps_label_url, $create_manifest_url, $get_price_url, $email, $password)
     {
@@ -35,6 +37,8 @@ class UspsService
     
     public function make_request_attributes($order)
     {
+        $this->calculateVolumetricWeight($order);
+
         $request_body = [
             'request_id' => 'HD-'.$order->id,
             'from_address' => [
@@ -58,14 +62,8 @@ class UspsService
                 'phone_number' => $order->recipient->phone,
                 'country_code' => 'US', 
             ],
-            'weight' => (float)$order->weight,
-            'weight_unit' => 'kg',
-            'dimensions' => [
-                'width' => (float)$order->width,
-                'length' => (float)$order->length,
-                'height' => (float)$order->height,
-            ],
-            'dimensions_unit' => 'cm',
+            'weight' => (float)$this->chargableWeight,
+            'weight_unit' => ($order->measurement_unit == 'kg/cm') ? 'kg' : 'lb',
             'value' => (float)$order->order_value,
             'image_format' => 'pdf',
             'image_resolution' => 300,
@@ -195,7 +193,7 @@ class UspsService
     public function getPrice($order, $service)
     {
        $data = $this->make_rates_request_attributes($order, $service);
-
+       
        try {
 
         $response = Http::acceptJson()->withBasicAuth($this->email, $this->password)->post($this->get_price_url, $data);
@@ -232,6 +230,8 @@ class UspsService
 
     public function make_rates_request_attributes($order, $service)
     {
+        $this->calculateVolumetricWeight($order);
+
         $request_body = [
             'from_address' => [
                 'company_name' => 'HERCO',
@@ -253,14 +253,8 @@ class UspsService
                 'phone_number' => '+13058885191',
                 'country_code' => 'US', 
             ],
-            'weight' => (float)$order->weight,
-            'weight_unit' => 'kg',
-            'dimensions' => [
-                'width' => (float)$order->width,
-                'length' => (float)$order->length,
-                'height' => (float)$order->height,
-            ],
-            'dimensions_unit' => 'cm',
+            'weight' => (float)$this->chargableWeight,
+            'weight_unit' => ($order->measurement_unit == 'kg/cm') ? 'kg' : 'lb',
             'image_format' => 'pdf',
             'usps' => [
                 'shape' => 'Parcel',
@@ -270,5 +264,19 @@ class UspsService
         ];
 
         return $request_body;
+    }
+
+    public function calculateVolumetricWeight($order)
+    {
+        if ( $order->measurement_unit == 'kg/cm' ){
+
+            $volumetricWeight = WeightCalculator::getVolumnWeight($order->length,$order->width,$order->height,'cm');
+           return $this->chargableWeight = round($volumetricWeight >  $order->weight ? $volumetricWeight :  $order->weight,2);
+
+        }else{
+
+            $volumetricWeight = WeightCalculator::getVolumnWeight($order->length,$order->width,$order->height,'in');
+           return $this->chargableWeight = round($volumetricWeight >  $order->weight ? $volumetricWeight :  $order->weight,2);
+        }
     }
 }
