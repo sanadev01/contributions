@@ -46,8 +46,8 @@ class BrazilTrackingRepository
 
     public function addOrderTracking($order_id, $correios_brazil_response)
     {
-        $date_time = $correios_brazil_response->data. ' ' . $correios_brazil_response->hora;
-        $date_time = str_ireplace('/', '-', $date_time);
+        // $date_time = $correios_brazil_response->data. ' ' . $correios_brazil_response->hora;
+        // $date_time = str_ireplace('/', '-', $date_time);
 
         OrderTracking::create([
             'order_id' => $order_id,
@@ -55,7 +55,7 @@ class BrazilTrackingRepository
             'type' => $correios_brazil_response->tipo,
             'description' => $correios_brazil_response->descricao,
             'country' => 'Brazil',
-            'created_at' => strtotime($date_time),
+            // 'created_at' => strtotime($date_time),
         ]);
 
         return true;
