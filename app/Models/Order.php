@@ -55,6 +55,8 @@ class Order extends Model implements Package
     const CHILE = 46;
     const USPS = 250;
 
+    public $user_profit = 0;
+
     public function scopeParcelReady(Builder $query)
     {
         return $query->where(function($query){
@@ -311,6 +313,7 @@ class Order extends Model implements Package
         if($this->recipient->country_id == 250)
         {
             $shippingCost = $this->user_declared_freight;
+            $this->calculateProfit($shippingCost);
 
         } else {
             $shippingCost = $shippingService->getRateFor($this,true,$onVolumetricWeight);
@@ -328,7 +331,7 @@ class Order extends Model implements Package
 
 
 
-        $total = $shippingCost + $additionalServicesCost + $this->insurance_value + $dangrousGoodsCost + $consolidation;
+        $total = $shippingCost + $additionalServicesCost + $this->insurance_value + $dangrousGoodsCost + $consolidation + $this->user_profit;
 
         $discount = 0; // not implemented yet
         $gross_total = $total - $discount;
@@ -346,6 +349,15 @@ class Order extends Model implements Package
             // 'user_declared_freight' => $this->user_declared_freight >0 ? $this->user_declared_freight : $shippingCost
         ]);
 
+    }
+
+    public function calculateProfit($shippingCost)
+    {
+        $profit = $this->user->api_profit / 100;
+        
+        $this->user_profit = $shippingCost * $profit;
+
+        return true;
     }
 
     public function addAffiliateCommissionSale(User $referrer, $commissionCalculator)

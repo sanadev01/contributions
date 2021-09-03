@@ -43,6 +43,7 @@ class UserSettingController extends Controller
             'battery' => $request->has('battery'),
             'perfume' => $request->has('perfume'),
             'usps' => $request->has('usps'),
+            'api_profit' => $request->input('api_profit'),
         ]);
 
         if ( $request->password ){
