@@ -6,7 +6,7 @@
             <select class="form-control" wire:model.defer="referrer_id">
                 <option value="">Select referrer</option>
                 @foreach ($users as $userReferrer)
-                    <option value="{{ $userReferrer->id }}">{{ $userReferrer->name }}</option>
+                    <option value="{{ $userReferrer->id }}">{{ $userReferrer->name }} | {{ $userReferrer->pobox_number }}</option>
                 @endforeach
             </select>
             <div class="help-block">
@@ -69,7 +69,7 @@
                 <tbody>
                     @forelse($CommissionSettings as $userRefferer)
                         <tr>
-                            <td>{{ $userRefferer->referrer ? $userRefferer->referrer->name : "Default" }}</td>
+                            <td>{{ $userRefferer->referrer ? $userRefferer->referrer->name . " | " .$userRefferer->referrer->pobox_number: "Default" }}</td>
                             <td>{{ $userRefferer->type }}</td>
                             <td>{{ $userRefferer->value }}</td>
                             <td>
