@@ -42,12 +42,8 @@ class OrderReportsRepository
 
         },'orders as weight' => function($query) use ($request) {
 
-            if ( $request->start_date ){
-                $query->where('order_date','>',$request->start_date);
-            }
-
-            if ( $request->end_date ){
-                $query->where('order_date','<=',$request->end_date);
+            if ( $request->start_date && $request->end_date) {
+                $query->whereBetween('order_date', [$request->start_date, $request->end_date]);
             }
 
             $query->select(DB::raw('sum(CASE WHEN measurement_unit = "kg/cm" THEN weight ELSE (weight/2.205) END) as weight'));
@@ -55,12 +51,8 @@ class OrderReportsRepository
             $query->where('status','>',Order::STATUS_PAYMENT_PENDING); 
 
         },'orders as spent' => function($query) use ($request) {
-            if ( $request->start_date ){
-                $query->where('order_date','>',$request->start_date);
-            }
-
-            if ( $request->end_date ){
-                $query->where('order_date','<=',$request->end_date);
+            if ( $request->start_date && $request->end_date) {
+                $query->whereBetween('order_date', [$request->start_date, $request->end_date]);
             }
 
             $query->select(DB::raw('sum(gross_total) as spent'));
