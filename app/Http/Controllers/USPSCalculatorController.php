@@ -17,6 +17,8 @@ use App\Services\Calculators\WeightCalculator;
 class USPSCalculatorController extends Controller
 {
     public $error;
+    public $shipping_rates = [];
+    public $user_api_profit;
     /**
      * Display a listing of the resource.
      *
@@ -100,6 +102,7 @@ class USPSCalculatorController extends Controller
         $order->recipient = $recipient;
 
         $shippingServices = collect() ;
+        $this->checkUser();
 
         $usps_shippingService = new USPSShippingService($order);
         foreach (ShippingService::query()->active()->get() as $shippingService) {
@@ -112,21 +115,27 @@ class USPSCalculatorController extends Controller
             $error = "Shipping Service not Available for the Country you have selected";
         }
 
-        $shipping_rates = [];
         
         foreach ($shippingServices as $shippingService) {
             $response = USPSFacade::getPrice($order, $shippingService->service_sub_class);
             
             if($response->success == true)
             {
-                array_push($shipping_rates , ['name'=> $shippingService->name , 'rate'=> $response->data['total_amount']]);
+                array_push($this->shipping_rates , ['name'=> $shippingService->name , 'rate'=> $response->data['total_amount']]);
+
             }else {
                 $this->error = $response->message;
             }
         }
 
-        if($shipping_rates == null){
+        if($this->shipping_rates == null){
+
             session()->flash('alert-danger', $this->error);
+
+        }else {
+
+            $this->addProfit($this->shipping_rates);
+            $shipping_rates = $this->shipping_rates;
         }
 
         if ($request->unit == 'kg/cm' ){
@@ -136,6 +145,38 @@ class USPSCalculatorController extends Controller
         }
         
         return view('uspscalculator.show', compact('shipping_rates','order', 'weightInOtherUnit', 'chargableWeight'));
+    }
+
+    public function checkUser()
+    {
+        if (Auth::check()) 
+        {
+            $this->user_api_profit = Auth::user()->api_profit;
+        }
+
+        if($this->user_api_profit == 0)
+        {
+            $admin = User::where('role_id',1)->first();
+
+            $this->user_api_profit = $admin->api_profit;
+        }
+
+        return;
+    }
+
+    public function addProfit($shipping_rates)
+    {
+        $this->shipping_rates = [];
+        foreach ($shipping_rates as  $shipping_rate) 
+        {
+            $profit = $shipping_rate['rate'] * ($this->user_api_profit / 100);
+
+            $rate = $shipping_rate['rate'] + $profit;
+
+            array_push($this->shipping_rates , ['name'=> $shipping_rate['name'] , 'rate'=> $rate]);
+        }
+
+        return true;
     }
 
     
