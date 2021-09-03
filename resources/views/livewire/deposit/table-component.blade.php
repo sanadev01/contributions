@@ -82,7 +82,7 @@
 
             </th>
             <th>
-
+                <input type="search" wire:model.debounce.500ms="description" class="form-control">
             </th>
             <th>
                 <select name="" class="form-control" wire:model="type">
@@ -90,6 +90,9 @@
                     <option value="1">Credit</option>
                     <option value="0">Debit</option>
                 </select>
+            </th>
+            <th>
+                <input type="search" wire:model.debounce.500ms="balance" class="form-control">
             </th>
         </tr>
         </thead>
