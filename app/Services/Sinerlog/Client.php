@@ -89,7 +89,7 @@ class Client
         // create product info
         $products = [];
         $package_description = '';
-
+        $actual_item_description = '';
         foreach ( $order->items as $orderItem){
             $item = new SinerlogProducts();
 
@@ -104,10 +104,13 @@ class Client
             $sh_description = \DB::table('sh_codes')
                     ->select('description')
                     ->where('code', $orderItem->sh_code)
-                    ->get();
+                    ->first();
             
-            $package_description = $package_description.', '.trim(substr($sh_description[0]->description,0,strpos($sh_description[0]->description,'-',0)));
-            
+            //prevent to add a repeated description
+            if($actual_item_description != $sh_description->description){
+                $package_description = $package_description.', '.trim(substr($sh_description->description,0,strpos($sh_description->description,'-',0)));
+            }
+            $actual_item_description = $sh_description->description;
         }
 
 
@@ -129,10 +132,9 @@ class Client
 
         $sinerlogAlias = \DB::table('shipping_services')
                     ->select('service_api_alias')
-                    ->where('id', $order->shipping_service_id)
-                    ->get();
+                    ->find($order->shipping_service_id);
 
-        $orderSinerlog->deliveryType = $sinerlogAlias[0]->service_api_alias;
+        $orderSinerlog->deliveryType = $sinerlogAlias->service_api_alias;
 
         switch ($order->tax_modality) {
             case 'ddp':

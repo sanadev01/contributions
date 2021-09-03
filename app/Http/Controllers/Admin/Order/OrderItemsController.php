@@ -60,30 +60,24 @@ class OrderItemsController extends Controller
          * Sinerlog modification
          * Get total of items declared to check if them more than US$ 50 when Sinerlog Small Parcels was selected
          */
-        if ($request->shipping_service_id == 8) {
-            
-            $max_sum_of_all_products = \DB::table('shipping_services')
-                ->select('max_sum_of_all_products')
-                ->where([
-                    ['id', '=', $request->shipping_service_id]
-                ])
-                ->get()
-                ->first()
-            ;
 
+        $shipping_service_data = \DB::table('shipping_services')
+            ->select('max_sum_of_all_products','api','service_api_alias')
+            ->find($request->shipping_service_id)
+        ;
+        if ($shipping_service_data->api == 'sinerlog' && $shipping_service_data->service_api_alias == 'XP') {
+            
             $sum_of_all_products = 0;
             foreach ($request->get('items',[]) as $item) {
                 $sum_of_all_products = $sum_of_all_products + (optional($item)['value'] * optional($item)['quantity']);
             }
 
-            //dd('Max allowed: '.strval($max_sum_of_all_products->max_sum_of_all_products).' | Total declared: '.strval($sum_of_all_products));
-
-            if ($sum_of_all_products > $max_sum_of_all_products->max_sum_of_all_products) {
+            if ($sum_of_all_products > $shipping_service_data->max_sum_of_all_products) {
                 session()->flash('alert-danger','The total amount of items declared must be lower or equal US$ 50.00 for selected shipping serivce.');
                 return \back()->withInput();
             }
 
-        }        
+        }    
         
         if ( $orderRepository->updateShippingAndItems($request,$order) ){
             session()->flash('alert-success','orders.Order Placed');

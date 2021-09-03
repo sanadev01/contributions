@@ -38,7 +38,7 @@ class OrderLabelController extends Controller
         if(
             $order->recipient->country_id == 30 
             && 
-            ($order->shipping_service_id == 6 || $order->shipping_service_id == 7 || $order->shipping_service_id == 8)
+            $order->shippingService()->find($order->shipping_service_id)->api == 'sinerlog'
         ){
             return $this->handleSinerlogLabels($request,$order);
         }
