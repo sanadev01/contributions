@@ -9,8 +9,8 @@
 
 .top {
     padding-top: 40px;
-    padding-left: 10% !important;
-    padding-right: 6% !important
+    padding-left: 5.5% !important;
+    padding-right: 3.5% !important
 }
 
 #progressbar {
@@ -24,7 +24,7 @@
 #progressbar li {
     list-style-type: none;
     font-size: 13px;
-    width: 20%;
+    width: 9%;
     float: left;
     position: relative;
     font-weight: 400
@@ -68,7 +68,14 @@
 
 #progressbar li:nth-child(2):after,
 #progressbar li:nth-child(3):after,
-#progressbar li:nth-child(4):after {
+#progressbar li:nth-child(4):after,
+#progressbar li:nth-child(5):after,
+#progressbar li:nth-child(6):after,
+#progressbar li:nth-child(7):after,
+#progressbar li:nth-child(8):after,
+#progressbar li:nth-child(9):after,
+#progressbar li:nth-child(10):after,
+#progressbar li:nth-child(11):after {
     left: -50%
 }
 
@@ -100,8 +107,8 @@
 }
 
 .icon {
-    width: 60px;
-    height: 60px;
+    width: 33px;
+    height: 33px;
     margin-right: 15px
 }
 

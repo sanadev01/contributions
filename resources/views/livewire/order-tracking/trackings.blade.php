@@ -51,57 +51,195 @@
                             <div class="col-12">
                                 <ul id="progressbar" class="text-center">
                                     @if ($tracking->type == 'HD')
-                                        <li class="@if($tracking->status_code >=  70) active @endif step0"></li>
-                                        <li class="@if($tracking->status_code >=  73) active @endif step0"></li>
+                                        <li class="@if($tracking->status_code >=  70) active @endif step0">
+                                            <div class="icon-content">
+                                                <img class="icon offset-1" src="{{ asset('images/tracking/to-hd.png') }}">
+                                                <div class="d-flex flex-column mt-2">
+                                                    <p class="font-weight-bold">Freight<br>in Transit </p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="@if($tracking->status_code >=  73) active @endif step0">
+                                            <div class="icon-content">
+                                                <img class="icon offset-1" src="{{ asset('images/tracking/hd-whr.png') }}">
+                                                <div class="d-flex flex-column mt-2">
+                                                    <p class="font-weight-bold">Received<br>Terminal </p>
+                                                </div>
+                                            </div>
+                                        </li>
                                         {{-- <li class="@if($tracking->status_code >=  75) active @endif step0"></li> --}}
-                                        <li class="@if($tracking->status_code >=  75) active @endif step0"></li>
-                                        <li class="@if($tracking->status_code >=  80) active @endif step0"></li>
-                                        <li class="step0"></li>
+                                        <li class="@if($tracking->status_code >=  75) active @endif step0">
+                                            <div class="icon-content">
+                                                <img class="icon offset-1" src="{{ asset('images/tracking/container.png') }}">
+                                                <div class="d-flex flex-column mt-4">
+                                                    <p class="font-weight-bold">Manifested </p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="@if($tracking->status_code >=  80) active @endif step0">
+                                            <div class="icon-content">
+                                                <img class="icon offset-1" src="{{ asset('images/tracking/awb.png') }}">
+                                                <div class="d-flex flex-column mt-4">
+                                                    <p class="font-weight-bold">Shipped</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="step0">
+                                            <div class="icon-content">
+                                                <img class="icon offset-1" src="{{ asset('images/tracking/correios.png') }}">
+                                                <div class="d-flex flex-column mt-2">
+                                                    <p class="font-weight-bold">Arrived<br>in Country</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="step0">
+                                            <div class="icon-content">
+                                                <img class="icon offset-1" src="{{ asset('images/tracking/to-hd.png') }}">
+                                                <div class="d-flex flex-column" mt-4>
+                                                    <p class="font-weight-bold">Received <br>Correios Brazil </p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="step0">
+                                            <div class="icon-content">
+                                                <img class="icon offset-1" src="{{ asset('images/tracking/to-hd.png') }}">
+                                                <div class="d-flex flex-column" mt-4>
+                                                    <p class="font-weight-bold">Customs<br>Finished</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="step0">
+                                            
+                                        </li>
+                                        <li class="step0">
+                                            
+                                        </li>
+                                        <li class="step0">
+                                            
+                                        </li>
+                                        <li class="step0">
+                                            
+                                        </li>
                                     @else
-                                        <li class="active step0"></li>
-                                        <li class="active step0"></li>
-                                        {{-- <li class="active step0"></li> --}}
-                                        <li class="active step0"></li>
-                                        <li class="@if($tracking->status_code =  01) active @endif step0"></li>
-                                        <li class="@if($tracking->status_code =  01) active @endif step0"></li>
+                                        <li class="active step0">
+                                            <div class="icon-content">
+                                                <img class="icon offset-1" src="{{ asset('images/tracking/to-hd.png') }}">
+                                                <div class="d-flex flex-column mt-2">
+                                                    <p class="font-weight-bold">Freight<br>in Transit </p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="active step0">
+
+                                        </li>
+                                        <li class="active step0">
+
+                                        </li>
+                                        <li class="active step0">
+
+                                        </li>
+                                        <li class="@if($tracking->status_code ==  01 && $tracking->type == 'PO' ) active @endif step0">
+                                        
+                                        </li>
+                                        <li class="@if($tracking->status_code ==  16 && $tracking->type == 'PAR' ) active @endif step0">
+                                        
+                                        </li>
+                                        <li class="@if($tracking->status_code ==  17 && $tracking->type == 'PAR' ) active @endif step0">
+                                        
+                                        </li>
+                                        <li class="@if($tracking->status_code ==  01 && $tracking->type == 'RO' ) active @endif step0">
+                                        
+                                        </li>
+                                        <li class="@if($tracking->status_code ==  01 && $tracking->type == 'DO' ) active @endif step0">
+                                        
+                                        </li>
+                                        <li class="@if($tracking->status_code ==  0 && $tracking->type  == 'OEC' ) active @endif step0">
+                                        
+                                        </li>
+                                        <li class="@if($tracking->status_code ==  01 && $tracking->type == 'BDEBDIBDR' ) active @endif step0">
+                                        
+                                        </li>
                                     @endif
                                     
                                 </ul>
                             </div>
                         </div>
                         <div class="row justify-content-between top">
-                            <div class="row d-flex icon-content"> <img class="icon" src="{{ asset('images/tracking/to-hd.png') }}">
+                            <div class="row d-flex icon-content">
+                                <img class="icon offset-1" src="{{ asset('images/tracking/to-hd.png') }}">
                                 <div class="d-flex flex-column mt-2">
                                     <p class="font-weight-bold">Freight<br>in Transit </p>
                                 </div>
                             </div>
-                            <div class="row d-flex icon-content"> <img class="icon" src="{{ asset('images/tracking/hd-whr.png') }}">
+                            <div class="row d-flex icon-content">
+                                <img class="icon offset-1" src="{{ asset('images/tracking/hd-whr.png') }}">
                                 <div class="d-flex flex-column mt-2">
                                     <p class="font-weight-bold">Received<br>Terminal </p>
                                 </div>
                             </div>
-                            <div class="row d-flex icon-content"> <img class="icon" src="{{ asset('images/tracking/container.png') }}">
+                            <div class="row d-flex icon-content">
+                                <img class="icon offset-1" src="{{ asset('images/tracking/container.png') }}">
                                 <div class="d-flex flex-column mt-4">
                                     <p class="font-weight-bold">Manifested </p>
                                 </div>
                             </div>
                             
-                            {{-- <div class="row d-flex icon-content"> <img class="icon" src="{{ asset('images/tracking/to-air.png') }}">
-                                <div class="d-flex flex-column" mt-4>
-                                    <p class="font-weight-bold">Container goto Airport </p>
-                                </div>
-                            </div> --}}
                             
-                            <div class="row d-flex icon-content"> <img class="icon" src="{{ asset('images/tracking/awb.png') }}">
+                            <div class="row d-flex icon-content">
+                                <img class="icon offset-1" src="{{ asset('images/tracking/awb.png') }}">
                                 <div class="d-flex flex-column mt-4">
                                     <p class="font-weight-bold">Shipped</p>
                                 </div>
                             </div>
-                            <div class="row d-flex icon-content"> <img class="icon" src="{{ asset('images/tracking/correios.png') }}">
+                            <div class="row d-flex icon-content">
+                                <img class="icon offset-1" src="{{ asset('images/tracking/correios.png') }}">
                                 <div class="d-flex flex-column mt-2">
                                     <p class="font-weight-bold">Arrived<br>in Country</p>
                                 </div>
                             </div>
+                            <div class="row d-flex icon-content">
+                                <img class="icon offset-1" src="{{ asset('images/tracking/to-hd.png') }}">
+                                <div class="d-flex flex-column" mt-4>
+                                    <p class="font-weight-bold">Received <br>Correios Brazil </p>
+                                </div>
+                            </div>
+                            <div class="row d-flex icon-content">
+                                <img class="icon offset-1" src="{{ asset('images/tracking/to-hd.png') }}">
+                                <div class="d-flex flex-column" mt-4>
+                                    <p class="font-weight-bold">Customs<br>Finished</p>
+                                </div>
+                            </div>
+                            <div class="row d-flex icon-content">
+                                <img class="icon offset-1" src="{{ asset('images/tracking/to-hd.png') }}">
+                                <div class="d-flex flex-column" mt-4>
+                                    <p class="font-weight-bold">Parcels in <br> transit to<br>distribution center<br> in {{ optional(optional(optional($tracking->order)->recipient)->state)->name }} </p>
+                                </div>
+                            </div>
+                            <div class="row d-flex icon-content">
+                                <img class="icon offset-1" src="{{ asset('images/tracking/to-hd.png') }}">
+                                <div class="d-flex flex-column" mt-4>
+                                    <p class="font-weight-bold">Parcels in <br> transit to<br>distribution center<br> in {{ optional(optional($tracking->order)->recipient)->city }} </p>
+                                </div>
+                            </div>
+                            <div class="row d-flex icon-content">
+                                <img class="icon offset-1" src="{{ asset('images/tracking/to-hd.png') }}">
+                                <div class="d-flex flex-column" mt-4>
+                                    <p class="font-weight-bold">Parcels left  <br> to the buyer </p>
+                                </div>
+                            </div>
+                            <div class="row d-flex icon-content">
+                                <img class="icon offset-1" src="{{ asset('images/tracking/to-hd.png') }}">
+                                <div class="d-flex flex-column" mt-4>
+                                    <p class="font-weight-bold">parcels  <br>delivered to the buyer  </p>
+                                </div>
+                            </div>
+                            {{-- <div class="row d-flex icon-content">
+                                <img class="icon offset-1" src="{{ asset('images/tracking/to-hd.png') }}">
+                                <div class="d-flex flex-column" mt-4>
+                                    <p class="font-weight-bold">Container <br> goto Airport </p>
+                                </div>
+                            </div> --}}
+                            
                         </div>
                 </div>
                 <hr>
