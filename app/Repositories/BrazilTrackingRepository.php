@@ -37,6 +37,7 @@ class BrazilTrackingRepository
                 if($response->success == true)
                 {
                     $this->addOrderTracking($order, $response->data);
+                    $order->update(['api_tracking_status' => $response->data->status]);
                 }
             }
         }
