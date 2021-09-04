@@ -31,7 +31,7 @@ class CorreiosBrazilTrackingService{
                 'tipo' => 'L',
                 'resultado' => 'T',
                 'lingua' => 101,
-                'objetos' => 'NX353009733BR',
+                'objetos' => $trackingNumber,
             );
 
             $result = $client->buscaEventos($request_param);
