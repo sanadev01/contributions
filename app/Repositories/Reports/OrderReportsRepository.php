@@ -30,12 +30,8 @@ class OrderReportsRepository
 
         $query->withCount(['orders as order_count'=> function($query) use ($request){
             
-            if ( $request->start_date ){
-                $query->where('order_date','>',$request->start_date);
-            }
-
-            if ( $request->end_date ){
-                $query->where('order_date','<=',$request->end_date);
+            if ( $request->start_date && $request->end_date) {
+                $query->whereBetween('order_date', [$request->start_date, $request->end_date]);
             }
 
             $query->where('status','>',Order::STATUS_PAYMENT_PENDING);
