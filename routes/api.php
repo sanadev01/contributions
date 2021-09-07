@@ -50,13 +50,13 @@ Route::prefix('v1')->group(function(){
             Route::get('balance', BalanceController::class);
             Route::resource('parcels', 'ParcelController')->only('store','destroy','update');
             Route::get('parcel/{order}/cn23',OrderLabelController::class);
+            Route::get('order/tracking/{search}', OrderTrackingController::class);
         });
     
         Route::get('countries', CountryController::class);
         Route::get('country/{country}/states', StateController::class);
         Route::get('shipping-services', ServicesController::class);
         Route::get('shcodes/{search?}', ShCodeController::class);
-        Route::get('order/tracking/{search}', OrderTrackingController::class);
         Route::get('services-rates', GetRateController::class);
     });
 
