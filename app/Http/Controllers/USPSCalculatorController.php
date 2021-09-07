@@ -133,7 +133,9 @@ class USPSCalculatorController extends Controller
             session()->flash('alert-danger', $this->error);
 
         }else {
-
+            // rates without profit
+            $usps_rates = $this->shipping_rates;
+            // rates with profit
             $this->addProfit($this->shipping_rates);
             $shipping_rates = $this->shipping_rates;
         }
@@ -144,7 +146,7 @@ class USPSCalculatorController extends Controller
             $weightInOtherUnit = UnitsConverter::poundToKg($chargableWeight);
         }
         
-        return view('uspscalculator.show', compact('shipping_rates','order', 'weightInOtherUnit', 'chargableWeight'));
+        return view('uspscalculator.show', compact('usps_rates','shipping_rates','order', 'weightInOtherUnit', 'chargableWeight'));
     }
 
     public function checkUser()
