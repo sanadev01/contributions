@@ -14,6 +14,16 @@
         </div>
         
         <div class="col-7 d-flex justify-content-end">
+            <form action="{{ route('admin.label.scan.download') }}" method="post">
+                @csrf
+                @foreach ($packagesRows as $key => $package)
+                    <input type="hidden" name="order[]" value="{{ $package['reference'] }}">
+                @endforeach
+                <button type="submit" class="btn btn-primary mr-2" title="@lang('orders.import-excel.Download')">
+                    <i class="feather icon-download"></i> @lang('orders.import-excel.Download') Excel
+                </button>
+                
+            </form>
             <form action="{{ route('admin.label.scan.store') }}" method="post">
                 @csrf
                 @foreach ($packagesRows as $key => $package)
@@ -25,6 +35,7 @@
                 
             </form>
         </div>
+        
     </div>
     <table class="table table-bordered">
         <tr>
