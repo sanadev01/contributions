@@ -144,6 +144,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
 
         Route::namespace('Label')->as('label.')->prefix('label')->group(function(){
             Route::resource('scan', PrintLabelController::class)->only('create','show','store');
+            Route::post('scan/download', [\App\Http\Controllers\Admin\Label\PrintLabelController::class, 'download'])->name('scan.download');
         });
 
         Route::resource('deposit', Deposit\DepositController::class)->only('create','store','index');

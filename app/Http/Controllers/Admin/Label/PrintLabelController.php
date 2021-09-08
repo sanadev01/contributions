@@ -7,9 +7,10 @@ use ZipArchive;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Repositories\CorrieosBrazilLabelRepository;
 use App\Repositories\LabelRepository;
 use Illuminate\Support\Facades\Storage;
+use App\Services\Excel\Export\ScanOrderExport;
+use App\Repositories\CorrieosBrazilLabelRepository;
 
 class PrintLabelController extends Controller
 {
@@ -142,5 +143,27 @@ class PrintLabelController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function download(Request $request)
+    {
+        if($request->order){
+
+            $orders = $this->getOrdersForExport($request->order);
+
+            $exportService = new ScanOrderExport($orders);
+            return $exportService->handle();
+
+        }
+
+        return back();
+        
+    }
+
+    public function getOrdersForExport($ids)
+    {
+        $orders = Order::whereIn('id', $ids)->get();
+
+        return $orders;
     }
 }
