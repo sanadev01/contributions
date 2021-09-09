@@ -233,7 +233,7 @@ class Client{
         {
             OrderTracking::create([
                 'order_id' => $order->id,
-                'status_code' => $order->status,
+                'status_code' => Order::STATUS_PAYMENT_DONE,
                 'type' => 'HD',
                 'description' => 'Order Placed',
                 'country' => $order->recipient->country->name,
