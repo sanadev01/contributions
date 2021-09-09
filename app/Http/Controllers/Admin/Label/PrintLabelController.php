@@ -150,23 +150,5 @@ class PrintLabelController extends Controller
     {
         //
     }
-
-    public function download(Request $request)
-    {
-        if($request->order){
-
-            
-
-        }
-
-        return back();
-        
-    }
-
-    public function getOrdersForExport($ids)
-    {
-        $orders = Order::whereIn('id', $ids)->get();
-
-        return $orders;
-    }
+    
 }
