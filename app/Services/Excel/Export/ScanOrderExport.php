@@ -39,12 +39,13 @@ class ScanOrderExport extends AbstractExportService
         $row = $this->currentRow;
 
         foreach ($this->orders as $order) {
-
+            
             $this->setCellValue('A'.$row, $this->count);
             $this->setColor('A'.$row, 'FF0D0D');
             $this->setAlignment('A'.$row, Alignment::HORIZONTAL_LEFT);
             $this->setCellValue('B'.$row, $order->corrios_tracking_code);
             $this->setCellValue('C'.$row,  date('d-m-Y', strtotime($order->order_date)));
+            $this->setCellValue('D'.$row,  optional($order->user)->pobox_number);
             
             $this->count++ ;
             $row++;
@@ -70,7 +71,10 @@ class ScanOrderExport extends AbstractExportService
         $this->setBold('C1', true);
         $this->setColor('C1', '0A0000');
 
-        $this->setBackgroundColor('A1:C1', 'C4C2C2');
+        $this->setColumnWidth('D', 20);
+        $this->setCellValue('D1', 'POBOX Number');
+        
+        $this->setBackgroundColor('A1:D1', 'C4C2C2');
 
         $this->currentRow++;
     }
