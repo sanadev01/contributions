@@ -45,7 +45,12 @@ class PrintLabelController extends Controller
     public function store(Request $request, CorrieosBrazilLabelRepository $labelRepository)
     {
         if($request->order){
+            if($request->excel){
+                $orders = Order::whereIn('id', $request->order)->get();
 
+                $exportService = new ScanOrderExport($orders);
+                return $exportService->handle();
+            }
             $zip = new ZipArchive();
             $tempFileUri = storage_path('app/labels/label.zip');
             
@@ -77,8 +82,9 @@ class PrintLabelController extends Controller
             } else {
                 echo 'Could not open ZIP file.';
             }
-
+            
             return response()->download($tempFileUri);
+            
         }
         return back();
 
@@ -149,10 +155,7 @@ class PrintLabelController extends Controller
     {
         if($request->order){
 
-            $orders = $this->getOrdersForExport($request->order);
-
-            $exportService = new ScanOrderExport($orders);
-            return $exportService->handle();
+            
 
         }
 
