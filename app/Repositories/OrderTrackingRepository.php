@@ -29,6 +29,10 @@ class OrderTrackingRepository
         $order = Order::where('corrios_tracking_code', $this->trackingNumber)->first();
         
         if($order){
+            if($order->recipient->country_id == Order::CHILE)
+            {
+                return CorreiosChileTrackingFacade::trackOrder($this->trackingNumber);
+            }
             if(!$order->trackings->isEmpty()){
                 return (Object)[
                     'success' => true,
