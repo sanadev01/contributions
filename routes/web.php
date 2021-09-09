@@ -210,4 +210,4 @@ Route::get('test-label',function(){
 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
 
-Route::get('test-usps', [\App\Http\Controllers\Admin\HomeController::class,'uspsApi'])->middleware('auth')->name('test-usps');
+Route::get('test-usps', [\App\Http\Controllers\Admin\HomeController::class,'trackings'])->middleware('auth')->name('test-usps');
