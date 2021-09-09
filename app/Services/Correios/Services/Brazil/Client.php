@@ -229,7 +229,7 @@ class Client{
 
     public function addOrderTracking($order)
     {
-        if($order->status == Order::STATUS_PAYMENT_DONE)
+        if($order->trackings->isEmpty())
         {
             OrderTracking::create([
                 'order_id' => $order->id,
