@@ -50,15 +50,15 @@ class ParcelController extends Controller
         $countryID = optional($request->recipient)['country_id'];
         $stateID = optional($request->recipient)['state_id'];
         
-        if (!is_numeric( optional($request->recipient)['state_id'])){
-
-            $state = State::where('code', optional($request->recipient)['state_id'])->orwhere('id', optional($request->recipient)['state_id'])->first();
-            $stateID = $state->id;
-        }
         if (!is_numeric( optional($request->recipient)['country_id'])){
-
+            
             $country = Country::where('code', optional($request->recipient)['country_id'])->orwhere('id', optional($request->recipient)['country_id'])->first();
             $countryID = $country->id;
+        }
+        if (!is_numeric( optional($request->recipient)['state_id'])){
+
+            $state = State::where('country_id', $countryID )->where('code', optional($request->recipient)['state_id'])->orwhere('id', optional($request->recipient)['state_id'])->first();
+            $stateID = $state->id;
         }
 
         DB::beginTransaction();
