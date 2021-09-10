@@ -38,8 +38,10 @@ class OrderReportsRepository
 
         },'orders as weight' => function($query) use ($request) {
 
-            if ( $request->start_date && $request->end_date) {
-                $query->whereBetween('order_date', [$request->start_date, $request->end_date]);
+            if ( $request->start_date && $request->end_date ) {
+                $startDate = $request->start_date.' 00:00:00';
+                $endDate = $request->end_date.' 23:59:59';
+                $query->whereBetween('order_date', [$startDate, $endDate]);
             }
 
             $query->select(DB::raw('sum(CASE WHEN measurement_unit = "kg/cm" THEN weight ELSE (weight/2.205) END) as weight'));
