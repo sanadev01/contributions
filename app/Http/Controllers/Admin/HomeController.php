@@ -34,33 +34,9 @@ class HomeController extends Controller
         return view('home');   
     }
 
-    public function trackings()
+    public function test()
     {
-        $orders = Order::findMany([2775, 2772, 2771, 2770, 2769, 2768,]);
-
-        foreach ($orders as $order) {
-            $this->addOrderTracking($order);
-        }
-
         dd(true);
-    }
-
-    public function addOrderTracking($order)
-    {
-        if($order->trackings->isEmpty())
-        {
-            OrderTracking::create([
-                'order_id' => $order->id,
-                'status_code' => $order->status,
-                'type' => 'HD',
-                'description' => 'Order Placed',
-                'country' => $order->recipient->country->name,
-                'created_at' => $order->updated_at,
-                'updated_at' => $order->updated_at,
-            ]);
-        }    
-
-        return true;
     }
     
 }
