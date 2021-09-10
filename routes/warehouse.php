@@ -11,6 +11,7 @@ use App\Http\Controllers\Warehouse\CN35DownloadController;
 use App\Http\Controllers\Warehouse\DeliveryBillController;
 use App\Http\Controllers\Warehouse\UnitRegisterController;
 use App\Http\Controllers\Warehouse\SearchPackageController;
+use App\Http\Controllers\Warehouse\ScanPackageController;
 use App\Http\Controllers\Warehouse\USPSContainerController;
 use App\Http\Controllers\Warehouse\ChileContainerController;
 use App\Http\Controllers\Warehouse\ContainerPackageController;
@@ -30,6 +31,7 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('order/{order}/download-cn23', CN23DownloadController::class)->name('cn23.download');
 
     Route::resource('search_package', SearchPackageController::class)->only('index', 'show');
+    Route::resource('scan', ScanPackageController::class)->only('index');
     
     Route::resource('containers', ContainerController::class);
     Route::get('awb/', AwbController::class)->name('container.awb');

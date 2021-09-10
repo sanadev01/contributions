@@ -7,6 +7,12 @@
     <ul class="menu-content">
 
         @admin
+            <li class="{{ $isActive(['warehouse.scan.index']) }}">
+                <a href="{{ route('warehouse.scan.index') }}">
+                    <i class="feather icon-circle"></i>
+                    <span class="menu-title">Check In Parcel</span>
+                </a>
+            </li>
             <li class="{{ $isActive(['warehouse.search_package.index','warehouse.search_package.show']) }}">
                 <a href="{{ route('warehouse.search_package.index') }}">
                     <i class="feather icon-circle"></i>

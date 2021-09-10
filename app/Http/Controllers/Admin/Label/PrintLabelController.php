@@ -7,7 +7,6 @@ use ZipArchive;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Repositories\LabelRepository;
 use Illuminate\Support\Facades\Storage;
 use App\Services\Excel\Export\ScanOrderExport;
 use App\Repositories\CorrieosBrazilLabelRepository;
