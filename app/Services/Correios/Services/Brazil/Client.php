@@ -236,7 +236,8 @@ class Client{
                 'status_code' => Order::STATUS_PAYMENT_DONE,
                 'type' => 'HD',
                 'description' => 'Order Placed',
-                'country' => $order->recipient->country->name,
+                'country' => ($order->user->country != null) ? $order->user->country->name : 'United States',
+                'city' => 'Miami',
             ]);
         }    
 
