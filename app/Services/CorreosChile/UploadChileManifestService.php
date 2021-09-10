@@ -3,6 +3,8 @@ namespace App\Services\CorreosChile;
 
 
 use Carbon\Carbon;
+use App\Models\Order;
+use App\Models\OrderTracking;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
 
@@ -89,6 +91,26 @@ class UploadChileManifestService
         $container->update([
             'response' => true,
         ]);
+
+        $this->addOrderTracking();
+        return true;
+    }
+
+    public function addOrderTracking()
+    {
+        $orders = $this->container->orders;
+
+        foreach ($orders as $order)
+        {
+            OrderTracking::create([
+                'order_id' => $order->id,
+                'status_code' => Order::STATUS_SHIPPED,
+                'type' => 'HD',
+                'description' => 'Homedelivery sent parcel to airport with CN35',
+                'country' => 'United States',
+                'city' => 'Miami'
+            ]);
+        }
 
         return true;
     }

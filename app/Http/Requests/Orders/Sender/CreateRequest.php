@@ -29,7 +29,18 @@ class CreateRequest extends FormRequest
             'email' => 'nullable|max:100|email',
             'phone' => 'nullable|max:15',
             'sender_address' => 'sometimes|required',
-            'sender_city' => 'sometimes|required'
+            'sender_city' => 'sometimes|required',
+            'sender_country_id' => 'sometimes|required|integer|exists:countries,id',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'first_name.required' => 'first name required',
+            'sender_country_id.required' => 'sender country must be selected',
+            'sender_country_id.integer' => 'sender country must be an integer',
+            'sender_country_id.exists' => 'sender country does not exist',
         ];
     }
 }

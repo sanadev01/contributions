@@ -2,12 +2,13 @@
 
 namespace App\Repositories\Warehouse;
 
-use App\Http\Resources\Warehouse\Container\PackageResource;
 use App\Models\Order;
-use App\Models\Warehouse\Container;
-use App\Repositories\AbstractRepository;
 use Illuminate\Http\Request;
+use App\Models\OrderTracking;
+use App\Models\Warehouse\Container;
 use Illuminate\Support\Facades\Auth;
+use App\Repositories\AbstractRepository;
+use App\Http\Resources\Warehouse\Container\PackageResource;
 
 class ContainerPackageRepository extends AbstractRepository{
 
@@ -65,6 +66,8 @@ class ContainerPackageRepository extends AbstractRepository{
 
         $container->orders()->attach($order->id);
 
+        $this->addOrderTracking($order->id);
+
         $order->error = null;
         $order->code = 200;
 
@@ -75,6 +78,31 @@ class ContainerPackageRepository extends AbstractRepository{
 
     public function removeOrderFromContainer(Container $container, Order $order)
     {
-        return $container->orders()->detach($order->id);
+        $container->orders()->detach($order->id);
+
+        return $this->removeOrderTracking($order->id);
+    }
+
+    public function addOrderTracking($id)
+    {
+        OrderTracking::create([
+            'order_id' => $id,
+            'status_code' => Order::STATUS_INSIDE_CONTAINER,
+            'type' => 'HD',
+            'description' => 'Parcel inside Homedelivery Container',
+            'country' => 'United States',
+            'city' => 'Miami'
+        ]);
+
+        return true;
+    }
+
+    public function removeOrderTracking($id)
+    {
+
+        $order_tracking = OrderTracking::where('order_id', $id)->latest()->first();
+
+       return $order_tracking->delete();
+
     }
 }
