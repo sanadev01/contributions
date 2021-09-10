@@ -7,9 +7,9 @@ use ZipArchive;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Repositories\CorrieosBrazilLabelRepository;
-use App\Repositories\LabelRepository;
 use Illuminate\Support\Facades\Storage;
+use App\Services\Excel\Export\ScanOrderExport;
+use App\Repositories\CorrieosBrazilLabelRepository;
 
 class PrintLabelController extends Controller
 {
@@ -44,7 +44,12 @@ class PrintLabelController extends Controller
     public function store(Request $request, CorrieosBrazilLabelRepository $labelRepository)
     {
         if($request->order){
+            if($request->excel){
+                $orders = Order::whereIn('id', $request->order)->get();
 
+                $exportService = new ScanOrderExport($orders);
+                return $exportService->handle();
+            }
             $zip = new ZipArchive();
             $tempFileUri = storage_path('app/labels/label.zip');
             

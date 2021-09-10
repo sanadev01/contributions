@@ -18,6 +18,18 @@
                 @csrf
                 @foreach ($packagesRows as $key => $package)
                     <input type="hidden" name="order[]" value="{{ $package['reference'] }}">
+                    <input type="hidden" name="excel" value="1">
+                @endforeach
+                <button type="submit" class="btn btn-primary mr-2" title="@lang('orders.import-excel.Download')">
+                    <i class="feather icon-download"></i> @lang('orders.import-excel.Download') Arrival Report
+                </button>
+                
+            </form>
+            <form action="{{ route('admin.label.scan.store') }}" method="post">
+                @csrf
+                @foreach ($packagesRows as $key => $package)
+                    <input type="hidden" name="order[]" value="{{ $package['reference'] }}">
+                    <input type="hidden" name="excel" value="0">
                 @endforeach
                 <button type="submit" class="btn btn-success mr-2" title="@lang('orders.import-excel.Download')">
                     <i class="feather icon-download"></i> @lang('orders.import-excel.Download') All
