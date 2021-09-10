@@ -52,8 +52,8 @@ class UserShipmentReportTable extends Component
             'name' => $this->name,
             'pobox_number' => $this->pobox_number,
             'email' => $this->email,
-            'start_date' => $this->start_date.' 00:00:00',
-            'end_date' => $this->end_date.' 23:59:59',
+            'start_date' => $this->start_date,
+            'end_date' => $this->end_date,
             'sort_by' => $this->sortBy, 
             'sort_order' => $this->sortAsc ? 'asc' : 'desc'
         ]);    
