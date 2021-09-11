@@ -319,5 +319,6 @@ return [
         'Action' => 'Action',
         'Remove' => 'Remove',
         'Add Row' => 'Add Row',
+        'Date' => 'Order Date',
     ]
 ];

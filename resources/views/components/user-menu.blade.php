@@ -4,6 +4,26 @@
     <div class="shadow-bottom"></div>
     <div class="main-menu-content ps ps--active-y">
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
+            @if (auth()->user()->hasRole('scanner'))
+                <li class="nav-item {{ $isActive('home') }}">
+                    <a class="nav-link" href="{{ route('admin.home') }}">
+                        <i class="feather icon-home"></i>
+                        <span data-i18n="Dashboard"> @lang('menu.dashboard') </span>
+                    </a>
+                </li>
+                <li class="nav-item {{ $isActive(['warehouse.scan.index']) }}">
+                    <a class="nav-link" href="{{ route('warehouse.scan.index') }}">
+                        <i class="feather icon-circle"></i>
+                        <span class="menu-title">Check In Parcel</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('admin.profile.index') }}">
+                        <i class="feather icon-user-check"></i>
+                        <span data-i18n="Apps"> @lang('menu.profile') </span>
+                    </a>
+                </li>
+            @else
             <li class="nav-item {{ $isActive('home') }}">
                 <a class="nav-link" href="{{ route('admin.home') }}">
                     <i class="feather icon-home"></i>
@@ -304,6 +324,7 @@
             @endcan
 
             <x-shared-menu></x-shared-menu>
+            @endif
         </ul>
     </div>
 </div>
