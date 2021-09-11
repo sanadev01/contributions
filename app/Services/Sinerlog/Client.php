@@ -129,11 +129,11 @@ class Client
         }
         $orderSinerlog->totalAmount = $order->order_value;
         $orderSinerlog->currency = "USD";
-
+        // Get sinerlog service alias
         $sinerlogAlias = \DB::table('shipping_services')
                     ->select('service_api_alias')
                     ->find($order->shipping_service_id);
-
+                    
         $orderSinerlog->deliveryType = $sinerlogAlias->service_api_alias;
 
         switch ($order->tax_modality) {
@@ -184,16 +184,16 @@ class Client
         $sinerLogCustomerSA->number = $recipientAddress->street_no;
         $sinerLogCustomerSA->complement = $recipientAddress->address2;
         $sinerLogCustomerSA->city = $recipientAddress->city;
-        
+        // get brazilian state code
         $state = \DB::table('states')
                     ->select('code')
                     ->where([
                         ['id', '=', $recipientAddress->state_id],
                         ['country_id', '=', $recipientAddress->country_id]
                     ])
-                    ->get();
+                    ->first();
         
-        $sinerLogCustomerSA->province = $state[0]->code;
+        $sinerLogCustomerSA->province = $state->code;
         $sinerLogCustomerSA->zipcode = $recipientAddress->zipcode;
 
         $shippingAddress = [

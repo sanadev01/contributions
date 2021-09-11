@@ -60,7 +60,6 @@ class OrderItemsController extends Controller
          * Sinerlog modification
          * Get total of items declared to check if them more than US$ 50 when Sinerlog Small Parcels was selected
          */
-
         $shipping_service_data = \DB::table('shipping_services')
             ->select('max_sum_of_all_products','api','service_api_alias')
             ->find($request->shipping_service_id)

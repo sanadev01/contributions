@@ -64,9 +64,7 @@ class OrderLabelController extends Controller
         $error = $labelRepository->getError();
         $buttonsOnly = $request->has('buttons_only');
         return view('admin.orders.label.label',compact('order','error','buttonsOnly'));
-    }
-
-   
+    }   
 
     public function handleCorreiosLabels(Request $request, Order $order)
     {
