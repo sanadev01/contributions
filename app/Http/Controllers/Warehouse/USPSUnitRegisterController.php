@@ -56,7 +56,7 @@ class USPSUnitRegisterController extends Controller
                 'status_code' => Order::STATUS_SHIPPED,
                 'type' => 'HD',
                 'description' => 'Homedelivery sent parcel to airport with CN35',
-                'country' => 'United States',
+                'country' => 'US',
                 'city' => 'Miami'
             ]);
         }
