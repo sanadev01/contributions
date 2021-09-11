@@ -45,8 +45,15 @@ class PrintLabelController extends Controller
     {
         if($request->order){
             if($request->excel){
-                $orders = Order::whereIn('id', $request->order)->get();
+                if($request->start_date != null && $request->end_date != null)
+                {
+                    $orders = Order::whereIn('id', $request->order)
+                                        ->where('order_date', '>=', $request->start_date)
+                                        ->where('order_date', '<=', $request->end_date)->get();                   
+                }else{
 
+                    $orders = Order::whereIn('id', $request->order)->get();
+                }
                 $exportService = new ScanOrderExport($orders);
                 return $exportService->handle();
             }

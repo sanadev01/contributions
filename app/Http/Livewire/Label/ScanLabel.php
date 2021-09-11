@@ -41,6 +41,7 @@ class ScanLabel extends Component
             'kg' => '',
             'reference' => '',
             'recpient' => '',
+            'order_date' => '',
         ]);
     }
 
@@ -62,6 +63,7 @@ class ScanLabel extends Component
             $this->packagesRows[$index]['kg'] = $this->order->weight;
             $this->packagesRows[$index]['reference'] = $this->order->id;
             $this->packagesRows[$index]['recpient'] = $this->order->recipient->first_name;
+            $this->packagesRows[$index]['order_date'] = $this->order->order_date->format('m-d-Y');
             
             $this->addRow();
         }
@@ -104,6 +106,7 @@ class ScanLabel extends Component
                     'kg' => $this->order->weight,
                     'reference' => $this->order->id,
                     'recpient' => $this->order->recipient->first_name,
+                    'order_date' => $this->order->order_date->format('m-d-Y'),
                 ]);
                 
                 array_push($this->newOrder,$this->order);
@@ -111,7 +114,6 @@ class ScanLabel extends Component
                 $this->addOrderTracking($this->order);
             }
         }
-            
         $this->tracking = '';
     }
 

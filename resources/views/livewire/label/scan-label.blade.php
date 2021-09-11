@@ -20,6 +20,10 @@
                     <input type="hidden" name="order[]" value="{{ $package['reference'] }}">
                     <input type="hidden" name="excel" value="1">
                 @endforeach
+                <label for="start_date"> Start Date</label>
+                <input type="date"  name="start_date">
+                <label for="end_date"> End Date</label>
+                <input type="date" class="mr-3"  name="end_date">
                 <button type="submit" class="btn btn-primary mr-2" title="@lang('orders.import-excel.Download')">
                     <i class="feather icon-download"></i> @lang('orders.import-excel.Download') Arrival Report
                 </button>
@@ -47,6 +51,7 @@
             <th>@lang('orders.print-label.Kg')</th>
             <th>@lang('orders.print-label.Reference')#</th>
             <th>@lang('orders.print-label.Recpient')</th>
+            <th>@lang('orders.print-label.Date')</th>
             <th>@lang('orders.print-label.Action')</th>
         </tr>
         @foreach ($packagesRows as $key => $package)
@@ -79,7 +84,9 @@
                 <td>
                     {{ $package['recpient'] }}
                 </td>
-               
+                <td>
+                    {{ $package['order_date'] }}
+                </td>
                 <td>
                     
                     @if( !$error )
