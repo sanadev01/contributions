@@ -313,5 +313,6 @@ return [
         'Action' => 'Açao',
         'Remove' => 'Remover',
         'Add Row' => 'Adicionar linha',
+        'Date' => 'data do pedido',
     ]
 ];
