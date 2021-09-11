@@ -149,7 +149,7 @@ class Packages extends Component
             'status_code' => Order::STATUS_INSIDE_CONTAINER,
             'type' => 'HD',
             'description' => 'Parcel inside Homedelivery Container',
-            'country' => 'United States',
+            'country' => 'US',
             'city' => 'Miami'
         ]);
 

@@ -151,7 +151,7 @@ class ScanLabel extends Component
             'status_code' => Order::STATUS_ARRIVE_AT_WAREHOUSE,
             'type' => 'HD',
             'description' => 'Freight arrived at Homedelivery',
-            'country' => 'United States',
+            'country' => 'US',
             'city' => 'Miami'
         ]);
 

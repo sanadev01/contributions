@@ -73,14 +73,14 @@ class USPSLabelRepository
 
     public function addOrderTracking($order)
     {
-        if($order->status == Order::STATUS_PAYMENT_DONE)
+        if($order->trackings->isEmpty())
         {
             OrderTracking::create([
                 'order_id' => $order->id,
                 'status_code' => $order->status,
                 'type' => 'HD',
                 'description' => 'Order Placed',
-                'country' => $order->recipient->country->name,
+                'country' => ($order->user->country != null) ? $order->user->country->code : 'US',
             ]);
         }    
 
