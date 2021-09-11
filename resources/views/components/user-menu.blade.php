@@ -13,7 +13,7 @@
                 </li>
                 <li class="nav-item {{ $isActive(['warehouse.scan.index']) }}">
                     <a class="nav-link" href="{{ route('warehouse.scan.index') }}">
-                        <i class="feather icon-circle"></i>
+                        <i class="fab fa-searchengin"></i>
                         <span class="menu-title">Check In Parcel</span>
                     </a>
                 </li>
