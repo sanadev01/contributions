@@ -16,6 +16,7 @@
         window.locale= "{{ app()->getLocale() }}";
     </script>
     <livewire:styles>
+    <script src="https://kit.fontawesome.com/8ea855d2d1.js" crossorigin="anonymous"></script>
 </head>
 <!-- END: Head-->
 

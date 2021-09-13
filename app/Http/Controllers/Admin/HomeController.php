@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Models\User;
+use App\Models\Order;
+use App\Facades\USPSFacade;
 use Illuminate\Http\Request;
+use App\Models\OrderTracking;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -31,7 +34,9 @@ class HomeController extends Controller
         return view('home');   
     }
 
+    public function test()
+    {
+        dd(true);
+    }
     
-    
-
 }
