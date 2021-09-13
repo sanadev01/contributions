@@ -55,6 +55,9 @@
                                                     <a href="{{ route('admin.rates.profit-packages.edit',$package) }}" class="btn btn-primary mr-2" title="@lang('profitpackage.edit-profit-package')">
                                                         <i class="feather icon-edit"></i>
                                                     </a>
+                                                    <a href="{{ route('admin.rates.profit-packages-upload.edit',$package) }}" class="btn btn-secondary mr-2" title="@lang('profitpackage.edit-profit-package')">
+                                                        <i class="feather icon-upload"></i>
+                                                    </a>
                                                 @endcan
 
                                                 @can('delete', App\Models\ProfitPackage::class)
