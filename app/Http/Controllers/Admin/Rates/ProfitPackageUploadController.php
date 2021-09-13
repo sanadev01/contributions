@@ -48,4 +48,42 @@ class ProfitPackageUploadController extends Controller
 
     }
 
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(ProfitPackage $profit_packages_upload)
+    {   
+        $profitPackage = $profit_packages_upload;
+        
+        $shipping_services = ShippingService::all();
+        return view('admin.rates.profit-packages.editUpload',compact('profitPackage', 'shipping_services'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, ProfitPackage $profit_packages_upload)
+    {   
+        $this->validate($request,[
+            'shipping_service_id' => 'required',
+            'package_name' => 'required',
+            'type' => 'required',
+            'file' => 'required|file'
+        ]);
+
+        $importExcelService = new ProfitPackageImportService($request->file('file'),\Auth::id(), $request,$profit_packages_upload);
+        $importExcelService->handle();
+
+        session()->flash('alert-success','Import Successfullt');
+        return redirect()->route('admin.rates.profit-packages.index');
+
+    }
+
 }
