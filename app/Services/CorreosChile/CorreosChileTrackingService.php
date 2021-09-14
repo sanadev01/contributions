@@ -18,7 +18,6 @@ class CorreosChileTrackingService
         $this->apiUrl = $apiUrl;
         $this->user = $user;
         $this->password = $password;
-        $this->baseUri = 'http://hd-v2.test';
     }
 
     public function trackOrder($trackingNumber)
@@ -26,7 +25,18 @@ class CorreosChileTrackingService
        try {
            
             $response = Http::withBasicAuth($this->user, $this->password)->get($this->apiUrl.$trackingNumber);
-            dd($response->json());
+
+            dd($response->getStatusCode());
+            if($response->getStatusCode() == 200) 
+            {
+
+                $response = $response->json();
+                return (Object)[
+                    'status' => 'success',
+                    'data' => $response['historial'],
+                ];
+            }
+            
        } catch (Exception $e) {
            dd($e);
        }
