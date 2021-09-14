@@ -31,7 +31,9 @@ class OrderTrackingRepository
         if($order){
             if($order->recipient->country_id == Order::CHILE)
             {
-                return CorreiosChileTrackingFacade::trackOrder($this->trackingNumber);
+                $chile_trackings = CorreiosChileTrackingFacade::trackOrder($this->trackingNumber);
+
+                dd($chile_trackings);
             }
             if(!$order->trackings->isEmpty()){
                 return (Object)[
