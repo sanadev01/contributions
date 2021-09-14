@@ -13,6 +13,7 @@ class OrderTrackingRepository
 
     private $trackingNumber;
     private $order;
+    private $response_trackings = [];
    
     public function __construct($trackingNumber)
     {
@@ -35,10 +36,7 @@ class OrderTrackingRepository
                 {
                     $response = CorreiosChileTrackingFacade::trackOrder($this->trackingNumber);
 
-                    $chile_trackings = collect($response->data);
-                    $hd_trackings = $order->trackings;
-
-                    $trackings = $hd_trackings->push($chile_trackings);
+                   $trackings = $this->pushToTrackings($response->data, $order->trackings);
 
                     return (Object) [
                         'success' => true,
@@ -73,6 +71,20 @@ class OrderTrackingRepository
             'status' => 404,
             'trackings' => null,
         ];
+    }
+
+    private function pushToTrackings($response, $hd_trackings)
+    {
+        foreach($response as $data)
+        {
+            array_push($this->response_trackings, $data);
+        }
+
+        $chile_trackings = collect($this->response_trackings);
+
+        $trackings = $hd_trackings->push($chile_trackings);
+
+        return $trackings;
     }
 
 }
