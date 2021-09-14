@@ -29,11 +29,24 @@ class OrderTrackingRepository
         $order = Order::where('corrios_tracking_code', $this->trackingNumber)->first();
         
         if($order){
-            if($order->recipient->country_id == Order::CHILE)
+            if($order->recipient->country_id == Order::CHILE && !$order->trackings->isEmpty())
             {
-                $chile_trackings = CorreiosChileTrackingFacade::trackOrder($this->trackingNumber);
+                if($order->trackings->last()->status_code == Order::STATUS_ARRIVE_AT_WAREHOUSE)
+                {
+                    $chile_trackings = CorreiosChileTrackingFacade::trackOrder($this->trackingNumber);
+                    return (Object) [
+                        'success' => true,
+                        'status' => 200,
+                        'trackings' => $order->trackings,
+                        'chile_trackings' => $chile_trackings->data
+                    ];
+                }
 
-                dd($chile_trackings);
+                return (Object)[
+                    'success' => true,
+                    'status' => 200,
+                    'trackings' => $order->trackings,
+                ];
             }
             if(!$order->trackings->isEmpty()){
                 return (Object)[
