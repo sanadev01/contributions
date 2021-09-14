@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use stdClass;
 use App\Models\Order;
 use App\Facades\USPSTrackingFacade;
 use App\Facades\CorreiosChileTrackingFacade;
@@ -75,17 +76,17 @@ class OrderTrackingRepository
 
     private function pushToTrackings($response, $hd_trackings)
     {
+        $response_trackings = new stdClass();
+        
         foreach($response as $data)
         {
-            foreach($data as $tracking)
+            foreach($data as $key => $value)
             {
-                $this->response_trackings[] = $tracking;
+                $response_trackings->$key = $value;
             }
+
+            $trackings = $hd_trackings->push($response_trackings);
         }
-
-        $chile_trackings = collect($this->response_trackings);
-
-        $trackings = $hd_trackings->push($chile_trackings);
 
         return $trackings;
     }
