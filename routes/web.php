@@ -103,7 +103,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::get('accrual-rates/{accrual_rate?}', [\App\Http\Controllers\Admin\Rates\AccrualRateController::class, 'showRates'])->name('show-accrual-rates');
             Route::resource('user-rates', UserRateController::class)->only(['index']);
             Route::get('rates-exports/{package}', RateDownloadController::class)->name('rates.exports');
-            Route::resource('profit-packages-upload', ProfitPackageUploadController::class)->only(['create', 'store']);
+            Route::resource('profit-packages-upload', ProfitPackageUploadController::class)->only(['create', 'store','edit','update']);
         });
 
         Route::namespace('Connect')->group(function(){

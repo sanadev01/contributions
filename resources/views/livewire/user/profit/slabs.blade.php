@@ -30,7 +30,12 @@
                 if($weight < 100 ){
                     $weight = 100;
                 }
+                if ($this->profitPackage) {
                     $cost = $this->getSaleRate($this->profitPackage, $weight, false);
+                }else {
+                    $cost = 0;
+                }
+                    
                 @endphp
                 <td>
                     <input type="text" class="form-control shipping" name="shipping" value="@if($weight){{ $cost }}@endif" id="shipping_{{$key}}" data-key="{{$key}}">
