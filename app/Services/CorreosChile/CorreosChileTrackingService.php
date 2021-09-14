@@ -26,7 +26,7 @@ class CorreosChileTrackingService
        try {
            
             $response = Http::withBasicAuth($this->user, $this->password)->get($this->apiUrl.$trackingNumber);
-            dd($response);
+            dd($response->json());
        } catch (Exception $e) {
            dd($e);
        }
