@@ -77,7 +77,10 @@ class OrderTrackingRepository
     {
         foreach($response as $data)
         {
-            array_push($this->response_trackings, $data);
+            foreach($data as $tracking)
+            {
+                $this->response_trackings[] = $tracking;
+            }
         }
 
         $chile_trackings = collect($this->response_trackings);
