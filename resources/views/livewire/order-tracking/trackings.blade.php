@@ -94,7 +94,7 @@
                                         </li>
                                         <li class="step0">
                                             <div class="icon-content">
-                                                <img class="icon offset-1" src="{{ asset('images/tracking/to-hd.png') }}">
+                                                <img class="icon offset-1" src="{{ asset('images/tracking/brazil-flag.png') }}">
                                                 <div class="d-flex flex-column" mt-4>
                                                     <p class="font-weight-bold">Received <br>Correios Brazil </p>
                                                 </div>
@@ -102,7 +102,7 @@
                                         </li>
                                         <li class="step0">
                                             <div class="icon-content">
-                                                <img class="icon offset-1" src="{{ asset('images/tracking/to-hd.png') }}">
+                                                <img class="icon offset-1" src="{{ asset('images/tracking/custom-finished.png') }}">
                                                 <div class="d-flex flex-column" mt-4>
                                                     <p class="font-weight-bold">Customs<br>Finished</p>
                                                 </div>
@@ -126,7 +126,7 @@
                                         </li>
                                         <li class="step0">
                                             <div class="icon-content">
-                                                <img class="icon offset-1" src="{{ asset('images/tracking/to-hd.png') }}">
+                                                <img class="icon offset-1" src="{{ asset('images/tracking/left-to-buyer.png') }}">
                                                 <div class="d-flex flex-column" mt-4>
                                                     <p class="font-weight-bold">Parcels left  <br> to the buyer </p>
                                                 </div>
@@ -134,7 +134,7 @@
                                         </li>
                                         <li class="step0">
                                             <div class="icon-content">
-                                                <img class="icon offset-1" src="{{ asset('images/tracking/to-hd.png') }}">
+                                                <img class="icon offset-1" src="{{ asset('images/tracking/delivered.png') }}">
                                                 <div class="d-flex flex-column" mt-4>
                                                     <p class="font-weight-bold">parcels  <br>delivered to the buyer  </p>
                                                 </div>
@@ -183,7 +183,7 @@
                                         </li>
                                         <li class="@if( $correios_brazil_recieved || $custom_finished || $in_transit || $left_to_buyer || $delivered_to_buyer || $posted ) active @endif step0">
                                             <div class="icon-content">
-                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/to-hd.png') }}">
+                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/brazil-flag.png') }}">
                                                 <div class="d-flex flex-column" mt-4>
                                                     <p class="font-weight-bold">Received <br>Correios Brazil </p>
                                                 </div>
@@ -191,7 +191,7 @@
                                         </li>
                                         <li class="@if($custom_finished || $in_transit || $left_to_buyer || $delivered_to_buyer || $posted ) active @endif step0">
                                             <div class="icon-content">
-                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/to-hd.png') }}">
+                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/custom-finished.png') }}">
                                                 <div class="d-flex flex-column" mt-4>
                                                     <p class="font-weight-bold">Customs<br>Finished</p>
                                                 </div>
@@ -215,7 +215,7 @@
                                         </li>
                                         <li class="@if($delivered_to_buyer || $posted) active @endif step0">
                                             <div class="icon-content">
-                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/to-hd.png') }}">
+                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/left-to-buyer.png') }}">
                                                 <div class="d-flex flex-column" mt-4>
                                                     <p class="font-weight-bold">Parcels left  <br> to the buyer </p>
                                                 </div>
@@ -223,7 +223,7 @@
                                         </li>
                                         <li class="@if($posted ) active @endif step0">
                                             <div class="icon-content">
-                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/to-hd.png') }}">
+                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/delivered.png') }}">
                                                 <div class="d-flex flex-column" mt-4>
                                                     <p class="font-weight-bold">parcels  <br>delivered to the buyer  </p>
                                                 </div>

@@ -14,7 +14,6 @@ class OrderTrackingRepository
 
     private $trackingNumber;
     private $order;
-    private $response_trackings = [];
    
     public function __construct($trackingNumber)
     {
@@ -42,6 +41,7 @@ class OrderTrackingRepository
                     return (Object) [
                         'success' => true,
                         'status' => 200,
+                        'service' => 'Correios_Chile',
                         'trackings' => $trackings,
                     ];
                 }
@@ -49,6 +49,7 @@ class OrderTrackingRepository
                 return (Object)[
                     'success' => true,
                     'status' => 200,
+                    'service' => 'HD',
                     'trackings' => $order->trackings,
                 ];
             }
@@ -56,12 +57,14 @@ class OrderTrackingRepository
                 return (Object)[
                     'success' => true,
                     'status' => 200,
+                    'service' => 'HD',
                     'trackings' => $order->trackings,
                 ];
             }
             return (Object)[
                 'success' => false,
                 'status' => 201,
+                'service' => 'HD',
                 'trackings' => null,
             ];
 
@@ -70,6 +73,7 @@ class OrderTrackingRepository
         return (Object)[
             'success' => false,
             'status' => 404,
+            'service' => 'HD',
             'trackings' => null,
         ];
     }
