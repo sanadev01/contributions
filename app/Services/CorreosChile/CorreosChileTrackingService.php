@@ -26,19 +26,22 @@ class CorreosChileTrackingService
            
             $response = Http::withBasicAuth($this->user, $this->password)->get($this->apiUrl.$trackingNumber);
 
-            dd($response->getStatusCode());
             if($response->getStatusCode() == 200) 
             {
-
                 $response = $response->json();
                 return (Object)[
-                    'status' => 'success',
+                    'status' => true,
+                    'message' => 'Order Found',
                     'data' => $response['historial'],
                 ];
             }
             
        } catch (Exception $e) {
-           dd($e);
+            return (Object)[
+                'status' => false,
+                'message' => $e->getMessage(),
+                'data' => null,
+            ];
        }
     }
 }
