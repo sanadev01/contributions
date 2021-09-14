@@ -33,12 +33,17 @@ class OrderTrackingRepository
             {
                 if($order->trackings->last()->status_code == Order::STATUS_ARRIVE_AT_WAREHOUSE)
                 {
-                    $chile_trackings = CorreiosChileTrackingFacade::trackOrder($this->trackingNumber);
+                    $response = CorreiosChileTrackingFacade::trackOrder($this->trackingNumber);
+
+                    $chile_trackings = collect($response->data);
+                    $hd_trackings = $order->trackings;
+
+                    $trackings = $hd_trackings->push($chile_trackings);
+
                     return (Object) [
                         'success' => true,
                         'status' => 200,
-                        'trackings' => $order->trackings,
-                        'chile_trackings' => $chile_trackings->data
+                        'trackings' => $trackings,
                     ];
                 }
 
