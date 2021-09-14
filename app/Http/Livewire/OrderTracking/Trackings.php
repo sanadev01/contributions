@@ -20,11 +20,11 @@ class Trackings extends Component
     public $left_to_buyer = false;
     public $delivered_to_buyer = false;
     public $posted = false;
-
+    public $CorreiosChile = false;
 
     public function render()
     {  
-        if( isset($this->tracking))
+        if( isset($this->tracking) && $this->CorreiosChile == false )
         {
             $this->toggleStatus(); 
         }
@@ -46,6 +46,11 @@ class Trackings extends Component
             $order_tracking_repository = new OrderTrackingRepository($this->trackingNumber);
             $response = $order_tracking_repository->handle();
             
+            if( $response->service == 'Correios_Chile' )
+            {
+                $this->CorreiosChile = true;
+            }
+
             if( $response->success == true && $response->status = 200){
                 
                 $this->tracking = $response->trackings->last();
