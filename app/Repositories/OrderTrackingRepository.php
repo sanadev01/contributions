@@ -53,7 +53,7 @@ class OrderTrackingRepository
                 return (Object)[
                     'success' => true,
                     'status' => 200,
-                    'service' => 'HD',
+                    'service' => 'Correios_Chile',
                     'trackings' => $order->trackings,
                 ];
             }
@@ -61,14 +61,14 @@ class OrderTrackingRepository
                 return (Object)[
                     'success' => true,
                     'status' => 200,
-                    'service' => 'HD',
+                    'service' => 'Correios_Brazil',
                     'trackings' => $order->trackings,
                 ];
             }
             return (Object)[
                 'success' => false,
                 'status' => 201,
-                'service' => 'HD',
+                'service' => 'Correios_Brazil',
                 'trackings' => null,
             ];
 
