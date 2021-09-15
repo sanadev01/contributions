@@ -33,16 +33,16 @@
                     
                         <div class="row col-12 d-flex justify-content-between px-3 top">
                             <div class="col-3 d-flex">
-                                <h6>HD WHR#: <span class="text-primary font-weight-bold">{{ optional($tracking->order)->warehouse_number }}</span></h6>
+                                <h6>HD WHR#: <span class="text-primary font-weight-bold">{{ optional($order)->warehouse_number }}</span></h6>
                             </div>
                             <div class="col-3 d-flex">
-                                <h6>Tracking Number: <span class="text-primary font-weight-bold">{{ optional($tracking->order)->corrios_tracking_code }}</span></h6>
+                                <h6>Tracking Number: <span class="text-primary font-weight-bold">{{ optional($order)->corrios_tracking_code }}</span></h6>
                             </div>
                             <div class="col-3 d-flex">
-                                <h6>Piece: <span class="text-primary font-weight-bold">{{ optional(optional($tracking->order)->items)->count() }}</span></h6>
+                                <h6>Piece: <span class="text-primary font-weight-bold">{{ optional($order)->items->count() }}</span></h6>
                             </div>
                             <div class="col-3 d-flex">
-                                <h6>weight: <span class="text-primary font-weight-bold">{{ optional($tracking->order)->weight }} {{ optional($tracking->order)->measurement_unit }}</span></h6>
+                                <h6>weight: <span class="text-primary font-weight-bold">{{ optional($order)->weight }} {{ optional($order)->measurement_unit }}</span></h6>
                             </div>
                             
                         </div>
@@ -301,7 +301,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($trackings as $track)
+                                @foreach ($order->trackings as $track)
                                     <tr>
                                         <td>
                                             {{ $track->created_at }}

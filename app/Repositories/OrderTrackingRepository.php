@@ -45,6 +45,7 @@ class OrderTrackingRepository
                             'status' => 200,
                             'service' => 'Correios_Chile',
                             'trackings' => $trackings,
+                            'order' => $order
                         ];
                     }
                    
@@ -55,21 +56,24 @@ class OrderTrackingRepository
                     'status' => 200,
                     'service' => 'Correios_Chile',
                     'trackings' => $order->trackings,
+                    'order' => $order
                 ];
             }
             if(!$order->trackings->isEmpty()){
                 return (Object)[
                     'success' => true,
                     'status' => 200,
-                    'service' => 'Correios_Brazil',
+                    'service' => 'HD',
                     'trackings' => $order->trackings,
+                    'order' => $order
                 ];
             }
             return (Object)[
                 'success' => false,
                 'status' => 201,
-                'service' => 'Correios_Brazil',
+                'service' => 'HD',
                 'trackings' => null,
+                'order' => null
             ];
 
         }
@@ -79,6 +83,7 @@ class OrderTrackingRepository
             'status' => 404,
             'service' => 'HD',
             'trackings' => null,
+            'order' => null
         ];
     }
 
