@@ -15,6 +15,7 @@ class Trackings extends Component
     public $message;
     public $status = null;
     public $correios_brazil_recieved = false;
+    public $correios_chile_recieved = false;
     public $custom_finished = false;
     public $in_transit = false;
     public $left_to_buyer = false;
@@ -27,6 +28,11 @@ class Trackings extends Component
         if( isset($this->tracking) && $this->CorreiosChile == false )
         {
             $this->toggleStatus(); 
+        }
+
+        if( isset($this->tracking) && $this->CorreiosChile == true )
+        {
+            $this->toggleCorreiosChileStatus();
         }
        
         return view('livewire.order-tracking.trackings',[
@@ -46,11 +52,11 @@ class Trackings extends Component
             $order_tracking_repository = new OrderTrackingRepository($this->trackingNumber);
             $response = $order_tracking_repository->handle();
             
-            if( $response->service == 'Correios_Chile' )
+            if($response->service == 'Correios_Chile')
             {
                 $this->CorreiosChile = true;
             }
-
+        
             if( $response->success == true && $response->status = 200){
                 
                 $this->tracking = $response->trackings->last();
@@ -81,6 +87,13 @@ class Trackings extends Component
         $this->posted = ( $this->tracking->status_code == 01 && $this->tracking->type == 'PO' ) ? true : false;
         
         return true;
+    }
+
+    public function toggleCorreiosChileStatus()
+    {
+        $this->correios_chile_recieved = ( isset($this->tracking->Orden) == 4 ) ? true : false;
+        $this->in_transit = ( isset($this->tracking->Orden) == 6 ) ? true : false;
+        $this->delivered_to_buyer = ( isset($this->tracking->Orden) == 10 ) ? true : false;
     }
 
 

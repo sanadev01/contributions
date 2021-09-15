@@ -49,7 +49,7 @@
                         <hr>
                         <div class="row d-flex justify-content-center">
                             <div class="col-12">
-                                <ul id="progressbar" class="text-center">
+                                <ul id="progressbar" class="text-center" @if($CorreiosChile == true) style="margin-left: 15% !important;" @endif>
                                     @if (optional($tracking->type == 'HD') || $CorreiosChile == true)
                                         <li class="@if($tracking->status_code >=  70) active @endif step0">
                                             <div class="icon-content">
@@ -84,6 +84,7 @@
                                                 </div>
                                             </div>
                                         </li>
+                                        @if ($CorreiosChile == false)
                                         <li class="step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1" src="{{ asset('images/tracking/correios.png') }}">
@@ -140,6 +141,32 @@
                                                 </div>
                                             </div>
                                         </li>
+                                        @else
+                                        <li class="step0">
+                                            <div class="icon-content">
+                                                <img class="icon offset-1" src="{{ asset('images/tracking/brazil-flag.png') }}">
+                                                <div class="d-flex flex-column" mt-4>
+                                                    <p class="font-weight-bold">Received By<br>Correios Chile </p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="step0">
+                                            <div class="icon-content">
+                                                <img class="icon offset-1" src="{{ asset('images/tracking/to-hd.png') }}">
+                                                <div class="d-flex flex-column" mt-4>
+                                                    <p class="font-weight-bold">Parcels in <br> transit to<br>distribution center<br> @if(isset($tracking->Oficina)) in @endif {{ isset($tracking->Oficina) }} </p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="step0">
+                                            <div class="icon-content">
+                                                <img class="icon offset-1" src="{{ asset('images/tracking/delivered.png') }}">
+                                                <div class="d-flex flex-column" mt-4>
+                                                    <p class="font-weight-bold">parcels  <br>delivered to the buyer  </p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        @endif
                                     @else
                                         <li class="active step0">
                                             <div class="icon-content">
@@ -173,6 +200,7 @@
                                                 </div>
                                             </div>
                                         </li>
+                                        @if ($CorreiosChile == false)
                                         <li class="@if($posted || $correios_brazil_recieved ) active @endif step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/correios.png') }}">
@@ -229,6 +257,32 @@
                                                 </div>
                                             </div>
                                         </li>
+                                        @else
+                                        <li class="@if( $correios_chile_recieved || $in_transit || $delivered_to_buyer) active @endif step0">
+                                            <div class="icon-content">
+                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/brazil-flag.png') }}">
+                                                <div class="d-flex flex-column" mt-4>
+                                                    <p class="font-weight-bold">Received By<br>Correios Chile </p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="@if($in_transit || $delivered_to_buyer) active @endif step0">
+                                            <div class="icon-content">
+                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/to-hd.png') }}">
+                                                <div class="d-flex flex-column" mt-4>
+                                                    <p class="font-weight-bold">Parcels in <br> transit to<br>distribution center<br> @if(isset($tracking->Oficina)) in @endif {{ isset($tracking->Oficina) }} </p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="@if($delivered_to_buyer) active @endif step0">
+                                            <div class="icon-content">
+                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/left-to-buyer.png') }}">
+                                                <div class="d-flex flex-column" mt-4>
+                                                    <p class="font-weight-bold">Parcels left  <br> to the buyer </p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        @endif
                                     @endif
                                     
                                 </ul>
