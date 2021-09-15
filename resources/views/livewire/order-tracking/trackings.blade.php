@@ -51,7 +51,7 @@
                             <div class="col-12">
                                 <ul id="progressbar" class="text-center" @if($CorreiosChile == true) style="margin-left: 15% !important;" @endif>
                                     @if (optional($tracking->type == 'HD') || $CorreiosChile == true)
-                                        <li class="@if($tracking->status_code >=  70) active @endif step0">
+                                        <li class="@if(isset($tracking->status_code) >=  70) active @endif step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1" src="{{ asset('images/tracking/to-hd.png') }}">
                                                 <div class="d-flex flex-column mt-2">
@@ -59,7 +59,7 @@
                                                 </div>
                                             </div>
                                         </li>
-                                        <li class="@if($tracking->status_code >=  73) active @endif step0">
+                                        <li class="@if(isset($tracking->status_code) >=  73) active @endif step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1" src="{{ asset('images/tracking/hd-whr.png') }}">
                                                 <div class="d-flex flex-column mt-2">
@@ -67,8 +67,8 @@
                                                 </div>
                                             </div>
                                         </li>
-                                        {{-- <li class="@if($tracking->status_code >=  75) active @endif step0"></li> --}}
-                                        <li class="@if($tracking->status_code >=  75) active @endif step0">
+                                        {{-- <li class="@if(isset($tracking->status_code) >=  75) active @endif step0"></li> --}}
+                                        <li class="@if(isset($tracking->status_code) >=  75) active @endif step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1" src="{{ asset('images/tracking/container.png') }}">
                                                 <div class="d-flex flex-column mt-4">
@@ -76,7 +76,7 @@
                                                 </div>
                                             </div>
                                         </li>
-                                        <li class="@if($tracking->status_code >=  80) active @endif step0">
+                                        <li class="@if(isset($tracking->status_code) >=  80) active @endif step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1" src="{{ asset('images/tracking/awb.png') }}">
                                                 <div class="d-flex flex-column mt-4">
