@@ -36,14 +36,18 @@ class OrderTrackingRepository
                 {
                     $response = CorreiosChileTrackingFacade::trackOrder($this->trackingNumber);
 
-                   $trackings = $this->pushToTrackings($response->data, $order->trackings);
+                    if($response->status == true)
+                    {
+                        $trackings = $this->pushToTrackings($response->data, $order->trackings);
 
-                    return (Object) [
-                        'success' => true,
-                        'status' => 200,
-                        'service' => 'Correios_Chile',
-                        'trackings' => $trackings,
-                    ];
+                        return (Object) [
+                            'success' => true,
+                            'status' => 200,
+                            'service' => 'Correios_Chile',
+                            'trackings' => $trackings,
+                        ];
+                    }
+                   
                 }
 
                 return (Object)[
@@ -89,8 +93,9 @@ class OrderTrackingRepository
                 $response_trackings->$key = $value;
             }
 
-            $trackings = $hd_trackings->push($response_trackings);
         }
+
+        $trackings = $hd_trackings->push($response_trackings);
 
         return $trackings;
     }
