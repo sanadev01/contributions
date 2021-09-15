@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 
+use stdClass;
 use App\Models\User;
 use App\Models\Order;
 use App\Facades\USPSFacade;
@@ -37,10 +38,58 @@ class HomeController extends Controller
 
     public function test()
     {
-        $trackingNumber = '990077349283';
-        $response = CorreiosChileTrackingFacade::trackOrder($trackingNumber);
+        // $trackingNumber = '990077349283';
+        // $response = CorreiosChileTrackingFacade::trackOrder($trackingNumber);
 
-        dd($response);
+        // dd($response);
+
+        $this->conversion();
+    }
+
+    public function conversion()
+    {
+        $data = [
+            [
+                'FechaDate' => '2020-05-30T04:40:00',
+                'Fecha' => '30-05-2020 04:40',
+                'Estado' => 'EN PREPARACION',
+                'Oficina' => 'CORREOS CHILE',
+                'Icono' => '011',
+                'Orden' => 0,
+
+            ],
+            [
+                'FechaDate' => '2020-05-30T04:40:00',
+                'Fecha' => '30-05-2020 04:40',
+                'Estado' => 'PENDIENTE DE ENTREGA. CONTACTAR SERVICIO AL CLIENTE CORREOSCHILE',
+                'Oficina' => 'CORREOS CHILE',
+                'Icono' => '007',
+                'Orden' => 0,
+
+            ]
+        ];
+
+        $response = (Object) [
+            'status' => true,
+            'message' => 'Order Found',
+            'data' => $data,
+        ];
+
+        $order = Order::find(2761);
+
+       $trackings = $this->pushToTrackings($response->data, $order->trackings);
+        dd($trackings->toArray());
+    }
+
+    public function pushToTrackings($response, $hd_trackings)
+    {
+        foreach($response as $data)
+        {
+           
+            $hd_trackings->push($data);
+        }
+       
+        return $hd_trackings;
     }
     
 }
