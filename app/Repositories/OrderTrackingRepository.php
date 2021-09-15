@@ -84,18 +84,17 @@ class OrderTrackingRepository
 
     private function pushToTrackings($response, $hd_trackings)
     {
-        $response_trackings = new stdClass();
+        // $response_trackings = new stdClass();
         
         foreach($response as $data)
         {
-            foreach($data as $key => $value)
+            foreach($data as $tracking)
             {
-                $response_trackings->$key = $value;
+                $response_trackings = json_decode(json_encode($tracking));
             }
 
+            $trackings = $hd_trackings->push($response_trackings);
         }
-
-        $trackings = $hd_trackings->push($response_trackings);
 
         return $trackings;
     }
