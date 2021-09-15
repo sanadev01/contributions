@@ -11,6 +11,7 @@ use App\Models\OrderTracking;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use App\Facades\CorreiosChileTrackingFacade;
 
 class HomeController extends Controller
 {
@@ -36,7 +37,10 @@ class HomeController extends Controller
 
     public function test()
     {
-        dd(true);
+        $trackingNumber = '990077349283';
+        $response = CorreiosChileTrackingFacade::trackOrder($trackingNumber);
+
+        dd($response);
     }
     
 }

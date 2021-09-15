@@ -92,10 +92,13 @@ class OrderTrackingRepository
             {
                 $response_trackings = json_decode(json_encode($tracking));
             }
-
-            $trackings = $hd_trackings->push($response_trackings);
         }
 
+        foreach($response_trackings as $chile_tracking)
+        {
+            $trackings = $hd_trackings->push($chile_tracking);
+        }
+        
         return $trackings;
     }
 
