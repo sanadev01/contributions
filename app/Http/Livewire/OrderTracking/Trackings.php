@@ -22,6 +22,7 @@ class Trackings extends Component
     public $delivered_to_buyer = false;
     public $posted = false;
     public $CorreiosChile = false;
+    public $order;
 
     public function render()
     {  
@@ -63,6 +64,7 @@ class Trackings extends Component
                 $this->trackings = $response->trackings;
                 $this->status   = $response->status;
                 $this->message  = null;
+                $this->order = $response->order;
             }
             if( $response->success == false &&  $response->status == 201){
                 $this->status   = $response->status;
