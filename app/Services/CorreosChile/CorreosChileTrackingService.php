@@ -2,6 +2,7 @@
 namespace App\Services\CorreosChile;
 
 use Exception;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use GuzzleHttp\Client as GuzzleClient;
 
@@ -37,6 +38,7 @@ class CorreosChileTrackingService
             }
             
        } catch (Exception $e) {
+            Log::info($e->getMessage());
             return (Object)[
                 'status' => false,
                 'message' => $e->getMessage(),
