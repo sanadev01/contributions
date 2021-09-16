@@ -199,7 +199,7 @@ Route::get('order/{order}/label/get', function (App\Models\Order $order) {
 Route::get('test-label',function(){
     $labelPrinter = new CN23LabelMaker();
 
-    $order = Order::find(70705);
+    $order = Order::find(53654);
     $labelPrinter->setOrder($order);
     $labelPrinter->setService(2);
 
