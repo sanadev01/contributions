@@ -38,21 +38,20 @@ class OrderTrackingRepository
 
                     if($response->status == true)
                     {
-                        $trackings = $this->pushToTrackings($response->data, $order->trackings);
+                        // $trackings = $this->pushToTrackings($response->data, $order->trackings);
 
                         return (Object) [
                             'success' => true,
                             'status' => 200,
                             'service' => 'Correios_Chile',
-                            'trackings' => $trackings,
+                            'trackings' => $order->trackings,
+                            'chile_trackings' => $response->data,
                             'order' => $order
                         ];
                     }
                    
                 }
 
-                // $trackings = $this->testPush($order->trackings);
-                // dd($trackings);
                 return (Object)[
                     'success' => true,
                     'status' => 200,
@@ -99,23 +98,6 @@ class OrderTrackingRepository
         }
 
         return $hd_trackings;
-    }
-
-    private function testPush($hd_trackings)
-    {
-        $data = [
-            'FechaDate' => '2020-05-30T04:40:00',
-            'Fecha' => '30-05-2020 04:40',
-            'Estado' => 'PENDIENTE DE ENTREGA. CONTACTAR SERVICIO AL CLIENTE CORREOSCHILE',
-            'Oficina' => 'CORREOS CHILE',
-            'Icono' => '007',
-            'Orden' => 10,
-        ];
-
-        $hd_trackings->push($data);
-
-        return $hd_trackings;
-
     }
 
 }

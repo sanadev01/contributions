@@ -269,7 +269,6 @@
                 </div>
                 <hr>
                 <div class="card">
-                    @if($CorreiosChile == false)
                     <div class="table-wrapper position-relative">
                         <table class="table mb-0 table-responsive-md table-striped" id="">
                             <thead>
@@ -296,7 +295,7 @@
                             </tbody>
                         </table>
                     </div>
-                    @endif
+                   
                 </div>
             </div>
         </div>

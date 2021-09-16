@@ -59,6 +59,13 @@ class Trackings extends Component
             if( $response->service == 'Correios_Chile' )
             {
                 $this->CorreiosChile = true;
+                $this->tracking = last($response->chile_trackings);
+                $this->trackings = $response->trackings;
+                $this->order = $response->order;
+                $this->status   = $response->status;
+                $this->message  = null;
+
+                return true;
 
             }
             
@@ -112,6 +119,8 @@ class Trackings extends Component
         $this->correios_chile_recieved = ( isset($this->tracking['Orden']) == 4 ) ? true : false;
         $this->in_transit = ( isset($this->tracking['Orden']) == 6 ) ? true : false;
         $this->delivered_to_buyer = ( isset($this->tracking['Orden']) == 10 ) ? true : false;
+
+        // dd($this->delivered_to_buyer);
     }
 
 
