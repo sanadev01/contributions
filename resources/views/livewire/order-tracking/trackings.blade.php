@@ -33,24 +33,23 @@
                     
                         <div class="row col-12 d-flex justify-content-between px-3 top">
                             <div class="col-3 d-flex">
-                                <h6>HD WHR#: <span class="text-primary font-weight-bold">{{ optional($tracking->order)->warehouse_number }}</span></h6>
+                                <h6>HD WHR#: <span class="text-primary font-weight-bold">{{ optional($order)->warehouse_number }}</span></h6>
                             </div>
                             <div class="col-3 d-flex">
-                                <h6>Tracking Number: <span class="text-primary font-weight-bold">{{ optional($tracking->order)->corrios_tracking_code }}</span></h6>
+                                <h6>Tracking Number: <span class="text-primary font-weight-bold">{{ optional($order)->corrios_tracking_code }}</span></h6>
                             </div>
                             <div class="col-3 d-flex">
-                                <h6>Piece: <span class="text-primary font-weight-bold">{{ optional(optional($tracking->order)->items)->count() }}</span></h6>
+                                <h6>Piece: <span class="text-primary font-weight-bold">{{ optional($order)->items->count() }}</span></h6>
                             </div>
                             <div class="col-3 d-flex">
-                                <h6>weight: <span class="text-primary font-weight-bold">{{ optional($tracking->order)->weight }} {{ optional($tracking->order)->measurement_unit }}</span></h6>
+                                <h6>weight: <span class="text-primary font-weight-bold">{{ optional($order)->weight }} {{ optional($order)->measurement_unit }}</span></h6>
                             </div>
-                            
                         </div>
                         <hr>
                         <div class="row d-flex justify-content-center">
                             <div class="col-12">
                                 <ul id="progressbar" class="text-center">
-                                    @if (optional($tracking->type == 'HD'))
+                                    @if (isset($tracking->type) == 'HD' || $CorreiosChile == false)
                                         <li class="@if($tracking->status_code >=  70) active @endif step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1" src="{{ asset('images/tracking/to-hd.png') }}">
@@ -84,6 +83,7 @@
                                                 </div>
                                             </div>
                                         </li>
+                                        @if ($tracking->order->recipient->country_id != 46)
                                         <li class="step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1" src="{{ asset('images/tracking/correios.png') }}">
@@ -92,11 +92,16 @@
                                                 </div>
                                             </div>
                                         </li>
+                                        @endif
                                         <li class="step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1" src="{{ asset('images/tracking/brazil-flag.png') }}">
                                                 <div class="d-flex flex-column" mt-4>
-                                                    <p class="font-weight-bold">Received <br>Correios Brazil </p>
+                                                    @if ($tracking->order->recipient->country_id != 46)
+                                                        <p class="font-weight-bold">Received <br>Correios Brazil </p>
+                                                    @else
+                                                        <p class="font-weight-bold">Received <br>Correios Chile</p>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </li>
@@ -173,6 +178,7 @@
                                                 </div>
                                             </div>
                                         </li>
+                                        @if ($CorreiosChile == false)
                                         <li class="@if($posted || $correios_brazil_recieved ) active @endif step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/correios.png') }}">
@@ -229,6 +235,32 @@
                                                 </div>
                                             </div>
                                         </li>
+                                        @elseif( $CorreiosChile == true )
+                                        <li class="@if( $correios_chile_recieved || $in_transit || $delivered_to_buyer) active @endif step0">
+                                            <div class="icon-content">
+                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/brazil-flag.png') }}">
+                                                <div class="d-flex flex-column" mt-4>
+                                                    <p class="font-weight-bold">Received By<br>Correios Chile </p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="@if($in_transit || $delivered_to_buyer) active @endif step0">
+                                            <div class="icon-content">
+                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/to-hd.png') }}">
+                                                <div class="d-flex flex-column" mt-4>
+                                                    <p class="font-weight-bold">Parcels in <br> transit to<br>distribution center<br> @if(isset($tracking['Oficina'])) in @endif {{ isset($tracking['Oficina']) }} </p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="@if($delivered_to_buyer) active @endif step0">
+                                            <div class="icon-content">
+                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/left-to-buyer.png') }}">
+                                                <div class="d-flex flex-column" mt-4>
+                                                    <p class="font-weight-bold">Parcels delivered  <br> to the buyer </p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        @endif
                                     @endif
                                     
                                 </ul>
@@ -237,6 +269,7 @@
                 </div>
                 <hr>
                 <div class="card">
+                    @if($CorreiosChile == false)
                     <div class="table-wrapper position-relative">
                         <table class="table mb-0 table-responsive-md table-striped" id="">
                             <thead>
@@ -247,7 +280,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($trackings as $track)
+                                @foreach ($order->trackings as $track)
                                     <tr>
                                         <td>
                                             {{ $track->created_at }}
@@ -263,6 +296,7 @@
                             </tbody>
                         </table>
                     </div>
+                    @endif
                 </div>
             </div>
         </div>
