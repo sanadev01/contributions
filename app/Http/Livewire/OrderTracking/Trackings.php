@@ -5,6 +5,7 @@ namespace App\Http\Livewire\OrderTracking;
 use App\Models\Order;
 use Livewire\Component;
 use App\Facades\CorreosChileFacade;
+use Illuminate\Support\Facades\Log;
 use App\Repositories\OrderTrackingRepository;
 
 class Trackings extends Component
@@ -65,6 +66,7 @@ class Trackings extends Component
                 $this->status   = $response->status;
                 $this->message  = null;
 
+                Log::info($this->CorreiosChile);
                 return true;
 
             }
