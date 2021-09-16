@@ -22,18 +22,26 @@ class Trackings extends Component
     public $delivered_to_buyer = false;
     public $posted = false;
     public $CorreiosChile = false;
+    public $HD_Chile = false;
     public $order;
 
     public function render()
     {  
-        if( isset($this->tracking) && $this->CorreiosChile == false )
+        if( isset($this->tracking) && ($this->CorreiosChile == false && $this->HD_Chile == false) )
         {
             $this->toggleStatus(); 
         }
 
-        if( isset($this->tracking) && $this->CorreiosChile == true )
+        if( isset($this->tracking) && ($this->CorreiosChile == true || $this->HD_Chile == true) )
         {
             $this->toggleCorreiosChileStatus();
+
+            return view('livewire.order-tracking.chile-trackings',[
+                'tracking'  => $this->tracking,
+                'trackings'  => $this->trackings,
+                'status'    => $this->status,
+                'message'   => $this->message,
+            ]);
         }
        
         return view('livewire.order-tracking.trackings',[
@@ -53,11 +61,18 @@ class Trackings extends Component
             $order_tracking_repository = new OrderTrackingRepository($this->trackingNumber);
             $response = $order_tracking_repository->handle();
             
-            if($response->service == 'Correios_Chile')
+            if( $response->service == 'Correios_Chile' )
             {
                 $this->CorreiosChile = true;
+                $this->HD_Chile = false;
             }
-        
+
+            if( $response->service == 'HD_Chile' )
+            {
+                $this->CorreiosChile = false;
+                $this->HD_Chile = true;
+            }
+            
             if( $response->success == true && $response->status = 200){
                 
                 $this->tracking = $response->trackings->last();
@@ -96,6 +111,8 @@ class Trackings extends Component
         $this->correios_chile_recieved = ( isset($this->tracking->Orden) == 4 ) ? true : false;
         $this->in_transit = ( isset($this->tracking->Orden) == 6 ) ? true : false;
         $this->delivered_to_buyer = ( isset($this->tracking->Orden) == 10 ) ? true : false;
+        
+        return true;
     }
 
 

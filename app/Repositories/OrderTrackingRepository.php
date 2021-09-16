@@ -54,7 +54,7 @@ class OrderTrackingRepository
                 return (Object)[
                     'success' => true,
                     'status' => 200,
-                    'service' => 'Correios_Chile',
+                    'service' => 'HD_Chile',
                     'trackings' => $order->trackings,
                     'order' => $order
                 ];
