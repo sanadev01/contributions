@@ -194,13 +194,27 @@
                                 @foreach ($order->trackings as $track)
                                     <tr>
                                         <td>
-                                            {{ $track->created_at }}
+                                            @if (isset($track->created_at))
+                                                {{ $track->created_at }}
+                                            @elseif(isset($track->Fecha)))
+                                                {{ $track->Fecha }}    
+                                            @endif
+                                            
                                         </td>
                                         <td>
-                                            {{ $track->country }}
+                                            @if (isset($track->country))
+                                                {{ $track->country }}
+                                            @elseif(isset($track->Oficina)))
+                                                {{ $track->Oficina }}
+                                            @endif
                                         </td>
                                         <td>
-                                            {{ $track->description }}
+                                            @if (isset($track->description))
+                                                {{ $track->description }}
+                                            @elseif(isset($track->Estado)))
+                                                {{ $track->Estado }}
+                                            @endif
+                                            
                                         </td>
                                     </tr>
                                 @endforeach
