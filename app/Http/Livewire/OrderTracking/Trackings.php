@@ -12,6 +12,7 @@ class Trackings extends Component
     public $trackingNumber = '';
     public $tracking;
     public $trackings;
+    public $order;
     public $message;
     public $status = null;
     public $correios_brazil_recieved = false;
@@ -22,28 +23,20 @@ class Trackings extends Component
     public $delivered_to_buyer = false;
     public $posted = false;
     public $CorreiosChile = false;
-    public $HD_Chile = false;
-    public $order;
 
     public function render()
     {  
-        if( isset($this->tracking) && ($this->CorreiosChile == false && $this->HD_Chile == false) )
+        if( isset($this->tracking) && $this->CorreiosChile == false )
         {
             $this->toggleStatus(); 
         }
-
-        if( isset($this->tracking) && ($this->CorreiosChile == true || $this->HD_Chile == true) )
+        
+        if( isset($this->tracking) && $this->CorreiosChile == true )
         {
-            $this->toggleCorreiosChileStatus();
-
-            return view('livewire.order-tracking.chile-trackings',[
-                'tracking'  => $this->tracking,
-                'trackings'  => $this->trackings,
-                'status'    => $this->status,
-                'message'   => $this->message,
-            ]);
+            $this->toggleChileStatus(); 
+            
         }
-       
+        
         return view('livewire.order-tracking.trackings',[
             'tracking'  => $this->tracking,
             'trackings'  => $this->trackings,
@@ -61,25 +54,28 @@ class Trackings extends Component
             $order_tracking_repository = new OrderTrackingRepository($this->trackingNumber);
             $response = $order_tracking_repository->handle();
             
+            $this->CorreiosChile = false;
+
             if( $response->service == 'Correios_Chile' )
             {
                 $this->CorreiosChile = true;
-                $this->HD_Chile = false;
-            }
+                $this->tracking = last($response->chile_trackings);
+                $this->trackings = $response->trackings;
+                $this->order = $response->order;
+                $this->status   = $response->status;
+                $this->message  = null;
 
-            if( $response->service == 'HD_Chile' )
-            {
-                $this->CorreiosChile = false;
-                $this->HD_Chile = true;
+                return true;
+
             }
             
             if( $response->success == true && $response->status = 200){
                 
                 $this->tracking = $response->trackings->last();
                 $this->trackings = $response->trackings;
+                $this->order = $response->order;
                 $this->status   = $response->status;
                 $this->message  = null;
-                $this->order = $response->order;
             }
             if( $response->success == false &&  $response->status == 201){
                 $this->status   = $response->status;
@@ -95,7 +91,15 @@ class Trackings extends Component
     }
 
     public function toggleStatus()
-    {        
+    {   
+        $this->correios_brazil_recieved == false;
+        $this->custom_finished == false;
+        $this->in_transit == false;
+        $this->left_to_buyer == false;
+        $this->delivered_to_buyer == false;
+        $this->posted == false;
+
+
         $this->correios_brazil_recieved = ( $this->tracking->status_code == 16 && $this->tracking->type == 'PAR' ) ? true : false;
         $this->custom_finished = ( $this->tracking->status_code == 17 && $this->tracking->type == 'PAR' ) ? true : false;
         $this->in_transit = ( ($this->tracking->status_code == 01 && $this->tracking->type == 'RO') || ($this->tracking->status_code == 01 && $this->tracking->type == 'DO') ) ? true : false;
@@ -106,13 +110,17 @@ class Trackings extends Component
         return true;
     }
 
-    public function toggleCorreiosChileStatus()
+    public function toggleChileStatus()
     {
-        $this->correios_chile_recieved = ( isset($this->tracking->Orden) == 4 ) ? true : false;
-        $this->in_transit = ( isset($this->tracking->Orden) == 6 ) ? true : false;
-        $this->delivered_to_buyer = ( isset($this->tracking->Orden) == 10 ) ? true : false;
-        
-        return true;
+        $this->correios_chile_recieved = false;
+        $this->in_transit = false;
+        $this->delivered_to_buyer = false;
+
+        $this->correios_chile_recieved = ( isset($this->tracking['Orden']) == 4 ) ? true : false;
+        $this->in_transit = ( isset($this->tracking['Orden']) == 6 ) ? true : false;
+        $this->delivered_to_buyer = ( isset($this->tracking['Orden']) == 10 ) ? true : false;
+
+        // dd($this->delivered_to_buyer);
     }
 
 

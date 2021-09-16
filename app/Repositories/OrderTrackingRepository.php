@@ -38,13 +38,14 @@ class OrderTrackingRepository
 
                     if($response->status == true)
                     {
-                        $trackings = $this->pushToTrackings($response->data, $order->trackings);
+                        // $trackings = $this->pushToTrackings($response->data, $order->trackings);
 
                         return (Object) [
                             'success' => true,
                             'status' => 200,
                             'service' => 'Correios_Chile',
-                            'trackings' => $trackings,
+                            'trackings' => $order->trackings,
+                            'chile_trackings' => $response->data,
                             'order' => $order
                         ];
                     }
@@ -54,7 +55,7 @@ class OrderTrackingRepository
                 return (Object)[
                     'success' => true,
                     'status' => 200,
-                    'service' => 'HD_Chile',
+                    'service' => 'HD',
                     'trackings' => $order->trackings,
                     'order' => $order
                 ];
