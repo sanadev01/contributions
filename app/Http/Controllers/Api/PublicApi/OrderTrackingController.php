@@ -18,6 +18,14 @@ class OrderTrackingController extends Controller
 
         if( $response->success == true )
         {
+            if($response->service == 'Correios_Chile')
+            {
+                $this->trackings = $this->getChileTrackings($response->chile_trackings, $response->trackings);
+
+                $this->trackings = $this->trackings->toArray();
+                
+                return apiResponse(true,'Order found', $this->trackings);
+            }
             $this->trackings = $response->trackings->toArray();
 
             return apiResponse(true,'Order found', $this->trackings);
@@ -25,5 +33,16 @@ class OrderTrackingController extends Controller
 
         return apiResponse(false,'Order not found', $this->trackings);
         
+    }
+
+    private function getChileTrackings($response, $hd_trackings)
+    {
+        foreach($response as $data)
+        {
+
+            $hd_trackings->push($data);
+        }
+
+        return $hd_trackings;
     }
 }

@@ -83,7 +83,7 @@
                                                 </div>
                                             </div>
                                         </li>
-                                        @if ($tracking->order->recipient->country_id != 46)
+                                        @if ($tracking->order->recipient->country_id != \App\Models\Order::CHILE)
                                         <li class="step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1" src="{{ asset('images/tracking/correios.png') }}">
@@ -105,6 +105,7 @@
                                                 </div>
                                             </div>
                                         </li>
+                                        @if ($tracking->order->recipient->country_id != \App\Models\Order::CHILE)
                                         <li class="step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1" src="{{ asset('images/tracking/custom-finished.png') }}">
@@ -121,14 +122,16 @@
                                                 </div>
                                             </div>
                                         </li>
+                                        @endif
                                         <li class="step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1" src="{{ asset('images/tracking/to-hd.png') }}">
                                                 <div class="d-flex flex-column" mt-4>
-                                                    <p class="font-weight-bold">Parcels in <br> transit to<br>distribution center<br> in {{ optional(optional($tracking->order)->recipient)->city }} </p>
+                                                    <p class="font-weight-bold">Parcels in <br> transit to<br>distribution center<br> in @if ($tracking->order->recipient->country_id == \App\Models\Order::CHILE) {{ optional(optional(optional($tracking->order)->recipient)->state)->name }} @endif {{ optional(optional($tracking->order)->recipient)->city }} </p>
                                                 </div>
                                             </div>
                                         </li>
+                                        @if ($tracking->order->recipient->country_id != \App\Models\Order::CHILE)
                                         <li class="step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1" src="{{ asset('images/tracking/left-to-buyer.png') }}">
@@ -137,6 +140,7 @@
                                                 </div>
                                             </div>
                                         </li>
+                                        @endif
                                         <li class="step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1" src="{{ asset('images/tracking/delivered.png') }}">
