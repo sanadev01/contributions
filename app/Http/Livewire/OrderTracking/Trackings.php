@@ -83,7 +83,8 @@ class Trackings extends Component
                 if($this->tracking->type == 'HD')
                 {
                     $this->trackingType = 'HD';
-                }    
+                }
+                $this->chileTrackings = [];    
             }
             if( $response->success == false &&  $response->status == 201){
                 $this->status   = $response->status;

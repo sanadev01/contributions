@@ -32,7 +32,7 @@ class OrderTrackingRepository
         if($order){
             if($order->recipient->country_id == Order::CHILE && !$order->trackings->isEmpty())
             {
-                if($order->trackings->last()->status_code == Order::STATUS_ARRIVE_AT_WAREHOUSE)
+                if($order->trackings->last()->status_code == Order::STATUS_SHIPPED)
                 {
                     $response = CorreiosChileTrackingFacade::trackOrder($this->trackingNumber);
 

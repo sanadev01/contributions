@@ -57,9 +57,9 @@
                             <li class="nav-item">
                                 <a class="btn btn-primary" href="{{ route('login') }}"> <i class="feather icon-home"></i> Dashboard</a>
                             </li>
-                            <li class="nav-item">
+                            {{-- <li class="nav-item">
                                 <a class="nav-link" href="{{ route('tracking.index') }}">Tracking</a>
-                            </li>
+                            </li> --}}
                         @endguest
                         {{-- <x-lang-switcher></x-lang-switcher> --}}
                     </ul>
