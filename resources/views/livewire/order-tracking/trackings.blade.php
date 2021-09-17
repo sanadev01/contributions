@@ -49,7 +49,7 @@
                         <div class="row d-flex justify-content-center">
                             <div class="col-12">
                                 <ul id="progressbar" class="text-center">
-                                    @if (isset($tracking->type) == 'HD' || $CorreiosChile == false)
+                                    @if ($trackingType == 'HD')
                                         <li class="@if($tracking->status_code >=  70) active @endif step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1" src="{{ asset('images/tracking/to-hd.png') }}">
