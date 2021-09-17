@@ -24,6 +24,7 @@ class Trackings extends Component
     public $delivered_to_buyer = false;
     public $posted = false;
     public $CorreiosChile = false;
+    public $trackingType;
 
     public function render()
     {  
@@ -37,7 +38,6 @@ class Trackings extends Component
             $this->toggleChileStatus(); 
             
         }
-        
         return view('livewire.order-tracking.trackings',[
             'tracking'  => $this->tracking,
             'trackings'  => $this->trackings,
@@ -65,7 +65,7 @@ class Trackings extends Component
                 $this->order = $response->order;
                 $this->status   = $response->status;
                 $this->message  = null;
-
+                $this->trackingType = 'CL';
                 Log::info($this->CorreiosChile);
                 return true;
 
@@ -78,6 +78,10 @@ class Trackings extends Component
                 $this->order = $response->order;
                 $this->status   = $response->status;
                 $this->message  = null;
+                if($this->tracking->type == 'HD')
+                {
+                    $this->trackingType = 'HD';
+                }    
             }
             if( $response->success == false &&  $response->status == 201){
                 $this->status   = $response->status;
