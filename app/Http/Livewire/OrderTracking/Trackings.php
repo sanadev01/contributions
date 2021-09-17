@@ -124,9 +124,9 @@ class Trackings extends Component
         $this->in_transit = false;
         $this->delivered_to_buyer = false;
 
-        $this->correios_chile_recieved = ( isset($this->tracking['Orden']) == 4 ) ? true : false;
-        $this->in_transit = ( isset($this->tracking['Orden']) == 6 ) ? true : false;
-        $this->delivered_to_buyer = ( isset($this->tracking['Orden']) == 10 ) ? true : false;
+        $this->correios_chile_recieved = ($this->tracking['Orden'] == 4 ) ? true : false;
+        $this->in_transit = ($this->tracking['Orden'] == 6 ) ? true : false;
+        $this->delivered_to_buyer = ($this->tracking['Orden'] == 10 ) ? true : false;
 
     }
 
