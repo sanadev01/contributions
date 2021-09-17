@@ -49,7 +49,7 @@
             
             @can('viewAny', App\Models\Order::class)
                 <li class="nav-item {{ $isActive(['admin.tracking.index']) }}">
-                    <a href="{{ route('admin.tracking.index') }}">
+                    <a href="{{ route('admin.tracking.index') }}" target="_blank">
                         <i class="feather icon-map-pin"></i>
                         <span class="menu-title">@lang('menu.trackings')</span>
                     </a>
