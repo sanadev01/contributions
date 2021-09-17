@@ -37,6 +37,8 @@ class OrderTrackingController extends Controller
 
     private function getChileTrackings($response, $hd_trackings)
     {
+        $response = array_reverse($response);
+        
         foreach($response as $data)
         {
 

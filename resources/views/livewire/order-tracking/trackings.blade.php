@@ -47,7 +47,7 @@
                         </div>
                         <hr>
                         <div class="row d-flex justify-content-center">
-                            <div class="col-12">
+                            <div class="col-12" @if($order->recipient->country_id == \App\Models\Order::CHILE) style="margin-left: 30% !important;" @endif>
                                 <ul id="progressbar" class="text-center">
                                     @if ($trackingType == 'HD')
                                         <li class="@if($tracking->status_code >=  70) active @endif step0">
@@ -252,7 +252,7 @@
                                             <div class="icon-content">
                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/to-hd.png') }}">
                                                 <div class="d-flex flex-column" mt-4>
-                                                    <p class="font-weight-bold">Parcels in <br> transit to<br>distribution center<br> @if(isset($tracking['Oficina'])) in @endif {{ isset($tracking['Oficina']) }} </p>
+                                                    <p class="font-weight-bold">Parcels in <br> transit to<br>distribution center<br> @if(isset($tracking['Oficina'])) in {{ $tracking['Oficina'] }} @endif</p>
                                                 </div>
                                             </div>
                                         </li>
@@ -296,6 +296,21 @@
                                         </td>
                                     </tr>
                                 @endforeach
+                                @if ($chileTrackings != null)
+                                    @foreach ($chileTrackings as $track)
+                                    <tr>
+                                        <td>
+                                            {{ $track['Fecha'] }}
+                                        </td>
+                                        <td>
+                                            {{ $track['Oficina'] }}
+                                        </td>
+                                        <td>
+                                            {{ $track['Estado'] }}
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                @endif
                             </tbody>
                         </table>
                     </div>
