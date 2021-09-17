@@ -11,6 +11,7 @@ return [
     'payment-invoice' => 'Payment Invoices',
     'prealerts' => 'PreAlerts',
     'orders' => 'Orders',
+    'trackings' => 'Trackings',
     'transactions' => 'Transactions',
     'addresses' => 'Addresses',
     'calculator' => 'Calculator',

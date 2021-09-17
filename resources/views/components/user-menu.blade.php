@@ -46,7 +46,16 @@
                     </a>
                 </li>
             @endcan
-
+            
+            @can('viewAny', App\Models\Order::class)
+                <li class="nav-item {{ $isActive(['admin.tracking.index']) }}">
+                    <a href="{{ route('admin.tracking.index') }}" target="_blank">
+                        <i class="feather icon-map-pin"></i>
+                        <span class="menu-title">@lang('menu.trackings')</span>
+                    </a>
+                </li>
+            @endcan
+            
             @can('importExcel', App\Models\Order::class)
                 <li class="{{ $isActive(['admin.import.import-excel.index','admin.import.import-excel.show','admin.import.import-excel.create']) }}">
                     <a href="{{ route('admin.import.import-excel.index') }}">

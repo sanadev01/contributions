@@ -67,7 +67,7 @@ class ScanOrderExport extends AbstractExportService
         $this->setColor('B1', 'FF0D0D');
 
         $this->setColumnWidth('C', 20);
-        $this->setCellValue('C1', Carbon::now()->format('d/m/Y'));
+        $this->setCellValue('C1', Carbon::now()->format('d/m/Y H:i:s'));
         $this->setBold('C1', true);
         $this->setColor('C1', '0A0000');
 
