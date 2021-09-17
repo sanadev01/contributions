@@ -50,9 +50,9 @@
                                 <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
                             </li>
                             @endif
-                            <li class="nav-item">
+                            {{-- <li class="nav-item">
                                 <a class="nav-link" href="{{ route('tracking.index') }}">Tracking</a>
-                            </li>
+                            </li> --}}
                         @else
                             <li class="nav-item">
                                 <a class="btn btn-primary" href="{{ route('login') }}"> <i class="feather icon-home"></i> Dashboard</a>
