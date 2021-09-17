@@ -45,7 +45,7 @@ class OrderTrackingRepository
                             'status' => 200,
                             'service' => 'Correios_Chile',
                             'trackings' => $order->trackings,
-                            'chile_trackings' => $response->data,
+                            'chile_trackings' => $this->reverseChileTrackings($response->data),
                             'order' => $order
                         ];
                     }
@@ -98,6 +98,13 @@ class OrderTrackingRepository
         }
 
         return $hd_trackings;
+    }
+
+    private function reverseChileTrackings($response)
+    {
+        $response = array_reverse($response);
+
+        return $response;
     }
 
 }
