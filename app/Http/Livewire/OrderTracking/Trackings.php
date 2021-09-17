@@ -25,6 +25,7 @@ class Trackings extends Component
     public $posted = false;
     public $CorreiosChile = false;
     public $trackingType;
+    public $chileTrackings;
 
     public function render()
     {  
@@ -61,6 +62,7 @@ class Trackings extends Component
             {
                 $this->CorreiosChile = true;
                 $this->tracking = last($response->chile_trackings);
+                $this->chileTrackings = $response->chile_trackings;
                 $this->trackings = $response->trackings;
                 $this->order = $response->order;
                 $this->status   = $response->status;
@@ -126,7 +128,6 @@ class Trackings extends Component
         $this->in_transit = ( isset($this->tracking['Orden']) == 6 ) ? true : false;
         $this->delivered_to_buyer = ( isset($this->tracking['Orden']) == 10 ) ? true : false;
 
-        // dd($this->delivered_to_buyer);
     }
 
 
