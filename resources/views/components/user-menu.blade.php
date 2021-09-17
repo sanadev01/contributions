@@ -49,7 +49,7 @@
             
             @can('viewAny', App\Models\Order::class)
                 <li class="nav-item {{ $isActive(['admin.tracking.index']) }}">
-                    <a href="{{ route('admin.tracking.index') }}" target="_blank">
+                    <a href="{{ route('admin.tracking.index') }}">
                         <i class="feather icon-map-pin"></i>
                         <span class="menu-title">@lang('menu.trackings')</span>
                     </a>
@@ -185,6 +185,13 @@
                 <a class="nav-link" href="{{ route('calculator.index') }}" target="_blank">
                     <i class="fa fa-calculator"></i>
                     <span data-i18n="Apps">@lang('menu.calculator')</span>
+                </a>
+            </li>
+
+            <li class="nav-item {{ $isActive(['calculator.index']) }}">
+                <a class="nav-link" href="{{ route('usps-calculator.index') }}" target="_blank">
+                    <i class="fa fa-calculator"></i>
+                    <span data-i18n="Apps">@lang('menu.uspscalculator')</span>
                 </a>
             </li>
 

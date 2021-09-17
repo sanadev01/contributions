@@ -62,8 +62,12 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'Packet Mini service';
         }elseif($this->services_subclass_code == 'SRM'){
             return 'SRM service';
-        }else{
+        }elseif($this->services_subclass_code == 'SRP'){
             return 'SRP service';
+        }elseif($this->services_subclass_code == 'Priority'){
+            return 'Priority';
+        }else {
+            return 'FirstClass';
         }
     }
 
@@ -77,8 +81,12 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 3;
         }elseif($this->services_subclass_code == 'SRM') {
             return 4;
-        }else {
+        }elseif($this->services_subclass_code == 'SRP') {
             return 5;
+        }elseif($this->services_subclass_code == 'Priority') {
+            return 6;
+        }else {
+            return 7;
         }
         // return $this->services_subclass_code == 'NX' ? 2 : 1;
     }
@@ -89,6 +97,8 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'GRU';
         }elseif($this->destination_operator_name == 'CRBA') {
             return 'CWB';
+        }elseif($this->destination_operator_name == 'MIA') {
+            return 'Miami';
         }elseif($this->destination_operator_name == 'MR') {
             return 'Santiago';
         }else {

@@ -32,26 +32,6 @@ class SearchPackage extends Component
         unset($this->packagesRows[$index]);
     }
     
-    public function getTrackingCode(string $trackingCode, $index)
-    {
-        $order = Order::where('corrios_tracking_code', $trackingCode)->first();
-        $this->order = $order;
-        
-        if($this->order){
-            $this->packagesRows[$index]['tracking_code'] = $trackingCode;
-            $this->packagesRows[$index]['client'] = $this->order->merchant;
-            $this->packagesRows[$index]['dimensions'] = $this->order->length . ' x ' . $this->order->width . ' x ' . $this->order->height ;
-            $this->packagesRows[$index]['kg'] = $this->order->$order->getWeight('kg');
-            $this->packagesRows[$index]['lbs'] = $this->order->$order->getWeight('lbs');
-            $this->packagesRows[$index]['unit'] = $this->order->measurement_unit;
-            $this->packagesRows[$index]['reference'] = $this->order->warehouse_number;
-            $this->packagesRows[$index]['recpient'] = $this->order->recipient->first_name.' '.$this->order->recipient->last_name;
-            $this->packagesRows[$index]['status'] = $this->order->status;
-            
-            $this->addRow();
-        }
-    }
-    
     public function updatedTracking()
     {
         if($this->tracking){
