@@ -47,9 +47,11 @@ class PrintLabelController extends Controller
             if($request->excel){
                 if($request->start_date != null && $request->end_date != null)
                 {
+                    $start_date = $request->start_date.' 00:00:00';
+                    $end_date = $request->end_date.' 23:59:59';
+
                     $orders = Order::whereIn('id', $request->order)
-                                        ->where('order_date', '>=', $request->start_date)
-                                        ->where('order_date', '<=', $request->end_date)->get();                   
+                                    ->whereBetween('order_date', [$start_date, $end_date])->get();                            
                 }else{
 
                     $orders = Order::whereIn('id', $request->order)->get();

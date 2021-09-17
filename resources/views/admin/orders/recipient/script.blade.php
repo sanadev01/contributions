@@ -335,7 +335,7 @@
             $('#div_region').css('display', 'none')
             $('#div_communes').css('display', 'none')
             $('#commune').prop('disabled', true);
-
+            
             $('#label_address').css('display', 'inline-block')
             $('#label_chile_address').css('display', 'none')
 

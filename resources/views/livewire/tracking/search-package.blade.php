@@ -65,7 +65,7 @@
                         
                         @if( !$error )
                             @if( $package['client'] )
-                                <a href="{{ route('tracking.show', $package['reference']) }}" class="btn btn-success mr-2" onclick="addClass({{$key}})" title="More Details">
+                                <a href="{{ route('admin.tracking.show', $package['reference']) }}" class="btn btn-success mr-2" onclick="addClass({{$key}})" title="More Details">
                                     <i class="fa fa-search"></i> More Details
                                 </a>
                             @endif
