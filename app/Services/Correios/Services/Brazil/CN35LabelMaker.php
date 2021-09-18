@@ -20,6 +20,7 @@ class CN35LabelMaker implements HasLableExport
     private $weight;
     private $service;
     private $unitCode;
+    private $OrderWeight;
 
     public function __construct()
     {
@@ -95,6 +96,11 @@ class CN35LabelMaker implements HasLableExport
         return $this;
     }
 
+    public function setType(string $weight)
+    {
+        $this->OrderWeight = $weight;
+        return $this;
+    }
     public function setDestinationAirport(string $airport)
     {
         $this->destinationAirport = $airport;
@@ -150,6 +156,7 @@ class CN35LabelMaker implements HasLableExport
             'weight' => $this->weight,
             'service' => $this->service,
             'unitCode' => $this->unitCode,
+            'OrderWeight' => $this->OrderWeight,
         ];
     }
 
