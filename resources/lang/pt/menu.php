@@ -20,6 +20,7 @@ return [
     'API Documents' => 'Documentos API',
     'Parcels' => 'Pacotes',
     'Rates' => 'Minhas tarifas',
+    'My Rates' => 'Minhas tarifas',
     'Profit Packages' => 'Pacotes de lucro',
     'Handling Services' => 'Serviços de Manuseio',
     'Shipping Services' => 'Serviços de Frete',
