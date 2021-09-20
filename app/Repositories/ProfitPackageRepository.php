@@ -2,11 +2,12 @@
 
 namespace App\Repositories;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Models\ProfitPackage;
-use App\Models\User;
 use Exception;
+use App\Models\User;
+use Illuminate\Http\Request;
+use App\Models\ProfitPackage;
+use App\Models\ProfitSetting;
+use Illuminate\Support\Facades\Auth;
 
 class ProfitPackageRepository
 {
@@ -95,6 +96,24 @@ class ProfitPackageRepository
         $profitPackage->delete();
         return true;
 
+    }
+
+    public function getPackageUsers($package)
+    {
+        $settings = ProfitSetting::where('package_id', $package->id)->get();
+        
+        if(!$settings->isEmpty())
+        {
+            foreach ($settings as $setting) 
+            {
+                $settingIds[] = $setting->user_id;
+            }
+
+            $users = User::findMany($settingIds);
+        }
+        
+
+        return $users;
     }
 
 }

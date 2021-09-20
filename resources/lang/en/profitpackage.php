@@ -32,5 +32,7 @@ return [
     'download-profit-package' => 'Download',
     'Shipping Service' => 'Shipping Service',
     'Select Service' => 'Select Service',
+    'users' => 'Users',
+    'view users' => 'View Users',
 ];
  

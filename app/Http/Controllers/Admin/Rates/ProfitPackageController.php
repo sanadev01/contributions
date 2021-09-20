@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Repositories\ProfitPackageRepository;
 use App\Http\Requests\Admin\ProfitPackage\CreateRequest;
 use App\Http\Requests\Admin\ProfitPackage\UpdateRequest;
+use App\Models\ProfitSetting;
 
 class ProfitPackageController extends Controller
 {   
@@ -111,5 +112,12 @@ class ProfitPackageController extends Controller
         }
   
         return back();
+    }
+
+    public function packageUsers(ProfitPackage $package, ProfitPackageRepository $repository)
+    {
+        $users = $repository->getPackageUsers($package);
+        
+        return view('admin.modals.package.users', compact('package', 'users'));
     }
 }
