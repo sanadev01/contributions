@@ -166,7 +166,7 @@
                 @can('userSellingRates', App\Models\ProfitPackage::class)
                     <li class="nav-item {{ $isActive(['admin.rates.user-rates.index']) }}">
                         <a class="nav-link" href="{{ route('admin.rates.user-rates.index') }}"><i class="feather icon-dollar-sign"></i>
-                            <span data-i18n="Apps">@lang('menu.Rates')</span>
+                            <span data-i18n="Apps">@lang('menu.My Rates')</span>
                         </a>
                     </li>
                 @endcan
