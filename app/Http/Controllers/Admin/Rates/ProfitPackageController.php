@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Repositories\ProfitPackageRepository;
 use App\Http\Requests\Admin\ProfitPackage\CreateRequest;
 use App\Http\Requests\Admin\ProfitPackage\UpdateRequest;
+use App\Models\ProfitSetting;
 
 class ProfitPackageController extends Controller
 {   
@@ -111,5 +112,23 @@ class ProfitPackageController extends Controller
         }
   
         return back();
+    }
+
+    public function packageUsers(ProfitPackage $package)
+    {
+        $settings = ProfitSetting::where('package_id', $package->id)->get();
+        
+        if(!$settings->isEmpty())
+        {
+            foreach ($settings as $setting) 
+            {
+                $settingIds[] = $setting->user_id;
+            }
+
+            $users = User::findMany($settingIds);
+        }
+        
+
+        return view('admin.modals.package.users', compact('package', 'users'));
     }
 }

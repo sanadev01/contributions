@@ -31,4 +31,6 @@ return [
     'download-profit-package' => 'Baixar',
     'Shipping Service' => 'Serviço de entrega',
     'Select Service' => 'Selecione  Serviço',
+    'users' => 'Usuários',
+    'view users' => 'ver usuários',
 ];
