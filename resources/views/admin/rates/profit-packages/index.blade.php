@@ -28,6 +28,9 @@
                                         @lang('profitpackage.Shipping Service')
                                     </th>
                                     <th>
+                                        @lang('profitpackage.users')
+                                    </th>
+                                    <th>
                                         @lang('profitpackage.type')
                                     </th>
                                     <th>
@@ -43,6 +46,9 @@
                                             </td>
                                             <td>
                                                 {{ optional($package->shippingService)->name }}
+                                            </td>
+                                            <td>
+                                                <button data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.package.users',$package) }}" class="btn btn-info btn-sm">@lang('profitpackage.view users')</button>
                                             </td>
                                             <td>
                                                 {{ $package->type }}
@@ -80,4 +86,7 @@
             </div>
         </div>
     </section>
+@endsection
+@section('modal')
+    <x-modal/>
 @endsection
