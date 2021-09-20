@@ -55,6 +55,7 @@ class CreateRequest extends FormRequest
             $rules['tax_id'] = 'sometimes|cpf_cnpj|required_if:country_id,'.Country::where('code', 'BR')->first()->id;
             // $rules['tax_id'] = 'sometimes|cnpj|required_if:country_id,'.Country::where('code', 'BR')->first()->id;
             $rules['zipcode'] = ['required', new ZipCodeValidator($this->country_id,$this->state_id)];
+            $rules['street_no'] = 'sometimes|numeric';
         }
         
         return $rules;
