@@ -5,9 +5,14 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
-                        <h4 class="mb-0">@lang('menu.Rates')</h4>
-                        {{-- <a href="{{ route('admin.rates.rates.exports',$packageId) }}" class="pull-right btn btn-success"> @lang('profitpackage.download-profit-package') <i class="feather icon-download"> </i></a> --}}
+                    <div class="row pt-3 pl-2">
+                        <div class="col-6">
+                            <h4 class="mb-0">{{ $service }}  @lang('menu.Rates')</h4>
+                        </div>
+                        <div class="col-6 d-flex justify-content-end">
+                            <a href="{{ route('admin.rates.rates.exports',$packageId) }}" class="btn btn-success"> @lang('profitpackage.download-profit-package') <i class="feather icon-download"> </i></a>
+                            <a href="{{ route('admin.rates.user-rates.index') }}" class="btn btn-primary mx-3">@lang('profitpackage.back to list')</a>  
+                        </div>
                     </div>
                     <div class="card-content">
                         <div class="mt-1">

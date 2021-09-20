@@ -31,9 +31,9 @@ class UserRateController extends Controller
                 $rates = $rateReportsRepository->getRateReport($setting->package_id, $setting->service_id);
                 $this->rates[] = [
                     'service' => $service->name,
-                    'rates' => $rates
+                    'rates' => $rates,
+                    'packageId' => $setting->package_id,
                 ];
-                $this->packageId[] = $setting->package_id;
             }
 
             $rates = $this->rates;
@@ -46,7 +46,8 @@ class UserRateController extends Controller
             $service = ShippingService::where('name', 'Packet Standard')->first();
             $this->rates[] = [
                 'service' => $service->name,
-                'rates' => $rates
+                'rates' => $rates,
+                'packageId' => $packageId,
             ];
 
         }else{
@@ -57,12 +58,13 @@ class UserRateController extends Controller
             $service = ShippingService::where('name', 'Packet Standard')->first();
             $this->rates[] = [
                 'service' => $service->name,
-                'rates' => $rates
+                'rates' => $rates,
+                'packageId' => $packageId,
             ];
         }
-        
+
         $rates = $this->rates;
-        return view('admin.rates.profit-packages.user-profit-package.index', compact('rates','packageId'));
+        return view('admin.rates.profit-packages.user-profit-package.index', compact('rates'));
     }
 
     public function showRates(Request $request)
@@ -70,8 +72,10 @@ class UserRateController extends Controller
         $rates = json_decode($request->rates, true);
 
         $rates = collect($rates);
+        $service = $request->service;
+        $packageId = $request->packageId;
 
-        return view('admin.rates.profit-packages.user-profit-package.rates', compact('rates'));
+        return view('admin.rates.profit-packages.user-profit-package.rates', compact('rates', 'service', 'packageId'));
     }
     
 }
