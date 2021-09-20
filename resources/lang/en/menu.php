@@ -22,6 +22,7 @@ return [
     'API Documents' => 'API Documents',
     'Parcels' => 'Parcels',
     'Rates' => 'Rates',
+    'My Rates' => 'My Rates',
     'Profit Packages' => 'Profit Packages',
     'Handling Services' => 'Handling Services',
     'Shipping Services' => 'Shipping Services',

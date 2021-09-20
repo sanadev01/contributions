@@ -14,9 +14,9 @@
                             <table class="table mb-0">
                                 <thead>
                                 <tr>
-                                    <th> Service </th>
+                                    <th> Weight </th>
                                     <th>
-                                        Rates
+                                        Cost
                                     </th>
                                 </tr>
                                 </thead>
@@ -24,15 +24,10 @@
                                     @foreach($rates as $rate)
                                         <tr>
                                             <td>
-                                                {{ $rate['service'] }}
+                                                {{ $rate['weight'] . ' g' }}
                                             </td>
                                             <td>
-                                                <form action="{{ route('admin.rates.show-profit-rates') }}" method="POST">
-                                                    @csrf
-                                                    <input type="hidden" name="rates" value="{{ $rate['rates'] }}">
-                                                    <button type="submit" class="btn btn-success btn-sm">View Rates</button>
-                                                </form>
-                                                {{-- <a href="{{ route('admin.rates.show-profit-rates', 123) }}" type="button" class="btn btn-success btn-sm">View Rates</a> --}}
+                                                {{ number_format($rate['shipping'][0]*($rate['profit']/100)+$rate['shipping'][0],2) }}
                                             </td>
                                             
                                         </tr>
