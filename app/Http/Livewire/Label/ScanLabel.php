@@ -97,7 +97,7 @@ class ScanLabel extends Component
                     return $this->tracking = '';
                 }
                 
-                array_push($this->packagesRows,[
+                $newRow = [
                     'tracking_code' => $this->tracking,
                     'client' => $this->order->merchant,
                     'dimensions' => $this->order->length . ' x ' . $this->order->length . ' x ' . $this->order->height,
@@ -105,9 +105,21 @@ class ScanLabel extends Component
                     'reference' => $this->order->id,
                     'recpient' => $this->order->recipient->first_name,
                     'order_date' => $this->order->order_date->format('m-d-Y'),
-                ]);
-                    
+                ];
+
+                if(in_array($newRow, $this->packagesRows, true)){
+
+                    $this->orderStatus = 'Order already present';
+                    return $this->tracking = '';
+                }
+
+                array_push($this->packagesRows, $newRow);
+
                 array_push($this->newOrder,$this->order);
+                
+                $this->tracking = '';
+                $this->orderStatus = '';
+                
             }
         }
         $this->tracking = '';

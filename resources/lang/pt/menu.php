@@ -11,6 +11,7 @@ return [
     'payment-invoice' => 'Faturas de Pagamento',
     'prealerts' => 'Aviso de compra',
     'orders' => 'Pedidos',
+    'trackings' => 'Rastreamentos',
     'transactions' => 'Transações',
     'addresses' => 'Endereços',
     'calculator' => 'Calculadora',

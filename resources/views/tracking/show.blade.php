@@ -126,7 +126,7 @@
                             Tracking Package
                         </h4>
                         <div>
-                            <a href="{{ route('tracking.index') }}" class="btn btn-primary"> <i class="fa fa-search"></i> Tracking Package </a>
+                            <a href="{{ route('admin.tracking.index') }}" class="btn btn-primary"> <i class="fa fa-search"></i> Tracking Package </a>
                         </div>
                     </div>
                     

@@ -29,7 +29,7 @@ Route::get('/', function (Shopify $shopifyClient) {
 });
 
 Route::resource('calculator', CalculatorController::class)->only(['index', 'store']);
-Route::resource('tracking', TrackingController::class)->only(['index', 'show']);
+// Route::resource('tracking', TrackingController::class)->only(['index', 'show']);
 Route::get('/home', function () {
 
     if ( session()->get('shopify.redirect') ){
@@ -62,6 +62,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         });
 
         Route::resource('orders',OrderController::class)->only('index','destroy', 'show');
+        Route::resource('tracking', TrackingController::class)->only(['index', 'show']);
 
         Route::namespace('Order')->group(function () {
             Route::resource('leve-order-import', LeveOrderImportController::class)->only(['index','store']);

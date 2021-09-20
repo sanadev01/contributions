@@ -10,6 +10,10 @@ class ScanOrderExport extends AbstractExportService
 {
     private $orders;
 
+    private $pieces;
+
+    private $totalWeight;
+
     private $currentRow = 1;
 
     private $count = 1;
@@ -17,6 +21,8 @@ class ScanOrderExport extends AbstractExportService
     public function __construct(Collection $orders)
     {
         $this->orders = $orders;
+        $this->pieces = $this->orders->count();
+        $this->totalWeight = $this->orders->sum('weight');
 
         parent::__construct();
     }
@@ -44,8 +50,7 @@ class ScanOrderExport extends AbstractExportService
             $this->setColor('A'.$row, 'FF0D0D');
             $this->setAlignment('A'.$row, Alignment::HORIZONTAL_LEFT);
             $this->setCellValue('B'.$row, $order->corrios_tracking_code);
-            $this->setCellValue('C'.$row,  date('d-m-Y', strtotime($order->order_date)));
-            $this->setCellValue('D'.$row,  optional($order->user)->pobox_number);
+            $this->setCellValue('C'.$row,  $order->corrios_tracking_code);
             
             $this->count++ ;
             $row++;
@@ -58,25 +63,34 @@ class ScanOrderExport extends AbstractExportService
 
     private function setExcelHeaderRow()
     {
+
         $this->setColumnWidth('A', 20);
         $this->setCellValue('A1', '');
 
         $this->setColumnWidth('B', 25);
-        $this->setCellValue('B1', 'Recieved on:');
-        $this->setBold('B1', true);
-        $this->setColor('B1', 'FF0D0D');
+        $this->setCellValue('B1', 'Homedeliverybr');
+        $this->setCellValue('B2', '2200 NW 129th Avenue');
+        $this->setCellValue('B3', 'Suite#100');
+        $this->setCellValue('B4', 'Miami, FL 33182');
 
-        $this->setColumnWidth('C', 20);
-        $this->setCellValue('C1', Carbon::now()->format('d/m/Y'));
-        $this->setBold('C1', true);
-        $this->setColor('C1', '0A0000');
+        $this->setCellValue('B6', 'Recieved on:');
+        $this->setBold('B6', true);
+        $this->setColor('B6', 'FF0D0D');
 
-        $this->setColumnWidth('D', 20);
-        $this->setCellValue('D1', 'POBOX Number');
+        $this->setColumnWidth('C', 25);
+        $this->setCellValue('C6', Carbon::now()->toFormattedDateString());
+        $this->setBold('C6', true);
+        $this->setColor('C6', '0A0000');
+
+        $this->setColumnWidth('D', 25);
+        $this->setCellValue('D1', 'Pieces : '.$this->pieces);
+        $this->setCellValue('D2', 'Total Weight : '.$this->totalWeight.' Kg');
         
-        $this->setBackgroundColor('A1:D1', 'C4C2C2');
+        $this->setCellValue('D6', Carbon::now()->format('d/m/Y H:i:s'));
+        
+        $this->setBackgroundColor('A6:D6', 'C4C2C2');
 
-        $this->currentRow++;
+        $this->currentRow = 7;
     }
 
     private function setSecondHeaderRow($row)
@@ -87,9 +101,9 @@ class ScanOrderExport extends AbstractExportService
 
         $this->setCellValue('B'.$row, 'Tracking #');
         $this->setBold('B'.$row, true);
-        
-        $this->setCellValue('C'.$row, 'Order Date');
-        $this->setBold('C'.$row, true);
+
+        $this->setCellValue('D'.$row, 'Notes');
+        $this->setBold('D'.$row, true);
 
         $this->currentRow++;
 
