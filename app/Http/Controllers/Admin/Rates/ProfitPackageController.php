@@ -114,21 +114,10 @@ class ProfitPackageController extends Controller
         return back();
     }
 
-    public function packageUsers(ProfitPackage $package)
+    public function packageUsers(ProfitPackage $package, ProfitPackageRepository $repository)
     {
-        $settings = ProfitSetting::where('package_id', $package->id)->get();
+        $users = $repository->getPackageUsers($package);
         
-        if(!$settings->isEmpty())
-        {
-            foreach ($settings as $setting) 
-            {
-                $settingIds[] = $setting->user_id;
-            }
-
-            $users = User::findMany($settingIds);
-        }
-        
-
         return view('admin.modals.package.users', compact('package', 'users'));
     }
 }
