@@ -122,8 +122,10 @@ class ProfitPackageController extends Controller
         {
             foreach ($settings as $setting) 
             {
-                $users = User::where('id', $setting->user_id)->get();
+                $settingIds[] = $setting->user_id;
             }
+
+            $users = User::findMany($settingIds);
         }
         
 
