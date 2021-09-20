@@ -7,7 +7,6 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">@lang('menu.Rates')</h4>
-                        {{-- <a href="{{ route('admin.rates.rates.exports',$packageId) }}" class="pull-right btn btn-success"> @lang('profitpackage.download-profit-package') <i class="feather icon-download"> </i></a> --}}
                     </div>
                     <div class="card-content">
                         <div class="mt-1">
@@ -30,9 +29,10 @@
                                                 <form action="{{ route('admin.rates.show-profit-rates') }}" method="POST">
                                                     @csrf
                                                     <input type="hidden" name="rates" value="{{ $rate['rates'] }}">
+                                                    <input type="hidden" name="service" value="{{ $rate['service'] }}">
+                                                    <input type="hidden" name="packageId" value="{{ $rate['packageId'] }}">
                                                     <button type="submit" class="btn btn-success btn-sm">View Rates</button>
                                                 </form>
-                                                {{-- <a href="{{ route('admin.rates.show-profit-rates', 123) }}" type="button" class="btn btn-success btn-sm">View Rates</a> --}}
                                             </td>
                                             
                                         </tr>
