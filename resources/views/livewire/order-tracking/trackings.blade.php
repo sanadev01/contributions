@@ -12,7 +12,7 @@
     @endif
     <div class="row">
         <div class="col-md-8 col-sm-8">
-            <input type="text" placeholder="Enter Tracking Number" class="form-control offset-4 col-8 w-100 text-center border border-primary" style="height: 50px; font-size: 30px;" wire:model.defer="trackingNumber">
+            <input type="text" placeholder="Enter Tracking Number" class="form-control offset-4 col-6 w-100 text-center border border-primary" style="height: 35px; font-size: 20px;" wire:model.defer="trackingNumber">
         </div>
         <div class="col-md-4 col-sm-4">
             <button class="btn btn-primary btn-lg" wire:click="trackOrder">Search</button>
