@@ -32,6 +32,12 @@
                     <span class="menu-title">@lang('menu.Warehouse.Delivery Bill')</span>
                 </a>
             </li>
+            <li class="{{ $isActive(['warehouse.usps_containers.index','warehouse.usps_containers.create','warehouse.usps_containers.edit','warehouse.usps_container.packages.index']) }}">
+                <a href="{{ route('warehouse.usps_containers.index') }}">
+                    <i class="feather icon-circle"></i>
+                    <span class="menu-title">@lang('menu.Warehouse.USPS Containers')</span>
+                </a>
+            </li>
         @endadmin
         <li class="{{ $isActive(['warehouse.chile_containers.index','warehouse.chile_containers.create','warehouse.chile_containers.edit','warehouse.chile_container.packages.index']) }}">
             <a href="{{ route('warehouse.chile_containers.index') }}">

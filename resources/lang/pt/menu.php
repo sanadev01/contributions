@@ -15,6 +15,7 @@ return [
     'transactions' => 'Transações',
     'addresses' => 'Endereços',
     'calculator' => 'Calculadora',
+    'uspscalculator' => 'USPS Calculadora',
     'connect' => 'Conectar',
     'support tickets' => 'Assistência',
     'profile' => 'Perfil',
@@ -44,6 +45,7 @@ return [
         'Containers' => 'Recipientes',
         'Delivery Bill' => 'Fatura de entrega',
         'Chile Containers' => 'Chile Recipientes',
+        'USPS Containers' => 'USPS Recipientes',
     ],
     'Affiliate' => [
         'menu' => 'Relatórios',

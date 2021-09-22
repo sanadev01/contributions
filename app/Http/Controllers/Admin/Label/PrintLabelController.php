@@ -90,8 +90,9 @@ class PrintLabelController extends Controller
             } else {
                 echo 'Could not open ZIP file.';
             }
-
+            
             return response()->download($tempFileUri);
+            
         }
         return back();
 
@@ -157,4 +158,5 @@ class PrintLabelController extends Controller
     {
         //
     }
+    
 }
