@@ -56,6 +56,7 @@ class BrazilTrackingRepository
             'type' => $correios_brazil_response->tipo,
             'description' => $correios_brazil_response->descricao,
             'country' => 'Brazil',
+            'city' => $correios_brazil_response->cidade,
         ]);
 
         return true;
