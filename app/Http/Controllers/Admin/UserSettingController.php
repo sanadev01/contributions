@@ -42,6 +42,7 @@ class UserSettingController extends Controller
             'email' => $request->user_email,
             'battery' => $request->has('battery'),
             'perfume' => $request->has('perfume'),
+            'insurance' => $request->has('insurance') ? 1 : 0,
             'usps' => $request->has('usps'),
             'api_profit' => $request->input('api_profit'),
         ]);

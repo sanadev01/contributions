@@ -15,12 +15,38 @@ class OrderInvoiceController extends Controller
         if ( !$order->recipient || $order->items->isEmpty() ){
             abort(404);
         }
+        
+        $services = $order->service;
 
-        return view('admin.orders.invoice.index',compact('order'));
+        if( $order->services->filter(function ($service) {return $service->name == 'Insurance';}) &&  $order->user->insurance == false)
+        {
+           $services = $this->calculateInsurance($order);
+        }
+        
+        return view('admin.orders.invoice.index',compact('order', 'services'));
     }
 
     public function store(Request $request, Order $order)
     {
 
+    }
+
+    private function calculateInsurance($order)
+    {
+        foreach ($order->services as $service) 
+        {
+            if($service->name == 'Insurance')
+            {
+
+                $total_insurance = (3/100) * $order->order_value;
+
+                if ($total_insurance > 35) 
+                {
+                    $service->price = $total_insurance;
+                }
+            }
+        }
+
+        return $order->services;
     }
 }

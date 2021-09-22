@@ -41,6 +41,9 @@ return [
         'Order Items' => 'Itens de ordem',
         'Add Item' => 'Adicionar Item',
         'Previous' => 'Anterior',
+        'Insurance' => 'Seguro',
+        'Disclaimer' => 'Aviso Legal',
+        'Disclaimer Text' => 'Aviso  Al seleccionar este seguro, usted acepta y estas de acuerdo que su cobertura se basa únicamente en el valor declarado y proporciona toda la documentación necesaria en caso de que deba presentarse un reclamo. Si no es proporcionado la documentación necesaria resultará en un reclamo rechazado. Si no está de acuerdo por favor no acepte o compre el seguro',
         'order-item' => [
             'Harmonized Code' => 'Código Harmonizado',
             'Description' => 'Descrição',
