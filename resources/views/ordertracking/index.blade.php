@@ -132,6 +132,9 @@
                         <h4 class="mb-0">
                             Track Your Order
                         </h4>
+                        <h4 class="mb-0">
+                            <a href="{{ route('admin.home') }}" class="btn btn-primary">Go Back</a>
+                        </h4>
                     </div>
                     <div class="card-content card-body">
                         <div class="mt-1">
