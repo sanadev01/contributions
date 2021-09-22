@@ -21,6 +21,8 @@ class OrderServicesController extends Controller
         
         $order->load('services');
         $services = HandlingService::query()->active()->get();
+        $services = $this->checkInsurance($services,$order);
+
         return view('admin.orders.services.index',compact('order','services'));
     }
 
@@ -42,5 +44,17 @@ class OrderServicesController extends Controller
 
         session()->flash('alert-success','orders.Error Updateding Services');
         return \back();
+    }
+    
+    private function checkInsurance($services, $order)
+    {
+        if($order->user->insurance == true)
+        {
+            $services = $services->filter(function ($service) {
+                return $service->name != 'Insurance';
+            });
+        }
+
+        return $services;
     }
 }

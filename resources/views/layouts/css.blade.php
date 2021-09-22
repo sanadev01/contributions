@@ -157,5 +157,13 @@
     .table-responsive.order-table {
         padding-bottom: 3rem;
     }
+
+    .big-checkbox{
+        height: 25px; 
+        width: 25px;
+    }
+    .big-label {
+        font-size: 15px;
+    }
 </style>
 @yield('custom-css')
