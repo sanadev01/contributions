@@ -39,7 +39,7 @@ class OrderServicesController extends Controller
         
         if ( $orderRepository->updateHandelingServices($request,$order) ){
             session()->flash('alert-success','orders.Services Updated');
-            return redirect()->route('admin.orders.order-details.index',$order);
+            return redirect()->route('admin.orders.order-invoice.index',$order);
         }
 
         session()->flash('alert-success','orders.Error Updateding Services');
@@ -52,6 +52,13 @@ class OrderServicesController extends Controller
         {
             $services = $services->filter(function ($service) {
                 return $service->name != 'Insurance';
+            });
+        }
+
+        if ($order->user->hasRole('wholesale'))
+        {
+            $services = $services->filter(function ($service) {
+                return $service->name == 'Insurance';
             });
         }
 

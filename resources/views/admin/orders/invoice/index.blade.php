@@ -18,7 +18,7 @@
         <div class="actions clearfix no-print">
             <ul role="menu" aria-label="Pagination">
                 <li class="disabled" aria-disabled="true">
-                    <a href="{{ route('admin.orders.order-details.index',$order) }}" role="menuitem">@lang('orders.invoice.Previous')</a>
+                    <a href="{{ route('admin.orders.services.index',$order) }}" role="menuitem">@lang('orders.invoice.Previous')</a>
                 </li>
                 @if ( !$order->isPaid() )
                 <li aria-hidden="false" aria-disabled="false">
