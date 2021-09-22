@@ -300,7 +300,7 @@ class Order extends Model implements Package
         $shippingService = $this->shippingService;
 
         $shippingCost = $shippingService->getRateFor($this,true,$onVolumetricWeight);
-        $additionalServicesCost = $this->services()->sum('price');
+        $additionalServicesCost = $this->calculateAdditionalServicesCost($this->services);
 
         $battriesExtra = $shippingService->contains_battery_charges * ( $this->items()->batteries()->count() );
         $pefumeExtra = $shippingService->contains_perfume_charges * ( $this->items()->perfumes()->count() );
@@ -329,6 +329,30 @@ class Order extends Model implements Package
             // 'user_declared_freight' => $this->user_declared_freight >0 ? $this->user_declared_freight : $shippingCost
         ]);
 
+    }
+
+    public function calculateAdditionalServicesCost($services)
+    {
+        if($this->user->insurance == false)
+        {
+            foreach ($services as $service) 
+            {
+                if($service->name == 'Insurance')
+                {
+                    $order_value = $this->items()->sum(\DB::raw('quantity * value'));
+
+                    $total_insurance = (3/100) * $order_value;
+
+                    if ($total_insurance > 35) 
+                    {
+                        $service->price = $total_insurance;
+                    }
+                }
+            }
+        }
+        
+
+        return $services->sum('price');
     }
 
     public function addAffiliateCommissionSale(User $referrer, $commissionCalculator)

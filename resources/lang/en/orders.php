@@ -43,6 +43,9 @@ return [
         'Order Items' => 'Order Items',
         'Add Item' => 'Add Item',
         'Previous' => 'Previous',
+        'Insurance' => 'Insurance',
+        'Disclaimer' => 'Disclaimer',
+        'Disclaimer Text' => 'Upon selecting this insurance, you are accepting and agreeing that your coverage is solely based on the declared value  and will provide all necessary documentation in case a claim needs to be filed. Failure to provide the needed documentation will result in a rejected claim. If you do not agree please do not accept or purchase the insurance',
         'order-item' => [
             'Harmonized Code' => 'Harmonized Code',
             'Description' => 'Description',

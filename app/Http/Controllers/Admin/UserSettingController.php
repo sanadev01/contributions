@@ -41,7 +41,8 @@ class UserSettingController extends Controller
             'market_place_name' => $request->market_place_name,
             'email' => $request->user_email,
             'battery' => $request->has('battery'),
-            'perfume' => $request->has('perfume')
+            'perfume' => $request->has('perfume'),
+            'insurance' => $request->has('insurance') ? 1 : 0,
         ]);
 
         if ( $request->password ){
