@@ -29,8 +29,8 @@ class CorreiosBrazilTrackingService{
                 'usuario' => $this->user,
                 'senha' => $this->password,
                 'tipo' => 'L',
-                'resultado' => 'T',
-                'lingua' => 101,
+                'resultado' => 'U',
+                'lingua' => 102,
                 'objetos' => $trackingNumber,
             );
 

@@ -13,6 +13,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Facades\CorreiosChileTrackingFacade;
+use App\Facades\CorreiosBrazilTrackingFacade;
 
 class HomeController extends Controller
 {
@@ -92,4 +93,12 @@ class HomeController extends Controller
         return $hd_trackings;
     }
     
+    public function testBrazilTracking()
+    {
+        $trackingNumber = 'NX358146988BR';
+        
+        $response = CorreiosBrazilTrackingFacade::trackOrder($trackingNumber);
+
+        dd($response);
+    }
 }
