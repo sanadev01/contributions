@@ -337,7 +337,7 @@ class Order extends Model implements Package
         {
             foreach ($services as $service) 
             {
-                if($service->name == 'Insurance')
+                if($service->name == 'Insurance' || $service->name == 'Seguro')
                 {
                     $order_value = $this->items()->sum(\DB::raw('quantity * value'));
 

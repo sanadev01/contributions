@@ -23,7 +23,7 @@
                                     <i class="vs-icon feather icon-check"></i>
                                 </span>
                             </span> 
-                            <span> {{ $service->name }} <strong>  ( Custo  extra @if($service->name == 'Insurance') maximum 3% of total declared value of order items and minimum @endif{{ $service->price }})</strong>  USD por envio
+                            <span> {{ $service->name }} <strong>  ( Custo  extra @if($service->name == 'Insurance' || $service->name == 'Seguro') maximum 3% of total declared value of order items and minimum @endif{{ $service->price }})</strong>  USD por envio
                             </span>
                         </div>
                     @endforeach
@@ -66,7 +66,7 @@
     $('#additional_service').change(function() {
         if($(this).is(':checked')){
             let service_name = $(this).data('service');
-            if(service_name == 'Insurance')
+            if(service_name == 'Insurance' || service_name == 'Seguro')
             {
                 $('#disclaimer').modal({
                     show : true,
