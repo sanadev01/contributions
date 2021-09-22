@@ -87,11 +87,7 @@
     <div class="actions clearfix">
         <ul role="menu" aria-label="Pagination">
             <li class="disabled" aria-disabled="true">
-                @if ($order->user->hasRole('retailer'))
-                    <a href="{{ route('admin.orders.services.index',$order) }}" role="menuitem">@lang('orders.order-details.Previous')</a>
-                @else
-                    <a href="{{ route('admin.orders.recipient.index',$order) }}" role="menuitem">@lang('orders.order-details.Previous')</a>
-                @endif    
+                <a href="{{ route('admin.orders.recipient.index',$order) }}" role="menuitem">@lang('orders.order-details.Previous')</a>   
             </li>
             <li aria-hidden="false" aria-disabled="false">
                 <button class="btn btn-primary">@lang('orders.order-details.Place Order')</button>
