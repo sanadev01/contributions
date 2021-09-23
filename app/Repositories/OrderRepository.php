@@ -122,7 +122,7 @@ class OrderRepository
     {
         DB::beginTransaction();
 
-        // try {
+        try {
             
             $order->items()->delete();
 
@@ -159,11 +159,11 @@ class OrderRepository
             DB::commit();
 
             return true;
-        // } catch (\Exception $ex) {
-        //     DB::rollback();
-        //     $this->error = $ex->getMessage();
-        //     return false;
-        // }
+        } catch (\Exception $ex) {
+            DB::rollback();
+            $this->error = $ex->getMessage();
+            return false;
+        }
     }
 
     public function checkout(Request $request, PaymentInvoice $paymentInvoice)

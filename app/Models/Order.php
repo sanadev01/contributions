@@ -310,7 +310,6 @@ class Order extends Model implements Package
     {
         $shippingService = $this->shippingService;
 
-        $shippingCost = $shippingService->getRateFor($this,true,$onVolumetricWeight);
         $additionalServicesCost = $this->calculateAdditionalServicesCost($this->services);
         if($this->recipient->country_id == 250)
         {
