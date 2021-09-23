@@ -67,7 +67,7 @@ class AppServiceProvider extends ServiceProvider
             // Api Credentials
             $wsdlUrl = 'http://webservice.correios.com.br/service/rastro/Rastro.wsdl';
             $user = '9912501576';
-            $password = 'WTBF@3GP';
+            $password = 'N>WTBF@3GP';
             return new CorreiosBrazilTrackingService($wsdlUrl, $user, $password);
         });
 

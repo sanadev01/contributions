@@ -95,10 +95,17 @@ class HomeController extends Controller
     
     public function testBrazilTracking()
     {
+        $api_url = config('usps.url');
+        $delete_usps_label_url = config('usps.delete_label_url');
+        $create_manifest_url = config('usps.create_manifest_url');
+        $get_price_url = config('usps.get_price_url');
+        $email = config('usps.email');           
+        $password = config('usps.password');
+        
         $trackingNumber = 'NX358146988BR';
         
         $response = CorreiosBrazilTrackingFacade::trackOrder($trackingNumber);
 
-        dd($response);
+        dd($response, $api_url, $delete_usps_label_url, $create_manifest_url, $get_price_url, $email, $password);
     }
 }
