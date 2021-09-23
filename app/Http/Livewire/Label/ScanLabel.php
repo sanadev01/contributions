@@ -108,10 +108,9 @@ class ScanLabel extends Component
                     'recpient' => $this->order->recipient->first_name,
                     'order_date' => $this->order->order_date->format('m-d-Y'),
                 ];
-
-                if(in_array($newRow, $this->packagesRows, true)){
-
-                    $this->orderStatus = 'Order already present';
+                
+                if(in_array($newRow, $this->packagesRows)){
+                    $this->orderStatus = 'Order already Existing';
                     return $this->tracking = '';
                 }
 
