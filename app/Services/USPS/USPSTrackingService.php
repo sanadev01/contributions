@@ -29,28 +29,32 @@ class USPSTrackingService
             if($response->successful())
             {
                 return (Object)[
-                    'success' => true,
+                    'status' => true,
+                    'message' => 'Order Found',
                     'data' => $response->json(),
                 ];
             }elseif($response->clientError())
             {
                 return (Object)[
-                    'success' => false,
+                    'status' => false,
                     'message' => $response->json()['error'],
+                    'data' => null,
                 ];    
             }elseif ($response->status() !== 200) 
             {
     
                 return (object) [
-                    'success' => false,
+                    'status' => false,
                     'message' => $response->json()['message'],
+                    'data' => null,
                 ];
             }
             
         }catch (Exception $e) {
             return (object) [
-                'success' => false,
+                'status' => false,
                 'message' => $e->getMessage(),
+                'data' => null,
             ];
         }
     }

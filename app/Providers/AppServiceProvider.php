@@ -43,8 +43,15 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton('USPS_service', function() {
+            // USPS Api Testing Environemtn Credentials
+            // $api_url = 'https://api-sandbox.myibservices.com/v1/labels';
+            // $delete_usps_label_url = 'https://api-sandbox.myibservices.com/v1/labels/';
+            // $create_manifest_url = 'https://api-sandbox.myibservices.com/v1/manifests.json';
+            // $get_price_url = 'https://api-sandbox.myibservices.com/v1/price.json';
+            // $email = 'ghaziislam3@gmail.com';           
+            // $password = 'Ikonic@1234';
 
-            // Api Credentials(currently credentials of testing environment are being used)
+            // USPS Api Production Environment Credentials
             $api_url = config('usps.url');
             $delete_usps_label_url = config('usps.delete_label_url');
             $create_manifest_url = config('usps.create_manifest_url');
@@ -74,9 +81,13 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton('USPSTracking_service', function() {
+            // USPS Api Testing Environemtn Credentials
+            // $api_url = 'https://api-sandbox.myibservices.com/v1/track/';
+            // $email = 'ghaziislam3@gmail.com';           
+            // $password = 'Ikonic@1234';
 
-            // Api Credentials
-            $apiUrl = 'https://api-sandbox.myibservices.com/v1/track/';
+            // Usps Tracking Api Credentials Production Enironment
+            $apiUrl = config('usps.tracking_url');
             $email = config('usps.email');           
             $password = config('usps.password');
             return new USPSTrackingService($apiUrl, $email, $password);

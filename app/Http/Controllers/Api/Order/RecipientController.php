@@ -207,7 +207,13 @@ class RecipientController extends Controller
 
     public function validate_USAddress(Request $request)
     {
-        $api_url = 'https://api-sandbox.myibservices.com/v1/address/validate';
+        // USPS Testing Environment Credentials
+        // $api_url = 'https://api-sandbox.myibservices.com/v1/address/validate';
+        // $email = 'ghaziislam3@gmail.com';           
+        // $password = 'Ikonic@1234';
+
+        // USPS Production Environment Credentials
+        $api_url = 'https://orderapi.myibservices.com/v1/address/validate';
         $email = config('usps.email');           
         $password = config('usps.password');
 
@@ -216,7 +222,7 @@ class RecipientController extends Controller
         try {
 
             $response = Http::withBasicAuth($email, $password)->post($api_url, $data);
-            // dd($response->status(),$response->json());
+            
             if($response->status() == 200) {
                 
                 return (Array)[

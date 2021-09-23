@@ -60,6 +60,33 @@ class OrderTrackingRepository
                     'order' => $order
                 ];
             }
+            if($order->recipient->country_id == Order::USPS && !$order->trackings->isEmpty())
+            {
+                if($order->trackings->last()->status_code == Order::STATUS_SHIPPED)
+                {
+                    $response = USPSTrackingFacade::trackOrder($this->trackingNumber);
+
+                    if($response->status == true)
+                    {
+                        return (Object) [
+                            'success' => true,
+                            'status' => 200,
+                            'service' => 'USPS',
+                            'trackings' => $order->trackings,
+                            'usps_trackings' => $response->data,
+                            'order' => $order
+                        ];
+                    }
+                }
+
+                return (Object)[
+                    'success' => true,
+                    'status' => 200,
+                    'service' => 'HD',
+                    'trackings' => $order->trackings,
+                    'order' => $order
+                ];
+            }
             if(!$order->trackings->isEmpty()){
                 return (Object)[
                     'success' => true,
