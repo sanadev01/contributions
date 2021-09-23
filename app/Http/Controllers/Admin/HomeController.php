@@ -106,6 +106,6 @@ class HomeController extends Controller
         
         $response = CorreiosBrazilTrackingFacade::trackOrder($trackingNumber);
 
-        dd($response, $api_url, $delete_usps_label_url, $create_manifest_url, $get_price_url, $email, $password);
+        dd($response);
     }
 }

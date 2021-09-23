@@ -213,7 +213,7 @@ class RecipientController extends Controller
         // $password = 'Ikonic@1234';
 
         // USPS Production Environment Credentials
-        $api_url = 'https://orderapi.myibservices.com/v1/address/validate';
+        $api_url = 'https://api.myibservices.com/v1/address/validate';
         $email = config('usps.email');           
         $password = config('usps.password');
 
