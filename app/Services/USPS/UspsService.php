@@ -248,7 +248,7 @@ class UspsService
                 'company_name' => 'HERCO',
                 'line1' => $order->recipient->address.' '.$order->recipient->street_no,
                 'city' => $order->recipient->city,    //City validation required
-                'state_province' => $order->recipient->state->code,
+                'state_province' => '',
                 'postal_code' => $order->recipient->zipcode,  //Zip validation required
                 'phone_number' => '+13058885191',
                 'country_code' => 'US', 
