@@ -20,10 +20,6 @@
                     <input type="hidden" name="order[]" value="{{ $package['reference'] }}">
                     <input type="hidden" name="excel" value="1">
                 @endforeach
-                <label for="start_date"> Start Date</label>
-                <input type="date"  name="start_date">
-                <label for="end_date"> End Date</label>
-                <input type="date" class="mr-3"  name="end_date">
                 <button type="submit" class="btn btn-primary mr-2" title="@lang('orders.import-excel.Download')">
                     <i class="feather icon-download"></i> @lang('orders.import-excel.Download') Arrival Report
                 </button>
@@ -41,68 +37,117 @@
                 
             </form>
         </div>
+        <div class="row col-12 d-flex justify-content-end">
+            <form wire:submit.prevent="search" class="col-12">
+                <div class="row col-12">
+                    <div class="offset-7 col-2">
+                        <div class="form-group">
+                            <div class="controls">
+                                <label class="d-flex">Start Date</label>
+                                <input class="form-control" type="date" wire:model.defer="start_date">
+                                @error("start_date")
+                                <div class="help-block text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="form-group">
+                            <div class="controls">
+                                <label class="d-flex">End Date</label>
+                                <input class="form-control" type="date" wire:model.defer="end_date">
+                                @error("end_date")
+                                    <div class="help-block text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-1">
+                        <div class="form-group">
+                            <div class="controls">
+                                <button type="submit" class="btn btn-primary mt-4" wire:click="search">
+                                    <i class="feather icon-search"></i>  Search
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
     <table class="table table-bordered">
         <tr>
             <th>@lang('orders.print-label.Barcode')</th>
+            <th>PO Box#</th>
             <th>@lang('orders.print-label.Client')</th>
             <th>@lang('orders.print-label.Dimensions')</th>
             <th>@lang('orders.print-label.Kg')</th>
             <th>@lang('orders.print-label.Reference')#</th>
             <th>@lang('orders.print-label.Recpient')</th>
             <th>@lang('orders.print-label.Date')</th>
-            <th>@lang('orders.print-label.Action')</th>
+            <th>@if($searchOrder) Arrival Date @else @lang('orders.print-label.Action')@endif</th>
         </tr>
-        @foreach ($packagesRows as $key => $package)
-        
-            <tr id="{{ $key }}">
-                <td>
-                    {{ $package['tracking_code'] }}
-                    {{-- <input type="text" class="form-control" name="tracking[{{$key}}][tracking_code]"
-                    value="{{ $package['tracking_code'] }}" wire:keydown.enter="getTrackingCode($event.target.value, {{$key}})">
-                    @error("tracking.$key.tracking_code")
-                    <div class="text-danger">
-                        {{ $message }}
-                    </div>
-                    @enderror --}}
-                </td>
-                <td>
-                    {{ $package['client'] }}
-                </td>
-                <td>
-                    {{ $package['dimensions'] }}
-                </td>
-                <td>
-                    {{ $package['kg'] }}
-                </td>
-                <td>
-                    @if ($package['reference'])
-                        HD-{{ $package['reference'] }}
-                    @endif 
-                </td>
-                <td>
-                    {{ $package['recpient'] }}
-                </td>
-                <td>
-                    {{ $package['order_date'] }}
-                </td>
-                <td>
-                    
-                    @if( !$error )
-                        @if( $package['client'] )
-                            <a href="{{route('admin.label.scan.show',$package['reference'])}}" target="_blank" class="btn btn-success mr-2" onclick="addClass({{$key}})" title="@lang('orders.import-excel.Download')">
-                                <i class="feather icon-download"></i>@lang('orders.import-excel.Download')
-                            </a>
+        @if($searchOrder)
+            @foreach ($searchOrder as $package)
+                <tr>
+                    <td>{{ $package->corrios_tracking_code }}</td>
+                    <td>{{ $package->user->pobox_number }}</td>
+                    <td>{{ $package->merchant }}</td>
+                    <td>{{ $package->length }} x {{ $package->length }} x {{ $package->height }}</td>
+                    <td>{{ $package->weight }}</td>
+                    <td>{{ $package->id }}</td>
+                    <td>{{ $package->recipient->first_name }}</td>
+                    <td>{{ $package->order_date }}</td>
+                    <td>{{ $package->arrived_date }}</td>
+                </tr>
+            @endforeach
+        @else
+            @foreach ($packagesRows as $key => $package)
+                <tr id="{{ $key }}">
+                    <td>
+                        {{ $package['tracking_code'] }}
+                    </td>
+                    <td>
+                        {{ $package['pobox'] }}
+                    </td>
+                    <td>
+                        {{ $package['client'] }}
+                    </td>
+                    <td>
+                        {{ $package['dimensions'] }}
+                    </td>
+                    <td>
+                        {{ $package['kg'] }}
+                    </td>
+                    <td>
+                        @if ($package['reference'])
+                            HD-{{ $package['reference'] }}
+                        @endif 
+                    </td>
+                    <td>
+                        {{ $package['recpient'] }}
+                    </td>
+                    <td>
+                        {{ $package['order_date'] }}
+                    </td>
+                    <td>
+                        
+                        @if( !$error )
+                            @if( $package['client'] )
+                                <a href="{{route('admin.label.scan.show',$package['reference'])}}" target="_blank" class="btn btn-success mr-2" onclick="addClass({{$key}})" title="@lang('orders.import-excel.Download')">
+                                    <i class="feather icon-download"></i>@lang('orders.import-excel.Download')
+                                </a>
+                            @endif
                         @endif
-                    @endif
-                    
-                    <button class="btn btn-danger" role="button" tabindex="-1" type="button" wire:click='removeRow({{$key}})'>
-                        @lang('orders.print-label.Remove')
-                    </button>
-                </td>
-            </tr>
+                        
+                        <button class="btn btn-danger" role="button" tabindex="-1" type="button" wire:click='removeRow({{$key}})'>
+                            @lang('orders.print-label.Remove')
+                        </button>
+                    </td>
+                </tr>
+            @endforeach
+        @endif
         
-        @endforeach
         {{-- <tr>
             <td colspan="7">
                 <button class="btn btn-primary" role="button" type="button" wire:click='addRow'>
