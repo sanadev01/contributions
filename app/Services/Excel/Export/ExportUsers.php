@@ -38,7 +38,7 @@ class ExportUsers extends AbstractExportService
             $this->setCellValue('C'.$row, $user->email);
             $this->setCellValue('D'.$row, $user->accountType());
             $this->setCellValue('E'.$row, $user->come_from);
-            $this->setCellValue('F'.$row, $this->getUserProfitPackage($user->package_id));
+            $this->setCellValue('F'.$row, optional($user->profitPackage)->name);
             $this->setCellValue('G'.$row, $this->getProfitPackageSettings($user->id));
             $row++;
         }
@@ -75,15 +75,6 @@ class ExportUsers extends AbstractExportService
         $this->currentRow++;
     }
 
-    private function getUserProfitPackage($packageId)
-    {
-        if($packageId == null) 
-        {
-            return '';
-        }
-        $package = ProfitPackage::find($packageId);
-        return $package['name'];
-    }
 
     private function getProfitPackageSettings($userId)
     {
