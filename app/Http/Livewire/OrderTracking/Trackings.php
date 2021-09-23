@@ -26,6 +26,8 @@ class Trackings extends Component
     public $CorreiosChile = false;
     public $trackingType;
     public $chileTrackings;
+    public $uspsTrackings;
+    public $uspsService;
 
     public function render()
     {  
@@ -38,6 +40,11 @@ class Trackings extends Component
         {
             $this->toggleChileStatus(); 
             
+        }
+
+        if( isset($this->tracking) && $this->uspsService == true )
+        {
+            $this->toggleUspsStatus();
         }
         return view('livewire.order-tracking.trackings',[
             'tracking'  => $this->tracking,
@@ -57,6 +64,7 @@ class Trackings extends Component
             $response = $order_tracking_repository->handle();
             
             $this->CorreiosChile = false;
+            $this->uspsService = false;
 
             if( $response->service == 'Correios_Chile' )
             {
@@ -72,6 +80,19 @@ class Trackings extends Component
                 return true;
 
             }
+
+            if( $response->service == 'USPS' )
+            {
+                $this->uspsService = true;
+                $this->tracking = last($response->usps_trackings);
+                $this->uspsTrackings = $response->usps_trackings;
+                $this->trackings = $response->trackings;
+                $this->order = $response->order;
+                $this->status   = $response->status;
+                $this->message  = null;
+                $this->trackingType = 'USPS';
+                return true;
+            }
             
             if( $response->success == true && $response->status = 200){
                 
@@ -84,7 +105,8 @@ class Trackings extends Component
                 {
                     $this->trackingType = 'HD';
                 }
-                $this->chileTrackings = [];    
+                $this->chileTrackings = [];
+                $this->uspsTrackings = [];    
             }
             if( $response->success == false &&  $response->status == 201){
                 $this->status   = $response->status;
@@ -128,6 +150,11 @@ class Trackings extends Component
         $this->correios_chile_recieved = ($this->tracking['Orden'] == 4 ) ? true : false;
         $this->in_transit = ($this->tracking['Orden'] == 6 ) ? true : false;
         $this->delivered_to_buyer = ($this->tracking['Orden'] == 10 ) ? true : false;
+
+    }
+
+    public function toggleUspsStatus()
+    {
 
     }
 
