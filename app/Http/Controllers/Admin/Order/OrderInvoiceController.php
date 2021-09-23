@@ -35,7 +35,7 @@ class OrderInvoiceController extends Controller
     {
         foreach ($order->services as $service) 
         {
-            if($service->name == 'Insurance')
+            if($service->name == 'Insurance' || $service->name == 'Seguro')
             {
 
                 $total_insurance = (3/100) * $order->order_value;
