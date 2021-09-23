@@ -10,10 +10,17 @@
             <div class="row mb-1">
                 <div class="col-md-3 form-group">
                     <label for="country">@lang('orders.sender.Select Country')</label>
-                    <select class="form-control countrySelect" aria-label="Default select example">
-                        <option value="brazil" {{ optional($order->recipient)->country_id == 30 ? 'selected' : ''}}>Brazil</option>
-                        <option value="chile" {{ optional($order->recipient)->country_id == 46 ? 'selected' : ''}}>Chile</option>
+                    <select class="form-control countrySelect" aria-label="Default select example" name="sender_country_id" required>
+                        <option {{ old('sender_country_id', __default($order->sender_country_id,optional($order->user)->country_id)) == 30 ? 'selected' : ''}}   value="30">Brazil</option>
+                        <option {{ old('sender_country_id', __default($order->sender_country_id, optional($order->user)->country_id)) == 46 ? 'selected' : ''}}   value="46">Chile</option>
+                        <option  {{ old('sender_country_id', __default($order->sender_country_id, optional($order->user)->country_id)) == 250 ? 'selected' : ''}} value="250">United States</option>
+                        <option  {{ old('sender_country_id', __default($order->sender_country_id, optional($order->user)->country_id)) == 47 ? 'selected' : ''}} value="47">China</option>
                     </select>
+                    @error('sender_country_id')
+                        <div class="text-danger">
+                            {{ $message }}
+                        </div>
+                    @enderror
                 </div>
                 
             </div>
@@ -122,7 +129,7 @@
 
         let selected = $('.countrySelect').val();
 
-        if(selected == 'chile') {
+        if(selected == '46') {
                 $('#address').css('display', 'block');
                 $('#city').css('display', 'block');
                 $('#tax_id').css('display', 'none'); 
@@ -152,7 +159,7 @@
         $('.countrySelect').change(function () {
             let selected = $('.countrySelect').val();
             
-            if(selected == 'chile') {
+            if(selected == '46') {
                 $('#address').css('display', 'block');
                 $('#city').css('display', 'block');
                 $('#tax_id').css('display', 'none'); 

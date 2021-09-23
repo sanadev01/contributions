@@ -62,6 +62,13 @@ class OrderServicesController extends Controller
             });
         }
 
+        if ($order->user->hasRole('wholesale'))
+        {
+            $services = $services->filter(function ($service) {
+                return $service->name == 'Insurance';
+            });
+        }
+
         return $services;
     }
 }

@@ -12,12 +12,16 @@ use App\Http\Controllers\Warehouse\DeliveryBillController;
 use App\Http\Controllers\Warehouse\UnitRegisterController;
 use App\Http\Controllers\Warehouse\SearchPackageController;
 use App\Http\Controllers\Warehouse\ScanPackageController;
+use App\Http\Controllers\Warehouse\USPSContainerController;
 use App\Http\Controllers\Warehouse\ChileContainerController;
 use App\Http\Controllers\Warehouse\ContainerPackageController;
 use App\Http\Controllers\Warehouse\ManifestDownloadController;
+use App\Http\Controllers\Warehouse\USPSCN35DownloadController;
+use App\Http\Controllers\Warehouse\USPSUnitRegisterController;
 use App\Http\Controllers\Warehouse\ChileCN35DownloadController;
 use App\Http\Controllers\Warehouse\DeliveryBillDownloadController;
 use App\Http\Controllers\Warehouse\DeliveryBillRegisterController;
+use App\Http\Controllers\Warehouse\USPSContainerPackageController;
 use App\Http\Controllers\Warehouse\ChileContainerPackageController;
 use App\Http\Controllers\Warehouse\DeliveryBillStatusUpdateController;
 
@@ -51,6 +55,12 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('chile_container/{container}/upload_manifest', [ChileContainerController::class, 'upload_ManifestToChile'])->name('upload.manifest');
     Route::get('chile_container/{container}/download_chile_cn35', ChileCN35DownloadController::class)->name('download.chile_cn35');
     
+    // Routes for USPS Container
+    Route::resource('usps_containers', USPSContainerController::class);
+    Route::resource('usps_container.packages', USPSContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('usps_container/{container}/register', USPSUnitRegisterController::class)->name('usps_container.register');
+    Route::get('usps_container/{container}/download', USPSCN35DownloadController::class)->name('usps_container.download');
+    Route::get('usps_container/{container}/download_excel_manifest', [USPSContainerController::class, 'download_exceltManifest'])->name('download.usps_manifest_excel');
 });
 
 

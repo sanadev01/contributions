@@ -188,6 +188,13 @@
                 </a>
             </li>
 
+            <li class="nav-item {{ $isActive(['calculator.index']) }}">
+                <a class="nav-link" href="{{ route('usps-calculator.index') }}" target="_blank">
+                    <i class="fa fa-calculator"></i>
+                    <span data-i18n="Apps">@lang('menu.uspscalculator')</span>
+                </a>
+            </li>
+
             {{-- Reports --}}
             <li class="nav-item has-sub sidebar-group">
                 <a href="#">
