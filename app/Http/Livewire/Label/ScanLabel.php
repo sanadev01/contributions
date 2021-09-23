@@ -2,9 +2,11 @@
 
 namespace App\Http\Livewire\Label;
 
+use Carbon\Carbon;
 use App\Models\Order;
 use Livewire\Component;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\OrderTracking;
 use App\Repositories\LabelRepository;
 use Illuminate\Support\Facades\Storage;
@@ -14,8 +16,11 @@ class ScanLabel extends Component
     public $packagesRows;
     public $tracking = '';
     public $orderStatus = '';
+    public $start_date;
+    public $end_date;
     public $error = '';
     public $order = [];
+    public $searchOrder = [];
     public $newOrder = [];
 
     public function mount()
@@ -25,6 +30,7 @@ class ScanLabel extends Component
         $this->tracking  = $this->tracking;
         $this->newOrder  = $this->newOrder;
         $this->orderStatus  = $this->orderStatus;
+        $this->searchOrder  = $this->searchOrder;
     }
 
     public function render()
@@ -58,6 +64,7 @@ class ScanLabel extends Component
         
         if($this->order){
             $this->packagesRows[$index]['tracking_code'] = $trackingCode;
+            $this->packagesRows[$index]['pobox'] = $this->order->user->pobox_number;
             $this->packagesRows[$index]['client'] = $this->order->merchant;
             $this->packagesRows[$index]['dimensions'] = $this->order->length . ' x ' . $this->order->length . ' x ' . $this->order->height ;
             $this->packagesRows[$index]['kg'] = $this->order->weight;
@@ -101,6 +108,7 @@ class ScanLabel extends Component
                 
                 $newRow = [
                     'tracking_code' => $this->tracking,
+                    'pobox' => $this->order->user->pobox_number,
                     'client' => $this->order->merchant,
                     'dimensions' => $this->order->length . ' x ' . $this->order->length . ' x ' . $this->order->height,
                     'kg' => $this->order->weight,
@@ -113,7 +121,7 @@ class ScanLabel extends Component
                     $this->orderStatus = 'Order already Existing';
                     return $this->tracking = '';
                 }
-
+                
                 array_push($this->packagesRows, $newRow);
 
                 array_push($this->newOrder,$this->order);
@@ -122,6 +130,13 @@ class ScanLabel extends Component
                 
                 $this->tracking = '';
                 $this->orderStatus = '';
+                if(Auth::user()->isUser() && Auth::user()->role->name == 'scanner'){
+                    if(!$this->order->arrived_date){
+                        $this->order->update([
+                            'arrived_date' => date('Y-m-d H:i:s'), 
+                        ]);
+                    }
+                }
             }
         }
         $this->tracking = '';
@@ -131,31 +146,34 @@ class ScanLabel extends Component
     {
         foreach($this->newOrder as $order){
 
-            // dd($order);
             $this->getOrder($order, $labelRepository);
-            
+
         }
     }
     public function getOrder(Order $order, LabelRepository $labelRepository)
     {
-    //    dd($order);
         $labelData = null;
 
-        // if ( $request->update_label === 'true' ){
-        //     $labelData = $labelRepository->update($order);
-        // }else{
-            $labelData = $labelRepository->get($order);
-        // }
-
-        // $order->refresh();
-
+        $labelData = $labelRepository->get($order);
+       
         if ( $labelData ){
             Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
         }
         return redirect()->route('order.label.download',[$order,'time'=>md5(microtime())]);
       
     }
-
+    
+    public function search()
+    {
+        $data = $this->validate([
+            'start_date' => 'nullable',
+            'end_date' => 'nullable',
+        ]);
+        $this->start_date = $data['start_date'];
+        $this->end_date   = $data['end_date'];
+        $order = Order::whereBetween('arrived_date',[$this->start_date, $this->end_date])->get();
+        $this->searchOrder = $order; 
+    }
     public function addOrderTracking($order)
     {
         OrderTracking::create([
