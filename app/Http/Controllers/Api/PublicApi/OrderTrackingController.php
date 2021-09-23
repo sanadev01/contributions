@@ -26,6 +26,15 @@ class OrderTrackingController extends Controller
                 
                 return apiResponse(true,'Order found', $this->trackings);
             }
+            if($response->service == 'USPS')
+            {
+                $this->trackings = $this->getUSPSTrackings($response->usps_trackings, $response->trackings);
+
+                $this->trackings = $this->trackings->toArray();
+                
+                return apiResponse(true,'Order found', $this->trackings);
+            }
+
             $this->trackings = $response->trackings->toArray();
 
             return apiResponse(true,'Order found', $this->trackings);
@@ -42,6 +51,18 @@ class OrderTrackingController extends Controller
         foreach($response as $data)
         {
 
+            $hd_trackings->push($data);
+        }
+
+        return $hd_trackings;
+    }
+
+    private function getUSPSTrackings($response, $hd_trackings)
+    {
+        $response = array_reverse($response);
+        
+        foreach($response as $data)
+        {
             $hd_trackings->push($data);
         }
 
