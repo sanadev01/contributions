@@ -20,7 +20,10 @@ class ChileContainerRepository {
 
         // $query->whereDoesntHave('deliveryBills');
         
-        return $query->where('origin_country', 'CL')->latest()->paginate();
+        return $query->where(function($query) {
+                        $query->where('services_subclass_code','SRP')
+                                ->orWhere('services_subclass_code','SRM');
+                    })->latest()->paginate();
     }
 
     public function store(Request $request)

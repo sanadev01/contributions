@@ -7,6 +7,7 @@ use App\Models\Order;
 use Livewire\Component;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\OrderTracking;
 use App\Repositories\LabelRepository;
 use Illuminate\Support\Facades\Storage;
 
@@ -52,6 +53,7 @@ class ScanLabel extends Component
 
     public function removeRow($index)
     {
+        $this->removeOrderTracking($this->packagesRows[$index]['tracking_code']);
         unset($this->packagesRows[$index]);
     }
     
@@ -123,6 +125,8 @@ class ScanLabel extends Component
                 array_push($this->packagesRows, $newRow);
 
                 array_push($this->newOrder,$this->order);
+
+                $this->addOrderTracking($this->order);
                 
                 $this->tracking = '';
                 $this->orderStatus = '';
@@ -169,5 +173,30 @@ class ScanLabel extends Component
         $this->end_date   = $data['end_date'];
         $order = Order::whereBetween('arrived_date',[$this->start_date, $this->end_date])->get();
         $this->searchOrder = $order; 
+    }
+    public function addOrderTracking($order)
+    {
+        OrderTracking::create([
+            'order_id' => $order->id,
+            'status_code' => Order::STATUS_ARRIVE_AT_WAREHOUSE,
+            'type' => 'HD',
+            'description' => 'Freight arrived at Homedelivery',
+            'country' => 'US',
+            'city' => 'Miami'
+        ]);
+
+        return true;
+    }
+
+    public function removeOrderTracking($tracking_code)
+    {
+        $order = Order::where('corrios_tracking_code', $tracking_code)->first();
+
+        $order_tracking = OrderTracking::where('order_id', $order->id)->latest()->first();
+
+        $order_tracking->delete();
+
+        return true;
+
     }
 }
