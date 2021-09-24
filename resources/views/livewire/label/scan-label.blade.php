@@ -14,28 +14,30 @@
         </div>
         
         <div class="col-7 d-flex justify-content-end">
-            <form action="{{ route('admin.label.scan.store') }}" method="post">
-                @csrf
-                @foreach ($packagesRows as $key => $package)
-                    <input type="hidden" name="order[]" value="{{ $package['reference'] }}">
-                    <input type="hidden" name="excel" value="1">
-                @endforeach
-                <button type="submit" class="btn btn-primary mr-2" title="@lang('orders.import-excel.Download')">
-                    <i class="feather icon-download"></i> @lang('orders.import-excel.Download') Arrival Report
-                </button>
-                
-            </form>
-            <form action="{{ route('admin.label.scan.store') }}" method="post">
-                @csrf
-                @foreach ($packagesRows as $key => $package)
-                    <input type="hidden" name="order[]" value="{{ $package['reference'] }}">
-                    <input type="hidden" name="excel" value="0">
-                @endforeach
-                <button type="submit" class="btn btn-success mr-2" title="@lang('orders.import-excel.Download')">
-                    <i class="feather icon-download"></i> @lang('orders.import-excel.Download') All
-                </button>
-                
-            </form>
+            @if(!$searchOrder)
+                <form action="{{ route('admin.label.scan.store') }}" method="post">
+                    @csrf
+                    @foreach ($packagesRows as $key => $package)
+                        <input type="hidden" name="order[]" value="{{ $package['reference'] }}">
+                        <input type="hidden" name="excel" value="1">
+                    @endforeach
+                    <button type="submit" class="btn btn-primary mr-2" title="@lang('orders.import-excel.Download')">
+                        <i class="feather icon-download"></i> @lang('orders.import-excel.Download') Arrival Report
+                    </button>
+                    
+                </form>
+                <form action="{{ route('admin.label.scan.store') }}" method="post">
+                    @csrf
+                    @foreach ($packagesRows as $key => $package)
+                        <input type="hidden" name="order[]" value="{{ $package['reference'] }}">
+                        <input type="hidden" name="excel" value="0">
+                    @endforeach
+                    <button type="submit" class="btn btn-success mr-2" title="@lang('orders.import-excel.Download')">
+                        <i class="feather icon-download"></i> @lang('orders.import-excel.Download') All
+                    </button>
+                    
+                </form>
+            @endif
         </div>
         <div class="row col-12 d-flex justify-content-end">
             <form wire:submit.prevent="search" class="col-12">
@@ -74,6 +76,7 @@
                 </div>
             </form>
         </div>
+        
     </div>
     <table class="table table-bordered">
         <tr>
