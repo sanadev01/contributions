@@ -17,12 +17,12 @@ class OrderInvoiceController extends Controller
         }
         
         $services = $order->services;
+        
         if(($order->user->hasRole('wholesale') && $order->user->insurance == false) || $order->user->hasRole('retailer'))
         {
-
             if( $order->services->filter(function ($service) {return $service->name == 'Insurance';}) &&  $order->user->insurance == false)
             {
-               $services = $this->calculateInsurance($order);
+                $services = $this->calculateInsurance($order);
             }
         }
         
