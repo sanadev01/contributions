@@ -16,11 +16,14 @@ class OrderInvoiceController extends Controller
             abort(404);
         }
         
-        $services = $order->service;
-
-        if( $order->services->filter(function ($service) {return $service->name == 'Insurance';}) &&  $order->user->insurance == false)
+        $services = $order->services;
+        
+        if(($order->user->hasRole('wholesale') && $order->user->insurance == false) || $order->user->hasRole('retailer'))
         {
-           $services = $this->calculateInsurance($order);
+            if( $order->services->filter(function ($service) {return $service->name == 'Insurance';}) &&  $order->user->insurance == false)
+            {
+                $services = $this->calculateInsurance($order);
+            }
         }
         
         return view('admin.orders.invoice.index',compact('order', 'services'));

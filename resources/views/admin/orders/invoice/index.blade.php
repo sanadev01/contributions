@@ -18,7 +18,11 @@
         <div class="actions clearfix no-print">
             <ul role="menu" aria-label="Pagination">
                 <li class="disabled" aria-disabled="true">
-                    <a href="{{ route('admin.orders.services.index',$order) }}" role="menuitem">@lang('orders.invoice.Previous')</a>
+                    @if (($order->user->hasRole('wholesale') && $order->user->insurance == false) || ($order->user->hasRole('retailer')))
+                        <a href="{{ route('admin.orders.services.index',$order) }}" role="menuitem">@lang('orders.invoice.Previous')</a>
+                    @else
+                        <a href="{{ route('admin.orders.order-details.index',$order) }}" role="menuitem">@lang('orders.invoice.Previous')</a>
+                    @endif
                 </li>
                 @if ( !$order->isPaid() )
                 <li aria-hidden="false" aria-disabled="false">

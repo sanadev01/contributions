@@ -58,6 +58,10 @@ class OrderItemsController extends Controller
         
         if ( $orderRepository->updateShippingAndItems($request,$order) ){
             session()->flash('alert-success','orders.Order Placed');
+            if ($order->user->hasRole('wholesale') && $order->user->insurance == true) 
+            {
+                return redirect()->route('admin.orders.order-invoice.index',$order);# code...
+            }
             return \redirect()->route('admin.orders.services.index',$order);
         }
         session()->flash('alert-danger','orders.Error While placing Order'." ".$orderRepository->getError());
