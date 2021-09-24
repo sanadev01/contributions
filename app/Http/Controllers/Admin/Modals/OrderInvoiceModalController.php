@@ -10,7 +10,7 @@ class OrderInvoiceModalController extends Controller
 {
     public function __invoke(Order $order)
     {
-        $services = $order->service;
+        $services = $order->services;
 
         if( $order->services->filter(function ($service) {return $service->name == 'Insurance';}) &&  $order->user->insurance == false)
         {
