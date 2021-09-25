@@ -39,9 +39,18 @@
                 </form>
             @else
                 @if (!$searchOrder->isEmpty())
-                    <a href="{{ route('admin.label.scan.edit',12) }}" class="btn btn-primary mt-5">
-                        <i class="feather icon-download"></i>@lang('orders.import-excel.Download') Sacn List
-                    </a>
+                    <form action="{{ route('admin.label.scan.update', 10) }}" method="post">
+                        @csrf
+                        @method('PUT')
+                        @foreach ($searchOrder as $key => $order)
+                            <input type="hidden" name="Ids[]" value="{{ $order['id'] }}">
+                            <input type="hidden" name="excel" value="0">
+                        @endforeach
+                        <button type="submit" class="btn btn-success mr-2" title="@lang('orders.import-excel.Download')">
+                            <i class="feather icon-download"></i> @lang('orders.import-excel.Download') Sacn List
+                        </button>
+
+                    </form>
                 @endif
             @endif
         </div>
