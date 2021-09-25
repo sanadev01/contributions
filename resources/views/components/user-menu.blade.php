@@ -17,6 +17,12 @@
                         <span class="menu-title">Check In Parcel</span>
                     </a>
                 </li>
+                <li class="nav-item {{ $isActive(['admin.tracking.index']) }}">
+                    <a href="{{ route('admin.tracking.index') }}" target="_blank">
+                        <i class="feather icon-map-pin"></i>
+                        <span class="menu-title">@lang('menu.trackings')</span>
+                    </a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('admin.profile.index') }}">
                         <i class="feather icon-user-check"></i>
