@@ -10,7 +10,10 @@
 {{--    <meta name="keywords" content="admin template, Vuexy admin template, dashboard template, flat admin template, responsive admin template, web app">--}}
 {{--    <meta name="author" content="PIXINVENT">--}}
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link href='https://fonts.googleapis.com/css?family=Karla' rel='stylesheet'>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Karla&display=swap" rel="stylesheet">
+    {{-- <link href='https://fonts.googleapis.com/css?family=Karla' rel='stylesheet'> --}}
     @include('layouts.css')
     @yield('css')
     <script>
