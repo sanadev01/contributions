@@ -145,7 +145,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         });
 
         Route::namespace('Label')->as('label.')->prefix('label')->group(function(){
-            Route::resource('scan', PrintLabelController::class)->only('create','show','store');
+            Route::resource('scan', PrintLabelController::class)->only('create','show','store','edit');
         });
 
         Route::resource('deposit', Deposit\DepositController::class)->only('create','store','index');

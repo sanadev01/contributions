@@ -37,6 +37,12 @@
                     </button>
                     
                 </form>
+            @else
+                @if (!$searchOrder->isEmpty())
+                    <a href="{{ route('admin.label.scan.edit',12) }}" class="btn btn-primary mt-5">
+                        <i class="feather icon-download"></i>@lang('orders.import-excel.Download') Sacn List
+                    </a>
+                @endif
             @endif
         </div>
         <div class="row col-12 d-flex justify-content-end">
