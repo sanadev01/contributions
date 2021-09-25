@@ -28,6 +28,7 @@ Route::get('/', function (Shopify $shopifyClient) {
     return redirect('login');
 });
 
+Route::resource('usps-calculator', USPSCalculatorController::class)->only(['index', 'store']);
 Route::resource('calculator', CalculatorController::class)->only(['index', 'store']);
 // Route::resource('tracking', TrackingController::class)->only(['index', 'show']);
 Route::get('/home', function () {
@@ -144,7 +145,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         });
 
         Route::namespace('Label')->as('label.')->prefix('label')->group(function(){
-            Route::resource('scan', PrintLabelController::class)->only('create','show','store');
+            Route::resource('scan', PrintLabelController::class)->only('create','show','store','update');
         });
 
         Route::resource('deposit', Deposit\DepositController::class)->only('create','store','index');
@@ -210,3 +211,5 @@ Route::get('test-label',function(){
 });
 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
+
+Route::get('test-usps', [\App\Http\Controllers\Admin\HomeController::class,'testBrazilTracking'])->middleware('auth')->name('test-usps');

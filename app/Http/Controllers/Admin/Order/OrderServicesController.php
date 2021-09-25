@@ -51,12 +51,19 @@ class OrderServicesController extends Controller
         if($order->user->insurance == true)
         {
             $services = $services->filter(function ($service) {
-                return $service->name != 'Insurance' || $service->name != 'Seguro';
+                return $service->name != ('Insurance' || 'Seguro');
             });
         }
 
         if ($order->user->hasRole('wholesale'))
         {
+            if($order->user->insurance == true)
+            {
+                $services = $services->filter(function ($service) {
+                    return $service->name != ('Insurance' || 'Seguro');
+                });
+            }
+
             $services = $services->filter(function ($service) {
                 return $service->name == 'Insurance' || $service->name == 'Seguro';
             });
