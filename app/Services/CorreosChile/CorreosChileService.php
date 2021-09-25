@@ -90,6 +90,11 @@ class CorreosChileService
 
         $description = implode(" ", $itemDescription);
 
+        if (strlen($description) > 57)
+        {
+           return $description = str_limit($description, 54);
+        }
+        
         return $description;
     }
 
