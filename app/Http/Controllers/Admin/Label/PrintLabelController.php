@@ -133,7 +133,7 @@ class PrintLabelController extends Controller
      */
     public function edit($id)
     {
-        //
+        
     }
 
     /**
@@ -145,7 +145,15 @@ class PrintLabelController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $orders = Order::whereIn('id', $request->Ids)->get();
+
+        if($orders != null)
+        {
+            $exportService = new ScanOrderExport($orders);
+            return $exportService->handle();
+        }
+
+        return back();
     }
 
     /**
