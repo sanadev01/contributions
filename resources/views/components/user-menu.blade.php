@@ -3,7 +3,7 @@
     {!! $header !!}
     <div class="shadow-bottom"></div>
     <div class="main-menu-content ps ps--active-y">
-        <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
+        <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation" style=" font-size: 13px; font-family: karla;">
             @if (auth()->user()->hasRole('scanner'))
                 <li class="nav-item {{ $isActive('home') }}">
                     <a class="nav-link" href="{{ route('admin.home') }}">
