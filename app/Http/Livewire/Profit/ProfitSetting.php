@@ -25,8 +25,8 @@ class ProfitSetting extends Component
     public function render()
     {
         return view('livewire.profit.profit-setting',[
-            'packages' =>  ProfitPackage::all(),
-            'services' => ShippingService::all(),
+            'packages' =>  ProfitPackage::orderBy('name','ASC')->get(),
+            'services' => ShippingService::orderBy('name','ASC')->get(),
             'profitSettings' => PacakgeSetting::where('user_id', $this->user_id)->get()
         ]);
     }

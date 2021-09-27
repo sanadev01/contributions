@@ -20,7 +20,7 @@ class UserSettingController extends Controller
     
     public function index(User $user)
     {   
-        $packages = ProfitPackage::all();
+        $packages = ProfitPackage::orderBy('name','ASC')->get();
         $roles = Role::orderBy('id', 'desc')->get();
         $users = User::user()->get();
         return view('admin.users.setting.edit', compact('packages', 'user', 'roles', 'users'));
