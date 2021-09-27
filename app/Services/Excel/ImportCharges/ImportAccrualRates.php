@@ -3,8 +3,9 @@
 namespace App\Services\Excel\ImportCharges;
 
 use App\Models\Rate;
-use App\Models\Warehouse\AccrualRate;
+use App\Models\Country;
 use Illuminate\Http\UploadedFile;
+use App\Models\Warehouse\AccrualRate;
 use App\Services\Excel\AbstractImportService;
 
 class ImportAccrualRates extends AbstractImportService
@@ -32,12 +33,18 @@ class ImportAccrualRates extends AbstractImportService
     public function readRatesFromFile()
     {
         $rates = [];
+        if($this->country_id == Country::Chile)
+        {
+            $limit = 75;
+        }else{
+            $limit = 70;
+        }
 
-        foreach (range(3, 70) as $row) {
+        foreach (range(3, $limit) as $row) {
 
             $weight = round($this->getValueOrDefault('A'.$row),2);
             
-            if(($this->country_id == 30 && $weight <= 30000) || ($this->country_id == 46 && $weight <= 50000))
+            if(($this->country_id == Country::Brazil && $weight <= 30000) || ($this->country_id == Country::Chile && $weight <= 50000))
             {
                 $rates[] = [
                     'service' => $this->service,

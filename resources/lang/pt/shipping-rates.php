@@ -19,6 +19,7 @@ return [
     'Cancel' => 'Cancelar',
     'Import' => 'Importar',
     'Download' => 'Baixar',
+    'Chile Rates' => 'Download Chile Taxas',
     'Rates Updated Successfully' => 'Taxas atualizadas com sucesso',
     'Error While Updating Rates' => 'Erro ao atualizar taxas',
     'Fixed Charges' => 'Cobranças Fixas',
