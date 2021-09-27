@@ -60,6 +60,7 @@ class RateReportsRepository
 
                 if($serviceId)
                 {
+                    \Log::info('serviceId: '.$serviceId);
                     $service = ShippingService::find($serviceId);
                     $service->cacheCalculator = false;
                     if ( $service->isAvailableFor($order) ){
