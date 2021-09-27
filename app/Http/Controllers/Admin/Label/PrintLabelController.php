@@ -90,8 +90,9 @@ class PrintLabelController extends Controller
             } else {
                 echo 'Could not open ZIP file.';
             }
-
+            
             return response()->download($tempFileUri);
+            
         }
         return back();
 
@@ -132,7 +133,7 @@ class PrintLabelController extends Controller
      */
     public function edit($id)
     {
-        //
+        
     }
 
     /**
@@ -144,7 +145,15 @@ class PrintLabelController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $orders = Order::whereIn('id', $request->Ids)->get();
+
+        if($orders != null)
+        {
+            $exportService = new ScanOrderExport($orders);
+            return $exportService->handle();
+        }
+
+        return back();
     }
 
     /**
@@ -157,4 +166,5 @@ class PrintLabelController extends Controller
     {
         //
     }
+    
 }

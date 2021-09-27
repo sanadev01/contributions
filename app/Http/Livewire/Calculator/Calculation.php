@@ -3,9 +3,11 @@
 namespace App\Http\Livewire\Calculator;
 
 use App\Models\Order;
-use App\Services\Calculators\WeightCalculator;
-use App\Services\Converters\UnitsConverter;
+use App\Models\Country;
 use Livewire\Component;
+use Illuminate\Support\Facades\Auth;
+use App\Services\Converters\UnitsConverter;
+use App\Services\Calculators\WeightCalculator;
 
 class Calculation extends Component
 {   
@@ -29,6 +31,7 @@ class Calculation extends Component
     {
         $this->order = optional($order)->toArray();
         $this->fillData();
+        $this->checkUser();
     }
 
     public function render() 
@@ -100,5 +103,23 @@ class Calculation extends Component
             $this->volumeWeight = round($volumetricWeight > $this->weight ? $volumetricWeight : $this->weight,2);
             $this->volumeWeightOther = UnitsConverter::poundToKg($this->volumeWeight);
         }
+    }
+
+    public function checkUser()
+    {
+        if (Auth::check()) {
+            
+            $country_id = Auth::user()->country_id;
+            if($country_id)
+            {
+                $country = Country::find($country_id);
+                if($country->id == 250)
+                {
+                   return $this->unit = 'lbs/in';
+                }
+            }
+        }
+
+        return;
     }
 }

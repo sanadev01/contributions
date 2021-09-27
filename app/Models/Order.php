@@ -2,17 +2,18 @@
 
 namespace App\Models;
 
-use App\Services\Correios\Contracts\Package;
+use App\Models\OrderTracking;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 use App\Models\Warehouse\Container;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use App\Services\Converters\UnitsConverter;
 use Spatie\Activitylog\Traits\LogsActivity;
+use App\Services\Correios\Contracts\Package;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Services\Calculators\WeightCalculator;
 use App\Services\Correios\Models\Package as ModelsPackage;
-use Illuminate\Support\Facades\DB;
 
 class Order extends Model implements Package
 {
@@ -45,7 +46,17 @@ class Order extends Model implements Package
 
     const STATUS_PAYMENT_PENDING = 60;
     const STATUS_PAYMENT_DONE = 70;
+    const STATUS_ARRIVE_AT_WAREHOUSE = 73;
+    const STATUS_INSIDE_CONTAINER = 75;
     const STATUS_SHIPPED = 80;
+    const STATUS_BRAZIL_POSTED = 01;
+
+    const BRAZIL = 30;
+    const CHILE = 46;
+    const USPS = 250;
+
+    public $user_profit = 0;
+
     public function scopeParcelReady(Builder $query)
     {
         return $query->where(function($query){
@@ -299,8 +310,15 @@ class Order extends Model implements Package
     {
         $shippingService = $this->shippingService;
 
-        $shippingCost = $shippingService->getRateFor($this,true,$onVolumetricWeight);
         $additionalServicesCost = $this->calculateAdditionalServicesCost($this->services);
+        if($this->recipient->country_id == 250)
+        {
+            $shippingCost = $this->user_declared_freight;
+            $this->calculateProfit($shippingCost);
+
+        } else {
+            $shippingCost = $shippingService->getRateFor($this,true,$onVolumetricWeight);
+        }
 
         $battriesExtra = $shippingService->contains_battery_charges * ( $this->items()->batteries()->count() );
         $pefumeExtra = $shippingService->contains_perfume_charges * ( $this->items()->perfumes()->count() );
@@ -311,7 +329,7 @@ class Order extends Model implements Package
 
 
 
-        $total = $shippingCost + $additionalServicesCost + $this->insurance_value + $dangrousGoodsCost + $consolidation;
+        $total = $shippingCost + $additionalServicesCost + $this->insurance_value + $dangrousGoodsCost + $consolidation + $this->user_profit;
 
         $discount = 0; // not implemented yet
         $gross_total = $total - $discount;
@@ -351,8 +369,15 @@ class Order extends Model implements Package
             }
         }
         
-
         return $services->sum('price');
+    }
+    public function calculateProfit($shippingCost)
+    {
+        $profit = $this->user->api_profit / 100;
+        
+        $this->user_profit = $shippingCost * $profit;
+
+        return true;
     }
 
     public function addAffiliateCommissionSale(User $referrer, $commissionCalculator)
@@ -439,5 +464,15 @@ class Order extends Model implements Package
     public function getOrderValue()
     {
         return $this->items()->sum(DB::raw('quantity * value'));
+    }
+
+    public function sender_country()
+    {
+        return $this->belongsTo(Country::class, 'sender_country_id');
+    }
+
+    public function trackings()
+    {
+        return $this->hasMany(OrderTracking::class, 'order_id');
     }
 }

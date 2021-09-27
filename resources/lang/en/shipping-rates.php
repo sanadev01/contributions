@@ -19,6 +19,7 @@ return [
     'Cancel' => 'Cancel',
     'Import' => 'Import',
     'Download' => 'Download',
+    'Chile Rates' => 'Download Chile Rates',
     'Rates Updated Successfully' => 'Rates Updated Successfully',
     'Error While Updating Rates' => 'Error While Updating Rates',
     'Fixed Charges' => 'Fixed Charges',

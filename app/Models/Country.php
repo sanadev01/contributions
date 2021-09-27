@@ -17,6 +17,9 @@ class Country extends Model
         'name', 'code'
     ];
 
+    const Chile = 46;
+    const Brazil = 30;
+
     public function states()
     {
         return $this->hasMany(State::class);

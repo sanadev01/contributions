@@ -19,7 +19,11 @@ class ContainerRepository extends AbstractRepository{
 
         // $query->whereDoesntHave('deliveryBills');
 
-        return $query->where('origin_country', '!=', 'CL')->latest()->paginate();
+        return $query->where(function($query) {
+                 $query->where('services_subclass_code','NX')
+                        ->orWhere('services_subclass_code','IX')
+                        ->orWhere('services_subclass_code','XP');
+                })->latest()->paginate();
     }
 
     public function store(Request $request)
