@@ -13,7 +13,15 @@
                 <th>
                     Weight (Grams)
                 </th>
+                @if ($service == App\Services\Correios\Models\Package::SERVICE_CLASS_SRP || $service == App\Services\Correios\Models\Package::SERVICE_CLASS_SRM)
+                <th>
+                    SCL
+                </th>
 
+                <th>
+                    Other  
+                </th>
+                @else
                 <th>
                     CWB
                 </th>
@@ -21,6 +29,7 @@
                 <th>
                     GRU  
                 </th>
+                @endif
             </tr>
             <tr>
                 <th style="width: 20% !important;">
