@@ -19,6 +19,8 @@ return [
     'Cancel' => 'Cancel',
     'Import' => 'Import',
     'Download' => 'Download',
+    'Chile SRP Rates' => 'Download Chile SRP Rates',
+    'Chile SRM Rates' => 'Download Chile SRM Rates',
     'Rates Updated Successfully' => 'Rates Updated Successfully',
     'Error While Updating Rates' => 'Error While Updating Rates',
     'Fixed Charges' => 'Fixed Charges',
