@@ -60,14 +60,16 @@ class RateReportsRepository
 
                 if($serviceId)
                 {
-                    \Log::info('serviceId: '.$serviceId);
                     $service = ShippingService::find($serviceId);
-                    $service->cacheCalculator = false;
-                    if ( $service->isAvailableFor($order) ){
-                        $rate = $service->getRateFor($order,true,false);
-                        $value = $service->getRateFor($order,false,false);
-                        $shippingRates->push($rate);
-                        $shippingValue->push($value);
+                    if($service){
+
+                        $service->cacheCalculator = false;
+                        if ( $service->isAvailableFor($order) ){
+                            $rate = $service->getRateFor($order,true,false);
+                            $value = $service->getRateFor($order,false,false);
+                            $shippingRates->push($rate);
+                            $shippingValue->push($value);
+                        }
                     }
                     
                 }else{
