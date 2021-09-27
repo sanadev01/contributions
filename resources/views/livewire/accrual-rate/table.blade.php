@@ -13,13 +13,13 @@
                 <th>
                     Weight (Grams)
                 </th>
-                @if ($service == App\Services\Correios\Models\Package::SERVICE_CLASS_SRP || $service == App\Services\Correios\Models\Package::SERVICE_CLASS_SRM)
+                @if ($chileService == true)
                 <th>
                     SCL
                 </th>
 
                 <th>
-                    Other  
+                    Other  Region
                 </th>
                 @else
                 <th>
