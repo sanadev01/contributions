@@ -167,7 +167,7 @@ class ScanLabel extends Component
         ]);
         $this->start_date = $data['start_date'];
         $this->end_date   = $data['end_date'];
-        $order = Order::whereBetween('arrived_date',[$this->start_date, $this->end_date])->get();
+        $order = Order::whereBetween('arrived_date',[$this->start_date.' 00:00:00', $this->end_date.' 23:59:59'])->get();
         $this->searchOrder = $order; 
     }
 }
