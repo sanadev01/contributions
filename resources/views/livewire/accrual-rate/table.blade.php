@@ -15,11 +15,11 @@
                 </th>
                 @if ($chileService == true)
                 <th>
-                    SCL
+                    SCL (SRM)
                 </th>
 
                 <th>
-                    Other  Region
+                    SCL (SRP)
                 </th>
                 @else
                 <th>
