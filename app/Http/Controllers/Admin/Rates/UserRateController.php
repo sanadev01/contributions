@@ -28,12 +28,14 @@ class UserRateController extends Controller
             foreach($settings as $setting)
             {
                 $service = ShippingService::where('id', $setting->service_id)->first();
-                $rates = $rateReportsRepository->getRateReport($setting->package_id, $setting->service_id);
-                $this->rates[] = [
-                    'service' => $service->name,
-                    'rates' => $rates,
-                    'packageId' => $setting->package_id,
-                ];
+                if($service){
+                    $rates = $rateReportsRepository->getRateReport($setting->package_id, $setting->service_id);
+                    $this->rates[] = [
+                        'service' => $service->name,
+                        'rates' => $rates,
+                        'packageId' => $setting->package_id,
+                    ];
+                }
             }
 
             $rates = $this->rates;
