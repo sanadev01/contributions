@@ -19,6 +19,8 @@ return [
     'Cancel' => 'Cancelar',
     'Import' => 'Importar',
     'Download' => 'Baixar',
+    'Chile SRP Rates' => 'Baixar Chile SRP Taxas',
+    'Chile SRM Rates' => 'Baixar Chile SRM Taxas',
     'Rates Updated Successfully' => 'Taxas atualizadas com sucesso',
     'Error While Updating Rates' => 'Erro ao atualizar taxas',
     'Fixed Charges' => 'Cobranças Fixas',
