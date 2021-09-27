@@ -55,7 +55,7 @@ class UploadChileManifestService
         $file = fopen("../storage/app/manifests/uploads/$filename.txt", 'a');//opens file in append mode  
         foreach ($orders as $order)
         {
-            $chile_response = json_decode($order->chile_response);
+            $chile_response = json_decode($order->api_response);
             fwrite($file,  $this->combineChileResponseFields($chile_response));  
             fwrite($file, '|');
             fwrite($file, $this->container->awb);
