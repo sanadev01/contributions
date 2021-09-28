@@ -111,7 +111,7 @@
                     <td>{{ $package->user->pobox_number }}</td>
                     <td>{{ $package->merchant }}</td>
                     <td>{{ $package->length }} x {{ $package->length }} x {{ $package->height }}</td>
-                    <td>{{ $package->weight }}</td>
+                    <td>{{ $package->getWeight('kg') }}</td>
                     <td>{{ $package->id }}</td>
                     <td>{{ $package->recipient->first_name }}</td>
                     <td>{{ $package->order_date }}</td>
