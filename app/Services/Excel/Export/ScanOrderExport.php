@@ -53,6 +53,7 @@ class ScanOrderExport extends AbstractExportService
             $this->setCellValue('F'.$row, $order->id);
             $this->setCellValue('G'.$row, $order->recipient->first_name);
             $this->setCellValue('H'.$row, $order->order_date->format('m-d-Y'));
+            $this->setCellValue('I'.$row, $order->arrived_date);
             $this->count++ ;
             $row++;
         }
@@ -119,9 +120,12 @@ class ScanOrderExport extends AbstractExportService
 
         $this->setColumnWidth('H', 20);
         $this->setCellValue('H7', 'Order Date');
+        
+        $this->setColumnWidth('I', 20);
+        $this->setCellValue('I7', 'Arrival Date');
 
-        $this->setBackgroundColor('A7:H7', '2b5cab');
-        $this->setColor('A7:H7', 'FFFFFF');
+        $this->setBackgroundColor('A7:I7', '2b5cab');
+        $this->setColor('A7:I7', 'FFFFFF');
         $this->currentRow++;
 
         return true;
