@@ -9,23 +9,26 @@ use App\Http\Controllers\Controller;
 use App\Repositories\RateRepository;
 use App\Models\Warehouse\AccrualRate;
 use App\Http\Requests\Admin\Rate\CreateRequest;
+use App\Services\Excel\Export\AccuralRateExport;
 use App\Services\Excel\ImportCharges\ImportAccrualRates;
 
 class AccrualRateController extends Controller
 {   
     public function __construct()
     {
-        $this->authorizeResource(Rate::class);
+        
     } 
 
     public function index()
     {
+        $this->authorizeResource(Rate::class);
         $shippingRates = AccrualRate::all();
         return view('admin.rates.accrual-rates.index', compact('shippingRates'));
     }
 
     public function create()
     {   
+        $this->authorizeResource(Rate::class);
         return view('admin.rates.accrual-rates.create');
     }
 
@@ -49,6 +52,13 @@ class AccrualRateController extends Controller
     public function showRates($service)
     {
         return view('admin.rates.accrual-rates.show', compact('service'));
+    }
+    
+    public function downloadRates($service)
+    {
+       $rates = AccrualRate::where('service', $service)->get();
+       $exportService = new AccuralRateExport($rates);
+        return $exportService->handle();
     }
 
 }
