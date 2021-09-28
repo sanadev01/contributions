@@ -9,7 +9,7 @@ return  [
         'Your Home DeliveryBR address' => 'Your Home DeliveryBR address is:',
         'Address line 1:' => 'Address line 1:',
         'Address line 2:' => 'Address line 2:',
-        'City:' => 'City',
+        'City:' => 'City:',
         'State:' => 'State:',
         'Zip code:' => 'Zip code:',
         'You may use our' => 'You may use our online calculator to get an estimate of freight charges and the services we offer, prior to completing your online purchase.',
