@@ -67,7 +67,7 @@ class ScanLabel extends Component
             $this->packagesRows[$index]['pobox'] = $this->order->user->pobox_number;
             $this->packagesRows[$index]['client'] = $this->order->merchant;
             $this->packagesRows[$index]['dimensions'] = $this->order->length . ' x ' . $this->order->length . ' x ' . $this->order->height ;
-            $this->packagesRows[$index]['kg'] = $this->order->weight;
+            $this->packagesRows[$index]['kg'] = $this->order->getWeight('kg');
             $this->packagesRows[$index]['reference'] = $this->order->id;
             $this->packagesRows[$index]['recpient'] = $this->order->recipient->first_name;
             $this->packagesRows[$index]['order_date'] = $this->order->order_date->format('m-d-Y');
@@ -111,7 +111,7 @@ class ScanLabel extends Component
                     'pobox' => $this->order->user->pobox_number,
                     'client' => $this->order->merchant,
                     'dimensions' => $this->order->length . ' x ' . $this->order->length . ' x ' . $this->order->height,
-                    'kg' => $this->order->weight,
+                    'kg' => $this->order->getWeight('kg'),
                     'reference' => $this->order->id,
                     'recpient' => $this->order->recipient->first_name,
                     'order_date' => $this->order->order_date->format('m-d-Y'),
