@@ -39,6 +39,7 @@
                 </form>
             @else
                 @if (!$searchOrder->isEmpty())
+                    <br>
                     <form action="{{ route('admin.label.scan.update', 10) }}" method="post">
                         @csrf
                         @method('PUT')

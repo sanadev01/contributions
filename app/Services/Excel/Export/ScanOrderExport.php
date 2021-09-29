@@ -45,15 +45,16 @@ class ScanOrderExport extends AbstractExportService
         $row = $this->currentRow;
 
         foreach ($this->orders as $order) {
-            $this->setCellValue('A'.$row, $order->corrios_tracking_code);
-            $this->setCellValue('B'.$row, $order->user->pobox_number);
-            $this->setCellValue('C'.$row, $order->merchant);
-            $this->setCellValue('D'.$row, $order->length . ' x ' . $order->length . ' x ' . $order->height );
-            $this->setCellValue('E'.$row, $order->getWeight('kg'));
-            $this->setCellValue('F'.$row, $order->id);
-            $this->setCellValue('G'.$row, $order->recipient->first_name);
-            $this->setCellValue('H'.$row, $order->order_date->format('m-d-Y'));
-            $this->setCellValue('I'.$row, $order->arrived_date);
+            $this->setCellValue('A'.$row, $this->count);
+            $this->setCellValue('B'.$row, $order->corrios_tracking_code);
+            $this->setCellValue('C'.$row, $order->user->pobox_number);
+            $this->setCellValue('D'.$row, $order->merchant);
+            $this->setCellValue('E'.$row, $order->length . ' x ' . $order->length . ' x ' . $order->height );
+            $this->setCellValue('F'.$row, $order->getWeight('kg'));
+            $this->setCellValue('G'.$row, $order->id);
+            $this->setCellValue('H'.$row, $order->recipient->first_name);
+            $this->setCellValue('I'.$row, $order->order_date->format('m-d-Y'));
+            $this->setCellValue('J'.$row, $order->arrived_date);
             $this->count++ ;
             $row++;
         }
@@ -98,34 +99,37 @@ class ScanOrderExport extends AbstractExportService
     private function setSecondHeaderRow($row)
     {
         $this->setColumnWidth('A', 20);
-        $this->setCellValue('A7', 'Tracking Code');
-
+        $this->setCellValue('A7', 'Nr. Boxes');
+        
         $this->setColumnWidth('B', 20);
-        $this->setCellValue('B7', 'POBOX#');
+        $this->setCellValue('B7', 'Tracking Code');
 
         $this->setColumnWidth('C', 20);
-        $this->setCellValue('C7', 'Client');
+        $this->setCellValue('C7', 'POBOX#');
 
         $this->setColumnWidth('D', 20);
-        $this->setCellValue('D7', 'Dimensions');
+        $this->setCellValue('D7', 'Client');
 
         $this->setColumnWidth('E', 20);
-        $this->setCellValue('E7', 'Weight Kg');
+        $this->setCellValue('E7', 'Dimensions');
 
         $this->setColumnWidth('F', 20);
-        $this->setCellValue('F7', 'Reference#');
+        $this->setCellValue('F7', 'Weight Kg');
 
         $this->setColumnWidth('G', 20);
-        $this->setCellValue('G7', 'Recpient');
+        $this->setCellValue('G7', 'Reference#');
 
         $this->setColumnWidth('H', 20);
-        $this->setCellValue('H7', 'Order Date');
-        
-        $this->setColumnWidth('I', 20);
-        $this->setCellValue('I7', 'Arrival Date');
+        $this->setCellValue('H7', 'Recpient');
 
-        $this->setBackgroundColor('A7:I7', '2b5cab');
-        $this->setColor('A7:I7', 'FFFFFF');
+        $this->setColumnWidth('I', 20);
+        $this->setCellValue('I7', 'Order Date');
+        
+        $this->setColumnWidth('J', 20);
+        $this->setCellValue('J7', 'Arrival Date');
+
+        $this->setBackgroundColor('A7:J7', '2b5cab');
+        $this->setColor('A7:J7', 'FFFFFF');
         $this->currentRow++;
 
         return true;
