@@ -29,6 +29,7 @@ Route::get('orders/recipient/normalize_address', [App\Http\Controllers\Api\Order
 // Routes for usps
 Route::get('orders/recipient/us_address', [App\Http\Controllers\Api\Order\RecipientController::class, 'validate_USAddress'])->name('api.orders.recipient.us_address');
 Route::get('order-usps-rates', [App\Http\Controllers\Admin\Order\OrderItemsController::class, 'usps_rates'])->name('api.usps_rates');
+Route::get('order-usps-sender-rates', [App\Http\Controllers\Admin\Order\OrderUSPSLabelController::class, 'usps_sender_rates'])->name('api.usps_sender_rates');
 
 Route::post('order/update/status',Api\OrderStatusController::class)->name('api.order.status.update');
 

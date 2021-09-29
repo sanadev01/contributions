@@ -165,6 +165,7 @@ return [
         'create-order' => 'Criar envio',
         'duplicate-order' => 'Pedido Duplicado',
         'back-to-list' => 'Voltar',
+        'buy-usps-label' => 'Comprar Etiqueta USPS',
     ],
     'create' => [
         'shipment-and-destination' => 'Criação do envio',

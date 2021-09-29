@@ -141,6 +141,11 @@
                         <a href="{{ route('admin.orders.label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
                             <i class="feather icon-printer"></i>@lang('orders.actions.label')
                         </a>
+                        @if( $order->corrios_tracking_code)
+                            <a href="{{ route('admin.orders.usps-label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
+                                <i class="feather icon-printer"></i>@lang('orders.actions.buy-usps-label')
+                            </a>
+                        @endif
                     @endif
                     
                    @can('updateOrder', $order)
