@@ -17,10 +17,17 @@ class ScanLabel extends Component
     public $orderStatus = '';
     public $start_date;
     public $end_date;
+    public $user_id;
     public $error = '';
     public $order = [];
     public $searchOrder = [];
     public $newOrder = [];
+    public $totalWeight = 0;
+    public $totalPieces = 0;
+
+    protected $listeners = ['user:updated' => 'getUser',
+                             'clear-search' => 'removeUser'   
+                            ];
 
     public function mount()
     {
@@ -164,10 +171,48 @@ class ScanLabel extends Component
         $data = $this->validate([
             'start_date' => 'nullable',
             'end_date' => 'nullable',
+            'user_id' => 'nullable',
         ]);
+
         $this->start_date = $data['start_date'];
         $this->end_date   = $data['end_date'];
+        $this->user_id    = $data['user_id'];
+
+        if($this->user_id != null)
+        {
+            $order = Order::where('user_id', $this->user_id)->whereBetween('arrived_date',[$this->start_date.' 00:00:00', $this->end_date.' 23:59:59'])->get();
+            $this->searchOrder = $order;
+            $this->totalPieces = $this->searchOrder->count();
+            $this->calculateTotalWeight();
+            
+            return true;
+        }
+
         $order = Order::whereBetween('arrived_date',[$this->start_date.' 00:00:00', $this->end_date.' 23:59:59'])->get();
-        $this->searchOrder = $order; 
+        $this->searchOrder = $order;
+        $this->totalPieces = $this->searchOrder->count();
+        $this->calculateTotalWeight();
+    }
+
+    public function getUser($userId)
+    {
+        $this->user_id = $userId;
+    }
+
+    public function removeUser()
+    {
+        $this->user_id = null;
+    }
+
+    public function calculateTotalWeight()
+    {
+        if($this->searchOrder)
+        {
+            $this->totalWeight = 0;
+            foreach($this->searchOrder as $order)
+            {
+                $this->totalWeight += $order->getWeight('kg');
+            }
+        }
     }
 }

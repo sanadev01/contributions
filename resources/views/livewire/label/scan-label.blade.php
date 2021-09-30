@@ -7,13 +7,20 @@
         </div>
     @endif
     <div class="col-12 row mb-5">
-        <div class="form-group row col-5">
+        <div class="form-group row col-4">
             <label class="col-2 text-right"> @lang('orders.print-label.Scan Package')</label>
             <input type="text" @if (count($packagesRows) == 50) readonly @endif class="form-control col-8" wire:model.debounce.500ms="tracking">
             <span class="text-danger offset-2"> @lang('orders.print-label.Scan Package Message') {{ count($packagesRows)}} / 50</span>
         </div>
         
-        <div class="col-7 d-flex justify-content-end">
+        <div class="form-group row col-4">
+            @if($searchOrder)
+                <h4>Total Weight: <span class="text-danger">{{ $totalWeight }} Kg</span></h4>
+                <h4 class="ml-2">Total Pieces: <span class="text-danger">{{ $totalPieces }}</span></h4>
+            @endif
+        </div>
+        
+        <div class="col-4 d-flex justify-content-end">
             @if(!$searchOrder)
                 <form action="{{ route('admin.label.scan.store') }}" method="post">
                     @csrf
@@ -39,6 +46,7 @@
                 </form>
             @else
                 @if (!$searchOrder->isEmpty())
+                    <br>
                     <form action="{{ route('admin.label.scan.update', 10) }}" method="post">
                         @csrf
                         @method('PUT')
@@ -57,6 +65,17 @@
         <div class="row col-12 d-flex justify-content-end">
             <form wire:submit.prevent="search" class="col-12">
                 <div class="row col-12">
+                    <div class="offset-7 col-2">
+                        <div class="form-group">
+                            <div class="controls">
+                                <label class="d-flex">@lang('parcel.User POBOX Number')</label>
+                                <livewire:components.search-user />
+                                @error("start_date")
+                                <div class="help-block text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
                     <div class="offset-7 col-2">
                         <div class="form-group">
                             <div class="controls">
