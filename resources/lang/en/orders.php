@@ -172,6 +172,7 @@ return [
         'duplicate-order' => 'Duplicate Order',
         'back-to-list' => 'Back to List',
         'buy-usps-label' => 'Buy USPS Label',
+        'print-usps-label' => 'Print USPS Label',
     ],
     'create' => [
         'shipment-and-destination' => 'Shipment & Destination',

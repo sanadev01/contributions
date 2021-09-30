@@ -200,6 +200,12 @@ Route::get('order/{order}/label/get', function (App\Models\Order $order) {
     return response()->download(storage_path("app/labels/{$order->corrios_tracking_code}.pdf"),"{$order->corrios_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.label.download');
 
+Route::get('order/{order}/usps-label/get', function (App\Models\Order $order) {
+    if ( !file_exists(storage_path("app/labels/{$order->corrios_usps_tracking_code}.pdf")) ){
+        return apiResponse(false,"Lable Expired or not generated yet please update lable");
+    }
+    return response()->download(storage_path("app/labels/{$order->corrios_usps_tracking_code}.pdf"),"{$order->corrios_usps_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
+})->name('order.usps-label.download');
 
 Route::get('test-label',function(){
     $labelPrinter = new CN23LabelMaker();

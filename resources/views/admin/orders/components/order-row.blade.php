@@ -143,7 +143,7 @@
                         </a>
                         @if( $order->corrios_tracking_code)
                             <a href="{{ route('admin.orders.usps-label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
-                                <i class="feather icon-printer"></i>@lang('orders.actions.buy-usps-label')
+                                <i class="feather icon-printer"></i>@if($order->corrios_usps_tracking_code != null) @lang('orders.actions.print-usps-label') @else @lang('orders.actions.buy-usps-label') @endif
                             </a>
                         @endif
                     @endif

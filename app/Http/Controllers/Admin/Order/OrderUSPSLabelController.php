@@ -5,10 +5,8 @@ namespace App\Http\Controllers\Admin\Order;
 use App\Models\Order;
 use App\Models\State;
 use Illuminate\Http\Request;
-use App\Models\ShippingService;
 use App\Http\Controllers\Controller;
 use App\Repositories\USPSLabelRepository;
-use App\Services\USPS\USPSShippingService;
 
 class OrderUSPSLabelController extends Controller
 {
@@ -21,32 +19,13 @@ class OrderUSPSLabelController extends Controller
     public function index(Request $request, Order $order)
     {
         $this->authorize('canPrintLable',$order);
-
-        $shippingServices = collect() ;
-        $error = null;
+        
+        $usps_labelRepository = new USPSLabelRepository();
+        $shippingServices = $usps_labelRepository->getShippingServices($order);
+        $error = $usps_labelRepository->getUSPSErrors();
 
         $states = State::query()->where("country_id", 250)->get(["name","code","id"]);
-        $usps_shippingService = new USPSShippingService($order);
         
-        foreach (ShippingService::query()->active()->get() as $shippingService) {
-            if ( $usps_shippingService->isAvailableFor($shippingService) ){
-                    $shippingServices->push($shippingService);
-            }
-        }
-
-        if($shippingServices->isEmpty()){
-            $error = "Shipping Service not Available for the Country you have selected";
-        }
-
-        if($shippingServices->contains('service_sub_class', '3440') || $shippingServices->contains('service_sub_class', '3441'))
-        {
-            if($order->user->usps != 1)
-            {
-                $error = "USPS is not enabled for this user";
-                $shippingServices = collect() ;
-            }
-        }
-
         return view('admin.orders.label.usps',compact('order', 'states', 'shippingServices', 'error'));
     }
 
@@ -84,7 +63,9 @@ class OrderUSPSLabelController extends Controller
             return \back()->withInput();
         }
 
-        return redirect()->back();
+        $order->refresh();
+
+        return redirect()->route('admin.orders.usps-label.index', $order->id);
     }
 
     /**

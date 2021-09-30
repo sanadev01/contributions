@@ -8,7 +8,9 @@ use App\Models\User;
 use App\Models\Order;
 use App\Facades\USPSFacade;
 use App\Models\OrderTracking;
+use App\Models\ShippingService;
 use App\Services\USPS\USPSLabelMaker;
+use App\Services\USPS\USPSShippingService;
 
 
 class USPSLabelRepository
@@ -90,6 +92,32 @@ class USPSLabelRepository
         return true;
     }
     
+    public function getShippingServices($order)
+    {
+        $shippingServices = collect();
+
+        $usps_shippingService = new USPSShippingService($order);
+
+        foreach (ShippingService::query()->active()->get() as $shippingService) {
+            if ( $usps_shippingService->isAvailableFor($shippingService) ){
+                $shippingServices->push($shippingService);
+            }
+        }
+        
+        if($shippingServices->contains('service_sub_class', '3440') || $shippingServices->contains('service_sub_class', '3441'))
+        {
+            if($order->user->usps != 1)
+            {
+                $this->usps_errors = "USPS is not enabled for this user";
+                $shippingServices = collect() ;
+            }
+        }
+        
+        return $shippingServices;
+
+        
+    }
+
     public function getRates($request)
     {
         $order = Order::find($request->order_id);
@@ -131,17 +159,16 @@ class USPSLabelRepository
 
     public function buyLabel($request, $order)
     {
+        if($order->corrios_usps_tracking_code != null)
+        {
+            $this->printLabel($order);
+
+            return true;
+        }
         
         if ( $request->total_price > getBalance())
         {
             $this->usps_errors = 'Not Enough Balance. Please Recharge your account.';
-
-            return false;
-        }
-
-        if($order->corrios_usps_tracking_code != null)
-        {
-            $this->usps_errors = 'Label has already been generated';
 
             return false;
         }
@@ -159,13 +186,14 @@ class USPSLabelRepository
         {
             // storing response in orders table
             $order->update([
+                'usps_response' => json_encode($response->data),
                 'corrios_usps_tracking_code' => $response->data['usps']['tracking_numbers'][0],
                 'usps_cost' => $request->total_price,
             ]);
 
             chargeAmount($request->total_price, $order);
 
-            return true;
+            $this->printLabel($order);
 
         } else {
 
