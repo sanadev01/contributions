@@ -12,7 +12,7 @@ class ScanOrderExport extends AbstractExportService
 
     private $pieces;
 
-    private $totalWeight;
+    private $totalWeight = 0;
 
     private $currentRow = 1;
 
@@ -22,7 +22,7 @@ class ScanOrderExport extends AbstractExportService
     {
         $this->orders = $orders;
         $this->pieces = $this->orders->count();
-        $this->totalWeight = $this->orders->sum('weight');
+        $this->totalWeight = $this->calculateTotalWeight();
 
         parent::__construct();
     }
@@ -133,5 +133,16 @@ class ScanOrderExport extends AbstractExportService
         $this->currentRow++;
 
         return true;
+    }
+
+    private function calculateTotalWeight()
+    {
+        $totalWeight = 0;
+
+        foreach ($this->orders as $order) {
+            $totalWeight += $order->getWeight('kg');
+        }
+
+        return $totalWeight;
     }
 }
