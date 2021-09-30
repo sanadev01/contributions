@@ -25,7 +25,9 @@ class ScanLabel extends Component
     public $totalWeight = 0;
     public $totalPieces = 0;
 
-    protected $listeners = ['user:updated' => 'getUser'];
+    protected $listeners = ['user:updated' => 'getUser',
+                             'clear-search' => 'removeUser'   
+                            ];
 
     public function mount()
     {
@@ -195,6 +197,11 @@ class ScanLabel extends Component
     public function getUser($userId)
     {
         $this->user_id = $userId;
+    }
+
+    public function removeUser()
+    {
+        $this->user_id = null;
     }
 
     public function calculateTotalWeight()
