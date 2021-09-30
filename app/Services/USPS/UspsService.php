@@ -279,4 +279,92 @@ class UspsService
            return $this->chargableWeight = round($volumetricWeight >  $order->weight ? $volumetricWeight :  $order->weight,2);
         }
     }
+
+    // USPS BUY Label Logics
+    public function getSenderPrice($order, $request)
+    {
+        $data = $this->make_rates_request_for_sender($order, $request);
+
+        try {
+
+            $response = Http::acceptJson()->withBasicAuth($this->email, $this->password)->post($this->get_price_url, $data);
+            
+            if($response->successful())
+            {
+                return (Object)[
+                    'success' => true,
+                    'data' => $response->json(),
+                ];
+            }elseif($response->clientError())
+            {
+                return (Object)[
+                    'success' => false,
+                    'message' => $response->json()['error'],
+                ];    
+            }elseif ($response->status() !== 200) 
+            {
+    
+                return (object) [
+                    'success' => false,
+                    'message' => $response->json()['message'],
+                ];
+            }
+    
+           } catch (Exception $e) {
+               
+                return (object) [
+                    'success' => false,
+                    'message' => $e->getMessage(),
+                ];
+           }
+
+    }
+
+    public function buyLabel($order, $request)
+    {
+        // dd($request->all());
+        $data = $this->make_rates_request_for_sender($order, $request);
+        // dd($data);
+        $usps_response = $this->usps_ApiCall($data);
+        
+        return $usps_response;
+    }
+
+    public function make_rates_request_for_sender($order, $request)
+    {
+        $this->calculateVolumetricWeight($order);
+
+        $request_body = [
+            'from_address' => [
+                'company_name' => 'HERCO',
+                'line1' => $request->sender_address,
+                'city' => $request->sender_city,
+                'state_province' => $request->sender_state,
+                'postal_code' => $request->sender_zipcode,
+                'phone_number' => '+13058885191',
+                'sms' => '+17867024093',
+                'email' => 'homedelivery@homedeliverybr.com',
+                'country_code' => 'US',
+            ],
+            'to_address' => [
+                'company_name' => 'HERCO',
+                'line1' => '2200 NW 129TH AVE',
+                'city' => 'Miami',
+                'state_province' => 'FL',
+                'postal_code' => '33182',
+                'phone_number' => '+13058885191',
+                'country_code' => 'US', 
+            ],
+            'weight' => (float)$this->chargableWeight,
+            'weight_unit' => ($order->measurement_unit == 'kg/cm') ? 'kg' : 'lb',
+            'image_format' => 'pdf',
+            'usps' => [
+                'shape' => 'Parcel',
+                'mail_class' => ($request->service == 3440) ? 'Priority' : 'FirstClass',
+                'image_size' => '4x6',
+            ],
+        ];
+
+        return $request_body;
+    }
 }
