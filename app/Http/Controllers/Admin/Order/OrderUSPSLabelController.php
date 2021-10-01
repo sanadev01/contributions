@@ -23,7 +23,11 @@ class OrderUSPSLabelController extends Controller
         $usps_labelRepository = new USPSLabelRepository();
         $shippingServices = $usps_labelRepository->getShippingServices($order);
         $error = $usps_labelRepository->getUSPSErrors();
-
+        if($error != null)
+        {
+            session()->flash('alert-danger', $error);
+        }
+        
         $states = State::query()->where("country_id", 250)->get(["name","code","id"]);
         
         return view('admin.orders.label.usps',compact('order', 'states', 'shippingServices', 'error'));
