@@ -51,7 +51,7 @@
                 <h4>Tracking Code : {{ $order->corrios_tracking_code }}</h4>
             </div>
             <div class="col-md-3">
-                <h4>Weight : {{ $order->weight }} {{ ($order->measurement_unit == 'lbs/in') ? 'lbs' : 'Kg'  }}</h4>
+                <h4>Weight : {{ $order->getWeight('kg')  }} Kg</h4>
             </div>
             <div class="col-md-3">
                 <h4>Client :  {{ $order->carrier }} </h4>
