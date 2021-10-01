@@ -92,9 +92,12 @@ class ExportUsers extends AbstractExportService
 
         $packages = $settings->map(function($setting) {
             $package = ProfitPackage::find($setting->package_id);
-            return $package['name'];
+            if($package)
+            {
+                return isset($package['name']) ? $package['name'] : '';
+            }
         });
-
+        
         return $packages->implode(', ');
     }
 }
