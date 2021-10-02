@@ -322,9 +322,8 @@ class UspsService
 
     public function buyLabel($order, $request)
     {
-        // dd($request->all());
         $data = $this->make_rates_request_for_sender($order, $request);
-        // dd($data);
+       
         $usps_response = $this->usps_ApiCall($data);
         
         return $usps_response;
@@ -336,7 +335,7 @@ class UspsService
 
         $request_body = [
             'from_address' => [
-                'company_name' => 'HERCO',
+                'company_name' => ($request->first_name && $request->last_name) ? $request->first_name.' '.$request->last_name :'HERCO',
                 'line1' => $request->sender_address,
                 'city' => $request->sender_city,
                 'state_province' => $request->sender_state,

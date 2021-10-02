@@ -1,5 +1,7 @@
 @extends('layouts.master')
-
+@section('css')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+@endsection
 @section('page')
 
 @if($order->corrios_usps_tracking_code != null)
@@ -69,9 +71,25 @@
             <div class="container">
                 <div class="form-row">
                     <div class="form-group col-md-6">
+                        <label for="first_name">First Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="first_name" value="{{ old('first_name', __default($order->sender_first_name, optional($order->user)->name)) }}" id="first_name" placeholder="Enter your First Name" required>
+                        <div id="first_name_error">
+
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="last_name">Last Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="last_name" value="{{ old('last_name',__default($order->sender_last_name,optional($order->user)->last_name)) }}" id="last_name" placeholder="Enter your last Name" required>
+                        <div id="last_name_error">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
                         <label for="state">Select State <span class="text-danger">*</span></label>
-                        <select name="sender_state" id="sender_state" class="form-control" required>
-                            <option value="">Select @lang('address.State')</option>
+                        <select name="sender_state" id="sender_state" class="form-control selectpicker" data-live-search="true" required>
+                            <option value="" disabled>Select @lang('address.State')</option>
                             @foreach ($states as $state)
                                 <option {{ old('sender_state') == $state->id ? 'selected' : '' }} value="{{ $state->code }}" data-state-code="{{$state->code}}">{{ $state->code }}</option>
                             @endforeach
@@ -117,7 +135,7 @@
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="inputEmail4">Choose Service <span class="text-danger">*</span></label>
-                        <select name="service" id="usps_shipping_service" class="form-control" required>
+                        <select name="service" id="usps_shipping_service" class="form-control selectpicker" data-live-search="true" required>
                             <option value="">@lang('orders.order-details.Select Shipping Service')</option>
                             @foreach ($shippingServices as $shippingService)
                                 <option value="{{ $shippingService->service_sub_class }}" {{ old('service',$order->shipping_service_id) == $shippingService->service_sub_class ? 'selected' : '' }} data-service-code="{{$shippingService->service_sub_class}}">{{ "{$shippingService->name}"}}</option>
@@ -144,6 +162,12 @@
 @endsection
 @section('js')
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+<script>
+    $(function () {
+        $('.selectpicker').selectpicker();
+    });
+</script>
     @include('admin.orders.label.script')
 
 @endsection
