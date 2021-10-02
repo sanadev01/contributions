@@ -54,6 +54,20 @@
 
         resetErrorMessages();
 
+        if($('#first_name').val() == '' || $('#first_name').val() == undefined)
+        {
+            $('#first_name_error').empty().append("<p style='color: red;'>first name is required</p>");
+
+            return false;
+        }
+
+        if($('#last_name').val() == '' || $('#last_name').val() == undefined)
+        {
+            $('#last_name_error').empty().append("<p style='color: red;'>last name is required</p>");
+
+            return false;
+        }
+
         if($('#sender_state').val() == '' || $('#sender_state').val() == undefined)
         {
             $('#state_error').empty().append("<p style='color: red;'>state must be selected</p>");
