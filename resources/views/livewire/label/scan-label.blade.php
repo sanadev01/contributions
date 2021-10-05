@@ -9,8 +9,8 @@
     <div class="col-12 row mb-5">
         <div class="form-group row col-4">
             <label class="col-2 text-right"> @lang('orders.print-label.Scan Package')</label>
-            <input type="text" @if (count($packagesRows) == 50) readonly @endif class="form-control col-8" wire:model.debounce.500ms="tracking">
-            <span class="text-danger offset-2"> @lang('orders.print-label.Scan Package Message') {{ count($packagesRows)}} / 50</span>
+            <input type="text" @if (count($packagesRows) == 300) readonly @endif class="form-control col-8" wire:model.debounce.500ms="tracking">
+            <span class="text-danger offset-2"> @lang('orders.print-label.Scan Package Message') {{ count($packagesRows)}} / 300</span>
         </div>
         
         <div class="form-group row col-4">
