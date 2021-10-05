@@ -312,7 +312,7 @@ return [
     'print-label' => [
         'Scan Packages' => 'Scan Packages',
         'Scan Package' => 'Scan Package',
-        'Scan Package Message' => 'Bulk labels print is only limited to print 50 labels at one time, Remaining:',
+        'Scan Package Message' => 'Bulk labels print is only limited to print 300 labels at one time, Remaining:',
         'Barcode' => 'Barcode',
         'Client' => 'Client',
         'Dimensions' => 'Dimensions',
