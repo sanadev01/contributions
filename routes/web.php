@@ -64,6 +64,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
 
         Route::resource('orders',OrderController::class)->only('index','destroy', 'show');
         Route::resource('tracking', TrackingController::class)->only(['index', 'show']);
+        Route::get('/buy-usps-label', [\App\Http\Controllers\Admin\Order\OrderUSPSLabelController::class, 'uspsBulkView'])->name('bulk-usps-label');
 
         Route::namespace('Order')->group(function () {
             Route::resource('leve-order-import', LeveOrderImportController::class)->only(['index','store']);

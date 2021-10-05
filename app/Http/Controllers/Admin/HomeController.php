@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Models\OrderTracking;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 use App\Facades\CorreiosChileTrackingFacade;
 use App\Facades\CorreiosBrazilTrackingFacade;
@@ -95,6 +96,14 @@ class HomeController extends Controller
     
     public function testBrazilTracking()
     {
+        // try {
+            
+        //     $response = Http::withBasicAuth('herco.app', 'Colombia2021*')->get('http://appcer.4-72.com.co/WcfServiceSPOKE/ServiceSPOKE.svc/GetHeadquarter/0');
+        //     dd($response->json());
+        // } catch (\Exception $e) {
+        //     dd($e->getMessage());
+        // }
+        // dd(true);
         $wsdlUrl = config('correoschile.url');
         $usuario = config('correoschile.userId');              //CorreosChile user Id
         $contrasena = config('correoschile.correosKey');  //CorreosChile Key

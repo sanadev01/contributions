@@ -7,6 +7,7 @@ use App\Models\Order;
 class USPSShippingService
 {
     private $order;
+    private $weight;
     private $length;
     private $width;
     private $height;
@@ -20,7 +21,8 @@ class USPSShippingService
         $this->height = $order->height;
         $this->measurement_unit = $order->measurement_unit;
 
-        $this->weightCalculator();
+        $this->weight = $order->getWeight('kg');
+        // $this->weightCalculator();
     }
 
     public function isAvailableFor($shippingService)
