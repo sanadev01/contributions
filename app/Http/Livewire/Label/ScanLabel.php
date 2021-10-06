@@ -89,27 +89,26 @@ class ScanLabel extends Component
             
             $order = Order::where('corrios_tracking_code', $this->tracking)->first();
             $this->order = $order;
-            // $this->orderStatus = '';
             
             if($this->order){
                 
                 if($this->order->status == Order::STATUS_CANCEL){
-                    // $this->orderStatus = 'Order Cancel';
+                    $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order Cancel']);
                     return $this->tracking = '';
                 }
                 
                 if($this->order->status == Order::STATUS_REJECTED){
-                    // $this->orderStatus = 'Order Rejected';
+                    $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order Rejected']);
                     return $this->tracking = '';
                 }
                 
                 if($this->order->status == Order::STATUS_RELEASE){
-                    // $this->orderStatus = 'Order Release';
+                    $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order Release']);
                     return $this->tracking = '';
                 }
 
                 if($this->order->status == Order::STATUS_REFUND){
-                    // $this->orderStatus = 'Order Refund';
+                    $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order Refund']);
                     return $this->tracking = '';
                 }
                 
@@ -125,7 +124,7 @@ class ScanLabel extends Component
                 ];
                 
                 if(in_array($newRow, $this->packagesRows)){
-                    // $this->orderStatus = 'Order already Existing';
+                    $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order already exist']);
                     return $this->tracking = '';
                 }
                 
@@ -136,7 +135,6 @@ class ScanLabel extends Component
                 $this->addOrderTracking($this->order);
                 
                 $this->tracking = '';
-                $this->orderStatus = '';
                 if(Auth::user()->isUser() && Auth::user()->role->name == 'scanner'){
                     if(!$this->order->arrived_date){
                         $this->order->update([
