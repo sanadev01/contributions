@@ -284,7 +284,7 @@ class UspsService
     public function getSenderPrice($order, $request)
     {
         $data = $this->make_rates_request_for_sender($order, $request);
-
+    
         try {
 
             $response = Http::acceptJson()->withBasicAuth($this->email, $this->password)->post($this->get_price_url, $data);
@@ -331,8 +331,11 @@ class UspsService
 
     public function make_rates_request_for_sender($order, $request)
     {
-        $this->calculateVolumetricWeight($order);
-
+        if(!isset($request->uspsBulkLabel))
+        {
+            $this->calculateVolumetricWeight($order);
+        }
+        
         $request_body = [
             'from_address' => [
                 'company_name' => ($request->first_name && $request->last_name) ? $request->first_name.' '.$request->last_name :'HERCO',
@@ -354,7 +357,7 @@ class UspsService
                 'phone_number' => '+13058885191',
                 'country_code' => 'US', 
             ],
-            'weight' => (float)$this->chargableWeight,
+            'weight' => ($this->chargableWeight != null) ? (float)$this->chargableWeight : (float)$order->weight,
             'weight_unit' => ($order->measurement_unit == 'kg/cm') ? 'kg' : 'lb',
             'image_format' => 'pdf',
             'usps' => [

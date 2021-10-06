@@ -63,8 +63,8 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Buy USPS Label</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <h5 class="modal-title" id="exampleModalLabel">Buy USPS Label <span class="text-danger ml-3">Total Weight : {{ $totalWeight}} Kg</span></h5>
+              <button type="button" class="close" wire:click="closeModal()" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
@@ -73,42 +73,44 @@
                     <div class="form-row">
                       <div class="form-group col-md-6">
                         <label for="first_name">First Name <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" wire:model="firstName" name="firstName" id="first_name" placeholder="Enter your First Name" required>
-                        <div id="first_name_error"></div>
+                        <input type="text" class="form-control" wire:model.lazy="firstName" name="firstName" id="first_name" placeholder="Enter your First Name" required>
+                        @error('firstName') <span class="error text-danger">{{ $message }}</span> @enderror
                     </div>
                       <div class="form-group col-md-6">
                         <label for="last_name">Last Name <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" wire:model="lastName" name="lastName" id="last_name" placeholder="Enter your last Name" required>
-                        <div id="last_name_error"></div>
+                        <input type="text" class="form-control" wire:model.lazy="lastName" name="lastName" id="last_name" placeholder="Enter your last Name" required>
+                        @error('lastName') <span class="error text-danger">{{ $message }}</span> @enderror
                     </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="state">Select State <span class="text-danger">*</span></label>
                             <select name="selectedState" wire:model="selectedState" id="sender_state" class="form-control" required>
-                                <option value="" disabled>Select @lang('address.State')</option>
+                                <option value="">Select @lang('address.State')</option>
                                 @foreach ($states as $state)
                                     <option value="{{ $state->code }}">{{ $state->code }}</option>
                                 @endforeach
                             </select>
-                            @error('selectedState') <span class="error">{{ $message }}</span> @enderror
+                            @error('selectedState') <span class="error text-danger">{{ $message }}</span> @enderror
                         </div>
                         <div class="form-group col-md-6">
                             <label for="sender_address">Sender Address <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" wire:model="senderAddress" name="senderAddress" id="sender_address" placeholder="Enter you street address">
-                            @error('senderAddress') <span class="error">{{ $message }}</span> @enderror
+                            <input type="text" class="form-control" wire:model.lazy="senderAddress" name="senderAddress" id="sender_address" placeholder="Enter you street address">
+                            @error('senderAddress') <span class="error text-danger">{{ $message }}</span> @enderror
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="sender_city">Sender City <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" wire:model="senderCity" name="sender_city" id="sender_city" placeholder="Enter your city">
-                            @error('senderCity') <span class="error">{{ $message }}</span> @enderror
+                            <input type="text" class="form-control" wire:model.lazy="senderCity" name="sender_city" id="sender_city" placeholder="Enter your city">
+                            @error('senderCity') <span class="error text-danger">{{ $message }}</span> @enderror
                         </div>
                         <div class="form-group col-md-6">
                             <label for="sender_zipcode">Sender Zip Code <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" wire:model="senderZipCode" name="sender_zipcode" value="{{ old('sender_zipcode') }}" id="sender_zipcode" placeholder="Enter your zipcode">
-                            <div id="zipcode_response"></div>
+                            @if ($zipcodeResponse)
+                                <span class="error {{ $reposnseClass }}"> {{$zipcodeResponse}}</span>
+                            @endif
                         </div>
                     </div>
                     <div class="form-row">
@@ -117,25 +119,30 @@
                             <select name="service" wire:model="selectedService" id="usps_shipping_service" class="form-control" required>
                                 <option value="">@lang('orders.order-details.Select Shipping Service')</option>
                                 @foreach ($shippingServices as $shippingService)
-                                    <option value="{{ $shippingService->service_sub_class }}">{{ "{$shippingService->name}"}}</option>
+                                    <option value="{{ $shippingService['service_sub_class'] }}">{{ "{$shippingService['name']}"}}</option>
                                 @endforeach
                             </select>
                         </div>
-                        <div class="form-group col-md-6" id="calculated_rates">
-                            
-                        </div>
+                        @if ($uspsRate)
+                            <div class="form-group col-md-6">
+                                <h4 class="text-danger mt-4">Total Charges : {{ $uspsRate}} USD</h4>
+                            </div>
+                        @endif
                     </div>
                     <input type="hidden" name="total_price" value="{{ old('total_price') }}" id="total_price">
                   </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-danger" wire:click="closeModal()">Close</button>
               <button type="button" class="btn btn-primary">Buy USPS Label</button>
             </div>
           </div>
         </div>
     </div>
     @endif
+    <div class="position-absolute">
+        @include('layouts.livewire.loading')
+    </div>
 </div>
 <script>
     window.addEventListener('sender-modal', event => {
