@@ -18,16 +18,20 @@ class USPSBulkLabelRepository
 {
     private $total_weight = 0;
     private $temp_weight = 0;
+    private $calculated_width = 0;
+    private $calculated_height = 0;
+    private $calculated_length = 0;
     private $orderWithMaxWeight;
     private $orders;
-    protected $usps_errors;
+    public $usps_errors;
     public $user_api_profit;
     public $total_amount;
 
     public function handle($order_Ids)
     {
         $this->getOrdersWeight($order_Ids);
-        $order = $this->makeOrder();
+        $this->calculateOrderDimensions();
+        $order = $this->createOrder();
 
         return $order;
     }
@@ -53,6 +57,11 @@ class USPSBulkLabelRepository
         ]; 
     }
 
+    public function generateLabel($order, $request)
+    {
+        dd($order->toArray(), $request);
+    }
+
     private function getOrdersWeight($order_Ids)
     {
         $this->orders = Order::whereIn('id', $order_Ids)->get();
@@ -70,16 +79,45 @@ class USPSBulkLabelRepository
         return;
     }
 
-    private function makeOrder()
+    private function calculateOrderDimensions()
+    {
+        $width = $this->orderWithMaxWeight->width;
+        $height = $this->orderWithMaxWeight->height;
+        $length = $this->orderWithMaxWeight->length;
+
+        $this->label_dimension = auth()->user()->order_dimension;
+
+        if($this->label_dimension == 0)
+        {
+            $admin = User::where('role_id',1)->first();
+
+            $this->label_dimension = $admin->order_dimension;
+        }
+
+        $increased_width = $width * ($this->label_dimension / 100);
+        $this->calculated_width = $width + $increased_width;
+
+        $increased_height = $height * ($this->label_dimension / 100);
+        $this->calculated_height = $height + $increased_height;
+
+        $increased_length = $length * ($this->label_dimension / 100);
+        $this->calculated_length = $length + $increased_length;
+
+        return true;
+
+
+    }
+
+    private function createOrder()
     {
         $order = new Order();
         $order->id = 1;
         $order->user = Auth::user();
         $order->sender_country_id = 250;
         $order->weight = $this->total_weight;
-        $order->width = $this->orderWithMaxWeight->width;
-        $order->height = $this->orderWithMaxWeight->height;
-        $order->length = $this->orderWithMaxWeight->length;
+        $order->width = $this->calculated_width;
+        $order->height = $this->calculated_height;
+        $order->length = $this->calculated_length;
         $order->measurement_unit = $this->orderWithMaxWeight->measurement_unit;
         
         return $order;

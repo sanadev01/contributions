@@ -124,17 +124,23 @@
                             </select>
                         </div>
                         @if ($uspsRate)
-                            <div class="form-group col-md-6">
-                                <h4 class="text-danger mt-4">Total Charges : {{ $uspsRate}} USD</h4>
+                            <div class="form-group col-md-6 border border-danger">
+                                <h5 class="text-danger mt-4">Total Charges : {{ $uspsRate}} USD</h5>
                             </div>
                         @endif
                     </div>
-                    <input type="hidden" name="total_price" value="{{ old('total_price') }}" id="total_price">
+                    @if ($uspsError)
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <h4 class="text-danger mt-4">{{ $uspsError}}</h4>
+                        </div> 
+                    </div>
+                    @endif
                   </form>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" wire:click="closeModal()">Close</button>
-              <button type="button" class="btn btn-primary">Buy USPS Label</button>
+              <button type="button" class="btn btn-primary" wire:click="getLabel()" @if($uspsRate == null) disabled @endif>Buy USPS Label</button>
             </div>
           </div>
         </div>
@@ -144,14 +150,4 @@
         @include('layouts.livewire.loading')
     </div>
 </div>
-<script>
-    window.addEventListener('sender-modal', event => {
-        // console.log(event.detail.shippingServices);
-        // $('#senderModal').modal({
-        //     show : true,
-        //     backdrop: 'static',
-        //     keyboard: false
-        // })
-    })
-</script>
 

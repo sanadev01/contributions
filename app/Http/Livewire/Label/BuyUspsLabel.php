@@ -29,9 +29,9 @@ class BuyUspsLabel extends Component
     public $zipcodeResponse;
     public $reposnseClass;
     public $uspsRate;
-    public $uspsRateError;
+    public $uspsError;
     public $totalWeight;
-
+    
     public function render()
     {
         $this->getStates();
@@ -107,6 +107,21 @@ class BuyUspsLabel extends Component
         $this->getUSPSRates();
     }
 
+    public function getLabel()
+    {
+        $this->validate();
+        $this->checkServiceUSPS();
+        $this->checkBalance();
+
+        if($this->uspsError == null)
+        {
+            $usps_labelRepository = new USPSBulkLabelRepository();
+            $this->order = $usps_labelRepository->handle($this->selectedOrders);
+            $request = $this->createRequest();
+            $this->order = $usps_labelRepository->generateLabel($this->order, $request);
+        }
+    }
+
     public function closeModal()
     {
         $this->resetFileds();
@@ -126,7 +141,7 @@ class BuyUspsLabel extends Component
         $this->zipcodeResponse = null;
         $this->reposnseClass = null;
         $this->uspsRate = null;
-        $this->uspsRateError = null;
+        $this->uspsError = null;
         $this->totalWeight = null;
     }
 
@@ -156,6 +171,21 @@ class BuyUspsLabel extends Component
     private function getUSPSRates()
     {
         $usps_labelRepository = new USPSBulkLabelRepository();
+        $request = $this->createRequest();
+
+        $response = $usps_labelRepository->getRates($this->order, $request);
+        if($response['success'] == true)
+        {
+            $this->uspsRate = $response['total_amount'];
+
+        }else {
+
+            $this->uspsError = $response['message'];
+        }
+    }
+
+    private function createRequest()
+    {
         $request = (Object)[
             'uspsBulkLabel' => true,
             'first_name' => $this->firstName,
@@ -167,15 +197,20 @@ class BuyUspsLabel extends Component
             'service' => $this->selectedService,
         ];
 
-        $response = $usps_labelRepository->getRates($this->order, $request);
-        if($response['success'] == true)
-        {
-            $this->uspsRate = $response['total_amount'];
+        return $request;
+    }
 
-        }else {
+    private function checkServiceUSPS()
+    {
+        (auth()->user()->usps == false) ?  $this->uspsError = 'Sorry! USPS Service is not available to your account' : null; 
 
-            $this->uspsRateError = $response['message'];
-        }
-
+        return false;
+    }
+    
+    private function checkBalance()
+    {
+        ($this->uspsRate > getBalance()) ? $this->uspsError = 'Sorry! Not Enough Balance. Please Recharge your account.' : null;
+        
+        return false;
     }
 }

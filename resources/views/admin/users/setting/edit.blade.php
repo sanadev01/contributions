@@ -192,16 +192,17 @@
                                     <div class="col-md-6">
                                         <div class="input-group">
                                             <div class="vs-checkbox-con vs-checkbox-primary" title="usps">
-                                            <input type="checkbox" name="usps" id="usps" @if( $user->usps == 1 ) checked @endif>
-                                            <span class="vs-checkbox vs-checkbox-lg">
-                                                <span class="vs-checkbox--check">
-                                                    <i class="vs-icon feather icon-check"></i>
+                                                <input type="checkbox" name="usps" id="usps" @if( $user->usps == 1 ) checked @endif>
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
                                                 </span>
-                                            </span>
-                                            <span class="h3 mx-2 text-primary my-0 py-0"></span>
                                             </div>
                                             <span class="offset-2 mr-2 mt-2">Profit Percentage (%) :</span>
                                             <input type="number" name="api_profit" class="form-control col-2" id="api_profit" value="{{ $user->api_profit }}">
+                                            <span class="offset-2 mr-2 mt-2">Bulk Label Dimension (%) :</span>
+                                            <input type="number" name="order_dimension" class="form-control col-2" id="order_dimension" value="{{ $user->order_dimension }}">
                                         </div>    
                                     </div>
                                 </div>
