@@ -26,11 +26,6 @@ class USPSLabelMaker
 
             return true;
         }
-
-        $api_response = json_decode($this->order->api_response);
-        $base64_pdf = $api_response->base64_labels[0];
-
-        Storage::put("labels/{$this->order->corrios_tracking_code}.pdf", base64_decode($base64_pdf));
     }
     
     public function saveUSPSLabel()
@@ -44,11 +39,6 @@ class USPSLabelMaker
 
             return true;
         }
-
-        $usps_response = json_decode($this->order->usps_response);
-        $base64_pdf = $usps_response->base64_labels[0];
-
-        Storage::put("labels/{$this->order->corrios_usps_tracking_code}.pdf", base64_decode($base64_pdf));
     }
     
     public function getContainerCN35($unit_response_list)

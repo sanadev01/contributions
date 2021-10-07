@@ -17,6 +17,9 @@ class ShippingService extends Model
     const API_CORREIOS = 'api_correios';
     const API_LEVE = 'api_leve';
 
+    const USPS_PRIORITY = 3440;
+    const USPS_FIRSTCLASS = 3441;
+
     protected $guarded = [];
 
     protected static $logAttributes = ['*'];

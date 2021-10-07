@@ -212,6 +212,7 @@ class BuyUspsLabel extends Component
             'order_Ids' => $this->selectedOrders,
             'first_name' => $this->firstName,
             'last_name' => $this->lastName,
+            'pobox_number' => $this->order->user->pobox_number,
             'sender_address' => $this->senderAddress,
             'sender_city' => $this->senderCity,
             'sender_state' => $this->selectedState,

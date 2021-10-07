@@ -2,6 +2,7 @@
 namespace App\Services\USPS;
 
 use App\Models\Order;
+use App\Models\ShippingService;
 
 
 class USPSShippingService
@@ -27,7 +28,7 @@ class USPSShippingService
 
     public function isAvailableFor($shippingService)
     {
-        if($shippingService->service_sub_class == 3440 || $shippingService->service_sub_class == 3441 && $this->weight <= $shippingService->max_weight_allowed)
+        if($shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS && $this->weight <= $shippingService->max_weight_allowed)
         {
             return true;
         }

@@ -69,6 +69,15 @@ class USPSLabelRepository
     {
         $labelPrinter = new USPSLabelMaker();
         $labelPrinter->setOrder($order);
+        $labelPrinter->saveLabel();
+
+        return true;
+    }
+
+    public function printBuyUSPSLabel(Order $order)
+    {
+        $labelPrinter = new USPSLabelMaker();
+        $labelPrinter->setOrder($order);
         $labelPrinter->saveUSPSLabel();
 
         return true;
@@ -107,7 +116,7 @@ class USPSLabelRepository
             }
         }
         
-        if($shippingServices->contains('service_sub_class', '3440') || $shippingServices->contains('service_sub_class', '3441'))
+        if($shippingServices->contains('service_sub_class', ShippingService::USPS_PRIORITY) || $shippingServices->contains('service_sub_class', ShippingService::USPS_FIRSTCLASS))
         {
             if($order->user->usps != 1)
             {
@@ -164,7 +173,7 @@ class USPSLabelRepository
     {
         if($order->corrios_usps_tracking_code != null)
         {
-            $this->printLabel($order);
+            $this->printBuyUSPSLabel($order);
 
             return true;
         }
@@ -196,7 +205,7 @@ class USPSLabelRepository
 
             $this->chargeAmount($request->total_price, $order);
 
-            $this->printLabel($order);
+            $this->printBuyUSPSLabel($order);
 
         } else {
 
