@@ -31,6 +31,7 @@ class BuyUspsLabel extends Component
     public $uspsRate;
     public $uspsError;
     public $totalWeight;
+    public $error;
     
     public function render()
     {
@@ -57,6 +58,12 @@ class BuyUspsLabel extends Component
         $this->order = $usps_labelRepository->handle($this->selectedOrders);
         $this->totalWeight = $this->order->weight;
         $this->getShippingServices();
+        if($this->shippingServices == null)
+        {
+            $this->error = 'Sorry! USPS Service is not available to your account';
+        } else {
+            $this->error = null;
+        }
     }
 
     public function getStates()
@@ -112,7 +119,7 @@ class BuyUspsLabel extends Component
         $this->validate();
         $this->checkServiceUSPS();
         $this->checkBalance();
-
+        
         if($this->uspsError == null)
         {
             $usps_labelRepository = new USPSBulkLabelRepository();

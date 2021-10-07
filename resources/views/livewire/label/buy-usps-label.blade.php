@@ -15,6 +15,13 @@
             <button type="button" wire:click="buyLabel" class="btn btn-primary" @if(!$selectedOrders) disabled @endif>Buy Label</button>
         </div>
     </div>
+    @if ($error)
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <h4 class="text-danger mt-4">{{ $error}}</h4>
+            </div> 
+        </div>
+    @endif
     <div class="mt-3">
         <table class="table table-bordered">
             <tr>
