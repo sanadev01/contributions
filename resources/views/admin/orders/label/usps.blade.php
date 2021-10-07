@@ -56,7 +56,7 @@
                 <h4>Weight : {{ $order->getWeight('kg')  }} Kg</h4>
             </div>
             <div class="col-md-3">
-                <h4>Client :  {{ $order->carrier }} </h4>
+                <h4>POBOX # :  {{ $order->user->pobox_number }} </h4>
             </div>
         </div>
     </div>
