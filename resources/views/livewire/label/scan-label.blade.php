@@ -197,7 +197,7 @@
         </tr> --}}
     </table>
     
-    @if (count($packagesRows) == 50)
+    @if (count($packagesRows) == 300)
       <!-- Modal -->
         <div class="modal fade show d-block" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
             <div class="modal-dialog" role="document">
