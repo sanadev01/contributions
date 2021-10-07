@@ -116,4 +116,9 @@ class OrderUSPSLabelController extends Controller
     {
         //
     }
+
+    public function uspsBulkView()
+    {
+        return view('admin.orders.label.usps-bulk-label');
+    }
 }

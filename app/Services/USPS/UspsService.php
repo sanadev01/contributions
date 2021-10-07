@@ -2,6 +2,7 @@
 namespace App\Services\USPS;
 
 use Exception;
+use App\Models\ShippingService;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use App\Services\Calculators\WeightCalculator;
@@ -234,7 +235,7 @@ class UspsService
 
         $request_body = [
             'from_address' => [
-                'company_name' => 'HERCO',
+                'company_name' => 'HERCO SUIT#100',
                 'line1' => '2200 NW 129TH AVE',
                 'city' => 'Miami',
                 'state_province' => 'FL',
@@ -258,7 +259,7 @@ class UspsService
             'image_format' => 'pdf',
             'usps' => [
                 'shape' => 'Parcel',
-                'mail_class' => ($service == 3440) ? 'Priority' : 'FirstClass',
+                'mail_class' => ($service == ShippingService::USPS_PRIORITY) ? 'Priority' : 'FirstClass',
                 'image_size' => '4x6',
             ],
         ];
@@ -284,11 +285,9 @@ class UspsService
     public function getSenderPrice($order, $request)
     {
         $data = $this->make_rates_request_for_sender($order, $request);
-
         try {
 
             $response = Http::acceptJson()->withBasicAuth($this->email, $this->password)->post($this->get_price_url, $data);
-            
             if($response->successful())
             {
                 return (Object)[
@@ -323,7 +322,7 @@ class UspsService
     public function buyLabel($order, $request)
     {
         $data = $this->make_rates_request_for_sender($order, $request);
-       
+        
         $usps_response = $this->usps_ApiCall($data);
         
         return $usps_response;
@@ -331,11 +330,14 @@ class UspsService
 
     public function make_rates_request_for_sender($order, $request)
     {
-        $this->calculateVolumetricWeight($order);
-
+        if(!isset($request->uspsBulkLabel))
+        {
+            $this->calculateVolumetricWeight($order);
+        }
+        
         $request_body = [
             'from_address' => [
-                'company_name' => ($request->first_name && $request->last_name) ? $request->first_name.' '.$request->last_name :'HERCO',
+                'company_name' => ($request->first_name && $request->last_name) ? $request->first_name.' '.$request->last_name.' '.$request->pobox_number :'HERCO SUIT#100',
                 'line1' => $request->sender_address,
                 'city' => $request->sender_city,
                 'state_province' => $request->sender_state,
@@ -346,7 +348,7 @@ class UspsService
                 'country_code' => 'US',
             ],
             'to_address' => [
-                'company_name' => 'HERCO',
+                'company_name' => 'HERCO SUIT#100',
                 'line1' => '2200 NW 129TH AVE',
                 'city' => 'Miami',
                 'state_province' => 'FL',
@@ -354,12 +356,12 @@ class UspsService
                 'phone_number' => '+13058885191',
                 'country_code' => 'US', 
             ],
-            'weight' => (float)$this->chargableWeight,
+            'weight' => ($this->chargableWeight != null) ? (float)$this->chargableWeight : (float)$order->weight,
             'weight_unit' => ($order->measurement_unit == 'kg/cm') ? 'kg' : 'lb',
             'image_format' => 'pdf',
             'usps' => [
                 'shape' => 'Parcel',
-                'mail_class' => ($request->service == 3440) ? 'Priority' : 'FirstClass',
+                'mail_class' => ($request->service == ShippingService::USPS_PRIORITY) ? 'Priority' : 'FirstClass',
                 'image_size' => '4x6',
             ],
         ];

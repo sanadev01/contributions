@@ -51,6 +51,13 @@
                         <span class="menu-title">@lang('menu.orders')</span>
                     </a>
                 </li>
+                {{-- buy bulk usps labels --}}
+                <li class="nav-item {{ $isActive(['admin.bulk-usps-label']) }}">
+                    <a href="{{ route('admin.bulk-usps-label') }}">
+                        <i class="feather icon-tag"></i>
+                        <span class="menu-title">@lang('menu.Bulk Usps Label')</span>
+                    </a>
+                </li>
             @endcan
             
             @can('viewAny', App\Models\Order::class)

@@ -54,4 +54,5 @@ return [
     ],
     'activity' => 'Activity',
     'Print Label' => 'Print Bulk Label',
+    'Bulk Usps Label' => 'Buy Bulk USPS Label',
 ];

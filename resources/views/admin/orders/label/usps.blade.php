@@ -60,6 +60,7 @@
             </div>
         </div>
     </div>
+    @if ($order->getWeight('kg') < 31)
     <form action="{{ route('admin.orders.usps-label.store', $order) }}" method="POST">
         @csrf
         <div class="ml-3 mt-3">
@@ -131,11 +132,11 @@
                     Service
                 </h2>
             </div>
-            <div class="container pb-3">
+            <div class="container pb-5">
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="inputEmail4">Choose Service <span class="text-danger">*</span></label>
-                        <select name="service" id="usps_shipping_service" class="form-control selectpicker" data-live-search="true" required>
+                        <select name="service" id="usps_shipping_service" class="form-control selectpicker dropup" data-dropup-auto="false" data-live-search="true" required>
                             <option value="">@lang('orders.order-details.Select Shipping Service')</option>
                             @foreach ($shippingServices as $shippingService)
                                 <option value="{{ $shippingService->service_sub_class }}" {{ old('service',$order->shipping_service_id) == $shippingService->service_sub_class ? 'selected' : '' }} data-service-code="{{$shippingService->service_sub_class}}">{{ "{$shippingService->name}"}}</option>
@@ -156,6 +157,13 @@
             </div>    
         </div>
     </form>
+    @else
+    <div class="container">
+        <div class="row mb-3 col-12 alert alert-danger">
+            <h5 class="text-danger">USPS is not available for more than 30 Kg</h5>
+        </div>
+    </div>
+    @endif
 </div>
 @endif
 

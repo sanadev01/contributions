@@ -54,4 +54,5 @@ return [
     ],
     'activity' => 'Atividade',
     'Print Label' => 'Imprimir etiqueta em massa',
+    'Bulk Usps Label' => 'Comprar etiqueta USPS a granel',
 ];
