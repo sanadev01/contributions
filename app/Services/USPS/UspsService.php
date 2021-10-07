@@ -43,7 +43,7 @@ class UspsService
         $request_body = [
             'request_id' => 'HD-'.$order->id,
             'from_address' => [
-                'company_name' => 'HERCO',
+                'company_name' => 'HERCO SUIT#100',
                 'line1' => '2200 NW 129TH AVE',
                 'city' => 'Miami',
                 'state_province' => 'FL',
