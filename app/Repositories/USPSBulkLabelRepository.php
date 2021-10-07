@@ -6,8 +6,10 @@ namespace App\Repositories;
 
 use App\Models\User;
 use App\Models\Order;
+use App\Models\Deposit;
 use App\Facades\USPSFacade;
 use App\Models\OrderTracking;
+use App\Models\PaymentInvoice;
 use App\Models\ShippingService;
 use Illuminate\Support\Facades\Auth;
 use App\Services\USPS\USPSLabelMaker;
@@ -57,9 +59,47 @@ class USPSBulkLabelRepository
         ]; 
     }
 
-    public function generateLabel($order, $request)
+    public function generateLabel($order, $usps_cost, $request)
     {
-        dd($order->toArray(), $request);
+        $response = USPSFacade::buyLabel($order, $request);
+        if($response->success == true)
+        {
+            // storing response in orders table
+            foreach($this->orders as $order)
+            {
+                $order->update([
+                    'usps_response' => json_encode($response->data),
+                    'corrios_usps_tracking_code' => $response->data['usps']['tracking_numbers'][0],
+                    'usps_cost' => $usps_cost,
+                ]);
+
+                $order->refresh();
+            }
+            
+            $this->chargeAmount($usps_cost);
+            $this->printLabel($this->getFirstOrder());
+
+            return true;
+
+        } else {
+
+            $this->usps_errors = $response->message;
+            return false;
+        }
+    }
+    
+    public function printLabel(Order $order)
+    {
+        $labelPrinter = new USPSLabelMaker();
+        $labelPrinter->setOrder($order);
+        $labelPrinter->saveUSPSLabel();
+
+        return true;
+    }
+
+    public function getUSPSErrors()
+    {
+        return $this->usps_errors;
     }
 
     private function getOrdersWeight($order_Ids)
@@ -139,6 +179,46 @@ class USPSBulkLabelRepository
         $this->total_amount = $usps_rate + $profit;
 
         return true;
+    }
+    
+    private function chargeAmount($usps_cost)
+    {
+        $order = $this->getFirstOrder();
+
+        $deposit = Deposit::create([
+            'uuid' => PaymentInvoice::generateUUID('DP-'),
+            'amount' => $usps_cost,
+            'user_id' => Auth::id(),
+            'order_id' => $order->id,
+            'balance' => Deposit::getCurrentBalance() - $usps_cost,
+            'is_credit' => false,
+            'description' => $this->getDescription(),
+        ]);
+
+        if ( $order ){
+            $order->deposits()->sync($deposit->id);
+        }
+
+        return $deposit;
+    }
+
+    public function getFirstOrder()
+    {
+        $order = $this->orders->first();
+
+        return $order;
+    }
+
+    private function getDescription()
+    {
+        $description = 'Bought USPS Label for : ';
+
+        foreach($this->orders as $order)
+        {
+            $description .= $order->warehouse_number . ',';
+        }
+
+        return $description;
     }
 
 }

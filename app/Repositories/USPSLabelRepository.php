@@ -6,9 +6,12 @@ namespace App\Repositories;
 
 use App\Models\User;
 use App\Models\Order;
+use App\Models\Deposit;
 use App\Facades\USPSFacade;
 use App\Models\OrderTracking;
+use App\Models\PaymentInvoice;
 use App\Models\ShippingService;
+use Illuminate\Support\Facades\Auth;
 use App\Services\USPS\USPSLabelMaker;
 use App\Services\USPS\USPSShippingService;
 
@@ -66,7 +69,7 @@ class USPSLabelRepository
     {
         $labelPrinter = new USPSLabelMaker();
         $labelPrinter->setOrder($order);
-        $labelPrinter->saveLabel();
+        $labelPrinter->saveUSPSLabel();
 
         return true;
     }
@@ -191,7 +194,7 @@ class USPSLabelRepository
                 'usps_cost' => $request->total_price,
             ]);
 
-            chargeAmount($request->total_price, $order);
+            $this->chargeAmount($request->total_price, $order);
 
             $this->printLabel($order);
 
@@ -200,6 +203,25 @@ class USPSLabelRepository
             $this->usps_errors = $response->message;
             return null;
         }
+    }
+
+    private function chargeAmount($usps_cost, $order)
+    {
+        $deposit = Deposit::create([
+            'uuid' => PaymentInvoice::generateUUID('DP-'),
+            'amount' => $usps_cost,
+            'user_id' => Auth::id(),
+            'order_id' => $order->id,
+            'balance' => Deposit::getCurrentBalance() - $usps_cost,
+            'is_credit' => false,
+            'description' => 'Bought USPS Label For : '.$order->warehouse_number,
+        ]);
+        
+        if ( $order ){
+            $order->deposits()->sync($deposit->id);
+        }
+
+        return $deposit;
     }
     
 }

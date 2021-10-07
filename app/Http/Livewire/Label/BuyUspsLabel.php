@@ -46,7 +46,8 @@ class BuyUspsLabel extends Component
             $orders = Order::where([
                                     ['user_id', auth()->user()->id],
                                     ['corrios_tracking_code', '!=', null],
-                                    ['corrios_usps_tracking_code', null], 
+                                    ['corrios_usps_tracking_code', null],
+                                    ['usps_response', null] 
                                 ])->whereBetween('order_date',[$this->start_date.' 00:00:00', $this->end_date.' 23:59:59'])->get();
             $this->searchOrders = $orders;
         }
@@ -125,13 +126,26 @@ class BuyUspsLabel extends Component
             $usps_labelRepository = new USPSBulkLabelRepository();
             $this->order = $usps_labelRepository->handle($this->selectedOrders);
             $request = $this->createRequest();
-            $this->order = $usps_labelRepository->generateLabel($this->order, $request);
+
+            $usps_labelRepository->generateLabel($this->order, $this->uspsRate, $request);
+            $this->uspsError = $usps_labelRepository->getUSPSErrors();
+
+            if($this->uspsError == null)
+            {
+                $order = $usps_labelRepository->getFirstOrder();
+                $this->printLabel($order);
+            }
         }
     }
 
     public function closeModal()
     {
         $this->resetFileds();
+    }
+
+    private function printLabel($order)
+    {
+        return redirect()->route('admin.orders.usps-label.index', $order->id);
     }
 
     private function resetFileds()
@@ -195,6 +209,7 @@ class BuyUspsLabel extends Component
     {
         $request = (Object)[
             'uspsBulkLabel' => true,
+            'order_Ids' => $this->selectedOrders,
             'first_name' => $this->firstName,
             'last_name' => $this->lastName,
             'sender_address' => $this->senderAddress,
