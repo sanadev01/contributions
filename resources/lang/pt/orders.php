@@ -165,6 +165,7 @@ return [
         'create-order' => 'Criar envio',
         'duplicate-order' => 'Pedido Duplicado',
         'back-to-list' => 'Voltar',
+        'buy-domestic-label' => 'Buy Domestic Etiqueta',
         'buy-usps-label' => 'Comprar Etiqueta USPS',
         'print-usps-label' => 'Imprimir Etiqueta USPS',
     ],
@@ -319,5 +320,9 @@ return [
         'Remove' => 'Remover',
         'Add Row' => 'Adicionar linha',
         'Date' => 'data do pedido',
+    ],
+    'buy-label' => [
+        'Warning' => 'Isenção de responsabilidade',
+        'Message' => 'Insira a quantidade de dimensões corretas ,  se você estiver planejando consolidar mais de um pedido para o envio doméstico até o terminal da Homedeliverybr .O sistema podera fornecer uma estimativa do seu envio. Todas os envios serão auditados ao chegarem fisicamente ao terminal  , e podera ser reclassificado para a medida e peso correto,  seu cartão de crédito será debitado  para  o valor correto com base na dimensão aferidose no terminal'
     ]
 ];

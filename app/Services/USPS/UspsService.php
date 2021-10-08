@@ -272,7 +272,7 @@ class UspsService
         if ( $order->measurement_unit == 'kg/cm' ){
 
             $volumetricWeight = WeightCalculator::getVolumnWeight($order->length,$order->width,$order->height,'cm');
-           return $this->chargableWeight = round($volumetricWeight >  $order->weight ? $volumetricWeight :  $order->weight,2);
+            return $this->chargableWeight = round($volumetricWeight >  $order->weight ? $volumetricWeight :  $order->weight,2);
 
         }else{
 
