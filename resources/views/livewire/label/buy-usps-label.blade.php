@@ -119,32 +119,6 @@
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="form-group col-md-3">
-                            <label for="measuring_unit">Measuring Unit</label>
-                            <select name="measuring_unit" wire:model="measuringUnit" id="measuring_unit" class="form-control" required>
-                                <option value="">select measuring unit</option>
-                                <option value="kg/cm">cm</option>
-                                <option value="lbs/in">in</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label for="length">Length <span>@if($measuringUnit) ({{$measuringUnit == 'kg/cm' ? 'cm' : 'in'}}) @endif</span></label>
-                            <input step="0.001" type="number" class="form-control" autocomplete="off" wire:model.lazy="length" name="length" id="length" placeholder="">
-                            @error('senderAddress') <span class="error text-danger">{{ $message }}</span> @enderror
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label for="width">Width <span>@if($measuringUnit) ({{$measuringUnit == 'kg/cm' ? 'cm' : 'in'}}) @endif</span></label>
-                            <input step="0.001" type="number" class="form-control" autocomplete="off" wire:model.lazy="width" name="width" id="width" placeholder="">
-                            @error('senderAddress') <span class="error text-danger">{{ $message }}</span> @enderror
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label for="height">Height <span>@if($measuringUnit) ({{$measuringUnit == 'kg/cm' ? 'cm' : 'in'}}) @endif</span></label>
-                            <input step="0.001" type="number" class="form-control" autocomplete="off" wire:model.lazy="height" name="height" id="height" placeholder="">
-                            @error('senderAddress') <span class="error text-danger">{{ $message }}</span> @enderror
-                        </div>
-                    </div>
-                    {{-- <livewire:order.shipment-info /> --}}
-                    <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="inputEmail4">Choose Service <span class="text-danger">*</span></label>
                             <select name="service" wire:model="selectedService" id="usps_shipping_service" class="form-control" required>
@@ -159,10 +133,6 @@
                                 <h5 class="text-danger mt-4">Total Charges : {{ $uspsRate}} USD</h5>
                             </div>
                         @endif
-                    </div>
-                    <div class="form-row">
-                        <h4 class="text-danger">@lang('orders.buy-label.Warning')</h4>
-                        <p class="text-danger text-justify">@lang('orders.buy-label.Message')</p>
                     </div>
                     @if ($uspsError)
                     <div class="form-row">

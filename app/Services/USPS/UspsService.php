@@ -43,7 +43,7 @@ class UspsService
         $request_body = [
             'request_id' => 'HD-'.$order->id,
             'from_address' => [
-                'company_name' => 'HERCO SUIT#100',
+                'company_name' => 'HERCO SUITE#100',
                 'line1' => '2200 NW 129TH AVE',
                 'city' => 'Miami',
                 'state_province' => 'FL',
@@ -235,7 +235,7 @@ class UspsService
 
         $request_body = [
             'from_address' => [
-                'company_name' => 'HERCO SUIT#100',
+                'company_name' => 'HERCO SUITE#100',
                 'line1' => '2200 NW 129TH AVE',
                 'city' => 'Miami',
                 'state_province' => 'FL',
@@ -246,7 +246,7 @@ class UspsService
                 'country_code' => $order->sender_country->code,
             ],
             'to_address' => [
-                'company_name' => 'HERCO',
+                'company_name' => 'HERCO SUITE#100',
                 'line1' => $order->recipient->address.' '.$order->recipient->street_no,
                 'city' => $order->recipient->city,    //City validation required
                 'state_province' => $order->recipient->state->code,
@@ -348,7 +348,7 @@ class UspsService
                 'country_code' => 'US',
             ],
             'to_address' => [
-                'company_name' => 'HERCO SUIT#100',
+                'company_name' => 'HERCO SUITE#100',
                 'line1' => '2200 NW 129TH AVE',
                 'city' => 'Miami',
                 'state_province' => 'FL',

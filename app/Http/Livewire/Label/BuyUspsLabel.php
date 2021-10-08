@@ -23,10 +23,6 @@ class BuyUspsLabel extends Component
     public $senderAddress;
     public $senderCity;
     public $senderZipCode;
-    public $measuringUnit;
-    public $length;
-    public $width;
-    public $height;
     public $selectedService;
     public $order;
     public $updated = false;
@@ -225,10 +221,6 @@ class BuyUspsLabel extends Component
             'sender_city' => $this->senderCity,
             'sender_state' => $this->selectedState,
             'sender_zipcode' => $this->senderZipCode,
-            'measuring_unit' => $this->measuringUnit,
-            'length' => $this->length,
-            'width' => $this->width,
-            'height' => $this->height,
             'service' => $this->selectedService,
         ];
 
