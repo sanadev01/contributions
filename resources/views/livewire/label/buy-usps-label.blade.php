@@ -12,7 +12,7 @@
             <button type="button" wire:click="search" class="btn btn-primary">Search</button>
         </div>
         <div class="form-group col-md-2 mt-4 ml-3">
-            <button type="button" wire:click="buyLabel" class="btn btn-primary" @if(!$selectedOrders) disabled @endif>Buy Label</button>
+            <button type="button" wire:click="buyLabel" class="btn btn-primary" @if(!$selectedOrders) disabled @endif>Buy USPS Label</button>
         </div>
     </div>
     @if ($error)
@@ -67,7 +67,7 @@
     {{-- sender address modal --}}
     @if ($shippingServices)
     <div class="modal d-block" id="senderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLabel">Buy USPS Label <span class="text-danger ml-3">Total Weight : {{ $totalWeight}} Kg</span></h5>
@@ -78,19 +78,17 @@
             <div class="modal-body">
                 <form>
                     <div class="form-row">
-                      <div class="form-group col-md-6">
-                        <label for="first_name">First Name <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" wire:model.lazy="firstName" name="firstName" id="first_name" placeholder="Enter your First Name" required>
-                        @error('firstName') <span class="error text-danger">{{ $message }}</span> @enderror
-                    </div>
-                      <div class="form-group col-md-6">
-                        <label for="last_name">Last Name <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" wire:model.lazy="lastName" name="lastName" id="last_name" placeholder="Enter your last Name" required>
-                        @error('lastName') <span class="error text-danger">{{ $message }}</span> @enderror
-                    </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-3">
+                            <label for="first_name">First Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" wire:model.lazy="firstName" name="firstName" id="first_name" placeholder="Enter your First Name" required>
+                            @error('firstName') <span class="error text-danger">{{ $message }}</span> @enderror
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="last_name">Last Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" wire:model.lazy="lastName" name="lastName" id="last_name" placeholder="Enter your last Name" required>
+                            @error('lastName') <span class="error text-danger">{{ $message }}</span> @enderror
+                        </div>
+                        <div class="form-group col-md-3">
                             <label for="state">Select State <span class="text-danger">*</span></label>
                             <select name="selectedState" wire:model="selectedState" id="sender_state" class="form-control" required>
                                 <option value="">Select @lang('address.State')</option>
@@ -100,17 +98,17 @@
                             </select>
                             @error('selectedState') <span class="error text-danger">{{ $message }}</span> @enderror
                         </div>
-                        <div class="form-group col-md-6">
-                            <label for="sender_address">Sender Address <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" wire:model.lazy="senderAddress" name="senderAddress" id="sender_address" placeholder="Enter you street address">
-                            @error('senderAddress') <span class="error text-danger">{{ $message }}</span> @enderror
+                        <div class="form-group col-md-3">
+                            <label for="sender_city">Sender City <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" wire:model.lazy="senderCity" name="sender_city" id="sender_city" placeholder="Enter your city">
+                            @error('senderCity') <span class="error text-danger">{{ $message }}</span> @enderror
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label for="sender_city">Sender City <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" wire:model.lazy="senderCity" name="sender_city" id="sender_city" placeholder="Enter your city">
-                            @error('senderCity') <span class="error text-danger">{{ $message }}</span> @enderror
+                            <label for="sender_address">Sender Address <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" wire:model.lazy="senderAddress" name="senderAddress" id="sender_address" placeholder="Enter you street address">
+                            @error('senderAddress') <span class="error text-danger">{{ $message }}</span> @enderror
                         </div>
                         <div class="form-group col-md-6">
                             <label for="sender_zipcode">Sender Zip Code <span class="text-danger">*</span></label>
@@ -147,7 +145,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" wire:click="closeModal()">Close</button>
-              <button type="button" class="btn btn-primary" wire:click="getLabel()" @if($uspsRate == null) disabled @endif>Buy USPS Label</button>
+              <button type="button" class="btn btn-primary" wire:click="getLabel()" @if($uspsRate == null) disabled @endif>Buy</button>
             </div>
           </div>
         </div>

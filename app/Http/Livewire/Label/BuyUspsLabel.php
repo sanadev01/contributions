@@ -157,6 +157,10 @@ class BuyUspsLabel extends Component
         $this->senderAddress = null;
         $this->senderCity = null;
         $this->senderZipCode = null;
+        $this->measuringUnit = null;
+        $this->length = null;
+        $this->width = null;
+        $this->height = null;
         $this->selectedService = null;
         $this->order = null;
         $this->zipcodeResponse = null;
@@ -180,7 +184,7 @@ class BuyUspsLabel extends Component
         {
             $this->senderZipCode = $response['zipcode'];
             $this->reposnseClass = 'text-primary';
-            $this->zipcodeResponse = 'According to your given Addrees, your zip code should be : '.$this->senderZipCode;
+            $this->zipcodeResponse = 'According to your given Addrees, your zip code is : '.$this->senderZipCode;
         } else {
 
             $this->reposnseClass = 'text-danger';

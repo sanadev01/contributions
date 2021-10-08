@@ -171,6 +171,7 @@ return [
         'create-order' => 'Create Order',
         'duplicate-order' => 'Duplicate Order',
         'back-to-list' => 'Back to List',
+        'buy-domestic-label' => 'Buy Domestic Label',
         'buy-usps-label' => 'Buy USPS Label',
         'print-usps-label' => 'Print USPS Label',
     ],
@@ -325,5 +326,10 @@ return [
         'Remove' => 'Remove',
         'Add Row' => 'Add Row',
         'Date' => 'Order Date',
+    ],
+    'buy-label' => [
+        'Warning' => 'Warning Message',
+        'Message' => 'Please enter accurate dimensions if you are planning to consolidate more than one order to send domestic to our terminal . if the information is accurately entered in the system, it may generate you an estimate cost.  your parcel will be reclassified upon arrival to our terminal , your credit card will be  used to pay the correct value based on the correct dimension'
     ]
+
 ];
