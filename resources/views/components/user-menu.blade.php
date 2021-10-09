@@ -160,6 +160,13 @@
                             <span class="menu-title">Accrual Rates</span>
                         </a>
                     </li>
+
+                    <li class="{{ $isActive(['admin.rates.usps-accrual-rates.index']) }}">
+                        <a href="{{ route('admin.rates.usps-accrual-rates.index') }}">
+                            <i class="feather icon-circle"></i>
+                            <span class="menu-title">USPS Accrual Rates</span>
+                        </a>
+                    </li>
                     @endcan
 
                     @can('viewAny', App\Models\Rate::class)

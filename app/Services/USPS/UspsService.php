@@ -337,7 +337,9 @@ class UspsService
         
         $request_body = [
             'from_address' => [
-                'company_name' => ($request->first_name && $request->last_name) ? $request->first_name.' '.$request->last_name.' '.$request->pobox_number :'HERCO SUIT#100',
+                'company_name' => 'HERCO SUIT#100',
+                'first_name' => ($request->first_name) ? $request->first_name : '',
+                'last_name' => ($request->last_name) ? $request->last_name.' '.$request->pobox_number : '',
                 'line1' => $request->sender_address,
                 'city' => $request->sender_city,
                 'state_province' => $request->sender_state,
