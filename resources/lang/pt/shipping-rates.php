@@ -27,5 +27,15 @@ return [
     'Rates' => 'Cotações',
     'Country' => 'País',
     'Select Country' => 'Selecione o pais',
+    'USPS Rates' => 'USPS Acumulação Taxas',
+    'Customer ID' => 'Cliente ID',
+    'Order' => 'Pedido',
+    'Paid To USPS' => 'Pago ao USPS',
+    'Charge To Customer' => 'Cobrar do cliente',
+    'Service' => 'Serviço',
+    'Pieces' => 'Peças',
+    'Weight' => 'Peso',
+    'Zip Code Origin' => 'Origem do código postal',
+    'Zip Code Destination' => 'Destino do CEP',
 ];
  

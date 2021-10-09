@@ -110,6 +110,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::get('rates-exports/{package}', RateDownloadController::class)->name('rates.exports');
             Route::resource('profit-packages-upload', ProfitPackageUploadController::class)->only(['create', 'store','edit','update']);
             Route::post('/show-profit-package-rates', [\App\Http\Controllers\Admin\Rates\UserRateController::class, 'showRates'])->name('show-profit-rates');
+            Route::resource('usps-accrual-rates', USPSAccrualRateController::class)->only(['index']);
         });
 
         Route::namespace('Connect')->group(function(){

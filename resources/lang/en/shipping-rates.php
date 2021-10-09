@@ -27,5 +27,15 @@ return [
     'Rates' => 'Rates',
     'Country' => 'Country',
     'Select Country' => 'Select Country',
+    'USPS Rates' => 'USPS Accural Rates',
+    'Customer ID' => 'Customer ID',
+    'Order' => 'Order',
+    'Paid To USPS' => 'Paid To USPS',
+    'Charge To Customer' => 'Charge To Customer',
+    'Service' => 'Service',
+    'Pieces' => 'Pieces',
+    'Weight' => 'Weight',
+    'Zip Code Origin' => 'Zip Code Origin',
+    'Zip Code Destination' => 'Zip Code Destination',
 ];
  

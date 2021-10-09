@@ -475,4 +475,9 @@ class Order extends Model implements Package
     {
         return $this->hasMany(OrderTracking::class, 'order_id');
     }
+
+    public function getUspsResponse()
+    {
+        return json_decode($this->usps_response);
+    }
 }
