@@ -30,6 +30,7 @@ return [
     'USPS Rates' => 'USPS Acumulação Taxas',
     'Customer ID' => 'Cliente ID',
     'Order' => 'Pedido',
+    'Tracking Number' => 'Numero de rastreio',
     'Paid To USPS' => 'Pago ao USPS',
     'Charge To Customer' => 'Cobrar do cliente',
     'Service' => 'Serviço',

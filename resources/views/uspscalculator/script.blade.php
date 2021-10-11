@@ -1,4 +1,6 @@
 <script>
+    $('#origin_country option:contains("United States")').prop('selected',true);
+
     $('#destination_state').on('change', function() {
         window.validate_us_address();
     });

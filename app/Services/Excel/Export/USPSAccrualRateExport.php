@@ -39,13 +39,14 @@ class USPSAccrualRateExport extends AbstractExportService
 
             $this->setCellValue('A'.$row, $order[0]->user->pobox_number);
             $this->setCellValue('B'.$row, $this->getPakagesWarehouse($order));
-            $this->setCellValue('C'.$row, $order[0]->getUspsResponse()->total_amount);
-            $this->setCellValue('D'.$row, $order[0]->usps_cost);
-            $this->setCellValue('E'.$row, $order[0]->getUspsResponse()->usps->mail_class);
-            $this->setCellValue('F'.$row, $order->count());
-            $this->setCellValue('G'.$row, $order[0]->getUspsResponse()->weight.' '.$order[0]->getUspsResponse()->weight_unit);
-            $this->setCellValue('H'.$row, $order[0]->getUspsResponse()->from_address->postal_code);
-            $this->setCellValue('I'.$row, $order[0]->getUspsResponse()->to_address->postal_code);
+            $this->setCellValue('C'.$row, $order[0]->corrios_usps_tracking_code);
+            $this->setCellValue('D'.$row, $order[0]->getUspsResponse()->total_amount);
+            $this->setCellValue('E'.$row, $order[0]->usps_cost);
+            $this->setCellValue('F'.$row, $order[0]->getUspsResponse()->usps->mail_class);
+            $this->setCellValue('G'.$row, $order->count());
+            $this->setCellValue('H'.$row, $order[0]->getUspsResponse()->weight.' '.$order[0]->getUspsResponse()->weight_unit);
+            $this->setCellValue('I'.$row, $order[0]->getUspsResponse()->from_address->postal_code);
+            $this->setCellValue('J'.$row, $order[0]->getUspsResponse()->to_address->postal_code);
             
             $row++;
         }
@@ -64,28 +65,31 @@ class USPSAccrualRateExport extends AbstractExportService
         $this->setCellValue('B1', 'Order');
 
         $this->setColumnWidth('C', 20);
-        $this->setCellValue('C1', 'Paid To USPS (USD)');
+        $this->setCellValue('C1', 'Tracking Number');
 
         $this->setColumnWidth('D', 20);
-        $this->setCellValue('D1', 'Charged From Customer (USD)');
+        $this->setCellValue('D1', 'Paid To USPS (USD)');
 
         $this->setColumnWidth('E', 20);
-        $this->setCellValue('E1', 'Service');
+        $this->setCellValue('E1', 'Charged From Customer (USD)');
 
         $this->setColumnWidth('F', 20);
-        $this->setCellValue('F1', 'Pieces');
+        $this->setCellValue('F1', 'Service');
 
         $this->setColumnWidth('G', 20);
-        $this->setCellValue('G1', 'Weight');
-        
-        $this->setColumnWidth('H', 20);
-        $this->setCellValue('H1', 'ZipCode Origin');
+        $this->setCellValue('G1', 'Pieces');
 
-        $this->setColumnWidth('I', 20);
-        $this->setCellValue('I1', 'ZipCode Destination');
+        $this->setColumnWidth('H', 20);
+        $this->setCellValue('H1', 'Weight');
         
-        $this->setBackgroundColor('A1:I1', '2b5cab');
-        $this->setColor('A1:I1', 'FFFFFF');
+        $this->setColumnWidth('I', 20);
+        $this->setCellValue('I1', 'ZipCode Origin');
+
+        $this->setColumnWidth('J', 20);
+        $this->setCellValue('J1', 'ZipCode Destination');
+        
+        $this->setBackgroundColor('A1:J1', '2b5cab');
+        $this->setColor('A1:J1', 'FFFFFF');
 
         $this->currentRow++;
     }
