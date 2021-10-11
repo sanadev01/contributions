@@ -30,6 +30,7 @@ return [
     'USPS Rates' => 'USPS Accural Rates',
     'Customer ID' => 'Customer ID',
     'Order' => 'Order',
+    'Tracking Number' => 'Tracking Number',
     'Paid To USPS' => 'Paid To USPS',
     'Charge To Customer' => 'Charge To Customer',
     'Service' => 'Service',

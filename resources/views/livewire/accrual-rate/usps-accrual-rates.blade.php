@@ -27,6 +27,7 @@
             <tr>
                 <th>@lang('shipping-rates.Customer ID')</th>
                 <th>@lang('shipping-rates.Order')</th>
+                <th>@lang('shipping-rates.Tracking Number')</th>
                 <th>@lang('shipping-rates.Paid To USPS')</th>
                 <th>@lang('shipping-rates.Charge To Customer')</th>
                 <th>@lang('shipping-rates.Service')</th>
@@ -45,6 +46,9 @@
                         @foreach ($order as $parcel)
                             {{ $parcel->warehouse_number }},
                         @endforeach
+                    </td>
+                    <td>
+                        {{ $order[0]->corrios_usps_tracking_code }}
                     </td>
                     <td>
                         {{ $order[0]->getUspsResponse()->total_amount }} USD
