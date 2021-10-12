@@ -55,7 +55,7 @@ class USPSUnitRegisterController extends Controller
                 'order_id' => $order->id,
                 'status_code' => Order::STATUS_SHIPPED,
                 'type' => 'HD',
-                'description' => 'Homedelivery sent parcel to airport with CN35',
+                'description' => 'Homedelivery sent parcel to airport',
                 'country' => 'US',
                 'city' => 'Miami'
             ]);
