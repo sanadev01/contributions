@@ -28,8 +28,8 @@ class CreateRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'first_name' => 'required|max:50',
-            'last_name' => 'nullable|max:50',
+            'first_name' => 'required|max:25',
+            'last_name' => 'nullable|max:25',
             'address' => 'required',
             'address2' => 'nullable|max:50',
             'street_no' => 'sometimes',
