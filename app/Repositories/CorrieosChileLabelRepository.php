@@ -7,6 +7,7 @@ namespace App\Repositories;
 use App\Models\Order;
 use App\Models\OrderTracking;
 use App\Facades\CorreosChileFacade;
+use App\Models\ShippingService;
 use App\Services\CorreosChile\CorreosChileLabelMaker;
 
 class CorrieosChileLabelRepository
@@ -15,7 +16,7 @@ class CorrieosChileLabelRepository
 
     public function handle($order)
     {
-        if(($order->shipping_service_name == 'SRP' || $order->shipping_service_name == 'SRM') && $order->api_response == null)
+        if(($order->shippingService->service_sub_class == ShippingService::SRP || $order->shippingService->service_sub_class == ShippingService::SRM) && $order->api_response == null)
         {
 
             $this->generat_ChileLabel($order);
@@ -35,7 +36,7 @@ class CorrieosChileLabelRepository
 
     public function generat_ChileLabel($order)
     {
-        if($order->shipping_service_name == 'SRP')
+        if($order->shippingService->service_sub_class == ShippingService::SRP)
         {
             $this->getSRP($order);
 
@@ -49,7 +50,7 @@ class CorrieosChileLabelRepository
 
     public function getSRP($order)
     {
-        $serviceType = 28;      //service code defined by correos chile
+        $serviceType = ShippingService::SRP;      //service code defined by correos chile
 
         $response = CorreosChileFacade::generateLabel($order, $serviceType);
         
@@ -73,7 +74,7 @@ class CorrieosChileLabelRepository
 
     public function getSRM($order)
     {
-        $serviceType = 32;      //service code defined by correos chile
+        $serviceType = ShippingService::SRM;      //service code defined by correos chile
         
         $response = CorreosChileFacade::generateLabel($order, $serviceType);
 

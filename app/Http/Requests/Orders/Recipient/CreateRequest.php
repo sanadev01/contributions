@@ -28,8 +28,8 @@ class CreateRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'first_name' => 'required|max:50',
-            'last_name' => 'nullable|max:50',
+            'first_name' => ($this->country_id == Country::Chile) ? 'required|max:28' : 'required|max:50',
+            'last_name' => ($this->country_id == Country::Chile) ? 'nullable|max:28' : 'nullable|max:50',
             'address' => 'required',
             'address2' => 'nullable|max:50',
             'street_no' => 'sometimes',
