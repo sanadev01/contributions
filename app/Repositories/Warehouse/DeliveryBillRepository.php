@@ -141,7 +141,7 @@ class DeliveryBillRepository extends AbstractRepository
             'order_id' => $order_id,
             'status_code' => Order::STATUS_SHIPPED,
             'type' => 'HD',
-            'description' => 'Homedelivery sent parcel to airport',
+            'description' => 'Parcel transfered to airline',
             'country' => 'US',
             'city' => 'Miami'
         ]);
