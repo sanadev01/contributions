@@ -52,8 +52,8 @@ class CorreosChileLabelMaker
 
         $description = implode(" ", $itemDescription);
 
-        if (strlen($description) > 57){
-            $description = str_limit($description, 45);
+        if (strlen($description) > 40){
+            $description = str_limit($description, 38);
         }
         
         return $description;

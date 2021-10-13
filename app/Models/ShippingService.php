@@ -19,6 +19,8 @@ class ShippingService extends Model
 
     const USPS_PRIORITY = 3440;
     const USPS_FIRSTCLASS = 3441;
+    const SRP = 28;
+    const SRM = 32;
 
     protected $guarded = [];
 
