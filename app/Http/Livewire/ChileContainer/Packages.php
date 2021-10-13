@@ -9,6 +9,7 @@ use App\Models\OrderTracking;
 use App\Models\Warehouse\Container;
 use function GuzzleHttp\json_decode;
 use App\Http\Controllers\Warehouse\ChileContainerPackageController;
+use App\Models\ShippingService;
 
 class Packages extends Component
 {
@@ -29,13 +30,7 @@ class Packages extends Component
         $this->orders = json_decode($ordersCollection);
         $this->editMode = $editMode;
 
-        // condition to check service type
-        if($container->services_subclass_code == 'SRM')
-        {
-            $this->service = 'SRM';
-        } else {
-            $this->service = 'SRP';
-        }
+        $this->checkContainerShippingService($container->services_subclass_code);
         
         if($container->destination_operator_name == 'MR')
         {
@@ -166,4 +161,20 @@ class Packages extends Component
         return true;
 
     }
+
+    private function checkContainerShippingService($container_service)
+    {
+        
+        if($container_service == 'SRM')
+        {
+            $shipping_service = ShippingService::where('service_sub_class', ShippingService::SRM)->first();
+            $this->service = $shipping_service->name;
+            return;
+        }
+        
+        $shipping_service = ShippingService::where('service_sub_class', ShippingService::SRP)->first();
+        $this->service = $shipping_service->name;
+        return;
+    }
+         
 }
