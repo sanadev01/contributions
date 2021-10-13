@@ -5,7 +5,9 @@ namespace App\Repositories;
 
 
 use App\Models\Order;
+use App\Models\OrderTracking;
 use App\Facades\CorreosChileFacade;
+use App\Models\ShippingService;
 use App\Services\CorreosChile\CorreosChileLabelMaker;
 
 class CorrieosChileLabelRepository
@@ -14,12 +16,12 @@ class CorrieosChileLabelRepository
 
     public function handle($order)
     {
-        if(($order->shipping_service_name == 'SRP' || $order->shipping_service_name == 'SRM') && $order->chile_response == null)
+        if(($order->shippingService->service_sub_class == ShippingService::SRP || $order->shippingService->service_sub_class == ShippingService::SRM) && $order->api_response == null)
         {
 
             $this->generat_ChileLabel($order);
 
-        }elseif($order->chile_response != null)
+        }elseif($order->api_response != null)
         {
 
             $this->printLabel($order);
@@ -34,7 +36,7 @@ class CorrieosChileLabelRepository
 
     public function generat_ChileLabel($order)
     {
-        if($order->shipping_service_name == 'SRP')
+        if($order->shippingService->service_sub_class == ShippingService::SRP)
         {
             $this->getSRP($order);
 
@@ -48,17 +50,19 @@ class CorrieosChileLabelRepository
 
     public function getSRP($order)
     {
-        $serviceType = 28;      //service code defined by correos chile
+        $serviceType = ShippingService::SRP;      //service code defined by correos chile
 
         $response = CorreosChileFacade::generateLabel($order, $serviceType);
-
+        
         if($response->success == true)
         {
             //storing response in orders table
             $order->update([
-                'chile_response' => json_encode($response->data),
+                'api_response' => json_encode($response->data),
                 'corrios_tracking_code' => $response->data->NumeroEnvio,
             ]);
+
+            $this->addOrderTracking($order);
             
             $this->printLabel($order);
         } else {
@@ -70,7 +74,7 @@ class CorrieosChileLabelRepository
 
     public function getSRM($order)
     {
-        $serviceType = 32;      //service code defined by correos chile
+        $serviceType = ShippingService::SRM;      //service code defined by correos chile
         
         $response = CorreosChileFacade::generateLabel($order, $serviceType);
 
@@ -78,9 +82,12 @@ class CorrieosChileLabelRepository
         {
             //storing response in orders table
             $order->update([
-                'chile_response' => json_encode($response->data),
+                'api_response' => json_encode($response->data),
                 'corrios_tracking_code' => $response->data->NumeroEnvio,
             ]);
+
+            $this->addOrderTracking($order);
+            
             $this->printLabel($order);
         } else {
             
@@ -99,6 +106,22 @@ class CorrieosChileLabelRepository
         $labelPrinter = new CorreosChileLabelMaker();
         $labelPrinter->setOrder($order);
         $labelPrinter->saveLabel();
+
+        return true;
+    }
+
+    public function addOrderTracking($order)
+    {
+        if($order->trackings->isEmpty())
+        {
+            OrderTracking::create([
+                'order_id' => $order->id,
+                'status_code' => Order::STATUS_PAYMENT_DONE,
+                'type' => 'HD',
+                'description' => 'Order Placed',
+                'country' => ($order->user->country != null) ? $order->user->country->code : 'US',
+            ]);
+        }    
 
         return true;
     }

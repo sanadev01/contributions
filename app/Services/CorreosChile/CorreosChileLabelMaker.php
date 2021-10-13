@@ -22,7 +22,7 @@ class CorreosChileLabelMaker
 
     public function saveLabel()
     {
-        $chile_response = json_decode($this->order->chile_response);
+        $chile_response = json_decode($this->order->api_response);
         $description = $this->itemsDescription( $this->order->items);
         $date = \Carbon\Carbon::parse($this->order->updated_at)->format('d/m/Y H:i');
         $bar_code = $this->get_code_for_generating_barcode($chile_response);

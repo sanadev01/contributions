@@ -51,6 +51,13 @@
                         <span class="menu-title">@lang('menu.orders')</span>
                     </a>
                 </li>
+                {{-- buy bulk usps labels --}}
+                {{-- <li class="nav-item {{ $isActive(['admin.bulk-usps-label']) }}">
+                    <a href="{{ route('admin.bulk-usps-label') }}">
+                        <i class="feather icon-tag"></i>
+                        <span class="menu-title">@lang('menu.Bulk Usps Label')</span>
+                    </a>
+                </li> --}}
             @endcan
             
             @can('viewAny', App\Models\Order::class)
@@ -153,6 +160,13 @@
                             <span class="menu-title">Accrual Rates</span>
                         </a>
                     </li>
+
+                    <li class="{{ $isActive(['admin.rates.usps-accrual-rates.index']) }}">
+                        <a href="{{ route('admin.rates.usps-accrual-rates.index') }}">
+                            <i class="feather icon-circle"></i>
+                            <span class="menu-title">USPS Accrual Rates</span>
+                        </a>
+                    </li>
                     @endcan
 
                     @can('viewAny', App\Models\Rate::class)
@@ -191,6 +205,13 @@
                 <a class="nav-link" href="{{ route('calculator.index') }}" target="_blank">
                     <i class="fa fa-calculator"></i>
                     <span data-i18n="Apps">@lang('menu.calculator')</span>
+                </a>
+            </li>
+
+            <li class="nav-item {{ $isActive(['calculator.index']) }}">
+                <a class="nav-link" href="{{ route('usps-calculator.index') }}" target="_blank">
+                    <i class="fa fa-calculator"></i>
+                    <span data-i18n="Apps">@lang('menu.uspscalculator')</span>
                 </a>
             </li>
 

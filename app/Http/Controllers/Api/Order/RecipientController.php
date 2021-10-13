@@ -9,6 +9,7 @@ use App\Models\Address;
 use Illuminate\Http\Request;
 use FlyingLuscas\Correios\Client;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Http;
 
 class RecipientController extends Controller
 {
@@ -204,4 +205,59 @@ class RecipientController extends Controller
         
     }
 
+    public function validate_USAddress(Request $request)
+    {
+        // USPS Testing Environment Credentials
+        // $api_url = 'https://api-sandbox.myibservices.com/v1/address/validate';
+        // $email = 'ghaziislam3@gmail.com';           
+        // $password = 'Ikonic@1234';
+
+        // USPS Production Environment Credentials
+        $api_url = 'https://api.myibservices.com/v1/address/validate';
+        $email = config('usps.email');           
+        $password = config('usps.password');
+
+        $data = $this->make_request_attributes($request->state, $request->city, $request->address);
+
+        try {
+
+            $response = Http::withBasicAuth($email, $password)->post($api_url, $data);
+            
+            if($response->status() == 200) {
+                
+                return (Array)[
+                    'success' => true,
+                    'zipcode'    => $response->json()['zip5'],
+                ];
+            }
+
+            if($response->status() != 200) {
+                return (Array)[
+                    'success' => false,
+                    'message' => $response->json()['message'],
+                ];
+            }
+        } catch (Exception $e) {
+            
+            return (Array)[
+                'success' => false,
+                'message' => $e->getMessage(),
+            ];
+        }
+
+    }
+
+    public function make_request_attributes($state,$city,$address)
+    {
+        $data = [
+            'company_name' => 'Herco',
+            'line1' => $address,
+            'state_province' => $state,
+            'city' => $city,
+            'postal_code' => '',
+            'country_code' => 'US'
+        ];
+
+        return $data;
+    }
 }

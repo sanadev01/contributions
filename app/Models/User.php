@@ -47,7 +47,9 @@ class User extends Authenticatable
     protected $fillable = [
         'pobox_number', 'package_id', 'state_id', 'country_id', 'role_id','name', 'email', 'last_name', 
         'password', 'phone', 'city', 'street_no', 'address', 'address2', 'account_type', 'tax_id', 'zipcode', 
-        'api_token', 'api_enabled', 'locale','market_place_name','image_id','reffered_by', 'reffer_code','come_from', 'battery', 'perfume','status', 'insurance'
+        'api_token', 'api_enabled', 'locale','market_place_name','image_id','reffered_by', 'reffer_code','come_from', 'battery', 'perfume','status', 'insurance',
+        'api_token', 'api_enabled', 'locale','market_place_name','image_id','reffered_by', 'reffer_code','come_from', 'battery', 'perfume','status', 
+        'usps', 'api_profit', 'order_dimension'
     ];
 
     /**

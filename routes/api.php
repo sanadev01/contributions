@@ -26,6 +26,11 @@ Route::get('orders/recipient/chile_regions', [App\Http\Controllers\Api\Order\Rec
 Route::get('orders/recipient/chile_communes', [App\Http\Controllers\Api\Order\RecipientController::class, 'chileCommunes'])->name('api.orders.recipient.chile_comunes');
 Route::get('orders/recipient/normalize_address', [App\Http\Controllers\Api\Order\RecipientController::class, 'normalizeAddress'])->name('api.orders.recipient.normalize_address');
 
+// Routes for usps
+Route::get('orders/recipient/us_address', [App\Http\Controllers\Api\Order\RecipientController::class, 'validate_USAddress'])->name('api.orders.recipient.us_address');
+Route::get('order-usps-rates', [App\Http\Controllers\Admin\Order\OrderItemsController::class, 'usps_rates'])->name('api.usps_rates');
+Route::get('order-usps-sender-rates', [App\Http\Controllers\Admin\Order\OrderUSPSLabelController::class, 'usps_sender_rates'])->name('api.usps_sender_rates');
+
 Route::post('order/update/status',Api\OrderStatusController::class)->name('api.order.status.update');
 
 Route::prefix('v1')->middleware('auth:api')->group(function(){
@@ -50,13 +55,13 @@ Route::prefix('v1')->group(function(){
             Route::get('balance', BalanceController::class);
             Route::resource('parcels', 'ParcelController')->only('store','destroy','update');
             Route::get('parcel/{order}/cn23',OrderLabelController::class);
+            Route::get('order/tracking/{search}', OrderTrackingController::class);
         });
     
         Route::get('countries', CountryController::class);
         Route::get('country/{country}/states', StateController::class);
         Route::get('shipping-services', ServicesController::class);
         Route::get('shcodes/{search?}', ShCodeController::class);
-        Route::get('order/tracking/{search}', OrderTrackingController::class);
         Route::get('services-rates', GetRateController::class);
     });
 
