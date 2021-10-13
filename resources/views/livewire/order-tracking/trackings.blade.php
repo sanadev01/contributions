@@ -95,7 +95,11 @@
                                         @endif
                                         <li class="step0">
                                             <div class="icon-content">
-                                                <img class="icon offset-1" src="{{ asset('images/tracking/brazil-flag.png') }}">
+                                                @if ($tracking->order->recipient->country_id != 46)
+                                                    <img class="icon offset-1" src="{{ asset('images/tracking/brazil-flag.png') }}">
+                                                @else
+                                                    <img class="icon offset-1" src="{{ asset('images/tracking/chile-flag.png') }}">
+                                                @endif
                                                 <div class="d-flex flex-column" mt-4>
                                                     @if ($tracking->order->recipient->country_id != 46)
                                                         <p class="font-weight-bold">Received <br>Correios Brazil </p>
