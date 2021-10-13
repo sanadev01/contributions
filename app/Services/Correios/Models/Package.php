@@ -12,6 +12,8 @@ class Package implements \App\Services\Correios\Contracts\Package
     const SERVICE_CLASS_MINI = 33197;
     const SERVICE_CLASS_SRP = 28;
     const SERVICE_CLASS_SRM = 32;
+    const SERVICE_CLASS_PRIORITY = 3440;
+    const SERVICE_CLASS_FIRSTCLASS = 3441;
 
     public $customerControlCode = "";
     public $senderName = "HERCO";

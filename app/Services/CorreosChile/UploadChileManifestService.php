@@ -3,6 +3,8 @@ namespace App\Services\CorreosChile;
 
 
 use Carbon\Carbon;
+use App\Models\Order;
+use App\Models\OrderTracking;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
 
@@ -53,7 +55,7 @@ class UploadChileManifestService
         $file = fopen("../storage/app/manifests/uploads/$filename.txt", 'a');//opens file in append mode  
         foreach ($orders as $order)
         {
-            $chile_response = json_decode($order->chile_response);
+            $chile_response = json_decode($order->api_response);
             fwrite($file,  $this->combineChileResponseFields($chile_response));  
             fwrite($file, '|');
             fwrite($file, $this->container->awb);
@@ -89,6 +91,26 @@ class UploadChileManifestService
         $container->update([
             'response' => true,
         ]);
+
+        $this->addOrderTracking();
+        return true;
+    }
+
+    public function addOrderTracking()
+    {
+        $orders = $this->container->orders;
+
+        foreach ($orders as $order)
+        {
+            OrderTracking::create([
+                'order_id' => $order->id,
+                'status_code' => Order::STATUS_SHIPPED,
+                'type' => 'HD',
+                'description' => 'Homedelivery sent parcel to airport',
+                'country' => 'US',
+                'city' => 'Miami'
+            ]);
+        }
 
         return true;
     }
