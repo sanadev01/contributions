@@ -54,16 +54,15 @@ class ContainerPackageRepository extends AbstractRepository{
                         'code' => 404
                     ],
                 ];
-            }else{
-                if( $order->getWeight('kg') <= 3 ){
-                    return [
-                        'order' => [
-                            'corrios_tracking_code' => $barcode,
-                            'error' => 'Order weight is less then 3 Kg, Please Check Order Weight',
-                            'code' => 404
-                        ],
-                    ];
-                }
+            }elseif($containerOrder->getWeight('kg') > 3 && $order->getWeight('kg') <= 3)
+            {
+                return [
+                    'order' => [
+                        'corrios_tracking_code' => $barcode,
+                        'error' => 'Order weight is less then 3 Kg, Please Check Order Weight',
+                        'code' => 404
+                    ],
+                ];
             }
         }
         
