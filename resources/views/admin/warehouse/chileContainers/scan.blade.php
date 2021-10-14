@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('page')
-    <section id="vue-scanner">
+    <section>
         <div class="row">
             <div class="col-12">
                 <div class="card">
@@ -24,7 +24,3 @@
         </div>
     </section>
 @endsection
-
-@push('js')
-    <script src="{{ asset('js/pages/scanner.js') }}"></script>
-@endpush
