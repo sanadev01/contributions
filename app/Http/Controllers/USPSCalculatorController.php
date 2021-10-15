@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\State;
@@ -12,6 +13,7 @@ use App\Models\ShippingService;
 use Illuminate\Support\Facades\Auth;
 use App\Services\USPS\USPSShippingService;
 use App\Services\Converters\UnitsConverter;
+use App\Repositories\USPSCalculatorRepository;
 use App\Services\Calculators\WeightCalculator;
 
 class USPSCalculatorController extends Controller
@@ -19,6 +21,7 @@ class USPSCalculatorController extends Controller
     public $error;
     public $shipping_rates = [];
     public $user_api_profit;
+    public $userLoggedIn = false;
     /**
      * Display a listing of the resource.
      *
@@ -41,10 +44,10 @@ class USPSCalculatorController extends Controller
         $rules = [
             'origin_country' => 'required|numeric|exists:countries,id',
             'destination_country' => 'required|numeric|exists:countries,id',
-            'destination_state' => 'required|exists:states,id',
-            'destination_address' => 'required',
-            'destination_city' => 'required',
-            'destination_zipcode' => 'required',
+            'sender_state' => 'required|exists:states,code',
+            'sender_address' => 'required',
+            'sender_city' => 'required',
+            'sender_zipcode' => 'required',
             'height' => 'sometimes|numeric',
             'width' => 'sometimes|numeric',
             'length' => 'sometimes|numeric',
@@ -60,10 +63,10 @@ class USPSCalculatorController extends Controller
         $message = [
             'origin_country' => 'Please Select Origin country',
             'destination_country' => 'Please Select Destination country',
-            'destination_state' => 'Please Select Destination state',
-            'destination_address' => 'Please Enter Destination address',
-            'destination_city' => 'Please Enter Destination city',
-            'destination_zipcode' => 'Please Enter Destination zipcode',
+            'sender_state' => 'Please Select Origin state',
+            'sender_address' => 'Please Enter Destination address',
+            'sender_city' => 'Please Enter Destination city',
+            'sender_zipcode' => 'Please Enter Destination zipcode',
             'weight' => 'Please Enter weight',
             'weight.max' => 'weight exceed the delivery of USPS',
             'height' => 'Please Enter height',
@@ -85,22 +88,30 @@ class USPSCalculatorController extends Controller
 
         $recipient = new Recipient();
         $recipient->country_id = $request->destination_country;
-        $recipient->state_id = $request->destination_state;
-        $recipient->address = $request->destination_address;
-        $recipient->city = $request->destination_city;
-        $recipient->zipcode = $request->destination_zipcode;
-
+        $recipient->state_id = 4622;
+        $recipient->address = '2200 NW 129TH AVE';
+        $recipient->city = 'Miami';
+        $recipient->zipcode = '33182';
+        
         $order = new Order();
         $order->id = 1;
         $order->user = Auth::user() ? Auth::user() :  User::where('role_id',1)->first();
         $order->sender_country_id = $request->origin_country;
+        $order->sender_first_name = $order->user->name;
+        $order->sender_last_name = $order->user->last_name;
+        $order->pobox_number = $order->user->pobox_number;
+        $order->sender_city = $request->sender_city;
+        $order->sender_state = $request->sender_state;
+        $order->sender_address = $request->sender_address;
+        $order->sender_zipcode = $request->sender_zipcode;
+        $order->order_date = Carbon::now();
         $order->width = $request->width;
         $order->height = $request->height;
         $order->length = $request->length;
         $order->weight = $request->weight;
         $order->measurement_unit = $request->unit;
         $order->recipient = $recipient;
-
+        
         $shippingServices = collect() ;
         $this->checkUser();
 
@@ -117,8 +128,10 @@ class USPSCalculatorController extends Controller
 
         
         foreach ($shippingServices as $shippingService) {
-            $response = USPSFacade::getPrice($order, $shippingService->service_sub_class);
-            
+
+            $request_data = $this->create_request($order, $shippingService->service_sub_class);
+            $response = USPSFacade::getSenderPrice($order, $request_data);
+           
             if($response->success == true)
             {
                 array_push($this->shipping_rates , ['name'=> $shippingService->name , 'rate'=> $response->data['total_amount']]);
@@ -145,8 +158,8 @@ class USPSCalculatorController extends Controller
         }else{
             $weightInOtherUnit = UnitsConverter::poundToKg($chargableWeight);
         }
-        
-        return view('uspscalculator.show', compact('usps_rates','shipping_rates','order', 'weightInOtherUnit', 'chargableWeight'));
+        $userLoggedIn = $this->userLoggedIn;
+        return view('uspscalculator.show', compact('usps_rates','shipping_rates','order', 'weightInOtherUnit', 'chargableWeight', 'userLoggedIn'));
     }
 
     public function checkUser()
@@ -154,6 +167,8 @@ class USPSCalculatorController extends Controller
         if (Auth::check()) 
         {
             $this->user_api_profit = Auth::user()->api_profit;
+            $this->userLoggedIn = true;
+
         }
 
         if($this->user_api_profit == 0)
@@ -179,6 +194,40 @@ class USPSCalculatorController extends Controller
         }
 
         return true;
+    }
+
+    private function create_request($order, $service)
+    {
+        $request = (Object)[
+            'sender_country_id' => $order->sender_country_id,
+            'first_name' => $order->sender_first_name,
+            'last_name' => $order->sender_last_name,
+            'pobox_number' => $order->pobox_number,
+            'sender_state' => $order->sender_state,
+            'sender_city' => $order->sender_city,
+            'sender_address' => $order->sender_address,
+            'sender_zipcode' => $order->sender_zipcode,
+            'service' => $service,
+        ];
+        
+        
+        return $request;
+    }
+
+    public function buy_usps_label(Request $request)
+    {
+        $usps_calculatorRepository = new USPSCalculatorRepository();
+        $usps_calculatorRepository->handle($request);
+
+        $error = $usps_calculatorRepository->getUSPSErrors();
+
+        if($error != null)
+        {
+            return (Array)[
+                'success' => false,
+                'message' => $error,
+            ]; 
+        }
     }
 
     
