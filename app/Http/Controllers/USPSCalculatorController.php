@@ -121,7 +121,7 @@ class USPSCalculatorController extends Controller
             
             if($response->success == true)
             {
-                array_push($this->shipping_rates , ['name'=> $shippingService->name , 'rate'=> $response->data['total_amount']]);
+                array_push($this->shipping_rates , ['name'=> $shippingService->name , 'rate'=> number_format($response->data['total_amount'], 2)]);
 
             }else {
                 $this->error = $response->message;
@@ -175,7 +175,7 @@ class USPSCalculatorController extends Controller
 
             $rate = $shipping_rate['rate'] + $profit;
 
-            array_push($this->shipping_rates , ['name'=> $shipping_rate['name'] , 'rate'=> $rate]);
+            array_push($this->shipping_rates , ['name'=> $shipping_rate['name'] , 'rate'=> number_format($rate, 2)]);
         }
 
         return true;
