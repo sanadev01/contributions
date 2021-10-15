@@ -59,6 +59,7 @@ class Packages extends Component
     {
         if ( $barcode != null || $barcode != '' ||  strlen($barcode) > 4 ){
             $this->saveOrder();
+            $this->dispatchBrowserEvent('focus-barcode');
         }
 
     }
