@@ -363,7 +363,7 @@ class UspsService
             'image_format' => 'pdf',
             'usps' => [
                 'shape' => 'Parcel',
-                'mail_class' => ($request->service == ShippingService::USPS_PRIORITY) ? 'Priority' : 'FirstClass',
+                'mail_class' => ($request->service == ShippingService::USPS_FIRSTCLASS || $request->service == 'FirstClass') ? 'FirstClass' : 'Priority',
                 'image_size' => '4x6',
             ],
         ];
