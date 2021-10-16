@@ -217,7 +217,7 @@ class USPSCalculatorController extends Controller
     public function buy_usps_label(Request $request)
     {
         $usps_calculatorRepository = new USPSCalculatorRepository();
-        $usps_calculatorRepository->handle($request);
+        $order = $usps_calculatorRepository->handle($request);
 
         $error = $usps_calculatorRepository->getUSPSErrors();
 
@@ -228,6 +228,12 @@ class USPSCalculatorController extends Controller
                 'message' => $error,
             ]; 
         }
+
+        return (Array)[
+            'success' => true,
+            'message' => 'USPS label has been generated successfully',
+            'path' => route('admin.orders.label.index', $order->id)
+        ]; 
     }
 
     

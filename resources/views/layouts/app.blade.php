@@ -58,9 +58,9 @@
                                 <a class="btn btn-primary" href="{{ route('login') }}"> <i class="feather icon-home"></i> Dashboard</a>
                             </li>
                             @can('viewAny', App\Models\Order::class)
-                                <li class="nav-item">
+                                {{-- <li class="nav-item">
                                     <a class="btn btn-primary ml-3" href="{{ route('admin.bulk-usps-label') }}">Buy USPS Label</a>
-                                </li>
+                                </li> --}}
                             @endcan
                         @endguest
                         {{-- <x-lang-switcher></x-lang-switcher> --}}

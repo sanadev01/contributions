@@ -59,6 +59,7 @@
                                     <form id="SubmitUSPSForm">
                                         @csrf
                                         <input type="hidden" name="order" value="{{ $order }}" id="order">
+                                        <input type="hidden" name="user_id" value="{{ auth()->user()->id }}" id="user_id">
                                         <div class="row mb-1 ml-4">
                                             <div class="controls col-6">
                                                 <label>@lang('orders.order-details.Select Shipping Service')<span class="text-danger"></span></label>
@@ -68,10 +69,15 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <div class="controls col-6">
+                                            <div class="controls col-6" id="buy_label_div">
                                                 <button id="btn-submit" type="button" class="btn btn-success btn-lg mt-4" @if(auth()->user()->usps == false) disabled @endif>
                                                     Buy Label
                                                 </button>
+                                            </div>
+                                            <div class="controls col-6" id="print_label_div" style="display: none;">
+                                                <a href="" type="button" class="btn btn-success btn-lg mt-4" id="print_label_btn">
+                                                    Print Label
+                                                </a>
                                             </div>
                                         </div>
                                     </form>
@@ -160,22 +166,29 @@
         e.preventDefault();
         let service = $('#shipping_service option:selected').text();
         let usps_cost = $('#shipping_service option:selected').attr('data-cost');
-        console.log(usps_cost);
         let order = $('#order').val();
+        let user_id = $('#user_id').val();
         
-        console.log(service);
         $.ajax({
             type:'POST',
             url:"{{ route('api.buy_usps_label') }}",
             data:{
                 service:service, 
                 usps_cost:usps_cost,  
-                order:order
+                order:order,
+                user_id:user_id
             },
             success:function(response){
                 if(response.success == false)
                 {
                     $('#usps_response').empty().append("<h4 style='color: red;'>"+response.message+"</h4>");
+                }
+                if(response.success == true)
+                {
+                    $('#buy_label_div').css('display', 'none');
+                    $('#print_label_div').css('display', 'block');
+                    $('#print_label_btn').attr("href", response.path);
+                    $('#usps_response').empty().append("<h4 style='color: green;'>"+response.message+"</h4>");
                 }
             },
             error: function(response) {
