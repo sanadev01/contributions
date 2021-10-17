@@ -168,7 +168,10 @@
         let usps_cost = $('#shipping_service option:selected').attr('data-cost');
         let order = $('#order').val();
         let user_id = $('#user_id').val();
-        
+        $('#usps_response').empty().append("<h4 style='color: blue;'>Processing......</h4>");
+        $('#btn-submit').prop('disabled', true);
+        $('#btn-submit').html("Loading");
+
         $.ajax({
             type:'POST',
             url:"{{ route('api.buy_usps_label') }}",
@@ -182,6 +185,7 @@
                 if(response.success == false)
                 {
                     $('#usps_response').empty().append("<h4 style='color: red;'>"+response.message+"</h4>");
+                    $('#btn-submit').html("Failed");
                 }
                 if(response.success == true)
                 {
@@ -189,13 +193,16 @@
                     $('#print_label_div').css('display', 'block');
                     $('#print_label_btn').attr("href", response.path);
                     $('#usps_response').empty().append("<h4 style='color: green;'>"+response.message+"</h4>");
+                    $('#btn-submit').html("Label Generated");
                 }
             },
             error: function(response) {
                 console.log(response);
                 $('#usps_response').empty().append("<h4 style='color: red;'>"+response.message+"</h4>");
+                $('#btn-submit').html("Failed");
             }
         });
+
     });
     </script>
 @endsection
