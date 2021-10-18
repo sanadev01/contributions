@@ -36,7 +36,7 @@ class OrderTrackingRepository
                 {
                     $response = CorreiosChileTrackingFacade::trackOrder($this->trackingNumber);
 
-                    if($response->status == true)
+                    if($response->status == true && ($response->data != null || $response->data != []) )
                     {
                         // $trackings = $this->pushToTrackings($response->data, $order->trackings);
 
