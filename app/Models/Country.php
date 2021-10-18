@@ -19,6 +19,7 @@ class Country extends Model
 
     const Chile = 46;
     const Brazil = 30;
+    const US = 250;
 
     public function states()
     {

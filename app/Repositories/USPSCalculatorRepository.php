@@ -85,6 +85,9 @@ class USPSCalculatorRepository
                 'merchant' => 'HomeDeliveryBr',
                 'user_id' => $this->user->id,
                 'carrier' => 'HERCO',
+                'tracking_id' => 'HERCO',
+                'customer_reference' => 'HERCO',
+                'carrier' => 'HERCO',
                 'order_date' => Carbon::now(),
                 'sender_first_name' => $this->request_order->sender_first_name,
                 'sender_last_name' => $this->request_order->sender_last_name,
@@ -94,6 +97,8 @@ class USPSCalculatorRepository
                 'width' => $this->request_order->width,
                 'height' => $this->request_order->height,
                 'measurement_unit' => $this->request_order->measurement_unit,
+                'shipping_service_id' => $this->getShippingService($this->service),
+                'shipping_service_name' => $this->service,
                 'status' => Order::STATUS_ORDER,
             ]);
             
@@ -118,6 +123,13 @@ class USPSCalculatorRepository
         
     }
 
+    private function getShippingService($service_name)
+    {
+        $shipping_service = ShippingService::where('name', $service_name)->first();
+
+        return $shipping_service->id;
+    }
+
     private function createOrderRecipient()
     {
         DB::beginTransaction();
@@ -134,6 +146,7 @@ class USPSCalculatorRepository
                 'zipcode' => '33182',
                 'state_id' => 4622,
                 'country_id' => 250,
+                'account_type' => 'individual',
             ]);
 
             DB::commit();
@@ -157,13 +170,17 @@ class USPSCalculatorRepository
             $order->update([
                 'api_response' => json_encode($response->data),
                 'corrios_tracking_code' => $response->data['usps']['tracking_numbers'][0],
+                'is_invoice_created' => true,
+                'is_shipment_added' => true,
+                'user_declared_freight' => $response->data['total_amount'],
+                'shipping_value' => $this->usps_cost,
                 'total' => $this->usps_cost,
                 'gross_total' => $this->usps_cost,
                 'status' => Order::STATUS_PAYMENT_DONE,
             ]);
 
             $this->chargeAmount($this->usps_cost, $order);
-
+            $this->createInvoivce($order);
             $this->printLabel($order);
 
             return true;
@@ -209,6 +226,26 @@ class USPSCalculatorRepository
         }
 
         return $deposit;
+    }
+
+    private function createInvoivce($order)
+    {
+        $invoice = PaymentInvoice::create([
+            'uuid' => PaymentInvoice::generateUUID(),
+            'paid_by' => $this->user->id,
+            'is_paid' => 1,
+            'order_count' => 1,
+            'type' => PaymentInvoice::TYPE_PREPAID
+        ]);
+
+
+        $invoice->orders()->sync($order->id);
+
+        $invoice->update([
+            'total_amount' => $invoice->orders()->sum('gross_total')
+        ]);
+
+        return true;
     }
 
     public function printLabel(Order $order)
