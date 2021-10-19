@@ -47,7 +47,7 @@ class ContainerPackageRepository extends AbstractRepository{
         $order          = Order::where('corrios_tracking_code',strtoupper($barcode))->first();
         
         if( $containerOrder ){
-            if( $containerOrder->getWeight('kg') <= 3 && $order->getWeight('kg') > 3){
+            if( $containerOrder->getOriginalWeight('kg') <= 3 && $order->getOriginalWeight('kg') > 3){
                 return [
                     'order' => [
                         'corrios_tracking_code' => $barcode,
@@ -55,7 +55,7 @@ class ContainerPackageRepository extends AbstractRepository{
                         'code' => 404
                     ],
                 ];
-            }elseif($containerOrder->getWeight('kg') > 3 && $order->getWeight('kg') <= 3)
+            }elseif($containerOrder->getOriginalWeight('kg') > 3 && $order->getOriginalWeight('kg') <= 3)
             {
                 return [
                     'order' => [
