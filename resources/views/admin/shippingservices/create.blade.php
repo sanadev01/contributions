@@ -168,7 +168,7 @@
                                     <div class="controls row mb-1 align-items-center">
                                         <label class="col-md-3 text-md-right">Max sum of all products<span class="text-danger">*</span></label>
                                         <div class="col-md-6">
-                                            <input type="number" required class="form-control" name="max_sum_of_all_products" placeholder="Max sum of all products">{{ old('max_sum_of_all_products') }}</input>
+                                            <input type="number" class="form-control" name="max_sum_of_all_products" placeholder="Max sum of all products">{{ old('max_sum_of_all_products') }}</input>
                                             @error('max_sum_of_all_products')
                                                 <div class="help-block text-danger"> {{ $message }} </div>
                                             @enderror
