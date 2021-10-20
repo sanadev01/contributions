@@ -215,7 +215,7 @@ class PreAlertRepository
             // if ( $order->isConsolidated() ){
             //     $order->subOrders()->sync([]);
             // }
-            if($order->recipient->country_id == 250 && $order->api_response != null)
+            if(optional($order->recipient)->country_id == 250 && $order->api_response != null)
             {
                 $response = USPSFacade::deleteUSPSLabel($order->corrios_tracking_code);
                 
