@@ -154,6 +154,58 @@
                                     </div>
                                 </div>
 
+                                <div class="sinelrog-inputs d-none">
+                                    <div class="controls row mb-1 align-items-center">
+                                        <label class="col-md-3 text-md-right">API<span class="text-danger">*</span></label>
+                                        <div class="col-md-6">
+                                            <input type="text" required class="form-control" name="api" placeholder="API" value="sinerlog">{{ old('api') }}</input>
+                                            @error('api')
+                                                <div class="help-block text-danger"> {{ $message }} </div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="controls row mb-1 align-items-center">
+                                        <label class="col-md-3 text-md-right">Max sum of all products<span class="text-danger">*</span></label>
+                                        <div class="col-md-6">
+                                            <input type="number" required class="form-control" name="max_sum_of_all_products" placeholder="Max sum of all products">{{ old('max_sum_of_all_products') }}</input>
+                                            @error('max_sum_of_all_products')
+                                                <div class="help-block text-danger"> {{ $message }} </div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="controls row mb-1 align-items-center">
+                                        <label class="col-md-3 text-md-right">Service API alias<span class="text-danger">*</span></label>
+                                        <div class="col-md-6">
+                                            <input type="text" required class="form-control" name="service_api_alias" placeholder="Service API alias">{{ old('service_api_alias') }}</input>
+                                            @error('service_api_alias')
+                                                <div class="help-block text-danger"> {{ $message }} </div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="controls row mb-1 align-items-center">
+                                        <label class="col-md-3 text-md-right">Min height allowed<span class="text-danger">*</span></label>
+                                        <div class="col-md-6">
+                                            <input type="number" required class="form-control" name="min_height_allowed" placeholder="Min height allowed">{{ old('min_height_allowed') }}</input>
+                                            @error('min_height_allowed')
+                                                <div class="help-block text-danger"> {{ $message }} </div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="controls row mb-1 align-items-center">
+                                        <label class="col-md-3 text-md-right">Max height allowed<span class="text-danger">*</span></label>
+                                        <div class="col-md-6">
+                                            <input type="number" required class="form-control" name="max_height_allowed" placeholder="Max height allowed">{{ old('max_height_allowed') }}</input>
+                                            @error('max_height_allowed')
+                                                <div class="help-block text-danger"> {{ $message }} </div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">Delivery Time Notes<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
@@ -182,4 +234,25 @@
             </div>
         </div>
     </section>
+@endsection
+
+@section('js')
+    <script>
+        $(document).ready(function() {
+            $('select[name=service_sub_class]').change(
+                function () {
+                    if (
+                        ($(this).find(':selected').val() == '33162' && $(this).find(':selected').text() == 'SL Standard Modal') || 
+                        ($(this).find(':selected').val() == '33170' && $(this).find(':selected').text() == 'SL Express Modal') || 
+                        ($(this).find(':selected').val() == '33197' && $(this).find(':selected').text() == 'SL Small Parcels')
+                    ) {
+                        $('.sinelrog-inputs').removeClass('d-none');
+                    }
+                    else {
+                        $('.sinelrog-inputs').addClass('d-none');
+                    }
+                }
+            );
+        });
+    </script>
 @endsection
