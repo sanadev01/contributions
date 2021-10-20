@@ -280,7 +280,7 @@
                         <li class="{{ $isActive(['admin.affiliate.sales-commission.index']) }}">
                             <a href="{{ route('admin.affiliate.sales-commission.index') }}">
                                 <i class="feather icon-circle"></i>
-                                <span class="menu-title">@lang('menu.Affiliate.Sales Commission')</span>
+                                <span class="menu-title">@lang('menu.Reports.Commission Report')</span>
                             </a>
                         </li>
                     </ul>
