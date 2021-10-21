@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Payment;
 
 use App\Models\Order;
 use App\Models\Deposit;
+use App\Events\OrderPaid;
 use Illuminate\Http\Request;
 use App\Models\PaymentInvoice;
 use PhpParser\Node\Stmt\Foreach_;
@@ -54,6 +55,8 @@ class OrdersCheckoutController extends Controller
                 'is_paid' => true,
                 'status' => Order::STATUS_PAYMENT_DONE
             ]);
+            
+            event(new OrderPaid($invoice->orders, true));
 
             session()->flash('alert-success', __('orders.payment.alert-success'));
             return redirect()->route('admin.payment-invoices.index');
