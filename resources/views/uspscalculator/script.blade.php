@@ -1,24 +1,24 @@
 <script>
     $('#origin_country option:contains("United States")').prop('selected',true);
 
-    $('#destination_state').on('change', function() {
+    $('#sender_state').on('change', function() {
         window.validate_us_address();
     });
 
-    $('#destination_city').on('change', function() {
+    $('#sender_city').on('change', function() {
         window.validate_us_address();
     });
 
-    $('#destination_address').on('change', function() {
+    $('#sender_address').on('change', function() {
         window.validate_us_address();
     });
 
     validate_us_address = function()
     {
         let country = $('#destination_country').val();
-        let address = $('#destination_address').val();
-        let state = $('#destination_state option:selected').text();
-        let city = $('#destination_city').val();
+        let address = $('#sender_address').val();
+        let state = $('#sender_state option:selected').text();
+        let city = $('#sender_city').val();
 
         if(country == '250' && state != undefined && address.length > 4 && city.length >= 4)
         {
