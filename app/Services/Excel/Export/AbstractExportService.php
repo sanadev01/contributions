@@ -49,6 +49,14 @@ abstract class AbstractExportService
         return $this;
     }
 
+    protected function setCellFormat($cellRange)
+    {
+        $this->sheet->getStyle($cellRange)
+                ->getNumberFormat()->setFormatCode('#');
+
+        return $this;
+    }
+
     protected function getCellValue($cellRange, $value)
     {
         return $this->sheet->getCell($cellRange)->getValue();

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
 use App\Repositories\Warehouse\ChileContainerRepository;
+use App\Services\CorreosChile\ExportChileManifestService;
 use App\Services\CorreosChile\UploadChileManifestService;
 use App\Services\CorreosChile\ExportTxtChileManifestService;
 use App\Services\CorreosChile\ExportExcelChileManifestService;
@@ -132,7 +133,7 @@ class ChileContainerController extends Controller
 
     public function download_exceltManifest(Container $container)
     {
-        $exportChileManifestService = new ExportExcelChileManifestService($container);
+        $exportChileManifestService = new ExportChileManifestService($container);
         return $exportChileManifestService->handle();
     }
 
