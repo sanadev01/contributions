@@ -146,7 +146,7 @@ class ExportChileManifestService extends AbstractExportService
             $itemSHCode[] = $item->sh_code;
         }
 
-        $sh_code = implode(" ", $itemSHCode);
+        $sh_code = implode(",", $itemSHCode);
 
         return $sh_code;
     }
