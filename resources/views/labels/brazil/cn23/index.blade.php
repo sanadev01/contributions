@@ -393,7 +393,7 @@
                     {!! $returnAddress !!}
                 </p>
             </div>
-            @if($order->getWeight('kg') > 3)
+            @if($order->getOriginalWeight('kg') > 3)
                 <div class="bottom-block">
                     <div class="box-g">    </div>
                     <div class="box-text">G</div>
