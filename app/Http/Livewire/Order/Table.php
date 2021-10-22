@@ -3,9 +3,10 @@
 namespace App\Http\Livewire\Order;
 
 use App\Models\Order;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Country;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\Auth;
 
 class Table extends Component
 {
@@ -176,6 +177,12 @@ class Table extends Component
             $orders->where('user_id', Auth::id());
         }
 
+        if($this->userType == 'domestic')
+        {
+            $orders = $orders->where('sender_country_id', Country::US);
+            return $orders;
+        }
+        
         if($this->userType){
             $orders = $orders->whereHas('user', function ($queryUser) {
                 $queryUser->whereHas('role', function ($queryRole) {

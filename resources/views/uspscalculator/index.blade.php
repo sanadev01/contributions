@@ -60,32 +60,37 @@
                             </div>
                             <div class="row mb-1">
                                 <div class="controls col-6">
-                                    <label>Destination State</label>
+                                    <label>Sender State</label>
                                     <option value="" selected disabled hidden>Select State</option>
-                                    <select name="destination_state" id="destination_state" class="form-control selectpicker show-tick" data-live-search="true" required>
+                                    <select name="sender_state" id="sender_state" class="form-control selectpicker show-tick" data-live-search="true" required>
                                         <option value="">Select @lang('address.State')</option>
                                         @foreach ($states as $state)
-                                            <option {{ old('destination_state') == $state->id ? 'selected' : '' }} value="{{ $state->id }}">{{ $state->code }}</option>
+                                            <option {{ old('sender_state') == $state->code ? 'selected' : '' }} value="{{ $state->code }}">{{ $state->code }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="controls col-6">
-                                    <label>Destination Address</label>
-                                    <input type="text" class="form-control" id="destination_address" name="destination_address" value="{{old('destination_address')}}" required placeholder="Destination Address"/>
+                                    <label>Sender Address</label>
+                                    <input type="text" class="form-control" id="sender_address" name="sender_address" value="{{old('sender_address')}}" required placeholder="Sender Address"/>
                                 </div>
                             </div>
 
                             <div class="row mb-1">
                                 <div class="controls col-6">
-                                    <label>Destination City</label>
-                                    <input type="text" id="destination_city" name="destination_city" value="{{old('destination_city')}}" class="form-control"  required placeholder="Destination City"/>
+                                    <label>Sender City</label>
+                                    <input type="text" id="sender_city" name="sender_city" value="{{old('sender_city')}}" class="form-control"  required placeholder="Sender City"/>
                                 </div>
                                 <div class="controls col-6">
-                                    <label>Destination ZipCode</label>
-                                    <input type="text" name="destination_zipcode"  id="destination_zipcode" value="{{ cleanString(old('destination_zipcode')) }}" required class="form-control" placeholder="Zip Code"/>
+                                    <label>Sender ZipCode</label>
+                                    <input type="text" name="sender_zipcode"  id="sender_zipcode" value="{{ cleanString(old('sender_zipcode')) }}" required class="form-control" placeholder="Zip Code"/>
                                     <div id="zipcode_response">
                                         
                                     </div>
+                                </div>
+                            </div>
+                            <div class="row mb-1 mt-3">
+                                <div class="controls col-6">
+                                    <h4 class="text-danger">Destination : Homedeliverybr MIA</h4>
                                 </div>
                             </div>
 
@@ -99,17 +104,7 @@
                                 </div>
                             </div>
                         </div>
-
                         </form>
-                        {{-- <div>
-                            <div class="row justify-content-center">
-                                <div class="col-md-8 text-center">
-                                    <button class="btn btn-lg btn-primary">
-                                        Re-Calculate
-                                    </button>
-                                </div>
-                            </div>
-                        </div> --}}
                     </div>
                 </div>
             </div>
