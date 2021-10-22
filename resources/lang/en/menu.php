@@ -16,6 +16,7 @@ return [
     'addresses' => 'Addresses',
     'calculator' => 'Calculator',
     'uspscalculator' => 'USPS Calculator',
+    'upscalculator' => 'UPS Calculator',
     'connect' => 'Connect',
     'support tickets' => 'Support Tickets',
     'profile' => 'Profile',

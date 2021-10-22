@@ -62,6 +62,26 @@ class AppServiceProvider extends ServiceProvider
             return new UspsService($api_url, $delete_usps_label_url, $create_manifest_url, $get_price_url, $email, $password);
         });
 
+        $this->app->singleton('UPS_service', function() {
+            // USPS Api Testing Environemtn Credentials
+            $api_url = 'https://api-sandbox.myibservices.com/v1/labels';
+            $delete_usps_label_url = 'https://api-sandbox.myibservices.com/v1/labels/';
+            $create_manifest_url = 'https://api-sandbox.myibservices.com/v1/manifests.json';
+            $get_price_url = 'https://wwwcie.ups.com/ship/v1801/freight/rating/';
+            $email = 'ghaziislam3@gmail.com';           
+            $password = 'Ikonic@1234';
+
+            // USPS Api Production Environment Credentials
+            // $api_url = config('usps.url');
+            // $delete_usps_label_url = config('usps.delete_label_url');
+            // $create_manifest_url = config('usps.create_manifest_url');
+            // $get_price_url = config('usps.get_price_url');
+            // $email = config('usps.email');           
+            // $password = config('usps.password');
+
+            return new UspsService($api_url, $delete_usps_label_url, $create_manifest_url, $get_price_url, $email, $password);
+        });
+
         $this->app->singleton('CorreiosBrazilTracking_service', function() {
 
             // Api Credentials

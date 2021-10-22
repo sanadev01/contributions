@@ -96,6 +96,43 @@ class HomeController extends Controller
     
     public function testBrazilTracking()
     {
+        $rates = [
+            (Object)[
+                'type' => (Object)[
+                    'code' => 2,
+                    'Description' => 2,
+                ],
+                'factor' => (Object)[
+                    'value' => '39.02',
+                    'UnitOfMeasurement' => (Object)[
+                        'code' => 'USD'
+                    ]
+                ],
+            ],
+            (Object)[
+                'type' => (Object)[
+                    'code' => 'LND_GROSS',
+                    'Description' => 'LND_GROSS',
+                ],
+                'factor' => (Object)[
+                    'value' => '144.50',
+                    'UnitOfMeasurement' => (Object)[
+                        'code' => 'USD'
+                    ]
+                ],
+            ],
+        ];
+
+        
+        foreach($rates as $rate)
+        {
+            if($rate->type->code == 'LND_GROSS')
+            {
+                var_dump($rate->factor->value);
+            }
+            // var_dump($rate->type->code);
+        }
+        dd($rates);
         // try {
             
         //     $response = Http::withBasicAuth('herco.app', 'Colombia2021*')->get('http://appcer.4-72.com.co/WcfServiceSPOKE/ServiceSPOKE.svc/GetHeadquarter/0');
