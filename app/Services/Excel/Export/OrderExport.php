@@ -39,7 +39,8 @@ class OrderExport extends AbstractExportService
             $this->setCellValue('C'.$row, $order->merchant);
             $this->setCellValue('D'.$row, $order->tracking_id);
             $this->setCellValue('E'.$row, $order->customer_reference);
-            $this->setCellValue('F'.$row, $order->corrios_tracking_code);
+            $this->setCellFormat('F'.$row);
+            $this->setCellValue('F'.$row, (string)$order->corrios_tracking_code);
             $this->setCellValue('G'.$row, $order->gross_total);
             $this->setCellValue('H'.$row, $this->checkValue(number_format($order->dangrous_goods,2)));
             $this->setCellValue('I'.$row, $order->getWeight('kg'));
@@ -96,7 +97,7 @@ class OrderExport extends AbstractExportService
         $this->setColumnWidth('E', 20);
         $this->setCellValue('E1', 'Referência do Cliente');
 
-        $this->setColumnWidth('F', 20);
+        $this->setColumnWidth('F', 23);
         $this->setCellValue('F1', '	Tracking Code');
 
         $this->setColumnWidth('G', 20);
