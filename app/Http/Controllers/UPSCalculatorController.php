@@ -7,14 +7,19 @@ use App\Models\User;
 use App\Models\Order;
 use App\Models\State;
 use App\Models\Recipient;
+use App\Facades\UPSFacade;
 use Illuminate\Http\Request;
 use App\Models\ShippingService;
 use Illuminate\Support\Facades\Auth;
 use App\Services\UPS\UPSShippingService;
+use App\Services\Converters\UnitsConverter;
 use App\Services\Calculators\WeightCalculator;
 
 class UPSCalculatorController extends Controller
 {
+    public $error;
+    public $shipping_rates = [];
+
     public function index()
     {
         $states = State::query()->where("country_id", 250)->get(["name","code","id"]);
@@ -102,24 +107,55 @@ class UPSCalculatorController extends Controller
                     $shippingServices->push($shippingService);
             }
         }
-
-        dd($shippingServices->toArray());
+        
         if($shippingServices->isEmpty()){
             $error = "Shipping Service not Available for the Country you have selected";
         }
 
         foreach ($shippingServices as $shippingService) {
 
-            // $request_data = $this->create_request($order, $shippingService->service_sub_class);
-            // $response = USPSFacade::getSenderPrice($order, $request_data);
+            $request_data = $this->create_request($order, $shippingService->service_sub_class);
+            $response = UPSFacade::getSenderPrice($order, $request_data);
            
-            // if($response->success == true)
-            // {
-            //     array_push($this->shipping_rates , ['name'=> $shippingService->name , 'rate'=> number_format($response->data['total_amount'], 2)]);
+            if($response->success == true)
+            {
+                array_push($this->shipping_rates , ['name'=> $shippingService->name , 'rate'=> number_format($response->data['FreightRateResponse']['TotalShipmentCharge']['MonetaryValue'], 2)]);
 
-            // }else {
-            //     $this->error = $response->message;
-            // }
+            }else {
+                $this->error = $response->message;
+            }
         }
+
+        if($this->shipping_rates == null){
+            session()->flash('alert-danger', $this->error);
+        }
+
+        if ($request->unit == 'kg/cm' ){
+            $weightInOtherUnit = UnitsConverter::kgToPound($chargableWeight);
+        }else{
+            $weightInOtherUnit = UnitsConverter::poundToKg($chargableWeight);
+        }
+        
+        $shipping_rates = $this->shipping_rates;
+        return view('upscalculator.show', compact('shipping_rates','order', 'weightInOtherUnit', 'chargableWeight'));
+
+    }
+
+    private function create_request($order, $service)
+    {
+        $request = (Object)[
+            'sender_country_id' => $order->sender_country_id,
+            'first_name' => $order->sender_first_name,
+            'last_name' => $order->sender_last_name,
+            'pobox_number' => $order->pobox_number,
+            'sender_state' => $order->sender_state,
+            'sender_city' => $order->sender_city,
+            'sender_address' => $order->sender_address,
+            'sender_zipcode' => $order->sender_zipcode,
+            'service' => $service,
+        ];
+        
+        
+        return $request;
     }
 }

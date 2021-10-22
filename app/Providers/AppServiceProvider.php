@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 
+use App\Services\UPS\UpsService;
 use App\Services\USPS\UspsService;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
@@ -64,12 +65,13 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton('UPS_service', function() {
             // USPS Api Testing Environemtn Credentials
-            $api_url = 'https://api-sandbox.myibservices.com/v1/labels';
-            $delete_usps_label_url = 'https://api-sandbox.myibservices.com/v1/labels/';
-            $create_manifest_url = 'https://api-sandbox.myibservices.com/v1/manifests.json';
-            $get_price_url = 'https://wwwcie.ups.com/ship/v1801/freight/rating/';
-            $email = 'ghaziislam3@gmail.com';           
-            $password = 'Ikonic@1234';
+            $package_url = '';
+            $delete_package_url = '';
+            $create_manifest_url = '';
+            $ground_rates_url = 'https://wwwcie.ups.com/ship/v1801/freight/rating/ground';
+            $transactionSrc = 'HERCO';
+            $userName = 'hffinc1';           
+            $password = 'Hdbrasilc4!';
 
             // USPS Api Production Environment Credentials
             // $api_url = config('usps.url');
@@ -79,7 +81,7 @@ class AppServiceProvider extends ServiceProvider
             // $email = config('usps.email');           
             // $password = config('usps.password');
 
-            return new UspsService($api_url, $delete_usps_label_url, $create_manifest_url, $get_price_url, $email, $password);
+            return new UpsService($package_url, $delete_package_url, $create_manifest_url, $ground_rates_url, $transactionSrc, $userName, $password);
         });
 
         $this->app->singleton('CorreiosBrazilTracking_service', function() {
