@@ -34,7 +34,9 @@ class ContainerOrderExport extends AbstractExportService
 
         foreach ($this->orders as $order) {
 
-            $this->setCellValue('A'.$row, $order->corrios_tracking_code);
+            $this->setCellFormat('A'.$row);
+            $this->setAlignment('A'.$row, 'left');
+            $this->setCellValue('A'.$row, (string)$order->corrios_tracking_code);
             $this->setCellValue('B'.$row, $order->warehouse_number);
             $this->setCellValue('C'.$row, $order->getOriginalWeight('kg'));
             $this->setCellValue('D'.$row, $order->getWeight('lbs').' lbs / '. $order->getWeight('kg'). ' kg');
