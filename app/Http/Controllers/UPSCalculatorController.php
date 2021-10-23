@@ -13,12 +13,15 @@ use App\Models\ShippingService;
 use Illuminate\Support\Facades\Auth;
 use App\Services\UPS\UPSShippingService;
 use App\Services\Converters\UnitsConverter;
+use App\Repositories\UPSCalculatorRepository;
 use App\Services\Calculators\WeightCalculator;
 
 class UPSCalculatorController extends Controller
 {
     public $error;
     public $shipping_rates = [];
+    public $user_api_profit;
+    public $userLoggedIn = false;
 
     public function index()
     {
@@ -100,6 +103,7 @@ class UPSCalculatorController extends Controller
         $order->recipient = $recipient;
 
         $shippingServices = collect();
+        $this->checkUser();
 
         $ups_shippingService = new UPSShippingService($order);
         foreach (ShippingService::query()->active()->get() as $shippingService) {
@@ -128,6 +132,12 @@ class UPSCalculatorController extends Controller
 
         if($this->shipping_rates == null){
             session()->flash('alert-danger', $this->error);
+        } else {
+            // rates without profit
+            $ups_rates = $this->shipping_rates;
+            // rates with profit
+            $this->addProfit($this->shipping_rates);
+            $shipping_rates = $this->shipping_rates;
         }
 
         if ($request->unit == 'kg/cm' ){
@@ -135,10 +145,31 @@ class UPSCalculatorController extends Controller
         }else{
             $weightInOtherUnit = UnitsConverter::poundToKg($chargableWeight);
         }
-        
-        $shipping_rates = $this->shipping_rates;
-        return view('upscalculator.show', compact('shipping_rates','order', 'weightInOtherUnit', 'chargableWeight'));
 
+        $userLoggedIn = $this->userLoggedIn;
+        
+        // $shipping_rates = $this->shipping_rates;
+        return view('upscalculator.show', compact('ups_rates','shipping_rates','order', 'weightInOtherUnit', 'chargableWeight', 'userLoggedIn'));
+
+    }
+
+    private function checkUser()
+    {
+        if (Auth::check()) 
+        {
+            $this->user_api_profit = Auth::user()->api_profit;
+            $this->userLoggedIn = true;
+
+        }
+
+        if($this->user_api_profit == 0)
+        {
+            $admin = User::where('role_id',1)->first();
+
+            $this->user_api_profit = $admin->api_profit;
+        }
+
+        return;
     }
 
     private function create_request($order, $service)
@@ -157,5 +188,42 @@ class UPSCalculatorController extends Controller
         
         
         return $request;
+    }
+
+    private function addProfit($shipping_rates)
+    {
+        $this->shipping_rates = [];
+        foreach ($shipping_rates as  $shipping_rate) 
+        {
+            $profit = $shipping_rate['rate'] * ($this->user_api_profit / 100);
+
+            $rate = $shipping_rate['rate'] + $profit;
+
+            array_push($this->shipping_rates , ['name'=> $shipping_rate['name'] , 'rate'=> number_format($rate, 2)]);
+        }
+
+        return true;
+    }
+
+    public function buy_ups_label(Request $request)
+    {
+        $ups_calculatorRepository = new UPSCalculatorRepository();
+        $order = $ups_calculatorRepository->handle($request);
+
+        $error = $ups_calculatorRepository->getUPSErrors();
+
+        if($error != null)
+        {
+            return (Array)[
+                'success' => false,
+                'message' => $error,
+            ]; 
+        }
+
+        return (Array)[
+            'success' => true,
+            'message' => 'USPS label has been generated successfully',
+            'path' => route('admin.orders.label.index', $order->id)
+        ]; 
     }
 }

@@ -97,6 +97,8 @@ class HomeController extends Controller
     
     public function testBrazilTracking()
     {
+        $response = UPSFacade::buyLabel();
+        dd($response);
         $response = UPSFacade::getSenderPrice();
         if($response->success == true)
         {
