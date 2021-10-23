@@ -14,7 +14,7 @@ class CN35DownloadController extends Controller
     {
         $order = $container->orders->first();
         if($order){
-            $orderWeight = $order->getWeight('kg');
+            $orderWeight = $order->getOriginalWeight('kg');
         }
         $cn23Maker = new CN35LabelMaker();
         $cn23Maker->setDispatchNumber($container->dispatch_number)

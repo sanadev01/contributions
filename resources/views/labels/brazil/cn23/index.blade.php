@@ -393,7 +393,7 @@
                     {!! $returnAddress !!}
                 </p>
             </div>
-            @if($order->getWeight('kg') > 3)
+            @if($order->getOriginalWeight('kg') > 3)
                 <div class="bottom-block">
                     <div class="box-g">    </div>
                     <div class="box-text">G</div>
@@ -413,7 +413,7 @@
             {{ $order->sender_email }} <br>
             <strong>Order#:</strong>{{ $order->warehouse_number }} <br>
             <strong>CR#:</strong>{{ $order->customer_reference }} <br>
-            <strong>Weight</strong> {{ $order->getWeight('kg') }}kg|{{ $order->getWeight('lbs') }}lbs <br>
+            <strong>Weight</strong> {{ $order->getOriginalWeight('kg') }}kg|{{ $order->getOriginalWeight('lbs') }}lbs <br>
             <strong>{{ $order->length }} x {{ $order->width }} x {{$order->height}} ({{$order->isWeightInKg() ? 'cm' :'in'}})</strong>
         </div>
     </div>
