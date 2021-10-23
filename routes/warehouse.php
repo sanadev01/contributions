@@ -23,6 +23,10 @@ use App\Http\Controllers\Warehouse\DeliveryBillRegisterController;
 use App\Http\Controllers\Warehouse\USPSContainerPackageController;
 use App\Http\Controllers\Warehouse\ChileContainerPackageController;
 use App\Http\Controllers\Warehouse\DeliveryBillStatusUpdateController;
+use App\Http\Controllers\Warehouse\SinerlogContainerController;
+use App\Http\Controllers\Warehouse\SinerlogContainerPackageController;
+use App\Http\Controllers\Warehouse\SinerlogUnitRegisterController;
+use App\Http\Controllers\Warehouse\SinerlogCN35DownloadController;
 
 
 Route::middleware(['auth'])->as('warehouse.')->group(function () {
@@ -58,6 +62,12 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::resource('usps_container.packages', USPSContainerPackageController::class)->only('index','destroy', 'create');
     Route::get('usps_container/{container}/register', USPSUnitRegisterController::class)->name('usps_container.register');
     Route::get('usps_container/{container}/download', USPSCN35DownloadController::class)->name('usps_container.download');
+
+    // Routes for Sinerlog Container
+    Route::resource('sinerlog_containers', SinerlogContainerController::class);
+    Route::resource('sinerlog_container.packages', SinerlogContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('sinerlog_container/{container}/register', SinerlogUnitRegisterController::class)->name('sinerlog_container.register');
+    Route::get('sinerlog_container/{container}/download', SinerlogCN35DownloadController::class)->name('sinerlog_container.download');
 });
 
 

@@ -44,4 +44,7 @@ return [
     'chileContainers' => [
         'Containers' => 'Chile Containers',
     ],
+    'sinerlogContainers' => [
+        'Containers' => 'Sinerlog Containers'
+    ]
 ];
