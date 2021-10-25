@@ -84,14 +84,14 @@
                                             </div>
                                         </li>
                                         @if ($tracking->order->recipient->country_id != \App\Models\Order::CHILE)
-                                        <li class="step0">
+                                        {{-- <li class="step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1" src="{{ asset('images/tracking/correios.png') }}">
                                                 <div class="d-flex flex-column mt-2">
                                                     <p class="font-weight-bold">Arrived<br>in Country</p>
                                                 </div>
                                             </div>
-                                        </li>
+                                        </li> --}}
                                         @endif
                                         <li class="step0">
                                             <div class="icon-content">
@@ -187,14 +187,14 @@
                                             </div>
                                         </li>
                                         @if ($CorreiosChile == false)
-                                        <li class="@if($posted || $correios_brazil_recieved ) active @endif step0">
+                                        {{-- <li class="@if($posted || $correios_brazil_recieved ) active @endif step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/correios.png') }}">
                                                 <div class="d-flex flex-column mt-2">
                                                     <p class="font-weight-bold">Arrived<br>in Country</p>
                                                 </div>
                                             </div>
-                                        </li>
+                                        </li> --}}
                                         <li class="@if( $correios_brazil_recieved || $custom_finished || $in_transit || $left_to_buyer || $delivered_to_buyer || $posted ) active @endif step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/brazil-flag.png') }}">
@@ -246,7 +246,7 @@
                                         @elseif( $CorreiosChile == true )
                                         <li class="@if( $correios_chile_recieved || $in_transit || $delivered_to_buyer) active @endif step0">
                                             <div class="icon-content">
-                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/brazil-flag.png') }}">
+                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/chile-flag.png') }}">
                                                 <div class="d-flex flex-column" mt-4>
                                                     <p class="font-weight-bold">Received By<br>Correios Chile </p>
                                                 </div>
