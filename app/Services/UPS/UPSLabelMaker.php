@@ -1,5 +1,5 @@
 <?php
-namespace App\Services\USPS;
+namespace App\Services\UPS;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
@@ -19,8 +19,8 @@ class UPSLabelMaker
     {
         if($this->order->api_response != null)
         {
-            $usps_response = json_decode($this->order->api_response);
-            $base64_pdf = $usps_response->base64_labels[0];
+            $ups_response = json_decode($this->order->api_response);
+            $base64_pdf = $ups_response->FreightShipResponse->ShipmentResults->Documents->Image->GraphicImage;
 
             Storage::put("labels/{$this->order->corrios_tracking_code}.pdf", base64_decode($base64_pdf));
 

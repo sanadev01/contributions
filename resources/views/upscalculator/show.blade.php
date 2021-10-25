@@ -55,7 +55,7 @@
                                         </div>
                                     @endif
                                     <div class="row mb-1 ml-4">
-                                        <div class="controls col-12" id="usps_response">
+                                        <div class="controls col-12" id="ups_response">
                                         </div>
                                     </div>
                                     <form id="SubmitUPSForm">
@@ -169,10 +169,10 @@
 
         e.preventDefault();
         let service = $('#shipping_service option:selected').text();
-        let usps_cost = $('#shipping_service option:selected').attr('data-cost');
+        let ups_cost = $('#shipping_service option:selected').attr('data-cost');
         let order = $('#order').val();
         let user_id = $('#user_id').val();
-        $('#usps_response').empty().append("<h4 style='color: blue;'>Processing......</h4>");
+        $('#ups_response').empty().append("<h4 style='color: blue;'>Processing......</h4>");
         $('#btn-submit').prop('disabled', true);
         $('#btn-submit').html("Loading");
 
@@ -181,14 +181,14 @@
             url:"{{ route('api.buy_ups_label') }}",
             data:{
                 service:service, 
-                usps_cost:usps_cost,  
+                ups_cost:ups_cost,  
                 order:order,
                 user_id:user_id
             },
             success:function(response){
                 if(response.success == false)
                 {
-                    $('#usps_response').empty().append("<h4 style='color: red;'>"+response.message+"</h4>");
+                    $('#ups_response').empty().append("<h4 style='color: red;'>"+response.message+"</h4>");
                     $('#btn-submit').html("Failed");
                 }
                 if(response.success == true)
@@ -196,13 +196,13 @@
                     $('#buy_label_div').css('display', 'none');
                     $('#print_label_div').css('display', 'block');
                     $('#print_label_btn').attr("href", response.path);
-                    $('#usps_response').empty().append("<h4 style='color: green;'>"+response.message+"</h4>");
+                    $('#ups_response').empty().append("<h4 style='color: green;'>"+response.message+"</h4>");
                     $('#btn-submit').html("Label Generated");
                 }
             },
             error: function(response) {
                 console.log(response);
-                $('#usps_response').empty().append("<h4 style='color: red;'>"+response.message+"</h4>");
+                $('#ups_response').empty().append("<h4 style='color: red;'>"+response.message+"</h4>");
                 $('#btn-submit').html("Failed");
             }
         });

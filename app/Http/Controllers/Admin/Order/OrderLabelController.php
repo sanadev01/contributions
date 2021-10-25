@@ -6,6 +6,7 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Models\ShippingService;
 use App\Facades\CorreosChileFacade;
+use App\Services\UPS\UPSLabelMaker;
 use App\Http\Controllers\Controller;
 use App\Repositories\LabelRepository;
 use Illuminate\Support\Facades\Storage;
@@ -61,6 +62,8 @@ class OrderLabelController extends Controller
         $labelRepository = new CorrieosBrazilLabelRepository();
 
         $usps_labelRepository = new USPSLabelRepository();
+
+        $shipping_service_code =  $this->getOrderShippingService($order->shipping_service_id);
         
         if($order->recipient->country_id == Order::CHILE && $request->update_label === 'false')
         {
@@ -70,12 +73,22 @@ class OrderLabelController extends Controller
             return $this->renderLabel($request, $order, $error);
         }
 
-        if($order->recipient->country_id == Order::USPS && $request->update_label === 'false')
+        if($order->recipient->country_id == Order::US && $request->update_label === 'false')
         {
-            $usps_labelRepository->handle($order);
+            
+            if($shipping_service_code == ShippingService::USPS_PRIORITY || $shipping_service_code == ShippingService::USPS_FIRSTCLASS)
+            {
+                $usps_labelRepository->handle($order);
 
-            $error = $usps_labelRepository->getUSPSErrors();
+                $error = $usps_labelRepository->getUSPSErrors();
+                return $this->renderLabel($request, $order, $error);
+            }
+            
+            $labelPrinter = new UPSLabelMaker();
+            $labelPrinter->setOrder($order);
+            $labelPrinter->saveLabel();
             return $this->renderLabel($request, $order, $error);
+            
         }
         
         if ( $request->update_label === 'true' ){
@@ -88,11 +101,19 @@ class OrderLabelController extends Controller
                 return $this->renderLabel($request, $order, $error);
             }
             
-            if($order->recipient->country_id == Order::USPS)
+            if($order->recipient->country_id == Order::US)
             {
-                $usps_labelRepository->update($order);
+                if($shipping_service_code == (ShippingService::USPS_PRIORITY || ShippingService::USPS_FIRSTCLASS))
+                {
+                    $usps_labelRepository->update($order);
 
-                $error = $usps_labelRepository->getUSPSErrors();
+                    $error = $usps_labelRepository->getUSPSErrors();
+                    return $this->renderLabel($request, $order, $error);
+                }
+
+                $labelPrinter = new UPSLabelMaker();
+                $labelPrinter->setOrder($order);
+                $labelPrinter->saveLabel();
                 return $this->renderLabel($request, $order, $error);
             }
 
@@ -114,5 +135,12 @@ class OrderLabelController extends Controller
         $buttonsOnly = $request->has('buttons_only');
 
         return view('admin.orders.label.label',compact('order','error' ,'buttonsOnly'));
+    }
+
+    private function getOrderShippingService($order_shipping_service_id)
+    {
+        $shipping_service = ShippingService::find($order_shipping_service_id);
+
+        return $shipping_service->service_sub_class;
     }
 }
