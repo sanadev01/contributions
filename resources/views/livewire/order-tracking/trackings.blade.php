@@ -215,7 +215,7 @@
                                             <div class="icon-content">
                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/to-hd.png') }}">
                                                 <div class="d-flex flex-column" mt-4>
-                                                    <p class="font-weight-bold">Parcels in <br> transit to<br>distribution center<br> in {{ optional(optional(optional($tracking->order)->recipient)->state)->name }} </p>
+                                                    <p class="font-weight-bold">Parcels in <br> transit to<br>distribution center<br> in {{optional(optional($order->recipient)->state)->name}}</p>
                                                 </div>
                                             </div>
                                         </li>
@@ -223,7 +223,7 @@
                                             <div class="icon-content">
                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/to-hd.png') }}">
                                                 <div class="d-flex flex-column" mt-4>
-                                                    <p class="font-weight-bold">Parcels in <br> transit to<br>distribution center<br> in {{ optional(optional($tracking->order)->recipient)->city }} </p>
+                                                    <p class="font-weight-bold">Parcels in <br> transit to<br>distribution center<br> in {{optional($order->recipient)->city}}</p>
                                                 </div>
                                             </div>
                                         </li>
@@ -300,6 +300,19 @@
                                         </td>
                                     </tr>
                                 @endforeach
+                                @if ($CorreiosBrazil)
+                                    <tr>
+                                        <td>
+                                            {{ $tracking['data'] }}
+                                        </td>
+                                        <td>
+                                            Brazil
+                                        </td>
+                                        <td>
+                                            {{ $tracking['descricao'] }}
+                                        </td>
+                                    </tr>
+                                @endif
                                 @if ($chileTrackings != null)
                                     @foreach ($chileTrackings as $track)
                                     <tr>

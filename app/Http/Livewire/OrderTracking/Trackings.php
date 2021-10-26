@@ -24,6 +24,7 @@ class Trackings extends Component
     public $delivered_to_buyer = false;
     public $posted = false;
     public $CorreiosChile = false;
+    public $CorreiosBrazil = false;
     public $trackingType;
     public $chileTrackings;
     public $uspsTrackings;
@@ -31,9 +32,14 @@ class Trackings extends Component
 
     public function render()
     {  
-        if( isset($this->tracking) && $this->CorreiosChile == false )
+        if( isset($this->tracking) && $this->CorreiosChile == false && $this->CorreiosBrazil == false && $this->uspsService == false)
         {
             $this->toggleStatus(); 
+        }
+
+        if( isset($this->tracking) && $this->CorreiosBrazil == true )
+        {
+            $this->toggleBrazilStatus(); 
         }
         
         if( isset($this->tracking) && $this->CorreiosChile == true )
@@ -65,6 +71,19 @@ class Trackings extends Component
             
             $this->CorreiosChile = false;
             $this->uspsService = false;
+            $this->CorreiosBrazil = false;
+
+            if($response->service == 'Correios_Brazil')
+            {
+                $this->CorreiosBrazil = true;
+                $this->tracking = (Array)$response->brazil_trackings;
+                $this->trackings = $response->trackings;
+                $this->order = $response->order;
+                $this->status   = $response->status;
+                $this->message  = null;
+                $this->trackingType = 'BL';
+                return true;
+            }
 
             if( $response->service == 'Correios_Chile' )
             {
@@ -137,6 +156,25 @@ class Trackings extends Component
         $this->left_to_buyer = ( $this->tracking->status_code == 0 && $this->tracking->type == 'OEC' ) ? true : false;
         $this->delivered_to_buyer = ( $this->tracking->status_code == 01 && $this->tracking->type == 'BDEBDIBDR' ) ? true : false;
         $this->posted = ( $this->tracking->status_code == 01 && $this->tracking->type == 'PO' ) ? true : false;
+        
+        return true;
+    }
+
+    public function toggleBrazilStatus()
+    {
+        $this->correios_brazil_recieved == false;
+        $this->custom_finished == false;
+        $this->in_transit == false;
+        $this->left_to_buyer == false;
+        $this->delivered_to_buyer == false;
+        $this->posted == false;
+
+        $this->correios_brazil_recieved = ( $this->tracking['status'] == 16 && $this->tracking['tipo'] == 'PAR' ) ? true : false;
+        $this->custom_finished = ( $this->tracking['status'] == 17 && $this->tracking['tipo'] == 'PAR' ) ? true : false;
+        $this->in_transit = ( ($this->tracking['status'] == 01 && $this->tracking['tipo'] == 'RO') || ($this->tracking['status'] == 01 && $this->tracking['tipo'] == 'DO') ) ? true : false;
+        $this->left_to_buyer = ( $this->tracking['status'] == 0 && $this->tracking['tipo'] == 'OEC' ) ? true : false;
+        $this->delivered_to_buyer = ( $this->tracking['status'] == 01 && $this->tracking['tipo'] == 'BDEBDIBDR' ) ? true : false;
+        $this->posted = ( $this->tracking['status'] == 01 && ($this->tracking['tipo'] == 'PO' || $this->tracking['tipo'] == 'BDE') ) ? true : false;
         
         return true;
     }
