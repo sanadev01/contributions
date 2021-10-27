@@ -182,7 +182,7 @@ class ScanLabel extends Component
 
         if($this->user_id != null)
         {
-            $order = Order::where('user_id', $this->user_id)->whereBetween('arrived_date',[$this->start_date.' 00:00:00', $this->end_date.' 23:59:59'])->get();
+            $order = Order::where('user_id', $this->user_id)->whereBetween('arrived_date',[$this->start_date.' 00:00:00', $this->end_date.' 23:59:59'])->orderBy('arrived_date', 'DESC')->get();
             $this->searchOrder = $order;
             $this->totalPieces = $this->searchOrder->count();
             $this->calculateTotalWeight();
@@ -190,7 +190,7 @@ class ScanLabel extends Component
             return true;
         }
 
-        $order = Order::whereBetween('arrived_date',[$this->start_date.' 00:00:00', $this->end_date.' 23:59:59'])->get();
+        $order = Order::whereBetween('arrived_date',[$this->start_date.' 00:00:00', $this->end_date.' 23:59:59'])->orderBy('arrived_date', 'DESC')->get();
         $this->searchOrder = $order;
         $this->totalPieces = $this->searchOrder->count();
         $this->calculateTotalWeight();
