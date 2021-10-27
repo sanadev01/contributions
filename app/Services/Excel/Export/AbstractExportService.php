@@ -42,6 +42,19 @@ abstract class AbstractExportService
         return Storage::download("{$this->path}/{$filename}", $filename);
     }
 
+    public function downloadExcel()
+    {
+        $excelWriter = new Xlsx($this->spreadSheet);
+
+        $filename = md5(microtime()).'.xlsx';
+
+        $excelWriter->save(
+            storage_path("app/{$this->path}/{$filename}")
+        );
+
+        return $path = storage_path("app/{$this->path}/{$filename}");
+    }
+
     protected function setCellValue($cellRange, $value)
     {
         $this->sheet->setCellValue($cellRange, $value);

@@ -10,6 +10,7 @@ use App\Services\CorreosChile\ExportChileManifestService;
 use App\Services\CorreosChile\UploadChileManifestService;
 use App\Services\CorreosChile\ExportTxtChileManifestService;
 use App\Services\CorreosChile\ExportExcelChileManifestService;
+use App\Services\CorreosChile\ExportCombineChileManifestService;
 use App\Http\Requests\Warehouse\ChileContainer\CreateContainerRequest;
 use App\Http\Requests\Warehouse\ChileContainer\UpdateContainerRequest;
 
@@ -135,6 +136,16 @@ class ChileContainerController extends Controller
     {
         $exportChileManifestService = new ExportChileManifestService($container);
         return $exportChileManifestService->handle();
+    }
+
+    public function download_combine_manifest($container_Ids)
+    {
+        $Ids = explode(',', $container_Ids);   
+        $containers = Container::whereIn('id',$Ids)->get();
+
+        $exportChileManifestService = new ExportCombineChileManifestService($containers);
+        $path = $exportChileManifestService->handle();
+        return response()->download($path);
     }
 
     public function upload_ManifestToChile(Container $container)
