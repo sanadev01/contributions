@@ -9,7 +9,7 @@ return  [
         'Your Home DeliveryBR address' => 'Seu endereço Home DeliveryBR nos Estados Unidos é:',
         'Address line 1:' => 'Endereço:',
         'Address line 2:' => 'Complemento:',
-        'City:' => 'Cidade',
+        'City:' => 'Cidade:',
         'State:' => 'Estado:',
         'Zip code:' => 'Código postal:',
         'You may use our' => 'Você poderá simular o seus envios, visualizar nossos serviços e preços em nossa calculadora online.',

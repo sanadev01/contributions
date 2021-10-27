@@ -3,7 +3,33 @@
     {!! $header !!}
     <div class="shadow-bottom"></div>
     <div class="main-menu-content ps ps--active-y">
-        <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
+        <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation" style="color: #454f5b; font-family: 'Karla-Regular', Helvetica, Arial, sans-serif;">
+            @if (auth()->user()->hasRole('scanner'))
+                <li class="nav-item {{ $isActive('home') }}">
+                    <a class="nav-link" href="{{ route('admin.home') }}">
+                        <i class="feather icon-home"></i>
+                        <span data-i18n="Dashboard"> @lang('menu.dashboard') </span>
+                    </a>
+                </li>
+                <li class="nav-item {{ $isActive(['warehouse.scan.index']) }}">
+                    <a class="nav-link" href="{{ route('warehouse.scan.index') }}">
+                        <i class="fab fa-searchengin"></i>
+                        <span class="menu-title">Check In Parcel</span>
+                    </a>
+                </li>
+                <li class="nav-item {{ $isActive(['admin.tracking.index']) }}">
+                    <a href="{{ route('admin.tracking.index') }}" target="_blank">
+                        <i class="feather icon-map-pin"></i>
+                        <span class="menu-title">@lang('menu.trackings')</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('admin.profile.index') }}">
+                        <i class="feather icon-user-check"></i>
+                        <span data-i18n="Apps"> @lang('menu.profile') </span>
+                    </a>
+                </li>
+            @else
             <li class="nav-item {{ $isActive('home') }}">
                 <a class="nav-link" href="{{ route('admin.home') }}">
                     <i class="feather icon-home"></i>
@@ -25,8 +51,24 @@
                         <span class="menu-title">@lang('menu.orders')</span>
                     </a>
                 </li>
+                {{-- buy bulk usps labels --}}
+                {{-- <li class="nav-item {{ $isActive(['admin.bulk-usps-label']) }}">
+                    <a href="{{ route('admin.bulk-usps-label') }}">
+                        <i class="feather icon-tag"></i>
+                        <span class="menu-title">@lang('menu.Bulk Usps Label')</span>
+                    </a>
+                </li> --}}
             @endcan
-
+            
+            @can('viewAny', App\Models\Order::class)
+                <li class="nav-item {{ $isActive(['admin.tracking.index']) }}">
+                    <a href="{{ route('admin.tracking.index') }}" target="_blank">
+                        <i class="feather icon-map-pin"></i>
+                        <span class="menu-title">@lang('menu.trackings')</span>
+                    </a>
+                </li>
+            @endcan
+            
             @can('importExcel', App\Models\Order::class)
                 <li class="{{ $isActive(['admin.import.import-excel.index','admin.import.import-excel.show','admin.import.import-excel.create']) }}">
                     <a href="{{ route('admin.import.import-excel.index') }}">
@@ -118,6 +160,13 @@
                             <span class="menu-title">Accrual Rates</span>
                         </a>
                     </li>
+
+                    <li class="{{ $isActive(['admin.rates.usps-accrual-rates.index']) }}">
+                        <a href="{{ route('admin.rates.usps-accrual-rates.index') }}">
+                            <i class="feather icon-circle"></i>
+                            <span class="menu-title">USPS Accrual Rates</span>
+                        </a>
+                    </li>
                     @endcan
 
                     @can('viewAny', App\Models\Rate::class)
@@ -137,7 +186,7 @@
                 @can('userSellingRates', App\Models\ProfitPackage::class)
                     <li class="nav-item {{ $isActive(['admin.rates.user-rates.index']) }}">
                         <a class="nav-link" href="{{ route('admin.rates.user-rates.index') }}"><i class="feather icon-dollar-sign"></i>
-                            <span data-i18n="Apps">@lang('menu.Rates')</span>
+                            <span data-i18n="Apps">@lang('menu.My Rates')</span>
                         </a>
                     </li>
                 @endcan
@@ -156,6 +205,13 @@
                 <a class="nav-link" href="{{ route('calculator.index') }}" target="_blank">
                     <i class="fa fa-calculator"></i>
                     <span data-i18n="Apps">@lang('menu.calculator')</span>
+                </a>
+            </li>
+
+            <li class="nav-item {{ $isActive(['calculator.index']) }}">
+                <a class="nav-link" href="{{ route('usps-calculator.index') }}" target="_blank">
+                    <i class="fa fa-calculator"></i>
+                    <span data-i18n="Apps">@lang('menu.uspscalculator')</span>
                 </a>
             </li>
 
@@ -224,7 +280,7 @@
                         <li class="{{ $isActive(['admin.affiliate.sales-commission.index']) }}">
                             <a href="{{ route('admin.affiliate.sales-commission.index') }}">
                                 <i class="feather icon-circle"></i>
-                                <span class="menu-title">@lang('menu.Affiliate.Sales Commission')</span>
+                                <span class="menu-title">@lang('menu.Reports.Commission Report')</span>
                             </a>
                         </li>
                     </ul>
@@ -304,6 +360,7 @@
             @endcan
 
             <x-shared-menu></x-shared-menu>
+            @endif
         </ul>
     </div>
 </div>

@@ -25,7 +25,7 @@ class OrderLabelController extends Controller
         $labelData = null;
 
         // For Correos Chile
-        if($order->recipient->country_id == 46)
+        if($order->recipient->country_id == Order::CHILE)
         {
             $chile_labelRepository->handle($order);
 
@@ -52,7 +52,7 @@ class OrderLabelController extends Controller
         }
 
         // For USPS
-        if($order->recipient->country_id == 250)
+        if($order->recipient->country_id == Order::USPS)
         {
             $usps_labelRepository->handle($order);
 

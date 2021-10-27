@@ -27,6 +27,7 @@ class CorreosChileLabelMaker
         $date = \Carbon\Carbon::parse($this->order->updated_at)->format('d/m/Y H:i');
         $bar_code = $this->get_code_for_generating_barcode($chile_response);
         $clienteRemitente = config('correoschile.codeId');
+        $recipient_name = $this->getRecipientName();
 
         $pdf = \PDF::loadView('labels.chile.index', [
             'order' => $this->order,
@@ -36,6 +37,7 @@ class CorreosChileLabelMaker
             'clienteRemitente' => $clienteRemitente,
             'barcodeNew' => new BarcodeGeneratorPNG(),
             'bar_code' => $bar_code,
+            'recipient_name' => $recipient_name,
         ]);
         
         Storage::put("labels/{$chile_response->NumeroEnvio}.pdf", $pdf->output());
@@ -50,8 +52,8 @@ class CorreosChileLabelMaker
 
         $description = implode(" ", $itemDescription);
 
-        if (strlen($description) > 57){
-            $description = str_limit($description, 54);
+        if (strlen($description) > 40){
+            $description = str_limit($description, 38);
         }
         
         return $description;
@@ -63,6 +65,17 @@ class CorreosChileLabelMaker
         
         return $combine_code = $chile_response->CodigoEncaminamiento.$chile_response->NumeroEnvio.$bultos;
 
+    }
+
+    private function getRecipientName()
+    {
+        $full_name = $this->order->recipient->first_name. ' '. $this->order->recipient->last_name;
+        
+        if (strlen($full_name) > 25){
+            $full_name = str_limit($full_name, 20);
+        }
+
+        return $full_name;
     }
 
 }

@@ -41,6 +41,9 @@ return [
         'Order Items' => 'Itens de ordem',
         'Add Item' => 'Adicionar Item',
         'Previous' => 'Anterior',
+        'Insurance' => 'Seguro',
+        'Disclaimer' => 'Aviso Legal',
+        'Disclaimer Text' => 'Aviso  Al seleccionar este seguro, usted acepta y estas de acuerdo que su cobertura se basa únicamente en el valor declarado y proporciona toda la documentación necesaria en caso de que deba presentarse un reclamo. Si no es proporcionado la documentación necesaria resultará en un reclamo rechazado. Si no está de acuerdo por favor no acepte o compre el seguro',
         'order-item' => [
             'Harmonized Code' => 'Código Harmonizado',
             'Description' => 'Descrição',
@@ -162,6 +165,9 @@ return [
         'create-order' => 'Criar envio',
         'duplicate-order' => 'Pedido Duplicado',
         'back-to-list' => 'Voltar',
+        'buy-domestic-label' => 'Buy Domestic Etiqueta',
+        'buy-usps-label' => 'Comprar Etiqueta USPS',
+        'print-usps-label' => 'Imprimir Etiqueta USPS',
     ],
     'create' => [
         'shipment-and-destination' => 'Criação do envio',
@@ -303,7 +309,7 @@ return [
     'print-label' => [
         'Scan Packages' => 'Scan Packages',
         'Scan Package' => 'Scan Package',
-        'Scan Package Message' => 'A impressão de etiquetas em massa está limitada apenas a 50 etiquetas de uma vez, Remanescente:',
+        'Scan Package Message' => 'A impressão de etiquetas em massa está limitada apenas a 300 etiquetas de uma vez, Remanescente:',
         'Barcode' => 'Código de barras',
         'Client' => 'Cliente',
         'Dimensions' => 'Dimensões',
@@ -313,5 +319,10 @@ return [
         'Action' => 'Açao',
         'Remove' => 'Remover',
         'Add Row' => 'Adicionar linha',
+        'Date' => 'data do pedido',
+    ],
+    'buy-label' => [
+        'Warning' => 'Isenção de responsabilidade',
+        'Message' => 'Insira a quantidade de dimensões corretas ,  se você estiver planejando consolidar mais de um pedido para o envio doméstico até o terminal da Homedeliverybr .O sistema podera fornecer uma estimativa do seu envio. Todas os envios serão auditados ao chegarem fisicamente ao terminal  , e podera ser reclassificado para a medida e peso correto,  seu cartão de crédito será debitado  para  o valor correto com base na dimensão aferidose no terminal'
     ]
 ];

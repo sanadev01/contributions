@@ -28,8 +28,9 @@ Route::get('/', function (Shopify $shopifyClient) {
     return redirect('login');
 });
 
+Route::resource('usps-calculator', USPSCalculatorController::class)->only(['index', 'store']);
 Route::resource('calculator', CalculatorController::class)->only(['index', 'store']);
-Route::resource('tracking', TrackingController::class)->only(['index', 'show']);
+// Route::resource('tracking', TrackingController::class)->only(['index', 'show']);
 Route::get('/home', function () {
 
     if ( session()->get('shopify.redirect') ){
@@ -62,6 +63,8 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         });
 
         Route::resource('orders',OrderController::class)->only('index','destroy', 'show');
+        Route::resource('tracking', TrackingController::class)->only(['index', 'show']);
+        Route::get('/buy-usps-label', [\App\Http\Controllers\Admin\Order\OrderUSPSLabelController::class, 'uspsBulkView'])->name('bulk-usps-label');
 
         Route::namespace('Order')->group(function () {
             Route::resource('leve-order-import', LeveOrderImportController::class)->only(['index','store']);
@@ -74,6 +77,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('orders.label', OrderLabelController::class)->only('index','store');
             Route::get('order-exports', OrderExportController::class)->name('order.exports');
             Route::get('bulk-action', BulkActionController::class)->name('order.bulk-action');
+            Route::resource('orders.usps-label', OrderUSPSLabelController::class)->only('index','store');
         });
 
         Route::namespace('Consolidation')->prefix('consolidation')->as('consolidation.')->group(function(){
@@ -100,10 +104,13 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('fixed-charges', FixedChargesController::class)->only(['index','store']);
             Route::resource('shipping-rates', RateController::class)->only(['create', 'store', 'index', 'show']);
             Route::resource('accrual-rates', AccrualRateController::class)->only(['create', 'store', 'index']);
-            Route::get('accrual-rates/{accrual_rate?}', [\App\Http\Controllers\Admin\Rates\AccrualRateController::class, 'showRates'])->name('show-accrual-rates');
+            Route::get('accrual-rates/{accrual_rate}', [\App\Http\Controllers\Admin\Rates\AccrualRateController::class, 'showRates'])->name('show-accrual-rates');
+            Route::get('accrual-rates-download/{accrual_rate}', [\App\Http\Controllers\Admin\Rates\AccrualRateController::class, 'downloadRates'])->name('download-accrual-rates');
             Route::resource('user-rates', UserRateController::class)->only(['index']);
             Route::get('rates-exports/{package}', RateDownloadController::class)->name('rates.exports');
-            Route::resource('profit-packages-upload', ProfitPackageUploadController::class)->only(['create', 'store']);
+            Route::resource('profit-packages-upload', ProfitPackageUploadController::class)->only(['create', 'store','edit','update']);
+            Route::post('/show-profit-package-rates', [\App\Http\Controllers\Admin\Rates\UserRateController::class, 'showRates'])->name('show-profit-rates');
+            Route::resource('usps-accrual-rates', USPSAccrualRateController::class)->only(['index']);
         });
 
         Route::namespace('Connect')->group(function(){
@@ -142,7 +149,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         });
 
         Route::namespace('Label')->as('label.')->prefix('label')->group(function(){
-            Route::resource('scan', PrintLabelController::class)->only('create','show','store');
+            Route::resource('scan', PrintLabelController::class)->only('create','show','store','update');
         });
 
         Route::resource('deposit', Deposit\DepositController::class)->only('create','store','index');
@@ -167,6 +174,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::get('order/{order}/invoice', \OrderInvoiceModalController::class)->name('order.invoice');
             Route::get('order/{error}/edit/{edit?}', [\App\Http\Controllers\Admin\Modals\ImportOrderModalController::class,'edit'])->name('order.error.edit');
             Route::get('order/{error}/show', [\App\Http\Controllers\Admin\Modals\ImportOrderModalController::class,'show'])->name('order.error.show');
+            Route::get('package/{package}/users', [\App\Http\Controllers\Admin\Rates\ProfitPackageController::class,'packageUsers'])->name('package.users');
         });
 });
 
@@ -204,6 +212,12 @@ Route::get('order/{order}/label/get', function (App\Models\Order $order) {
     return response()->download(storage_path("app/labels/{$order->corrios_tracking_code}.pdf"),"{$order->corrios_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.label.download');
 
+Route::get('order/{order}/usps-label/get', function (App\Models\Order $order) {
+    if ( !file_exists(storage_path("app/labels/{$order->corrios_usps_tracking_code}.pdf")) ){
+        return apiResponse(false,"Lable Expired or not generated yet please update lable");
+    }
+    return response()->download(storage_path("app/labels/{$order->corrios_usps_tracking_code}.pdf"),"{$order->corrios_usps_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
+})->name('order.usps-label.download');
 
 Route::get('test-label',function(){
     $labelPrinter = new CN23LabelMaker();
@@ -217,4 +231,4 @@ Route::get('test-label',function(){
 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
 
-Route::get('test-usps', [\App\Http\Controllers\Admin\HomeController::class,'uspsApi'])->middleware('auth')->name('test-usps');
+Route::get('test-usps', [\App\Http\Controllers\Admin\HomeController::class,'testBrazilTracking'])->middleware('auth')->name('test-usps');

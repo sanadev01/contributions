@@ -13,7 +13,15 @@
                 <th>
                     Weight (Grams)
                 </th>
+                @if ($chileService == true)
+                <th>
+                    SCL (SRM)
+                </th>
 
+                <th>
+                    SCL (SRP)
+                </th>
+                @else
                 <th>
                     CWB
                 </th>
@@ -21,6 +29,7 @@
                 <th>
                     GRU  
                 </th>
+                @endif
             </tr>
             <tr>
                 <th style="width: 20% !important;">

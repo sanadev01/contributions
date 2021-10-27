@@ -117,8 +117,8 @@
                         <td style="text-align: right !important;">
                             Para :
                         </td>
-                        <td style="@if (strlen($order->recipient->first_name.' '.$order->recipient->last_name) > 15) font-size: 6px !important; @endif">
-                            {{$order->recipient->first_name}} {{$order->recipient->last_name}}
+                        <td style="@if (strlen($recipient_name) > 15) font-size: 6px !important; @endif">
+                            {{ $recipient_name }}
                         </td>
                         <td rowspan="3">
                             <div style="height: 0.6cm !important; width: 0.6cm !important; position: relative !important; float: right !important; margin-top: 4px !important;">

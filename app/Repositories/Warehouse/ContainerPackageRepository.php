@@ -2,12 +2,13 @@
 
 namespace App\Repositories\Warehouse;
 
-use App\Http\Resources\Warehouse\Container\PackageResource;
 use App\Models\Order;
-use App\Models\Warehouse\Container;
-use App\Repositories\AbstractRepository;
 use Illuminate\Http\Request;
+use App\Models\OrderTracking;
+use App\Models\Warehouse\Container;
 use Illuminate\Support\Facades\Auth;
+use App\Repositories\AbstractRepository;
+use App\Http\Resources\Warehouse\Container\PackageResource;
 
 class ContainerPackageRepository extends AbstractRepository{
 
@@ -42,7 +43,30 @@ class ContainerPackageRepository extends AbstractRepository{
                 ],
             ];
         }
-        $order = Order::where('corrios_tracking_code',strtoupper($barcode))->first();
+        $containerOrder = $container->orders->first();
+        $order          = Order::where('corrios_tracking_code',strtoupper($barcode))->first();
+        
+        if( $containerOrder ){
+            if( $containerOrder->getOriginalWeight('kg') <= 3 && $order->getOriginalWeight('kg') > 3){
+                return [
+                    'order' => [
+                        'corrios_tracking_code' => $barcode,
+                        'error' => 'Order weight is greater then 3 Kg, Please Check Order Weight',
+                        'code' => 404
+                    ],
+                ];
+            }elseif($containerOrder->getOriginalWeight('kg') > 3 && $order->getOriginalWeight('kg') <= 3)
+            {
+                return [
+                    'order' => [
+                        'corrios_tracking_code' => $barcode,
+                        'error' => 'Order weight is less then 3 Kg, Please Check Order Weight',
+                        'code' => 404
+                    ],
+                ];
+            }
+        }
+        
         if ( !$order ){
             return [
                 'order' => [
@@ -65,6 +89,8 @@ class ContainerPackageRepository extends AbstractRepository{
 
         $container->orders()->attach($order->id);
 
+        $this->addOrderTracking($order->id);
+
         $order->error = null;
         $order->code = 200;
 
@@ -75,6 +101,31 @@ class ContainerPackageRepository extends AbstractRepository{
 
     public function removeOrderFromContainer(Container $container, Order $order)
     {
-        return $container->orders()->detach($order->id);
+        $container->orders()->detach($order->id);
+
+        return $this->removeOrderTracking($order->id);
+    }
+
+    public function addOrderTracking($id)
+    {
+        OrderTracking::create([
+            'order_id' => $id,
+            'status_code' => Order::STATUS_INSIDE_CONTAINER,
+            'type' => 'HD',
+            'description' => 'Parcel inside Homedelivery Container',
+            'country' => 'US',
+            'city' => 'Miami'
+        ]);
+
+        return true;
+    }
+
+    public function removeOrderTracking($id)
+    {
+
+        $order_tracking = OrderTracking::where('order_id', $id)->latest()->first();
+
+       return $order_tracking->delete();
+
     }
 }

@@ -11,6 +11,7 @@ use App\Http\Controllers\Warehouse\CN35DownloadController;
 use App\Http\Controllers\Warehouse\DeliveryBillController;
 use App\Http\Controllers\Warehouse\UnitRegisterController;
 use App\Http\Controllers\Warehouse\SearchPackageController;
+use App\Http\Controllers\Warehouse\ScanPackageController;
 use App\Http\Controllers\Warehouse\USPSContainerController;
 use App\Http\Controllers\Warehouse\ChileContainerController;
 use App\Http\Controllers\Warehouse\ContainerPackageController;
@@ -35,6 +36,7 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('order/{order}/download-cn23', CN23DownloadController::class)->name('cn23.download');
 
     Route::resource('search_package', SearchPackageController::class)->only('index', 'show');
+    Route::resource('scan', ScanPackageController::class)->only('index');
     
     Route::resource('containers', ContainerController::class);
     Route::get('awb/', AwbController::class)->name('container.awb');
@@ -55,6 +57,7 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::resource('chile_container.packages', ChileContainerPackageController::class)->only('index','destroy', 'create');
     Route::get('chile_container/{container}/download_txt_manifest', [ChileContainerController::class, 'download_txtManifest'])->name('download.manifest_txt');
     Route::get('chile_container/{container}/download_excel_manifest', [ChileContainerController::class, 'download_exceltManifest'])->name('download.manifest_excel');
+    Route::get('chile_container/{container?}/download_combine_manifest', [ChileContainerController::class, 'download_combine_manifest'])->name('download.combine_manifest');
     Route::get('chile_container/{container}/upload_manifest', [ChileContainerController::class, 'upload_ManifestToChile'])->name('upload.manifest');
     Route::get('chile_container/{container}/download_chile_cn35', ChileCN35DownloadController::class)->name('download.chile_cn35');
     
@@ -63,6 +66,7 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::resource('usps_container.packages', USPSContainerPackageController::class)->only('index','destroy', 'create');
     Route::get('usps_container/{container}/register', USPSUnitRegisterController::class)->name('usps_container.register');
     Route::get('usps_container/{container}/download', USPSCN35DownloadController::class)->name('usps_container.download');
+    Route::get('usps_container/{container}/download_excel_manifest', [USPSContainerController::class, 'download_exceltManifest'])->name('download.usps_manifest_excel');
 
     // Routes for Sinerlog Container
     Route::resource('sinerlog_containers', SinerlogContainerController::class);

@@ -7,9 +7,9 @@ use ZipArchive;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Repositories\CorrieosBrazilLabelRepository;
-use App\Repositories\LabelRepository;
 use Illuminate\Support\Facades\Storage;
+use App\Services\Excel\Export\ScanOrderExport;
+use App\Repositories\CorrieosBrazilLabelRepository;
 
 class PrintLabelController extends Controller
 {
@@ -44,7 +44,21 @@ class PrintLabelController extends Controller
     public function store(Request $request, CorrieosBrazilLabelRepository $labelRepository)
     {
         if($request->order){
+            if($request->excel){
+                if($request->start_date != null && $request->end_date != null)
+                {
+                    $start_date = $request->start_date.' 00:00:00';
+                    $end_date = $request->end_date.' 23:59:59';
 
+                    $orders = Order::whereIn('id', $request->order)
+                                    ->whereBetween('order_date', [$start_date, $end_date])->get();                            
+                }else{
+
+                    $orders = Order::whereIn('id', $request->order)->get();
+                }
+                $exportService = new ScanOrderExport($orders);
+                return $exportService->handle();
+            }
             $zip = new ZipArchive();
             $tempFileUri = storage_path('app/labels/label.zip');
             
@@ -76,8 +90,9 @@ class PrintLabelController extends Controller
             } else {
                 echo 'Could not open ZIP file.';
             }
-
+            
             return response()->download($tempFileUri);
+            
         }
         return back();
 
@@ -118,7 +133,7 @@ class PrintLabelController extends Controller
      */
     public function edit($id)
     {
-        //
+        
     }
 
     /**
@@ -130,7 +145,15 @@ class PrintLabelController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $orders = Order::whereIn('id', $request->Ids)->get();
+
+        if($orders != null)
+        {
+            $exportService = new ScanOrderExport($orders);
+            return $exportService->handle();
+        }
+
+        return back();
     }
 
     /**
@@ -143,4 +166,5 @@ class PrintLabelController extends Controller
     {
         //
     }
+    
 }

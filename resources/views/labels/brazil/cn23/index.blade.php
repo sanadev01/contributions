@@ -292,6 +292,50 @@
             box-sizing: border-box;
             text-align: center;
         }
+        .bottom-block{
+            position: absolute;
+            top: 20.5mm;
+            font-size: 8pt !important;
+        }
+        .box-g{
+            border-style: solid;
+            border-width: 3px;
+            white-space:pre;
+            width:10px !important;
+            height:10px !important;
+        }
+        .box-p1{
+            border-style: solid;
+            border-width: 2px;
+            white-space:pre;
+            width:4px !important;
+            margin-left:4.5px;
+            height:4px !important;
+        }
+        .box-p2{
+            margin-top:1px;
+            border-style: solid;
+            border-width: 2px;
+            white-space:pre;
+            width:4px !important;
+            height:4px !important;
+        }
+        .box-p3{
+            position: absolute;
+            top: 9px !important;
+            margin-left:9px;
+            border-style: solid;
+            border-width: 2px;
+            white-space:pre;
+            width:4px !important;
+            height:4px !important;
+        }
+        .box-text{
+            position: absolute;
+            top: -0.5mm;
+            font-size: 16px !important;
+            margin-left:20px;
+        }
     </style>
 </head>
 <body>
@@ -349,6 +393,19 @@
                     {!! $returnAddress !!}
                 </p>
             </div>
+            @if($order->getOriginalWeight('kg') > 3)
+                <div class="bottom-block">
+                    <div class="box-g">    </div>
+                    <div class="box-text">G</div>
+                </div>
+            @else
+                <div class="bottom-block">
+                    <div class="box-p1">    </div>
+                    <div class="box-p2">    </div>
+                    <div class="box-p3">    </div>
+                    <div class="box-text">P</div>
+                </div>
+            @endif
         </div>
         <div class="right-block">
             <h2>Remetente:</h2>
@@ -356,7 +413,7 @@
             {{ $order->sender_email }} <br>
             <strong>Order#:</strong>{{ $order->warehouse_number }} <br>
             <strong>CR#:</strong>{{ $order->customer_reference }} <br>
-            <strong>Weight</strong> {{ $order->getWeight('kg') }}kg|{{ $order->getWeight('lbs') }}lbs <br>
+            <strong>Weight</strong> {{ $order->getOriginalWeight('kg') }}kg|{{ $order->getOriginalWeight('lbs') }}lbs <br>
             <strong>{{ $order->length }} x {{ $order->width }} x {{$order->height}} ({{$order->isWeightInKg() ? 'cm' :'in'}})</strong>
         </div>
     </div>

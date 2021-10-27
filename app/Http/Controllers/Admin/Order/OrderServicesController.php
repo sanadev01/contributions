@@ -21,6 +21,8 @@ class OrderServicesController extends Controller
         
         $order->load('services');
         $services = HandlingService::query()->active()->get();
+        $services = $this->checkInsurance($services,$order);
+
         return view('admin.orders.services.index',compact('order','services'));
     }
 
@@ -37,10 +39,36 @@ class OrderServicesController extends Controller
         
         if ( $orderRepository->updateHandelingServices($request,$order) ){
             session()->flash('alert-success','orders.Services Updated');
-            return redirect()->route('admin.orders.order-details.index',$order);
+            return redirect()->route('admin.orders.order-invoice.index',$order);
         }
 
         session()->flash('alert-success','orders.Error Updateding Services');
         return \back();
+    }
+    
+    private function checkInsurance($services, $order)
+    {
+        if($order->user->insurance == true)
+        {
+            $services = $services->filter(function ($service) {
+                return $service->name != ('Insurance' || 'Seguro');
+            });
+        }
+
+        if ($order->user->hasRole('wholesale'))
+        {
+            if($order->user->insurance == true)
+            {
+                $services = $services->filter(function ($service) {
+                    return $service->name != ('Insurance' || 'Seguro');
+                });
+            }
+
+            $services = $services->filter(function ($service) {
+                return $service->name == 'Insurance' || $service->name == 'Seguro';
+            });
+        }
+
+        return $services;
     }
 }

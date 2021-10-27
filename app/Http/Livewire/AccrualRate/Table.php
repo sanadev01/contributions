@@ -4,6 +4,7 @@ namespace App\Http\Livewire\AccrualRate;
 
 use Livewire\Component;
 use App\Models\Warehouse\AccrualRate;
+use App\Services\Correios\Models\Package;
 
 class Table extends Component
 {
@@ -13,6 +14,7 @@ class Table extends Component
     public $cwb;
     public $gru;
     public $service;
+    public $chileService = false;
     
     public function mount($shippingService)
     {
@@ -21,6 +23,7 @@ class Table extends Component
     
     public function render()
     {
+        $this->checkService();
         $this->search();
 
         return view('livewire.accrual-rate.table', [
@@ -85,6 +88,14 @@ class Table extends Component
     public function searchByCountryAndWeight()
     {
         $this->shippingRates = AccrualRate::where('service', $this->service)->where('country_id', $this->selectedCountry)->where('weight', 'LIKE', "%{$this->weight}%")->get();
+    }
+
+    public function checkService()
+    {
+        if($this->service == Package::SERVICE_CLASS_SRP || $this->service == Package::SERVICE_CLASS_SRM)
+        {
+            $this->chileService = true;
+        }
     }
 
 }

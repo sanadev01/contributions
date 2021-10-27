@@ -4,6 +4,7 @@ namespace App\Http\Livewire\UspsContainer;
 
 use App\Models\Order;
 use Livewire\Component;
+use App\Models\OrderTracking;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Warehouse\USPSContainerPackageController;
 
@@ -71,6 +72,7 @@ class Packages extends Component
 
             $order = $usps_ContainerPackageController->store($this->container, $order);
 
+            $this->addOrderTracking($order);
             $this->error = '';
             return $this->barcode = '';
         }
@@ -87,6 +89,7 @@ class Packages extends Component
         $usps_ContainerPackageController->destroy($this->container, $id);
         unset($this->orders[$key]);
         
+        $this->removeOrderTracking($id);
         $this->error = '';
     }
 
@@ -104,5 +107,30 @@ class Packages extends Component
         }
 
         return $this->totalweight = $weight;
+    }
+
+    public function addOrderTracking($order)
+    {
+        OrderTracking::create([
+            'order_id' => $order->id,
+            'status_code' => Order::STATUS_INSIDE_CONTAINER,
+            'type' => 'HD',
+            'description' => 'Parcel inside Homedelivery Container',
+            'country' => 'US',
+            'city' => 'Miami'
+        ]);
+
+        return true;
+    }
+
+    public function removeOrderTracking($id)
+    {
+
+        $order_tracking = OrderTracking::where('order_id', $id)->latest()->first();
+
+        $order_tracking->delete();
+
+        return true;
+
     }
 }

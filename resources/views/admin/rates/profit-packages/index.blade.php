@@ -28,6 +28,9 @@
                                         @lang('profitpackage.Shipping Service')
                                     </th>
                                     <th>
+                                        @lang('profitpackage.users')
+                                    </th>
+                                    <th>
                                         @lang('profitpackage.type')
                                     </th>
                                     <th>
@@ -45,6 +48,9 @@
                                                 {{ optional($package->shippingService)->name }}
                                             </td>
                                             <td>
+                                                <button data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.package.users',$package) }}" class="btn btn-info btn-sm">@lang('profitpackage.view users')</button>
+                                            </td>
+                                            <td>
                                                 {{ $package->type }}
                                             </td>
                                             <td class="d-flex">
@@ -54,6 +60,9 @@
                                                 @can('update', App\Models\ProfitPackage::class)
                                                     <a href="{{ route('admin.rates.profit-packages.edit',$package) }}" class="btn btn-primary mr-2" title="@lang('profitpackage.edit-profit-package')">
                                                         <i class="feather icon-edit"></i>
+                                                    </a>
+                                                    <a href="{{ route('admin.rates.profit-packages-upload.edit',$package) }}" class="btn btn-secondary mr-2" title="@lang('profitpackage.edit-profit-package')">
+                                                        <i class="feather icon-upload"></i>
                                                     </a>
                                                 @endcan
 
@@ -77,4 +86,7 @@
             </div>
         </div>
     </section>
+@endsection
+@section('modal')
+    <x-modal/>
 @endsection

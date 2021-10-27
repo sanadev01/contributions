@@ -16,10 +16,11 @@ class ProfitPackageImportService extends AbstractImportService
     private $userId; 
     private $request; 
 
-    public function __construct(UploadedFile $file,$userId, $request)
+    public function __construct(UploadedFile $file,$userId, $request, $profitPackage = null)
     {
         $this->userId = $userId;
         $this->request = $request;
+        $this->profitPackage = $profitPackage;
 
         $filename = $this->importFile($file);
 
@@ -67,15 +68,27 @@ class ProfitPackageImportService extends AbstractImportService
     }
 
     private function createOrUpdateOrder($data){
+        
         DB::beginTransaction();
         
         try {
-            $profitPackage = ProfitPackage::create([
-                "shipping_service_id" => $this->request->shipping_service_id,
-                "name" => $this->request->package_name,
-                "type" => $this->request->type,
-                "data" => $data,
-            ]);
+            if($this->profitPackage){
+                $this->profitPackage->update([
+                    "shipping_service_id" => $this->request->shipping_service_id,
+                    "name" => $this->request->package_name,
+                    "type" => $this->request->type,
+                    "data" => $data,
+                ]);
+                
+            }else{
+
+                $profitPackage = ProfitPackage::create([
+                    "shipping_service_id" => $this->request->shipping_service_id,
+                    "name" => $this->request->package_name,
+                    "type" => $this->request->type,
+                    "data" => $data,
+                ]);
+            }
 
             DB::commit();
 

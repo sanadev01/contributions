@@ -2,6 +2,8 @@
 
 namespace App\Services\Excel\Export;
 
+use App\Models\ProfitPackage;
+use App\Models\ProfitSetting;
 use Illuminate\Support\Collection;
 
 class ExportUsers extends AbstractExportService
@@ -36,6 +38,8 @@ class ExportUsers extends AbstractExportService
             $this->setCellValue('C'.$row, $user->email);
             $this->setCellValue('D'.$row, $user->accountType());
             $this->setCellValue('E'.$row, $user->come_from);
+            $this->setCellValue('F'.$row, optional($user->profitPackage)->name);
+            $this->setCellValue('G'.$row, $this->getProfitPackageSettings($user->id));
             $row++;
         }
 
@@ -59,9 +63,41 @@ class ExportUsers extends AbstractExportService
         $this->setColumnWidth('E', 20);
         $this->setCellValue('E1', 'Referral');
 
-        $this->setBackgroundColor('A1:E1', '2b5cab');
-        $this->setColor('A1:E1', 'FFFFFF');
+        $this->setColumnWidth('F', 25);
+        $this->setCellValue('F1', 'Default Package');
+
+        $this->setColumnWidth('G', 25);
+        $this->setCellValue('G1', 'User Setting Package');
+
+        $this->setBackgroundColor('A1:G1', '2b5cab');
+        $this->setColor('A1:G1', 'FFFFFF');
 
         $this->currentRow++;
+    }
+
+
+    private function getProfitPackageSettings($userId)
+    {
+        if(!$userId)
+        {
+            return '';
+        }
+
+        $settings = ProfitSetting::where('user_id', $userId)->get();
+
+        if(!$settings)
+        {
+            return '';
+        }
+
+        $packages = $settings->map(function($setting) {
+            $package = ProfitPackage::find($setting->package_id);
+            if($package)
+            {
+                return isset($package['name']) ? $package['name'] : '';
+            }
+        });
+        
+        return $packages->implode(', ');
     }
 }

@@ -20,7 +20,7 @@ class UserSettingController extends Controller
     
     public function index(User $user)
     {   
-        $packages = ProfitPackage::all();
+        $packages = ProfitPackage::orderBy('name','ASC')->get();
         $roles = Role::orderBy('id', 'desc')->get();
         $users = User::user()->get();
         return view('admin.users.setting.edit', compact('packages', 'user', 'roles', 'users'));
@@ -41,7 +41,11 @@ class UserSettingController extends Controller
             'market_place_name' => $request->market_place_name,
             'email' => $request->user_email,
             'battery' => $request->has('battery'),
-            'perfume' => $request->has('perfume')
+            'perfume' => $request->has('perfume'),
+            'insurance' => $request->has('insurance') ? 1 : 0,
+            'usps' => $request->has('usps'),
+            'api_profit' => $request->input('api_profit'),
+            'order_dimension' => $request->input('order_dimension'),
         ]);
 
         if ( $request->password ){

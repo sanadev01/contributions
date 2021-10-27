@@ -61,10 +61,15 @@
             @if($editMode == true)
             <tr>
                 <td colspan="8">
-                    <input type="text" wire:model.debounce.500ms="barcode" class="w-100 text-center" style="height:50px;font-size:30px;">
+                    <input id="barcode" type="text" wire:model.debounce.500ms="barcode" class="w-100 text-center" style="height:50px;font-size:30px;">
                 </td>
             </tr>
             @endif
         </tbody>
     </table>
 </div>
+<script>
+    window.addEventListener('focus-barcode', event => {
+     $("#barcode").focus();
+ })
+ </script>

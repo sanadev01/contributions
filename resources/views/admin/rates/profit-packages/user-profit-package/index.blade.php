@@ -7,16 +7,15 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">@lang('menu.Rates')</h4>
-                        <a href="{{ route('admin.rates.rates.exports',$packageId) }}" class="pull-right btn btn-success"> @lang('profitpackage.download-profit-package') <i class="feather icon-download"> </i></a>
                     </div>
                     <div class="card-content">
                         <div class="mt-1">
                             <table class="table mb-0">
                                 <thead>
                                 <tr>
-                                    <th> Weight </th>
+                                    <th> Service </th>
                                     <th>
-                                        Cost
+                                        Rates
                                     </th>
                                 </tr>
                                 </thead>
@@ -24,10 +23,16 @@
                                     @foreach($rates as $rate)
                                         <tr>
                                             <td>
-                                                {{ $rate['weight'] . ' g' }}
+                                                {{ $rate['service'] }}
                                             </td>
                                             <td>
-                                                {{ number_format($rate['shipping'][0]*($rate['profit']/100)+$rate['shipping'][0],2) }}
+                                                <form action="{{ route('admin.rates.show-profit-rates') }}" method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="rates" value="{{ $rate['rates'] }}">
+                                                    <input type="hidden" name="service" value="{{ $rate['service'] }}">
+                                                    <input type="hidden" name="packageId" value="{{ $rate['packageId'] }}">
+                                                    <button type="submit" class="btn btn-success btn-sm">View Rates</button>
+                                                </form>
                                             </td>
                                             
                                         </tr>

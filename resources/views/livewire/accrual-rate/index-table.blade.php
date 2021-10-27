@@ -16,8 +16,12 @@
                 <th>
                     {{$service['name']}}
                 <th>
-                    <a href="{{ route('admin.rates.show-accrual-rates',$service['value']) }}" class="btn btn-success btn-sm">
-                        View
+                    <a href="{{ route('admin.rates.show-accrual-rates',$service['value']) }}" class="btn btn-primary btn-sm">
+                       <i class="feather icon-eye"></i> View
+                    </a>
+                    |
+                    <a href="{{ route('admin.rates.download-accrual-rates',$service['value']) }}" class="btn btn-success btn-sm">
+                        <i class="feather icon-download"></i> Download
                     </a>
                 </th>
             </tr>

@@ -17,7 +17,7 @@ class RateReportsRepository
 {
     protected $error;
 
-    public function getRateReport($packageId)
+    public function getRateReport($packageId, $serviceId = null)
     {
         $package = ProfitPackage::find($packageId);
         $recipient = new Recipient();
@@ -58,13 +58,29 @@ class RateReportsRepository
                 }
             }else{
 
-                foreach (ShippingService::query()->active()->get() as $shippingService) {
-                    $shippingService->cacheCalculator = false;
-                    if ( $shippingService->isAvailableFor($order) ){
-                        $rate = $shippingService->getRateFor($order,true,false);
-                        $value = $shippingService->getRateFor($order,false,false);
-                        $shippingRates->push($rate);
-                        $shippingValue->push($value);
+                if($serviceId)
+                {
+                    $service = ShippingService::find($serviceId);
+                    if($service){
+
+                        $service->cacheCalculator = false;
+                        if ( $service->isAvailableFor($order) ){
+                            $rate = $service->getRateFor($order,true,false);
+                            $value = $service->getRateFor($order,false,false);
+                            $shippingRates->push($rate);
+                            $shippingValue->push($value);
+                        }
+                    }
+                    
+                }else{
+                    foreach (ShippingService::query()->active()->get() as $shippingService) {
+                        $shippingService->cacheCalculator = false;
+                        if ( $shippingService->isAvailableFor($order) ){
+                            $rate = $shippingService->getRateFor($order,true,false);
+                            $value = $shippingService->getRateFor($order,false,false);
+                            $shippingRates->push($rate);
+                            $shippingValue->push($value);
+                        }
                     }
                 }
             }
