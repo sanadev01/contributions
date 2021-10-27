@@ -17,7 +17,7 @@ class SinerlogUnitRegisterController extends Controller
      */
     public function __invoke(Container $container)
     {
-        if (count($container->orders) >= 0)
+        if (count($container->orders) > 0)
         {
             $client = new Client();
 

@@ -11,7 +11,7 @@ class SinerlogContainerPackageRepository extends AbstractRepository {
 
     public function addOrderToContainer(Container $sinerlog_container,string $barcode)
     {
-        if($sinerlog_container->services_subclass_code  != substr($barcode,0,2)){
+        if(explode('-', $sinerlog_container->services_subclass_code)[1]  != substr($barcode,0,2)){
             return [
                 'order' => [
                     'corrios_tracking_code' => $barcode,
@@ -41,7 +41,7 @@ class SinerlogContainerPackageRepository extends AbstractRepository {
             ];
         }
 
-        $container->orders()->attach($order->id);
+        $sinerlog_container->orders()->attach($order->id);
 
         $order->error = null;
         $order->code = 200;
