@@ -56,7 +56,7 @@ class ScanOrderExport extends AbstractExportService
             $this->setCellValue('I'.$row, $order->order_date->format('m-d-Y'));
             $this->setCellValue('J'.$row, $order->arrived_date);
             if($order->status < 80 ){
-                $this->setCellValue('K'.$row, 'Pending to Shipped');
+                $this->setCellValue('K'.$row, 'Scanned in the warehouse');
             }
             if($order->status >= 80 ){
                 $this->setCellValue('K'.$row, 'Shipped');

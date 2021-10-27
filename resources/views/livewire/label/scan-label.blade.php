@@ -144,7 +144,7 @@
                     <td>{{ $package->arrived_date }}</td>
                     <td>
                         @if($package->status < 80 )
-                            Pending to Shipped
+                            Scanned in the warehouse
                         @endif
                         @if($package->status >= 80 )
                             Shipped
