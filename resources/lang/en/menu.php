@@ -46,6 +46,7 @@ return [
         'Delivery Bill' => 'Delivery Bill',
         'Chile Containers' => 'Chile Containers',
         'USPS Containers' => 'USPS Containers',
+        'Sinerlog Containers' => 'Sinerlog Containers'
     ],
     'Affiliate' => [
         'menu' => 'Affiliate',

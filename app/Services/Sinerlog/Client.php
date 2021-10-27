@@ -3,6 +3,7 @@
 namespace App\Services\Sinerlog;
 
 use App\Models\Order;
+use App\Models\Warehouse\Container;
 use Storage;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Sinerlog\Models\BaseModel;
@@ -11,11 +12,13 @@ use App\Services\Sinerlog\Models\Order as SinerlogOrder;
 use App\Services\Sinerlog\Models\Seller as SinerlogSeller;
 use App\Services\Sinerlog\Models\Product as SinerlogProducts;
 use App\Services\Sinerlog\Models\Customer as SinerlogCustomer;
+use App\Services\Sinerlog\Models\Bag as SinerlogBag;
 use App\Services\Sinerlog\Models\CustomerShippingAddress as SinerlogCustomerSA;
 
 use Exception;
 use GuzzleHttp\Client as GuzzleHttpClient;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 class Client
@@ -362,4 +365,109 @@ class Client
         return $this->baseUri.$url;
     }
 
+    public function createBag(Container $sinerlog_container)
+    {
+        $token = $this->getToken();
+
+        $sinerlogBag = new SinerlogBag();
+        $sinerlogBag->bag_code = 'TS'.$sinerlog_container->dispatch_number;
+        $sinerlogBag->seal_barcode = $sinerlog_container->seal_no;
+        $sinerlogBag->unitization_type = $sinerlog_container->unit_type;
+        $sinerlogBag->weight = $sinerlog_container->getWeight() * 1000;
+
+        foreach($sinerlog_container->orders as $key => $order)
+        {
+            array_push($sinerlogBag->orders, array('tracking_number' => $order->corrios_tracking_code));
+        }
+
+        $bagBody = [
+            'bag_code' => $sinerlogBag->bag_code,
+            'seal_barcode' => $sinerlogBag->seal_barcode,
+            'unitization_type' => $sinerlogBag->unitization_type,
+            'weight' => $sinerlogBag->weight,
+            'orders' => $sinerlogBag->orders
+        ];
+
+        try {
+            $client = new GuzzleHttpClient([
+                'base_uri' => $this->baseUri
+            ]);
+
+            $response = $client->post('/api/bags',[
+                'json' =>  $bagBody,
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'Bearer '.$token 
+                ]
+            ]);
+            
+            if ( $response->getStatusCode() == 200 || $response->getStatusCode() == 201){
+                $data = json_decode($response->getBody()->getContents());
+                
+                return (Object)[
+                    'success' => true,
+                    'data' => $data
+                ];
+            }
+
+            throw new \Exception($response->getBody()->getContents(),500);
+
+        }catch (\GuzzleHttp\Exception\ClientException $e) {
+            return (Object)[
+                'success' => false,
+                'message' => $e->getResponse()->getBody()->getContents(),
+                'data' => json_decode($e->getResponse()->getBody()->getContents())
+            ];
+        } catch (\Exception $ex) {
+            return (Object)[
+                'success' => false,
+                'message' => $ex->getMessage(),
+                'data' => json_decode($ex->getMessage())
+            ];
+        }
+    }
+
+    public function getBagCN35(Container $sinerlog_container)
+    {
+        $token = $this->getToken();
+
+        try {
+            $client = new GuzzleHttpClient([
+                'base_uri' => $this->baseUri
+            ]);
+
+            $response = $client->get('/api/bags/cn35/' . (int)$sinerlog_container->unit_code ,[
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'Bearer '.$token 
+                ]
+            ]);
+            
+            if ( $response->getStatusCode() == 200 || $response->getStatusCode() == 201){
+                $data = json_decode($response->getBody()->getContents());
+                
+                return (Object)[
+                    'success' => true,
+                    'data' => $data
+                ];
+            }
+
+            throw new \Exception($response->getBody()->getContents(),500);
+
+        }catch (\GuzzleHttp\Exception\ClientException $e) {
+            dd($e);
+            return (Object)[
+                'success' => false,
+                'message' => $e->getResponse()->getBody()->getContents(),
+                'data' => json_decode($e->getResponse()->getBody()->getContents())
+            ];
+        } catch (\Exception $ex) {
+            dd($ex);
+            return (Object)[
+                'success' => false,
+                'message' => $ex->getMessage(),
+                'data' => json_decode($ex->getMessage())
+            ];
+        }
+    }
 }
