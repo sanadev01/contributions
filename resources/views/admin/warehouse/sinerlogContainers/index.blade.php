@@ -147,6 +147,10 @@
                                                                     <i class="feather icon-box"></i> Print CN35
                                                                 </a>
                                                             @endif
+
+                                                            <a href="{{ route('warehouse.sinerlog_container.manifest', $container) }}" class="dropdown-item w-100">
+                                                                <i class="fa fa-cloud-download"></i> Download Manifest
+                                                            </a>
                                                         @endif
                                                     </div>
                                                 </div>

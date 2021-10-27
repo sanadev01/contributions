@@ -27,6 +27,7 @@ use App\Http\Controllers\Warehouse\SinerlogContainerController;
 use App\Http\Controllers\Warehouse\SinerlogContainerPackageController;
 use App\Http\Controllers\Warehouse\SinerlogUnitRegisterController;
 use App\Http\Controllers\Warehouse\SinerlogCN35DownloadController;
+use App\Http\Controllers\Warehouse\SinerlogManifestDownloadController;
 
 
 Route::middleware(['auth'])->as('warehouse.')->group(function () {
@@ -66,8 +67,10 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     // Routes for Sinerlog Container
     Route::resource('sinerlog_containers', SinerlogContainerController::class);
     Route::resource('sinerlog_container.packages', SinerlogContainerPackageController::class)->only('index','destroy', 'create');
+    Route::post('sinerlog_container/{container}/packages/{barcode}', [SinerlogContainerPackageController::class,'store'])->name('sinerlog_container.packages.store');
     Route::get('sinerlog_container/{container}/register', SinerlogUnitRegisterController::class)->name('sinerlog_container.register');
     Route::get('sinerlog_container/{container}/download', SinerlogCN35DownloadController::class)->name('sinerlog_container.download');
+    Route::get('sinerlog_container/{container}/manifest', SinerlogManifestDownloadController::class)->name('sinerlog_container.manifest');
 });
 
 

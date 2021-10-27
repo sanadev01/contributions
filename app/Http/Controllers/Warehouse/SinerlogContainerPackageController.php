@@ -39,9 +39,9 @@ class SinerlogContainerPackageController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Container $sinerlog_container, string $barcode, SinerlogContainerPackageRepository $sinerlogContainerPackageRepository)
+    public function store(Container $container, string $barcode, SinerlogContainerPackageRepository $sinerlogContainerPackageRepository)
     {
-        return $sinerlogContainerPackageRepository->addOrderToContainer($sinerlog_container,$barcode);
+        return $sinerlogContainerPackageRepository->addOrderToContainer($container,$barcode);
     }
 
     /**
