@@ -88,7 +88,9 @@ class UPSCalculatorController extends Controller
         $order->user = Auth::user() ? Auth::user() :  User::where('role_id',1)->first();
         $order->sender_country_id = $request->origin_country;
         $order->sender_first_name = $order->user->name;
-        $order->sender_last_name = $order->user->last_name;
+        $order->sender_last_name = $order->user->last_name ?? '';
+        $order->sender_email = $order->user->email;
+        $order->sender_phone = $order->user->phone;
         $order->pobox_number = $order->user->pobox_number;
         $order->sender_city = $request->sender_city;
         $order->sender_state = $request->sender_state;

@@ -12,7 +12,7 @@ use App\Models\OrderTracking;
 use App\Models\PaymentInvoice;
 use App\Models\ShippingService;
 use Illuminate\Support\Facades\DB;
-use App\Services\USPS\UPSLabelMaker;
+use App\Services\UPS\UPSLabelMaker;
 use Illuminate\Support\Facades\Auth;
 
 class UPSCalculatorRepository
@@ -23,6 +23,8 @@ class UPSCalculatorRepository
     public $user_api_profit;
     public $total_amount;
     public $service;
+    public $shipping_service_id;
+    public $shipping_service_sub_class;
     public $ups_cost;
     public $request_order;
 
@@ -31,10 +33,10 @@ class UPSCalculatorRepository
         $this->request_order = json_decode($request->order);
         $this->getUser($request->user_id);
         $this->service = $request->service;
-        $this->usps_cost = $request->usps_cost;
-        
+        $this->getShippingService($this->service);
+        $this->ups_cost = $request->ups_cost;
         $current_balance =  $this->checkBalance();
-        if( $this->usps_cost > $current_balance)
+        if( $this->ups_cost > $current_balance)
         {
             $this->ups_errors = 'Not Enough Balance. Please Recharge your account.';
 
@@ -44,7 +46,7 @@ class UPSCalculatorRepository
         $this->createOrder();
         if($this->ups_errors == null)
         {
-            $this->createOrderRecipient($this->order);
+            $this->createOrderRecipient();
         }
 
         $this->buy_UPSLabel($this->order, $this->request_order);
@@ -93,7 +95,7 @@ class UPSCalculatorRepository
                 'width' => $this->request_order->width,
                 'height' => $this->request_order->height,
                 'measurement_unit' => $this->request_order->measurement_unit,
-                'shipping_service_id' => $this->getShippingService($this->service),
+                'shipping_service_id' =>  $this->shipping_service_id,
                 'shipping_service_name' => $this->service,
                 'status' => Order::STATUS_ORDER,
             ]);
@@ -121,7 +123,10 @@ class UPSCalculatorRepository
     {
         $shipping_service = ShippingService::where('name', $service_name)->first();
 
-        return $shipping_service->id;
+        $this->shipping_service_id = $shipping_service->id;
+        $this->shipping_service_sub_class = $shipping_service->service_sub_class;
+
+        return true;
     }
 
     private function createOrderRecipient()
@@ -153,9 +158,9 @@ class UPSCalculatorRepository
         }
     }
 
-    private function buy_UPSLabel($order, $request)
+    private function buy_UPSLabel($order)
     {
-        $request_sender_data = $this->make_request_data($request);
+        $request_sender_data = $this->make_request_data();
         $response = UPSFacade::buyLabel($order, $request_sender_data);
         
         if($response->success == true)
@@ -163,17 +168,17 @@ class UPSCalculatorRepository
             // storing response in orders table
             $order->update([
                 'api_response' => json_encode($response->data),
-                'corrios_tracking_code' => $response->data['usps']['tracking_numbers'][0],
+                'corrios_tracking_code' => $response->data['FreightShipResponse']['ShipmentResults']['ShipmentNumber'],
                 'is_invoice_created' => true,
                 'is_shipment_added' => true,
-                'user_declared_freight' => $response->data['total_amount'],
-                'shipping_value' => $this->usps_cost,
-                'total' => $this->usps_cost,
-                'gross_total' => $this->usps_cost,
+                'user_declared_freight' => $response->data['FreightShipResponse']['ShipmentResults']['TotalShipmentCharge']['MonetaryValue'],
+                'shipping_value' => $this->ups_cost,
+                'total' => $this->ups_cost,
+                'gross_total' => $this->ups_cost,
                 'status' => Order::STATUS_PAYMENT_DONE,
             ]);
 
-            $this->chargeAmount($this->usps_cost, $order);
+            $this->chargeAmount($this->ups_cost, $order);
             $this->createInvoivce($order);
             $this->printLabel($order);
 
@@ -186,33 +191,35 @@ class UPSCalculatorRepository
         }
     }
 
-    private function make_request_data($request)
+    private function make_request_data()
     {
         $data = (Object)[
-            'sender_country_id' => $request->sender_country_id,
-            'first_name' => $request->sender_first_name,
-            'last_name' => $request->sender_last_name,
-            'pobox_number' => $request->pobox_number,
-            'sender_state' => $request->sender_state,
-            'sender_city' => $request->sender_city,
-            'sender_address' => $request->sender_address,
-            'sender_zipcode' => $request->sender_zipcode,
-            'service' => $this->service,
+            'sender_country_id' => $this->request_order->sender_country_id,
+            'first_name' => $this->request_order->sender_first_name,
+            'last_name' => $this->request_order->sender_last_name,
+            'sender_email' => $this->request_order->sender_email,
+            'sender_phone' => $this->request_order->sender_phone,
+            'pobox_number' => $this->request_order->pobox_number,
+            'sender_state' => $this->request_order->sender_state,
+            'sender_city' => $this->request_order->sender_city,
+            'sender_address' => $this->request_order->sender_address,
+            'sender_zipcode' => $this->request_order->sender_zipcode,
+            'service' => $this->shipping_service_sub_class,
         ];
 
         return $data;
     }
 
-    private function chargeAmount($usps_cost, $order)
+    private function chargeAmount($ups_cost, $order)
     {
         $deposit = Deposit::create([
             'uuid' => PaymentInvoice::generateUUID('DP-'),
-            'amount' => $usps_cost,
+            'amount' => $ups_cost,
             'user_id' => $this->user->id,
             'order_id' => $order->id,
-            'balance' => $this->checkBalance() - $usps_cost,
+            'balance' => $this->checkBalance() - $ups_cost,
             'is_credit' => false,
-            'description' => 'Bought USPS Label For : '.$order->warehouse_number,
+            'description' => 'Bought UPS Label For : '.$order->warehouse_number,
         ]);
         
         if ( $order ){

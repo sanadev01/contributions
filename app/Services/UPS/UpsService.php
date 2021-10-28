@@ -75,10 +75,9 @@ class UpsService
        }
     }
 
-    public function buyLabel()
+    public function buyLabel($order, $request_sender_data)
     {
-        $data = $this->make_package_request_for_sender();
-        // dd($data);
+        $data = $this->make_package_request_for_sender($order, $request_sender_data);
         $ups_response = $this->ups_ApiCall($data);
         
         return $ups_response;
@@ -183,27 +182,27 @@ class UpsService
         return $request_body;
     }
 
-    private function make_package_request_for_sender()
+    private function make_package_request_for_sender($order, $request)
     {
-        // $this->calculateVolumetricWeight($order);
+        $this->calculateVolumetricWeight($order);
 
         $request_body = [
             'FreightShipRequest' => [
                 'Shipment' => [
                     'ShipFrom' => [
-                        'Name' => 'Ghazi Khan',
+                        'Name' => $request->first_name.' '.$request->last_name,
                         'Address' => [
-                            'AddressLine' => '123 Lane',
-                            'City' => 'TIMONIUM',
-                            'StateProvinceCode' => 'MD',
-                            'PostalCode' => '21093',
+                            'AddressLine' => $request->sender_address,
+                            'City' => $request->sender_city,
+                            'StateProvinceCode' => $request->sender_state,
+                            'PostalCode' => $request->sender_zipcode,
                             'CountryCode' => 'US',
                         ],
-                        'AttentionName' => 'Ghazi',
+                        'AttentionName' => $request->first_name.' '.$request->last_name,
                         'Phone' => [
-                            'Number' => '+13058885191',
+                            'Number' => $request->sender_phone,
                         ],
-                        'EMailAddress' => 'ghaziislam3@gmail.com'
+                        'EMailAddress' => $request->sender_email
                     ],
                     'ShipperNumber' => $this->shipperNumber,
                     'ShipTo' => [
@@ -231,12 +230,11 @@ class UpsService
                                 'PostalCode' => '33182',
                                 'CountryCode' => 'US',
                             ],
-                            'ShipperNumber' => 'AT0123',
+                            'ShipperNumber' => $this->shipperNumber,
                             'AccountType' => '1',
                             'AttentionName' => 'Marcio',
                             'Phone' => [
                                 'Number' => '+13058885191',
-                                // 'Extension' => '4444',
                             ],
                             'EMailAddress' => 'homedelivery@homedeliverybr.com'
                         ],
@@ -264,7 +262,7 @@ class UpsService
                         ]
                     ],
                     'Service' =>  [
-                        'Code' => '308',
+                        'Code' => $request->service,
                     ],
                     'HandlingUnitOne' => [
                         'Quantity' => '2',
@@ -276,18 +274,18 @@ class UpsService
                         'Description' => 'Goods',
                         'Weight' => [
                             'UnitOfMeasurement' => [
-                                'Code' => 'LBS',
+                                'Code' => ($order->measurement_unit == 'kg/cm') ? 'KGS' : 'LBS',
                             ],
-                            'Value' => "30",
+                            'Value' => ($this->chargableWeight != null) ? "$this->chargableWeight" : "$order->weight",
                         ],
                         'Dimensions' => [
                             'UnitOfMeasurement' => [
-                                'Code' => 'IN',
+                                'Code' => ($order->measurement_unit == 'kg/cm') ? 'CM' : 'IN',
                                 'Description' => ''
                             ],
-                            'Length' => '4',
-                            'Width' => '5',
-                            'Height' => '6',
+                            'Length' => "$order->length",
+                            'Width' => "$order->width",
+                            'Height' => "$order->height",
                         ],
                         'NumberOfPieces' => '1',
                         'PackagingType' => [
@@ -296,10 +294,10 @@ class UpsService
                         'FreightClass' => '60',
     
                     ],
-                    'DensityEligibleIndicator' => '',
                     'PickupRequest' => [
                         'Requester' => [
                             'AttentionName' => 'Marcio',
+                            'ThirdPartyIndicator' => 'Shipper',
                             'EMailAddress' => 'marcio@gmail.com',
                             'Name' => 'Marcio',
                             'Phone' => [
@@ -348,8 +346,7 @@ class UpsService
                 'transId' => $this->transactionSrc,
                 'transactionSrc' => 'HERCO',
             ])->acceptJson()->post($this->create_package_url, $data);
-            
-            dd($response->json());
+           
             if($response->successful())
             {
                 return (Object)[
