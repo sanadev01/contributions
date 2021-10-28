@@ -126,6 +126,9 @@
             <th>@lang('orders.print-label.Recpient')</th>
             <th>@lang('orders.print-label.Date')</th>
             <th>@if($searchOrder) Arrival Date @else @lang('orders.print-label.Action')@endif</th>
+            @if($searchOrder)
+                <th> Status </th>
+            @endif
         </tr>
         @if($searchOrder)
             @foreach ($searchOrder as $package)
@@ -139,6 +142,14 @@
                     <td>{{ $package->recipient->first_name }}</td>
                     <td>{{ $package->order_date }}</td>
                     <td>{{ $package->arrived_date }}</td>
+                    <td>
+                        @if($package->status < 80 )
+                            Scanned in the warehouse
+                        @endif
+                        @if($package->status >= 80 )
+                            Shipped
+                        @endif
+                    </td>
                 </tr>
             @endforeach
         @else

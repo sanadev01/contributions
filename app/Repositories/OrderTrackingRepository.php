@@ -87,7 +87,26 @@ class OrderTrackingRepository
                     'order' => $order
                 ];
             }
-            if(!$order->trackings->isEmpty()){
+
+            if($order->recipient->country_id == Order::BRAZIL && !$order->trackings->isEmpty())
+            {
+                if($order->trackings->last()->status_code == Order::STATUS_SHIPPED)
+                {
+                    $response = CorreiosBrazilTrackingFacade::trackOrder($this->trackingNumber);
+                    
+                    if($response->success == true)
+                    {
+                        return (Object) [
+                            'success' => true,
+                            'status' => 200,
+                            'service' => 'Correios_Brazil',
+                            'trackings' => $order->trackings,
+                            'brazil_trackings' => $response->data,
+                            'order' => $order
+                        ];
+                    }
+                }
+
                 return (Object)[
                     'success' => true,
                     'status' => 200,
