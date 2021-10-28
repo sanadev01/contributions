@@ -60,7 +60,7 @@ class OrderTrackingRepository
                     'order' => $order
                 ];
             }
-            if($order->recipient->country_id == Order::USPS && !$order->trackings->isEmpty())
+            if($order->recipient->country_id == Order::US && !$order->trackings->isEmpty())
             {
                 if($order->trackings->last()->status_code == Order::STATUS_SHIPPED)
                 {
