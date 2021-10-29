@@ -36,6 +36,14 @@ class CorreiosBrazilTrackingService{
 
             $result = $client->buscaEventos($request_param);
 
+            if(isset($result->return->objeto->erro))
+            {
+                return (Object)[
+                    'success' => false,
+                    'error' => $result->return->objeto->erro,
+                ];
+            }
+
             if(isset($result->return->objeto->evento))
             {
                 return (Object)[

@@ -6,10 +6,17 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="mb-0">
-                            @lang('warehouse.chileContainers.Containers')
-                        </h4>
-                        <a href="{{ route('warehouse.chile_containers.create') }}" class="pull-right btn btn-primary"> @lang('warehouse.containers.Create Container') </a>
+                        <div class="row col-12">
+                            <div class="col-6">
+                                <h4 class="mb-0">
+                                    @lang('warehouse.chileContainers.Containers')
+                                </h4>
+                            </div>
+                            <div class="col-6">
+                                <a href="{{ route('warehouse.chile_containers.create') }}" class="pull-right btn btn-primary ml-3"> @lang('warehouse.containers.Create Container')</a>
+                                <a href="" id="download-combine-manifest" class="pull-right btn btn-success">  @lang('warehouse.containers.Download Manifest')</a>
+                            </div>
+                        </div>
                     </div>
                     <div class="card-content card-body" style="min-height: 100vh;">
                         <div class="mt-1">
@@ -51,7 +58,7 @@
                                     <tr>
                                         <td>
                                             <div class="vs-checkbox-con vs-checkbox-primary" title="@lang('orders.Bulk Print')">
-                                                <input type="checkbox" name="containers[]" class="bulk-container" value="{{$container->id}}">
+                                                <input type="checkbox" name="containers[]" class="bulk-container" value="{{$container->id}}" data-container_awb=@if( $container->awb != null ) true @else false @endif>
                                                 <span class="vs-checkbox vs-checkbox-lg">
                                                     <span class="vs-checkbox--check">
                                                         <i class="vs-icon feather icon-check"></i>
@@ -214,6 +221,22 @@
                 $('#confirm').modal('show');
                 // $('#bulk_sale_form').submit();
             }
+        })
+        $('body').on('click','#download-combine-manifest',function(){
+            var containerIds = [];
+            $.each($(".bulk-container:checked"), function(){
+                if($(this).attr("data-container_awb") == 'true')
+                {
+                    containerIds.push($(this).val());
+                }
+            });
+            if(containerIds.length == 0)
+            {
+                alert('Please Select Containers');
+                return false;
+            }
+            var url = '{{ route('warehouse.download.combine_manifest', ":ids") }}'
+            $("#download-combine-manifest").attr("href", url.replace(':ids', containerIds));
         })
     </script>
 @endsection

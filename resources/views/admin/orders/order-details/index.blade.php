@@ -8,6 +8,7 @@
         {{$error}}
     </div>
 @endif
+<div class="alert alert-danger" role="alert" id="ups_response" style="display: none;"></div>
 <form action="{{ route('admin.orders.order-details.store',$order) }}" method="POST" class="wizard">
     @csrf
     <input type="hidden" name="order_id" id="order_id" value="{{$order->id}}">
@@ -53,7 +54,7 @@
                         </select>
                         @else
                         {{-- for usps --}}
-                        <select class="form-control selectpicker show-tick" data-live-search="true" name="shipping_service_id" id="usps_shipping_service" required placeholder="Select Shipping Service">
+                        <select class="form-control selectpicker show-tick" data-live-search="true" name="shipping_service_id" id="us_shipping_service" required placeholder="Select Shipping Service">
                             <option value="">@lang('orders.order-details.Select Shipping Service')</option>
                             @foreach ($shippingServices as $shippingService)
                                 <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-service-code="{{$shippingService->service_sub_class}}">{{ "{$shippingService->name}"}}</option>
@@ -107,14 +108,28 @@
         );
     })
 
-    $('#usps_shipping_service').ready(function() {
-        
-        getUspsRates();
+    $('#us_shipping_service').ready(function() {
+        const service = $('#us_shipping_service option:selected').attr('data-service-code');
+        if(service == 3440 || service == 3441) {
+
+          return  getUspsRates();
+
+        } else if(service != undefined) {
+           return getUpsRates();
+        }
         
     })
 
-    $('#usps_shipping_service').on('change',function(){
-        getUspsRates();
+    $('#us_shipping_service').on('change',function(){
+        const service = $('#us_shipping_service option:selected').attr('data-service-code');
+        if(service == 3440 || service == 3441) {
+
+           return getUspsRates();
+
+        } else if(service != undefined) {
+
+          return  getUpsRates();
+        }
     })
    
     function change(id){
@@ -133,7 +148,7 @@
     }
 
     function getUspsRates(){
-        const service = $('#usps_shipping_service option:selected').attr('data-service-code');
+        const service = $('#us_shipping_service option:selected').attr('data-service-code');
         var order_id = $('#order_id').val();
         
         $('#loading').fadeIn();
@@ -144,6 +159,34 @@
                 if(response.success == true){
                     $('#user_declared_freight').val(response.total_amount);
                     $('#user_declared_freight').prop('readonly', true);
+                }
+                $('#loading').fadeOut();
+
+            }).catch(function(error){
+                console.log(error);
+                $('#loading').fadeOut();
+        })
+        
+    }
+
+    function getUpsRates(){
+        const service = $('#us_shipping_service option:selected').attr('data-service-code');
+        var order_id = $('#order_id').val();
+        
+        $('#loading').fadeIn();
+        $.get('{{ route("api.ups_rates") }}',{
+                service: service,
+                order_id: order_id,
+            }).then(function(response){
+                if(response.success == true){
+                    $('#user_declared_freight').val(response.total_amount);
+                    $('#user_declared_freight').prop('readonly', true);
+                }
+                if(response.success == false)
+                {
+                    toastr.error(response.error);
+                    $('#ups_response').css('display', 'block');
+                    $('#ups_response').empty().append(response.error);
                 }
                 $('#loading').fadeOut();
 
