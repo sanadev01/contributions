@@ -128,11 +128,13 @@ class UPSCalculatorController extends Controller
                 array_push($this->shipping_rates , ['name'=> $shippingService->name , 'rate'=> number_format($response->data['FreightRateResponse']['TotalShipmentCharge']['MonetaryValue'], 2)]);
 
             }else {
-                $this->error = $response->message;
+                $this->error = $response->error['response']['errors'][0]['message'];
             }
         }
 
         if($this->shipping_rates == null){
+            $ups_rates = $this->shipping_rates;
+            $shipping_rates = $this->shipping_rates;
             session()->flash('alert-danger', $this->error);
         } else {
             // rates without profit
