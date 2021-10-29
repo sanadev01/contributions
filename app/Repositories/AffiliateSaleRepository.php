@@ -133,7 +133,7 @@ class AffiliateSaleRepository
             $query->where('is_paid',false);
         }
         
-        return $query->get();
+        return $query->orderBy('user_id')->get();
     }
 
 
