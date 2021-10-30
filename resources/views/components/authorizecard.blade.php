@@ -97,11 +97,12 @@
     </div>
     <div class="form-container m-auto" style="grid-template-rows:unset">
         <div class="field-container">
+            <input type="hidden" name="stripe_token" id="stripe_token">
             <label for="cardnumber">@lang('billing.Card Number') </label> @isset($billingInformation) <a  onclick="editInput('cardnumber')" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i></a> @endisset
             @isset($billingInformation)
                 <input id="cardnumber" type="text" class="{{ $errors->has('card_no')?'border border-danger':'' }}" title="{{ $errors->has('card_no')?  $errors->first('card_no'):'Card Number' }}" inputmode="numeric" readonly placeholder="**** **** **** {{ substr ($billingInformation->card_no, -4)}}">
             @else
-                <input id="cardnumber" type="text" required name="card_no" class="{{ $errors->has('card_no')?'border border-danger':'' }}" title="{{ $errors->has('card_no')?  $errors->first('card_no'):'Card Number' }}" inputmode="numeric" value="@isset($billingInformation) {{$billingInformation->card_no}} @else {{ old('card_no') }} @endisset">
+                <input id="cardnumber" type="text" required name="card_no" class="{{ $errors->has('card_no')?'border border-danger':'' }}" title="{{ $errors->has('card_no')?  $errors->first('card_no'):'Card Number' }}" inputmode="numeric" value="@isset($billingInformation){{$billingInformation->card_no}}@else{{ old('card_no') }}@endisset">
             @endisset
             <svg id="ccicon" class="ccicon" width="750" height="471" viewBox="0 0 750 471" version="1.1" xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink">

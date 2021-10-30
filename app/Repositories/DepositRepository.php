@@ -4,6 +4,8 @@
 namespace App\Repositories;
 
 
+use Stripe\Charge;
+use Stripe\Stripe;
 use App\Models\Order;
 use App\Models\State;
 use App\Models\Country;
@@ -119,6 +121,13 @@ class DepositRepository
                 $billingInformation->save();
             }
 
+            $this->stripePayment($request);
+            if($this->error != null)
+            {
+                DB::rollBack();
+                return false;
+            }
+
             $authorizeNetService = new AuthorizeNetService();
 
             $transactionID = PaymentInvoice::generateUUID('DP-');
@@ -150,6 +159,24 @@ class DepositRepository
             DB::rollBack();
             $this->error = $ex->getMessage();
             return false;
+        }
+    }
+
+    private function stripePayment($request)
+    {
+        Stripe::setApiKey(env('STRIPE_SECRET'));
+        try {
+            Charge::create ([
+                'amount' => (float)$request->amount * 100,
+                'currency' => "usd",
+                'source' => $request->stripe_token,
+                'description' => "User paid to HomeDelivery"
+            ]);
+
+            return true;
+
+        } catch (\Exception $ex) {
+            return $this->error = $ex->getMessage();
         }
     }
 
