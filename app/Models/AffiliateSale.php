@@ -22,6 +22,7 @@ class AffiliateSale extends Model
         'type',
         'commission',
         'detail',
+        'referrer_id'
     ];
     
     public function user()
@@ -32,5 +33,10 @@ class AffiliateSale extends Model
     public function order()
     {
         return $this->belongsTo(Order::class,'order_id');
+    }
+
+    public function commissionSetting()
+    {
+        return $this->belongsTo(CommissionSetting::class, 'referrer_id');
     }
 }

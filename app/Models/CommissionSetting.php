@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\AffiliateSale;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -28,6 +29,11 @@ class CommissionSetting extends Model
     public function referrer()
     {
         return $this->belongsTo(User::class, 'referrer_id');
+    }
+
+    public function affiliateSales()
+    {
+        return $this->hasMany(AffiliateSale::class, 'referrer_id');
     }
 
 
