@@ -38,6 +38,32 @@
                                         <div class="help-block"></div>
                                     </div>
                                 </div>
+                                
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">@lang('setting.Stripe Key')<span class="text-danger">*</span></label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" value="{{ old('STRIPE_KEY',setting('STRIPE_KEY')) }}" name="STRIPE_KEY" required placeholder="@lang('setting.Stripe Key')">
+                                        <div class="help-block"></div>
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">@lang('setting.Stripe Secret')<span class="text-danger">*</span></label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" name="STRIPE_SECRET" value="{{ old('STRIPE_SECRET',setting('STRIPE_SECRET')) }}" required placeholder="@lang('setting.Stripe Secret')">
+                                        <div class="help-block"></div>
+                                    </div>
+                                </div>
+
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">@lang('setting.Payment Gateway')<span class="text-danger">*</span></label>
+                                    <div class="col-md-6">
+                                        <select class="form-control" name="PAYMENT_GATEWAY">
+                                            <option value="AUTHORIZE" {{ setting('PAYMENT_GATEWAY') == 'AUTHORIZE' ? 'selected' : '' }}>Authorize</option>
+                                            <option value="STRIPE" {{ setting('PAYMENT_GATEWAY') == 'STRIPE' ? 'selected' : '' }}>Stripe</option>
+                                        </select>
+                                        <div class="help-block"></div>
+                                    </div>
+                                </div>
 
                                 <hr>
                                 <livewire:token-generator :user-id="auth()->id()"/>

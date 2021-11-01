@@ -105,7 +105,7 @@ class AffiliateSaleRepository
     public function getSalesForExport($request)
     {   
         $query = AffiliateSale::has('user')->with('order')->has('order');
-
+        
         if (Auth::user()->isUser()) {
             $query->where('user_id', Auth::id());
         }
@@ -133,7 +133,7 @@ class AffiliateSaleRepository
             $query->where('is_paid',false);
         }
         
-        return $query->get();
+        return $query->get()->sortByDesc('order.user_id');
     }
 
 

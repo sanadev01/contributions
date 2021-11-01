@@ -4,6 +4,8 @@
 namespace App\Repositories;
 
 
+use Stripe\Charge;
+use Stripe\Stripe;
 use App\Models\Order;
 use App\Models\State;
 use App\Models\Country;
@@ -89,6 +91,8 @@ class DepositRepository
 
     public function store(Request $request)
     {
+        $paymentGateway = setting('PAYMENT_GATEWAY', null, null, true);
+        
         DB::beginTransaction();
 
         try {
@@ -119,22 +123,36 @@ class DepositRepository
                 $billingInformation->save();
             }
 
-            $authorizeNetService = new AuthorizeNetService();
+            if($paymentGateway == 'STRIPE')
+            {
+                $transactionID = PaymentInvoice::generateUUID('DP-');
+                $this->stripePayment($request);
 
-            $transactionID = PaymentInvoice::generateUUID('DP-');
-            $response = $authorizeNetService->makeCreditCardPaymentWithoutInvoice($billingInformation,$transactionID,$request->amount,Auth::user());
-
-
-            if ( !$response->success ){
-                $this->error = json_encode($response->message);
-                DB::rollBack();
-                return false;
+                if($this->error != null)
+                {
+                    DB::rollBack();
+                    return false;
+                }
             }
 
+            if($paymentGateway == 'AUTHORIZE')
+            {
+                $authorizeNetService = new AuthorizeNetService();
+
+                $transactionID = PaymentInvoice::generateUUID('DP-');
+                $response = $authorizeNetService->makeCreditCardPaymentWithoutInvoice($billingInformation,$transactionID,$request->amount,Auth::user());
+
+
+                if ( !$response->success ){
+                    $this->error = json_encode($response->message);
+                    DB::rollBack();
+                    return false;
+                }
+            }
 
             Deposit::create([
                 'uuid' => $transactionID,
-                'transaction_id' => $response->data->getTransId(),
+                'transaction_id' => ($paymentGateway == 'STRIPE') ? null : $response->data->getTransId(),
                 'amount' => $request->amount,
                 'user_id' => Auth::id(),
                 'balance' => Deposit::getCurrentBalance() + $request->amount,
@@ -150,6 +168,26 @@ class DepositRepository
             DB::rollBack();
             $this->error = $ex->getMessage();
             return false;
+        }
+    }
+
+    private function stripePayment($request)
+    {
+        $stripeSecret = setting('STRIPE_SECRET', null, null, true);
+        
+        Stripe::setApiKey($stripeSecret);
+        try {
+            Charge::create ([
+                'amount' => (float)$request->amount * 100,
+                'currency' => "usd",
+                'source' => $request->stripe_token,
+                'description' => "User paid to HomeDelivery"
+            ]);
+
+            return true;
+
+        } catch (\Exception $ex) {
+            return $this->error = $ex->getMessage();
         }
     }
 
