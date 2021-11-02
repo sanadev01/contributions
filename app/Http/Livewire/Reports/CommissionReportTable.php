@@ -43,7 +43,11 @@ class CommissionReportTable extends Component
 
     public function getReportData()
     {
-        return (new CommissionReportsRepository)->getCommissionReportOfUsers($this->getRequestData(),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc');
+        if (auth()->user()->isAdmin()) {
+            return (new CommissionReportsRepository)->getCommissionReportOfUsers($this->getRequestData(),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc');
+        }
+        
+        return (new CommissionReportsRepository)->getCommissionReportOfLoggedInUser($this->getRequestData(),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc');
     }
 
     public function getRequestData()

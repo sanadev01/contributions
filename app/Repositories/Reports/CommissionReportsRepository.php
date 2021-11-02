@@ -13,53 +13,76 @@ class CommissionReportsRepository
 {
     protected $error;
 
-    public function getCommissionReportOfUsers(Request $request, $paginate = true, $pageSize = 50, $orderBy = 'id', $orderType = 'asc')
+    public function getCommissionReportOfUsers(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='asc')
     {
-
-        if (auth()->user()->isUser()) {
-            // $query = User::where(Auth::id());
-            $query = CommissionSetting::where('user_id', Auth::id());
+        $query = User::query();
             $query->with(['affiliateSales']);
+
+        if ( $request->name ){
+            $query->where('name','LIKE',"%{$request->name}%")
+                    ->orWhere('last_name','LIKE',"%{$request->name}%");
+        } elseif ( $request->pobox_number ) 
+        {
+            $query->where('pobox_number','LIKE',"%{$request->pobox_number}%");
+        } elseif ( $request->email)
+        {
+            $query->where('email','LIKE',"%{$request->email}%");
+        }
+
+        $query->withCount(['affiliateSales as sale_count'=> function($query) use ($request){
             
-            // $commissionSettings = CommissionSetting::where('user_id', Auth::id())->get();
-            dd(($query->get())->toArray());
-        } else {
-            $query = User::query();
-
-            $query->with(['affiliateSales']);
-
-            if ($request->name) {
-                $query->where('name', 'LIKE', "%{$request->name}%")
-                    ->orWhere('last_name', 'LIKE', "%{$request->name}%");
-            } elseif ($request->pobox_number) {
-                $query->where('pobox_number', 'LIKE', "%{$request->pobox_number}%");
-            } elseif ($request->email) {
-                $query->where('email', 'LIKE', "%{$request->email}%");
+            if ( $request->start_date ){
+                $query->where('created_at','>',$request->start_date);
             }
 
-            $query->withCount(['affiliateSales as sale_count' => function ($query) use ($request) {
+            if ( $request->end_date ){
+                $query->where('created_at','<=',$request->end_date);
+            }
 
-                if ($request->start_date) {
-                    $query->where('created_at', '>', $request->start_date);
-                }
+        },'affiliateSales as commission' => function($query) use ($request) {
+            if ( $request->start_date ){
+                $query->where('created_at','>',$request->start_date);
+            }
 
-                if ($request->end_date) {
-                    $query->where('created_at', '<=', $request->end_date);
-                }
-            }, 'affiliateSales as commission' => function ($query) use ($request) {
-                if ($request->start_date) {
-                    $query->where('created_at', '>', $request->start_date);
-                }
+            if ( $request->end_date ){
+                $query->where('created_at','<=',$request->end_date);
+            }
 
-                if ($request->end_date) {
-                    $query->where('created_at', '<=', $request->end_date);
-                }
+            $query->select(DB::raw('sum(commission) as commission'));
+        }])
+        ->orderBy($orderBy,$orderType);
 
-                $query->select(DB::raw('sum(commission) as commission'));
-            }])
-                ->orderBy($orderBy, $orderType);
+        return $paginate ? $query->paginate($pageSize) : $query->get();
+    }
 
-            return $paginate ? $query->paginate($pageSize) : $query->get();
-        }
+    public function getCommissionReportOfLoggedInUser(Request $request, $paginate = true, $pageSize = 50, $orderBy = 'id', $orderType = 'asc')
+    {
+        $query = CommissionSetting::where('user_id', Auth::id());
+        $query->with(['user']);
+        $query->with(['affiliateSales']);
+        
+        $query->withCount(['affiliateSales as sale_count'=> function($query) use ($request){
+            
+            if ( $request->start_date ){
+                $query->where('created_at','>',$request->start_date);
+            }
+
+            if ( $request->end_date ){
+                $query->where('created_at','<=',$request->end_date);
+            }
+
+        },'affiliateSales as commission' => function($query) use ($request) {
+            if ( $request->start_date ){
+                $query->where('created_at','>',$request->start_date);
+            }
+
+            if ( $request->end_date ){
+                $query->where('created_at','<=',$request->end_date);
+            }
+
+            $query->select(DB::raw('sum(commission) as commission'));
+        }])->orderBy($orderBy,$orderType);
+
+        return $paginate ? $query->paginate($pageSize) : $query->get();
     }
 }

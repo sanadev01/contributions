@@ -37,6 +37,6 @@ class AffiliateSale extends Model
 
     public function commissionSetting()
     {
-        return $this->belongsTo(CommissionSetting::class, 'referrer_id');
+        return $this->belongsTo(CommissionSetting::class, 'referrer_id', 'referrer_id');
     }
 }

@@ -105,6 +105,7 @@
                     </th>
                 </tr>
             </thead>
+            @if(auth()->user()->isAdmin())
             <tbody>
                 @foreach($users as $user)
                     <tr>
@@ -136,6 +137,39 @@
                     </tr>
                 @endforeach
             </tbody>
+            @else
+            <tbody>
+                @foreach($users as $commission)
+                    <tr>
+    
+                        <td class="details-control">
+                            <input type="hidden" class="user_id" value="{{$commission->user->id}}">
+                        </td>
+                        <td>
+                            {{ $commission->user->name }} {{ $commission->user->last_name }}
+                        </td>
+                        <td>
+                            {{ $commission->user->pobox_number }} 
+                        </td>
+                        <td>
+                            {{ $commission->user->email }} 
+                        </td>
+                        <td class="h4">
+                            {{ $commission->sale_count }} 
+                        </td>
+                        
+                        <td class="h4">
+                            {{ number_format($commission->commission,2) }} USD
+                        </td>
+                        <td class="h4">
+                            <a href="{{ route('admin.reports.commission.show',$commission->user) }}">
+                                <i class="fa fa-eye text-success"></i>
+                            </a>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+            @endif
         </table>
         <div class="d-flex justify-content-end px-3">
             {{ $users->links() }}

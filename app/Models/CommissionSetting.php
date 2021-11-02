@@ -33,7 +33,7 @@ class CommissionSetting extends Model
 
     public function affiliateSales()
     {
-        return $this->hasMany(AffiliateSale::class, 'referrer_id');
+        return $this->hasMany(AffiliateSale::class, 'referrer_id', 'referrer_id');
     }
 
 
