@@ -58,7 +58,6 @@ class CommissionReportsRepository
     public function getCommissionReportOfLoggedInUser(Request $request, $paginate = true, $pageSize = 50, $orderBy = 'id', $orderType = 'asc')
     {
         $query = CommissionSetting::where('user_id', Auth::id());
-        $query->with(['user']);
         $query->with(['affiliateSales']);
         
         $query->withCount(['affiliateSales as sale_count'=> function($query) use ($request){

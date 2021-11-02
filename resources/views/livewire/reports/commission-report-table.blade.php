@@ -143,16 +143,16 @@
                     <tr>
     
                         <td class="details-control">
-                            <input type="hidden" class="user_id" value="{{$commission->user->id}}">
+                            <input type="hidden" class="user_id" value="{{$commission->referrer->id}}">
                         </td>
                         <td>
-                            {{ $commission->user->name }} {{ $commission->user->last_name }}
+                            {{ $commission->referrer->name }} {{ $commission->referrer->last_name }}
                         </td>
                         <td>
-                            {{ $commission->user->pobox_number }} 
+                            {{ $commission->referrer->pobox_number }} 
                         </td>
                         <td>
-                            {{ $commission->user->email }} 
+                            {{ $commission->referrer->email }} 
                         </td>
                         <td class="h4">
                             {{ $commission->sale_count }} 
