@@ -106,7 +106,8 @@
                 </tr>
             </thead>
             <tbody>
-                @if(auth()->user()->isAdmin())
+                @if(\Auth::user()->isAdmin())
+                
                     @foreach($users as $user)
                         <tr>
                             <td class="details-control">
@@ -158,7 +159,7 @@
                                 {{ number_format($commission->commission,2) }} USD
                             </td>
                             <td class="h4">
-                                <a href="{{ route('admin.reports.commission.show',$commission->user) }}">
+                                <a href="{{ route('admin.reports.commission.show',$commission->referrer) }}">
                                     <i class="fa fa-eye text-success"></i>
                                 </a>
                             </td>
