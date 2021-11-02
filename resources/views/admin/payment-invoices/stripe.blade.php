@@ -7,11 +7,12 @@
     });
 
     $('.payment-form').on('submit', function (e) {
-        var adminBalance = $("input[name='adminpay']:checked").val();
+        var HDaccount = $("input[name='pay']:checked").val();
         let stripe = $(this).data('stripe-payment');
         let stripeKey = $(this).data('stripe-publishable-key');
         
-        if(paymentGateway == 'stripe' && (adminBalance == 0 || adminBalance == undefined))
+        
+        if(paymentGateway == 'stripe' && HDaccount == 0 )
         {
             e.preventDefault();
 
