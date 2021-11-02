@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin\Reports;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\AffiliateSale;
 use App\Services\Excel\Export\CommissionReport;
 use App\Repositories\Reports\CommissionReportsRepository;
+use Illuminate\Support\Facades\Auth;
 
 class CommissionReportController extends Controller
 {
@@ -31,8 +33,12 @@ class CommissionReportController extends Controller
     
     public function show(User $commission) 
     {
-        $commission->affiliateSales;
-        $user = $commission;
+        if(Auth::user()->isAdmin()){
+            $commission->affiliateSales;
+            $user = $commission;
+        }else{
+            $user = $commission;
+        }
 
         return view('admin.reports.commission-report-show', compact('user'));
     }
