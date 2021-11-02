@@ -18,7 +18,7 @@
                         </a>
                     </div>
                     <div class="card-content">
-                        <form action="{{ route('admin.payment-invoices.invoice.checkout.store',$invoice) }}" method="POST">
+                        <form action="{{ route('admin.payment-invoices.invoice.checkout.store',$invoice) }}" method="POST" class="payment-form" @if($paymentGateway == 'STRIPE') data-stripe-payment="true" data-stripe-publishable-key="{{ $stripeKey }}" @else data-stripe-payment="false" @endif>
                             @csrf
                             <div class="card-body">
                                 <p class="h5 dim">@lang('invoice.Checkout Message Detail')</p>
@@ -60,6 +60,13 @@
                                 </div> --}}
                                 <div  id="ifCard" style="display:none">
                                     <div class="grid-wrapper w-100">
+                                        <div class="form-group col-md-4">
+                                            <label for="payment_gateway">Select Payment Gateway</label>
+                                            <select id="payment_gateway" name="payment_gateway" class="form-control">
+                                              <option selected value="authorize">Authorize</option>
+                                              <option value="stripe">Stripe</option>
+                                            </select>
+                                        </div>
                                         @foreach (auth()->user()->billingInformations as $billingInfo)
                                             <div class="card-wrapper h-auto my-2 w-100">
                                                 <input class="c-card" type="radio" name="billingInfo" id="{{$billingInfo->id}}" {{ request('billingInfo') == $billingInfo->id ? 'checked': '' }} value="{{$billingInfo->id}}">
@@ -112,6 +119,7 @@
                                                     </div>
                                                 </fieldset>
                                             </div>
+                                            <div class="row ml-3 mt-3" id="stripe_error" style="display: none;"></div>
                                         </div>
                                     </div>
                                     <hr>
@@ -175,4 +183,5 @@
             }
         }
     </script>
+    @include('admin.payment-invoices.stripe')
 @endsection

@@ -123,7 +123,7 @@ class DepositRepository
                 $billingInformation->save();
             }
 
-            if($paymentGateway == 'STRIPE')
+            if($request->payment_gateway == 'stripe')
             {
                 $transactionID = PaymentInvoice::generateUUID('DP-');
                 $this->stripePayment($request);
@@ -135,7 +135,7 @@ class DepositRepository
                 }
             }
 
-            if($paymentGateway == 'AUTHORIZE')
+            if($request->payment_gateway == 'authorize')
             {
                 $authorizeNetService = new AuthorizeNetService();
 
@@ -152,7 +152,7 @@ class DepositRepository
 
             Deposit::create([
                 'uuid' => $transactionID,
-                'transaction_id' => ($paymentGateway == 'STRIPE') ? null : $response->data->getTransId(),
+                'transaction_id' => ($request->payment_gateway == 'stripe') ? null : $response->data->getTransId(),
                 'amount' => $request->amount,
                 'user_id' => Auth::id(),
                 'balance' => Deposit::getCurrentBalance() + $request->amount,
