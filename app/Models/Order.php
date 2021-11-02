@@ -382,11 +382,14 @@ class Order extends Model implements Package
 
     public function addAffiliateCommissionSale(User $referrer, $commissionCalculator)
     {
+        \Log::info($this);
+        \Log::info($this->user_id);
         return $this->affiliateSale()->create( [
             'value' => $commissionCalculator->getValue(),
             'type' => $commissionCalculator->getCommissionSetting()->type,
             'commission' => $commissionCalculator->getCommission(),
             'user_id' => $referrer->id,
+            'referrer_id' => $this->user_id,
             'detail' => 'Commission from order '. $this->warehouse_number,
         ]);
 
