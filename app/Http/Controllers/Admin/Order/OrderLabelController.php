@@ -36,7 +36,7 @@ class OrderLabelController extends Controller
          * Checks if shipping service ia a Sinerlog service
          */
         if(
-            $order->recipient->country_id == 30 
+            $order->recipient->country_id == Order::BRAZIL 
             && 
             $order->shippingService()->find($order->shipping_service_id)->api == 'sinerlog'
         ){
