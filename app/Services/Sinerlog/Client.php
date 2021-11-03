@@ -455,14 +455,12 @@ class Client
             throw new \Exception($response->getBody()->getContents(),500);
 
         }catch (\GuzzleHttp\Exception\ClientException $e) {
-            dd($e);
             return (Object)[
                 'success' => false,
                 'message' => $e->getResponse()->getBody()->getContents(),
                 'data' => json_decode($e->getResponse()->getBody()->getContents())
             ];
         } catch (\Exception $ex) {
-            dd($ex);
             return (Object)[
                 'success' => false,
                 'message' => $ex->getMessage(),
