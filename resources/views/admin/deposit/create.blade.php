@@ -128,13 +128,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="payment_gateway">Select Payment Gateway</label>
-                                        <select id="payment_gateway" name="payment_gateway" class="form-control">
-                                          <option selected value="authorize">Authorize</option>
-                                          <option value="stripe">Stripe</option>
-                                        </select>
-                                    </div>
                                     <div class="clearfix mt-4"></div>
                                     <div class="billingInfo-wrapper position-relative border p-4" style="display: none;cursor: default;">
                                         <x-authorize-card billingInformationId=""></x-authorize-card>
