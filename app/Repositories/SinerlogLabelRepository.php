@@ -25,8 +25,7 @@ class SinerlogLabelRepository
     public function update(Order $order)
     {
         $cn23 = $this->generateLabel($order);
-
-        if ( $cn23 ){
+        if ( $cn23->success == true ){
 
             /**
              * If label was successfully created, stores transction data on database
@@ -45,7 +44,7 @@ class SinerlogLabelRepository
             return $this->printLabel($order);
         }
         else {
-            return $this->error = 'An error occurred while generating the label';
+            return $this->error = $cn23->message;
         }
     }
 
