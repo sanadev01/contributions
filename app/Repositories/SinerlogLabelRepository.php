@@ -45,7 +45,7 @@ class SinerlogLabelRepository
             return $this->printLabel($order);
         }
         else {
-            return 'An error occurred while generating the label';
+            return $this->error = 'An error occurred while generating the label';
         }
     }
 
@@ -58,7 +58,7 @@ class SinerlogLabelRepository
         if($data->success){
             return $data->data;
         } else {
-            return 'An error occurred while generating the label';
+            return $this->error = 'An error occurred while generating the label';
         }
     }
 
