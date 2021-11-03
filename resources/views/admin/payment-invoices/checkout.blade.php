@@ -60,13 +60,6 @@
                                 </div> --}}
                                 <div  id="ifCard" style="display:none">
                                     <div class="grid-wrapper w-100">
-                                        <div class="form-group col-md-4">
-                                            <label for="payment_gateway">Select Payment Gateway</label>
-                                            <select id="payment_gateway" name="payment_gateway" class="form-control">
-                                              <option selected value="authorize">Authorize</option>
-                                              <option value="stripe">Stripe</option>
-                                            </select>
-                                        </div>
                                         @foreach (auth()->user()->billingInformations as $billingInfo)
                                             <div class="card-wrapper h-auto my-2 w-100">
                                                 <input class="c-card" type="radio" name="billingInfo" id="{{$billingInfo->id}}" {{ request('billingInfo') == $billingInfo->id ? 'checked': '' }} value="{{$billingInfo->id}}">
