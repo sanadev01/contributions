@@ -5,11 +5,16 @@
                 <div class="col-12 text-right mb-3">
                     <p class="mr-2 h5">UserName:<span class="text-success h4"> {{ $user->name }}</span></p>
                     <p class="mr-2 h5">POBOX Number:<span class="text-success h4"> {{ $user->pobox_number }}</span></p>
-                    <p class="mr-2 h5">Paid Commission:<span class="text-success h4"> $ {{ number_format($user->affiliateSales()->where('is_paid', true)->sum('value'), 2) }}</span></p>
-                    <p class="mr-2 h5">UnPaid Commission:<span class="text-danger h4"> $ {{ number_format($user->affiliateSales()->where('is_paid', false)->sum('value'), 2) }}</span></p>
+                    <p class="mr-2 h5">Paid Commission:<span class="text-success h4"> $ {{ number_format($user->affiliateSales()->where('is_paid', true)->sum('commission'), 2) }}</span></p>
+                    <p class="mr-2 h5">UnPaid Commission:<span class="text-danger h4"> $ {{ number_format($user->affiliateSales()->where('is_paid', false)->sum('commission'), 2) }}</span></p>
                 </div>
             </div>
         @endadmin
+        <div class="col-12 text-right">
+            <a href="{{ route('admin.reports.commission.index') }}" class="btn btn-primary">
+                Back to list
+            </a>
+        </div>
         <div class="row mb-2 no-print">
             <div class="col-1">
                 <select class="form-control" wire:model="pageSize">
