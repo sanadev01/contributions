@@ -105,71 +105,68 @@
                     </th>
                 </tr>
             </thead>
-            @if(auth()->user()->isAdmin())
             <tbody>
-                @foreach($users as $user)
-                    <tr>
-    
-                        <td class="details-control">
-                            <input type="hidden" class="user_id" value="{{$user->id}}">
-                        </td>
-                        <td>
-                            {{ $user->name }} {{ $user->last_name }}
-                        </td>
-                        <td>
-                            {{ $user->pobox_number }} 
-                        </td>
-                        <td>
-                            {{ $user->email }} 
-                        </td>
-                        <td class="h4">
-                            {{ $user->sale_count }} 
-                        </td>
-                        
-                        <td class="h4">
-                            {{ number_format($user->commission,2) }} USD
-                        </td>
-                        <td class="h4">
-                            <a href="{{ route('admin.reports.commission.show',$user) }}">
-                                <i class="fa fa-eye text-success"></i>
-                            </a>
-                        </td>
-                    </tr>
-                @endforeach
+                @if(\Auth::user()->isAdmin())
+                
+                    @foreach($users as $user)
+                        <tr>
+                            <td class="details-control">
+                                <input type="hidden" class="user_id" value="{{$user->id}}">
+                            </td>
+                            <td>
+                                {{ $user->name }} {{ $user->last_name }}
+                            </td>
+                            <td>
+                                {{ $user->pobox_number }} 
+                            </td>
+                            <td>
+                                {{ $user->email }} 
+                            </td>
+                            <td class="h4">
+                                {{ $user->sale_count }} 
+                            </td>
+                            
+                            <td class="h4">
+                                {{ number_format($user->commission,2) }} USD
+                            </td>
+                            <td class="h4">
+                                <a href="{{ route('admin.reports.commission.show',$user) }}">
+                                    <i class="fa fa-eye text-success"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    @endforeach
+                @else
+                    @foreach($users as $commission)
+                        <tr>
+                            <td class="details-control">
+                                <input type="hidden" class="user_id" value="{{optional($commission->referrer)->id}}">
+                            </td>
+                            <td>
+                                {{ optional($commission->referrer)->name }} {{ optional($commission->referrer)->last_name }}
+                            </td>
+                            <td>
+                                {{ optional($commission->referrer)->pobox_number }} 
+                            </td>
+                            <td>
+                                {{ optional($commission->referrer)->email }} 
+                            </td>
+                            <td class="h4">
+                                {{ $commission->sale_count }} 
+                            </td>
+                            
+                            <td class="h4">
+                                {{ number_format($commission->commission,2) }} USD
+                            </td>
+                            <td class="h4">
+                                <a href="{{ route('admin.reports.commission.show',$commission->user) }}">
+                                    <i class="fa fa-eye text-success"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    @endforeach
+                @endif
             </tbody>
-            @else
-            <tbody>
-                @foreach($users as $commission)
-                    <tr>
-    
-                        <td class="details-control">
-                            <input type="hidden" class="user_id" value="{{$commission->referrer->id}}">
-                        </td>
-                        <td>
-                            {{ $commission->referrer->name }} {{ $commission->referrer->last_name }}
-                        </td>
-                        <td>
-                            {{ $commission->referrer->pobox_number }} 
-                        </td>
-                        <td>
-                            {{ $commission->referrer->email }} 
-                        </td>
-                        <td class="h4">
-                            {{ $commission->sale_count }} 
-                        </td>
-                        
-                        <td class="h4">
-                            {{ number_format($commission->commission,2) }} USD
-                        </td>
-                        <td class="h4">
-                            <a href="{{ route('admin.reports.commission.show',$commission->user) }}">
-                                <i class="fa fa-eye text-success"></i>
-                            </a>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-            @endif
         </table>
         <div class="d-flex justify-content-end px-3">
             {{ $users->links() }}
