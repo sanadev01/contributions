@@ -14,8 +14,10 @@ class AffiliateSaleRepository
         if (Auth::user()->isUser()) {
             if(\Route::currentRouteName() == 'admin.reports.commission.show'){
                 $query->where('user_id', Auth::id())->where('referrer_id', $request->user_id);
+                return $paginate ? $query->paginate($pageSize) : $query->get();
             }else{
                 $query->where('user_id', Auth::id());
+                return $paginate ? $query->paginate($pageSize) : $query->get();
             }
         }
         
