@@ -16,7 +16,12 @@
                     <h6>@lang('orders.invoice.INVOICE NO.')</h6>
                     <p>{{ $order->warehouse_number }}</p>
                     <h6 class="mt-2">@lang('orders.invoice.INVOICE DATE')</h6>
-                    <p>{{ now()->format('d M Y') }}</p>
+                    @if($order->getPaymentInvoice())
+                        <p>{{ $order->getPaymentInvoice()->updated_at->format('d M Y') }}</p>
+                    @else
+                        <p>{{ now()->format('d M Y') }}</p>
+                    @endif
+                    
                 </div>
             </div>
         </div>
