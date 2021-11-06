@@ -27,6 +27,7 @@ return [
     'Handling Services' => 'Handling Services',
     'Shipping Services' => 'Shipping Services',
     'Shipping Rates' => 'Shipping Rates (Cost) Upload',
+    'Correios Cost' => 'Correios Cost',
     'Users' => 'Users',
     'Roles' => 'Roles',
     'Billing Informations' => 'Billing Informations',
