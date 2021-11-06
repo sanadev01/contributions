@@ -47,14 +47,14 @@
                         </div>
                         <hr>
                         <div class="row d-flex justify-content-center">
-                            <div class="col-12" @if($order->recipient->country_id == \App\Models\Order::CHILE) style="margin-left: 30% !important;" @endif>
+                            <div class="col-12 ml-5" @if($order->recipient->country_id == \App\Models\Order::CHILE) style="margin-left: 30% !important;" @endif>
                                 <ul id="progressbar" class="text-center">
                                     @if ($trackingType == 'HD')
                                         <li class="@if($tracking->status_code >=  70) active @endif step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1" src="{{ asset('images/tracking/to-hd.png') }}">
                                                 <div class="d-flex flex-column mt-2">
-                                                    <p class="font-weight-bold">Freight<br>in Transit </p>
+                                                    <p class="font-weight-bold">Freight<br>in transit </p>
                                                 </div>
                                             </div>
                                         </li>
@@ -71,7 +71,7 @@
                                             <div class="icon-content">
                                                 <img class="icon offset-1" src="{{ asset('images/tracking/container.png') }}">
                                                 <div class="d-flex flex-column mt-4">
-                                                    <p class="font-weight-bold">Manifested </p>
+                                                    <p class="font-weight-bold">Processed/ <br> manifested </p>
                                                 </div>
                                             </div>
                                         </li>
@@ -79,7 +79,7 @@
                                             <div class="icon-content">
                                                 <img class="icon offset-1" src="{{ asset('images/tracking/awb.png') }}">
                                                 <div class="d-flex flex-column mt-4">
-                                                    <p class="font-weight-bold">Shipped</p>
+                                                    <p class="font-weight-bold">@if($tracking->order->recipient->country_id == \App\Models\Order::BRAZIL)Posted @else Shipped @endif</p>
                                                 </div>
                                             </div>
                                         </li>
@@ -95,14 +95,14 @@
                                         @endif
                                         <li class="step0">
                                             <div class="icon-content">
-                                                @if ($tracking->order->recipient->country_id != 46)
+                                                @if ($tracking->order->recipient->country_id != \App\Models\Order::CHILE)
                                                     <img class="icon offset-1" src="{{ asset('images/tracking/brazil-flag.png') }}">
                                                 @else
                                                     <img class="icon offset-1" src="{{ asset('images/tracking/chile-flag.png') }}">
                                                 @endif
                                                 <div class="d-flex flex-column" mt-4>
-                                                    @if ($tracking->order->recipient->country_id != 46)
-                                                        <p class="font-weight-bold">Received <br>Correios Brazil </p>
+                                                    @if ($tracking->order->recipient->country_id != \App\Models\Order::CHILE)
+                                                        <p class="font-weight-bold">Received <br>by Correios</p>
                                                     @else
                                                         <p class="font-weight-bold">Received <br>Correios Chile</p>
                                                     @endif
@@ -114,15 +114,7 @@
                                             <div class="icon-content">
                                                 <img class="icon offset-1" src="{{ asset('images/tracking/custom-finished.png') }}">
                                                 <div class="d-flex flex-column" mt-4>
-                                                    <p class="font-weight-bold">Customs<br>Finished</p>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li class="step0">
-                                            <div class="icon-content">
-                                                <img class="icon offset-1" src="{{ asset('images/tracking/to-hd.png') }}">
-                                                <div class="d-flex flex-column" mt-4>
-                                                    <p class="font-weight-bold">Parcels in <br> transit to<br>distribution center<br> in {{ optional(optional(optional($tracking->order)->recipient)->state)->name }} </p>
+                                                    <p class="font-weight-bold">Customs clearance<br>finalized</p>
                                                 </div>
                                             </div>
                                         </li>
@@ -131,16 +123,24 @@
                                             <div class="icon-content">
                                                 <img class="icon offset-1" src="{{ asset('images/tracking/to-hd.png') }}">
                                                 <div class="d-flex flex-column" mt-4>
-                                                    <p class="font-weight-bold">Parcels in <br> transit to<br>distribution center<br> in @if ($tracking->order->recipient->country_id == \App\Models\Order::CHILE) {{ optional(optional(optional($tracking->order)->recipient)->state)->name }} @endif {{ optional(optional($tracking->order)->recipient)->city }} </p>
+                                                    <p class="font-weight-bold">In transit <br>to @if ($tracking->order->recipient->country_id == \App\Models\Order::CHILE) {{ optional(optional(optional($tracking->order)->recipient)->state)->name }} @endif {{ optional(optional($tracking->order)->recipient)->city }}</p>
                                                 </div>
                                             </div>
                                         </li>
+                                        {{-- <li class="step0">
+                                            <div class="icon-content">
+                                                <img class="icon offset-1" src="{{ asset('images/tracking/to-hd.png') }}">
+                                                <div class="d-flex flex-column" mt-4>
+                                                    <p class="font-weight-bold">Parcels in <br> transit to<br>distribution center<br> in @if ($tracking->order->recipient->country_id == \App\Models\Order::CHILE) {{ optional(optional(optional($tracking->order)->recipient)->state)->name }} @endif {{ optional(optional($tracking->order)->recipient)->city }} </p>
+                                                </div>
+                                            </div>
+                                        </li> --}}
                                         @if ($tracking->order->recipient->country_id != \App\Models\Order::CHILE)
                                         <li class="step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1" src="{{ asset('images/tracking/left-to-buyer.png') }}">
                                                 <div class="d-flex flex-column" mt-4>
-                                                    <p class="font-weight-bold">Parcels left  <br> to the buyer </p>
+                                                    <p class="font-weight-bold">Out for<br>delivery </p>
                                                 </div>
                                             </div>
                                         </li>
@@ -149,7 +149,7 @@
                                             <div class="icon-content">
                                                 <img class="icon offset-1" src="{{ asset('images/tracking/delivered.png') }}">
                                                 <div class="d-flex flex-column" mt-4>
-                                                    <p class="font-weight-bold">parcels  <br>delivered to the buyer  </p>
+                                                    <p class="font-weight-bold">parcels delivered</p>
                                                 </div>
                                             </div>
                                         </li>
@@ -158,7 +158,7 @@
                                             <div class="icon-content">
                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/to-hd.png') }}">
                                                 <div class="d-flex flex-column mt-2">
-                                                    <p class="font-weight-bold">Freight<br>in Transit </p>
+                                                    <p class="font-weight-bold">Freight<br>in transit </p>
                                                 </div>
                                             </div>
                                         </li>
@@ -174,7 +174,7 @@
                                             <div class="icon-content">
                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/container.png') }}">
                                                 <div class="d-flex flex-column mt-4">
-                                                    <p class="font-weight-bold">Manifested </p>
+                                                    <p class="font-weight-bold">Processed/ <br> manifested </p>
                                                 </div>
                                             </div>
                                         </li>
@@ -182,7 +182,7 @@
                                             <div class="icon-content">
                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/awb.png') }}">
                                                 <div class="d-flex flex-column mt-4">
-                                                    <p class="font-weight-bold">Shipped</p>
+                                                    <p class="font-weight-bold">@if($order->recipient->country_id == \App\Models\Order::BRAZIL)Posted @else Shipped @endif</p>
                                                 </div>
                                             </div>
                                         </li>
@@ -199,7 +199,7 @@
                                             <div class="icon-content">
                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/brazil-flag.png') }}">
                                                 <div class="d-flex flex-column" mt-4>
-                                                    <p class="font-weight-bold">Received <br>Correios Brazil </p>
+                                                    <p class="font-weight-bold">Received <br>by Correios</p>
                                                 </div>
                                             </div>
                                         </li>
@@ -207,7 +207,7 @@
                                             <div class="icon-content">
                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/custom-finished.png') }}">
                                                 <div class="d-flex flex-column" mt-4>
-                                                    <p class="font-weight-bold">Customs<br>Finished</p>
+                                                    <p class="font-weight-bold">Customs<br>clearance finalized</p>
                                                 </div>
                                             </div>
                                         </li>
@@ -215,23 +215,23 @@
                                             <div class="icon-content">
                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/to-hd.png') }}">
                                                 <div class="d-flex flex-column" mt-4>
-                                                    <p class="font-weight-bold">Parcels in <br> transit to<br>distribution center<br> in {{optional(optional($order->recipient)->state)->name}}</p>
+                                                    <p class="font-weight-bold">In transit <br>to @if ($tracking->order->recipient->country_id == \App\Models\Order::CHILE) {{ optional(optional(optional($tracking->order)->recipient)->state)->name }} @endif {{ optional(optional($tracking->order)->recipient)->city }}</p>
                                                 </div>
                                             </div>
                                         </li>
-                                        <li class="@if($left_to_buyer || $delivered_to_buyer || $posted ) active @endif step0">
+                                        {{-- <li class="@if($left_to_buyer || $delivered_to_buyer || $posted ) active @endif step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/to-hd.png') }}">
                                                 <div class="d-flex flex-column" mt-4>
                                                     <p class="font-weight-bold">Parcels in <br> transit to<br>distribution center<br> in {{optional($order->recipient)->city}}</p>
                                                 </div>
                                             </div>
-                                        </li>
+                                        </li> --}}
                                         <li class="@if($delivered_to_buyer || $posted) active @endif step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/left-to-buyer.png') }}">
                                                 <div class="d-flex flex-column" mt-4>
-                                                    <p class="font-weight-bold">Parcels left  <br> to the buyer </p>
+                                                    <p class="font-weight-bold">Out for  <br> delivery</p>
                                                 </div>
                                             </div>
                                         </li>
@@ -239,7 +239,7 @@
                                             <div class="icon-content">
                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/delivered.png') }}">
                                                 <div class="d-flex flex-column" mt-4>
-                                                    <p class="font-weight-bold">parcels  <br>delivered to the buyer  </p>
+                                                    <p class="font-weight-bold">parcels delivered </p>
                                                 </div>
                                             </div>
                                         </li>
@@ -256,7 +256,7 @@
                                             <div class="icon-content">
                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/to-hd.png') }}">
                                                 <div class="d-flex flex-column" mt-4>
-                                                    <p class="font-weight-bold">Parcels in <br> transit to<br>distribution center<br> @if(isset($tracking['Oficina'])) in {{ $tracking['Oficina'] }} @endif</p>
+                                                    <p class="font-weight-bold">Parcels in <br> transit to @if(isset($tracking['Oficina'])) in {{ $tracking['Oficina'] }} @endif</p>
                                                 </div>
                                             </div>
                                         </li>
@@ -264,7 +264,7 @@
                                             <div class="icon-content">
                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/left-to-buyer.png') }}">
                                                 <div class="d-flex flex-column" mt-4>
-                                                    <p class="font-weight-bold">Parcels delivered  <br> to the buyer </p>
+                                                    <p class="font-weight-bold">Parcels delivered</p>
                                                 </div>
                                             </div>
                                         </li>
@@ -303,7 +303,7 @@
                                 @if ($CorreiosBrazil)
                                     <tr>
                                         <td>
-                                            {{ $tracking['data'] }}
+                                            {{ $tracking['data'] }} {{ $tracking['hora'] }}
                                         </td>
                                         <td>
                                             Brazil
