@@ -38,5 +38,6 @@ return [
     'Weight' => 'Peso',
     'Zip Code Origin' => 'Origem do código postal',
     'Zip Code Destination' => 'Destino do CEP',
+    'accrual-rates' => 'Accrual Rates',
 ];
  
