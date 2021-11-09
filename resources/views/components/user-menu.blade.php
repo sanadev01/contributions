@@ -145,7 +145,7 @@
                     @endcan
 
                     @can('viewAny', App\Models\Rate::class)
-                    <li class="{{ $isActive(['admin.rates.shipping-rates.index','admin.rates.shipping-rates.create']) }}">
+                    <li class="{{ $isActive(['admin.rates.shipping-rates.index','admin.rates.shipping-rates.create', 'admin.rates.view-shipping-rates']) }}">
                         <a href="{{ route('admin.rates.shipping-rates.index') }}">
                             <i class="feather icon-circle"></i>
                             <span class="menu-title" style="font-size: 13px !important; font-weight: 500 !important;">@lang('menu.Shipping Rates')</span>

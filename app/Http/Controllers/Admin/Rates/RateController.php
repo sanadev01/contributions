@@ -55,4 +55,21 @@ class RateController extends Controller
 
     }
 
+    public function showShippingRates($id)
+    {   
+        $this->authorizeResource(Rate::class);
+
+        $shipping_rate = Rate::findorfail($id);
+        return view('admin.rates.shipping-rates.show', compact('shipping_rate'));
+    }
+
+    public function downloadShippingRates($id)
+    {
+        $this->authorizeResource(Rate::class);
+        
+        $shipping_rate = Rate::findorfail($id);
+        $exportService = new ShippingServiceRateExport($shipping_rate->data);
+        return $exportService->handle();
+    }
+
 }
