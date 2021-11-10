@@ -121,14 +121,14 @@ class UpsService
                         'EMailAddress' => 'homedelivery@homedeliverybr.com'
                     ],
                     'ShipmentBillingOption' => [
-                        'Code' => '10',
+                        'Code' => '40',
                     ],
                 ],
                 'Service' =>  [
                     'Code' => $request->service,
                 ],
                 'Commodity' => [
-                    'Description' => 'FRS-Freight',
+                    'Description' => 'goods',
                     'Weight' => [
                         'UnitOfMeasurement' => [
                             'Code' => ($order->measurement_unit == 'kg/cm') ? 'KGS' : 'LBS',
@@ -218,7 +218,7 @@ class UpsService
                             'EMailAddress' => 'homedelivery@homedeliverybr.com'
                         ],
                         'ShipmentBillingOption' => [
-                            'Code' => '10',
+                            'Code' => '40',
                         ],
                     ],
                     'Documents' => [
@@ -355,7 +355,7 @@ class UpsService
                         'EMailAddress' => 'homedelivery@homedeliverybr.com'
                     ],
                     'ShipmentBillingOption' => [
-                        'Code' => '10',
+                        'Code' => '40',
                     ],
                 ],
                 'Service' =>  [
@@ -449,7 +449,7 @@ class UpsService
                             'EMailAddress' => 'homedelivery@homedeliverybr.com'
                         ],
                         'ShipmentBillingOption' => [
-                            'Code' => '10',
+                            'Code' => '40',
                         ],
                     ],
                     'Documents' => [

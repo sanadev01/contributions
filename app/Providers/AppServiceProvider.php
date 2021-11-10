@@ -68,7 +68,7 @@ class AppServiceProvider extends ServiceProvider
             $create_package_url = 'https://wwwcie.ups.com/ship/v1/freight/shipments/ground';
             $delete_package_url = '';
             $create_manifest_url = '';
-            $ground_rates_url = 'https://wwwcie.ups.com/ship/v1801/freight/rating/ground';
+            $ground_rates_url = 'https://onlinetools.ups.com/ship/v1801/freight/rating/rate';
             $transactionSrc = 'HERCO';
             $userName = 'hffinc1';           
             $password = 'Hdbrasilc4!';
