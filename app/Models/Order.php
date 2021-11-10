@@ -53,7 +53,7 @@ class Order extends Model implements Package
 
     const BRAZIL = 30;
     const CHILE = 46;
-    const USPS = 250;
+    const US = 250;
 
     public $user_profit = 0;
 
@@ -341,7 +341,7 @@ class Order extends Model implements Package
         $shippingService = $this->shippingService;
 
         $additionalServicesCost = $this->calculateAdditionalServicesCost($this->services);
-        if($this->recipient->country_id == 250)
+        if($this->recipient->country_id == self::US)
         {
             $shippingCost = $this->user_declared_freight;
             $this->calculateProfit($shippingCost);
