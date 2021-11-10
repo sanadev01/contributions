@@ -28,6 +28,7 @@ return [
     'Handling Services' => 'Handling Services',
     'Shipping Services' => 'Shipping Services',
     'Shipping Rates' => 'Shipping Rates (Cost) Upload',
+    'Correios Cost' => 'Correios Cost',
     'Users' => 'Users',
     'Roles' => 'Roles',
     'Billing Informations' => 'Billing Informations',
@@ -47,6 +48,7 @@ return [
         'Delivery Bill' => 'Delivery Bill',
         'Chile Containers' => 'Chile Containers',
         'USPS Containers' => 'USPS Containers',
+        'Sinerlog Containers' => 'Sinerlog Containers'
     ],
     'Affiliate' => [
         'menu' => 'Affiliate',

@@ -22,8 +22,16 @@ class OrdersCheckoutController extends Controller
         if ( $invoice->isPaid() ){
             abort(404);
         }
+
+        $stripeKey = null;
+
+        $paymentGateway = setting('PAYMENT_GATEWAY', null, null, true);
+        if($paymentGateway == 'STRIPE')
+        {
+            $stripeKey = setting('STRIPE_KEY', null, null, true);
+        }
         
-        return view('admin.payment-invoices.checkout',compact('invoice'));
+        return view('admin.payment-invoices.checkout',compact('invoice', 'paymentGateway', 'stripeKey'));
     }
 
     public function store(PaymentInvoice $invoice,Request $request, OrderRepository $orderRepository)

@@ -60,6 +60,12 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'Packet Express service';
         }elseif($this->services_subclass_code == 'XP'){
             return 'Packet Mini service';
+        }elseif($this->services_subclass_code == 'SL-NX'){
+            return 'SL Standard Modal';
+        }elseif($this->services_subclass_code == 'SL-IX'){
+            return 'SL Express Modal';
+        }elseif($this->services_subclass_code == 'SL-XP'){
+            return 'SL Small Parcels';
         }elseif($this->services_subclass_code == 'SRM'){
             return 'SRM service';
         }elseif($this->services_subclass_code == 'SRP'){

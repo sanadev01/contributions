@@ -2,19 +2,21 @@
 
 namespace App\Repositories;
 
-use App\Events\OrderPaid;
-use App\Mail\User\PaymentPaid;
-use App\Models\BillingInformation;
-use App\Models\Country;
-use App\Models\HandlingService;
+use Stripe\Charge;
+use Stripe\Stripe;
 use App\Models\Order;
-use App\Models\PaymentInvoice;
-use App\Models\ShippingService;
 use App\Models\State;
-use App\Services\PaymentServices\AuthorizeNetService;
+use App\Models\Country;
+use App\Events\OrderPaid;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Mail\User\PaymentPaid;
+use App\Models\PaymentInvoice;
+use App\Models\HandlingService;
+use App\Models\ShippingService;
+use App\Models\BillingInformation;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use App\Services\PaymentServices\AuthorizeNetService;
 
 class OrderRepository
 {
@@ -198,16 +200,31 @@ class OrderRepository
                 $billingInformation->save();
             }
 
-            $authorizeNetService = new AuthorizeNetService();
+            if($request->payment_gateway == 'stripe')
+            {
+                $transactionID = PaymentInvoice::generateUUID('DP-');
+                $response = $this->stripePayment($request, $paymentInvoice->total_amount);
 
-            $response = $authorizeNetService->makeCreditCardPayement($billingInformation,$paymentInvoice);
-
-
-            if ( !$response->success ){
-                $this->error = json_encode($response->message);
-                DB::rollBack();
-                return false;
+                if($this->error != null)
+                {
+                    DB::rollBack();
+                    return false;
+                }
             }
+
+            if($request->payment_gateway == 'authorize')
+            {
+                $authorizeNetService = new AuthorizeNetService();
+
+                $response = $authorizeNetService->makeCreditCardPayement($billingInformation,$paymentInvoice);
+
+                if ( !$response->success ){
+                    $this->error = json_encode($response->message);
+                    DB::rollBack();
+                    return false;
+                }
+            }
+            
 
             $paymentInvoice->update([ 
                 'last_four_digits' => substr($billingInformation->card_no,-4),
@@ -215,7 +232,7 @@ class OrderRepository
             ]);
 
             $paymentInvoice->transactions()->create([
-                'transaction_id' => $response->data->getTransId(),
+                'transaction_id' => ($request->payment_gateway == 'stripe') ? $response->id : $response->data->getTransId(),
                 'amount' => $paymentInvoice->total_amount
             ]);
 
@@ -268,6 +285,26 @@ class OrderRepository
         }
         
         return $orders->get();
+    }
+    
+    private function stripePayment($request, $total_amount)
+    {
+        $stripeSecret = setting('STRIPE_SECRET', null, null, true);
+        
+        Stripe::setApiKey($stripeSecret);
+        try {
+            $response = Charge::create ([
+                'amount' => (float)$total_amount * 100,
+                'currency' => "usd",
+                'source' => $request->stripe_token,
+                'description' => "User paid to HomeDelivery"
+            ]);
+
+            return $response;
+
+        } catch (\Exception $ex) {
+            return $this->error = $ex->getMessage();
+        }
     }
 
 
