@@ -187,7 +187,7 @@
                                             </div>
                                         </li>
                                         @if ($CorreiosChile == false)
-                                        {{-- <li class="@if($posted || $correios_brazil_recieved ) active @endif step0">
+                                        {{-- <li class="@if($delivered || $correios_brazil_recieved ) active @endif step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/correios.png') }}">
                                                 <div class="d-flex flex-column mt-2">
@@ -195,7 +195,7 @@
                                                 </div>
                                             </div>
                                         </li> --}}
-                                        <li class="@if( $correios_brazil_recieved || $custom_finished || $in_transit || $left_to_buyer || $delivered_to_buyer || $posted ) active @endif step0">
+                                        <li class="@if( $correios_brazil_recieved || $custom_finished || $in_transit || $left_to_buyer || $delivered_to_buyer || $delivered ) active @endif step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/brazil-flag.png') }}">
                                                 <div class="d-flex flex-column" mt-4>
@@ -203,7 +203,7 @@
                                                 </div>
                                             </div>
                                         </li>
-                                        <li class="@if($custom_finished || $in_transit || $left_to_buyer || $delivered_to_buyer || $posted ) active @endif step0">
+                                        <li class="@if($custom_finished || $in_transit || $left_to_buyer || $delivered_to_buyer || $delivered ) active @endif step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/custom-finished.png') }}">
                                                 <div class="d-flex flex-column" mt-4>
@@ -211,15 +211,15 @@
                                                 </div>
                                             </div>
                                         </li>
-                                        <li class="@if($in_transit || $left_to_buyer || $delivered_to_buyer || $posted ) active @endif step0">
+                                        <li class="@if($in_transit || $left_to_buyer || $delivered_to_buyer || $delivered ) active @endif step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/to-hd.png') }}">
                                                 <div class="d-flex flex-column" mt-4>
-                                                    <p class="font-weight-bold">In transit <br>to @if ($tracking->order->recipient->country_id == \App\Models\Order::CHILE) {{ optional(optional(optional($tracking->order)->recipient)->state)->name }} @endif {{ optional(optional($tracking->order)->recipient)->city }}</p>
+                                                    <p class="font-weight-bold">In transit <br>to @if ($order->recipient->country_id == \App\Models\Order::CHILE) {{ optional(optional($order->recipient)->state)->name }} @endif {{ optional($order->recipient)->city }}</p>
                                                 </div>
                                             </div>
                                         </li>
-                                        {{-- <li class="@if($left_to_buyer || $delivered_to_buyer || $posted ) active @endif step0">
+                                        {{-- <li class="@if($left_to_buyer || $delivered_to_buyer || $delivered ) active @endif step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/to-hd.png') }}">
                                                 <div class="d-flex flex-column" mt-4>
@@ -227,7 +227,7 @@
                                                 </div>
                                             </div>
                                         </li> --}}
-                                        <li class="@if($delivered_to_buyer || $posted) active @endif step0">
+                                        <li class="@if($delivered_to_buyer || $delivered) active @endif step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/left-to-buyer.png') }}">
                                                 <div class="d-flex flex-column" mt-4>
@@ -235,7 +235,7 @@
                                                 </div>
                                             </div>
                                         </li>
-                                        <li class="@if($posted ) active @endif step0">
+                                        <li class="@if($delivered ) active @endif step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/delivered.png') }}">
                                                 <div class="d-flex flex-column" mt-4>
