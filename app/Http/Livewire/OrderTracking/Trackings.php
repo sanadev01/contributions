@@ -22,7 +22,7 @@ class Trackings extends Component
     public $in_transit = false;
     public $left_to_buyer = false;
     public $delivered_to_buyer = false;
-    public $posted = false;
+    public $delivered = false;
     public $CorreiosChile = false;
     public $CorreiosBrazil = false;
     public $trackingType;
@@ -147,7 +147,7 @@ class Trackings extends Component
         $this->in_transit == false;
         $this->left_to_buyer == false;
         $this->delivered_to_buyer == false;
-        $this->posted == false;
+        $this->delivered == false;
 
 
         $this->correios_brazil_recieved = ( $this->tracking->status_code == 16 && $this->tracking->type == 'PAR' ) ? true : false;
@@ -155,7 +155,7 @@ class Trackings extends Component
         $this->in_transit = ( ($this->tracking->status_code == 01 && $this->tracking->type == 'RO') || ($this->tracking->status_code == 01 && $this->tracking->type == 'DO') ) ? true : false;
         $this->left_to_buyer = ( $this->tracking->status_code == 0 && $this->tracking->type == 'OEC' ) ? true : false;
         $this->delivered_to_buyer = ( $this->tracking->status_code == 01 && $this->tracking->type == 'BDEBDIBDR' ) ? true : false;
-        $this->posted = ( $this->tracking->status_code == 01 && $this->tracking->type == 'PO' ) ? true : false;
+        $this->delivered = ( $this->tracking->status_code == 01 && $this->tracking->type == 'PO' ) ? true : false;
         
         return true;
     }
@@ -167,14 +167,14 @@ class Trackings extends Component
         $this->in_transit == false;
         $this->left_to_buyer == false;
         $this->delivered_to_buyer == false;
-        $this->posted == false;
+        $this->delivered == false;
 
         $this->correios_brazil_recieved = ( $this->tracking['status'] == 16 && $this->tracking['tipo'] == 'PAR' ) ? true : false;
         $this->custom_finished = ( $this->tracking['status'] == 17 && $this->tracking['tipo'] == 'PAR' ) ? true : false;
         $this->in_transit = ( ($this->tracking['status'] == 01 && $this->tracking['tipo'] == 'RO') || ($this->tracking['status'] == 01 && $this->tracking['tipo'] == 'DO') ) ? true : false;
         $this->left_to_buyer = ( $this->tracking['status'] == 0 && $this->tracking['tipo'] == 'OEC' ) ? true : false;
         $this->delivered_to_buyer = ( $this->tracking['status'] == 01 && $this->tracking['tipo'] == 'BDEBDIBDR' ) ? true : false;
-        $this->posted = ( $this->tracking['status'] == 01 && ($this->tracking['tipo'] == 'PO' || $this->tracking['tipo'] == 'BDE') ) ? true : false;
+        $this->delivered = ( $this->tracking['status'] == 01 && $this->tracking['tipo'] == 'BDE') ? true : false;
         
         return true;
     }
