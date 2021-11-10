@@ -31,10 +31,19 @@ class SaleExport extends AbstractExportService
         $this->setExcelHeaderRow();
 
         $row = $this->currentRow;
-
+        $checkUser = null;
+        $sumRow = 'H1';
         foreach ($this->sales as $sale) {
             $user = $sale->user;
             $commissionUser = $sale->order->user;
+
+            if($checkUser && $checkUser != $commissionUser->pobox_number){
+                $this->setCellValue('I'.$row, "=SUM($sumRow:H{$row})");
+                $this->setBackgroundColor("A{$row}:J{$row}", 'adfb84');
+                $row++;
+                $sumRow = 'H'.$row;
+            }
+            
             if ( Auth::user()->isAdmin() ){
                 $this->setCellValue('A'.$row, $user->name . $user->pobox_number);
             }
@@ -49,10 +58,14 @@ class SaleExport extends AbstractExportService
             $this->setCellValue('J'.$row, $sale->created_at->format('m/d/Y'));
             
             $row++;
+            $checkUser = optional($commissionUser)->pobox_number;
         }
 
         $this->currentRow = $row;
-
+        $endRowSum = $row;
+        $this->setCellValue('I'.$row, "=SUM($sumRow:H{$endRowSum})");
+        $this->setBackgroundColor("A{$row}:J{$row}", 'adfb84');
+        $row++;
         $this->setCellValue('H'.$row, "=SUM(H1:H{$row})");
         $this->setBackgroundColor("A{$row}:J{$row}", 'adfb84');
     }
