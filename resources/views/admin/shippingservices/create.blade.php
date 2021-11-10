@@ -178,7 +178,7 @@
                                     <div class="controls row mb-1 align-items-center">
                                         <label class="col-md-3 text-md-right">Service API alias<span class="text-danger">*</span></label>
                                         <div class="col-md-6">
-                                            <input type="text" required class="form-control" name="service_api_alias" placeholder="Service API alias" value="{{old('service_api_alias')}}" />
+                                            <input type="text" class="form-control" name="service_api_alias" id="service_api_alias" placeholder="Service API alias" value="{{old('service_api_alias')}}" />
                                             @error('service_api_alias')
                                                 <div class="help-block text-danger"> {{ $message }} </div>
                                             @enderror
@@ -188,7 +188,7 @@
                                     <div class="controls row mb-1 align-items-center">
                                         <label class="col-md-3 text-md-right">Min height allowed<span class="text-danger">*</span></label>
                                         <div class="col-md-6">
-                                            <input type="number" required class="form-control" name="min_height_allowed" placeholder="Min height allowed" value="{{ old('min_height_allowed') }}" />
+                                            <input type="number" required class="form-control" name="min_height_allowed" id="min_height_allowed" placeholder="Min height allowed" value="{{ old('min_height_allowed') }}" />
                                             @error('min_height_allowed')
                                                 <div class="help-block text-danger"> {{ $message }} </div>
                                             @enderror
@@ -198,7 +198,7 @@
                                     <div class="controls row mb-1 align-items-center">
                                         <label class="col-md-3 text-md-right">Max height allowed<span class="text-danger">*</span></label>
                                         <div class="col-md-6">
-                                            <input type="number" required class="form-control" name="max_height_allowed" placeholder="Max height allowed" value="{{ old('max_height_allowed') }}" />
+                                            <input type="number" required class="form-control" name="max_height_allowed" id="max_height_allowed" placeholder="Max height allowed" value="{{ old('max_height_allowed') }}" />
                                             @error('max_height_allowed')
                                                 <div class="help-block text-danger"> {{ $message }} </div>
                                             @enderror
@@ -242,6 +242,10 @@
 
             $('#service_sub_class').on('change', function(){
 
+                $('#service_api_alias').prop('required', false);
+                $('#max_height_allowed').prop('required', false);
+                $('#min_height_allowed').prop('required', false); 
+
                 let serviceClass = $('#service_sub_class').val();
 
                 if(serviceClass == '33163' || serviceClass == '33171' || serviceClass == '33198')
@@ -249,6 +253,11 @@
                     $('.all-products').addClass('d-none');
 
                     $('.sinelrog-inputs').removeClass('d-none');
+
+                    $('#service_api_alias').prop('required', true);
+                    $('#max_height_allowed').prop('required', true);
+                    $('#min_height_allowed').prop('required', true);
+                    
                     if(serviceClass == '33198')
                     {
                         $('.all-products').removeClass('d-none');
