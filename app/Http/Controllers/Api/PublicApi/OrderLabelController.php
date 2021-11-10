@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Api\PublicApi;
 
 use App\Models\Order;
+use App\Events\OrderPaid;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 // use App\Repositories\LabelRepository;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use App\Repositories\USPSLabelRepository;
+use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
 
@@ -15,7 +17,7 @@ class OrderLabelController extends Controller
 {
     public function __invoke(Request $request, Order $order, CorrieosBrazilLabelRepository $labelRepository, CorrieosChileLabelRepository $chile_labelRepository, USPSLabelRepository $usps_labelRepository)
     {
-        
+        $orders = new Collection;
         $this->authorize('canPrintLableViaApi',$order);
         
         if ( !$order->isPaid() &&  getBalance() < $order->gross_total){
@@ -99,6 +101,8 @@ class OrderLabelController extends Controller
                 'status' => Order::STATUS_PAYMENT_DONE
             ]);
             chargeAmount($order->gross_total,$order);
+            $orders->push($order);
+            event(new OrderPaid($orders, true));
         }
 
         return apiResponse(true,"Lable Generated successfully.",[
