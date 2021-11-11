@@ -37,7 +37,7 @@
                                                         <i class="vs-icon feather icon-check"></i>
                                                     </span>
                                                 </span>
-                                                <span class="h3 mx-2 text-primary my-0 py-0"></span>
+                                                <span class="h3 mx-2 text-danger my-0 py-0">@if ( getBalance() < $invoice->total_amount) Not Enough Balance in HD account @endif</span>
                                             </div>
                                         </div>
                                     </div>
