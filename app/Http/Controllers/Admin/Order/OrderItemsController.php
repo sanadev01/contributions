@@ -76,7 +76,18 @@ class OrderItemsController extends Controller
                 $shippingServices = collect() ;
             }
         }
-        
+
+        if($shippingServices->contains('service_sub_class', '33163') || $shippingServices->contains('service_sub_class', '33171') || $shippingServices->contains('service_sub_class', '33198'))
+        {
+           if($order->user->sinerlog != true)
+           {
+                $shippingServices = $shippingServices->filter(function ($item, $key)  {
+                    return $item->service_sub_class != '33163' && $item->service_sub_class != '33171' && $item->service_sub_class != '33198';
+                });
+           }
+           
+        }
+
         return view('admin.orders.order-details.index',compact('order','shippingServices', 'error'));
     }
 
