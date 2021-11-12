@@ -271,28 +271,8 @@ class UpsService
                             'Code' => 'BOX',
                         ],
                         'FreightClass' => '60',
-    
                     ],
-                    'PickupRequest' => [
-                        'Requester' => [
-                            'AttentionName' => 'Marcio',
-                            'ThirdPartyIndicator' => 'Shipper',
-                            'EMailAddress' => 'marcio@gmail.com',
-                            'Name' => 'Marcio',
-                            'Phone' => [
-                                'Number' => '+13058885191'
-                            ]
-                        ],
-                        'PickupDate' => '20211027',
-                        'EarliestTimeReady' => '0723',
-                        'LatestTimeReady' => '1700',
-                    ],
-                    'TimeInTransitIndicator' => '',
                 ],
-                'Miscellaneous' => [
-                    'WSVersion' => '21.0.11',
-                    'ReleaseID' => '07.12.2008'
-                ]
             ],
         ];
 
@@ -502,13 +482,8 @@ class UpsService
                             'Code' => 'BOX',
                         ],
                         'FreightClass' => '60',
-    
                     ],
                 ],
-                'Miscellaneous' => [
-                    'WSVersion' => '21.0.11',
-                    'ReleaseID' => '07.12.2008'
-                ]
             ],
         ];
 
