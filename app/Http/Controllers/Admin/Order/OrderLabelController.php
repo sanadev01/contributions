@@ -25,11 +25,14 @@ class OrderLabelController extends Controller
     {
         $this->authorize('canPrintLable',$order);
 
-        
+        if(!$order->isPaid()){
+            $error = 'Error: Payment is Pending';
+            $buttonsOnly = $request->has('buttons_only');
+            return view('admin.orders.label.label',compact('order','error','buttonsOnly'));
+        }
         // if($order->shippingService->api == ShippingService::API_CORREIOS){
             return $this->handleCorreiosLabels($request,$order);
         // }
-
         $labelData = null;
         $error = null;
 
