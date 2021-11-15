@@ -51,11 +51,26 @@ class OrderExport extends AbstractExportService
             if($order->status == Order::STATUS_ORDER){
                 $this->setCellValue('M'.$row, 'ORDER');
             }
+            if($order->status == Order::STATUS_NEEDS_PROCESSING){
+                $this->setCellValue('M'.$row, 'PROCESSING');
+            }
+            if($order->status == Order::STATUS_CANCEL){
+                $this->setCellValue('M'.$row, 'CANCEL');
+            }
+            if($order->status == Order::STATUS_REJECTED){
+                $this->setCellValue('M'.$row, 'REJECTED');
+            }
+            if($order->status == Order::STATUS_RELEASE){
+                $this->setCellValue('M'.$row, 'RELEASED');
+            }
+            if($order->status == Order::STATUS_REFUND){
+                $this->setCellValue('M'.$row, 'REFUND');
+            }
             if($order->status == Order::STATUS_PAYMENT_PENDING){
-                $this->setCellValue('M'.$row, 'PAYMENT_PENDING');
+                $this->setCellValue('M'.$row, 'PAYMENT PENDING');
             }
             if($order->status == Order::STATUS_PAYMENT_DONE){
-                $this->setCellValue('M'.$row, 'PAYMENT_DONE');
+                $this->setCellValue('M'.$row, 'PAYMENT DONE');
             }
             if($order->status == Order::STATUS_SHIPPED){
                 $this->setCellValue('M'.$row, 'SHIPPED');
