@@ -6,6 +6,7 @@ namespace App\Repositories;
 
 use Stripe\Charge;
 use Stripe\Stripe;
+use Stripe\Customer;
 use App\Models\Order;
 use App\Models\State;
 use App\Models\Country;
@@ -108,9 +109,8 @@ class DepositRepository
                     'user_id' => Auth::id(),
                     'first_name' => $request->first_name,
                     'last_name' => $request->last_name,
-                    'card_no' => $request->card_no,
-                    'expiration' => $request->expiration,
-                    'cvv' => $request->cvv,
+                    'expiration' => ($request->payment_gateway == 'stripe_ach') ? null : $request->expiration,
+                    'cvv' => ($request->payment_gateway == 'stripe_ach') ? $request->routing_number : $request->cvv,
                     'phone' => $request->phone,
                     'address' => $request->address,
                     'state' => State::find($request->state)->code,
@@ -127,6 +127,18 @@ class DepositRepository
             {
                 $transactionID = PaymentInvoice::generateUUID('DP-');
                 $this->stripePayment($request);
+
+                if($this->error != null)
+                {
+                    DB::rollBack();
+                    return false;
+                }
+            }
+
+            if($request->payment_gateway == 'stripe_ach')
+            {
+                $transactionID = PaymentInvoice::generateUUID('DP-');
+                $this->stripeAchPayment($request);
 
                 if($this->error != null)
                 {
@@ -152,7 +164,7 @@ class DepositRepository
 
             Deposit::create([
                 'uuid' => $transactionID,
-                'transaction_id' => ($request->payment_gateway == 'stripe') ? null : $response->data->getTransId(),
+                'transaction_id' => ($request->payment_gateway == 'stripe' || $request->payment_gateway == 'stripe_ach') ? null : $response->data->getTransId(),
                 'amount' => $request->amount,
                 'user_id' => Auth::id(),
                 'balance' => Deposit::getCurrentBalance() + $request->amount,
@@ -182,6 +194,76 @@ class DepositRepository
                 'currency' => "usd",
                 'source' => $request->stripe_token,
                 'description' => "User paid to HomeDelivery"
+            ]);
+
+            return true;
+
+        } catch (\Exception $ex) {
+            return $this->error = $ex->getMessage();
+        }
+    }
+
+    private function stripeAchPayment($request)
+    {
+        $stripeSecret = setting('STRIPE_SECRET', null, null, true);
+        
+        Stripe::setApiKey($stripeSecret);
+
+        try {
+
+            $customer = Customer::create([
+                'description' => $request->first_name . ' ' . $request->last_name,
+                'source' => $request->stripe_token,
+            ]);
+
+            $this->verifyCustomer($customer, $request);
+
+            return true;
+
+        } catch (\Exception $th) {
+            $this->error = $th->getMessage();
+
+            return false;
+        }
+        
+    }
+
+    private function verifyCustomer($customer, $request)
+    {
+        try {
+
+            $bank_account = Customer::retrieveSource(
+                $customer->id,
+                $customer->default_source
+            );
+
+            $bank_account->verify(['amounts' => [32, 45]]);
+
+            $this->stripeAchCharge($customer, $request);
+
+            return true;
+
+        } catch (\Exception $ex) {
+
+            $this->error = $ex->getMessage();
+
+            return false;
+        }
+        
+    }
+
+    private function stripeAchCharge($customer, $request)
+    {
+        try {
+
+            $stripeSecret = setting('STRIPE_SECRET', null, null, true);
+
+            $stripe = new \Stripe\StripeClient($stripeSecret);
+
+            $charge = $stripe->charges->create([
+                'amount' => (float)$request->amount * 100, 
+                'currency' => 'usd', 
+                'customer' => $customer->id,
             ]);
 
             return true;

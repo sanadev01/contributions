@@ -102,25 +102,36 @@
                 <select id="payment_gateway" name="payment_gateway" class="form-control border border-danger" style="font-size: 18px !important;">
                   <option selected value="authorize">Authorize</option>
                   <option value="stripe">Stripe</option>
+                  <option value="stripe_ach">Stripe ACH</option>
                 </select>
             </div>
             <input type="hidden" name="stripe_token" id="stripe_token">
-            <label for="cardnumber">@lang('billing.Card Number') </label> @isset($billingInformation) <a  onclick="editInput('cardnumber')" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i></a> @endisset
-            @isset($billingInformation)
-                <input id="cardnumber" type="text" class="{{ $errors->has('card_no')?'border border-danger':'' }}" title="{{ $errors->has('card_no')?  $errors->first('card_no'):'Card Number' }}" inputmode="numeric" readonly placeholder="**** **** **** {{ substr ($billingInformation->card_no, -4)}}">
-            @else
-                <input id="cardnumber" type="text" required name="card_no" class="{{ $errors->has('card_no')?'border border-danger':'' }}" title="{{ $errors->has('card_no')?  $errors->first('card_no'):'Card Number' }}" inputmode="numeric" value="@isset($billingInformation){{$billingInformation->card_no}}@else{{ old('card_no') }}@endisset">
-            @endisset
+            <div class="d-block" id="div_card_number">
+                <label for="cardnumber">@lang('billing.Card Number') </label> @isset($billingInformation) <a  onclick="editInput('cardnumber')" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i></a> @endisset
+                @isset($billingInformation)
+                    <input id="cardnumber" type="text" class="{{ $errors->has('card_no')?'border border-danger':'' }}" title="{{ $errors->has('card_no')?  $errors->first('card_no'):'Card Number' }}" inputmode="numeric" readonly placeholder="**** **** **** {{ substr ($billingInformation->card_no, -4)}}">
+                @else
+                    <input id="cardnumber" type="text" required name="card_no" class="{{ $errors->has('card_no')?'border border-danger':'' }}" title="{{ $errors->has('card_no')?  $errors->first('card_no'):'Card Number' }}" inputmode="numeric" value="@isset($billingInformation){{$billingInformation->card_no}}@else{{ old('card_no') }}@endisset">
+                @endisset
+            </div>
+            <div class="d-none" id="div_account_number">
+                <label for="accountNumber">@lang('billing.Account Number')</label>
+                <input id="accountNumber" type="text" required name="card_no" class="{{ $errors->has('card_no')?'border border-danger':'' }}" title="{{ $errors->has('card_no')?  $errors->first('card_no'):'Card Number' }}" inputmode="numeric" value="@isset($billingInformation){{$billingInformation->card_no}}@else{{ old('card_no') }}@endisset">
+            </div>
             <svg id="ccicon" class="ccicon" width="750" height="471" viewBox="0 0 750 471" version="1.1" xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink">
             </svg>
         </div>
         <div class="row justify-content-center">
-            <div class="col-6">
+            <div class="col-6 d-block" id="div_expiry_date">
                 <label for="expirationdate">@lang('billing.Expiration')  (mm/yy)</label>
                 <input id="expirationdate" required type="text" name="expiration" class="{{ $errors->has('expiration')?'border border-danger':'' }}" title="{{ $errors->has('expiration')?  $errors->first('expiration'):'Expiration Date' }}"  value="@isset($billingInformation){{$billingInformation->expiration}}@else{{ old('expiration') }}@endisset" inputmode="numeric">
             </div>
-            <div class="col-6">
+            <div class="col-12 d-none" id="div_routing_number">
+                <label for="routing_number">@lang('billing.Routing Number')</label>
+                <input id="routing_number" required type="text" name="routing_number" class="{{ $errors->has('routing_number')?'border border-danger':'' }}" title="{{ $errors->has('routing_number')?  $errors->first('routing_number'):'Routing Number' }}"  value="{{ old('routing_number') }}" inputmode="numeric">
+            </div>
+            <div class="col-6 d-block" id="div_security_code">
                 <label for="securitycode">@lang('billing.Security Code') </label> @isset($billingInformation) <a  onclick="editInput('securitycode')" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i></a> @endisset
             @isset($billingInformation)
                 <input id="securitycode" type="text" class="{{ $errors->has('cvv')?'border border-danger':'' }}" title="{{ $errors->has('cvv')?  $errors->first('cvv'):'Security Code' }}" placeholder="****" readonly inputmode="numeric">
