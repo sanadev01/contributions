@@ -63,7 +63,7 @@ class DuplicateOrderRepository extends Model
         foreach ($order->services as $service) {
             $serviceCopy = $service->replicate();
             $serviceCopy->save();
-            $copy->services()->save($$serviceCopy);
+            $copy->services()->save($serviceCopy);
         }
     }
 

@@ -8,6 +8,7 @@ use App\Events\OrderPaid;
 use Illuminate\Http\Request;
 use App\Models\PaymentInvoice;
 use PhpParser\Node\Stmt\Foreach_;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\OrderRepository;
@@ -49,20 +50,32 @@ class OrdersCheckoutController extends Controller
                 return back();
             }
             
-            foreach($invoice->orders as $order){
-                if ( !$order->isPaid() &&  getBalance() >= $order->gross_total ){
-                    chargeAmount($order->gross_total,$order);
+            DB::beginTransaction();
+
+            try {
+                
+                foreach($invoice->orders as $order){
+                    if ( !$order->isPaid() &&  getBalance() >= $order->gross_total ){
+                        chargeAmount($order->gross_total,$order);
+                    }
                 }
+    
+                $invoice->update([
+                    'is_paid' => true
+                ]);
+    
+                $invoice->orders()->update([
+                    'is_paid' => true,
+                    'status' => Order::STATUS_PAYMENT_DONE
+                ]);
+
+                DB::commit();
+            } catch (\Exception $ex) {
+                DB::rollBack();
+                session()->flash('alert-danger',$ex->getMessage());
+                return back();
             }
-
-            $invoice->update([
-                'is_paid' => true
-            ]);
-
-            $invoice->orders()->update([
-                'is_paid' => true,
-                'status' => Order::STATUS_PAYMENT_DONE
-            ]);
+            
             
             event(new OrderPaid($invoice->orders, true));
 
