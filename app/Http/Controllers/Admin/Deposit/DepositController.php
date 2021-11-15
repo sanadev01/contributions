@@ -28,11 +28,20 @@ class DepositController extends Controller
 
     public function create()
     {
-        return view('admin.deposit.create');
+        $stripeKey = null;
+
+        $paymentGateway = setting('PAYMENT_GATEWAY', null, null, true);
+        if($paymentGateway == 'STRIPE')
+        {
+            $stripeKey = setting('STRIPE_KEY', null, null, true);
+        }
+        
+        return view('admin.deposit.create', compact('paymentGateway', 'stripeKey'));
     }
 
     public function store(Request $request, DepositRepository $depositRepository)
     {
+    
         if(Auth::user()->isAdmin()){
             
             if($request->adminpay){

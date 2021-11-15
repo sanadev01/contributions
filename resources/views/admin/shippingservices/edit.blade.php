@@ -144,7 +144,7 @@
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">Shipping Service Sub Class<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <select class="form-control" name="service_sub_class" required value="{{ old('service_sub_class') }}" placeholder="service_sub_class" >
+                                        <select class="form-control" name="service_sub_class" required value="{{ old('service_sub_class') }}" placeholder="service_sub_class" id="service_sub_class">
                                             <option value="">Select</option>
                                             @foreach (config('shippingServices.correios.sub_classess') as $key => $item)
                                                 <option value="{{$key}}" {{ old('service_sub_class',$shippingService->service_sub_class) == $key ? 'selected' : '' }}>{{$item}}</option>
@@ -155,7 +155,57 @@
                                         @enderror
                                     </div>
                                 </div>
+                                <div class="sinelrog-inputs d-none">
+                                    <div class="controls row mb-1 align-items-center">
+                                        <label class="col-md-3 text-md-right">API<span class="text-danger">*</span></label>
+                                        <div class="col-md-6">
+                                            <input type="text" required class="form-control" name="api" placeholder="API" value="sinerlog" readonly value="{{ $shippingService->api }}"/>
+                                            @error('api')
+                                                <div class="help-block text-danger"> {{ $message }} </div>
+                                            @enderror
+                                        </div>
+                                    </div>
 
+                                    <div class="controls row mb-1 align-items-center all-products d-none">
+                                        <label class="col-md-3 text-md-right">Max sum of all products<span class="text-danger">*</span></label>
+                                        <div class="col-md-6">
+                                            <input type="number" class="form-control" name="max_sum_of_all_products" placeholder="Max sum of all products" value="{{ $shippingService->max_sum_of_all_products }}" />
+                                            @error('max_sum_of_all_products')
+                                                <div class="help-block text-danger"> {{ $message }} </div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="controls row mb-1 align-items-center">
+                                        <label class="col-md-3 text-md-right">Service API alias<span class="text-danger">*</span></label>
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control" name="service_api_alias" id="service_api_alias" value="{{ $shippingService->service_api_alias }}" placeholder="Service API alias" />
+                                            @error('service_api_alias')
+                                                <div class="help-block text-danger"> {{ $message }} </div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="controls row mb-1 align-items-center">
+                                        <label class="col-md-3 text-md-right">Min height allowed<span class="text-danger">*</span></label>
+                                        <div class="col-md-6">
+                                            <input type="number" class="form-control" name="min_height_allowed" id="min_height_allowed" placeholder="Min height allowed" value="{{ $shippingService->min_height_allowed }}" />
+                                            @error('min_height_allowed')
+                                                <div class="help-block text-danger"> {{ $message }} </div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="controls row mb-1 align-items-center">
+                                        <label class="col-md-3 text-md-right">Max height allowed<span class="text-danger">*</span></label>
+                                        <div class="col-md-6">
+                                            <input type="number" class="form-control" name="max_height_allowed" id="max_height_allowed" placeholder="Max height allowed" value="{{$shippingService->max_height_allowed }}" />
+                                            @error('max_height_allowed')
+                                                <div class="help-block text-danger"> {{ $message }} </div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">Delivery Time Notes<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
@@ -184,4 +234,60 @@
             </div>
         </div>
     </section>
+@endsection
+@section('js')
+    <script>
+        console.log(true);
+        $(document).ready(function() {
+            $('#service_sub_class').ready(function() {
+                let serviceClass = $('#service_sub_class').val();
+
+                $('#service_api_alias').prop('required', false);
+                $('#max_height_allowed').prop('required', false);
+                $('#min_height_allowed').prop('required', false); 
+
+                if(serviceClass == '33163' || serviceClass == '33171' || serviceClass == '33198')
+                {
+                    $('.all-products').addClass('d-none');
+                    $('.sinelrog-inputs').removeClass('d-none');
+
+                    $('#service_api_alias').prop('required', true);
+                    $('#max_height_allowed').prop('required', true);
+                    $('#min_height_allowed').prop('required', true);
+
+                    if(serviceClass == '33198')
+                    {
+                        $('.all-products').removeClass('d-none');
+                        $('.products-sum').prop('required',true);
+                    }
+
+                }
+
+            });
+            $('#serviceClass_sub_class').on('change', function(){
+                let serviceClass = $('#service_sub_class').val();
+
+                $('#service_api_alias').prop('required', false);
+                $('#max_height_allowed').prop('required', false);
+                $('#min_height_allowed').prop('required', false); 
+
+                if(serviceClass == '33163' || serviceClass == '33171' || serviceClass == '33198')
+                {
+                    $('.all-products').addClass('d-none');
+                    $('.sinelrog-inputs').removeClass('d-none');
+
+                    $('#service_api_alias').prop('required', true);
+                    $('#max_height_allowed').prop('required', true);
+                    $('#min_height_allowed').prop('required', true);
+
+                    if(serviceClass == '33198')
+                    {
+                        $('.all-products').removeClass('d-none');
+                        $('.products-sum').prop('required', true);
+                    }
+
+                }
+            });
+        });
+    </script>
 @endsection
