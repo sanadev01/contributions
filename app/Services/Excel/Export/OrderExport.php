@@ -72,12 +72,6 @@ class OrderExport extends AbstractExportService
             if($order->status == Order::STATUS_PAYMENT_DONE){
                 $this->setCellValue('M'.$row, 'PAYMENT DONE');
             }
-            if($order->status == Order::STATUS_ARRIVE_AT_WAREHOUSE){
-                $this->setCellValue('M'.$row, 'IN WAREHOUSE');
-            }
-            if($order->status == Order::STATUS_INSIDE_CONTAINER){
-                $this->setCellValue('M'.$row, 'INSIDE CONTAINER');
-            }
             if($order->status == Order::STATUS_SHIPPED){
                 $this->setCellValue('M'.$row, 'SHIPPED');
             }
