@@ -68,7 +68,11 @@ class ScanLabel extends Component
     {
         $order = Order::where('corrios_tracking_code', $trackingCode)->first();
         $this->order = $order;
-        
+
+        if(!$order->isPaid() && !$order->is_paid){
+            $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order Payment is pending']);
+            return $this->tracking = '';
+        }
         if($this->order){
             $this->packagesRows[$index]['tracking_code'] = $trackingCode;
             $this->packagesRows[$index]['pobox'] = $this->order->user->pobox_number;
@@ -91,7 +95,10 @@ class ScanLabel extends Component
             $this->order = $order;
             
             if($this->order){
-                
+                if(!$this->order->is_paid){
+                    $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order Payment is pending']);
+                    return $this->tracking = '';
+                }
                 if($this->order->status == Order::STATUS_CANCEL){
                     $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order Cancel']);
                     return $this->tracking = '';
