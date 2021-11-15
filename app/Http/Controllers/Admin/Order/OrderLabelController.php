@@ -30,6 +30,11 @@ class OrderLabelController extends Controller
             $buttonsOnly = $request->has('buttons_only');
             return view('admin.orders.label.label',compact('order','error','buttonsOnly'));
         }
+        if ( !$order->is_paid){
+            $error = 'Error: Payment is Pending';
+            $buttonsOnly = $request->has('buttons_only');
+            return view('admin.orders.label.label',compact('order','error','buttonsOnly'));
+        }
         // if($order->shippingService->api == ShippingService::API_CORREIOS){
             return $this->handleCorreiosLabels($request,$order);
         // }
