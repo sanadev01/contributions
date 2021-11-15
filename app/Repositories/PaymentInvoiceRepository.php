@@ -3,8 +3,9 @@
 namespace App\Repositories;
 
 use App\Models\Order;
-use App\Models\PaymentInvoice;
 use Illuminate\Http\Request;
+use App\Models\PaymentInvoice;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class PaymentInvoiceRepository
@@ -69,21 +70,32 @@ class PaymentInvoiceRepository
             return !$order->getPaymentInvoice();
         })->all());
 
-        $invoice = PaymentInvoice::create([
-            'uuid' => PaymentInvoice::generateUUID(),
-            'paid_by' => Auth::id(),
-            'order_count' => $orders->count(),
-            'type' => auth()->user()->can('canCreatePostPaidInvoices', PaymentInvoice::class) ? PaymentInvoice::TYPE_POSTPAID : PaymentInvoice::TYPE_PREPAID
-        ]);
+        DB::beginTransaction();
+        
+        try {
 
+            $invoice = PaymentInvoice::create([
+                'uuid' => PaymentInvoice::generateUUID(),
+                'paid_by' => Auth::id(),
+                'order_count' => $orders->count(),
+                'type' => auth()->user()->can('canCreatePostPaidInvoices', PaymentInvoice::class) ? PaymentInvoice::TYPE_POSTPAID : PaymentInvoice::TYPE_PREPAID
+            ]);
 
-        $invoice->orders()->sync($orders->pluck('id')->toArray());
+            DB::commit();
 
-        $invoice->update([
-            'total_amount' => $invoice->orders()->sum('gross_total')
-        ]);
+            $invoice->orders()->sync($orders->pluck('id')->toArray());
 
-        return $invoice;
+            $invoice->update([
+                'total_amount' => $invoice->orders()->sum('gross_total')
+            ]);
+
+            return $invoice;
+           
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            return $ex->getMessage();
+        }
+       
     }
 
     public function updateInvoice(Request $request,PaymentInvoice $invoice)
@@ -95,14 +107,24 @@ class PaymentInvoiceRepository
             return !$order->getPaymentInvoice() || $order->getPaymentInvoice()->id === $invoice->id;
         })->all());
 
-        $invoice->orders()->sync($orders->pluck('id')->toArray());
+        DB::beginTransaction();
 
-        $invoice->update([
-            'total_amount' => $invoice->orders()->sum('gross_total'),
-            'order_count' => $invoice->orders()->count()
-        ]);
+        try {
+            $invoice->orders()->sync($orders->pluck('id')->toArray());
 
-        return $invoice;
+            $invoice->update([
+                'total_amount' => $invoice->orders()->sum('gross_total'),
+                'order_count' => $invoice->orders()->count()
+            ]);
+            
+            DB::commit();
+            return $invoice;
+            
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            return $ex->getMessage();
+        }
+        
     }
 
     public function delete(PaymentInvoice  $paymentInvoice)
