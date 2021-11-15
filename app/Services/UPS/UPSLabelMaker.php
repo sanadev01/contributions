@@ -1,0 +1,44 @@
+<?php
+namespace App\Services\UPS;
+
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Response;
+
+
+class UPSLabelMaker
+{
+    private $order;
+
+    public function setOrder($order)
+    {
+        
+        $this->order = $order;
+    }
+
+    public function saveLabel()
+    {
+        if($this->order->api_response != null)
+        {
+            $ups_response = json_decode($this->order->api_response);
+            $base64_pdf = $ups_response->FreightShipResponse->ShipmentResults->Documents->Image->GraphicImage;
+
+            Storage::put("labels/{$this->order->corrios_tracking_code}.pdf", base64_decode($base64_pdf));
+
+            return true;
+        }
+    }
+    
+    public function saveUSPSLabel()
+    {
+        if($this->order->usps_response != null)
+        {
+            $usps_response = json_decode($this->order->usps_response);
+            $base64_pdf = $usps_response->base64_labels[0];
+
+            Storage::put("labels/{$this->order->corrios_usps_tracking_code}.pdf", base64_decode($base64_pdf));
+
+            return true;
+        }
+    }
+
+}

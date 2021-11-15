@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 
+use App\Services\UPS\UpsService;
 use App\Services\USPS\UspsService;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
@@ -60,6 +61,28 @@ class AppServiceProvider extends ServiceProvider
             // $password = config('usps.password');
 
             return new UspsService($api_url, $delete_usps_label_url, $create_manifest_url, $get_price_url, $email, $password);
+        });
+
+        $this->app->singleton('UPS_service', function() {
+            // USPS Api Testing Environemtn Credentials
+            $create_package_url = 'https://wwwcie.ups.com/ship/v1/freight/shipments/ground';
+            $delete_package_url = '';
+            $create_manifest_url = '';
+            $ground_rates_url = 'https://onlinetools.ups.com/ship/v1801/freight/rating/rate';
+            $transactionSrc = 'HERCO';
+            $userName = 'hffinc1';           
+            $password = 'Hdbrasilc4!';
+            $shipperNumber = '022VX0';
+
+            // USPS Api Production Environment Credentials
+            // $api_url = config('usps.url');
+            // $delete_usps_label_url = config('usps.delete_label_url');
+            // $create_manifest_url = config('usps.create_manifest_url');
+            // $get_price_url = config('usps.get_price_url');
+            // $email = config('usps.email');           
+            // $password = config('usps.password');
+
+            return new UpsService($create_package_url, $delete_package_url, $create_manifest_url, $ground_rates_url, $transactionSrc, $userName, $password, $shipperNumber);
         });
 
         $this->app->singleton('CorreiosBrazilTracking_service', function() {

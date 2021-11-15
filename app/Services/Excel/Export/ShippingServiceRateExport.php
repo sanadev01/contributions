@@ -46,7 +46,7 @@ class ShippingServiceRateExport extends AbstractExportService
             $this->setCellValue('B2', 'Weight Kg');
             
             $this->setColumnWidth('C', 20);
-            $this->setCellValue('C2', 'Leve');
+           (\Request::route()->getName() == 'admin.rates.download-shipping-rates') ? $this->setCellValue('C2', 'Rate ($)') : $this->setCellValue('C2', 'Leve');
             
         $this->currentRow++;
     }
