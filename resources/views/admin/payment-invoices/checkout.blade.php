@@ -113,7 +113,6 @@
                                                     </div>
                                                 </fieldset>
                                             </div>
-                                            <div class="row ml-3 mt-3" id="stripe_error" style="display: none;"></div>
                                         </div>
                                     </div>
                                     <hr>
