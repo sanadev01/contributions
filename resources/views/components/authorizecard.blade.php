@@ -116,7 +116,7 @@
             </div>
             <div class="d-none" id="div_account_number">
                 <label for="accountNumber">@lang('billing.Account Number')</label>
-                <input id="accountNumber" type="text" required name="card_no" class="{{ $errors->has('card_no')?'border border-danger':'' }}" title="{{ $errors->has('card_no')?  $errors->first('card_no'):'Card Number' }}" inputmode="numeric" value="@isset($billingInformation){{$billingInformation->card_no}}@else{{ old('card_no') }}@endisset">
+                <input id="accountNumber" type="text" required name="account_no" class="{{ $errors->has('card_no')?'border border-danger':'' }}" title="{{ $errors->has('card_no')?  $errors->first('card_no'):'Card Number' }}" inputmode="numeric" value="@isset($billingInformation){{$billingInformation->card_no}}@else{{ old('card_no') }}@endisset">
             </div>
             <svg id="ccicon" class="ccicon" width="750" height="471" viewBox="0 0 750 471" version="1.1" xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -187,6 +187,7 @@
                     <input id="zipcode" name="zipcode" required maxlength="20" type="text" class="{{ $errors->has('zipcode')?'border border-danger':'' }}" title="{{ $errors->has('zipcode')?  $errors->first('zipcode'):'Name on Card' }}" value="@isset($billingInformation){{$billingInformation->zipcode}}@else{{ old('zipcode') }}@endisset">
                 </div>
             </div>
+            <div class="row ml-3 mt-3" style="display: none;" id="stripe_error"></div>
         </div>
     </div>
 </div>

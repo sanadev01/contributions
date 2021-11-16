@@ -26,6 +26,8 @@ class DepositRepository
 {
     protected $error;
     protected $fileName;
+    protected $chargeID;
+
     public function get(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='asc')
     {
         $query = Deposit::query();
@@ -115,7 +117,8 @@ class DepositRepository
                     'address' => $request->address,
                     'state' => State::find($request->state)->code,
                     'zipcode' => $request->zipcode,
-                    'country' => Country::find($request->country)->name
+                    'country' => Country::find($request->country)->name,
+                    'card_no' => ($request->payment_gateway == 'stripe_ach') ? $request->account_no : $request->card_no,
                 ]);
             }
 
@@ -164,7 +167,7 @@ class DepositRepository
 
             Deposit::create([
                 'uuid' => $transactionID,
-                'transaction_id' => ($request->payment_gateway == 'stripe' || $request->payment_gateway == 'stripe_ach') ? null : $response->data->getTransId(),
+                'transaction_id' => ($request->payment_gateway == 'stripe' || $request->payment_gateway == 'stripe_ach') ? $this->chargeID : $response->data->getTransId(),
                 'amount' => $request->amount,
                 'user_id' => Auth::id(),
                 'balance' => Deposit::getCurrentBalance() + $request->amount,
@@ -189,17 +192,20 @@ class DepositRepository
         
         Stripe::setApiKey($stripeSecret);
         try {
-            Charge::create ([
+            $charge =Charge::create ([
                 'amount' => (float)$request->amount * 100,
                 'currency' => "usd",
                 'source' => $request->stripe_token,
-                'description' => "User paid to HomeDelivery"
+                'description' => auth()->user()->pobox_number.' '.'charged HD account',
             ]);
 
+            $this->chargeID = $charge->id;
             return true;
 
         } catch (\Exception $ex) {
-            return $this->error = $ex->getMessage();
+            $this->error = $ex->getMessage();
+
+            return false;
         }
     }
 
@@ -216,9 +222,10 @@ class DepositRepository
                 'source' => $request->stripe_token,
             ]);
 
-            $this->verifyCustomer($customer, $request);
-
-            return true;
+            if($this->verifyCustomer($customer, $request))
+            {
+                return true;
+            }
 
         } catch (\Exception $th) {
             $this->error = $th->getMessage();
@@ -239,9 +246,10 @@ class DepositRepository
 
             $bank_account->verify(['amounts' => [32, 45]]);
 
-            $this->stripeAchCharge($customer, $request);
-
-            return true;
+            if($this->stripeAchCharge($customer, $request))
+            {
+                return true;
+            }
 
         } catch (\Exception $ex) {
 
@@ -266,6 +274,7 @@ class DepositRepository
                 'customer' => $customer->id,
             ]);
 
+            $this->chargeID = $charge->id;
             return true;
 
         } catch (\Exception $ex) {

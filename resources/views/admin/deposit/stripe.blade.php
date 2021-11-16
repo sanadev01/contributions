@@ -1,3 +1,4 @@
+<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
 <script type="text/javascript" src="https://js.stripe.com/v3/"></script>
 <script>
     let paymentGateway = $('#payment_gateway').val();
@@ -26,7 +27,16 @@
 
             $('#cardnumber').attr('required', false); 
             $('#expirationdate').attr('required', false); 
-            $('#securitycode').attr('required', false); 
+            $('#securitycode').attr('required', false);
+
+            $('#country').on('change', function(){
+                let countryId = $(this).val();
+                if (countryId != '250' && countryId != undefined) 
+                {
+                    $('#stripe_error').css('display', 'block');
+                    $('#stripe_error').html('<h4 class="text-danger">Stripe ACH payment is available only for United States Banks</h4>');
+                }
+            }); 
 
         } else {
             $('#div_routing_number').addClass('d-none');
@@ -50,15 +60,19 @@
             $('#cardnumber').attr('required', true); 
             $('#expirationdate').attr('required', true); 
             $('#securitycode').attr('required', true);
+
+            $('#stripe_error').css('display', 'block');
+            $('#stripe_error').empty();
         }
         
     });
 
     $('.payment-form').on('submit', function (e) {
         var adminBalance = $("input[name='adminpay']:checked").val();
-        // let stripe = $(this).data('stripe-payment');
         let stripeKey = $(this).data('stripe-publishable-key');
-        
+        let countryId = $('#country').val();
+        let paymentGateway = $('#payment_gateway').val();
+
         if(paymentGateway == 'stripe' && (adminBalance == 0 || adminBalance == undefined))
         {
             e.preventDefault();
@@ -84,7 +98,7 @@
             }
         }
 
-        if(paymentGateway == 'stripe_ach' && (adminBalance == 0 || adminBalance == undefined))
+        if(paymentGateway == 'stripe_ach' && (adminBalance == 0 || adminBalance == undefined) && countryId == '250')
         {
             e.preventDefault();
 
@@ -118,6 +132,11 @@
                     }
             });
         }
+
+        if(paymentGateway == 'stripe_ach' && (adminBalance == 0 || adminBalance == undefined) && countryId != '250')
+        {
+            e.preventDefault();
+        }
         
     });
 
@@ -128,7 +147,6 @@
             $('#stripe_error').empty().append("<h4 style='color: red;'>"+response.error.message+"</h4>");
             toastr.error(response.error.message)
         } else {
-            console.log(response.id);
             $('#stripe_token').val(response.id);
             $('.payment-form').get(0).submit();
         }

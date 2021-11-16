@@ -90,7 +90,6 @@
                                     @endadmin
                                 </div>
                                 <hr>
-                                <div class="row ml-3 mt-3" id="stripe_error" style="display: none;"></div>
                                 <div class="billingInfo-div" @admin @if(old('adminpay')) style="display: none" @endif @endadmin>
                                     <div class="grid-wrapper w-100">
                                         @foreach (auth()->user()->billingInformations as $billingInfo)
