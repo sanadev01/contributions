@@ -42,6 +42,9 @@
             $('#div_routing_number').addClass('d-none');
             $('#div_routing_number').removeClass('d-block');
 
+            $('#div_account_number').removeClass('d-block');
+            $('#div_account_number').addClass('d-none');
+
             $('#div_expiry_date').addClass('d-block');
             $('#div_expiry_date').removeClass('d-none');
 
@@ -136,6 +139,8 @@
         if(paymentGateway == 'stripe_ach' && (adminBalance == 0 || adminBalance == undefined) && countryId != '250')
         {
             e.preventDefault();
+            $('#stripe_error').css('display', 'block');
+            $('#stripe_error').html('<h4 class="text-danger">Stripe ACH payment is available only for United States Banks</h4>');
         }
         
     });
