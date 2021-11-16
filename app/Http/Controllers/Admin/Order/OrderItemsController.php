@@ -85,6 +85,13 @@ class OrderItemsController extends Controller
                     return $item->service_sub_class != '33163' && $item->service_sub_class != '33171' && $item->service_sub_class != '33198';
                 });
            }
+
+           if($order->user->sinerlog == true)
+           {
+                $shippingServices = $shippingServices->filter(function ($item, $key)  {
+                    return $item->service_sub_class != '33162' && $item->service_sub_class != '33170' && $item->service_sub_class != '33197';
+                });
+           }
            
         }
 
