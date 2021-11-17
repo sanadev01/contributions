@@ -20,6 +20,7 @@ use GuzzleHttp\Client as GuzzleHttpClient;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class Client
 {   
@@ -334,6 +335,8 @@ class Client
 
                     $data = json_decode($response->getBody()->getContents());
 
+                    Log::info('label url');
+                    Log::info($data->data->file);
                     $order->setSinerlogLabelURL($data->data->file);
 
                     return (Object)[
