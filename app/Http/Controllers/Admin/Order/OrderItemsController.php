@@ -77,22 +77,28 @@ class OrderItemsController extends Controller
             }
         }
 
-        if($shippingServices->contains('service_sub_class', '33163') || $shippingServices->contains('service_sub_class', '33171') || $shippingServices->contains('service_sub_class', '33198'))
+        
+        if($order->recipient->country_id == Order::BRAZIL)
         {
-           if($order->user->sinerlog != true)
-           {
-                $shippingServices = $shippingServices->filter(function ($item, $key)  {
-                    return $item->service_sub_class != '33163' && $item->service_sub_class != '33171' && $item->service_sub_class != '33198';
-                });
-           }
-
-           if($order->user->sinerlog == true)
-           {
+            // If sinerlog is enabled for the user, then remove the Correios services
+            if($order->user->sinerlog == true)
+            {
                 $shippingServices = $shippingServices->filter(function ($item, $key)  {
                     return $item->service_sub_class != '33162' && $item->service_sub_class != '33170' && $item->service_sub_class != '33197';
                 });
-           }
-           
+            }
+
+            // If sinerlog is not enabled for the user then remove Sinerlog services from shipping service
+            if($order->user->sinerlog != true)
+            {
+                $shippingServices = $shippingServices->filter(function ($item, $key)  {
+                    return $item->service_sub_class != '33163' && $item->service_sub_class != '33171' && $item->service_sub_class != '33198';
+                });
+            }
+            
+            if($shippingServices->isEmpty()){
+                $error = "Please check your parcel dimensions";
+            }
         }
 
         return view('admin.orders.order-details.index',compact('order','shippingServices', 'error'));
