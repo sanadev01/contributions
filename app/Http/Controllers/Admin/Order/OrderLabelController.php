@@ -41,6 +41,7 @@ class OrderLabelController extends Controller
             $buttonsOnly = $request->has('buttons_only');
             return view('admin.orders.label.label',compact('order','error','buttonsOnly'));
         }
+        // comment correos brazil return logic
         // if($order->shippingService->api == ShippingService::API_CORREIOS){
         //     return $this->handleCorreiosLabels($request,$order);
         // }
