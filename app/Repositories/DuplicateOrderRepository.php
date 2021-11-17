@@ -27,11 +27,11 @@ class DuplicateOrderRepository extends Model
         $copy->corrios_tracking_code = null;
         $copy->sinerlog_url_label = null;
         $copy->api_response = null;
-        $copy->corrios_usps_tracking_code;
-        $copy->usps_response;
-        $copy->usps_cost;
-        $copy->sinerlog_tran_id;
-        $copy->sinerlog_freight;
+        $copy->corrios_usps_tracking_code = null;
+        $copy->usps_response = null;
+        $copy->usps_cost = null;
+        $copy->sinerlog_tran_id = null;
+        $copy->sinerlog_freight = null;
         $copy->order_date = Carbon::now();
         $copy->is_received_from_sender = false;
         $copy->purchase_invoice = null;
