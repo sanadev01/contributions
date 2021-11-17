@@ -7,7 +7,7 @@ namespace App\Repositories;
 use App\Models\Order;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Sinerlog\Client;
-
+use Illuminate\Support\Facades\Log;
 
 class SinerlogLabelRepository
 {
@@ -35,6 +35,9 @@ class SinerlogLabelRepository
             if($arrCN23['success']){
                 $arrSinerlogReturn = (array)$arrCN23['data'];
                 $arrSinerlogReturn = (array)$arrSinerlogReturn['data'];
+                
+                Log::info('Sinerlog Label Repository: update() - CN23 data: ');
+                Log::info(json_encode($arrSinerlogReturn));
                 
                 $order->setCN23($arrSinerlogReturn);
                 $order->setSinerlogTrxId($arrSinerlogReturn['order_code']);
