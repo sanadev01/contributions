@@ -42,7 +42,7 @@ class OrderLabelController extends Controller
             return view('admin.orders.label.label',compact('order','error','buttonsOnly'));
         }
         // if($order->shippingService->api == ShippingService::API_CORREIOS){
-            return $this->handleCorreiosLabels($request,$order);
+        //     return $this->handleCorreiosLabels($request,$order);
         // }
         $labelSinerlogRep = new SinerlogLabelRepository(); 
 

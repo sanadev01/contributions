@@ -23,10 +23,10 @@ use Carbon\Carbon;
 
 class Client
 {   
-    private $baseUri = 'https://dev.easymundi.com/';
-    private $clientUsername = 'fernando@fecisan.com';
-    private $clientPassword = ',96(LcBL~HLPk4J@';
-    private $clientSecret = '1VZlziQ8J2obtEg1NByxxnC4DJqq6BeXs2Lxgkry';
+    private $baseUri = 'https://api.easymundi.com/';
+    private $clientUsername = 'marcio.freitas@hercoinc.com';
+    private $clientPassword = 'op$cUu%LB1R';
+    private $clientSecret = 'hvv6tJUoav88xXfWNcvpTiYSulbwzGQm35TKkwkT';
 
     public function __construct()
     {
