@@ -136,6 +136,7 @@
             </thead>
             <tbody>
                 @forelse ($orders as $order)
+                    {{dd($order)}}
                     @include('admin.orders.components.order-row',['order'=>$order])    
                 @empty
                     <x-tables.no-record colspan="12"></x-tables.no-record>
