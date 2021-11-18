@@ -18,6 +18,7 @@ use App\Repositories\CorrieosBrazilLabelRepository;
  * Use for Sinerlog integration
  */
 use App\Repositories\SinerlogLabelRepository;
+use Illuminate\Support\Facades\Log;
 
 class OrderLabelController extends Controller
 {
@@ -84,6 +85,7 @@ class OrderLabelController extends Controller
 
     public function handleCorreiosLabels(Request $request, Order $order)
     {
+        dd('handleCorreiosLabels', $order->toArray());
         $error = null;
 
         $chile_labelRepository = new CorrieosChileLabelRepository();
@@ -163,15 +165,18 @@ class OrderLabelController extends Controller
      */
     public function handleSinerlogLabels(Request $request, Order $order)
     {
+        Log::info('Sinerlog label');
         $error = null;
         /**
          * Variable to handle Sinerlog label creation
          */
         $labelSinerlogRep = new SinerlogLabelRepository();       
 
-        if (!$order->hasCN23()){          
+        if (!$order->hasCN23()){
+            dd('CN23 is False', $order->toArray());  
             $renderLabel = $labelSinerlogRep->update($order);
         } else{
+            dd('CN23 is true', $order->toArray());  
             $renderLabel = $labelSinerlogRep->get($order);
         }
 
