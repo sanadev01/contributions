@@ -43,7 +43,7 @@ class OrderLabelController extends Controller
             return view('admin.orders.label.label',compact('order','error','buttonsOnly'));
         }
         // if($order->shippingService->api == ShippingService::API_CORREIOS){
-            return $this->handleCorreiosLabels($request,$order);
+            // return $this->handleCorreiosLabels($request,$order);
         // }
         $labelSinerlogRep = new SinerlogLabelRepository(); 
 
@@ -84,7 +84,7 @@ class OrderLabelController extends Controller
 
     public function handleCorreiosLabels(Request $request, Order $order)
     {
-        dd('handleCorreiosLabels', $order->toArray());
+        Log::info('handleCorreiosLabels');
         $error = null;
 
         $chile_labelRepository = new CorrieosChileLabelRepository();
@@ -172,10 +172,8 @@ class OrderLabelController extends Controller
         $labelSinerlogRep = new SinerlogLabelRepository();       
 
         if (!$order->hasCN23()){
-            dd('CN23 is False', $order->toArray());  
             $renderLabel = $labelSinerlogRep->update($order);
         } else{
-            dd('CN23 is true', $order->toArray());  
             $renderLabel = $labelSinerlogRep->get($order);
         }
 
