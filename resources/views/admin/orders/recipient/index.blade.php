@@ -20,7 +20,30 @@
     @endif
     <form action="{{ route('admin.orders.recipient.store',$order) }}" class="wizard" method="post" enctype="multipart/form-data">
         @csrf
-
+        <div class="controls d-flex mb-1">
+            <div>
+                <div class="vs-checkbox-con vs-checkbox-primary" title="Insurance">
+                    <input type="checkbox" name="postal_service" id="postal_service">
+                    <span class="vs-checkbox vs-checkbox-lg">
+                        <span class="vs-checkbox--check">
+                            <i class="vs-icon feather icon-check"></i>
+                        </span>
+                    </span>
+                    <span class="h3 mx-2 text-primary my-0 py-0">Postal Service</span>
+                </div>
+            </div>
+            <div class="ml-3">
+                <div class="vs-checkbox-con vs-checkbox-primary" title="Insurance">
+                    <input type="checkbox" name="courier_Service" id="courier_Service">
+                    <span class="vs-checkbox vs-checkbox-lg">
+                        <span class="vs-checkbox--check">
+                            <i class="vs-icon feather icon-check"></i>
+                        </span>
+                    </span>
+                    <span class="h3 mx-2 text-primary my-0 py-0">Courier Express</span>
+                </div>
+            </div>
+        </div>
         <div>
             <div class="row mt-1">
                 <div class="form-group col-12 col-sm-6 col-md-6">
