@@ -34,7 +34,8 @@ class CreateRequest extends FormRequest
             'address2' => 'nullable|max:50',
             'street_no' => 'sometimes',
             'country_id' => 'required|exists:countries,id',
-            'city' => 'required',
+            'city' => 'required_if:service,==,postal_service',
+            'commune_id' => 'required_if:service,==,courier_express',
             'phone' => [
                 'required','max:15','min:11', new PhoneNumberValidator($this->country_id)
             ],

@@ -23,7 +23,7 @@
         <div class="controls d-flex mb-1">
             <div>
                 <div class="vs-checkbox-con vs-checkbox-primary" title="Insurance">
-                    <input type="checkbox" name="postal_service" id="postal_service">
+                    <input type="radio" name="service" value="postal_service" id="postal_service" required @if( optional($order->recipient)->commune_id == null ) checked @endif>
                     <span class="vs-checkbox vs-checkbox-lg">
                         <span class="vs-checkbox--check">
                             <i class="vs-icon feather icon-check"></i>
@@ -34,7 +34,7 @@
             </div>
             <div class="ml-3">
                 <div class="vs-checkbox-con vs-checkbox-primary" title="Insurance">
-                    <input type="checkbox" name="courier_Service" id="courier_Service">
+                    <input type="radio" name="service" value="courier_express" id="courier_express" required @if( optional($order->recipient)->commune_id != null ) checked @endif>
                     <span class="vs-checkbox vs-checkbox-lg">
                         <span class="vs-checkbox--check">
                             <i class="vs-icon feather icon-check"></i>
@@ -130,7 +130,7 @@
                                     <option {{ old('country_id',optional($order->recipient)->country_id) == $country->id ? 'selected' : '' }} value="{{ $country->id }}">{{ $country->name }}</option>
                                 @endforeach
                             </select>
-                            <div class="help-block"></div>
+                            <div class="help-block" id="country_message"></div>
                         </div>
                     </div>
                 </div>
@@ -169,7 +169,7 @@
                     {{-- Chile Communes --}}
                     <div class="controls" id="div_communes" style="display: none">
                         <label>Communes <span class="text-danger">*</span></label>
-                        <select name="city" id="commune" class="form-control selectpicker show-tick" data-live-search="true" data-value="{{ old('city', optional($order->recipient)->city) }}">
+                        <select name="city" id="commune" class="form-control selectpicker show-tick" data-live-search="true" data-value="{{ old('city', optional($order->recipient)->city) }}" data-commune="{{ old('commune_id', optional($order->recipient)->commune_id) }}">
                             <option value="">Select Commune</option>
                         </select>
                         <div class="help-block"></div>
