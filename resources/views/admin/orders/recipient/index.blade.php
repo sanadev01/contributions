@@ -23,7 +23,7 @@
         <div class="controls d-flex mb-1">
             <div>
                 <div class="vs-checkbox-con vs-checkbox-primary" title="Insurance">
-                    <input type="radio" name="service" value="postal_service" id="postal_service" required @if( optional($order->recipient)->commune_id == null ) checked @endif>
+                    <input type="radio" name="service" value="postal_service" id="postal_service" required @if( optional($order->recipient)->commune_id == null && $order->recipient != null ) checked @endif>
                     <span class="vs-checkbox vs-checkbox-lg">
                         <span class="vs-checkbox--check">
                             <i class="vs-icon feather icon-check"></i>
@@ -67,8 +67,8 @@
                         <label>@lang('address.Type') <span class="text-danger">*</span></label>
                         <select class="form-control" name="account_type" id="accountType" required placeholder="@lang('address.Type')">
                             <option value="">@lang('address.Type')</option>
-                            <option value="individual" {{ optional($order->recipient)->account_type == 'individual' ? 'selected' : '' }}>Individual</option>
-                            <option value="business" {{ optional($order->recipient)->account_type == 'business' ? 'selected' : '' }}>Business</option>
+                            <option value="individual" {{ old('account_type', optional($order->recipient)->account_type) == 'individual' ? 'selected' : '' }}>Individual</option>
+                            <option value="business" {{ old('account_type', optional($order->recipient)->account_type) == 'business' ? 'selected' : '' }}>Business</option>
                         </select>
                         <div class="help-block"></div>
                     </div>
@@ -135,7 +135,7 @@
                     </div>
                 </div>
                 <div class="form-group col-12 col-sm-6 col-md-4">
-                    <div class="controls" id="div_state" style="display: none">
+                    <div class="controls" id="div_state">
                         <label>@lang('address.State') <span class="text-danger">*</span></label>
                         <select name="state_id" id="state" class="form-control selectpicker show-tick" data-live-search="true">
                             <option value="">Select @lang('address.State')</option>
@@ -161,7 +161,7 @@
                     </div>
                 </div> --}}
                 <div class="form-group col-12 col-sm-6 col-md-4">
-                    <div class="controls" id="div_city" style="display: none">
+                    <div class="controls" id="div_city">
                         <label>@lang('address.City') <span class="text-danger">*</span></label>
                         <input type="text" id="city" name="city" value="{{old('city',optional($order->recipient)->city)}}" class="form-control"  required placeholder="City"/>
                         <div class="help-block"></div>

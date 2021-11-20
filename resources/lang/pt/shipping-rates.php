@@ -26,6 +26,7 @@ return [
     'consolidation Charges' => 'Taxas de consolidação',
     'Rates' => 'Cotações',
     'Country' => 'País',
+    'Region' => 'Región',
     'Select Country' => 'Selecione o pais',
     'USPS Rates' => 'USPS Acumulação Taxas',
     'Customer ID' => 'Cliente ID',

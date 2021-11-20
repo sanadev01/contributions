@@ -1,5 +1,7 @@
 @extends('layouts.master')
-
+@section('css')
+<link rel="stylesheet" href="{{ asset('app-assets/select/css/bootstrap-select.min.css') }}">
+@endsection
 @section('page') 
     <div class="card">
         <div class="card-header">
@@ -50,9 +52,9 @@
                                 <div class="form-group">
                                     <div class="controls">
                                         <label>@lang('shipping-rates.Country') <span class="text-danger">*</span></label>
-                                        <select name="country_id" required class="form-control">
+                                        <select name="country_id" required class="form-control selectpicker show-tick" data-live-search="true" id="country">
                                                 @foreach (countries() as $country)
-                                                    <option value="{{ $country->id }}">{{ $country->name }}</option>
+                                                    <option {{ old('country_id') == $country->id ? 'selected' : '' }} value="{{ $country->id }}">{{ $country->name }}</option>
                                                 @endforeach
                                         </select>
                                         <div class="help-block"></div>
@@ -60,6 +62,19 @@
                                 </div>
                             </div>
 
+                        </div>
+
+                        <div class="row justify-content-center d-none" id="region_div">
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <div class="controls">
+                                        <label>@lang('shipping-rates.Region')</label>
+                                        <select name="region_id" class="form-control selectpicker show-tick" data-live-search="true" data-region="{{ old('region_id') }}" id="region">
+                                        </select>
+                                        <div class="help-block" id="regions_response"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="row justify-content-center">
@@ -121,4 +136,90 @@
             </div>
         </div>
     </div>
+@endsection
+@section('js')
+<script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
+<script>
+    $(document).ready(function() {
+        console.log('ready');
+
+        $('#country').ready(function(){
+            let country = $('#country').val();
+            
+            if(country == '46')
+            {
+                $('#region_div').removeClass('d-none');
+                $('#region_div').addClass('d-block');
+                $('#region_div').css('margin-left', '25%');
+
+                let old_region = $('#region').data('region');
+                
+                $.get('{{ route("api.orders.recipient.hd_chile_regions") }}')
+                .then(function(response){
+                    if(response.success == true)
+                    {
+                        $('#region').empty();
+                        $('#region').append('<option value="">Select Region</option>');
+                        $.each(response.data,function(key, region)
+                        {
+                            $('#region').append('<option value="'+region.id+'">'+region.name+'</option>');
+                            $('#region').selectpicker('refresh');
+                        });
+                        $('#region').selectpicker('refresh');
+                        if(old_region != undefined || old_region != '')
+                        {
+                            $('#region').val(old_region);
+                        }
+                        
+                    }else{
+                        console.log(response.message);
+                        $('#regions_response').empty().append("<p style='color: red;'>"+response.message+"</p>");
+                    }
+                })
+            }else {
+
+                $('#region_div').removeClass('d-block');
+                $('#region_div').addClass('d-none');
+                $('#region').empty();
+            }
+                
+        });
+
+        $('#country').on('change', function(){
+            let country = $(this).val();
+            
+            if(country == '46')
+            {
+                $('#region_div').removeClass('d-none');
+                $('#region_div').addClass('d-block');
+                $('#region_div').css('margin-left', '25%');
+
+                $.get('{{ route("api.orders.recipient.hd_chile_regions") }}')
+                .then(function(response){
+                    if(response.success == true)
+                    {
+                        $('#region').empty();
+                        $('#region').append('<option value="">Select Region</option>');
+                        $.each(response.data,function(key, region)
+                        {
+                            $('#region').append('<option value="'+region.id+'">'+region.name+'</option>');
+                            $('#region').selectpicker('refresh');
+                        });
+                        $('#region').selectpicker('refresh');
+                        
+                    }else{
+                        console.log(response.message);
+                        $('#regions_response').empty().append("<p style='color: red;'>"+response.message+"</p>");
+                    }
+                })
+            }else {
+
+                $('#region_div').removeClass('d-block');
+                $('#region_div').addClass('d-none');
+                $('#region').empty();
+            }
+                
+        });
+    });
+</script>
 @endsection

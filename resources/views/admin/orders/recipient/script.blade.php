@@ -104,7 +104,7 @@
                 window.activeChileFields();
                 $('#loading').fadeIn();
                 
-                if(window.service == 'postal_service')
+                if(window.service != 'courier_express')
                 {
                     window.fetchChileRegions(old_region);
                     // Fetch Communes
@@ -142,6 +142,8 @@
                         window.inactiveChileFields();
                     }
                 }
+            }else{
+                window.inactiveChileFields();
             }
         });
 
@@ -367,6 +369,7 @@
     })
 
     activeChileFields = function(){
+        console.log('active chile fields');
         if(window.service != 'courier_express')
         {
             $('#cpf').css('display', 'none');
@@ -390,6 +393,7 @@
     }
 
     inactiveChileFields = function(){
+        console.log('inactive chile fields');
         $('#cpf').css('display', 'block')
         $('#div_state').css('display', 'block')
         $('#div_city').css('display', 'block')

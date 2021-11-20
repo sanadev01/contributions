@@ -26,6 +26,7 @@ return [
     'consolidation Charges' => 'Consolidation Charges',
     'Rates' => 'Rates',
     'Country' => 'Country',
+    'Region' => 'Region',
     'Select Country' => 'Select Country',
     'USPS Rates' => 'USPS Accural Rates',
     'Customer ID' => 'Customer ID',

@@ -30,6 +30,9 @@
                                         <th colspan="4"><h3>Country</h3></th><th colspan="100%"><h4>{{ optional($ratesData->country)->name }}</h4></th>
                                     </tr>
                                     <tr>
+                                        <th colspan="4"><h3>Region</h3></th><th colspan="100%"><h4>{{ optional($ratesData->region)->name }}</h4></th>
+                                    </tr>
+                                    <tr>
                                         <th>@lang('shipping-rates.Weight')</th>
                                         @foreach($ratesData->data??[] as $rate)
                                             <td>

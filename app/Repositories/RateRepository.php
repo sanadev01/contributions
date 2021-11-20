@@ -24,7 +24,7 @@ class RateRepository
             $file = $request->file('csv_file');
 
             try {
-                $importService = new ImportRates($file, $request->shipping_service_id, $request->country_id);
+                $importService = new ImportRates($file, $request->shipping_service_id, $request->country_id, $request->exists('region_id') ? $request->region_id : null);
                 $importService->handle();
                 session()->flash('alert-success', 'shipping-rates.Rates Updated Successfully');
 

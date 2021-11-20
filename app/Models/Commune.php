@@ -10,7 +10,7 @@ class Commune extends Model
     protected $guarded = [];
 
 
-    public function regions()
+    public function region()
     {
         return $this->belongsTo(Region::class);
     }
