@@ -13,7 +13,7 @@ class RateRepository
 {
     public function get()
     {   
-        $rates = Rate::has('shippingService')->paginate(5);
+        $rates = Rate::has('shippingService')->paginate(15);
         return $rates;
     }
 

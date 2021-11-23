@@ -44,6 +44,7 @@ class UserSettingController extends Controller
             'perfume' => $request->has('perfume'),
             'insurance' => $request->has('insurance') ? 1 : 0,
             'usps' => $request->has('usps'),
+            'sinerlog' => $request->has('sinerlog'),
             'api_profit' => $request->input('api_profit'),
             'order_dimension' => $request->input('order_dimension'),
         ]);

@@ -54,7 +54,7 @@ class OrderLabelController extends Controller
         }
 
         // For USPS
-        if($order->recipient->country_id == Order::USPS)
+        if($order->recipient->country_id == Order::US)
         {
             $usps_labelRepository->handle($order);
 

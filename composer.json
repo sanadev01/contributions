@@ -30,6 +30,7 @@
         "rap2hpoutre/laravel-log-viewer": "^1.7",
         "saqijaan/laravel-json-column-trait": "dev-master",
         "spatie/laravel-activitylog": "^3.16",
+        "stripe/stripe-php": "^7.100",
         "yangyao/php-barcode": "dev-master"
     },
     "require-dev": {

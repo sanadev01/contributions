@@ -24,6 +24,11 @@ use App\Http\Controllers\Warehouse\DeliveryBillRegisterController;
 use App\Http\Controllers\Warehouse\USPSContainerPackageController;
 use App\Http\Controllers\Warehouse\ChileContainerPackageController;
 use App\Http\Controllers\Warehouse\DeliveryBillStatusUpdateController;
+use App\Http\Controllers\Warehouse\SinerlogContainerController;
+use App\Http\Controllers\Warehouse\SinerlogContainerPackageController;
+use App\Http\Controllers\Warehouse\SinerlogUnitRegisterController;
+use App\Http\Controllers\Warehouse\SinerlogCN35DownloadController;
+use App\Http\Controllers\Warehouse\SinerlogManifestDownloadController;
 
 
 Route::middleware(['auth'])->as('warehouse.')->group(function () {
@@ -62,6 +67,14 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('usps_container/{container}/register', USPSUnitRegisterController::class)->name('usps_container.register');
     Route::get('usps_container/{container}/download', USPSCN35DownloadController::class)->name('usps_container.download');
     Route::get('usps_container/{container}/download_excel_manifest', [USPSContainerController::class, 'download_exceltManifest'])->name('download.usps_manifest_excel');
+
+    // Routes for Sinerlog Container
+    Route::resource('sinerlog_containers', SinerlogContainerController::class);
+    Route::resource('sinerlog_container.packages', SinerlogContainerPackageController::class)->only('index','destroy', 'create');
+    Route::post('sinerlog_container/{container}/packages/{barcode}', [SinerlogContainerPackageController::class,'store'])->name('sinerlog_container.packages.store');
+    Route::get('sinerlog_container/{container}/register', SinerlogUnitRegisterController::class)->name('sinerlog_container.register');
+    Route::get('sinerlog_container/{container}/download', SinerlogCN35DownloadController::class)->name('sinerlog_container.download');
+    Route::get('sinerlog_container/{container}/manifest', SinerlogManifestDownloadController::class)->name('sinerlog_container.manifest');
 });
 
 
