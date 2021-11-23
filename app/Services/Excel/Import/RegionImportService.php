@@ -10,7 +10,7 @@ class RegionImportService extends AbstractImportService
     public function __construct()
     {
         parent::__construct(
-            storage_path('app/excels/chile_regions.xlsx')
+            storage_path('chile_regions.xlsx')
         );
     }
 
