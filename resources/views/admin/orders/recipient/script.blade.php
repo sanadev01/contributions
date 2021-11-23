@@ -23,7 +23,7 @@
         {
             window.service = service_type;
         }
-        console.log(window.service);
+        
         if(window.service == 'courier_express')
         {
             window.activeChileFields();
@@ -33,7 +33,7 @@
 
     $('input:radio[name="service"]').change(function(){
         window.service = $(this).val();
-        console.log(window.service);
+        
         if(window.service == 'courier_express')
         {
             window.activeChileFields();
@@ -41,8 +41,6 @@
             window.getHDChileRegions();
         }else {
             window.inactiveChileFields();
-            $('#country').selectpicker('val', '30');
-            $('#country').selectpicker('refresh');
         }
     })
 
@@ -393,7 +391,6 @@
     }
 
     inactiveChileFields = function(){
-        console.log('inactive chile fields');
         $('#cpf').css('display', 'block')
         $('#div_state').css('display', 'block')
         $('#div_city').css('display', 'block')

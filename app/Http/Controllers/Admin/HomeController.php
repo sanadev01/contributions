@@ -33,13 +33,6 @@ class HomeController extends Controller
 
     public function testBrazilTracking()
     {
-        Artisan::call('db:seed --class=RegionSeeder');
-        Artisan::call('db:seed --class=CommuneSeeder');
-        
-        $output = Artisan::output();
-        
-        Log::info($output);
-
         return true;
     }
 }
