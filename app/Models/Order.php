@@ -311,8 +311,7 @@ class Order extends Model implements Package
         $shippingService = $this->shippingService;
 
         $additionalServicesCost = $this->calculateAdditionalServicesCost($this->services);
-        if($this->recipient->country_id == 250)
-        {
+        if($this->recipient->country_id == 250){
             $shippingCost = $this->user_declared_freight;
             $this->calculateProfit($shippingCost);
 
@@ -327,13 +326,10 @@ class Order extends Model implements Package
 
         $consolidation = $this->isConsolidated() ?  setting('CONSOLIDATION_CHARGES',0,null,true) : 0;
 
-
-
         $total = $shippingCost + $additionalServicesCost + $this->insurance_value + $dangrousGoodsCost + $consolidation + $this->user_profit;
 
         $discount = 0; // not implemented yet
         $gross_total = $total - $discount;
-
 
         $this->update([
             'consolidation' => $consolidation,
@@ -346,23 +342,16 @@ class Order extends Model implements Package
             'user_declared_freight' => $this->user_declared_freight
             // 'user_declared_freight' => $this->user_declared_freight >0 ? $this->user_declared_freight : $shippingCost
         ]);
-
     }
 
     public function calculateAdditionalServicesCost($services)
     {
-        if($this->user->insurance == false)
-        {
-            foreach ($services as $service) 
-            {
-                if($service->name == 'Insurance' || $service->name == 'Seguro')
-                {
+        if($this->user->insurance == false){
+            foreach ($services as $service){
+                if($service->name == 'Insurance' || $service->name == 'Seguro'){
                     $order_value = $this->items()->sum(\DB::raw('quantity * value'));
-
                     $total_insurance = (3/100) * $order_value;
-
-                    if ($total_insurance > 35) 
-                    {
+                    if ($total_insurance > 35){
                         $service->price = $total_insurance;
                     }
                 }
@@ -374,9 +363,7 @@ class Order extends Model implements Package
     public function calculateProfit($shippingCost)
     {
         $profit = $this->user->api_profit / 100;
-        
         $this->user_profit = $shippingCost * $profit;
-
         return true;
     }
 
@@ -392,7 +379,6 @@ class Order extends Model implements Package
             'referrer_id' => $this->user_id,
             'detail' => 'Commission from order '. $this->warehouse_number,
         ]);
-
     }
     /**
      * Accessors
@@ -419,11 +405,9 @@ class Order extends Model implements Package
         if ( $this->status == Order::STATUS_ORDER ){
             $class = 'btn btn-sm btn-info';
         }
-
         if ( $this->status == Order::STATUS_NEEDS_PROCESSING ){
             $class = 'btn btn-sm btn-warning text-dark';
         }
-        
         if ( $this->status == Order::STATUS_CANCEL ){
             $class = 'btn btn-sm btn-cancelled bg-cancelled';
         }
@@ -433,23 +417,18 @@ class Order extends Model implements Package
         if ( $this->status == Order::STATUS_RELEASE ){
             $class = 'btn btn-sm btn-warning';
         }
-
         if ( $this->status == Order::STATUS_PAYMENT_PENDING ){
             $class = 'btn btn-sm btn-danger';
         }
-
         if ( $this->status == Order::STATUS_PAYMENT_DONE ){
             $class = 'btn btn-sm btn-success';
         }
-
         if ( $this->status == Order::STATUS_SHIPPED ){
             $class = 'btn btn-sm bg-secondary text-white';
         }
-        
         if ( $this->status == Order::STATUS_REFUND ){
             $class = 'btn btn-sm btn-refund text-white';
         }
-
         return $class;
     }
 
