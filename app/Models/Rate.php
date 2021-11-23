@@ -32,6 +32,11 @@ class Rate extends Model
         return $builder->where('country_id',$countryId);
     }
 
+    public function scopeByRegion(Builder $builder,$regionId)
+    {
+        return $builder->where('region_id', $regionId);
+    }
+
     public function country()
     {
         return $this->belongsTo(Country::class, 'country_id');
