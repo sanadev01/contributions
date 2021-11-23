@@ -3,6 +3,7 @@
 use App\Models\Order;
 use App\Services\StoreIntegrations\Shopify;
 use App\Http\Controllers\Admin\Deposit\DepositController;
+use App\Models\ProfitPackage;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 
 /*
@@ -210,14 +211,16 @@ Route::get('order/{order}/usps-label/get', function (App\Models\Order $order) {
     return response()->download(storage_path("app/labels/{$order->corrios_usps_tracking_code}.pdf"),"{$order->corrios_usps_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.usps-label.download');
 
-Route::get('test-label',function(){
-    $labelPrinter = new CN23LabelMaker();
+Route::get('test-profit/{id}',function($id){
+    $profit = ProfitPackage::find($id);
+    dd($profit);
+    // $labelPrinter = new CN23LabelMaker();
 
-    $order = Order::find(53654);
-    $labelPrinter->setOrder($order);
-    $labelPrinter->setService(2);
+    // $order = Order::find(53654);
+    // $labelPrinter->setOrder($order);
+    // $labelPrinter->setService(2);
 
-    return $labelPrinter->download();
+    // return $labelPrinter->download();
 });
 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
