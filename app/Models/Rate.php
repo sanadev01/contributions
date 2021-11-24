@@ -29,7 +29,10 @@ class Rate extends Model
 
     public function scopeByCountry(Builder $builder,$countryId)
     {
-        return $builder->where('country_id',$countryId);
+        return $builder->where([
+            ['country_id', $countryId],
+            ['region_id', null],
+        ]);
     }
 
     public function scopeByRegion(Builder $builder,$regionId)

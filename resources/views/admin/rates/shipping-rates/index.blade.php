@@ -30,6 +30,9 @@
                                         Country
                                     </th>
                                     <th>
+                                        Region
+                                    </th>
+                                    <th>
                                         Action
                                     </th>
                                 </tr>
@@ -42,6 +45,9 @@
                                     </th>
                                     <th>
                                         {{ optional($rate->country)->name }}
+                                    </th>
+                                    <th>
+                                        {{ optional($rate->region)->name }}
                                     </th>
                                     <th>
                                         <a href="{{ route('admin.rates.view-shipping-rates', $rate) }}" class="btn btn-primary btn-sm">
