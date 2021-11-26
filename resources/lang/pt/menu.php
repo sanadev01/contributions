@@ -39,6 +39,7 @@ return [
         'Tracking Report' => 'Relatório de Rastreamento',
         'Orders Report' => 'Relatório de pedidos',
         'Commission Report' => 'Relatório de Comissão',
+        'Audit Report' => 'Relatório de Auditoria',
     ],
     'Warehouse' => [
         'menu' => 'Armazém',

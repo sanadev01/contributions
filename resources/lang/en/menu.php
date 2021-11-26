@@ -39,6 +39,7 @@ return [
         'Tracking Report' => 'Tracking Report',
         'Orders Report' => 'Orders Report',
         'Commission Report' => 'Commission Report',
+        'Audit Report' => 'Audit Report',
     ],
     'Warehouse' => [
         'menu' => 'Warehouse',
