@@ -41,7 +41,11 @@ class AuditReportsRepository
             $weight = 0.1;
         }
         $weightToGrams = UnitsConverter::kgToGrams($weight);
-        $profitPackageRate = $order->shippingService->getRateFor($order,true,true);
+        $profitPackageRate = 0;
+        if($order->recipient->country_id != 250)
+        {
+            $profitPackageRate = $order->shippingService->getRateFor($order,true,true);
+        }
         $serviceCode = optional($order->shippingService)->service_sub_class;
         $rateSlab = AccrualRate::where('service',$serviceCode)->where('weight','<=',$weightToGrams)->orderBy('id','DESC')->take(1)->first();
         if ( !$rateSlab ){
