@@ -67,7 +67,7 @@
                         <th>Additional Charges</th>
                         <th>Shipping Value</th>
                         <th>Total Charges</th>
-                        <th>Profit</th>
+                        {{-- <th>Profit</th> --}}
                         <th>Corrieos Charges</th>
                     </tr>
                     <tr class="no-print">
@@ -128,7 +128,7 @@
                             {{ number_format($order->gross_total,2) }}
                         </td>
                         <td>
-                            {{ number_format(optional($this->getRates($order))['profitPackageRate'],2) }}
+                            {{-- {{ number_format(optional($this->getRates($order))['profitPackageRate'],2) }} --}}
                         </td>
                         <td>
                             {{ number_format(optional($this->getRates($order))['accrualRate'],2) }}
