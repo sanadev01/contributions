@@ -31,6 +31,7 @@ class AuditReport extends Component
             'auditRecords' => $this->getAuditRecord(),
         ]);
     }
+    
     public function getAuditRecord()
     {
         return (new AuditReportsRepository)->get(request()->merge([
@@ -44,24 +45,6 @@ class AuditReport extends Component
     public function getRates(Order $order)
     {
         return (new AuditReportsRepository)->getRates($order);
-        $weight = $order->getWeight('kg');
-        if($weight < 0.1){
-            $weight = 0.1;
-        }
-        $weightToGrams = UnitsConverter::kgToGrams($weight);
-        $profitPackageRate = $order->shippingService->getRateFor($order,true,true);
-        $serviceCode = optional($order->shippingService)->service_sub_class;
-        $rateSlab = AccrualRate::where('service',$serviceCode)->where('weight','<=',$weightToGrams)->orderBy('id','DESC')->take(1)->first();
-        if ( !$rateSlab ){
-            return [
-                'accrualRate' => 0,
-                'profitPackageRate' => $profitPackageRate,
-            ];
-        }
-        return [
-            'accrualRate' => $rateSlab->gru,
-            'profitPackageRate' => $profitPackageRate,
-        ];
     }
     
     public function updating()

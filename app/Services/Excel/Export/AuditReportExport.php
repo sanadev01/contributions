@@ -41,7 +41,7 @@ class AuditReportExport extends AbstractExportService
             $this->setCellValue('D'.$row, (string)$order->corrios_tracking_code);
             $this->setCellValue('E'.$row, $order->getWeight('kg'));
             $this->setCellValue('F'.$row, $order->getWeight('lbs'));
-            $this->setCellValue('G'.$row, $this->checkValue(number_format($order->dangrous_goods,2)));
+            $this->setCellValue('G'.$row, number_format($order->dangrous_goods,2));
             $this->setCellValue('H'.$row, number_format($order->services->sum('price'),2));
             $this->setCellValue('I'.$row, number_format($order->shipping_value,2));
             $this->setCellValue('J'.$row, number_format($order->gross_total,2));
