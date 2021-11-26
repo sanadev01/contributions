@@ -127,9 +127,9 @@
                         <td>
                             {{ number_format($order->gross_total,2) }}
                         </td>
-                        <td>
-                            {{-- {{ number_format(optional($this->getRates($order))['profitPackageRate'],2) }} --}}
-                        </td>
+                        {{-- <td>
+                            {{ number_format(optional($this->getRates($order))['profitPackageRate'],2) }}
+                        </td> --}}
                         <td>
                             {{ number_format(optional($this->getRates($order))['accrualRate'],2) }}
                         </td>
