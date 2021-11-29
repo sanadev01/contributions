@@ -13,6 +13,8 @@ class UnitCancelContoller extends Controller
     {
         $client = new Client();
         $response = $client->destroy($container);
+        \log::info('unit cancel response');
+        \log::info($response);
         if ( $response == 1){
             $container->update([
                 'unit_code' => null
@@ -20,7 +22,7 @@ class UnitCancelContoller extends Controller
             session()->flash('alert-success','Package Registration Cancelled.');
             return back();
         }
-        session()->flash('alert-success','Something went wrong.');
+        session()->flash('alert-danger','Something went wrong.');
         return back();
     }
 }
