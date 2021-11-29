@@ -45,8 +45,8 @@ class AuditReportExport extends AbstractExportService
             $this->setCellValue('H'.$row, number_format($order->services->sum('price'),2));
             $this->setCellValue('I'.$row, number_format($order->shipping_value,2));
             $this->setCellValue('J'.$row, number_format($order->gross_total,2));
-            $this->setCellValue('K'.$row, $rates['profitPackageRate']);
-            $this->setCellValue('L'.$row, $rates['accrualRate']);
+            $this->setCellValue('K'.$row, $rates['accrualRate']);
+            // $this->setCellValue('K'.$row, $rates['profitPackageRate']);
             $row++;
         }
         $this->currentRow = $row;
@@ -54,7 +54,7 @@ class AuditReportExport extends AbstractExportService
         $this->setCellValue('H'.$row, "=SUM(H1:H{$row})");
         $this->setCellValue('I'.$row, "=SUM(I1:I{$row})");
         $this->setCellValue('J'.$row, "=SUM(J1:J{$row})");
-        $this->setCellValue('K'.$row, "=SUM(K1:K{$row})");
+        // $this->setCellValue('K'.$row, "=SUM(K1:K{$row})");
         $this->mergeCells("A{$row}:F{$row}");
         $this->setBackgroundColor("A{$row}:L{$row}", 'adfb84');
         $this->setAlignment('A'.$row, Alignment::VERTICAL_CENTER);
@@ -95,13 +95,13 @@ class AuditReportExport extends AbstractExportService
         $this->setCellValue('J1', 'Total Charges');
 
         $this->setColumnWidth('K', 20);
-        $this->setCellValue('K1', 'Profit');
+        $this->setCellValue('K1', 'Corrieos Charges');
+        
+        // $this->setColumnWidth('L', 20);
+        // $this->setCellValue('L1', 'Profit');
 
-        $this->setColumnWidth('L', 20);
-        $this->setCellValue('L1', 'Corrieos Charges');
-
-        $this->setBackgroundColor('A1:L1', '2b5cab');
-        $this->setColor('A1:L1', 'FFFFFF');
+        $this->setBackgroundColor('A1:K1', '2b5cab');
+        $this->setColor('A1:K1', 'FFFFFF');
 
         $this->currentRow++;
     }
