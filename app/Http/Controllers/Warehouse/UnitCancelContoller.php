@@ -17,5 +17,7 @@ class UnitCancelContoller extends Controller
             session()->flash('alert-success','Package Registration Cancelled.');
             return back();
         }
+        session()->flash('alert-success','Something went wrong.');
+        return back();
     }
 }

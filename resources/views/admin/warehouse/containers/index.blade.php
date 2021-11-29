@@ -125,7 +125,9 @@
                                                             <a href="{{ route('warehouse.container.register',$container) }}" class="dropdown-item w-100">
                                                                 <i class="feather icon-box"></i> Register Unit
                                                             </a>
-                                                            
+                                                            <a href="{{ route('warehouse.container.cancel',$container) }}" class="dropdown-item w-100">
+                                                                <i class="feather icon-box"></i> Cancel Unit
+                                                            </a>
                                                             <form action="{{ route('warehouse.containers.destroy',$container) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
                                                                 @csrf
                                                                 @method('DELETE')
