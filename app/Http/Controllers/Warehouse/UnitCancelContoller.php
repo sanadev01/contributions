@@ -13,8 +13,7 @@ class UnitCancelContoller extends Controller
     {
         $client = new Client();
         $response = $client->destroy($container);
-        \log::info('unit cancel response');
-        \log::info($response);
+        
         if ( $response == 1){
             $container->update([
                 'unit_code' => null
