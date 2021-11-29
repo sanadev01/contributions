@@ -14,6 +14,9 @@ class UnitCancelContoller extends Controller
         $client = new Client();
         $response = $client->destroy($container);
         if ( $response == 1){
+            $container->update([
+                'unit_code' => null
+            ]);
             session()->flash('alert-success','Package Registration Cancelled.');
             return back();
         }
