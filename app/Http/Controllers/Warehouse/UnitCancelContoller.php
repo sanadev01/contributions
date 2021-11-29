@@ -11,7 +11,6 @@ class UnitCancelContoller extends Controller
 {
     public function __invoke(Container $container)
     {
-        dd($container);
         $client = new Client();
         $response = $client->destroy($container);
         if ( $response == 1){
