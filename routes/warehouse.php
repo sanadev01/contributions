@@ -39,6 +39,7 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::post('containers/{container}/packages/{barcode}', [ContainerPackageController::class,'store'])->name('containers.packages.store');
 
     Route::get('container/{container}/register', UnitRegisterController::class)->name('container.register');
+    Route::get('container/{container}/cancel', UnitRegisterController::class)->name('container.cancel');
     Route::get('container/{container}/download', CN35DownloadController::class)->name('container.download');
 
     Route::resource('delivery_bill', DeliveryBillController::class);
