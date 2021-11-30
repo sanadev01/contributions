@@ -252,6 +252,7 @@ class Client{
                     'Authorization' => "Bearer {$this->getToken()}"
                 ]
             ]);
+            return $response;
         }catch (\GuzzleHttp\Exception\ClientException $e) {
             return new PackageError($e->getResponse()->getBody()->getContents());
         }
