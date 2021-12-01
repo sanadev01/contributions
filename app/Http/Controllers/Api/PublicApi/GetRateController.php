@@ -97,7 +97,7 @@ class GetRateController extends Controller
             $order->weight = $request->weight;
             $order->measurement_unit = $request->unit;
             $order->recipient = $recipient;
-
+            \Log::info($order);
             $shippingServices = collect();
             foreach (ShippingService::query()->active()->get() as $shippingService) {
                 
