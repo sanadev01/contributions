@@ -244,4 +244,21 @@ class Client{
         return true;
     }
 
+    public function destroy($container)
+    {
+        try {
+            $response = $this->client->delete("/packet/v1/units/dispatch/$container->dispatch_number",[
+                'headers' => [
+                    'Authorization' => "Bearer {$this->getToken()}"
+                ]
+            ]);
+            return $response;
+        }catch (\GuzzleHttp\Exception\ClientException $e) {
+            return new PackageError($e->getResponse()->getBody()->getContents());
+        }
+        catch (\Exception $exception){
+            return new PackageError($exception->getMessage());
+        }
+    }
+
 }

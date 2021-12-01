@@ -116,7 +116,7 @@
             </div>
             <div class="d-none" id="div_account_number">
                 <label for="accountNumber">@lang('billing.Account Number')</label>
-                <input id="accountNumber" type="text" required name="account_no" class="{{ $errors->has('card_no')?'border border-danger':'' }}" title="{{ $errors->has('card_no')?  $errors->first('card_no'):'Card Number' }}" inputmode="numeric" value="@isset($billingInformation){{$billingInformation->card_no}}@else{{ old('card_no') }}@endisset">
+                <input id="accountNumber" type="text" name="account_no" class="{{ $errors->has('card_no')?'border border-danger':'' }}" title="{{ $errors->has('card_no')?  $errors->first('card_no'):'Card Number' }}" inputmode="numeric" value="@isset($billingInformation){{$billingInformation->card_no}}@else{{ old('card_no') }}@endisset">
             </div>
             <svg id="ccicon" class="ccicon" width="750" height="471" viewBox="0 0 750 471" version="1.1" xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -129,7 +129,7 @@
             </div>
             <div class="col-12 d-none" id="div_routing_number">
                 <label for="routing_number">@lang('billing.Routing Number')</label>
-                <input id="routing_number" required type="text" name="routing_number" class="{{ $errors->has('routing_number')?'border border-danger':'' }}" title="{{ $errors->has('routing_number')?  $errors->first('routing_number'):'Routing Number' }}"  value="{{ old('routing_number') }}" inputmode="numeric">
+                <input id="routing_number" type="text" name="routing_number" class="{{ $errors->has('routing_number')?'border border-danger':'' }}" title="{{ $errors->has('routing_number')?  $errors->first('routing_number'):'Routing Number' }}"  value="{{ old('routing_number') }}" inputmode="numeric">
             </div>
             <div class="col-6 d-block" id="div_security_code">
                 <label for="securitycode">@lang('billing.Security Code') </label> @isset($billingInformation) <a  onclick="editInput('securitycode')" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i></a> @endisset
