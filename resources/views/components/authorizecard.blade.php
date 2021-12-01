@@ -100,9 +100,9 @@
             <div class="form-group col-md-4">
                 <label for="payment_gateway" class="h4">Select Payment Gateway</label>
                 <select id="payment_gateway" name="payment_gateway" class="form-control border border-danger" style="font-size: 18px !important;">
-                  <option selected value="authorize">Authorize</option>
-                  <option value="stripe">Stripe</option>
-                  <option value="stripe_ach">Stripe ACH</option>
+                  <option selected value="authorize">Credit Card (authorize.net)</option>
+                  <option value="stripe">Debit Card (stripe)</option>
+                  {{-- <option value="stripe_ach">Stripe ACH</option> --}}
                 </select>
             </div>
             <input type="hidden" name="stripe_token" id="stripe_token">

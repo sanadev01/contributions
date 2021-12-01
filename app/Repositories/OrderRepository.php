@@ -205,7 +205,7 @@ class OrderRepository
             if($request->payment_gateway == 'stripe')
             {
                 $transactionID = PaymentInvoice::generateUUID('DP-');
-                $this->stripePayment($request, $paymentInvoice->total_amount);
+                $this->stripePayment($request, $paymentInvoice->total_amount, $paymentInvoice->uuid);
 
                 if($this->error != null)
                 {
@@ -301,7 +301,7 @@ class OrderRepository
         return $orders->get();
     }
     
-    private function stripePayment($request, $total_amount)
+    private function stripePayment($request, $total_amount, $InvoiceId)
     {
         $stripeSecret = setting('STRIPE_SECRET', null, null, true);
         
@@ -311,7 +311,7 @@ class OrderRepository
                 'amount' => (float)$total_amount * 100,
                 'currency' => "usd",
                 'source' => $request->stripe_token,
-                'description' => auth()->user()->pobox_number.' '.'paid to HomeDelivery'
+                'description' => auth()->user()->pobox_number.' '.'paid to HomeDelivery against payment invoice# '.$InvoiceId,
             ]);
             
             $this->chargeID = $charge->id;
