@@ -18,7 +18,7 @@
                         </a>
                     </div>
                     <div class="card-content">
-                        <form action="{{ route('admin.payment-invoices.invoice.checkout.store',$invoice) }}" method="POST">
+                        <form action="{{ route('admin.payment-invoices.invoice.checkout.store',$invoice) }}" method="POST" class="payment-form" @if($paymentGateway == 'STRIPE') data-stripe-payment="true" data-stripe-publishable-key="{{ $stripeKey }}" @else data-stripe-payment="false" @endif>
                             @csrf
                             <div class="card-body">
                                 <p class="h5 dim">@lang('invoice.Checkout Message Detail')</p>
@@ -176,4 +176,5 @@
             }
         }
     </script>
+    @include('admin.payment-invoices.stripe')
 @endsection

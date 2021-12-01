@@ -18,7 +18,7 @@
                         </a>
                     </div>
                     <div class="card-content">
-                        <form action="{{ route('admin.deposit.store') }}" method="POST" enctype="multipart/form-data" @admin onSubmit="return confirm('Are you sure! you want to add balance to User account') " @endadmin>
+                        <form action="{{ route('admin.deposit.store') }}" class="payment-form" method="POST" enctype="multipart/form-data" @if($paymentGateway == 'STRIPE') data-stripe-payment="true" data-stripe-publishable-key="{{ $stripeKey }}" @else data-stripe-payment="false" @endif  @admin onSubmit="return confirm('Are you sure! you want to add balance to User account') " @endadmin>
                             @csrf
                             <div class="card-body">
                                 @admin
@@ -144,6 +144,7 @@
                                                     </div>
                                                 </fieldset>
                                             </div>
+                                            <div class="row ml-3 mt-3" id="stripe_error" style="display: none;"></div>
                                         </div>
                                     </div>
                                     <hr>
@@ -205,4 +206,5 @@
             }
         }
     </script>
+    @include('admin.deposit.stripe')
 @endsection
