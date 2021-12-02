@@ -5,14 +5,15 @@ use Illuminate\Support\Facades\Route;
 use App\Services\Correios\Models\Package;
 use App\Http\Controllers\Warehouse\AwbController;
 use App\Http\Controllers\Warehouse\ContainerController;
+use App\Http\Controllers\Warehouse\UnitCancelContoller;
+use App\Http\Controllers\Warehouse\AuditReportController;
+use App\Http\Controllers\Warehouse\ScanPackageController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Warehouse\CN23DownloadController;
 use App\Http\Controllers\Warehouse\CN35DownloadController;
 use App\Http\Controllers\Warehouse\DeliveryBillController;
 use App\Http\Controllers\Warehouse\UnitRegisterController;
-use App\Http\Controllers\Warehouse\UnitCancelContoller;
 use App\Http\Controllers\Warehouse\SearchPackageController;
-use App\Http\Controllers\Warehouse\ScanPackageController;
 use App\Http\Controllers\Warehouse\USPSContainerController;
 use App\Http\Controllers\Warehouse\ChileContainerController;
 use App\Http\Controllers\Warehouse\ContainerPackageController;
@@ -48,6 +49,8 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('delivery_bill/{delivery_bill}/status/refresh', DeliveryBillStatusUpdateController::class)->name('delivery_bill.status.refresh');
     Route::get('delivery_bill/{delivery_bill}/download', DeliveryBillDownloadController::class)->name('delivery_bill.download');
     Route::get('delivery_bill/{delivery_bill}/manifest', ManifestDownloadController::class)->name('delivery_bill.manifest');
+    
+    Route::resource('audit-report', AuditReportController::class)->only(['show']);
 
     // ALL Routes for Chile Containers
     Route::resource('chile_containers', ChileContainerController::class);

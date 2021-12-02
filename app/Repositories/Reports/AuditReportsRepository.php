@@ -5,7 +5,9 @@ namespace App\Repositories\Reports;
 use App\Models\User;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use App\Models\ProfitPackage;
 use Illuminate\Support\Facades\DB;
+use App\Models\Warehouse\Container;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Warehouse\AccrualRate;
 use App\Services\Converters\UnitsConverter;
@@ -34,29 +36,50 @@ class AuditReportsRepository
         return $paginate ? $query->paginate($pageSize):$query->get();
     }
 
-    public function getRates(Order $order)
+    public function getRates(Container $container, Order $order)
     {
         $weight = $order->getWeight('kg');
         if($weight < 0.1){
             $weight = 0.1;
         }
         $weightToGrams = UnitsConverter::kgToGrams($weight);
-        // $profitPackageRate = 0;
-        // if($order->recipient->country_id != 250)
-        // {
-        //     $profitPackageRate = $order->shippingService->getRateFor($order,true,true);
-        // }
+        $profitPackageRate = 0;
+        $rate = 0;
+        if($order->recipient->country_id != 250)
+        {
+            $profitPackageRate = $order->shippingService->getRateFor($order,true,true);
+            $rate = $order->shippingService->getRateFor($order,false,true);
+        }
+        $shippingServiceId = optional($order->shippingService)->id;
+        $profitSetting = $order->user->profitSettings()->where('user_id',$order->user->id)->where('service_id',$shippingServiceId)->first();
+        if($profitSetting){
+            $profitPackage =$profitSetting->profitPackage;
+        }else{
+            $profitPackage = optional($order->user)->profitPackage;
+        }
+
+        if ( !$profitPackage ){
+            $profitPackage = ProfitPackage::where('type',ProfitPackage::TYPE_DEFAULT)->first();
+        }
         $serviceCode = optional($order->shippingService)->service_sub_class;
         $rateSlab = AccrualRate::where('service',$serviceCode)->where('weight','<=',$weightToGrams)->orderBy('id','DESC')->take(1)->first();
         if ( !$rateSlab ){
             return [
                 'accrualRate' => 0,
-                // 'profitPackageRate' => $profitPackageRate,
+                'profitPackageRate' => $profitPackageRate,
+                'rate' => $rate,
+                'profitPackage' => $profitPackage->name,
             ];
         }
+        $accuralRate = $rateSlab->cwb;
+        if ( $container->getDestinationAriport() ==  "GRU"){
+           $accuralRate = $rateSlab->gru;
+        }
         return [
-            'accrualRate' => $rateSlab->gru,
-            // 'profitPackageRate' => $profitPackageRate,
+            'accrualRate' => $accuralRate,
+            'profitPackageRate' => $profitPackageRate,
+            'rate' => $rate,
+            'profitPackage' => $profitPackage->name,
         ];
     }
 }
