@@ -257,12 +257,12 @@
                         </li>
                         @endcan
                     @admin
-                        <li class="{{ $isActive(['admin.reports.audit-report.index','admin.reports.audit-report.show']) }}">
+                        {{-- <li class="{{ $isActive(['admin.reports.audit-report.index','admin.reports.audit-report.show']) }}">
                             <a href="{{ route('admin.reports.audit-report.index') }}">
                                 <i class="feather icon-circle"></i>
                                 <span class="menu-title">@lang('menu.Reports.Audit Report')</span>
                             </a>
-                        </li>
+                        </li> --}}
                     @endadmin
                 </ul>
             </li>
