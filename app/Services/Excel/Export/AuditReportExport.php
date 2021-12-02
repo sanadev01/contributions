@@ -94,10 +94,10 @@ class AuditReportExport extends AbstractExportService
         $this->setCellValue('H1', 'Additional Charges');
 
         $this->setColumnWidth('I', 20);
-        $this->setCellValue('I1', 'Shipping Value Charged');
+        $this->setCellValue('I1', 'Selling Rate to Customer');
 
         $this->setColumnWidth('J', 20);
-        $this->setCellValue('J1', 'Shipping Rate only');
+        $this->setCellValue('J1', 'HomedeliveryBr Cost');
 
         $this->setColumnWidth('K', 20);
         $this->setCellValue('K1', 'Customer Rate profit package');
@@ -106,7 +106,7 @@ class AuditReportExport extends AbstractExportService
         $this->setCellValue('L1', 'Profit Package');
 
         $this->setColumnWidth('M', 20);
-        $this->setCellValue('M1', 'Total Charges');
+        $this->setCellValue('M1', 'Total Invoiced to Customer');
         
         $this->setColumnWidth('N', 20);
         $this->setCellValue('N1', 'Correios Accrual');
