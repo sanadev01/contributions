@@ -28,14 +28,7 @@ class UPSShippingService
 
     public function isAvailableFor($shippingService)
     {
-        if((
-            $shippingService->service_sub_class == ShippingService::UPS_FREIGHT_LTL 
-            || $shippingService->service_sub_class == ShippingService::UPS_FREIGHT_LTL_GUARANTEED
-            || $shippingService->service_sub_class == ShippingService::UPS_FREIGHT_LTL_GUARANTEED_AM
-            || $shippingService->service_sub_class == ShippingService::UPS_STANDARD_LTL
-
-            ) 
-            && $this->weight <= $shippingService->max_weight_allowed)
+        if($shippingService->service_sub_class == ShippingService::UPS_GROUND && $this->weight <= $shippingService->max_weight_allowed)
         {
             return true;
         }
