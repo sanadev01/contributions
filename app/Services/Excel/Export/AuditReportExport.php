@@ -48,9 +48,10 @@ class AuditReportExport extends AbstractExportService
                 $this->setCellValue('I'.$row, number_format($order->shipping_value,2));
                 $this->setCellValue('J'.$row, $rates['rate']);
                 $this->setCellValue('K'.$row, $rates['profitPackageRate']);
-                $this->setCellValue('L'.$row, $rates['profitPackage']);
-                $this->setCellValue('M'.$row, number_format($order->gross_total,2));
-                $this->setCellValue('N'.$row, $rates['accrualRate']);
+                $this->setCellValue('L'.$row, "=MIN(I{$row}-K{$row})");
+                $this->setCellValue('M'.$row, $rates['profitPackage']);
+                $this->setCellValue('N'.$row, number_format($order->gross_total,2));
+                $this->setCellValue('O'.$row, $rates['accrualRate']);
                 $row++;
             }
         }
@@ -101,18 +102,21 @@ class AuditReportExport extends AbstractExportService
 
         $this->setColumnWidth('K', 20);
         $this->setCellValue('K1', 'Customer Rate profit package');
-
+        
         $this->setColumnWidth('L', 20);
-        $this->setCellValue('L1', 'Profit Package');
+        $this->setCellValue('L1', 'Divergency');
 
         $this->setColumnWidth('M', 20);
-        $this->setCellValue('M1', 'Total Invoiced to Customer');
-        
-        $this->setColumnWidth('N', 20);
-        $this->setCellValue('N1', 'Correios Accrual');
+        $this->setCellValue('M1', 'Profit Package');
 
-        $this->setBackgroundColor('A1:N1', '2b5cab');
-        $this->setColor('A1:N1', 'FFFFFF');
+        $this->setColumnWidth('N', 20);
+        $this->setCellValue('N1', 'Total Invoiced to Customer');
+        
+        $this->setColumnWidth('O', 20);
+        $this->setCellValue('O1', 'Correios Accrual');
+
+        $this->setBackgroundColor('A1:O1', '2b5cab');
+        $this->setColor('A1:O1', 'FFFFFF');
 
         $this->currentRow++;
     }
