@@ -6,21 +6,29 @@ namespace App\Repositories;
 
 use App\Models\Order;
 use App\Models\OrderTracking;
-use App\Facades\CorreosChileFacade;
 use App\Models\ShippingService;
+use App\Facades\CorreosChileFacade;
 use App\Services\CorreosChile\CorreosChileLabelMaker;
+use App\Services\CourierExpress\CourrierExpressService;
 
 class CorrieosChileLabelRepository
 {
     protected $chile_errors;
-
+    
     public function handle($order)
     {
-        if(($order->shippingService->service_sub_class == ShippingService::SRP || $order->shippingService->service_sub_class == ShippingService::SRM) && $order->api_response == null)
+        if($order->shippingService->service_sub_class == ShippingService::SRP || $order->shippingService->service_sub_class == ShippingService::SRM && $order->isPaid())
         {
+            if($order->recipient->commune_id != null)
+            {
+               return $this->generateCourierExpressLabel($order);
+            }
 
-            $this->generat_ChileLabel($order);
-
+            if($order->api_response == null && $order->recipient->commune_id == null)
+            {
+                $this->generat_ChileLabel($order);
+            }
+            
         }elseif($order->api_response != null)
         {
 
@@ -124,5 +132,11 @@ class CorrieosChileLabelRepository
         }    
 
         return true;
+    }
+
+    public function generateCourierExpressLabel($order)
+    {
+        $courierExpressService = new CourrierExpressService();
+        return $courierExpressService->generateLabel($order);
     }
 }

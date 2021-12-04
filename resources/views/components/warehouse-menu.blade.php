@@ -38,6 +38,12 @@
                     <span class="menu-title">@lang('menu.Warehouse.USPS Containers')</span>
                 </a>
             </li>
+            <li class="{{ $isActive(['warehouse.sinerlog_containers.index','warehouse.sinerlog_containers.create','warehouse.sinerlog_containers.edit','warehouse.sinerlog_container.packages.index']) }}">
+                <a href="{{ route('warehouse.sinerlog_containers.index') }}">
+                    <i class="feather icon-circle"></i>
+                    <span class="menu-title">@lang('menu.Warehouse.Sinerlog Containers')</span>
+                </a>
+            </li>
         @endadmin
         <li class="{{ $isActive(['warehouse.chile_containers.index','warehouse.chile_containers.create','warehouse.chile_containers.edit','warehouse.chile_container.packages.index']) }}">
             <a href="{{ route('warehouse.chile_containers.index') }}">
@@ -45,7 +51,6 @@
                 <span class="menu-title">@lang('menu.Warehouse.Chile Containers')</span>
             </a>
         </li>
-
     </ul>
 </li>
 @endcan
