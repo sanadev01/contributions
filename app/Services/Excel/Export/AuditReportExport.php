@@ -3,18 +3,19 @@
 namespace App\Services\Excel\Export;
 use App\Models\Order;
 use Illuminate\Support\Collection;
+use App\Models\Warehouse\DeliveryBill;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use App\Repositories\Reports\AuditReportsRepository;
 
 class AuditReportExport extends AbstractExportService
 {
-    private $orders;
+    private $deliveryBill;
 
     private $currentRow = 1;
 
-    public function __construct(Collection $orders)
+    public function __construct(DeliveryBill $deliveryBill)
     {
-        $this->orders = $orders;
+        $this->deliveryBill = $deliveryBill;
 
         parent::__construct();
     }
@@ -32,33 +33,36 @@ class AuditReportExport extends AbstractExportService
 
         $row = $this->currentRow;
         $auditReportsRepository = new AuditReportsRepository;
-        foreach ($this->orders as $order) {
-            $user = $order->user;
-            $rates = $auditReportsRepository->getRates($order);
-            $this->setCellValue('A'.$row, $order->order_date);
-            $this->setCellValue('B'.$row, $user->name);
-            $this->setCellValue('C'.$row, $order->warehouse_number);
-            $this->setCellValue('D'.$row, (string)$order->corrios_tracking_code);
-            $this->setCellValue('E'.$row, $order->getWeight('kg'));
-            $this->setCellValue('F'.$row, $order->getWeight('lbs'));
-            $this->setCellValue('G'.$row, number_format($order->dangrous_goods,2));
-            $this->setCellValue('H'.$row, number_format($order->services->sum('price'),2));
-            $this->setCellValue('I'.$row, number_format($order->shipping_value,2));
-            $this->setCellValue('J'.$row, number_format($order->gross_total,2));
-            $this->setCellValue('K'.$row, $rates['accrualRate']);
-            // $this->setCellValue('K'.$row, $rates['profitPackageRate']);
-            $row++;
+        foreach ($this->deliveryBill->containers as $container) {
+            foreach ($container->orders as $order) {
+                $user = $order->user;
+                $rates = $auditReportsRepository->getRates($container,$order);
+                $this->setCellValue('A'.$row, $order->order_date);
+                $this->setCellValue('B'.$row, $user->name);
+                $this->setCellValue('C'.$row, $order->warehouse_number);
+                $this->setCellValue('D'.$row, (string)$order->corrios_tracking_code);
+                $this->setCellValue('E'.$row, $order->getWeight('kg'));
+                $this->setCellValue('F'.$row, $order->getWeight('lbs'));
+                $this->setCellValue('G'.$row, number_format($order->dangrous_goods,2));
+                $this->setCellValue('H'.$row, number_format($order->services->sum('price'),2));
+                $this->setCellValue('I'.$row, number_format($order->shipping_value,2));
+                $this->setCellValue('J'.$row, $rates['profitPackageRate']);
+                $this->setCellValue('K'.$row, $rates['profitPackage']);
+                $this->setCellValue('L'.$row, "=MIN(I{$row}-J{$row})");
+                $this->setCellValue('M'.$row, $rates['rate']);
+                $this->setCellValue('N'.$row, number_format($order->gross_total,2));
+                $this->setCellValue('O'.$row, $rates['accrualRate']);
+                $row++;
+            }
         }
         $this->currentRow = $row;
         $this->setCellValue('G'.$row, "=SUM(G1:G{$row})");
         $this->setCellValue('H'.$row, "=SUM(H1:H{$row})");
         $this->setCellValue('I'.$row, "=SUM(I1:I{$row})");
         $this->setCellValue('J'.$row, "=SUM(J1:J{$row})");
-        // $this->setCellValue('K'.$row, "=SUM(K1:K{$row})");
-        $this->mergeCells("A{$row}:F{$row}");
-        $this->setBackgroundColor("A{$row}:L{$row}", 'adfb84');
-        $this->setAlignment('A'.$row, Alignment::VERTICAL_CENTER);
-        $this->setCellValue('A'.$row, 'Total Order: '.$this->orders->count());
+        // $this->mergeCells("A{$row}:F{$row}");
+        
+        $this->setBackgroundColor("A{$row}:O{$row}", 'adfb84');
     }
 
 
@@ -89,28 +93,30 @@ class AuditReportExport extends AbstractExportService
         $this->setCellValue('H1', 'Additional Charges');
 
         $this->setColumnWidth('I', 20);
-        $this->setCellValue('I1', 'Shipping Value');
+        $this->setCellValue('I1', 'Selling Rate to Customer');
 
         $this->setColumnWidth('J', 20);
-        $this->setCellValue('J1', 'Total Charges');
-
-        $this->setColumnWidth('K', 20);
-        $this->setCellValue('K1', 'Corrieos Charges');
+        $this->setCellValue('J1', 'Customer Rate profit package');
         
-        // $this->setColumnWidth('L', 20);
-        // $this->setCellValue('L1', 'Profit');
+        $this->setColumnWidth('K', 20);
+        $this->setCellValue('K1', 'Profit Package');
+        
+        $this->setColumnWidth('L', 20);
+        $this->setCellValue('L1', 'Divergency');
+        
+        $this->setColumnWidth('M', 20);
+        $this->setCellValue('M1', 'HomedeliveryBr Cost');
 
-        $this->setBackgroundColor('A1:K1', '2b5cab');
-        $this->setColor('A1:K1', 'FFFFFF');
+        $this->setColumnWidth('N', 20);
+        $this->setCellValue('N1', 'Total Invoiced to Customer');
+        
+        $this->setColumnWidth('O', 20);
+        $this->setCellValue('O1', 'Correios Accrual');
+
+        $this->setBackgroundColor('A1:O1', '2b5cab');
+        $this->setBackgroundColor('J1:K1', 'ff1a1a');
+        $this->setColor('A1:O1', 'FFFFFF');
 
         $this->currentRow++;
-    }
-
-    private function checkValue($value)
-    {
-        if($value == 0){
-            return 0.00;
-        }
-        return $value;
     }
 }
