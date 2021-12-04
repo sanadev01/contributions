@@ -46,10 +46,10 @@ class AuditReportExport extends AbstractExportService
                 $this->setCellValue('G'.$row, number_format($order->dangrous_goods,2));
                 $this->setCellValue('H'.$row, number_format($order->services->sum('price'),2));
                 $this->setCellValue('I'.$row, number_format($order->shipping_value,2));
-                $this->setCellValue('J'.$row, $rates['rate']);
-                $this->setCellValue('K'.$row, $rates['profitPackageRate']);
-                $this->setCellValue('L'.$row, "=MIN(I{$row}-K{$row})");
-                $this->setCellValue('M'.$row, $rates['profitPackage']);
+                $this->setCellValue('J'.$row, $rates['profitPackageRate']);
+                $this->setCellValue('K'.$row, $rates['profitPackage']);
+                $this->setCellValue('L'.$row, "=MIN(I{$row}-J{$row})");
+                $this->setCellValue('M'.$row, $rates['rate']);
                 $this->setCellValue('N'.$row, number_format($order->gross_total,2));
                 $this->setCellValue('O'.$row, $rates['accrualRate']);
                 $row++;
@@ -60,11 +60,7 @@ class AuditReportExport extends AbstractExportService
         $this->setCellValue('H'.$row, "=SUM(H1:H{$row})");
         $this->setCellValue('I'.$row, "=SUM(I1:I{$row})");
         $this->setCellValue('J'.$row, "=SUM(J1:J{$row})");
-        // $this->setCellValue('K'.$row, "=SUM(K1:K{$row})");
-        $this->mergeCells("A{$row}:F{$row}");
-        // $this->setBackgroundColor("A{$row}:L{$row}", 'adfb84');
-        // $this->setAlignment('A'.$row, Alignment::VERTICAL_CENTER);
-        // $this->setCellValue('A'.$row, 'Total Order: '.$this->orders->count());
+        // $this->mergeCells("A{$row}:F{$row}");
     }
 
 
@@ -98,16 +94,16 @@ class AuditReportExport extends AbstractExportService
         $this->setCellValue('I1', 'Selling Rate to Customer');
 
         $this->setColumnWidth('J', 20);
-        $this->setCellValue('J1', 'HomedeliveryBr Cost');
-
+        $this->setCellValue('J1', 'Customer Rate profit package');
+        
         $this->setColumnWidth('K', 20);
-        $this->setCellValue('K1', 'Customer Rate profit package');
+        $this->setCellValue('K1', 'Profit Package');
         
         $this->setColumnWidth('L', 20);
         $this->setCellValue('L1', 'Divergency');
-
+        
         $this->setColumnWidth('M', 20);
-        $this->setCellValue('M1', 'Profit Package');
+        $this->setCellValue('M1', 'HomedeliveryBr Cost');
 
         $this->setColumnWidth('N', 20);
         $this->setCellValue('N1', 'Total Invoiced to Customer');
@@ -116,6 +112,7 @@ class AuditReportExport extends AbstractExportService
         $this->setCellValue('O1', 'Correios Accrual');
 
         $this->setBackgroundColor('A1:O1', '2b5cab');
+        $this->setBackgroundColor('J1:K1', 'ff1a1a');
         $this->setColor('A1:O1', 'FFFFFF');
 
         $this->currentRow++;
