@@ -207,17 +207,6 @@
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">Stripe<span class="text-danger"></span></label>
-                                    <div class="col-md-6">
-                                        <div class="vs-checkbox-con vs-checkbox-primary" title="Stripe">
-                                            <input type="checkbox" name="stripe" id="stripe" @if( $user->stripe == 1 ) checked @endif>
-                                            <span class="vs-checkbox vs-checkbox-lg">
-                                                <span class="vs-checkbox--check">
-                                                    <i class="vs-icon feather icon-check"></i>
-                                                </span>
-                                            </span>
-                                            <span class="h3 mx-2 text-primary my-0 py-0"></span>
-                                        </div>
                                     <label class="col-md-3 text-md-right">SinerLog<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <div class="input-group">
@@ -230,6 +219,20 @@
                                                 </span>
                                             </div>
                                         </div>    
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">Stripe<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="vs-checkbox-con vs-checkbox-primary" title="Stripe">
+                                            <input type="checkbox" name="stripe" id="stripe" @if( $user->stripe == 1 ) checked @endif>
+                                            <span class="vs-checkbox vs-checkbox-lg">
+                                                <span class="vs-checkbox--check">
+                                                    <i class="vs-icon feather icon-check"></i>
+                                                </span>
+                                            </span>
+                                            <span class="h3 mx-2 text-primary my-0 py-0"></span>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row mt-1">
