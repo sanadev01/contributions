@@ -145,7 +145,12 @@ class PrintLabelController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $orders = Order::whereIn('id', $request->Ids)->get();
+        if($request->userId != null)
+        {
+            $orders = Order::where('user_id', $request->userId)->whereBetween('arrived_date',[$request->start_date.' 00:00:00', $request->end_date.' 23:59:59'])->orderBy('arrived_date', 'DESC')->get();
+        }else {
+            $orders = Order::whereBetween('arrived_date',[$request->start_date.' 00:00:00', $request->end_date.' 23:59:59'])->orderBy('arrived_date', 'DESC')->get();
+        }
 
         if($orders != null)
         {
