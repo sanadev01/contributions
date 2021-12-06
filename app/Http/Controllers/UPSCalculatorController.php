@@ -15,6 +15,7 @@ use App\Services\UPS\UPSShippingService;
 use App\Services\Converters\UnitsConverter;
 use App\Repositories\UPSCalculatorRepository;
 use App\Services\Calculators\WeightCalculator;
+use App\Http\Requests\Calculator\UPSCalculatorRequest;
 
 class UPSCalculatorController extends Controller
 {
@@ -29,43 +30,8 @@ class UPSCalculatorController extends Controller
         return view('upscalculator.index', compact('states'));
     }
 
-    public function store(Request $request)
+    public function store(UPSCalculatorRequest $request)
     {   
-        $rules = [
-            'origin_country' => 'required|numeric|exists:countries,id',
-            'destination_country' => 'required|numeric|exists:countries,id',
-            'sender_state' => 'required|exists:states,code',
-            'sender_address' => 'required',
-            'sender_city' => 'required',
-            'sender_zipcode' => 'required',
-            'height' => 'sometimes|numeric',
-            'width' => 'sometimes|numeric',
-            'length' => 'sometimes|numeric',
-            'unit' => 'required|in:lbs/in,kg/cm',
-        ];
-        
-        if($request->unit == 'kg/cm'){
-            $rules['weight'] = 'sometimes|numeric|max:30';
-        }else{
-            $rules['weight'] = 'sometimes|numeric|max:66.15';
-        }
-
-        $message = [
-            'origin_country' => 'Please Select Origin country',
-            'destination_country' => 'Please Select Destination country',
-            'sender_state' => 'Please Select Origin state',
-            'sender_address' => 'Please Enter Destination address',
-            'sender_city' => 'Please Enter Destination city',
-            'sender_zipcode' => 'Please Enter Destination zipcode',
-            'weight' => 'Please Enter weight',
-            'weight.max' => 'weight exceed the delivery of USPS',
-            'height' => 'Please Enter height',
-            'width' => 'Please Enter width',
-            'length' => 'Please Enter length',
-            'unit' => 'Please Select Measurement Unit ',
-        ];
-        
-        $this->validate($request, $rules, $message);
         
         $originalWeight =  $request->weight;
         if ( $request->unit == 'kg/cm' ){
@@ -76,13 +42,62 @@ class UPSCalculatorController extends Controller
             $chargableWeight = round($volumetricWeight >  $originalWeight ? $volumetricWeight :  $originalWeight,2);
         }
 
+        $recipient = $this->getRecipient($request);
+
+       $order = $this->createOrder($request, $recipient);
+
+        $shippingServices = $this->getShippingServices($order);
+        $this->checkUser();
+        
+        if($shippingServices->isEmpty()){
+            $error = "Shipping Service not Available for the Country you have selected";
+        }
+
+        if($shippingServices->isNotEmpty())
+        {
+            $this->getShippingRates($shippingServices, $order);
+        }
+        
+
+        if($this->shipping_rates == null){
+            $ups_rates = $this->shipping_rates;
+            $shipping_rates = $this->shipping_rates;
+            session()->flash('alert-danger', $this->error);
+        }else 
+        {
+            // rates without profit
+            $ups_rates = $this->shipping_rates;
+            // rates with profit
+            $this->addProfit($this->shipping_rates);
+            $shipping_rates = $this->shipping_rates;
+        }
+
+        if ($request->unit == 'kg/cm' ){
+            $weightInOtherUnit = UnitsConverter::kgToPound($chargableWeight);
+        }else
+        {
+            $weightInOtherUnit = UnitsConverter::poundToKg($chargableWeight);
+        }
+
+        $userLoggedIn = $this->userLoggedIn;
+        
+        return view('upscalculator.show', compact('ups_rates','shipping_rates','order', 'weightInOtherUnit', 'chargableWeight', 'userLoggedIn'));
+    }
+
+    private function getRecipient()
+    {
         $recipient = new Recipient();
-        $recipient->country_id = $request->destination_country;
+        $recipient->country_id = 250;
         $recipient->state_id = 4622;
         $recipient->address = '2200 NW 129TH AVE';
         $recipient->city = 'Miami';
         $recipient->zipcode = '33182';
 
+        return $recipient;
+    }
+
+    private function createOrder($request, $recipient)
+    {
         $order = new Order();
         $order->id = 1;
         $order->user = Auth::user() ? Auth::user() :  User::where('role_id',1)->first();
@@ -104,8 +119,12 @@ class UPSCalculatorController extends Controller
         $order->measurement_unit = $request->unit;
         $order->recipient = $recipient;
 
+        return $order;
+    }
+
+    public function getShippingServices($order)
+    {
         $shippingServices = collect();
-        $this->checkUser();
 
         $ups_shippingService = new UPSShippingService($order);
         foreach (ShippingService::query()->active()->get() as $shippingService) {
@@ -113,47 +132,28 @@ class UPSCalculatorController extends Controller
                     $shippingServices->push($shippingService);
             }
         }
-        
-        if($shippingServices->isEmpty()){
-            $error = "Shipping Service not Available for the Country you have selected";
-        }
 
-        foreach ($shippingServices as $shippingService) {
+        return $shippingServices;
+    }
+
+    private function getShippingRates($shippingServices, $order)
+    {
+        $shippingServices->each(function ($shippingService, $key) use ($order) {
 
             $request_data = $this->create_request($order, $shippingService->service_sub_class);
             $response = UPSFacade::getSenderPrice($order, $request_data);
-            
+
             if($response->success == true)
             {
                 array_push($this->shipping_rates , ['name'=> $shippingService->name , 'rate'=> number_format($response->data['RateResponse']['RatedShipment']['TotalCharges']['MonetaryValue'], 2)]);
 
-            }else {
+            }else 
+            {
                 $this->error = $response->error['response']['errors'][0]['message'];
             }
-        }
+        });
 
-        if($this->shipping_rates == null){
-            $ups_rates = $this->shipping_rates;
-            $shipping_rates = $this->shipping_rates;
-            session()->flash('alert-danger', $this->error);
-        } else {
-            // rates without profit
-            $ups_rates = $this->shipping_rates;
-            // rates with profit
-            $this->addProfit($this->shipping_rates);
-            $shipping_rates = $this->shipping_rates;
-        }
-
-        if ($request->unit == 'kg/cm' ){
-            $weightInOtherUnit = UnitsConverter::kgToPound($chargableWeight);
-        }else{
-            $weightInOtherUnit = UnitsConverter::poundToKg($chargableWeight);
-        }
-
-        $userLoggedIn = $this->userLoggedIn;
-        
-        return view('upscalculator.show', compact('ups_rates','shipping_rates','order', 'weightInOtherUnit', 'chargableWeight', 'userLoggedIn'));
-
+        return true;
     }
 
     private function checkUser()
