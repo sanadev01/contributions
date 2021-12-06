@@ -34,7 +34,7 @@ class ContainerPackageRepository extends AbstractRepository{
 
     public function addOrderToContainer(Container $container,string $barcode)
     {
-        if($container->services_subclass_code  != substr($barcode,0,2)){
+        if(strtolower($container->services_subclass_code)  != strtolower(substr($barcode,0,2))){
             return [
                 'order' => [
                     'corrios_tracking_code' => $barcode,
