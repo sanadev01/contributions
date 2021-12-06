@@ -122,10 +122,10 @@ class UPSCalculatorController extends Controller
 
             $request_data = $this->create_request($order, $shippingService->service_sub_class);
             $response = UPSFacade::getSenderPrice($order, $request_data);
-           
+            
             if($response->success == true)
             {
-                array_push($this->shipping_rates , ['name'=> $shippingService->name , 'rate'=> number_format($response->data['FreightRateResponse']['TotalShipmentCharge']['MonetaryValue'], 2)]);
+                array_push($this->shipping_rates , ['name'=> $shippingService->name , 'rate'=> number_format($response->data['RateResponse']['RatedShipment']['TotalCharges']['MonetaryValue'], 2)]);
 
             }else {
                 $this->error = $response->error['response']['errors'][0]['message'];
@@ -152,7 +152,6 @@ class UPSCalculatorController extends Controller
 
         $userLoggedIn = $this->userLoggedIn;
         
-        // $shipping_rates = $this->shipping_rates;
         return view('upscalculator.show', compact('ups_rates','shipping_rates','order', 'weightInOtherUnit', 'chargableWeight', 'userLoggedIn'));
 
     }
@@ -226,7 +225,7 @@ class UPSCalculatorController extends Controller
 
         return (Array)[
             'success' => true,
-            'message' => 'USPS label has been generated successfully',
+            'message' => 'UPS label has been generated successfully',
             'path' => route('admin.orders.label.index', $order->id)
         ]; 
     }

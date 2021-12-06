@@ -5,6 +5,7 @@ use Exception;
 use App\Models\ShippingService;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use App\Services\Converters\UnitsConverter;
 use App\Services\Calculators\WeightCalculator;
 
 class UpsService
@@ -19,6 +20,11 @@ class UpsService
     protected $chargableWeight;
     protected $shipperNumber;
     protected $itemDescription = [];
+
+    protected $width;
+    protected $height;
+    protected $length;
+    protected $weight;
 
     public function __construct($create_package_url, $delete_package_url, $create_manifest_url, $rating_package_url, $transactionSrc, $userName, $password, $shipperNumber)
     {
@@ -75,7 +81,7 @@ class UpsService
                     ]
                 ],
                 'CustomerClassification' => [
-                    'Code' => '00'
+                    'Code' => '01'
                 ],
                 'Shipment' => [
                     'Shipper' => [
@@ -109,19 +115,6 @@ class UpsService
                             'CountryCode' => 'US',
                         ],
                     ],
-                    'AlternateDeliveryAddress' => [
-                        'Name' => 'HERCO SUIT#100',
-                        'Address' => [
-                            'AddressLine' => '2200 NW 129TH AVE',
-                            'City' => 'Miami',
-                            'StateProvinceCode' => 'FL',
-                            'PostalCode' => '33182',
-                            'CountryCode' => 'US',
-                        ],
-                    ],
-                    'ShipmentIndicationType' => [
-                        'Code' => '01'
-                    ],
                     'PaymentDetails' => [
                         'ShipmentCharge' => [
                             'Type' => '01',
@@ -134,6 +127,13 @@ class UpsService
                         'Code' => '0'.$request->service,
                         'Description' => 'Ground Service'
                     ],
+                    'ShipmentTotalWeight' => [
+                        'UnitOfMeasurement' => [
+                            'Code' => 'LBS',
+                            'Description' => 'Pounds'
+                        ],
+                        'Weight' => $this->chargableWeight
+                    ],
                     'Package' => [
                         'PackagingType' => [
                             'Code' => '02',
@@ -141,24 +141,17 @@ class UpsService
                         ],
                         'Dimensions' => [
                             'UnitOfMeasurement' => [
-                                'Code' => ($order->measurement_unit == 'kg/cm') ? 'CM' : 'IN',
+                                'Code' => 'IN',
                             ],
-                            'Length' => "$order->length",
-                            'Width' => "$order->width",
-                            'Height' => "$order->height",
+                            'Length' => ($order->measurement_unit == 'kg/cm') ? "$this->length" :"$order->length",
+                            'Width' => ($order->measurement_unit == 'kg/cm') ? "$this->width" : "$order->width",
+                            'Height' => ($order->measurement_unit == 'kg/cm') ? "$this->height" : "$order->height",
                         ],
                         'PackageWeight' => [
                             'UnitOfMeasurement' => [
-                                'Code' => ($order->measurement_unit == 'kg/cm') ? 'KGS' : 'LBS',
+                                'Code' => 'LBS',
                             ],
-                            'Weight' => ($this->chargableWeight != null) ? "$this->chargableWeight" : "$order->weight",
-                        ],
-                        'SimpleRate' => [
-                            'Code' => 'S',
-                            'Description' => 'Small Package'
-                        ],
-                        'ShipmentRatingOptions' => [
-                            'NegotiatedRatesIndicator' => '1'
+                            'Weight' => ($this->chargableWeight != null) ? "$this->chargableWeight" : (($order->measurement_unit == 'kg/cm') ? "$this->weight" :"$order->weight"),
                         ],
                         'ShipmentServiceOptions' => [
                             'DirectDeliveryOnlyIndicator' => '1'
@@ -528,13 +521,17 @@ class UpsService
     private function calculateVolumetricWeight($order)
     {
         if ( $order->measurement_unit == 'kg/cm' ){
+            $this->length = UnitsConverter::cmToIn($order->length);
+            $this->width = UnitsConverter::cmToIn($order->width);
+            $this->height = UnitsConverter::cmToIn($order->height);
+            $this->weight = UnitsConverter::kgToPound($order->weight);
 
-            $volumetricWeight = WeightCalculator::getVolumnWeight($order->length,$order->width,$order->height,'cm');
-            return $this->chargableWeight = round($volumetricWeight >  $order->weight ? $volumetricWeight :  $order->weight,2);
+            $volumetricWeight = WeightCalculator::getUPSVolumnWeight($this->length,$this->width,$this->height,'in');
+            return $this->chargableWeight = round($volumetricWeight >  $this->weight ? $volumetricWeight :  $this->weight,2);
 
         }else{
 
-            $volumetricWeight = WeightCalculator::getVolumnWeight($order->length,$order->width,$order->height,'in');
+            $volumetricWeight = WeightCalculator::getUPSVolumnWeight($order->length,$order->width,$order->height,'in');
            return $this->chargableWeight = round($volumetricWeight >  $order->weight ? $volumetricWeight :  $order->weight,2);
         }
     }

@@ -23,7 +23,6 @@ class UPSShippingService
         $this->measurement_unit = $order->measurement_unit;
 
         $this->weight = $order->getWeight('kg');
-        // $this->weightCalculator();
     }
 
     public function isAvailableFor($shippingService)
