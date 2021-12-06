@@ -145,14 +145,14 @@ class UPSCalculatorController extends Controller
 
             if($response->success == true)
             {
-                array_push($this->shipping_rates , ['name'=> $shippingService->name , 'rate'=> number_format($response->data['RateResponse']['RatedShipment']['TotalCharges']['MonetaryValue'], 2)]);
+                array_push($this->shipping_rates , ['name'=> $shippingService->name , 'sub_class_code' => $shippingService->service_sub_class, 'rate'=> number_format($response->data['RateResponse']['RatedShipment']['TotalCharges']['MonetaryValue'], 2)]);
 
             }else 
             {
                 $this->error = $response->error['response']['errors'][0]['message'];
             }
         });
-
+        
         return true;
     }
 
@@ -202,7 +202,7 @@ class UPSCalculatorController extends Controller
 
             $rate = $shipping_rate['rate'] + $profit;
 
-            array_push($this->shipping_rates , ['name'=> $shipping_rate['name'] , 'rate'=> number_format($rate, 2)]);
+            array_push($this->shipping_rates , ['name'=> $shipping_rate['name'] , 'sub_class_code' => $shipping_rate['sub_class_code'], 'rate'=> number_format($rate, 2)]);
         }
 
         return true;

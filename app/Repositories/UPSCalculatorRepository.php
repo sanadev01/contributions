@@ -25,6 +25,7 @@ class UPSCalculatorRepository
     public $service;
     public $shipping_service_id;
     public $shipping_service_sub_class;
+    public $shipping_service_name;
     public $ups_cost;
     public $request_order;
 
@@ -32,17 +33,18 @@ class UPSCalculatorRepository
     {
         $this->request_order = json_decode($request->order);
         $this->getUser($request->user_id);
-        $this->service = $request->service;
-        $this->getShippingService($this->service);
+        $this->shipping_service_sub_class = $request->service;
+        $this->getShippingService();
         $this->ups_cost = $request->ups_cost;
         $current_balance =  $this->checkBalance();
+        
         if( $this->ups_cost > $current_balance)
         {
             $this->ups_errors = 'Not Enough Balance. Please Recharge your account.';
 
             return false;
         }
-        
+        dd('In process');
         $this->createOrder();
         if($this->ups_errors == null)
         {
@@ -96,7 +98,7 @@ class UPSCalculatorRepository
                 'height' => $this->request_order->height,
                 'measurement_unit' => $this->request_order->measurement_unit,
                 'shipping_service_id' =>  $this->shipping_service_id,
-                'shipping_service_name' => $this->service,
+                'shipping_service_name' => $this->shipping_service_name,
                 'status' => Order::STATUS_ORDER,
             ]);
             
@@ -119,12 +121,12 @@ class UPSCalculatorRepository
         }
     }
 
-    private function getShippingService($service_name)
+    private function getShippingService()
     {
-        $shipping_service = ShippingService::where('name', $service_name)->first();
+        $shipping_service = ShippingService::where('service_sub_class', $this->shipping_service_sub_class)->first();
 
         $this->shipping_service_id = $shipping_service->id;
-        $this->shipping_service_sub_class = $shipping_service->service_sub_class;
+        $this->shipping_service_name = $shipping_service->name;
 
         return true;
     }

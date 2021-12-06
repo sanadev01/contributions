@@ -65,12 +65,12 @@
                                                 <label>@lang('orders.order-details.Select Shipping Service')<span class="text-danger"></span></label>
                                                 <select name="shipping_service" id="shipping_service" class="form-control" required>
                                                     @foreach ($shipping_rates as $shipping_service)
-                                                        <option {{ old('shipping_service') == $shipping_service['name'] ? 'selected' : '' }} value="{{ $shipping_service['name'] }}" data-cost="{{ $shipping_service['rate']}}">{{ $shipping_service['name'] }}</option>
+                                                        <option {{ old('shipping_service') == $shipping_service['name'] ? 'selected' : '' }} value="{{ $shipping_service['sub_class_code'] }}" data-cost="{{ $shipping_service['rate']}}">{{ $shipping_service['name'] }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                             <div class="controls col-6" id="buy_label_div">
-                                                <button disabled id="btn-submit" type="button" class="btn btn-success btn-lg mt-4" @if(auth()->user()->usps == false) disabled @endif>
+                                                <button id="btn-submit" type="button" class="btn btn-success btn-lg mt-4" @if(auth()->user()->usps == false) disabled @endif>
                                                     Buy Label
                                                 </button>
                                             </div>
@@ -164,7 +164,7 @@
         });
 
         e.preventDefault();
-        let service = $('#shipping_service option:selected').text();
+        let service = $('#shipping_service option:selected').val();
         let ups_cost = $('#shipping_service option:selected').attr('data-cost');
         let order = $('#order').val();
         let user_id = $('#user_id').val();
