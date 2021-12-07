@@ -139,7 +139,7 @@ class ScanLabel extends Component
 
                 array_push($this->newOrder,$this->order);
 
-                if($order->trackings()->latest()->first()->status_code == Order::STATUS_PAYMENT_DONE)
+                if($order->trackings->isNotEmpty() && $order->trackings()->latest()->first()->status_code == Order::STATUS_PAYMENT_DONE)
                 {
                     $this->addOrderTracking($this->order);
                 }
@@ -245,7 +245,7 @@ class ScanLabel extends Component
     {
         $order = Order::where('corrios_tracking_code', $tracking_code)->first();
         
-        if($order->trackings()->count() < 3)
+        if($order->trackings->isNotEmpty() && $order->trackings()->count() < 3)
         {
             $order->trackings()->latest()->first()->delete();
         }
