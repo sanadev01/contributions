@@ -152,6 +152,6 @@ class ScanOrderExport extends AbstractExportService
             $totalWeight += $order->getWeight('kg');
         }
 
-        return $totalWeight;
+        return (float)bcdiv($totalWeight, 1, 2);
     }
 }
