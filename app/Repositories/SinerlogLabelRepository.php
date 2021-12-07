@@ -5,9 +5,10 @@ namespace App\Repositories;
 
 
 use App\Models\Order;
-use App\Services\Converters\UnitsConverter;
+use App\Models\OrderTracking;
 use App\Services\Sinerlog\Client;
 use Illuminate\Support\Facades\Log;
+use App\Services\Converters\UnitsConverter;
 
 class SinerlogLabelRepository
 {
@@ -43,6 +44,8 @@ class SinerlogLabelRepository
                 $order->setSinerlogTrxId($arrSinerlogReturn['order_code']);
                 $order->setSinerlogFreight($arrSinerlogReturn['data']->freight_price);
             }
+
+            $this->addOrderTracking($order);
 
             return $this->printLabel($order);
         }
@@ -80,6 +83,22 @@ class SinerlogLabelRepository
     public function getError()
     {
         return $this->error;
+    }
+
+    public function addOrderTracking($order)
+    {
+        if($order->trackings->isEmpty())
+        {
+            OrderTracking::create([
+                'order_id' => $order->id,
+                'status_code' => Order::STATUS_PAYMENT_DONE,
+                'type' => 'HD',
+                'description' => 'Order Placed',
+                'country' => ($order->user->country != null) ? $order->user->country->code : 'US',
+            ]);
+        }    
+
+        return true;
     }
 
 }
