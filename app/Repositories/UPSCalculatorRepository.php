@@ -44,14 +44,14 @@ class UPSCalculatorRepository
 
             return false;
         }
-        dd('In process');
+        
         $this->createOrder();
         if($this->ups_errors == null)
         {
             $this->createOrderRecipient();
         }
 
-        $this->buy_UPSLabel($this->order, $this->request_order);
+        $this->buy_UPSLabel($this->order);
 
         return $this->order;
     }
@@ -164,16 +164,16 @@ class UPSCalculatorRepository
     {
         $request_sender_data = $this->make_request_data();
         $response = UPSFacade::buyLabel($order, $request_sender_data);
-        
+        dd($response);
         if($response->success == true)
         {
             // storing response in orders table
             $order->update([
                 'api_response' => json_encode($response->data),
-                'corrios_tracking_code' => $response->data['FreightShipResponse']['ShipmentResults']['ShipmentNumber'],
+                'corrios_tracking_code' => $response->data['ShipmentResponse']['ShipmentResults']['ShipmentIdentificationNumber'],
                 'is_invoice_created' => true,
                 'is_shipment_added' => true,
-                'user_declared_freight' => $response->data['FreightShipResponse']['ShipmentResults']['TotalShipmentCharge']['MonetaryValue'],
+                'user_declared_freight' => $response->data['ShipmentResponse']['ShipmentResults']['TotalCharges']['MonetaryValue'],
                 'shipping_value' => $this->ups_cost,
                 'total' => $this->ups_cost,
                 'gross_total' => $this->ups_cost,

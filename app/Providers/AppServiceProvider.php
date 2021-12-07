@@ -65,7 +65,7 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton('UPS_service', function() {
             // USPS Api Testing Environemtn Credentials
-            $create_package_url = 'https://wwwcie.ups.com/ship/v1/freight/shipments/ground';
+            $create_package_url = 'https://wwwcie.ups.com/ship/v1/shipments';
             $delete_package_url = '';
             $create_manifest_url = '';
             $rating_package_url = 'https://onlinetools.ups.com/ship/v1/rating/Rate';
