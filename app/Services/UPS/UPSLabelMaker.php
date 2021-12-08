@@ -3,7 +3,7 @@ namespace App\Services\UPS;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
-
+use File;
 
 class UPSLabelMaker
 {
@@ -20,11 +20,13 @@ class UPSLabelMaker
         if($this->order->api_response != null)
         {
             $ups_response = json_decode($this->order->api_response);
-            $base64_pdf = $ups_response->FreightShipResponse->ShipmentResults->Documents->Image->GraphicImage;
+            
+            $png_label = $ups_response->ShipmentResponse->ShipmentResults->PackageResults->ShippingLabel->GraphicImage;
+            Storage::put("temp/labels/{$this->order->corrios_tracking_code}.png", base64_decode($png_label));
 
-            Storage::put("labels/{$this->order->corrios_tracking_code}.pdf", base64_decode($base64_pdf));
-
-            return true;
+            $temp_label_path = Storage::path('temp/labels/'.$this->order->corrios_tracking_code.'.png');
+            $this->rotateLabel($temp_label_path);
+            dd(true);
         }
     }
     
@@ -39,6 +41,16 @@ class UPSLabelMaker
 
             return true;
         }
+    }
+
+    private function rotateLabel($path)
+    {
+        $image = imagecreatefrompng($path);
+        $rotate = imagerotate($image, -90, 0);
+        imagepng($rotate, 'rotated_label.png');
+
+        return true;
+
     }
 
 }

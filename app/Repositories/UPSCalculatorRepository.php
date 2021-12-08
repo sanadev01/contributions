@@ -164,7 +164,7 @@ class UPSCalculatorRepository
     {
         $request_sender_data = $this->make_request_data();
         $response = UPSFacade::buyLabel($order, $request_sender_data);
-        dd($response);
+
         if($response->success == true)
         {
             // storing response in orders table
@@ -173,7 +173,7 @@ class UPSCalculatorRepository
                 'corrios_tracking_code' => $response->data['ShipmentResponse']['ShipmentResults']['ShipmentIdentificationNumber'],
                 'is_invoice_created' => true,
                 'is_shipment_added' => true,
-                'user_declared_freight' => $response->data['ShipmentResponse']['ShipmentResults']['TotalCharges']['MonetaryValue'],
+                'user_declared_freight' => $response->data['ShipmentResponse']['ShipmentResults']['ShipmentCharges']['TotalCharges']['MonetaryValue'],
                 'shipping_value' => $this->ups_cost,
                 'total' => $this->ups_cost,
                 'gross_total' => $this->ups_cost,
@@ -182,7 +182,7 @@ class UPSCalculatorRepository
 
             $this->chargeAmount($this->ups_cost, $order);
             $this->createInvoivce($order);
-            $this->printLabel($order);
+            // $this->printLabel($order);
 
             return true;
 
