@@ -87,8 +87,12 @@ class OrderReportsRepository
    
     public function getShipmentReportOfUsersByWeight($id)
     {
-        $query = Order::where('status','>',Order::STATUS_PAYMENT_PENDING)
-        ->has('user')->where('user_id', $id);
+        $query = Order::where('status','>',Order::STATUS_PAYMENT_PENDING);
+        
+        if($id)
+        {
+            $query->has('user')->where('user_id', $id);
+        }
         
         $query->select(DB::raw('CASE WHEN measurement_unit = "kg/cm" THEN weight ELSE (weight/2.205) END as kgweight'));
         $record = collect();
@@ -170,7 +174,12 @@ class OrderReportsRepository
 
     public function getShipmentReportOfUsersByMonth(Request $request)
     {
-        $ordersByYear = Order::selectRaw("count(*) as total, Month(created_at) as month ")->groupBy('month')->where('created_at', 'like', "$request->year%" )->get();
-        dd($ordersByYear);
+        $ordersByYear = Order::selectRaw(
+            "count(*) as total, Month(created_at) as month, 
+            sum(gross_total) as spent,
+            sum(CASE WHEN measurement_unit = 'kg/cm' THEN weight ELSE (weight/2.205) END) as weight"
+            )->groupBy('month')->where('created_at', 'like', "$request->year%" )->get();
+        
+        return $ordersByYear;
     }
 }

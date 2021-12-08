@@ -1,5 +1,5 @@
 <div>
-    <form action="{{ route('admin.reports.user-shipments.index') }}" method="GET">
+    <form action="{{ route('admin.reports.user-shipments.index') }}" method="GET" target="_blank">
         <div class="row">
             <div class="col-md-12 row mb-3">
 
