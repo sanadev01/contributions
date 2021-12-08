@@ -19,6 +19,12 @@ class ShipmentPerUserReportController extends Controller
             $shipmentReport = new ShipmentReport($users);
             return $shipmentReport->handle();
         }
+        
+        if ( $request->year ){
+            $users = $orderReportsRepository->getShipmentReportOfUsersByMonth($request);
+            $shipmentReport = new ShipmentReport($users);
+            return $shipmentReport->handle();
+        }
 
         return view('admin.reports.shipment-report');
     }

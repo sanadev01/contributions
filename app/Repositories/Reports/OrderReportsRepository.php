@@ -105,7 +105,7 @@ class OrderReportsRepository
         return $record;
     }
     
-     public function getWeight(){
+    public function getWeight(){
         return [
             [
                 'min_weight' => '0.00',
@@ -166,5 +166,11 @@ class OrderReportsRepository
             
         ];
 
-     }
+    }
+
+    public function getShipmentReportOfUsersByMonth(Request $request)
+    {
+        $ordersByYear = Order::selectRaw("count(*) as total, Month(created_at) as month ")->groupBy('month')->where('created_at', 'like', "$request->year%" )->get();
+        dd($ordersByYear);
+    }
 }
