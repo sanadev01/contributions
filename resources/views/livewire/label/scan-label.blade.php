@@ -18,7 +18,7 @@
         
         <div class="form-group row col-4">
             @if($searchOrder)
-                <h4>Total Weight: <span class="text-danger">{{ $totalWeight }} Kg</span></h4>
+                <h4>Total Weight: <span class="text-danger">{{ number_format((float)$totalWeight, 2, '.', '') }} Kg</span></h4>
                 <h4 class="ml-2">Total Pieces: <span class="text-danger">{{ $totalPieces }}</span></h4>
             @endif
         </div>
