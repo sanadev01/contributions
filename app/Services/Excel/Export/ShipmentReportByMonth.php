@@ -3,17 +3,20 @@
 namespace App\Services\Excel\Export;
 
 use Illuminate\Support\Collection;
+use Illuminate\Http\Request;
 use App\Repositories\Reports\OrderReportsRepository;
 
 class ShipmentReportByMonth extends AbstractExportService
 {
     private $months;
+    private $request;
 
     private $currentRow = 1;
 
-    public function __construct(Collection $months)
+    public function __construct(Collection $months, Request $request)
     {
         $this->months = $months;
+        $this->request = $request;
 
         parent::__construct();
     }
@@ -32,7 +35,8 @@ class ShipmentReportByMonth extends AbstractExportService
         $row = $this->currentRow;
         $orderReportsRepository = new OrderReportsRepository;
         foreach ($this->months as $month) {
-            $report = $orderReportsRepository->getShipmentReportOfUsersByWeight($id = null);
+            $report = $orderReportsRepository->getShipmentReportOfUsersByWeight(null,$this->getMonthName($month->month), $this->request);
+            
             $this->setCellValue('A'.$row, $this->getMonthName($month->month));
             $this->setCellValue('B'.$row, $month->total);
             $this->setCellValue('C'.$row, round($month->weight,2));
@@ -61,13 +65,13 @@ class ShipmentReportByMonth extends AbstractExportService
         $this->setCellValue('G'.$row, "=SUM(G1:G{$row})");
         $this->setCellValue('H'.$row, "=SUM(H1:H{$row})");
         $this->setCellValue('I'.$row, "=SUM(I1:I{$row})");
-        $this->setCellValue('J'.$row, "=SUM(J1:K{$row})");
+        $this->setCellValue('J'.$row, "=SUM(J1:J{$row})");
         $this->setCellValue('K'.$row, "=SUM(K1:K{$row})");
         $this->setCellValue('L'.$row, "=SUM(L1:L{$row})");
         $this->setCellValue('M'.$row, "=SUM(M1:M{$row})");
         $this->setCellValue('N'.$row, "=SUM(N1:N{$row})");
         $this->setCellValue('O'.$row, "=SUM(O1:O{$row})");
-        $this->setCellValue('p'.$row, "=SUM(P1:Q{$row})");
+        $this->setCellValue('p'.$row, "=SUM(P1:P{$row})");
         $this->setCellValue('Q'.$row, "=SUM(Q1:Q{$row})");
         $this->setCellValue('R'.$row, "=SUM(R1:R{$row})");
         $this->setBackgroundColor("A{$row}:R{$row}", 'adfb84');

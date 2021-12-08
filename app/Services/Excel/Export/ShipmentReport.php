@@ -32,7 +32,7 @@ class ShipmentReport extends AbstractExportService
         $row = $this->currentRow;
         $orderReportsRepository = new OrderReportsRepository;
         foreach ($this->users as $user) {
-            $report = $orderReportsRepository->getShipmentReportOfUsersByWeight($user->id);
+            $report = $orderReportsRepository->getShipmentReportOfUsersByWeight($user->id, null, null);
             $this->setCellValue('A'.$row, $user->pobox_number);
             $this->setCellValue('B'.$row, $user->name);
             $this->setCellValue('C'.$row, $user->email);

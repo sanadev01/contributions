@@ -23,7 +23,7 @@ class ShipmentPerUserReportController extends Controller
         
         if ( $request->year ){
             $months = $orderReportsRepository->getShipmentReportOfUsersByMonth($request);
-            $shipmentReport = new ShipmentReportByMonth($months);
+            $shipmentReport = new ShipmentReportByMonth($months,$request);
             return $shipmentReport->handle();
         }
 
