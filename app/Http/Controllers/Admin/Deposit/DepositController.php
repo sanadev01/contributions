@@ -41,7 +41,11 @@ class DepositController extends Controller
 
     public function store(Request $request, DepositRepository $depositRepository)
     {
-    
+        
+        $request->validate([
+            'amount' => 'required|numeric',
+        ]);
+
         if(Auth::user()->isAdmin()){
             
             if($request->adminpay){

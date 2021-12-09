@@ -18,12 +18,16 @@ class UserShipmentReportTable extends Component
     public $email;
     public $start_date;
     public $end_date;
+    public $years;
 
     public $sortBy = 'spent';
     public $sortAsc = false;
     
     public function render()
     {
+        $startYear = 2020;
+        $latestYear = date('Y'); 
+        $this->years = range( $latestYear, $startYear );
         return view('livewire.reports.user-shipment-report-table',[
             'users' => $this->getReportData(),
             'downloadLink' => route('admin.reports.user-shipments.index',http_build_query(
