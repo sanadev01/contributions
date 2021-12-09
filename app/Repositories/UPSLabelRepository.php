@@ -21,6 +21,7 @@ use App\Services\USPS\USPSShippingService;
 class UPSLabelRepository
 {
     protected $shipping_service_code;
+    public $ups_errors;
 
     public function handle($order)
     {
@@ -28,10 +29,9 @@ class UPSLabelRepository
         {
             $this->generatUPSLabel($order);
 
-        }elseif ($order->api_response != null)
-        {
-            $this->printLabel($order);
         }
+
+        return true;
     }
 
     public function update($order)
@@ -50,26 +50,31 @@ class UPSLabelRepository
                 'api_response' => json_encode($response->data),
                 'corrios_tracking_code' => $response->data['FreightShipResponse']['ShipmentResults']['ShipmentNumber'],
             ]);
+
+            $order->refresh();
             // store order status in order tracking
             $this->addOrderTracking($order);
 
-            $this->printLabel($order);
+            // Connert PNG label To PDF
+            $this->convertLabelToPDF($order);
 
             return true;
 
         } else {
 
-            $this->usps_errors = $response->error['response']['errors'][0]['message'];
+            $this->ups_errors = $response->error['response']['errors'][0]['message'];
             return null;
         }
         
     }
 
-    private function printLabel(Order $order)
+    private function convertLabelToPDF($order)
     {
         $labelPrinter = new UPSLabelMaker();
         $labelPrinter->setOrder($order);
+        $labelPrinter->rotatePNGLabel();
         $labelPrinter->saveLabel();
+        $labelPrinter->deletePNGLabel();
 
         return true;
     }
@@ -93,6 +98,6 @@ class UPSLabelRepository
 
     public function getUPSErrors()
     {
-        # code... 03129427
+        return $this->ups_errors;
     }
 }

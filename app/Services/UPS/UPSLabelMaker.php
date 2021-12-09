@@ -15,42 +15,46 @@ class UPSLabelMaker
         $this->order = $order;
     }
 
+    public function rotatePNGLabel()
+    {
+        $ups_response = json_decode($this->order->api_response);
+            
+        $png_label = $ups_response->ShipmentResponse->ShipmentResults->PackageResults->ShippingLabel->GraphicImage;
+
+        // storing label in as png
+        Storage::put("labels/{$this->order->corrios_tracking_code}.png", base64_decode($png_label));
+
+        // rotating the label image
+        $png_label_path = Storage::path('labels/'.$this->order->corrios_tracking_code.'.png');
+        
+        $temp_image = imagecreatefrompng($png_label_path);
+        $rotate = imagerotate($temp_image, -90, 0);
+        imagepng($rotate, $this->order->corrios_tracking_code.'.png');
+
+        //move rotated label image to storage
+        $from_path = public_path($this->order->corrios_tracking_code.'.png');
+
+        if(File::exists($from_path)){
+            File::move($from_path, $png_label_path);
+        }
+
+        return $png_label_path;
+    }
+
     public function saveLabel()
     {
-        if($this->order->api_response != null)
-        {
-            $ups_response = json_decode($this->order->api_response);
-            
-            $png_label = $ups_response->ShipmentResponse->ShipmentResults->PackageResults->ShippingLabel->GraphicImage;
-            Storage::put("temp/labels/{$this->order->corrios_tracking_code}.png", base64_decode($png_label));
-
-            $temp_label_path = Storage::path('temp/labels/'.$this->order->corrios_tracking_code.'.png');
-            $this->rotateLabel($temp_label_path);
-            dd(true);
-        }
-    }
-    
-    public function saveUSPSLabel()
-    {
-        if($this->order->usps_response != null)
-        {
-            $usps_response = json_decode($this->order->usps_response);
-            $base64_pdf = $usps_response->base64_labels[0];
-
-            Storage::put("labels/{$this->order->corrios_usps_tracking_code}.pdf", base64_decode($base64_pdf));
-
-            return true;
-        }
+        $pdf = \PDF::loadView('labels.ups.index', ['corrios_tracking_code' => $this->order->corrios_tracking_code]);
+        
+        Storage::put("labels/{$this->order->corrios_tracking_code}.pdf", $pdf->output());
+        
+        return true;
     }
 
-    private function rotateLabel($path)
+    public function deletePNGLabel()
     {
-        $image = imagecreatefrompng($path);
-        $rotate = imagerotate($image, -90, 0);
-        imagepng($rotate, 'rotated_label.png');
+        File::delete(Storage::path('labels/'.$this->order->corrios_tracking_code.'.png'));
 
         return true;
-
     }
 
 }

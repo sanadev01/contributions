@@ -595,7 +595,16 @@ class UpsService
            
             return (object) [
                 'success' => false,
-                'error' => $e->getMessage(),
+                'error' => [
+                    'response' => [
+                        'errors' => [
+                            [
+                                'code' => 501,
+                                'message' => $e->getMessage(),
+                            ]
+                        ]
+                    ]
+                ],
             ];
        }
     }

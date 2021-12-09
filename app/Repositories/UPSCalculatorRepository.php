@@ -180,15 +180,20 @@ class UPSCalculatorRepository
                 'status' => Order::STATUS_PAYMENT_DONE,
             ]);
 
+            $order->refresh();
+
             $this->chargeAmount($this->ups_cost, $order);
             $this->createInvoivce($order);
-            // $this->printLabel($order);
+
+            $this->addOrderTracking($order);
+
+            $this->convertLabelToPDF($order);
 
             return true;
 
         } else {
 
-            $this->ups_errors = $response->message;
+            $this->ups_errors = $response->error['response']['errors'][0]['message'];
             return null;
         }
     }
@@ -251,11 +256,29 @@ class UPSCalculatorRepository
         return true;
     }
 
-    public function printLabel(Order $order)
+    public function convertLabelToPDF(Order $order)
     {
         $labelPrinter = new UPSLabelMaker();
         $labelPrinter->setOrder($order);
+        $labelPrinter->rotatePNGLabel();
         $labelPrinter->saveLabel();
+        $labelPrinter->deletePNGLabel();
+
+        return true;
+    }
+
+    private function addOrderTracking($order)
+    {
+        if($order->trackings->isEmpty())
+        {
+            OrderTracking::create([
+                'order_id' => $order->id,
+                'status_code' => Order::STATUS_PAYMENT_DONE,
+                'type' => 'HD',
+                'description' => 'Order Placed',
+                'country' => ($order->user->country != null) ? $order->user->country->code : 'US',
+            ]);
+        }    
 
         return true;
     }
