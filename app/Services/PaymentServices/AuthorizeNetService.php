@@ -124,17 +124,17 @@ class AuthorizeNetService
             \Log::info('Request: ');
             \Log::info(json_encode($request));
             
-            // if ( app()->environment('production') ){
-            //     $response = $controller->executeWithApiResponse(ANetEnvironment::PRODUCTION);
-            //     \Log::info('AuthorizeNetService: '.json_encode($response));
+            if ( app()->environment('production') ){
+                $response = $controller->executeWithApiResponse(ANetEnvironment::PRODUCTION);
+                \Log::info('AuthorizeNetService: '.json_encode($response));
 
-            //     \Log::info('Production Environment');
-            // }else{
+                \Log::info('Production Environment');
+            }else{
                 $response = $controller->executeWithApiResponse(ANetEnvironment::SANDBOX);
                 \Log::info('AuthorizeNetService: '.json_encode($response));
                 
                 \Log::info('Sandbox Environment');
-            // }
+            }
 
             \Log::info(
                 $invoice
