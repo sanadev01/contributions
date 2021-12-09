@@ -29,6 +29,9 @@ class AuthorizeNetService
         $AuthorizeID = setting('AUTHORIZE_ID', null, null, true);
         $AuthorizeKey = setting('AUTHORIZE_KEY', null, null, true);
 
+        \Log::info('Authorize ID: ' . $AuthorizeID);
+        \Log::info('Authorize Key: ' . $AuthorizeKey);
+        
         if (! $AuthorizeID || ! $AuthorizeKey) {
             throw new Exception('Athorize Error');
         }
@@ -92,8 +95,14 @@ class AuthorizeNetService
             $controller = new CreateTransactionController($request);
             if ( app()->environment('production') ){
                 $response = $controller->executeWithApiResponse(ANetEnvironment::PRODUCTION);
+                \Log::info('AuthorizeNetService: '.json_encode($response));
+
+                \Log::info('Production Environment');
             }else{
                 $response = $controller->executeWithApiResponse(ANetEnvironment::SANDBOX);
+                \Log::info('AuthorizeNetService: '.json_encode($response));
+                
+                \Log::info('Sandbox Environment');
             }
 
             \Log::info(

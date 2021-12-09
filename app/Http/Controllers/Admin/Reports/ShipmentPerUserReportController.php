@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Admin\Reports;
 
-use App\Http\Controllers\Controller;
 use App\Models\Reports;
-use App\Repositories\Reports\OrderReportsRepository;
-use App\Services\Excel\Export\ShipmentReport;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Services\Excel\Export\ShipmentReport;
+use App\Repositories\Reports\OrderReportsRepository;
+use App\Services\Excel\Export\ShipmentReportByMonth;
 
 class ShipmentPerUserReportController extends Controller
 {
@@ -17,6 +18,12 @@ class ShipmentPerUserReportController extends Controller
         if ( $request->dl ==1 ){
             $users = $orderReportsRepository->getShipmentReportOfUsers($request,false,0,$request->sort_by,$request->sort_order);
             $shipmentReport = new ShipmentReport($users);
+            return $shipmentReport->handle();
+        }
+        
+        if ( $request->year ){
+            $months = $orderReportsRepository->getShipmentReportOfUsersByMonth($request);
+            $shipmentReport = new ShipmentReportByMonth($months,$request);
             return $shipmentReport->handle();
         }
 
