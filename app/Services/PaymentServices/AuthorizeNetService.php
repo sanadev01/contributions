@@ -93,6 +93,10 @@ class AuthorizeNetService
 
             $request->setTransactionRequest($transactionRequestType);
             $controller = new CreateTransactionController($request);
+
+            \Log::info('Request: ');
+            \Log::info(json_encode($request));
+            
             if ( app()->environment('production') ){
                 $response = $controller->executeWithApiResponse(ANetEnvironment::PRODUCTION);
                 \Log::info('AuthorizeNetService: '.json_encode($response));
