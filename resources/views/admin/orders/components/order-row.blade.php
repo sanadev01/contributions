@@ -141,9 +141,12 @@
                         <a href="{{ route('admin.orders.label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
                             <i class="feather icon-printer"></i>@lang('orders.actions.label')
                         </a>
-                        @if( $order->corrios_tracking_code)
+                        @if( $order->corrios_tracking_code && $order->recipient->country_id != \App\Models\Order::US)
                             <a href="{{ route('admin.orders.usps-label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
-                                <i class="feather icon-printer"></i>@if($order->corrios_usps_tracking_code != null) @lang('orders.actions.print-usps-label') @else @lang('orders.actions.buy-usps-label') @endif
+                                <i class="feather icon-printer"></i>@if($order->hasSecondLabel()) @lang('orders.actions.print-usps-label') @else @lang('orders.actions.buy-usps-label') @endif
+                            </a>
+                            <a href="{{ route('admin.orders.ups-label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
+                                <i class="feather icon-printer"></i>@if($order->hasSecondLabel()) @lang('orders.actions.print-ups-label') @else @lang('orders.actions.buy-ups-label') @endif
                             </a>
                         @endif
                     @endif

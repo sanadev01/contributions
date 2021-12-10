@@ -174,6 +174,8 @@ return [
         'buy-domestic-label' => 'Buy Domestic Label',
         'buy-usps-label' => 'Buy USPS Label',
         'print-usps-label' => 'Print USPS Label',
+        'buy-ups-label' => 'Buy UPS Label',
+        'print-ups-label' => 'Print UPS Label',
     ],
     'create' => [
         'shipment-and-destination' => 'Shipment & Destination',

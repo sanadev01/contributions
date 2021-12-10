@@ -80,6 +80,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::get('order-exports', OrderExportController::class)->name('order.exports');
             Route::get('bulk-action', BulkActionController::class)->name('order.bulk-action');
             Route::resource('orders.usps-label', OrderUSPSLabelController::class)->only('index','store');
+            Route::resource('orders.ups-label', OrderUPSLabelController::class)->only('index','store');
         });
 
         Route::namespace('Consolidation')->prefix('consolidation')->as('consolidation.')->group(function(){

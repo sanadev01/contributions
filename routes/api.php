@@ -33,6 +33,7 @@ Route::get('order-usps-sender-rates', [App\Http\Controllers\Admin\Order\OrderUSP
 
 // Rates for UPS
 Route::get('order-ups-rates', [App\Http\Controllers\Admin\Order\OrderItemsController::class, 'ups_rates'])->name('api.ups_rates');
+Route::get('order-ups-sender-rates', [App\Http\Controllers\Admin\Order\OrderUPSLabelController::class, 'ups_sender_rates'])->name('api.ups_sender_rates');
 
 Route::post('order/update/status',Api\OrderStatusController::class)->name('api.order.status.update');
 Route::post('buy-usps-label', [App\Http\Controllers\USPSCalculatorController::class, 'buy_usps_label'])->name('api.buy_usps_label');

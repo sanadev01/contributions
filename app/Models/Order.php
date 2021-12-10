@@ -301,6 +301,11 @@ class Order extends Model implements Package
         return $this->cn23 ? true: false;
     }
 
+    public function hasSecondLabel()
+    {
+        return $this->usps_response ? true: false;
+    }
+
     public function getTempWhrNumber()
     {
         return "HD-{$this->id}";

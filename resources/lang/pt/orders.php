@@ -168,6 +168,8 @@ return [
         'buy-domestic-label' => 'Buy Domestic Etiqueta',
         'buy-usps-label' => 'Comprar Etiqueta USPS',
         'print-usps-label' => 'Imprimir Etiqueta USPS',
+        'buy-ups-label' => 'Comprar Etiqueta UPS',
+        'print-ups-label' => 'Imprimir Etiqueta UPS',
     ],
     'create' => [
         'shipment-and-destination' => 'Criação do envio',
