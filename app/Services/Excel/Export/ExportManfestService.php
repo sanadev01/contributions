@@ -36,6 +36,7 @@ class ExportManfestService extends AbstractCsvExportService
             'ConsigneeAddres',
             'Piece',
             'Weigth',
+            'Volumetric Weigth',
             'Contents',
             'NCM',
             'Value',
@@ -68,8 +69,9 @@ class ExportManfestService extends AbstractCsvExportService
                 ($package->recipient)->getAddress(),
                 1,
                 $package->getOriginalWeight('kg'),
-                7 => 'contents',
-                8 => 'ncm',
+                $package->getWeight('kg'),
+                8 => 'contents',
+                9 => 'ncm',
                 $package->getOrderValue(),
                 $package->warehouse_number,
                 $package->gross_total,
@@ -85,8 +87,8 @@ class ExportManfestService extends AbstractCsvExportService
                     $this->csvData[$this->row] = array_fill(0,14,'');
                 }
 
-                $this->csvData[$this->row][7] = $item->description;
-                $this->csvData[$this->row][8] = $item->sh_code;
+                $this->csvData[$this->row][8] = $item->description;
+                $this->csvData[$this->row][9] = $item->sh_code;
 
                 $this->row++;
                 
