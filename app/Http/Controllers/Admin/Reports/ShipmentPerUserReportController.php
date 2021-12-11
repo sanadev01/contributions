@@ -17,7 +17,7 @@ class ShipmentPerUserReportController extends Controller
         
         if ( $request->dl ==1 ){
             $users = $orderReportsRepository->getShipmentReportOfUsers($request,false,0,$request->sort_by,$request->sort_order);
-            $shipmentReport = new ShipmentReport($users);
+            $shipmentReport = new ShipmentReport($users, $request);
             return $shipmentReport->handle();
         }
         
