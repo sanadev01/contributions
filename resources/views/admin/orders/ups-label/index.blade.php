@@ -152,7 +152,7 @@
         <div class="container pb-3">
             <div class="row mr-3">
                 <div class="ml-auto">
-                    <button type="submit" id="submitBtn" class="btn btn-primary" disabled>Buy USPS Label</button>
+                    <button type="submit" id="submitBtn" class="btn btn-primary" disabled>Buy UPS Label</button>
                 </div>
             </div>    
         </div>

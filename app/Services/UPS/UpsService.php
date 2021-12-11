@@ -84,17 +84,7 @@ class UpsService
                     'Code' => '01'
                 ],
                 'Shipment' => [
-                    'Shipper' => [
-                        'Name' => 'HERCO SUIT#100',
-                        'ShipperNumber' => $this->shipperNumber,
-                        'Address' => [
-                            'AddressLine' => '2200 NW 129TH AVE',
-                            'City' => 'Miami',
-                            'StateProvinceCode' => 'FL',
-                            'PostalCode' => '33182',
-                            'CountryCode' => 'US',
-                        ],
-                    ],
+                    'Shipper' => $this->getShipper(),
                     'ShipFrom' => [
                         'Name' => ($request->first_name) ? $request->first_name : 'HERCO SUIT#100',
                         'Address' => [
@@ -115,25 +105,12 @@ class UpsService
                             'CountryCode' => 'US',
                         ],
                     ],
-                    'PaymentDetails' => [
-                        'ShipmentCharge' => [
-                            'Type' => '01',
-                            'BillShipper' => [
-                                'AccountNumber' => $this->shipperNumber
-                            ]
-                        ]
-                    ],
+                    'PaymentDetails' => $this->getPaymentDetails(),
                     'Service' =>  [
                         'Code' => '0'.$request->service,
                         'Description' => 'Ground Service'
                     ],
-                    'ShipmentTotalWeight' => [
-                        'UnitOfMeasurement' => [
-                            'Code' => 'LBS',
-                            'Description' => 'Pounds'
-                        ],
-                        'Weight' => $this->chargableWeight
-                    ],
+                    'ShipmentTotalWeight' => $this->getShipmentTotalWeight(),
                     'Package' => [
                         'PackagingType' => [
                             'Code' => '02',
@@ -172,21 +149,7 @@ class UpsService
             'ShipmentRequest' => [
                 'Shipment' => [
                     'Description' => '1206 PTR',
-                    'Shipper' => [
-                        'Name' => 'HERCO SUIT#100',
-                        'AttentionName' => 'Marcio',
-                        'ShipperNumber' => $this->shipperNumber,
-                        'Phone' => [
-                            'Number' => '+13058885191'
-                        ],
-                        'Address' => [
-                            'AddressLine' => '2200 NW 129TH AVE',
-                            'City' => 'Miami',
-                            'StateProvinceCode' => 'FL',
-                            'PostalCode' => '33182',
-                            'CountryCode' => 'US',
-                        ],
-                    ],
+                    'Shipper' => $this->getShipper(),
                     'ShipTo' => [
                         'Name' => 'HERCO SUIT#100',
                         'AttentionName' => 'Marcio',
@@ -215,14 +178,7 @@ class UpsService
                             'Number' => $request->sender_phone,
                         ],
                     ],
-                    'PaymentInformation' => [
-                        'ShipmentCharge' => [
-                            'Type' => '01',
-                            'BillShipper' => [
-                                'AccountNumber' => $this->shipperNumber
-                            ]
-                        ]
-                    ],
+                    'PaymentInformation' => $this->getPaymentDetails(),
                     'Service' => [
                         'Code' => '0'.$request->service,
                         'Description' => 'Ground Service'
@@ -287,17 +243,7 @@ class UpsService
                     'Code' => '01'
                 ],
                 'Shipment' => [
-                    'Shipper' => [
-                        'Name' => 'HERCO SUIT#100',
-                        'ShipperNumber' => $this->shipperNumber,
-                        'Address' => [
-                            'AddressLine' => '2200 NW 129TH AVE',
-                            'City' => 'Miami',
-                            'StateProvinceCode' => 'FL',
-                            'PostalCode' => '33182',
-                            'CountryCode' => 'US',
-                        ],
-                    ],
+                    'Shipper' => $this->getShipper(),
                     'ShipFrom' => [
                         'Name' => 'HERCO SUIT#100',
                         'Address' => [
@@ -318,25 +264,12 @@ class UpsService
                             'CountryCode' => 'US',
                         ],
                     ],
-                    'PaymentDetails' => [
-                        'ShipmentCharge' => [
-                            'Type' => '01',
-                            'BillShipper' => [
-                                'AccountNumber' => $this->shipperNumber
-                            ]
-                        ]
-                    ],
+                    'PaymentDetails' => $this->getPaymentDetails(),
                     'Service' =>  [
                         'Code' => '0'.$service,
                         'Description' => 'Ground Service'
                     ],
-                    'ShipmentTotalWeight' => [
-                        'UnitOfMeasurement' => [
-                            'Code' => 'LBS',
-                            'Description' => 'Pounds'
-                        ],
-                        'Weight' => $this->chargableWeight
-                    ],
+                    'ShipmentTotalWeight' => $this->getShipmentTotalWeight(),
                     'Package' => [
                         'PackagingType' => [
                             'Code' => '02',
@@ -375,21 +308,7 @@ class UpsService
             'ShipmentRequest' => [
                 'Shipment' => [
                     'Description' => '1206 PTR',
-                    'Shipper' => [
-                        'Name' => 'HERCO SUIT#100',
-                        'AttentionName' => 'Marcio',
-                        'ShipperNumber' => $this->shipperNumber,
-                        'Phone' => [
-                            'Number' => '+13058885191'
-                        ],
-                        'Address' => [
-                            'AddressLine' => '2200 NW 129TH AVE',
-                            'City' => 'Miami',
-                            'StateProvinceCode' => 'FL',
-                            'PostalCode' => '33182',
-                            'CountryCode' => 'US',
-                        ],
-                    ],
+                    'Shipper' => $this->getShipper(),
                     'ShipFrom' => [
                         'Name' => 'HERCO SUIT#100',
                         'AttentionName' => 'Marcio',
@@ -418,14 +337,7 @@ class UpsService
                             'Number' => $order->recipient->phone,
                         ],
                     ],
-                    'PaymentInformation' => [
-                        'ShipmentCharge' => [
-                            'Type' => '01',
-                            'BillShipper' => [
-                                'AccountNumber' => $this->shipperNumber
-                            ]
-                        ]
-                    ],
+                    'PaymentInformation' => $this->getPaymentDetails(),
                     'Service' => [
                         'Code' => '0'.$order->shippingService->service_sub_class,
                         'Description' => 'Ground Service'
@@ -595,5 +507,47 @@ class UpsService
                 ],
             ];
        }
+    }
+
+    private function getShipper()
+    {
+        return [
+            'Name' => 'HERCO SUIT#100',
+            'AttentionName' => 'HERCO',
+            'ShipperNumber' => $this->shipperNumber,
+            'Phone' => [
+                'Number' => '+13058885191'
+            ],
+            'Address' => [
+                'AddressLine' => '2200 NW 129TH AVE',
+                'City' => 'Miami',
+                'StateProvinceCode' => 'FL',
+                'PostalCode' => '33182',
+                'CountryCode' => 'US',
+            ],
+        ];
+    }
+
+    private function getPaymentDetails()
+    {
+        return [
+            'ShipmentCharge' => [
+                'Type' => '01',
+                'BillShipper' => [
+                    'AccountNumber' => $this->shipperNumber
+                ]
+            ]
+        ];
+    }
+
+    private function getShipmentTotalWeight()
+    {
+        return [
+            'UnitOfMeasurement' => [
+                'Code' => 'LBS',
+                'Description' => 'Pounds'
+            ],
+            'Weight' => $this->chargableWeight
+        ];
     }
 }
