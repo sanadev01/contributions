@@ -89,13 +89,13 @@ class UPSLabelRepository
     private function generatUPSLabel($order)
     {
         $response = UPSFacade::generateLabel($order);
-
+        
         if($response->success == true)
         {
             //storing response in orders table
             $order->update([
                 'api_response' => json_encode($response->data),
-                'corrios_tracking_code' => $response->data['FreightShipResponse']['ShipmentResults']['ShipmentNumber'],
+                'corrios_tracking_code' => $response->data['ShipmentResponse']['ShipmentResults']['ShipmentIdentificationNumber'],
             ]);
 
             $order->refresh();

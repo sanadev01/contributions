@@ -46,11 +46,7 @@ class OrderItemsController extends Controller
             foreach (ShippingService::query()->active()->get() as $shippingService) {
                 if ( $ups_shippingService->isAvailableFor($shippingService) ){
 
-                    $response = UPSFacade::getRecipientRates($order, $shippingService->service_sub_class);
-                    if($response->success == true)
-                    {
-                        $shippingServices->push($shippingService);
-                    }
+                    $shippingServices->push($shippingService);
                 }
             }
 
@@ -63,12 +59,13 @@ class OrderItemsController extends Controller
                 }
             }
         }
-        
         if($shippingServices->isEmpty()){
             $error = "Shipping Service not Available for the Country you have selected";
         }
 
-        if($shippingServices->contains('service_sub_class', '3440') || $shippingServices->contains('service_sub_class', '3441'))
+        if($shippingServices->contains('service_sub_class', ShippingService::USPS_PRIORITY) 
+            || $shippingServices->contains('service_sub_class', ShippingService::USPS_FIRSTCLASS)
+            || $shippingServices->contains('service_sub_class', ShippingService::UPS_GROUND))
         {
             if($order->user->usps != 1)
             {
@@ -141,7 +138,7 @@ class OrderItemsController extends Controller
 
         return (Array)[
             'success' => true,
-            'total_amount' => number_format($response->data['FreightRateResponse']['TotalShipmentCharge']['MonetaryValue'], 2),
+            'total_amount' => number_format($response->data['RateResponse']['RatedShipment']['TotalCharges']['MonetaryValue'], 2),
         ];
     }
 }
