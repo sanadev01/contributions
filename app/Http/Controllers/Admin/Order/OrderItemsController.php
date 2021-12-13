@@ -73,7 +73,31 @@ class OrderItemsController extends Controller
                 $shippingServices = collect() ;
             }
         }
+
         
+        if($order->recipient->country_id == Order::BRAZIL)
+        {
+            // If sinerlog is enabled for the user, then remove the Correios services
+            if($order->user->sinerlog == true)
+            {
+                $shippingServices = $shippingServices->filter(function ($item, $key)  {
+                    return $item->service_sub_class != '33162' && $item->service_sub_class != '33170' && $item->service_sub_class != '33197';
+                });
+            }
+
+            // If sinerlog is not enabled for the user then remove Sinerlog services from shipping service
+            if($order->user->sinerlog != true)
+            {
+                $shippingServices = $shippingServices->filter(function ($item, $key)  {
+                    return $item->service_sub_class != '33163' && $item->service_sub_class != '33171' && $item->service_sub_class != '33198';
+                });
+            }
+            
+            if($shippingServices->isEmpty()){
+                $error = "Please check your parcel dimensions";
+            }
+        }
+
         return view('admin.orders.order-details.index',compact('order','shippingServices', 'error'));
     }
 
@@ -90,6 +114,28 @@ class OrderItemsController extends Controller
         if ( !$order->recipient ){
             abort(404);
         }
+
+        /**
+         * Sinerlog modification
+         * Get total of items declared to check if them more than US$ 50 when Sinerlog Small Parcels was selected
+         */
+        $shipping_service_data = \DB::table('shipping_services')
+            ->select('max_sum_of_all_products','api','service_api_alias')
+            ->find($request->shipping_service_id)
+        ;
+        if ($shipping_service_data->api == 'sinerlog' && $shipping_service_data->service_api_alias == 'XP') {
+            
+            $sum_of_all_products = 0;
+            foreach ($request->get('items',[]) as $item) {
+                $sum_of_all_products = $sum_of_all_products + (optional($item)['value'] * optional($item)['quantity']);
+            }
+
+            if ($sum_of_all_products > $shipping_service_data->max_sum_of_all_products) {
+                session()->flash('alert-danger','The total amount of items declared must be lower or equal US$ 50.00 for selected shipping serivce.');
+                return \back()->withInput();
+            }
+
+        }    
         
         if ( $orderRepository->updateShippingAndItems($request,$order) ){
             session()->flash('alert-success','orders.Order Placed');

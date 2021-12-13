@@ -106,6 +106,8 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('profit-packages', ProfitPackageController::class);
             Route::resource('fixed-charges', FixedChargesController::class)->only(['index','store']);
             Route::resource('shipping-rates', RateController::class)->only(['create', 'store', 'index', 'show']);
+            Route::get('view-shipping-rates/{shipping_rate}', [\App\Http\Controllers\Admin\Rates\RateController::class, 'showShippingRates'])->name('view-shipping-rates');
+            Route::get('shipping-rates-download/{accrual_rate}', [\App\Http\Controllers\Admin\Rates\RateController::class, 'downloadShippingRates'])->name('download-shipping-rates');
             Route::resource('accrual-rates', AccrualRateController::class)->only(['create', 'store', 'index']);
             Route::get('accrual-rates/{accrual_rate}', [\App\Http\Controllers\Admin\Rates\AccrualRateController::class, 'showRates'])->name('show-accrual-rates');
             Route::get('accrual-rates-download/{accrual_rate}', [\App\Http\Controllers\Admin\Rates\AccrualRateController::class, 'downloadRates'])->name('download-accrual-rates');
@@ -201,9 +203,18 @@ Route::get('media/get/{document}', function (App\Models\Document $document) {
 })->name('media.get');
 
 Route::get('order/{order}/label/get', function (App\Models\Order $order) {
-    if ( !file_exists(storage_path("app/labels/{$order->corrios_tracking_code}.pdf")) ){
-        return apiResponse(false,"Lable Expired or not generated yet please update lable");
-    }
+
+    /**
+     * Sinerlog modification
+     */
+    if ( $order->sinerlog_url_label != '' ) {
+        return redirect($order->sinerlog_url_label);
+    } else {
+        if ( !file_exists(storage_path("app/labels/{$order->corrios_tracking_code}.pdf")) ){
+            return apiResponse(false,"Lable Expired or not generated yet please update lable");
+        }
+    }    
+
     return response()->download(storage_path("app/labels/{$order->corrios_tracking_code}.pdf"),"{$order->corrios_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.label.download');
 
