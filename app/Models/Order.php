@@ -303,7 +303,7 @@ class Order extends Model implements Package
 
     public function hasSecondLabel()
     {
-        return $this->usps_response ? true: false;
+        return $this->us_api_response ? true: false;
     }
 
     public function getTempWhrNumber()

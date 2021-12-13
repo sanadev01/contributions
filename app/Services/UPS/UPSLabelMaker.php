@@ -17,15 +17,15 @@ class UPSLabelMaker
 
         /**
             * Note...
-            * corrios_usps_tracking_code and usps_response are the columns for 
+            * us_api_tracking_code and us_api_response are the columns for 
             * second label(when there is a two label against order(UPS or USPS Label)
         */    
-            $this->tracking_number = ($order->hasSecondLabel()) ? $order->corrios_usps_tracking_code : $order->corrios_tracking_code;
+            $this->tracking_number = ($order->hasSecondLabel()) ? $order->us_api_tracking_code : $order->corrios_tracking_code;
     }
 
     public function rotatePNGLabel()
     {
-        $ups_response = ($this->order->hasSecondLabel()) ? json_decode($this->order->usps_response)  : json_decode($this->order->api_response);
+        $ups_response = ($this->order->hasSecondLabel()) ? json_decode($this->order->us_api_response)  : json_decode($this->order->api_response);
             
         $png_label = $ups_response->ShipmentResponse->ShipmentResults->PackageResults->ShippingLabel->GraphicImage;
 

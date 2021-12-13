@@ -171,7 +171,7 @@ class USPSLabelRepository
 
     public function buyLabel($request, $order)
     {
-        if($order->corrios_usps_tracking_code != null)
+        if($order->us_api_tracking_code != null)
         {
             $this->printBuyUSPSLabel($order);
 
@@ -198,9 +198,9 @@ class USPSLabelRepository
         {
             // storing response in orders table
             $order->update([
-                'usps_response' => json_encode($response->data),
-                'corrios_usps_tracking_code' => $response->data['usps']['tracking_numbers'][0],
-                'usps_cost' => $request->total_price,
+                'us_api_response' => json_encode($response->data),
+                'us_api_tracking_code' => $response->data['usps']['tracking_numbers'][0],
+                'us_api_cost' => $request->total_price,
             ]);
 
             $this->chargeAmount($request->total_price, $order);

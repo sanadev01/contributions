@@ -59,14 +59,14 @@ class UPSLabelRepository
         {
             /**
                 * Note...
-                * corrios_usps_tracking_code and usps_response are the columns for 
+                * us_api_tracking_code and us_api_response are the columns for 
                 * domestic label(when there is a second label against order(UPS or USPS Label)
             */
             
             $order->update([
-                'usps_response' => json_encode($response->data),
-                'corrios_usps_tracking_code' => $response->data['ShipmentResponse']['ShipmentResults']['ShipmentIdentificationNumber'],
-                'usps_cost' => $request->total_price,
+                'us_api_response' => json_encode($response->data),
+                'us_api_tracking_code' => $response->data['ShipmentResponse']['ShipmentResults']['ShipmentIdentificationNumber'],
+                'us_api_cost' => $request->total_price,
             ]);
 
             $this->chargeAmount($request->total_price, $order);
