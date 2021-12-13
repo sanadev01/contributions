@@ -25,6 +25,7 @@ class UPSCalculatorRepository
     public $service;
     public $shipping_service_id;
     public $shipping_service_sub_class;
+    public $shipping_service_name;
     public $ups_cost;
     public $request_order;
 
@@ -32,10 +33,11 @@ class UPSCalculatorRepository
     {
         $this->request_order = json_decode($request->order);
         $this->getUser($request->user_id);
-        $this->service = $request->service;
-        $this->getShippingService($this->service);
+        $this->shipping_service_sub_class = $request->service;
+        $this->getShippingService();
         $this->ups_cost = $request->ups_cost;
         $current_balance =  $this->checkBalance();
+        
         if( $this->ups_cost > $current_balance)
         {
             $this->ups_errors = 'Not Enough Balance. Please Recharge your account.';
@@ -49,7 +51,7 @@ class UPSCalculatorRepository
             $this->createOrderRecipient();
         }
 
-        $this->buy_UPSLabel($this->order, $this->request_order);
+        $this->buy_UPSLabel($this->order);
 
         return $this->order;
     }
@@ -96,7 +98,7 @@ class UPSCalculatorRepository
                 'height' => $this->request_order->height,
                 'measurement_unit' => $this->request_order->measurement_unit,
                 'shipping_service_id' =>  $this->shipping_service_id,
-                'shipping_service_name' => $this->service,
+                'shipping_service_name' => $this->shipping_service_name,
                 'status' => Order::STATUS_ORDER,
             ]);
             
@@ -119,12 +121,12 @@ class UPSCalculatorRepository
         }
     }
 
-    private function getShippingService($service_name)
+    private function getShippingService()
     {
-        $shipping_service = ShippingService::where('name', $service_name)->first();
+        $shipping_service = ShippingService::where('service_sub_class', $this->shipping_service_sub_class)->first();
 
         $this->shipping_service_id = $shipping_service->id;
-        $this->shipping_service_sub_class = $shipping_service->service_sub_class;
+        $this->shipping_service_name = $shipping_service->name;
 
         return true;
     }
@@ -162,31 +164,36 @@ class UPSCalculatorRepository
     {
         $request_sender_data = $this->make_request_data();
         $response = UPSFacade::buyLabel($order, $request_sender_data);
-        
+
         if($response->success == true)
         {
             // storing response in orders table
             $order->update([
                 'api_response' => json_encode($response->data),
-                'corrios_tracking_code' => $response->data['FreightShipResponse']['ShipmentResults']['ShipmentNumber'],
+                'corrios_tracking_code' => $response->data['ShipmentResponse']['ShipmentResults']['ShipmentIdentificationNumber'],
                 'is_invoice_created' => true,
                 'is_shipment_added' => true,
-                'user_declared_freight' => $response->data['FreightShipResponse']['ShipmentResults']['TotalShipmentCharge']['MonetaryValue'],
+                'user_declared_freight' => $response->data['ShipmentResponse']['ShipmentResults']['ShipmentCharges']['TotalCharges']['MonetaryValue'],
                 'shipping_value' => $this->ups_cost,
                 'total' => $this->ups_cost,
                 'gross_total' => $this->ups_cost,
                 'status' => Order::STATUS_PAYMENT_DONE,
             ]);
 
+            $order->refresh();
+
             $this->chargeAmount($this->ups_cost, $order);
             $this->createInvoivce($order);
-            $this->printLabel($order);
+
+            $this->addOrderTracking($order);
+
+            $this->convertLabelToPDF($order);
 
             return true;
 
         } else {
 
-            $this->ups_errors = $response->message;
+            $this->ups_errors = $response->error['response']['errors'][0]['message'];
             return null;
         }
     }
@@ -249,11 +256,29 @@ class UPSCalculatorRepository
         return true;
     }
 
-    public function printLabel(Order $order)
+    public function convertLabelToPDF(Order $order)
     {
         $labelPrinter = new UPSLabelMaker();
         $labelPrinter->setOrder($order);
+        $labelPrinter->rotatePNGLabel();
         $labelPrinter->saveLabel();
+        $labelPrinter->deletePNGLabel();
+
+        return true;
+    }
+
+    private function addOrderTracking($order)
+    {
+        if($order->trackings->isEmpty())
+        {
+            OrderTracking::create([
+                'order_id' => $order->id,
+                'status_code' => Order::STATUS_PAYMENT_DONE,
+                'type' => 'HD',
+                'description' => 'Order Placed',
+                'country' => ($order->user->country != null) ? $order->user->country->code : 'US',
+            ]);
+        }    
 
         return true;
     }

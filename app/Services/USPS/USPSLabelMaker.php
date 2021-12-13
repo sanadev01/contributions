@@ -30,12 +30,12 @@ class USPSLabelMaker
     
     public function saveUSPSLabel()
     {
-        if($this->order->usps_response != null)
+        if($this->order->us_api_response != null)
         {
-            $usps_response = json_decode($this->order->usps_response);
+            $usps_response = json_decode($this->order->us_api_response);
             $base64_pdf = $usps_response->base64_labels[0];
 
-            Storage::put("labels/{$this->order->corrios_usps_tracking_code}.pdf", base64_decode($base64_pdf));
+            Storage::put("labels/{$this->order->us_api_tracking_code}.pdf", base64_decode($base64_pdf));
 
             return true;
         }

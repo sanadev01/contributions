@@ -184,7 +184,7 @@ class OrderReportsRepository
             "count(*) as total, Month(created_at) as month, 
             sum(gross_total) as spent,
             sum(CASE WHEN measurement_unit = 'kg/cm' THEN weight ELSE (weight/2.205) END) as weight"
-            )->groupBy('month')->where('created_at', 'like', "$request->year%" )->get();
+            )->groupBy('month')->where('created_at', 'like', "$request->year%" )->orderBy('month','asc')->get();
         
         return $ordersByYear;
     }

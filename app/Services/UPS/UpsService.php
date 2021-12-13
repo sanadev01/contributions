@@ -5,6 +5,7 @@ use Exception;
 use App\Models\ShippingService;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use App\Services\Converters\UnitsConverter;
 use App\Services\Calculators\WeightCalculator;
 
 class UpsService
@@ -12,7 +13,7 @@ class UpsService
     protected $create_package_url;
     protected $delete_package_url;
     protected $create_manifest_url;
-    protected $ground_rates_url;
+    protected $rating_package_url;
     protected $userName;
     protected $password;
     protected $transactionSrc;
@@ -20,12 +21,17 @@ class UpsService
     protected $shipperNumber;
     protected $itemDescription = [];
 
-    public function __construct($create_package_url, $delete_package_url, $create_manifest_url, $ground_rates_url, $transactionSrc, $userName, $password, $shipperNumber)
+    protected $width;
+    protected $height;
+    protected $length;
+    protected $weight;
+
+    public function __construct($create_package_url, $delete_package_url, $create_manifest_url, $rating_package_url, $transactionSrc, $userName, $password, $shipperNumber)
     {
         $this->create_package_url = $create_package_url;
         $this->delete_usps_label_url = $delete_package_url;
         $this->create_manifest_url = $create_manifest_url;
-        $this->ground_rates_url = $ground_rates_url;
+        $this->rating_package_url = $rating_package_url;
         $this->userName = $userName;
         $this->password = $password;
         $this->transactionSrc = $transactionSrc;
@@ -43,15 +49,15 @@ class UpsService
     public function getSenderPrice($order, $request_data)
     {
        $data = $this->make_rates_request_for_sender($order, $request_data);
-
+        
        return $this->upsApiCallForRates($data);
     }
 
     public function buyLabel($order, $request_sender_data)
     {
         $data = $this->make_package_request_for_sender($order, $request_sender_data);
-        $ups_response = $this->ups_ApiCall($data);
         
+        $ups_response = $this->ups_ApiCall($data);
         return $ups_response;
     }
 
@@ -67,42 +73,29 @@ class UpsService
         $this->calculateVolumetricWeight($order);
 
         $request_body = [
-            'FreightRateRequest' => [
-                'ShipFrom' => [
-                    'Name' => ($request->first_name) ? $request->first_name : 'HERCO SUIT#100',
-                    'Address' => [
-                        'AddressLine' => $request->sender_address,
-                        'City' => $request->sender_city,
-                        'StateProvinceCode' => $request->sender_state,
-                        'PostalCode' => $request->sender_zipcode,
-                        'CountryCode' => 'US',
-                    ],
-                    'AttentionName' => ($request->first_name) ? $request->first_name : 'HERCO SUIT#100',
-                    'Phone' => [
-                        'Number' => '+13058885191',
-                        // 'Extension' => '4444',
-                    ],
-                    'EMailAddress' => 'homedelivery@homedeliverybr.com'
+            'RateRequest' => [
+                'Request' => [
+                    'SubVersion' => '1703',
+                    'TransactionReference' => [
+                        'CustomerContext' => ''
+                    ]
                 ],
-                'ShipperNumber' => $this->shipperNumber,
-                'ShipTo' => [
-                    'Name' => 'HERCO SUIT#100',
-                    'Address' => [
-                        'AddressLine' => '2200 NW 129TH AVE',
-                        'City' => 'Miami',
-                        'StateProvinceCode' => 'FL',
-                        'PostalCode' => '33182',
-                        'CountryCode' => 'US',
-                    ],
-                    'AttentionName' => 'Marcio',
-                    'Phone' => [
-                        'Number' => '+13058885191',
-                        // 'Extension' => '4444',
-                    ],
-                    'EMailAddress' => 'homedelivery@homedeliverybr.com'
+                'CustomerClassification' => [
+                    'Code' => '01'
                 ],
-                'PaymentInformation' => [
-                    'Payer' => [
+                'Shipment' => [
+                    'Shipper' => $this->getShipper(),
+                    'ShipFrom' => [
+                        'Name' => ($request->first_name) ? $request->first_name : 'HERCO SUIT#100',
+                        'Address' => [
+                            'AddressLine' => $request->sender_address,
+                            'City' => $request->sender_city,
+                            'StateProvinceCode' => $request->sender_state,
+                            'PostalCode' => $request->sender_zipcode,
+                            'CountryCode' => 'US',
+                        ],
+                    ],
+                    'ShipTo' => [
                         'Name' => 'HERCO SUIT#100',
                         'Address' => [
                             'AddressLine' => '2200 NW 129TH AVE',
@@ -111,50 +104,37 @@ class UpsService
                             'PostalCode' => '33182',
                             'CountryCode' => 'US',
                         ],
-                        'ShipperNumber' => 'AT0123',
-                        'AccountType' => '1',
-                        'AttentionName' => 'Marcio',
-                        'Phone' => [
-                            'Number' => '+13058885191',
-                            // 'Extension' => '4444',
-                        ],
-                        'EMailAddress' => 'homedelivery@homedeliverybr.com'
                     ],
-                    'ShipmentBillingOption' => [
-                        'Code' => '40',
+                    'PaymentDetails' => $this->getPaymentDetails(),
+                    'Service' =>  [
+                        'Code' => '0'.$request->service,
+                        'Description' => 'Ground Service'
+                    ],
+                    'ShipmentTotalWeight' => $this->getShipmentTotalWeight(),
+                    'Package' => [
+                        'PackagingType' => [
+                            'Code' => '02',
+                            'Description' => 'Package'
+                        ],
+                        'Dimensions' => [
+                            'UnitOfMeasurement' => [
+                                'Code' => 'IN',
+                            ],
+                            'Length' => ($order->measurement_unit == 'kg/cm') ? "$this->length" :"$order->length",
+                            'Width' => ($order->measurement_unit == 'kg/cm') ? "$this->width" : "$order->width",
+                            'Height' => ($order->measurement_unit == 'kg/cm') ? "$this->height" : "$order->height",
+                        ],
+                        'PackageWeight' => [
+                            'UnitOfMeasurement' => [
+                                'Code' => 'LBS',
+                            ],
+                            'Weight' => ($this->chargableWeight != null) ? "$this->chargableWeight" : (($order->measurement_unit == 'kg/cm') ? "$this->weight" :"$order->weight"),
+                        ],
+                        'ShipmentServiceOptions' => [
+                            'DirectDeliveryOnlyIndicator' => '1'
+                        ],
                     ],
                 ],
-                'Service' =>  [
-                    'Code' => $request->service,
-                ],
-                'Commodity' => [
-                    'Description' => 'goods',
-                    'Weight' => [
-                        'UnitOfMeasurement' => [
-                            'Code' => ($order->measurement_unit == 'kg/cm') ? 'KGS' : 'LBS',
-                        ],
-                        'Value' => ($this->chargableWeight != null) ? "$this->chargableWeight" : "$order->weight",
-                    ],
-                    'Dimensions' => [
-                        'UnitOfMeasurement' => [
-                            'Code' => ($order->measurement_unit == 'kg/cm') ? 'CM' : 'IN',
-                            'Description' => ''
-                        ],
-                        'Length' => $order->length,
-                        'Width' => $order->width,
-                        'Height' => $order->height,
-                    ],
-                    'NumberOfPieces' => '1',
-                    'PackagingType' => [
-                        'Code' => 'BOX',
-                    ],
-                    'FreightClass' => '60',
-
-                ],
-                'DensityEligibleIndicator' => '',
-                // 'AlternateRateOptions' => [
-                //     'Code' => '1',
-                // ],
             ],
         ];
 
@@ -166,26 +146,16 @@ class UpsService
         $this->calculateVolumetricWeight($order);
 
         $request_body = [
-            'FreightShipRequest' => [
+            'ShipmentRequest' => [
                 'Shipment' => [
-                    'ShipFrom' => [
-                        'Name' => $request->first_name.' '.$request->last_name,
-                        'Address' => [
-                            'AddressLine' => $request->sender_address,
-                            'City' => $request->sender_city,
-                            'StateProvinceCode' => $request->sender_state,
-                            'PostalCode' => $request->sender_zipcode,
-                            'CountryCode' => 'US',
-                        ],
-                        'AttentionName' => $request->first_name.' '.$request->last_name,
-                        'Phone' => [
-                            'Number' => $request->sender_phone,
-                        ],
-                        'EMailAddress' => $request->sender_email
-                    ],
-                    'ShipperNumber' => $this->shipperNumber,
+                    'Description' => '1206 PTR',
+                    'Shipper' => $this->getShipper(),
                     'ShipTo' => [
                         'Name' => 'HERCO SUIT#100',
+                        'AttentionName' => 'Marcio',
+                        'Phone' => [
+                            'Number' => '+13058885191'
+                        ],
                         'Address' => [
                             'AddressLine' => '2200 NW 129TH AVE',
                             'City' => 'Miami',
@@ -193,86 +163,64 @@ class UpsService
                             'PostalCode' => '33182',
                             'CountryCode' => 'US',
                         ],
-                        'AttentionName' => 'Marcio',
+                    ],
+                    'ShipFrom' => [
+                        'Name' => $request->first_name.' '.$request->last_name,
+                        'AttentionName' => $request->first_name.' '.$request->last_name,
+                        'Address' => [
+                            'AddressLine' => $request->sender_address,
+                            'City' => $request->sender_city,
+                            'StateProvinceCode' => $request->sender_state,
+                            'PostalCode' => $request->sender_zipcode,
+                            'CountryCode' => 'US',
+                        ],
                         'Phone' => [
-                            'Number' => '+13058885191',
-                        ],
-                        'EMailAddress' => 'homedelivery@homedeliverybr.com'
-                    ],
-                    'PaymentInformation' => [
-                        'Payer' => [
-                            'Name' => 'HERCO SUIT#100',
-                            'Address' => [
-                                'AddressLine' => '2200 NW 129TH AVE',
-                                'City' => 'Miami',
-                                'StateProvinceCode' => 'FL',
-                                'PostalCode' => '33182',
-                                'CountryCode' => 'US',
-                            ],
-                            'ShipperNumber' => $this->shipperNumber,
-                            'AccountType' => '1',
-                            'AttentionName' => 'Marcio',
-                            'Phone' => [
-                                'Number' => '+13058885191',
-                            ],
-                            'EMailAddress' => 'homedelivery@homedeliverybr.com'
-                        ],
-                        'ShipmentBillingOption' => [
-                            'Code' => '40',
+                            'Number' => $request->sender_phone,
                         ],
                     ],
-                    'Documents' => [
-                        'Image' => [
-                            'Type' => [
-                                'Code' => '30'
-                            ],
-                            'LabelsPerPage' => '1',
-                            'Format' => [
-                                'Code' => '01',
-                            ],
-                            'PrintFormat' => [
+                    'PaymentInformation' => $this->getPaymentDetails(),
+                    'Service' => [
+                        'Code' => '0'.$request->service,
+                        'Description' => 'Ground Service'
+                    ],
+                    'Package' => [
+                        [
+                            'Description' => 'Goods',
+                            'Packaging' => [
                                 'Code' => '02',
+                                'Description' => 'Customer Supplied Package'
                             ],
-                            'PrintSize' => [
-                                'Length' => '4',
-                                'Width' => '6'
-                            ]
-
+                            'Dimensions' => [
+                                'UnitOfMeasurement' => [
+                                    'Code' => 'IN',
+                                ],
+                                'Length' => ($order->measurement_unit == 'kg/cm') ? "$this->length" :"$order->length",
+                                'Width' => ($order->measurement_unit == 'kg/cm') ? "$this->width" : "$order->width",
+                                'Height' => ($order->measurement_unit == 'kg/cm') ? "$this->height" : "$order->height",
+                            ],
+                            'PackageWeight' => [
+                                'UnitOfMeasurement' => [
+                                    'Code' => 'LBS',
+                                ],
+                                'Weight' => ($this->chargableWeight != null) ? "$this->chargableWeight" : (($order->measurement_unit == 'kg/cm') ? "$this->weight" :"$order->weight"),
+                            ],
                         ]
                     ],
-                    'Service' =>  [
-                        'Code' => $request->service,
+                    'ShipmentServiceOptions' => [
+                        'DirectDeliveryOnlyIndicator' => '1'
                     ],
-                    'HandlingUnitOne' => [
-                        'Quantity' => '2',
-                        'Type' => [
-                            'Code' => 'PLT',
-                        ]
-                    ],
-                    'Commodity' => [
-                        'Description' => 'Goods',
-                        'Weight' => [
-                            'UnitOfMeasurement' => [
-                                'Code' => ($order->measurement_unit == 'kg/cm') ? 'KGS' : 'LBS',
-                            ],
-                            'Value' => ($this->chargableWeight != null) ? "$this->chargableWeight" : "$order->weight",
-                        ],
-                        'Dimensions' => [
-                            'UnitOfMeasurement' => [
-                                'Code' => ($order->measurement_unit == 'kg/cm') ? 'CM' : 'IN',
-                                'Description' => ''
-                            ],
-                            'Length' => "$order->length",
-                            'Width' => "$order->width",
-                            'Height' => "$order->height",
-                        ],
-                        'NumberOfPieces' => '1',
-                        'PackagingType' => [
-                            'Code' => 'BOX',
-                        ],
-                        'FreightClass' => '60',
+                    'ItemizedChargesRequestedIndicator' => '1',
+                    'RatingMethodRequestedIndicator' => '1',
+                    'TaxInformationIndicator' => '1',
+                    'ShipmentRatingOptions' => [
+                        'NegotiatedRatesIndicator' => '1'
                     ],
                 ],
+                'LabelSpecification' => [
+                    'LabelImageFormat' => [
+                        'Code' => 'PNG',
+                    ]
+                ]
             ],
         ];
 
@@ -282,42 +230,21 @@ class UpsService
     private function make_rates_request_for_recipient($order, $service)
     {
         $this->calculateVolumetricWeight($order);
-        
+
         $request_body = [
-            'FreightRateRequest' => [
-                'ShipFrom' => [
-                    'Name' => 'HERCO SUIT#100',
-                    'Address' => [
-                        'AddressLine' => '2200 NW 129TH AVE',
-                        'City' => 'Miami',
-                        'StateProvinceCode' => 'FL',
-                        'PostalCode' => '33182',
-                        'CountryCode' => 'US',
-                    ],
-                    'AttentionName' => 'HERCO',
-                    'Phone' => [
-                        'Number' => '+13058885191',
-                    ],
-                    'EMailAddress' => 'homedelivery@homedeliverybr.com'
+            'RateRequest' => [
+                'Request' => [
+                    'SubVersion' => '1703',
+                    'TransactionReference' => [
+                        'CustomerContext' => ''
+                    ]
                 ],
-                'ShipperNumber' => $this->shipperNumber,
-                'ShipTo' => [
-                    'Name' => 'HERCO SUIT#100',
-                    'Address' => [
-                        'AddressLine' => $order->recipient->address.' '.$order->recipient->street_no,
-                        'City' =>  $order->recipient->city,
-                        'StateProvinceCode' => $order->recipient->state->code,
-                        'PostalCode' => $order->recipient->zipcode,
-                        'CountryCode' => 'US',
-                    ],
-                    'AttentionName' => $order->recipient->first_name.' '.$order->recipient->last_name,
-                    'Phone' => [
-                        'Number' => $order->recipient->phone,
-                    ],
-                    'EMailAddress' => $order->recipient->email ?? 'homedelivery@homedeliverybr.com'
+                'CustomerClassification' => [
+                    'Code' => '01'
                 ],
-                'PaymentInformation' => [
-                    'Payer' => [
+                'Shipment' => [
+                    'Shipper' => $this->getShipper(),
+                    'ShipFrom' => [
                         'Name' => 'HERCO SUIT#100',
                         'Address' => [
                             'AddressLine' => '2200 NW 129TH AVE',
@@ -326,46 +253,47 @@ class UpsService
                             'PostalCode' => '33182',
                             'CountryCode' => 'US',
                         ],
-                        'ShipperNumber' => $this->shipperNumber,
-                        'AccountType' => '1',
-                        'AttentionName' => 'HERCO',
-                        'Phone' => [
-                            'Number' => '+13058885191',
-                        ],
-                        'EMailAddress' => 'homedelivery@homedeliverybr.com'
                     ],
-                    'ShipmentBillingOption' => [
-                        'Code' => '40',
+                    'ShipTo' => [
+                        'Name' => $order->recipient->first_name.' '.$order->recipient->last_name,
+                        'Address' => [
+                            'AddressLine' => $order->recipient->address.' '.$order->recipient->street_no,
+                            'City' => $order->recipient->city,
+                            'StateProvinceCode' => $order->recipient->state->code,
+                            'PostalCode' => $order->recipient->zipcode,
+                            'CountryCode' => 'US',
+                        ],
+                    ],
+                    'PaymentDetails' => $this->getPaymentDetails(),
+                    'Service' =>  [
+                        'Code' => '0'.$service,
+                        'Description' => 'Ground Service'
+                    ],
+                    'ShipmentTotalWeight' => $this->getShipmentTotalWeight(),
+                    'Package' => [
+                        'PackagingType' => [
+                            'Code' => '02',
+                            'Description' => 'Package'
+                        ],
+                        'Dimensions' => [
+                            'UnitOfMeasurement' => [
+                                'Code' => 'IN',
+                            ],
+                            'Length' => ($order->measurement_unit == 'kg/cm') ? "$this->length" :"$order->length",
+                            'Width' => ($order->measurement_unit == 'kg/cm') ? "$this->width" : "$order->width",
+                            'Height' => ($order->measurement_unit == 'kg/cm') ? "$this->height" : "$order->height",
+                        ],
+                        'PackageWeight' => [
+                            'UnitOfMeasurement' => [
+                                'Code' => 'LBS',
+                            ],
+                            'Weight' => ($this->chargableWeight != null) ? "$this->chargableWeight" : (($order->measurement_unit == 'kg/cm') ? "$this->weight" :"$order->weight"),
+                        ],
+                        'ShipmentServiceOptions' => [
+                            'DirectDeliveryOnlyIndicator' => '1'
+                        ],
                     ],
                 ],
-                'Service' =>  [
-                    'Code' => $service,
-                ],
-                'Commodity' => [
-                    'Description' => 'Goods',
-                    'Weight' => [
-                        'UnitOfMeasurement' => [
-                            'Code' => ($order->measurement_unit == 'kg/cm') ? 'KGS' : 'LBS',
-                        ],
-                        'Value' => ($this->chargableWeight != null) ? "$this->chargableWeight" : "$order->weight",
-                    ],
-                    'Dimensions' => [
-                        'UnitOfMeasurement' => [
-                            'Code' => ($order->measurement_unit == 'kg/cm') ? 'CM' : 'IN',
-                            'Description' => ''
-                        ],
-                        'Length' => "$order->length",
-                        'Width' => "$order->width",
-                        'Height' => "$order->height",
-                    ],
-                    'NumberOfPieces' => '1',
-                    'PackagingType' => [
-                        'Code' => 'BOX',
-                    ],
-                    'FreightClass' => '60',
-
-                ],
-                'DensityEligibleIndicator' => '',
             ],
         ];
 
@@ -377,10 +305,16 @@ class UpsService
         $this->calculateVolumetricWeight($order);
 
         $request_body = [
-            'FreightShipRequest' => [
+            'ShipmentRequest' => [
                 'Shipment' => [
+                    'Description' => '1206 PTR',
+                    'Shipper' => $this->getShipper(),
                     'ShipFrom' => [
                         'Name' => 'HERCO SUIT#100',
+                        'AttentionName' => 'Marcio',
+                        'Phone' => [
+                            'Number' => '+13058885191'
+                        ],
                         'Address' => [
                             'AddressLine' => '2200 NW 129TH AVE',
                             'City' => 'Miami',
@@ -388,102 +322,64 @@ class UpsService
                             'PostalCode' => '33182',
                             'CountryCode' => 'US',
                         ],
-                        'AttentionName' => 'HERCO',
-                        'Phone' => [
-                            'Number' => '+13058885191',
-                        ],
-                        'EMailAddress' => 'homedelivery@homedeliverybr.com'
                     ],
-                    'ShipperNumber' => $this->shipperNumber,
                     'ShipTo' => [
-                        'Name' => 'HERCO SUIT#100',
+                        'Name' => $order->recipient->first_name.' '.$order->recipient->last_name,
+                        'AttentionName' => $order->recipient->first_name.' '.$order->recipient->last_name,
                         'Address' => [
                             'AddressLine' => $order->recipient->address.' '.$order->recipient->street_no,
-                            'City' =>  $order->recipient->city,
+                            'City' => $order->recipient->city,
                             'StateProvinceCode' => $order->recipient->state->code,
                             'PostalCode' => $order->recipient->zipcode,
                             'CountryCode' => 'US',
                         ],
-                        'AttentionName' => $order->recipient->first_name.' '.$order->recipient->last_name,
                         'Phone' => [
                             'Number' => $order->recipient->phone,
                         ],
-                        'EMailAddress' => $order->recipient->email ?? 'homedelivery@homedeliverybr.com'
                     ],
-                    'PaymentInformation' => [
-                        'Payer' => [
-                            'Name' => 'HERCO SUIT#100',
-                            'Address' => [
-                                'AddressLine' => '2200 NW 129TH AVE',
-                                'City' => 'Miami',
-                                'StateProvinceCode' => 'FL',
-                                'PostalCode' => '33182',
-                                'CountryCode' => 'US',
-                            ],
-                            'ShipperNumber' => $this->shipperNumber,
-                            'AccountType' => '1',
-                            'AttentionName' => 'HERCO',
-                            'Phone' => [
-                                'Number' => '+13058885191',
-                            ],
-                            'EMailAddress' => 'homedelivery@homedeliverybr.com'
-                        ],
-                        'ShipmentBillingOption' => [
-                            'Code' => '40',
-                        ],
+                    'PaymentInformation' => $this->getPaymentDetails(),
+                    'Service' => [
+                        'Code' => '0'.$order->shippingService->service_sub_class,
+                        'Description' => 'Ground Service'
                     ],
-                    'Documents' => [
-                        'Image' => [
-                            'Type' => [
-                                'Code' => '30'
-                            ],
-                            'LabelsPerPage' => '1',
-                            'Format' => [
-                                'Code' => '01',
-                            ],
-                            'PrintFormat' => [
+                    'Package' => [
+                        [
+                            'Description' => $this->orderDescription($order->items),
+                            'Packaging' => [
                                 'Code' => '02',
+                                'Description' => 'Customer Supplied Package'
                             ],
-                            'PrintSize' => [
-                                'Length' => '4',
-                                'Width' => '6'
-                            ]
-
+                            'Dimensions' => [
+                                'UnitOfMeasurement' => [
+                                    'Code' => 'IN',
+                                ],
+                                'Length' => ($order->measurement_unit == 'kg/cm') ? "$this->length" :"$order->length",
+                                'Width' => ($order->measurement_unit == 'kg/cm') ? "$this->width" : "$order->width",
+                                'Height' => ($order->measurement_unit == 'kg/cm') ? "$this->height" : "$order->height",
+                            ],
+                            'PackageWeight' => [
+                                'UnitOfMeasurement' => [
+                                    'Code' => 'LBS',
+                                ],
+                                'Weight' => ($this->chargableWeight != null) ? "$this->chargableWeight" : (($order->measurement_unit == 'kg/cm') ? "$this->weight" :"$order->weight"),
+                            ],
                         ]
                     ],
-                    'Service' =>  [
-                        'Code' => $order->shippingService->service_sub_class,
+                    'ShipmentServiceOptions' => [
+                        'DirectDeliveryOnlyIndicator' => '1'
                     ],
-                    'HandlingUnitOne' => [
-                        'Quantity' => '2',
-                        'Type' => [
-                            'Code' => 'PLT',
-                        ]
-                    ],
-                    'Commodity' => [
-                        'Description' => $this->orderDescription($order->items),
-                        'Weight' => [
-                            'UnitOfMeasurement' => [
-                                'Code' => ($order->measurement_unit == 'kg/cm') ? 'KGS' : 'LBS',
-                            ],
-                            'Value' => ($this->chargableWeight != null) ? "$this->chargableWeight" : "$order->weight",
-                        ],
-                        'Dimensions' => [
-                            'UnitOfMeasurement' => [
-                                'Code' => ($order->measurement_unit == 'kg/cm') ? 'CM' : 'IN',
-                                'Description' => ''
-                            ],
-                            'Length' => "$order->length",
-                            'Width' => "$order->width",
-                            'Height' => "$order->height",
-                        ],
-                        'NumberOfPieces' => '1',
-                        'PackagingType' => [
-                            'Code' => 'BOX',
-                        ],
-                        'FreightClass' => '60',
+                    'ItemizedChargesRequestedIndicator' => '1',
+                    'RatingMethodRequestedIndicator' => '1',
+                    'TaxInformationIndicator' => '1',
+                    'ShipmentRatingOptions' => [
+                        'NegotiatedRatesIndicator' => '1'
                     ],
                 ],
+                'LabelSpecification' => [
+                    'LabelImageFormat' => [
+                        'Code' => 'PNG',
+                    ]
+                ]
             ],
         ];
 
@@ -493,13 +389,17 @@ class UpsService
     private function calculateVolumetricWeight($order)
     {
         if ( $order->measurement_unit == 'kg/cm' ){
+            $this->length = UnitsConverter::cmToIn($order->length);
+            $this->width = UnitsConverter::cmToIn($order->width);
+            $this->height = UnitsConverter::cmToIn($order->height);
+            $this->weight = UnitsConverter::kgToPound($order->weight);
 
-            $volumetricWeight = WeightCalculator::getVolumnWeight($order->length,$order->width,$order->height,'cm');
-            return $this->chargableWeight = round($volumetricWeight >  $order->weight ? $volumetricWeight :  $order->weight,2);
+            $volumetricWeight = WeightCalculator::getUPSVolumnWeight($this->length,$this->width,$this->height,'in');
+            return $this->chargableWeight = round($volumetricWeight >  $this->weight ? $volumetricWeight :  $this->weight,2);
 
         }else{
 
-            $volumetricWeight = WeightCalculator::getVolumnWeight($order->length,$order->width,$order->height,'in');
+            $volumetricWeight = WeightCalculator::getUPSVolumnWeight($order->length,$order->width,$order->height,'in');
            return $this->chargableWeight = round($volumetricWeight >  $order->weight ? $volumetricWeight :  $order->weight,2);
         }
     }
@@ -526,7 +426,7 @@ class UpsService
                 'Username' => $this->userName,
                 'transId' => $this->transactionSrc,
                 'transactionSrc' => 'HERCO',
-            ])->acceptJson()->post($this->ground_rates_url, $data);
+            ])->acceptJson()->post($this->rating_package_url, $data);
             
             if($response->successful())
             {
@@ -595,8 +495,59 @@ class UpsService
            
             return (object) [
                 'success' => false,
-                'error' => $e->getMessage(),
+                'error' => [
+                    'response' => [
+                        'errors' => [
+                            [
+                                'code' => 501,
+                                'message' => $e->getMessage(),
+                            ]
+                        ]
+                    ]
+                ],
             ];
        }
+    }
+
+    private function getShipper()
+    {
+        return [
+            'Name' => 'HERCO SUIT#100',
+            'AttentionName' => 'HERCO',
+            'ShipperNumber' => $this->shipperNumber,
+            'Phone' => [
+                'Number' => '+13058885191'
+            ],
+            'Address' => [
+                'AddressLine' => '2200 NW 129TH AVE',
+                'City' => 'Miami',
+                'StateProvinceCode' => 'FL',
+                'PostalCode' => '33182',
+                'CountryCode' => 'US',
+            ],
+        ];
+    }
+
+    private function getPaymentDetails()
+    {
+        return [
+            'ShipmentCharge' => [
+                'Type' => '01',
+                'BillShipper' => [
+                    'AccountNumber' => $this->shipperNumber
+                ]
+            ]
+        ];
+    }
+
+    private function getShipmentTotalWeight()
+    {
+        return [
+            'UnitOfMeasurement' => [
+                'Code' => 'LBS',
+                'Description' => 'Pounds'
+            ],
+            'Weight' => $this->chargableWeight
+        ];
     }
 }

@@ -4,7 +4,7 @@
     <section id="vue-calculator">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-12">
+                <div class="col-8">
                     <div class="card p-2">
                         <div class="card-header pb-0">
                             <h2 class="mb-2 text-center w-100">
@@ -18,9 +18,8 @@
                          
                         <div class="card-body">
                             @if ($shipping_rates != null)
-                                <div class="row col-md-12 text-center">
+                                <div class="text-center">
                                     @foreach ($shipping_rates as $shipping_rate) 
-                                    <div class="col-md-6">
                                         <div class="card-body"><div class="row justify-content-center mb-2 full-height align-items-center"><div class="col-10"><div class="row justify-content-center"><div class="pb-1 pt-1 border-bottom-light col-md-5 bg-primary text-white">
                                             Service Name
                                         </div> <div class="border col-5 py-1">
@@ -43,7 +42,6 @@
                                         
                                         </div></div></div></div></div>
                                         <hr>
-                                    </div>
                                     @endforeach
                                 </div>
                                 @if ($userLoggedIn)
@@ -67,7 +65,7 @@
                                                 <label>@lang('orders.order-details.Select Shipping Service')<span class="text-danger"></span></label>
                                                 <select name="shipping_service" id="shipping_service" class="form-control" required>
                                                     @foreach ($shipping_rates as $shipping_service)
-                                                        <option {{ old('shipping_service') == $shipping_service['name'] ? 'selected' : '' }} value="{{ $shipping_service['name'] }}" data-cost="{{ $shipping_service['rate']}}">{{ $shipping_service['name'] }}</option>
+                                                        <option {{ old('shipping_service') == $shipping_service['name'] ? 'selected' : '' }} value="{{ $shipping_service['sub_class_code'] }}" data-cost="{{ $shipping_service['rate']}}">{{ $shipping_service['name'] }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -100,7 +98,7 @@
                         <div class="card p-2">
                             <div class="card-header pb-0">
                                 <h2 class="mb-2 text-center w-100">
-                                    Rate Calculated For USPS (without Profit)
+                                    Rate Calculated For UPS (without Profit)
                                 </h2>
                             </div>
 
@@ -110,9 +108,8 @@
 
                             <div class="card-body">
                                 @if ($ups_rates != null)
-                                    <div class="row col-md-12 text-center">
+                                    <div class="text-center">
                                         @foreach ($ups_rates as $ups_rate)
-                                        <div class="col-md-6"> 
                                             <div class="card-body">
                                                 <div class="row justify-content-center mb-2 full-height align-items-center"><div class="col-10"><div class="row justify-content-center"><div class="pb-1 pt-1 border-bottom-light col-md-5 bg-primary text-white">
                                                 Service Name
@@ -136,7 +133,6 @@
                                             
                                             </div></div></div></div></div>
                                             <hr>
-                                        </div>
                                         @endforeach
                                     </div>
                                 @endif
@@ -168,7 +164,7 @@
         });
 
         e.preventDefault();
-        let service = $('#shipping_service option:selected').text();
+        let service = $('#shipping_service option:selected').val();
         let ups_cost = $('#shipping_service option:selected').attr('data-cost');
         let order = $('#order').val();
         let user_id = $('#user_id').val();

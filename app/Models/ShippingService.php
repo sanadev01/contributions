@@ -21,10 +21,7 @@ class ShippingService extends Model
     const USPS_FIRSTCLASS = 3441;
     const SRP = 28;
     const SRM = 32;
-    const UPS_FREIGHT_LTL = 308;
-    const UPS_FREIGHT_LTL_GUARANTEED = 309;
-    const UPS_FREIGHT_LTL_GUARANTEED_AM = 334;
-    const UPS_STANDARD_LTL = 349;
+    const UPS_GROUND = 03;
 
     protected $guarded = [];
 

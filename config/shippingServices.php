@@ -10,10 +10,7 @@ return [
             32 => 'SRM',
             3440 => 'Priority',
             3441 => 'FirstClass',
-            308 => 'UPS Freight LTL',
-            309 => 'UPS Freight LTL Guaranteed',
-            334 => 'UPS Freight LTL Guaranteed AM',
-            349 => 'UPS Standard LTL',
+            03 => 'UPS Ground',
             33163 => 'SL Standard Modal',
             33171 => 'SL Express Modal',
             33198 => 'SL Small Parcels'

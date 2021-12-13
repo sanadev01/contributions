@@ -65,10 +65,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton('UPS_service', function() {
             // USPS Api Testing Environemtn Credentials
-            $create_package_url = 'https://wwwcie.ups.com/ship/v1/freight/shipments/ground';
+            $create_package_url = 'https://wwwcie.ups.com/ship/v1/shipments';
             $delete_package_url = '';
             $create_manifest_url = '';
-            $ground_rates_url = 'https://onlinetools.ups.com/ship/v1801/freight/rating/rate';
+            $rating_package_url = 'https://onlinetools.ups.com/ship/v1/rating/Rate';
             $transactionSrc = 'HERCO';
             $userName = 'hffinc1';           
             $password = 'Hdbrasilc4!';
@@ -82,7 +82,7 @@ class AppServiceProvider extends ServiceProvider
             // $email = config('usps.email');           
             // $password = config('usps.password');
 
-            return new UpsService($create_package_url, $delete_package_url, $create_manifest_url, $ground_rates_url, $transactionSrc, $userName, $password, $shipperNumber);
+            return new UpsService($create_package_url, $delete_package_url, $create_manifest_url, $rating_package_url, $transactionSrc, $userName, $password, $shipperNumber);
         });
 
         $this->app->singleton('CorreiosBrazilTracking_service', function() {

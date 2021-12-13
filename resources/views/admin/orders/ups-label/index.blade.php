@@ -61,7 +61,7 @@
         </div>
     </div>
     @if ($order->getWeight('kg') < 31)
-    <form action="{{ route('admin.orders.usps-label.store', $order) }}" method="POST">
+    <form action="{{ route('admin.orders.ups-label.store', $order) }}" method="POST">
         @csrf
         <div class="ml-3 mt-3">
             <div class="row ml-3">
@@ -135,8 +135,8 @@
             <div class="container pb-5">
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <label for="inputEmail4">Choose Service <span class="text-danger">*</span></label>
-                        <select name="service" id="usps_shipping_service" class="form-control selectpicker dropup" data-dropup-auto="false" data-live-search="true" required>
+                        <label for="service">Choose Service <span class="text-danger">*</span></label>
+                        <select name="service" id="ups_shipping_service" class="form-control selectpicker dropup" data-dropup-auto="false" data-live-search="true" required>
                             <option value="">@lang('orders.order-details.Select Shipping Service')</option>
                             @foreach ($shippingServices as $shippingService)
                                 <option value="{{ $shippingService->service_sub_class }}" {{ old('service',$order->shipping_service_id) == $shippingService->service_sub_class ? 'selected' : '' }} data-service-code="{{$shippingService->service_sub_class}}">{{ "{$shippingService->name}"}}</option>
@@ -152,7 +152,7 @@
         <div class="container pb-3">
             <div class="row mr-3">
                 <div class="ml-auto">
-                    <button type="submit" id="submitBtn" class="btn btn-primary" disabled>Buy USPS Label</button>
+                    <button type="submit" id="submitBtn" class="btn btn-primary" disabled>Buy UPS Label</button>
                 </div>
             </div>    
         </div>
@@ -160,7 +160,7 @@
     @else
     <div class="container">
         <div class="row mb-3 col-12 alert alert-danger">
-            <h5 class="text-danger">USPS is not available for more than 30 Kg</h5>
+            <h5 class="text-danger">UPS is not available for more than 68 Kg</h5>
         </div>
     </div>
     @endif
@@ -176,6 +176,6 @@
         $('.selectpicker').selectpicker();
     });
 </script>
-    @include('admin.orders.label.script')
+    @include('admin.orders.ups-label.script')
 
 @endsection

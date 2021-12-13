@@ -53,8 +53,8 @@
                             @endforeach
                         </select>
                         @else
-                        {{-- for usps --}}
-                        <select class="form-control selectpicker show-tick" data-live-search="true" data-country="{{ $order->recipient->country_id }}" name="shipping_service_id" id="us_shipping_service" required placeholder="Select Shipping Service">
+                        {{-- for usps and ups --}}
+                        <select class="form-control selectpicker show-tick" data-live-search="true" name="shipping_service_id" id="us_shipping_service" required placeholder="Select Shipping Service">
                             <option value="">@lang('orders.order-details.Select Shipping Service')</option>
                             @foreach ($shippingServices as $shippingService)
                                 <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-service-code="{{$shippingService->service_sub_class}}">{{ "{$shippingService->name}"}}</option>
@@ -114,8 +114,8 @@
 
           return  getUspsRates();
 
-        } else if(service != undefined) {
-           return getUpsRates();
+        } else if(service == 3) {
+            return getUpsRates();
         }
         
     })
@@ -128,7 +128,7 @@
 
         } else if(service != undefined) {
 
-          return  getUpsRates();
+          return getUpsRates();
         }
     })
    
