@@ -46,6 +46,8 @@ class OrderRepository
             'sender_address' => $request->sender_address,
             'sender_city' => $request->sender_city,
             'sender_country_id' => $request->sender_country_id,
+            'sender_state_id' => $request->sender_state_id,
+            'sender_zipcode' => $request->sender_zipcode,
         ]);
 
         return $order;

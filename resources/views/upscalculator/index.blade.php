@@ -45,9 +45,7 @@
                                     <label>Origin Country</label>
                                     <select id="origin_country"  name="origin_country" class="form-control selectpicker show-tick" data-live-search="true" required>
                                         <option value="">Select @lang('address.Country')</option>
-                                        @foreach (countries() as $country)
-                                            <option {{ old('origin_country') == $country->id ? 'selected' : '' }} value="{{ $country->id }}">{{ $country->name }}</option>
-                                        @endforeach
+                                        <option value="250" selected>United States</option>
                                     </select>
                                 </div>
                                 <div class="controls col-6"> 

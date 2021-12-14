@@ -77,7 +77,9 @@ return [
         'City' => 'City',
         'Next' => 'Next', 
         'Step 1' => 'Step 1',
-        'Select Country' => 'Select Country', 
+        'Select Country' => 'Select Country',
+        'State' => 'State',
+        'Zipcode' => 'Zipcode',
     ],
     'import-excel' =>[
         'Import Orders via Excel Sheet' => 'Import Orders via Excel Sheet',
