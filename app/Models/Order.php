@@ -409,11 +409,19 @@ class Order extends Model implements Package
     }
     public function calculateProfit($shippingCost)
     {
-        $profit = $this->user->api_profit / 100;
+        $profit_percentage = ($this->user->api_profit != 0) ? $this->user->api_profit : $this->getAdminProfit();
+        $profit = $profit_percentage / 100;
         
         $this->user_profit = $shippingCost * $profit;
 
         return true;
+    }
+
+    private function getAdminProfit()
+    {
+        $admin = User::where('role_id',1)->first();
+
+        return $admin->api_profit;
     }
 
     public function addAffiliateCommissionSale(User $referrer, $commissionCalculator)

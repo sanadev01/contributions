@@ -52,7 +52,6 @@ class UpsService
 
     public function getSenderPrice($order, $request_data)
     {   
-       $this->sender_name = $request_data->first_name . ' ' . $request_data->last_name; 
        $data = $this->make_rates_request_for_sender($order, $request_data);
         
        return $this->upsApiCallForRates($data);
@@ -60,7 +59,6 @@ class UpsService
 
     public function buyLabel($order, $request_sender_data)
     {
-        $this->sender_name = $request_sender_data->first_name . ' ' . $request_sender_data->last_name; 
         $data = $this->make_package_request_for_sender($order, $request_sender_data);
         
         $ups_response = $this->ups_ApiCall($data);
@@ -170,8 +168,8 @@ class UpsService
                 'Shipment' => [
                     'Description' => '1206 PTR',
                     'Shipper' => [
-                        'Name' => Auth::user() ? Auth::user()->pobox_number :  'HERCO SUIT#100',
-                        'AttentionName' => $this->sender_name,
+                        'Name' => Auth::user() ? Auth::user()->pobox_number :  optional($order->user)->pobox_number,
+                        'AttentionName' => $request->first_name.' '.$request->last_name,
                         'ShipperNumber' => $this->shipperNumber,
                         'Phone' => [
                             'Number' => Auth::user() ? Auth::user()->phone : '+13058885191'
@@ -186,7 +184,7 @@ class UpsService
                     ],
                     'ShipTo' => [
                         'Name' => 'HERCO SUIT#100',
-                        'AttentionName' => 'Marcio',
+                        'AttentionName' => Auth::user() ? Auth::user()->pobox_number :  optional($order->user)->pobox_number,
                         'Phone' => [
                             'Number' => '+13058885191'
                         ],
@@ -357,7 +355,7 @@ class UpsService
                 'Shipment' => [
                     'Description' => '1206 PTR',
                     'Shipper' => [
-                        'Name' => $order->sender_first_name.' '.$order->sender_last_name,
+                        'Name' => optional($order->user)->pobox_number,
                         'AttentionName' => $order->sender_first_name.' '.$order->sender_last_name,
                         'ShipperNumber' => $this->shipperNumber,
                         'Phone' => [
@@ -387,7 +385,7 @@ class UpsService
                     ],
                     'ShipTo' => [
                         'Name' => $order->recipient->first_name.' '.$order->recipient->last_name,
-                        'AttentionName' => $order->recipient->first_name.' '.$order->recipient->last_name,
+                        'AttentionName' => optional($order->user)->pobox_number,
                         'Address' => [
                             'AddressLine' => $order->recipient->address.' '.$order->recipient->street_no,
                             'City' => $order->recipient->city,
