@@ -68,9 +68,9 @@ class USPSBulkLabelRepository
             foreach($this->orders as $order)
             {
                 $order->update([
-                    'usps_response' => json_encode($response->data),
+                    'us_api_response' => json_encode($response->data),
                     'us_api_tracking_code' => $response->data['usps']['tracking_numbers'][0],
-                    'usps_cost' => $usps_cost,
+                    'us_api_cost' => $usps_cost,
                 ]);
 
                 $order->refresh();
