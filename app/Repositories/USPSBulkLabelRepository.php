@@ -69,7 +69,7 @@ class USPSBulkLabelRepository
             {
                 $order->update([
                     'usps_response' => json_encode($response->data),
-                    'corrios_usps_tracking_code' => $response->data['usps']['tracking_numbers'][0],
+                    'us_api_tracking_code' => $response->data['usps']['tracking_numbers'][0],
                     'usps_cost' => $usps_cost,
                 ]);
 

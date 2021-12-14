@@ -39,7 +39,7 @@ class USPSAccrualRateExport extends AbstractExportService
 
             $this->setCellValue('A'.$row, $order[0]->user->pobox_number);
             $this->setCellValue('B'.$row, $this->getPakagesWarehouse($order));
-            $this->setCellValue('C'.$row, $order[0]->corrios_usps_tracking_code);
+            $this->setCellValue('C'.$row, $order[0]->us_api_tracking_code);
             $this->setCellValue('D'.$row, $order[0]->getUspsResponse()->total_amount);
             $this->setCellValue('E'.$row, $order[0]->usps_cost);
             $this->setCellValue('F'.$row, $order[0]->getUspsResponse()->usps->mail_class);
