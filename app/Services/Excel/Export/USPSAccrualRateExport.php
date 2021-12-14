@@ -33,8 +33,6 @@ class USPSAccrualRateExport extends AbstractExportService
 
         $row = $this->currentRow;
         
-
-
         foreach ($this->orders as $order) {
 
             $this->setCellValue('A'.$row, $order[0]->user->pobox_number);
