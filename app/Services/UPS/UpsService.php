@@ -287,7 +287,7 @@ class UpsService
                         'Address' => [
                             'AddressLine' => $order->sender_address,
                             'City' => $order->sender_city,
-                            'StateProvinceCode' => optional($order->sender_state)->code,
+                            'StateProvinceCode' => optional($order->senderState)->code,
                             'PostalCode' => $order->sender_zipcode,
                             'CountryCode' => 'US',
                         ],
@@ -366,7 +366,7 @@ class UpsService
                         'Address' => [
                             'AddressLine' => $order->sender_address,
                             'City' => $order->sender_city,
-                            'StateProvinceCode' => optional($order->sender_state)->code,
+                            'StateProvinceCode' => optional($order->senderState)->code,
                             'PostalCode' => $order->sender_zipcode,
                             'CountryCode' => 'US',
                         ],
@@ -380,7 +380,7 @@ class UpsService
                         'Address' => [
                             'AddressLine' => $order->sender_address,
                             'City' => $order->sender_city,
-                            'StateProvinceCode' => optional($order->sender_state)->code,
+                            'StateProvinceCode' => optional($order->senderState)->code,
                             'PostalCode' => $order->sender_zipcode,
                             'CountryCode' => 'US',
                         ],
