@@ -75,6 +75,8 @@ return [
         'City' => 'cidade',
         'Next' => 'Próximo',
         'Select Country' => 'Selecione pais', 
+        'State' => 'State',
+        'Zip Code' => 'Código Postal',
     ],
     'import-excel' =>[
         'Import Orders via Excel Sheet' => 'Importar pedidos via planilha do Excel',

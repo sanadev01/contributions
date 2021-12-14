@@ -253,6 +253,10 @@ class UPSCalculatorRepository
             'total_amount' => $invoice->orders()->sum('gross_total')
         ]);
 
+        $order->update([
+            'is_paid' => true,
+        ]);
+
         return true;
     }
 

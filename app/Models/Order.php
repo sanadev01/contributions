@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\State;
 use App\Models\OrderTracking;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -504,9 +505,14 @@ class Order extends Model implements Package
         return $this->items()->sum(DB::raw('quantity * value'));
     }
 
-    public function sender_country()
+    public function senderCountry()
     {
         return $this->belongsTo(Country::class, 'sender_country_id');
+    }
+
+    public function senderState()
+    {
+        return $this->belongsTo(State::class, 'sender_state_id');
     }
 
     public function trackings()

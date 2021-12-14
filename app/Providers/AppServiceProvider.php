@@ -73,6 +73,7 @@ class AppServiceProvider extends ServiceProvider
             $userName = 'hffinc1';           
             $password = 'Hdbrasilc4!';
             $shipperNumber = '022VX0';
+            $AccessLicenseNumber = '5DA71F61D4F245F6';
 
             // USPS Api Production Environment Credentials
             // $api_url = config('usps.url');
@@ -82,7 +83,7 @@ class AppServiceProvider extends ServiceProvider
             // $email = config('usps.email');           
             // $password = config('usps.password');
 
-            return new UpsService($create_package_url, $delete_package_url, $create_manifest_url, $rating_package_url, $transactionSrc, $userName, $password, $shipperNumber);
+            return new UpsService($create_package_url, $delete_package_url, $create_manifest_url, $rating_package_url, $transactionSrc, $userName, $password, $shipperNumber, $AccessLicenseNumber);
         });
 
         $this->app->singleton('CorreiosBrazilTracking_service', function() {
