@@ -1,7 +1,7 @@
 @can('do_warehouse_operations')
 <li class="nav-item has-sub sidebar-group">
     <a href="#">
-        <i class="fa fa-home"></i>
+        <img src="{{ asset('images/icon/warehouse.svg') }}" alt="warehouse">
         <span class="menu-title">@lang('menu.Warehouse.menu')</span>
     </a>
     <ul class="menu-content">
