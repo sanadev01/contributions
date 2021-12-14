@@ -94,7 +94,7 @@
             @can('viewAny', App\Models\Connect::class)
                 <li class="nav-item {{ $isActive(['admin.connect.index']) }}">
                     <a class="nav-link" href="{{ route('admin.connect.index') }}">
-                        <i class="fa fa-plug"></i>
+                        <i class="fa fa-plug" style="color: #28c76f;"></i>
                         <span data-i18n="Apps">@lang('menu.connect')</span>
                     </a>
                 </li>
@@ -322,14 +322,15 @@
             @admin
             <li class="nav-item {{ $isActive(['admin.shcode.index','admin.shcode.create','admin.shcode.edit']) }}">
                 <a href="{{ route('admin.shcode.index') }}">
-                    <i class="fa fa-codepen"></i>
+                    <i class="fa fa-codepen" style="color: #28c76f;"></i>
                     <span class="menu-title">SH Codes</span>
                 </a>
             </li>
             @endadmin
 
             <li class="nav-item {{ $isActive(['admin.tickets.index','admin.tickets.show']) }}">
-                <a class="nav-link" href="{{ route('admin.tickets.index') }}"><i class="feather icon-message-circle"></i>
+                <a class="nav-link" href="{{ route('admin.tickets.index') }}">
+                    <i class="feather icon-message-circle" style="color: #28c76f;"></i>
                     <span data-i18n="Apps">@lang('menu.support tickets')</span>
                     <livewire:components.support-ticket/>
                 </a>
@@ -338,7 +339,7 @@
             @can('viewAny', App\Models\BillingInformation::class)
             <li class="nav-item {{ $isActive(['admin.billing-information.index','admin.billing-information.edit','admin.billing-information.create']) }}">
                 <a href="{{ route('admin.billing-information.index') }}">
-                    <i class="feather icon-alert-triangle"></i>
+                    <i class="feather icon-alert-triangle" style="color: #28c76f;"></i>
                     <span class="menu-title">@lang('menu.Billing Informations')</span>
                 </a>
             </li>
@@ -356,7 +357,7 @@
             @can('viewAny', Spatie\Activitylog\Models\Activity::class)
             <li class="nav-item {{ $isActive(['admin.activity.log.index']) }}">
                 <a href="{{ route('admin.activity.log.index') }}">
-                    <i class="feather icon-activity"></i>
+                    <i class="feather icon-activity" style="color: #28c76f;"></i>
                     <span class="menu-title">@lang('menu.activity')</span>
                 </a>
             </li>
