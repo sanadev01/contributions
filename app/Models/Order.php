@@ -516,6 +516,6 @@ class Order extends Model implements Package
 
     public function getUspsResponse()
     {
-        return json_decode($this->usps_response);
+        return json_decode($this->us_api_response);
     }
 }
