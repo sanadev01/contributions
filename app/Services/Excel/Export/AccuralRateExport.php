@@ -35,9 +35,9 @@ class AccuralRateExport extends AbstractExportService
 
         foreach ($this->rates as $rate) {
             $this->setCellValue('A'.$row, $rate->getServiceName());
-            $this->setCellValue('B'.$row,  $rate->cwb);
-            $this->setCellValue('C'.$row,  $rate->gru);
-            
+            $this->setCellValue('B'.$row, $rate->weight);
+            $this->setCellValue('C'.$row,  $rate->cwb);
+            $this->setCellValue('D'.$row,  $rate->gru);
             $row++;
         }
 
@@ -51,21 +51,25 @@ class AccuralRateExport extends AbstractExportService
         $this->setCellValue('A1', 'Service Name');
         if($this->countryId == 30){
             $this->setColumnWidth('B', 20);
-            $this->setCellValue('B1', 'CWB');
-            
+            $this->setCellValue('B1', 'Weight');
+
             $this->setColumnWidth('C', 20);
-            $this->setCellValue('C1', 'GRU');
+            $this->setCellValue('C1', 'CWB');
+
+            $this->setColumnWidth('D', 20);
+            $this->setCellValue('D1', 'GRU');
         }else{
             $this->setColumnWidth('B', 20);
-            $this->setCellValue('B1', 'SCL (SRM)');
-            
+            $this->setCellValue('B1', 'Weight');
+
             $this->setColumnWidth('C', 20);
-            $this->setCellValue('C1', 'SCL (SRP)');
+            $this->setCellValue('C1', 'SCL (SRM)');
 
+            $this->setColumnWidth('D', 20);
+            $this->setCellValue('D1', 'SCL (SRP)');
         }
-
+        $this->setBackgroundColor('A1:D1', '2b5cab');
         $this->currentRow++;
-
         return true;
     }
 }
