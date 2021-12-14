@@ -139,7 +139,10 @@ class ScanLabel extends Component
 
                 array_push($this->newOrder,$this->order);
 
-                $this->addOrderTracking($this->order);
+                if($order->trackings->isNotEmpty() && $order->trackings()->latest()->first()->status_code == Order::STATUS_PAYMENT_DONE)
+                {
+                    $this->addOrderTracking($this->order);
+                }
                 
                 $this->tracking = '';
                 if(Auth::user()->isUser() && Auth::user()->role->name == 'scanner'){
@@ -241,10 +244,11 @@ class ScanLabel extends Component
     public function removeOrderTracking($tracking_code)
     {
         $order = Order::where('corrios_tracking_code', $tracking_code)->first();
-
-        $order_tracking = OrderTracking::where('order_id', $order->id)->latest()->first();
-
-        $order_tracking->delete();
+        
+        if($order->trackings->isNotEmpty() && $order->trackings()->count() < 3)
+        {
+            $order->trackings()->latest()->first()->delete();
+        }
 
         return true;
 

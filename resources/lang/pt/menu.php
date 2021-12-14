@@ -16,6 +16,7 @@ return [
     'addresses' => 'Endereços',
     'calculator' => 'Calculadora',
     'uspscalculator' => 'USPS Calculadora',
+    'upscalculator' => 'UPS Calculadora',
     'connect' => 'Conectar',
     'support tickets' => 'Assistência',
     'profile' => 'Perfil',
@@ -27,6 +28,7 @@ return [
     'Handling Services' => 'Serviços de Manuseio',
     'Shipping Services' => 'Serviços de Frete',
     'Shipping Rates' => 'Upload de taxas de frete (custo)',
+    'Correios Cost' => 'Correios Custo',
     'Users' => 'Comercial',
     'Roles' => 'Funções',
     'Billing Informations' => 'Informações de pagamento',
@@ -39,6 +41,7 @@ return [
         'Tracking Report' => 'Relatório de Rastreamento',
         'Orders Report' => 'Relatório de pedidos',
         'Commission Report' => 'Relatório de Comissão',
+        'Audit Report' => 'Relatório de Auditoria',
     ],
     'Warehouse' => [
         'menu' => 'Armazém',

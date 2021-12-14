@@ -48,7 +48,7 @@
                         @endforeach
                     </td>
                     <td>
-                        {{ $order[0]->corrios_usps_tracking_code }}
+                        {{ $order[0]->us_api_tracking_code }}
                     </td>
                     <td>
                         {{ $order[0]->getUspsResponse()->total_amount }} USD

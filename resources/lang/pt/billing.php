@@ -23,5 +23,7 @@ return [
     'Select Country' => 'Selecione o pais',
     'Select State' => 'Selecione o estado',
     'Card Number' => 'Número do cartão',
+    'Account Number' => 'Account Number',
+    'Routing Number' => 'Routing Number',
     'Security Code' => 'Código de segurança',
 ];

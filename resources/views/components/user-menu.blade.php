@@ -142,10 +142,10 @@
                     @endcan
 
                     @can('viewAny', App\Models\Rate::class)
-                    <li class="{{ $isActive(['admin.rates.shipping-rates.index','admin.rates.shipping-rates.create']) }}">
+                    <li class="{{ $isActive(['admin.rates.shipping-rates.index','admin.rates.shipping-rates.create', 'admin.rates.view-shipping-rates']) }}">
                         <a href="{{ route('admin.rates.shipping-rates.index') }}">
                             <i class="feather icon-circle"></i>
-                            <span class="menu-title" style="font-size: 13px !important; font-weight: 500 !important;">@lang('menu.Shipping Rates')</span>
+                            <span class="menu-title">@lang('menu.Correios Cost')</span>
                         </a>
                     </li>
                     @endcan
@@ -214,6 +214,13 @@
                 </a>
             </li>
 
+            <li class="nav-item {{ $isActive(['calculator.index']) }}">
+                <a class="nav-link" href="{{ route('ups-calculator.index') }}" target="_blank">
+                    <i class="fa fa-calculator"></i>
+                    <span data-i18n="Apps">@lang('menu.upscalculator')</span>
+                </a>
+            </li>
+
             {{-- Reports --}}
             <li class="nav-item has-sub sidebar-group">
                 <a href="#">
@@ -247,7 +254,6 @@
                         </a>
                     </li>
                     @endcan
-                    {{-- @admin --}}
                         @can('viewComissionReport', App\Models\Reports::class)
                         <li class="{{ $isActive(['admin.reports.commission.index','admin.reports.commission.show']) }}">
                             <a href="{{ route('admin.reports.commission.index') }}">
@@ -256,7 +262,14 @@
                             </a>
                         </li>
                         @endcan
-                    {{-- @endadmin --}}
+                    @admin
+                        {{-- <li class="{{ $isActive(['admin.reports.audit-report.index','admin.reports.audit-report.show']) }}">
+                            <a href="{{ route('admin.reports.audit-report.index') }}">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title">@lang('menu.Reports.Audit Report')</span>
+                            </a>
+                        </li> --}}
+                    @endadmin
                 </ul>
             </li>
 

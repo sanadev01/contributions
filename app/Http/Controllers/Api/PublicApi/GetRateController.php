@@ -97,16 +97,17 @@ class GetRateController extends Controller
             $order->weight = $request->weight;
             $order->measurement_unit = $request->unit;
             $order->recipient = $recipient;
-
-            $shippingServices = collect();
-            foreach (ShippingService::query()->active()->get() as $shippingService) {
+            $order->id = 1;
+            \Log::info($order);
+            // $shippingServices = collect();
+            // foreach (ShippingService::query()->active()->get() as $shippingService) {
                 
-                if ( $shippingService->isAvailableFor($order) ){
-                    $shippingServices->push($shippingService);
-                }else{
-                    session()->flash('alert-danger',"Shipping Service not Available Error:{$shippingService->getCalculator($order)->getErrors()}");
-                }
-            }
+            //     if ( $shippingService->isAvailableFor($order) ){
+            //         $shippingServices->push($shippingService);
+            //     }else{
+            //         session()->flash('alert-danger',"Shipping Service not Available Error:{$shippingService->getCalculator($order)->getErrors()}");
+            //     }
+            // }
 
             if ($request->unit == 'kg/cm' ){
                 $weightInOtherUnit = UnitsConverter::kgToPound($chargableWeight);
@@ -121,13 +122,16 @@ class GetRateController extends Controller
 
             $getRate =collect();
             
-            foreach($shippingServices as $shippingService){
-                $getRate->push([
-                    'shippingServices'  => $shippingService->name,
-                    // 'weightInOtherUnit'  => $weightInOtherUnit,
-                    'Weight'  => $chargableWeight,
-                    'cost'  => $shippingService->getRateFor($order,true,true),
-                ]);
+            foreach(ShippingService::query()->active()->get() as $shippingService){
+                $shippingService->cacheCalculator = false;
+                if ( $shippingService->isAvailableFor($order) ){
+                    $getRate->push([
+                        'shippingServices'  => $shippingService->name,
+                        // 'weightInOtherUnit'  => $weightInOtherUnit,
+                        'Weight'  => $chargableWeight,
+                        'cost'  => $shippingService->getRateFor($order,true,false),
+                    ]);
+                }
             }
             return apiResponse(true,$getRate->count().' Services Rate Found against your Weight',$getRate);
         } catch (\Exception $ex) {

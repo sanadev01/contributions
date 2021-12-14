@@ -85,16 +85,26 @@ class OrderReportsRepository
         return $orders;
     }
    
-    public function getShipmentReportOfUsersByWeight($id)
+    public function getShipmentReportOfUsersByWeight($id, $month=null, Request $request)
     {
-        $query = Order::where('status','>',Order::STATUS_PAYMENT_PENDING)
-        ->has('user')->where('user_id', $id);
+        $query = Order::where('status','>',Order::STATUS_PAYMENT_PENDING);
+        if($id){
+            $query->has('user')->where('user_id', $id);
+        }
+        if($month){
+            $month = date("m",strtotime($month));
+            $startDate = $request->year.'-'.$month.'-01 00:00:00'; 
+            $endDate = $request->year.'-'.$month.'-31 23:59:59'; 
+            $query->whereBetween('created_at', [$startDate,$endDate]);
+        }
         
         $query->select(DB::raw('CASE WHEN measurement_unit = "kg/cm" THEN weight ELSE (weight/2.205) END as kgweight'));
         $record = collect();
         $orders = $query->get();
+        
         foreach($this->getWeight() as $weight){
             $ordersCount = $orders->whereBetween('kgweight', [$weight['min_weight'], $weight['max_weight']]);
+            \Log::info($ordersCount->count());
             $record->push([
                 'orders' => $ordersCount->count(),
                 'min_weight' => $weight['min_weight'],
@@ -105,7 +115,7 @@ class OrderReportsRepository
         return $record;
     }
     
-     public function getWeight(){
+    public function getWeight(){
         return [
             [
                 'min_weight' => '0.00',
@@ -166,5 +176,16 @@ class OrderReportsRepository
             
         ];
 
-     }
+    }
+
+    public function getShipmentReportOfUsersByMonth(Request $request)
+    {
+        $ordersByYear = Order::selectRaw(
+            "count(*) as total, Month(created_at) as month, 
+            sum(gross_total) as spent,
+            sum(CASE WHEN measurement_unit = 'kg/cm' THEN weight ELSE (weight/2.205) END) as weight"
+            )->groupBy('month')->where('created_at', 'like', "$request->year%" )->orderBy('month','asc')->get();
+        
+        return $ordersByYear;
+    }
 }

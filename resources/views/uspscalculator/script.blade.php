@@ -31,7 +31,7 @@
                 
                 if ( response.success == true && response.zipcode != 0)
                 {
-                    $('#destination_zipcode').val(response.zipcode);
+                    $('#sender_zipcode').val(response.zipcode);
                     $('#zipcode_response').empty().append("<p style='color: #198754;'>According to your given Addrees, your zip code should be: <span>"+response.zipcode+"</span></p>");
                 }else {
                     $('#zipcode_response').empty().append("<p style='color: red;'><span>"+response.message+"</span></p>");

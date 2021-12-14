@@ -18,7 +18,7 @@
         
         <div class="form-group row col-4">
             @if($searchOrder)
-                <h4>Total Weight: <span class="text-danger">{{ $totalWeight }} Kg</span></h4>
+                <h4>Total Weight: <span class="text-danger">{{ number_format((float)$totalWeight, 2, '.', '') }} Kg</span></h4>
                 <h4 class="ml-2">Total Pieces: <span class="text-danger">{{ $totalPieces }}</span></h4>
             @endif
         </div>
@@ -53,10 +53,9 @@
                     <form action="{{ route('admin.label.scan.update', 10) }}" method="post">
                         @csrf
                         @method('PUT')
-                        @foreach ($searchOrder as $key => $order)
-                            <input type="hidden" name="Ids[]" value="{{ $order['id'] }}">
-                            <input type="hidden" name="excel" value="0">
-                        @endforeach
+                        <input type="hidden" name="start_date" value="{{ $start_date }}">
+                        <input type="hidden" name="end_date" value="{{ $end_date }}">
+                        <input type="hidden" name="userId" value="{{ $user_id }}">
                         <button type="submit" class="btn btn-success mr-2" title="@lang('orders.import-excel.Download')">
                             <i class="feather icon-download"></i> @lang('orders.import-excel.Download') Sacn List
                         </button>

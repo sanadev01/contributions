@@ -25,6 +25,13 @@ class DuplicateOrderRepository extends Model
         $copy = $order->replicate();
         $copy->is_paid = false;
         $copy->corrios_tracking_code = null;
+        $copy->sinerlog_url_label = null;
+        $copy->api_response = null;
+        $copy->us_api_tracking_code = null;
+        $copy->us_api_response = null;
+        $copy->us_api_cost = 0;
+        $copy->sinerlog_tran_id = null;
+        $copy->sinerlog_freight = null;
         $copy->order_date = Carbon::now();
         $copy->is_received_from_sender = false;
         $copy->purchase_invoice = null;
