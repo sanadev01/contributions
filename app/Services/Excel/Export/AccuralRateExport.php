@@ -69,6 +69,7 @@ class AccuralRateExport extends AbstractExportService
             $this->setCellValue('D1', 'SCL (SRP)');
         }
         $this->setBackgroundColor('A1:D1', '2b5cab');
+        $this->setColor('A1:D1', 'FFFFFF');
         $this->currentRow++;
         return true;
     }
