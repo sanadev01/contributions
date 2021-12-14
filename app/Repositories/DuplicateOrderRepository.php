@@ -27,7 +27,7 @@ class DuplicateOrderRepository extends Model
         $copy->corrios_tracking_code = null;
         $copy->sinerlog_url_label = null;
         $copy->api_response = null;
-        $copy->corrios_usps_tracking_code = null;
+        $copy->us_api_tracking_code = null;
         $copy->usps_response = null;
         $copy->usps_cost = 0;
         $copy->sinerlog_tran_id = null;
