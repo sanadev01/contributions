@@ -8,12 +8,14 @@ use App\Repositories\Reports\OrderReportsRepository;
 class ShipmentReport extends AbstractExportService
 {
     private $users;
-
+    private $request;
+    
     private $currentRow = 1;
 
-    public function __construct(Collection $users)
+    public function __construct(Collection $users, $request)
     {
         $this->users = $users;
+        $this->request = $request;
 
         parent::__construct();
     }
@@ -32,7 +34,7 @@ class ShipmentReport extends AbstractExportService
         $row = $this->currentRow;
         $orderReportsRepository = new OrderReportsRepository;
         foreach ($this->users as $user) {
-            $report = $orderReportsRepository->getShipmentReportOfUsersByWeight($user->id, null, null);
+            $report = $orderReportsRepository->getShipmentReportOfUsersByWeight($user->id, null, $this->request);
             $this->setCellValue('A'.$row, $user->pobox_number);
             $this->setCellValue('B'.$row, $user->name);
             $this->setCellValue('C'.$row, $user->email);
