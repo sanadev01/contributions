@@ -100,13 +100,12 @@ class OrderReportsRepository
             $query->whereBetween('created_at', [$startDate,$endDate]);
         }
         
-        $query->select(DB::raw('CASE WHEN measurement_unit = "kg/cm" THEN weight ELSE (weight/2.205) END as kgweight'));
+        $query->select(DB::raw('CASE WHEN measurement_unit = "kg/cm" THEN ROUND(weight,2) ELSE ROUND((weight/2.205),2) END as kgweight'));
         $record = collect();
         $orders = $query->get();
         
         foreach($this->getWeight() as $weight){
             $ordersCount = $orders->whereBetween('kgweight', [$weight['min_weight'], $weight['max_weight']]);
-            \Log::info($ordersCount->count());
             $record->push([
                 'orders' => $ordersCount->count(),
                 'min_weight' => $weight['min_weight'],
@@ -182,12 +181,11 @@ class OrderReportsRepository
 
     public function getShipmentReportOfUsersByMonth(Request $request)
     {
-        $ordersByYear = Order::where('status','>=',Order::STATUS_PAYMENT_DONE)->selectRaw(
+        $ordersByYear = Order::where('status','>',Order::STATUS_PAYMENT_PENDING)->selectRaw(
             "count(*) as total, Month(created_at) as month, 
             sum(gross_total) as spent,
             sum(CASE WHEN measurement_unit = 'kg/cm' THEN weight ELSE (weight/2.205) END) as weight"
-            )->groupBy('month')->where('created_at', 'like', "$request->year%" )->orderBy('month','asc')->get();
-        
+        )->groupBy('month')->where('created_at', 'like', "$request->year%" )->orderBy('month','asc')->get();
         return $ordersByYear;
     }
 }
