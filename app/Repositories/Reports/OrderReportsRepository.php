@@ -93,8 +93,10 @@ class OrderReportsRepository
         }
         if($month){
             $month = date("m",strtotime($month));
-            $startDate = $request->year.'-'.$month.'-01 00:00:00'; 
-            $endDate = $request->year.'-'.$month.'-31 23:59:59'; 
+            $firatDateOfMonth = $request->year.'-'.$month.'-01';
+            $lastDateOfMonth = \Carbon\Carbon::parse($firatDateOfMonth)->endOfMonth()->toDateString();
+            $startDate = $firatDateOfMonth.' 00:00:00'; 
+            $endDate = $lastDateOfMonth.' 23:59:59';
             $query->whereBetween('created_at', [$startDate,$endDate]);
         }
         
