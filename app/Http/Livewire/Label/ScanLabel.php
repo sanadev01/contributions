@@ -96,7 +96,7 @@ class ScanLabel extends Component
             
             if($this->order){
                 if($order->trackings()->latest()->first()->status_code >= Order::STATUS_ARRIVE_AT_WAREHOUSE){
-                $lastScanned = $order->trackings->where('status_code',Order::STATUS_ARRIVE_AT_WAREHOUSE)->pluck('updated_at')->first()->format('m/d/Y');
+                $lastScanned = $order->trackings()->where('status_code',Order::STATUS_ARRIVE_AT_WAREHOUSE)->pluck('updated_at')->first()->format('m/d/Y');
                 $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'package already scanned on '.$lastScanned.'']);
                 return $this->tracking = '';
                 }
