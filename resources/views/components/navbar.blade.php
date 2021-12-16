@@ -11,7 +11,7 @@
     <div class="navbar-wrapper">
         <div class="navbar-container content">
             <div class="navbar-collapse" id="navbar-mobile">
-                @if(Auth::user()->status=="suspended")
+                @if(!Auth::user()->isActive())
                 <div class="row col-8">
                     <div class="col-12">
                         <div class="alert alert-danger text-center">

@@ -57,14 +57,14 @@
                             <li class="nav-item">
                                 <a class="btn btn-primary" href="{{ route('login') }}"> <i class="feather icon-home"></i> Dashboard</a>
                             </li>
-                            @can('viewAny', App\Models\Order::class)
                             <li class="new-item ml-1">
                                  <a href="{{ route('admin.home') }}" class="btn btn-primary">Go Back</a>
                             </li>
-                            @endcan
+                            @can('viewAny', App\Models\Order::class)
                                 {{-- <li class="nav-item">
                                     <a class="btn btn-primary ml-3" href="{{ route('admin.bulk-usps-label') }}">Buy USPS Label</a>
                                 </li> --}}
+                            @endcan
                         @endguest
                         {{-- <x-lang-switcher></x-lang-switcher> --}}
                     </ul>
