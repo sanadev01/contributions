@@ -1,5 +1,7 @@
 @extends('admin.orders.layouts.wizard')
-
+@section('wizard-css')
+    <link rel="stylesheet" href="{{ asset('app-assets/select/css/bootstrap-select.min.css') }}">
+@endsection
 @section('wizard-form')
 <form action="{{ route('admin.orders.sender.store',$order) }}" method="POST" class="wizard">
     @csrf
@@ -62,7 +64,7 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label for="emailAddress1">@lang('orders.sender.Phone')<span class="text-danger" id="chile_phone" style="display: none;">*</span></label>
+                        <label for="emailAddress1">@lang('orders.sender.Phone')<span class="text-danger" id="phone" style="display: none;">*</span></label>
                         <input type="text" class="form-control" name="phone" value="{{ old('phone',__default($order->sender_phone,null)) }}">
                         @error('phone')
                             <div class="text-danger">
@@ -82,10 +84,27 @@
                         @enderror
                     </div>
                 </div>
+                <div class="col-sm-6 d-none" id="state">
+                    <div class="form-group">
+                        <label for="sender_state">@lang('orders.sender.State')<span class="text-danger">*</span></label>
+                        <option value="" selected disabled hidden>Select State</option>
+                        <select name="sender_state_id" id="sender_state" class="form-control selectpicker show-tick" data-live-search="true" required>
+                            <option value="">Select @lang('address.State')</option>
+                            @foreach ($states as $state)
+                                <option {{ old('sender_state_id', optional($order)->sender_state_id) == $state->id ? 'selected' : '' }} value="{{ $state->id }}">{{ $state->code }}</option>
+                            @endforeach
+                        </select>
+                        @error('sender_state_id')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                </div>
                 <div class="col-sm-6" id="address" style="display: none">
                     <div class="form-group">
                         <label for="sender_address">@lang('orders.sender.Address')<span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="sender_address" value="{{ old('sender_address',__default($order->sender_address,optional($order->user)->address)) }}">
+                        <input type="text" class="form-control" id="sender_address" name="sender_address" value="{{ old('sender_address',__default($order->sender_address,optional($order->user)->address)) }}">
                         @error('taxt_id')
                             <div class="text-danger">
                                 {{ $message }}
@@ -96,13 +115,25 @@
                 <div class="col-sm-6" id="city" style="display: none">
                     <div class="form-group">
                         <label for="sender_city">@lang('orders.sender.City')<span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="sender_city" value="{{ old('sender_city',__default($order->sender_city,optional($order->user)->city)) }}">
+                        <input type="text" class="form-control" id="sender_city" name="sender_city" value="{{ old('sender_city',__default($order->sender_city,optional($order->user)->city)) }}">
                         @error('taxt_id')
                             <div class="text-danger">
                                 {{ $message }}
                             </div>
                         @enderror
                     </div>
+                </div>
+                <div class="col-sm-6 d-none" id="zip_code">
+                    <div class="form-group">
+                        <label for="zipcode">@lang('orders.sender.Zipcode')<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="sender_zipcode" name="sender_zipcode" value="{{ old('sender_zipcode',__default($order->sender_zipcode,optional($order->user)->zipcode)) }}">
+                        @error('sender_zipcode')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div class="help-block" id="zipcode_response"></div>
                 </div>
             </div>
         </fieldset>
@@ -128,12 +159,23 @@
         $("[name='sender_city']").prop('disabled',true);
 
         let selected = $('.countrySelect').val();
-
-        if(selected == '46') {
+        
+        if(selected == '46' || selected == '250') {
                 $('#address').css('display', 'block');
                 $('#city').css('display', 'block');
                 $('#tax_id').css('display', 'none'); 
-                $('#chile_phone').css('display', 'inline-block');
+                $('#phone').css('display', 'inline-block');
+                
+                if (selected == '250') {
+                    $('#state').removeClass('d-none');
+                    $('#zip_code').removeClass('d-none');
+
+                    $('#state').addClass('d-block');
+                    $('#zip_code').addClass('d-block');
+
+                    $('#sender_state').prop('required',true);
+                    $("[name='sender_zipcode']").prop('required', true);
+                }
 
                 $("[name='sender_address']").prop( "disabled", false );
                 $("[name='sender_city']").prop('disabled',false);
@@ -141,12 +183,19 @@
 
                 $("[name='sender_address']").prop('required',true);
                 $("[name='sender_city']").prop('required',true);
+                $("[name='phone']").prop('required',true);
+                $("[name='sender_zipcode']").prop('required', false);
         } else 
         {
                 $('#address').css('display', 'none');
                 $('#city').css('display', 'none'); 
                 $('#tax_id').css('display', 'block');
-                $('#chile_phone').css('display', 'none');
+                $('#phone').css('display', 'none');
+                $('#state').addClass('d-none');
+                $('#zip_code').addClass('d-none');
+
+                $('#state').removeClass('d-block');
+                $('#zip_code').removeClass('d-block');
 
                 $("[name='sender_address']").prop( 'disabled', true );
                 $("[name='sender_city']").prop('disabled', true);
@@ -154,16 +203,35 @@
 
                 $("[name='sender_address']").prop('required',false);
                 $("[name='sender_city']").prop('required', false);
+                $('#sender_state').prop('required',false);
+                $("[name='phone']").prop('required',false);
         }
+
+        $('#sender_address').on('change', function(){
+            window.validate_us_address();
+        });
         
         $('.countrySelect').change(function () {
             let selected = $('.countrySelect').val();
             
-            if(selected == '46') {
+            if(selected == '46' || selected == '250') {
                 $('#address').css('display', 'block');
                 $('#city').css('display', 'block');
                 $('#tax_id').css('display', 'none'); 
-                $('#chile_phone').css('display', 'inline-block');
+                $('#phone').css('display', 'inline-block');
+
+                if (selected == '250') {
+                    $('#state').removeClass('d-none');
+                    $('#zip_code').removeClass('d-none');
+
+                    $('#state').addClass('d-block');
+                    $('#zip_code').addClass('d-block');
+
+                    $('#sender_state').prop('required',true);
+                    $("[name='sender_zipcode']").prop('required', true);
+
+                    window.validate_us_address();
+                }
 
                 $("[name='sender_address']").prop( "disabled", false );
                 $("[name='sender_city']").prop('disabled',false);
@@ -171,11 +239,17 @@
 
                 $("[name='sender_address']").prop('required',true);
                 $("[name='sender_city']").prop('required',true);
+                $("[name='phone']").prop('required',true);
             } else {
                 $('#address').css('display', 'none');
                 $('#city').css('display', 'none'); 
                 $('#tax_id').css('display', 'block');
-                $('#chile_phone').css('display', 'none');
+                $('#phone').css('display', 'none');
+                $('#state').addClass('d-none');
+                $('#zip_code').addClass('d-none');
+
+                $('#state').removeClass('d-block');
+                $('#zip_code').removeClass('d-block');
 
                 $("[name='sender_address']").prop( 'disabled', true );
                 $("[name='sender_city']").prop('disabled', true);
@@ -183,11 +257,55 @@
 
                 $("[name='sender_address']").prop('required',false);
                 $("[name='sender_city']").prop('required', false);
+                $('#sender_state').prop('required',false);
+                $("[name='phone']").prop('required',false);
+                $("[name='sender_zipcode']").prop('required', false);
             }
+        });
+
+        $('#sender_state').on('change', function() {
+            window.validate_us_address();
+        });
+
+        $('#sender_city').on('change', function() {
+            console.log('city changed');
+            window.validate_us_address();
         });
 
     })
 
+    validate_us_address = function()
+    {
+        let country = $('.countrySelect').val();
+        let address = $('#sender_address').val();
+        let state = $('#sender_state option:selected').text();
+        let city = $('#sender_city').val();
+
+        if(country == '250' && state != undefined && address.length > 4 && city.length >= 4)
+        {
+            $('#loading').fadeIn();
+            $.get('{{ route("api.orders.recipient.us_address") }}',{
+                address: address,
+                state: state,
+                city: city,
+            }).then(function(response){
+                
+                if ( response.success == true && response.zipcode != 0){
+                    $('#loading').fadeOut();
+                    $('#sender_zipcode').val(response.zipcode);
+                    $('#zipcode_response').empty().append("<p><b>According to your given Addrees, your zip code should be this</b></p><p><span style='color: red;'>Zipcode: </span><span>"+response.zipcode+"</span></p>");
+                }else {
+                    $('#loading').fadeOut();
+                    $('#zipcode_response').empty().append("<p style='color: red;'><b>According to USPS,</b></p><p><span style='color: red;'></span><span>"+response.message+"</span></p>");
+                }
+
+            }).catch(function(error){
+                console.log(error);
+                $('#loading').fadeOut();
+                $('#zipcode_response').empty().append("<p style='color: red;'><b>According to USPS, your address is Invalid</b></p>");
+            })
+        }
+    }
 
  
 </script>

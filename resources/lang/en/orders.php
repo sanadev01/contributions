@@ -77,7 +77,9 @@ return [
         'City' => 'City',
         'Next' => 'Next', 
         'Step 1' => 'Step 1',
-        'Select Country' => 'Select Country', 
+        'Select Country' => 'Select Country',
+        'State' => 'State',
+        'Zipcode' => 'Zipcode',
     ],
     'import-excel' =>[
         'Import Orders via Excel Sheet' => 'Import Orders via Excel Sheet',
@@ -174,6 +176,8 @@ return [
         'buy-domestic-label' => 'Buy Domestic Label',
         'buy-usps-label' => 'Buy USPS Label',
         'print-usps-label' => 'Print USPS Label',
+        'buy-ups-label' => 'Buy UPS Label',
+        'print-ups-label' => 'Print UPS Label',
     ],
     'create' => [
         'shipment-and-destination' => 'Shipment & Destination',

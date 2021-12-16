@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Order;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -17,5 +18,10 @@ class State extends Model
     public function country()
     {
         return $this->belongsTo(Country::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'sender_state_id', 'id');
     }
 }

@@ -83,13 +83,26 @@ export default {
                 return;
             }
 
-            this.axios.post(`/containers/${this.container.id}/packages/${barCode}`)
+            if (this.container.services_subclass_code.includes('SL'))
+            {
+                this.axios.post(`/sinerlog_container/${this.container.id}/packages/${barCode}`)
                 .then(response=>{
                     this.orders.push(response.data.order);
                 })
                 .catch(error=>{
                     console.log(error)
                 })
+            }
+            else
+            {
+                this.axios.post(`/containers/${this.container.id}/packages/${barCode}`)
+                .then(response=>{
+                    this.orders.push(response.data.order);
+                })
+                .catch(error=>{
+                    console.log(error)
+                })
+            }
         },
         addOrder(event){
             this.getPackage(event.target.value);
