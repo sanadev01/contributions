@@ -79,13 +79,13 @@
                             <i class="fa fa-print"></i> @lang('consolidation.Print Consolidation Request')
                         </a>
                     @endif
-
+                    @if( $parcel->isShipmentAdded() && !Auth::user()->isActive() )
                     @can('update',  $parcel)
                         <a href="{{ route('admin.parcels.edit',$parcel) }}" class="dropdown-item btn" title="@lang('parcel.Edit Parcel')">
                             <i class="feather icon-edit"></i> @lang('parcel.Edit Parcel')
                         </a>
                     @endcan
-                    
+                    @endif
                     @can('duplicatePreAlert',  $parcel)
                         <a href="{{ route('admin.parcel.duplicate',$parcel) }}" class="dropdown-item btn" title="@lang('parcel.Edit Parcel')">
                             <i class="feather icon-edit"></i> @lang('parcel.Duplicate Parcel')
