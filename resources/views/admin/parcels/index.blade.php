@@ -10,7 +10,7 @@
                             @lang('parcel.My Parcels')
                         </h1>
                         <div>
-                            @if(Auth::user()->status=="active")
+                            @if(Auth::user()->status == "active")
                             <a href="{{ route('admin.consolidation.parcels.index') }}" class="btn btn-lg btn-info"> @lang('consolidation.Create Consolidation') </a>
                             <a href="{{ route('admin.parcels.create') }}" class="btn btn-lg btn-primary"> @lang('parcel.Create Parcel') </a>
                             @endif
