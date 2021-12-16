@@ -10,8 +10,10 @@
                             @lang('parcel.My Parcels')
                         </h1>
                         <div>
+                            @if(Auth::user()->isActive())
                             <a href="{{ route('admin.consolidation.parcels.index') }}" class="btn btn-lg btn-info"> @lang('consolidation.Create Consolidation') </a>
                             <a href="{{ route('admin.parcels.create') }}" class="btn btn-lg btn-primary"> @lang('parcel.Create Parcel') </a>
+                            @endif
                         </div>
                     </div>
                     <div class="card-content card-body">
