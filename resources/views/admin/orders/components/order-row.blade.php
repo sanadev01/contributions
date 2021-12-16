@@ -137,7 +137,7 @@
                         </a>
                     @endcan
 
-                    @if( $order->isPaid() && auth()->user()->can('canPrintLable',$order) && !$order->isRefund()  && $order->user->status=="active")
+                    @if( $order->isPaid() && auth()->user()->can('canPrintLable',$order) && !$order->isRefund() && Auth::user()->isActive())
                         <a href="{{ route('admin.orders.label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
                             <i class="feather icon-printer"></i>@lang('orders.actions.label')
                         </a>
