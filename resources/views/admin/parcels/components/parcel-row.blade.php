@@ -68,7 +68,7 @@
                 </button>
                 <div class="dropdown-menu dropdown-menu-right dropright">
 
-                    @if( $parcel->isShipmentAdded() && !Auth::user()->isActive() )
+                    @if( $parcel->isShipmentAdded() && Auth::user()->isActive() )
                         <a href="{{ route('admin.orders.sender.index',$parcel) }}" class="dropdown-item" title=" @lang('parcel.Create Order')">
                             <i class="feather icon-shopping-cart"></i> @lang('prealerts.actions.place-order')
                         </a>
@@ -79,13 +79,11 @@
                             <i class="fa fa-print"></i> @lang('consolidation.Print Consolidation Request')
                         </a>
                     @endif
-
                     @can('update',  $parcel)
                         <a href="{{ route('admin.parcels.edit',$parcel) }}" class="dropdown-item btn" title="@lang('parcel.Edit Parcel')">
                             <i class="feather icon-edit"></i> @lang('parcel.Edit Parcel')
                         </a>
                     @endcan
-                    
                     @can('duplicatePreAlert',  $parcel)
                         <a href="{{ route('admin.parcel.duplicate',$parcel) }}" class="dropdown-item btn" title="@lang('parcel.Edit Parcel')">
                             <i class="feather icon-edit"></i> @lang('parcel.Duplicate Parcel')
