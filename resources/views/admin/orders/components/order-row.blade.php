@@ -107,7 +107,7 @@
                 <div class="dropdown-menu overlap-menu" aria-labelledby="dropdownMenuLink">
 
                     @user
-                        @if( !$order->isPaid() && !$order->isNeedsProcessing())
+                        @if( !$order->isPaid() && !$order->isNeedsProcessing() && $order->user->status=="active")
 
                             @if ( optional($order)->getPaymentInvoice() )
                                 <a href="{{ route('admin.payment-invoices.invoice.show',optional($order)->getPaymentInvoice()) }}" class="dropdown-item" title="Pay Order">
@@ -137,7 +137,7 @@
                         </a>
                     @endcan
 
-                    @if( $order->isPaid() && auth()->user()->can('canPrintLable',$order) && !$order->isRefund())
+                    @if( $order->isPaid() && auth()->user()->can('canPrintLable',$order) && !$order->isRefund()  && $order->user->status=="active")
                         <a href="{{ route('admin.orders.label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
                             <i class="feather icon-printer"></i>@lang('orders.actions.label')
                         </a>
