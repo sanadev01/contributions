@@ -107,7 +107,7 @@
                 <div class="dropdown-menu overlap-menu" aria-labelledby="dropdownMenuLink">
 
                     @user
-                        @if( !$order->isPaid() && !$order->isNeedsProcessing() && $order->user->status=="active")
+                        @if( !$order->isPaid() && !$order->isNeedsProcessing() && $order->user->isActive())
 
                             @if ( optional($order)->getPaymentInvoice() )
                                 <a href="{{ route('admin.payment-invoices.invoice.show',optional($order)->getPaymentInvoice()) }}" class="dropdown-item" title="Pay Order">
@@ -137,8 +137,8 @@
                         </a>
                     @endcan
 
-                    @if( $order->isPaid() && auth()->user()->can('canPrintLable',$order) && !$order->isRefund() && Auth::user()->isActive())
-                    @if( $order->isPaid() && auth()->user()->can('canPrintLable',$order) && !$order->isRefund() && $order->is_paid)
+                    @if( $order->isPaid() && auth()->user()->can('canPrintLable',$order) && !$order->isRefund() && $order->is_paid && Auth::user()->isActive())
+                    {{-- @if( $order->isPaid() && auth()->user()->can('canPrintLable',$order) && !$order->isRefund() && $order->is_paid) --}}
                         <a href="{{ route('admin.orders.label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
                             <i class="feather icon-printer"></i>@lang('orders.actions.label')
                         </a>
@@ -151,7 +151,7 @@
                             </a>
                         @endif
                     @endif
-                    
+                    {{-- @endif --}}
                    @can('updateOrder', $order)
                         <a href="{{ route('admin.orders.sender.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.update')">
                             <i class="feather icon-edit"></i>@lang('orders.actions.update')
