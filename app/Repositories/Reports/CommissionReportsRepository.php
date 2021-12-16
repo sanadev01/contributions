@@ -5,6 +5,7 @@ namespace App\Repositories\Reports;
 use App\Models\User;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use App\Models\AffiliateSale;
 use App\Models\CommissionSetting;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -83,5 +84,16 @@ class CommissionReportsRepository
         }])->orderBy($orderBy,$orderType);
 
         return $paginate ? $query->paginate($pageSize) : $query->get();
+    }
+
+    public function getCommissionReportOfUserByMonth(User $user, Request $request)
+    {
+        $query = $user->affiliateSales();
+        $startDate  = $request->start_date.' 00:00:00'; 
+        $endDate    = $request->end_date.' 23:59:59';
+        $affiliateSalesByMonth = $query->selectRaw(
+            "count(*) as total, Month(created_at) as month"
+        )->groupBy('month')->whereBetween('created_at',[$startDate,$endDate])->orderBy('month','asc')->get();
+        return $affiliateSalesByMonth;
     }
 }
