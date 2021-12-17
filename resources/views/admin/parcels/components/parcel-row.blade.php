@@ -68,11 +68,17 @@
                 </button>
                 <div class="dropdown-menu dropdown-menu-right dropright">
 
-                    @if( $parcel->isShipmentAdded() && Auth::user()->isActive() )
+                    {{-- @if( $parcel->isShipmentAdded()) --}}
+                    @if(Auth::user()->isActive())
                         <a href="{{ route('admin.orders.sender.index',$parcel) }}" class="dropdown-item" title=" @lang('parcel.Create Order')">
                             <i class="feather icon-shopping-cart"></i> @lang('prealerts.actions.place-order')
                         </a>
+                    @else
+                    <a  data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" class="dropdown-item" title=" @lang('parcel.Create Order')">
+                        <i class="feather icon-shopping-cart"></i> @lang('prealerts.actions.place-order')
+                    </a>
                     @endif
+                    {{-- @endif --}}
                     
                     @if ( auth()->user()->can('canPrintConsolidationForm',$parcel) && $parcel->isConsolidated() && !Auth::user()->isActive())
                         <a href="#" class="dropdown-item btn" title="@lang('consolidation.Print Consolidation Request')" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.parcel.consolidation-print',$parcel) }}">
@@ -95,7 +101,7 @@
                             <i class="feather icon-edit"></i> @lang('consolidation.Edit Consolidation')
                         </a>
                     @endif
-
+                        @if(Auth::user()->isActive())
                     @can('delete', $parcel)
                         <form method="post" action="{{ route('admin.parcels.destroy',$parcel) }}" class="d-inline-block w-100" onsubmit="return confirmDelete()">
                             @csrf
@@ -105,6 +111,7 @@
                             </button>
                         </form>
                     @endcan
+                    @endif
                 </div>
             </div>
         </div>
