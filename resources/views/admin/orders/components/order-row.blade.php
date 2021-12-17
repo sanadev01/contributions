@@ -141,14 +141,23 @@
                         <a href="{{ route('admin.orders.label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
                             <i class="feather icon-printer"></i>@lang('orders.actions.label')
                         </a>
-                        @if( $order->corrios_tracking_code && $order->recipient->country_id != \App\Models\Order::US)
+                        @if( $order->corrios_tracking_code && $order->recipient->country_id != \App\Models\Order::US && !$order->hasSecondLabel())
                             <a href="{{ route('admin.orders.usps-label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
-                                <i class="feather icon-printer"></i>@if($order->hasSecondLabel()) @lang('orders.actions.print-usps-label') @else @lang('orders.actions.buy-usps-label') @endif
+                                <i class="feather icon-printer"></i>@lang('orders.actions.buy-usps-label')
                             </a>
                             <a href="{{ route('admin.orders.ups-label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
-                                <i class="feather icon-printer"></i>@if($order->hasSecondLabel()) @lang('orders.actions.print-ups-label') @else @lang('orders.actions.buy-ups-label') @endif
+                                <i class="feather icon-printer"></i>@lang('orders.actions.buy-ups-label')
                             </a>
                         @endif
+                        @if($order->hasSecondLabel() && $order->usLabelService() == \App\Models\ShippingService::UPS_GROUND)
+                            <a href="{{ route('admin.orders.usps-label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
+                                <i class="feather icon-printer"></i>@lang('orders.actions.print-ups-label')
+                            </a>
+                        @elseif($order->hasSecondLabel() && ($order->usLabelService() == (\App\Models\ShippingService::USPS_PRIORITY || \App\Models\ShippingService::USPS_FIRSTCLASS) ))
+                            <a href="{{ route('admin.orders.ups-label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
+                                <i class="feather icon-printer"></i>@lang('orders.actions.print-usps-label')
+                            </a>
+                        @endif        
                     @endif
                    @can('updateOrder', $order)
                         <a href="{{ route('admin.orders.sender.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.update')">

@@ -307,6 +307,11 @@ class Order extends Model implements Package
         return $this->us_api_response ? true: false;
     }
 
+    public function usLabelService()
+    {
+        return $this->hasSecondLabel() ? $this->us_api_service : null;
+    }
+
     /**
      * Sinerlog modification
      * This function sets sinerlog tran id

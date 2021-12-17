@@ -27,7 +27,6 @@ class UpsService
     protected $height;
     protected $length;
     protected $weight;
-    protected $sender_name = 'HERCO';
 
     public function __construct($create_package_url, $delete_package_url, $create_manifest_url, $rating_package_url, $transactionSrc, $userName, $password, $shipperNumber, $AccessLicenseNumber)
     {
@@ -89,8 +88,8 @@ class UpsService
                 ],
                 'Shipment' => [
                     'Shipper' => [
-                        'Name' => Auth::user() ? Auth::user()->pobox_number :  'HERCO SUIT#100',
-                        'AttentionName' => ($request->first_name) ? $request->first_name : 'HERCO SUIT#100',
+                        'Name' => Auth::user() ? Auth::user()->pobox_number :  'HERCO SUITE#100',
+                        'AttentionName' => ($request->first_name) ? $request->first_name : 'HERCO SUITE#100',
                         'ShipperNumber' => $this->shipperNumber,
                         'Phone' => [
                             'Number' => Auth::user() ? Auth::user()->phone : '+13058885191'
@@ -104,7 +103,7 @@ class UpsService
                         ],
                     ],
                     'ShipFrom' => [
-                        'Name' => ($request->first_name) ? $request->first_name : 'HERCO SUIT#100',
+                        'Name' => ($request->first_name) ? $request->first_name : 'HERCO SUITE#100',
                         'Address' => [
                             'AddressLine' => $request->sender_address,
                             'City' => $request->sender_city,
@@ -114,7 +113,7 @@ class UpsService
                         ],
                     ],
                     'ShipTo' => [
-                        'Name' => 'HERCO SUIT#100',
+                        'Name' => 'HERCO SUITE#100',
                         'Address' => [
                             'AddressLine' => '2200 NW 129TH AVE',
                             'City' => 'Miami',
@@ -183,7 +182,7 @@ class UpsService
                         ],
                     ],
                     'ShipTo' => [
-                        'Name' => 'HERCO SUIT#100',
+                        'Name' => 'HERCO SUITE#100',
                         'AttentionName' => Auth::user() ? Auth::user()->pobox_number :  optional($order->user)->pobox_number,
                         'Phone' => [
                             'Number' => '+13058885191'
@@ -276,7 +275,7 @@ class UpsService
                 ],
                 'Shipment' => [
                     'Shipper' => [
-                        'Name' => Auth::user() ? Auth::user()->pobox_number :  'HERCO SUIT#100',
+                        'Name' => Auth::user() ? Auth::user()->pobox_number :  'HERCO SUITE#100',
                         'AttentionName' => $order->sender_first_name.' '.$order->sender_last_name,
                         'ShipperNumber' => $this->shipperNumber,
                         'Phone' => [
@@ -291,7 +290,7 @@ class UpsService
                         ],
                     ],
                     'ShipFrom' => [
-                        'Name' => 'HERCO SUIT#100',
+                        'Name' => 'HERCO SUITE#100',
                         'Address' => [
                             'AddressLine' => '2200 NW 129TH AVE',
                             'City' => 'Miami',
@@ -528,7 +527,7 @@ class UpsService
                 'Password' => $this->password,
                 'Username' => $this->userName,
                 'transId' => $this->transactionSrc,
-                'transactionSrc' => 'HERCO',
+                'transactionSrc' => 'HERCO SUITE#100',
             ])->acceptJson()->post($this->create_package_url, $data);
            
             if($response->successful())

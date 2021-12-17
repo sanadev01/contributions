@@ -92,7 +92,7 @@
                         <select name="sender_state" id="sender_state" class="form-control selectpicker" data-live-search="true" required>
                             <option value="" disabled>Select @lang('address.State')</option>
                             @foreach ($states as $state)
-                                <option {{ old('sender_state') == $state->id ? 'selected' : '' }} value="{{ $state->code }}" data-state-code="{{$state->code}}">{{ $state->code }}</option>
+                                <option {{ old('sender_state') == $state->code ? 'selected' : '' }} value="{{ $state->code }}" data-state-code="{{$state->code}}">{{ $state->code }}</option>
                             @endforeach
                         </select>
                         <div id="state_error">

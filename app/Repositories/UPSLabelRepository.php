@@ -67,9 +67,10 @@ class UPSLabelRepository
                 'us_api_response' => json_encode($response->data),
                 'us_api_tracking_code' => $response->data['ShipmentResponse']['ShipmentResults']['ShipmentIdentificationNumber'],
                 'us_api_cost' => $request->total_price,
+                'us_api_service' => $request->service,
             ]);
 
-            $this->chargeAmount($request->total_price, $order);
+            chargeAmount($request->total_price, $order, 'Bought UPS Label For : ');
 
             $this->convertLabelToPDF($order);
 
@@ -204,24 +205,5 @@ class UPSLabelRepository
         $this->total_amount = $ups_rates + $profit;
 
         return true;
-    }
-
-    private function chargeAmount($usps_cost, $order)
-    {
-        $deposit = Deposit::create([
-            'uuid' => PaymentInvoice::generateUUID('DP-'),
-            'amount' => $usps_cost,
-            'user_id' => Auth::id(),
-            'order_id' => $order->id,
-            'balance' => Deposit::getCurrentBalance() - $usps_cost,
-            'is_credit' => false,
-            'description' => 'Bought USPS Label For : '.$order->warehouse_number,
-        ]);
-        
-        if ( $order ){
-            $order->deposits()->sync($deposit->id);
-        }
-
-        return $deposit;
     }
 }
