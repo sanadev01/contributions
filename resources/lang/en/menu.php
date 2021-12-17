@@ -56,7 +56,6 @@ return [
         'Dashboard' => 'Dashboard',
         'Sales Commission' => 'Comission Statement',
         'Sale Commission' => 'Sales Commission',
-
     ],
     'activity' => 'Activity',
     'Print Label' => 'Print Bulk Label',
