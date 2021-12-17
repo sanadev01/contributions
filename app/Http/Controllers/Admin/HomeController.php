@@ -18,16 +18,6 @@ class HomeController extends Controller
      */
     public function __invoke()
     {
-        if ( !Session::has('last_logged_in') ){
-            $user = Auth::user();
-            if ($user->isUser() && $user->status == 'suspended') {
-                Auth::logout();
-
-                session()->flash('alert-danger','Your Account has been suspended Please contact Us / Sua conta foi suspensa Entre em contato conosco');
-                return redirect()->route('login');
-            }
-        }
-
         return view('home');   
     }
 

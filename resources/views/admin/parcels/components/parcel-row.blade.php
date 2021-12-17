@@ -86,14 +86,26 @@
                         </a>
                     @endif
                     @can('update',  $parcel)
+                        @if(Auth::user()->isActive())
                         <a href="{{ route('admin.parcels.edit',$parcel) }}" class="dropdown-item btn" title="@lang('parcel.Edit Parcel')">
                             <i class="feather icon-edit"></i> @lang('parcel.Edit Parcel')
                         </a>
+                        @else
+                        <a  data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" class="dropdown-item btn" title="@lang('parcel.Edit Parcel')">
+                            <i class="feather icon-edit"></i> @lang('parcel.Edit Parcel')
+                        </a>
+                        @endif
                     @endcan
                     @can('duplicatePreAlert',  $parcel)
+                        @if(Auth::user()->isActive())
                         <a href="{{ route('admin.parcel.duplicate',$parcel) }}" class="dropdown-item btn" title="@lang('parcel.Edit Parcel')">
                             <i class="feather icon-edit"></i> @lang('parcel.Duplicate Parcel')
                         </a>
+                        @else
+                        <a data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" class="dropdown-item btn" title="@lang('parcel.Edit Parcel')">
+                            <i class="feather icon-edit"></i> @lang('parcel.Duplicate Parcel')
+                        </a>
+                        @endif
                     @endcan
 
                     @if ( auth()->user()->can('updateConsolidation',$parcel) && $parcel->isConsolidated())
