@@ -54,8 +54,8 @@ return [
     'Affiliate' => [
         'menu' => 'Affiliate',
         'Dashboard' => 'Dashboard',
-        // 'Sales Commission' => 'Comission Statement',
-        'Sales Commission' => 'Sales Commission',
+        'Sales Commission' => 'Comission Statement',
+        'Sale Commission' => 'Sales Commission',
 
     ],
     'activity' => 'Activity',
