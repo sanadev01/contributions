@@ -99,8 +99,4 @@ class UserController extends Controller
         session()->flash('alert-success','User Deleted');
         return back();
     }
-
-    public function blockedUser(){
-        return view('admin.modals.users.suspended');
-    }
 }
