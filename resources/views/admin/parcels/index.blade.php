@@ -11,11 +11,11 @@
                         </h1>
                         <div>
                             @if(Auth::user()->isActive())
-                            <a href="{{ route('admin.consolidation.parcels.index') }}" class="btn btn-lg btn-info"> @lang('consolidation.Create Consolidation') </a>
-                            <a href="{{ route('admin.parcels.create') }}" class="btn btn-lg btn-primary"> @lang('parcel.Create Parcel') </a>
+                              <a href="{{ route('admin.consolidation.parcels.index') }}" class="btn btn-lg btn-info"> @lang('consolidation.Create Consolidation') </a>
+                              <a href="{{ route('admin.parcels.create') }}" class="btn btn-lg btn-primary"> @lang('parcel.Create Parcel') </a>
                             @else
-                            <a  data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}"  class="btn btn-lg btn-info"> @lang('consolidation.Create Consolidation') </a>
-                            <a  data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}"  class="btn btn-lg btn-primary"> @lang('parcel.Create Parcel') </a>
+                              <a  data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}"  class="btn btn-lg btn-info"> @lang('consolidation.Create Consolidation') </a>
+                              <a  data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}"  class="btn btn-lg btn-primary"> @lang('parcel.Create Parcel') </a>
                             @endif
                         </div>
                     </div>
