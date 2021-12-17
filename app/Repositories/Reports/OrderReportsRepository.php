@@ -98,6 +98,10 @@ class OrderReportsRepository
             $startDate = $firatDateOfMonth.' 00:00:00'; 
             $endDate = $lastDateOfMonth.' 23:59:59';
             $query->whereBetween('order_date', [$startDate,$endDate]);
+        }else {
+            $startDate = $request->start_date.' 00:00:00'; 
+            $endDate = $request->end_date.' 23:59:59';
+            $query->whereBetween('order_date', [$startDate,$endDate]);
         }
         
         $query->select(DB::raw('CASE WHEN measurement_unit = "kg/cm" THEN ROUND(weight,2) ELSE ROUND((weight/2.205),2) END as kgweight'));
