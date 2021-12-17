@@ -160,6 +160,9 @@ class RatesCalculator
     public function getProfitSlabValue($profitPackage)
     {
         $weight = ceil(WeightCalculator::kgToGrams($this->weight));
+        if ( $weight<100 ){
+            $weight = 100;
+        }
         $profitSlab = collect($profitPackage->data)->where('max_weight','<=',$weight)->sortByDesc('min_weight')->first();
        
         if ( !$profitSlab ){
