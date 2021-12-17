@@ -52,7 +52,7 @@ class OrderReportsRepository
                 $query->where('order_date','<=', $endDate);
             }
 
-            $query->select(DB::raw('sum(CASE WHEN measurement_unit = "kg/cm" THEN weight ELSE (weight/2.205) END) as weight'));
+            $query->select(DB::raw('sum(CASE WHEN measurement_unit = "kg/cm" THEN ROUND(weight,2) ELSE ROUND((weight/2.205),2) END) as weight'));
 
             $query->where('status','>',Order::STATUS_PAYMENT_PENDING); 
 
@@ -97,7 +97,11 @@ class OrderReportsRepository
             $lastDateOfMonth = \Carbon\Carbon::parse($firatDateOfMonth)->endOfMonth()->toDateString();
             $startDate = $firatDateOfMonth.' 00:00:00'; 
             $endDate = $lastDateOfMonth.' 23:59:59';
-            $query->whereBetween('created_at', [$startDate,$endDate]);
+            $query->whereBetween('order_date', [$startDate,$endDate]);
+        }else {
+            $startDate = $request->start_date.' 00:00:00'; 
+            $endDate = $request->end_date.' 23:59:59';
+            $query->whereBetween('order_date', [$startDate,$endDate]);
         }
         
         $query->select(DB::raw('CASE WHEN measurement_unit = "kg/cm" THEN ROUND(weight,2) ELSE ROUND((weight/2.205),2) END as kgweight'));
@@ -182,10 +186,10 @@ class OrderReportsRepository
     public function getShipmentReportOfUsersByMonth(Request $request)
     {
         $ordersByYear = Order::where('status','>',Order::STATUS_PAYMENT_PENDING)->selectRaw(
-            "count(*) as total, Month(created_at) as month, 
+            "count(*) as total, Month(order_date) as month, 
             sum(gross_total) as spent,
-            sum(CASE WHEN measurement_unit = 'kg/cm' THEN weight ELSE (weight/2.205) END) as weight"
-        )->groupBy('month')->where('created_at', 'like', "$request->year%" )->orderBy('month','asc')->get();
+            sum(CASE WHEN measurement_unit = 'kg/cm' THEN ROUND(weight,2) ELSE ROUND((weight/2.205),2) END) as weight"
+        )->groupBy('month')->where('order_date', 'like', "$request->year%" )->orderBy('month','asc')->get();
         return $ordersByYear;
     }
 }

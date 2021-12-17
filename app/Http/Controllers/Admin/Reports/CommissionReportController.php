@@ -24,7 +24,7 @@ class CommissionReportController extends Controller
 
         if ( $request->dl ==1 ){
             $users = $commissionReportsRepository->getCommissionReportOfUsers($request,false,0,$request->sort_by,$request->sort_order);
-            $shipmentReport = new CommissionReport($users);
+            $shipmentReport = new CommissionReport($users,$request);
             return $shipmentReport->handle();
         }
 
