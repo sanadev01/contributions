@@ -136,9 +136,9 @@
                                 <i class="feather icon-truck"></i>@lang('orders.actions.track-order')
                             </button>
                         @else
-                        <button class="dropdown-item" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" title="@lang('orders.track-order')">
-                            <i class="feather icon-truck"></i>@lang('orders.actions.track-order')
-                        </button>
+                            <button class="dropdown-item" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" title="@lang('orders.track-order')">
+                                <i class="feather icon-truck"></i>@lang('orders.actions.track-order')
+                            </button>
                         @endif
                     @endif
 
