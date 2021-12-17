@@ -68,7 +68,7 @@
                 </button>
                 <div class="dropdown-menu dropdown-menu-right dropright">
 
-                    {{-- @if( $parcel->isShipmentAdded()) --}}
+                    @if( $parcel->isShipmentAdded())
                     @if(Auth::user()->isActive())
                         <a href="{{ route('admin.orders.sender.index',$parcel) }}" class="dropdown-item" title=" @lang('parcel.Create Order')">
                             <i class="feather icon-shopping-cart"></i> @lang('prealerts.actions.place-order')
@@ -78,7 +78,7 @@
                         <i class="feather icon-shopping-cart"></i> @lang('prealerts.actions.place-order')
                     </a>
                     @endif
-                    {{-- @endif --}}
+                    @endif
                     
                     @if ( auth()->user()->can('canPrintConsolidationForm',$parcel) && $parcel->isConsolidated() && !Auth::user()->isActive())
                         <a href="#" class="dropdown-item btn" title="@lang('consolidation.Print Consolidation Request')" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.parcel.consolidation-print',$parcel) }}">
