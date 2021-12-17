@@ -160,7 +160,7 @@
                             <i class="feather icon-copy"></i>@lang('orders.actions.duplicate-order')
                         </a>
                    @endcan
-                    
+                    @if( Auth::user()->isActive())
                     <form action="{{ route('admin.orders.destroy',$order->id) }}" method="post" onsubmit="return confirmDelete()">
                         @csrf
                         @method('DELETE')
@@ -168,6 +168,7 @@
                             <i class="feather icon-trash"></i>@if( $order->user->hasRole('retailer') &&  !$order->isPaid()) @lang('orders.Remove') @else @lang('orders.Delete') @endif  
                         </button>
                     </form>
+                    @endif
                 </div>
             </div>
         </div>

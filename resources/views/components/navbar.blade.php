@@ -12,10 +12,10 @@
         <div class="navbar-container content">
             <div class="navbar-collapse" id="navbar-mobile">
                 @if(!Auth::user()->isActive())
-                <div class="row col-8">
+                <div class="row col-9">
                     <div class="col-12">
                         <div class="alert alert-danger text-center">
-                            <h3 class="text-danger">Account is suspended</h3> 
+                            <h3 class="text-danger">@lang('validation.Message')</h3> 
                         </div>
                     </div>
                 </div>

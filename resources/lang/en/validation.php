@@ -153,5 +153,6 @@ return [
     ],
     'invalid_number' => 'Number should be in :country International Format',
     'invalid_zipcode' => 'Zip code :input is not found for selected state. please check state and zipcode again. :link',
+    'Message' => "please contact the Homedeliverybr customer service for assistance",
 
 ];
