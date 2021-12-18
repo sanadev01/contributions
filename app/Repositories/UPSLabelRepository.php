@@ -177,6 +177,20 @@ class UPSLabelRepository
         {
             $this->addProfit($order->user, $response->data['RateResponse']['RatedShipment']['TotalCharges']['MonetaryValue']);
 
+            if($request->pickup == "true")
+            {
+                $response = UPSFacade::getPickupRates($request);
+                if($response->success == true)
+                {
+                    $this->addPickupRate($response->data);
+                    
+                }else {
+                    return (Array)[
+                        'success' => false,
+                        'message' => 'server error, could not get rates',
+                    ];
+                }
+            }
             return (Array)[
                 'success' => true,
                 'total_amount' => round($this->total_amount, 2),
@@ -204,6 +218,12 @@ class UPSLabelRepository
 
         $this->total_amount = $ups_rates + $profit;
 
+        return true;
+    }
+
+    private function addPickupRate($pickup_rates)
+    {
+        $this->total_amount = $this->total_amount + $pickup_rates['PickupRateResponse']['RateResult']['GrandTotalOfAllCharge'];
         return true;
     }
 }

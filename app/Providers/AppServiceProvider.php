@@ -69,6 +69,7 @@ class AppServiceProvider extends ServiceProvider
             $delete_package_url = '';
             $create_manifest_url = '';
             $rating_package_url = 'https://onlinetools.ups.com/ship/v1/rating/Rate';
+            $pickup_rating_url = 'https://onlinetools.ups.com/ship/1707/pickups/rating';
             $transactionSrc = 'HERCO';
             $userName = 'hffinc1';           
             $password = 'Hdbrasilc4!';
@@ -83,7 +84,7 @@ class AppServiceProvider extends ServiceProvider
             // $email = config('usps.email');           
             // $password = config('usps.password');
 
-            return new UpsService($create_package_url, $delete_package_url, $create_manifest_url, $rating_package_url, $transactionSrc, $userName, $password, $shipperNumber, $AccessLicenseNumber);
+            return new UpsService($create_package_url, $delete_package_url, $create_manifest_url, $rating_package_url, $pickup_rating_url, $transactionSrc, $userName, $password, $shipperNumber, $AccessLicenseNumber);
         });
 
         $this->app->singleton('CorreiosBrazilTracking_service', function() {

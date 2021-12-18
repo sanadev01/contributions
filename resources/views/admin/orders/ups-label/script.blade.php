@@ -1,4 +1,12 @@
 <script>
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0');
+    var yyyy = today.getFullYear();
+
+    today = yyyy + '-' + mm + '-' + dd;
+    $('#pickup_date').attr('min',today);
+
     let total_price = $('#total_price').val();
     if(total_price > 0)
     {
@@ -19,6 +27,17 @@
     $('#sender_address').on('change', function() {
         resetErrorMessages();
         window.validate_us_address();
+    });
+
+    $('#pickup_type').change(function() {
+        if(this.checked) {
+            enablePickupForm();
+
+        }else{
+
+            disablePickupForm();
+        }
+        
     });
 
     $('#usps_shipping_service').on('change',function(){
@@ -137,6 +156,7 @@
     }
 
     function getUpsRates(){
+        let pickup = $('input[type=checkbox]').prop('checked');
         let first_name = $('#first_name').val();
         let state = $('#sender_state option:selected').attr('data-state-code');
         let address = $('#sender_address').val();
@@ -144,12 +164,38 @@
         let zipcode = $('#sender_zipcode').val();
         const service = $('#ups_shipping_service option:selected').attr('data-service-code');
         var order_id = $('#order_id').val();
+        let pickup_date = $('#pickup_date').val();
+        let earliest_pickup_time = $('#earliest_pickup_time').val();
+        let latest_pickup_time = $('#latest_pickup_time').val();
+        let pickup_location = $('#pickup_location').val();
         
+
+        if(pickup == true)
+        {
+            if (pickup_date == '' || pickup_date == undefined) {
+                $('#pickup_date_response').empty().append("<p style='color: red;'>select pickup date</p>");
+                return false;
+            }
+            if (earliest_pickup_time == '' || earliest_pickup_time == undefined) {
+                $('#earliest_pickup_response').empty().append("<p style='color: red;'>select earliest pickup time</p>");
+                return false;
+            }
+            if (latest_pickup_time == '' || latest_pickup_time == undefined) {
+                $('#latest_pickup_response').empty().append("<p style='color: red;'>select latest pickup time</p>");
+                return false;
+            }
+            if (pickup_location == '' || pickup_location == undefined) {
+                $('#pickup_location_response').empty().append("<p style='color: red;'>Enter preferred pickup location</p>");
+                return false;
+            }
+            
+        }
+
         if (service == undefined) {
             $('#calculated_rates').empty().append("<p style='color: red;'>Please select UPS shipping service</p>");
             return false;
         }
-
+        
         $('#loading').fadeIn();
         $.get('{{ route("api.ups_sender_rates") }}',{
                 first_name: first_name,
@@ -160,6 +206,11 @@
                 service: service,
                 order_id: order_id,
                 buy_usps_label: true,
+                pickup: pickup,
+                pickup_date: pickup_date,
+                earliest_pickup_time: earliest_pickup_time,
+                latest_pickup_time: latest_pickup_time,
+                pickup_location: pickup_location
 
             }).then(function(response){
                 if(response.success == true){
@@ -180,6 +231,42 @@
         $('#state_error').empty();
         $('#address_error').empty();
         $('#city_error').empty();
+    }
+
+    function enablePickupForm() {
+        $('#pickup_form').removeClass('d-none');
+        $('#pickup_form').addClass('d-block');
+
+        $('#pickup_date').prop('required', true);
+        $('#pickup_date').prop('disabled', false);
+
+        $('#earliest_pickup_time').prop('required', true);
+        $('#earliest_pickup_time').prop('disabled', false);
+
+        $('#latest_pickup_time').prop('required', true);
+        $('#latest_pickup_time').prop('disabled', false);
+
+        $('#pickup_location').prop('required', true);
+        $('#pickup_location').prop('disabled', false);
+    }
+
+    function disablePickupForm() {
+        $('#pickup_form').addClass('d-none');
+        $('#pickup_form').removeClass('d-block');
+
+        $('#pickup_date').prop('required', false);
+        $('#pickup_date').prop('disabled', true);
+
+        $('#earliest_pickup_time').prop('required', false);
+        $('#earliest_pickup_time').prop('disabled', true);
+
+        $('#latest_pickup_time').prop('required', false);
+        $('#latest_pickup_time').prop('disabled', true);
+
+        $('#pickup_location').prop('required', false);
+        $('#pickup_location').prop('disabled', true);
+
+        $('#pickup_date, #earliest_pickup_time, #latest_pickup_time, #pickup_location').val('');
     }
 
 </script>
