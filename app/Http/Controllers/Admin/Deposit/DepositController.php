@@ -45,7 +45,6 @@ class DepositController extends Controller
         $request->validate([
             'amount' => 'required|numeric',
         ]);
-        // dd($request->all());
         if(Auth::user()->isAdmin()){
             
             if($request->adminpay){
