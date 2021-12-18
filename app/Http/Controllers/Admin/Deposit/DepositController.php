@@ -48,12 +48,21 @@ class DepositController extends Controller
         if(Auth::user()->isAdmin()){
             
             if($request->adminpay){
+                $user = Deposit::query()->where('user_id',$request->user_id)->latest('id')->first();
+                // dd($user);
                 $request->validate([
                     'user_id'     => 'required',
                     'description' => 'required',
+                    'is_credit'=>'required',
                     'amount'      => 'required',
-                    'balance_action'=>'required'
+
                 ]);
+                if($request->amount < $user->balance && $request->is_credit=="false"){
+                    $request->validate([
+                    'amount'      => 'integer|min:'.$user->balance,
+                    ]);
+                }
+                // dd($request->amount < $user->balance && $request->is_credit=="false");
                 $depositRepository->adminAdd($request);
                 session()->flash('alert-success', __('orders.payment.alert-success'));
                 return redirect()->route('admin.deposit.index');

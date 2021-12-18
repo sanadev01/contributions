@@ -69,12 +69,12 @@
                                         </div>
                                         <div class="col-md-2 balanceuser"  @admin @if(old('adminpay') == 0) style="display: none" @endif  @endadmin>
                                             <label>Select Operation</label>
-                                            <select name="balance_action" required class="form-control">
+                                            <select name="is_credit" required class="form-control">
                                                 <option value="">Select Option</option>
-                                                <option value="credit">Credit Balance</option>
-                                                <option value="debit">Debit Balance</option>
+                                                <option value="true">Credit Balance</option>
+                                                <option value="false">Debit Balance</option>
                                             </select>
-                                            @error('balance_action')
+                                            @error('is_credit')
                                                 <div class="text-danger">
                                                     {{ $message }}
                                                 </div>
