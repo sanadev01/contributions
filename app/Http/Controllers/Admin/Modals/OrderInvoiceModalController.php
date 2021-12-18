@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin\Modals;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use Illuminate\Http\Request;
-
+use Auth;
 class OrderInvoiceModalController extends Controller
 {
     public function __invoke(Order $order)
@@ -16,7 +16,9 @@ class OrderInvoiceModalController extends Controller
         {
            $services = $this->calculateInsurance($order);
         }
-
+        if(!Auth::user()->isActive()){
+            return redirect()->route('admin.modals.user.suspended');
+        }
         return view('admin.modals.orders.invoice',compact('order', 'services'));
     }
 

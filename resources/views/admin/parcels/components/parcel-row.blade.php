@@ -69,15 +69,9 @@
                 <div class="dropdown-menu dropdown-menu-right dropright">
 
                     @if( $parcel->isShipmentAdded())
-                        @if(Auth::user()->isActive())
-                            <a href="{{ route('admin.orders.sender.index',$parcel) }}" class="dropdown-item" title=" @lang('parcel.Create Order')">
-                                <i class="feather icon-shopping-cart"></i> @lang('prealerts.actions.place-order')
-                            </a>
-                        @else
-                            <a  data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" class="dropdown-item" title=" @lang('parcel.Create Order')">
-                                <i class="feather icon-shopping-cart"></i> @lang('prealerts.actions.place-order')
-                            </a>
-                        @endif
+                        <a @if(Auth::user()->isActive()) href="{{ route('admin.orders.sender.index',$parcel) }}" @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" @endif class="dropdown-item" title=" @lang('parcel.Create Order')">
+                            <i class="feather icon-shopping-cart"></i> @lang('prealerts.actions.place-order')
+                        </a>
                     @endif
                     
                     @if ( auth()->user()->can('canPrintConsolidationForm',$parcel) && $parcel->isConsolidated() && !Auth::user()->isActive())
@@ -86,28 +80,15 @@
                         </a>
                     @endif
                     @can('update',  $parcel)
-                        @if(Auth::user()->isActive())
-                            <a href="{{ route('admin.parcels.edit',$parcel) }}" class="dropdown-item btn" title="@lang('parcel.Edit Parcel')">
-                                <i class="feather icon-edit"></i> @lang('parcel.Edit Parcel')
-                            </a>
-                        @else
-                            <a  data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" class="dropdown-item btn" title="@lang('parcel.Edit Parcel')">
-                                <i class="feather icon-edit"></i> @lang('parcel.Edit Parcel')
-                            </a>
-                        @endif
+                        <a @if(Auth::user()->isActive()) href="{{ route('admin.parcels.edit',$parcel) }}" @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" @endif class="dropdown-item btn" title="@lang('parcel.Edit Parcel')">
+                            <i class="feather icon-edit"></i> @lang('parcel.Edit Parcel')
+                        </a>
                     @endcan
                     @can('duplicatePreAlert',  $parcel)
-                        @if(Auth::user()->isActive())
-                            <a href="{{ route('admin.parcel.duplicate',$parcel) }}" class="dropdown-item btn" title="@lang('parcel.Edit Parcel')">
-                                <i class="feather icon-edit"></i> @lang('parcel.Duplicate Parcel')
-                            </a>
-                        @else
-                            <a data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" class="dropdown-item btn" title="@lang('parcel.Edit Parcel')">
-                                <i class="feather icon-edit"></i> @lang('parcel.Duplicate Parcel')
-                            </a>
-                        @endif
+                        <a  @if(Auth::user()->isActive()) href="{{ route('admin.parcel.duplicate',$parcel) }}"  @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" @endif class="dropdown-item btn" title="@lang('parcel.Edit Parcel')">
+                            <i class="feather icon-edit"></i> @lang('parcel.Duplicate Parcel')
+                        </a>
                     @endcan
-
                     @if ( auth()->user()->can('updateConsolidation',$parcel) && $parcel->isConsolidated())
                         <a href="{{ route('admin.consolidation.parcels.edit',$parcel) }}" class="dropdown-item btn" title="@lang('consolidation.Edit Consolidation')">
                             <i class="feather icon-edit"></i> @lang('consolidation.Edit Consolidation')

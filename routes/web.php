@@ -175,7 +175,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         Route::get('language/{locale}', LanguageController::class)->name('locale.change');
 
         Route::namespace('Modals')->prefix('modals')->as('modals.')->group(function(){
-            Route::get('user/blocked',\UserSuspendController::class)->name('user.suspended');
+            Route::get('user/suspended',\UserSuspendController::class)->name('user.suspended');
             Route::get('parcel/{parcel}/shipment-info', \ShipmentModalController::class)->name('parcel.shipment-info');
             Route::get('parcel/{parcel}/consolidation-print', \ConsolidationPrintController::class)->name('parcel.consolidation-print');
             Route::get('order/{order}/invoice', \OrderInvoiceModalController::class)->name('order.invoice');
