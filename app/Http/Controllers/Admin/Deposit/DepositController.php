@@ -45,7 +45,7 @@ class DepositController extends Controller
         $request->validate([
             'amount' => 'required|numeric',
         ]);
-
+        // dd($request->all());
         if(Auth::user()->isAdmin()){
             
             if($request->adminpay){
@@ -53,6 +53,7 @@ class DepositController extends Controller
                     'user_id'     => 'required',
                     'description' => 'required',
                     'amount'      => 'required',
+                    'balance_action'=>'required'
                 ]);
                 $depositRepository->adminAdd($request);
                 session()->flash('alert-success', __('orders.payment.alert-success'));

@@ -67,8 +67,21 @@
                                                 </div>
                                             @enderror
                                         </div>
-                                    @endadmin
-                                    <div class="col-md-4">
+                                        <div class="col-md-2 balanceuser"  @admin @if(old('adminpay') == 0) style="display: none" @endif  @endadmin>
+                                            <label>Select Operation</label>
+                                            <select name="balance_action" required class="form-control">
+                                                <option value="">Select Option</option>
+                                                <option value="credit">Credit Balance</option>
+                                                <option value="debit">Debit Balance</option>
+                                            </select>
+                                            @error('balance_action')
+                                                <div class="text-danger">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
+                                        @endadmin
+                                    <div class="col-md-2">
                                         <label>Amount</label>
                                         <input type="number" min="0" class="form-control" required name="amount" placeholder="Enter Amount to Deposit">
                                         @error('amount')
