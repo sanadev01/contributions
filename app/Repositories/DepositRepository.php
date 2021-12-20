@@ -291,7 +291,7 @@ class DepositRepository
         }else{
             $balance = $lastTransaction->balance;
         }
-
+        dd($request->all());
         // if( $request->is_credit == "false" && $lastTransaction->balance < (int)$request->amount ){
         //      return  $this->error='Account Balance Is Lower than '.$request->amount.'';
         //     // dd('Account Balance is insufficent');

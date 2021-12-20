@@ -49,20 +49,20 @@ class DepositController extends Controller
             
             if($request->adminpay){
                 $user = Deposit::query()->where('user_id',$request->user_id)->latest('id')->first();
-                // dd($user);
                 $request->validate([
                     'user_id'     => 'required',
                     'description' => 'required',
                     'is_credit'=>'required',
-                    'amount'      => 'required',
+                    'amount'      => 'required|integer',
 
                 ]);
-                if($request->amount < $user->balance && $request->is_credit=="false"){
+                if((float)($request->amount) > $user->balance && $request->is_credit=="false"){
                     $request->validate([
-                    'amount'      => 'integer|min:'.$user->balance,
+                    'amount'      => 'integer|max:'.$user->balance,
+                    ], [
+                        'amount.max' => 'Your Current Account Balance is '.$user->balance.' and debit amount should be less than '.$user->balance.'.!',
                     ]);
                 }
-                // dd($request->amount < $user->balance && $request->is_credit=="false");
                 $depositRepository->adminAdd($request);
                 session()->flash('alert-success', __('orders.payment.alert-success'));
                 return redirect()->route('admin.deposit.index');
