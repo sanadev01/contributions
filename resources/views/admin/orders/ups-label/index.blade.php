@@ -123,6 +123,47 @@
                         </div>
                     </div>
                 </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <div class="input-group">
+                            <div class="vs-checkbox-con vs-checkbox-primary" title="pickup">
+                                <input type="checkbox" name="pickup" id="pickup_type">
+                                <span class="vs-checkbox vs-checkbox-lg">
+                                    <span class="vs-checkbox--check">
+                                        <i class="vs-icon feather icon-check"></i>
+                                    </span>
+                                </span>
+                            </div>
+                            <label class="mt-2 h4 text-danger">Pick Up</label>
+                        </div>  
+                    </div>
+                </div>
+                <div class="d-none" id="pickup_form">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="pickup_date">Pickup Date<span class="text-danger">*</span></label>
+                            <input type="date" name="pickup_date" id="pickup_date" class="form-control" />
+                            <div id="pickup_date_response"></div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="earliest_pickup_time">Earliest Pickup Time<span class="text-danger">*</span></label>
+                            <input type="time" name="earliest_pickup_time" id="earliest_pickup_time" class="form-control" />
+                            <div id="earliest_pickup_response"></div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="latest_pickup_time">Latest Pickup Time<span class="text-danger">*</span></label>
+                            <input type="time" name="latest_pickup_time" id="latest_pickup_time" class="form-control" />
+                            <div id="latest_pickup_response"></div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="pickup_location">Preferred Pickup Location <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="pickup_location" value="{{ old('pickup_location') }}" id="pickup_location" placeholder="Enter your preferred prickup point e.g Front Door">
+                            <div id="pickup_location_response"></div>
+                        </div>
+                    </div>
+                </div>    
                 <input type="hidden" name="total_price" value="{{ old('total_price') }}" id="total_price">
             </div>
         </div>

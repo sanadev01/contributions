@@ -518,4 +518,9 @@ class Order extends Model implements Package
     {
         return json_decode($this->us_api_response);
     }
+
+    public function apiPickupResponse()
+    {
+        return $this->api_pickup_response ? json_decode($this->api_pickup_response) : null;
+    }
 }

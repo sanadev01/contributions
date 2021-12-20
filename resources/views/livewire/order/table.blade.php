@@ -13,6 +13,9 @@
                         <li class="nav-item ">
                             <a class="nav-link border @if($userType == 'domestic') btn btn-primary text-white @endif" href="{{ route('admin.orders.show','domestic') }}"><span style="font-size: 22px;">Domestic</span></a>
                         </li>
+                        <li class="nav-item ">
+                            <a class="nav-link border @if($userType == 'pickups') btn btn-primary text-white @endif" href="{{ route('admin.orders.show','pickups') }}"><span style="font-size: 22px;">Pickups</span></a>
+                        </li>
                     </ul>
                 </div>        
             </div> 

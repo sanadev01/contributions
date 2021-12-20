@@ -23,6 +23,8 @@ class UPSLabelRepository
 {
     protected $shipping_service_code;
     public $ups_errors;
+    protected $user_api_profit;
+    protected $total_amount;
 
     public function handle($order)
     {
@@ -57,6 +59,20 @@ class UPSLabelRepository
 
         if($response->success == true)
         {
+            $this->addProfit($order->user, $response->data['ShipmentResponse']['ShipmentResults']['ShipmentCharges']['TotalCharges']['MonetaryValue']);
+
+            if($request->has('pickup'))
+            {
+                $pickupShipmentresponse = UPSFacade::createPickupShipment($order, $request);
+                
+                if ($pickupShipmentresponse->success == true) {
+                    $this->addPickupRate($pickupShipmentresponse->data['PickupCreationResponse']['RateResult']['GrandTotalOfAllCharge']);
+
+                    $order->update([
+                        'api_pickup_response' => $pickupShipmentresponse->data,
+                    ]);
+                }
+            }
             /**
                 * Note...
                 * us_api_tracking_code and us_api_response are the columns for 
@@ -66,11 +82,12 @@ class UPSLabelRepository
             $order->update([
                 'us_api_response' => json_encode($response->data),
                 'us_api_tracking_code' => $response->data['ShipmentResponse']['ShipmentResults']['ShipmentIdentificationNumber'],
-                'us_api_cost' => $request->total_price,
+                'us_api_cost' => $this->total_amount,
                 'us_api_service' => $request->service,
+                'api_pickup_response' => ($request->has('pickup')) ? $pickupShipmentresponse->data : null,
             ]);
 
-            chargeAmount($request->total_price, $order, 'Bought UPS Label For : ');
+            chargeAmount(round($this->total_amount, 2), $order, 'Bought UPS Label For : ');
 
             $this->convertLabelToPDF($order);
 
@@ -85,6 +102,23 @@ class UPSLabelRepository
     public function update($order)
     {
         $this->generatUPSLabel($order);
+    }
+
+    public function cancelUPSPickup($order)
+    {
+        $response = UPSFacade::cancelPickup($order->apiPickupResponse()->PickupCreationResponse->PRN);
+        
+        if($response->success == true)
+        {
+            $order->update([
+                'api_pickup_response' => null,
+            ]);
+
+            return true;
+        }
+
+        $this->ups_errors = $response->error['response']['errors'][0]['message'];
+        return false;
     }
 
     private function generatUPSLabel($order)
@@ -177,6 +211,21 @@ class UPSLabelRepository
         {
             $this->addProfit($order->user, $response->data['RateResponse']['RatedShipment']['TotalCharges']['MonetaryValue']);
 
+            if($request->pickup == "true")
+            {
+                $response = UPSFacade::getPickupRates($request);
+                if($response->success == true)
+                {
+                    
+                    $this->addPickupRate($response->data['PickupRateResponse']['RateResult']['GrandTotalOfAllCharge']);
+                    
+                }else {
+                    return (Array)[
+                        'success' => false,
+                        'message' => 'server error, could not get rates',
+                    ];
+                }
+            }
             return (Array)[
                 'success' => true,
                 'total_amount' => round($this->total_amount, 2),
@@ -204,6 +253,12 @@ class UPSLabelRepository
 
         $this->total_amount = $ups_rates + $profit;
 
+        return true;
+    }
+
+    private function addPickupRate($pickup_charges)
+    {
+        $this->total_amount = $this->total_amount + $pickup_charges;
         return true;
     }
 }

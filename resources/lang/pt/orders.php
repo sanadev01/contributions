@@ -172,6 +172,7 @@ return [
         'print-usps-label' => 'Imprimir Etiqueta USPS',
         'buy-ups-label' => 'Comprar Etiqueta UPS',
         'print-ups-label' => 'Imprimir Etiqueta UPS',
+        'cancel-ups-pickup' => 'Cancelar Pickup',
     ],
     'create' => [
         'shipment-and-destination' => 'Criação do envio',
