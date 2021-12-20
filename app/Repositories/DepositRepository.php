@@ -291,12 +291,6 @@ class DepositRepository
         }else{
             $balance = $lastTransaction->balance;
         }
-        dd($request->all());
-        // if( $request->is_credit == "false" && $lastTransaction->balance < (int)$request->amount ){
-        //      return  $this->error='Account Balance Is Lower than '.$request->amount.'';
-        //     // dd('Account Balance is insufficent');
-        // }
-        // dd('transaction balance',$lastTransaction->balance,'amount',(int)($request->amount),'operation',$request->is_credit);
         // if ($request->has('attachment')) {
             
         //     $this->fileName = time().'.'.$request->attachment->extension();
@@ -308,7 +302,7 @@ class DepositRepository
             'amount' => $request->amount,
             'user_id' => $request->user_id,
             'balance' => ($request->is_credit == "true") ? $balance + $request->amount : $balance - $request->amount,
-            'is_credit' => $request->is_credit,
+            'is_credit' =>  ($request->is_credit == "true") ? true : 0,
             'last_four_digits' => Auth::user()->name,
             'attachment' => $this->fileName,
             'description' => $request->description,

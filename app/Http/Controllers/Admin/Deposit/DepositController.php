@@ -53,12 +53,12 @@ class DepositController extends Controller
                     'user_id'     => 'required',
                     'description' => 'required',
                     'is_credit'=>'required',
-                    'amount'      => 'required|integer',
+                    'amount'      => 'required|numeric',
 
                 ]);
                 if((float)($request->amount) > $user->balance && $request->is_credit=="false"){
                     $request->validate([
-                    'amount'      => 'integer|max:'.$user->balance,
+                    'amount'      => 'numeric|max:'.$user->balance,
                     ], [
                         'amount.max' => 'Your Current Account Balance is '.$user->balance.' and debit amount should be less than '.$user->balance.'.!',
                     ]);

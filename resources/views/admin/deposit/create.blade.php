@@ -60,19 +60,19 @@
                                         </div>
                                         <div class="col-md-4 balanceuser" @admin @if(old('adminpay') == 0) style="display: none" @endif  @endadmin>
                                             <label>Description</label>
-                                            <textarea class="form-control" required name="description" placeholder="Enter Description"  rows="7"></textarea>
+                                            <textarea class="form-control"  required name="description" placeholder="Enter Description"  rows="7">{{ old('description') }}</textarea>
                                             @error('description')
                                                 <div class="text-danger">
                                                     {{ $message }}
                                                 </div>
                                             @enderror
                                         </div>
-                                        <div class="col-md-2 balanceuser"  @admin @if(old('adminpay') == 0) style="display: none" @endif  @endadmin>
+                                        <div class="col-md-2 balanceuser" @admin @if(old('adminpay') == 0) style="display: none" @endif  @endadmin>
                                             <label>Select Operation</label>
-                                            <select name="is_credit" required class="form-control">
+                                            <select name="is_credit" required   class="form-control">
                                                 <option value="">Select Option</option>
-                                                <option value="true">Credit Balance</option>
-                                                <option value="false">Debit Balance</option>
+                                                <option value="true" @if (old('is_credit') == "true") {{ 'selected' }} @endif>Credit Balance</option>
+                                                <option value="false" @if (old('is_credit') == "false") {{ 'selected' }} @endif>Debit Balance</option>
                                             </select>
                                             @error('is_credit')
                                                 <div class="text-danger">
@@ -80,12 +80,12 @@
                                                 </div>
                                             @enderror
                                         </div>
-                                        @endadmin
-                                    <div class="col-md-2">
+                                    @endadmin
+                                    <div class="col-md-4" id="amount_div">
                                         <label>Amount</label>
-                                        <input type="number" min="0" class="form-control" required name="amount" placeholder="Enter Amount to Deposit">
+                                        <input type="number" min="0" class="form-control" value="{{ old('amount') }}" required name="amount" placeholder="Enter Amount to Deposit">
                                         @error('amount')
-                                            <div class="text-danger">
+                                            <div class="text-danger error_amount">
                                                 {{ $message }}
                                             </div>
                                         @enderror
@@ -204,15 +204,21 @@
     </script>
 
     <script>
+            if ($(".error_amount")[0]){
+            $("#amount_div").removeAttr("Class");
+            $("#amount_div").addClass("col-md-2");
+            }
         function paybyadmin() {
-            
+            $("#amount_div").removeAttr("Class");
             if(document.getElementById('balance').checked){
+                $("#amount_div").addClass("col-md-2");
                 $('.balanceuser').fadeIn();
                 $('.billingInfo-div').fadeOut();
                 $('form').attr('novalidate','novalidate');
             }
 
             if (document.getElementById('card').checked) {
+                $("#amount_div").addClass("col-md-4");
                 $('.balanceuser').fadeOut();
                 $('.billingInfo-div').fadeIn();
                 $('form').removeAttr('novalidate');
