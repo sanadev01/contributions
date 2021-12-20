@@ -81,6 +81,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::get('bulk-action', BulkActionController::class)->name('order.bulk-action');
             Route::resource('orders.usps-label', OrderUSPSLabelController::class)->only('index','store');
             Route::resource('orders.ups-label', OrderUPSLabelController::class)->only('index','store');
+            Route::get('order-ups-label-cancel-pickup/{id?}', [\App\Http\Controllers\Admin\Order\OrderUPSLabelController::class, 'cancelUPSPickup'])->name('order.ups-label.cancel.pickup');
         });
 
         Route::namespace('Consolidation')->prefix('consolidation')->as('consolidation.')->group(function(){

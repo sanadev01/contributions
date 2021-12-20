@@ -178,6 +178,7 @@ return [
         'print-usps-label' => 'Print USPS Label',
         'buy-ups-label' => 'Buy UPS Label',
         'print-ups-label' => 'Print UPS Label',
+        'cancel-ups-pickup' => 'Cancel Pickup',
     ],
     'create' => [
         'shipment-and-destination' => 'Shipment & Destination',

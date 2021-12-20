@@ -74,4 +74,25 @@ class OrderUPSLabelController extends Controller
         return redirect()->route('admin.orders.ups-label.index', $order->id);
         
     }
+
+    public function cancelUPSPickup($id)
+    {
+        $order = Order::findorfail($id);
+        $this->authorize('canPrintLable',$order);
+
+        $ups_labelRepository = new UPSLabelRepository();
+
+        $ups_labelRepository->cancelUPSPickup($order);
+
+        $error = $ups_labelRepository->getUPSErrors();
+
+        if($error != null)
+        {
+            session()->flash('alert-danger', $error);
+            return \back()->withInput();
+        }
+
+        session()->flash('alert-success', 'Pickup Cancelled Successfully');
+        return \back();
+    }
 }

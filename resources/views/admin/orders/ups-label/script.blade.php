@@ -32,96 +32,36 @@
     $('#pickup_type').change(function() {
         if(this.checked) {
             enablePickupForm();
+            if (validatePickupInputs() == true) {
+                getUpsRates();
+            }
 
         }else{
-
             disablePickupForm();
+            if (validateInputs() == true) {
+                getUpsRates();
+            }
         }
         
     });
 
-    $('#usps_shipping_service').on('change',function(){
+    $('#ups_shipping_service').ready(function() {
 
         resetErrorMessages();
 
-        if($('#first_name').val() == '' || $('#first_name').val() == undefined)
-        {
-            $('#first_name_error').empty().append("<p style='color: red;'>first name is required</p>");
-
-            return false;
+        if (validateInputs() == true) {
+            getUpsRates();
         }
-
-        if($('#last_name').val() == '' || $('#last_name').val() == undefined)
-        {
-            $('#last_name_error').empty().append("<p style='color: red;'>last name is required</p>");
-
-            return false;
-        }
-
-        if($('#sender_state').val() == '' || $('#sender_state').val() == undefined)
-        {
-            $('#state_error').empty().append("<p style='color: red;'>state must be selected</p>");
-
-            return false;
-        }
-
-        if($('#sender_address').val() == '' || $('#sender_address').val() == undefined)
-        {
-            $('#address_error').empty().append("<p style='color: red;'>complete street address must be mention</p>");
-
-            return false;
-        }
-
-        if($('#sender_city').val() == '' || $('#sender_city').val() == undefined)
-        {
-            $('#city_error').empty().append("<p style='color: red;'>city is required</p>");
-
-            return false;
-        }
-
-        getUspsRates();
     })
 
     $('#ups_shipping_service').on('change',function(){
 
         resetErrorMessages();
 
-        if($('#first_name').val() == '' || $('#first_name').val() == undefined)
-        {
-            $('#first_name_error').empty().append("<p style='color: red;'>first name is required</p>");
-
-            return false;
+        if (validateInputs() == true) {
+            getUpsRates();
         }
-
-        if($('#last_name').val() == '' || $('#last_name').val() == undefined)
-        {
-            $('#last_name_error').empty().append("<p style='color: red;'>last name is required</p>");
-
-            return false;
-        }
-
-        if($('#sender_state').val() == '' || $('#sender_state').val() == undefined)
-        {
-            $('#state_error').empty().append("<p style='color: red;'>state must be selected</p>");
-
-            return false;
-        }
-
-        if($('#sender_address').val() == '' || $('#sender_address').val() == undefined)
-        {
-            $('#address_error').empty().append("<p style='color: red;'>complete street address must be mention</p>");
-
-            return false;
-        }
-
-        if($('#sender_city').val() == '' || $('#sender_city').val() == undefined)
-        {
-            $('#city_error').empty().append("<p style='color: red;'>city is required</p>");
-
-            return false;
-        }
-
-        getUpsRates();
+        
     })
 
     validate_us_address = function()
@@ -266,7 +206,63 @@
         $('#pickup_location').prop('required', false);
         $('#pickup_location').prop('disabled', true);
 
-        $('#pickup_date, #earliest_pickup_time, #latest_pickup_time, #pickup_location').val('');
+        // $('#pickup_date, #earliest_pickup_time, #latest_pickup_time, #pickup_location').val('');
+    }
+
+    function validateInputs() {
+        if($('#first_name').val() == '' || $('#first_name').val() == undefined)
+        {
+            $('#first_name_error').empty().append("<p style='color: red;'>first name is required</p>");
+
+            return false;
+        }
+
+        if($('#last_name').val() == '' || $('#last_name').val() == undefined)
+        {
+            $('#last_name_error').empty().append("<p style='color: red;'>last name is required</p>");
+
+            return false;
+        }
+
+        if($('#sender_state').val() == '' || $('#sender_state').val() == undefined)
+        {
+            $('#state_error').empty().append("<p style='color: red;'>state must be selected</p>");
+
+            return false;
+        }
+
+        if($('#sender_address').val() == '' || $('#sender_address').val() == undefined)
+        {
+            $('#address_error').empty().append("<p style='color: red;'>complete street address must be mention</p>");
+
+            return false;
+        }
+
+        if($('#sender_city').val() == '' || $('#sender_city').val() == undefined)
+        {
+            $('#city_error').empty().append("<p style='color: red;'>city is required</p>");
+
+            return false;
+        }
+
+        return true;
+    }
+
+    function validatePickupInputs() {
+        if (pickup_date == '' || pickup_date == undefined) {
+            return false;
+        }
+        if (earliest_pickup_time == '' || earliest_pickup_time == undefined) {
+            return false;
+        }
+        if (latest_pickup_time == '' || latest_pickup_time == undefined) {
+            return false;
+        }
+        if (pickup_location == '' || pickup_location == undefined) {
+            return false;
+        }
+
+        return true;
     }
 
 </script>

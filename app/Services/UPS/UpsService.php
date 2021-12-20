@@ -16,6 +16,8 @@ class UpsService
     protected $create_manifest_url;
     protected $rating_package_url;
     protected $pickup_rating_url;
+    protected $pickup_shipment_url;
+    protected $pickup_cancel_url;
     protected $userName;
     protected $password;
     protected $transactionSrc;
@@ -29,13 +31,15 @@ class UpsService
     protected $length;
     protected $weight;
 
-    public function __construct($create_package_url, $delete_package_url, $create_manifest_url, $rating_package_url, $pickup_rating_url, $transactionSrc, $userName, $password, $shipperNumber, $AccessLicenseNumber)
+    public function __construct($create_package_url, $delete_package_url, $create_manifest_url, $rating_package_url, $pickup_rating_url, $pickup_shipment_url, $pickup_cancel_url, $transactionSrc, $userName, $password, $shipperNumber, $AccessLicenseNumber)
     {
         $this->create_package_url = $create_package_url;
         $this->delete_usps_label_url = $delete_package_url;
         $this->create_manifest_url = $create_manifest_url;
         $this->rating_package_url = $rating_package_url;
         $this->pickup_rating_url = $pickup_rating_url;
+        $this->pickup_shipment_url = $pickup_shipment_url;
+        $this->pickup_cancel_url = $pickup_cancel_url;
         $this->userName = $userName;
         $this->password = $password;
         $this->transactionSrc = $transactionSrc;
@@ -46,37 +50,45 @@ class UpsService
     public function generateLabel($order)
     {
         $data = $this->make_package_request_for_recipient($order);
-        $ups_response = $this->ups_ApiCall($data);
-
-        return $ups_response;
+        return $this->ups_ApiCall($this->create_package_url, $data);
     }
 
     public function getSenderPrice($order, $request_data)
     {   
        $data = $this->make_rates_request_for_sender($order, $request_data);
         
-       return $this->upsApiCallForRates($data);
+       return $this->ups_ApiCall($this->rating_package_url, $data);
     }
 
     public function buyLabel($order, $request_sender_data)
     {
         $data = $this->make_package_request_for_sender($order, $request_sender_data);
         
-        $ups_response = $this->ups_ApiCall($data);
-        return $ups_response;
+        return $this->ups_ApiCall($this->create_package_url, $data);
     }
 
     public function getRecipientRates($order, $service)
     {
         $data = $this->make_rates_request_for_recipient($order, $service);
 
-        return $this->upsApiCallForRates($data);
+        return $this->ups_ApiCall($this->rating_package_url, $data);
     }
 
     public function getPickupRates($request)
     {
         $data = $this->make_request_for_pickup_rates($request);
-        return $this->upsApiCallForPickupRates($data);
+        return $this->upsApiCallForPickup($this->pickup_rating_url, $data);
+    }
+
+    public function createPickupShipment($order, $request)
+    {
+       $data = $this->make_request_for_pickup_shipment($order, $request);
+       return $this->upsApiCallForPickup($this->pickup_shipment_url, $data);
+    }
+
+    public function cancelPickup($prn)
+    {
+        return $this->cancelUPSPickup($prn);
     }
 
     private function make_rates_request_for_sender($order, $request)
@@ -482,6 +494,65 @@ class UpsService
         return $request_body;
     }
 
+    private function make_request_for_pickup_shipment($order, $request)
+    {
+        $this->calculateVolumetricWeight($order);
+
+        $request_body = [
+            'PickupCreationRequest' => [
+                'RatePickupIndicator' => 'Y',
+                'Shipper' => [
+                    'Account' => [
+                        'AccountNumber' => $this->shipperNumber,
+                        'AccountCountryCode' => 'US'
+                    ],
+                ],
+                'PickupDateInfo' => [
+                    'PickupDate' => '20'.str_replace("-", "", date('y-m-d', strtotime($request->pickup_date))),
+                    'ReadyTime' => str_replace(":", "",$request->earliest_pickup_time),
+                    'CloseTime' => str_replace(":", "",$request->latest_pickup_time)
+                ],
+                'PickupAddress' => [
+                    'CompanyName' => $request->first_name.' '.$request->last_name,
+                    'ContactName' => $request->first_name.' '.$request->last_name,
+                    'AddressLine' => $request->sender_address,
+                    'City' => $request->sender_city,
+                    'StateProvinceCode' => $request->sender_state,
+                    'PostalCode' => $request->sender_zipcode,
+                    'CountryCode' => 'US',
+                    'ResidentialIndicator' => 'Y',
+                    'PickupPoint' => $request->pickup_location,
+                    'Phone' => [
+                        'Number' => $order->user->phone
+                    ]
+                ],
+                'AlternateAddressIndicator' => 'N',
+                'PickupPiece' => [
+                    [
+                        'ServiceCode' => '00'.$request->service,
+                        'Quantity' => '1',
+                        'DestinationCountryCode' => 'US',
+                        'ContainerCode' => '01',
+                    ]
+
+                    ],
+                    'TotalWeight' => [
+                        'Weight' => ($this->chargableWeight != null) ? "$this->chargableWeight" : (($order->measurement_unit == 'kg/cm') ? "$this->weight" :"$order->weight"),
+                        'UnitOfMeasurement' => 'LBS'
+                    ],
+                    'OverweightIndicator' => 'N',
+                    'PaymentMethod' => '01',
+                    'ShippingLabelsAvailable' => 'Y',
+                    'Notification' => [
+                        'ConfirmationEmailAddress' => $order->user->email,
+                        'UndeliverableEmailAddress' => $order->user->email,
+                    ]
+            ] 
+        ];
+
+        return $request_body;
+    }
+
     private function calculateVolumetricWeight($order)
     {
         if ( $order->measurement_unit == 'kg/cm' ){
@@ -511,50 +582,7 @@ class UpsService
         return $description;
     }
 
-    private function upsApiCallForRates($data)
-    {
-        try {
-            $response = Http::withHeaders([
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-                'AccessLicenseNumber' => $this->AccessLicenseNumber,
-                'Password' => $this->password,
-                'Username' => $this->userName,
-                'transId' => $this->transactionSrc,
-                'transactionSrc' => 'HERCO',
-            ])->acceptJson()->post($this->rating_package_url, $data);
-            
-            if($response->successful())
-            {
-                return (Object)[
-                    'success' => true,
-                    'data' => $response->json(),
-                    'error' => null,
-                ];
-            }elseif($response->clientError())
-            {
-                return (Object)[
-                    'success' => false,
-                    'error' => $response->json(),
-                ];    
-            }elseif ($response->status() !== 200) 
-            {
-
-                return (object) [
-                    'success' => false,
-                    'error' => $response->json(),
-                ];
-            }
-       } catch (Exception $e) {
-           
-            return (object) [
-                'success' => false,
-                'error' => $e->getMessage(),
-            ];
-       }
-    }
-
-    private function ups_ApiCall($data)
+    private function ups_ApiCall($url, $data)
     {
         try {
             $response = Http::withHeaders([
@@ -565,7 +593,7 @@ class UpsService
                 'Username' => $this->userName,
                 'transId' => $this->transactionSrc,
                 'transactionSrc' => 'HERCO SUITE#100',
-            ])->acceptJson()->post($this->create_package_url, $data);
+            ])->acceptJson()->post($url, $data);
            
             if($response->successful())
             {
@@ -605,7 +633,7 @@ class UpsService
        }
     }
 
-    private function upsApiCallForPickupRates($data)
+    private function upsApiCallForPickup($url, $data)
     {
         try {
             $response = Http::withHeaders([
@@ -614,7 +642,7 @@ class UpsService
                 'AccessLicenseNumber' => $this->AccessLicenseNumber,
                 'Password' => $this->password,
                 'Username' => $this->userName,
-            ])->acceptJson()->post($this->pickup_rating_url, $data);
+            ])->acceptJson()->post($url, $data);
             
             if($response->successful())
             {
@@ -638,10 +666,69 @@ class UpsService
                 ];
             }
        } catch (Exception $e) {
-           
             return (object) [
                 'success' => false,
-                'error' => $e->getMessage(),
+                'error' => [
+                    'response' => [
+                        'errors' => [
+                            [
+                                'code' => 501,
+                                'message' => $e->getMessage(),
+                            ]
+                        ]
+                    ]
+                ],
+            ];
+       }
+    }
+
+    private function cancelUPSPickup($prn)
+    {
+       try {
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+                'AccessLicenseNumber' => $this->AccessLicenseNumber,
+                'Password' => $this->password,
+                'Username' => $this->userName,
+                'Prn' => $prn,
+            ])->acceptJson()->delete($this->pickup_cancel_url);
+
+            if($response->successful())
+            {
+                return (Object)[
+                    'success' => true,
+                    'data' => $response->json(),
+                    'error' => null,
+                ];
+            }elseif($response->clientError())
+            {
+                return (Object)[
+                    'success' => false,
+                    'error' => $response->json(),
+                ];    
+            }elseif ($response->status() !== 200) 
+            {
+
+                return (object) [
+                    'success' => false,
+                    'error' => $response->json(),
+                ];
+            }
+
+       } catch (Exception $e) {
+            return (object) [
+                'success' => false,
+                'error' => [
+                    'response' => [
+                        'errors' => [
+                            [
+                                'code' => 501,
+                                'message' => $e->getMessage(),
+                            ]
+                        ]
+                    ]
+                ],
             ];
        }
     }
