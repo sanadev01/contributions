@@ -123,7 +123,7 @@ class USPSLabelRepository
         
         if($shippingServices->contains('service_sub_class', ShippingService::USPS_PRIORITY) || $shippingServices->contains('service_sub_class', ShippingService::USPS_FIRSTCLASS))
         {
-            if(!$order->user->usps)
+            if(!setting('usps', null, $order->user->id))
             {
                 $this->usps_errors = "USPS is not enabled for this user";
                 $shippingServices = collect() ;

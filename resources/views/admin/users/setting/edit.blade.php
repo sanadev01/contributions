@@ -149,7 +149,7 @@
                                     <label class="col-md-3 text-md-right" for="battery">Waive battery fee<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <div class="vs-checkbox-con vs-checkbox-primary" title="Waive battery fee">
-                                            <input type="checkbox" name="battery" id="battery" @if( $user->battery == 1 ) checked @endif>
+                                            <input type="checkbox" name="battery" id="battery" @if(setting('battery', null, $user->id)) checked @endif>
                                             <span class="vs-checkbox vs-checkbox-lg">
                                                 <span class="vs-checkbox--check">
                                                     <i class="vs-icon feather icon-check"></i>
@@ -163,7 +163,7 @@
                                     <label class="col-md-3 text-md-right">Waive perfume/aerosol/nail polish fee<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <div class="vs-checkbox-con vs-checkbox-primary" title="Waive perfume/aerosol/nail polish fee">
-                                            <input type="checkbox" name="perfume" id="perfume" @if( $user->perfume == 1 ) checked @endif>
+                                            <input type="checkbox" name="perfume" id="perfume" @if(setting('perfume', null, $user->id)) checked @endif>
                                             <span class="vs-checkbox vs-checkbox-lg">
                                                 <span class="vs-checkbox--check">
                                                     <i class="vs-icon feather icon-check"></i>
@@ -177,7 +177,7 @@
                                     <label class="col-md-3 text-md-right">Insurance<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <div class="vs-checkbox-con vs-checkbox-primary" title="Insurance">
-                                            <input type="checkbox" name="insurance" id="perfume" @if( $user->insurance == 1 ) checked @endif>
+                                            <input type="checkbox" name="insurance" id="perfume" @if(setting('insurance', null, $user->id)) checked @endif>
                                             <span class="vs-checkbox vs-checkbox-lg">
                                                 <span class="vs-checkbox--check">
                                                     <i class="vs-icon feather icon-check"></i>
@@ -192,7 +192,7 @@
                                     <div class="col-md-6">
                                         <div class="input-group">
                                             <div class="vs-checkbox-con vs-checkbox-primary" title="usps">
-                                                <input type="checkbox" name="usps" id="usps" @if( $user->usps == 1 ) checked @endif>
+                                                <input type="checkbox" name="usps" id="usps" @if(setting('usps', null, $user->id)) checked @endif>
                                                 <span class="vs-checkbox vs-checkbox-lg">
                                                     <span class="vs-checkbox--check">
                                                         <i class="vs-icon feather icon-check"></i>
@@ -211,7 +211,7 @@
                                     <div class="col-md-6">
                                         <div class="input-group">
                                             <div class="vs-checkbox-con vs-checkbox-primary" title="ups">
-                                                <input type="checkbox" name="ups" id="ups" @if($user->ups) checked @endif>
+                                                <input type="checkbox" name="ups" id="ups" @if(setting('ups', null, $user->id)) checked @endif>
                                                 <span class="vs-checkbox vs-checkbox-lg">
                                                     <span class="vs-checkbox--check">
                                                         <i class="vs-icon feather icon-check"></i>
@@ -226,7 +226,7 @@
                                     <div class="col-md-6">
                                         <div class="input-group">
                                             <div class="vs-checkbox-con vs-checkbox-primary" title="sinerlog">
-                                                <input type="checkbox" name="sinerlog" id="sinerlog" @if( $user->sinerlog == 1 ) checked @endif>
+                                                <input type="checkbox" name="sinerlog" id="sinerlog" @if(setting('sinerlog', null, $user->id)) checked @endif>
                                                 <span class="vs-checkbox vs-checkbox-lg">
                                                     <span class="vs-checkbox--check">
                                                         <i class="vs-icon feather icon-check"></i>
@@ -240,7 +240,7 @@
                                     <label class="col-md-3 text-md-right">Stripe<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <div class="vs-checkbox-con vs-checkbox-primary" title="Stripe">
-                                            <input type="checkbox" name="stripe" id="stripe" @if( $user->stripe == 1 ) checked @endif>
+                                            <input type="checkbox" name="stripe" id="stripe" @if(setting('stripe', null, $user->id)) checked @endif>
                                             <span class="vs-checkbox vs-checkbox-lg">
                                                 <span class="vs-checkbox--check">
                                                     <i class="vs-icon feather icon-check"></i>
