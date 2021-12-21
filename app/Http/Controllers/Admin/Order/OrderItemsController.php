@@ -67,10 +67,24 @@ class OrderItemsController extends Controller
             || $shippingServices->contains('service_sub_class', ShippingService::USPS_FIRSTCLASS)
             || $shippingServices->contains('service_sub_class', ShippingService::UPS_GROUND))
         {
-            if($order->user->usps != 1)
+            if(!$order->user->usps)
             {
                 $error = "USPS is not enabled for this user";
-                $shippingServices = collect() ;
+                $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                    return $shippingService->service_sub_class != ShippingService::USPS_PRIORITY &&
+                        $shippingService->service_sub_class != ShippingService::USPS_FIRSTCLASS;
+                });
+            }
+            if(!$order->user->ups)
+            {
+                $error = "UPS is not enabled for this user";
+                $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                    return $shippingService->service_sub_class != ShippingService::UPS_GROUND;
+                });
+            }
+
+            if($shippingServices->isNotEmpty()){
+                $error = null;
             }
         }
 

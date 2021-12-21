@@ -199,6 +199,14 @@ class UPSLabelRepository
             $this->ups_errors = 'No shipping services available for this order';
         }
 
+        if($shippingServices->isNotEmpty() && !$order->user->ups)
+        {
+            $this->ups_errors = "UPS is not enabled for your account";
+            $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                return $shippingService->service_sub_class != ShippingService::UPS_GROUND;
+            });
+        }
+
         return $shippingServices;
     }
 

@@ -115,10 +115,15 @@ class USPSLabelRepository
                 $shippingServices->push($shippingService);
             }
         }
+
+        if($shippingServices->isEmpty())
+        {
+            $this->ups_errors = 'No shipping services available for this order';
+        }
         
         if($shippingServices->contains('service_sub_class', ShippingService::USPS_PRIORITY) || $shippingServices->contains('service_sub_class', ShippingService::USPS_FIRSTCLASS))
         {
-            if($order->user->usps != 1)
+            if(!$order->user->usps)
             {
                 $this->usps_errors = "USPS is not enabled for this user";
                 $shippingServices = collect() ;
