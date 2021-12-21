@@ -69,35 +69,35 @@
                 <div class="dropdown-menu dropdown-menu-right dropright">
 
                     @if( $parcel->isShipmentAdded() )
-                        <a href="{{ route('admin.orders.sender.index',$parcel) }}" class="dropdown-item" title=" @lang('parcel.Create Order')">
+                        <a @if(Auth::user()->isActive()) href="{{ route('admin.orders.sender.index',$parcel) }}" @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" @endif  class="dropdown-item" title=" @lang('parcel.Create Order')">
                             <i class="feather icon-shopping-cart"></i> @lang('prealerts.actions.place-order')
                         </a>
                     @endif
                     
                     @if ( auth()->user()->can('canPrintConsolidationForm',$parcel) && $parcel->isConsolidated())
-                        <a href="#" class="dropdown-item btn" title="@lang('consolidation.Print Consolidation Request')" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.parcel.consolidation-print',$parcel) }}">
+                        <a href="#" class="dropdown-item btn" title="@lang('consolidation.Print Consolidation Request')" data-toggle="modal" data-target="#hd-modal" @if(Auth::user()->isActive()) data-url="{{ route('admin.modals.parcel.consolidation-print',$parcel) }}" @else data-url="{{ route('admin.modals.user.suspended') }}" @endif >
                             <i class="fa fa-print"></i> @lang('consolidation.Print Consolidation Request')
                         </a>
                     @endif
-
+                    @if( $parcel->isShipmentAdded() && !Auth::user()->isActive() )
                     @can('update',  $parcel)
-                        <a href="{{ route('admin.parcels.edit',$parcel) }}" class="dropdown-item btn" title="@lang('parcel.Edit Parcel')">
+                        <a @if(Auth::user()->isActive()) href="{{ route('admin.parcels.edit',$parcel) }}" @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" @endif class="dropdown-item btn" title="@lang('parcel.Edit Parcel')">
                             <i class="feather icon-edit"></i> @lang('parcel.Edit Parcel')
                         </a>
                     @endcan
-                    
+                    @endif
                     @can('duplicatePreAlert',  $parcel)
-                        <a href="{{ route('admin.parcel.duplicate',$parcel) }}" class="dropdown-item btn" title="@lang('parcel.Edit Parcel')">
+                        <a @if(Auth::user()->isActive()) href="{{ route('admin.parcel.duplicate',$parcel) }}"  @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" @endif class="dropdown-item btn" title="@lang('parcel.Edit Parcel')">
                             <i class="feather icon-edit"></i> @lang('parcel.Duplicate Parcel')
                         </a>
                     @endcan
 
                     @if ( auth()->user()->can('updateConsolidation',$parcel) && $parcel->isConsolidated())
-                        <a href="{{ route('admin.consolidation.parcels.edit',$parcel) }}" class="dropdown-item btn" title="@lang('consolidation.Edit Consolidation')">
+                        <a @if(Auth::user()->isActive()) href="{{ route('admin.consolidation.parcels.edit',$parcel) }}" @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" @endif class="dropdown-item btn" title="@lang('consolidation.Edit Consolidation')">
                             <i class="feather icon-edit"></i> @lang('consolidation.Edit Consolidation')
                         </a>
                     @endif
-
+                    @if(Auth::user()->isActive())
                     @can('delete', $parcel)
                         <form method="post" action="{{ route('admin.parcels.destroy',$parcel) }}" class="d-inline-block w-100" onsubmit="return confirmDelete()">
                             @csrf
@@ -107,6 +107,7 @@
                             </button>
                         </form>
                     @endcan
+                    @endif
                 </div>
             </div>
         </div>

@@ -261,4 +261,8 @@ class User extends Authenticatable
     {
         return $this->name . ' '. $this->last_name;
     }
+
+    public function isActive(){
+        return ($this->status == "active" || $this->status == NULL) ? true :false;
+    }
 }

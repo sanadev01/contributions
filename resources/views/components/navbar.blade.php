@@ -11,6 +11,15 @@
     <div class="navbar-wrapper">
         <div class="navbar-container content">
             <div class="navbar-collapse" id="navbar-mobile">
+                @if(!Auth::user()->isActive())
+                <div class="row col-9">
+                    <div class="col-12">
+                        <div class="alert alert-danger text-center">
+                           <h3 class="text-danger">@lang('validation.Message')</h3> 
+                        </div>
+                    </div>
+                </div>
+                @endif
                 <div class="mr-auto float-left bookmark-wrapper d-flex align-items-center">
                     <ul class="nav navbar-nav">
                         <li class="nav-item mobile-menu d-xl-none mr-auto"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i class="ficon feather icon-menu"></i></a></li>

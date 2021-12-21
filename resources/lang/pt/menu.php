@@ -52,6 +52,7 @@ return [
         'menu' => 'Relatórios',
         'Dashboard' => 'Painel de controle',
         'Sales Commission' => 'Extrato de Comissoes',
+        'Sale Commission' => 'Comissão de vendas',
     ],
     'activity' => 'Atividade',
     'Print Label' => 'Imprimir etiqueta em massa',

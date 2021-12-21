@@ -7,7 +7,7 @@ use App\Http\Requests\Orders\Sender\CreateRequest;
 use App\Models\Order;
 use App\Repositories\OrderRepository;
 use Illuminate\Http\Request;
-
+use Auth;
 class OrderSenderController extends Controller
 {
     /**
@@ -18,7 +18,9 @@ class OrderSenderController extends Controller
     public function index(Order $order)
     {
         $this->authorize('editSender',$order);
-
+        if(!Auth::user()->isActive()){
+            return redirect()->route('admin.modals.user.suspended');
+            }
         return view('admin.orders.sender.index',compact('order'));
     }
 
