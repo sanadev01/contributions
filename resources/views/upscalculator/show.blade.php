@@ -68,9 +68,12 @@
                                                         <option {{ old('shipping_service') == $shipping_service['name'] ? 'selected' : '' }} value="{{ $shipping_service['sub_class_code'] }}" data-cost="{{ $shipping_service['rate']}}">{{ $shipping_service['name'] }}</option>
                                                     @endforeach
                                                 </select>
+                                                @if (!auth()->user()->ups)
+                                                    <span class="text-danger">UPS is not enabled for your account</span>
+                                                @endif
                                             </div>
                                             <div class="controls col-6" id="buy_label_div">
-                                                <button id="btn-submit" type="button" class="btn btn-success btn-lg mt-4" @if(auth()->user()->usps == false) disabled @endif>
+                                                <button id="btn-submit" type="button" class="btn btn-success btn-lg mt-4" @if(auth()->user()->ups == false) disabled @endif>
                                                     Buy Label
                                                 </button>
                                             </div>
