@@ -214,7 +214,7 @@
             }else if($('#card').is(':checked')){
                 $('input[name=user]').attr('required', false); 
                 $('input[name=description]').attr('required', false); 
-                $('input[name=is_credit]').attr('required', false); 
+                $('select[name=is_credit]').attr('required', false); 
                 $('input[name=amount]').attr('required', false); 
 
             }
