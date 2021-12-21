@@ -60,19 +60,32 @@
                                         </div>
                                         <div class="col-md-4 balanceuser" @admin @if(old('adminpay') == 0) style="display: none" @endif  @endadmin>
                                             <label>Description</label>
-                                            <textarea class="form-control" required name="description" placeholder="Enter Description"  rows="7"></textarea>
+                                            <textarea class="form-control"  required name="description" placeholder="Enter Description"  rows="7">{{ old('description') }}</textarea>
                                             @error('description')
                                                 <div class="text-danger">
                                                     {{ $message }}
                                                 </div>
                                             @enderror
                                         </div>
+                                        <div class="col-md-2 balanceuser" @admin @if(old('adminpay') == 0) style="display: none" @endif  @endadmin>
+                                            <label>Select Operation</label>
+                                            <select name="is_credit" required   class="form-control">
+                                                <option value="">Select Option</option>
+                                                <option value="true" @if (old('is_credit') == "true") {{ 'selected' }} @endif>Credit Balance</option>
+                                                <option value="false" @if (old('is_credit') == "false") {{ 'selected' }} @endif>Debit Balance</option>
+                                            </select>
+                                            @error('is_credit')
+                                                <div class="text-danger">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
                                     @endadmin
-                                    <div class="col-md-4">
+                                    <div class="col-md-4" id="amount_div">
                                         <label>Amount</label>
-                                        <input type="number" min="0" class="form-control" required name="amount" placeholder="Enter Amount to Deposit">
+                                        <input type="number" min="0" step="any" class="form-control" value="{{ old('amount') }}" required name="amount" placeholder="Enter Amount to Deposit">
                                         @error('amount')
-                                            <div class="text-danger">
+                                            <div class="text-danger error_amount">
                                                 {{ $message }}
                                             </div>
                                         @enderror
@@ -187,19 +200,44 @@
 
         $(function(){
             $('input[name=billingInfo]').trigger('change');
+            if($('#balance').is(':checked')) { 
+                $('input[name=card_no]').attr('required', false); 
+                $('input[name=expiration]').attr('required', false); 
+                $('input[name=cvv]').attr('required', false); 
+                $('input[name=first_name]').attr('required', false); 
+                $('input[name=last_name]').attr('required', false); 
+                $('input[name=address]').attr('required', false); 
+                $('input[name=phone]').attr('required', false); 
+                $('select[name=country]').attr('required', false); 
+                $('select[name=state]').attr('required', false); 
+                $('input[name=zipcode]').attr('required', false); 
+            }else if($('#card').is(':checked')){
+                $('input[name=user]').attr('required', false); 
+                $('textarea[name=description]').attr('required', false); 
+                $('select[name=is_credit]').attr('required', false); 
+                $('input[name=amount]').attr('required', false); 
+
+            }
         })
     </script>
 
     <script>
-        function paybyadmin() {
+            if ($(".error_amount")[0] || $(".help-block ")[0]){
+            $("#amount_div").removeAttr("Class");
+            $("#amount_div").addClass("col-md-2");
+            }
             
+        function paybyadmin() {
+            $("#amount_div").removeAttr("Class");
             if(document.getElementById('balance').checked){
+                $("#amount_div").addClass("col-md-2");
                 $('.balanceuser').fadeIn();
                 $('.billingInfo-div').fadeOut();
                 $('form').attr('novalidate','novalidate');
             }
 
             if (document.getElementById('card').checked) {
+                $("#amount_div").addClass("col-md-4");
                 $('.balanceuser').fadeOut();
                 $('.billingInfo-div').fadeIn();
                 $('form').removeAttr('novalidate');

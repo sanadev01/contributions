@@ -291,20 +291,18 @@ class DepositRepository
         }else{
             $balance = $lastTransaction->balance;
         }
-        // dd($request->attachment);
         // if ($request->has('attachment')) {
             
         //     $this->fileName = time().'.'.$request->attachment->extension();
         //     $request->attachment->storeAs('deposits', $this->fileName);
         // }
 
-        
         $deposit = Deposit::create([
             'uuid' => PaymentInvoice::generateUUID('DP-'),
             'amount' => $request->amount,
             'user_id' => $request->user_id,
-            'balance' => $balance + $request->amount,
-            'is_credit' => true,
+            'balance' => ($request->is_credit == "true") ? $balance + $request->amount : $balance - $request->amount,
+            'is_credit' =>  ($request->is_credit == "true") ? true : 0,
             'last_four_digits' => Auth::user()->name,
             'attachment' => $this->fileName,
             'description' => $request->description,
