@@ -213,7 +213,7 @@
                 $('input[name=zipcode]').attr('required', false); 
             }else if($('#card').is(':checked')){
                 $('input[name=user]').attr('required', false); 
-                $('input[name=description]').attr('required', false); 
+                $('textarea[name=description]').attr('required', false); 
                 $('select[name=is_credit]').attr('required', false); 
                 $('input[name=amount]').attr('required', false); 
 
