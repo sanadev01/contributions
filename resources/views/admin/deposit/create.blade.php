@@ -211,15 +211,22 @@
                 $('select[name=country]').attr('required', false); 
                 $('select[name=state]').attr('required', false); 
                 $('input[name=zipcode]').attr('required', false); 
-            };
+            }else if($('#card').is(':checked')){
+                $('input[name=user]').attr('required', false); 
+                $('textarea[name=description]').attr('required', false); 
+                $('select[name=is_credit]').attr('required', false); 
+                $('input[name=amount]').attr('required', false); 
+
+            }
         })
     </script>
 
     <script>
-            if ($(".error_amount")[0]){
+            if ($(".error_amount")[0] || $(".help-block ")[0]){
             $("#amount_div").removeAttr("Class");
             $("#amount_div").addClass("col-md-2");
             }
+            
         function paybyadmin() {
             $("#amount_div").removeAttr("Class");
             if(document.getElementById('balance').checked){
