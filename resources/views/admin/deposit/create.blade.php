@@ -83,7 +83,7 @@
                                     @endadmin
                                     <div class="col-md-4" id="amount_div">
                                         <label>Amount</label>
-                                        <input type="number" min="0" class="form-control" value="{{ old('amount') }}" required name="amount" placeholder="Enter Amount to Deposit">
+                                        <input type="number" min="0" step="any" class="form-control" value="{{ old('amount') }}" required name="amount" placeholder="Enter Amount to Deposit">
                                         @error('amount')
                                             <div class="text-danger error_amount">
                                                 {{ $message }}
@@ -200,6 +200,18 @@
 
         $(function(){
             $('input[name=billingInfo]').trigger('change');
+            if($('#balance').is(':checked')) { 
+                $('input[name=card_no]').attr('required', false); 
+                $('input[name=expiration]').attr('required', false); 
+                $('input[name=cvv]').attr('required', false); 
+                $('input[name=first_name]').attr('required', false); 
+                $('input[name=last_name]').attr('required', false); 
+                $('input[name=address]').attr('required', false); 
+                $('input[name=phone]').attr('required', false); 
+                $('select[name=country]').attr('required', false); 
+                $('select[name=state]').attr('required', false); 
+                $('input[name=zipcode]').attr('required', false); 
+            };
         })
     </script>
 
