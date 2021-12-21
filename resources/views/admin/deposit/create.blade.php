@@ -216,10 +216,11 @@
     </script>
 
     <script>
-            if ($(".error_amount")[0]){
+            if ($(".error_amount")[0] || $(".help-block ")[0]){
             $("#amount_div").removeAttr("Class");
             $("#amount_div").addClass("col-md-2");
             }
+            
         function paybyadmin() {
             $("#amount_div").removeAttr("Class");
             if(document.getElementById('balance').checked){
