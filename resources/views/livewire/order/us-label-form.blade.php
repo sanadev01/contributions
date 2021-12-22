@@ -1,0 +1,162 @@
+<div>
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title" id="basic-layout-form"></h4>
+            <a href="{{ route('admin.orders.index') }}" class="btn btn-primary pull-right">
+                @lang('shipping-rates.Return to List')
+            </a>
+    
+            <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+            <div class="heading-elements">
+                <ul class="list-inline mb-0">
+                    <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                </ul>
+            </div>
+        </div>
+        <hr>
+        <div class="ml-3">
+            <div class="row ml-3">
+                <h2 class="mb-2">
+                    Order Details
+                </h2>
+            </div>
+            <div class="row mt-3 ml-3">
+                <input type="hidden" name="order_id" id="order_id" value="{{$order->id}}">
+                <div class="col-md-3">
+                    <h4>Order ID: {{ $order->warehouse_number }}</h4>
+                </div>
+                <div class="col-md-3">
+                    <h4>Tracking Code : {{ $order->corrios_tracking_code }}</h4>
+                </div>
+                <div class="col-md-3">
+                    <h4>Weight : {{ $order->getWeight('kg')  }} Kg</h4>
+                </div>
+                <div class="col-md-3">
+                    <h4>POBOX # :  {{ $order->user->pobox_number }} </h4>
+                </div>
+            </div>
+        </div>
+        <form wire:submit.prevent="getRates">
+            <div class="ml-3 mt-3">
+                <div class="row ml-3">
+                    <h2 class="mb-2">
+                        Sender Address
+                    </h2>
+                </div>
+                <div class="container">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="first_name">First Name <span class="text-danger">*</span></label>
+                            <input type="text" wire:model.debounce.500ms="firstName" class="form-control" name="first_name" id="first_name" placeholder="Enter your First Name" required>
+                            @error('first_name') <span class="error">{{ $message }}</span> @enderror
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="last_name">Last Name <span class="text-danger">*</span></label>
+                            <input type="text" wire:model.debounce.500ms="lastName" class="form-control" name="last_name" id="last_name" placeholder="Enter your last Name" required>
+                            @error('last_name') <span class="error">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="state">Select State <span class="text-danger">*</span></label>
+                            <select wire:model.debounce.500ms="senderState" name="sender_state" id="sender_state" class="form-control" required>
+                                <option value="" disabled>Select @lang('address.State')</option>
+                                @foreach ($states as $state)
+                                    <option value="{{$state->code}}">{{ $state->code }}</option>
+                                @endforeach
+                            </select>
+                            @error('sender_state') <span class="error">{{ $message }}</span> @enderror
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="sender_address">Sender Address <span class="text-danger">*</span></label>
+                            <input type="text" wire:model.debounce.500ms="senderAddress" class="form-control" name="sender_address" id="sender_address" placeholder="Enter you street address">
+                            @error('sender_address') <span class="error">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="sender_city">Sender City <span class="text-danger">*</span></label>
+                            <input type="text" wire:model.debounce.500ms="senderCity" class="form-control" name="sender_city" id="sender_city" placeholder="Enter your city">
+                            @error('sender_city') <span class="error">{{ $message }}</span> @enderror
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="sender_zipcode">Sender Zip Code <span class="text-danger">*</span></label>
+                            <input type="text" wire:model.debounce.500ms="senderZipCode" class="form-control" name="sender_zipcode" id="sender_zipcode" placeholder="Enter your zipcode">
+                            @error('sender_zipcode') <span class="error">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <div class="input-group">
+                                <div class="vs-checkbox-con vs-checkbox-primary" title="pickup">
+                                    <input type="checkbox" name="pickup" id="pickup_type">
+                                    <span class="vs-checkbox vs-checkbox-lg">
+                                        <span class="vs-checkbox--check">
+                                            <i class="vs-icon feather icon-check"></i>
+                                        </span>
+                                    </span>
+                                </div>
+                                <label class="mt-2 h4 text-danger">Pick Up</label>
+                            </div>  
+                        </div>
+                    </div>
+                    <div class="d-none" id="pickup_form">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="pickup_date">Pickup Date<span class="text-danger">*</span></label>
+                                <input type="date" name="pickup_date" id="pickup_date" class="form-control" />
+                                <div id="pickup_date_response"></div>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="earliest_pickup_time">Earliest Pickup Time<span class="text-danger">*</span></label>
+                                <input type="time" name="earliest_pickup_time" id="earliest_pickup_time" class="form-control" />
+                                <div id="earliest_pickup_response"></div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="latest_pickup_time">Latest Pickup Time<span class="text-danger">*</span></label>
+                                <input type="time" name="latest_pickup_time" id="latest_pickup_time" class="form-control" />
+                                <div id="latest_pickup_response"></div>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="pickup_location">Preferred Pickup Location <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="pickup_location" value="{{ old('pickup_location') }}" id="pickup_location" placeholder="Enter your preferred prickup point e.g Front Door">
+                                <div id="pickup_location_response"></div>
+                            </div>
+                        </div>
+                    </div>    
+                    <input type="hidden" name="total_price" id="total_price">
+                </div>
+            </div>
+            <div class="ml-3 mt-3">
+                <div class="row ml-3">
+                    <h2 class="mb-2">
+                        Service
+                    </h2>
+                </div>
+                <div class="container pb-5">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="service">Choose Service <span class="text-danger">*</span></label>
+                            <select name="service" wire:model.debounce.500ms="service" id="ups_shipping_service" class="form-control" required style="height: 80%;">
+                                <option value="">@lang('orders.order-details.Select Shipping Service')</option>
+                                @foreach ($usShippingServices as $shippingService)
+                                    <option style="font-size: 15px;" value="{{ $shippingService['service_sub_class'] }}">{{ $shippingService['name'] }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        @error('service') <span class="error">{{ $message }}</span> @enderror
+                    </div>
+                </div>
+            </div>
+            <div class="container pb-3">
+                <div class="row mr-3">
+                    <div class="ml-auto">
+                        <button type="submit" id="submitBtn" class="btn btn-primary">Get Quote</button>
+                    </div>
+                </div>    
+            </div>
+        </form>
+    </div>   
+</div>

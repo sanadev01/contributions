@@ -140,11 +140,8 @@
                             <i class="feather icon-printer"></i>@lang('orders.actions.label')
                         </a>
                         @if( $order->corrios_tracking_code && $order->recipient->country_id != \App\Models\Order::US && !$order->hasSecondLabel())
-                            <a href="{{ route('admin.orders.usps-label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
-                                <i class="feather icon-printer"></i>@lang('orders.actions.buy-usps-label')
-                            </a>
-                            <a href="{{ route('admin.orders.ups-label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
-                                <i class="feather icon-printer"></i>@lang('orders.actions.buy-ups-label')
+                            <a href="{{ route('admin.order.us-label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
+                                <i class="feather icon-printer"></i>@lang('orders.actions.buy-us-label')
                             </a>
                         @endif
                         @if($order->hasSecondLabel() && $order->usLabelService() == \App\Models\ShippingService::UPS_GROUND)
