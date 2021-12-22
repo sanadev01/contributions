@@ -185,9 +185,9 @@ class UpsService
         $request_body = [
             'ShipmentRequest' => [
                 'Shipment' => [
-                    'Description' => '1206 PTR',
+                    'Description' => $order->items->count() > 0 ? $this->orderDescription($order->items) : 'goods',
                     'Shipper' => [
-                        'Name' => Auth::user() ? Auth::user()->pobox_number :  optional($order->user)->pobox_number,
+                        'Name' => Auth::user() ? Auth::user()->pobox_number.' - WRH#: '.$order->warehouse_number :  optional($order->user)->pobox_number.' - WRH#: '.$order->warehouse_number,
                         'AttentionName' => $request->first_name.' '.$request->last_name,
                         'ShipperNumber' => $this->shipperNumber,
                         'Phone' => [
@@ -236,7 +236,7 @@ class UpsService
                     ],
                     'Package' => [
                         [
-                            'Description' => 'Goods',
+                            'Description' => $order->items->count() > 0 ? $this->orderDescription($order->items) : 'goods',
                             'Packaging' => [
                                 'Code' => '02',
                                 'Description' => 'Customer Supplied Package'
@@ -372,9 +372,9 @@ class UpsService
         $request_body = [
             'ShipmentRequest' => [
                 'Shipment' => [
-                    'Description' => '1206 PTR',
+                    'Description' => $this->orderDescription($order->items),
                     'Shipper' => [
-                        'Name' => optional($order->user)->pobox_number,
+                        'Name' => optional($order->user)->pobox_number.' - WRH#: '.$order->warehouse_number,
                         'AttentionName' => $order->sender_first_name.' '.$order->sender_last_name,
                         'ShipperNumber' => $this->shipperNumber,
                         'Phone' => [
@@ -540,7 +540,7 @@ class UpsService
                         'Weight' => ($this->chargableWeight != null) ? "$this->chargableWeight" : (($order->measurement_unit == 'kg/cm') ? "$this->weight" :"$order->weight"),
                         'UnitOfMeasurement' => 'LBS'
                     ],
-                    'OverweightIndicator' => 'N',
+                    'OverweightIndicator' => $this->chargableWeight > 69 ? 'Y' : 'N',
                     'PaymentMethod' => '01',
                     'ShippingLabelsAvailable' => 'Y',
                     'Notification' => [

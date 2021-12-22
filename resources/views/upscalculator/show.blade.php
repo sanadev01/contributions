@@ -45,10 +45,10 @@
                                     @endforeach
                                 </div>
                                 @if ($userLoggedIn)
-                                    @if(auth()->user()->usps == false) 
+                                    @if(auth()->user()->ups == false) 
                                         <div class="row mb-1 ml-4">
                                             <div class="controls col-12">
-                                                <h4 class="text-danger">USPS is not enabled for your account</h4>
+                                                <h4 class="text-danger">UPS is not enabled for your account</h4>
                                             </div>
                                         </div>
                                     @endif

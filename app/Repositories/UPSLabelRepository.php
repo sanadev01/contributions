@@ -71,6 +71,11 @@ class UPSLabelRepository
                     $order->update([
                         'api_pickup_response' => $pickupShipmentresponse->data,
                     ]);
+                    
+                }else 
+                {
+                    $this->ups_errors = $pickupShipmentresponse->error['response']['errors'][0]['message'];
+                    return false;
                 }
             }
             /**
@@ -84,7 +89,6 @@ class UPSLabelRepository
                 'us_api_tracking_code' => $response->data['ShipmentResponse']['ShipmentResults']['ShipmentIdentificationNumber'],
                 'us_api_cost' => $this->total_amount,
                 'us_api_service' => $request->service,
-                'api_pickup_response' => ($request->has('pickup')) ? $pickupShipmentresponse->data : null,
             ]);
 
             chargeAmount(round($this->total_amount, 2), $order, 'Bought UPS Label For : ');
@@ -199,7 +203,7 @@ class UPSLabelRepository
             $this->ups_errors = 'No shipping services available for this order';
         }
 
-        if($shippingServices->isNotEmpty() && !$order->user->ups)
+        if($shippingServices->isNotEmpty() && !setting('ups', null, $order->user->id))
         {
             $this->ups_errors = "UPS is not enabled for your account";
             $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
