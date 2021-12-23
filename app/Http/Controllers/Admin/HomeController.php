@@ -39,9 +39,9 @@ class HomeController extends Controller
         return view('home');   
     }
     
-    public function testBrazilTracking($seal_number)
+    public function testBrazilTracking($dispatch_number)
     {
-        $containers = Container::where('seal_no', $seal_number)->get();
+        $containers = Container::where('dispatch_number', $dispatch_number)->get();
         dd($containers->toArray());
     }
 }
