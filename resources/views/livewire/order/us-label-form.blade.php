@@ -48,12 +48,12 @@
                         <div class="form-group col-md-6">
                             <label for="first_name">First Name <span class="text-danger">*</span></label>
                             <input type="text" wire:model.debounce.500ms="firstName" class="form-control" name="first_name" id="first_name" placeholder="Enter your First Name" required>
-                            @error('first_name') <span class="error">{{ $message }}</span> @enderror
+                            @error('firstName') <span class="error text-danger">{{ $message }}</span> @enderror
                         </div>
                         <div class="form-group col-md-6">
                             <label for="last_name">Last Name <span class="text-danger">*</span></label>
                             <input type="text" wire:model.debounce.500ms="lastName" class="form-control" name="last_name" id="last_name" placeholder="Enter your last Name" required>
-                            @error('last_name') <span class="error">{{ $message }}</span> @enderror
+                            @error('lastName') <span class="error text-danger">{{ $message }}</span> @enderror
                         </div>
                     </div>
                     <div class="form-row">
@@ -65,31 +65,32 @@
                                     <option value="{{$state->code}}">{{ $state->code }}</option>
                                 @endforeach
                             </select>
-                            @error('sender_state') <span class="error">{{ $message }}</span> @enderror
+                            @error('senderState') <span class="error text-danger">{{ $message }}</span> @enderror
                         </div>
                         <div class="form-group col-md-6">
                             <label for="sender_address">Sender Address <span class="text-danger">*</span></label>
                             <input type="text" wire:model.debounce.500ms="senderAddress" class="form-control" name="sender_address" id="sender_address" placeholder="Enter you street address">
-                            @error('sender_address') <span class="error">{{ $message }}</span> @enderror
+                            @error('senderAddress') <span class="error text-danger">{{ $message }}</span> @enderror
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="sender_city">Sender City <span class="text-danger">*</span></label>
                             <input type="text" wire:model.debounce.500ms="senderCity" class="form-control" name="sender_city" id="sender_city" placeholder="Enter your city">
-                            @error('sender_city') <span class="error">{{ $message }}</span> @enderror
+                            @error('senderCity') <span class="error text-danger">{{ $message }}</span> @enderror
                         </div>
                         <div class="form-group col-md-6">
                             <label for="sender_zipcode">Sender Zip Code <span class="text-danger">*</span></label>
                             <input type="text" wire:model.debounce.500ms="senderZipCode" class="form-control" name="sender_zipcode" id="sender_zipcode" placeholder="Enter your zipcode">
-                            @error('sender_zipcode') <span class="error">{{ $message }}</span> @enderror
+                            @if($zipCodeResponse) <p class="{{ $zipCodeClass }}">{{ $zipCodeResponseMessage }}</p>@endif
+                            @error('senderZipCode') <span class="error text-danger">{{ $message }}</span> @enderror
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <div class="input-group">
                                 <div class="vs-checkbox-con vs-checkbox-primary" title="pickup">
-                                    <input type="checkbox" name="pickup" id="pickup_type">
+                                    <input type="checkbox" value="true" wire:model="pickupType" name="pickup" id="pickup_type">
                                     <span class="vs-checkbox vs-checkbox-lg">
                                         <span class="vs-checkbox--check">
                                             <i class="vs-icon feather icon-check"></i>
@@ -100,35 +101,71 @@
                             </div>  
                         </div>
                     </div>
-                    <div class="d-none" id="pickup_form">
+                    @if ($pickupType)
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="pickup_date">Pickup Date<span class="text-danger">*</span></label>
-                                <input type="date" name="pickup_date" id="pickup_date" class="form-control" />
-                                <div id="pickup_date_response"></div>
+                                <input type="date" wire:model.debounce.500ms="pickupDate" name="pickup_date" id="pickup_date" class="form-control" />
+                                @error('pickupDate') <span class="error text-danger">{{ $message }}</span> @enderror
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="earliest_pickup_time">Earliest Pickup Time<span class="text-danger">*</span></label>
-                                <input type="time" name="earliest_pickup_time" id="earliest_pickup_time" class="form-control" />
-                                <div id="earliest_pickup_response"></div>
+                                <input type="time" wire:model.debounce.500ms="earliestPickupTime" name="earliest_pickup_time" id="earliest_pickup_time" class="form-control" />
+                                @error('earliestPickupTime') <span class="error text-danger">{{ $message }}</span> @enderror
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="latest_pickup_time">Latest Pickup Time<span class="text-danger">*</span></label>
-                                <input type="time" name="latest_pickup_time" id="latest_pickup_time" class="form-control" />
-                                <div id="latest_pickup_response"></div>
+                                <input type="time" wire:model.debounce.500ms="latestPickupTime" name="latest_pickup_time" id="latest_pickup_time" class="form-control" />
+                                @error('latestPickupTime') <span class="error text-danger">{{ $message }}</span> @enderror
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="pickup_location">Preferred Pickup Location <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="pickup_location" value="{{ old('pickup_location') }}" id="pickup_location" placeholder="Enter your preferred prickup point e.g Front Door">
-                                <div id="pickup_location_response"></div>
+                                <input type="text" wire:model.debounce.500ms="pickupLocation" class="form-control" name="pickup_location" value="{{ old('pickup_location') }}" id="pickup_location" placeholder="Enter your preferred prickup point e.g Front Door">
+                                @error('pickupLocation') <span class="error text-danger">{{ $message }}</span> @enderror
                             </div>
                         </div>
-                    </div>    
-                    <input type="hidden" name="total_price" id="total_price">
+                    @endif        
                 </div>
             </div>
+            <div class="container pb-3">
+                <div class="row mr-3">
+                    <div class="ml-auto">
+                        <button type="submit" id="submitBtn" class="btn btn-primary">Get Quote</button>
+                    </div>
+                </div>    
+            </div>
+        </form>
+        <div class="container">
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                  <tr>
+                    <th scope="col" style="width: 6%;">#</th>
+                    <th scope="col-3">Service</th>
+                    <th scope="col-3">Cost</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">1</th>
+                    <td class="col-3">Mark</td>
+                    <td class="col-3">Otto</td>
+                  </tr>
+                  <tr>
+                    <th scope="row col-3">2</th>
+                    <td class="col-3">Jacob</td>
+                    <td class="col-3">Thornton</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td class="col-3">Larry</td>
+                    <td class="col-3">the Bird</td>
+                  </tr>
+                </tbody>
+            </table>
+        </div>
+        @if ($hasRates)
             <div class="ml-3 mt-3">
                 <div class="row ml-3">
                     <h2 class="mb-2">
@@ -146,17 +183,10 @@
                                 @endforeach
                             </select>
                         </div>
-                        @error('service') <span class="error">{{ $message }}</span> @enderror
+                        @error('service') <span class="error text-danger">{{ $message }}</span> @enderror
                     </div>
                 </div>
             </div>
-            <div class="container pb-3">
-                <div class="row mr-3">
-                    <div class="ml-auto">
-                        <button type="submit" id="submitBtn" class="btn btn-primary">Get Quote</button>
-                    </div>
-                </div>    
-            </div>
-        </form>
+        @endif
     </div>   
 </div>
