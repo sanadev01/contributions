@@ -182,6 +182,11 @@ class Table extends Component
             $orders = $orders->where('sender_country_id', Country::US);
             return $orders;
         }
+
+        if ($this->userType == 'pickups') {
+            $orders = $orders->where('api_pickup_response' , '!=', null);
+            return $orders;
+        }
         
         if($this->userType){
             $orders = $orders->whereHas('user', function ($queryUser) {

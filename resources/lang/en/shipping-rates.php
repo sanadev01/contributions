@@ -26,6 +26,7 @@ return [
     'consolidation Charges' => 'Consolidation Charges',
     'Rates' => 'Rates',
     'Country' => 'Country',
+    'Region' => 'Region',
     'Select Country' => 'Select Country',
     'USPS Rates' => 'USPS Accural Rates',
     'Customer ID' => 'Customer ID',
@@ -38,5 +39,6 @@ return [
     'Weight' => 'Weight',
     'Zip Code Origin' => 'Zip Code Origin',
     'Zip Code Destination' => 'Zip Code Destination',
+    'accrual-rates' => 'Accrual Rates',
 ];
  

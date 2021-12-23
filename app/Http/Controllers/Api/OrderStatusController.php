@@ -20,6 +20,7 @@ class OrderStatusController extends Controller
         
         \Log::info('Login user id: ' . Auth::id());
         \Log::info('order user id: ' . $order->user_id);
+        \Log::info('order id: ' . $order->id);
         \Log::info('order status: ' . $order->status);
         \Log::info('request status: ' . $request->status);
         

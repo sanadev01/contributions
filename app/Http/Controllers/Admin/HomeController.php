@@ -3,15 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 
-use stdClass;
-use App\Models\User;
-use App\Models\Order;
-use App\Facades\USPSFacade;
-use Illuminate\Http\Request;
-use App\Models\OrderTracking;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Session;
 use App\Facades\CorreiosChileTrackingFacade;
 use App\Facades\CorreiosBrazilTrackingFacade;
@@ -26,16 +20,6 @@ class HomeController extends Controller
      */
     public function __invoke()
     {
-        if ( !Session::has('last_logged_in') ){
-            $user = Auth::user();
-            if ($user->isUser() && $user->status == 'suspended') {
-                Auth::logout();
-
-                session()->flash('alert-danger','Your Account has been suspended Please contact Us / Sua conta foi suspensa Entre em contato conosco');
-                return redirect()->route('login');
-            }
-        }
-
         return view('home');   
     }
     

@@ -46,6 +46,8 @@ class OrderRepository
             'sender_address' => $request->sender_address,
             'sender_city' => $request->sender_city,
             'sender_country_id' => $request->sender_country_id,
+            'sender_state_id' => $request->sender_state_id,
+            'sender_zipcode' => $request->sender_zipcode,
         ]);
 
         return $order;
@@ -76,7 +78,8 @@ class OrderRepository
                 'last_name' => $request->last_name,
                 'email' => $request->email,
                 'phone' => $request->phone,
-                'city' => $request->city,
+                'city' => ($request->service == 'postal_service') ? $request->city : null,
+                'commune_id' => ($request->service == 'courier_express') ? $request->commune_id : null,
                 'street_no' => $request->street_no,
                 'address' => $request->address,
                 'address2' => $request->address2,
@@ -97,7 +100,8 @@ class OrderRepository
             'last_name' => $request->last_name,
             'email' => $request->email,
             'phone' => $request->phone,
-            'city' => $request->city,
+            'city' => ($request->service == 'postal_service') ? $request->city : null,
+            'commune_id' => ($request->service == 'courier_express') ? $request->commune_id : null,
             'street_no' => $request->street_no,
             'address' => $request->address,
             'address2' => $request->address2,

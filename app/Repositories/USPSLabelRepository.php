@@ -115,10 +115,15 @@ class USPSLabelRepository
                 $shippingServices->push($shippingService);
             }
         }
+
+        if($shippingServices->isEmpty())
+        {
+            $this->ups_errors = 'No shipping services available for this order';
+        }
         
         if($shippingServices->contains('service_sub_class', ShippingService::USPS_PRIORITY) || $shippingServices->contains('service_sub_class', ShippingService::USPS_FIRSTCLASS))
         {
-            if($order->user->usps != 1)
+            if(!$order->user->usps)
             {
                 $this->usps_errors = "USPS is not enabled for this user";
                 $shippingServices = collect() ;
@@ -171,7 +176,7 @@ class USPSLabelRepository
 
     public function buyLabel($request, $order)
     {
-        if($order->corrios_usps_tracking_code != null)
+        if($order->hasSecondLabel())
         {
             $this->printBuyUSPSLabel($order);
 
@@ -198,12 +203,13 @@ class USPSLabelRepository
         {
             // storing response in orders table
             $order->update([
-                'usps_response' => json_encode($response->data),
-                'corrios_usps_tracking_code' => $response->data['usps']['tracking_numbers'][0],
-                'usps_cost' => $request->total_price,
+                'us_api_response' => json_encode($response->data),
+                'us_api_tracking_code' => $response->data['usps']['tracking_numbers'][0],
+                'us_api_cost' => $request->total_price,
+                'us_api_service' => $request->service,
             ]);
 
-            $this->chargeAmount($request->total_price, $order);
+            chargeAmount($request->total_price, $order, 'Bought USPS Label For : ');
 
             $this->printBuyUSPSLabel($order);
 
@@ -212,25 +218,6 @@ class USPSLabelRepository
             $this->usps_errors = $response->message;
             return null;
         }
-    }
-
-    private function chargeAmount($usps_cost, $order)
-    {
-        $deposit = Deposit::create([
-            'uuid' => PaymentInvoice::generateUUID('DP-'),
-            'amount' => $usps_cost,
-            'user_id' => Auth::id(),
-            'order_id' => $order->id,
-            'balance' => Deposit::getCurrentBalance() - $usps_cost,
-            'is_credit' => false,
-            'description' => 'Bought USPS Label For : '.$order->warehouse_number,
-        ]);
-        
-        if ( $order ){
-            $order->deposits()->sync($deposit->id);
-        }
-
-        return $deposit;
     }
     
 }

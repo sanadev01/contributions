@@ -75,6 +75,16 @@ class WeightCalculator
         return round(($length * $width * $heigt) / $divisor,2);
     }
 
+    public static function getUPSVolumnWeight($length, $width, $heigt, $unit = 'in')
+    {
+        if (! $unit == 'in') {
+            throw  new Exception('Invalid Unit.');
+        }
+
+        $divisor = 139; //UPS Divisor
+        return round(($length * $width * $heigt) / $divisor,2);
+    }
+
     public static function kgToOunce($kgs)
     {
         return $kgs * 35.274;
