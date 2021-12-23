@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 use App\Facades\CorreiosChileTrackingFacade;
 use App\Facades\CorreiosBrazilTrackingFacade;
-
+use App\Repositories\DashboardRepository;
 class HomeController extends Controller
 {
     /**
@@ -23,11 +23,11 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function __invoke()
+    public function __invoke(DashboardRepository $dashboard)
     {
-        
-
-        return view('home');   
+        $orders = $dashboard->getDashboardStats();
+        // dd($orders);
+        return view('home',compact('orders'));   
     }
 
     public function test()
