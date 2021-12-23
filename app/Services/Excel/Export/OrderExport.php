@@ -83,9 +83,10 @@ class OrderExport extends AbstractExportService
 
         $this->currentRow = $row;
 
+        $this->setCellValue('G'.$row, "=SUM(G1:G{$row})");
         $this->setCellValue('I'.$row, "=SUM(I1:I{$row})");
         $this->setCellValue('J'.$row, "=SUM(J1:J{$row})");
-        $this->mergeCells("A{$row}:G{$row}");
+        $this->mergeCells("A{$row}:F{$row}");
         $this->setBackgroundColor("A{$row}:L{$row}", 'adfb84');
         $this->setAlignment('A'.$row, Alignment::VERTICAL_CENTER);
         $this->setCellValue('A'.$row, 'Total Order: '.$this->orders->count());

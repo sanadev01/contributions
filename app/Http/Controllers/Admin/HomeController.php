@@ -7,7 +7,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Log;
+use App\Facades\CorreiosChileTrackingFacade;
+use App\Facades\CorreiosBrazilTrackingFacade;
+use App\Models\Warehouse\Container;
 
 class HomeController extends Controller
 {
@@ -20,9 +22,10 @@ class HomeController extends Controller
     {
         return view('home');   
     }
-
-    public function testBrazilTracking()
+    
+    public function testBrazilTracking($dispatch_number)
     {
-        return true;
+        $containers = Container::where('dispatch_number', $dispatch_number)->get();
+        dd($containers->toArray());
     }
 }
