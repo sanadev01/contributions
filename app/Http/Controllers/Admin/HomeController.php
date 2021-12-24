@@ -9,8 +9,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Session;
 use App\Facades\CorreiosChileTrackingFacade;
 use App\Facades\CorreiosBrazilTrackingFacade;
-use App\Models\Warehouse\Container;
-
+use App\Repositories\DashboardRepository;
 class HomeController extends Controller
 {
     /**
@@ -18,9 +17,11 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function __invoke()
+    public function __invoke(DashboardRepository $dashboard)
     {
-        return view('home');   
+        $orders = $dashboard->getDashboardStats();
+        
+        return view('home',compact('orders'));   
     }
     
     public function testBrazilTracking($dispatch_number)

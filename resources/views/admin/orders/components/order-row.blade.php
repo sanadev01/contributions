@@ -110,11 +110,11 @@
                         @if( !$order->isPaid() && !$order->isNeedsProcessing() && $order->user->isActive())
 
                             @if ( optional($order)->getPaymentInvoice() )
-                                <a href="{{ route('admin.payment-invoices.invoice.show',optional($order)->getPaymentInvoice()) }}" class="dropdown-item" title="Pay Order">
+                                <a  @if(Auth::user()->isActive()) href="{{ route('admin.payment-invoices.invoice.show',optional($order)->getPaymentInvoice()) }}" @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" @endif  class="dropdown-item" title="Pay Order">
                                     <i class="feather icon-dollar-sign"></i> @lang('orders.actions.pay-order')
                                 </a>
                             @else
-                                <a href="{{ route('admin.payment-invoices.orders.index',['order'=>$order]) }}" class="dropdown-item" title="Pay Order">
+                                <a @if(Auth::user()->isActive()) href="{{ route('admin.payment-invoices.orders.index',['order'=>$order]) }}" @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" @endif  class="dropdown-item" title="Pay Order">
                                     <i class="feather icon-dollar-sign"></i> @lang('orders.actions.pay-order')
                                 </a>
                             @endif
