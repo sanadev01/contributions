@@ -20,36 +20,45 @@
                     </div>
                     <hr>
                     <div class="card-content card-body">
-                        <table class="table table-bordered table-responsive">
+                        <table class="table table-bordered table-responsive-md">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Service
+                                    </th>
+                                    <th>
+                                        Country
+                                    </th>
+                                    <th>
+                                        Region
+                                    </th>
+                                    <th>
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
                             <tbody>
-                                @foreach ($shippingRates as $ratesData)
-                                    <tr>
-                                        <th colspan="4"><h3>Service Name</h3></th><th colspan="100%"><h4>{{ optional($ratesData->shippingService)->name }}</h4></th>
-                                    </tr>
-                                    <tr>
-                                        <th colspan="4"><h3>Country</h3></th><th colspan="100%"><h4>{{ optional($ratesData->country)->name }}</h4></th>
-                                    </tr>
-                                    <tr>
-                                        <th>@lang('shipping-rates.Weight')</th>
-                                        @foreach($ratesData->data??[] as $rate)
-                                            <td>
-                                                {{ isset($rate['weight'])?$rate['weight']:0 }} g
-                                            </td>
-                                        @endforeach
-                                    </tr>
-                                    <tr>
-                                        <th>@lang('shipping-rates.Rates') ($)</th>
-                                        @foreach($ratesData->data??[] as $rate)
-                                            <td>
-                                                {{ isset($rate['leve'])?$rate['leve']:0 }}
-                                            </td>
-                                        @endforeach
-                                    </tr>
-                                    <tr>
-                                        <th colspan="100%">
-                                            <hr>
-                                        </th>
-                                    </tr>
+                                @foreach ($shippingRates as $rate)
+                                <tr>
+                                    <th>
+                                        {{ optional($rate->shippingService)->name }}
+                                    </th>
+                                    <th>
+                                        {{ optional($rate->country)->name }}
+                                    </th>
+                                    <th>
+                                        {{ optional($rate->region)->name }}
+                                    </th>
+                                    <th>
+                                        <a href="{{ route('admin.rates.view-shipping-rates', $rate) }}" class="btn btn-primary btn-sm">
+                                           <i class="feather icon-eye"></i> View
+                                        </a>
+                                        |
+                                        <a href="{{ route('admin.rates.download-shipping-rates', $rate)}}" class="btn btn-success btn-sm">
+                                            <i class="feather icon-download"></i> Download
+                                        </a>
+                                    </th>
+                                </tr>
                                 @endforeach
                             </tbody>
                         </table>

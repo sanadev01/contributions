@@ -181,6 +181,7 @@ class USPSCalculatorRepository
 
             $this->chargeAmount($this->usps_cost, $order);
             $this->createInvoivce($order);
+            $this->addOrderTracking($order);
             $this->printLabel($order);
 
             return true;
@@ -244,6 +245,26 @@ class USPSCalculatorRepository
         $invoice->update([
             'total_amount' => $invoice->orders()->sum('gross_total')
         ]);
+
+        $order->update([
+            'is_paid' => true,
+        ]);
+
+        return true;
+    }
+
+    private function addOrderTracking($order)
+    {
+        if($order->trackings->isEmpty())
+        {
+            OrderTracking::create([
+                'order_id' => $order->id,
+                'status_code' => Order::STATUS_PAYMENT_DONE,
+                'type' => 'HD',
+                'description' => 'Order Placed',
+                'country' => ($order->user->country != null) ? $order->user->country->code : 'US',
+            ]);
+        }    
 
         return true;
     }

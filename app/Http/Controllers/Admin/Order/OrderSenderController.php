@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Admin\Order;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Orders\Sender\CreateRequest;
 use App\Models\Order;
-use App\Repositories\OrderRepository;
+use App\Models\State;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Repositories\OrderRepository;
+use App\Http\Requests\Orders\Sender\CreateRequest;
 use Auth;
 class OrderSenderController extends Controller
 {
@@ -20,8 +21,9 @@ class OrderSenderController extends Controller
         $this->authorize('editSender',$order);
         if(!Auth::user()->isActive()){
             return redirect()->route('admin.modals.user.suspended');
-            }
-        return view('admin.orders.sender.index',compact('order'));
+        }
+        $states = State::query()->where("country_id", 250)->get(["name","code","id"]);
+        return view('admin.orders.sender.index',compact('order', 'states'));
     }
 
     /**

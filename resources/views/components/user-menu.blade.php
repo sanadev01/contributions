@@ -142,10 +142,10 @@
                     @endcan
 
                     @can('viewAny', App\Models\Rate::class)
-                    <li class="{{ $isActive(['admin.rates.shipping-rates.index','admin.rates.shipping-rates.create']) }}">
+                    <li class="{{ $isActive(['admin.rates.shipping-rates.index','admin.rates.shipping-rates.create', 'admin.rates.view-shipping-rates']) }}">
                         <a href="{{ route('admin.rates.shipping-rates.index') }}">
                             <i class="feather icon-circle"></i>
-                            <span class="menu-title" style="font-size: 13px !important; font-weight: 500 !important;">@lang('menu.Shipping Rates')</span>
+                            <span class="menu-title">@lang('menu.Correios Cost')</span>
                         </a>
                     </li>
                     @endcan
@@ -211,6 +211,13 @@
                 <a class="nav-link" href="{{ route('usps-calculator.index') }}" target="_blank">
                     <img src="{{ asset('images/icon/calculator.svg') }}" alt="Calculator">
                     <span data-i18n="Apps">@lang('menu.uspscalculator')</span>
+                </a>
+            </li>
+
+            <li class="nav-item {{ $isActive(['calculator.index']) }}">
+                <a class="nav-link" href="{{ route('ups-calculator.index') }}" target="_blank">
+                    <i class="fa fa-calculator"></i>
+                    <span data-i18n="Apps">@lang('menu.upscalculator')</span>
                 </a>
             </li>
 

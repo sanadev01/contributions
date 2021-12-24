@@ -15,7 +15,7 @@
                 <div class="row col-9">
                     <div class="col-12">
                         <div class="alert alert-danger text-center">
-                           <h4 class="text-danger">@lang('validation.Message')</h4> 
+                            <h3 class="text-danger">@lang('validation.Message')</h3> 
                         </div>
                     </div>
                 </div>

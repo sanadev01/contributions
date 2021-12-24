@@ -105,6 +105,11 @@
                 @endadmin
                 <td>
                     @if($deposit->hasOrder())
+                        @if ($deposit->firstOrder()->hasSecondLabel())
+                            <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->orders()->first()) }}" class="w-100" title="Show Order Details">
+                                {{ $deposit->firstOrder()->us_api_tracking_code }}
+                            </a><hr>
+                        @endif
                         <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->orders()->first()) }}" class="w-100" title="Show Order Details">
                             {{ $deposit->firstOrder()->corrios_tracking_code }}
                         </a>
