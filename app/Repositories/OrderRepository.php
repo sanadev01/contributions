@@ -293,16 +293,16 @@ class OrderRepository
         if (Auth::user()->isUser()) {
             $orders->where('user_id', Auth::id());
         }
-        
+        $startDate  = $request->start_date.'00:00:00';
+        $endDate    = $request->end_date.'23:59:59';
         if ( $request->start_date ){
-            $orders->where('order_date','>',$request->start_date);
+            $orders->where('order_date','>=',$startDate);
         }
-        
         if ( $request->end_date ){
-            $orders->where('order_date','<=',$request->end_date);
+            $orders->where('order_date','<=',$endDate);
         }
         
-        return $orders->get();
+        return $orders->orderBy('id')->get();
     }
     
     private function stripePayment($request, $total_amount, $InvoiceId)
