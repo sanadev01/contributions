@@ -154,7 +154,7 @@
                         </a>
                    @endcan
                    @can('copyOrder', $order)
-                        <a @if(Auth::user()->isActive())  @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}"  @endif class="dropdown-item" title="@lang('orders.actions.duplicate-order')">
+                        <a @if(Auth::user()->isActive())  href="{{ route('admin.orders.duplicate',$order) }}" @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}"  @endif class="dropdown-item" title="@lang('orders.actions.duplicate-order')">
                             <i class="feather icon-copy"></i>@lang('orders.actions.duplicate-order')
                         </a>
                    @endcan
