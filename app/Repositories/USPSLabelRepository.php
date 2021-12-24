@@ -125,7 +125,7 @@ class USPSLabelRepository
         {
             if(!$order->user->usps)
             {
-                $this->usps_errors = "USPS is not enabled for this user";
+                $this->usps_errors = "USPS is not enabled for your account";
                 $shippingServices = collect() ;
             }
         }
