@@ -4,23 +4,28 @@ namespace App\Http\Livewire\Order;
 
 use Exception;
 use Livewire\Component;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Models\ShippingService;
 use Illuminate\Support\Facades\Http;
 use App\Repositories\UPSLabelRepository;
+use App\Repositories\USPSLabelRepository;
 
 class UsLabelForm extends Component
 {
     public $order;
     public $states;
     public $usShippingServices;
-    private $upsLabelRepository;
-    public $errors;
+    public $usServicesErrors;
+    public $upsError;
+    public $uspsError;
     public $hasRates = false;
+    public $usRates = [];
     public $api_url;
     public $email;
     public $password;
 
+    public $selectedService;
     public $firstName;
     public $lastName;
     public $senderState;
@@ -34,6 +39,7 @@ class UsLabelForm extends Component
     public $pickupLocation;
     public $service;
 
+    public $selectedServiceCost;
     public $zipCodeResponse;
     public $zipCodeResponseMessage;
     public $zipCodeClass;
@@ -57,7 +63,7 @@ class UsLabelForm extends Component
         $this->order = $order;
         $this->states = $states;
         $this->usShippingServices = $usShippingServices;
-        $this->errors = $errors;
+        $this->usServicesErrors = $errors;
 
         $this->setUSPSAddressApiCredentials();
     }
@@ -142,33 +148,125 @@ class UsLabelForm extends Component
         $this->password = config('usps.password');
     }
 
-    public function getRates(UPSLabelRepository $upsLabelRepository)
+    public function getRates(UPSLabelRepository $upsLabelRepository, USPSLabelRepository $uspsLabelRepository)
     {
         $this->validate();
+        $this->usRates = [];
         
-        $this->usShippingServices->each(function ($shippingService, $key) use ($upsLabelRepository) {
-            if ($shippingService['service_sub_class'] == ShippingService::UPS_GROUND) {
-                $this->getUPSRates($shippingService['service_sub_class'], $upsLabelRepository);
+        if ($this->usShippingServices)
+        {
+            $this->usShippingServices->each(function ($shippingService, $key) use ($upsLabelRepository, $uspsLabelRepository) {
+                if ($shippingService['service_sub_class'] == ShippingService::UPS_GROUND) {
+                    $this->getUPSRates($shippingService['service_sub_class'], $upsLabelRepository);
+                }
+
+                if ($shippingService['service_sub_class'] == ShippingService::USPS_PRIORITY
+                    || $shippingService['service_sub_class'] == ShippingService::USPS_FIRSTCLASS) 
+                {
+                    $this->getUSPSRates($shippingService['service_sub_class'], $uspsLabelRepository);
+                }
+            });
+        }    
+    }
+
+    public function getLabel(UPSLabelRepository $upsLabelRepository, USPSLabelRepository $uspsLabelRepository)
+    {
+        $this->validate();
+        if (!$this->order->hasSecondLabel()) {
+
+            $this->getCostOfSelectedService();
+            if ($this->selectedService == ShippingService::UPS_GROUND) 
+            {
+               return $this->getUPSLabel($upsLabelRepository);
             }
-        });
+
+            $this->getUSPSLabel($uspsLabelRepository);
+        }
+        
     }
 
     private function getUPSRates($service, $upsLabelRepository)
     {
-        $upsRateResponse = $upsLabelRepository->getRates($this->createRequestBodyForUPS($service));
+        $request = $this->createRequest($service);
+
+        $request->merge(['pickup' => $this->pickupType]);
+
+        $upsRateResponse = $upsLabelRepository->getRates($request);
+        if ($upsRateResponse['success'] == true) {
+          return array_push($this->usRates, ['service' => 'UPS Ground', 'service_code' => $service, 'cost' => $upsRateResponse['total_amount']]);
+        }
+
+        $this->upsError = $upsRateResponse['message'];
     }
 
-    private function createRequestBodyForUPS($servcie)
+    private function getUSPSRates($service, $uspsLabelRepository)
     {
-        return new Request([
+        $uspsRateResponse = $uspsLabelRepository->getRates($this->createRequest($service));
+        if ($uspsRateResponse['success'] == true) {
+            return array_push($this->usRates, ['service' => ($service == ShippingService::USPS_PRIORITY) ? 'USPS Priority' : 'USPS FirstClass', 'service_code' => $service, 'cost' => $uspsRateResponse['total_amount']]);
+        }
+
+        $this->uspsError = $uspsRateResponse['message'];
+    }
+
+    private function getUPSLabel($upsLabelRepository)
+    {
+        $request = $this->createRequest($this->selectedService);
+        $request->merge(['total_price' => $this->selectedServiceCost]);
+
+        $request = ($this->pickupType == true) ? $request->merge(['pickup' => $this->pickupType]) : $request;
+        
+        $upsLabelRepository->buyLabel($request, $this->order);
+
+        $this->upsError = $upsLabelRepository->getUPSErrors();
+        
+        if (!$this->upsError) {
+            return redirect()->route('admin.order.us-label.index', $this->order->id);
+        }
+
+        return false;
+    }
+
+    private function getUSPSLabel($uspsLabelRepository)
+    {
+        $request = $this->createRequest($this->selectedService);
+        $request->merge(['total_price' => $this->selectedServiceCost]);
+        
+        $uspsLabelRepository->buyLabel($request, $this->order);
+
+        $this->uspsError = $uspsLabelRepository->getUSPSErrors();
+
+        if ($this->uspsError == null) {
+            return redirect()->route('admin.order.us-label.index', $this->order->id);
+        }
+
+        return false;
+    }
+
+    private function createRequest($servcie)
+    {
+       return new Request([
             'first_name' => $this->firstName,
+            'last_name' => $this->lastName,
             'sender_state' => $this->senderState,
             'sender_address' => $this->senderAddress,
             'sender_city' => $this->senderCity,
             'sender_zipcode' => $this->senderZipCode,
             'service' => $servcie,
             'order_id' => $this->order->id,
-            'pickup' => $this->pickupType,
+            'pickup_date' => $this->pickupDate,
+            'earliest_pickup_time' => $this->earliestPickupTime,
+            'latest_pickup_time' => $this->latestPickupTime,
         ]);
+    }
+
+    private function getCostOfSelectedService()
+    {
+        Arr::where($this->usRates, function ($value, $key) {
+            if($value['service_code'] == $this->selectedService)
+            {
+                return $this->selectedServiceCost = $value['cost'];
+            }
+        });
     }
 }

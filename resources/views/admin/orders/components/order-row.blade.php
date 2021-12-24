@@ -144,19 +144,15 @@
                                 <i class="feather icon-printer"></i>@lang('orders.actions.buy-us-label')
                             </a>
                         @endif
-                        @if($order->hasSecondLabel() && $order->usLabelService() == \App\Models\ShippingService::UPS_GROUND)
-                            <a href="{{ route('admin.orders.ups-label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
-                                <i class="feather icon-printer"></i>@lang('orders.actions.print-ups-label')
+                        @if($order->hasSecondLabel())
+                            <a href="{{ route('admin.order.us-label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
+                                <i class="feather icon-printer"></i>@if($order->usLabelService() == \App\Models\ShippingService::UPS_GROUND)@lang('orders.actions.print-ups-label') @else @lang('orders.actions.print-usps-label') @endif
                             </a>
                             @if ($order->apiPickupResponse() != null)
                                 <a href="{{ route('admin.order.ups-label.cancel.pickup', $order->id) }}" class="dropdown-item" title="@lang('orders.actions.label')">
                                     <i class="feather icon-trash"></i>@lang('orders.actions.cancel-ups-pickup')
                                 </a>
                             @endif
-                        @elseif($order->hasSecondLabel() && ($order->usLabelService() == (\App\Models\ShippingService::USPS_PRIORITY || \App\Models\ShippingService::USPS_FIRSTCLASS) ))
-                            <a href="{{ route('admin.orders.usps-label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
-                                <i class="feather icon-printer"></i>@lang('orders.actions.print-usps-label')
-                            </a>
                         @endif        
                     @endif
                    @can('updateOrder', $order)
