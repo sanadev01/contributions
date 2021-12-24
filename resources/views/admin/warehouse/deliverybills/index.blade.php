@@ -94,6 +94,9 @@
                                 @endforeach
                                 </tbody>
                             </table>
+                            <div class="d-flex justify-content-end py-2 px-3">
+                                {{ $deliveryBills->links() }}
+                            </div>
                         </div>
                     </div>
                 </div>
