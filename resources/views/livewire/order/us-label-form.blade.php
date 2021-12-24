@@ -196,7 +196,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        @error('service') <span class="error text-danger">{{ $message }}</span> @enderror
+                        @error('selectedService') <span class="error text-danger">{{ $message }}</span> @enderror
                     </div>
                 </div>
             </div>

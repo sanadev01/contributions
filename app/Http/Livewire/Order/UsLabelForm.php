@@ -172,16 +172,18 @@ class UsLabelForm extends Component
     public function getLabel(UPSLabelRepository $upsLabelRepository, USPSLabelRepository $uspsLabelRepository)
     {
         $this->validate();
-        if (!$this->order->hasSecondLabel()) {
 
-            $this->getCostOfSelectedService();
-            if ($this->selectedService == ShippingService::UPS_GROUND) 
-            {
-               return $this->getUPSLabel($upsLabelRepository);
-            }
-
-            $this->getUSPSLabel($uspsLabelRepository);
+        if (!$this->selectedService) {
+            return $this->addError('selectedService', 'select service please.');
         }
+
+        $this->getCostOfSelectedService();
+        if ($this->selectedService == ShippingService::UPS_GROUND) 
+        {
+            return $this->getUPSLabel($upsLabelRepository);
+        }
+
+        $this->getUSPSLabel($uspsLabelRepository);
         
     }
 
