@@ -17,8 +17,8 @@
                 <div class="card-block">
                     <h5 class="m-b-20 white">@lang('dashboard.today-orders')</h5>
                     <h2 class="text-right"><i class="fa fa-cart-plus f-left white"></i><span
-                            class="white">{{ $orders['totalTodayOrders'] }}</span></h2>
-                    <p class="m-b-0">@lang('dashboard.total-completed-order')<span class="f-right">{{ $orders['todayConfirmOrders'] }}</span></p>
+                            class="white">{{ $orders['currentDayTotal'] }}</span></h2>
+                    <p class="m-b-0">@lang('dashboard.total-completed-order')<span class="f-right">{{ $orders['currentDayConfirm'] }}</span></p>
                 </div>
             </div>
         </div>
@@ -27,31 +27,31 @@
                 <div class="card-block">
                     <h5 class="m-b-20 white">Total {{ $orders['monthName'] }} Orders</h5>
                     <h2 class="text-right"> <i class="fas fa-calendar-week f-left white"></i> <span
-                            class="white">{{ $orders['totalCurrentMonthOrders'] }}</span></h2>
+                            class="white">{{ $orders['currentmonthTotal'] }}</span></h2>
                     <p class="m-b-0">Completed Orders<span
-                            class="f-right white">{{ $orders['CompleteCurrentMonthOrders'] }}</span></p>
+                            class="f-right white">{{ $orders['currentmonthConfirm'] }}</span></p>
                 </div>
             </div>
         </div>
         <div class="col-3">
             <div class="card_block bg-c-pink order-card">
                 <div class="card-block">
-                    <h5 class="m-b-20 white">Total Orders Received</h5>
+                    <h5 class="m-b-20 white">Total Current Year Orders</h5>
                     <h2 class="text-right"><i class="fa fa-credit-card f-left white"></i><span
-                            class="white">{{ $orders['totalOrders'] }}</span></h2>
+                            class="white">{{ $orders['currentYearTotal'] }}</span></h2>
                     <p class="m-b-0">Total Completed Orders<span
-                            class="f-right white">{{ $orders['totalCompleteOrders'] }}</span></p>
+                            class="f-right white">{{ $orders['currentYearConfirm'] }}</span></p>
                 </div>
             </div>
         </div>
         <div class="col-3">
             <div class="card_block bg-c-blue order-card">
                 <div class="card-block">
-                    <h5 class="m-b-20 white">Total Canceled Orders</h5>
-                    <h2 class="text-right"><i class="fa fa-ban f-left white"></i><span
-                            class="white">{{ $orders['totalCanceledOrder'] }}</span></h2>
-                    <p class="m-b-0">Today Refund Orders<span
-                            class="f-right white">{{ $orders['totalRefundOrder'] }}</span></p>
+                    <h5 class="m-b-20 white">Total Orders</h5>
+                    <h2 class="text-right"><i class="fa fa-cart-plus f-left white"></i><span
+                            class="white">{{ $orders['totalOrders'] }}</span></h2>
+                    <p class="m-b-0">Today Completed Orders<span
+                            class="f-right white">{{ $orders['totalCompleteOrders'] }}</span></p>
                 </div>
             </div>
         </div>

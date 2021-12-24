@@ -12,52 +12,67 @@ use Illuminate\Support\Facades\Auth;
 class DashboardRepository
 {
     
-    public function getDashboardStats($startDate=NULL,$endDate=NULL)
+    public function getDashboardStats($startDate=NULL, $endDate=NULL)
     {
-        $query = Order::query();
-        
+        $filter = false;
+
+        if($startDate != NULL && $endDate != NULL){
+            $filter = true;
+            $filterQuery = Order::whereBetween('order_date', [$startDate .' 00:00:00',$endDate.' 23:59:59']);
+        }
+
         if(Auth::user()->isUser()){
-            $query->where('user_id',Auth::id());
+
+            $query = ($filter == true) ? $filterQuery->where('user_id', Auth::id()) : Order::where('user_id', Auth::id());
+
+        }else{
+
+            $query = ($filter == true) ? $filterQuery : Order::query();
         }
-        if($startDate!=NULL && $endDate!=NULL){
-            $query->whereBetween('order_date', [$startDate,$endDate])->count();
-        }
-        
+
         $monthName= \Carbon\Carbon::now()->format('F');
+        $currentyear=\Carbon\Carbon::now()->year;
+        $currentmonth=\Carbon\Carbon::now()->month;
         $today = Carbon::today()->format('Y-m-d');
 
-        $confirmedOrder = $query->where('status', '>=' ,Order::STATUS_PAYMENT_DONE);
+        
+        $totalOrder = $query->count();
+        $Curentyear =  $query;
+        $currentYearTotal  = $Curentyear->whereYear('order_date',$currentyear)->count();
+        $currentYearConfirm  = $Curentyear->where('status', '>=' ,Order::STATUS_PAYMENT_DONE)->count();
+        
+        if(Auth::user()->isUser()){
+            $CurentMonth = ($filter == true) ? $filterQuery->where('user_id', Auth::id()) : Order::where('user_id',Auth::id());
+        }else{
+            $CurentMonth =   ($filter == true) ? $filterQuery : Order::query();
+        }
+        $currentmonthTotal  = $CurentMonth->whereMonth('order_date',$currentmonth)->count();
+        $currentmonthConfirm  = $CurentMonth->where('status', '>=' ,Order::STATUS_PAYMENT_DONE)->count();
 
-        $totalOrders = $query->count();
-        $confirmedOrders = $confirmedOrder->count();
-        
-        //current year orders
-        $totalCompleteOrders = $confirmedOrder->count();
-        $totalCurrentMonthOrders = $query->whereMonth('order_date', date('m'))->count();
-        
-        //current month orders
-        $totalCompleteOrders = $confirmedOrder->count();
-        $totalCurrentMonthOrders = $query->whereMonth('order_date', date('m'))->count();
-        
-        //today orders
-        $totalTodayOrders = $query->where('created_at', 'LIKE', $today.'%')->count();
-        $todayDoneOrders = $confirmedOrder->where('created_at', 'LIKE', $today.'%')->count();
+        if(Auth::user()->isUser()){
+            $CurentDay = ($filter == true) ? $filterQuery->where('user_id', Auth::id()) : Order::where('user_id',Auth::id());
+        }else{
+            $CurentDay =   ($filter == true) ?  $filterQuery : Order::query();
+        }
 
-        $todayConfirmOrders = $queryconfirmedOrder->count();
-        $totalRefundOrder = $query->where('status',Order::STATUS_REFUND)->count();
+        $currentDayTotal  = $CurentDay->whereDate('order_date',$today)->count();
         
+        $currentDayConfirm  = $CurentDay->where('status', '>=' ,Order::STATUS_PAYMENT_DONE)->count();
+        if(Auth::user()->isUser()){
+            $totalCompleteOrders  = ($filter == true)  ? Order::where('user_id',Auth::id())->whereBetween('order_date', [$startDate .' 00:00:00',$endDate.' 23:59:59'])->where('status', '>=' ,Order::STATUS_PAYMENT_DONE)->count() : Order::where('user_id',Auth::id())->where('status', '>=' ,Order::STATUS_PAYMENT_DONE)->count();
+        }else{
+            $totalCompleteOrders  = ($filter == true)  ? Order::whereBetween('order_date', [$startDate .' 00:00:00',$endDate.' 23:59:59'])->where('status', '>=' ,Order::STATUS_PAYMENT_DONE)->count() : Order::where('status', '>=' ,Order::STATUS_PAYMENT_DONE)->count();
+        } 
         return  $order[] = [
             'totalOrders' => $totalOrder,
             'totalCompleteOrders' =>$totalCompleteOrders,
-            'totalCurrentMonthOrders'=>$totalCurrentMonthOrders,
-            'CompleteCurrentMonthOrders'=>$CompleteCurrentMonthOrders,
-            'totalTodayOrders'=>$totalTodayOrders,
-            'totalTodayCompletedOrders'=>$totalTodayCompletedOrders,
-            'totalCanceledOrder'=>$totalCanceledOrder,
-            'todayConfirmOrders'=>$todayConfirmOrders,
-            'totalRefundOrder'=>$totalRefundOrder,
+            'currentmonthTotal'=>$currentmonthTotal,
+            'currentmonthConfirm'=>$currentmonthConfirm,
+            'currentDayTotal'=>$currentDayTotal,
+            'currentDayConfirm'=>$currentDayConfirm,
+            'currentYearTotal'=>$currentYearTotal,
+            'currentYearConfirm'=>$currentYearConfirm,
             'monthName'=>$monthName
-            
         ];
     }
 
