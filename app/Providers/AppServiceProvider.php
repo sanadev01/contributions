@@ -64,7 +64,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton('UPS_service', function() {
-            // USPS Api Testing Environemtn Credentials
+            // UPS Api Testing Environemtn Credentials
             $create_package_url = 'https://wwwcie.ups.com/ship/v1/shipments';
             $delete_package_url = '';
             $create_manifest_url = '';
@@ -72,21 +72,14 @@ class AppServiceProvider extends ServiceProvider
             $pickup_rating_url = 'https://wwwcie.ups.com/ship/1707/pickups/rating';
             $pickup_shipment_url = 'https://wwwcie.ups.com/ship/1707/pickups';
             $pickup_cancel_url = 'https://wwwcie.ups.com/ship/v1/pickups/prn';
+            $tracking_url = 'https://onlinetools.ups.com/track/v1/details/';
             $transactionSrc = 'HERCO';
             $userName = 'hffinc1';           
             $password = 'Hdbrasilc4!';
             $shipperNumber = '022VX0';
             $AccessLicenseNumber = '5DA71F61D4F245F6';
 
-            // USPS Api Production Environment Credentials
-            // $api_url = config('usps.url');
-            // $delete_usps_label_url = config('usps.delete_label_url');
-            // $create_manifest_url = config('usps.create_manifest_url');
-            // $get_price_url = config('usps.get_price_url');
-            // $email = config('usps.email');           
-            // $password = config('usps.password');
-
-            return new UpsService($create_package_url, $delete_package_url, $create_manifest_url, $rating_package_url, $pickup_rating_url, $pickup_shipment_url, $pickup_cancel_url, $transactionSrc, $userName, $password, $shipperNumber, $AccessLicenseNumber);
+            return new UpsService($create_package_url, $delete_package_url, $create_manifest_url, $rating_package_url, $pickup_rating_url, $pickup_shipment_url, $pickup_cancel_url, $tracking_url, $transactionSrc, $userName, $password, $shipperNumber, $AccessLicenseNumber);
         });
 
         $this->app->singleton('CorreiosBrazilTracking_service', function() {

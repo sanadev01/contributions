@@ -4,6 +4,8 @@ namespace App\Repositories;
 
 use stdClass;
 use App\Models\Order;
+use App\Facades\UPSFacade;
+use App\Models\ShippingService;
 use App\Facades\USPSTrackingFacade;
 use App\Facades\CorreiosChileTrackingFacade;
 use App\Facades\CorreiosBrazilTrackingFacade;
@@ -62,8 +64,32 @@ class OrderTrackingRepository
             }
             if($order->recipient->country_id == Order::US && !$order->trackings->isEmpty())
             {
+                
                 if($order->trackings->last()->status_code == Order::STATUS_SHIPPED)
                 {
+                    if($order->shippingService->service_sub_class == ShippingService::UPS_GROUND)
+                    {
+                        $trackingNumber = '1Z022VX00499893563';
+                        $response = UPSFacade::trackOrder($trackingNumber);
+                        if($response->success == true)
+                        {
+                            return (Object) [
+                                'success' => true,
+                                'status' => 200,
+                                'service' => 'UPS',
+                                'trackings' => $order->trackings,
+                                'ups_trackings' => $this->reverseTrackings($trackings = $response->data['trackResponse']['shipment'][0]['package'][0]['activity']),
+                                'order' => $order
+                            ];
+                        }
+                        return (Object)[
+                            'success' => true,
+                            'status' => 200,
+                            'service' => 'HD',
+                            'trackings' => $order->trackings,
+                            'order' => $order
+                        ];
+                    }
                     $response = USPSTrackingFacade::trackOrder($this->trackingNumber);
 
                     if($response->status == true)
