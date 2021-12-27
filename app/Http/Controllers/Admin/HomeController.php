@@ -4,11 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Session;
-use App\Facades\CorreiosChileTrackingFacade;
-use App\Facades\CorreiosBrazilTrackingFacade;
 use App\Repositories\DashboardRepository;
 class HomeController extends Controller
 {
@@ -24,9 +19,8 @@ class HomeController extends Controller
         return view('home',compact('orders'));   
     }
     
-    public function testBrazilTracking($dispatch_number)
+    public function test()
     {
-        $containers = Container::where('dispatch_number', $dispatch_number)->get();
-        dd($containers->toArray());
+        return true;
     }
 }
