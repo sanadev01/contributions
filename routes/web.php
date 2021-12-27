@@ -226,4 +226,4 @@ Route::get('test-profit/{id}',function($id){
 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
 
-Route::get('test-usps/{dispatch_no}', [\App\Http\Controllers\Admin\HomeController::class,'testBrazilTracking'])->middleware('auth')->name('test-usps');
+Route::get('test/{delivery_bill}/{cnd38_code}', [\App\Http\Controllers\Admin\HomeController::class,'test'])->middleware('auth')->name('test');
