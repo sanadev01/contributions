@@ -25,7 +25,6 @@
         <div class="col-3">
             <div class="card_block bg-c-yellow order-card">
                 <div class="card-block">
-                    {{-- <h5 class="m-b-20 white">Total {{ $orders['monthName'] }} Orders</h5> --}}
                     <h5 class="m-b-20 white">@lang('dashboard.total-month-order',['month'=>$orders['monthName']])</h5>
                     <h2 class="text-right"> <i class="fas fa-calendar-week f-left white"></i> <span
                             class="white">{{ $orders['currentmonthTotal'] }}</span></h2>
