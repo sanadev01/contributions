@@ -3,20 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 
-use stdClass;
-use App\Models\User;
-use App\Models\Order;
-use App\Facades\USPSFacade;
-use Illuminate\Http\Request;
-use App\Models\OrderTracking;
-use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
-use App\Models\Warehouse\DeliveryBill;
 use Illuminate\Support\Facades\Session;
-use App\Facades\CorreiosChileTrackingFacade;
-use App\Facades\CorreiosBrazilTrackingFacade;
 
 class HomeController extends Controller
 {
@@ -40,13 +29,8 @@ class HomeController extends Controller
         return view('home');   
     }
     
-    public function test($id, $cnd38_code)
+    public function test()
     {
-        $delivery_bill = DeliveryBill::findorfail($id);
-        $delivery_bill->update([
-            'cnd38_code' => $cnd38_code,
-        ]);
-
-        dd($delivery_bill->toArray());
+        return true;
     }
 }
