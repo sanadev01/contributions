@@ -5,6 +5,10 @@ return [
     'order-history-month' => 'Histórico de Pedidos (Mês :month)',
     'order-history-year' => 'Histórico de Pedidos (Ano :year)',
     'today-orders'=> 'pedidos de hoje',
-    'total-completed-order'=>'total de pedidos concluídos',
-    'total-month-order','pedidos totais do (Mês :month)'
+    'total-month-order'=>'pedidos totais do (Mês :month)',
+    'completed-orders'=>'pedidos concluídos',
+    'current-year' =>'pedidos totais do ano atual',
+    'total-orders'=>'pedidos totais',
+    'start-date'=>'data de início',
+    'end-date'=>'data final'
 ];
