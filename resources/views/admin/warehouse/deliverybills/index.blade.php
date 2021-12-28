@@ -20,11 +20,9 @@
                                         <div class="row justify-content-start">
                                             <div class="col-md-3">
                                                 <label>Start Date</label>
-
                                             </div>
                                             <div class="col-md-9">
                                                 <input type="date" class="form-control mb-2 mr-sm-2" value="{{ Request('startDate') }}" name="startDate">
-
                                             </div>
                                         </div>
                                     </div>
@@ -32,11 +30,9 @@
                                         <div class="row justify-content-start">
                                             <div class="col-md-3">
                                                 <label>End Date</label>
-
                                             </div>
                                             <div class="col-md-9">
                                                 <input type="date" class="form-control" value="{{ Request('endDate') }}"  name="endDate">
-
                                             </div>
                                         </div>
                                     </div>
