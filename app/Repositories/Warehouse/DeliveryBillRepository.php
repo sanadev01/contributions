@@ -15,10 +15,19 @@ use App\Repositories\AbstractRepository;
 
 class DeliveryBillRepository extends AbstractRepository
 {
-    public function get()
+    public function get(Request $request)
     {
         $query = DeliveryBill::query();
-
+        
+        if($request->startDate){
+            $startDate = $request->startDate. ' 00:00:00';
+            $query->where('created_at','>=', $startDate);
+        }
+        if($request->endDate){
+            $endDate = $request->endDate. ' 23:59:59';
+            $query->where('created_at','<=', $endDate);
+        }
+        // dd($query->get());
         return $query->latest()->paginate(50);
     }
 
@@ -147,11 +156,5 @@ class DeliveryBillRepository extends AbstractRepository
         ]);
 
         return true;
-    }
-
-    public function search(Array $array)
-    {
-        $query = DeliveryBill::whereBetween('created_at', [$array['startDate']." 00:00:00",$array['endDate']." 23:59:59"])->paginate(50);  
-        return $query;
     }
 }
