@@ -69,16 +69,16 @@ class OrderTrackingRepository
                 {
                     if($order->shippingService->service_sub_class == ShippingService::UPS_GROUND)
                     {
-                        $trackingNumber = '1Z022VX00499893563';
-                        $response = UPSFacade::trackOrder($trackingNumber);
-                        if($response->success == true)
+                        $response = UPSFacade::trackOrder($this->trackingNumber);
+                        
+                        if($response->success == true && !isset($response->data['trackResponse']['shipment'][0]['warnings']))
                         {
                             return (Object) [
                                 'success' => true,
                                 'status' => 200,
                                 'service' => 'UPS',
                                 'trackings' => $order->trackings,
-                                'ups_trackings' => $this->reverseTrackings($trackings = $response->data['trackResponse']['shipment'][0]['package'][0]['activity']),
+                                'ups_trackings' => $this->reverseTrackings($response->data['trackResponse']['shipment'][0]['package'][0]['activity']),
                                 'order' => $order
                             ];
                         }

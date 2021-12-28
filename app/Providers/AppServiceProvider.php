@@ -72,7 +72,7 @@ class AppServiceProvider extends ServiceProvider
             $pickup_rating_url = 'https://wwwcie.ups.com/ship/1707/pickups/rating';
             $pickup_shipment_url = 'https://wwwcie.ups.com/ship/1707/pickups';
             $pickup_cancel_url = 'https://wwwcie.ups.com/ship/v1/pickups/prn';
-            $tracking_url = 'https://onlinetools.ups.com/track/v1/details/';
+            $tracking_url = 'https://wwwcie.ups.com/track/v1/details/';
             $transactionSrc = 'HERCO';
             $userName = 'hffinc1';           
             $password = 'Hdbrasilc4!';
