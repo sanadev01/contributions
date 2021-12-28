@@ -18,6 +18,7 @@ class UpsService
     protected $pickup_rating_url;
     protected $pickup_shipment_url;
     protected $pickup_cancel_url;
+    protected $tracking_url;
     protected $userName;
     protected $password;
     protected $transactionSrc;
@@ -31,7 +32,7 @@ class UpsService
     protected $length;
     protected $weight;
 
-    public function __construct($create_package_url, $delete_package_url, $create_manifest_url, $rating_package_url, $pickup_rating_url, $pickup_shipment_url, $pickup_cancel_url, $transactionSrc, $userName, $password, $shipperNumber, $AccessLicenseNumber)
+    public function __construct($create_package_url, $delete_package_url, $create_manifest_url, $rating_package_url, $pickup_rating_url, $pickup_shipment_url, $pickup_cancel_url, $tracking_url, $transactionSrc, $userName, $password, $shipperNumber, $AccessLicenseNumber)
     {
         $this->create_package_url = $create_package_url;
         $this->delete_usps_label_url = $delete_package_url;
@@ -40,6 +41,7 @@ class UpsService
         $this->pickup_rating_url = $pickup_rating_url;
         $this->pickup_shipment_url = $pickup_shipment_url;
         $this->pickup_cancel_url = $pickup_cancel_url;
+        $this->tracking_url = $tracking_url;
         $this->userName = $userName;
         $this->password = $password;
         $this->transactionSrc = $transactionSrc;
@@ -89,6 +91,11 @@ class UpsService
     public function cancelPickup($prn)
     {
         return $this->cancelUPSPickup($prn);
+    }
+
+    public function trackOrder($trackingNumber)
+    {
+        return $this->trackUPSOrder($trackingNumber);
     }
 
     private function make_rates_request_for_sender($order, $request)
@@ -585,15 +592,7 @@ class UpsService
     private function ups_ApiCall($url, $data)
     {
         try {
-            $response = Http::withHeaders([
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-                'AccessLicenseNumber' => $this->AccessLicenseNumber,
-                'Password' => $this->password,
-                'Username' => $this->userName,
-                'transId' => $this->transactionSrc,
-                'transactionSrc' => 'HERCO SUITE#100',
-            ])->acceptJson()->post($url, $data);
+            $response = Http::withHeaders($this->setHeaders())->acceptJson()->post($url, $data);
            
             if($response->successful())
             {
@@ -636,13 +635,7 @@ class UpsService
     private function upsApiCallForPickup($url, $data)
     {
         try {
-            $response = Http::withHeaders([
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-                'AccessLicenseNumber' => $this->AccessLicenseNumber,
-                'Password' => $this->password,
-                'Username' => $this->userName,
-            ])->acceptJson()->post($url, $data);
+            $response = Http::withHeaders($this->setHeaders())->acceptJson()->post($url, $data);
             
             if($response->successful())
             {
@@ -733,6 +726,49 @@ class UpsService
        }
     }
 
+    private function trackUPSOrder($trackingNumber)
+    {
+        try {
+                $response = Http::withHeaders($this->setHeaders())
+                        ->acceptJson()->get($this->tracking_url.$trackingNumber);
+                
+                if($response->successful())
+                {
+                    return (Object)[
+                        'success' => true,
+                        'data' => $response->json(),
+                    ];
+                }elseif($response->clientError())
+                {
+                    return (Object)[
+                        'success' => false,
+                        'error' => $response->json(),
+                    ];    
+                }elseif ($response->status() !== 200) 
+                {
+
+                    return (object) [
+                        'success' => false,
+                        'error' => $response->json(),
+                    ];
+                }
+            } catch (Exception $e) {
+            return (object) [
+                'success' => false,
+                'error' => [
+                    'response' => [
+                        'errors' => [
+                            [
+                                'code' => 501,
+                                'message' => $e->getMessage(),
+                            ]
+                        ]
+                    ]
+                ],
+            ];
+        }
+    }
+
     private function getPaymentDetails()
     {
         return [
@@ -753,6 +789,19 @@ class UpsService
                 'Description' => 'Pounds'
             ],
             'Weight' => $this->chargableWeight
+        ];
+    }
+
+    private function setHeaders()
+    {
+       return [
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+            'AccessLicenseNumber' => $this->AccessLicenseNumber,
+            'Password' => $this->password,
+            'Username' => $this->userName,
+            'transId' => $this->transactionSrc,
+            'transactionSrc' => 'HERCO SUITE#100',
         ];
     }
 }
