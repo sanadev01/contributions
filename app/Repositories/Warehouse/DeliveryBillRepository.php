@@ -148,4 +148,10 @@ class DeliveryBillRepository extends AbstractRepository
 
         return true;
     }
+
+    public function search(Array $array)
+    {
+        $query = DeliveryBill::whereBetween('created_at', [$array['startDate']." 00:00:00",$array['endDate']." 23:59:59"])->paginate(50);  
+        return $query;
+    }
 }

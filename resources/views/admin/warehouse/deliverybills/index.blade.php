@@ -13,6 +13,46 @@
                     </div>
                     <div class="card-content card-body" style="min-height: 100vh;">
                         <div class="mt-1">
+                            <div class="col-12 text-right">
+                                <form  action="">
+                                <div class="row justify-content-start">
+                                    <div class="col-md-4">
+                                        <div class="row justify-content-start">
+                                            <div class="col-md-3">
+                                                <label>Start Date</label>
+
+                                            </div>
+                                            <div class="col-md-9">
+                                                <input type="date" class="form-control mb-2 mr-sm-2" value="{{ Request('startDate') }}" name="startDate">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="row justify-content-start">
+                                            <div class="col-md-3">
+                                                <label>End Date</label>
+
+                                            </div>
+                                            <div class="col-md-9">
+                                                <input type="date" class="form-control" value="{{ Request('endDate') }}"  name="endDate">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <button class="btn btn-success waves-effect waves-light" title="Search">
+                                            Search <i class="fa fa-search" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <a class="btn btn-success waves-effect waves-light" href="{{url('delivery_bill')}}">
+                                            back to lists
+                                        </a>
+                                    </div>
+                                </div>
+                                </form>
+                            </div>
                             <table class="table mb-0">
                                 <thead>
                                 <tr>
