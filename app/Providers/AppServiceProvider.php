@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 
+use App\Services\UPS\UpsService;
 use App\Services\USPS\UspsService;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
@@ -60,6 +61,25 @@ class AppServiceProvider extends ServiceProvider
             // $password = config('usps.password');
 
             return new UspsService($api_url, $delete_usps_label_url, $create_manifest_url, $get_price_url, $email, $password);
+        });
+
+        $this->app->singleton('UPS_service', function() {
+            // UPS Api Testing Environemtn Credentials
+            $create_package_url = 'https://wwwcie.ups.com/ship/v1/shipments';
+            $delete_package_url = '';
+            $create_manifest_url = '';
+            $rating_package_url = 'https://onlinetools.ups.com/ship/v1/rating/Rate';
+            $pickup_rating_url = 'https://wwwcie.ups.com/ship/1707/pickups/rating';
+            $pickup_shipment_url = 'https://wwwcie.ups.com/ship/1707/pickups';
+            $pickup_cancel_url = 'https://wwwcie.ups.com/ship/v1/pickups/prn';
+            $tracking_url = 'https://wwwcie.ups.com/track/v1/details/';
+            $transactionSrc = 'HERCO';
+            $userName = 'hffinc1';           
+            $password = 'Hdbrasilc4!';
+            $shipperNumber = '022VX0';
+            $AccessLicenseNumber = '5DA71F61D4F245F6';
+
+            return new UpsService($create_package_url, $delete_package_url, $create_manifest_url, $rating_package_url, $pickup_rating_url, $pickup_shipment_url, $pickup_cancel_url, $tracking_url, $transactionSrc, $userName, $password, $shipperNumber, $AccessLicenseNumber);
         });
 
         $this->app->singleton('CorreiosBrazilTracking_service', function() {

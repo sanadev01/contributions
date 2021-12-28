@@ -70,7 +70,7 @@
                                                 </select>
                                             </div>
                                             <div class="controls col-6" id="buy_label_div">
-                                                <button id="btn-submit" type="button" class="btn btn-success btn-lg mt-4" @if(auth()->user()->usps == false) disabled @endif>
+                                                <button id="btn-submit" type="button" class="btn btn-success btn-lg mt-4" @if(!auth()->user()->usps) disabled @endif>
                                                     Buy Label
                                                 </button>
                                             </div>

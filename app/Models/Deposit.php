@@ -50,7 +50,7 @@ class Deposit extends Model
         return $this->orders()->count();
     }
 
-    public static function chargeAmount($amount,Order $order=null)
+    public static function chargeAmount($amount,Order $order=null,$description=null)
     {
 
         $deposit = self::create([
@@ -60,6 +60,7 @@ class Deposit extends Model
             'order_id' => $order->id,
             'balance' => Deposit::getCurrentBalance() - $amount,
             'is_credit' => false,
+            'description' => $description ? $description.$order->warehouse_number : null,
         ]);
 
         if ( $order ){

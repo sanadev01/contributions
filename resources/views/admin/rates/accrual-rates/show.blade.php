@@ -8,14 +8,22 @@
                     <div class="card-header">
                         <div class="">
                             <h4 class="mb-0 mr-3">
-                                @lang('shipping-rates.shipping-rates')
+                                @lang('shipping-rates.accrual-rates')
                             </h4>
                             <hr>
                         </div>
                         @can('create', App\Models\Rate::class)
-                            <a href="{{ route('admin.rates.accrual-rates.index') }}" class="pull-right btn btn-primary">
-                                @lang('shipping-rates.Return to List')
-                            </a>
+                        <div class="row col-md-6">
+                            <div class="ml-auto">
+                                <a href="{{ route('admin.rates.accrual-rates.index') }}" class="pull-right btn btn-primary ml-2">
+                                    @lang('shipping-rates.Return to List')
+                                </a>
+                                <a href="{{ route('admin.rates.download-accrual-rates', $service) }}" class="pull-right btn btn-success">
+                                    @lang('shipping-rates.Download')
+                                </a>
+                            </div>    
+                        </div>
+                            
                         @endcan
                     </div>
                     <hr>
