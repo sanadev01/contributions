@@ -23,7 +23,7 @@
         <div class="controls d-flex mb-1">
             <div>
                 <div class="vs-checkbox-con vs-checkbox-primary" title="Insurance">
-                    <input type="radio" name="service" value="postal_service" id="postal_service" required @if( optional($order->recipient)->commune_id == null && $order->recipient != null ) checked @endif>
+                    <input type="radio" name="service" value="postal_service" id="postal_service" required @if( (optional($order->recipient)->commune_id == null && $order->recipient != null) || old('service') == 'postal_service') checked @endif>
                     <span class="vs-checkbox vs-checkbox-lg">
                         <span class="vs-checkbox--check">
                             <i class="vs-icon feather icon-check"></i>
@@ -34,7 +34,7 @@
             </div>
             <div class="ml-3">
                 <div class="vs-checkbox-con vs-checkbox-primary" title="Insurance">
-                    <input type="radio" name="service" value="courier_express" id="courier_express" required @if( optional($order->recipient)->commune_id != null ) checked @endif>
+                    <input type="radio" name="service" value="courier_express" id="courier_express" required @if( optional($order->recipient)->commune_id != null || old('service') == 'courier_express') checked @endif>
                     <span class="vs-checkbox vs-checkbox-lg">
                         <span class="vs-checkbox--check">
                             <i class="vs-icon feather icon-check"></i>
