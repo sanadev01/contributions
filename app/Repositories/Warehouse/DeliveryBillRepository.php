@@ -27,7 +27,6 @@ class DeliveryBillRepository extends AbstractRepository
             $endDate = $request->endDate. ' 23:59:59';
             $query->where('created_at','<=', $endDate);
         }
-        // dd($query->get());
         return $query->latest()->paginate(50);
     }
 
