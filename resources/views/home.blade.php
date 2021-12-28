@@ -78,7 +78,7 @@
         @endif
         {{-- <x-charts.orders-charts/> --}}
         
-        <div class="row card">
+        <div class="card">
             <livewire:dashboard.stats-filter/>
         </div>
         

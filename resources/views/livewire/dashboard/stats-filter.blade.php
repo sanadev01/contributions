@@ -12,7 +12,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-3">
+        <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
             <div class="card_block bg-c-green order-card">
                 <div class="card-block">
                     <h5 class="m-b-20 white">@lang('dashboard.today-orders')</h5>
@@ -22,7 +22,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-3">
+        <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
             <div class="card_block bg-c-yellow order-card">
                 <div class="card-block">
                     <h5 class="m-b-20 white">Total {{ $orders['monthName'] }} Orders</h5>
@@ -33,7 +33,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-3">
+        <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
             <div class="card_block bg-c-pink order-card">
                 <div class="card-block">
                     <h5 class="m-b-20 white">Total Current Year Orders</h5>
@@ -44,7 +44,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-3">
+        <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
             <div class="card_block bg-c-blue order-card">
                 <div class="card-block">
                     <h5 class="m-b-20 white">Total Orders</h5>
