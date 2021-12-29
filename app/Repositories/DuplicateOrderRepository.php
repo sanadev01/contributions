@@ -29,6 +29,8 @@ class DuplicateOrderRepository extends Model
         $copy->api_response = null;
         $copy->us_api_tracking_code = null;
         $copy->us_api_response = null;
+        $copy->api_pickup_response = null;
+        $copy->us_api_service = null;
         $copy->us_api_cost = 0;
         $copy->sinerlog_tran_id = null;
         $copy->sinerlog_freight = null;
