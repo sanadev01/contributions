@@ -16,9 +16,9 @@ class DeliveryBillController extends Controller
      * @param DeliveryBillRepository $deliveryBillRepository
      * @return \Illuminate\Http\Response
      */
-    public function index(DeliveryBillRepository $deliveryBillRepository)
+    public function index(DeliveryBillRepository $deliveryBillRepository,Request $request)
     {
-        $deliveryBills = $deliveryBillRepository->get();
+        $deliveryBills = $deliveryBillRepository->get($request);
         return view('admin.warehouse.deliverybills.index',compact('deliveryBills'));
     }
 
