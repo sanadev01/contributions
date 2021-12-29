@@ -289,8 +289,8 @@ class OrderRepository
         if (Auth::user()->isUser()) {
             $orders->where('user_id', Auth::id());
         }
-        $startDate  = $request->start_date.'00:00:00';
-        $endDate    = $request->end_date.'23:59:59';
+        $startDate  = $request->start_date.' 00:00:00';
+        $endDate    = $request->end_date.' 23:59:59';
         if ( $request->start_date ){
             $orders->where('order_date','>=',$startDate);
         }
