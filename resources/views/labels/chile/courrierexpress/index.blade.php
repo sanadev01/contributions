@@ -303,6 +303,13 @@
             font-size: 16px !important;
             margin-left:20px;
         }
+        .chl_class{
+            margin-top: -50%;
+            margin-left:15%;
+            position: absolute;
+            font-size: 35px !important;
+        }
+        
     </style>
 </head>
 <body>
@@ -339,6 +346,9 @@
     <p class="zipcode-label">{{ cleanString($recipient->zipcode) }}</p>
     <div class="serivce-zipcode">
         <div class="left-block">
+            <div class="chl_class">
+                <h1>CHL</h1>
+            </div>
             @if($order->getOriginalWeight('kg') > 3)
                 <div class="bottom-block">
                     <div class="box-g">    </div>
