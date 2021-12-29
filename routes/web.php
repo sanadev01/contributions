@@ -3,7 +3,6 @@
 use App\Models\Order;
 use App\Services\StoreIntegrations\Shopify;
 use App\Http\Controllers\Admin\Deposit\DepositController;
-use App\Models\AffiliateSale;
 use App\Models\ProfitPackage;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 
@@ -213,13 +212,9 @@ Route::get('order/{order}/usps-label/get', function (App\Models\Order $order) {
     return response()->download(storage_path("app/labels/{$order->corrios_usps_tracking_code}.pdf"),"{$order->corrios_usps_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.usps-label.download');
 
-Route::get('delete/sales/{id?}',function($id = null){
-    $profit = AffiliateSale::where('created_at',"<=","2021-11-30 23:59:59");
-    if($id){
-        $profit->delete();
-    }
-    dd($profit->get(), $profit->count());
-    
+Route::get('test-profit/{id}',function($id){
+    $profit = ProfitPackage::find($id);
+    dd($profit);
     // $labelPrinter = new CN23LabelMaker();
 
     // $order = Order::find(53654);
