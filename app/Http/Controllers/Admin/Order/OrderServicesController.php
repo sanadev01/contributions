@@ -48,7 +48,7 @@ class OrderServicesController extends Controller
     
     private function checkInsurance($services, $order)
     {
-        if($order->user->insurance == true)
+        if(setting('insurance', null, $order->user->id))
         {
             $services = $services->filter(function ($service) {
                 return $service->name != ('Insurance' || 'Seguro');
@@ -57,7 +57,7 @@ class OrderServicesController extends Controller
 
         if ($order->user->hasRole('wholesale'))
         {
-            if($order->user->insurance == true)
+            if(setting('insurance', null, $order->user->id))
             {
                 $services = $services->filter(function ($service) {
                     return $service->name != ('Insurance' || 'Seguro');

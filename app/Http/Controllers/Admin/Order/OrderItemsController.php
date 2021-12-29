@@ -67,7 +67,7 @@ class OrderItemsController extends Controller
             || $shippingServices->contains('service_sub_class', ShippingService::USPS_FIRSTCLASS)
             || $shippingServices->contains('service_sub_class', ShippingService::UPS_GROUND))
         {
-            if(!$order->user->usps)
+            if(!setting('usps', null, $order->user->id))
             {
                 $error = "USPS is not enabled for this user";
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
@@ -75,7 +75,7 @@ class OrderItemsController extends Controller
                         $shippingService->service_sub_class != ShippingService::USPS_FIRSTCLASS;
                 });
             }
-            if(!$order->user->ups)
+            if(!setting('ups', null, $order->user->id))
             {
                 $error = "UPS is not enabled for this user";
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
@@ -92,7 +92,7 @@ class OrderItemsController extends Controller
         if($order->recipient->country_id == Order::BRAZIL)
         {
             // If sinerlog is enabled for the user, then remove the Correios services
-            if($order->user->sinerlog == true)
+            if(setting('sinerlog', null, $order->user->id))
             {
                 $shippingServices = $shippingServices->filter(function ($item, $key)  {
                     return $item->service_sub_class != '33162' && $item->service_sub_class != '33170' && $item->service_sub_class != '33197';
@@ -100,7 +100,7 @@ class OrderItemsController extends Controller
             }
 
             // If sinerlog is not enabled for the user then remove Sinerlog services from shipping service
-            if($order->user->sinerlog != true)
+            if(!setting('sinerlog', null, $order->user->id))
             {
                 $shippingServices = $shippingServices->filter(function ($item, $key)  {
                     return $item->service_sub_class != '33163' && $item->service_sub_class != '33171' && $item->service_sub_class != '33198';

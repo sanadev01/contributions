@@ -45,7 +45,7 @@
                                     @endforeach
                                 </div>
                                 @if ($userLoggedIn)
-                                    @if(auth()->user()->ups == false) 
+                                    @if(!setting('ups', null, auth()->user()->id)) 
                                         <div class="row mb-1 ml-4">
                                             <div class="controls col-12">
                                                 <h4 class="text-danger">UPS is not enabled for your account</h4>
@@ -68,12 +68,9 @@
                                                         <option {{ old('shipping_service') == $shipping_service['name'] ? 'selected' : '' }} value="{{ $shipping_service['sub_class_code'] }}" data-cost="{{ $shipping_service['rate']}}">{{ $shipping_service['name'] }}</option>
                                                     @endforeach
                                                 </select>
-                                                @if (!auth()->user()->ups)
-                                                    <span class="text-danger">UPS is not enabled for your account</span>
-                                                @endif
                                             </div>
                                             <div class="controls col-6" id="buy_label_div">
-                                                <button id="btn-submit" type="button" class="btn btn-success btn-lg mt-4" @if(auth()->user()->ups == false) disabled @endif>
+                                                <button id="btn-submit" type="button" class="btn btn-success btn-lg mt-4" @if(!setting('ups', null, auth()->user()->id)) disabled @endif>
                                                     Buy Label
                                                 </button>
                                             </div>
