@@ -5,10 +5,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Log;
 
+use App\Repositories\DashboardRepository;
 class HomeController extends Controller
 {
     /**
@@ -16,12 +15,14 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function __invoke()
+    public function __invoke(DashboardRepository $dashboard)
     {
-        return view('home');   
+        $orders = $dashboard->getDashboardStats();
+        
+        return view('home',compact('orders'));   
     }
-
-    public function testBrazilTracking()
+    
+    public function test()
     {
         return true;
     }

@@ -3,7 +3,7 @@
         <tbody>
             <tr>
                 <td colspan="3">
-                    DECLARACÃO PARA ALFÃNDEGA
+                   customs declaration
                 </td>
                 <td colspan="3">
                     PODE SER ABERTO EX OFICIO 1/2

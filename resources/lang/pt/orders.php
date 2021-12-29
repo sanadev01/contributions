@@ -168,6 +168,7 @@ return [
         'duplicate-order' => 'Pedido Duplicado',
         'back-to-list' => 'Voltar',
         'buy-domestic-label' => 'Buy Domestic Etiqueta',
+        'buy-us-label' => 'Buy US Etiqueta',
         'buy-usps-label' => 'Comprar Etiqueta USPS',
         'print-usps-label' => 'Imprimir Etiqueta USPS',
         'buy-ups-label' => 'Comprar Etiqueta UPS',

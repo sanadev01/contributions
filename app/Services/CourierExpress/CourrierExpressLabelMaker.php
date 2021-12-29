@@ -29,7 +29,7 @@ class CourrierExpressLabelMaker implements HasLableExport
         $this->returnAddress = 'Blue Line Ag. De Cargas Ltda. <br>
         Rua Barao Do Triunfo, 520 - CJ 152 - Brooklin Paulista
         CEP 04602-001 - São Paulo - SP- Brasil';
-        $this->complainAddress = 'Em caso de problemas com o produto, entre em contato com o remetente';
+        $this->complainAddress = 'In case of any question please contact the shipper';
     }
 
     public function setOrder(Order $order)

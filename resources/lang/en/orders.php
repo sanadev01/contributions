@@ -174,6 +174,7 @@ return [
         'duplicate-order' => 'Duplicate Order',
         'back-to-list' => 'Back to List',
         'buy-domestic-label' => 'Buy Domestic Label',
+        'buy-us-label' => 'Buy US Label',
         'buy-usps-label' => 'Buy USPS Label',
         'print-usps-label' => 'Print USPS Label',
         'buy-ups-label' => 'Buy UPS Label',

@@ -90,7 +90,7 @@
                         </a>
                     @endcan
                     @if ( auth()->user()->can('updateConsolidation',$parcel) && $parcel->isConsolidated())
-                        <a href="{{ route('admin.consolidation.parcels.edit',$parcel) }}" class="dropdown-item btn" title="@lang('consolidation.Edit Consolidation')">
+                        <a @if(Auth::user()->isActive()) href="{{ route('admin.consolidation.parcels.edit',$parcel) }}" @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" @endif class="dropdown-item btn" title="@lang('consolidation.Edit Consolidation')">
                             <i class="feather icon-edit"></i> @lang('consolidation.Edit Consolidation')
                         </a>
                     @endif

@@ -315,8 +315,8 @@
     </div>
     <p class="barcode-label">{{$order->corrios_tracking_code}}</p>
     <div class="empty-lines">
-        Nome legível: _______________________________________________ <br>
-        Documento: ___________________Rúbrica:______________________
+        Name: _______________________________________________ <br>
+        ID Number: ___________________Initials:______________________
     </div>
     <div class="address">
         <div class="destination">
@@ -354,7 +354,7 @@
             @endif
         </div>
         <div class="right-block">
-            <h2>Remetente:</h2>
+            <h2>Shipper:</h2>
             {{ $order->sender_first_name }} {{ $order->sender_last_name }} <br>
             {{ $order->sender_email }} <br>
             <strong>Order#:</strong>{{ $order->warehouse_number }} <br>

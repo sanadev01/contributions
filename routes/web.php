@@ -1,10 +1,11 @@
 <?php
 
 use App\Models\Order;
+use App\Models\ProfitPackage;
 use App\Services\StoreIntegrations\Shopify;
 use App\Http\Controllers\Admin\Deposit\DepositController;
-use App\Models\ProfitPackage;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
+use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,6 +80,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('orders.label', OrderLabelController::class)->only('index','store');
             Route::get('order-exports', OrderExportController::class)->name('order.exports');
             Route::get('bulk-action', BulkActionController::class)->name('order.bulk-action');
+            Route::get('order/{order}/us-label', [OrderUSLabelController::class, 'index'])->name('order.us-label.index');
             Route::resource('orders.usps-label', OrderUSPSLabelController::class)->only('index','store');
             Route::resource('orders.ups-label', OrderUPSLabelController::class)->only('index','store');
             Route::get('order-ups-label-cancel-pickup/{id?}', [\App\Http\Controllers\Admin\Order\OrderUPSLabelController::class, 'cancelUPSPickup'])->name('order.ups-label.cancel.pickup');
@@ -241,4 +243,4 @@ Route::get('test-profit/{id}',function($id){
 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
 
-Route::get('test-usps', [\App\Http\Controllers\Admin\HomeController::class,'testBrazilTracking'])->middleware('auth')->name('test-usps');
+Route::get('test', [\App\Http\Controllers\Admin\HomeController::class,'test'])->middleware('auth')->name('test');

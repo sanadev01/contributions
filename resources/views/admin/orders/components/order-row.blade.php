@@ -110,11 +110,11 @@
                         @if( !$order->isPaid() && !$order->isNeedsProcessing() && $order->user->isActive())
 
                             @if ( optional($order)->getPaymentInvoice() )
-                                <a href="{{ route('admin.payment-invoices.invoice.show',optional($order)->getPaymentInvoice()) }}" class="dropdown-item" title="Pay Order">
+                                <a  @if(Auth::user()->isActive()) href="{{ route('admin.payment-invoices.invoice.show',optional($order)->getPaymentInvoice()) }}" @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" @endif  class="dropdown-item" title="Pay Order">
                                     <i class="feather icon-dollar-sign"></i> @lang('orders.actions.pay-order')
                                 </a>
                             @else
-                                <a href="{{ route('admin.payment-invoices.orders.index',['order'=>$order]) }}" class="dropdown-item" title="Pay Order">
+                                <a @if(Auth::user()->isActive()) href="{{ route('admin.payment-invoices.orders.index',['order'=>$order]) }}" @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" @endif  class="dropdown-item" title="Pay Order">
                                     <i class="feather icon-dollar-sign"></i> @lang('orders.actions.pay-order')
                                 </a>
                             @endif
@@ -140,26 +140,19 @@
                             <i class="feather icon-printer"></i>@lang('orders.actions.label')
                         </a>
                         @if( $order->corrios_tracking_code && $order->recipient->country_id != \App\Models\Order::US && !$order->hasSecondLabel())
-                            <a href="{{ route('admin.orders.usps-label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
-                                <i class="feather icon-printer"></i>@lang('orders.actions.buy-usps-label')
-                            </a>
-                            <a href="{{ route('admin.orders.ups-label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
-                                <i class="feather icon-printer"></i>@lang('orders.actions.buy-ups-label')
+                            <a href="{{ route('admin.order.us-label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
+                                <i class="feather icon-printer"></i>@lang('orders.actions.buy-us-label')
                             </a>
                         @endif
-                        @if($order->hasSecondLabel() && $order->usLabelService() == \App\Models\ShippingService::UPS_GROUND)
-                            <a href="{{ route('admin.orders.ups-label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
-                                <i class="feather icon-printer"></i>@lang('orders.actions.print-ups-label')
+                        @if($order->hasSecondLabel())
+                            <a href="{{ route('admin.order.us-label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
+                                <i class="feather icon-printer"></i>@if($order->usLabelService() == \App\Models\ShippingService::UPS_GROUND)@lang('orders.actions.print-ups-label') @else @lang('orders.actions.print-usps-label') @endif
                             </a>
                             @if ($order->apiPickupResponse() != null)
                                 <a href="{{ route('admin.order.ups-label.cancel.pickup', $order->id) }}" class="dropdown-item" title="@lang('orders.actions.label')">
                                     <i class="feather icon-trash"></i>@lang('orders.actions.cancel-ups-pickup')
                                 </a>
                             @endif
-                        @elseif($order->hasSecondLabel() && ($order->usLabelService() == (\App\Models\ShippingService::USPS_PRIORITY || \App\Models\ShippingService::USPS_FIRSTCLASS) ))
-                            <a href="{{ route('admin.orders.usps-label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
-                                <i class="feather icon-printer"></i>@lang('orders.actions.print-usps-label')
-                            </a>
                         @endif        
                     @endif
                    @can('updateOrder', $order)
