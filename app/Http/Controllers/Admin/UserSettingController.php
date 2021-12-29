@@ -20,8 +20,6 @@ class UserSettingController extends Controller
     
     public function index(User $user)
     {   
-        // saveSetting('ups', true, $user->id);
-        // dd(setting('ups', null, $user->id));
         $packages = ProfitPackage::orderBy('name','ASC')->get();
         $roles = Role::orderBy('id', 'desc')->get();
         $users = User::user()->get();
