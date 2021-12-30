@@ -59,6 +59,10 @@
     </td>
     <td>
         {{ $order->corrios_tracking_code }}
+        @if($order->hasSecondLabel())
+            <hr>
+            {{ $order->us_api_tracking_code }}
+        @endif
     </td>
     <td>
         ${{ number_format($order->gross_total,2) }}
