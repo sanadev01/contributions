@@ -304,10 +304,12 @@
             margin-left:20px;
         }
         .chl_class{
+            text-align: center;
             margin-top: -50%;
-            margin-left:15%;
             position: absolute;
             font-size: 35px !important;
+            font-family: Arial !important;
+            color: black;
         }
         
     </style>
