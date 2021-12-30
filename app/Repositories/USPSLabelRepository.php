@@ -158,13 +158,11 @@ class USPSLabelRepository
 
     private function addProfit($user, $usps_rate)
     {
-        $this->user_api_profit = $user->api_profit;
+        $this->user_api_profit = setting('usps_profit', null, $user->id);
 
-        if($this->user_api_profit == 0)
+        if($this->user_api_profit == null || $this->user_api_profit == 0)
         {
-            $admin = User::where('role_id',1)->first();
-
-            $this->user_api_profit = $admin->api_profit;
+            $this->user_api_profit = setting('usps_profit', null, 1);
         }
 
         $profit = $usps_rate * ($this->user_api_profit / 100);

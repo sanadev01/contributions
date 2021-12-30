@@ -355,7 +355,7 @@ class Order extends Model implements Package
         if($this->recipient->country_id == self::US)
         {
             $shippingCost = $this->user_declared_freight;
-            $this->calculateProfit($shippingCost);
+            $this->calculateProfit($shippingCost, $shippingService);
 
         } else {
             $shippingCost = $shippingService->getRateFor($this,true,$onVolumetricWeight);
@@ -402,9 +402,14 @@ class Order extends Model implements Package
         
         return $services->sum('price');
     }
-    public function calculateProfit($shippingCost)
+    public function calculateProfit($shippingCost, $shippingService)
     {
-        $profit_percentage = ($this->user->api_profit != 0) ? $this->user->api_profit : $this->getAdminProfit();
+        if ($shippingService->service_sub_class == ShippingService::UPS_GROUND) {
+            $profit_percentage = (setting('ups_profit', null, $this->user->id) != null &&  setting('ups_profit', null, $this->user->id) != 0) ?  setting('ups_profit', null, $this->user->id) : setting('ups_profit', null, 1);
+        }else {
+            $profit_percentage = (setting('usps_profit', null, $this->user->id) != null &&  setting('usps_profit', null, $this->user->id) != 0) ?  setting('usps_profit', null, $this->user->id) : setting('usps_profit', null, 1);
+        }
+        
         $profit = $profit_percentage / 100;
         
         $this->user_profit = $shippingCost * $profit;

@@ -40,17 +40,21 @@ class UserSettingController extends Controller
             'api_enabled' => $request->has('api_enabled'),
             'market_place_name' => $request->market_place_name,
             'email' => $request->user_email,
-            'battery' => $request->has('battery') ? saveSetting('perfume', true, $user->id) : saveSetting('battery', false, $user->id),
-            'perfume' => $request->has('perfume') ? saveSetting('perfume', true, $user->id) : saveSetting('perfume', false, $user->id),
-            'insurance' => $request->has('insurance') ? saveSetting('insurance', true, $user->id) : saveSetting('insurance', false, $user->id),
-            'usps' => $request->has('usps') ? saveSetting('usps', true, $user->id) : saveSetting('usps', false, $user->id),
-            'ups' => $request->has('ups') ? saveSetting('ups', true, $user->id) : saveSetting('ups', false, $user->id),
-            'stripe' => $request->has('stripe') ? saveSetting('stripe', true, $user->id) : saveSetting('stripe', false, $user->id),
-            'sinerlog' => $request->has('sinerlog') ? saveSetting('sinerlog', true, $user->id) : saveSetting('sinerlog', false, $user->id),
-            'api_profit' => $request->input('api_profit'),
-            'order_dimension' => $request->input('order_dimension'),
         ]);
 
+        $request->has('battery') ? saveSetting('perfume', true, $user->id) : saveSetting('battery', false, $user->id);
+        $request->has('perfume') ? saveSetting('perfume', true, $user->id) : saveSetting('perfume', false, $user->id);
+        $request->has('insurance') ? saveSetting('insurance', true, $user->id) : saveSetting('insurance', false, $user->id);
+        $request->has('usps') ? saveSetting('usps', true, $user->id) : saveSetting('usps', false, $user->id);
+        $request->has('ups') ? saveSetting('ups', true, $user->id) : saveSetting('ups', false, $user->id);
+        $request->has('stripe') ? saveSetting('stripe', true, $user->id) : saveSetting('stripe', false, $user->id);
+        $request->has('sinerlog') ? saveSetting('sinerlog', true, $user->id) : saveSetting('sinerlog', false, $user->id);
+
+        ($request->usps_profit != null ) ? saveSetting('usps_profit', $request->usps_profit, $user->id) : saveSetting('usps_profit', 0, $user->id);
+        ($request->usps_order_dimension != null ) ? saveSetting('usps_order_dimension', $request->usps_order_dimension, $user->id) : saveSetting('usps_order_dimension', 0, $user->id);
+        ($request->ups_profit != null ) ? saveSetting('ups_profit', $request->ups_profit, $user->id) : saveSetting('ups_profit', 0, $user->id);
+        ($request->ups_order_dimension != null ) ? saveSetting('ups_order_dimension', $request->ups_order_dimension, $user->id) : saveSetting('ups_order_dimension', 0, $user->id);
+        
         if ( $request->password ){
             $user->update([
                 'password' => bcrypt($request->password)

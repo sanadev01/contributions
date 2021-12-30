@@ -200,9 +200,9 @@
                                                 </span>
                                             </div>
                                             <span class="offset-2 mr-2 mt-2">Profit Percentage (%) :</span>
-                                            <input type="number" name="api_profit" class="form-control col-2" id="api_profit" value="{{ $user->api_profit }}">
+                                            <input type="number" name="usps_profit" class="form-control col-2" id="usps_profit" value="{{ setting('usps_profit', null, $user->id) }}">
                                             <span class="offset-2 mr-2 mt-2">Bulk Label Dimension (%) :</span>
-                                            <input type="number" name="order_dimension" class="form-control col-2" id="order_dimension" value="{{ $user->order_dimension }}">
+                                            <input type="number" name="usps_order_dimension" class="form-control col-2" id="usps_order_dimension" value="{{ setting('usps_order_dimension', null, $user->id) }}">
                                         </div>    
                                     </div>
                                 </div>
@@ -218,6 +218,10 @@
                                                     </span>
                                                 </span>
                                             </div>
+                                            <span class="offset-2 mr-2 mt-2">Profit Percentage (%) :</span>
+                                            <input type="number" name="ups_profit" class="form-control col-2" id="ups_profit" value="{{ setting('ups_profit', null, $user->id) }}">
+                                            <span class="offset-2 mr-2 mt-2">Bulk Label Dimension (%) :</span>
+                                            <input type="number" name="ups_order_dimension" class="form-control col-2" id="ups_order_dimension" value="{{ setting('ups_order_dimension', null, $user->id) }}">
                                         </div>    
                                     </div>
                                 </div>
