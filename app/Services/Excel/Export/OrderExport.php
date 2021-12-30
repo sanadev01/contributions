@@ -34,49 +34,49 @@ class OrderExport extends AbstractExportService
         foreach ($this->orders as $order) {
             $user = $order->user;
         
-            $this->setCellValue('A'.$row, $order->warehouse_number);
-            $this->setCellValue('B'.$row, $user->name);
-            $this->setCellValue('C'.$row, $order->merchant);
-            $this->setCellValue('D'.$row, $order->tracking_id);
-            $this->setCellValue('E'.$row, $order->customer_reference);
-            $this->setCellFormat('F'.$row);
-            $this->setCellValue('F'.$row, (string)$order->corrios_tracking_code);
-            $this->setCellValue('G'.$row, $order->gross_total);
-            $this->setCellValue('H'.$row, $this->checkValue(number_format($order->dangrous_goods,2)));
-            $this->setCellValue('I'.$row, $order->getWeight('kg'));
-            $this->setCellValue('J'.$row, $order->getWeight('lbs'));
-            $this->setCellValue('K'.$row, $this->getVolumnWeight($order->length, $order->width, $order->height,$this->isWeightInKg($order->measurement_unit)));
-            $this->setCellValue('L'.$row, $order->length. ' X '. $order->width.' X '.$order->height);
+            $this->setCellValue('A'.$row, $order->order_date);
+            $this->setCellValue('B'.$row, $order->warehouse_number);
+            $this->setCellValue('C'.$row, $user->name);
+            $this->setCellValue('D'.$row, $order->merchant);
+            $this->setCellValue('E'.$row, $order->tracking_id);
+            $this->setCellValue('F'.$row, $order->customer_reference);
+            $this->setCellFormat('G'.$row);
+            $this->setCellValue('G'.$row, (string)$order->corrios_tracking_code);
+            $this->setCellValue('H'.$row, $order->gross_total);
+            $this->setCellValue('I'.$row, $this->checkValue(number_format($order->dangrous_goods,2)));
+            $this->setCellValue('J'.$row, $order->getWeight('kg'));
+            $this->setCellValue('K'.$row, $order->getWeight('lbs'));
+            $this->setCellValue('L'.$row, $this->getVolumnWeight($order->length, $order->width, $order->height,$this->isWeightInKg($order->measurement_unit)));
+            $this->setCellValue('M'.$row, $order->length. ' X '. $order->width.' X '.$order->height);
 
             if($order->status == Order::STATUS_ORDER){
-                $this->setCellValue('M'.$row, 'ORDER');
+                $this->setCellValue('N'.$row, 'ORDER');
             }
             if($order->status == Order::STATUS_NEEDS_PROCESSING){
-                $this->setCellValue('M'.$row, 'PROCESSING');
+                $this->setCellValue('N'.$row, 'PROCESSING');
             }
             if($order->status == Order::STATUS_CANCEL){
-                $this->setCellValue('M'.$row, 'CANCEL');
+                $this->setCellValue('N'.$row, 'CANCEL');
             }
             if($order->status == Order::STATUS_REJECTED){
-                $this->setCellValue('M'.$row, 'REJECTED');
+                $this->setCellValue('N'.$row, 'REJECTED');
             }
             if($order->status == Order::STATUS_RELEASE){
-                $this->setCellValue('M'.$row, 'RELEASED');
+                $this->setCellValue('N'.$row, 'RELEASED');
             }
             if($order->status == Order::STATUS_REFUND){
-                $this->setCellValue('M'.$row, 'REFUND');
+                $this->setCellValue('N'.$row, 'REFUND');
             }
             if($order->status == Order::STATUS_PAYMENT_PENDING){
-                $this->setCellValue('M'.$row, 'PAYMENT PENDING');
+                $this->setCellValue('N'.$row, 'PAYMENT PENDING');
             }
             if($order->status == Order::STATUS_PAYMENT_DONE){
-                $this->setCellValue('M'.$row, 'PAYMENT DONE');
+                $this->setCellValue('N'.$row, 'PAYMENT DONE');
             }
             if($order->status == Order::STATUS_SHIPPED){
-                $this->setCellValue('M'.$row, 'SHIPPED');
+                $this->setCellValue('N'.$row, 'SHIPPED');
             }
             
-            $this->setCellValue('N'.$row, $order->order_date);
             
             $row++;
         }
@@ -99,47 +99,49 @@ class OrderExport extends AbstractExportService
     private function setExcelHeaderRow()
     {
         $this->setColumnWidth('A', 20);
-        $this->setCellValue('A1', 'Order ID#');
+        $this->setCellValue('A1', 'Date');
 
         $this->setColumnWidth('B', 20);
-        $this->setCellValue('B1', 'Name');
+        $this->setCellValue('B1', 'Order ID#');
 
         $this->setColumnWidth('C', 20);
-        $this->setCellValue('C1', 'Loja/Cliente');
+        $this->setCellValue('C1', 'Name');
 
         $this->setColumnWidth('D', 20);
-        $this->setCellValue('D1', 'Carrier Tracking');
+        $this->setCellValue('D1', 'Loja/Cliente');
 
         $this->setColumnWidth('E', 20);
-        $this->setCellValue('E1', 'Referência do Cliente');
+        $this->setCellValue('E1', 'Carrier Tracking');
 
-        $this->setColumnWidth('F', 23);
-        $this->setCellValue('F1', '	Tracking Code');
+        $this->setColumnWidth('F', 20);
+        $this->setCellValue('F1', 'Referência do Cliente');
 
-        $this->setColumnWidth('G', 20);
-        $this->setCellValue('G1', 'Amount');
+        $this->setColumnWidth('G', 23);
+        $this->setCellValue('G1', '	Tracking Code');
 
-        $this->setColumnWidth('H', 25);
-        $this->setCellValue('H1', 'Battery/Perfume/Flameable');
+        $this->setColumnWidth('H', 20);
+        $this->setCellValue('H1', 'Amount');
 
-        $this->setColumnWidth('I', 20);
-        $this->setCellValue('I1', 'Weight(Kg)');
-        
+        $this->setColumnWidth('I', 25);
+        $this->setCellValue('I1', 'Battery/Perfume/Flameable');
+
         $this->setColumnWidth('J', 20);
-        $this->setCellValue('J1', 'Weight(Lbs)');
-
+        $this->setCellValue('J1', 'Weight(Kg)');
+        
         $this->setColumnWidth('K', 20);
-        $this->setCellValue('K1', 'Metric Weight(kg)');
+        $this->setCellValue('K1', 'Weight(Lbs)');
 
         $this->setColumnWidth('L', 20);
-        $this->sheet->getStyle('L')->getAlignment()->setHorizontal('center');
-        $this->setCellValue('L1', 'Dimesnsions');
+        $this->setCellValue('L1', 'Metric Weight(kg)');
 
         $this->setColumnWidth('M', 20);
-        $this->setCellValue('M1', 'Status');
+        $this->sheet->getStyle('M')->getAlignment()->setHorizontal('center');
+        $this->setCellValue('M1', 'Dimesnsions');
 
         $this->setColumnWidth('N', 20);
-        $this->setCellValue('N1', 'Date');
+        $this->setCellValue('N1', 'Status');
+
+        
 
         $this->setBackgroundColor('A1:N1', '2b5cab');
         $this->setColor('A1:N1', 'FFFFFF');
