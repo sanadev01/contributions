@@ -160,16 +160,14 @@ class UPSCalculatorController extends Controller
     {
         if (Auth::check()) 
         {
-            $this->user_api_profit = Auth::user()->api_profit;
+            $this->user_api_profit = setting('ups_profit', null, auth()->user()->id);
             $this->userLoggedIn = true;
 
         }
 
-        if($this->user_api_profit == 0)
+        if($this->user_api_profit == null || $this->user_api_profit == 0)
         {
-            $admin = User::where('role_id',1)->first();
-
-            $this->user_api_profit = $admin->api_profit;
+            $this->user_api_profit = setting('ups_profit', null, 1);
         }
 
         return;
