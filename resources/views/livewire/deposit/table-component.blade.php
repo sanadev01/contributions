@@ -104,18 +104,16 @@
                 <td>{{ optional($deposit->user)->name }}</td>
                 @endadmin
                 <td>
-                    @if($deposit->hasOrder())
-                        @if ($deposit->firstOrder()->hasSecondLabel())
-                            <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->orders()->first()) }}" class="w-100" title="Show Order Details">
-                                {{ $deposit->firstOrder()->us_api_tracking_code }}
-                            </a>
-                        @elseif($deposit->getOrder($deposit->order_id))
-                            <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->getOrder($deposit->order_id)) }}" class="w-100" title="Show Order Details">
-                                {{ $deposit->getOrder($deposit->order_id)->corrios_tracking_code }}
-                            </a>    
-                        @endif
-                    @endif
-                </td>   
+                    @if($deposit->hasOrder() && $deposit->firstOrder()->hasSecondLabel())
+                        <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->orders()->first()) }}" class="w-100" title="Show Order Details">
+                            {{ $deposit->firstOrder()->us_api_tracking_code }}
+                        </a>
+                    @elseif($deposit->order_id)
+                        <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->getOrder($deposit->order_id)) }}" class="w-100" title="Show Order Details">
+                            {{ $deposit->getOrder($deposit->order_id)->corrios_tracking_code }}
+                        </a>    
+                    @endif    
+                </td>
                 <td>
                     @if($deposit->order_id != null)
                         @if($deposit->getOrder($deposit->order_id))
