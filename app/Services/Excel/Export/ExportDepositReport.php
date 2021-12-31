@@ -94,13 +94,36 @@ class ExportDepositReport extends AbstractExportService
         if ($deposit->firstOrder() && $deposit->firstOrder()->hasSecondLabel()) {
             return ($deposit->firstOrder()->us_api_service == ShippingService::UPS_GROUND) ? 'UPS' : 'USPS';
         }
+
+        if ($order->shippingService) {
+            switch ($order->recipient->country_id) {
+                case ORDER::US:
+                    if ($order->shippingService->sub_class_code == ShippingService::UPS_GROUND) {
+                        return 'UPS';
+                    }
+                     return 'USPS';
+                   break;
+                case ORDER::CHILE:
+                        return 'Corrios Chile';
+                    break;
+                case ORDER::BRAZIL:
+                        return 'Corrios Brazil';
+                    break;
+                default:
+                    return '';
+                   break;
+            }
+        }
        return optional($order->shippingService)->name;
     }
 
     private function getShippingCarrierCost($deposit, $order)
     {
         if ($deposit->firstOrder() && $deposit->firstOrder()->hasSecondLabel()) {
-            return 'us cost';
+            if ($order->us_secondary_label_cost) {
+                return $order->us_secondary_label_cost['api_cost'];
+            }
+            return '';
         }
 
         if ($order->recipient->country_id == Order::BRAZIL || $order->recipient->country_id == Order::CHILE) {

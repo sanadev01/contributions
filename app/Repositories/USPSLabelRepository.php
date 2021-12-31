@@ -3,15 +3,10 @@
 
 namespace App\Repositories;
 
-
-use App\Models\User;
 use App\Models\Order;
-use App\Models\Deposit;
 use App\Facades\USPSFacade;
 use App\Models\OrderTracking;
-use App\Models\PaymentInvoice;
 use App\Models\ShippingService;
-use Illuminate\Support\Facades\Auth;
 use App\Services\USPS\USPSLabelMaker;
 use App\Services\USPS\USPSShippingService;
 
@@ -20,7 +15,7 @@ class USPSLabelRepository
 {
     protected $usps_errors;
     public $user_api_profit;
-    public $total_amount;
+    public $total_amount_with_profit;
 
     public function handle($order)
     {
@@ -146,7 +141,7 @@ class USPSLabelRepository
 
             return (Array)[
                 'success' => true,
-                'total_amount' => round($this->total_amount, 2),
+                'total_amount' => round($this->total_amount_with_profit, 2),
             ]; 
         }
 
@@ -167,7 +162,7 @@ class USPSLabelRepository
 
         $profit = $usps_rate * ($this->user_api_profit / 100);
 
-        $this->total_amount = $usps_rate + $profit;
+        $this->total_amount_with_profit = $usps_rate + $profit;
 
         return true;
     }
@@ -203,7 +198,7 @@ class USPSLabelRepository
             $order->update([
                 'us_api_response' => json_encode($response->data),
                 'us_api_tracking_code' => $response->data['usps']['tracking_numbers'][0],
-                'us_api_cost' => $request->total_price,
+                'us_secondary_label_cost' => setUSCosts($response->data['total_amount'], $request->total_price),
                 'us_api_service' => $request->service,
             ]);
 

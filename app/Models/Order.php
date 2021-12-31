@@ -28,7 +28,8 @@ class Order extends Model implements Package
     protected static $submitEmptyLogs = false;
     protected $casts = [
        'cn23' => 'Array',
-       'order_date' => 'datetime'
+       'order_date' => 'datetime',
+       'us_secondary_label_cost' => 'array',
     ];
 
     const STATUS_PREALERT_TRANSIT = 10;
