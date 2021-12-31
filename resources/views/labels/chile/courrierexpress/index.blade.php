@@ -305,10 +305,9 @@
         }
         .chl_class{
             text-align: center;
-            margin-top: -50%;
+            margin-top: -60%;
             position: absolute;
-            font-size: 35px !important;
-            font-family: Arial !important;
+            font-size: 50px !important;
             color: black;
         }
         
