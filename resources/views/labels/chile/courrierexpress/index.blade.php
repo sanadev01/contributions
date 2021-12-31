@@ -307,8 +307,7 @@
             text-align: center;
             margin-top: -50%;
             position: absolute;
-            font-size: 35px !important;
-            font-family: Arial !important;
+            font-size: 40px !important;
             color: black;
         }
         
