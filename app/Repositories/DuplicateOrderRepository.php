@@ -31,7 +31,7 @@ class DuplicateOrderRepository extends Model
         $copy->us_api_response = null;
         $copy->api_pickup_response = null;
         $copy->us_api_service = null;
-        $copy->us_api_cost = 0;
+        $copy->us_secondary_label_cost = null;
         $copy->sinerlog_tran_id = null;
         $copy->sinerlog_freight = null;
         $copy->order_date = Carbon::now();
