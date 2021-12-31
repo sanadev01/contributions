@@ -30,10 +30,17 @@ class OrderExport extends AbstractExportService
         $this->setExcelHeaderRow();
 
         $row = $this->currentRow;
-
+        $totalAmount = 0;
+        $totalWeightKg=0;
+        $totalWeightLbs=0;
+        $totalMetricWeight=0;
         foreach ($this->orders as $order) {
             $user = $order->user;
-        
+            $totalAmount += $order->gross_total;
+            $totalWeightKg +=$order->getWeight('kg'); 
+            $totalWeightLbs += $order->getWeight('lbs');
+            $totalMetricWeight += $this->getVolumnWeight($order->length, $order->width, $order->height,$this->isWeightInKg($order->measurement_unit));
+
             $this->setCellValue('A'.$row, $order->order_date);
             $this->setCellValue('B'.$row, $order->warehouse_number);
             $this->setCellValue('C'.$row, $user->name);
@@ -84,12 +91,19 @@ class OrderExport extends AbstractExportService
         $this->currentRow = $row;
 
         $this->setCellValue('G'.$row, "=SUM(G1:G{$row})");
+        $this->setCellValue('H'.$row, 'Total Amount:  '.number_format($totalAmount,2));
         $this->setCellValue('I'.$row, "=SUM(I1:I{$row})");
-        $this->setCellValue('J'.$row, "=SUM(J1:J{$row})");
+        $this->setCellValue('J'.$row, 'Total Weight:  '.number_format($totalWeightKg,2));
+        $this->setCellValue('K'.$row, 'Total Weight:  '.number_format($totalWeightLbs,2));
+        $this->setCellValue('L'.$row,  'Total Weight:  '.number_format($totalMetricWeight,2));
         $this->mergeCells("A{$row}:F{$row}");
         $this->setBackgroundColor("A{$row}:L{$row}", 'adfb84');
-        $this->setAlignment('A'.$row, Alignment::VERTICAL_CENTER);
         $this->setCellValue('A'.$row, 'Total Order: '.$this->orders->count());
+        $this->setAlignment('A'.$row, Alignment::VERTICAL_CENTER);
+        $this->setAlignment('H'.$row,Alignment::HORIZONTAL_RIGHT);
+        $this->setAlignment('J'.$row,Alignment::HORIZONTAL_RIGHT);
+        $this->setAlignment('K'.$row,Alignment::HORIZONTAL_RIGHT);
+        $this->setAlignment('L'.$row,Alignment::HORIZONTAL_RIGHT);
 
 
 
