@@ -36,6 +36,7 @@ class OrderExport extends AbstractExportService
         $totalMetricWeight=0;
         foreach ($this->orders as $order) {
             $user = $order->user;
+            
             $totalAmount += $order->gross_total;
             $totalWeightKg +=$order->getWeight('kg'); 
             $totalWeightLbs += $order->getWeight('lbs');
