@@ -26,6 +26,7 @@ return [
     'consolidation Charges' => 'Taxas de consolidação',
     'Rates' => 'Cotações',
     'Country' => 'País',
+    'Region' => 'Región',
     'Select Country' => 'Selecione o pais',
     'USPS Rates' => 'USPS Acumulação Taxas',
     'Customer ID' => 'Cliente ID',
@@ -38,5 +39,6 @@ return [
     'Weight' => 'Peso',
     'Zip Code Origin' => 'Origem do código postal',
     'Zip Code Destination' => 'Destino do CEP',
+    'accrual-rates' => 'Accrual Rates',
 ];
  

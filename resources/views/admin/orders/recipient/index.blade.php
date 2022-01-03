@@ -20,7 +20,30 @@
     @endif
     <form action="{{ route('admin.orders.recipient.store',$order) }}" class="wizard" method="post" enctype="multipart/form-data">
         @csrf
-
+        <div class="controls d-flex mb-1">
+            <div>
+                <div class="vs-checkbox-con vs-checkbox-primary" title="Insurance">
+                    <input type="radio" name="service" value="postal_service" id="postal_service" required @if( (optional($order->recipient)->commune_id == null && $order->recipient != null) || old('service') == 'postal_service') checked @endif>
+                    <span class="vs-checkbox vs-checkbox-lg">
+                        <span class="vs-checkbox--check">
+                            <i class="vs-icon feather icon-check"></i>
+                        </span>
+                    </span>
+                    <span class="h3 mx-2 text-primary my-0 py-0">Postal Service</span>
+                </div>
+            </div>
+            <div class="ml-3">
+                <div class="vs-checkbox-con vs-checkbox-primary" title="Insurance">
+                    <input type="radio" name="service" value="courier_express" id="courier_express" required @if( optional($order->recipient)->commune_id != null || old('service') == 'courier_express') checked @endif>
+                    <span class="vs-checkbox vs-checkbox-lg">
+                        <span class="vs-checkbox--check">
+                            <i class="vs-icon feather icon-check"></i>
+                        </span>
+                    </span>
+                    <span class="h3 mx-2 text-primary my-0 py-0">Courier Express</span>
+                </div>
+            </div>
+        </div>
         <div>
             <div class="row mt-1">
                 <div class="form-group col-12 col-sm-6 col-md-6">
@@ -44,8 +67,8 @@
                         <label>@lang('address.Type') <span class="text-danger">*</span></label>
                         <select class="form-control" name="account_type" id="accountType" required placeholder="@lang('address.Type')">
                             <option value="">@lang('address.Type')</option>
-                            <option value="individual" {{ optional($order->recipient)->account_type == 'individual' ? 'selected' : '' }}>Individual</option>
-                            <option value="business" {{ optional($order->recipient)->account_type == 'business' ? 'selected' : '' }}>Business</option>
+                            <option value="individual" {{ old('account_type', optional($order->recipient)->account_type) == 'individual' ? 'selected' : '' }}>Individual</option>
+                            <option value="business" {{ old('account_type', optional($order->recipient)->account_type) == 'business' ? 'selected' : '' }}>Business</option>
                         </select>
                         <div class="help-block"></div>
                     </div>
@@ -107,12 +130,12 @@
                                     <option {{ old('country_id',optional($order->recipient)->country_id) == $country->id ? 'selected' : '' }} value="{{ $country->id }}">{{ $country->name }}</option>
                                 @endforeach
                             </select>
-                            <div class="help-block"></div>
+                            <div class="help-block" id="country_message"></div>
                         </div>
                     </div>
                 </div>
                 <div class="form-group col-12 col-sm-6 col-md-4">
-                    <div class="controls" id="div_state" style="display: none">
+                    <div class="controls" id="div_state">
                         <label>@lang('address.State') <span class="text-danger">*</span></label>
                         <select name="state_id" id="state" class="form-control selectpicker show-tick" data-live-search="true">
                             <option value="">Select @lang('address.State')</option>
@@ -138,7 +161,7 @@
                     </div>
                 </div> --}}
                 <div class="form-group col-12 col-sm-6 col-md-4">
-                    <div class="controls" id="div_city" style="display: none">
+                    <div class="controls" id="div_city">
                         <label>@lang('address.City') <span class="text-danger">*</span></label>
                         <input type="text" id="city" name="city" value="{{old('city',optional($order->recipient)->city)}}" class="form-control"  required placeholder="City"/>
                         <div class="help-block"></div>
@@ -146,7 +169,7 @@
                     {{-- Chile Communes --}}
                     <div class="controls" id="div_communes" style="display: none">
                         <label>Communes <span class="text-danger">*</span></label>
-                        <select name="city" id="commune" class="form-control selectpicker show-tick" data-live-search="true" data-value="{{ old('city', optional($order->recipient)->city) }}">
+                        <select name="city" id="commune" class="form-control selectpicker show-tick" data-live-search="true" data-value="{{ old('city', optional($order->recipient)->city) }}" data-commune="{{ old('commune_id', optional($order->recipient)->commune_id) }}">
                             <option value="">Select Commune</option>
                         </select>
                         <div class="help-block"></div>

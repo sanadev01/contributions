@@ -101,7 +101,7 @@
                 <label for="payment_gateway" class="h4">Select Payment Gateway</label>
                 <select id="payment_gateway" name="payment_gateway" class="form-control border border-danger" style="font-size: 18px !important;">
                   <option selected value="authorize">Credit Card (authorize.net)</option>
-                  @if (auth()->user()->stripe)
+                  @if (setting('stripe', null, auth()->user()->id))
                     <option value="stripe">Debit Card (stripe)</option>
                   @endif
                   {{-- <option value="stripe_ach">Stripe ACH</option> --}}

@@ -3,15 +3,10 @@
 
 namespace App\Repositories;
 
-
-use App\Models\User;
 use App\Models\Order;
-use App\Models\Deposit;
 use App\Facades\USPSFacade;
 use App\Models\OrderTracking;
-use App\Models\PaymentInvoice;
 use App\Models\ShippingService;
-use Illuminate\Support\Facades\Auth;
 use App\Services\USPS\USPSLabelMaker;
 use App\Services\USPS\USPSShippingService;
 
@@ -20,7 +15,7 @@ class USPSLabelRepository
 {
     protected $usps_errors;
     public $user_api_profit;
-    public $total_amount;
+    public $total_amount_with_profit;
 
     public function handle($order)
     {
@@ -115,12 +110,17 @@ class USPSLabelRepository
                 $shippingServices->push($shippingService);
             }
         }
+
+        if($shippingServices->isEmpty())
+        {
+            $this->ups_errors = 'No shipping services available for this order';
+        }
         
         if($shippingServices->contains('service_sub_class', ShippingService::USPS_PRIORITY) || $shippingServices->contains('service_sub_class', ShippingService::USPS_FIRSTCLASS))
         {
-            if($order->user->usps != 1)
+            if(!setting('usps', null, $order->user->id))
             {
-                $this->usps_errors = "USPS is not enabled for this user";
+                $this->usps_errors = "USPS is not enabled for your account";
                 $shippingServices = collect() ;
             }
         }
@@ -141,7 +141,7 @@ class USPSLabelRepository
 
             return (Array)[
                 'success' => true,
-                'total_amount' => round($this->total_amount, 2),
+                'total_amount' => round($this->total_amount_with_profit, 2),
             ]; 
         }
 
@@ -153,25 +153,23 @@ class USPSLabelRepository
 
     private function addProfit($user, $usps_rate)
     {
-        $this->user_api_profit = $user->api_profit;
+        $this->user_api_profit = setting('usps_profit', null, $user->id);
 
-        if($this->user_api_profit == 0)
+        if($this->user_api_profit == null || $this->user_api_profit == 0)
         {
-            $admin = User::where('role_id',1)->first();
-
-            $this->user_api_profit = $admin->api_profit;
+            $this->user_api_profit = setting('usps_profit', null, 1);
         }
 
         $profit = $usps_rate * ($this->user_api_profit / 100);
 
-        $this->total_amount = $usps_rate + $profit;
+        $this->total_amount_with_profit = $usps_rate + $profit;
 
         return true;
     }
 
     public function buyLabel($request, $order)
     {
-        if($order->corrios_usps_tracking_code != null)
+        if($order->hasSecondLabel())
         {
             $this->printBuyUSPSLabel($order);
 
@@ -198,12 +196,13 @@ class USPSLabelRepository
         {
             // storing response in orders table
             $order->update([
-                'usps_response' => json_encode($response->data),
-                'corrios_usps_tracking_code' => $response->data['usps']['tracking_numbers'][0],
-                'usps_cost' => $request->total_price,
+                'us_api_response' => json_encode($response->data),
+                'us_api_tracking_code' => $response->data['usps']['tracking_numbers'][0],
+                'us_secondary_label_cost' => setUSCosts($response->data['total_amount'], $request->total_price),
+                'us_api_service' => $request->service,
             ]);
 
-            $this->chargeAmount($request->total_price, $order);
+            chargeAmount($request->total_price, $order, 'Bought USPS Label For : ');
 
             $this->printBuyUSPSLabel($order);
 
@@ -212,25 +211,6 @@ class USPSLabelRepository
             $this->usps_errors = $response->message;
             return null;
         }
-    }
-
-    private function chargeAmount($usps_cost, $order)
-    {
-        $deposit = Deposit::create([
-            'uuid' => PaymentInvoice::generateUUID('DP-'),
-            'amount' => $usps_cost,
-            'user_id' => Auth::id(),
-            'order_id' => $order->id,
-            'balance' => Deposit::getCurrentBalance() - $usps_cost,
-            'is_credit' => false,
-            'description' => 'Bought USPS Label For : '.$order->warehouse_number,
-        ]);
-        
-        if ( $order ){
-            $order->deposits()->sync($deposit->id);
-        }
-
-        return $deposit;
     }
     
 }

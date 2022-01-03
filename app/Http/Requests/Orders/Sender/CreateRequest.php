@@ -31,6 +31,8 @@ class CreateRequest extends FormRequest
             'sender_address' => 'sometimes|required',
             'sender_city' => 'sometimes|required',
             'sender_country_id' => 'sometimes|required|integer|exists:countries,id',
+            'sender_state_id' => 'bail|required_if:sender_country_id,==,250',
+            'sender_zipcode' => 'bail|required_if:sender_country_id,==,250',
         ];
     }
 

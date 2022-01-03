@@ -76,22 +76,22 @@ class SaleExport extends AbstractExportService
         $this->setCellValue('A'.$row, "Number Of Parcels Per Customer : ");
         $this->setCellValue('B'.$row,  "=ROWS($totalOrderRow:D{$endOrderTotal})-2");
         $this->setAlignment('D'.$row,Alignment::HORIZONTAL_LEFT);
-        $this->setCellValue('G'.$row, "Due Amount : ");
-        $this->setAlignment('G'.$row,Alignment::HORIZONTAL_RIGHT);
+        $this->setCellValue('E'.$row, "Due Amount : ");
+        $this->setAlignment('E'.$row,Alignment::HORIZONTAL_RIGHT);
         $this->setAlignment('B'.$row,Alignment::HORIZONTAL_LEFT);
         
-        $this->setCellValue('H'.$row, "=SUM($sumRow:H{$endRowSum})");
-        $this->setAlignment('H'.$row,Alignment::HORIZONTAL_LEFT);
+        $this->setCellValue('F'.$row, "=SUM($sumRow:H{$endRowSum})");
+        $this->setAlignment('F'.$row,Alignment::HORIZONTAL_LEFT);
         $this->setBackgroundColor("A{$row}:J{$row}", 'adfb84');
         $row++;
-        $this->setCellValue('F'.$row, "Total Due Amount : ");
-        $this->setAlignment('F'.$row,Alignment::HORIZONTAL_RIGHT);
+        $this->setCellValue('G'.$row, "Total Due Amount : ");
+        $this->setAlignment('G'.$row,Alignment::HORIZONTAL_RIGHT);
         $this->setCellValue('C'.$row, "Total Number of Orders : ");
         $this->setCellValue('D'.$row, $this->sales->count());
         $this->setAlignment('D'.$row,Alignment::HORIZONTAL_LEFT);
         
-        $this->setCellValue('G'.$row, "=SUM(H1:H{$row})");
-        $this->setAlignment('G'.$row,Alignment::HORIZONTAL_LEFT);
+        $this->setCellValue('H'.$row, "=SUM(H1:H{$row})");
+        $this->setAlignment('H'.$row,Alignment::HORIZONTAL_LEFT);
         $this->setBackgroundColor("A{$row}:J{$row}", 'adfb84');
     }
 

@@ -90,7 +90,15 @@ function getBalance()
     return Deposit::getCurrentBalance();
 }
 
-function chargeAmount($amount,$order=null)
+function chargeAmount($amount,$order=null,$description=null)
 {
-    Deposit::chargeAmount($amount,$order);
+    Deposit::chargeAmount($amount,$order,$description);
+}
+
+function setUSCosts($api_cost, $profit_cost)
+{
+    return [
+        'api_cost' => $api_cost,
+        'profit_cost' => $profit_cost
+    ];
 }
