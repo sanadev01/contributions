@@ -34,17 +34,16 @@ class SaleExport extends AbstractExportService
         $checkUser = null;
         $sumRow = 'H1';
         $totalOrderRow = 'D1';
-        $totalNumberOfOrderPerCutomer = 0;
         foreach ($this->sales as $sale) {
             $user = $sale->user;
             $commissionUser = $sale->order->user;
             if($checkUser && $checkUser != $commissionUser->pobox_number){
                 $this->setCellValue('H'.$row, "Due Amount : ");
-                $this->setCellValue('C'.$row, "Number Of Parcels Per Customer : ");
-                $this->setCellValue('D'.$row, "=ROWS($totalOrderRow:D{$row})-2");
+                $this->setCellValue('A'.$row, "Number Of Parcels Per Customer : ");
+                $this->setCellValue('B'.$row, "=ROWS($totalOrderRow:D{$row})-2");
                 $this->setAlignment('I'.$row,Alignment::HORIZONTAL_LEFT);
                 $this->setAlignment('H'.$row,Alignment::HORIZONTAL_RIGHT);
-                $this->setAlignment('D'.$row,Alignment::HORIZONTAL_LEFT);
+                $this->setAlignment('B'.$row,Alignment::HORIZONTAL_LEFT);
                 
                 $this->setCellValue('I'.$row, "=SUM($sumRow:H{$row})");
                 $this->setBackgroundColor("A{$row}:J{$row}", 'adfb84');
@@ -74,24 +73,25 @@ class SaleExport extends AbstractExportService
         $this->currentRow = $row;
         $endRowSum = $row;
         $endOrderTotal = $row;
-        $this->setCellValue('C'.$row, "Number Of Parcels Per Customer : ");
-        $this->setCellValue('D'.$row,  "=ROWS($totalOrderRow:D{$endOrderTotal})-2");
+        $this->setCellValue('A'.$row, "Number Of Parcels Per Customer : ");
+        $this->setCellValue('B'.$row,  "=ROWS($totalOrderRow:D{$endOrderTotal})-2");
         $this->setAlignment('D'.$row,Alignment::HORIZONTAL_LEFT);
         $this->setCellValue('H'.$row, "Due Amount : ");
         $this->setAlignment('H'.$row,Alignment::HORIZONTAL_RIGHT);
+        $this->setAlignment('B'.$row,Alignment::HORIZONTAL_LEFT);
         
         $this->setCellValue('I'.$row, "=SUM($sumRow:H{$endRowSum})");
         $this->setAlignment('I'.$row,Alignment::HORIZONTAL_LEFT);
         $this->setBackgroundColor("A{$row}:J{$row}", 'adfb84');
         $row++;
-        $this->setCellValue('H'.$row, "Total Due Amount : ");
-        $this->setAlignment('H'.$row,Alignment::HORIZONTAL_RIGHT);
+        $this->setCellValue('G'.$row, "Total Due Amount : ");
+        $this->setAlignment('G'.$row,Alignment::HORIZONTAL_RIGHT);
         $this->setCellValue('C'.$row, "Total Number of Orders : ");
         $this->setCellValue('D'.$row, $this->sales->count());
         $this->setAlignment('D'.$row,Alignment::HORIZONTAL_LEFT);
         
-        $this->setCellValue('I'.$row, "=SUM(H1:H{$row})");
-        $this->setAlignment('I'.$row,Alignment::HORIZONTAL_LEFT);
+        $this->setCellValue('H'.$row, "=SUM(H1:H{$row})");
+        $this->setAlignment('H'.$row,Alignment::HORIZONTAL_LEFT);
         $this->setBackgroundColor("A{$row}:J{$row}", 'adfb84');
     }
 
@@ -99,7 +99,7 @@ class SaleExport extends AbstractExportService
     private function setExcelHeaderRow()
     {
         if ( Auth::user()->isAdmin() ){
-            $this->setColumnWidth('A', 20);
+            $this->setColumnWidth('A', 32);
             $this->setCellValue('A1', 'Name');
         }
         
