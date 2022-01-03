@@ -76,12 +76,12 @@ class SaleExport extends AbstractExportService
         $this->setCellValue('A'.$row, "Number Of Parcels Per Customer : ");
         $this->setCellValue('B'.$row,  "=ROWS($totalOrderRow:D{$endOrderTotal})-2");
         $this->setAlignment('D'.$row,Alignment::HORIZONTAL_LEFT);
-        $this->setCellValue('E'.$row, "Due Amount : ");
-        $this->setAlignment('E'.$row,Alignment::HORIZONTAL_RIGHT);
+        $this->setCellValue('H'.$row, "Due Amount : ");
+        $this->setAlignment('H'.$row,Alignment::HORIZONTAL_RIGHT);
         $this->setAlignment('B'.$row,Alignment::HORIZONTAL_LEFT);
         
-        $this->setCellValue('F'.$row, "=SUM($sumRow:H{$endRowSum})");
-        $this->setAlignment('F'.$row,Alignment::HORIZONTAL_LEFT);
+        $this->setCellValue('I'.$row, "=SUM($sumRow:H{$endRowSum})");
+        $this->setAlignment('I'.$row,Alignment::HORIZONTAL_LEFT);
         $this->setBackgroundColor("A{$row}:J{$row}", 'adfb84');
         $row++;
         $this->setCellValue('G'.$row, "Total Due Amount : ");
