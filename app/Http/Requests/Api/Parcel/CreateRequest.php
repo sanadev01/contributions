@@ -60,12 +60,6 @@ class CreateRequest extends FormRequest
             "recipient.zipcode" => "required",
             // "recipient.state_id" => "required|exists:states,id",
             // "recipient.country_id" => "required|exists:countries,id",
-
-            'sender_country_id' => 'required_if:recipient.country_id,250,US|integer|exists:countries,id',
-            'sender_state_id' => 'bail|required_if:sender_country_id,==,250',
-            'sender_zipcode' => 'bail|required_if:sender_country_id,==,250',
-            'sender_city' => 'bail|required_if:sender_country_id,==,250',
-            'sender_address' => 'bail|required_if:sender_country_id,==,250',
             
             "products" => "required|array|min:1",
 
@@ -95,6 +89,14 @@ class CreateRequest extends FormRequest
             $rules["recipient.state_id"] = "required|exists:states,id";
         }else{
             $rules["recipient.state_id"] = "required|exists:states,code";
+        }
+
+        if (optional($request->recipient)['country_id'] == 250 || optional($request->recipient)['country_id'] == 'US') {
+            $rules['sender.sender_country_id'] = 'required|integer|exists:countries,id';
+            $rules['sender.sender_state_id'] = 'required|integer|exists:states,id';
+            $rules['sender.sender_city'] = 'required|string|max:100';
+            $rules['sender.sender_address'] = 'required|string|max:100';
+            $rules['sender.sender_phone'] = 'sometimes|string|max:100';
         }
 
         return $rules;
