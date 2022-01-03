@@ -84,14 +84,14 @@ class SaleExport extends AbstractExportService
         $this->setAlignment('I'.$row,Alignment::HORIZONTAL_LEFT);
         $this->setBackgroundColor("A{$row}:J{$row}", 'adfb84');
         $row++;
-        $this->setCellValue('F'.$row, "Total Due Amount : ");
-        $this->setAlignment('F'.$row,Alignment::HORIZONTAL_RIGHT);
+        $this->setCellValue('G'.$row, "Total Due Amount : ");
+        $this->setAlignment('G'.$row,Alignment::HORIZONTAL_RIGHT);
         $this->setCellValue('C'.$row, "Total Number of Orders : ");
         $this->setCellValue('D'.$row, $this->sales->count());
         $this->setAlignment('D'.$row,Alignment::HORIZONTAL_LEFT);
         
-        $this->setCellValue('G'.$row, "=SUM(H1:H{$row})");
-        $this->setAlignment('G'.$row,Alignment::HORIZONTAL_LEFT);
+        $this->setCellValue('H'.$row, "=SUM(H1:H{$row})");
+        $this->setAlignment('H'.$row,Alignment::HORIZONTAL_LEFT);
         $this->setBackgroundColor("A{$row}:J{$row}", 'adfb84');
     }
 
