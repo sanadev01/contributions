@@ -95,7 +95,6 @@ class SaleExport extends AbstractExportService
         $this->setBackgroundColor("A{$row}:J{$row}", 'adfb84');
     }
 
-
     private function setExcelHeaderRow()
     {
         if ( Auth::user()->isAdmin() ){
