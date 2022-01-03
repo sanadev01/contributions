@@ -61,6 +61,12 @@ class CreateRequest extends FormRequest
             // "recipient.state_id" => "required|exists:states,id",
             // "recipient.country_id" => "required|exists:countries,id",
 
+            'sender_country_id' => 'required_if:recipient.country_id,250,US|integer|exists:countries,id',
+            'sender_state_id' => 'bail|required_if:sender_country_id,==,250',
+            'sender_zipcode' => 'bail|required_if:sender_country_id,==,250',
+            'sender_city' => 'bail|required_if:sender_country_id,==,250',
+            'sender_address' => 'bail|required_if:sender_country_id,==,250',
+            
             "products" => "required|array|min:1",
 
             "products.*.sh_code" => [
