@@ -19,7 +19,7 @@ class USPSLabelRepository
 
     public function handle($order)
     {
-        if(($order->shipping_service_name == 'Priority' || $order->shipping_service_name == 'FirstClass') && $order->api_response == null)
+        if(($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS) && $order->api_response == null)
         {
     
             $this->generat_USPSLabel($order);

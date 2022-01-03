@@ -6,8 +6,10 @@ use App\Models\Order;
 use App\Events\OrderPaid;
 use Illuminate\Http\Request;
 // use App\Repositories\LabelRepository;
+use App\Models\ShippingService;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
+use App\Repositories\UPSLabelRepository;
 use App\Repositories\USPSLabelRepository;
 use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\CorrieosChileLabelRepository;
@@ -15,7 +17,7 @@ use App\Repositories\CorrieosBrazilLabelRepository;
 
 class OrderLabelController extends Controller
 {
-    public function __invoke(Request $request, Order $order, CorrieosBrazilLabelRepository $labelRepository, CorrieosChileLabelRepository $chile_labelRepository, USPSLabelRepository $usps_labelRepository)
+    public function __invoke(Request $request, Order $order, CorrieosBrazilLabelRepository $labelRepository, CorrieosChileLabelRepository $chile_labelRepository, USPSLabelRepository $usps_labelRepository, UPSLabelRepository $upsLabelRepository)
     {
         $orders = new Collection;
         $this->authorize('canPrintLableViaApi',$order);
@@ -53,12 +55,23 @@ class OrderLabelController extends Controller
             
         }
 
-        // For USPS
         if($order->recipient->country_id == Order::US)
         {
-            $usps_labelRepository->handle($order);
+            // For USPS
+            if ($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS) 
+            {
+                $usps_labelRepository->handle($order);
 
-            $error = $usps_labelRepository->getUSPSErrors();
+                $error = $usps_labelRepository->getUSPSErrors();
+            }
+
+            // For UPS
+            if ($order->shippingService->service_sub_class == ShippingService::UPS_GROUND) {
+
+                $upsLabelRepository->handle($order);
+                $error = $upsLabelRepository->getUPSErrors();
+            }
+           
 
             if(!$error)
             {
