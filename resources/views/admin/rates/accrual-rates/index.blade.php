@@ -8,7 +8,7 @@
                     <div class="card-header">
                         <div class="">
                             <h4 class="mb-0 mr-3">
-                                @lang('shipping-rates.shipping-rates')
+                                @lang('shipping-rates.accrual-rates')
                             </h4>
                             <hr>
                         </div>

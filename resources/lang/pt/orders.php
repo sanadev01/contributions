@@ -75,6 +75,8 @@ return [
         'City' => 'cidade',
         'Next' => 'Próximo',
         'Select Country' => 'Selecione pais', 
+        'State' => 'State',
+        'Zip Code' => 'Código Postal',
     ],
     'import-excel' =>[
         'Import Orders via Excel Sheet' => 'Importar pedidos via planilha do Excel',
@@ -166,8 +168,12 @@ return [
         'duplicate-order' => 'Pedido Duplicado',
         'back-to-list' => 'Voltar',
         'buy-domestic-label' => 'Buy Domestic Etiqueta',
+        'buy-us-label' => 'Buy US Etiqueta',
         'buy-usps-label' => 'Comprar Etiqueta USPS',
         'print-usps-label' => 'Imprimir Etiqueta USPS',
+        'buy-ups-label' => 'Comprar Etiqueta UPS',
+        'print-ups-label' => 'Imprimir Etiqueta UPS',
+        'cancel-ups-pickup' => 'Cancelar Pickup',
     ],
     'create' => [
         'shipment-and-destination' => 'Criação do envio',

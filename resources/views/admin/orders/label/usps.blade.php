@@ -4,11 +4,11 @@
 @endsection
 @section('page')
 
-@if($order->corrios_usps_tracking_code != null)
+@if($order->hasSecondLabel())
 <div class="card pb-3">
     <div class="row mr-3">
         <div class="ml-auto mt-5">
-            <button onclick="window.open('{{ route('order.usps-label.download',[$order,'time'=>md5(microtime())]) }}','','top:0,left:0,width:600px;height:700px;')" class="btn btn-primary">Download</button>
+            <button onclick="window.open('{{ route('order.us-label.download',[$order,'time'=>md5(microtime())]) }}','','top:0,left:0,width:600px;height:700px;')" class="btn btn-primary">Download</button>
             <a href="{{ route('admin.orders.index') }}" class="btn btn-primary ml-2 pull-right">
                 @lang('shipping-rates.Return to List')
             </a>
@@ -16,8 +16,8 @@
     </div>
     <div class="container">
         <div class="label mt-2">
-            <iframe src="https://docs.google.com/gview?url={{ route('order.usps-label.download',$order) }}&embedded=true&time{{md5(microtime())}}" style="width:100%; height:700px;" frameborder="0">
-                <iframe src="{{ route('order.usps-label.download',$order) }}" style="width:100%; height:700px;" frameborder="0"></iframe>
+            <iframe src="https://docs.google.com/gview?url={{ route('order.us-label.download',$order) }}&embedded=true&time{{md5(microtime())}}" style="width:100%; height:700px;" frameborder="0">
+                <iframe src="{{ route('order.us-label.download',$order) }}" style="width:100%; height:700px;" frameborder="0"></iframe>
             </iframe>
         </div>
     </div>

@@ -2040,11 +2040,19 @@ __webpack_require__.r(__webpack_exports__);
         return;
       }
 
-      this.axios.post("/containers/".concat(this.container.id, "/packages/").concat(barCode)).then(function (response) {
-        _this.orders.push(response.data.order);
-      })["catch"](function (error) {
-        console.log(error);
-      });
+      if (this.container.services_subclass_code.includes('SL')) {
+        this.axios.post("/sinerlog_container/".concat(this.container.id, "/packages/").concat(barCode)).then(function (response) {
+          _this.orders.push(response.data.order);
+        })["catch"](function (error) {
+          console.log(error);
+        });
+      } else {
+        this.axios.post("/containers/".concat(this.container.id, "/packages/").concat(barCode)).then(function (response) {
+          _this.orders.push(response.data.order);
+        })["catch"](function (error) {
+          console.log(error);
+        });
+      }
     },
     addOrder: function addOrder(event) {
       this.getPackage(event.target.value);
@@ -15133,7 +15141,7 @@ if (document.getElementById('vue-scanner')) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\laragon\www\hd-v2\resources\js\pages\scanner.js */"./resources/js/pages/scanner.js");
+module.exports = __webpack_require__(/*! F:\laragon\www\hd-v2\resources\js\pages\scanner.js */"./resources/js/pages/scanner.js");
 
 
 /***/ })

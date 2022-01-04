@@ -13,7 +13,7 @@ class RateRepository
 {
     public function get()
     {   
-        $rates = Rate::has('shippingService')->paginate(5);
+        $rates = Rate::has('shippingService')->paginate(15);
         return $rates;
     }
 
@@ -24,7 +24,7 @@ class RateRepository
             $file = $request->file('csv_file');
 
             try {
-                $importService = new ImportRates($file, $request->shipping_service_id, $request->country_id);
+                $importService = new ImportRates($file, $request->shipping_service_id, $request->country_id, $request->exists('region_id') ? $request->region_id : null);
                 $importService->handle();
                 session()->flash('alert-success', 'shipping-rates.Rates Updated Successfully');
 
@@ -42,5 +42,14 @@ class RateRepository
         }
     }
 
+    public function getRegionRates($shipping_service)
+    {
+        $rates = Rate::where([
+            ['shipping_service_id', $shipping_service->id],
+            ['region_id', '!=', null]
+        ])->paginate(15);
+        
+        return $rates;
+    }
 
 }

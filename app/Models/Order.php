@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\State;
 use App\Models\OrderTracking;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -27,7 +28,8 @@ class Order extends Model implements Package
     protected static $submitEmptyLogs = false;
     protected $casts = [
        'cn23' => 'Array',
-       'order_date' => 'datetime'
+       'order_date' => 'datetime',
+       'us_secondary_label_cost' => 'array',
     ];
 
     const STATUS_PREALERT_TRANSIT = 10;
@@ -53,7 +55,7 @@ class Order extends Model implements Package
 
     const BRAZIL = 30;
     const CHILE = 46;
-    const USPS = 250;
+    const US = 250;
 
     public $user_profit = 0;
 
@@ -301,6 +303,46 @@ class Order extends Model implements Package
         return $this->cn23 ? true: false;
     }
 
+    public function hasSecondLabel()
+    {
+        return $this->us_api_response ? true: false;
+    }
+
+    public function usLabelService()
+    {
+        return $this->hasSecondLabel() ? $this->us_api_service : null;
+    }
+
+    /**
+     * Sinerlog modification
+     * This function sets sinerlog tran id
+     */
+    public function setSinerlogTrxId($trxId){
+        $this->update([
+            'sinerlog_tran_id' => $trxId
+        ]);
+    }
+
+    /**
+     * Sinerlog modification
+     * This function sets sinerlog freight price
+     */
+    public function setSinerlogFreight($freight){
+        $this->update([
+            'sinerlog_freight' => $freight
+        ]);
+    }
+
+    /**
+     * Sinerlog modification
+     * This function sets sinerlog url label
+     */
+    public function setSinerlogLabelURL($url){
+        $this->update([
+            'sinerlog_url_label' => $url
+        ]);
+    }    
+
     public function getTempWhrNumber()
     {
         return "HD-{$this->id}";
@@ -311,9 +353,10 @@ class Order extends Model implements Package
         $shippingService = $this->shippingService;
 
         $additionalServicesCost = $this->calculateAdditionalServicesCost($this->services);
-        if($this->recipient->country_id == 250){
+        if($this->recipient->country_id == self::US)
+        {
             $shippingCost = $this->user_declared_freight;
-            $this->calculateProfit($shippingCost);
+            $this->calculateProfit($shippingCost, $shippingService);
 
         } else {
             $shippingCost = $shippingService->getRateFor($this,true,$onVolumetricWeight);
@@ -323,7 +366,7 @@ class Order extends Model implements Package
         $pefumeExtra = $shippingService->contains_perfume_charges * ( $this->items()->perfumes()->count() );
 
         $dangrousGoodsCost = (isset($this->user->perfume) && $this->user->perfume == 1 ? 0 : $pefumeExtra) + (isset($this->user->battery) && $this->user->battery == 1 ? 0 : $battriesExtra);
-
+        // $dangrousGoodsCost = (setting('perfume', null, $this->user->id) ? 0 : $pefumeExtra) + (setting('battery', null, $this->user->id) ? 0 : $battriesExtra);
         $consolidation = $this->isConsolidated() ?  setting('CONSOLIDATION_CHARGES',0,null,true) : 0;
 
         $total = $shippingCost + $additionalServicesCost + $this->insurance_value + $dangrousGoodsCost + $consolidation + $this->user_profit;
@@ -360,11 +403,25 @@ class Order extends Model implements Package
         
         return $services->sum('price');
     }
-    public function calculateProfit($shippingCost)
+    public function calculateProfit($shippingCost, $shippingService)
     {
-        $profit = $this->user->api_profit / 100;
+        if ($shippingService->service_sub_class == ShippingService::UPS_GROUND) {
+            $profit_percentage = (setting('ups_profit', null, $this->user->id) != null &&  setting('ups_profit', null, $this->user->id) != 0) ?  setting('ups_profit', null, $this->user->id) : setting('ups_profit', null, 1);
+        }else {
+            $profit_percentage = (setting('usps_profit', null, $this->user->id) != null &&  setting('usps_profit', null, $this->user->id) != 0) ?  setting('usps_profit', null, $this->user->id) : setting('usps_profit', null, 1);
+        }
+        
+        $profit = $profit_percentage / 100;
+        
         $this->user_profit = $shippingCost * $profit;
         return true;
+    }
+
+    private function getAdminProfit()
+    {
+        $admin = User::where('role_id',1)->first();
+
+        return $admin->api_profit;
     }
 
     public function addAffiliateCommissionSale(User $referrer, $commissionCalculator)
@@ -448,9 +505,14 @@ class Order extends Model implements Package
         return $this->items()->sum(DB::raw('quantity * value'));
     }
 
-    public function sender_country()
+    public function senderCountry()
     {
         return $this->belongsTo(Country::class, 'sender_country_id');
+    }
+
+    public function senderState()
+    {
+        return $this->belongsTo(State::class, 'sender_state_id');
     }
 
     public function trackings()
@@ -460,6 +522,11 @@ class Order extends Model implements Package
 
     public function getUspsResponse()
     {
-        return json_decode($this->usps_response);
+        return json_decode($this->us_api_response);
+    }
+
+    public function apiPickupResponse()
+    {
+        return $this->api_pickup_response ? json_decode($this->api_pickup_response) : null;
     }
 }

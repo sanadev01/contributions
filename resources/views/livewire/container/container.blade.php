@@ -213,4 +213,8 @@
     </section>
     @include('layouts.livewire.loading')
 
+<<<<<<< HEAD
 </div>
+=======
+</div>
+>>>>>>> bf52a30894e77616ec7e2e1a262b7545860c4bda

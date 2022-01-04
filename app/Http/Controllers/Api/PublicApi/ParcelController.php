@@ -15,6 +15,7 @@ use App\Services\Calculators\WeightCalculator;
 use App\Http\Requests\Api\Parcel\CreateRequest;
 use App\Http\Requests\Api\Parcel\UpdateRequest;
 use App\Http\Resources\PublicApi\OrderResource;
+use App\Repositories\ApiShippingServiceRepository;
 
 class ParcelController extends Controller
 {
@@ -25,7 +26,7 @@ class ParcelController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateRequest $request)
+    public function store(CreateRequest $request, ApiShippingServiceRepository $usShippingService)
     {
         
         $weight = optional($request->parcel)['weight']??0;
@@ -61,6 +62,13 @@ class ParcelController extends Controller
             $stateID = $state->id;
         }
 
+        if ($countryID == 250) {
+           if(!$usShippingService->isAvalaible($request))
+           {
+                return apiResponse(false, 'Seleceted Shipping service is not available for your account');
+           }
+        }
+        
         DB::beginTransaction();
 
         try {
@@ -105,7 +113,7 @@ class ParcelController extends Controller
                 "country_id" =>$countryID 
             ]);
             
-            if($countryID == 46){
+            if($countryID == Order::CHILE){
 
                 $order->update([
                     "sender_address" => optional($request->sender)['sender_address'],
@@ -115,7 +123,17 @@ class ParcelController extends Controller
                     "region" => optional($request->recipient)['region'],
                 ]);
             }
-            
+
+            if ($countryID == Order::US) {
+              
+                $order->update([
+                    "sender_country_id" => optional($request->sender)['sender_country_id'],
+                    "sender_state_id" => optional($request->sender)['sender_state_id'],
+                    "sender_zipcode" => optional($request->sender)['sender_zipcode'],
+                    "sender_address" => optional($request->sender)['sender_address'],
+                    "sender_city" => optional($request->sender)['sender_city'],
+                ]);
+            }
             
             $isBattery = false;
             $isPerfume = false;
@@ -149,6 +167,14 @@ class ParcelController extends Controller
                 "order_value" => $orderValue,
                 'shipping_service_name' => $order->shippingService->name
             ]);
+            
+            if ($countryID == Order::US) {
+                if(!$usShippingService->getUSShippingServiceRate($order))
+                {
+                    DB::rollback();
+                    return apiResponse(false, $usShippingService->getError());
+                }
+            }
 
             $order->doCalculations();
 

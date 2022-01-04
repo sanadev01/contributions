@@ -47,7 +47,7 @@
                         </div>
                         <hr>
                         <div class="row d-flex justify-content-center">
-                            <div class="col-12 ml-5" @if($order->recipient->country_id == \App\Models\Order::CHILE) style="margin-left: 30% !important;" @endif>
+                            <div class="col-12 ml-5" @if($order->recipient->country_id != \App\Models\Order::BRAZIL) style="margin-left: 30% !important;" @endif>
                                 <ul id="progressbar" class="text-center">
                                     @if ($trackingType == 'HD')
                                         <li class="@if($tracking->status_code >=  70) active @endif step0">
@@ -95,21 +95,25 @@
                                         @endif
                                         <li class="step0">
                                             <div class="icon-content">
-                                                @if ($tracking->order->recipient->country_id != \App\Models\Order::CHILE)
+                                                @if ($tracking->order->recipient->country_id == \App\Models\Order::BRAZIL)
                                                     <img class="icon offset-1" src="{{ asset('images/tracking/brazil-flag.png') }}">
-                                                @else
+                                                @elseif($tracking->order->recipient->country_id == \App\Models\Order::CHILE)
                                                     <img class="icon offset-1" src="{{ asset('images/tracking/chile-flag.png') }}">
-                                                @endif
+                                                @else
+                                                    <img class="icon offset-1" src="{{ asset('images/tracking/ups-logo.png') }}">
+                                                @endif    
                                                 <div class="d-flex flex-column" mt-4>
-                                                    @if ($tracking->order->recipient->country_id != \App\Models\Order::CHILE)
+                                                    @if ($tracking->order->recipient->country_id == \App\Models\Order::BRAZIL)
                                                         <p class="font-weight-bold">Received <br>by Correios</p>
-                                                    @else
+                                                    @elseif ($tracking->order->recipient->country_id == \App\Models\Order::CHILE)
                                                         <p class="font-weight-bold">Received <br>Correios Chile</p>
+                                                    @else 
+                                                        <p class="font-weight-bold">Received <br>by UPS</p>    
                                                     @endif
                                                 </div>
                                             </div>
                                         </li>
-                                        @if ($tracking->order->recipient->country_id != \App\Models\Order::CHILE)
+                                        @if ($tracking->order->recipient->country_id == \App\Models\Order::BRAZIL)
                                         <li class="step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1" src="{{ asset('images/tracking/custom-finished.png') }}">
@@ -119,6 +123,7 @@
                                             </div>
                                         </li>
                                         @endif
+                                        @if($tracking->order->recipient->country_id != \App\Models\Order::US)
                                         <li class="step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1" src="{{ asset('images/tracking/to-hd.png') }}">
@@ -127,6 +132,7 @@
                                                 </div>
                                             </div>
                                         </li>
+                                        @endif
                                         {{-- <li class="step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1" src="{{ asset('images/tracking/to-hd.png') }}">
@@ -135,12 +141,30 @@
                                                 </div>
                                             </div>
                                         </li> --}}
-                                        @if ($tracking->order->recipient->country_id != \App\Models\Order::CHILE)
+                                        @if ($tracking->order->recipient->country_id == \App\Models\Order::BRAZIL)
                                         <li class="step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1" src="{{ asset('images/tracking/left-to-buyer.png') }}">
                                                 <div class="d-flex flex-column" mt-4>
                                                     <p class="font-weight-bold">Out for<br>delivery </p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        @endif
+                                        @if($tracking->order->recipient->country_id == \App\Models\Order::US)
+                                        <li class="step0">
+                                            <div class="icon-content">
+                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/to-hd.png') }}">
+                                                <div class="d-flex flex-column" mt-4>
+                                                    <p class="font-weight-bold">Arrived at <br> UPS Facility</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="step0">
+                                            <div class="icon-content">
+                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/to-hd.png') }}">
+                                                <div class="d-flex flex-column" mt-4>
+                                                    <p class="font-weight-bold">Departed from <br> UPS Facility</p>
                                                 </div>
                                             </div>
                                         </li>
@@ -186,7 +210,7 @@
                                                 </div>
                                             </div>
                                         </li>
-                                        @if ($CorreiosChile == false)
+                                        @if ($CorreiosBrazil == true)
                                         {{-- <li class="@if($delivered || $correios_brazil_recieved ) active @endif step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/correios.png') }}">
@@ -268,6 +292,39 @@
                                                 </div>
                                             </div>
                                         </li>
+                                        @elseif( $upsService == true )
+                                        <li class="@if( $upsRecieved || $arrivedAtUPSFacility || $departedFromUPSFacility || $delivered ) active @endif step0">
+                                            <div class="icon-content">
+                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/ups-logo.png') }}">
+                                                <div class="d-flex flex-column" mt-4>
+                                                    <p class="font-weight-bold">Received <br>by UPS</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="@if($arrivedAtUPSFacility || $departedFromUPSFacility || $delivered ) active @endif step0">
+                                            <div class="icon-content">
+                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/to-hd.png') }}">
+                                                <div class="d-flex flex-column" mt-4>
+                                                    <p class="font-weight-bold">Arrived at <br> UPS Facility</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="@if($departedFromUPSFacility || $delivered ) active @endif step0">
+                                            <div class="icon-content">
+                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/to-hd.png') }}">
+                                                <div class="d-flex flex-column" mt-4>
+                                                    <p class="font-weight-bold">Departed from <br> UPS Facility</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="@if($delivered) active @endif step0">
+                                            <div class="icon-content">
+                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/left-to-buyer.png') }}">
+                                                <div class="d-flex flex-column" mt-4>
+                                                    <p class="font-weight-bold">Parcels delivered</p>
+                                                </div>
+                                            </div>
+                                        </li>
                                         @endif
                                     @endif
                                     
@@ -282,7 +339,7 @@
                             <thead>
                                 <tr>
                                     <th>Date</th>
-                                    <th>Country</th>
+                                    <th>@if($order->recipient->country_id == \App\Models\Order::US)City @else Country @endif</th>
                                     <th>Description</th>
                                 </tr>
                             </thead>
@@ -293,7 +350,7 @@
                                             {{ $track->created_at }}
                                         </td>
                                         <td>
-                                            {{ $track->country }}
+                                            @if($order->recipient->country_id == \App\Models\Order::US) {{ $track->city }} @else {{ $track->country }} @endif
                                         </td>
                                         <td>
                                             {{ $track->description }}
@@ -326,6 +383,21 @@
                                             {{ $track['Estado'] }}
                                         </td>
                                     </tr>
+                                    @endforeach
+                                @endif
+                                @if($upsService)
+                                    @foreach ($upsTrackings as $tracking)
+                                        <tr>
+                                            <td>
+                                               20{{ date('y-m-d', strtotime($tracking['date'])) }} {{ date('H:i:s', strtotime($tracking['time'])) }}
+                                            </td>
+                                            <td>
+                                                {{ $tracking['location']['address']['city'] }}
+                                            </td>
+                                            <td>
+                                                {{ $tracking['status']['description'] }}
+                                            </td>
+                                        </tr>   
                                     @endforeach
                                 @endif
                             </tbody>

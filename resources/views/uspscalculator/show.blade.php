@@ -45,7 +45,7 @@
                                     @endforeach
                                 </div>
                                 @if ($userLoggedIn)
-                                    @if(auth()->user()->usps == false) 
+                                    @if(!setting('usps', null, auth()->user()->id)) 
                                         <div class="row mb-1 ml-4">
                                             <div class="controls col-12">
                                                 <h4 class="text-danger">USPS is not enabled for your account</h4>
@@ -70,7 +70,7 @@
                                                 </select>
                                             </div>
                                             <div class="controls col-6" id="buy_label_div">
-                                                <button id="btn-submit" type="button" class="btn btn-success btn-lg mt-4" @if(auth()->user()->usps == false) disabled @endif>
+                                                <button id="btn-submit" type="button" class="btn btn-success btn-lg mt-4" @if(!setting('usps', null, auth()->user()->id)) disabled @endif>
                                                     Buy Label
                                                 </button>
                                             </div>
