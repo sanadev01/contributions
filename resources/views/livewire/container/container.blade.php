@@ -49,7 +49,7 @@
                                 <tr>
                                     <th></th>
                                     <th>    
-                                        <input type="search" class="form-control col-md-9 ml-5" wire:model.debounce.1000ms="dispatchNumber">
+                                        <input type="search" class="form-control" wire:model.debounce.1000ms="dispatchNumber">
                                     </th>
                                     <th>
                                         <input type="search" class="form-control" wire:model.debounce.1000ms="sealNo">
