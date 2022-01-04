@@ -14,10 +14,10 @@ class Container extends Component
     public function render(ContainerRepository $containerRepository)
     {
         return view('livewire.container.container',[
-            'containers'=>  $this->getDeposits()
+            'containers'=>  $this->getContainers()
         ]);
     }
-    public function getDeposits()
+    public function getContainers()
     {
         return (new ContainerRepository)->get($this->getRequestData());
     }
