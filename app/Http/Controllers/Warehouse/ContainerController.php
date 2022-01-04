@@ -11,9 +11,9 @@ use Illuminate\Http\Request;
 
 class ContainerController extends Controller
 {
-    public function index(ContainerRepository $containerRepository)
+    public function index(Request $request,ContainerRepository $containerRepository)
     {
-        $containers = $containerRepository->get();
+        $containers = $containerRepository->get($request);
         return view('admin.warehouse.containers.index',compact('containers'));
     }
 
