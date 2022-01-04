@@ -22,6 +22,7 @@ class ShippingService extends Model
     const SRP = 28;
     const SRM = 32;
     const UPS_GROUND = 03;
+    const FEDEX_GROUND = 041;
 
     protected $guarded = [];
 

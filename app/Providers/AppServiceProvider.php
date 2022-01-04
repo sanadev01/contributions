@@ -5,6 +5,7 @@ namespace App\Providers;
 
 use App\Services\UPS\UpsService;
 use App\Services\USPS\UspsService;
+use App\Services\FedEx\FedExService;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
@@ -111,6 +112,19 @@ class AppServiceProvider extends ServiceProvider
             $email = config('usps.email');           
             $password = config('usps.password');
             return new USPSTrackingService($apiUrl, $email, $password);
+        });
+
+        $this->app->singleton('fedex_service', function() {
+
+            $clientId = config('fedex.credentials.client_id');
+            $clientSecret = config('fedex.credentials.client_secret');
+
+            // FedEx Api Testing Environment Credentials
+            $getTokenUrl = config('fedex.testing.getTokenUrl');
+            $getRatesUrl = config('fedex.testing.getRatesUrl');
+            $createShipmentUrl = config('fedex.testing.createShipmentUrl');
+           
+            return new FedExService($clientId, $clientSecret, $getTokenUrl, $getRatesUrl, $createShipmentUrl);
         });
     }
 
