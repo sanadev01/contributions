@@ -154,7 +154,7 @@
                     </div>
                 </td>
                 <td rowspan="2" colspan="2">
-                    <div style="text-align:center; @if($service != 1) margin-top: 1.5% !important; @endif">
+                    <div style="text-align:center; @if($OrderWeight <= 3) margin-top: 2% !important; @endif">
                         <img style="width: 14cm; height:1.5cm;display:block;" src="data:image/png;base64,{{DNS1D::getBarcodePNG($unitCode, 'C128',1,100,[0,0,0])}}" alt="barcode"   />
                         <div class="unit-code" style="width: 100%;display:block;">
                             {{$unitCode}}
