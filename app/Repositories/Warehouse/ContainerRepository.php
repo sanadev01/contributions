@@ -9,21 +9,27 @@ use Illuminate\Support\Facades\Auth;
 
 class ContainerRepository extends AbstractRepository{
 
-    public function get()
+    public function get(Request $request)
     {
         $query = Container::query();
 
         if ( !Auth::user()->isAdmin() ){
             $query->where('user_id',Auth::id());
         }
-
-        // $query->whereDoesntHave('deliveryBills');
-
+        if($request->has('dispatchNumber')){
+           $query->where('dispatch_number', 'LIKE', '%' . $request->dispatchNumber . '%');
+        } 
+        if($request->has('sealNo')){
+          $query->where('seal_no', 'LIKE', '%' . $request->sealNo . '%');
+        } 
+        if($request->has('packetType')){
+            $query->where('services_subclass_code', 'LIKE', '%' . $request->packetType . '%');
+        } 
         return $query->where(function($query) {
                  $query->where('services_subclass_code','NX')
                         ->orWhere('services_subclass_code','IX')
                         ->orWhere('services_subclass_code','XP');
-                })->latest()->paginate();
+                })->latest()->paginate(50);
     }
 
     public function store(Request $request)

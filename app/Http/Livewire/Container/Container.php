@@ -13,26 +13,21 @@ class Container extends Component
     public $sealNo='';
     public function render(ContainerRepository $containerRepository)
     {
-        if (! $this->query) {
-            $this->query = $this->getQuery();
-        }
         return view('livewire.container.container',[
-            'containers'=> $this->query->paginate(50)
+            'containers'=>  $this->getDeposits()
         ]);
     }
-
-    public function getQuery()
+    public function getDeposits()
     {
-        $query = Contain::query();
-        if ($this->sealNo) {
-         $query->where('seal_no', 'LIKE', '%' . $this->sealNo . '%');
-        }
-        if($this->dispatchNumber){
-            $query->where('dispatch_number', 'LIKE', '%' . $this->dispatchNumber . '%');
-        }
-        if($this->packetType){
-            $query->where('services_subclass_code', 'LIKE', '%' . $this->packetType . '%');
-        }
-        return $query;
+        return (new ContainerRepository)->get($this->getRequestData());
+    }
+
+    public function getRequestData()
+    {
+        return request()->merge([
+            'dispatchNumber' => $this->dispatchNumber,
+            'sealNo' => $this->sealNo,
+            'packetType' => $this->packetType,
+        ]);
     }
 }
