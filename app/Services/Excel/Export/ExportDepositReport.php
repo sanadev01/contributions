@@ -44,7 +44,10 @@ class ExportDepositReport extends AbstractExportService
             $this->setCellValue('G'.$row, $deposit->amount);
             $this->setCellValue('H'.$row, ($deposit->getOrder($deposit->order_id)) ? $this->getShippingCarrier($deposit ,$deposit->getOrder($deposit->order_id)) : '');
             $this->setCellValue('I'.$row, ($deposit->getOrder($deposit->order_id)) ? $this->getShippingCarrierCost($deposit ,$deposit->getOrder($deposit->order_id)) : '');
-            $this->setCellValue('J'.$row, $deposit->isCredit() ? 'Credit' : 'Debit');
+            $this->setCellValue('J'.$row, ($deposit->getOrder($deposit->order_id)) ? $this->getOrderDimensions($deposit->getOrder($deposit->order_id)) : '');
+            $this->setCellValue('K'.$row, ($deposit->getOrder($deposit->order_id)) ? $this->getOrderTotalWeight($deposit->getOrder($deposit->order_id)) : '');
+            $this->setCellValue('L'.$row, ($deposit->getOrder($deposit->order_id)) ? $this->getOrderVolumetricWeight($deposit->getOrder($deposit->order_id)) : '');
+            $this->setCellValue('M'.$row, $deposit->isCredit() ? 'Credit' : 'Debit');
             $row++;
         }
 
@@ -81,10 +84,19 @@ class ExportDepositReport extends AbstractExportService
         $this->setCellValue('I1', 'Carrier Cost');
 
         $this->setColumnWidth('J', 20);
-        $this->setCellValue('J1', 'Credit/Debit');
+        $this->setCellValue('J1', 'Order Dimensions');
 
-        $this->setBackgroundColor('A1:J1', '2b5cab');
-        $this->setColor('A1:J1', 'FFFFFF');
+        $this->setColumnWidth('K', 20);
+        $this->setCellValue('K1', 'Total Weight');
+
+        $this->setColumnWidth('L', 20);
+        $this->setCellValue('L1', 'Volumetric Weight');
+
+        $this->setColumnWidth('M', 20);
+        $this->setCellValue('M1', 'Credit/Debit');
+
+        $this->setBackgroundColor('A1:M1', '2b5cab');
+        $this->setColor('A1:M1', 'FFFFFF');
 
         $this->currentRow++;
     }
@@ -150,5 +162,20 @@ class ExportDepositReport extends AbstractExportService
             default:
                 return $rateSlab->cwb;
         }
+    }
+
+    private function getOrderDimensions($order)
+    {
+       return $order->length. ' X '. $order->width.' X '.$order->height;
+    }
+
+    private function getOrderTotalWeight($order)
+    {
+       return $order->getOriginalWeight('kg');
+    }
+
+    public function getOrderVolumetricWeight($order)
+    {
+        return $order->getWeight('kg');
     }
 }
