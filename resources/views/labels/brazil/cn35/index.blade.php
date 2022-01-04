@@ -57,7 +57,11 @@
                 <td class="column1" style="text-align: center;font-size:28px;font-weight:bold;">{!! $companyName !!}</td>
                 <td rowspan="2" colspan="2">
                     <img class="corrioes-lable" src="{{\public_path('images/correios-1.png')}}" style="display:block;width:30mm;height:30mm;font-weight:bold;font-size:25px;text-align:center;vertical-align:middle;position:absolute;top:0px;left:220px;" alt="">
-                    <div style="display:block;width:20mm;height:20mm;border-radius: 1cm;background:black;font-weight:bold;font-size:25px;text-align:center;vertical-align:middle;position:absolute;top:15px;left:370px;"></div>
+                    @if ($service == 1)
+                        <img class="corrioes-lable" src="{{\public_path('images/express-package.png')}}" style="display:block;width:20mm;height:20mm;font-weight:bold;font-size:25px;text-align:center;vertical-align:middle;position:absolute;top:12px;left:370px;" alt="">
+                    @else
+                        <div style="display:block;width:20mm;height:20mm;border-radius: 1cm;background:black;font-weight:bold;font-size:25px;text-align:center;vertical-align:middle;position:absolute;top:15px;left:370px;"></div>
+                    @endif    
                     <div style="display:block;width:400px;font-weight:bold;font-size:35px;text-align:center;vertical-align:middle;position:absolute;top:30px;left:440px;">
                         {{ $packetType }}
                     </div>
@@ -150,7 +154,7 @@
                     </div>
                 </td>
                 <td rowspan="2" colspan="2">
-                    <div style="text-align:center;">
+                    <div style="text-align:center; @if($service != 1) margin-top: 1.5% !important; @endif">
                         <img style="width: 14cm; height:1.5cm;display:block;" src="data:image/png;base64,{{DNS1D::getBarcodePNG($unitCode, 'C128',1,100,[0,0,0])}}" alt="barcode"   />
                         <div class="unit-code" style="width: 100%;display:block;">
                             {{$unitCode}}
