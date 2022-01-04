@@ -30,35 +30,47 @@
                                         Country
                                     </th>
                                     <th>
-                                        Region
-                                    </th>
-                                    <th>
                                         Action
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($shippingRates as $rate)
-                                <tr>
-                                    <th>
-                                        {{ optional($rate->shippingService)->name }}
-                                    </th>
-                                    <th>
-                                        {{ optional($rate->country)->name }}
-                                    </th>
-                                    <th>
-                                        {{ optional($rate->region)->name }}
-                                    </th>
-                                    <th>
-                                        <a href="{{ route('admin.rates.view-shipping-rates', $rate) }}" class="btn btn-primary btn-sm">
-                                           <i class="feather icon-eye"></i> View
-                                        </a>
-                                        |
-                                        <a href="{{ route('admin.rates.download-shipping-rates', $rate)}}" class="btn btn-success btn-sm">
-                                            <i class="feather icon-download"></i> Download
-                                        </a>
-                                    </th>
-                                </tr>
+
+                                    @if(!$rate->region)
+                                    <tr>
+                                        <th>
+                                            {{ optional($rate->shippingService)->name }}
+                                        </th>
+                                        <th>
+                                            {{ optional($rate->country)->name }}
+                                        </th>
+                                        <th>
+                                            <a href="{{ route('admin.rates.view-shipping-rates', $rate) }}" class="btn btn-primary btn-sm">
+                                               <i class="feather icon-eye"></i> View
+                                            </a>
+                                            |
+                                            <a href="{{ route('admin.rates.download-shipping-rates', $rate)}}" class="btn btn-success btn-sm">
+                                                <i class="feather icon-download"></i> Download
+                                            </a>
+                                        </th>
+                                    </tr>
+                                    @endif
+                                    @if($rate->region)
+                                    <tr>
+                                        <th>
+                                            {{ optional($rate->shippingService)->name }}
+                                        </th>
+                                        <th>
+                                            {{ optional($rate->country)->name }} / Regions
+                                        </th>
+                                        <th>
+                                            <a href="{{ route('admin.rates.region-rates', $rate->shippingService) }}" class="btn btn-primary btn-sm">
+                                                <i class="feather icon-eye"></i> View Region Rates
+                                            </a>
+                                        </th>
+                                    </tr>
+                                    @endif
                                 @endforeach
                             </tbody>
                         </table>

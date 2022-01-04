@@ -42,5 +42,14 @@ class RateRepository
         }
     }
 
+    public function getRegionRates($shipping_service)
+    {
+        $rates = Rate::where([
+            ['shipping_service_id', $shipping_service->id],
+            ['region_id', '!=', null]
+        ])->paginate(15);
+        
+        return $rates;
+    }
 
 }
