@@ -13,6 +13,7 @@ return [
     ],
     'credentials' => [
         'client_id' => 'l70a73c2c8c5124eb1a7c309b7d6b47649',
-        'client_secret' => '33c94c3e3af143a7bcf9ff11a5147919'
+        'client_secret' => '33c94c3e3af143a7bcf9ff11a5147919',
+        'account_number' => '510087020'
     ]
 ];

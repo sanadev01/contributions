@@ -118,13 +118,14 @@ class AppServiceProvider extends ServiceProvider
 
             $clientId = config('fedex.credentials.client_id');
             $clientSecret = config('fedex.credentials.client_secret');
+            $accountNumber = config('fedex.credentials.account_number');
 
             // FedEx Api Testing Environment Credentials
             $getTokenUrl = config('fedex.testing.getTokenUrl');
             $getRatesUrl = config('fedex.testing.getRatesUrl');
             $createShipmentUrl = config('fedex.testing.createShipmentUrl');
            
-            return new FedExService($clientId, $clientSecret, $getTokenUrl, $getRatesUrl, $createShipmentUrl);
+            return new FedExService($clientId, $clientSecret, $accountNumber, $getTokenUrl, $getRatesUrl, $createShipmentUrl);
         });
     }
 

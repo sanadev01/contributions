@@ -7,6 +7,7 @@ use Livewire\Component;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Models\ShippingService;
+use App\Repositories\FedExLabelRepository;
 use Illuminate\Support\Facades\Http;
 use App\Repositories\UPSLabelRepository;
 use App\Repositories\USPSLabelRepository;
@@ -148,14 +149,14 @@ class UsLabelForm extends Component
         $this->password = config('usps.password');
     }
 
-    public function getRates(UPSLabelRepository $upsLabelRepository, USPSLabelRepository $uspsLabelRepository)
+    public function getRates(UPSLabelRepository $upsLabelRepository, USPSLabelRepository $uspsLabelRepository, FedExLabelRepository $fedExLabelRepository)
     {
         $this->validate();
         $this->usRates = [];
         
         if ($this->usShippingServices)
         {
-            $this->usShippingServices->each(function ($shippingService, $key) use ($upsLabelRepository, $uspsLabelRepository) {
+            $this->usShippingServices->each(function ($shippingService, $key) use ($upsLabelRepository, $uspsLabelRepository, $fedExLabelRepository) {
                 if ($shippingService['service_sub_class'] == ShippingService::UPS_GROUND) {
                     $this->getUPSRates($shippingService['service_sub_class'], $upsLabelRepository);
                 }
@@ -164,6 +165,10 @@ class UsLabelForm extends Component
                     || $shippingService['service_sub_class'] == ShippingService::USPS_FIRSTCLASS) 
                 {
                     $this->getUSPSRates($shippingService['service_sub_class'], $uspsLabelRepository);
+                }
+
+                if ($shippingService['service_sub_class'] == ShippingService::FEDEX_GROUND) {
+                   $this->getFedexRates($shippingService['service_sub_class'], $fedExLabelRepository);
                 }
             });
         }    
@@ -209,6 +214,16 @@ class UsLabelForm extends Component
         }
 
         $this->uspsError = $uspsRateResponse['message'];
+    }
+
+    private function getFedexRates($service, $fedExLabelRepository)
+    {
+        $fedExRateResponse = $fedExLabelRepository->getRates($this->createRequest($service));
+        if ($fedExRateResponse['success'] == true) {
+            return array_push($this->usRates, ['service' => 'FedEx Ground', 'service_code' => $service, 'cost' => $fedExRateResponse['total_amount']]);
+        }
+
+        $this->fedExError = $fedExRateResponse['message'];
     }
 
     private function getUPSLabel($upsLabelRepository)
