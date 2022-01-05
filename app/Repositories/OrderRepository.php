@@ -116,7 +116,9 @@ class OrderRepository
         DB::beginTransaction();
 
         try {
-
+            // $orderItem = $order->items()->get();
+            // $itemQuantity =$orderItem['quantity']; 
+            // // dd($order->items()->get());
             $order->items()->delete();
             $product = $order->products->first();
             $totalQuantity = 0;
@@ -127,6 +129,7 @@ class OrderRepository
                 }
             }
             if($productQuantity < $totalQuantity){
+            session()->flash('alert-danger','Your Quantity Balance Is '.$productQuantity.' You Cannot Add More Than '.$productQuantity.'');
                 return false ;
             }
             foreach ($request->get('items',[]) as $item) {
