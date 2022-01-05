@@ -28,6 +28,7 @@
                         @endadmin
                         <th>Name</th>
                         <th>Price</th>
+                        <th>Quantity</th>
                         <th>SKU</th>
                         <th>Active</th>
                         <th>Description</th>
@@ -48,6 +49,7 @@
                         <th>
                             <input type="search" class="form-control" wire:model.debounce.1000ms="price">
                         </th>
+                        <th></th>
                         <th>
                             <input type="search" class="form-control" wire:model.debounce.1000ms="sku">
                         </th>

@@ -116,9 +116,19 @@ class OrderRepository
         DB::beginTransaction();
 
         try {
-            
+
             $order->items()->delete();
-            dd($order->products);
+            $product = $order->products->first();
+            $totalQuantity = 0;
+            $productQuantity = $product->quantity;
+            foreach ($request->get('items',[]) as $item) {
+                if($productQuantity >= $totalQuantity && $product->sh_code == $item['sh_code'] ){
+                    $totalQuantity+=$item['quantity'];
+                }
+            }
+            if($productQuantity < $totalQuantity){
+                return false ;
+            }
             foreach ($request->get('items',[]) as $item) {
 
                 $order->items()->create([
@@ -131,8 +141,9 @@ class OrderRepository
                     'contains_flammable_liquid' => optional($item)['dangrous_item'] == 'contains_flammable_liquid' ? true: false,
                 ]);
             }
-
-            
+            $product->update([
+                'quantity'=>$productQuantity-$totalQuantity,
+            ]);
             $shippingService = ShippingService::find($request->shipping_service_id);
 
             $order->update([
@@ -146,16 +157,17 @@ class OrderRepository
                 'insurance_value' => 0,
                 'status' => $order->isPaid() ? ($order->status < Order::STATUS_ORDER ? Order::STATUS_ORDER : $order->status) : Order::STATUS_ORDER
             ]);
-
+            
             $order->doCalculations();
 
             DB::commit();
-
+            session()->flash('alert-success','orders.Sender Updated');
             return true;
         } catch (\Exception $ex) {
             DB::rollback();
             $this->error = $ex->getMessage();
-            return false;
+            session()->flash('alert-success','orders.Sender Update Error');
+
         }
     }
 

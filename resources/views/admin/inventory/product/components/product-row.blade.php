@@ -5,6 +5,7 @@
     @endadmin
     <td>{{ $product->name }}</td>
     <td>{{ $product->price }}</td>
+    <td>{{ $product->quantity }}</td>
     <td>{{ $product->sku }}</td>
     <td>
         <select style="min-width:150px;" class="form-control {{ !auth()->user()->isAdmin() ? 'btn disabled' : ''  }} {{ $product->getStatusClass() }}" @if (auth()->user()->isAdmin())  wire:change="$emit('updated-status',{{$product->id}},$event.target.value)" @else disabled="disabled"  @endif>

@@ -170,9 +170,9 @@ class ProductRepository
 
             $this->addItem($order, $productOrder);
 
-            $productOrder->update([
-                "quantity" => $productOrder->quantity -1,
-            ]);
+            // $productOrder->update([
+            //     "quantity" => $productOrder->quantity -1,
+            // ]);
 
             DB::commit();
 
