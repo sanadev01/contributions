@@ -35,9 +35,12 @@ class Rate extends Model
         ]);
     }
 
-    public function scopeByRegion(Builder $builder,$regionId)
+    public function scopeByRegion(Builder $builder,$countryId,$regionId)
     {
-        return $builder->where('region_id', $regionId);
+        return $builder->where([
+            ['country_id', $countryId],
+            ['region_id', $regionId]
+        ]);
     }
 
     public function country()

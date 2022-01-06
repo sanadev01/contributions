@@ -60,7 +60,7 @@ class OrderItemsController extends Controller
             }
         }
         if($shippingServices->isEmpty()){
-            $error = "Shipping Service not Available for the Country you have selected";
+            $error = ($order->recipient->commune_id != null) ? "Shipping Service not Available for the Region you have selected" : "Shipping Service not Available for the Country you have selected";
         }
 
         if($shippingServices->contains('service_sub_class', ShippingService::USPS_PRIORITY) 
