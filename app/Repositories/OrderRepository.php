@@ -116,15 +116,15 @@ class OrderRepository
         DB::beginTransaction();
 
         try {
+
             $lastOrderItem = $order->items()->first();
-            $lastOrderItemQuantity =$lastOrderItem->quantity;
+            $lastOrderItemQuantity = $lastOrderItem->quantity;
             $order->items()->delete();
             $product = $order->products->first();
             $totalQuantity = 0;
-            $productQuantity = $product->quantity;
             
             foreach ($request->get('items',[]) as $item) {
-                if($productQuantity >= $totalQuantity && $product->sh_code == $item['sh_code'] ){
+                if($product->quantity  >= $totalQuantity && $product->sh_code == $item['sh_code'] ){
                     $totalQuantity+=$item['quantity'];
                 }
                 $order->items()->create([
@@ -137,13 +137,15 @@ class OrderRepository
                     'contains_flammable_liquid' => optional($item)['dangrous_item'] == 'contains_flammable_liquid' ? true: false,
                 ]);
             }
-            if($productQuantity + $lastOrderItemQuantity < $totalQuantity){
-                session()->flash('alert-danger','Your Quantity Is '.$productQuantity.' You Cannot Add More Than '.$productQuantity.'');
-                return false ;
+
+            if($product->quantity + $lastOrderItemQuantity < $totalQuantity){
+                session()->flash('alert-danger','Your Quantity Is '. $product->quantity . ' You Cannot Add More Than '. $product->quantity );
+                DB::rollback();
+                return false;
             }
-            $totalDifference =  $totalQuantity - $lastOrderItemQuantity;
+            $totalDifference = $totalQuantity - $lastOrderItemQuantity;
             $product->update([
-                'quantity'=>$productQuantity-$totalDifference,
+                'quantity'=>$product->quantity - $totalDifference,
             ]);
             $shippingService = ShippingService::find($request->shipping_service_id);
 
@@ -168,7 +170,7 @@ class OrderRepository
             DB::rollback();
             $this->error = $ex->getMessage();
             session()->flash('alert-success','orders.Sender Update Error');
-
+            return false;
         }
     }
 
