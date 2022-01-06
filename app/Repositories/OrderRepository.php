@@ -121,7 +121,6 @@ class OrderRepository
             $order->items()->delete();
             $product = $order->products->first();
             $totalQuantity = 0;
-            $totalQuantityUpdate = 0;
             $productQuantity = $product->quantity;
 
             foreach ($request->get('items',[]) as $item) {
@@ -134,7 +133,7 @@ class OrderRepository
                 session()->flash('alert-danger','Your Quantity Is '.$productQuantity.' You Cannot Add More Than '.$productQuantity.'');
                 return false ;
             }
-            
+
             $totalDifference =  $totalQuantity - $lastOrderItemQuantity;
             $product->update([
                 'quantity'=>$productQuantity-$totalDifference,
