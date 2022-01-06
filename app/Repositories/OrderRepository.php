@@ -116,22 +116,29 @@ class OrderRepository
         DB::beginTransaction();
 
         try {
-            // $orderItem = $order->items()->get();
-            // $itemQuantity =$orderItem['quantity']; 
-            // // dd($order->items()->get());
+            $lastOrderItem = $order->items()->first();
+            $lastOrderItemQuantity =$lastOrderItem->quantity;
             $order->items()->delete();
             $product = $order->products->first();
             $totalQuantity = 0;
+            $totalQuantityUpdate = 0;
             $productQuantity = $product->quantity;
+
             foreach ($request->get('items',[]) as $item) {
                 if($productQuantity >= $totalQuantity && $product->sh_code == $item['sh_code'] ){
                     $totalQuantity+=$item['quantity'];
                 }
             }
+            
             if($productQuantity < $totalQuantity){
-            session()->flash('alert-danger','Your Quantity Balance Is '.$productQuantity.' You Cannot Add More Than '.$productQuantity.'');
+                session()->flash('alert-danger','Your Quantity Is '.$productQuantity.' You Cannot Add More Than '.$productQuantity.'');
                 return false ;
             }
+            
+            $totalDifference =  $totalQuantity - $lastOrderItemQuantity;
+            $product->update([
+                'quantity'=>$productQuantity-$totalDifference,
+            ]);
             foreach ($request->get('items',[]) as $item) {
 
                 $order->items()->create([
@@ -144,9 +151,7 @@ class OrderRepository
                     'contains_flammable_liquid' => optional($item)['dangrous_item'] == 'contains_flammable_liquid' ? true: false,
                 ]);
             }
-            $product->update([
-                'quantity'=>$productQuantity-$totalQuantity,
-            ]);
+           
             $shippingService = ShippingService::find($request->shipping_service_id);
 
             $order->update([
