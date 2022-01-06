@@ -122,27 +122,28 @@ class OrderRepository
             $totalQuantity = 0;
             $productQuantity = $product->quantity;
             foreach ($request->get('items',[]) as $item) {
-                if($productQuantity >= $totalQuantity && $product->sh_code == $item['sh_code'] ){
+                if($product->quantity  >= $totalQuantity && $product->sh_code == $item['sh_code'] ){
                     $totalQuantity+=$item['quantity'];
                 }
                 $order->items()->create([
-                        'sh_code' => optional($item)['sh_code'],
-                        'description' => optional($item)['description'],
-                        'quantity' => optional($item)['quantity'],
-                        'value' => optional($item)['value'],
-                        'contains_battery' => optional($item)['dangrous_item'] == 'contains_battery' ? true: false,
-                        'contains_perfume' => optional($item)['dangrous_item'] == 'contains_perfume' ? true: false,
-                        'contains_flammable_liquid' => optional($item)['dangrous_item'] == 'contains_flammable_liquid' ? true: false,
-                    ]);
-                }
-            if($productQuantity + $lastOrderItemQuantity < $totalQuantity){
-                session()->flash('alert-danger','Your Quantity Is '.$productQuantity.' You Cannot Add More Than '.$productQuantity.'');
-                DB::rollback();
-                return false ;
+                    'sh_code' => optional($item)['sh_code'],
+                    'description' => optional($item)['description'],
+                    'quantity' => optional($item)['quantity'],
+                    'value' => optional($item)['value'],
+                    'contains_battery' => optional($item)['dangrous_item'] == 'contains_battery' ? true: false,
+                    'contains_perfume' => optional($item)['dangrous_item'] == 'contains_perfume' ? true: false,
+                    'contains_flammable_liquid' => optional($item)['dangrous_item'] == 'contains_flammable_liquid' ? true: false,
+                ]);
             }
-            $totalDifference =  $totalQuantity - $lastOrderItemQuantity;
+
+            if($product->quantity + $lastOrderItemQuantity < $totalQuantity){
+                session()->flash('alert-danger','Your Quantity Is '. $product->quantity . ' You Cannot Add More Than '. $product->quantity );
+                DB::rollback();
+                return false;
+            }
+            $totalDifference = $totalQuantity - $lastOrderItemQuantity;
             $product->update([
-                'quantity'=>$productQuantity-$totalDifference,
+                'quantity'=>$product->quantity - $totalDifference,
             ]);
             $shippingService = ShippingService::find($request->shipping_service_id);
 
