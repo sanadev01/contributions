@@ -1,9 +1,10 @@
 <?php
 
+use App\Models\User;
 use App\Models\Order;
+use App\Models\ProfitPackage;
 use App\Services\StoreIntegrations\Shopify;
 use App\Http\Controllers\Admin\Deposit\DepositController;
-use App\Models\ProfitPackage;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 
 /*
@@ -226,4 +227,7 @@ Route::get('test-profit/{id}',function($id){
 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
 
-Route::get('test', [\App\Http\Controllers\Admin\HomeController::class,'test'])->middleware('auth')->name('test');
+Route::get('/tests', function() {
+    $user = User::find(993);
+    dd($user->toArray());
+})->middleware('auth')->name('test');
