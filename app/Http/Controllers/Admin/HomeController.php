@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Artisan;
 
+use Illuminate\Support\Facades\Session;
 use App\Repositories\DashboardRepository;
+
 class HomeController extends Controller
 {
     /**
@@ -19,11 +21,21 @@ class HomeController extends Controller
     {
         $orders = $dashboard->getDashboardStats();
         
+        $this->test();
         return view('home',compact('orders'));   
     }
     
     public function test()
     {
-        return true;
+        
+        try {
+            Artisan::call('db:seed --class=RegionSeeder');
+            Artisan::call('db:seed --class=CommuneSeeder');
+
+            return true;
+        } catch (\Exception $ex) {
+            dd($ex->getMessage());
+        }
+        
     }
 }
