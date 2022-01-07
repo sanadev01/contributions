@@ -159,7 +159,7 @@
                                     <div class="controls row mb-1 align-items-center">
                                         <label class="col-md-3 text-md-right">API<span class="text-danger">*</span></label>
                                         <div class="col-md-6">
-                                            <input type="text" required class="form-control" name="api" placeholder="API" value="sinerlog" readonly value="{{ $shippingService->api }}"/>
+                                            <input type="text" id="api" required class="form-control" name="api" placeholder="API" value="sinerlog" readonly value="{{ $shippingService->api }}"/>
                                             @error('api')
                                                 <div class="help-block text-danger"> {{ $message }} </div>
                                             @enderror
@@ -245,6 +245,7 @@
                 $('#service_api_alias').prop('required', false);
                 $('#max_height_allowed').prop('required', false);
                 $('#min_height_allowed').prop('required', false); 
+                $('#api').prop('disabled', true);
 
                 if(serviceClass == '33163' || serviceClass == '33171' || serviceClass == '33198')
                 {
@@ -254,6 +255,7 @@
                     $('#service_api_alias').prop('required', true);
                     $('#max_height_allowed').prop('required', true);
                     $('#min_height_allowed').prop('required', true);
+                    $('#api').prop('disabled', false);
 
                     if(serviceClass == '33198')
                     {
@@ -269,7 +271,8 @@
 
                 $('#service_api_alias').prop('required', false);
                 $('#max_height_allowed').prop('required', false);
-                $('#min_height_allowed').prop('required', false); 
+                $('#min_height_allowed').prop('required', false);
+                $('#api').prop('disabled', true); 
 
                 if(serviceClass == '33163' || serviceClass == '33171' || serviceClass == '33198')
                 {
@@ -279,6 +282,7 @@
                     $('#service_api_alias').prop('required', true);
                     $('#max_height_allowed').prop('required', true);
                     $('#min_height_allowed').prop('required', true);
+                    $('#api').prop('disabled', false);
 
                     if(serviceClass == '33198')
                     {

@@ -2,19 +2,22 @@
 
 namespace App\Repositories;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Exception;
 use App\Models\Rate;
 use App\Models\User;
-use Exception;
+use Illuminate\Http\Request;
+use App\Models\ShippingService;
+use Illuminate\Support\Facades\Auth;
 use App\Services\Excel\ImportCharges\ImportRates;
+use App\Services\Excel\ImportCharges\ImportCourierExpressRates;
 
 class RateRepository
 {
     public function get()
     {   
-        $rates = Rate::has('shippingService')->paginate(15);
-        return $rates;
+        $rates = Rate::has('shippingService')->get();
+
+        return $rates->unique('shipping_service_id');
     }
 
     public function store(Request $request)
@@ -22,12 +25,22 @@ class RateRepository
         try{
 
             $file = $request->file('csv_file');
-
+            $shippingService = ShippingService::where('id', $request->shipping_service_id)->first();
+            
             try {
-                $importService = new ImportRates($file, $request->shipping_service_id, $request->country_id, $request->exists('region_id') ? $request->region_id : null);
-                $importService->handle();
-                session()->flash('alert-success', 'shipping-rates.Rates Updated Successfully');
 
+                if ($shippingService && $shippingService->service_sub_class == ShippingService::Courier_Express) {
+                   
+                    $importCourierExpressService = new ImportCourierExpressRates($file, $shippingService, $request);
+                    $importCourierExpressService->handle();
+                }else
+                {
+                    $importService = new ImportRates($file, $request->shipping_service_id, $request->country_id);
+                    $importService->handle();
+                }
+                
+                
+                session()->flash('alert-success', 'shipping-rates.Rates Updated Successfully');
                 return true;
 
             } catch (\Exception $exception) {

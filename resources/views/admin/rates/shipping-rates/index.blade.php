@@ -74,7 +74,7 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        {{ $shippingRates->links() }}
+                        {{-- {{ $shippingRates->links() }} --}}
                     </div>
                 </div>
             </div>

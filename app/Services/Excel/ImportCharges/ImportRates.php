@@ -10,13 +10,11 @@ class ImportRates extends AbstractImportService
 {
     protected $shippingSrviceId;
     protected $countryId;
-    protected $regionId;
 
-    public function __construct(UploadedFile $file, $shippingSrviceId, $countryId, $regionId = null)
+    public function __construct(UploadedFile $file, $shippingSrviceId, $countryId)
     {
         $this->shippingSrviceId = $shippingSrviceId;
         $this->countryId = $countryId;
-        $this->regionId = $regionId;
 
         $filename = $this->importFile($file);
 
@@ -56,10 +54,6 @@ class ImportRates extends AbstractImportService
         //     'max_weight' => $this->workSheet->getCell('C'.(++$row))->getValue(),
         //     'max_value' => $this->workSheet->getCell('C'.(++$row))->getValue(),
         // ];
-        if($this->regionId != null)
-        {
-            return $this->storeRegionRates($rates);
-        }
 
         return $this->storeRatesToDb($rates);
     }
@@ -74,26 +68,6 @@ class ImportRates extends AbstractImportService
 
         $rates->shipping_service_id = $this->shippingSrviceId;
         $rates->country_id = $this->countryId;
-        $rates->data = $data;
-        $rates->save();
-        return $rates;
-    }
-
-    private function storeRegionRates(array $data)
-    {
-        $rates = Rate::where([
-            ['shipping_service_id',$this->shippingSrviceId],
-            ['country_id',$this->countryId],
-            ['region_id',$this->regionId]
-        ])->first();
-        
-        if ( !$rates ){
-            $rates= new Rate();
-        }
-
-        $rates->shipping_service_id = $this->shippingSrviceId;
-        $rates->country_id = $this->countryId;
-        $rates->region_id = $this->regionId;
         $rates->data = $data;
         $rates->save();
         return $rates;

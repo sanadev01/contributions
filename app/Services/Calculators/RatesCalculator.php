@@ -42,7 +42,7 @@ class RatesCalculator
         
         if($this->recipient->commune_id != null)
         {
-            $this->rates = $service->rates()->byRegion(optional($this->recipient->commune)->region->id)->first();
+            $this->rates = $service->rates()->byRegion($this->recipient->country_id, optional($this->recipient->commune)->region->id)->first();
         
         }else{
             $this->rates = $service->rates()->byCountry($this->recipient->country_id)->first();
