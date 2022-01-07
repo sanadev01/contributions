@@ -69,6 +69,7 @@ class ImportCourierExpressRates extends AbstractImportService
         foreach ($this->regionCodes as $cell => $regionCode) {
            $region = $this->regions->firstWhere('code', $regionCode);
            
+           $rates = [];
             if ($region) {
                 foreach (range(2, $limit) as $row)
                 {
