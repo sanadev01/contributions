@@ -3,6 +3,7 @@
 namespace App\Services\FedEx;
 
 use Carbon\Carbon;
+use App\Models\ShippingService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
@@ -61,18 +62,22 @@ class FedExService
             'requestedShipment' => [
                 'shipper' => [
                     'address' => [
+                        'city' => $request->sender_city,
+                        'stateOrProvinceCode' => $request->sender_state,
                         'postalCode' => $request->sender_zipcode,
                         'countryCode' => 'US',
                     ]
                 ],
                 'recipient' => [
                     'address' => [
+                        'city' => 'Miami',
+                        'stateOrProvinceCode' => 'FL',
                         'postalCode' => 33182,
                         'countryCode' => 'US',
                     ]
                 ],
-                'serviceType' => 'FEDEX_GROUND',
-                'pickupType' => 'DROPOFF_AT_FEDEX_LOCATION',
+                'serviceType' => ($request->service == ShippingService::FEDEX_GROUND) ? 'FEDEX_GROUND' : 'GROUND_HOME_DELIVERY',
+                'pickupType' => ($request->pickup == "true") ? 'CONTACT_FEDEX_TO_SCHEDULE' : 'DROPOFF_AT_FEDEX_LOCATION',
                 'rateRequestType' => [
                     'ACCOUNT'
                 ],
