@@ -165,6 +165,7 @@
                 $('#city').css('display', 'block');
                 $('#tax_id').css('display', 'none'); 
                 $('#phone').css('display', 'inline-block');
+                $('#sender_state').prop('disabled', true);
                 
                 if (selected == '250') {
                     $('#state').removeClass('d-none');
@@ -175,6 +176,8 @@
 
                     $('#sender_state').prop('required',true);
                     $("[name='sender_zipcode']").prop('required', true);
+
+                    $('#sender_state').prop('disabled', false);
                 }
 
                 $("[name='sender_address']").prop( "disabled", false );
@@ -205,6 +208,8 @@
                 $("[name='sender_city']").prop('required', false);
                 $('#sender_state').prop('required',false);
                 $("[name='phone']").prop('required',false);
+
+                $('#sender_state').prop('disabled', true);
         }
 
         $('#sender_address').on('change', function(){
@@ -219,6 +224,7 @@
                 $('#city').css('display', 'block');
                 $('#tax_id').css('display', 'none'); 
                 $('#phone').css('display', 'inline-block');
+                $('#sender_state').prop('disabled', true);
 
                 if (selected == '250') {
                     $('#state').removeClass('d-none');
@@ -229,6 +235,8 @@
 
                     $('#sender_state').prop('required',true);
                     $("[name='sender_zipcode']").prop('required', true);
+                    
+                    $('#sender_state').prop('disabled',false);
 
                     window.validate_us_address();
                 }
@@ -260,6 +268,8 @@
                 $('#sender_state').prop('required',false);
                 $("[name='phone']").prop('required',false);
                 $("[name='sender_zipcode']").prop('required', false);
+
+                $('#sender_state').prop('disabled', true);
             }
         });
 

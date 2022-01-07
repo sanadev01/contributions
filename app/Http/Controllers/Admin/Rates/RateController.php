@@ -45,6 +45,11 @@ class RateController extends Controller
     
     public function show(ShippingService $shipping_rate, RateRepository $repository)
     {   
+        if ($shipping_rate->service_sub_class == ShippingService::Courier_Express) {
+            $defaultRate = public_path('uploads/bps/chile_regions_rate.xlsx');
+            return response()->download($defaultRate);
+        }
+
         if(optional($shipping_rate->rates)[0]){
             $rates = optional(optional($shipping_rate->rates)[0])->data;
             $exportService = new ShippingServiceRateExport($rates);

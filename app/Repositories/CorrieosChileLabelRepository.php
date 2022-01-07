@@ -17,32 +17,35 @@ class CorrieosChileLabelRepository
     
     public function handle($order)
     {
-        if($order->shippingService->service_sub_class == ShippingService::SRP || $order->shippingService->service_sub_class == ShippingService::SRM && $order->isPaid())
+        if($order->isPaid() && !$order->api_response)
         {
-            if($order->recipient->commune_id != null)
+            if($order->shippingService->service_sub_class == ShippingService::SRP || $order->shippingService->service_sub_class == ShippingService::SRM)
             {
-               return $this->generateCourierExpressLabel($order);
+               return $this->generatChileLabel($order);
             }
 
-            if($order->api_response == null && $order->recipient->commune_id == null)
+            if($order->shippingService->service_sub_class == ShippingService::Courier_Express)
             {
-                $this->generat_ChileLabel($order);
+                return $this->generateCourierExpressLabel($order);
             }
             
-        }elseif($order->api_response != null)
-        {
-
-            $this->printLabel($order);
         }
+
+        return $this->printLabel($order);
 
     }
 
     public function update($order)
     {
-        $this->generat_ChileLabel($order);
+        if($order->shippingService->service_sub_class == ShippingService::Courier_Express)
+        {
+            return $this->generateCourierExpressLabel($order);
+        }
+        
+        $this->generatChileLabel($order);
     }
 
-    public function generat_ChileLabel($order)
+    public function generatChileLabel($order)
     {
         if($order->shippingService->service_sub_class == ShippingService::SRP)
         {

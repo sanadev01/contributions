@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Http\Controllers\Controller;
+use App\Models\Rate;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -18,7 +19,6 @@ class HomeController extends Controller
     public function __invoke(DashboardRepository $dashboard)
     {
         $orders = $dashboard->getDashboardStats();
-        
         return view('home',compact('orders'));   
     }
     
