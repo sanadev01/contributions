@@ -25,12 +25,12 @@ class RegionImportService extends AbstractImportService
 
         $regions = collect();
 
-        foreach (range(2, 19) as $row) 
+        foreach (range(2, 22) as $row) 
         {
             $regions->push([
                 'country_id' => 46,
                 'state_id' => null,
-                'name' => $this->workSheet->getCell('A'.$row)->getValue(),
+                'name' => strtoupper(trim($this->workSheet->getCell('A'.$row)->getValue())),
                 'code' => $this->workSheet->getCell('B'.$row)->getValue(),
             ]);
         }
