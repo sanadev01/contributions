@@ -18,12 +18,7 @@ class HomeController extends Controller
      */
     public function __invoke(DashboardRepository $dashboard)
     {
-        $rates = Rate::where('shipping_service_id', 20)->get();
-        foreach ($rates as $rate) {
-            $rate->delete();
-        }
         $orders = $dashboard->getDashboardStats();
-        
         return view('home',compact('orders'));   
     }
     
