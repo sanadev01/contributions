@@ -51,7 +51,7 @@ class UspsService
                 'phone_number' => '+13058885191',
                 'sms' => '+17867024093',
                 'email' => 'homedelivery@homedeliverybr.com',
-                'country_code' => $order->sender_country->code,
+                'country_code' => 'US',
             ],
             'to_address' => [
                 'first_name' => $order->recipient->first_name,
@@ -243,7 +243,7 @@ class UspsService
                 'phone_number' => '+13058885191',
                 'sms' => '+17867024093',
                 'email' => 'homedelivery@homedeliverybr.com',
-                'country_code' => $order->sender_country->code,
+                'country_code' => 'US',
             ],
             'to_address' => [
                 'company_name' => 'HERCO SUITE#100',

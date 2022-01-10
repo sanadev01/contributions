@@ -37,9 +37,9 @@ class UspsAccrualRates extends Component
     public function getOrders()
     {
         $orders = Order::where([
-                                ['corrios_usps_tracking_code', '!=', null],
-                                ['usps_response', '!=', null] 
-                        ])->whereBetween('order_date',[$this->start_date.' 00:00:00', $this->end_date.' 23:59:59'])->get()->groupBy('corrios_usps_tracking_code')->all();
+                                ['us_api_tracking_code', '!=', null],
+                                ['us_api_response', '!=', null] 
+                        ])->whereBetween('order_date',[$this->start_date.' 00:00:00', $this->end_date.' 23:59:59'])->get()->groupBy('us_api_tracking_code')->all();
         return $orders;                
     }
 }

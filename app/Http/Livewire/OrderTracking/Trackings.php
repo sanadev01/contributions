@@ -29,10 +29,16 @@ class Trackings extends Component
     public $chileTrackings;
     public $uspsTrackings;
     public $uspsService;
+    public $upsTrackings;
+    public $upsService;
+
+    public $upsRecieved;
+    public $arrivedAtUPSFacility;
+    public $departedFromUPSFacility;
 
     public function render()
     {  
-        if( isset($this->tracking) && $this->CorreiosChile == false && $this->CorreiosBrazil == false && $this->uspsService == false)
+        if( isset($this->tracking) && $this->CorreiosChile == false && $this->CorreiosBrazil == false && $this->uspsService == false && $this->upsService == false)
         {
             $this->toggleStatus(); 
         }
@@ -52,6 +58,12 @@ class Trackings extends Component
         {
             $this->toggleUspsStatus();
         }
+
+        if( isset($this->tracking) && $this->upsService == true )
+        {
+            $this->toggleUpsStatus();
+        }
+
         return view('livewire.order-tracking.trackings',[
             'tracking'  => $this->tracking,
             'trackings'  => $this->trackings,
@@ -72,6 +84,7 @@ class Trackings extends Component
             $this->CorreiosChile = false;
             $this->uspsService = false;
             $this->CorreiosBrazil = false;
+            $this->upsService = false;
 
             if($response->service == 'Correios_Brazil')
             {
@@ -112,6 +125,18 @@ class Trackings extends Component
                 $this->trackingType = 'USPS';
                 return true;
             }
+
+            if ($response->service == 'UPS') {
+                $this->upsService = true;
+                $this->tracking = last($response->ups_trackings);
+                $this->upsTrackings = $response->ups_trackings;
+                $this->trackings = $response->trackings;
+                $this->order = $response->order;
+                $this->status   = $response->status;
+                $this->message  = null;
+                $this->trackingType = 'UPS';
+                return true;
+            }
             
             if( $response->success == true && $response->status = 200){
                 
@@ -140,7 +165,7 @@ class Trackings extends Component
 
     }
 
-    public function toggleStatus()
+    private function toggleStatus()
     {   
         $this->correios_brazil_recieved == false;
         $this->custom_finished == false;
@@ -160,7 +185,7 @@ class Trackings extends Component
         return true;
     }
 
-    public function toggleBrazilStatus()
+    private function toggleBrazilStatus()
     {
         $this->correios_brazil_recieved == false;
         $this->custom_finished == false;
@@ -179,7 +204,7 @@ class Trackings extends Component
         return true;
     }
 
-    public function toggleChileStatus()
+    private function toggleChileStatus()
     {
         $this->correios_chile_recieved = false;
         $this->in_transit = false;
@@ -191,9 +216,22 @@ class Trackings extends Component
 
     }
 
-    public function toggleUspsStatus()
+    private function toggleUspsStatus()
     {
 
+    }
+
+    private function toggleUpsStatus()
+    {
+        $this->upsRecieved = false;
+        $this->arrivedAtUPSFacility = false;
+        $this->departedFromUPSFacility = false;
+        $this->delivered = false;
+
+        $this->upsRecieved = ($this->tracking['status']['type'] == 'I' && $this->tracking['status']['code'] == 'OR') ? true : false;
+        $this->arrivedAtUPSFacility = ($this->tracking['status']['type'] == 'I' && $this->tracking['status']['code'] == 'AR') ? true : false;
+        $this->departedFromUPSFacility = ($this->tracking['status']['type'] == 'I' && $this->tracking['status']['code'] == 'DP') ? true : false;
+        $this->delivered = ($this->tracking['status']['type'] == 'D' && $this->tracking['status']['code'] == 'KB') ? true : false;
     }
 
 

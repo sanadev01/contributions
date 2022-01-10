@@ -1,5 +1,7 @@
 @extends('layouts.master')
-
+@section('css')
+<link rel="stylesheet" href="{{ asset('app-assets/select/css/bootstrap-select.min.css') }}">
+@endsection
 @section('page') 
     <div class="card">
         <div class="card-header">
@@ -50,9 +52,9 @@
                                 <div class="form-group">
                                     <div class="controls">
                                         <label>@lang('shipping-rates.Country') <span class="text-danger">*</span></label>
-                                        <select name="country_id" required class="form-control">
+                                        <select name="country_id" required class="form-control selectpicker show-tick" data-live-search="true" id="country">
                                                 @foreach (countries() as $country)
-                                                    <option value="{{ $country->id }}">{{ $country->name }}</option>
+                                                    <option {{ old('country_id') == $country->id ? 'selected' : '' }} value="{{ $country->id }}">{{ $country->name }}</option>
                                                 @endforeach
                                         </select>
                                         <div class="help-block"></div>
@@ -61,7 +63,6 @@
                             </div>
 
                         </div>
-
                         <div class="row justify-content-center">
 
                             <div class="col-md-6">
@@ -121,4 +122,7 @@
             </div>
         </div>
     </div>
+@endsection
+@section('js')
+<script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
 @endsection

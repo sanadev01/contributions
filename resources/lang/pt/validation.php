@@ -153,5 +153,6 @@ return [
     ],
     'invalid_number' => 'O número deve estar no formato internacional do :country',
     'invalid_zipcode' => 'O cep :input não foi encontrado para o estado selecionado. verifique o estado e o cep novamente. :link',
+    'Message' => "entre em contato com o atendimento ao cliente Homedeliverybr para obter assistência",
 
 ];

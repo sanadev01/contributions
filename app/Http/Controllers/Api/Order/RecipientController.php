@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api\Order;
 use Exception;
 use SoapClient;
 use App\Models\Order;
+use App\Models\Region;
 use App\Models\Address;
+use App\Models\Commune;
 use Illuminate\Http\Request;
 use FlyingLuscas\Correios\Client;
 use App\Http\Controllers\Controller;
@@ -259,5 +261,33 @@ class RecipientController extends Controller
         ];
 
         return $data;
+    }
+
+    // get chile regions from db
+    public function hdChileRegions()
+    {
+        try {
+            $regions = Region::select('id','name')->where('country_id', 46)->get();
+
+            return apiResponse(true,'Regions Fetched',$regions);
+
+        } catch (Exception $e) {
+            
+            return apiResponse(false,'could not Load Regions plaease reload',$e->getMessage());
+        }
+    }
+
+    // get chile communes from db
+    public function hdChileCommunes(Request $request)
+    {
+        try {
+            $communes = Commune::select('id','name')->where('region_id', $request->region_id)->get();
+            
+            return apiResponse(true,'Communes Fetched',$communes);
+
+        } catch (Exception $e) {
+            
+            return apiResponse(false,'could not Load Communes, please select region',$e->getMessage());
+        }
     }
 }

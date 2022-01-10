@@ -6,35 +6,46 @@ namespace App\Repositories;
 
 use App\Models\Order;
 use App\Models\OrderTracking;
-use App\Facades\CorreosChileFacade;
 use App\Models\ShippingService;
+use App\Facades\CorreosChileFacade;
 use App\Services\CorreosChile\CorreosChileLabelMaker;
+use App\Services\CourierExpress\CourrierExpressService;
 
 class CorrieosChileLabelRepository
 {
     protected $chile_errors;
-
+    
     public function handle($order)
     {
-        if(($order->shippingService->service_sub_class == ShippingService::SRP || $order->shippingService->service_sub_class == ShippingService::SRM) && $order->api_response == null)
+        if($order->isPaid() && !$order->api_response)
         {
+            if($order->shippingService->service_sub_class == ShippingService::SRP || $order->shippingService->service_sub_class == ShippingService::SRM)
+            {
+               return $this->generatChileLabel($order);
+            }
 
-            $this->generat_ChileLabel($order);
-
-        }elseif($order->api_response != null)
-        {
-
-            $this->printLabel($order);
+            if($order->shippingService->service_sub_class == ShippingService::Courier_Express)
+            {
+                return $this->generateCourierExpressLabel($order);
+            }
+            
         }
+
+        return $this->printLabel($order);
 
     }
 
     public function update($order)
     {
-        $this->generat_ChileLabel($order);
+        if($order->shippingService->service_sub_class == ShippingService::Courier_Express)
+        {
+            return $this->generateCourierExpressLabel($order);
+        }
+        
+        $this->generatChileLabel($order);
     }
 
-    public function generat_ChileLabel($order)
+    public function generatChileLabel($order)
     {
         if($order->shippingService->service_sub_class == ShippingService::SRP)
         {
@@ -124,5 +135,11 @@ class CorrieosChileLabelRepository
         }    
 
         return true;
+    }
+
+    public function generateCourierExpressLabel($order)
+    {
+        $courierExpressService = new CourrierExpressService();
+        return $courierExpressService->generateLabel($order);
     }
 }

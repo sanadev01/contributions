@@ -149,7 +149,7 @@
                                     <label class="col-md-3 text-md-right" for="battery">Waive battery fee<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <div class="vs-checkbox-con vs-checkbox-primary" title="Waive battery fee">
-                                            <input type="checkbox" name="battery" id="battery" @if( $user->battery == 1 ) checked @endif>
+                                            <input type="checkbox" name="battery" id="battery" @if(setting('battery', null, $user->id)) checked @endif>
                                             <span class="vs-checkbox vs-checkbox-lg">
                                                 <span class="vs-checkbox--check">
                                                     <i class="vs-icon feather icon-check"></i>
@@ -163,7 +163,7 @@
                                     <label class="col-md-3 text-md-right">Waive perfume/aerosol/nail polish fee<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <div class="vs-checkbox-con vs-checkbox-primary" title="Waive perfume/aerosol/nail polish fee">
-                                            <input type="checkbox" name="perfume" id="perfume" @if( $user->perfume == 1 ) checked @endif>
+                                            <input type="checkbox" name="perfume" id="perfume" @if(setting('perfume', null, $user->id)) checked @endif>
                                             <span class="vs-checkbox vs-checkbox-lg">
                                                 <span class="vs-checkbox--check">
                                                     <i class="vs-icon feather icon-check"></i>
@@ -177,7 +177,7 @@
                                     <label class="col-md-3 text-md-right">Insurance<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <div class="vs-checkbox-con vs-checkbox-primary" title="Insurance">
-                                            <input type="checkbox" name="insurance" id="perfume" @if( $user->insurance == 1 ) checked @endif>
+                                            <input type="checkbox" name="insurance" id="perfume" @if(setting('insurance', null, $user->id)) checked @endif>
                                             <span class="vs-checkbox vs-checkbox-lg">
                                                 <span class="vs-checkbox--check">
                                                     <i class="vs-icon feather icon-check"></i>
@@ -192,7 +192,7 @@
                                     <div class="col-md-6">
                                         <div class="input-group">
                                             <div class="vs-checkbox-con vs-checkbox-primary" title="usps">
-                                                <input type="checkbox" name="usps" id="usps" @if( $user->usps == 1 ) checked @endif>
+                                                <input type="checkbox" name="usps" id="usps" @if(setting('usps', null, $user->id)) checked @endif>
                                                 <span class="vs-checkbox vs-checkbox-lg">
                                                     <span class="vs-checkbox--check">
                                                         <i class="vs-icon feather icon-check"></i>
@@ -200,17 +200,51 @@
                                                 </span>
                                             </div>
                                             <span class="offset-2 mr-2 mt-2">Profit Percentage (%) :</span>
-                                            <input type="number" name="api_profit" class="form-control col-2" id="api_profit" value="{{ $user->api_profit }}">
+                                            <input type="number" name="usps_profit" class="form-control col-2" id="usps_profit" value="{{ setting('usps_profit', null, $user->id) }}">
                                             <span class="offset-2 mr-2 mt-2">Bulk Label Dimension (%) :</span>
-                                            <input type="number" name="order_dimension" class="form-control col-2" id="order_dimension" value="{{ $user->order_dimension }}">
+                                            <input type="number" name="usps_order_dimension" class="form-control col-2" id="usps_order_dimension" value="{{ setting('usps_order_dimension', null, $user->id) }}">
+                                        </div>    
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">UPS<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="ups">
+                                                <input type="checkbox" name="ups" id="ups" @if(setting('ups', null, $user->id)) checked @endif>
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            <span class="offset-2 mr-2 mt-2">Profit Percentage (%) :</span>
+                                            <input type="number" name="ups_profit" class="form-control col-2" id="ups_profit" value="{{ setting('ups_profit', null, $user->id) }}">
+                                            <span class="offset-2 mr-2 mt-2">Bulk Label Dimension (%) :</span>
+                                            <input type="number" name="ups_order_dimension" class="form-control col-2" id="ups_order_dimension" value="{{ setting('ups_order_dimension', null, $user->id) }}">
+                                        </div>    
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">SinerLog<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="sinerlog">
+                                                <input type="checkbox" name="sinerlog" id="sinerlog" @if(setting('sinerlog', null, $user->id)) checked @endif>
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
                                         </div>    
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">Stripe<span class="text-danger"></span></label>
                                     <div class="col-md-6">
-                                        <div class="vs-checkbox-con vs-checkbox-primary" title="Insurance">
-                                            <input type="checkbox" name="stripe" id="stripe" @if( $user->stripe == 1 ) checked @endif>
+                                        <div class="vs-checkbox-con vs-checkbox-primary" title="Stripe">
+                                            <input type="checkbox" name="stripe" id="stripe" @if(setting('stripe', null, $user->id)) checked @endif>
                                             <span class="vs-checkbox vs-checkbox-lg">
                                                 <span class="vs-checkbox--check">
                                                     <i class="vs-icon feather icon-check"></i>

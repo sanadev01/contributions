@@ -68,45 +68,43 @@
                 </button>
                 <div class="dropdown-menu dropdown-menu-right dropright">
 
-                    @if( $parcel->isShipmentAdded() )
-                        <a href="{{ route('admin.orders.sender.index',$parcel) }}" class="dropdown-item" title=" @lang('parcel.Create Order')">
+                    @if( $parcel->isShipmentAdded())
+                        <a @if(Auth::user()->isActive()) href="{{ route('admin.orders.sender.index',$parcel) }}" @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" @endif class="dropdown-item" title=" @lang('parcel.Create Order')">
                             <i class="feather icon-shopping-cart"></i> @lang('prealerts.actions.place-order')
                         </a>
                     @endif
                     
-                    @if ( auth()->user()->can('canPrintConsolidationForm',$parcel) && $parcel->isConsolidated())
+                    @if ( auth()->user()->can('canPrintConsolidationForm',$parcel) && $parcel->isConsolidated() && !Auth::user()->isActive())
                         <a href="#" class="dropdown-item btn" title="@lang('consolidation.Print Consolidation Request')" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.parcel.consolidation-print',$parcel) }}">
                             <i class="fa fa-print"></i> @lang('consolidation.Print Consolidation Request')
                         </a>
                     @endif
-
                     @can('update',  $parcel)
-                        <a href="{{ route('admin.parcels.edit',$parcel) }}" class="dropdown-item btn" title="@lang('parcel.Edit Parcel')">
+                        <a @if(Auth::user()->isActive()) href="{{ route('admin.parcels.edit',$parcel) }}" @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" @endif class="dropdown-item btn" title="@lang('parcel.Edit Parcel')">
                             <i class="feather icon-edit"></i> @lang('parcel.Edit Parcel')
                         </a>
                     @endcan
-                    
                     @can('duplicatePreAlert',  $parcel)
-                        <a href="{{ route('admin.parcel.duplicate',$parcel) }}" class="dropdown-item btn" title="@lang('parcel.Edit Parcel')">
+                        <a  @if(Auth::user()->isActive()) href="{{ route('admin.parcel.duplicate',$parcel) }}"  @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" @endif class="dropdown-item btn" title="@lang('parcel.Edit Parcel')">
                             <i class="feather icon-edit"></i> @lang('parcel.Duplicate Parcel')
                         </a>
                     @endcan
-
                     @if ( auth()->user()->can('updateConsolidation',$parcel) && $parcel->isConsolidated())
-                        <a href="{{ route('admin.consolidation.parcels.edit',$parcel) }}" class="dropdown-item btn" title="@lang('consolidation.Edit Consolidation')">
+                        <a @if(Auth::user()->isActive()) href="{{ route('admin.consolidation.parcels.edit',$parcel) }}" @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" @endif class="dropdown-item btn" title="@lang('consolidation.Edit Consolidation')">
                             <i class="feather icon-edit"></i> @lang('consolidation.Edit Consolidation')
                         </a>
                     @endif
-
-                    @can('delete', $parcel)
-                        <form method="post" action="{{ route('admin.parcels.destroy',$parcel) }}" class="d-inline-block w-100" onsubmit="return confirmDelete()">
-                            @csrf
-                            @method('DELETE')
-                            <button class="dropdown-item w-100 text-danger" title="@lang('parcel.Delete Parcel')">
-                                <i class="feather icon-trash-2"></i> @lang('parcel.Delete')
-                            </button>
-                        </form>
-                    @endcan
+                    @if(Auth::user()->isActive())
+                        @can('delete', $parcel)
+                            <form method="post" action="{{ route('admin.parcels.destroy',$parcel) }}" class="d-inline-block w-100" onsubmit="return confirmDelete()">
+                                @csrf
+                                @method('DELETE')
+                                <button class="dropdown-item w-100 text-danger" title="@lang('parcel.Delete Parcel')">
+                                    <i class="feather icon-trash-2"></i> @lang('parcel.Delete')
+                                </button>
+                            </form>
+                        @endcan
+                    @endif
                 </div>
             </div>
         </div>

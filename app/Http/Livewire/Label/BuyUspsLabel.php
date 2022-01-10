@@ -44,11 +44,11 @@ class BuyUspsLabel extends Component
         if($this->start_date != null || $this->end_date != null)
         {
             $orders = Order::where([
-                                    ['user_id', auth()->user()->id],
-                                    ['corrios_tracking_code', '!=', null],
-                                    ['corrios_usps_tracking_code', null],
-                                    ['usps_response', null] 
-                                ])->whereBetween('order_date',[$this->start_date.' 00:00:00', $this->end_date.' 23:59:59'])->get();
+                ['user_id', auth()->user()->id],
+                ['corrios_tracking_code', '!=', null],
+                ['us_api_tracking_code', null],
+                ['us_api_response', null] 
+            ])->whereBetween('order_date',[$this->start_date.' 00:00:00', $this->end_date.' 23:59:59'])->get();
             $this->searchOrders = $orders;
         }
     }

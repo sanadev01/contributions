@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Http\Controllers\Controller;
+use App\Models\Rate;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
+use App\Repositories\DashboardRepository;
 class HomeController extends Controller
 {
     /**
@@ -14,19 +16,10 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function __invoke()
+    public function __invoke(DashboardRepository $dashboard)
     {
-        if ( !Session::has('last_logged_in') ){
-            $user = Auth::user();
-            if ($user->isUser() && $user->status == 'suspended') {
-                Auth::logout();
-
-                session()->flash('alert-danger','Your Account has been suspended Please contact Us / Sua conta foi suspensa Entre em contato conosco');
-                return redirect()->route('login');
-            }
-        }
-
-        return view('home');   
+        $orders = $dashboard->getDashboardStats();
+        return view('home',compact('orders'));   
     }
     
     public function test()

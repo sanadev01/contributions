@@ -39,9 +39,15 @@ class RatesCalculator
         $this->shippingService = $service;
 
         $this->recipient = $order->recipient;
-
-        $this->rates = $service->rates()->byCountry($this->recipient->country_id)->first();
-
+        
+        if($this->recipient->commune_id != null)
+        {
+            $this->rates = $service->rates()->byRegion($this->recipient->country_id, optional($this->recipient->commune)->region->id)->first();
+        
+        }else{
+            $this->rates = $service->rates()->byCountry($this->recipient->country_id)->first();
+        }
+        
         $this->initializeDims();
 
         $this->weight = $calculateOnVolumeMetricWeight ? $this->calculateWeight(): $this->originalWeight;
@@ -190,6 +196,52 @@ class RatesCalculator
                 self::$errors .= "service is not available for more then {$this->shippingService->max_weight_allowed}KG  weight";
                 return false;
             }
+
+            /**
+             * Sinerlog modification
+             * Validation for sinerlog services
+             */
+            /**
+             * Standard service
+             * "weight":["The weight must be between 1 and 30000."],
+             * "height":["The height must be between 1 and 105."],
+             * "width":["The width must be between 9 and 105."],
+             * "length":["The length must be between 14 and 105."]
+             */
+            
+            /**
+             * Express service
+             * "weight":["The weight must be between 1 and 30000."]
+             * "height":["The height must be between 1 and 105."]
+             * "width":["The width must be between 9 and 105."]
+             * "length" :["The length must be between 14 and 105."]
+             */
+
+            /**
+             * Small package
+             * "weight":["The weight must be between 1 and 300."]
+             * "height":["The height must be between 1 and 4."]
+             * "width":["The width must be between 10 and 16."]
+             * "length":["The length must be between 15 and 24."]
+             * "products.0.value":["The products.0.value must be between 0.01 and 50.00."]
+             */
+            if ( $this->shippingService->api == 'sinerlog' ) {
+                if($this->height < $this->shippingService->min_height_allowed || $this->height > $this->shippingService->max_height_allowed){
+                    return false;
+                }
+        
+                if ($this->width < $this->shippingService->min_width_allowed || $this->width > $this->shippingService->max_width_allowed) {
+                    return false;
+                }
+        
+                if ($this->length < $this->shippingService->min_length_allowed || $this->length > $this->shippingService->max_length_allowed) {
+                    return false;
+                }
+        
+                if (($this->width + $this->height + $this->length) > $this->shippingService->max_sum_of_all_sides) {
+                    return false;
+                }
+            }            
 
             return true;
         } catch (Exception $exception) {

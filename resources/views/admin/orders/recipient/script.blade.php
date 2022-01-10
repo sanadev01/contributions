@@ -1,4 +1,6 @@
 <script>
+    var service;
+
     $(document).ready(function(){
         $('#accountType').on('change', function(){
             let val = $(this).val();
@@ -12,6 +14,34 @@
                 $('#tax_id').attr('placeholder', 'CNPJ')
             }
         })
+    })
+
+    // chile courier express service logic
+    $(document).ready(function(){
+        let service_type = $('input[name="service"]:checked').val();
+        if(service_type != '' || service_type != undefined)
+        {
+            window.service = service_type;
+        }
+        
+        if(window.service == 'courier_express')
+        {
+            window.activeChileFields();
+            window.getHDChileRegions();
+        }
+    })
+
+    $('input:radio[name="service"]').change(function(){
+        window.service = $(this).val();
+        
+        if(window.service == 'courier_express')
+        {
+            window.activeChileFields();
+            $('#country').selectpicker('val', '46');
+            window.getHDChileRegions();
+        }else {
+            window.inactiveChileFields();
+        }
     })
 
     $('#address_id').on('change',function(){
@@ -72,41 +102,45 @@
                 window.activeChileFields();
                 $('#loading').fadeIn();
                 
-                window.fetchChileRegions(old_region);
-                // Fetch Communes
-                if(old_region != undefined || old_region != '')
+                if(window.service != 'courier_express')
                 {
-                    $('#loading').fadeIn();
-                    $('#communes_response').css('display', 'none');
-                    $.get('{{ route("api.orders.recipient.chile_comunes") }}',{
-                        region_code: old_region,
-                    })
-                    .then(function(response){
-                        if(response.success == true)
-                        {
-                            $('#commune').attr('disabled', false);
-                            $.each(response.data,function(key, value)
+                    window.fetchChileRegions(old_region);
+                    // Fetch Communes
+                    if(old_region != undefined || old_region != '')
+                    {
+                        $('#loading').fadeIn();
+                        $('#communes_response').css('display', 'none');
+                        $.get('{{ route("api.orders.recipient.chile_comunes") }}',{
+                            region_code: old_region,
+                        })
+                        .then(function(response){
+                            if(response.success == true)
                             {
-                                $('#commune').append('<option value="'+value.NombreComuna+'">'+value.NombreComuna+'</option>');
-                                $('#commune').selectpicker('refresh');
-                                if(old_city != undefined || old_city != '')
+                                $('#commune').attr('disabled', false);
+                                $.each(response.data,function(key, value)
                                 {
-                                    $('#commune').val(old_city);
-                                }
-                            });
-                            $('#loading').fadeOut();
-                        }else{
-                            $('#loading').fadeOut();
-                            $('#communes_response').css('display', 'block');
-                            $('#communes_response').empty().append("<p style='color: red;'>"+response.message+"</p>");
-                            toastr.error(response.message)
-                        }
-                    }).catch(function(error){
-                        console.log(error);
-                    })
-                }    
-
-            }else {
+                                    $('#commune').append('<option value="'+value.NombreComuna+'">'+value.NombreComuna+'</option>');
+                                    $('#commune').selectpicker('refresh');
+                                    if(old_city != undefined || old_city != '')
+                                    {
+                                        $('#commune').val(old_city);
+                                    }
+                                });
+                                $('#loading').fadeOut();
+                            }else{
+                                $('#loading').fadeOut();
+                                $('#communes_response').css('display', 'block');
+                                $('#communes_response').empty().append("<p style='color: red;'>"+response.message+"</p>");
+                                toastr.error(response.message)
+                            }
+                        }).catch(function(error){
+                            console.log(error);
+                        })
+                    } else {
+                        window.inactiveChileFields();
+                    }
+                }
+            }else{
                 window.inactiveChileFields();
             }
         });
@@ -116,6 +150,20 @@
             let val = $(this).val();
             const old_region = $('#region').data('value');
 
+            if(val == '46' && window.service == 'courier_express')
+            {
+                window.activeChileFields();
+                window.getHDChileRegions();
+                $('#country_message').empty();
+                return;
+            }
+
+            if(val != '46' && window.service == 'courier_express')
+            {
+                $('#country_message').empty().append("<p style='color: red;'>Courier Express is valid for Chile only!</p>");
+                window.inactiveChileFields();
+                return;
+            }
             if(val == '46'){
                 window.activeChileFields();
 
@@ -162,40 +210,51 @@
 
         // For getting Chile Communes based on selected region
         $('#region').on('change', function(){
-            const old_region = $('#region').data('value');
-            $('#communes_response').css('display', 'none');
-            if ( $(this).val() == undefined || $(this).val() == "" ) return;
-            let region_code = $('#region').val();
-            
-            $('#loading').fadeIn();
-            $.get('{{ route("api.orders.recipient.chile_comunes") }}',{
-                region_code: $(this).val(),
-            })
-            .then(function(response){
-                if(response.success == true)
-                {
-                    $('#commune').attr('disabled', false);
-                    $.each(response.data,function(key, value)
+            let selected_Service = window.service;
+
+            if(selected_Service == 'courier_express')
+            {
+                var regionId = $(this).val();
+                window.getHDChileCommunes(regionId);
+
+            }else {
+
+                const old_region = $('#region').data('value');
+                $('#communes_response').css('display', 'none');
+                if ( $(this).val() == undefined || $(this).val() == "" ) return;
+                let region_code = $('#region').val();
+                
+                $('#loading').fadeIn();
+                $.get('{{ route("api.orders.recipient.chile_comunes") }}',{
+                    region_code: $(this).val(),
+                })
+                .then(function(response){
+                    if(response.success == true)
                     {
-                        $('#commune').append('<option value="'+value.NombreComuna+'">'+value.NombreComuna+'</option>');
-                        $('#commune').selectpicker('refresh');
-                    });
-                    if((old_region != undefined || old_region != '') && (old_city != undefined || old_city != '') && region_code == old_region)
-                    {
-                        $('#commune').val(old_city);
+                        $('#commune').attr('disabled', false);
+                        $('#commune').empty();
+                        $.each(response.data,function(key, value)
+                        {
+                            $('#commune').append('<option value="'+value.NombreComuna+'">'+value.NombreComuna+'</option>');
+                            $('#commune').selectpicker('refresh');
+                        });
+                        if((old_region != undefined || old_region != '') && (old_city != undefined || old_city != '') && region_code == old_region)
+                        {
+                            $('#commune').val(old_city);
+                        }else{
+                            $('#commune').val('');
+                        }
+                        $('#loading').fadeOut();
                     }else{
-                        $('#commune').val('');
+                        $('#loading').fadeOut();
+                        $('#communes_response').css('display', 'block');
+                        $('#communes_response').empty().append("<p style='color: red;'>"+response.message+"</p>");
+                        toastr.error(response.message)
                     }
-                    $('#loading').fadeOut();
-                }else{
-                    $('#loading').fadeOut();
-                    $('#communes_response').css('display', 'block');
-                    $('#communes_response').empty().append("<p style='color: red;'>"+response.message+"</p>");
-                    toastr.error(response.message)
-                }
-            }).catch(function(error){
-                console.log(error);
-            })
+                }).catch(function(error){
+                    console.log(error);
+                })
+            }    
         });
 
         // For validating Address and Zipcode
@@ -305,47 +364,52 @@
                 })
             }
         });
-
-        activeChileFields = function(){
-            $('#cpf').css('display', 'none')
-            $('#div_state').css('display', 'none')
-            $('#div_city').css('display', 'none')
-            $('#div_street_number').css('display', 'none')
-
-            $('#div_region').css('display', 'block')
-            $('#div_communes').css('display', 'block')
-            $('#commune').prop('disabled', false);
-
-            $('#label_address').css('display', 'none')
-            $('#label_chile_address').css('display', 'inline-block')
-
-            $('#state').prop('disabled', true);
-            $('#city').attr('disabled', true);
-
-            $('#region').prop('disabled', false);
-            $('#commune').attr('disabled', false);
-        }
-
-        inactiveChileFields = function(){
-            $('#cpf').css('display', 'block')
-            $('#div_state').css('display', 'block')
-            $('#div_city').css('display', 'block')
-            $('#div_street_number').css('display', 'block')
-
-            $('#div_region').css('display', 'none')
-            $('#div_communes').css('display', 'none')
-            $('#commune').prop('disabled', true);
-            
-            $('#label_address').css('display', 'inline-block')
-            $('#label_chile_address').css('display', 'none')
-
-            $('#state').prop('disabled', false);
-            $('#city').attr('disabled', false);
-
-            $('#region').prop('disabled', true);
-            $('#commune').attr('disable', true);
-        }
     })
+
+    activeChileFields = function(){
+        console.log('active chile fields');
+        if(window.service != 'courier_express')
+        {
+            $('#cpf').css('display', 'none');
+        }
+        $('#div_state').css('display', 'none')
+        $('#div_city').css('display', 'none')
+        $('#div_street_number').css('display', 'none')
+
+        $('#div_region').css('display', 'block')
+        $('#div_communes').css('display', 'block')
+        $('#commune').prop('disabled', false);
+
+        $('#label_address').css('display', 'none')
+        $('#label_chile_address').css('display', 'inline-block')
+
+        $('#state').prop('disabled', true);
+        $('#city').attr('disabled', true);
+
+        $('#region').prop('disabled', false);
+        $('#commune').attr('disabled', false);
+    }
+
+    inactiveChileFields = function(){
+        $('#cpf').css('display', 'block')
+        $('#div_state').css('display', 'block')
+        $('#div_city').css('display', 'block')
+        $('#div_street_number').css('display', 'block')
+
+        $('#div_region').css('display', 'none')
+        $('#div_communes').css('display', 'none')
+        $('#commune').prop('disabled', true);
+        
+        $('#label_address').css('display', 'inline-block')
+        $('#label_chile_address').css('display', 'none')
+
+        $('#state').prop('disabled', false);
+        $('#city').attr('disabled', false);
+
+        $('#region').prop('disabled', true);
+        $('#commune').attr('disable', true);
+    }
+        
     // USPS Logics
 
     $(document).ready(function(){
@@ -418,7 +482,7 @@
             }
     }
 
-    
+    // get regions from corrioes chile api
     fetchChileRegions = function(old_region){
         console.log(true);
         $.get('{{ route("api.orders.recipient.chile_regions") }}')
@@ -426,6 +490,7 @@
                 if(response.success == true)
                 {
                     $('#region').attr('disabled', false);
+                    $('#region').empty();
                     $.each(response.data,function(key, value)
                     {
                         $('#region').append('<option value="'+value.Identificador+'">'+value.Nombre+'</option>');
@@ -444,6 +509,77 @@
             }).catch(function(error){
                 console.log(error);
         })
+    }
+
+    // get regions from database
+    getHDChileRegions = function(){
+        if(window.service == 'courier_express')
+        {
+            const old_region = $('#region').data('value');
+            console.log(old_region);
+
+            $.get('{{ route("api.orders.recipient.hd_chile_regions") }}')
+                .then(function(response){
+                    if(response.success == true)
+                    {
+                        $('#region').attr('disabled', false);
+                        $('#region').empty();
+                        $.each(response.data,function(key, region)
+                        {
+                            $('#region').append('<option value="'+region.id+'">'+region.name+'</option>');
+                            $('#region').selectpicker('refresh');
+                        });
+                        if(old_region != undefined || old_region != '')
+                        {
+                            $('#region').val(old_region);
+                        }
+                        $('#region').selectpicker('refresh');
+                        // get chile communes from db
+                        getHDChileCommunes($('#region').val());
+                    }else{
+                        console.log(response.message);
+                        $('#regions_response').css('display', 'block');
+                        $('#regions_response').empty().append("<p style='color: red;'>"+response.message+"</p>");
+                        toastr.error(response.message)
+                    }
+                })
+        }
+    }
+
+    // get communes from database
+    getHDChileCommunes = function(region_id){
+        if(window.service == 'courier_express')
+        {
+            const old_commune = $('#commune').data('commune');
+            console.log(old_commune);
+
+            $.get('{{ route("api.orders.recipient.hd_chile_comunes") }}',{
+                region_id: region_id,
+            }).then(function(response){
+
+                if(response.success == true)
+                {
+                    $('#commune').attr('disabled', false);
+                    $('#commune').attr('name', 'commune_id');
+                    $('#commune').empty();
+                    $.each(response.data,function(key, commune)
+                    {
+                        $('#commune').append('<option value="'+commune.id+'">'+commune.name+'</option>');
+                        $('#commune').selectpicker('refresh');
+                    });
+                    if(old_commune != undefined || old_commune != '')
+                    {
+                        $('#commune').val(old_commune);
+                    }
+                    $('#commune').selectpicker('refresh');
+                }else{
+                    console.log(response.message);
+                    $('#communes_response').css('display', 'block');
+                    $('#communes_response').empty().append("<p style='color: red;'>"+response.message+"</p>");
+                    toastr.error(response.message)
+                }
+            })
+        }
     }
  
 </script>
