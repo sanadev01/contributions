@@ -47,7 +47,7 @@ class DashboardRepository
             $CurentMonth =   ($filter == true) ? $filterQuery : Order::query();
         }
         $currentmonthTotal  = $CurentMonth->whereMonth('order_date',$currentmonth)->whereYear('order_date',$currentyear)->count();
-        $currentmonthConfirm  = $CurentMonth->where('status', '>=' ,Order::STATUS_PAYMENT_DONE)->whereYear('order_date',$currentyear)->count();
+        $currentmonthConfirm  = $CurentMonth->where('status', '>=' ,Order::STATUS_PAYMENT_DONE)->count();
 
         if(Auth::user()->isUser()){
             $CurentDay = ($filter == true) ? $filterQuery->where('user_id', Auth::id()) : Order::where('user_id',Auth::id());
