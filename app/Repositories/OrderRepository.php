@@ -153,8 +153,9 @@ class OrderRepository
             }
 
             if($product->quantity + $lastOrderItemQuantity < $totalQuantity){
-                session()->flash('alert-danger','Your Quantity Is '. $product->quantity . ' You Cannot Add More Than '. $product->quantity );
+                $remainingQuantity = $product->quantity+1;
                 DB::rollback();
+                session()->flash('alert-danger','Your Quantity Is '. $remainingQuantity . ' You Cannot Add More Than '. $remainingQuantity );
                 return false;
             }
             $totalDifference = $totalQuantity - $lastOrderItemQuantity;
@@ -183,7 +184,7 @@ class OrderRepository
         } catch (\Exception $ex) {
             DB::rollback();
             $this->error = $ex->getMessage();
-            session()->flash('alert-success','orders.Sender Update Error');
+             session()->flash('alert-danger','orders.Error While placing Order'." ".$this->error);
             return false;
         }
     }
