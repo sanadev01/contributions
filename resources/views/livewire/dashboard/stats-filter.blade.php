@@ -18,7 +18,7 @@
                     <h5 class="m-b-20 white">@lang('dashboard.Today Orders')</h5>
                     <h2 class="text-right"><i class="fa fa-cart-plus f-left white"></i><span
                             class="white">{{ $orders['currentDayTotal'] }}</span></h2>
-                    <p class="m-b-0">@lang('dashboard.Completed Orders')<span class="f-right">{{ $orders['currentDayConfirm'] }}</span></p>
+                    <h5 class="m-b-0 white">@lang('dashboard.Completed Orders')<span class="f-right">{{ $orders['currentDayConfirm'] }}</span></h5>
                 </div>
             </div>
         </div>
@@ -28,8 +28,8 @@
                     <h5 class="m-b-20 white">@lang('dashboard.Total Month Order',['month'=>$orders['monthName']])</h5>
                     <h2 class="text-right"> <i class="fas fa-calendar-week f-left white"></i> <span
                             class="white">{{ $orders['currentmonthTotal'] }}</span></h2>
-                    <p class="m-b-0">@lang('dashboard.Completed Orders')<span
-                            class="f-right white">{{ $orders['currentmonthConfirm'] }}</span></p>
+                    <h5 class="m-b-0 white">@lang('dashboard.Completed Orders')<span
+                            class="f-right white">{{ $orders['currentmonthConfirm'] }}</span></h5>
                 </div>
             </div>
         </div>
@@ -39,8 +39,8 @@
                     <h5 class="m-b-20 white">@lang('dashboard.Current Year')</h5>
                     <h2 class="text-right"><i class="fa fa-credit-card f-left white"></i><span
                             class="white">{{ $orders['currentYearTotal'] }}</span></h2>
-                    <p class="m-b-0">@lang('dashboard.Completed Orders')<span
-                            class="f-right white">{{ $orders['currentYearConfirm'] }}</span></p>
+                    <h5 class="m-b-0 white">@lang('dashboard.Completed Orders')<span
+                            class="f-right white">{{ $orders['currentYearConfirm'] }}</span></h5>
                 </div>
             </div>
         </div>
@@ -50,8 +50,8 @@
                     <h5 class="m-b-20 white">@lang('dashboard.Total Orders')</h5>
                     <h2 class="text-right"><i class="fa fa-cart-plus f-left white"></i><span
                             class="white">{{ $orders['totalOrders'] }}</span></h2>
-                    <p class="m-b-0">@lang('dashboard.Completed Orders')<span
-                            class="f-right white">{{ $orders['totalCompleteOrders'] }}</span></p>
+                    <h5 class="m-b-0 white">@lang('dashboard.Completed Orders')<span
+                            class="f-right white">{{ $orders['totalCompleteOrders'] }}</span></h5>
                 </div>
             </div>
         </div>
