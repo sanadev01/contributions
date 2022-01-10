@@ -131,11 +131,16 @@ class OrderRepository
         DB::beginTransaction();
 
         try {
-            
+            $lastOrderItemQuantity = $order->items()->sum('quantity');
             $order->items()->delete();
-
+            $product = $order->products->first();
+            $totalQuantity = 0;
+            $productQuantity = $product->quantity;
             foreach ($request->get('items',[]) as $item) {
-
+                if($product->quantity  >= $totalQuantity && $product->sh_code == $item['sh_code'] ){
+                    $totalQuantity+=$item['quantity'];
+                }
+                
                 $order->items()->create([
                     'sh_code' => optional($item)['sh_code'],
                     'description' => optional($item)['description'],
@@ -147,7 +152,15 @@ class OrderRepository
                 ]);
             }
 
-            
+            if($product->quantity + $lastOrderItemQuantity < $totalQuantity){
+                session()->flash('alert-danger','Your Quantity Is '. $product->quantity . ' You Cannot Add More Than '. $product->quantity );
+                DB::rollback();
+                return false;
+            }
+            $totalDifference = $totalQuantity - $lastOrderItemQuantity;
+            $product->update([
+                'quantity'=>$product->quantity - $totalDifference,
+            ]);
             $shippingService = ShippingService::find($request->shipping_service_id);
 
             $order->update([
@@ -161,15 +174,16 @@ class OrderRepository
                 'insurance_value' => 0,
                 'status' => $order->isPaid() ? ($order->status < Order::STATUS_ORDER ? Order::STATUS_ORDER : $order->status) : Order::STATUS_ORDER
             ]);
-
+            
             $order->doCalculations();
 
             DB::commit();
-
+            session()->flash('alert-success','orders.Sender Updated');
             return true;
         } catch (\Exception $ex) {
             DB::rollback();
             $this->error = $ex->getMessage();
+            session()->flash('alert-success','orders.Sender Update Error');
             return false;
         }
     }
