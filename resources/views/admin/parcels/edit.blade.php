@@ -40,7 +40,7 @@
                                 <div class="row mt-1">
                                     <div class="form-group col-12 col-sm-6 col-md-4">
                                         <div class="controls">
-                                            <label>@lang('parcel.Merchant') <span class="text-danger">*</span></label>
+                                            <label>@lang('parcel.Sender Inside')<span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" name="merchant" value="{{ old('merchant',$parcel->merchant) }}" placeholder="">
                                             @error('merchant')
                                                 <div class="help-block text-danger">{{ $message }}</div>
@@ -49,7 +49,7 @@
                                     </div>
                                     <div class="form-group col-12 col-sm-6 col-md-4">
                                         <div class="controls">
-                                            <label>@lang('parcel.Carrier') <span class="text-danger">*</span></label>
+                                            <label>@lang('parcel.Carrier Inside') <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" value="{{ old('carrier',$parcel->carrier) }}" placeholder=""  name="carrier">
                                             @error('carrier')
                                                 <div class="help-block text-danger">{{ $message }}</div>
@@ -58,7 +58,7 @@
                                     </div>
                                     <div class="form-group col-12 col-sm-6 col-md-4">
                                         <div class="controls">
-                                            <label>@lang('parcel.Tracking ID')<span class="text-danger">*</span></label>
+                                            <label>@lang('parcel.Tracking Inside') <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" name="tracking_id" value="{{ old('tracking_id',$parcel->tracking_id) }}" placeholder="">
                                             @error('tracking_id')
                                                 <div class="help-block text-danger">{{ $message }}</div>
@@ -102,7 +102,7 @@
                                     </div>
                                     <div class="form-group col-12 col-sm-6 col-md-4">
                                         <div class="controls">
-                                            <label>@lang('prealerts.invoice')</label>
+                                            <label>@lang('parcel.Invoice')</label>
                                             <input type="file" name="invoiceFile" {{ auth()->user()->isUser() ? 'required': ''  }} class="form-control" placeholder="@lang('parcel.Choose Invoice File')">
                                             @error('record')
                                                 <div class="help-block text-danger">{{ $message }}</div>
@@ -132,12 +132,12 @@
 
                                 @can('addShipmentDetails', App\Models\Order::class)
                                     <livewire:order.shipment-info :order="$parcel" />
-                                    <h4 class="mt-2">@lang('parcel.Parcel Images')</h4>
+                                    <h4 class="mt-2">@lang('parcel.Parcel Images and Docs')</h4>
                                     <div class="row mt-1">
                                         <div class="col-12 col-sm-6 col-md-4">
                                             <div class="controls">
-                                                <label>@lang('parcel.Images') <span class="text-danger">*</span></label>
-                                                <input type="file" accept="image/*" multiple name="images[]">
+                                                <label>@lang('parcel.Select File') <span class="text-danger">*</span></label>
+                                                <input type="file" accept=".xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf" multiple name="images[]">
                                                 {{-- @error('record')
                                                     <div class="help-block text-danger">{{ $message }}</div>
                                                 @enderror --}}
@@ -158,7 +158,7 @@
                                         <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">
                                             @lang('parcel.Save Parcel')
                                         </button>
-                                        <button type="reset" class="btn btn-outline-warning waves-effect waves-light">@lang('parcel.Reset')</button>
+                                        <button type="reset" class="btn btn-outline-danger waves-effect waves-light">@lang('parcel.Reset')</button>
                                     </div>
                                 </div>
                             </form>

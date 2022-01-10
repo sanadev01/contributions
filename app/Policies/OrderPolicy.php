@@ -128,6 +128,11 @@ class OrderPolicy
     {
         return  $order->user_id == $user->id;
     }
+    
+    public function duplicatePreAlert(User $user, Order $order)
+    {
+        return  $user->hasPermission('duplicate_preAlert') && $order->user_id == $user->id;
+    }
 
     public function updateConsolidation(User $user, Order $order)
     {
@@ -158,10 +163,25 @@ class OrderPolicy
     {
         return $user->hasPermission('edit_order') && $order->user_id == $user->id && !$order->isPaid();
     }
+    
+    public function copyOrder(User $user,Order $order)
+    {
+        return $user->hasPermission('duplicate_order') && $order->user_id == $user->id;
+    }
 
     public function canPrintLable(User $user,Order $order)
     {
         return $user->hasPermission('print_label') && $order->user_id == $user->id && $order->isPaid();
+    }
+
+    public function canPrintLableViaApi(User $user,Order $order)
+    {
+        return $user->hasPermission('print_label') && $order->user_id == $user->id;
+    }
+    
+    public function canPrintLableUpdate(User $user,Order $order)
+    {
+        return $user->hasPermission('update_label') && $order->user_id == $user->id;
     }
 
     public function importExcel(User $user)

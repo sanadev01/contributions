@@ -1,4 +1,14 @@
 @extends('layouts.master')
+@section('css')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+<style>
+    .dropdown .btn:not(.btn-sm):not(.btn-lg), .dropdown .btn:not(.btn-sm):not(.btn-lg).dropdown-toggle {
+        background-color: white !important;
+        border: 1px solid #ced4da;
+        color: #495057 !important;
+    }
+</style>
+@endsection
 @section('page')
     <section id="prealerts">
         <div class="row">
@@ -22,12 +32,12 @@
                             @endif
                             <form action="{{ route('admin.users.setting.store', $user->id) }}" method="post" enctype="multipart/form-data">
                                 @csrf
-                                 
-                                <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">@lang('user.Package')<span class="text-danger"></span></label>
+
+                                <div class="controls row align-items-center" style="margin-bottom: 2.25rem !important;">
+                                    <label class="col-md-3 text-md-right">@lang('user.Default Package')<span class="text-danger"></span></label>
                                     <div class="col-md-6">
-                                        <select name="package_id" class="form-control">
-                                            <option value="" selected disabled hidden>@lang('user.Select Package')</option>
+                                        <select name="package_id" class="form-control selectpicker" data-live-search="true">
+                                            <option value="" disabled hidden>@lang('user.Select Package')</option>
                                             @isset($packages)
                                                 @foreach ($packages as $package)
                                                     <option @if( $user->package_id == $package->id ) selected @endif value="{{ $package->id }}">{{ $package->name }}</option>
@@ -37,7 +47,6 @@
                                         <div class="help-block"></div>
                                     </div>
                                 </div>
-
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('user.Role')<span class="text-danger"></span></label>
                                     <div class="col-md-6">
@@ -51,6 +60,22 @@
                                         <div class="help-block"></div>
                                     </div>  
                                 </div>
+                                
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">@lang('user.status')<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <select name="status" class="form-control">
+                                            <option value="active" @if($user->status == 'active') selected @endif>Active</option>
+                                            <option value="suspended" @if($user->status == 'suspended') selected @endif>Suspended</option>
+                                        </select>
+                                        <div class="help-block"></div>
+                                    </div>  
+                                </div>
+
+                                <h3>Profit Package Settings</h3>
+                                <hr> 
+                                <h4 class="ml-5">Multi Profit Services Settings</h4>
+                                <livewire:profit.profit-setting :user_id="$user->id"  />
 
                                 <h3>Api Settings</h3>
                                 <hr>
@@ -99,11 +124,23 @@
 
                                 <h3>Affiliate Settings</h3>
                                 <hr>
-                                <h4>Referrer Settings</h4>
-                                <livewire:affiliate.referrer-setting :user_id="$user->id" />
                                 
+                                <h4 class="ml-5">Referrer Settings</h4>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">@lang('user.Referrer')<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <select name="referrer_id[]" class="form-control selectpicker" multiple data-live-search="true">
+                                            <option value="" disabled>@lang('user.Select Referrer')</option>
+                                            @foreach ($users as $userRefferer)
+                                                <option value="{{ $userRefferer->id }}" @if ($userRefferer->reffered_by == $user->id) selected @endif>{{ $userRefferer->name }} | {{ $userRefferer->pobox_number }}</option>
+                                            @endforeach
+                                        </select>
+                                        <div class="help-block"></div>
+                                    </div>
+                                </div>
                                 <hr>
-                                <h4>Commision Settings</h4>
+                                
+                                <h4 class="ml-5">Commission Settings</h4>
                                 <livewire:affiliate.commision-setting :user_id="$user->id"  />
                                 
                                 <h3>Waiver Fee Settings</h3>
@@ -112,7 +149,7 @@
                                     <label class="col-md-3 text-md-right" for="battery">Waive battery fee<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <div class="vs-checkbox-con vs-checkbox-primary" title="Waive battery fee">
-                                            <input type="checkbox" name="battery" id="battery" @if( $user->battery == 1 ) checked @endif>
+                                            <input type="checkbox" name="battery" id="battery" @if(setting('battery', null, $user->id)) checked @endif>
                                             <span class="vs-checkbox vs-checkbox-lg">
                                                 <span class="vs-checkbox--check">
                                                     <i class="vs-icon feather icon-check"></i>
@@ -126,7 +163,7 @@
                                     <label class="col-md-3 text-md-right">Waive perfume/aerosol/nail polish fee<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <div class="vs-checkbox-con vs-checkbox-primary" title="Waive perfume/aerosol/nail polish fee">
-                                            <input type="checkbox" name="perfume" id="perfume" @if( $user->perfume == 1 ) checked @endif>
+                                            <input type="checkbox" name="perfume" id="perfume" @if(setting('perfume', null, $user->id)) checked @endif>
                                             <span class="vs-checkbox vs-checkbox-lg">
                                                 <span class="vs-checkbox--check">
                                                     <i class="vs-icon feather icon-check"></i>
@@ -136,9 +173,87 @@
                                         </div>
                                     </div>
                                 </div>
-
-                               
-
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">Insurance<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="vs-checkbox-con vs-checkbox-primary" title="Insurance">
+                                            <input type="checkbox" name="insurance" id="perfume" @if(setting('insurance', null, $user->id)) checked @endif>
+                                            <span class="vs-checkbox vs-checkbox-lg">
+                                                <span class="vs-checkbox--check">
+                                                    <i class="vs-icon feather icon-check"></i>
+                                                </span>
+                                            </span>
+                                            <span class="h3 mx-2 text-primary my-0 py-0"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">USPS<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="usps">
+                                                <input type="checkbox" name="usps" id="usps" @if(setting('usps', null, $user->id)) checked @endif>
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            <span class="offset-2 mr-2 mt-2">Profit Percentage (%) :</span>
+                                            <input type="number" name="usps_profit" class="form-control col-2" id="usps_profit" value="{{ setting('usps_profit', null, $user->id) }}">
+                                            <span class="offset-2 mr-2 mt-2">Bulk Label Dimension (%) :</span>
+                                            <input type="number" name="usps_order_dimension" class="form-control col-2" id="usps_order_dimension" value="{{ setting('usps_order_dimension', null, $user->id) }}">
+                                        </div>    
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">UPS<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="ups">
+                                                <input type="checkbox" name="ups" id="ups" @if(setting('ups', null, $user->id)) checked @endif>
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            <span class="offset-2 mr-2 mt-2">Profit Percentage (%) :</span>
+                                            <input type="number" name="ups_profit" class="form-control col-2" id="ups_profit" value="{{ setting('ups_profit', null, $user->id) }}">
+                                            <span class="offset-2 mr-2 mt-2">Bulk Label Dimension (%) :</span>
+                                            <input type="number" name="ups_order_dimension" class="form-control col-2" id="ups_order_dimension" value="{{ setting('ups_order_dimension', null, $user->id) }}">
+                                        </div>    
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">SinerLog<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="sinerlog">
+                                                <input type="checkbox" name="sinerlog" id="sinerlog" @if(setting('sinerlog', null, $user->id)) checked @endif>
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </div>    
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">Stripe<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="vs-checkbox-con vs-checkbox-primary" title="Stripe">
+                                            <input type="checkbox" name="stripe" id="stripe" @if(setting('stripe', null, $user->id)) checked @endif>
+                                            <span class="vs-checkbox vs-checkbox-lg">
+                                                <span class="vs-checkbox--check">
+                                                    <i class="vs-icon feather icon-check"></i>
+                                                </span>
+                                            </span>
+                                            <span class="h3 mx-2 text-primary my-0 py-0"></span>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="row mt-1">
                                     <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
                                         <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">
@@ -154,4 +269,13 @@
             </div>
         </div>
     </section>
+@endsection
+@section('js')
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+<script>
+    $(function () {
+        $('.selectpicker').selectpicker();
+    });
+</script>
 @endsection

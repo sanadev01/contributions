@@ -2,9 +2,12 @@
 
 namespace App\Http\Livewire\Label;
 
+use Carbon\Carbon;
 use App\Models\Order;
 use Livewire\Component;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\OrderTracking;
 use App\Repositories\LabelRepository;
 use Illuminate\Support\Facades\Storage;
 
@@ -13,9 +16,19 @@ class ScanLabel extends Component
     public $packagesRows;
     public $tracking = '';
     public $orderStatus = '';
+    public $start_date;
+    public $end_date;
+    public $user_id;
     public $error = '';
     public $order = [];
+    public $searchOrder = [];
     public $newOrder = [];
+    public $totalWeight = 0;
+    public $totalPieces = 0;
+
+    protected $listeners = ['user:updated' => 'getUser',
+                             'clear-search' => 'removeUser'   
+                            ];
 
     public function mount()
     {
@@ -24,6 +37,7 @@ class ScanLabel extends Component
         $this->tracking  = $this->tracking;
         $this->newOrder  = $this->newOrder;
         $this->orderStatus  = $this->orderStatus;
+        $this->searchOrder  = $this->searchOrder;
     }
 
     public function render()
@@ -40,11 +54,13 @@ class ScanLabel extends Component
             'kg' => '',
             'reference' => '',
             'recpient' => '',
+            'order_date' => '',
         ]);
     }
 
     public function removeRow($index)
     {
+        $this->removeOrderTracking($this->packagesRows[$index]['tracking_code']);
         unset($this->packagesRows[$index]);
     }
     
@@ -52,14 +68,20 @@ class ScanLabel extends Component
     {
         $order = Order::where('corrios_tracking_code', $trackingCode)->first();
         $this->order = $order;
-        
+
+        if(!$order->isPaid() && !$order->is_paid){
+            $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order Payment is pending']);
+            return $this->tracking = '';
+        }
         if($this->order){
             $this->packagesRows[$index]['tracking_code'] = $trackingCode;
+            $this->packagesRows[$index]['pobox'] = $this->order->user->pobox_number;
             $this->packagesRows[$index]['client'] = $this->order->merchant;
             $this->packagesRows[$index]['dimensions'] = $this->order->length . ' x ' . $this->order->length . ' x ' . $this->order->height ;
-            $this->packagesRows[$index]['kg'] = $this->order->weight;
+            $this->packagesRows[$index]['kg'] = $this->order->getWeight('kg');
             $this->packagesRows[$index]['reference'] = $this->order->id;
             $this->packagesRows[$index]['recpient'] = $this->order->recipient->first_name;
+            $this->packagesRows[$index]['order_date'] = $this->order->order_date->format('m-d-Y');
             
             $this->addRow();
         }
@@ -67,29 +89,75 @@ class ScanLabel extends Component
     
     public function updatedTracking()
     {
-        $order = Order::where('corrios_tracking_code', $this->tracking)->first();
-        $this->order = $order;
-        $this->orderStatus = '';
+        if($this->tracking){
+            
+            $order = Order::where('corrios_tracking_code', $this->tracking)->first();
+            $this->order = $order;
+            
+            if($this->order){
+                if($order->trackings->isNotEmpty() && $order->trackings()->latest()->first()->status_code >= Order::STATUS_ARRIVE_AT_WAREHOUSE){
+                    $lastScanned = $order->trackings()->where('status_code',Order::STATUS_ARRIVE_AT_WAREHOUSE)->pluck('updated_at')->first()->format('m/d/Y');
+                    $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'package already scanned on '.$lastScanned.'']);
+                }
+                if(!$this->order->is_paid){
+                    $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order Payment is pending']);
+                    return $this->tracking = '';
+                }
+                if($this->order->status == Order::STATUS_CANCEL){
+                    $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order Cancel']);
+                    return $this->tracking = '';
+                }
+                
+                if($this->order->status == Order::STATUS_REJECTED){
+                    $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order Rejected']);
+                    return $this->tracking = '';
+                }
+                
+                if($this->order->status == Order::STATUS_RELEASE){
+                    $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order Release']);
+                    return $this->tracking = '';
+                }
 
-        if($this->order->status == Order::STATUS_CANCEL){
-            $this->orderStatus = 'Order Cancel';
-            return $this->tracking = '';
+                if($this->order->status == Order::STATUS_REFUND){
+                    $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order Refund']);
+                    return $this->tracking = '';
+                }
+                
+                $newRow = [
+                    'tracking_code' => $this->tracking,
+                    'pobox' => $this->order->user->pobox_number,
+                    'client' => $this->order->merchant,
+                    'dimensions' => $this->order->length . ' x ' . $this->order->length . ' x ' . $this->order->height,
+                    'kg' => $this->order->getWeight('kg'),
+                    'reference' => $this->order->id,
+                    'recpient' => $this->order->recipient->first_name,
+                    'order_date' => $this->order->order_date->format('m-d-Y'),
+                ];
+                
+                if(in_array($newRow, $this->packagesRows)){
+                    $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order already exist']);
+                    return $this->tracking = '';
+                }
+                
+                array_push($this->packagesRows, $newRow);
+
+                array_push($this->newOrder,$this->order);
+
+                if($order->trackings->isNotEmpty() && $order->trackings()->latest()->first()->status_code == Order::STATUS_PAYMENT_DONE)
+                {
+                    $this->addOrderTracking($this->order);
+                }
+                
+                $this->tracking = '';
+                if(Auth::user()->isUser() && Auth::user()->role->name == 'scanner'){
+                    if(!$this->order->arrived_date){
+                        $this->order->update([
+                            'arrived_date' => date('Y-m-d H:i:s'), 
+                        ]);
+                    }
+                }
+            }
         }
-        
-        if($this->order){
-            
-            array_push($this->packagesRows,[
-                'tracking_code' => $this->tracking,
-                'client' => $this->order->merchant,
-                'dimensions' => $this->order->length . ' x ' . $this->order->length . ' x ' . $this->order->height,
-                'kg' => $this->order->weight,
-                'reference' => $this->order->id,
-                'recpient' => $this->order->recipient->first_name,
-            ]);
-            
-            array_push($this->newOrder,$this->order);
-        }
-            
         $this->tracking = '';
     }
 
@@ -97,28 +165,96 @@ class ScanLabel extends Component
     {
         foreach($this->newOrder as $order){
 
-            // dd($order);
             $this->getOrder($order, $labelRepository);
-            
+
         }
     }
     public function getOrder(Order $order, LabelRepository $labelRepository)
     {
-    //    dd($order);
         $labelData = null;
 
-        // if ( $request->update_label === 'true' ){
-        //     $labelData = $labelRepository->update($order);
-        // }else{
-            $labelData = $labelRepository->get($order);
-        // }
-
-        // $order->refresh();
-
+        $labelData = $labelRepository->get($order);
+       
         if ( $labelData ){
             Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
         }
         return redirect()->route('order.label.download',[$order,'time'=>md5(microtime())]);
       
+    }
+    
+    public function search()
+    {
+        $data = $this->validate([
+            'start_date' => 'nullable',
+            'end_date' => 'nullable',
+            'user_id' => 'nullable',
+        ]);
+
+        $this->start_date = $data['start_date'];
+        $this->end_date   = $data['end_date'];
+        $this->user_id    = $data['user_id'];
+
+        if($this->user_id != null)
+        {
+            $order = Order::where('user_id', $this->user_id)->whereBetween('arrived_date',[$this->start_date.' 00:00:00', $this->end_date.' 23:59:59'])->orderBy('arrived_date', 'DESC')->get();
+            $this->searchOrder = $order;
+            $this->totalPieces = $this->searchOrder->count();
+            $this->calculateTotalWeight();
+            
+            return true;
+        }
+
+        $order = Order::whereBetween('arrived_date',[$this->start_date.' 00:00:00', $this->end_date.' 23:59:59'])->orderBy('arrived_date', 'DESC')->get();
+        $this->searchOrder = $order;
+        $this->totalPieces = $this->searchOrder->count();
+        $this->calculateTotalWeight();
+    }
+
+    public function getUser($userId)
+    {
+        $this->user_id = $userId;
+    }
+
+    public function removeUser()
+    {
+        $this->user_id = null;
+    }
+
+    public function calculateTotalWeight()
+    {
+        if($this->searchOrder)
+        {
+            $this->totalWeight = 0;
+            foreach($this->searchOrder as $order)
+            {
+                $this->totalWeight += $order->getWeight('kg');
+            }
+        }
+    }
+    public function addOrderTracking($order)
+    {
+        OrderTracking::create([
+            'order_id' => $order->id,
+            'status_code' => Order::STATUS_ARRIVE_AT_WAREHOUSE,
+            'type' => 'HD',
+            'description' => 'Freight arrived at Homedelivery',
+            'country' => 'US',
+            'city' => 'Miami'
+        ]);
+
+        return true;
+    }
+
+    public function removeOrderTracking($tracking_code)
+    {
+        $order = Order::where('corrios_tracking_code', $tracking_code)->first();
+        
+        if($order->trackings->isNotEmpty() && $order->trackings()->count() < 3)
+        {
+            $order->trackings()->latest()->first()->delete();
+        }
+
+        return true;
+
     }
 }

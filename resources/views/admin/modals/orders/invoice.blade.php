@@ -16,7 +16,12 @@
                     <h6>@lang('orders.invoice.INVOICE NO.')</h6>
                     <p>{{ $order->warehouse_number }}</p>
                     <h6 class="mt-2">@lang('orders.invoice.INVOICE DATE')</h6>
-                    <p>{{ now()->format('d M Y') }}</p>
+                    @if($order->getPaymentInvoice())
+                        <p>{{ $order->getPaymentInvoice()->updated_at->format('d M Y') }}</p>
+                    @else
+                        <p>{{ now()->format('d M Y') }}</p>
+                    @endif
+                    
                 </div>
             </div>
         </div>
@@ -137,7 +142,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($order->services as $service)
+                            @foreach ($services as $service)
                                 <tr>
                                     <td>{{ $service->name }}</td>
                                     <td>{{ number_format($service->price,2) }} USD</td>
@@ -145,7 +150,7 @@
                             @endforeach   
                             <tr class="border-top-light">
                                 <td class="text-center h4">@lang('orders.invoice.Total')</td>
-                                <td class="h4">{{ number_format($order->services()->sum('price'),2) }} USD</td>
+                                <td class="h4">{{ number_format($services->sum('price'),2) }} USD</td>
                             </tr>                            
                         </tbody>
                     </table>
@@ -197,7 +202,11 @@
                             <tr class="border-top-light">
                                 <td colspan="4" class="text-center h4">@lang('orders.invoice.Freight Declared to Custom')</td>
                                 <td class="h4">
-                                    {{ number_format($order->user_declared_freight,2) }} USD
+                                    @if (number_format($order->user_declared_freight,2) == 0.01)
+                                        0.00 USD
+                                    @else
+                                        {{ number_format($order->user_declared_freight,2) }} USD
+                                    @endif
                                 </td>
                                 <td></td>
                             </tr>                             
@@ -220,7 +229,7 @@
                                 <tr>
                                     <th>@lang('orders.invoice.Additional Services')</th>
                                     <td>
-                                        {{ number_format($order->services()->sum('price'),2) }} USD
+                                        {{ number_format($services->sum('price'),2) }} USD
                                     </td>
                                 </tr>
                                 <tr>

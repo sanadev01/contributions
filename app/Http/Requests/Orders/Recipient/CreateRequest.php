@@ -3,8 +3,9 @@
 namespace App\Http\Requests\Orders\Recipient;
 
 use App\Models\Country;
-use App\Rules\PhoneNumberValidator;
 use App\Rules\ZipCodeValidator;
+use App\Rules\PhoneNumberValidator;
+use App\Rules\CorreosAddresstValidator;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateRequest extends FormRequest
@@ -27,27 +28,37 @@ class CreateRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'first_name' => 'required|max:50',
-            'last_name' => 'nullable|max:50',
+            'first_name' => ($this->country_id == Country::Chile) ? 'required|max:28' : 'required|max:50',
+            'last_name' => ($this->country_id == Country::Chile) ? 'nullable|max:28' : 'nullable|max:50',
             'address' => 'required',
             'address2' => 'nullable|max:50',
-            'street_no' => 'required',
+            'street_no' => 'sometimes',
             'country_id' => 'required|exists:countries,id',
-            'city' => 'required',
+            'city' => 'required_if:service,==,postal_service',
+            'commune_id' => 'required_if:service,==,courier_express',
             'phone' => [
-                'required','max:15','min:13', new PhoneNumberValidator($this->country_id)
+                'required','max:15','min:11', new PhoneNumberValidator($this->country_id)
             ],
-            'state_id' => 'required|exists:states,id',
+            'state_id' => 'sometimes|required|exists:states,id',
+            'region' => 'sometimes|required',
             'zipcode' => [
-                'required', new ZipCodeValidator($this->country_id,$this->state_id)
+                'required'
+                // 'required',  new CorreosAddresstValidator($this->country_id,$this->address), new ZipCodeValidator($this->country_id,$this->state_id)
             ]
         ];
 
+        // if (Country::where('code', 'BR')->first()->id == $this->country_id) {
+        //     $rules['cpf'] = 'sometimes|cpf|required_if:country_id,'.Country::where('code', 'BR')->first()->id;
+        //     $rules['cnpj'] = 'sometimes|cnpj|required_if:country_id,'.Country::where('code', 'BR')->first()->id;
+        //     $rules['zipcode'] = ['required', new ZipCodeValidator($this->country_id,$this->state_id)];
+        // }
         if (Country::where('code', 'BR')->first()->id == $this->country_id) {
-            $rules['cpf'] = 'sometimes|cpf|required_if:country_id,'.Country::where('code', 'BR')->first()->id;
-            $rules['cnpj'] = 'sometimes|cnpj|required_if:country_id,'.Country::where('code', 'BR')->first()->id;
+            $rules['tax_id'] = 'sometimes|cpf_cnpj|required_if:country_id,'.Country::where('code', 'BR')->first()->id;
+            // $rules['tax_id'] = 'sometimes|cnpj|required_if:country_id,'.Country::where('code', 'BR')->first()->id;
+            $rules['zipcode'] = ['required', new ZipCodeValidator($this->country_id,$this->state_id)];
+            $rules['street_no'] = 'sometimes|numeric';
         }
-
+        
         return $rules;
     }
 

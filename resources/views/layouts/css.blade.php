@@ -94,18 +94,76 @@
 
     ::-webkit-scrollbar
     {
-        width: 12px;
+        height: 5px;
+        width: 6px;
         background-color: #F5F5F5;
     }
 
     ::-webkit-scrollbar-thumb
     {
-        border-radius: 10px;
+        border-radius: 7px;
         -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
         background-color: #555;
     }
     .min-vh-100{
         min-height: 100vh !important
+    }
+    
+    /* Extra small devices (phones, 600px and down) */
+    @media only screen and (max-width: 600px) {
+        #main-menu-navigation {
+            overflow-y: scroll;
+        }
+    }
+
+   /* Small devices (portrait tablets and large phones, 600px and up) */
+    @media only screen and (min-width: 600px) {
+        #main-menu-navigation {
+            overflow-y: scroll;
+        }
+    }
+
+    /* Medium devices (landscape tablets, 768px and up) */
+    @media only screen and (min-width: 768px) {
+        #main-menu-navigation {
+            overflow-y: scroll;
+        }
+    }
+
+    /* Extra large devices (large laptops and desktops, 1200px and up) */
+    @media only screen and (min-width: 1200px) {
+        #main-menu-navigation {
+            overflow-y: scroll;
+        }
+    }
+
+    @media only screen and (max-width: 768px) {
+    .modal{
+            padding-right: 153px;
+        }
+        .modal-content {
+            width: min-content;
+        }
+    }    
+    .dropdown-menu.overlap-menu {
+        z-index: 10;
+        right: 0px;
+        left: unset !important;
+    }
+
+    .table-responsive-md{
+        min-height: 265px;
+    }
+    .table-responsive.order-table {
+        padding-bottom: 3rem;
+    }
+
+    .big-checkbox{
+        height: 25px; 
+        width: 25px;
+    }
+    .big-label {
+        font-size: 15px;
     }
 </style>
 @yield('custom-css')

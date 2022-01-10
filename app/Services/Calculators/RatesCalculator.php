@@ -31,7 +31,7 @@ class RatesCalculator
 
     protected $calculateOnVolumeMetricWeight;
 
-    protected $errors;
+    protected static $errors;
 
     public function __construct(Order $order,ShippingService $service, $calculateOnVolumeMetricWeight = true )
     {
@@ -39,9 +39,15 @@ class RatesCalculator
         $this->shippingService = $service;
 
         $this->recipient = $order->recipient;
-
-        $this->rates = $service->rates()->byCountry($this->recipient->country_id)->first();
-
+        
+        if($this->recipient->commune_id != null)
+        {
+            $this->rates = $service->rates()->byRegion($this->recipient->country_id, optional($this->recipient->commune)->region->id)->first();
+        
+        }else{
+            $this->rates = $service->rates()->byCountry($this->recipient->country_id)->first();
+        }
+        
         $this->initializeDims();
 
         $this->weight = $calculateOnVolumeMetricWeight ? $this->calculateWeight(): $this->originalWeight;
@@ -99,14 +105,26 @@ class RatesCalculator
             $weight = 100;
         }
         
-        $rate = collect($this->rates->data)->where('weight','<=',$weight)->sortByDesc('weight')->take(1)->first();
+        $rates = collect($this->rates->data)->where('weight','<=',$weight)->sortByDesc('weight')->take(2);
+        $secRate = [];
+        foreach($rates as $rate){
+            $secRate[] = $rate;
+        }
+        if($this->order->id){
+            if(optional($secRate)[1]){
+                $rate = $secRate[1]['leve'];
+            }else{
+                $rate = $secRate[0]['leve'];
+            }
+        }else{
+            $rate = collect($this->rates->data)->where('weight','<=',$weight)->sortByDesc('weight')->take(1)->first();
+            $rate = $rate['leve'];
+        }
 
-        $rate = $rate['leve'];
-
+        
         if (! $addProfit) {
             return $rate;
         }
-        
         return $rate + $this->getProfitOn($rate);
     }
 
@@ -119,7 +137,7 @@ class RatesCalculator
         }
 
         $profitPercentage =  $this->getProfitSlabValue($profitPackage);
-
+        
         $profitAmount =  ($profitPercentage/100) * $cost ;
 
         return $profitAmount;
@@ -128,7 +146,15 @@ class RatesCalculator
     public function getProfitPackage()
     {
         $user = $this->order->user;
-        $profitPackage = $user->profitPackage;
+        
+        $shippingServiceId = $this->shippingService->id;
+        
+        $profitSetting = $this->order->user->profitSettings()->where('user_id',$user->id)->where('service_id',$shippingServiceId)->first();
+        if($profitSetting){
+            $profitPackage =$profitSetting->profitPackage;
+        }else{
+            $profitPackage = $user->profitPackage;
+        }
 
         if ( !$profitPackage ){
             return ProfitPackage::where('type',ProfitPackage::TYPE_DEFAULT)->first();
@@ -140,8 +166,11 @@ class RatesCalculator
     public function getProfitSlabValue($profitPackage)
     {
         $weight = ceil(WeightCalculator::kgToGrams($this->weight));
-        $profitSlab = collect($profitPackage->data)->where('min_weight','<=',$weight)->where('max_weight','>=',$weight)->first();
-
+        if ( $weight<100 ){
+            $weight = 100;
+        }
+        $profitSlab = collect($profitPackage->data)->where('max_weight','<=',$weight)->sortByDesc('min_weight')->first();
+       
         if ( !$profitSlab ){
             $profitSlab = collect($profitPackage->data)->where('max_weight','>=',29999)->first();
         }
@@ -159,17 +188,64 @@ class RatesCalculator
         try {
 
             if ( !$this->rates ) {
-                $this->errors .= "Service not available for this Country <br>";
+                // self::$errors .= "Service not available for this Country <br>";
                 return false;
             }
 
             if ( $this->shippingService->max_weight_allowed < $this->weight ){
-                $this->errors .= "service is not available for more then {$this->shippingService->max_weight_allowed}KG  weight";
+                self::$errors .= "service is not available for more then {$this->shippingService->max_weight_allowed}KG  weight";
                 return false;
             }
 
+            /**
+             * Sinerlog modification
+             * Validation for sinerlog services
+             */
+            /**
+             * Standard service
+             * "weight":["The weight must be between 1 and 30000."],
+             * "height":["The height must be between 1 and 105."],
+             * "width":["The width must be between 9 and 105."],
+             * "length":["The length must be between 14 and 105."]
+             */
+            
+            /**
+             * Express service
+             * "weight":["The weight must be between 1 and 30000."]
+             * "height":["The height must be between 1 and 105."]
+             * "width":["The width must be between 9 and 105."]
+             * "length" :["The length must be between 14 and 105."]
+             */
+
+            /**
+             * Small package
+             * "weight":["The weight must be between 1 and 300."]
+             * "height":["The height must be between 1 and 4."]
+             * "width":["The width must be between 10 and 16."]
+             * "length":["The length must be between 15 and 24."]
+             * "products.0.value":["The products.0.value must be between 0.01 and 50.00."]
+             */
+            if ( $this->shippingService->api == 'sinerlog' ) {
+                if($this->height < $this->shippingService->min_height_allowed || $this->height > $this->shippingService->max_height_allowed){
+                    return false;
+                }
+        
+                if ($this->width < $this->shippingService->min_width_allowed || $this->width > $this->shippingService->max_width_allowed) {
+                    return false;
+                }
+        
+                if ($this->length < $this->shippingService->min_length_allowed || $this->length > $this->shippingService->max_length_allowed) {
+                    return false;
+                }
+        
+                if (($this->width + $this->height + $this->length) > $this->shippingService->max_sum_of_all_sides) {
+                    return false;
+                }
+            }            
+
             return true;
         } catch (Exception $exception) {
+            self::$errors .= "Error: ".$exception->getMessage();
             return false;
         }
     }
@@ -186,6 +262,6 @@ class RatesCalculator
 
     public function getErrors()
     {
-        return $this->errors;
+        return self::$errors;
     }
 }

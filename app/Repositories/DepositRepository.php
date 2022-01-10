@@ -4,10 +4,14 @@
 namespace App\Repositories;
 
 
+use Stripe\Charge;
+use Stripe\Stripe;
+use Stripe\Customer;
 use App\Models\Order;
 use App\Models\State;
 use App\Models\Country;
 use App\Models\Deposit;
+use App\Models\Document;
 use App\Events\OrderPaid;
 use Illuminate\Http\Request;
 use App\Mail\User\PaymentPaid;
@@ -21,6 +25,8 @@ use App\Services\PaymentServices\AuthorizeNetService;
 class DepositRepository
 {
     protected $error;
+    protected $fileName;
+    protected $chargeID;
 
     public function get(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='asc')
     {
@@ -39,6 +45,18 @@ class DepositRepository
             });
         }
 
+        if ( $request->warehouseNumber ){
+            $query->whereHas('orders',function($query) use($request){
+                return $query->where('warehouse_number','LIKE',"%{$request->warehouseNumber}%");
+            });
+        }
+
+        if ( $request->trackingCode ){
+            $query->whereHas('orders',function($query) use($request){
+                return $query->where('corrios_tracking_code','LIKE',"%{$request->trackingCode}%");
+            });
+        }
+
         if ( $request->type ){
             $query->where('is_credit',$request->type);
         }
@@ -47,8 +65,25 @@ class DepositRepository
             $query->where('uuid','LIKE',"%{$request->uuid}%");
         }
 
+        if ( $request->dateFrom ){
+            $query->where('created_at','>=',$request->dateFrom. ' 00:00:00');
+        }
+
+        if ( $request->dateTo ){
+            $query->where('created_at','<=',$request->dateTo. ' 23:59:59');
+        }
+
+
         if ( $request->last_four_digits ){
             $query->where('last_four_digits','LIKE',"%{$request->last_four_digits}%");
+        }
+
+        if ( $request->description ){
+            $query->where('description','LIKE',"%{$request->description}%");
+        }
+
+        if ( $request->balance ){
+            $query->where('balance','LIKE',"%{$request->balance}%");
         }
 
         $query->orderBy($orderBy,$orderType);
@@ -59,6 +94,8 @@ class DepositRepository
 
     public function store(Request $request)
     {
+        $paymentGateway = setting('PAYMENT_GATEWAY', null, null, true);
+        
         DB::beginTransaction();
 
         try {
@@ -74,14 +111,14 @@ class DepositRepository
                     'user_id' => Auth::id(),
                     'first_name' => $request->first_name,
                     'last_name' => $request->last_name,
-                    'card_no' => $request->card_no,
-                    'expiration' => $request->expiration,
-                    'cvv' => $request->cvv,
+                    'expiration' => ($request->payment_gateway == 'stripe_ach') ? null : $request->expiration,
+                    'cvv' => ($request->payment_gateway == 'stripe_ach') ? $request->routing_number : $request->cvv,
                     'phone' => $request->phone,
                     'address' => $request->address,
                     'state' => State::find($request->state)->code,
                     'zipcode' => $request->zipcode,
-                    'country' => Country::find($request->country)->name
+                    'country' => Country::find($request->country)->name,
+                    'card_no' => ($request->payment_gateway == 'stripe_ach') ? $request->account_no : $request->card_no,
                 ]);
             }
 
@@ -89,22 +126,48 @@ class DepositRepository
                 $billingInformation->save();
             }
 
-            $authorizeNetService = new AuthorizeNetService();
+            if($request->payment_gateway == 'stripe')
+            {
+                $transactionID = PaymentInvoice::generateUUID('DP-');
+                $this->stripePayment($request);
 
-            $transactionID = PaymentInvoice::generateUUID('DP-');
-            $response = $authorizeNetService->makeCreditCardPaymentWithoutInvoice($billingInformation,$transactionID,$request->amount,Auth::user());
-
-
-            if ( !$response->success ){
-                $this->error = json_encode($response->message);
-                DB::rollBack();
-                return false;
+                if($this->error != null)
+                {
+                    DB::rollBack();
+                    return false;
+                }
             }
 
+            if($request->payment_gateway == 'stripe_ach')
+            {
+                $transactionID = PaymentInvoice::generateUUID('DP-');
+                $this->stripeAchPayment($request);
+
+                if($this->error != null)
+                {
+                    DB::rollBack();
+                    return false;
+                }
+            }
+
+            if($request->payment_gateway == 'authorize')
+            {
+                $authorizeNetService = new AuthorizeNetService();
+
+                $transactionID = PaymentInvoice::generateUUID('DP-');
+                $response = $authorizeNetService->makeCreditCardPaymentWithoutInvoice($billingInformation,$transactionID,$request->amount,Auth::user());
+
+
+                if ( !$response->success ){
+                    $this->error = json_encode($response->message);
+                    DB::rollBack();
+                    return false;
+                }
+            }
 
             Deposit::create([
                 'uuid' => $transactionID,
-                'transaction_id' => $response->data->getTransId(),
+                'transaction_id' => ($request->payment_gateway == 'stripe' || $request->payment_gateway == 'stripe_ach') ? $this->chargeID : $response->data->getTransId(),
                 'amount' => $request->amount,
                 'user_id' => Auth::id(),
                 'balance' => Deposit::getCurrentBalance() + $request->amount,
@@ -123,6 +186,140 @@ class DepositRepository
         }
     }
 
+    private function stripePayment($request)
+    {
+        $stripeSecret = setting('STRIPE_SECRET', null, null, true);
+        
+        Stripe::setApiKey($stripeSecret);
+        try {
+            $charge =Charge::create ([
+                'amount' => (float)$request->amount * 100,
+                'currency' => "usd",
+                'source' => $request->stripe_token,
+                'description' => auth()->user()->pobox_number.' '.'charged HD account',
+            ]);
+
+            $this->chargeID = $charge->id;
+            return true;
+
+        } catch (\Exception $ex) {
+            $this->error = $ex->getMessage();
+
+            return false;
+        }
+    }
+
+    private function stripeAchPayment($request)
+    {
+        $stripeSecret = setting('STRIPE_SECRET', null, null, true);
+        
+        Stripe::setApiKey($stripeSecret);
+
+        try {
+
+            $customer = Customer::create([
+                'description' => $request->first_name . ' ' . $request->last_name,
+                'source' => $request->stripe_token,
+            ]);
+
+            if($this->verifyCustomer($customer, $request))
+            {
+                return true;
+            }
+
+        } catch (\Exception $th) {
+            $this->error = $th->getMessage();
+
+            return false;
+        }
+        
+    }
+
+    private function verifyCustomer($customer, $request)
+    {
+        try {
+
+            $bank_account = Customer::retrieveSource(
+                $customer->id,
+                $customer->default_source
+            );
+
+            $bank_account->verify(['amounts' => [32, 45]]);
+
+            if($this->stripeAchCharge($customer, $request))
+            {
+                return true;
+            }
+
+        } catch (\Exception $ex) {
+
+            $this->error = $ex->getMessage();
+
+            return false;
+        }
+        
+    }
+
+    private function stripeAchCharge($customer, $request)
+    {
+        try {
+
+            $stripeSecret = setting('STRIPE_SECRET', null, null, true);
+
+            $stripe = new \Stripe\StripeClient($stripeSecret);
+
+            $charge = $stripe->charges->create([
+                'amount' => (float)$request->amount * 100, 
+                'currency' => 'usd', 
+                'customer' => $customer->id,
+            ]);
+
+            $this->chargeID = $charge->id;
+            return true;
+
+        } catch (\Exception $ex) {
+            return $this->error = $ex->getMessage();
+        }
+    }
+
+
+    public function adminAdd(Request $request)
+    {
+        $lastTransaction = Deposit::query()->where('user_id',$request->user_id)->latest('id')->first();
+        if ( !$lastTransaction ){
+            $balance =  0;
+        }else{
+            $balance = $lastTransaction->balance;
+        }
+        // if ($request->has('attachment')) {
+            
+        //     $this->fileName = time().'.'.$request->attachment->extension();
+        //     $request->attachment->storeAs('deposits', $this->fileName);
+        // }
+
+        $deposit = Deposit::create([
+            'uuid' => PaymentInvoice::generateUUID('DP-'),
+            'amount' => $request->amount,
+            'user_id' => $request->user_id,
+            'balance' => ($request->is_credit == "true") ? $balance + $request->amount : $balance - $request->amount,
+            'is_credit' =>  ($request->is_credit == "true") ? true : 0,
+            'last_four_digits' => Auth::user()->name,
+            'attachment' => $this->fileName,
+            'description' => $request->description,
+        ]);
+
+        if ($request->hasFile('attachment')) {
+            foreach ($request->file('attachment') as $attach) {
+                $document = Document::saveDocument($attach);
+                $deposit->depositAttchs()->create([
+                    'name' => $document->getClientOriginalName(),
+                    'size' => $document->getSize(),
+                    'type' => $document->getMimeType(),
+                    'path' => $document->filename
+                ]);
+            }
+        }
+    }
 
     public function getError()
     {

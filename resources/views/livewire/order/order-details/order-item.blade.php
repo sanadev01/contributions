@@ -49,7 +49,7 @@
         <div class="form-group col-12 col-sm-4 col-md-4">
             <div class="controls">
                 <label class="d-flex">@lang('orders.order-details.order-item.Is Contains Dangrous Goods')  </label>
-                <select name="items[{{$keyId}}][dangrous_item]" required class="form-control" id="">
+                <select name="items[{{$keyId}}][dangrous_item]" required class="form-control dangrous" id="dangrous_{{$keyId}}" onchange="change({{$keyId}})">
                     <option value="0">No</option>
                     <option value="contains_battery" {{ optional($item)['contains_battery'] == 1 ? 'selected': '' }}>@lang('orders.order-details.order-item.Contains Battery')</option>
                     <option value="contains_perfume" {{ optional($item)['contains_perfume'] == 1 ? 'selected': '' }}>@lang('orders.order-details.order-item.Contains Perfume')</option>

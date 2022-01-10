@@ -113,6 +113,7 @@ class OrderImportService extends AbstractImportService
                     "sender_last_name" => $this->getValue("K{$row}"),
                     "sender_email" => $this->getValue("L{$row}"),
                     "sender_phone" => $this->getValue("M{$row}"),
+                    "correios_tracking_code" => $this->getValue("AG{$row}"),
 
 
 
@@ -160,8 +161,8 @@ class OrderImportService extends AbstractImportService
             "value" => $this->getValue("AB{$row}"),
             "description" => $this->getValue("AC{$row}"),
             "sh_code" => $this->getValue("AD{$row}"),
-            "contains_battery" => strlen($this->getValue("AE{$row}")) >0 ? true : false,
-            "contains_perfume" => strlen($this->getValue("AF{$row}")) >0 ? true : false
+            "contains_battery" => strtolower($this->getValue("AE{$row}")) == 'yes' ? true : false,
+            "contains_perfume" => strtolower($this->getValue("AF{$row}")) == 'yes' ? true : false
         ];
 
         $items = $order->items ? $order->items : [];
@@ -214,7 +215,7 @@ class OrderImportService extends AbstractImportService
                 'merchant' => 'required',
                 'carrier' => 'required',
                 'tracking_id' => 'required',
-                'customer_reference' => 'required',
+                'customer_reference' => 'nullable',
                 'weight' => 'required|numeric|gt:0',
                 'measurement_unit' => 'required|in:kg/cm,lbs/in',
                 'length' => 'required|numeric|gt:0',
@@ -224,10 +225,7 @@ class OrderImportService extends AbstractImportService
                 'sender_first_name' => 'required',
                 'sender_last_name' => 'nullable',
                 'sender_email' => 'nullable',
-                'sender_phone' => [
-                    'nullable','max:15','min:13', new PhoneNumberValidator(optional( Country::where('code',$this->getValue("X{$row}"))->first() )->id)
-                ],
-
+                'sender_phone' => 'nullable|max:15',
 
                 'first_name' => 'required|max:100',
                 'last_name' => 'max:100',
@@ -275,7 +273,7 @@ class OrderImportService extends AbstractImportService
                 'merchant.required' => 'merchant is required',
                 'carrier.required' => 'carrier is required',
                 'tracking_id.required' => 'tracking id is required',
-                'customer_reference.required' => 'customer reference is required',
+                'customer_reference.nullable' => 'customer reference is invalid',
                 'measurement_unit.required' => 'measurement unit is required',
                 'weight.required' => 'weight is required',
                 'length.required' => 'length is required',
@@ -284,8 +282,8 @@ class OrderImportService extends AbstractImportService
 
                 'sender_first_name.required' => 'sender first name is required',
                 'sender_last_name.nullable' => 'sender last name is required',
-                'sender_email.nullable' => 'sender Email is required',
-                'sender_phone.nullable' => 'sender phone is required',
+                'sender_email.required' => 'sender Email is required',
+                'sender_phone.nullable' => 'sender phone is invalid',
 
                 'first_name.required' => 'first Name is required',
                 'last_name.required' => 'last Name is required',

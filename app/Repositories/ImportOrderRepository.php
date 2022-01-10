@@ -159,6 +159,7 @@ class ImportOrderRepository
 
     public function storeOrder(ImportedOrder $importedOrder)
     {
+        
         $shippingService = ShippingService::find($importedOrder->shipping_service_id);
         
         $order = Order::create([
@@ -184,6 +185,7 @@ class ImportOrderRepository
             "sender_last_name" => $importedOrder->sender_last_name,
             "sender_email" => $importedOrder->sender_email,
             "sender_phone" => $importedOrder->sender_phone,
+            "user_declared_freight" => $importedOrder->user_declared_freight?$importedOrder->user_declared_freight:"0.01",
 
         ]);
 
@@ -216,7 +218,7 @@ class ImportOrderRepository
         
         $order->update([
             'warehouse_number' => "HD-{$order->id}",
-            'user_declared_freight' => $importedOrder->user_declared_freight?$importedOrder->user_declared_freight:$shippingPrice,
+            'user_declared_freight' => $importedOrder->user_declared_freight?$importedOrder->user_declared_freight:"0.01",
         ]);
         
     }
@@ -231,6 +233,34 @@ class ImportOrderRepository
             "contains_battery" => optional($item)['contains_battery'],
             "contains_perfume" => optional($item)['contains_perfume'],
         ]);
+    }
+    public function storeOrderAll($id)
+    {
+        $query = ImportedOrder::query()->has('user');
+        
+        if ( Auth::user()->isUser() ){
+            $query->where('user_id',Auth::id());
+        }
+        $query->where(function($query) use($id){
+            return $query->where('error', null);
+        });
+        if ($id){
+            $query->where(function($query) use($id){
+                return $query->where('import_id',  $id);
+            });
+        }
+
+        $orders = $query->get();
+       
+        foreach($orders as $order){
+
+            if($order){
+                $this->storeOrder($order);
+                $this->importedOrderDelete($order);
+            }
+        }
+        return;
+        
     }
 
 }

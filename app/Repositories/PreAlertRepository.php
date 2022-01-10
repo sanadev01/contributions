@@ -2,15 +2,17 @@
 
 namespace App\Repositories;
 
-use App\Mail\User\ConsolidationRequest;
+use DB;
+use App\Models\Order;
+use App\Models\Document;
+use App\Facades\USPSFacade;
+use Illuminate\Http\Request;
 use App\Mail\User\OrderCombined;
 use App\Mail\User\ShipmentReady;
-use App\Models\Document;
-use App\Models\Order;
-use Illuminate\Http\Request;
+use App\Mail\User\ShipmentTransit;
 use Illuminate\Support\Facades\Auth;
-use DB;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\User\ConsolidationRequest;
 
 class PreAlertRepository
 {
@@ -93,12 +95,20 @@ class PreAlertRepository
                 ]);
             }
         }
-
-        try {
-            \Mail::send(new ShipmentReady($order));
-        } catch (\Exception $ex) {
-            \Log::info('Shipment ready email send error: '.$ex->getMessage());
+        if($order->status == Order::STATUS_PREALERT_TRANSIT){
+            try {
+                \Mail::send(new ShipmentTransit($order));
+            } catch (\Exception $ex) {
+                \Log::info('Shipment transit email send error: '.$ex->getMessage());
+            }
+        }else{
+            try {
+                \Mail::send(new ShipmentReady($order));
+            } catch (\Exception $ex) {
+                \Log::info('Shipment ready email send error: '.$ex->getMessage());
+            }
         }
+        
 
         return $order;
     }
@@ -107,7 +117,13 @@ class PreAlertRepository
     {
         $data = [];
 
-        $data = [ 'merchant', 'carrier', 'tracking_id','customer_reference', 'order_date'];
+        $data = [ 'merchant', 'carrier', 'tracking_id','customer_reference','user_id', 'order_date'];
+
+        if ( !Auth::user()->isAdmin() && $order->status<Order::STATUS_ORDER){
+            $request->merge([
+                'user_id' => Auth::id()
+            ]);
+        }
 
         if ( Auth::user()->can('addWarehouseNumber',Order::class) ){
             $request->merge([
@@ -163,6 +179,22 @@ class PreAlertRepository
             }
         }
 
+        if($order->status == Order::STATUS_PREALERT_TRANSIT){
+            try {
+                \Log::info('STATUS_PREALERT_TRANSIT');
+                \Mail::send(new ShipmentTransit($order));
+            } catch (\Exception $ex) {
+                \Log::info('Shipment transit email send error: '.$ex->getMessage());
+            }
+        }else{
+            try {
+                \Log::info('STATUS_READ');
+                \Mail::send(new ShipmentReady($order));
+            } catch (\Exception $ex) {
+                \Log::info('Shipment ready email send error: '.$ex->getMessage());
+            }
+        }
+        
         if( $order->isConsolidated() ){
             try {
                 \Mail::send(new OrderCombined($order));
@@ -170,7 +202,9 @@ class PreAlertRepository
                 \Log::info('Consolidation email send error: '.$ex->getMessage());
             }
         }
-
+        if( $order->status == Order::STATUS_ORDER ){
+            $order->doCalculations();
+        }
         return $order;
     }
 
@@ -181,6 +215,16 @@ class PreAlertRepository
             // if ( $order->isConsolidated() ){
             //     $order->subOrders()->sync([]);
             // }
+            if(optional($order->recipient)->country_id == 250 && $order->api_response != null)
+            {
+                $response = USPSFacade::deleteUSPSLabel($order->corrios_tracking_code);
+                
+                if($response->success == false)
+                {
+                    return false;
+                }
+            }
+
             optional($order->affiliateSale)->delete();
             $order->delete();
             return true;
@@ -259,6 +303,59 @@ class PreAlertRepository
         } catch (\Exception $ex) {
             DB::rollback();
             $this->error = $ex->getMessage();
+            return false;
+        }
+    }
+
+    public function returnToParcel(Order $order)
+    {
+        if($order->recipient->country_id == 250 && $order->api_response != null)
+        {
+            $response = USPSFacade::deleteUSPSLabel($order->corrios_tracking_code);
+            
+            if($response->success == false)
+            {
+                return false;
+            }
+        }
+        
+        try{
+                $order->items()->delete();
+                $order->recipient()->delete();
+                optional($order->purchaseInvoice)->delete();
+                $order = $order->update([
+                "user_id"               => $order->user_id,
+                "merchant"              => $order->merchant,
+                "carrier"               => $order->carrier,
+                "tracking_id"           => $order->tracking_id,
+                "status"                => Order::STATUS_PREALERT_TRANSIT,
+                "order_date"            => $order->order_date,
+                'warehouse_number'      => $order->warehouse_number,
+                "shipping_service_id"   => null,
+                "shipping_service_name" => '',
+                "customer_reference"    => '',
+                "weight"                => 0,
+                "length"                => 0,
+                "width"                 => 0,
+                "height"                => 0,
+                "measurement_unit"      => 'kg/cm',
+                "is_invoice_created"    => 0,
+                "is_shipment_added"     => 0,
+                "sender_first_name"     => '',
+                "sender_last_name"      => '',
+                "sender_email"          => '',
+                "sender_phone"          => '',
+                "user_declared_freight" => 0,
+                "api_response" => '',
+                "corrios_tracking_code" => '',
+
+            ]);
+            
+            return true;
+
+        } catch (\Exception $ex) {
+            DB::rollback();
+
             return false;
         }
     }

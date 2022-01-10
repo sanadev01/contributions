@@ -1,0 +1,57 @@
+<?php
+
+namespace App\Models\Warehouse;
+
+use App\Models\Country;
+use Illuminate\Database\Eloquent\Model;
+use App\Services\Correios\Models\Package;
+use App\Services\Converters\UnitsConverter;
+use Spatie\Activitylog\Traits\LogsActivity;
+
+class AccrualRate extends Model
+{
+    use LogsActivity;
+    protected static $logAttributes = ['*'];
+    protected static $logOnlyDirty = true;
+    protected static $submitEmptyLogs = false;
+    
+    public function getServiceName()
+    {
+        if ( $this->service == Package::SERVICE_CLASS_STANDARD ){
+            return "Standard";
+        }
+
+        if ( $this->service == Package::SERVICE_CLASS_EXPRESS ){
+            return "Express";
+        }
+
+        if ( $this->service == Package::SERVICE_CLASS_MINI ){
+            return "Mini";
+        }
+
+        if ( $this->service == Package::SERVICE_CLASS_SRP ){
+            return "SRP";
+        }
+
+        if ( $this->service == Package::SERVICE_CLASS_SRM ){
+            return "SRM";
+        }
+
+        return '';
+    }
+
+    public static function getRateSlabFor($weight): AccrualRate
+    {
+        if($weight < 0.1){
+            $weight = 0.1;
+        }
+        $weightToGrams = UnitsConverter::kgToGrams($weight);
+
+        return self::where('weight','<=',$weightToGrams)->orderBy('id','DESC')->take(1)->first();
+    }
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
+    }
+}

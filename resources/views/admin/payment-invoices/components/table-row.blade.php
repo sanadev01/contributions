@@ -10,7 +10,13 @@
         {{ number_format($invoice->orders()->sum('gross_total'),2) }} USD
     </td>
     <td>
-        {{ $invoice->last_four_digits  }}
+        @if ( $invoice->isPaid() )
+            @if ($invoice->last_four_digits)
+                {{ $invoice->last_four_digits  }}
+            @else
+                @lang('invoice.Paid with Balance')
+            @endif
+        @endif
     </td>
 
     <td>

@@ -2,17 +2,18 @@
 
 namespace App\Repositories;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Models\ProfitPackage;
-use App\Models\User;
 use Exception;
+use App\Models\User;
+use Illuminate\Http\Request;
+use App\Models\ProfitPackage;
+use App\Models\ProfitSetting;
+use Illuminate\Support\Facades\Auth;
 
 class ProfitPackageRepository
 {
     public function get()
     {   
-        $packages = ProfitPackage::query()->orderBy('name','ASC')->get();
+        $packages = ProfitPackage::query()->with('shippingService')->orderBy('name','ASC')->get();
         return $packages;
 
     }
@@ -20,13 +21,27 @@ class ProfitPackageRepository
     public function store(Request $request)
     {   
         try{
+            
+            $data = $request->slab;
+            $arrayCounter = 0;
 
             foreach( $request->slab as $slab ){
+            
+                if($arrayCounter == 0){
+                    $slab['min_weight'] = 0;
+                } else {
+                    $minWeight = $arrayCounter - 1;
+                    $prev_maxWeight = $data[ $minWeight ]['max_weight'];
+                    $slab['min_weight'] = $prev_maxWeight + 1;
+                }
+
+                $arrayCounter ++;
                 $profitPackageslab[] = $slab ;
             }
-    
+            
             $profitPackage = ProfitPackage::create([
                 'name' => $request->package_name,
+                'shipping_service_id' => $request->shipping_service_id,
                 'type' => $request->type,
                 'data' => $profitPackageslab
             ]);
@@ -43,13 +58,27 @@ class ProfitPackageRepository
     {   
         
         try{
+            
+            $data = $request->slab;
+            $arrayCounter = 0;
 
             foreach( $request->slab as $slab ){
-                $profitPackageslab[] = $slab;
+            
+                if($arrayCounter == 0){
+                    $slab['min_weight'] = 0;
+                } else {
+                    $minWeight = $arrayCounter - 1;
+                    $prev_maxWeight = $data[ $minWeight ]['max_weight'];
+                    $slab['min_weight'] = $prev_maxWeight + 1;
+                }
+
+                $arrayCounter ++;
+                $profitPackageslab[] = $slab ;
             }
     
             $profitPackage->update([
                 'name' => $request->package_name,
+                'shipping_service_id' => $request->shipping_service_id,
                 'type' => $request->type,
                 'data' => $profitPackageslab
             ]);
@@ -67,6 +96,24 @@ class ProfitPackageRepository
         $profitPackage->delete();
         return true;
 
+    }
+
+    public function getPackageUsers($package)
+    {
+        $settings = ProfitSetting::where('package_id', $package->id)->get();
+        
+        if(!$settings->isEmpty())
+        {
+            foreach ($settings as $setting) 
+            {
+                $settingIds[] = $setting->user_id;
+            }
+
+            $users = User::findMany($settingIds);
+        }
+        
+
+        return $users;
     }
 
 }

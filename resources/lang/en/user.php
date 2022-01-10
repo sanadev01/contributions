@@ -11,6 +11,7 @@ return [
     'Package' => 'Package',
     'Role' => 'Role',
     'Action' => 'Action',
+    'status' => 'Status',
     'Login' => 'Login',
     'Delete' => 'Delete',
     'Search' => 'Search',
@@ -31,5 +32,7 @@ return [
     'Select Commision Type' => 'Select Commision Type',
     'Referrer' => 'Referrer',
     'Select Referrer' => 'Select Referrer',
+    'Default Package' => 'Default Single Package',
+    'Referral' => 'Referral',
 ]; 
  

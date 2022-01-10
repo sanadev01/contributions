@@ -2,13 +2,20 @@
 
 return [
     'Parcel Images' => 'Parcel Images',
+    'Parcel Images and Docs' => 'Parcel Images and Docs',
+    'Select File' => 'Select Files',
     'Create Parcel' => 'Create Parcel',
     'Edit Parcel' => 'Edit Parcel',
+    'Duplicate Parcel' => 'Duplicate Parcel',
     'Delete Parcel' => 'Delete Parcel',
     'User POBOX Number' => 'User POBOX Number',
+    'Sender Inside' => 'Sender ( inside USA ) Remetente ( dentro dos EUA )',
+    'Carrier Inside' => 'Carrier ( inside USA ) Transportadora ( dentro dos EUA )',
+    'Tracking Inside' => 'Tracking ( inside USA ) Rastreio ( dentro dos EUA )',
     'Merchant' => 'Merchant',
+    'Sender' => 'Sender',
     'Carrier' => 'Carrier',
-    'Tracking ID' => 'Tracking ID',
+    'Tracking' => 'Tracking',
     'External Customer Reference' => 'External Customer Reference',
     'Arrival Date' => 'Arrival Date',
     'Order Date' => 'Order Date',
@@ -57,4 +64,5 @@ return [
     'Error Parcel Update' => 'Error Parcel Update',
     'Parcel Added' => 'Parcel Added',
     'Error Parcel Create' => 'Error Parcel Create',
+    'correios tracking code' => 'Correios Tracking Code',
 ];

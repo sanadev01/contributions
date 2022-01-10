@@ -10,12 +10,17 @@
 {{--    <meta name="keywords" content="admin template, Vuexy admin template, dashboard template, flat admin template, responsive admin template, web app">--}}
 {{--    <meta name="author" content="PIXINVENT">--}}
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Karla&display=swap" rel="stylesheet">
+    {{-- <link href='https://fonts.googleapis.com/css?family=Karla' rel='stylesheet'> --}}
     @include('layouts.css')
     @yield('css')
     <script>
         window.locale= "{{ app()->getLocale() }}";
     </script>
     <livewire:styles>
+    <script src="https://kit.fontawesome.com/8ea855d2d1.js" crossorigin="anonymous"></script>
 </head>
 <!-- END: Head-->
 
@@ -77,6 +82,7 @@
     {{-- Livewire Js Section start here --}}
     <livewire:scripts>
 
+    @stack('js')
     @yield('lvjs')
     @stack('lvjs-stack')
 

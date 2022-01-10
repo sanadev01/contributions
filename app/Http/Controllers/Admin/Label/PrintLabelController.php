@@ -7,8 +7,9 @@ use ZipArchive;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Repositories\LabelRepository;
 use Illuminate\Support\Facades\Storage;
+use App\Services\Excel\Export\ScanOrderExport;
+use App\Repositories\CorrieosBrazilLabelRepository;
 
 class PrintLabelController extends Controller
 {
@@ -30,7 +31,7 @@ class PrintLabelController extends Controller
      */
     public function create(Order $order)
     {
-        $this->authorize('canPrintLable',$order);
+        $this->authorize('labelPrint',$order);
         return view('admin.print-label.create');
     }
 
@@ -40,38 +41,60 @@ class PrintLabelController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, LabelRepository $labelRepository)
+    public function store(Request $request, CorrieosBrazilLabelRepository $labelRepository)
     {
-        
-        $zip = new ZipArchive();
-        $tempFileUri = storage_path('app/labels/label.zip');
-        
-        if(file_exists($tempFileUri)){
-            unlink($tempFileUri);
-        }
+        if($request->order){
+            if($request->excel){
+                if($request->start_date != null && $request->end_date != null)
+                {
+                    $start_date = $request->start_date.' 00:00:00';
+                    $end_date = $request->end_date.' 23:59:59';
 
-        if ($zip->open($tempFileUri, ZipArchive::CREATE) === TRUE) {
+                    $orders = Order::whereIn('id', $request->order)
+                                    ->whereBetween('order_date', [$start_date, $end_date])->get();                            
+                }else{
 
-            foreach($request->order as $orderId){
-                $order = Order::find($orderId);
-                $labelData = $labelRepository->get($order);
+                    $orders = Order::whereIn('id', $request->order)->get();
+                }
+                $exportService = new ScanOrderExport($orders);
+                return $exportService->handle();
+            }
+            $zip = new ZipArchive();
+            $tempFileUri = storage_path('app/labels/label.zip');
             
-                if ( $labelData ){
-                    Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
-                }
-                $relativeNameInZipFile = storage_path("app/labels/{$order->corrios_tracking_code}.pdf");
-                if (! $zip->addFile($relativeNameInZipFile, basename($relativeNameInZipFile))) {
-                    echo 'Could not add file to ZIP: ' . $relativeNameInZipFile;
-                }
-                
+            if(file_exists($tempFileUri)){
+                unlink($tempFileUri);
             }
 
-            $zip->close();
-        } else {
-            echo 'Could not open ZIP file.';
-        }
+            if ($zip->open($tempFileUri, ZipArchive::CREATE) === TRUE) {
 
-        return response()->download($tempFileUri);
+                foreach($request->order as $orderId){
+                    $order = Order::find($orderId);
+                    $relativeNameInZipFile = storage_path("app/labels/{$order->corrios_tracking_code}.pdf");
+                    if(!file_exists($relativeNameInZipFile)){
+                        $labelData = $labelRepository->get($order);
+                    
+                        if ( $labelData ){
+                            Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
+                        }
+                        $relativeNameInZipFile = storage_path("app/labels/{$order->corrios_tracking_code}.pdf");
+                    }
+                    
+                    if (! $zip->addFile($relativeNameInZipFile, basename($relativeNameInZipFile))) {
+                        echo 'Could not add file to ZIP: ' . $relativeNameInZipFile;
+                    }
+                    
+                }
+
+                $zip->close();
+            } else {
+                echo 'Could not open ZIP file.';
+            }
+            
+            return response()->download($tempFileUri);
+            
+        }
+        return back();
 
     }
 
@@ -81,7 +104,7 @@ class PrintLabelController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, Order $scan, LabelRepository $labelRepository)
+    public function show(Request $request, Order $scan, CorrieosBrazilLabelRepository $labelRepository)
     {
         $order = $scan;
     
@@ -98,6 +121,7 @@ class PrintLabelController extends Controller
         if ( $labelData ){
             Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
         }
+
         return redirect()->route('order.label.download',[$order,'time'=>md5(microtime())]);
     }
 
@@ -109,7 +133,7 @@ class PrintLabelController extends Controller
      */
     public function edit($id)
     {
-        //
+        
     }
 
     /**
@@ -121,7 +145,20 @@ class PrintLabelController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        if($request->userId != null)
+        {
+            $orders = Order::where('user_id', $request->userId)->whereBetween('arrived_date',[$request->start_date.' 00:00:00', $request->end_date.' 23:59:59'])->orderBy('arrived_date', 'DESC')->get();
+        }else {
+            $orders = Order::whereBetween('arrived_date',[$request->start_date.' 00:00:00', $request->end_date.' 23:59:59'])->orderBy('arrived_date', 'DESC')->get();
+        }
+
+        if($orders != null)
+        {
+            $exportService = new ScanOrderExport($orders);
+            return $exportService->handle();
+        }
+
+        return back();
     }
 
     /**
@@ -134,4 +171,5 @@ class PrintLabelController extends Controller
     {
         //
     }
+    
 }

@@ -3,9 +3,10 @@
 namespace App\Http\Livewire\Order;
 
 use App\Models\Order;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Country;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\Auth;
 
 class Table extends Component
 {
@@ -33,6 +34,7 @@ class Table extends Component
     public $amount = '';
     public $status = '';
     public $orderType = null;
+    public $userType = null;
     public $paymentStatus = null;
 
     /**
@@ -41,8 +43,9 @@ class Table extends Component
     public $sortAsc = false;
     public $sortBy = 'id';
 
-    public function mount()
+    public function mount($userType = null)
     {
+        $this->userType = $userType;
         $this->query = $this->getQuery();
     }
 
@@ -172,6 +175,25 @@ class Table extends Component
             ]);
         if (Auth::user()->isUser()) {
             $orders->where('user_id', Auth::id());
+        }
+
+        if($this->userType == 'domestic')
+        {
+            $orders = $orders->where('sender_country_id', Country::US);
+            return $orders;
+        }
+
+        if ($this->userType == 'pickups') {
+            $orders = $orders->where('api_pickup_response' , '!=', null);
+            return $orders;
+        }
+        
+        if($this->userType){
+            $orders = $orders->whereHas('user', function ($queryUser) {
+                $queryUser->whereHas('role', function ($queryRole) {
+                    return $queryRole->where('name', $this->userType);
+                });
+            });
         }
 
         return $orders;

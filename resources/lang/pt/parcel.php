@@ -2,14 +2,18 @@
 
 return [
     'Parcel Images' => 'Imagens do pacote',
+    'Parcel Images and Docs' => 'Imagens e documentos do pacote',
+    'Select File' => 'Selecionar arquivos',
     'Create Parcel' => 'Criar pacote',
     'Edit Parcel' => 'editar pacote',
+    'Duplicate Parcel' => 'Pacote Duplicado',
     'Print Consolidation Request' => 'Imprimir pedido de consolidação',
     'Delete Parcel' => 'Delete Parcel',
     'User POBOX Number' => 'Número POBOX do usuário',
     'Merchant' => 'Comerciante',
+    'Sender' => 'Remetente',
     'Carrier' => 'Transportadora',
-    'Tracking ID' => 'ID de rastreamento',
+    'Tracking' => 'Rastreio',
     'External Customer Reference' => 'Referência de cliente externo',
     'Arrival Date' => 'Data de chegada',
     'Order Date' => 'Data do pedido',
@@ -58,4 +62,5 @@ return [
     'Error Parcel Update' => 'Atualização do pacote de erro',
     'Parcel Added' => 'Parcela Adicionada',
     'Error Parcel Create' => 'erroAoCriarPacote',
+    'correios tracking code' => 'Código de Rastreamento dos Correios',
 ];

@@ -32,6 +32,7 @@ class SearchUser extends Component
         $this->userId = null;
         if ( !$this->search ){
             $this->usersList = [];
+            $this->emit('clear-search');
             return;
         }
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\ProfitPackage;
 use Illuminate\Database\Eloquent\Model;
 use LaravelJsonColumn\Traits\JsonColumn;
 use Illuminate\Database\Eloquent\Builder;
@@ -13,10 +14,20 @@ class ShippingService extends Model
     use JsonColumn;
     use LogsActivity;
 
+    const API_CORREIOS = 'api_correios';
+    const API_LEVE = 'api_leve';
+
+    const USPS_PRIORITY = 3440;
+    const USPS_FIRSTCLASS = 3441;
+    const SRP = 28;
+    const SRM = 32;
+    const Courier_Express = 33;
+    const UPS_GROUND = 03;
+
     protected $guarded = [];
-    
+
     protected static $logAttributes = ['*'];
-    
+
     protected static $logOnlyDirty = true;
     protected static $submitEmptyLogs = false;
 
@@ -48,11 +59,16 @@ class ShippingService extends Model
 
     public function getCalculator(Order $order, $calculateOnVolumeMetricWeight = true)
     {
-        // if ( self::$calculator && $this->cacheCalculator) 
+        // if ( self::$calculator && $this->cacheCalculator)
         //     return self::$calculator;
-        
+
         self::$calculator = new RatesCalculator($order,$this, $calculateOnVolumeMetricWeight);
 
         return self::$calculator;
+    }
+
+    public function profitPackages()
+    {
+        return $this->hasMany(ProfitPackage::class);
     }
 }

@@ -41,6 +41,11 @@ class ActivityRepository
                 return $query->where('subject_type', 'LIKE', "%{$request->model}%");
             });
         }
+        if ( $request->content ){
+            $query->where(function($query) use($request){
+                return $query->where('properties', 'LIKE', "%{$request->content}%");
+            });
+        }
 
         $activities = $query
         ->orderBy($orderBy,$orderType);

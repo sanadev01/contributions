@@ -1,6 +1,11 @@
 <?php
 
+use App\Models\Order;
+use App\Models\ProfitPackage;
 use App\Services\StoreIntegrations\Shopify;
+use App\Http\Controllers\Admin\Deposit\DepositController;
+use App\Services\Correios\Services\Brazil\CN23LabelMaker;
+use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,7 +30,10 @@ Route::get('/', function (Shopify $shopifyClient) {
     return redirect('login');
 });
 
+Route::resource('usps-calculator', USPSCalculatorController::class)->only(['index', 'store']);
+Route::resource('ups-calculator', UPSCalculatorController::class)->only(['index', 'store']);
 Route::resource('calculator', CalculatorController::class)->only(['index', 'store']);
+// Route::resource('tracking', TrackingController::class)->only(['index', 'show']);
 Route::get('/home', function () {
 
     if ( session()->get('shopify.redirect') ){
@@ -44,6 +52,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
 
         Route::get('dashboard', 'HomeController')->name('home');
         Route::resource('parcels', PreAlertController::class);
+        Route::get('parcel/{order}/duplicate',DuplicatePreAlertController::class)->name('parcel.duplicate');
         Route::resource('billing-information', BillingInformationController::class);
         // Route::resource('import-excel', ImportExcelController::class)->only(['index','store']);
 
@@ -53,10 +62,12 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
 
         Route::namespace('Import')->prefix('import')->as('import.')->group(function () {
             Route::resource('import-excel', ImportExcelController::class)->only(['index','create','store','show','destroy']);
-            Route::resource('import-order', ImportOrderController::class)->only(['index','store', 'edit','destroy']);
+            Route::resource('import-order', ImportOrderController::class)->only(['index','store','show', 'edit','destroy']);
         });
 
-        Route::resource('orders',OrderController::class)->only('index','destroy');
+        Route::resource('orders',OrderController::class)->only('index','destroy', 'show');
+        Route::resource('tracking', TrackingController::class)->only(['index', 'show']);
+        Route::get('/buy-usps-label', [\App\Http\Controllers\Admin\Order\OrderUSPSLabelController::class, 'uspsBulkView'])->name('bulk-usps-label');
 
         Route::namespace('Order')->group(function () {
             Route::resource('leve-order-import', LeveOrderImportController::class)->only(['index','store']);
@@ -69,6 +80,10 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('orders.label', OrderLabelController::class)->only('index','store');
             Route::get('order-exports', OrderExportController::class)->name('order.exports');
             Route::get('bulk-action', BulkActionController::class)->name('order.bulk-action');
+            Route::get('order/{order}/us-label', [OrderUSLabelController::class, 'index'])->name('order.us-label.index');
+            Route::resource('orders.usps-label', OrderUSPSLabelController::class)->only('index','store');
+            Route::resource('orders.ups-label', OrderUPSLabelController::class)->only('index','store');
+            Route::get('order-ups-label-cancel-pickup/{id?}', [\App\Http\Controllers\Admin\Order\OrderUPSLabelController::class, 'cancelUPSPickup'])->name('order.ups-label.cancel.pickup');
         });
 
         Route::namespace('Consolidation')->prefix('consolidation')->as('consolidation.')->group(function(){
@@ -93,9 +108,19 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         Route::namespace('Rates')->prefix('rates')->as('rates.')->group(function () {
             Route::resource('profit-packages', ProfitPackageController::class);
             Route::resource('fixed-charges', FixedChargesController::class)->only(['index','store']);
-            Route::resource('shipping-rates', RateController::class)->only(['create', 'store', 'index']);
+            Route::resource('shipping-rates', RateController::class)->only(['create', 'store', 'index', 'show']);
+            Route::get('view-shipping-rates/{shipping_rate}', [\App\Http\Controllers\Admin\Rates\RateController::class, 'showShippingRates'])->name('view-shipping-rates');
+            Route::get('shipping-rates-download/{accrual_rate}', [\App\Http\Controllers\Admin\Rates\RateController::class, 'downloadShippingRates'])->name('download-shipping-rates');
+            Route::get('shipping-region-rates/{shipping_service}', [\App\Http\Controllers\Admin\Rates\RateController::class, 'shippingRegionRates'])->name('region-rates');
+            Route::get('view-shipping-region-rates/{shipping_rate}', [\App\Http\Controllers\Admin\Rates\RateController::class, 'showShippingRegionRates'])->name('view-shipping-region-rates');
+            Route::resource('accrual-rates', AccrualRateController::class)->only(['create', 'store', 'index']);
+            Route::get('accrual-rates/{accrual_rate}', [\App\Http\Controllers\Admin\Rates\AccrualRateController::class, 'showRates'])->name('show-accrual-rates');
+            Route::get('accrual-rates-download/{accrual_rate}', [\App\Http\Controllers\Admin\Rates\AccrualRateController::class, 'downloadRates'])->name('download-accrual-rates');
+            Route::resource('user-rates', UserRateController::class)->only(['index']);
             Route::get('rates-exports/{package}', RateDownloadController::class)->name('rates.exports');
-            Route::resource('profit-packages-upload', ProfitPackageUploadController::class)->only(['create', 'store']);
+            Route::resource('profit-packages-upload', ProfitPackageUploadController::class)->only(['create', 'store','edit','update']);
+            Route::post('/show-profit-package-rates', [\App\Http\Controllers\Admin\Rates\UserRateController::class, 'showRates'])->name('show-profit-rates');
+            Route::resource('usps-accrual-rates', USPSAccrualRateController::class)->only(['index']);
         });
 
         Route::namespace('Connect')->group(function(){
@@ -111,6 +136,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         Route::resource('users', UserController::class)->only(['index','destroy']);
         Route::post('users/export', UserExportController::class)->name('users.export.index');
         Route::resource('users.setting', UserSettingController::class)->only('index','store');
+        Route::resource('shcode', ShCodeController::class)->only(['index', 'create','store','edit','update','destroy']);
 
         Route::resource('roles', RoleController::class);
         Route::resource('roles.permissions', RolePermissionController::class);
@@ -119,9 +145,12 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         Route::post('tickets/{ticket}/close', [\App\Http\Controllers\Admin\TicketController::class, 'markClose'])->name('ticket.mark-closed');
 
         Route::namespace('Reports')->as('reports.')->prefix('reports')->group(function(){
-            Route::get('user-shipments', \ShipmentPerUserReportController::class)->name('user-shipments');
+            Route::resource('user-shipments', \ShipmentPerUserReportController::class)->only(['index','create']);
             Route::resource('order-trackings', TrackingReportController::class)->only(['index','store']);
             Route::resource('order', OrderReportController::class)->only(['index','create']);
+            Route::resource('commission', CommissionReportController::class)->only(['index','show']);
+            Route::resource('audit-report', AuditReportController::class)->only(['index','create']);
+
         });
 
         Route::namespace('Inventory')->as('inventory.')->prefix('inventory')->group(function(){
@@ -136,16 +165,20 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
 
         Route::namespace('Affiliate')->as('affiliate.')->prefix('affiliate')->group(function(){
             Route::resource('dashboard', DashboardController::class)->only('index');
-            Route::resource('sales-commission', SalesCommisionController::class)->only(['index']);
+            Route::resource('sales-commission', SalesCommisionController::class)->only(['index','create','destroy']);
             Route::get('sale-exports', SaleExportController::class)->name('sale.exports');
         });
 
         Route::namespace('Label')->as('label.')->prefix('label')->group(function(){
-            Route::resource('scan', PrintLabelController::class)->only('create','show','store');
+            Route::resource('scan', PrintLabelController::class)->only('create','show','store','update');
         });
 
         Route::resource('deposit', Deposit\DepositController::class)->only('create','store','index');
+        Route::get('download-deposit-attachment/{attachment?}', [DepositController::class,'downloadAttachment'])->name('download_attachment');
+        Route::get('view-deposit-description/{deposit?}', [DepositController::class,'showDescription'])->name('deposit.description');
+        Route::post('update/deposit/description/{deposit?}', [DepositController::class,'updateDescription'])->name('deposit.description.update');
 
+        
         Route::namespace('Activity')->as('activity.')->prefix('activity')->group(function(){
             Route::resource('log', ActivityLogController::class)->only('index');
         });
@@ -157,10 +190,13 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         Route::get('language/{locale}', LanguageController::class)->name('locale.change');
 
         Route::namespace('Modals')->prefix('modals')->as('modals.')->group(function(){
+            Route::get('user/suspended',\UserSuspendController::class)->name('user.suspended');
             Route::get('parcel/{parcel}/shipment-info', \ShipmentModalController::class)->name('parcel.shipment-info');
             Route::get('parcel/{parcel}/consolidation-print', \ConsolidationPrintController::class)->name('parcel.consolidation-print');
             Route::get('order/{order}/invoice', \OrderInvoiceModalController::class)->name('order.invoice');
-            Route::resource('order/error', \ImportOrderModalController::class)->only(['show', 'edit']);
+            Route::get('order/{error}/edit/{edit?}', [\App\Http\Controllers\Admin\Modals\ImportOrderModalController::class,'edit'])->name('order.error.edit');
+            Route::get('order/{error}/show', [\App\Http\Controllers\Admin\Modals\ImportOrderModalController::class,'show'])->name('order.error.show');
+            Route::get('package/{package}/users', [\App\Http\Controllers\Admin\Rates\ProfitPackageController::class,'packageUsers'])->name('package.users');
         });
 });
 
@@ -183,8 +219,40 @@ Route::get('media/get/{document}', function (App\Models\Document $document) {
 })->name('media.get');
 
 Route::get('order/{order}/label/get', function (App\Models\Order $order) {
-    if ( !file_exists(storage_path("app/labels/{$order->corrios_tracking_code}.pdf")) ){
-        return apiResponse(false,"Lable Expired or not generated yet please update lable");
-    }
+
+    /**
+     * Sinerlog modification
+     */
+    if ( $order->sinerlog_url_label != '' ) {
+        return redirect($order->sinerlog_url_label);
+    } else {
+        if ( !file_exists(storage_path("app/labels/{$order->corrios_tracking_code}.pdf")) ){
+            return apiResponse(false,"Lable Expired or not generated yet please update lable");
+        }
+    }    
+
     return response()->download(storage_path("app/labels/{$order->corrios_tracking_code}.pdf"),"{$order->corrios_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.label.download');
+
+Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
+    if ( !file_exists(storage_path("app/labels/{$order->us_api_tracking_code}.pdf")) ){
+        return apiResponse(false,"Lable Expired or not generated yet please update lable");
+    }
+    return response()->download(storage_path("app/labels/{$order->us_api_tracking_code}.pdf"),"{$order->us_api_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
+})->name('order.us-label.download');
+
+Route::get('test-profit/{id}',function($id){
+    $profit = ProfitPackage::find($id);
+    dd($profit);
+    // $labelPrinter = new CN23LabelMaker();
+
+    // $order = Order::find(53654);
+    // $labelPrinter->setOrder($order);
+    // $labelPrinter->setService(2);
+
+    // return $labelPrinter->download();
+});
+
+Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
+
+Route::get('test', [\App\Http\Controllers\Admin\HomeController::class,'test'])->middleware('auth')->name('test');

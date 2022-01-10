@@ -9,9 +9,15 @@ use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
-    public function index()
+    public function index($userType = null)
     {
-        return view('admin.orders.index');
+        return view('admin.orders.index', compact('userType'));
+    }
+    
+    public function show($order = null)
+    {
+        $userType = $order;
+        return view('admin.orders.index', compact('userType'));
     }
 
 
@@ -24,6 +30,13 @@ class OrderController extends Controller
     public function destroy(Order $order, PreAlertRepository $preAlertRepository)
     {
         $this->authorize('delete',$order);
+        
+        if($order->user->hasRole('retailer') && !$order->isPaid()){
+            if ( $preAlertRepository->returnToParcel($order) ){
+                session()->flash('alert-success','Order Deleted');
+                return back();
+            }
+        }
 
         if ( $preAlertRepository->delete($order) ){
             session()->flash('alert-success','Parcel Deleted');

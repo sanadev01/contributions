@@ -6,6 +6,7 @@ Receba seus produtos facilmente <br>
 <br>
 <strong>Nome:</strong>	{{ $user->name }} {{ $user->last_name }} <br>
 <strong>Email:</strong>	{{ $user->email }} <br>
+<strong>Referral:</strong>	{{ $user->come_from }} <br>
 <strong>Telefone:</strong> {{ $user->phone }} <br>
 <strong>Unique ID:</strong> {{ $user->pobox_number }} <br>
 <strong>Date:</strong> {{ $user->created_at->format('Y-m-d') }} <br>

@@ -8,7 +8,8 @@ use Livewire\Component;
 
 class EditSender extends Component
 {
-    public $order; 
+    public $order;
+    public $edit;
 
     public $sender_first_name;
     public $sender_last_name;
@@ -16,9 +17,11 @@ class EditSender extends Component
     public $sender_phone;
     public $sender_taxId;
 
-    public function mount($order)
+    public function mount($order, $edit= '')
     {
         $this->order = $order;
+        $this->edit = $edit;
+        
         $this->sender_first_name = old('sender_first_name',  $this->order->sender_first_name );
         $this->sender_last_name = old('sender_last_name', $this->order->sender_last_name);
         $this->sender_email = old('sender_email', $this->order->sender_email);
@@ -33,7 +36,7 @@ class EditSender extends Component
     public function save()
     {
         $data = $this->validate($this->rules(), $this->messages());
-
+        
         $error = $this->order->error;
         if($error){
             $remainError = array_diff($error, $this->messages());
@@ -61,7 +64,7 @@ class EditSender extends Component
             'sender_last_name' => 'max:100',
             'sender_email' => 'nullable|max:100|email',
             'sender_phone' => [
-                'nullable','max:15','min:13', new PhoneNumberValidator(30)
+                'nullable','max:15','min:13'
             ],
         ];
 
@@ -73,8 +76,8 @@ class EditSender extends Component
         return [
             'sender_first_name.required' => 'sender first name is required',
             'sender_last_name.nullable' => 'sender last name is required',
-            'sender_email.required' => 'sender Email is required',
-            'sender_phone.required' => 'sender phone is required',
+            'sender_email.nullable' => 'sender Email is required',
+            'sender_phone.nullable' => 'sender phone is required',
         ];
     }
 }

@@ -13,18 +13,24 @@ class UserShipmentReportTable extends Component
 
     public $pageSize = 50;
     
-    public $user;
+    public $name;
+    public $pobox_number;
+    public $email;
     public $start_date;
     public $end_date;
+    public $years;
 
     public $sortBy = 'spent';
     public $sortAsc = false;
     
     public function render()
     {
+        $startYear = 2020;
+        $latestYear = date('Y'); 
+        $this->years = range( $latestYear, $startYear );
         return view('livewire.reports.user-shipment-report-table',[
             'users' => $this->getReportData(),
-            'downloadLink' => route('admin.reports.user-shipments',http_build_query(
+            'downloadLink' => route('admin.reports.user-shipments.index',http_build_query(
                 $this->getRequestData()->all()
             )).'&dl=1'
         ]);
@@ -47,7 +53,9 @@ class UserShipmentReportTable extends Component
     public function getRequestData()
     {
         return request()->merge([
-            'user' => $this->user,
+            'name' => $this->name,
+            'pobox_number' => $this->pobox_number,
+            'email' => $this->email,
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,
             'sort_by' => $this->sortBy, 

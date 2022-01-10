@@ -30,4 +30,9 @@ class SearchShCode extends Component
             'codes' => ShCode::all()
         ]);
     }
+
+    public function updatedsearch()
+    {
+        $this->dispatchBrowserEvent('checkShCode', ['sh_code' => $this->search]);
+    }
 }

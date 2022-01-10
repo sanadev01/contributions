@@ -13,6 +13,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\Traits\CausesActivity;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Milon\Barcode\DNS2D;
 
 
 class User extends Authenticatable
@@ -32,7 +33,7 @@ class User extends Authenticatable
     protected static $logAttributes = [
         'pobox_number', 'package_id', 'state_id', 'country_id', 'role_id','name', 'email', 'last_name', 
         'phone', 'city', 'street_no', 'address', 'address2', 'account_type', 'tax_id', 'zipcode', 
-        'locale','market_place_name','image_id','reffered_by', 'reffer_code', 'battery', 'perfume'
+        'locale','market_place_name','image_id','reffered_by', 'reffer_code', 'battery', 'perfume','status', 'insurance', 'stripe', 'usps', 'ups', 'api_profit'
     ];
     protected static $logOnlyDirty = true;
     protected static $submitEmptyLogs = false;
@@ -46,7 +47,9 @@ class User extends Authenticatable
     protected $fillable = [
         'pobox_number', 'package_id', 'state_id', 'country_id', 'role_id','name', 'email', 'last_name', 
         'password', 'phone', 'city', 'street_no', 'address', 'address2', 'account_type', 'tax_id', 'zipcode', 
-        'api_token', 'api_enabled', 'locale','market_place_name','image_id','reffered_by', 'reffer_code', 'battery', 'perfume'
+        'api_token', 'api_enabled', 'locale','market_place_name','image_id','reffered_by', 'reffer_code','come_from', 'battery', 'perfume','status', 'insurance',
+        'api_token', 'api_enabled', 'locale','market_place_name','image_id','reffered_by', 'reffer_code','come_from', 'battery', 'perfume','status', 
+        'usps', 'api_profit', 'order_dimension', 'sinerlog', 'stripe', 'ups'
     ];
 
     /**
@@ -105,6 +108,10 @@ class User extends Authenticatable
     public function products()
     {
         return $this->hasMany(Product::class, 'user_id');
+    }
+    public function profitSettings()
+    {
+        return $this->hasMany(ProfitSetting::class, 'user_id');
     }
 
     public function importOrders()
@@ -254,4 +261,12 @@ class User extends Authenticatable
         return $this->reffer_code;
     }
 
+    public function getFullName()
+    {
+        return $this->name . ' '. $this->last_name;
+    }
+    
+    public function isActive(){
+        return ($this->status == "active" || $this->status == NULL) ? true :false;
+    }
 }

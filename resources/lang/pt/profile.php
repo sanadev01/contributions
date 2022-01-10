@@ -4,6 +4,7 @@ return [
     'Edit Profile' => 'Editar Perfil',
     'First Name' => 'Primeiro nome',
     'Last Name' => 'Último nome',
+    'Email' => 'E-mail',
     'Phone' => 'telefone',
     '* (Format Itnernational)' => '* (Formato internacional)',
     'Password' => 'Senha',

@@ -1,10 +1,35 @@
-<div>
+<div class="card-body">
     <div class="row my-2 px-5">
         <div class="col-md-12 text-right">
-            <strong>Statement From: </strong> {{ date('m/01/Y') }} - {{ date('m/d/Y') }} <br>
+            <strong>Statement From: </strong> {{ $dateFrom }} - {{ $dateTo }} <br>
             {{-- <strong>Total Deposit:</strong> {{ 0 }} <br>
             <strong>Total Debit: </strong>  {{ 0 }} <br> --}}
-            <strong>Balance: </strong> {{ getBalance() }} USD
+            <strong>Balance: <span style="font-size: 16px;">{{ getBalance() }} USD </span></strong>
+        </div>
+    </div>
+    <div class="row justify-content-end">
+        <div class="col-md-4">
+            <div class="row justify-content-end">
+                <div class="col-md-3">
+                    <label for="">Date From</label>
+                </div>
+                <div class="col-md-9">
+                    <input type="date" class="form-control"  name="date" wire:model="dateFrom">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="row justify-content-end">
+                <div class="col-md-3">
+                    <label for="">Date To</label>
+                </div>
+                <div class="col-md-9">
+                    <input type="date" class="form-control" name="date" wire:model="dateTo">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1">
+            <a href="{{$downloadLink}}" class="btn btn-primary">Download</a>
         </div>
     </div>
     <div class="row">
@@ -26,7 +51,11 @@
             @admin
             <th>User</th>
             @endadmin
+            <th>Tracking Code</th>
+            <th>WHR#</th>
             <th>Card Last 4 Digits</th>
+            <th>Attachment</th>
+            <th>Description</th>
             <th>Debit/Credit</th>
             <th>Balance</th>
             <th>Created At</th>
@@ -41,15 +70,29 @@
             </th>
             @endadmin
             <th>
+                <input type="search" wire:model.debounce.500ms="trackingCode" class="form-control">
+            </th>
+            <th>
+                <input type="search" wire:model.debounce.500ms="warehouseNumber" class="form-control">
+            </th>
+            <th>
                 <input type="search" wire:model.debounce.500ms="card" class="form-control">
             </th>
+            <th>
 
+            </th>
+            <th>
+                <input type="search" wire:model.debounce.500ms="description" class="form-control">
+            </th>
             <th>
                 <select name="" class="form-control" wire:model="type">
                     <option value="">All</option>
                     <option value="1">Credit</option>
                     <option value="0">Debit</option>
                 </select>
+            </th>
+            <th>
+                <input type="search" wire:model.debounce.500ms="balance" class="form-control">
             </th>
         </tr>
         </thead>
@@ -61,13 +104,61 @@
                 <td>{{ optional($deposit->user)->name }}</td>
                 @endadmin
                 <td>
+                    @if($deposit->hasOrder() && $deposit->firstOrder()->hasSecondLabel())
+                        <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->orders()->first()) }}" class="w-100" title="Show Order Details">
+                            {{ $deposit->firstOrder()->us_api_tracking_code }}
+                        </a>
+                    @elseif($deposit->order_id && $deposit->getOrder($deposit->order_id))
+                        <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->getOrder($deposit->order_id)) }}" class="w-100" title="Show Order Details">
+                            {{ $deposit->getOrder($deposit->order_id)->corrios_tracking_code }}
+                        </a>    
+                    @endif    
+                </td>
+                <td>
+                    @if($deposit->order_id != null)
+                        @if($deposit->getOrder($deposit->order_id))
+                            <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->getOrder($deposit->order_id)) }}" class="w-100" title="Show Order Details">
+                                {{ $deposit->getOrder($deposit->order_id)->warehouse_number }}
+                            </a>
+                        @else
+                            <p class="font-italic text-danger">{{$deposit->order_id}} : Order Deleted</p> 
+                        @endif    
+                    @endif    
+                    {{-- @if($deposit->hasOrder())
+                        <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->orders()->first()) }}" class="w-100" title="Show Order Details">
+                            {{ $deposit->orders()->first()->warehouse_number }}
+                        </a>
+                    @endif --}}
+                </td>
+                <td>
                     {{ $deposit->last_four_digits  }}
+                </td>
+                <td>
+                    @if($deposit->depositAttchs)
+                    @foreach ($deposit->depositAttchs as $attachedFile )
+                        <a target="_blank" href="{{ $attachedFile->getPath() }}">Download</a><br>
+                        {{-- <a target="_blank" href="{{route('admin.download_attachment', [$deposit->attachment])}}">Download</a> --}}
+                    @endforeach
+                    @else
+                        Not Found
+                    @endif
+                </td>
+                <td>
+                    @if($deposit->description != null)
+                    <button data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.deposit.description',$deposit) }}" class="btn btn-primary">
+                        Description View
+                    </button>
+                    @endif
                 </td>
                 <th>
                     @if( $deposit->isCredit() )
                         <i class="fa fa-arrow-up text-success"></i>
+                        <br>
+                         <span class="text-success">$ {{ $deposit->amount }}</span>
                     @else
                         <i class="fa fa-arrow-down text-danger"></i>
+                        <br>
+                         <span class="text-danger">$ {{ $deposit->amount }}</span>
                     @endif
                 </th>
                 <td>

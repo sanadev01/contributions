@@ -2,8 +2,9 @@
 
 namespace App\Services\Calculators;
 
-use App\Models\AffiliateSale;
 use App\Models\Order;
+use App\Models\AffiliateSale;
+use App\Models\CommissionSetting;
 
 
 class CommissionCalculator
@@ -33,7 +34,8 @@ class CommissionCalculator
             return null;
         }
 
-        if($setting = $this->referrer->CommissionSetting){
+        $setting = CommissionSetting::where('user_id', $this->referrer->id)->where('referrer_id', $this->user->id)->first();
+        if($setting){
             return $setting;
         }
 

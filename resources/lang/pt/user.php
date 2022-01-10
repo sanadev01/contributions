@@ -11,6 +11,7 @@ return [
     'Account Type' => 'tipo de conta',
     'Package' => 'Pacote',
     'Action' => 'Açao',
+    'status' => 'Status',
     'Login' => 'Conecte-se',
     'Delete' => 'Excluir',
     'Search' => 'Procurar',
@@ -31,4 +32,6 @@ return [
     'Select Commision Type' => 'Selecione o tipo de comissão',
     'Referrer' => 'Selecione Referrer',
     'Select Referrer' => 'Selecione Referrer',
+    'Default Package' => 'Pacote Único Padrão',
+    'Referral' => 'Referência',
 ]; 

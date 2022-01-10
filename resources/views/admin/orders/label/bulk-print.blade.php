@@ -4,9 +4,21 @@
 <div class="card">
     <div class="card-header">
         <h4 class="card-title" id="basic-layout-form"></h4>
-        <a href="{{ route('admin.orders.index') }}" class="btn btn-primary pull-right">
-            @lang('shipping-rates.Return to List')
-        </a>
+        
+        <div class="col-7 d-flex justify-content-end">
+            <form action="{{ route('admin.label.scan.store') }}" method="post">
+                @csrf
+                @foreach ($orders as $order)
+                    <input type="hidden" name="order[]" value="{{ $order->id }}">
+                @endforeach
+                <button type="submit" class="btn btn-success mr-2" title="@lang('orders.import-excel.Download')">
+                    <i class="feather icon-download"></i> @lang('orders.import-excel.Download') All
+                </button>
+                <a href="{{ route('admin.orders.index') }}" class="btn btn-primary pull-right">
+                    @lang('shipping-rates.Return to List')
+                </a>
+            </form>
+        </div>
     </div>
     <hr>
     <div class="card-content collapse show">
@@ -85,6 +97,23 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="confirm" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h4 class="modal-title">Confirm!</h4>
+            </div>
+            <div class="modal-body">
+                <p><h5>@lang('orders.update-label')</h5></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="updateLabel({{$order->id}},'#row_{{$order->id}}')">Yes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('js')
@@ -114,6 +143,7 @@
 
         function updateLabel(orderId,referenceId){
             $(referenceId).html(window.labelLoader);
+            console.log('updating')
             loadLabel(orderId,referenceId,true);
         }
 

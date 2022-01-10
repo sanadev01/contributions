@@ -76,6 +76,16 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="form-group col-12 col-sm-6 col-md-4">
+                    <div class="controls">
+                        <label>@lang('parcel.correios tracking code')<span class="text-danger"></span></label>
+                        <input type="text" class="form-control" placeholder=""  name="correios_tracking_code" wire:model.defer.500ms="correios_tracking_code">
+                        @error('customer_reference')
+                            <div class="help-block text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
                 
             </div>
 
@@ -189,6 +199,7 @@
 
             <div class="row col-12 text-right">
                 <div class="col-11 text-right">
+                    @if(!$edit)
                         @if(!$order->error)
                         <div class="text-right">
                             <a href="{{ route('admin.import.import-excel.show', $order->import_id) }}" class="btn btn-success">
@@ -196,7 +207,8 @@
                             </a>
                         </div>
                         @endif
-                    </div>
+                    @endif
+                </div>
                 <div class="col-1 text-right">
                     <button class="btn btn-primary" wire:click="save">
                         @lang('orders.create.save')

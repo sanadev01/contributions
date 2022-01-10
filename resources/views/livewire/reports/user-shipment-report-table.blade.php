@@ -1,4 +1,23 @@
 <div>
+    <form action="{{ route('admin.reports.user-shipments.index') }}" method="GET" target="_blank">
+        <div class="row">
+            <div class="col-md-12 row mb-3">
+
+                <div class="offset-6 col-md-4">
+                    <label for="">Year</label>
+                    <select class="form-control" name="year" id="DefaultSelect">
+                        <option value="">Select Year </option>
+                        @foreach( $years as $year )
+                        <option value="{{$year}}" @if($year == $year) selected @endif > {{$year}} </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-2 mt-4">
+                    <button type="submit" class="btn btn-primary"> Download Yearly</button>
+                </div>
+            </div>
+        </div>
+    </form>
     <div class="row">
         <div class="col-12 text-right">
             <a href="{{ $downloadLink }}" class="btn btn-primary" {{ !$downloadLink ? 'disabled': '' }} target="_blank">
@@ -16,9 +35,12 @@
             <input type="date" class="form-control" wire:model='end_date'>
         </div>
     </div>
-    <table class="table mb-0">
+    <table class="table mb-0" id="example">
         <thead>
             <tr>
+                <th>
+                    
+                </th>
                 <th>
                     <a href="#" wire:click="sortBy('name')">
                         Name
@@ -82,13 +104,16 @@
             </tr>
             <tr>
                 <th>
-                    <input type="search" class="form-control" wire:model.debounce.500ms="user">
+                    
                 </th>
                 <th>
-                    <input type="search" class="form-control"  wire:model.debounce.500ms="user">
+                    <input type="search" class="form-control" wire:model.debounce.500ms="name">
                 </th>
                 <th>
-                    <input type="search" class="form-control"  wire:model.debounce.500ms="user">
+                    <input type="search" class="form-control"  wire:model.debounce.500ms="pobox_number">
+                </th>
+                <th>
+                    <input type="search" class="form-control"  wire:model.debounce.500ms="email">
                 </th>
                 <th>
                     
@@ -104,6 +129,10 @@
         <tbody>
             @foreach($users as $user)
                 <tr>
+
+                    <td class="details-control">
+                        <input type="hidden" class="user_id" value="{{$user->id}}">
+                    </td>
                     <td>
                         {{ $user->name }} {{ $user->last_name }}
                     </td>

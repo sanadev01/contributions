@@ -12,12 +12,30 @@ class AffiliateSaleRepository
         $query = AffiliateSale::has('user')->with('order')->has('order');
 
         if (Auth::user()->isUser()) {
-            $query->where('user_id', Auth::id());
+            if(\Route::currentRouteName() == 'admin.reports.commission.show'){
+                $query->where('user_id', Auth::id())->where('referrer_id', $request->user_id);
+                return $paginate ? $query->paginate($pageSize) : $query->get();
+            }else{
+                $query->where('user_id', Auth::id());
+                return $paginate ? $query->paginate($pageSize) : $query->get();
+            }
+        }
+        
+        if ($request->user_id) {
+            $query->where('user_id', $request->user_id);
         }
 
-        if ( $request->date ){
-            $query->where(function($query) use($request){
-                return $query->where('created_at', 'LIKE', "%{$request->date}%");
+        if ( $request->start ){
+            $startDate = $request->start . ' 00:00:00';
+            $query->where(function($query) use($startDate){
+                return $query->where('created_at','>',$startDate);
+            });
+        }
+        
+        if ( $request->end ){
+            $endDate = $request->end.' 23:59:59';
+            $query->where(function($query) use($endDate){
+                return $query->where('created_at','<=', $endDate);
             });
         }
 
@@ -26,10 +44,44 @@ class AffiliateSaleRepository
                 return $query->where('name', 'LIKE', "%{$request->name}%");
             });
         }
+        if ( $request->user ){
+            $query->whereHas('order',function($query) use($request) {
+                return $query->whereHas('user',function($query) use($request) {
+                   return $query->where('name', 'LIKE', "%{$request->user}%");
+               });
+           });
+        }
 
         if ( $request->order ){
             $query->where(function($query) use($request){
                 return $query->where('order_id', 'LIKE', "%{$request->order}%");
+            });
+        }
+       
+        if ( $request->whr ){
+            $query->whereHas('order',function($query) use($request){
+                return $query->where('warehouse_number', 'LIKE', "%{$request->whr}%");
+            });
+        }
+        if ( $request->corrios_tracking ){
+            $query->whereHas('order',function($query) use($request){
+                return $query->where('corrios_tracking_code', 'LIKE', "%{$request->corrios_tracking}%");
+            });
+        }
+        if ( $request->reference ){
+            $query->whereHas('order',function($query) use($request){
+                return $query->where('customer_reference', 'LIKE', "%{$request->reference}%");
+            });
+        }
+
+        if ( $request->tracking ){
+            $query->whereHas('order',function($query) use($request){
+                return $query->where('tracking_id', 'LIKE', "%{$request->tracking}%");
+            });
+        }
+        if ( $request->weight ){
+            $query->whereHas('order',function($query) use($request){
+                return $query->where('weight', 'LIKE', "%{$request->weight}%");
             });
         }
 
@@ -51,7 +103,7 @@ class AffiliateSaleRepository
             });
         }
 
-        $sales = $query;
+        $sales = $query->orderBy('id','desc');
 
         return $paginate ? $sales->paginate($pageSize) : $sales->get();
     }
@@ -59,9 +111,13 @@ class AffiliateSaleRepository
     public function getSalesForExport($request)
     {   
         $query = AffiliateSale::has('user')->with('order')->has('order');
-
+        
         if (Auth::user()->isUser()) {
             $query->where('user_id', Auth::id());
+        }
+        
+        if ($request->user_id) {
+            $query->where('user_id', $request->user_id);
         }
 
         $startDate = $request->start_date . ' 00:00:00';
@@ -75,7 +131,15 @@ class AffiliateSaleRepository
             $query->where('created_at','<=',$endDate);
         }
         
-        return $query->get();
+        if ( $request->status == 'paid' ){
+            $query->where('is_paid', true);
+        }
+        
+        if ( $request->status == 'unpaid' ){
+            $query->where('is_paid',false);
+        }
+        
+        return $query->get()->sortByDesc('order.user_id');
     }
 
 

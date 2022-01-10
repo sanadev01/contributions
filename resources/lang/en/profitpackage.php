@@ -11,6 +11,7 @@ return [
     'upload-profit-package' => 'Upload Profit Package',
     'package-slab' => 'Select Excel File to Upload',
     'edit-profit-package' => 'Edit Profit Package',
+    'update-profit-package' => 'Update Profit Package',
     'delete-profit-package' => 'Delete Profit Package',
     'package-name' => 'Package Name',
     'package-type' => 'Package Type',
@@ -29,5 +30,9 @@ return [
     'import' => 'Import',
     'selling' => 'Selling',
     'download-profit-package' => 'Download',
+    'Shipping Service' => 'Shipping Service',
+    'Select Service' => 'Select Service',
+    'users' => 'Users',
+    'view users' => 'View Users',
 ];
  

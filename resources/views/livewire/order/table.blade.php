@@ -1,5 +1,25 @@
 <div class="p-2" >
     <div class="row mb-2 no-print">
+        @admin
+            <div class="col-12">
+                <div class="p-1 mb-3">
+                    <ul class="nav nav-pills">
+                        <li class="nav-item ">
+                            <a class="nav-link border @if($userType == 'wholesale') btn btn-primary text-white @endif" href="{{ route('admin.orders.show','wholesale') }}"><span style="font-size: 22px;">Wholesales</span></a>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="nav-link border @if($userType == 'retailer') btn btn-primary text-white @endif" href="{{ route('admin.orders.show','retailer') }}"><span style="font-size: 22px;">Retail</span></a>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="nav-link border @if($userType == 'domestic') btn btn-primary text-white @endif" href="{{ route('admin.orders.show','domestic') }}"><span style="font-size: 22px;">Domestic</span></a>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="nav-link border @if($userType == 'pickups') btn btn-primary text-white @endif" href="{{ route('admin.orders.show','pickups') }}"><span style="font-size: 22px;">Pickups</span></a>
+                        </li>
+                    </ul>
+                </div>        
+            </div> 
+        @endadmin       
         <div class="col-1">
             <select class="form-control" wire:model="pageSize">
                 <option value="1">1</option>
@@ -26,7 +46,7 @@
             </form>
         </div>
     </div>
-    <div class="table-wrapper position-relative">
+    <div class="table-responsive order-table">
         <table class="table mb-0 table-responsive-md" id="order-table">
             <thead>
                 <tr>
@@ -92,6 +112,9 @@
                         <select class="form-control" wire:model="status">
                             <option value="">All</option>
                             <option value="{{ App\Models\Order::STATUS_ORDER }}">ORDER</option>
+                            <option value="{{ App\Models\Order::STATUS_CANCEL }}">CANCELLED</option>
+                            <option value="{{ App\Models\Order::STATUS_REJECTED }}">REJECTED</option>
+                            <option value="{{ App\Models\Order::STATUS_RELEASE }}">RELEASED</option>
                             <option value="{{ App\Models\Order::STATUS_PAYMENT_PENDING }}">PAYMENT_PENDING</option>
                             <option value="{{ App\Models\Order::STATUS_PAYMENT_DONE }}">PAYMENT_DONE</option>
                             <option value="{{ App\Models\Order::STATUS_SHIPPED }}">SHIPPED</option>
@@ -118,7 +141,7 @@
                 @forelse ($orders as $order)
                     @include('admin.orders.components.order-row',['order'=>$order])    
                 @empty
-                    <x-tables.no-record colspan="9"></x-tables.no-record>
+                    <x-tables.no-record colspan="12"></x-tables.no-record>
                 @endforelse
             </tbody>
         </table>

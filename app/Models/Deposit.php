@@ -4,9 +4,15 @@ namespace App\Models;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Deposit extends Model
 {
+    use LogsActivity;
+    protected static $logAttributes = ['*'];
+    protected static $logOnlyDirty = true;
+    protected static $submitEmptyLogs = false;
+    
     protected $guarded = [];
 
     public function user()
@@ -16,7 +22,7 @@ class Deposit extends Model
 
     public static function getCurrentBalance($user=null)
     {
-        $lastTransaction = self::query()->where('user_id',$user ? $user->id:  Auth::id())->latest()->first();
+        $lastTransaction = self::query()->where('user_id',$user ? $user->id:  Auth::id())->latest('id')->first();
         if ( !$lastTransaction ){
             return 0;
         }
@@ -24,20 +30,55 @@ class Deposit extends Model
         return $lastTransaction->balance;
     }
 
-    public static function chargeAmount($amount)
+    public function orders()
     {
-        return self::create([
+        return $this->belongsToMany(Order::class);
+    }
+
+    public function depositAttchs()
+    {
+        return $this->belongsToMany(Document::class);
+    }
+
+    public function firstOrder()
+    {
+        return $this->orders()->first();
+    }
+
+    public function hasOrder()
+    {
+        return $this->orders()->count();
+    }
+
+    public static function chargeAmount($amount,Order $order=null,$description=null)
+    {
+
+        $deposit = self::create([
             'uuid' => PaymentInvoice::generateUUID('DP-'),
             'amount' => $amount,
             'user_id' => Auth::id(),
+            'order_id' => $order->id,
             'balance' => Deposit::getCurrentBalance() - $amount,
             'is_credit' => false,
+            'description' => $description ? $description.$order->warehouse_number : null,
         ]);
+
+        if ( $order ){
+            $order->deposits()->sync($deposit->id);
+        }
+
+        return $deposit;
+        
     }
 
 
     public function isCredit()
     {
         return $this->is_credit;
+    }
+
+    public function getOrder($orderId)
+    {
+        return Order::find($orderId);
     }
 }

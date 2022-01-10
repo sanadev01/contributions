@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests\Api\Parcel;
 
-use App\Http\Requests\Concerns\HasJsonResponse;
 use App\Rules\NcmValidator;
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\Concerns\HasJsonResponse;
 
 class CreateRequest extends FormRequest
 {
@@ -25,20 +26,21 @@ class CreateRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(Request $request)
     {
-        return [
+        
+        $rules = [
             "parcel.service_id" => "required|exists:shipping_services,id",
             "parcel.merchant" => "required",
             "parcel.carrier" => "required",
             "parcel.tracking_id" => "sometimes|unique:orders,tracking_id",
             "parcel.customer_reference" => "unique:orders,customer_reference",
             "parcel.measurement_unit" => "required|in:kg/cm,lbs/in",
-            "parcel.weight" => "required|numeric|gt:0|max:30",
+            
             "parcel.length" => "required|numeric|gt:0",
             "parcel.width" => "required|numeric|gt:0",
             "parcel.height" => "required|numeric|gt:0",
-            "parcel.shipment_value" => "required|numeric|gt:0",
+            "parcel.shipment_value" => "nullable|numeric",
 
             "sender.sender_first_name" => "required|max:100",
             "sender.sender_last_name" => "required|max:100",
@@ -56,9 +58,9 @@ class CreateRequest extends FormRequest
             "recipient.account_type" => "required|in:individual,business",
             "recipient.tax_id" => "required",
             "recipient.zipcode" => "required",
-            "recipient.state_id" => "required|exists:states,id",
-            "recipient.country_id" => "required|exists:countries,id",
-
+            // "recipient.state_id" => "required|exists:states,id",
+            // "recipient.country_id" => "required|exists:countries,id",
+            
             "products" => "required|array|min:1",
 
             "products.*.sh_code" => [
@@ -72,6 +74,32 @@ class CreateRequest extends FormRequest
             "products.*.is_perfume" => "required|in:0,1",
             "products.*.is_flameable" => "required|in:0,1",
         ];
+
+        if(optional($request->parcel)['measurement_unit'] == 'kg/cm'){
+            $rules["parcel.weight"] = "required|numeric|gt:0|max:30";
+        }else{
+            $rules["parcel.weight"] = "required|numeric|gt:0|max:66.15";
+        }
+        if (is_numeric( optional($request->recipient)['country_id'])){
+            $rules["recipient.country_id"] = "required|exists:countries,id";
+        }else{
+            $rules["recipient.country_id"] = "required|exists:countries,code";
+        }
+        if (is_numeric( optional($request->recipient)['state_id'])){
+            $rules["recipient.state_id"] = "required|exists:states,id";
+        }else{
+            $rules["recipient.state_id"] = "required|exists:states,code";
+        }
+
+        if (optional($request->recipient)['country_id'] == 250 || optional($request->recipient)['country_id'] == 'US') {
+            $rules['sender.sender_country_id'] = 'required|integer|exists:countries,id';
+            $rules['sender.sender_state_id'] = 'required|integer|exists:states,id';
+            $rules['sender.sender_city'] = 'required|string|max:100';
+            $rules['sender.sender_address'] = 'required|string|max:100';
+            $rules['sender.sender_phone'] = 'sometimes|string|max:100';
+        }
+
+        return $rules;
     }
 
     public function messages()

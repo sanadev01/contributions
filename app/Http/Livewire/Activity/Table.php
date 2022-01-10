@@ -15,6 +15,7 @@ class Table extends Component
     public $date = '';
     public $name = '';
     public $model = '';
+    public $content = '';
     
     public $sortBy = 'id';
     public $sortDesc = true;
@@ -34,6 +35,7 @@ class Table extends Component
             'date' => $this->date,
             'name' => $this->name,
             'model' => $this->model,
+            'content' => $this->content,
         ]),true,$this->pageSize,$this->sortBy,$this->sortDesc ? 'DESC' : 'asc');
     }
 

@@ -1,5 +1,18 @@
 @extends('layouts.master')
-
+@section('css')
+    <style>
+       .btn-cancelled {
+            color: #fff!important;
+            background-color: #5a0000!important;
+            border-color: #5a0000!important;
+        }
+       .btn-refund {
+            color: #fff!important;
+            background-color:red!important;
+            border-color: red!important;
+        }
+    </style>
+@endsection
 @section('page')
 <div class="card min-vh-100">
     <div class="card-header">
@@ -11,7 +24,7 @@
     
     <div class="card-content">
         <div class="card-body no-print" style="overflow-y: visible">
-            <livewire:order.table/>
+            <livewire:order.table :userType="$userType"/>
         </div>
     </div>
     <form action="{{ route('admin.order.bulk-action') }}" method="GET" id="bulk_actions_form">
@@ -20,7 +33,6 @@
     </form>
 </div>
 @endsection
-
 
 @section('modal')
     <x-modal/>
