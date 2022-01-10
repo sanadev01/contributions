@@ -125,6 +125,7 @@ class OrderRepository
                 if($product->quantity  >= $totalQuantity && $product->sh_code == $item['sh_code'] ){
                     $totalQuantity+=$item['quantity'];
                 }
+                
                 $order->items()->create([
                     'sh_code' => optional($item)['sh_code'],
                     'description' => optional($item)['description'],
