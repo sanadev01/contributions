@@ -5,7 +5,7 @@
           </button>
         </div>
         <div class="alert alert-danger">
-          <h1 class="text-danger">@lang('validation.Message')</h1>  
+          <h3 class="text-danger">@lang('validation.Message')</h3>  
         </div>
       </div>
   </div>
