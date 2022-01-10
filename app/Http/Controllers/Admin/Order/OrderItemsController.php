@@ -159,7 +159,6 @@ class OrderItemsController extends Controller
             }
             return \redirect()->route('admin.orders.services.index',$order);
         }
-        session()->flash('alert-danger','orders.Error While placing Order'." ".$orderRepository->getError());
         return \back()->withInput();
     }
 
