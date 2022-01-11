@@ -125,9 +125,6 @@ class RatesCalculator
         if (! $addProfit) {
             return $rate;
         }
-        \Log::info('Correios Rate: '.$rate);
-        \Log::info('Profit: '.$this->getProfitOn($rate));
-        
         return $rate + $this->getProfitOn($rate);
     }
 
@@ -182,9 +179,6 @@ class RatesCalculator
             return 0;
         }
         
-        \Log::info('profitSlab value');
-        \Log::info(optional($profitSlab)['value']);
-
         return optional($profitSlab)['value'];
 
     }
