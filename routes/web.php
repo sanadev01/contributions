@@ -247,8 +247,8 @@ Route::get('test-profit/{id}',function($id){
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
 
 Route::get('/tests', function() {
-    \Artisan::call('db:seed --class=RegionSeeder');
-    \Artisan::call('db:seed --class=CommuneSeeder');
+    \Artisan::call('db:seed --class=RegionSeeder --no-interaction');
+    \Artisan::call('db:seed --class=CommuneSeeder --no-interaction');
 
     return response()->json(['message' => 'seeder run successfully']);
 })->middleware('auth')->name('test');
