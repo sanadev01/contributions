@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use App\Models\Order;
 use App\Models\ProfitPackage;
 use App\Services\StoreIntegrations\Shopify;
@@ -245,4 +246,6 @@ Route::get('test-profit/{id}',function($id){
 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
 
-Route::get('test', [\App\Http\Controllers\Admin\HomeController::class,'test'])->middleware('auth')->name('test');
+Route::get('/tests', function() {
+    return response()->json(['message' => 'Hello World']);
+})->middleware('auth')->name('test');
