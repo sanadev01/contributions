@@ -4,8 +4,6 @@ use App\Models\User;
 use App\Models\Order;
 use App\Models\ProfitPackage;
 use App\Services\StoreIntegrations\Shopify;
-use App\Services\Excel\Import\RegionImportService;
-use App\Services\Excel\Import\CommuneImportService;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
@@ -249,16 +247,5 @@ Route::get('test-profit/{id}',function($id){
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
 
 Route::get('/tests', function() {
-    \App\Models\Region::truncate();
-    $regionImportService = new RegionImportService();
-    $regionImportService->handle();
-
-    \App\Models\Commune::truncate();
-    $communeImportService = new CommuneImportService();
-    $communeImportService->handle();
-
-    $regions = \App\Models\Region::get();
-    $communes = \App\Models\Commune::get();
-
-    return response()->json(['regions' => $regions->toArray(), 'communes' => $communes->toArray()]);
+    return response()->json(['message' => 'Hello World']);
 })->middleware('auth')->name('test');
