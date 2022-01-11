@@ -51,15 +51,15 @@ class DashboardRepository
         $totalCompleteOrders    = $totalOrderQuery->where('status', '>=' ,$paymentDone)->count();
 
         return  $order[] = [
-            'totalOrders' => $totalOrder,
+            'totalOrders'         => $totalOrder,
             'totalCompleteOrders' =>$totalCompleteOrders,
-            'currentmonthTotal'=>$currentmonthTotal,
-            'currentmonthConfirm'=>$currentmonthConfirm,
-            'currentDayTotal'=>$currentDayTotal,
-            'currentDayConfirm'=>$currentDayConfirm,
-            'currentYearTotal'=>$currentYearTotal,
-            'currentYearConfirm'=>$currentYearConfirm,
-            'monthName'=>$monthName
+            'currentmonthTotal'   =>$currentmonthTotal,
+            'currentmonthConfirm' =>$currentmonthConfirm,
+            'currentDayTotal'     =>$currentDayTotal,
+            'currentDayConfirm'   =>$currentDayConfirm,
+            'currentYearTotal'    =>$currentYearTotal,
+            'currentYearConfirm'  =>$currentYearConfirm,
+            'monthName'           =>$monthName
         ];
     }
 
