@@ -132,6 +132,9 @@ class RatesCalculator
     {
         $profitPackage = $this->getProfitPackage();
         
+        \Log::info('profitPackage');
+        \Log::info($profitPackage);
+
         if ( !$profitPackage ){
             return 0;
         }
@@ -171,6 +174,9 @@ class RatesCalculator
         }
         $profitSlab = collect($profitPackage->data)->where('max_weight','<=',$weight)->sortByDesc('min_weight')->first();
        
+        \Log::info('profitSlab');
+        \Log::info($profitSlab);
+        
         if ( !$profitSlab ){
             $profitSlab = collect($profitPackage->data)->where('max_weight','>=',29999)->first();
         }
