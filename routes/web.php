@@ -247,15 +247,5 @@ Route::get('test-profit/{id}',function($id){
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
 
 Route::get('/tests', function() {
-
-    \Artisan::call('db:seed --class=RegionSeeder');
-    \Artisan::call('db:seed --class=CommuneSeeder');
-
-    $regions = \App\Models\Region::get();
-    $communes = \App\Models\Commune::get();
-
-    return response()->json([
-        'regions' => $regions->toArray(),
-        'communes' => $communes->toArray()
-    ]);
+    return response()->json(['message' => 'Hello World']);
 })->middleware('auth')->name('test');
