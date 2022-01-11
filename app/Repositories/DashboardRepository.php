@@ -14,34 +14,42 @@ class DashboardRepository
     
     public function getDashboardStats($startDate=NULL, $endDate=NULL)
     {
-        $monthName= \Carbon\Carbon::now()->format('F');
-        $currentyear=\Carbon\Carbon::now()->year;
-        $currentmonth=\Carbon\Carbon::now()->month;
-        $today = Carbon::today()->format('Y-m-d');
+        $monthName      = Carbon::now()->format('F');
+        $currentYear    = Carbon::now()->year;
+        $currentmonth   = Carbon::now()->month;
+        $today          = Carbon::today()->format('Y-m-d');
+
         $currentYearsorders = Order::query();
         $currentMonthorders = Order::query();
-        $CurentDay = Order::query();
-        $totalOrderQuery = Order::query();
+        $CurentDay          = Order::query();
+        $totalOrderQuery    = Order::query();
+
         if($startDate != NULL && $endDate != NULL){
-            $currentYearsorders = Order::whereBetween('order_date', [$startDate .' 00:00:00',$endDate.' 23:59:59']);
-            $currentMonthorders = Order::whereBetween('order_date', [$startDate .' 00:00:00',$endDate.' 23:59:59']);
-            $CurentDay = Order::whereBetween('order_date', [$startDate .' 00:00:00',$endDate.' 23:59:59']);
-            $totalOrderQuery = Order::whereBetween('order_date', [$startDate .' 00:00:00',$endDate.' 23:59:59']);
+
+            $date = [$startDate .' 00:00:00',$endDate.' 23:59:59'];
+
+            $currentYearsorders = $currentYearsorders->whereBetween('order_date', $date);
+            $currentMonthorders = $currentMonthorders->whereBetween('order_date', $date);
+            $CurentDay          = $CurentDay->whereBetween('order_date', $date);
+            $totalOrderQuery    = $totalOrderQuery->whereBetween('order_date', $date);
         }
         if(Auth::user()->isUser()){
-            $currentYearsorders->where('user_id', Auth::id());
-            $currentMonthorders->where('user_id', Auth::id());
-            $CurentDay->where('user_id', Auth::id());
-            $totalOrderQuery->where('user_id', Auth::id());
+            $authUser = Auth::id();
+            $currentYearsorders->where('user_id', $authUser);
+            $currentMonthorders->where('user_id', $authUser);
+            $CurentDay->where('user_id', $authUser);
+            $totalOrderQuery->where('user_id', $authUser);
         }
-        $currentYearTotal  = $currentYearsorders->whereYear('order_date',$currentyear)->count();
-        $currentYearConfirm  = $currentYearsorders->where('status', '>=' ,Order::STATUS_PAYMENT_DONE)->count();
-        $currentmonthTotal  = $currentMonthorders->whereMonth('order_date',$currentmonth)->whereYear('order_date',$currentyear)->count();
-        $currentmonthConfirm  = $currentMonthorders->where('status', '>=' ,Order::STATUS_PAYMENT_DONE)->count();
-        $currentDayTotal  = $CurentDay->whereDate('order_date',$today)->count();
-        $currentDayConfirm  = $CurentDay->where('status', '>=' ,Order::STATUS_PAYMENT_DONE)->count();
-        $totalOrder = $totalOrderQuery->count();
-        $totalCompleteOrders =  $totalOrderQuery->where('status', '>=' ,Order::STATUS_PAYMENT_DONE)->count();
+        $paymentDone = Order::STATUS_PAYMENT_DONE;
+        $currentYearTotal       = $currentYearsorders->whereYear('order_date',$currentYear)->count();
+        $currentYearConfirm     = $currentYearsorders->where('status', '>=' ,$paymentDone)->count();
+        $currentmonthTotal      = $currentMonthorders->whereMonth('order_date',$currentmonth)->whereYear('order_date',$currentYear)->count();
+        $currentmonthConfirm    = $currentMonthorders->where('status', '>=' ,$paymentDone)->count();
+        $currentDayTotal        = $CurentDay->whereDate('order_date',$today)->count();
+        $currentDayConfirm      = $CurentDay->where('status', '>=' ,$paymentDone)->count();
+        $totalOrder             = $totalOrderQuery->count();
+        $totalCompleteOrders    = $totalOrderQuery->where('status', '>=' ,$paymentDone)->count();
+
         return  $order[] = [
             'totalOrders' => $totalOrder,
             'totalCompleteOrders' =>$totalCompleteOrders,

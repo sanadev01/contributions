@@ -135,9 +135,10 @@ class OrderRepository
             $order->items()->delete();
             $product = $order->products->first();
             $totalQuantity = 0;
-            $productQuantity = $product->quantity;
+            // dd($product);
+            // $productQuantity = $product->quantity;
             foreach ($request->get('items',[]) as $item) {
-                if($product->quantity  >= $totalQuantity && $product->sh_code == $item['sh_code'] ){
+                if($product && $product->quantity  >= $totalQuantity && $product->sh_code == $item['sh_code'] ){
                     $totalQuantity+=$item['quantity'];
                 }
                 
@@ -152,16 +153,19 @@ class OrderRepository
                 ]);
             }
 
-            if($product->quantity + $lastOrderItemQuantity < $totalQuantity){
+            if($product && $product->quantity + $lastOrderItemQuantity < $totalQuantity){
                 $remainingQuantity = $product->quantity+1;
                 DB::rollback();
                 session()->flash('alert-danger','Your Quantity Is '. $remainingQuantity . ' You Cannot Add More Than '. $remainingQuantity );
                 return false;
             }
             $totalDifference = $totalQuantity - $lastOrderItemQuantity;
-            $product->update([
-                'quantity'=>$product->quantity - $totalDifference,
-            ]);
+            if($product){
+                $product->update([
+                    'quantity'=>$product->quantity - $totalDifference,
+                ]);
+            }
+
             $shippingService = ShippingService::find($request->shipping_service_id);
 
             $order->update([
