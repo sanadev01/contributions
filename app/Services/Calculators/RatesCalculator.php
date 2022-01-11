@@ -125,6 +125,9 @@ class RatesCalculator
         if (! $addProfit) {
             return $rate;
         }
+        \Log::info('Correios Rate: '.$rate);
+        \Log::info('Profit: '.$this->getProfitOn($rate));
+        
         return $rate + $this->getProfitOn($rate);
     }
 
@@ -132,9 +135,6 @@ class RatesCalculator
     {
         $profitPackage = $this->getProfitPackage();
         
-        \Log::info('profitPackage');
-        \Log::info($profitPackage);
-
         if ( !$profitPackage ){
             return 0;
         }
@@ -174,9 +174,6 @@ class RatesCalculator
         }
         $profitSlab = collect($profitPackage->data)->where('max_weight','<=',$weight)->sortByDesc('min_weight')->first();
        
-        \Log::info('profitSlab');
-        \Log::info($profitSlab);
-        
         if ( !$profitSlab ){
             $profitSlab = collect($profitPackage->data)->where('max_weight','>=',29999)->first();
         }
@@ -185,6 +182,9 @@ class RatesCalculator
             return 0;
         }
         
+        \Log::info('profitSlab value');
+        \Log::info(optional($profitSlab)['value']);
+
         return optional($profitSlab)['value'];
 
     }
