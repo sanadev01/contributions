@@ -52,14 +52,14 @@ class DashboardRepository
 
         return  $order[] = [
             'totalOrders'         => $totalOrder,
-            'totalCompleteOrders' =>$totalCompleteOrders,
-            'currentmonthTotal'   =>$currentmonthTotal,
-            'currentmonthConfirm' =>$currentmonthConfirm,
-            'currentDayTotal'     =>$currentDayTotal,
-            'currentDayConfirm'   =>$currentDayConfirm,
-            'currentYearTotal'    =>$currentYearTotal,
-            'currentYearConfirm'  =>$currentYearConfirm,
-            'monthName'           =>$monthName
+            'totalCompleteOrders' => $totalCompleteOrders,
+            'currentmonthTotal'   => $currentmonthTotal,
+            'currentmonthConfirm' => $currentmonthConfirm,
+            'currentDayTotal'     => $currentDayTotal,
+            'currentDayConfirm'   => $currentDayConfirm,
+            'currentYearTotal'    => $currentYearTotal,
+            'currentYearConfirm'  => $currentYearConfirm,
+            'monthName'           => $monthName
         ];
     }
 
