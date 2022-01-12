@@ -2,15 +2,14 @@
 
 namespace App\Http\Livewire\Order;
 
-use Exception;
 use Livewire\Component;
+use App\Facades\USPSFacade;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Models\ShippingService;
-use App\Repositories\FedExLabelRepository;
-use Illuminate\Support\Facades\Http;
 use App\Repositories\UPSLabelRepository;
 use App\Repositories\USPSLabelRepository;
+use App\Repositories\FedExLabelRepository;
 
 class UsLabelForm extends Component
 {
@@ -22,9 +21,6 @@ class UsLabelForm extends Component
     public $uspsError;
     public $hasRates = false;
     public $usRates = [];
-    public $api_url;
-    public $email;
-    public $password;
 
     public $selectedService;
     public $firstName;
@@ -65,8 +61,6 @@ class UsLabelForm extends Component
         $this->states = $states;
         $this->usShippingServices = $usShippingServices;
         $this->usServicesErrors = $errors;
-
-        $this->setUSPSAddressApiCredentials();
     }
 
     public function render()
@@ -98,55 +92,31 @@ class UsLabelForm extends Component
             'senderCity' => 'required|min:4',
         ]);
 
-        $this->callForUSPSAddressApi();
-    }
-
-    private function callForUSPSAddressApi()
-    {
-        $data = $this->makeRequestBodyForAddressValidation();
-
-        try {
-
-            $response = Http::withBasicAuth($this->email, $this->password)->post($this->api_url, $data);
-            
-            if($response->status() == 200) {
-                $this->senderZipCode = $response->json()['zip5'];
-                $this->zipCodeResponse = true;
-                $this->zipCodeResponseMessage = 'according to your given address your zipcode is: '.$this->senderZipCode;
-                $this->zipCodeClass = 'text-success';
-            }
-
-            if($response->status() != 200) {
-                $this->zipCodeResponse = true;
-                $this->zipCodeResponseMessage = $response->json()['message'];
-                $this->zipCodeClass = 'text-danger';
-            }
-        } catch (Exception $e) {
-            $this->zipCodeResponse = true;
-            $this->zipCodeResponseMessage = $e->getMessage();
-            $this->zipCodeClass = 'text-danger';
-        }
-    }
-
-    private function makeRequestBodyForAddressValidation()
-    {
-        $data = [
-            'company_name' => 'Herco',
-            'line1' => $this->senderAddress,
-            'state_province' => $this->senderState,
+        $request = new Request([
+            'state' => $this->senderState,
+            'address' => $this->senderAddress,
             'city' => $this->senderCity,
-            'postal_code' => '',
-            'country_code' => 'US'
-        ];
+        ]);
 
-        return $data;
+        $response = $this->callForUSPSAddressApi($request);
+        
+        if ($response['success'] == true) {
+            $this->senderZipCode = $response['zipcode'];
+            $this->zipCodeResponse = true;
+            $this->zipCodeResponseMessage = 'according to your given address your zipcode is: '.$this->senderZipCode;
+            $this->zipCodeClass = 'text-success';
+            return true;
+        }
+
+        $this->senderZipCode = '';
+        $this->zipCodeResponse = true;
+        $this->zipCodeResponseMessage = $response['message'];
+        $this->zipCodeClass = 'text-danger';
     }
 
-    private function setUSPSAddressApiCredentials()
+    private function callForUSPSAddressApi($request)
     {
-        $this->api_url = 'https://api.myibservices.com/v1/address/validate';
-        $this->email = config('usps.email');           
-        $this->password = config('usps.password');
+        return USPSFacade::validateAddress($request);
     }
 
     public function getRates(UPSLabelRepository $upsLabelRepository, USPSLabelRepository $uspsLabelRepository, FedExLabelRepository $fedExLabelRepository)
@@ -171,10 +141,11 @@ class UsLabelForm extends Component
                    $this->getFedexRates($shippingService['service_sub_class'], $fedExLabelRepository);
                 }
             });
+            
         }    
     }
 
-    public function getLabel(UPSLabelRepository $upsLabelRepository, USPSLabelRepository $uspsLabelRepository)
+    public function getLabel(UPSLabelRepository $upsLabelRepository, USPSLabelRepository $uspsLabelRepository, FedExLabelRepository $fedExLabelRepository)
     {
         $this->validate();
 
@@ -186,6 +157,11 @@ class UsLabelForm extends Component
         if ($this->selectedService == ShippingService::UPS_GROUND) 
         {
             return $this->getUPSLabel($upsLabelRepository);
+        }
+
+        if ($this->selectedService == ShippingService::FEDEX_GROUND) 
+        {
+            return $this->getFedexLabel($fedExLabelRepository);
         }
 
         $this->getUSPSLabel($uspsLabelRepository);
@@ -242,6 +218,16 @@ class UsLabelForm extends Component
         }
 
         return false;
+    }
+
+    private function getFedexLabel($fedExLabelRepository)
+    {
+        $request = $this->createRequest($this->selectedService);
+        $request->merge(['total_price' => $this->selectedServiceCost]);
+
+        $request = ($this->pickupType == true) ? $request->merge(['pickup' => $this->pickupType]) : $request;
+
+        $fedExLabelRepository->getSecondaryLabel($request, $this->order);
     }
 
     private function getUSPSLabel($uspsLabelRepository)

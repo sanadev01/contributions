@@ -52,6 +52,11 @@ class FedExService
        return $this->fedExApiCall($this->getRatesUrl, $data);
     }
 
+    public function createShipmentForSender($order, $request)
+    {
+        $data = $this->makeShipmentRequestForSender($order, $request);
+    }
+
     private function makeRatesRequestBodyForSenderRates($order, $request)
     {
         $this->calculateVolumetricWeight($order);
@@ -89,6 +94,69 @@ class FedExService
                         ]
                     ]
                 ]
+            ],
+        ];
+    }
+
+    private function makeShipmentRequestForSender($order, $request)
+    {
+        $this->calculateVolumetricWeight($order);
+
+        return [
+            'labelResponseOptions' => 'URL_ONLY',
+            'accountNumber' => [
+                'value' => $this->accountNumber,
+            ],
+            'requestedShipment' => [
+                'shipper' => [
+                    'contact' => [
+                        'personName' => $request->first_name.' '.$request->last_name,
+                        'phoneNumber' => $request->sender_phone,
+                    ],
+                    'address' => [
+                        'streetLines' => [
+                            $request->sender_address
+                        ],
+                        'city' => $request->sender_city,
+                        'stateOrProvinceCode' => $request->sender_state,
+                        'postalCode' => $request->sender_zipcode,
+                        'countryCode' => 'US',
+                    ],
+                ],
+                'recipients' => [
+                    'contact' => [
+                        'personName' => 'Marcio Fertias',
+                        'phoneNumber' => '+13058885191',
+                        'companyName' => 'HERCO SUITE#100'
+                    ],
+                    'address' => [
+                        'streetLines' => ['2200 NW 129TH AVE'],
+                        'city' => 'Miami',
+                        'stateOrProvinceCode' => 'FL',
+                        'postalCode' => 33182,
+                        'countryCode' => 'US',
+                    ],
+                ],
+                'shipDatestamp' => Carbon::now()->format('Y-m-d'),
+                'serviceType' => ($request->service == ShippingService::FEDEX_GROUND) ? 'FEDEX_GROUND' : 'GROUND_HOME_DELIVERY',
+                'packagingType' => 'YOUR_PACKAGING',
+                'pickupType' => ($request->pickup == "true") ? 'CONTACT_FEDEX_TO_SCHEDULE' : 'DROPOFF_AT_FEDEX_LOCATION',
+                'shippingChargesPayment' => [
+                    'paymentType' => 'RECIPIENT',
+                ],
+                'labelSpecification' => [
+                    'imageType' => 'PDF',
+                    'labelStockType' => 'PAPER_85X11_TOP_HALF_LABEL',
+                ],
+                'requestedPackageLineItems' => [
+                    [
+                        'weight' => [
+                            'units' => ($order->measurement_unit == 'kg/cm') ? 'KG' : 'LB',
+                            'value' => ($this->chargableWeight != null) ? (float)$this->chargableWeight : (float)$order->weight
+                        ]
+                    ]
+                ],
+                
             ],
         ];
     }

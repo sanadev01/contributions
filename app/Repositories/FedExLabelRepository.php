@@ -25,7 +25,7 @@ class FedExLabelRepository
                 $shippingServices->push($shippingService);
             }
         }
-
+        
         if($shippingServices->isEmpty())
         {
             $this->fedExError = 'No shipping service is available for this order';
@@ -40,6 +40,19 @@ class FedExLabelRepository
         }
 
         return $shippingServices;
+    }
+
+    public function getSecondaryLabel($request, $order)
+    {
+        if ( $request->total_price > getBalance())
+        {
+            $this->ups_errors = 'Not Enough Balance. Please Recharge your account.';
+           
+            return false;
+        }
+        
+        $request->merge(['sender_phone' => $order->user->phone]);
+        $response = FedExFacade::createShipmentForSender($order, $request);
     }
 
     public function getRates($request)
