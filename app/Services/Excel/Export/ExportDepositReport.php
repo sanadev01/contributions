@@ -116,10 +116,10 @@ class ExportDepositReport extends AbstractExportService
                      return 'USPS';
                    break;
                 case ORDER::CHILE:
-                        return 'Corrios Chile';
+                        return 'Correios Chile';
                     break;
                 case ORDER::BRAZIL:
-                        return 'Corrios Brazil';
+                        return 'Correios Brazil';
                     break;
                 default:
                     return '';
