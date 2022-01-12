@@ -20,10 +20,11 @@
     @endif
     <form action="{{ route('admin.orders.recipient.store',$order) }}" class="wizard" method="post" enctype="multipart/form-data">
         @csrf
+        @if($order->sender_country_id == 46)
         <div class="controls d-flex mb-1">
             <div>
                 <div class="vs-checkbox-con vs-checkbox-primary" title="Insurance">
-                    <input type="radio" name="service" value="postal_service" id="postal_service" required @if( (optional($order->recipient)->commune_id == null && $order->recipient != null) || old('service') == 'postal_service') checked @endif>
+                    <input type="radio" name="service" value="postal_service" id="postal_service"  required @if( (optional($order->recipient)->commune_id == null && $order->recipient != null) || old('service') == 'postal_service') checked @endif>
                     <span class="vs-checkbox vs-checkbox-lg">
                         <span class="vs-checkbox--check">
                             <i class="vs-icon feather icon-check"></i>
@@ -44,6 +45,10 @@
                 </div>
             </div>
         </div>
+        @elseif($order->sender_country_id != 46)
+        <input type="hidden" name="service" value="postal_service" id="postal_service">
+        @endif
+        
         <div>
             <div class="row mt-1">
                 <div class="form-group col-12 col-sm-6 col-md-6">
