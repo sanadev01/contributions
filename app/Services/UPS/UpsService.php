@@ -11,14 +11,14 @@ use App\Services\Calculators\WeightCalculator;
 
 class UpsService
 {
-    protected $create_package_url;
-    protected $delete_package_url;
-    protected $create_manifest_url;
-    protected $rating_package_url;
-    protected $pickup_rating_url;
-    protected $pickup_shipment_url;
-    protected $pickup_cancel_url;
-    protected $tracking_url;
+    protected $createPackageUrl;
+    protected $deletePackageUrl;
+    protected $createManifestUrl;
+    protected $ratingPackageUrl;
+    protected $pickupRatingUrl;
+    protected $pickupShipmentUrl;
+    protected $pickupCancelUrl;
+    protected $trackingUrl;
     protected $userName;
     protected $password;
     protected $transactionSrc;
@@ -32,16 +32,16 @@ class UpsService
     protected $length;
     protected $weight;
 
-    public function __construct($create_package_url, $delete_package_url, $create_manifest_url, $rating_package_url, $pickup_rating_url, $pickup_shipment_url, $pickup_cancel_url, $tracking_url, $transactionSrc, $userName, $password, $shipperNumber, $AccessLicenseNumber)
+    public function __construct($createPackageUrl, $deletePackageUrl, $createManifestUrl, $ratingPackageUrl, $pickupRatingUrl, $pickupShipmentUrl, $pickupCancelUrl, $trackingUrl, $transactionSrc, $userName, $password, $shipperNumber, $AccessLicenseNumber)
     {
-        $this->create_package_url = $create_package_url;
-        $this->delete_usps_label_url = $delete_package_url;
-        $this->create_manifest_url = $create_manifest_url;
-        $this->rating_package_url = $rating_package_url;
-        $this->pickup_rating_url = $pickup_rating_url;
-        $this->pickup_shipment_url = $pickup_shipment_url;
-        $this->pickup_cancel_url = $pickup_cancel_url;
-        $this->tracking_url = $tracking_url;
+        $this->createPackageUrl = $createPackageUrl;
+        $this->deletePackageUrl = $deletePackageUrl;
+        $this->createManifestUrl = $createManifestUrl;
+        $this->ratingPackageUrl = $ratingPackageUrl;
+        $this->pickupRatingUrl = $pickupRatingUrl;
+        $this->pickupShipmentUrl = $pickupShipmentUrl;
+        $this->pickupCancelUrl = $pickupCancelUrl;
+        $this->trackingUrl = $trackingUrl;
         $this->userName = $userName;
         $this->password = $password;
         $this->transactionSrc = $transactionSrc;
@@ -51,41 +51,41 @@ class UpsService
 
     public function generateLabel($order)
     {
-        $data = $this->make_package_request_for_recipient($order);
-        return $this->ups_ApiCall($this->create_package_url, $data);
+        $data = $this->makePackageRequestForRecipient($order);
+        return $this->upsApiCall($this->createPackageUrl, $data);
     }
 
     public function getSenderPrice($order, $request_data)
     {   
-       $data = $this->make_rates_request_for_sender($order, $request_data);
+       $data = $this->makeRatesRequestForSender($order, $request_data);
         
-       return $this->ups_ApiCall($this->rating_package_url, $data);
+       return $this->upsApiCall($this->ratingPackageUrl, $data);
     }
 
     public function buyLabel($order, $request_sender_data)
     {
-        $data = $this->make_package_request_for_sender($order, $request_sender_data);
+        $data = $this->makePackageRequestForSender($order, $request_sender_data);
         
-        return $this->ups_ApiCall($this->create_package_url, $data);
+        return $this->upsApiCall($this->createPackageUrl, $data);
     }
 
     public function getRecipientRates($order, $service)
     {
-        $data = $this->make_rates_request_for_recipient($order, $service);
+        $data = $this->makeRateRequestForRecipient($order, $service);
 
-        return $this->ups_ApiCall($this->rating_package_url, $data);
+        return $this->upsApiCall($this->ratingPackageUrl, $data);
     }
 
     public function getPickupRates($request)
     {
-        $data = $this->make_request_for_pickup_rates($request);
-        return $this->upsApiCallForPickup($this->pickup_rating_url, $data);
+        $data = $this->makeRequestForPickupRates($request);
+        return $this->upsApiCallForPickup($this->pickupRatingUrl, $data);
     }
 
     public function createPickupShipment($order, $request)
     {
-       $data = $this->make_request_for_pickup_shipment($order, $request);
-       return $this->upsApiCallForPickup($this->pickup_shipment_url, $data);
+       $data = $this->makeRequestForPickupShipment($order, $request);
+       return $this->upsApiCallForPickup($this->pickupShipmentUrl, $data);
     }
 
     public function cancelPickup($prn)
@@ -98,7 +98,7 @@ class UpsService
         return $this->trackUPSOrder($trackingNumber);
     }
 
-    private function make_rates_request_for_sender($order, $request)
+    private function makeRatesRequestForSender($order, $request)
     {   
         $this->calculateVolumetricWeight($order);
 
@@ -185,7 +185,7 @@ class UpsService
         return $request_body;
     }
 
-    private function make_package_request_for_sender($order, $request)
+    private function makePackageRequestForSender($order, $request)
     {
         $this->calculateVolumetricWeight($order);
 
@@ -285,7 +285,7 @@ class UpsService
         return $request_body;
     }
 
-    private function make_rates_request_for_recipient($order, $service)
+    private function makeRateRequestForRecipient($order, $service)
     {
         $this->calculateVolumetricWeight($order);
 
@@ -372,7 +372,7 @@ class UpsService
         return $request_body;
     }
 
-    private function make_package_request_for_recipient($order)
+    private function makePackageRequestForRecipient($order)
     {
         $this->calculateVolumetricWeight($order);
 
@@ -472,7 +472,7 @@ class UpsService
         return $request_body;
     }
 
-    private function make_request_for_pickup_rates($request)
+    private function makeRequestForPickupRates($request)
     {
         $request_body = [
             'PickupRateRequest' => [
@@ -501,7 +501,7 @@ class UpsService
         return $request_body;
     }
 
-    private function make_request_for_pickup_shipment($order, $request)
+    private function makeRequestForPickupShipment($order, $request)
     {
         $this->calculateVolumetricWeight($order);
 
@@ -589,7 +589,7 @@ class UpsService
         return $description;
     }
 
-    private function ups_ApiCall($url, $data)
+    private function upsApiCall($url, $data)
     {
         try {
             $response = Http::withHeaders($this->setHeaders())->acceptJson()->post($url, $data);
@@ -685,7 +685,7 @@ class UpsService
                 'Password' => $this->password,
                 'Username' => $this->userName,
                 'Prn' => $prn,
-            ])->acceptJson()->delete($this->pickup_cancel_url);
+            ])->acceptJson()->delete($this->pickupCancelUrl);
 
             if($response->successful())
             {
@@ -730,7 +730,7 @@ class UpsService
     {
         try {
                 $response = Http::withHeaders($this->setHeaders())
-                        ->acceptJson()->get($this->tracking_url.$trackingNumber);
+                        ->acceptJson()->get($this->trackingUrl.$trackingNumber);
                 
                 if($response->successful())
                 {

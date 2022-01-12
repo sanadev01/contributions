@@ -131,11 +131,17 @@ class OrderRepository
         DB::beginTransaction();
 
         try {
-            
+            $lastOrderItemQuantity = $order->items()->sum('quantity');
             $order->items()->delete();
-
+            $product = $order->products->first();
+            $totalQuantity = 0;
+            // dd($product);
+            // $productQuantity = $product->quantity;
             foreach ($request->get('items',[]) as $item) {
-
+                if($product && $product->quantity  >= $totalQuantity && $product->sh_code == $item['sh_code'] ){
+                    $totalQuantity+=$item['quantity'];
+                }
+                
                 $order->items()->create([
                     'sh_code' => optional($item)['sh_code'],
                     'description' => optional($item)['description'],
@@ -147,7 +153,19 @@ class OrderRepository
                 ]);
             }
 
-            
+            if($product && $product->quantity + $lastOrderItemQuantity < $totalQuantity){
+                $remainingQuantity = $product->quantity+1;
+                DB::rollback();
+                session()->flash('alert-danger','Your Quantity Is '. $remainingQuantity . ' You Cannot Add More Than '. $remainingQuantity );
+                return false;
+            }
+            $totalDifference = $totalQuantity - $lastOrderItemQuantity;
+            if($product){
+                $product->update([
+                    'quantity'=>$product->quantity - $totalDifference,
+                ]);
+            }
+
             $shippingService = ShippingService::find($request->shipping_service_id);
 
             $order->update([
@@ -161,15 +179,16 @@ class OrderRepository
                 'insurance_value' => 0,
                 'status' => $order->isPaid() ? ($order->status < Order::STATUS_ORDER ? Order::STATUS_ORDER : $order->status) : Order::STATUS_ORDER
             ]);
-
+            
             $order->doCalculations();
 
             DB::commit();
-
+            session()->flash('alert-success','orders.Sender Updated');
             return true;
         } catch (\Exception $ex) {
             DB::rollback();
             $this->error = $ex->getMessage();
+             session()->flash('alert-danger','orders.Error While placing Order'." ".$this->error);
             return false;
         }
     }

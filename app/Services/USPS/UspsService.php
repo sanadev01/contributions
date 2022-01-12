@@ -9,34 +9,79 @@ use App\Services\Calculators\WeightCalculator;
 
 class UspsService
 {
-    protected $api_url;
-    protected $delete_usps_label_url;
-    protected $create_manifest_url;
+    protected $createLabelUrl;
+    protected $deleteLabelUrl;
+    protected $createManifestUrl;
     protected $email;
     protected $password;
-    protected $get_price_url;
+    protected $getPriceUrl;
     protected $chargableWeight;
+    protected $addressValidationUrl;
 
-    public function __construct($api_url, $delete_usps_label_url, $create_manifest_url, $get_price_url, $email, $password)
+    public function __construct($createLabelUrl, $deleteLabelUrl, $createManifestUrl, $getPriceUrl, $addressValidationUrl, $email, $password)
     {
-        $this->api_url = $api_url;
-        $this->delete_usps_label_url = $delete_usps_label_url;
-        $this->create_manifest_url = $create_manifest_url;
+        $this->createLabelUrl = $createLabelUrl;
+        $this->deleteLabelUrl = $deleteLabelUrl;
+        $this->createManifestUrl = $createManifestUrl;
         $this->email = $email;
         $this->password = $password;
-        $this->get_price_url = $get_price_url;
+        $this->getPriceUrl = $getPriceUrl;
+        $this->addressValidationUrl = $addressValidationUrl;
+    }
+
+    public function validateAddress($request)
+    {
+        return $this->apiCallForAddressValidation($this->getAddressValidationData($request));
+    }
+
+    private function getAddressValidationData($request)
+    {
+        return [
+            'company_name' => 'Herco',
+            'line1' => $request->address,
+            'state_province' => $request->state,
+            'city' => $request->city,
+            'postal_code' => '',
+            'country_code' => 'US'
+        ];
+    }
+
+    private function apiCallForAddressValidation($data)
+    {
+        try {
+            $response = Http::withBasicAuth($this->email, $this->password)->post($this->addressValidationUrl, $data);
+            
+            if($response->status() == 200) {
+                
+                return (Array)[
+                    'success' => true,
+                    'zipcode'    => $response->json()['zip5'],
+                ];
+            }
+
+            if($response->status() != 200) {
+                return (Array)[
+                    'success' => false,
+                    'message' => $response->json()['message'],
+                ];
+            }
+            
+        } catch (Exception $ex) {
+
+            return (Array)[
+                'success' => false,
+                'message' => $ex->getMessage(),
+            ];
+        }
+        
     }
 
     public function generateLabel($order)
     {
-        $data = $this->make_request_attributes($order);
-        
-        $usps_response = $this->usps_ApiCall($data);
-        
-        return $usps_response;
+        return $this->uspsApiCall($this->makeRequestAttributeForLabel($order));
     }
     
-    public function make_request_attributes($order)
+    private function makeRequestAttributeForLabel($order)
     {
         $this->calculateVolumetricWeight($order);
 
@@ -78,11 +123,11 @@ class UspsService
         return $request_body;
     }
 
-    public function usps_ApiCall($data)
+    public function uspsApiCall($data)
     {
         try {
             
-            $response = Http::withBasicAuth($this->email, $this->password)->post($this->api_url, $data);
+            $response = Http::withBasicAuth($this->email, $this->password)->post($this->createLabelUrl, $data);
 
 
             if($response->status() == 201)
@@ -120,7 +165,7 @@ class UspsService
     {
         try {
             
-            $response =  Http::withBasicAuth($this->email, $this->password)->delete($this->delete_usps_label_url.$tracking_number);
+            $response =  Http::withBasicAuth($this->email, $this->password)->delete($this->deleteLabelUrl.$tracking_number);
             
             if($response->status() == 204)
             {
@@ -157,7 +202,7 @@ class UspsService
         
         try {
 
-            $response = Http::withBasicAuth($this->email, $this->password)->post($this->create_manifest_url, $data);
+            $response = Http::withBasicAuth($this->email, $this->password)->post($this->createManifestUrl, $data);
            
             if($response->status() == 201)
             {
@@ -193,11 +238,11 @@ class UspsService
 
     public function getPrice($order, $service)
     {
-       $data = $this->make_rates_request_attributes($order, $service);
+       $data = $this->makeRequestAttributeForRates($order, $service);
        
        try {
 
-        $response = Http::acceptJson()->withBasicAuth($this->email, $this->password)->post($this->get_price_url, $data);
+        $response = Http::acceptJson()->withBasicAuth($this->email, $this->password)->post($this->getPriceUrl, $data);
         
         if($response->successful())
         {
@@ -229,7 +274,7 @@ class UspsService
        }
     }
 
-    public function make_rates_request_attributes($order, $service)
+    public function makeRequestAttributeForRates($order, $service)
     {
         $this->calculateVolumetricWeight($order);
 
@@ -284,10 +329,10 @@ class UspsService
     // USPS BUY Label Logics
     public function getSenderPrice($order, $request)
     {
-        $data = $this->make_rates_request_for_sender($order, $request);
+        $data = $this->makeRequestAttributeForSenderRates($order, $request);
         try {
 
-            $response = Http::acceptJson()->withBasicAuth($this->email, $this->password)->post($this->get_price_url, $data);
+            $response = Http::acceptJson()->withBasicAuth($this->email, $this->password)->post($this->getPriceUrl, $data);
             if($response->successful())
             {
                 return (Object)[
@@ -321,14 +366,10 @@ class UspsService
 
     public function buyLabel($order, $request)
     {
-        $data = $this->make_rates_request_for_sender($order, $request);
-        
-        $usps_response = $this->usps_ApiCall($data);
-        
-        return $usps_response;
+        return $this->uspsApiCall($this->makeRequestAttributeForSenderRates($order, $request));
     }
 
-    public function make_rates_request_for_sender($order, $request)
+    private function makeRequestAttributeForSenderRates($order, $request)
     {
         if(!isset($request->uspsBulkLabel))
         {
