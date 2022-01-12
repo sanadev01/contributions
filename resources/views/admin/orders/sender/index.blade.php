@@ -12,7 +12,7 @@
             <div class="row mb-1">
                 <div class="col-md-3 form-group">
                     <label for="country">@lang('orders.sender.Select Country')</label>
-                    <select class="form-control countrySelect" aria-label="Default select example" name="sender_country_id" required>
+                    <select class="form-control countrySelect"  name="sender_country_id" required>
                         <option {{ old('sender_country_id', __default($order->sender_country_id,optional($order->user)->country_id)) == 30 ? 'selected' : ''}}   value="30">Brazil</option>
                         <option {{ old('sender_country_id', __default($order->sender_country_id, optional($order->user)->country_id)) == 46 ? 'selected' : ''}}   value="46">Chile</option>
                         <option  {{ old('sender_country_id', __default($order->sender_country_id, optional($order->user)->country_id)) == 250 ? 'selected' : ''}} value="250">United States</option>
@@ -155,6 +155,8 @@
 <script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
 <script>
     $(document).ready(function(){
+        $('.selectpicker').prop('disabled', false);
+        $('.selectpicker').selectpicker('refresh');
         $("[name='sender_address']").prop( "disabled", true );
         $("[name='sender_city']").prop('disabled',true);
 
@@ -303,7 +305,7 @@
                 if ( response.success == true && response.zipcode != 0){
                     $('#loading').fadeOut();
                     $('#sender_zipcode').val(response.zipcode);
-                    $('#zipcode_response').empty().append("<p><b>According to your given Addrees, your zip code should be this</b></p><p><span style='color: red;'>Zipcode: </span><span>"+response.zipcode+"</span></p>");
+                    $('#zipcode_response').empty().append("<p><b>According to your given Address, your zip code should be this</b></p><p><span style='color: red;'>Zipcode: </span><span>"+response.zipcode+"</span></p>");
                 }else {
                     $('#loading').fadeOut();
                     $('#zipcode_response').empty().append("<p style='color: red;'><b>According to USPS,</b></p><p><span style='color: red;'></span><span>"+response.message+"</span></p>");
