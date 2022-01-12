@@ -24,7 +24,9 @@ class CreateRequest extends FormRequest
      */
     public function rules()
     {
+        
         return [
+            'customer_reference' => ($this->order->recipient->country_id == \App\Models\Order::CHILE) ? 'required' : 'nullable',
             'shipping_service_id' => 'required|exists:shipping_services,id',
             'items' => 'required|array|min:1',
             'tax_modality' => 'required|in:ddu',

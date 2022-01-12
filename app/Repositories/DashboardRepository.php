@@ -40,6 +40,7 @@ class DashboardRepository
             $CurentDay->where('user_id', $authUser);
             $totalOrderQuery->where('user_id', $authUser);
         }
+        
         $paymentDone = Order::STATUS_PAYMENT_DONE;
         $currentYearTotal       = $currentYearsorders->whereYear('order_date',$currentYear)->count();
         $currentYearConfirm     = $currentYearsorders->where('status', '>=' ,$paymentDone)->count();
@@ -52,14 +53,14 @@ class DashboardRepository
 
         return  $order[] = [
             'totalOrders'         => $totalOrder,
-            'totalCompleteOrders' =>$totalCompleteOrders,
-            'currentmonthTotal'   =>$currentmonthTotal,
-            'currentmonthConfirm' =>$currentmonthConfirm,
-            'currentDayTotal'     =>$currentDayTotal,
-            'currentDayConfirm'   =>$currentDayConfirm,
-            'currentYearTotal'    =>$currentYearTotal,
-            'currentYearConfirm'  =>$currentYearConfirm,
-            'monthName'           =>$monthName
+            'totalCompleteOrders' => $totalCompleteOrders,
+            'currentmonthTotal'   => $currentmonthTotal,
+            'currentmonthConfirm' => $currentmonthConfirm,
+            'currentDayTotal'     => $currentDayTotal,
+            'currentDayConfirm'   => $currentDayConfirm,
+            'currentYearTotal'    => $currentYearTotal,
+            'currentYearConfirm'  => $currentYearConfirm,
+            'monthName'           => $monthName
         ];
     }
 
