@@ -12,8 +12,8 @@ return [
         'createShipmentUrl' => '',
     ],
     'credentials' => [
-        'client_id' => 'l70a73c2c8c5124eb1a7c309b7d6b47649',
-        'client_secret' => '33c94c3e3af143a7bcf9ff11a5147919',
+        'client_id' => 'l7bc13fa29ecab4417919ace5e6a089171',
+        'client_secret' => '1ea88a9850d24218bc4ca047a989e42d',
         'account_number' => '510087020'
     ]
 ];

@@ -6,12 +6,14 @@ use App\Models\Order;
 use App\Facades\UPSFacade;
 use App\Facades\USPSFacade;
 use App\Rules\NcmValidator;
+use App\Facades\FedExFacade;
 use Illuminate\Http\Request;
 use App\Models\ShippingService;
 use App\Http\Controllers\Controller;
 use App\Repositories\OrderRepository;
 use App\Services\UPS\UPSShippingService;
 use App\Services\USPS\USPSShippingService;
+use App\Services\FedEx\FedExShippingService;
 use App\Http\Requests\Orders\OrderDetails\CreateRequest;
 
 class OrderItemsController extends Controller
@@ -34,19 +36,26 @@ class OrderItemsController extends Controller
 
         if($order->recipient->country_id == Order::US)
         {
-            $usps_shippingService = new USPSShippingService($order);
+            $uspsShippingService = new USPSShippingService($order);
 
             foreach (ShippingService::query()->active()->get() as $shippingService) {
-                if ( $usps_shippingService->isAvailableFor($shippingService) ){
+                if ( $uspsShippingService->isAvailableFor($shippingService) ){
                         $shippingServices->push($shippingService);
                 }
             }
 
-            $ups_shippingService = new UPSShippingService($order);
+            $upsShippingService = new UPSShippingService($order);
             foreach (ShippingService::query()->active()->get() as $shippingService) {
-                if ( $ups_shippingService->isAvailableFor($shippingService) ){
+                if ( $upsShippingService->isAvailableFor($shippingService) ){
 
                     $shippingServices->push($shippingService);
+                }
+            }
+
+            $fedExShippingService = new FedExShippingService($order);
+            foreach (ShippingService::query()->active()->get() as $shippingService) {
+                if ( $fedExShippingService->isAvailableFor($shippingService) ){
+                        $shippingServices->push($shippingService);
                 }
             }
 
@@ -65,7 +74,8 @@ class OrderItemsController extends Controller
 
         if($shippingServices->contains('service_sub_class', ShippingService::USPS_PRIORITY) 
             || $shippingServices->contains('service_sub_class', ShippingService::USPS_FIRSTCLASS)
-            || $shippingServices->contains('service_sub_class', ShippingService::UPS_GROUND))
+            || $shippingServices->contains('service_sub_class', ShippingService::UPS_GROUND)
+            || $shippingServices->contains('service_sub_class', ShippingService::FEDEX_GROUND))
         {
             if(!setting('usps', null, $order->user->id))
             {
@@ -80,6 +90,13 @@ class OrderItemsController extends Controller
                 $error = "UPS is not enabled for this user";
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
                     return $shippingService->service_sub_class != ShippingService::UPS_GROUND;
+                });
+            }
+            if(!setting('fedex', null, $order->user->id))
+            {
+                $error = "FedEx is not enabled for this user";
+                $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                    return $shippingService->service_sub_class != ShippingService::FEDEX_GROUND;
                 });
             }
 
@@ -191,13 +208,31 @@ class OrderItemsController extends Controller
         {
             return (Array)[
                 'success' => false,
-                'error' => $response->error['response']['errors'][0]['message'],
+                'error' => $response->error['response']['errors'][0]['message'] ?? 'server error, could not get rates',
             ];
         }
 
         return (Array)[
             'success' => true,
             'total_amount' => number_format($response->data['RateResponse']['RatedShipment']['TotalCharges']['MonetaryValue'], 2),
+        ];
+    }
+
+    public function fedExRates(Request $request)
+    {
+        $order = Order::find($request->order_id);
+        $response = FedExFacade::getRecipientRates($order, $request->service);
+
+        if ($response->success == false) {
+            return (Array)[
+                'success' => false,
+                'error' => $response->error['response']['errors'][0]['message'] ?? 'server error, could not get rates',
+            ];
+        }
+
+        return (Array)[
+            'success' => true,
+            'total_amount' => number_format($response->data['output']['rateReplyDetails'][0]['ratedShipmentDetails'][0]['totalNetFedExCharge'], 2),
         ];
     }
 }
