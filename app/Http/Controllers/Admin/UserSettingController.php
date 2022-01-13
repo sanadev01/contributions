@@ -47,6 +47,7 @@ class UserSettingController extends Controller
         $request->has('insurance') ? saveSetting('insurance', true, $user->id) : saveSetting('insurance', false, $user->id);
         $request->has('usps') ? saveSetting('usps', true, $user->id) : saveSetting('usps', false, $user->id);
         $request->has('ups') ? saveSetting('ups', true, $user->id) : saveSetting('ups', false, $user->id);
+        $request->has('fedex') ? saveSetting('fedex', true, $user->id) : saveSetting('fedex', false, $user->id);
         $request->has('stripe') ? saveSetting('stripe', true, $user->id) : saveSetting('stripe', false, $user->id);
         $request->has('sinerlog') ? saveSetting('sinerlog', true, $user->id) : saveSetting('sinerlog', false, $user->id);
 
@@ -54,6 +55,8 @@ class UserSettingController extends Controller
         ($request->usps_order_dimension != null ) ? saveSetting('usps_order_dimension', $request->usps_order_dimension, $user->id) : saveSetting('usps_order_dimension', 0, $user->id);
         ($request->ups_profit != null ) ? saveSetting('ups_profit', $request->ups_profit, $user->id) : saveSetting('ups_profit', 0, $user->id);
         ($request->ups_order_dimension != null ) ? saveSetting('ups_order_dimension', $request->ups_order_dimension, $user->id) : saveSetting('ups_order_dimension', 0, $user->id);
+        ($request->fedex_profit != null ) ? saveSetting('fedex_profit', $request->fedex_profit, $user->id) : saveSetting('fedex_profit', 0, $user->id);
+        ($request->fedex_order_dimension != null ) ? saveSetting('fedex_order_dimension', $request->ups_order_dimension, $user->id) : saveSetting('fedex_order_dimension', 0, $user->id);
         
         if ( $request->password ){
             $user->update([

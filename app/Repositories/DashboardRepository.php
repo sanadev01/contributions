@@ -32,7 +32,6 @@ class DashboardRepository
             $CurentDay          = $CurentDay->whereBetween('order_date', $date);
             $totalOrderQuery    = $totalOrderQuery->whereBetween('order_date', $date);
         }
-
         if(Auth::user()->isUser()){
             $authUser = Auth::id();
             $currentYearsorders->where('user_id', $authUser);
