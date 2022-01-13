@@ -41,7 +41,7 @@ class FedExService
             });
 
         } catch (\Exception $ex) {
-            Log::error($ex->getMessage());
+           Log::info('FedEx Error ' . $ex->getMessage());
             return null;
         }
     }
@@ -61,6 +61,12 @@ class FedExService
     public function createShipmentForSender($order, $request)
     {
         $data = $this->makeShipmentRequestForSender($order, $request);
+        return $this->fedExApiCall($this->createShipmentUrl, $data);
+    }
+
+    public function createShipmentForRecipient($order)
+    {
+        $data = $this->makeShipmentRequestForRecipient($order);
         return $this->fedExApiCall($this->createShipmentUrl, $data);
     }
 
@@ -209,6 +215,68 @@ class FedExService
         ];
     }
 
+    private function makeShipmentRequestForRecipient($order)
+    {
+        $this->calculateVolumetricWeight($order);
+        
+        return [
+            'labelResponseOptions' => 'URL_ONLY',
+            'requestedShipment' => [
+                'shipper' => [
+                    'contact' => [
+                        'personName' => 'Marcio Fertias',
+                        'phoneNumber' => '+13058885191',
+                        'companyName' => 'HERCO SUITE#100'
+                    ],
+                    'address' => [
+                        'streetLines' => ['2200 NW 129TH AVE'],
+                        'city' => 'Miami',
+                        'stateOrProvinceCode' => 'FL',
+                        'postalCode' => 33182,
+                        'countryCode' => 'US',
+                    ],
+                ],
+                'recipients' => [
+                    [
+                        'contact' => [
+                            'personName' => $order->recipient->first_name.' '.$order->recipient->last_name,
+                            'phoneNumber' => $order->recipient->phone,
+                        ],
+                        'address' => [
+                            'streetLines' => [$order->recipient->address.' '.$order->recipient->street_no],
+                            'city' => $order->recipient->city,
+                            'stateOrProvinceCode' => $order->recipient->state->code,
+                            'postalCode' => $order->recipient->zipcode,
+                            'countryCode' => 'US',
+                        ],
+                    ]
+                ],
+                'shipDatestamp' => Carbon::now()->format('Y-m-d'),
+                'serviceType' => ($order->shippingService->service_sub_class == ShippingService::FEDEX_GROUND) ? 'FEDEX_GROUND' : 'GROUND_HOME_DELIVERY',
+                'packagingType' => 'YOUR_PACKAGING',
+                'pickupType' => 'DROPOFF_AT_FEDEX_LOCATION',
+                'shippingChargesPayment' => [
+                    'paymentType' => 'SENDER',
+                ],
+                'labelSpecification' => [
+                    'imageType' => 'PDF',
+                    'labelStockType' => 'PAPER_85X11_TOP_HALF_LABEL',
+                ],
+                'requestedPackageLineItems' => [
+                    [
+                        'weight' => [
+                            'value' => ($this->chargableWeight != null) ? (float)$this->chargableWeight : (float)$order->weight,
+                            'units' => ($order->measurement_unit == 'kg/cm') ? 'KG' : 'LB'
+                        ]
+                    ]
+                ],
+            ],
+            'accountNumber' => [
+                'value' => $this->accountNumber,
+            ]
+        ];
+    }
+
     public function calculateVolumetricWeight($order)
     {
         if ( $order->measurement_unit == 'kg/cm' ){
@@ -231,7 +299,7 @@ class FedExService
             return $this->setResponse($response);
 
         } catch (\Exception $ex) {
-            Log::error($ex->getMessage());
+           Log::info('FedEx Error ' . $ex->getMessage());
             return (object) [
                 'success' => false,
                 'error' => $ex->getMessage(),

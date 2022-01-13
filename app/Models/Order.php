@@ -406,9 +406,15 @@ class Order extends Model implements Package
     public function calculateProfit($shippingCost, $shippingService)
     {
         if ($shippingService->service_sub_class == ShippingService::UPS_GROUND) {
-            $profit_percentage = (setting('ups_profit', null, $this->user->id) != null &&  setting('ups_profit', null, $this->user->id) != 0) ?  setting('ups_profit', null, $this->user->id) : setting('ups_profit', null, 1);
-        }else {
-            $profit_percentage = (setting('usps_profit', null, $this->user->id) != null &&  setting('usps_profit', null, $this->user->id) != 0) ?  setting('usps_profit', null, $this->user->id) : setting('usps_profit', null, 1);
+
+            $profit_percentage = (setting('ups_profit', null, $this->user->id) != null &&  setting('ups_profit', null, $this->user->id) != 0) ?  setting('ups_profit', null, $this->user->id) : setting('ups_profit', null, User::ROLE_ADMIN);
+
+        }elseif ($shippingService->service_sub_class == ShippingService::FEDEX_GROUND) {
+            
+            $profit_percentage = (setting('fedex_profit', null, $this->user->id) != null &&  setting('fedex_profit', null, $this->user->id) != 0) ?  setting('fedex_profit', null, $this->user->id) : setting('fedex_profit', null, User::ROLE_ADMIN);
+        }
+        else {
+            $profit_percentage = (setting('usps_profit', null, $this->user->id) != null &&  setting('usps_profit', null, $this->user->id) != 0) ?  setting('usps_profit', null, $this->user->id) : setting('usps_profit', null, User::ROLE_ADMIN);
         }
         
         $profit = $profit_percentage / 100;

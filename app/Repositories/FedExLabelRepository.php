@@ -44,6 +44,44 @@ class FedExLabelRepository
         return $shippingServices;
     }
 
+    public function handle($order)
+    {
+        if($order->isPaid() && !$order->api_response)
+        {
+           return $this->getPrimaryLabel($order);
+        }
+
+        return true;
+    }
+
+    public function update($order)
+    {
+        if($order->isPaid())
+        {
+            return $this->getPrimaryLabel($order);
+        }
+    }
+
+    public function getPrimaryLabel($order)
+    {
+        $response = FedExFacade::createShipmentForRecipient($order);
+
+        if ($response->success == true) {
+
+            $order->update([
+                'api_response' => json_encode($response->data),
+                'corrios_tracking_code' => $response->data['output']['transactionShipments'][0]['pieceResponses'][0]['trackingNumber'],
+            ]);
+
+            $order->refresh();
+            $this->downloadFedexLabel(json_decode($order->api_response), $order->corrios_tracking_code);
+
+            return true;
+        }
+
+        $this->fedExError = $response->error['errors'][0]['message'] ?? 'Unknown error';
+    }
+
     public function getSecondaryLabel($request, $order)
     {
         if ( $request->total_price > getBalance())
@@ -74,7 +112,7 @@ class FedExLabelRepository
             return true;
         }
 
-        $this->fedExError = $response->error['errors'][0]['message'];
+        $this->fedExError = $response->error['errors'][0]['message'] ?? 'Unknown error' ;
         return false;
     }
 

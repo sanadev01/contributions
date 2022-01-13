@@ -125,10 +125,15 @@
 
     $('#us_shipping_service').on('change',function(){
         const service = $('#us_shipping_service option:selected').attr('data-service-code');
+        
         if(service == 3440 || service == 3441) {
 
            return getUspsRates();
 
+        }else if(service == 4)
+        {
+            return getFedExRates();
+            
         } else if(service != undefined) {
 
           return getUpsRates();
@@ -205,7 +210,7 @@
         var order_id = $('#order_id').val();
 
         $('#loading').fadeIn();
-        $.get('{{ route("api.fedex_rates") }}',{
+        $.get('{{ route("api.fedExRates") }}',{
                 service: service,
                 order_id: order_id,
             }).then(function(response){

@@ -209,7 +209,7 @@ class OrderItemsController extends Controller
         {
             return (Array)[
                 'success' => false,
-                'error' => $response->error['response']['errors'][0]['message'],
+                'error' => $response->error['response']['errors'][0]['message'] ?? 'server error, could not get rates',
             ];
         }
 
@@ -227,13 +227,13 @@ class OrderItemsController extends Controller
         if ($response->success == false) {
             return (Array)[
                 'success' => false,
-                'error' => $response->error['response']['errors'][0]['message'],
+                'error' => $response->error['response']['errors'][0]['message'] ?? 'server error, could not get rates',
             ];
         }
 
         return (Array)[
             'success' => true,
-            'total_amount' => number_format(0, 2),
+            'total_amount' => number_format($response->data['output']['rateReplyDetails'][0]['ratedShipmentDetails'][0]['totalNetFedExCharge'], 2),
         ];
     }
 }
