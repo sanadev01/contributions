@@ -31,6 +31,11 @@ class CorrieosChileLabelRepository
             
         }
 
+        if($order->shippingService->service_sub_class == ShippingService::Courier_Express)
+        {
+            return $this->generateCourierExpressLabel($order);
+        }
+
         return $this->printLabel($order);
 
     }
