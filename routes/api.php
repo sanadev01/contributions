@@ -40,6 +40,9 @@ Route::get('order-usps-sender-rates', [App\Http\Controllers\Admin\Order\OrderUSP
 Route::get('order-ups-rates', [App\Http\Controllers\Admin\Order\OrderItemsController::class, 'ups_rates'])->name('api.ups_rates');
 Route::get('order-ups-sender-rates', [App\Http\Controllers\Admin\Order\OrderUPSLabelController::class, 'ups_sender_rates'])->name('api.ups_sender_rates');
 
+// Rates for FedEx
+Route::get('order-fedex-rates', [App\Http\Controllers\Admin\Order\OrderItemsController::class, 'fedExRates'])->name('api.fedExRates');
+
 Route::post('order/update/status',Api\OrderStatusController::class)->name('api.order.status.update');
 Route::post('buy-usps-label', [App\Http\Controllers\USPSCalculatorController::class, 'buy_usps_label'])->name('api.buy_usps_label');
 Route::post('buy-ups-label', [App\Http\Controllers\UPSCalculatorController::class, 'buy_ups_label'])->name('api.buy_ups_label');

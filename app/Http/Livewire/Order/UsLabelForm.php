@@ -19,6 +19,7 @@ class UsLabelForm extends Component
     public $usServicesErrors;
     public $upsError;
     public $uspsError;
+    public $fedexError;
     public $hasRates = false;
     public $usRates = [];
 
@@ -227,7 +228,13 @@ class UsLabelForm extends Component
 
         $request = ($this->pickupType == true) ? $request->merge(['pickup' => $this->pickupType]) : $request;
 
-        $fedExLabelRepository->getSecondaryLabel($request, $this->order);
+        if($fedExLabelRepository->getSecondaryLabel($request, $this->order))
+        {
+            return redirect()->route('admin.order.us-label.index', $this->order->id);
+        }
+
+        $this->fedexError = $fedExLabelRepository->getFedExErrors();
+        return false;
     }
 
     private function getUSPSLabel($uspsLabelRepository)

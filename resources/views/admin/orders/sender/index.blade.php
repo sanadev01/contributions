@@ -155,6 +155,8 @@
 <script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
 <script>
     $(document).ready(function(){
+        $('.selectpicker').prop('disabled', false);
+        $('.selectpicker').selectpicker('refresh');
         $("[name='sender_address']").prop( "disabled", true );
         $("[name='sender_city']").prop('disabled',true);
 

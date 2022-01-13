@@ -46,18 +46,25 @@ class FedExService
         }
     }
 
+    public function getRecipientRates($order, $service)
+    {
+        $data = $this->makeRatesRequestBodyForRecipient($order, $service);
+        return $this->fedExApiCall($this->getRatesUrl, $data);
+    }
+
     public function getSenderRates($order, $request)
     {
-       $data = $this->makeRatesRequestBodyForSenderRates($order, $request);
+       $data = $this->makeRatesRequestBodyForSender($order, $request);
        return $this->fedExApiCall($this->getRatesUrl, $data);
     }
 
     public function createShipmentForSender($order, $request)
     {
         $data = $this->makeShipmentRequestForSender($order, $request);
+        return $this->fedExApiCall($this->createShipmentUrl, $data);
     }
 
-    private function makeRatesRequestBodyForSenderRates($order, $request)
+    private function makeRatesRequestBodyForSender($order, $request)
     {
         $this->calculateVolumetricWeight($order);
         return [
@@ -98,15 +105,13 @@ class FedExService
         ];
     }
 
+
     private function makeShipmentRequestForSender($order, $request)
     {
         $this->calculateVolumetricWeight($order);
 
         return [
             'labelResponseOptions' => 'URL_ONLY',
-            'accountNumber' => [
-                'value' => $this->accountNumber,
-            ],
             'requestedShipment' => [
                 'shipper' => [
                     'contact' => [
@@ -114,9 +119,7 @@ class FedExService
                         'phoneNumber' => $request->sender_phone,
                     ],
                     'address' => [
-                        'streetLines' => [
-                            $request->sender_address
-                        ],
+                        'streetLines' => [$request->sender_address],
                         'city' => $request->sender_city,
                         'stateOrProvinceCode' => $request->sender_state,
                         'postalCode' => $request->sender_zipcode,
@@ -124,25 +127,27 @@ class FedExService
                     ],
                 ],
                 'recipients' => [
-                    'contact' => [
-                        'personName' => 'Marcio Fertias',
-                        'phoneNumber' => '+13058885191',
-                        'companyName' => 'HERCO SUITE#100'
-                    ],
-                    'address' => [
-                        'streetLines' => ['2200 NW 129TH AVE'],
-                        'city' => 'Miami',
-                        'stateOrProvinceCode' => 'FL',
-                        'postalCode' => 33182,
-                        'countryCode' => 'US',
-                    ],
+                    [
+                        'contact' => [
+                            'personName' => 'Marcio Fertias',
+                            'phoneNumber' => '+13058885191',
+                            'companyName' => 'HERCO SUITE#100'
+                        ],
+                        'address' => [
+                            'streetLines' => ['2200 NW 129TH AVE'],
+                            'city' => 'Miami',
+                            'stateOrProvinceCode' => 'FL',
+                            'postalCode' => 33182,
+                            'countryCode' => 'US',
+                        ],
+                    ]
                 ],
                 'shipDatestamp' => Carbon::now()->format('Y-m-d'),
                 'serviceType' => ($request->service == ShippingService::FEDEX_GROUND) ? 'FEDEX_GROUND' : 'GROUND_HOME_DELIVERY',
                 'packagingType' => 'YOUR_PACKAGING',
                 'pickupType' => ($request->pickup == "true") ? 'CONTACT_FEDEX_TO_SCHEDULE' : 'DROPOFF_AT_FEDEX_LOCATION',
                 'shippingChargesPayment' => [
-                    'paymentType' => 'RECIPIENT',
+                    'paymentType' => 'SENDER',
                 ],
                 'labelSpecification' => [
                     'imageType' => 'PDF',
@@ -151,12 +156,55 @@ class FedExService
                 'requestedPackageLineItems' => [
                     [
                         'weight' => [
+                            'value' => ($this->chargableWeight != null) ? (float)$this->chargableWeight : (float)$order->weight,
+                            'units' => ($order->measurement_unit == 'kg/cm') ? 'KG' : 'LB'
+                        ]
+                    ]
+                ],
+            ],
+            'accountNumber' => [
+                'value' => $this->accountNumber,
+            ]
+        ];
+    }
+
+    private function makeRatesRequestBodyForRecipient($order, $service)
+    {
+        $this->calculateVolumetricWeight($order);
+        return [
+            'accountNumber' => [
+                'value' => $this->accountNumber,
+            ],
+            'requestedShipment' => [
+                'shipper' => [
+                    'address' => [
+                        'city' => 'Miami',
+                        'stateOrProvinceCode' => 'FL',
+                        'postalCode' => 33182,
+                        'countryCode' => 'US',
+                    ]
+                ],
+                'recipient' => [
+                    'address' => [
+                        'city' => $order->recipient->city,
+                        'stateOrProvinceCode' => $order->recipient->state->code,
+                        'postalCode' => $order->recipient->zipcode,
+                        'countryCode' => 'US',
+                    ]
+                ],
+                'serviceType' => ($service == ShippingService::FEDEX_GROUND) ? 'FEDEX_GROUND' : 'GROUND_HOME_DELIVERY',
+                'pickupType' => 'DROPOFF_AT_FEDEX_LOCATION',
+                'rateRequestType' => [
+                    'ACCOUNT'
+                ],
+                'requestedPackageLineItems' => [
+                    [
+                        'weight' => [
                             'units' => ($order->measurement_unit == 'kg/cm') ? 'KG' : 'LB',
                             'value' => ($this->chargableWeight != null) ? (float)$this->chargableWeight : (float)$order->weight
                         ]
                     ]
-                ],
-                
+                ]
             ],
         ];
     }

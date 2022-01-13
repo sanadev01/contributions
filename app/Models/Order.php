@@ -520,7 +520,7 @@ class Order extends Model implements Package
         return $this->hasMany(OrderTracking::class, 'order_id');
     }
 
-    public function getUspsResponse()
+    public function getUSLabelResponse()
     {
         return json_decode($this->us_api_response);
     }

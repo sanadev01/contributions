@@ -2,17 +2,19 @@
 
 namespace App\Repositories;
 
-use App\Facades\FedExFacade;
-use App\Models\Order;
-use App\Models\ShippingService;
 use App\Models\User;
+use App\Models\Order;
+use App\Facades\FedExFacade;
+use App\Models\ShippingService;
+use Illuminate\Support\Facades\Storage;
 use App\Services\FedEx\FedExShippingService;
 
 class FedExLabelRepository
 {
     public $fedExError;
-    protected $user_api_profit;
-    protected $total_amount_with_profit;
+    protected $userApiProfit;
+    protected $totalAmountWithProfit;
+    protected $totalFedExCost;
 
     public function getShippingServices($order)
     {
@@ -46,13 +48,34 @@ class FedExLabelRepository
     {
         if ( $request->total_price > getBalance())
         {
-            $this->ups_errors = 'Not Enough Balance. Please Recharge your account.';
+            $this->fedExError = 'Not Enough Balance. Please Recharge your account.';
            
             return false;
         }
         
         $request->merge(['sender_phone' => $order->user->phone]);
         $response = FedExFacade::createShipmentForSender($order, $request);
+        
+        if ($response->success == true) {
+            $this->totalFedExCost = $response->data['output']['transactionShipments'][0]['pieceResponses'][0]['baseRateAmount'];
+            $this->addProfit($order->user, $this->totalFedExCost);
+
+            $order->update([
+                'us_api_response' => json_encode($response->data),
+                'us_api_tracking_code' => $response->data['output']['transactionShipments'][0]['pieceResponses'][0]['trackingNumber'],
+                'us_secondary_label_cost' => setUSCosts($this->totalFedExCost, $this->totalAmountWithProfit),
+                'us_api_service' => $request->service,
+            ]);
+
+            chargeAmount(round($this->totalAmountWithProfit, 2), $order, 'Bought FedEx Label For : ');
+
+            $order->refresh();
+            $this->downloadFedexLabel($order->getUSLabelResponse(), $order->us_api_tracking_code);
+            return true;
+        }
+
+        $this->fedExError = $response->error['errors'][0]['message'];
+        return false;
     }
 
     public function getRates($request)
@@ -67,7 +90,7 @@ class FedExLabelRepository
             
             return (Array)[
                 'success' => true,
-                'total_amount' => round($this->total_amount_with_profit, 2),
+                'total_amount' => round($this->totalAmountWithProfit, 2),
             ];
         }
         return (Array)[
@@ -78,16 +101,16 @@ class FedExLabelRepository
 
     private function addProfit($user, $fedExRate)
     {
-        $this->user_api_profit = setting('fedex_profit', null, $user->id);
+        $this->userApiProfit = setting('fedex_profit', null, $user->id);
 
-        if($this->user_api_profit == null || $this->user_api_profit == 0)
+        if($this->userApiProfit == null || $this->userApiProfit == 0)
         {
-            $this->user_api_profit = setting('fedex_profit', null, User::ROLE_ADMIN);
+            $this->userApiProfit = setting('fedex_profit', null, User::ROLE_ADMIN);
         }
 
-        $profit = $fedExRate * ($this->user_api_profit / 100);
+        $profit = $fedExRate * ($this->userApiProfit / 100);
 
-        $this->total_amount_with_profit = $fedExRate + $profit;
+        $this->totalAmountWithProfit = $fedExRate + $profit;
 
         return true;
     }
@@ -95,5 +118,14 @@ class FedExLabelRepository
     public function getFedExErrors()
     {
         return $this->fedExError;
+    }
+
+    private function downloadFedexLabel($fedExResponse, $fedExtrackingCode)
+    {
+        $labelUrl = $fedExResponse->output->transactionShipments[0]->pieceResponses[0]->packageDocuments[0]->url;
+        $contents = file_get_contents($labelUrl);
+        Storage::put("labels/{$fedExtrackingCode}.pdf", $contents);
+        
+        return true;
     }
 }
