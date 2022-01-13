@@ -28,7 +28,7 @@ class OrderItemsController extends Controller
         if ( !$order->recipient ){
             abort(404);
         }
-
+        $chiliId =  Order::CHILE;
         $shippingServices = collect() ;
         $error = null;
 
@@ -112,7 +112,7 @@ class OrderItemsController extends Controller
             }
         }
 
-        return view('admin.orders.order-details.index',compact('order','shippingServices', 'error'));
+        return view('admin.orders.order-details.index',compact('order','shippingServices', 'error','chiliId'));
     }
 
     /**
