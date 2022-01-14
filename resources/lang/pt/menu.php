@@ -14,7 +14,7 @@ return [
     'trackings' => 'Rastreamentos',
     'transactions' => 'Transações',
     'addresses' => 'Endereços',
-    'calculator' => 'Calculadora',
+    'calculator' => 'Correios Calculadora',
     'uspscalculator' => 'USPS Calculadora',
     'upscalculator' => 'UPS Calculadora',
     'connect' => 'Conectar',
