@@ -200,25 +200,36 @@
             @endcan
 
 
-            <li class="nav-item {{ $isActive(['calculator.index']) }}">
-                <a class="nav-link" href="{{ route('calculator.index') }}" target="_blank">
-                    <img src="{{ asset('images/icon/calculator.svg') }}" alt="Calculator">
-                    <span data-i18n="Apps">@lang('menu.calculator')</span>
+            <li class="nav-item has-sub sidebar-group">
+                <a href="#">
+                    <img src="{{ asset('images/icon/calculator.svg') }}" alt="Rates" width="19px">
+                    <span class="menu-title" data-i18n="Dashboard">Calculators</span>
                 </a>
-            </li>
-
-            <li class="nav-item {{ $isActive(['calculator.index']) }}">
-                <a class="nav-link" href="{{ route('usps-calculator.index') }}" target="_blank">
-                    <img src="{{ asset('images/icon/calculator.svg') }}" alt="Calculator">
-                    <span data-i18n="Apps">@lang('menu.uspscalculator')</span>
-                </a>
-            </li>
-
-            <li class="nav-item {{ $isActive(['calculator.index']) }}">
-                <a class="nav-link" href="{{ route('ups-calculator.index') }}" target="_blank">
-                    <i class="fa fa-calculator"></i>
-                    <span data-i18n="Apps">@lang('menu.upscalculator')</span>
-                </a>
+                <ul class="menu-content">
+                    <li class="nav-item {{ $isActive(['calculator.index']) }} ml-2">
+                        <a class="nav-link" href="{{ route('calculator.index') }}" target="_blank">
+                            <img src="{{ asset('images/icon/calculator.svg') }}" alt="Calculator">
+                            <span data-i18n="Apps">@lang('menu.calculator')</span>
+                        </a>
+                    </li>
+                    @if (setting('usps', null, auth()->user()->id))
+                        <li class="nav-item {{ $isActive(['calculator.index']) }} ml-2">
+                            <a class="nav-link" href="{{ route('usps-calculator.index') }}"
+                                target="_blank">
+                                <img src="{{ asset('images/icon/calculator.svg') }}" alt="Calculator">
+                                <span data-i18n="Apps">@lang('menu.uspscalculator')</span>
+                            </a>
+                        </li>
+                    @endif
+                    @if (setting('ups', null, auth()->user()->id))
+                        <li class="nav-item {{ $isActive(['calculator.index']) }} ml-2">
+                            <a class="nav-link" href="{{ route('ups-calculator.index') }}" target="_blank">
+                                <img src="{{ asset('images/icon/calculator.svg') }}" alt="Calculator">
+                                <span data-i18n="Apps">@lang('menu.upscalculator')</span>
+                            </a>
+                        </li>
+                    @endif
+                </ul>
             </li>
 
             {{-- Reports --}}
