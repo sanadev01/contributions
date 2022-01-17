@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Order;
 
 use App\Models\Order;
+use App\Models\Product;
 use App\Services\Calculators\WeightCalculator;
 use App\Services\Converters\UnitsConverter;
 use Livewire\Component;
@@ -24,7 +25,7 @@ class ShipmentInfo extends Component
     public $volumeWeight;
     public $currentWeightUnit;
 
-    public function mount(Order $order = null)
+    public function mount($order = null)
     {
         $this->order = optional($order)->toArray();
         $this->fillData();
