@@ -6,7 +6,6 @@ use App\Models\User;
 class UserSettingRepository {
 
     public function store($request, $user){
-        
         $user->update([
             'package_id' => $request->package_id,
             'role_id' => $request->role_id,
@@ -23,6 +22,8 @@ class UserSettingRepository {
         $request->has('ups') ? saveSetting('ups', true, $user->id) : saveSetting('ups', false, $user->id);
         $request->has('stripe') ? saveSetting('stripe', true, $user->id) : saveSetting('stripe', false, $user->id);
         $request->has('sinerlog') ? saveSetting('sinerlog', true, $user->id) : saveSetting('sinerlog', false, $user->id);
+        $request->has('fedex') ? saveSetting('fedex', true, $user->id) : saveSetting('fedex', false, $user->id);
+        $request->has('battery') ? saveSetting('battery', true, $user->id) : saveSetting('battery', false, $user->id);
 
         ($request->usps_profit != null ) ? saveSetting('usps_profit', $request->usps_profit, $user->id) : saveSetting('usps_profit', 0, $user->id);
         ($request->usps_order_dimension != null ) ? saveSetting('usps_order_dimension', $request->usps_order_dimension, $user->id) : saveSetting('usps_order_dimension', 0, $user->id);
