@@ -1,0 +1,134 @@
+<?php 
+
+namespace App\Repositories\Calculator;
+
+use Illuminate\Database\Eloquent\Model;
+use App\Services\Calculators\WeightCalculator;
+use App\Models\Recipient;
+use App\Models\Order;
+use App\Models\ShippingService;
+use App\Services\Converters\UnitsConverter;
+use Illuminate\Support\Facades\DB;
+use Auth;
+
+class CalculatorRepository {
+
+    protected $error;
+    public $order;
+    public $recipient;
+    public $chargableWeight;
+
+    public function handel($request)
+    {
+
+        $originalWeight =  $request->weight;
+        if ( $request->unit == 'kg/cm' ){
+            $volumetricWeight = WeightCalculator::getVolumnWeight($request->length,$request->width,$request->height,'cm');
+            $this->chargableWeight = round($volumetricWeight >  $originalWeight ? $volumetricWeight :  $originalWeight,2);
+        }else{
+            $volumetricWeight = WeightCalculator::getVolumnWeight($request->length,$request->width,$request->height,'in');
+            $this->chargableWeight = round($volumetricWeight >  $originalWeight ? $volumetricWeight :  $originalWeight,2);
+        }
+
+        if($this->createRecipient($request)){
+
+            if($this->createOrder($request)){
+                return $this->order;
+            };
+        }
+    }
+
+    private function createRecipient($request){
+        DB::beginTransaction();
+
+        try{
+
+        $recipient = new Recipient();
+        $recipient->state_id = $request->state_id;
+        $recipient->country_id = $request->country_id;
+        DB::commit();
+
+        $recipient->refresh();
+        $this->recipient = $recipient;
+        return $this->recipient;
+
+        }catch (\Exception $ex) {
+
+        DB::rollback();
+        $this->error = $ex->getMessage();
+        return false;
+
+        }
+    }
+
+    private function createOrder($request){
+
+        DB::beginTransaction();
+
+        try{
+
+            $order = new Order();
+            $order->id = 1;
+            $order->user = Auth::user() ? Auth::user() :  User::where('role_id',1)->first();
+            $order->width = $request->width;
+            $order->height = $request->height;
+            $order->length = $request->length;
+            $order->weight = $request->weight;
+            $order->measurement_unit = $request->unit;
+            $order->recipient = $this->recipient;
+            DB::commit();
+            $order->refresh();
+            $this->order = $order;
+
+            return true;
+        } catch (\Exception $ex) {
+
+            DB::rollback();
+            $this->error = $ex->getMessage();
+            return false;
+
+        }
+    }
+
+
+    public function getShippingService()
+    {
+        $shippingServices = collect();
+        foreach (ShippingService::query()->active()->get() as $shippingService) {
+            if ( $shippingService->isAvailableFor($this->order) ){
+                $shippingServices->push($shippingService);
+            }else{
+                session()->flash('alert-danger',"Shipping Service not Available Error:{$shippingService->getCalculator($this->order)->getErrors()}");
+            }
+        }
+        return $shippingServices;
+    }
+
+    public function getChargableWeight($request){
+
+        $originalWeight =  $request->weight;
+
+        if ( $request->unit == 'kg/cm' ){
+            $volumetricWeight = WeightCalculator::getVolumnWeight($request->length,$request->width,$request->height,'cm');
+            $chargableWeight = round($volumetricWeight >  $originalWeight ? $volumetricWeight :  $originalWeight,2);
+        }else{
+            $volumetricWeight = WeightCalculator::getVolumnWeight($request->length,$request->width,$request->height,'in');
+            $chargableWeight = round($volumetricWeight >  $originalWeight ? $volumetricWeight :  $originalWeight,2);
+        }
+        $this->chargableWeight = $chargableWeight;
+
+        return $chargableWeight;
+    }
+
+    public function getWeightInOtherUnit($request){
+
+        if ($request->unit == 'kg/cm' ){
+            $weightInOtherUnit = UnitsConverter::kgToPound($this->chargableWeight);
+        }else{
+            $weightInOtherUnit = UnitsConverter::poundToKg($this->chargableWeight);
+        }
+
+        return $weightInOtherUnit;
+    }
+
+}
