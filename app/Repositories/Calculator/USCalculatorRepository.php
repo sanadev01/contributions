@@ -19,8 +19,11 @@ class USCalculatorRepository
     protected $recipient;
     public $order;
     public $uspsProfit;
-    public $shippingRates = [];
+    public $uspsShippingRates = [];
+    public $uspsRatesWithProfit = [];
     public $error;
+    protected $chargableWeight;
+    public $userLoggedIn = false;
 
     public function handle($request)
     {
@@ -29,10 +32,10 @@ class USCalculatorRepository
         $originalWeight =  $this->request->weight;
         if ( $this->request->unit == 'kg/cm' ){
             $volumetricWeight = WeightCalculator::getVolumnWeight($this->request->length,$this->request->width,$this->request->height,'cm');
-            $chargableWeight = round($volumetricWeight >  $originalWeight ? $volumetricWeight :  $originalWeight,2);
+            $this->chargableWeight = round($volumetricWeight >  $originalWeight ? $volumetricWeight :  $originalWeight,2);
         }else{
             $volumetricWeight = WeightCalculator::getVolumnWeight($this->request->length,$this->request->width,$this->request->height,'in');
-            $chargableWeight = round($volumetricWeight >  $originalWeight ? $volumetricWeight :  $originalWeight,2);
+            $this->chargableWeight = round($volumetricWeight >  $originalWeight ? $volumetricWeight :  $originalWeight,2);
         }
 
         $this->createRecipient();
@@ -48,12 +51,11 @@ class USCalculatorRepository
         {
             $this->uspsProfit = setting('usps_profit', null, auth()->user()->id);
             $this->userLoggedIn = true;
-
         }
 
         if($this->uspsProfit == null || $this->uspsProfit == 0)
         {
-            $this->uspsProfit = setting('usps_profit', null, 1);
+            $this->uspsProfit = setting('usps_profit', null, User::ROLE_ADMIN);
         }
 
         return $this->uspsProfit;
@@ -61,24 +63,44 @@ class USCalculatorRepository
 
     public function getUSPSRates($uspsShippingServices, $order)
     {
+        if ($uspsShippingServices->isEmpty()) {
+            return $this->uspsShippingRates;
+        }
+        $request = $this->createRequest($order);
+
         foreach ($uspsShippingServices as $shippingService) 
         {
-            $requestBody = $this->createRequest($order, $shippingService->service_sub_class);
+            $requestBody = $this->mergeShippingServiceIntoRequest($request, $shippingService->service_sub_class);
             $response = USPSFacade::getSenderPrice($order, $requestBody);
 
             if ($response->success == true) {
-                array_push($this->shippingRates , ['name'=> $shippingService->name , 'rate'=> number_format($response->data['total_amount'], 2)]);
+                array_push($this->uspsShippingRates , ['name'=> $shippingService->name , 'rate'=> number_format($response->data['total_amount'], 2)]);
             }else
             {
                 $this->error = $response->message;
             }
         }
 
-        if ($this->shippingRates) {
-            $this->addProfit();
+        return $this->uspsShippingRates;
+    }
+
+    public function getUSPSRatesWithProfit()
+    {
+        $this->uspsRatesWithProfit = [];
+
+        if (!$this->uspsShippingRates) {
+            return $this->uspsRatesWithProfit;
         }
 
-        return $this->shippingRates;
+        foreach ($this->uspsShippingRates as $uspsRate) {
+            $profit = $uspsRate['rate'] * ($this->uspsProfit / 100);
+
+            $rate = $uspsRate['rate'] + $profit;
+
+            array_push($this->uspsRatesWithProfit, ['name'=> $uspsRate['name'] , 'rate'=> number_format($rate, 2)]);
+        }
+
+        return $this->uspsRatesWithProfit;
     }
 
     public function getUSPSShippingServices($order)
@@ -93,6 +115,16 @@ class USCalculatorRepository
         }
 
         return $shippingServices;
+    }
+
+    public function getUserLoggedInStatus()
+    {
+        return $this->userLoggedIn;
+    }
+
+    public function getchargableWeight()
+    {
+        return $this->chargableWeight;
     }
 
     private function createRecipient()
@@ -133,7 +165,7 @@ class USCalculatorRepository
         $this->order = $order;
     }
 
-    private function createRequest($order, $serviceSubClassCode)
+    private function createRequest($order)
     {
         return new Request([
             'sender_country_id' => $order->sender_country_id,
@@ -144,12 +176,13 @@ class USCalculatorRepository
             'sender_city' => $order->sender_city,
             'sender_address' => $order->sender_address,
             'sender_zipcode' => $order->sender_zipcode,
-            'service' => $serviceSubClassCode,
         ]);
     }
 
-    private function addProfit()
+    private function mergeShippingServiceIntoRequest($request, $serviceSubClassCode)
     {
-        # code...
+        return $request->merge([
+            'service' => $serviceSubClassCode,
+        ]);
     }
 }

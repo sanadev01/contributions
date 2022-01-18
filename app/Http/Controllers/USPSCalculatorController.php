@@ -37,41 +37,23 @@ class USPSCalculatorController extends Controller
     {
         $order = $usCalculatorRepository->handle($request);
         $uspsShippingServices = $usCalculatorRepository->getUSPSShippingServices($order);
-
         $usCalculatorRepository->setUserUSPSProfit();
 
+        $usps_rates = $usCalculatorRepository->getUSPSRates($uspsShippingServices, $order);
+        $shipping_rates = $usCalculatorRepository->getUSPSRatesWithProfit();
+        
         if($uspsShippingServices->isEmpty()){
             $error = 'Shipping Service not Available for the Country you have selected';
-        }
-
-        $uspsRatesWithoutProfit = $usCalculatorRepository->getUSPSRates($uspsShippingServices, $order);
-
-        
-        foreach ($uspsShippingServices as $shippingService) {
-
-            $request_data = $this->create_request($order, $shippingService->service_sub_class);
-            $response = USPSFacade::getSenderPrice($order, $request_data);
-           
-            if($response->success == true)
-            {
-                array_push($this->shipping_rates , ['name'=> $shippingService->name , 'rate'=> number_format($response->data['total_amount'], 2)]);
-
-            }else {
-                $this->error = $response->message;
-            }
         }
 
         if($this->shipping_rates == null){
 
             session()->flash('alert-danger', $this->error);
 
-        }else {
-            // rates without profit
-            $usps_rates = $this->shipping_rates;
-            // rates with profit
-            $this->addProfit($this->shipping_rates);
-            $shipping_rates = $this->shipping_rates;
         }
+
+        $userLoggedIn = $usCalculatorRepository->getUserLoggedInStatus();
+        $chargableWeight = $usCalculatorRepository->getchargableWeight();
 
         if ($request->unit == 'kg/cm' ){
             $weightInOtherUnit = UnitsConverter::kgToPound($chargableWeight);
@@ -82,38 +64,6 @@ class USPSCalculatorController extends Controller
         return view('uspscalculator.show', compact('usps_rates','shipping_rates','order', 'weightInOtherUnit', 'chargableWeight', 'userLoggedIn'));
     }
 
-    public function addProfit($shipping_rates)
-    {
-        $this->shipping_rates = [];
-        foreach ($shipping_rates as  $shipping_rate) 
-        {
-            $profit = $shipping_rate['rate'] * ($this->user_api_profit / 100);
-
-            $rate = $shipping_rate['rate'] + $profit;
-
-            array_push($this->shipping_rates , ['name'=> $shipping_rate['name'] , 'rate'=> number_format($rate, 2)]);
-        }
-
-        return true;
-    }
-
-    private function create_request($order, $service)
-    {
-        $request = (Object)[
-            'sender_country_id' => $order->sender_country_id,
-            'first_name' => $order->sender_first_name,
-            'last_name' => $order->sender_last_name,
-            'pobox_number' => $order->pobox_number,
-            'sender_state' => $order->sender_state,
-            'sender_city' => $order->sender_city,
-            'sender_address' => $order->sender_address,
-            'sender_zipcode' => $order->sender_zipcode,
-            'service' => $service,
-        ];
-        
-        
-        return $request;
-    }
 
     public function buy_usps_label(Request $request)
     {
@@ -136,6 +86,4 @@ class USPSCalculatorController extends Controller
             'path' => route('admin.orders.label.index', $order->id)
         ]; 
     }
-
-    
 }
