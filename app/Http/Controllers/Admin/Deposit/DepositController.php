@@ -56,6 +56,7 @@ class DepositController extends Controller
                     'amount'      => 'required|numeric',
 
                 ]);
+                if($user){
                 if((float)($request->amount) > $user->balance && $request->is_credit=="false"){
                     $request->validate([
                     'amount'      => 'numeric|max:'.$user->balance,
@@ -63,6 +64,7 @@ class DepositController extends Controller
                         'amount.max' => 'Your Current Account Balance is '.$user->balance.' and debit amount should be less than '.$user->balance.'.!',
                     ]);
                 }
+            }
                 $depositRepository->adminAdd($request);
                 session()->flash('alert-success', __('orders.payment.alert-success'));
                 return redirect()->route('admin.deposit.index');
