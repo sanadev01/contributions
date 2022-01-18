@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\State;
-use App\Facades\USPSFacade;
 use Illuminate\Http\Request;
 use App\Services\Converters\UnitsConverter;
 use App\Repositories\USPSCalculatorRepository;
@@ -39,17 +38,17 @@ class USPSCalculatorController extends Controller
         $uspsShippingServices = $usCalculatorRepository->getUSPSShippingServices($order);
         $usCalculatorRepository->setUserUSPSProfit();
 
-        $usps_rates = $usCalculatorRepository->getUSPSRates($uspsShippingServices, $order);
-        $shipping_rates = $usCalculatorRepository->getUSPSRatesWithProfit();
+        $apiRates = $usCalculatorRepository->getUSPSRates($uspsShippingServices, $order);
+        $ratesWithProfit = $usCalculatorRepository->getUSPSRatesWithProfit();
         
+        $error = $usCalculatorRepository->getError();
+
         if($uspsShippingServices->isEmpty()){
             $error = 'Shipping Service not Available for the Country you have selected';
         }
 
-        if($this->shipping_rates == null){
-
-            session()->flash('alert-danger', $this->error);
-
+        if($ratesWithProfit == null){
+            session()->flash('alert-danger', $error);
         }
 
         $userLoggedIn = $usCalculatorRepository->getUserLoggedInStatus();
@@ -60,8 +59,10 @@ class USPSCalculatorController extends Controller
         }else{
             $weightInOtherUnit = UnitsConverter::poundToKg($chargableWeight);
         }
-        $userLoggedIn = $this->userLoggedIn;
-        return view('uspscalculator.show', compact('usps_rates','shipping_rates','order', 'weightInOtherUnit', 'chargableWeight', 'userLoggedIn'));
+
+        $shippingServiceTitle = 'USPS';
+
+        return view('uscalculator.index', compact('apiRates','ratesWithProfit','order', 'weightInOtherUnit', 'chargableWeight', 'userLoggedIn', 'shippingServiceTitle'));
     }
 
 

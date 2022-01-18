@@ -6,10 +6,12 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\Recipient;
+use App\Facades\UPSFacade;
 use App\Facades\USPSFacade;
 use Illuminate\Http\Request;
 use App\Models\ShippingService;
 use Illuminate\Support\Facades\Auth;
+use App\Services\UPS\UPSShippingService;
 use App\Services\USPS\USPSShippingService;
 use App\Services\Calculators\WeightCalculator;
 
@@ -19,8 +21,11 @@ class USCalculatorRepository
     protected $recipient;
     public $order;
     public $uspsProfit;
+    public $upsProfit;
     public $uspsShippingRates = [];
     public $uspsRatesWithProfit = [];
+    public $upsShippingRates = [];
+    public $upsRatesWithProfit = [];
     public $error;
     protected $chargableWeight;
     public $userLoggedIn = false;
@@ -61,6 +66,22 @@ class USCalculatorRepository
         return $this->uspsProfit;
     }
 
+    public function setUserUPSProfit()
+    {
+        if (Auth::check()) 
+        {
+            $this->upsProfit = setting('ups_profit', null, auth()->user()->id);
+            $this->userLoggedIn = true;
+        }
+
+        if($this->upsProfit == null || $this->upsProfit == 0)
+        {
+            $this->upsProfit = setting('ups_profit', null, User::ROLE_ADMIN);
+        }
+
+        return $this->upsProfit;
+    }
+
     public function getUSPSRates($uspsShippingServices, $order)
     {
         if ($uspsShippingServices->isEmpty()) {
@@ -71,17 +92,41 @@ class USCalculatorRepository
         foreach ($uspsShippingServices as $shippingService) 
         {
             $requestBody = $this->mergeShippingServiceIntoRequest($request, $shippingService->service_sub_class);
-            $response = USPSFacade::getSenderPrice($order, $requestBody);
+            $uspsResponse = USPSFacade::getSenderPrice($order, $requestBody);
 
-            if ($response->success == true) {
-                array_push($this->uspsShippingRates , ['name'=> $shippingService->name , 'rate'=> number_format($response->data['total_amount'], 2)]);
+            if ($uspsResponse->success == true) {
+                array_push($this->uspsShippingRates , ['name'=> $shippingService->name , 'rate'=> number_format($uspsResponse->data['total_amount'], 2)]);
             }else
             {
-                $this->error = $response->message;
+                $this->error = $uspsResponse->message;
             }
         }
 
         return $this->uspsShippingRates;
+    }
+
+    public function getUPSRates($upsShippingServices, $order)
+    {
+        if ($upsShippingServices->isEmpty()) {
+            return $this->upsShippingRates;
+        }
+
+        $request = $this->createRequest($order);
+
+        foreach ($upsShippingServices as $shippingService) {
+            $requestBody = $this->mergeShippingServiceIntoRequest($request, $shippingService->service_sub_class);
+            $upsResponse = UPSFacade::getSenderPrice($order, $requestBody);
+            
+            if($upsResponse->success == true)
+            {
+                array_push($this->upsShippingRates , ['name'=> $shippingService->name , 'sub_class_code' => $shippingService->service_sub_class, 'rate'=> number_format($upsResponse->data['RateResponse']['RatedShipment']['TotalCharges']['MonetaryValue'], 2)]);
+            }else
+            {
+                $this->error = $upsResponse->error['response']['errors'][0]['message'] ?? 'Unknown Error';
+            }
+        }
+
+        return $this->upsShippingRates;
     }
 
     public function getUSPSRatesWithProfit()
@@ -103,6 +148,26 @@ class USCalculatorRepository
         return $this->uspsRatesWithProfit;
     }
 
+    public function getUPSRatesWithProfit()
+    {
+        $this->upsRatesWithProfit = [];
+
+        if (!$this->upsShippingRates) {
+            return $this->upsRatesWithProfit;
+        }
+
+        foreach($this->upsShippingRates as $upsRate)
+        {
+            $profit = $upsRate['rate'] * ($this->upsProfit / 100);
+
+            $rate = $upsRate['rate'] + $profit;
+
+            array_push($this->upsRatesWithProfit, ['name'=> $upsRate['name'], 'sub_class_code' => $upsRate['sub_class_code'], 'rate'=> number_format($rate, 2)]);
+        }
+
+        return $this->upsRatesWithProfit;
+    }
+
     public function getUSPSShippingServices($order)
     {
         $shippingServices = collect() ;
@@ -110,6 +175,20 @@ class USCalculatorRepository
         $uspsShippingService = new USPSShippingService($order);
         foreach (ShippingService::query()->active()->get() as $shippingService) {
             if ( $uspsShippingService->isAvailableFor($shippingService) ){
+                $shippingServices->push($shippingService);
+            }
+        }
+
+        return $shippingServices;
+    }
+
+    public function getUPSShippingServices($order)
+    {
+        $shippingServices = collect() ;
+
+        $upsShippingService = new UPSShippingService($order);
+        foreach (ShippingService::query()->active()->get() as $shippingService) {
+            if ( $upsShippingService->isAvailableFor($shippingService) ){
                 $shippingServices->push($shippingService);
             }
         }
@@ -125,6 +204,11 @@ class USCalculatorRepository
     public function getchargableWeight()
     {
         return $this->chargableWeight;
+    }
+
+    public function getError()
+    {
+        return $this->error;
     }
 
     private function createRecipient()
