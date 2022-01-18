@@ -18,6 +18,12 @@ use App\Http\Requests\Orders\OrderDetails\CreateRequest;
 
 class OrderItemsController extends Controller
 {
+    protected $orderRepository;
+
+    public function __construct(OrderRepository $orderRepository)
+    {
+        $this->orderRepository = $orderRepository;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -30,106 +36,16 @@ class OrderItemsController extends Controller
         if ( !$order->recipient ){
             abort(404);
         }
-        $chiliId =  Order::CHILE;
-        $shippingServices = collect() ;
-        $error = null;
+        $chileCountryId =  Order::CHILE;
+        $usCountryId =  Order::US;
+        $shippingServices = $this->orderRepository->getShippingServices($order);
+        $error = $this->orderRepository->getShippingServicesError();
 
-        if($order->recipient->country_id == Order::US)
-        {
-            $uspsShippingService = new USPSShippingService($order);
-
-            foreach (ShippingService::query()->active()->get() as $shippingService) {
-                if ( $uspsShippingService->isAvailableFor($shippingService) ){
-                        $shippingServices->push($shippingService);
-                }
-            }
-
-            $upsShippingService = new UPSShippingService($order);
-            foreach (ShippingService::query()->active()->get() as $shippingService) {
-                if ( $upsShippingService->isAvailableFor($shippingService) ){
-
-                    $shippingServices->push($shippingService);
-                }
-            }
-
-            $fedExShippingService = new FedExShippingService($order);
-            foreach (ShippingService::query()->active()->get() as $shippingService) {
-                if ( $fedExShippingService->isAvailableFor($shippingService) ){
-                        $shippingServices->push($shippingService);
-                }
-            }
-
-        } else {
-            foreach (ShippingService::query()->has('rates')->active()->get() as $shippingService) {
-                if ( $shippingService->isAvailableFor($order) ){
-                    $shippingServices->push($shippingService);
-                }elseif($shippingService->getCalculator($order)->getErrors() != null && $shippingServices->isEmpty()){
-                    session()->flash('alert-danger',"Shipping Service not Available Error:{$shippingService->getCalculator($order)->getErrors()}");
-                }
-            }
+        if ($error) {
+            session()->flash($error);
         }
-        if($shippingServices->isEmpty()){
-            $error = ($order->recipient->commune_id != null) ? "Shipping Service not Available for the Region you have selected" : "Shipping Service not Available for the Country you have selected";
-        }
-
-        if($shippingServices->contains('service_sub_class', ShippingService::USPS_PRIORITY) 
-            || $shippingServices->contains('service_sub_class', ShippingService::USPS_FIRSTCLASS)
-            || $shippingServices->contains('service_sub_class', ShippingService::UPS_GROUND)
-            || $shippingServices->contains('service_sub_class', ShippingService::FEDEX_GROUND))
-        {
-            if(!setting('usps', null, $order->user->id))
-            {
-                $error = "USPS is not enabled for this user";
-                $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
-                    return $shippingService->service_sub_class != ShippingService::USPS_PRIORITY &&
-                        $shippingService->service_sub_class != ShippingService::USPS_FIRSTCLASS;
-                });
-            }
-            if(!setting('ups', null, $order->user->id))
-            {
-                $error = "UPS is not enabled for this user";
-                $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
-                    return $shippingService->service_sub_class != ShippingService::UPS_GROUND;
-                });
-            }
-            if(!setting('fedex', null, $order->user->id))
-            {
-                $error = "FedEx is not enabled for this user";
-                $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
-                    return $shippingService->service_sub_class != ShippingService::FEDEX_GROUND;
-                });
-            }
-
-            if($shippingServices->isNotEmpty()){
-                $error = null;
-            }
-        }
-
         
-        if($order->recipient->country_id == Order::BRAZIL)
-        {
-            // If sinerlog is enabled for the user, then remove the Correios services
-            if(setting('sinerlog', null, $order->user->id))
-            {
-                $shippingServices = $shippingServices->filter(function ($item, $key)  {
-                    return $item->service_sub_class != '33162' && $item->service_sub_class != '33170' && $item->service_sub_class != '33197';
-                });
-            }
-
-            // If sinerlog is not enabled for the user then remove Sinerlog services from shipping service
-            if(!setting('sinerlog', null, $order->user->id))
-            {
-                $shippingServices = $shippingServices->filter(function ($item, $key)  {
-                    return $item->service_sub_class != '33163' && $item->service_sub_class != '33171' && $item->service_sub_class != '33198';
-                });
-            }
-            
-            if($shippingServices->isEmpty()){
-                $error = "Please check your parcel dimensions";
-            }
-        }
-
-        return view('admin.orders.order-details.index',compact('order','shippingServices', 'error','chiliId'));
+        return view('admin.orders.order-details.index',compact('order','shippingServices', 'error','chileCountryId', 'usCountryId'));
     }
 
     /**
@@ -138,7 +54,7 @@ class OrderItemsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateRequest $request,Order $order, OrderRepository $orderRepository)
+    public function store(CreateRequest $request,Order $order)
     {
         $this->authorize('editItems',$order);
 
@@ -168,7 +84,7 @@ class OrderItemsController extends Controller
 
         }    
         
-        if ( $orderRepository->updateShippingAndItems($request,$order) ){
+        if ( $this->orderRepository->updateShippingAndItems($request,$order) ){
             session()->flash('alert-success','orders.Order Placed');
             if ($order->user->hasRole('wholesale') && $order->user->insurance == true) 
             {
@@ -179,10 +95,10 @@ class OrderItemsController extends Controller
         return \back()->withInput();
     }
 
-    public function usps_rates(Request $request)
+    public function uspsRates(Request $request)
     {
         $order = Order::find($request->order_id);
-        $response = USPSFacade::getPrice($order, $request->service);
+        $response = USPSFacade::getRecipientRates($order, $request->service);
 
         if($response->success == true)
         {

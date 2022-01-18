@@ -20,7 +20,7 @@
                 <div class="form-group col-12 col-sm-6 col-md-6">
                     <div class="controls">
                         <label>@lang('orders.order-details.Customer Reference') <span class="text-danger"></span></label>
-                        <input name="customer_reference" class="form-control" {{($order->recipient->country_id == $chiliId) ? 'required' : ''}} value="{{ $order->customer_reference }}" placeholder="@lang('orders.order-details.Customer Reference')"/>
+                        <input name="customer_reference" class="form-control" {{($order->recipient->country_id == $chileCountryId) ? 'required' : ''}} value="{{ $order->customer_reference }}" placeholder="@lang('orders.order-details.Customer Reference')"/>
                         <p class="text-danger">{{ $errors->first('customer_reference') }}</p>
                         <div class="help-block"></div>
                     </div>
@@ -46,7 +46,7 @@
                 <div class="form-group col-12 col-sm-6 col-md-6">
                     <div class="controls">
                         <label>@lang('orders.order-details.Select Shipping Service')<span class="text-danger"></span></label>
-                        @if ($order->recipient->country_id != 250)
+                        @if ($order->recipient->country_id != $usCountryId && $order->sender_country_id != $usCountryId)
                         <select class="form-control selectpicker show-tick" data-live-search="true" name="shipping_service_id" id="shipping_service_id" required placeholder="Select Shipping Service">
                             <option value="">@lang('orders.order-details.Select Shipping Service')</option>
                             @foreach ($shippingServices as $shippingService)
@@ -54,7 +54,7 @@
                             @endforeach
                         </select>
                         @else
-                        {{-- for usps and ups --}}
+                        {{-- for usps,ups and fedex --}}
                         <select class="form-control selectpicker show-tick" data-live-search="true" name="shipping_service_id" id="us_shipping_service" required placeholder="Select Shipping Service">
                             <option value="">@lang('orders.order-details.Select Shipping Service')</option>
                             @foreach ($shippingServices as $shippingService)
@@ -135,9 +135,8 @@
         {
             return getFedExRates();
             
-        } else if(service != undefined) {
-
-          return getUpsRates();
+        } else if(service != undefined && service == 03) {
+            return getUpsRates();
         }
     })
    
