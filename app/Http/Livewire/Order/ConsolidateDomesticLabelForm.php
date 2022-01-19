@@ -1,0 +1,140 @@
+<?php
+
+namespace App\Http\Livewire\Order;
+
+use Livewire\Component;
+use Illuminate\Http\Request;
+use App\Repositories\USLabelRepository;
+use App\Repositories\DomesticLabelRepository;
+
+class ConsolidateDomesticLabelForm extends Component
+{
+    public $consolidatedOrder;
+    public $orders;
+    public $states;
+    public $usShippingServices;
+    public $errors;
+
+    public $upsError;
+    public $uspsError;
+    public $fedexError;
+    public $hasRates = false;
+    public $usRates = [];
+
+    public $selectedService;
+    public $firstName;
+    public $lastName;
+    public $senderState;
+    public $senderAddress;
+    public $senderCity;
+    public $senderZipCode;
+    public $pickupType = false;
+    public $pickupDate;
+    public $earliestPickupTime;
+    public $latestPickupTime;
+    public $pickupLocation;
+    public $service;
+
+    public $selectedServiceCost;
+    public $zipCodeResponse;
+    public $zipCodeResponseMessage;
+    public $zipCodeClass;
+
+    protected $rules = [
+        'firstName' => 'required',
+        'lastName' => 'required',
+        'senderState' => 'required',
+        'senderAddress' => 'required',
+        'senderCity' => 'required',
+        'senderZipCode' => 'required',
+        'pickupType' => 'required',
+        'pickupDate' => 'required_if:pickupType,true',
+        'earliestPickupTime' => 'required_if:pickupType,true',
+        'latestPickupTime' => 'required_if:pickupType,true',
+        'pickupLocation' => 'required_if:pickupType,true',
+    ];
+
+    public function mount($consolidatedOrder, $orders, $states, $usShippingServices, $errors)
+    {
+        $this->consolidatedOrder = $consolidatedOrder;
+        $this->orders = $orders;
+        $this->states = $states;
+        $this->usShippingServices = $usShippingServices;
+        $this->errors = $errors;
+    }
+
+    public function render()
+    {
+        return view('livewire.order.consolidate-domestic-label-form');
+    }
+
+    public function updatedsenderState()
+    {
+        $this->validateUSAddress();
+    }
+
+    public function updatedsenderAddress()
+    {
+        $this->validateUSAddress();
+    }
+
+    public function updatedsenderCity()
+    {
+        $this->validateUSAddress();
+    }
+
+    private function validateUSAddress()
+    {
+        $this->validate([
+            'senderState' => 'required',
+            'senderAddress' => 'required|min:4',
+            'senderCity' => 'required|min:4',
+        ]);
+
+        $request = new Request([
+            'state' => $this->senderState,
+            'address' => $this->senderAddress,
+            'city' => $this->senderCity,
+        ]);
+
+        $domesticLabelRepostory = new DomesticLabelRepository();
+        $response = $domesticLabelRepostory->validateAddress($request);
+
+        if ($response['success'] == true) {
+            $this->senderZipCode = $response['zipcode'];
+            $this->zipCodeResponse = true;
+            $this->zipCodeResponseMessage = 'according to your given address your zipcode is: '.$this->senderZipCode;
+            $this->zipCodeClass = 'text-success';
+            return true;
+        }
+
+        $this->senderZipCode = '';
+        $this->zipCodeResponse = true;
+        $this->zipCodeResponseMessage = $response['message'];
+        $this->zipCodeClass = 'text-danger';
+    }
+
+    public function getRates(DomesticLabelRepository $domesticLabelRepostory)
+    {
+        $this->validate();
+        $this->usRates = [];
+
+        $this->usRates = $domesticLabelRepostory->getRatesForDomesticServices($this->createRequest(), $this->usShippingServices);
+    }
+
+    private function createRequest()
+    {
+        return new Request([
+            'first_name' => $this->firstName,
+            'last_name' => $this->lastName,
+            'sender_state' => $this->senderState,
+            'sender_address' => $this->senderAddress,
+            'sender_city' => $this->senderCity,
+            'sender_zipcode' => $this->senderZipCode,
+            'order' => $this->consolidatedOrder,
+            'pickup_date' => $this->pickupDate,
+            'earliest_pickup_time' => $this->earliestPickupTime,
+            'latest_pickup_time' => $this->latestPickupTime,
+        ]);
+    }
+}
