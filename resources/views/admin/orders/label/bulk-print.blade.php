@@ -40,7 +40,7 @@
                     </th>
                 </thead>
                 <tbody>
-                    @foreach ($orders as $order)
+                    @forelse ($orders as $order)
                         @if( $order->isPaid() && auth()->user()->can('canPrintLable',$order))
                         <tr>
 
@@ -91,7 +91,13 @@
                             </td>
                         </tr>
                         @endif
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="7" class="text-center danger h3">
+                                No Order Selected
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
@@ -108,7 +114,9 @@
                 <p><h5>@lang('orders.update-label')</h5></p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="updateLabel({{$order->id}},'#row_{{$order->id}}')">Yes</button>
+                @if (isset($order))
+                    <button type="button" class="btn btn-primary" onclick="updateLabel({{$order->id}},'#row_{{$order->id}}')">Yes</button>
+                @endif
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
             </div>
         </div>
