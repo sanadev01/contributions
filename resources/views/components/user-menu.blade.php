@@ -299,7 +299,7 @@
                                 <span class="menu-title">Products</span>
                             </a>
                         </li>
-                        <li class="{{ $isActive(['admin.inventory.status.approved']) }}">
+                        {{-- <li class="{{ $isActive(['admin.inventory.status.approved']) }}">
                             <a href="{{ route('admin.inventory.status.approved','approved') }}">
                                 <i class="feather icon-circle"></i>
                                 <span class="menu-title">Approved Products</span>
@@ -310,7 +310,7 @@
                                 <i class="feather icon-circle"></i>
                                 <span class="menu-title">Pending Products</span>
                             </a>
-                        </li>
+                        </li> --}}
                         
                     </ul>
                 </li>
