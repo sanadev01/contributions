@@ -157,8 +157,8 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         Route::namespace('Inventory')->as('inventory.')->prefix('inventory')->group(function(){
             Route::resource('product', ProductController::class);
             Route::post('product/status', [\App\Http\Controllers\Admin\Inventory\ProductController::class, 'statusUpdate'])->name('status.update');
-            Route::get('show/{status}/', [\App\Http\Controllers\Admin\Inventory\ProductController::class, 'status'])->name('status.approved');
-            Route::get('{status}/show', [\App\Http\Controllers\Admin\Inventory\ProductController::class, 'status'])->name('status.pending');
+            // Route::get('show/{status}/', [\App\Http\Controllers\Admin\Inventory\ProductController::class, 'status'])->name('status.approved');
+            // Route::get('{status}/show', [\App\Http\Controllers\Admin\Inventory\ProductController::class, 'status'])->name('status.pending');
             Route::resource('product-export', ProductExportController::class)->only('index');
             Route::resource('product-order', ProductOrderController::class)->only('show');
            
