@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Order;
 
 use Livewire\Component;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Repositories\USLabelRepository;
 use App\Repositories\DomesticLabelRepository;
@@ -119,7 +120,27 @@ class ConsolidateDomesticLabelForm extends Component
         $this->validate();
         $this->usRates = [];
 
+        $domesticLabelRepostory->handle();
         $this->usRates = $domesticLabelRepostory->getRatesForDomesticServices($this->createRequest(), $this->usShippingServices);
+    }
+
+    public function getLabel(DomesticLabelRepository $domesticLabelRepostory)
+    {
+        $this->validate();
+
+        if (!$this->selectedService) {
+            return $this->addError('selectedService', 'select service please.');
+        }
+
+        $this->getCostOfSelectedService();
+        $request = $this->createRequest();
+        $request->merge([
+            'service' => $this->selectedService,
+            'total_price' => $this->selectedServiceCost,
+        ]);
+
+        $domesticLabelRepostory->handle();
+        $domesticLabelRepostory->getDomesticLabel($request, $request->order);
     }
 
     private function createRequest()
@@ -135,6 +156,17 @@ class ConsolidateDomesticLabelForm extends Component
             'pickup_date' => $this->pickupDate,
             'earliest_pickup_time' => $this->earliestPickupTime,
             'latest_pickup_time' => $this->latestPickupTime,
+            'consolidated_order' => true,
         ]);
+    }
+
+    private function getCostOfSelectedService()
+    {
+        Arr::where($this->usRates, function ($value, $key) {
+            if($value['service_code'] == $this->selectedService)
+            {
+                return $this->selectedServiceCost = $value['cost'];
+            }
+        });
     }
 }

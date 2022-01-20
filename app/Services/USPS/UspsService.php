@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use App\Services\Calculators\WeightCalculator;
+use App\Services\USPS\ConsolidatedOrderService;
 
 class UspsService
 {
@@ -302,9 +303,14 @@ class UspsService
         }
     }
 
-    // USPS secondary Label Logic
     public function getSenderPrice($order, $request)
     {
+        if ($request->exists('consolidated_order')) {
+
+            $consolidatedOrderService = new ConsolidatedOrderService();
+            return $this->uspsApiCallForRates($consolidatedOrderService->makeRequestForSenderRates($order, $request));
+        }
+
         return $this->uspsApiCallForRates($this->makeRequestAttributeForSenderRates($order, $request));
     }
 

@@ -3,6 +3,7 @@
 
 namespace App\Repositories;
 
+use App\Models\User;
 use App\Models\Order;
 use App\Facades\USPSFacade;
 use App\Models\OrderTracking;
@@ -13,7 +14,7 @@ use App\Services\USPS\USPSShippingService;
 
 class USPSLabelRepository
 {
-    protected $usps_errors;
+    protected $uspsError;
     public $user_api_profit;
     public $total_amount_with_profit;
 
@@ -54,7 +55,7 @@ class USPSLabelRepository
 
         } else {
 
-            $this->usps_errors = $response->message;
+            $this->uspsError = $response->message;
             return null;
         }
         
@@ -80,7 +81,7 @@ class USPSLabelRepository
 
     public function getUSPSErrors()
     {
-        return $this->usps_errors;
+        return $this->uspsError;
     }
 
     public function addOrderTracking($order)
@@ -120,7 +121,7 @@ class USPSLabelRepository
         {
             if(!setting('usps', null, $order->user->id))
             {
-                $this->usps_errors = "USPS is not enabled for your account";
+                $this->uspsError = "USPS is not enabled for your account";
                 $shippingServices = collect() ;
             }
         }
@@ -132,12 +133,16 @@ class USPSLabelRepository
 
     public function getRates($request)
     {
-        $order = Order::find($request->order_id);
+        $order = ($request->exists('consolidated_order')) ? $request->order : Order::find($request->order_id);
         $response = USPSFacade::getSenderPrice($order, $request);
 
         if($response->success == true)
         {
-            $this->addProfit($order->user, $response->data['total_amount']);
+            $uspsRate = $response->data['total_amount'];
+            \Log::info('USPS Rate: '.$uspsRate);
+            
+            ($request->exists('consolidated_order')) ? $this->addProfitForConslidatedOrder($order['user'], $uspsRate) 
+                                                        : $this->addProfit($order->user, $uspsRate);
 
             return (Array)[
                 'success' => true,
@@ -149,6 +154,21 @@ class USPSLabelRepository
             'success' => false,
             'message' => 'server error, could not get rates',
         ]; 
+    }
+
+    public function getSecondaryLabel($request, $order)
+    {
+        if($this->checkUserBalance($request->total_price))
+        {
+           return $this->getLabelForSender($request, $order);
+        }
+    }
+
+    public function getLabelForSender($request, $order)
+    {
+        $response = USPSFacade::getLabelForSender($order, $request);
+
+        dd($response);
     }
 
     private function addProfit($user, $usps_rate)
@@ -178,7 +198,7 @@ class USPSLabelRepository
         
         if ( $request->total_price > getBalance())
         {
-            $this->usps_errors = 'Not Enough Balance. Please Recharge your account.';
+            $this->uspsError = 'Not Enough Balance. Please Recharge your account.';
 
             return false;
         }
@@ -208,9 +228,26 @@ class USPSLabelRepository
 
         } else {
 
-            $this->usps_errors = $response->message;
+            $this->uspsError = $response->message;
             return null;
         }
+    }
+
+    private function addProfitForConslidatedOrder($user, $uspsRate)
+    {
+        $user = User::find($user['id']);
+        return $this->addProfit($user, $uspsRate);
+    }
+
+    private function checkUserBalance($charges)
+    {
+        if ($charges > getBalance())
+        {
+            $this->uspsError = 'Not Enough Balance. Please Recharge your account.';
+            return false;
+        }
+
+        return true;
     }
     
 }

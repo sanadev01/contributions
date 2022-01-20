@@ -118,13 +118,17 @@ class FedExLabelRepository
 
     public function getRates($request)
     {
-        $order = Order::find($request->order_id);
+        $order = ($request->exists('consolidated_order')) ? $request->order : Order::find($request->order_id);
         $response = FedExFacade::getSenderRates($order, $request);
 
         if($response->success == true)
         {
             $fedExRate = $response->data['output']['rateReplyDetails'][0]['ratedShipmentDetails'][0]['totalNetFedExCharge'];
-            $this->addProfit($order->user, $fedExRate);
+            \Log::info('FedEx Rate: '.$fedExRate);
+            
+            ($request->exists('consolidated_order')) ? $this->addProfitForConslidatedOrder($order['user'], $fedExRate) 
+                                                        : $this->addProfit($order->user, $fedExRate);
+
             
             return (Array)[
                 'success' => true,
@@ -165,5 +169,11 @@ class FedExLabelRepository
         Storage::put("labels/{$fedExtrackingCode}.pdf", $contents);
         
         return true;
+    }
+
+    private function addProfitForConslidatedOrder($user, $fedexRate)
+    {
+        $user = User::find($user['id']);
+        return $this->addProfit($user, $fedexRate);
     }
 }

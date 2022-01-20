@@ -56,11 +56,16 @@ class UpsService
         return $this->upsApiCall($this->createPackageUrl, $data);
     }
 
-    public function getSenderPrice($order, $request_data)
-    {   
-       $data = $this->makeRatesRequestForSender($order, $request_data);
+    public function getSenderPrice($order, $request)
+    {  
+        if ($request->exists('consolidated_order')) {
+            $consolidatedOrderService = new ConsolidatedOrderService();
+
+            $consolidatedOrderService->handle($this->getPaymentDetails(), $this->shipperNumber);
+            return $this->upsApiCall($this->ratingPackageUrl,  $consolidatedOrderService->makeConsolidatedOrderRatesRequestForSender($order, $request));
+        }
         
-       return $this->upsApiCall($this->ratingPackageUrl, $data);
+        return $this->upsApiCall($this->ratingPackageUrl, $this->makeRatesRequestForSender($order, $request));
     }
 
     public function buyLabel($order, $request_sender_data)

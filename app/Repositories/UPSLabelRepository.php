@@ -4,6 +4,7 @@
 namespace App\Repositories;
 
 
+use App\Models\User;
 use App\Models\Order;
 use App\Facades\UPSFacade;
 use App\Models\OrderTracking;
@@ -213,13 +214,17 @@ class UPSLabelRepository
     }
 
     public function getRates($request)
-    {
-        $order = Order::find($request->order_id);
+    {  
+        $order = ($request->exists('consolidated_order')) ? $request->order : Order::find($request->order_id);
         $response = UPSFacade::getSenderPrice($order, $request);
 
         if($response->success == true)
         {
-            $this->addProfit($order->user, $response->data['RateResponse']['RatedShipment']['TotalCharges']['MonetaryValue']);
+            $upsRate = $response->data['RateResponse']['RatedShipment']['TotalCharges']['MonetaryValue'];
+            \Log::info('UPS Rate: '.$upsRate);
+
+            ($request->exists('consolidated_order')) ? $this->addProfitForConslidatedOrder($order['user'], $upsRate) 
+                                                        : $this->addProfit($order->user, $upsRate);
 
             if($request->pickup == "true")
             {
@@ -268,5 +273,11 @@ class UPSLabelRepository
     {
         $this->total_amount_with_profit = $this->total_amount_with_profit + $pickup_charges;
         return true;
+    }
+
+    private function addProfitForConslidatedOrder($user, $upsRate)
+    {
+        $user = User::find($user['id']);
+        return $this->addProfit($user, $upsRate);
     }
 }

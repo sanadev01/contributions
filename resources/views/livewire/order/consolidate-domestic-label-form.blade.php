@@ -54,7 +54,7 @@
                     <h4>Order Dimensions : {{ $consolidatedOrder['length'] }} X {{ $consolidatedOrder['width']}} X {{ $consolidatedOrder['height'] }}</h4>
                 </div>
                 <div class="col-md-3">
-                    {{-- <h4>POBOX # :  {{ $consolidatedOrder->user->pobox_number }} </h4> --}}
+                    <h4>POBOX # :  {{ $consolidatedOrder['user']['pobox_number'] }} </h4>
                 </div>
             </div>
         </div>
