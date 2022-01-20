@@ -221,7 +221,6 @@ class UPSLabelRepository
         if($response->success == true)
         {
             $upsRate = $response->data['RateResponse']['RatedShipment']['TotalCharges']['MonetaryValue'];
-            \Log::info('UPS Rate: '.$upsRate);
 
             ($request->exists('consolidated_order')) ? $this->addProfitForConslidatedOrder($order['user'], $upsRate) 
                                                         : $this->addProfit($order->user, $upsRate);

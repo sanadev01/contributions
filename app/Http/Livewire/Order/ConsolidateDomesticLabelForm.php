@@ -137,10 +137,16 @@ class ConsolidateDomesticLabelForm extends Component
         $request->merge([
             'service' => $this->selectedService,
             'total_price' => $this->selectedServiceCost,
+            'orders' => $this->orders,
         ]);
 
         $domesticLabelRepostory->handle();
-        $domesticLabelRepostory->getDomesticLabel($request, $request->order);
+        if($domesticLabelRepostory->getDomesticLabel($request, $request->order))
+        {
+            return redirect()->route('admin.order.us-label.index', $this->orders->first()->id);
+        }
+
+        $this->uspsError = $domesticLabelRepostory->getError();
     }
 
     private function createRequest()

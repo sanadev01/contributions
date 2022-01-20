@@ -48,10 +48,10 @@
             <div class="row mt-3 ml-3">
                 <input type="hidden" name="order_id" id="order_id" value="{{$order->id}}">
                 <div class="col-md-3">
-                    <h4>Order Weight: {{ $consolidatedOrder['weight'] }} Kg</h4>
+                    <h4>Consolidated Order Volumetric Weight: {{ $consolidatedOrder['weight'] }} Kg</h4>
                 </div>
                 <div class="col-md-3">
-                    <h4>Order Dimensions : {{ $consolidatedOrder['length'] }} X {{ $consolidatedOrder['width']}} X {{ $consolidatedOrder['height'] }}</h4>
+                    <h4>Consolidated Order Dimensions : {{ $consolidatedOrder['length'] }} in X {{ $consolidatedOrder['width']}} in X {{ $consolidatedOrder['height'] }} in</h4>
                 </div>
                 <div class="col-md-3">
                     <h4>POBOX # :  {{ $consolidatedOrder['user']['pobox_number'] }} </h4>

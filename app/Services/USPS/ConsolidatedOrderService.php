@@ -7,7 +7,7 @@ use App\Models\ShippingService;
 class ConsolidatedOrderService
 {
 
-    public function makeRequestForSenderRates($order, $request)
+    public function makeConsolidatedOrderRequestForSender($order, $request)
     {
         return [
             'from_address' => [

@@ -308,18 +308,24 @@ class UspsService
         if ($request->exists('consolidated_order')) {
 
             $consolidatedOrderService = new ConsolidatedOrderService();
-            return $this->uspsApiCallForRates($consolidatedOrderService->makeRequestForSenderRates($order, $request));
+            return $this->uspsApiCallForRates($consolidatedOrderService->makeConsolidatedOrderRequestForSender($order, $request));
         }
 
-        return $this->uspsApiCallForRates($this->makeRequestAttributeForSenderRates($order, $request));
+        return $this->uspsApiCallForRates($this->makeRequestForSender($order, $request));
     }
 
-    public function buyLabel($order, $request)
+    public function getLabelForSender($order, $request)
     {
-        return $this->uspsApiCall($this->makeRequestAttributeForSenderRates($order, $request));
+        if ($request->exists('consolidated_order')) 
+        {
+            $consolidatedOrderService = new ConsolidatedOrderService();
+            return $this->uspsApiCall($consolidatedOrderService->makeConsolidatedOrderRequestForSender($order, $request));
+        }
+
+        return $this->uspsApiCall($this->makeRequestForSender($order, $request));
     }
 
-    private function makeRequestAttributeForSenderRates($order, $request)
+    private function makeRequestForSender($order, $request)
     {
         if(!isset($request->uspsBulkLabel))
         {

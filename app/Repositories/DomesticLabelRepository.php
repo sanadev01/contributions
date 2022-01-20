@@ -15,6 +15,7 @@ class DomesticLabelRepository
     protected $fedexLabelRepository;
 
     public $domesticRates = [];
+    public $error;
 
     public function handle()
     {
@@ -53,20 +54,29 @@ class DomesticLabelRepository
     {
         if ($request->service == ShippingService::UPS_GROUND)
         {
-            dd(false);
-            return $this->upsLabelRepository->getUPSGroundLabel($request, $order);
+            // return $this->upsLabelRepository->getUPSGroundLabel($request, $order);
         }
 
         if ($request->service == ShippingService::FEDEX_GROUND) 
         {
-            dd(false);
-            return $this->fedexLabelRepository->getFedexGroundLabel($request, $order);
+            // return $this->fedexLabelRepository->getFedexGroundLabel($request, $order);
         }
 
         if ($request->service == ShippingService::USPS_PRIORITY || $request->service == ShippingService::USPS_FIRSTCLASS) 
         {
-            return $this->uspsLabelRepository->getSecondaryLabel($request, $order);
+            if($this->uspsLabelRepository->getSecondaryLabel($request, $order))
+            {
+                return true;
+            }
+            
+            $this->error = $this->uspsLabelRepository->getUSPSErrors();
+            return false;
         }
+    }
+
+    public function getError()
+    {
+        return $this->error;
     }
 
     private function getUPSRates($request, $service)

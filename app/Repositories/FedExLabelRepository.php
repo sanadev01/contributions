@@ -124,7 +124,6 @@ class FedExLabelRepository
         if($response->success == true)
         {
             $fedExRate = $response->data['output']['rateReplyDetails'][0]['ratedShipmentDetails'][0]['totalNetFedExCharge'];
-            \Log::info('FedEx Rate: '.$fedExRate);
             
             ($request->exists('consolidated_order')) ? $this->addProfitForConslidatedOrder($order['user'], $fedExRate) 
                                                         : $this->addProfit($order->user, $fedExRate);
