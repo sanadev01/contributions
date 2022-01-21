@@ -6,10 +6,7 @@ use Livewire\Component;
 use App\Facades\USPSFacade;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
-use App\Models\ShippingService;
-use App\Repositories\UPSLabelRepository;
-use App\Repositories\USPSLabelRepository;
-use App\Repositories\FedExLabelRepository;
+use App\Repositories\DomesticLabelRepository;
 
 class UsLabelForm extends Component
 {
@@ -120,33 +117,22 @@ class UsLabelForm extends Component
         return USPSFacade::validateAddress($request);
     }
 
-    public function getRates(UPSLabelRepository $upsLabelRepository, USPSLabelRepository $uspsLabelRepository, FedExLabelRepository $fedExLabelRepository)
+    public function getRates(DomesticLabelRepository $domesticLabelRepostory)
     {
         $this->validate();
         $this->usRates = [];
         
         if ($this->usShippingServices)
         {
-            $this->usShippingServices->each(function ($shippingService, $key) use ($upsLabelRepository, $uspsLabelRepository, $fedExLabelRepository) {
-                if ($shippingService['service_sub_class'] == ShippingService::UPS_GROUND) {
-                    $this->getUPSRates($shippingService['service_sub_class'], $upsLabelRepository);
-                }
-
-                if ($shippingService['service_sub_class'] == ShippingService::USPS_PRIORITY
-                    || $shippingService['service_sub_class'] == ShippingService::USPS_FIRSTCLASS) 
-                {
-                    $this->getUSPSRates($shippingService['service_sub_class'], $uspsLabelRepository);
-                }
-
-                if ($shippingService['service_sub_class'] == ShippingService::FEDEX_GROUND) {
-                   $this->getFedexRates($shippingService['service_sub_class'], $fedExLabelRepository);
-                }
-            });
+            $domesticLabelRepostory->handle();
+            $this->usRates = $domesticLabelRepostory->getRatesForDomesticServices($this->createRequest(), $this->usShippingServices);
             
+            $this->uspsError = $domesticLabelRepostory->getError();
+            $this->upsError = $domesticLabelRepostory->getError();
         }    
     }
 
-    public function getLabel(UPSLabelRepository $upsLabelRepository, USPSLabelRepository $uspsLabelRepository, FedExLabelRepository $fedExLabelRepository)
+    public function getLabel(DomesticLabelRepository $domesticLabelRepostory)
     {
         $this->validate();
 
@@ -155,105 +141,24 @@ class UsLabelForm extends Component
         }
 
         $this->getCostOfSelectedService();
-        if ($this->selectedService == ShippingService::UPS_GROUND) 
-        {
-            return $this->getUPSLabel($upsLabelRepository);
-        }
+        $request = $this->createRequest();
+        $request->merge([
+            'service' => $this->selectedService,
+            'total_price' => $this->selectedServiceCost,
+        ]);
 
-        if ($this->selectedService == ShippingService::FEDEX_GROUND) 
-        {
-            return $this->getFedexLabel($fedExLabelRepository);
-        }
-
-        $this->getUSPSLabel($uspsLabelRepository);
-        
-    }
-
-    private function getUPSRates($service, $upsLabelRepository)
-    {
-        $request = $this->createRequest($service);
-
-        $request->merge(['pickup' => $this->pickupType]);
-
-        $upsRateResponse = $upsLabelRepository->getRates($request);
-        if ($upsRateResponse['success'] == true) {
-          return array_push($this->usRates, ['service' => 'UPS Ground', 'service_code' => $service, 'cost' => $upsRateResponse['total_amount']]);
-        }
-
-        $this->upsError = $upsRateResponse['message'];
-    }
-
-    private function getUSPSRates($service, $uspsLabelRepository)
-    {
-        $uspsRateResponse = $uspsLabelRepository->getRates($this->createRequest($service));
-        if ($uspsRateResponse['success'] == true) {
-            return array_push($this->usRates, ['service' => ($service == ShippingService::USPS_PRIORITY) ? 'USPS Priority' : 'USPS FirstClass', 'service_code' => $service, 'cost' => $uspsRateResponse['total_amount']]);
-        }
-
-        $this->uspsError = $uspsRateResponse['message'];
-    }
-
-    private function getFedexRates($service, $fedExLabelRepository)
-    {
-        $fedExRateResponse = $fedExLabelRepository->getRates($this->createRequest($service));
-        if ($fedExRateResponse['success'] == true) {
-            return array_push($this->usRates, ['service' => 'FedEx Ground', 'service_code' => $service, 'cost' => $fedExRateResponse['total_amount']]);
-        }
-
-        $this->fedExError = $fedExRateResponse['message'];
-    }
-
-    private function getUPSLabel($upsLabelRepository)
-    {
-        $request = $this->createRequest($this->selectedService);
-        $request->merge(['total_price' => $this->selectedServiceCost]);
-
-        $request = ($this->pickupType == true) ? $request->merge(['pickup' => $this->pickupType]) : $request;
-        
-        $upsLabelRepository->buyLabel($request, $this->order);
-
-        $this->upsError = $upsLabelRepository->getUPSErrors();
-        
-        if (!$this->upsError) {
-            return redirect()->route('admin.order.us-label.index', $this->order->id);
-        }
-
-        return false;
-    }
-
-    private function getFedexLabel($fedExLabelRepository)
-    {
-        $request = $this->createRequest($this->selectedService);
-        $request->merge(['total_price' => $this->selectedServiceCost]);
-
-        $request = ($this->pickupType == true) ? $request->merge(['pickup' => $this->pickupType]) : $request;
-
-        if($fedExLabelRepository->getSecondaryLabel($request, $this->order))
+        $domesticLabelRepostory->handle();
+        if($domesticLabelRepostory->getDomesticLabel($request, $this->order))
         {
             return redirect()->route('admin.order.us-label.index', $this->order->id);
         }
 
-        $this->fedexError = $fedExLabelRepository->getFedExErrors();
-        return false;
-    }
-
-    private function getUSPSLabel($uspsLabelRepository)
-    {
-        $request = $this->createRequest($this->selectedService);
-        $request->merge(['total_price' => $this->selectedServiceCost]);
+        $this->uspsError = $domesticLabelRepostory->getError();
+        $this->upsError = $domesticLabelRepostory->getError();
         
-        $uspsLabelRepository->buyLabel($request, $this->order);
-
-        $this->uspsError = $uspsLabelRepository->getUSPSErrors();
-
-        if ($this->uspsError == null) {
-            return redirect()->route('admin.order.us-label.index', $this->order->id);
-        }
-
-        return false;
     }
 
-    private function createRequest($servcie)
+    private function createRequest()
     {
        return new Request([
             'first_name' => $this->firstName,
@@ -262,8 +167,8 @@ class UsLabelForm extends Component
             'sender_address' => $this->senderAddress,
             'sender_city' => $this->senderCity,
             'sender_zipcode' => $this->senderZipCode,
-            'service' => $servcie,
             'order_id' => $this->order->id,
+            'pickupShipment' => ($this->pickupType == 'true') ? true : false,
             'pickup_date' => $this->pickupDate,
             'earliest_pickup_time' => $this->earliestPickupTime,
             'latest_pickup_time' => $this->latestPickupTime,

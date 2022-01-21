@@ -2,10 +2,8 @@
 namespace App\Services\UPS;
 
 use Exception;
-use App\Models\ShippingService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Calculators\WeightCalculator;
 use Illuminate\Support\Facades\Log;
@@ -249,7 +247,7 @@ class UpsService
                             'CountryCode' => 'US',
                         ],
                         'Phone' => [
-                            'Number' => $request->sender_phone,
+                            'Number' => $order->sender_phone ? $order->sender_phone : '+13058885191',
                         ],
                     ],
                     'PaymentInformation' => $this->getPaymentDetails(),
@@ -602,6 +600,10 @@ class UpsService
         }
         $description = implode(' ', $this->itemDescription);
         
+        if (strlen($description) > 48){
+            $description = str_limit($description, 45);
+        }
+
         return $description;
     }
 

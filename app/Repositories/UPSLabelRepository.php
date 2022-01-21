@@ -110,11 +110,11 @@ class UPSLabelRepository
 
         if($response->success == true)
         {
-            $this->totalUpsCost = $this->totalUpsCost + $response->data['ShipmentResponse']['ShipmentResults']['ShipmentCharges']['TotalCharges']['MonetaryValue'];
-            $this->addProfitForConslidatedOrder($order['user'], $this->totalUpsCost);
+            $this->totalUpsCost += $response->data['ShipmentResponse']['ShipmentResults']['ShipmentCharges']['TotalCharges']['MonetaryValue'];
 
             if($request->exists('consolidated_order'))
             {
+                $this->addProfitForConslidatedOrder($order['user'], $this->totalUpsCost);
                 if(!$this->updateConsolidatedOrders($request, $response))
                 {
                     return false;
@@ -123,11 +123,12 @@ class UPSLabelRepository
                 $this->order = $request->orders->first();
             }else
             {
-                
+                $this->addProfit($order->user, $this->totalUpsCost);
+
                 $order->update([
                     'us_api_response' => json_encode($response->data),
                     'us_api_tracking_code' => $response->data['ShipmentResponse']['ShipmentResults']['ShipmentIdentificationNumber'],
-                    'us_secondary_label_cost' => setUSCosts($this->total_ups_cost, $this->total_amount_with_profit),
+                    'us_secondary_label_cost' => setUSCosts($this->totalUpsCost, $this->total_amount_with_profit),
                     'us_api_service' => $request->service,
                     'api_pickup_response' => ($request->pickupShipment == true) ? $this->pickupResponse : null,
                 ]);
@@ -155,8 +156,8 @@ class UPSLabelRepository
             return false;
         }
 
-        $pickupShipmentCost = $pickupShipmentresponse->data['PickupCreationResponse']['RateResult']['GrandTotalOfAllCharge'];
-        $this->addPickupRate($pickupShipmentCost);
+        $this->totalUpsCost += $pickupShipmentresponse->data['PickupCreationResponse']['RateResult']['GrandTotalOfAllCharge'];
+        $this->addPickupRate($this->totalUpsCost);
         $this->pickupResponse = $pickupShipmentresponse->data;
         return true;
     }
@@ -202,7 +203,6 @@ class UPSLabelRepository
         if($response->success == true)
         {
             $upsRate = $response->data['RateResponse']['RatedShipment']['TotalCharges']['MonetaryValue'];
-
             ($request->exists('consolidated_order')) ? $this->addProfitForConslidatedOrder($order['user'], $upsRate) 
                                                         : $this->addProfit($order->user, $upsRate);
 
@@ -253,15 +253,13 @@ class UPSLabelRepository
         }
 
         $profit = $ups_rates * ($this->user_api_profit / 100);
-
-        $this->total_amount_with_profit = $ups_rates + $profit;
-
+        $this->total_amount_with_profit += $ups_rates + $profit;
         return true;
     }
 
     private function addPickupRate($pickup_charges)
     {
-        $this->total_amount_with_profit = $this->total_amount_with_profit + $pickup_charges;
+        $this->total_amount_with_profit += $pickup_charges;
         return true;
     }
 
