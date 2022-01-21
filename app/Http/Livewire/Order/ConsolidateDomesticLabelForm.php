@@ -147,6 +147,7 @@ class ConsolidateDomesticLabelForm extends Component
         }
 
         $this->uspsError = $domesticLabelRepostory->getError();
+        $this->upsError = $domesticLabelRepostory->getError();
     }
 
     private function createRequest()
@@ -159,6 +160,7 @@ class ConsolidateDomesticLabelForm extends Component
             'sender_city' => $this->senderCity,
             'sender_zipcode' => $this->senderZipCode,
             'order' => $this->consolidatedOrder,
+            'pickupShipment' => ($this->pickupType == 'true') ? true : false,
             'pickup_date' => $this->pickupDate,
             'earliest_pickup_time' => $this->earliestPickupTime,
             'latest_pickup_time' => $this->latestPickupTime,

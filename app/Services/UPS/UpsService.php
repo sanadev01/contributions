@@ -52,7 +52,7 @@ class UpsService
 
     public function generateLabel($order)
     {
-        $data = $this->makePackageRequestForRecipient($order);
+        $data = $this->packageRequestForRecipient($order);
         return $this->upsApiCall($this->createPackageUrl, $data);
     }
 
@@ -62,36 +62,46 @@ class UpsService
             $consolidatedOrderService = new ConsolidatedOrderService();
 
             $consolidatedOrderService->handle($this->getPaymentDetails(), $this->shipperNumber);
-            return $this->upsApiCall($this->ratingPackageUrl,  $consolidatedOrderService->makeConsolidatedOrderRatesRequestForSender($order, $request));
+            return $this->upsApiCall($this->ratingPackageUrl,  $consolidatedOrderService->consolidatedOrderRatesRequestForSender($order, $request));
         }
         
-        return $this->upsApiCall($this->ratingPackageUrl, $this->makeRatesRequestForSender($order, $request));
+        return $this->upsApiCall($this->ratingPackageUrl, $this->ratesRequestForSender($order, $request));
     }
 
-    public function buyLabel($order, $request_sender_data)
+    public function getLabelForSender($order, $request)
     {
-        $data = $this->makePackageRequestForSender($order, $request_sender_data);
-        
-        return $this->upsApiCall($this->createPackageUrl, $data);
+        if ($request->exists('consolidated_order')) {
+            $consolidatedOrderService = new ConsolidatedOrderService();
+
+            $consolidatedOrderService->handle($this->getPaymentDetails(), $this->shipperNumber);
+            return $this->upsApiCall($this->createPackageUrl,  $consolidatedOrderService->consolidatedOrderPackageRequestForSender($order, $request));
+        }
+
+        return $this->upsApiCall($this->createPackageUrl, $this->packageRequestForSender($order, $request));
     }
 
     public function getRecipientRates($order, $service)
     {
-        $data = $this->makeRateRequestForRecipient($order, $service);
+        $data = $this->rateRequestForRecipient($order, $service);
 
         return $this->upsApiCall($this->ratingPackageUrl, $data);
     }
 
     public function getPickupRates($request)
     {
-        $data = $this->makeRequestForPickupRates($request);
-        return $this->upsApiCallForPickup($this->pickupRatingUrl, $data);
+        return $this->upsApiCallForPickup($this->pickupRatingUrl, $this->requestForPickupRates($request));
     }
 
     public function createPickupShipment($order, $request)
     {
-       $data = $this->makeRequestForPickupShipment($order, $request);
-       return $this->upsApiCallForPickup($this->pickupShipmentUrl, $data);
+        if ($request->exists('consolidated_order')) {
+            $consolidatedOrderService = new ConsolidatedOrderService();
+            $consolidatedOrderService->handle($this->getPaymentDetails(), $this->shipperNumber);
+            
+            return $this->upsApiCall($this->pickupShipmentUrl,  $consolidatedOrderService->consolidatedOrderPickupRequest($order, $request));
+        }
+
+       return $this->upsApiCallForPickup($this->pickupShipmentUrl, $this->requestForPickupShipment($order, $request));
     }
 
     public function cancelPickup($prn)
@@ -104,7 +114,7 @@ class UpsService
         return $this->trackUPSOrder($trackingNumber);
     }
 
-    private function makeRatesRequestForSender($order, $request)
+    private function ratesRequestForSender($order, $request)
     {   
         $this->calculateVolumetricWeight($order);
 
@@ -191,7 +201,7 @@ class UpsService
         return $request_body;
     }
 
-    private function makePackageRequestForSender($order, $request)
+    private function packageRequestForSender($order, $request)
     {
         $this->calculateVolumetricWeight($order);
 
@@ -291,7 +301,7 @@ class UpsService
         return $request_body;
     }
 
-    private function makeRateRequestForRecipient($order, $service)
+    private function rateRequestForRecipient($order, $service)
     {
         $this->calculateVolumetricWeight($order);
 
@@ -378,7 +388,7 @@ class UpsService
         return $request_body;
     }
 
-    private function makePackageRequestForRecipient($order)
+    private function packageRequestForRecipient($order)
     {
         $this->calculateVolumetricWeight($order);
 
@@ -478,7 +488,7 @@ class UpsService
         return $request_body;
     }
 
-    private function makeRequestForPickupRates($request)
+    private function requestForPickupRates($request)
     {
         $request_body = [
             'PickupRateRequest' => [
@@ -507,7 +517,7 @@ class UpsService
         return $request_body;
     }
 
-    private function makeRequestForPickupShipment($order, $request)
+    private function requestForPickupShipment($order, $request)
     {
         $this->calculateVolumetricWeight($order);
 
@@ -599,7 +609,7 @@ class UpsService
     {
         try {
             $response = Http::withHeaders($this->setHeaders())->acceptJson()->post($url, $data);
-           
+            
             if($response->successful())
             {
                 return (Object)[

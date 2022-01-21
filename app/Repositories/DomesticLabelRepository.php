@@ -54,7 +54,13 @@ class DomesticLabelRepository
     {
         if ($request->service == ShippingService::UPS_GROUND)
         {
-            // return $this->upsLabelRepository->getUPSGroundLabel($request, $order);
+            if($this->upsLabelRepository->getSecondaryLabel($request, $order))
+            {
+                return true;
+            }
+
+            $this->error = $this->upsLabelRepository->getUPSErrors();
+            return false;
         }
 
         if ($request->service == ShippingService::FEDEX_GROUND) 
@@ -83,7 +89,7 @@ class DomesticLabelRepository
     {
         $request->merge(['service' => $service]);
 
-        $upsRateResponse = $this->upsLabelRepository->getRates($request);
+        $upsRateResponse = $this->upsLabelRepository->getRatesForSender($request);
         if ($upsRateResponse['success'] == true) {
             return array_push($this->domesticRates, ['service' => 'UPS Ground', 'service_code' => $service, 'cost' => $upsRateResponse['total_amount']]);
         }
@@ -93,7 +99,7 @@ class DomesticLabelRepository
     {
         $request->merge(['service' => $service]);
 
-        $uspsRateResponse = $this->uspsLabelRepository->getRates($request);
+        $uspsRateResponse = $this->uspsLabelRepository->getRatesForSender($request);
         if ($uspsRateResponse['success'] == true) {
             return array_push($this->domesticRates, ['service' => ($service == ShippingService::USPS_PRIORITY) ? 'USPS Priority' : 'USPS FirstClass', 'service_code' => $service, 'cost' => $uspsRateResponse['total_amount']]);
         }
@@ -103,7 +109,7 @@ class DomesticLabelRepository
     {
         $request->merge(['service' => $service]);
 
-        $fedExRateResponse = $this->fedExLabelRepository->getRates($request);
+        $fedExRateResponse = $this->fedExLabelRepository->getRatesForSender($request);
         if ($fedExRateResponse['success'] == true) {
             return array_push($this->domesticRates, ['service' => 'FedEx Ground', 'service_code' => $service, 'cost' => $fedExRateResponse['total_amount']]);
         }

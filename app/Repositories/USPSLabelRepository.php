@@ -26,21 +26,21 @@ class USPSLabelRepository
         if(($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS) && $order->api_response == null)
         {
     
-            $this->generat_USPSLabel($order);
+            $this->getPrimaryLabel($order);
 
         }elseif($order->api_response != null)
         {
             
-            $this->printLabel($order);
+            $this->printPrimaryLabel($order);
         }
     }
 
     public function update($order)
     {
-        $this->generat_USPSLabel($order);
+        $this->getPrimaryLabel($order);
     }
 
-    public function generat_USPSLabel($order)
+    public function getPrimaryLabel($order)
     {
         $response = USPSFacade::generateLabel($order);
 
@@ -54,7 +54,7 @@ class USPSLabelRepository
             // store order status in order tracking
             $this->addOrderTracking($order);
 
-            $this->printLabel($order);
+            $this->printPrimaryLabel($order);
 
         } else {
 
@@ -64,20 +64,11 @@ class USPSLabelRepository
         
     }
 
-    public function printLabel(Order $order)
+    public function printPrimaryLabel(Order $order)
     {
         $labelPrinter = new USPSLabelMaker();
         $labelPrinter->setOrder($order);
         $labelPrinter->saveLabel();
-
-        return true;
-    }
-
-    public function printBuyUSPSLabel(Order $order)
-    {
-        $labelPrinter = new USPSLabelMaker();
-        $labelPrinter->setOrder($order);
-        $labelPrinter->saveUSPSLabel();
 
         return true;
     }
@@ -134,7 +125,7 @@ class USPSLabelRepository
         
     }
 
-    public function getRates($request)
+    public function getRatesForSender($request)
     {
         $order = ($request->exists('consolidated_order')) ? $request->order : Order::find($request->order_id);
         $response = USPSFacade::getSenderPrice($order, $request);
