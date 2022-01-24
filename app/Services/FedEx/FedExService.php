@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 use App\Services\Calculators\WeightCalculator;
+use App\Services\FedEx\ConsolidatedOrderService;
 
 class FedExService
 {
@@ -48,14 +49,19 @@ class FedExService
 
     public function getRecipientRates($order, $service)
     {
-        $data = $this->makeRatesRequestBodyForRecipient($order, $service);
-        return $this->fedExApiCall($this->getRatesUrl, $data);
+        return $this->fedExApiCall($this->getRatesUrl, $this->makeRatesRequestBodyForRecipient($order, $service));
     }
 
     public function getSenderRates($order, $request)
     {
-       $data = $this->makeRatesRequestBodyForSender($order, $request);
-       return $this->fedExApiCall($this->getRatesUrl, $data);
+        if ($request->exists('consolidated_order')) {
+            $consolidatedOrderService = new ConsolidatedOrderService();
+
+            $consolidatedOrderService->handle($this->accountNumber);
+            return $this->fedExApiCall($this->getRatesUrl, $consolidatedOrderService->makeRequestForSenderRates($order, $request));
+        }
+
+        return $this->fedExApiCall($this->getRatesUrl, $this->makeRatesRequestBodyForSender($order, $request));
     }
 
     public function createShipmentForSender($order, $request)

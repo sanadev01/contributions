@@ -3,17 +3,19 @@
 namespace App\Http\Livewire\Order;
 
 use Livewire\Component;
-use App\Facades\USPSFacade;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
+use App\Repositories\USLabelRepository;
 use App\Repositories\DomesticLabelRepository;
 
-class UsLabelForm extends Component
+class ConsolidateDomesticLabelForm extends Component
 {
-    public $order;
+    public $consolidatedOrder;
+    public $orders;
     public $states;
     public $usShippingServices;
-    public $usServicesErrors;
+    public $errors;
+
     public $upsError;
     public $uspsError;
     public $fedexError;
@@ -53,22 +55,22 @@ class UsLabelForm extends Component
         'pickupLocation' => 'required_if:pickupType,true',
     ];
 
-    public function mount($order, $states, $usShippingServices, $errors)
+    public function mount($consolidatedOrder, $orders, $states, $usShippingServices, $errors)
     {
-        $this->order = $order;
+        $this->consolidatedOrder = $consolidatedOrder;
+        $this->orders = $orders;
         $this->states = $states;
         $this->usShippingServices = $usShippingServices;
-        $this->usServicesErrors = $errors;
+        $this->errors = $errors;
     }
 
     public function render()
     {
-        return view('livewire.order.us-label-form');
+        return view('livewire.order.consolidate-domestic-label-form');
     }
 
     public function updatedsenderState()
     {
-        
         $this->validateUSAddress();
     }
 
@@ -96,8 +98,9 @@ class UsLabelForm extends Component
             'city' => $this->senderCity,
         ]);
 
-        $response = $this->callForUSPSAddressApi($request);
-        
+        $domesticLabelRepostory = new DomesticLabelRepository();
+        $response = $domesticLabelRepostory->validateAddress($request);
+
         if ($response['success'] == true) {
             $this->senderZipCode = $response['zipcode'];
             $this->zipCodeResponse = true;
@@ -112,26 +115,14 @@ class UsLabelForm extends Component
         $this->zipCodeClass = 'text-danger';
     }
 
-    private function callForUSPSAddressApi($request)
-    {
-        return USPSFacade::validateAddress($request);
-    }
-
     public function getRates(DomesticLabelRepository $domesticLabelRepostory)
     {
         $this->validate();
         $this->usRates = [];
-        
-        if ($this->usShippingServices)
-        {
-            $domesticLabelRepostory->handle();
-            $this->usRates = $domesticLabelRepostory->getRatesForDomesticServices($this->createRequest(), $this->usShippingServices);
-            
-            $this->uspsError = $domesticLabelRepostory->getError();
-            $this->upsError = $domesticLabelRepostory->getError();
 
-            $this->excludeShippingServices();
-        }    
+        $domesticLabelRepostory->handle();
+        $this->usRates = $domesticLabelRepostory->getRatesForDomesticServices($this->createRequest(), $this->usShippingServices);
+        $this->excludeShippingServices();
     }
 
     private function excludeShippingServices()
@@ -159,33 +150,34 @@ class UsLabelForm extends Component
         $request->merge([
             'service' => $this->selectedService,
             'total_price' => $this->selectedServiceCost,
+            'orders' => $this->orders,
         ]);
 
         $domesticLabelRepostory->handle();
-        if($domesticLabelRepostory->getDomesticLabel($request, $this->order))
+        if($domesticLabelRepostory->getDomesticLabel($request, $request->order))
         {
-            return redirect()->route('admin.order.us-label.index', $this->order->id);
+            return redirect()->route('admin.order.us-label.index', $this->orders->first()->id);
         }
 
         $this->uspsError = $domesticLabelRepostory->getError();
         $this->upsError = $domesticLabelRepostory->getError();
-        
     }
 
     private function createRequest()
     {
-       return new Request([
+        return new Request([
             'first_name' => $this->firstName,
             'last_name' => $this->lastName,
             'sender_state' => $this->senderState,
             'sender_address' => $this->senderAddress,
             'sender_city' => $this->senderCity,
             'sender_zipcode' => $this->senderZipCode,
-            'order_id' => $this->order->id,
+            'order' => $this->consolidatedOrder,
             'pickupShipment' => ($this->pickupType == 'true') ? true : false,
             'pickup_date' => $this->pickupDate,
             'earliest_pickup_time' => $this->earliestPickupTime,
             'latest_pickup_time' => $this->latestPickupTime,
+            'consolidated_order' => true,
         ]);
     }
 

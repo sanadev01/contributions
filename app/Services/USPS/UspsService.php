@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use App\Services\Calculators\WeightCalculator;
+use App\Services\USPS\ConsolidatedOrderService;
 
 class UspsService
 {
@@ -302,18 +303,29 @@ class UspsService
         }
     }
 
-    // USPS secondary Label Logic
     public function getSenderPrice($order, $request)
     {
-        return $this->uspsApiCallForRates($this->makeRequestAttributeForSenderRates($order, $request));
+        if ($request->exists('consolidated_order')) {
+
+            $consolidatedOrderService = new ConsolidatedOrderService();
+            return $this->uspsApiCallForRates($consolidatedOrderService->makeConsolidatedOrderRequestForSender($order, $request));
+        }
+
+        return $this->uspsApiCallForRates($this->makeRequestForSender($order, $request));
     }
 
-    public function buyLabel($order, $request)
+    public function getLabelForSender($order, $request)
     {
-        return $this->uspsApiCall($this->makeRequestAttributeForSenderRates($order, $request));
+        if ($request->exists('consolidated_order')) 
+        {
+            $consolidatedOrderService = new ConsolidatedOrderService();
+            return $this->uspsApiCall($consolidatedOrderService->makeConsolidatedOrderRequestForSender($order, $request));
+        }
+
+        return $this->uspsApiCall($this->makeRequestForSender($order, $request));
     }
 
-    private function makeRequestAttributeForSenderRates($order, $request)
+    private function makeRequestForSender($order, $request)
     {
         if(!isset($request->uspsBulkLabel))
         {
@@ -442,13 +454,14 @@ class UspsService
                 ];
             }elseif($response->clientError())
             {
+                Log::info('USPS Error'.$response->json()['message']);
                 return (Object)[
                     'success' => false,
                     'message' => $response->json()['message'],
                 ];    
             }elseif ($response->status() !== 200) 
             {
-    
+                Log::info('USPS Error'.$response->json()['message']);
                 return (object) [
                     'success' => false,
                     'message' => $response->json()['message'],

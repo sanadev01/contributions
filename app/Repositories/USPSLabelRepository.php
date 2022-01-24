@@ -3,40 +3,44 @@
 
 namespace App\Repositories;
 
+use App\Models\User;
 use App\Models\Order;
 use App\Facades\USPSFacade;
 use App\Models\OrderTracking;
 use App\Models\ShippingService;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Services\USPS\USPSLabelMaker;
 use App\Services\USPS\USPSShippingService;
 
 
 class USPSLabelRepository
 {
-    protected $usps_errors;
+    protected $uspsError;
     public $user_api_profit;
     public $total_amount_with_profit;
+    public $order;
 
     public function handle($order)
     {
         if(($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS) && $order->api_response == null)
         {
     
-            $this->generat_USPSLabel($order);
+            $this->getPrimaryLabel($order);
 
         }elseif($order->api_response != null)
         {
             
-            $this->printLabel($order);
+            $this->printPrimaryLabel($order);
         }
     }
 
     public function update($order)
     {
-        $this->generat_USPSLabel($order);
+        $this->getPrimaryLabel($order);
     }
 
-    public function generat_USPSLabel($order)
+    public function getPrimaryLabel($order)
     {
         $response = USPSFacade::generateLabel($order);
 
@@ -50,17 +54,17 @@ class USPSLabelRepository
             // store order status in order tracking
             $this->addOrderTracking($order);
 
-            $this->printLabel($order);
+            $this->printPrimaryLabel($order);
 
         } else {
 
-            $this->usps_errors = $response->message;
+            $this->uspsError = $response->message;
             return null;
         }
         
     }
 
-    public function printLabel(Order $order)
+    public function printPrimaryLabel(Order $order)
     {
         $labelPrinter = new USPSLabelMaker();
         $labelPrinter->setOrder($order);
@@ -69,18 +73,9 @@ class USPSLabelRepository
         return true;
     }
 
-    public function printBuyUSPSLabel(Order $order)
-    {
-        $labelPrinter = new USPSLabelMaker();
-        $labelPrinter->setOrder($order);
-        $labelPrinter->saveUSPSLabel();
-
-        return true;
-    }
-
     public function getUSPSErrors()
     {
-        return $this->usps_errors;
+        return $this->uspsError;
     }
 
     public function addOrderTracking($order)
@@ -120,7 +115,7 @@ class USPSLabelRepository
         {
             if(!setting('usps', null, $order->user->id))
             {
-                $this->usps_errors = "USPS is not enabled for your account";
+                $this->uspsError = "USPS is not enabled for your account";
                 $shippingServices = collect() ;
             }
         }
@@ -130,14 +125,17 @@ class USPSLabelRepository
         
     }
 
-    public function getRates($request)
+    public function getRatesForSender($request)
     {
-        $order = Order::find($request->order_id);
+        $order = ($request->exists('consolidated_order')) ? $request->order : Order::find($request->order_id);
         $response = USPSFacade::getSenderPrice($order, $request);
 
         if($response->success == true)
         {
-            $this->addProfit($order->user, $response->data['total_amount']);
+            $uspsRate = $response->data['total_amount'];
+            
+            ($request->exists('consolidated_order')) ? $this->addProfitForConslidatedOrder($order['user'], $uspsRate) 
+                                                        : $this->addProfit($order->user, $uspsRate);
 
             return (Array)[
                 'success' => true,
@@ -149,6 +147,57 @@ class USPSLabelRepository
             'success' => false,
             'message' => 'server error, could not get rates',
         ]; 
+    }
+
+    public function getSecondaryLabel($request, $order)
+    {
+        if($this->checkUserBalance($request->total_price))
+        {
+            if($this->getSecondaryLabelForSender($request, $order))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function getSecondaryLabelForSender($request, $order)
+    {
+        $response = USPSFacade::getLabelForSender($order, $request);
+        
+        if($response->success == true) 
+        {
+            if($request->exists('consolidated_order'))
+            {
+                if(!$this->updateConsolidatedOrders($request, $response))
+                {
+                    return false;
+                }
+
+                $this->order = $request->orders->first();
+
+            }else
+            {
+                $order->update([
+                    'us_api_response' => json_encode($response->data),
+                    'us_api_tracking_code' => $response->data['usps']['tracking_numbers'][0],
+                    'us_secondary_label_cost' => setUSCosts($response->data['total_amount'], $request->total_price),
+                    'us_api_service' => $request->service,
+                ]);
+    
+                chargeAmount($request->total_price, $order, 'Bought USPS Label For : ');
+                $order->refresh();
+                $this->order = $order;
+            }
+
+            $this->printSecondaryLabel($this->order);
+
+            return true;
+        }
+
+        $this->uspsError = $response->message;
+        return false;
     }
 
     private function addProfit($user, $usps_rate)
@@ -167,50 +216,61 @@ class USPSLabelRepository
         return true;
     }
 
-    public function buyLabel($request, $order)
+    private function addProfitForConslidatedOrder($user, $uspsRate)
     {
-        if($order->hasSecondLabel())
-        {
-            $this->printBuyUSPSLabel($order);
+        $user = User::find($user['id']);
+        return $this->addProfit($user, $uspsRate);
+    }
 
-            return true;
-        }
-        
-        if ( $request->total_price > getBalance())
+    private function checkUserBalance($charges)
+    {
+        if ($charges > getBalance())
         {
-            $this->usps_errors = 'Not Enough Balance. Please Recharge your account.';
-
+            $this->uspsError = 'Not Enough Balance. Please Recharge your account.';
             return false;
         }
-
-        $this->buy_USPSLabel($order, $request);
 
         return true;
     }
 
-    private function buy_USPSLabel($order, $request)
+    private function updateConsolidatedOrders($request, $response)
     {
-        $response = USPSFacade::buyLabel($order, $request);
-        
-        if($response->success == true)
-        {
-            // storing response in orders table
-            $order->update([
-                'us_api_response' => json_encode($response->data),
-                'us_api_tracking_code' => $response->data['usps']['tracking_numbers'][0],
-                'us_secondary_label_cost' => setUSCosts($response->data['total_amount'], $request->total_price),
-                'us_api_service' => $request->service,
-            ]);
+        DB::transaction(function () use ($request, $response) {
+            try {
 
-            chargeAmount($request->total_price, $order, 'Bought USPS Label For : ');
+                foreach ($request->orders as $order) {
+                    $order->update([
+                        'us_api_response' => json_encode($response->data),
+                        'us_api_tracking_code' => $response->data['usps']['tracking_numbers'][0],
+                        'us_secondary_label_cost' => setUSCosts($response->data['total_amount'], $request->total_price),
+                        'us_api_service' => $request->service,
+                    ]);
+    
+                    chargeAmount($request->total_price, $order, 'Bought USPS Label For : ');
 
-            $this->printBuyUSPSLabel($order);
+                    $order->refresh();
+                }
 
-        } else {
+                return true;
 
-            $this->usps_errors = $response->message;
-            return null;
-        }
+            } catch (\Exception $ex) {
+                Log::error($ex->getMessage());
+                $this->uspsError = $ex->getMessage();
+                return false;
+            }
+            
+        });
+
+        return true;
+    }
+
+    private function printSecondaryLabel(Order $order)
+    {
+        $labelPrinter = new USPSLabelMaker();
+        $labelPrinter->setOrder($order);
+        $labelPrinter->saveSecondaryLabel();
+
+        return true;
     }
     
 }
