@@ -22,6 +22,7 @@ class UPSLabelRepository
     protected $user_api_profit;
     protected $total_amount_with_profit;
     protected $totalUpsCost = 0;
+    protected $totalPickupCost = 0;
     protected $pickupResponse;
 
     public $order;
@@ -44,8 +45,8 @@ class UPSLabelRepository
 
     public function getSecondaryLabel($request, $order)
     {
-
-        if($this->checkUserBalance($request->total_price) && $this->getSecondaryLabelForSender($request, $order))
+        $approximateCost = $request->total_price + 5;
+        if($this->checkUserBalance($approximateCost) && $this->getSecondaryLabelForSender($request, $order))
         {
             return true;
         }
@@ -114,7 +115,7 @@ class UPSLabelRepository
 
             if($request->exists('consolidated_order'))
             {
-                $this->addProfitForConslidatedOrder($order['user'], $this->totalUpsCost);
+                $this->addProfitForConslidatedOrder($order['user']);
                 if(!$this->updateConsolidatedOrders($request, $response))
                 {
                     return false;
@@ -123,12 +124,14 @@ class UPSLabelRepository
                 $this->order = $request->orders->first();
             }else
             {
-                $this->addProfit($order->user, $this->totalUpsCost);
+                $this->addProfit($order->user);
+
+                $totalUPSCharge = $this->totalUpsCost + $this->totalPickupCost;
 
                 $order->update([
                     'us_api_response' => json_encode($response->data),
                     'us_api_tracking_code' => $response->data['ShipmentResponse']['ShipmentResults']['ShipmentIdentificationNumber'],
-                    'us_secondary_label_cost' => setUSCosts($this->totalUpsCost, $this->total_amount_with_profit),
+                    'us_secondary_label_cost' => setUSCosts($totalUPSCharge, $this->total_amount_with_profit),
                     'us_api_service' => $request->service,
                     'api_pickup_response' => ($request->pickupShipment == true) ? $this->pickupResponse : null,
                 ]);
@@ -156,8 +159,7 @@ class UPSLabelRepository
             return false;
         }
 
-        $this->totalUpsCost += $pickupShipmentresponse->data['PickupCreationResponse']['RateResult']['GrandTotalOfAllCharge'];
-        $this->addPickupRate($this->totalUpsCost);
+        $this->totalPickupCost += $pickupShipmentresponse->data['PickupCreationResponse']['RateResult']['GrandTotalOfAllCharge'];
         $this->pickupResponse = $pickupShipmentresponse->data;
         return true;
     }
@@ -202,16 +204,14 @@ class UPSLabelRepository
 
         if($response->success == true)
         {
-            $upsRate = $response->data['RateResponse']['RatedShipment']['TotalCharges']['MonetaryValue'];
-            ($request->exists('consolidated_order')) ? $this->addProfitForConslidatedOrder($order['user'], $upsRate) 
-                                                        : $this->addProfit($order->user, $upsRate);
+            $this->totalUpsCost += $response->data['RateResponse']['RatedShipment']['TotalCharges']['MonetaryValue'];
 
             if($request->pickupShipment)
             {
                 $response = UPSFacade::getPickupRates($request);
                 if($response->success == true)
                 {
-                    $this->addPickupRate($response->data['PickupRateResponse']['RateResult']['GrandTotalOfAllCharge']);
+                    $this->totalPickupCost += $response->data['PickupRateResponse']['RateResult']['GrandTotalOfAllCharge'];
                     
                 }else {
                     return (Array)[
@@ -220,6 +220,8 @@ class UPSLabelRepository
                     ];
                 }
             }
+            ($request->exists('consolidated_order')) ? $this->addProfitForConslidatedOrder($order['user']) 
+                                                        : $this->addProfit($order->user);
             return (Array)[
                 'success' => true,
                 'total_amount' => round($this->total_amount_with_profit, 2),
@@ -243,7 +245,7 @@ class UPSLabelRepository
         return true;
     }
 
-    private function addProfit($user, $ups_rates)
+    private function addProfit($user)
     {
         $this->user_api_profit = setting('ups_profit', null, $user->id);
 
@@ -252,21 +254,18 @@ class UPSLabelRepository
             $this->user_api_profit = setting('ups_profit', null, 1);
         }
 
+        $ups_rates = $this->totalUpsCost + $this->totalPickupCost;
+        
         $profit = $ups_rates * ($this->user_api_profit / 100);
         $this->total_amount_with_profit += $ups_rates + $profit;
         return true;
     }
 
-    private function addPickupRate($pickup_charges)
-    {
-        $this->total_amount_with_profit += $pickup_charges;
-        return true;
-    }
 
-    private function addProfitForConslidatedOrder($user, $upsRate)
+    private function addProfitForConslidatedOrder($user)
     {
         $user = User::find($user['id']);
-        return $this->addProfit($user, $upsRate);
+        return $this->addProfit($user);
     }
 
     private function updateConsolidatedOrders($request, $response)
@@ -274,11 +273,12 @@ class UPSLabelRepository
         DB::transaction(function () use ($request, $response) {
             try {
 
+                $totalUPSCharge = $this->totalUpsCost + $this->totalPickupCost;
                 foreach ($request->orders as $order) {
                     $order->update([
                         'us_api_response' => json_encode($response->data),
                         'us_api_tracking_code' => $response->data['ShipmentResponse']['ShipmentResults']['ShipmentIdentificationNumber'],
-                        'us_secondary_label_cost' => setUSCosts($this->totalUpsCost, $this->total_amount_with_profit),
+                        'us_secondary_label_cost' => setUSCosts($totalUPSCharge, $this->total_amount_with_profit),
                         'us_api_service' => $request->service,
                         'api_pickup_response' => ($request->pickupShipment == true) ? $this->pickupResponse : null,
                     ]);

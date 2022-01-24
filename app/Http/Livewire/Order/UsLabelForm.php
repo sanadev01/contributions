@@ -129,7 +129,21 @@ class UsLabelForm extends Component
             
             $this->uspsError = $domesticLabelRepostory->getError();
             $this->upsError = $domesticLabelRepostory->getError();
+
+            $this->excludeShippingServices();
         }    
+    }
+
+    private function excludeShippingServices()
+    {
+        $this->usShippingServices = $this->usShippingServices->filter(function ($service) {
+            foreach ($this->usRates as $rate) {
+                if($rate['service_code'] == $service['service_sub_class'])
+                {
+                    return true;
+                }
+            }
+        });
     }
 
     public function getLabel(DomesticLabelRepository $domesticLabelRepostory)

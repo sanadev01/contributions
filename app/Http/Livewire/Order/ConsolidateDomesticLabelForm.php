@@ -122,6 +122,19 @@ class ConsolidateDomesticLabelForm extends Component
 
         $domesticLabelRepostory->handle();
         $this->usRates = $domesticLabelRepostory->getRatesForDomesticServices($this->createRequest(), $this->usShippingServices);
+        $this->excludeShippingServices();
+    }
+
+    private function excludeShippingServices()
+    {
+        $this->usShippingServices = $this->usShippingServices->filter(function ($service) {
+            foreach ($this->usRates as $rate) {
+                if($rate['service_code'] == $service['service_sub_class'])
+                {
+                    return true;
+                }
+            }
+        });
     }
 
     public function getLabel(DomesticLabelRepository $domesticLabelRepostory)
