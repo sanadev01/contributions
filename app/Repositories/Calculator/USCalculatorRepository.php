@@ -14,12 +14,13 @@ use Illuminate\Http\Request;
 use App\Models\PaymentInvoice;
 use App\Models\ShippingService;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\UPSLabelRepository;
 use App\Services\UPS\UPSShippingService;
+use App\Repositories\USPSLabelRepository;
 use App\Services\USPS\USPSShippingService;
 use App\Services\Calculators\WeightCalculator;
-use Illuminate\Support\Facades\Log;
 
 class USCalculatorRepository
 {
@@ -104,7 +105,7 @@ class USCalculatorRepository
             $uspsResponse = USPSFacade::getSenderPrice($order, $requestBody);
 
             if ($uspsResponse->success == true) {
-                array_push($this->uspsShippingRates , ['name'=> $shippingService->name , 'rate'=> number_format($uspsResponse->data['total_amount'], 2)]);
+                array_push($this->uspsShippingRates , ['name'=> $shippingService->name, 'service_sub_class' => $shippingService->service_sub_class, 'rate'=> number_format($uspsResponse->data['total_amount'], 2)]);
             }else
             {
                 $this->error = $uspsResponse->message;
@@ -151,7 +152,7 @@ class USCalculatorRepository
 
             $rate = $uspsRate['rate'] + $profit;
 
-            array_push($this->uspsRatesWithProfit, ['name'=> $uspsRate['name'] , 'rate'=> number_format($rate, 2)]);
+            array_push($this->uspsRatesWithProfit, ['name'=> $uspsRate['name'] , 'service_sub_class' => $uspsRate['service_sub_class'], 'rate'=> number_format($rate, 2)]);
         }
 
         return $this->uspsRatesWithProfit;
@@ -402,20 +403,28 @@ class USCalculatorRepository
         if ($this->order->shippingService->service_sub_class == ShippingService::UPS_GROUND) {
 
             $upsLabelRepository = new UPSLabelRepository();
-            if($upsLabelRepository->getPrimaryLabelForSender($this->order, $request))
+            if(!$upsLabelRepository->getPrimaryLabelForSender($this->order, $request))
             {
-                $order = $this->order->refresh();
-                chargeAmount($order->gross_total, $order);
-
-                $this->createInvoice($order);
-
-                return true;
+                $this->error = $upsLabelRepository->getUPSErrors();
+                return false;
             }
-
-            $this->error = $upsLabelRepository->getUPSErrors();
-
-            return false;
         }
+
+        if ($this->order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $this->order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS) {
+            $uspsLabelRepository = new USPSLabelRepository();
+            
+            if(!$uspsLabelRepository->getPrimaryLabelForSender($this->order, $request))
+            {
+                $this->error = $uspsLabelRepository->getUSPSErrors();
+                return false;
+            }
+        }
+
+        $order = $this->order->refresh();
+        chargeAmount($order->gross_total, $order);
+        $this->createInvoice($order);
+
+        return true;
     }
 
     private function createInvoice($order)

@@ -34,11 +34,11 @@ class USPSCalculatorController extends Controller
      */
     public function store(USPSCalculatorRequest $request, USCalculatorRepository $usCalculatorRepository)
     {
-        $order = $usCalculatorRepository->handle($request);
-        $uspsShippingServices = $usCalculatorRepository->getUSPSShippingServices($order);
+        $tempOrder = $usCalculatorRepository->handle($request);
+        $uspsShippingServices = $usCalculatorRepository->getUSPSShippingServices($tempOrder);
         $usCalculatorRepository->setUserUSPSProfit();
 
-        $apiRates = $usCalculatorRepository->getUSPSRates($uspsShippingServices, $order);
+        $apiRates = $usCalculatorRepository->getUSPSRates($uspsShippingServices, $tempOrder);
         $ratesWithProfit = $usCalculatorRepository->getUSPSRatesWithProfit();
         
         $error = $usCalculatorRepository->getError();
@@ -62,29 +62,6 @@ class USPSCalculatorController extends Controller
 
         $shippingServiceTitle = 'USPS';
 
-        return view('uscalculator.index', compact('apiRates','ratesWithProfit','order', 'weightInOtherUnit', 'chargableWeight', 'userLoggedIn', 'shippingServiceTitle'));
-    }
-
-
-    public function buy_usps_label(Request $request)
-    {
-        $usps_calculatorRepository = new USPSCalculatorRepository();
-        $order = $usps_calculatorRepository->handle($request);
-
-        $error = $usps_calculatorRepository->getUSPSErrors();
-
-        if($error != null)
-        {
-            return (Array)[
-                'success' => false,
-                'message' => $error,
-            ]; 
-        }
-
-        return (Array)[
-            'success' => true,
-            'message' => 'USPS label has been generated successfully',
-            'path' => route('admin.orders.label.index', $order->id)
-        ]; 
+        return view('uscalculator.index', compact('apiRates','ratesWithProfit','tempOrder', 'weightInOtherUnit', 'chargableWeight', 'userLoggedIn', 'shippingServiceTitle'));
     }
 }

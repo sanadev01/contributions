@@ -327,11 +327,7 @@ class UspsService
 
     private function makeRequestForSender($order, $request)
     {
-        if(!isset($request->uspsBulkLabel))
-        {
-            $this->calculateVolumetricWeight($order);
-        }
-        
+        $this->calculateVolumetricWeight($order); 
         $request_body = [
             'from_address' => [
                 'company_name' => 'HERCO SUIT#100',
