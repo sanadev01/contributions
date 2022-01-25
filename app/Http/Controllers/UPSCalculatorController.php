@@ -8,8 +8,7 @@ use App\Models\Country;
 
 use Illuminate\Http\Request;
 use App\Services\Converters\UnitsConverter;
-use App\Repositories\UPSCalculatorRepository;
-use App\Http\Requests\Calculator\UPSCalculatorRequest;
+use App\Http\Requests\Calculator\USCalculatorRequest;
 use App\Repositories\Calculator\USCalculatorRepository;
 
 class UPSCalculatorController extends Controller
@@ -23,7 +22,7 @@ class UPSCalculatorController extends Controller
         return view('upscalculator.index', compact('states'));
     }
 
-    public function store(UPSCalculatorRequest $request, USCalculatorRepository $usCalculatorRepository)
+    public function store(USCalculatorRequest $request, USCalculatorRepository $usCalculatorRepository)
     {   
         
         $tempOrder = $usCalculatorRepository->handle($request);
