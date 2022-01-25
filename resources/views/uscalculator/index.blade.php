@@ -3,7 +3,7 @@
     @livewire('calculator.us-calculator-rates', [
         'apiRates' => $apiRates, 
         'ratesWithProfit' => $ratesWithProfit,
-        'order' => $order,
+        'tempOrder' => $tempOrder,
         'weightInOtherUnit' => $weightInOtherUnit,
         'chargableWeight' => $chargableWeight,
         'userLoggedIn' => $userLoggedIn,

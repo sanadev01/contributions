@@ -21,6 +21,8 @@ class USPSLabelRepository
     public $total_amount_with_profit;
     public $order;
 
+    public $totalUspsCost = 0;
+
     public function handle($order)
     {
         if(($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS) && $order->api_response == null)
@@ -62,6 +64,41 @@ class USPSLabelRepository
             return null;
         }
         
+    }
+
+    public function getPrimaryLabelForSender($order, $request)
+    {
+        $response = USPSFacade::getLabelForSender($order, $request);
+
+        if($response->success == true) 
+        {
+            $this->totalUspsCost += $response->data['total_amount'] ?? 0;
+            $this->addProfit($order->user, $this->totalUspsCost);
+
+            $order->update([
+                'api_response' => json_encode($response->data),
+                'corrios_tracking_code' => $response->data['usps']['tracking_numbers'][0] ?? null,
+                'is_invoice_created' => true,
+                'is_shipment_added' => true,
+                'user_declared_freight' => $this->totalUspsCost,
+                'shipping_value' => $this->total_amount_with_profit,
+                'total' => $this->total_amount_with_profit,
+                'gross_total' => $this->total_amount_with_profit,
+                'status' => Order::STATUS_PAYMENT_DONE,
+            ]);
+
+            $order->refresh();
+
+            // store order status in order tracking
+            $this->addOrderTracking($order);
+
+            $this->printPrimaryLabel($order);
+
+            return true;
+        }
+
+        $this->uspsError = $response->message;
+        return false;
     }
 
     public function printPrimaryLabel(Order $order)

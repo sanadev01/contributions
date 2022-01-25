@@ -23,7 +23,7 @@
                                         </div></div> <div class="row justify-content-center"><div class="pb-1 pt-1 border-bottom-light col-md-5 bg-primary text-white">
                                             Weight
                                         </div> <div class="border col-5 py-1">
-                                            @if($order->measurement_unit == 'kg/cm')
+                                            @if($tempOrder['measurement_unit'] == 'kg/cm')
                                                 {{$chargableWeight}} Kg ( {{$weightInOtherUnit}} lbs)
                                             @else
                                                 {{$chargableWeight}} lbs ( {{$weightInOtherUnit}} kg)
@@ -54,24 +54,27 @@
                                             </div>
                                         </div>
                                     @endif
-                                    <form>
+                                    @if($error)
+                                    <div class="row mb-1 ml-4">
+                                        <div class="controls col-12 text-danger">
+                                            {{$error}}
+                                        </div>
+                                    </div>
+                                    @endif
+                                    <form wire:submit.prevent="getSenderLabel">
                                         <div class="row mb-1 ml-4">
                                             <div class="controls col-6">
                                                 <label>@lang('orders.order-details.Select Shipping Service')<span class="text-danger"></span></label>
-                                                <select name="shipping_service"  class="form-control" required>
+                                                <select name="shipping_service" wire:model.debounce.500ms="selectedService"  class="form-control" required>
                                                     <option value="">Select Shipping Service</option>
                                                     @foreach ($ratesWithProfit as $profitRate)
-                                                        <option value="{{$profitRate['name']}}">{{$profitRate['name']}}</option>
+                                                        <option value="{{$profitRate['service_sub_class']}}">{{$profitRate['name']}}</option>
                                                     @endforeach
                                                 </select>
+                                                @error('selectedService') <span class="error text-danger">{{ $message }}</span> @enderror
                                             </div>
                                             <div class="controls col-6">
-                                                <button id="btn-submit" type="button" class="btn btn-success btn-lg mt-4" @if(!setting($shippingServiceTitle, null, auth()->user()->id)) disabled @endif>Buy Label </button>
-                                            </div>
-                                            <div class="controls col-6">
-                                                <a href="" type="button" class="btn btn-success btn-lg mt-4" id="print_label_btn">
-                                                    Print Label
-                                                </a>
+                                                <button id="btn-submit" type="submit" class="btn btn-success btn-lg mt-4" @if(!setting($shippingServiceTitle, null, auth()->user()->id)) disabled @endif>Buy Label </button>
                                             </div>
                                         </div>
                                     </form>
@@ -110,7 +113,7 @@
                                             </div></div> <div class="row justify-content-center"><div class="pb-1 pt-1 border-bottom-light col-md-5 bg-primary text-white">
                                                 Weight
                                             </div> <div class="border col-5 py-1">
-                                                @if($order->measurement_unit == 'kg/cm')
+                                                @if($tempOrder->measurement_unit == 'kg/cm')
                                                     {{$chargableWeight}} Kg ( {{$weightInOtherUnit}} lbs)
                                                 @else
                                                     {{$chargableWeight}} lbs ( {{$weightInOtherUnit}} kg)
@@ -135,5 +138,6 @@
                 </div>    
             </div>
         </div>
+        @include('layouts.livewire.loading')
     </section>
 </div>
