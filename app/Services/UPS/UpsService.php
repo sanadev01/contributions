@@ -48,10 +48,9 @@ class UpsService
         $this->AccessLicenseNumber = $AccessLicenseNumber;
     }
 
-    public function generateLabel($order)
+    public function getLabelForRecipient($order)
     {
-        $data = $this->packageRequestForRecipient($order);
-        return $this->upsApiCall($this->createPackageUrl, $data);
+        return $this->upsApiCall($this->createPackageUrl, $this->packageRequestForRecipient($order));
     }
 
     public function getSenderPrice($order, $request)
@@ -80,9 +79,7 @@ class UpsService
 
     public function getRecipientRates($order, $service)
     {
-        $data = $this->rateRequestForRecipient($order, $service);
-
-        return $this->upsApiCall($this->ratingPackageUrl, $data);
+        return $this->upsApiCall($this->ratingPackageUrl, $this->rateRequestForRecipient($order, $service));
     }
 
     public function getPickupRates($request)
