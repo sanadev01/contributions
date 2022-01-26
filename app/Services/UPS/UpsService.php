@@ -55,7 +55,7 @@ class UpsService
 
     public function getSenderPrice($order, $request)
     {  
-        if ($request->exists('consolidated_order')) {
+        if ($request->exists('consolidated_order') && $request->consolidated_order == false) {
             $consolidatedOrderService = new ConsolidatedOrderService();
 
             $consolidatedOrderService->handle($this->getPaymentDetails(), $this->shipperNumber);
@@ -67,7 +67,7 @@ class UpsService
 
     public function getLabelForSender($order, $request)
     {
-        if ($request->exists('consolidated_order')) {
+        if ($request->exists('consolidated_order') && $request->consolidated_order == false) {
             $consolidatedOrderService = new ConsolidatedOrderService();
 
             $consolidatedOrderService->handle($this->getPaymentDetails(), $this->shipperNumber);

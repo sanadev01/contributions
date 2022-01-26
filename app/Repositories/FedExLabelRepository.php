@@ -118,7 +118,7 @@ class FedExLabelRepository
 
     public function getRatesForSender($request)
     {
-        $order = ($request->exists('consolidated_order')) ? $request->order : Order::find($request->order_id);
+        $order = ($request->exists('consolidated_order') && $request->consolidated_order == true) ? $request->order : Order::find($request->order_id);
         $response = FedExFacade::getSenderRates($order, $request);
 
         if($response->success == true)

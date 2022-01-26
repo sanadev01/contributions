@@ -21,6 +21,7 @@ class ConsolidateDomesticLabelForm extends Component
     public $fedexError;
     public $hasRates = false;
     public $usRates = [];
+    public $shippingSerivceErrors = [];
 
     public $selectedService;
     public $firstName;
@@ -41,7 +42,22 @@ class ConsolidateDomesticLabelForm extends Component
     public $zipCodeResponseMessage;
     public $zipCodeClass;
 
+    public $weight;
+    public $length;
+    public $width;
+    public $height;
+    public $unit;
+    public $volumeWeight;
+
+    protected $tempOrder;
+
     protected $rules = [
+        'weight' => 'required|numeric',
+        'length' => 'required|numeric',
+        'width' => 'required|numeric',
+        'height' => 'required|numeric',
+        'unit' => 'required',
+        'volumeWeight' => 'required|numeric',
         'firstName' => 'required',
         'lastName' => 'required',
         'senderState' => 'required',
@@ -55,18 +71,61 @@ class ConsolidateDomesticLabelForm extends Component
         'pickupLocation' => 'required_if:pickupType,true',
     ];
 
-    public function mount($consolidatedOrder, $orders, $states, $usShippingServices, $errors)
+    protected $listeners = [
+        'updatedWeight',
+        'updatedUnit',
+        'updatedLength',
+        'updatedWidth',
+        'updatedHeight',
+        'volumeWeight',
+    ];
+
+    public function mount($orders, $states, $errors)
     {
-        $this->consolidatedOrder = $consolidatedOrder;
         $this->orders = $orders;
         $this->states = $states;
-        $this->usShippingServices = $usShippingServices;
         $this->errors = $errors;
     }
 
     public function render()
     {
         return view('livewire.order.consolidate-domestic-label-form');
+    }
+
+    public function updatedWeight($weight)
+    {
+        $this->weight = $weight;
+        $this->usRates = [];
+    }
+
+    public function updatedUnit($unit)
+    {
+        $this->unit = $unit;
+        $this->usRates = [];
+    }
+
+    public function updatedLength($length)
+    {
+        $this->length = $length;
+        $this->usRates = [];
+    }
+
+    public function updatedWidth($width)
+    {
+        $this->width = $width;
+        $this->usRates = [];
+    }
+
+    public function updatedHeight($height)
+    {
+        $this->height = $height;
+        $this->usRates = [];
+    }
+
+    public function volumeWeight($volumeWeight)
+    {
+        $this->volumeWeight = $volumeWeight;
+        $this->usRates = [];
     }
 
     public function updatedsenderState()
@@ -119,9 +178,24 @@ class ConsolidateDomesticLabelForm extends Component
     {
         $this->validate();
         $this->usRates = [];
+        $request = $this->createRequest();
 
         $domesticLabelRepostory->handle();
-        $this->usRates = $domesticLabelRepostory->getRatesForDomesticServices($this->createRequest(), $this->usShippingServices);
+        $this->tempOrder = $domesticLabelRepostory->getTempOrder($request);
+        $this->usShippingServices = $domesticLabelRepostory->getShippingServices($this->tempOrder);
+        
+        if ($this->usShippingServices->isEmpty()) {
+            $this->shippingSerivceErrors = $domesticLabelRepostory->getShippingServiceErrors();
+            return false;
+        }
+
+        $this->shippingSerivceErrors = null;
+        
+        $request->merge([
+            'order' => $this->tempOrder,
+        ]);
+
+        $this->usRates = $domesticLabelRepostory->getRatesForDomesticServices($request, $this->usShippingServices);
         $this->excludeShippingServices();
     }
 
@@ -147,13 +221,18 @@ class ConsolidateDomesticLabelForm extends Component
 
         $this->getCostOfSelectedService();
         $request = $this->createRequest();
+
+        $domesticLabelRepostory->handle();
+        $this->tempOrder = $domesticLabelRepostory->getTempOrder($request);
+
         $request->merge([
             'service' => $this->selectedService,
             'total_price' => $this->selectedServiceCost,
             'orders' => $this->orders,
+            'order' => $this->tempOrder,
         ]);
 
-        $domesticLabelRepostory->handle();
+
         if($domesticLabelRepostory->getDomesticLabel($request, $request->order))
         {
             return redirect()->route('admin.order.us-label.index', $this->orders->first()->id);
@@ -166,13 +245,20 @@ class ConsolidateDomesticLabelForm extends Component
     private function createRequest()
     {
         return new Request([
+            'weight' => (int)$this->weight,
+            'length' => (int)$this->length,
+            'width' => (int)$this->width,
+            'height' => (int)$this->height,
+            'unit' => $this->unit,
+            'volumeWeight' => $this->volumeWeight,
             'first_name' => $this->firstName,
             'last_name' => $this->lastName,
             'sender_state' => $this->senderState,
             'sender_address' => $this->senderAddress,
             'sender_city' => $this->senderCity,
             'sender_zipcode' => $this->senderZipCode,
-            'order' => $this->consolidatedOrder,
+            'user' => $this->orders->first()->user,
+            'order' => $this->tempOrder,
             'pickupShipment' => ($this->pickupType == 'true') ? true : false,
             'pickup_date' => $this->pickupDate,
             'earliest_pickup_time' => $this->earliestPickupTime,

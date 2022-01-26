@@ -54,7 +54,7 @@ class FedExService
 
     public function getSenderRates($order, $request)
     {
-        if ($request->exists('consolidated_order')) {
+        if ($request->exists('consolidated_order') && $request->consolidated_order == false) {
             $consolidatedOrderService = new ConsolidatedOrderService();
 
             $consolidatedOrderService->handle($this->accountNumber);

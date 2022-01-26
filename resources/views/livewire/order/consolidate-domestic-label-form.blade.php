@@ -39,26 +39,19 @@
             </table>
         </div>
         <hr>
-        <div class="ml-3">
-            <div class="row ml-3">
-                <h2 class="mb-2">
-                    Consolidated Order Details
-                </h2>
-            </div>
-            <div class="row mt-3 ml-3">
-                <input type="hidden" name="order_id" id="order_id" value="{{$order->id}}">
-                <div class="col-md-3">
-                    <h4>Consolidated Order Volumetric Weight: {{ $consolidatedOrder['weight'] }} Kg</h4>
-                </div>
-                <div class="col-md-3">
-                    <h4>Consolidated Order Dimensions : {{ $consolidatedOrder['length'] }} in X {{ $consolidatedOrder['width']}} in X {{ $consolidatedOrder['height'] }} in</h4>
-                </div>
-                <div class="col-md-3">
-                    <h4>POBOX # :  {{ $consolidatedOrder['user']['pobox_number'] }} </h4>
-                </div>
-            </div>
-        </div>
         <form wire:submit.prevent="getRates">
+            <div class="ml-3">
+                <div class="row ml-3">
+                    <h2 class="mb-2">
+                        Consolidated Order Details
+                    </h2>
+                </div>
+                <div class="row mt-3 ml-3">
+                    <div class="container">
+                        <livewire:order.shipment-info />
+                    </div>
+                </div>
+            </div>
             <div class="ml-3 mt-3">
                 <div class="row ml-3">
                     <h2 class="mb-2">
@@ -159,6 +152,15 @@
                 </div>    
             </div>
         </form>
+        @if ($shippingSerivceErrors)
+            <div class="container">
+                <div class="alert alert-danger" role="alert">
+                    @foreach ($shippingSerivceErrors as $error)
+                        <p>{{ $error }}</p>
+                    @endforeach
+                </div>
+            </div>
+        @endif
         @if ($upsError || $uspsError || $fedexError)
             <div class="container">
                 <div class="alert alert-danger" role="alert">
@@ -217,7 +219,9 @@
                 </div>    
             </div>
         @endif
-
-        @include('layouts.livewire.loading')
+        @if ($weight && $length && $width && $height && $unit)
+            @include('layouts.livewire.loading')
+        @endif
+        
     </div>
 </div>

@@ -36,17 +36,11 @@ class ConsolidateDomesticLabelController extends Controller
             return back();
         }
 
-        $consolidatedOrder = $domesticLabelRepository->consolidateOrders($orders);
-        $usShippingServices = $usLabelRepostory->shippingServices($consolidatedOrder);
         $errors = $usLabelRepostory->getErrors();
 
-        if($usShippingServices->isEmpty()) {
-            session()->flash('alert-danger', 'Domestic service not available for selected orders total weight: '.$consolidatedOrder->weight.' lbs');
-            return back();
-        }
         
         $states = $domesticLabelRepository->getStates();
-        $consolidatedOrder = collect($consolidatedOrder);
-        return view('admin.orders.consolidate-domestic-label', compact('consolidatedOrder', 'orders', 'states', 'usShippingServices', 'errors'));
+        
+        return view('admin.orders.consolidate-domestic-label', compact('orders', 'states', 'errors'));
     }
 }
