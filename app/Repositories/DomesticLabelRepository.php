@@ -2,6 +2,10 @@
 
 namespace App\Repositories;
 
+use App\Models\Order;
+use App\Models\State;
+use App\Models\Country;
+use App\Models\Recipient;
 use App\Facades\USPSFacade;
 use App\Models\ShippingService;
 use App\Repositories\UPSLabelRepository;
@@ -14,8 +18,38 @@ class DomesticLabelRepository
     protected $uspsLabelRepository;
     protected $fedexLabelRepository;
 
+    public $upsShippingServices;
+    public $uspsShippingServices;
+    public $fedExShippingServices;
+
+    public $upsErrors;
+    public $uspsErrors;
+    public $fedExErrors;
+
     public $domesticRates = [];
     public $error;
+
+    public function getTempOrder($request)
+    {
+        $order = new Order();
+        $order->id = 1;
+        $order->user = $request->user;
+        $order->weight = $request->weight;
+        $order->length = $request->length;
+        $order->width = $request->width;
+        $order->height = $request->height;
+        $order->measurement_unit = $request->unit;
+        $order->recipient = $this->createRecipient();
+        $order->refresh();
+
+        $order->weight = $order->getWeight('kg');
+        return $order;
+    }
+
+    public function getShippingServices($order)
+    {
+        return $this->getDomesticShippingServices($order);
+    }
 
     public function handle()
     {
@@ -118,5 +152,75 @@ class DomesticLabelRepository
     private function callForUSPSAddressApi($request)
     {
         return USPSFacade::validateAddress($request);
+    }
+
+    private function createRecipient()
+    {
+        $recipient = new Recipient();
+        $recipient->first_name = 'Marcio';
+        $recipient->last_name = 'Fertias';
+        $recipient->phone = '+13058885191';
+        $recipient->email = 'homedelivery@homedeliverybr.com';
+        $recipient->country_id = Country::US;
+        $recipient->state_id = State::FL;
+        $recipient->address = '2200 NW 129TH AVE';
+        $recipient->city = 'Miami';
+        $recipient->zipcode = '33182';
+        $recipient->account_type = 'individual';
+
+        return $recipient;
+    }
+
+    private function getDomesticShippingServices($order)
+    {
+        $shippingServices = collect();
+
+        $this->upsShippingServices =  $this->upsLabelRepository->getShippingServices($order);
+        $this->upsErrors = $this->upsLabelRepository->getUPSErrors();
+
+        $this->uspsShippingServices =  $this->uspsLabelRepository->getShippingServices($order);
+        $this->uspsErrors = $this->uspsLabelRepository->getUSPSErrors();
+
+        $this->fedExShippingServices =  $this->fedExLabelRepository->getShippingServices($order);
+        $this->fedExErrors = $this->fedExLabelRepository->getFedExErrors();
+
+        if ($this->upsShippingServices->isNotEmpty()) 
+        {
+            $shippingServices = $shippingServices->merge($this->upsShippingServices);
+        }
+
+        if ($this->uspsShippingServices->isNotEmpty()) 
+        {
+            $shippingServices = $shippingServices->merge($this->uspsShippingServices);
+        }
+
+        if ($this->fedExShippingServices->isNotEmpty()) 
+        {
+            $shippingServices = $shippingServices->merge($this->fedExShippingServices);
+        }
+
+        return $shippingServices;
+    }
+
+    public function getShippingServiceErrors()
+    {
+        $errors = [];
+
+        if ($this->upsErrors) 
+        {
+            array_push($errors, $this->upsErrors);
+        }
+
+        if ($this->uspsErrors) 
+        {
+            array_push($errors, $this->uspsErrors);
+        }
+
+        if ($this->fedExErrors) 
+        {
+            array_push($errors, $this->fedExErrors);
+        }
+
+        return $errors;
     }
 }

@@ -233,7 +233,7 @@ class UPSLabelRepository
 
     public function getRatesForSender($request)
     {  
-        $order = ($request->exists('consolidated_order')) ? $request->order : Order::find($request->order_id);
+        $order = ($request->exists('consolidated_order') && $request->consolidated_order == true) ? $request->order : Order::find($request->order_id);
         $response = UPSFacade::getSenderPrice($order, $request);
 
         if($response->success == true)
@@ -316,14 +316,11 @@ class UPSLabelRepository
                         'us_api_service' => $request->service,
                         'api_pickup_response' => ($request->pickupShipment == true) ? $this->pickupResponse : null,
                     ]);
-    
-                    chargeAmount(round($this->total_amount_with_profit, 2), $order, 'Bought UPS Label For : ');
 
                     $order->refresh();
                 }
 
                 return true;
-
             } catch (\Exception $ex) {
                 Log::error($ex->getMessage());
                 $this->upsError = $ex->getMessage();
@@ -332,9 +329,21 @@ class UPSLabelRepository
             
         });
 
+        chargeAmount(round($this->total_amount_with_profit, 2), $request->orders->first(), 'Bought UPS Label For '.$this->getOrderIds($request->orders).' : ');
+
         return true;
     }
 
+    private function getOrderIds($orders)
+    {
+        $warehouse_numbers = [];
+        foreach ($orders as $order) {
+            $warehouse_numbers[] = $order->warehouse_number;
+        }
+
+        return implode(' :,', $warehouse_numbers);
+    }
+    
     public function getShippingServices($order)
     {
         $shippingServices = collect();

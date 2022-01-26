@@ -164,7 +164,7 @@ class USPSLabelRepository
 
     public function getRatesForSender($request)
     {
-        $order = ($request->exists('consolidated_order')) ? $request->order : Order::find($request->order_id);
+        $order = ($request->exists('consolidated_order') && $request->consolidated_order == true) ? $request->order : Order::find($request->order_id);
         $response = USPSFacade::getSenderPrice($order, $request);
 
         if($response->success == true)
@@ -282,8 +282,6 @@ class USPSLabelRepository
                         'us_secondary_label_cost' => setUSCosts($response->data['total_amount'], $request->total_price),
                         'us_api_service' => $request->service,
                     ]);
-    
-                    chargeAmount($request->total_price, $order, 'Bought USPS Label For : ');
 
                     $order->refresh();
                 }
@@ -298,7 +296,19 @@ class USPSLabelRepository
             
         });
 
+        chargeAmount($request->total_price, $request->orders->first(), 'Bought UPS Label For '.$this->getOrderIds($request->orders).' : ');
+
         return true;
+    }
+
+    private function getOrderIds($orders)
+    {
+        $warehouse_numbers = [];
+        foreach ($orders as $order) {
+            $warehouse_numbers[] = $order->warehouse_number;
+        }
+
+        return implode(' :,', $warehouse_numbers);
     }
 
     private function printSecondaryLabel(Order $order)
