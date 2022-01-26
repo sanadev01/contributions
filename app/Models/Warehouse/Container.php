@@ -83,7 +83,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return  2;
         }elseif($this->services_subclass_code == 'IX'){
             return 1;
-        }elseif($this->services_subclass_code == 'IX'){
+        }elseif($this->services_subclass_code == 'XP'){
             return 3;
         }elseif($this->services_subclass_code == 'SRM') {
             return 4;
