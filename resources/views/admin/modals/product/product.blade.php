@@ -31,12 +31,12 @@
                                 <td>{{$product->status}} </td>
                             </tr>                                
                             <tr>
-                                <th>SH Code</th>
-                                <th>@lang('orders.invoice.merchant')</th>
-                                <th>@lang('orders.invoice.carrier')</th>
-                                <th>@lang('orders.invoice.carrier_tracking')</th>
-                                <th>@lang('orders.invoice.whr_number')</th>
-                                <th>@lang('orders.invoice.tracking_code')</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
                             </tr>
                             <tr>
                                 <td>{{ $product->sh_code }}</td>

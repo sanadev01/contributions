@@ -160,6 +160,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             // Route::get('show/{status}/', [\App\Http\Controllers\Admin\Inventory\ProductController::class, 'status'])->name('status.approved');
             // Route::get('{status}/show', [\App\Http\Controllers\Admin\Inventory\ProductController::class, 'status'])->name('status.pending');
             Route::resource('product-export', ProductExportController::class)->only('index');
+            Route::resource('product-import', ProductImportController::class)->only(['create','store']);
             Route::resource('product-order', ProductOrderController::class)->only('show');
            
         });
