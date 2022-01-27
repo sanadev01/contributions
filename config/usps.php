@@ -18,8 +18,8 @@ return [
         'getPriceUrl' => 'https://api-sandbox.myibservices.com/v1/price.json',
         'trackingUrl' => '',
         'addressValidationUrl' => 'https://api-sandbox.myibservices.com/v1/address/validate',
-        'email' => 'ghaziislam3@gmail.com',
-        'password' => 'Ikonic@1234',
+        'email' => 'mnaveedsaim@gmail.com',
+        'password' => 'Ikonic@123',
     ],
     
 ];

@@ -358,7 +358,7 @@ class Order extends Model implements Package
         $shippingService = $this->shippingService;
 
         $additionalServicesCost = $this->calculateAdditionalServicesCost($this->services);
-        if($this->recipient->country_id == self::US)
+        if($this->recipient->country_id == self::US || ($this->sender_country_id == self::US && $this->recipient->country_id != self::US))
         {
             $shippingCost = $this->user_declared_freight;
             $this->calculateProfit($shippingCost, $shippingService);
