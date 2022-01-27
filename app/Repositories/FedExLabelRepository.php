@@ -105,7 +105,7 @@ class FedExLabelRepository
                 'us_api_service' => $request->service,
             ]);
 
-            chargeAmount(round($this->totalAmountWithProfit, 2), $order, 'Bought FedEx Label For : ');
+            chargeAmount(round($this->totalAmountWithProfit, 2), $order, 'Bought FedEx Label For : '.$order->warehouse_number);
 
             $order->refresh();
             $this->downloadFedexLabel($order->getUSLabelResponse(), $order->us_api_tracking_code);

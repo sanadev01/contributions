@@ -170,7 +170,7 @@ class UPSLabelRepository
                     'api_pickup_response' => ($request->pickupShipment == true) ? $this->pickupResponse : null,
                 ]);
 
-                chargeAmount(round($this->total_amount_with_profit, 2), $order, 'Bought UPS Label For : ');
+                chargeAmount(round($this->total_amount_with_profit, 2), $order, 'Bought UPS Label For : '.$order->warehouse_number);
                 $order->refresh();
 
                 $this->order = $order;
@@ -329,7 +329,7 @@ class UPSLabelRepository
             
         });
 
-        chargeAmount(round($this->total_amount_with_profit, 2), $request->orders->first(), 'Bought UPS Label For '.$this->getOrderIds($request->orders).' : ');
+        chargeAmount(round($this->total_amount_with_profit, 2), $request->orders->first(), 'Bought UPS Label For '.$this->getOrderIds($request->orders));
 
         return true;
     }
