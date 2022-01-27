@@ -223,7 +223,7 @@ class USPSLabelRepository
                     'us_api_service' => $request->service,
                 ]);
     
-                chargeAmount($request->total_price, $order, 'Bought USPS Label For : ');
+                chargeAmount($request->total_price, $order, 'Bought USPS Label For : '.$order->warehouse_number);
                 $order->refresh();
                 $this->order = $order;
             }
@@ -296,7 +296,7 @@ class USPSLabelRepository
             
         });
 
-        chargeAmount($request->total_price, $request->orders->first(), 'Bought UPS Label For '.$this->getOrderIds($request->orders).' : ');
+        chargeAmount($request->total_price, $request->orders->first(), 'Bought USPS Label For '.$this->getOrderIds($request->orders));
 
         return true;
     }

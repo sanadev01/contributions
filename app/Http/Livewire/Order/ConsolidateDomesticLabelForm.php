@@ -5,7 +5,6 @@ namespace App\Http\Livewire\Order;
 use Livewire\Component;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
-use App\Repositories\USLabelRepository;
 use App\Repositories\DomesticLabelRepository;
 
 class ConsolidateDomesticLabelForm extends Component
@@ -46,7 +45,7 @@ class ConsolidateDomesticLabelForm extends Component
     public $length;
     public $width;
     public $height;
-    public $unit;
+    public $unit = 'lbs/in';
     public $volumeWeight;
 
     protected $tempOrder;
