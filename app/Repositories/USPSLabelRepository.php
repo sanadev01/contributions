@@ -25,7 +25,7 @@ class USPSLabelRepository
 
     public function handle($order)
     {
-        if(($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS) && $order->api_response == null)
+        if($order->isPaid() && !$order->api_response)
         {
     
             $this->getPrimaryLabel($order);
@@ -44,7 +44,7 @@ class USPSLabelRepository
 
     public function getPrimaryLabel($order)
     {
-        $response = USPSFacade::generateLabel($order);
+        $response = USPSFacade::getPrimaryLabelForRecipient($order);
 
         if($response->success == true)
         {

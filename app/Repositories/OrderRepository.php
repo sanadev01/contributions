@@ -181,6 +181,7 @@ class OrderRepository
                     return false;
                 }
             }
+
             $order->update([
                 'customer_reference' => $request->customer_reference,
                 'shipping_service_id' => $shippingService->id,
@@ -459,18 +460,7 @@ class OrderRepository
                     $shippingServices->push($shippingService);
                 }
             }
-        } elseif ($order->sender_country_id == Order::US && $order->recipient->country_id != Order::US) 
-        {
-            $uspsShippingService = new USPSShippingService($order);
-
-            foreach (ShippingService::query()->active()->get() as $shippingService)
-            {
-                if ($uspsShippingService->isAvailableForInternational($shippingService)) {
-                    $shippingServices->push($shippingService);
-                }
-            }
-
-        }else 
+        } else
         {
             foreach (ShippingService::query()->has('rates')->active()->get() as $shippingService) 
             {
@@ -478,6 +468,19 @@ class OrderRepository
                     $shippingServices->push($shippingService);
                 }elseif($shippingService->getCalculator($order)->getErrors() != null && $shippingServices->isEmpty()){
                     $this->shippingServiceError = 'Shipping Service not Available Error: {'.$shippingService->getCalculator($order)->getErrors().'}';
+                }
+            }
+
+            // USPS Intenrational Services
+            if ($order->sender_country_id == Order::US && $order->recipient->country_id != Order::US) 
+            {
+                $uspsShippingService = new USPSShippingService($order);
+
+                foreach (ShippingService::query()->active()->get() as $shippingService)
+                {
+                    if ($uspsShippingService->isAvailableForInternational($shippingService)) {
+                        $shippingServices->push($shippingService);
+                    }
                 }
             }
 
