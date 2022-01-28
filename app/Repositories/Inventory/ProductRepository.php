@@ -151,16 +151,7 @@ class ProductRepository
             
             $order = $productOrder->orders()->create([
                 "user_id" => $productOrder->user_id,
-                "merchant" => $productOrder->merchant,
-                "carrier" => $productOrder->carrier,
-                "tracking_id" => $productOrder->tracking_id,
-
-                "weight" => $productOrder->weight,
-                "length" => $productOrder->length,
-                "width" => $productOrder->width,
-                "height" => $productOrder->height,
-                "measurement_unit" => $productOrder->measurement_unit,
-                "status" => Order::STATUS_NEEDS_PROCESSING,
+                "status" => Order::STATUS_PREALERT_READY,
                 "order_date" => now(),
 
             ]);
@@ -168,8 +159,6 @@ class ProductRepository
             $order->update([
                 "warehouse_number" => "HD-{$order->id}",
             ]);
-
-            $this->addItem($order, $productOrder);
 
             $productOrder->update([
                 "quantity" => $productOrder->quantity -1,
@@ -185,16 +174,5 @@ class ProductRepository
             return false;
         }
     }
-
-    public function addItem($order, $productOrder)
-    {
-        $order->items()->create([
-            "quantity" => 1,
-            "value" => $productOrder->price,
-            "description" => $productOrder->description,
-            "sh_code" => $productOrder->sh_code,
-        ]);
-    }
-
 
 }

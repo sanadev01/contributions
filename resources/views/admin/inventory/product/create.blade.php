@@ -31,7 +31,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>Name<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="name" value="" placeholder="Enter Product Name">
+                                <input type="text" class="form-control" name="name" value="{{ old('name') }}" placeholder="Enter Product Name">
                                 @error('name')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
@@ -41,7 +41,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>Order#<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="order" value="" placeholder="Enter Product Order Number">
+                                <input type="text" class="form-control" name="order" value="{{ old('order') }}" placeholder="Enter Product Order Number">
                                 @error('order')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
@@ -51,7 +51,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>Price Per Item <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="price" value="" placeholder="Enter Product Price">
+                                <input type="text" class="form-control" name="price" value="{{ old('price') }}" placeholder="Enter Product Price">
                                 @error('price')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
@@ -61,7 +61,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>Category <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="category" value="" placeholder="Enter Product category">
+                                <input type="text" class="form-control" name="category" value="{{ old('category') }}" placeholder="Enter Product category">
                                 @error('category')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
@@ -71,7 +71,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>SKU<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="sku" value="" placeholder="Enter Product SKU">
+                                <input type="text" class="form-control" name="sku" value="{{ old('sku') }}" placeholder="Enter Product SKU">
                                 @error('sku')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
@@ -81,7 +81,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>Description<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="description" value="" placeholder="Enter Product description">
+                                <input type="text" class="form-control" name="description" value="{{ old('description') }}" placeholder="Enter Product description">
                                 @error('description')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
@@ -91,7 +91,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>Quantity<span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" name="quantity" value="" placeholder="Enter Product quantity">
+                                <input type="number" class="form-control" name="quantity" value="{{ old('quantity') }}" placeholder="Enter Product quantity">
                                 @error('quantity')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
