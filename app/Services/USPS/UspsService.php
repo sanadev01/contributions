@@ -284,6 +284,7 @@ class UspsService
                 'shape' => 'Parcel',
                 'mail_class' => $this->setServiceClass($service),
                 'image_size' => '4x6',
+                'gde_origin_country_code' => 'CH',
             ],
         ];
     }

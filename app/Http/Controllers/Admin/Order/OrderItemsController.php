@@ -5,15 +5,10 @@ namespace App\Http\Controllers\Admin\Order;
 use App\Models\Order;
 use App\Facades\UPSFacade;
 use App\Facades\USPSFacade;
-use App\Rules\NcmValidator;
 use App\Facades\FedExFacade;
 use Illuminate\Http\Request;
-use App\Models\ShippingService;
 use App\Http\Controllers\Controller;
 use App\Repositories\OrderRepository;
-use App\Services\UPS\UPSShippingService;
-use App\Services\USPS\USPSShippingService;
-use App\Services\FedEx\FedExShippingService;
 use App\Http\Requests\Orders\OrderDetails\CreateRequest;
 
 class OrderItemsController extends Controller

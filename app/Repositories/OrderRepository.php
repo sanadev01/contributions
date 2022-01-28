@@ -440,7 +440,7 @@ class OrderRepository
     {
         $shippingServices = collect() ;
 
-        if($order->recipient->country_id == Order::US)
+        if($order->sender_country_id == Order::US && optional($order->recipient)->country_id == Order::US)
         {
             $uspsShippingService = new USPSShippingService($order);
             $upsShippingService = new UPSShippingService($order);
@@ -472,7 +472,7 @@ class OrderRepository
             }
 
             // USPS Intenrational Services
-            if ($order->sender_country_id == Order::US && $order->recipient->country_id != Order::US) 
+            if (($order->sender_country_id == Order::US && optional($order->recipient)->country_id != Order::US ) || ($order->sender_country_id != Order::US && optional($order->recipient)->country_id == Order::US )) 
             {
                 $uspsShippingService = new USPSShippingService($order);
 
