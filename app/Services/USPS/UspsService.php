@@ -82,7 +82,6 @@ class UspsService
     public function getPrimaryLabelForRecipient($order)
     {
         if ($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
-            Log::info('USPS: getPrimaryLabelForRecipient: '.$order->id);
             return $this->uspsApiCall($this->makeRequestAttributeForInternationalLabel($order));
         }
         
@@ -409,15 +408,15 @@ class UspsService
                 $itemToPush = [];
                 $itemToPush = [
                     'description' => $item->description,
-                    'quantity' => $item->quantity,
-                    'value' => $item->value,
+                    'quantity' => (int)$item->quantity,
+                    'value' => (float)$item->value,
                     'weight' => $singleItemWeight,
                     'weight_unit' => ($order->measurement_unit == 'kg/cm') ? 'kg' : 'lb',
                 ];
                array_push($items, $itemToPush);
             }
         }
-        Log::info('Items: '.json_encode($items));
+
         return $items;
     }
 
@@ -465,28 +464,37 @@ class UspsService
 
     private function uspsApiCallForRates($data)
     {
-        $response = Http::acceptJson()->withBasicAuth($this->email, $this->password)->post($this->getPriceUrl, $data);
-        dd($response->json());
-        
-        if($response->successful())
-        {
-            return (Object)[
-                'success' => true,
-                'data' => $response->json(),
-            ];
-        }elseif($response->clientError())
-        {
-            Log::info('USPS Error'.$response->json()['message']);
-            return (Object)[
-                'success' => false,
-                'message' => $response->json()['message'],
-            ];    
-        }elseif ($response->status() !== 200) 
-        {
-            Log::info('USPS Error'.$response->json()['message']);
+        try {
+
+            $response = Http::acceptJson()->withBasicAuth($this->email, $this->password)->post($this->getPriceUrl, $data);
+            
+            if($response->successful())
+            {
+                return (Object)[
+                    'success' => true,
+                    'data' => $response->json(),
+                ];
+            }elseif($response->clientError())
+            {
+                Log::info('USPS Error'.$response->json()['message']);
+                return (Object)[
+                    'success' => false,
+                    'message' => $response->json()['message'],
+                ];    
+            }elseif ($response->status() !== 200) 
+            {
+                Log::info('USPS Error'.$response->json()['message']);
+                return (object) [
+                    'success' => false,
+                    'message' => $response->json()['message'],
+                ];
+            }
+    
+        } catch (Exception $e) {
+            Log::info('USPS Error'. $e->getMessage());
             return (object) [
                 'success' => false,
-                'message' => $response->json()['message'],
+                'message' => $e->getMessage(),
             ];
         }
     }
