@@ -132,6 +132,7 @@ class UspsService
 
     public function uspsApiCall($data)
     {
+        dd($data);
         $response = Http::withBasicAuth($this->email, $this->password)->post($this->createLabelUrl, $data);
         
         if($response->status() == 201)
