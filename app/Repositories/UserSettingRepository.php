@@ -29,6 +29,7 @@ class UserSettingRepository {
         ($request->usps_order_dimension != null ) ? saveSetting('usps_order_dimension', $request->usps_order_dimension, $user->id) : saveSetting('usps_order_dimension', 0, $user->id);
         ($request->ups_profit != null ) ? saveSetting('ups_profit', $request->ups_profit, $user->id) : saveSetting('ups_profit', 0, $user->id);
         ($request->ups_order_dimension != null ) ? saveSetting('ups_order_dimension', $request->ups_order_dimension, $user->id) : saveSetting('ups_order_dimension', 0, $user->id);
+        ($request->fedex_profit != null ) ? saveSetting('fedex_profit', $request->fedex_profit, $user->id) : saveSetting('fedex_profit', 0, $user->id);
         
         if ( $request->password ){
             $user->update([

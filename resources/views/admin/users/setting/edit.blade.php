@@ -200,9 +200,7 @@
                                                 </span>
                                             </div>
                                             <span class="offset-2 mr-2 mt-2">Profit Percentage (%) :</span>
-                                            <input type="number" name="usps_profit" class="form-control col-2" id="usps_profit" value="{{ setting('usps_profit', null, $user->id) }}">
-                                            <span class="offset-2 mr-2 mt-2">Bulk Label Dimension (%) :</span>
-                                            <input type="number" name="usps_order_dimension" class="form-control col-2" id="usps_order_dimension" value="{{ setting('usps_order_dimension', null, $user->id) }}">
+                                            <input type="number" name="usps_profit" step="0.01" min=0 class="form-control col-2" id="usps_profit" value="{{ setting('usps_profit', null, $user->id) }}">
                                         </div>    
                                     </div>
                                 </div>
@@ -211,7 +209,7 @@
                                     <div class="col-md-6">
                                         <div class="input-group">
                                             <div class="vs-checkbox-con vs-checkbox-primary" title="ups">
-                                                <input type="checkbox" name="ups" id="ups" @if(setting('ups', null, $user->id)) checked @endif>
+                                                <input type="checkbox" name="ups"  id="ups" @if(setting('ups', null, $user->id)) checked @endif>
                                                 <span class="vs-checkbox vs-checkbox-lg">
                                                     <span class="vs-checkbox--check">
                                                         <i class="vs-icon feather icon-check"></i>
@@ -219,9 +217,7 @@
                                                 </span>
                                             </div>
                                             <span class="offset-2 mr-2 mt-2">Profit Percentage (%) :</span>
-                                            <input type="number" name="ups_profit" class="form-control col-2" id="ups_profit" value="{{ setting('ups_profit', null, $user->id) }}">
-                                            <span class="offset-2 mr-2 mt-2">Bulk Label Dimension (%) :</span>
-                                            <input type="number" name="ups_order_dimension" class="form-control col-2" id="ups_order_dimension" value="{{ setting('ups_order_dimension', null, $user->id) }}">
+                                            <input type="number" name="ups_profit" step="0.01" min=0 class="form-control col-2" id="ups_profit" value="{{ setting('ups_profit', null, $user->id) }}">
                                         </div>    
                                     </div>
                                 </div>
@@ -238,9 +234,7 @@
                                                 </span>
                                             </div>
                                             <span class="offset-2 mr-2 mt-2">Profit Percentage (%) :</span>
-                                            <input type="number" name="fedex_profit" class="form-control col-2" id="ups_profit" value="{{ setting('fedex_profit', null, $user->id) }}">
-                                            <span class="offset-2 mr-2 mt-2">Bulk Label Dimension (%) :</span>
-                                            <input type="number" name="fedex_order_dimension" class="form-control col-2" id="fedex_order_dimension" value="{{ setting('fedex_order_dimension', null, $user->id) }}">
+                                            <input type="number" name="fedex_profit" step="0.01" min=0 class="form-control col-2" id="ups_profit" value="{{ setting('fedex_profit', null, $user->id) }}">
                                         </div>    
                                     </div>
                                 </div>
