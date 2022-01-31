@@ -465,37 +465,28 @@ class UspsService
 
     private function uspsApiCallForRates($data)
     {
-        try {
-
-            $response = Http::acceptJson()->withBasicAuth($this->email, $this->password)->post($this->getPriceUrl, $data);
-            
-            if($response->successful())
-            {
-                return (Object)[
-                    'success' => true,
-                    'data' => $response->json(),
-                ];
-            }elseif($response->clientError())
-            {
-                Log::info('USPS Error'.$response->json()['message']);
-                return (Object)[
-                    'success' => false,
-                    'message' => $response->json()['message'],
-                ];    
-            }elseif ($response->status() !== 200) 
-            {
-                Log::info('USPS Error'.$response->json()['message']);
-                return (object) [
-                    'success' => false,
-                    'message' => $response->json()['message'],
-                ];
-            }
-    
-        } catch (Exception $e) {
-            Log::info('USPS Error'. $e->getMessage());
+        $response = Http::acceptJson()->withBasicAuth($this->email, $this->password)->post($this->getPriceUrl, $data);
+        dd($response->json());
+        
+        if($response->successful())
+        {
+            return (Object)[
+                'success' => true,
+                'data' => $response->json(),
+            ];
+        }elseif($response->clientError())
+        {
+            Log::info('USPS Error'.$response->json()['message']);
+            return (Object)[
+                'success' => false,
+                'message' => $response->json()['message'],
+            ];    
+        }elseif ($response->status() !== 200) 
+        {
+            Log::info('USPS Error'.$response->json()['message']);
             return (object) [
                 'success' => false,
-                'message' => $e->getMessage(),
+                'message' => $response->json()['message'],
             ];
         }
     }
