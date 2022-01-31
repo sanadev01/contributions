@@ -158,11 +158,12 @@ class UspsService
                 ];
             }
             
-        } catch (Exception $e) {
-            Log::info('USPS Error'. $e->getMessage());
+        } catch (Exception $ex) {
+            dd($ex);
+            Log::info('USPS Error'. $ex->getMessage());
             return (object) [
                 'success' => false,
-                'message' => $e->getMessage(),
+                'message' => $ex->getMessage(),
             ];
         }
     }
