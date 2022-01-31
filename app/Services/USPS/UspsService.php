@@ -2,6 +2,7 @@
 namespace App\Services\USPS;
 
 use Exception;
+use App\Models\Country;
 use App\Models\ShippingService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -80,10 +81,10 @@ class UspsService
 
     public function getPrimaryLabelForRecipient($order)
     {
-
         if ($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
             return $this->uspsApiCall($this->makeRequestAttributeForInternationalLabel($order));
         }
+        
         return $this->uspsApiCall($this->makeRequestAttributeForLabel($order));
     }
     
@@ -254,7 +255,7 @@ class UspsService
     {
         $this->calculateVolumetricWeight($order);
 
-        return [
+        $request_body = [
             'from_address' => $this->getHercoAddress(),
             'to_address' => $this->getRecipientAddress($order),
             'weight' => (float)$this->chargableWeight,
@@ -266,6 +267,12 @@ class UspsService
                 'image_size' => '4x6',
             ],
         ];
+
+        if ($order->sender_country_id != Country::US) {
+            $request_body['usps']['gde_origin_country_code'] = Country::find($order->sender_country_id)->code;
+        }
+        
+        return $request_body;
     }
 
     private function makeRequestAttributeForInternationalRates($order, $service)
@@ -284,6 +291,7 @@ class UspsService
                 'shape' => 'Parcel',
                 'mail_class' => $this->setServiceClass($service),
                 'image_size' => '4x6',
+                'gde_origin_country_code' => 'CH',
             ],
         ];
     }
