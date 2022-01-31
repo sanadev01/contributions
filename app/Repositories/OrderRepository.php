@@ -472,7 +472,7 @@ class OrderRepository
             }
 
             // USPS Intenrational Services
-            if ($order->sender_country_id == Order::US && optional($order->recipient)->country_id != Order::US ) 
+            if ($order->sender_country_id == Order::US && optional($order->recipient)->country_id != Order::US && setting('usps', null, $order->user->id)) 
             {
                 $uspsShippingService = new USPSShippingService($order);
 
