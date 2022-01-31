@@ -6,7 +6,7 @@
         </div>
     </div>
     @foreach ($items as $key => $item)
-        <livewire:order.order-details.order-item :key-id="$key" :item="$item" :key="$key"/>
+        <livewire:order.order-details.order-item :key-id="$key" :item="$item" :key="$key" :order="$order" />
     @endforeach
 
     @include('layouts.livewire.loading')
