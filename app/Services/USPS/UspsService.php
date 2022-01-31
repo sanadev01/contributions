@@ -132,38 +132,27 @@ class UspsService
 
     public function uspsApiCall($data)
     {
-        try {
-            
-            $response = Http::withBasicAuth($this->email, $this->password)->post($this->createLabelUrl, $data);
-            
-            if($response->status() == 201)
-            {
-                return (Object)[
-                    'success' => true,
-                    'message' => 'Label has been generated',
-                    'data'    => $response->json(),
-                ];    
-            }elseif($response->status() == 401)
-            {
-                return (Object)[
-                    'success' => false,
-                    'message' => $response->json()['error'],
-                ];    
-            }elseif ($response->status() !== 201) 
-            {
+        $response = Http::withBasicAuth($this->email, $this->password)->post($this->createLabelUrl, $data);
+        
+        if($response->status() == 201)
+        {
+            return (Object)[
+                'success' => true,
+                'message' => 'Label has been generated',
+                'data'    => $response->json(),
+            ];    
+        }elseif($response->status() == 401)
+        {
+            return (Object)[
+                'success' => false,
+                'message' => $response->json()['error'],
+            ];    
+        }elseif ($response->status() !== 201) 
+        {
 
-                return (object) [
-                    'success' => false,
-                    'message' => $response->json()['message'],
-                ];
-            }
-            
-        } catch (Exception $ex) {
-            dd($ex);
-            Log::info('USPS Error'. $ex->getMessage());
             return (object) [
                 'success' => false,
-                'message' => $ex->getMessage(),
+                'message' => $response->json()['message'],
             ];
         }
     }
