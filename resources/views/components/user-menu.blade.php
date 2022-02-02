@@ -299,6 +299,12 @@
                                 <span class="menu-title">Products</span>
                             </a>
                         </li>
+                        <li class="{{ $isActive(['admin.inventory.product.pickup']) }}">
+                            <a href="{{ route('admin.inventory.product.pickup') }}">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title">Pickup</span>
+                            </a>
+                        </li>
                         {{-- <li class="{{ $isActive(['admin.inventory.status.approved']) }}">
                             <a href="{{ route('admin.inventory.status.approved','approved') }}">
                                 <i class="feather icon-circle"></i>
