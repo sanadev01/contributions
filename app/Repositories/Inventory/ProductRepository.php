@@ -65,29 +65,29 @@ class ProductRepository
 
     public function store(Request $request)
     {
-        $product                = new Product();
-        $product->user_id       = Auth::user()->isAdmin()? $request->user_id: auth()->id();
-        $product->name          = $request->name;
-        $product->price         = $request->price;
-        $product->sku           = $request->sku;
-        $product->status        = 'pending';
-
-        $product->merchant      = $request->merchant;
-        $product->carrier       = $request->carrier;
-        $product->tracking_id   = $request->tracking_id;
-
-        $product->order_date    = $request->order_date;
-        $product->sh_code       = $request->sh_code;
-        $product->description   = $request->description;
-        $product->quantity      = $request->quantity;
-
-        $product->weight        = $request->weight;
-        $product->length        = $request->length;
-        $product->width         = $request->width ;
-        $product->height        = $request->height;
-        
-        $product->warehouse_number= $request->whr_number;
-        $product->measurement_unit= $request->unit;
+        $product                 = new Product();
+        $product->user_id        = Auth::user()->isAdmin()? $request->user_id: auth()->id();
+        $product->name           = $request->name;
+        $product->price          = $request->price;
+        $product->sku            = $request->sku;
+        $product->status         = 'pending';
+        $product->order          = $request->order;
+        $product->category       = $request->category;
+        $product->brand          = $request->brand;
+        $product->manufacturer   = $request->manufacturer;
+        $product->barcode        = $request->barcode;
+        $product->description    = $request->description;
+        $product->quantity       = $request->quantity;
+        $product->item           = $request->item;
+        $product->lot            = $request->lot ;
+        $product->unit           = $request->unit ;
+        $product->case           = $request->case;
+        $product->inventory_alue = $request->inventory_alue;
+        $product->min_quantity   = $request->min_quantity;
+        $product->max_quantity   = $request->max_quantity;
+        $product->discontinued   = $request->discontinued;
+        $product->stor_day       = $request->stor_day;
+        $product->location       = $request->location;
         
         $product->save();
 
@@ -100,28 +100,29 @@ class ProductRepository
    
     public function update(Request $request, Product $product)
     {
-        $product->user_id       = Auth::user()->isAdmin()? $request->user_id: auth()->id();
-        $product->name          = $request->name;
-        $product->price         = $request->price;
-        $product->sku           = $request->sku;
-        $product->status        = 'pending';
-
-        $product->merchant      = $request->merchant;
-        $product->carrier       = $request->carrier;
-        $product->tracking_id   = $request->tracking_id;
-
-        $product->order_date    = $request->order_date;
-        $product->sh_code       = $request->sh_code;
-        $product->description   = $request->description;
-        $product->quantity      = $request->quantity;
-
-        $product->weight        = $request->weight;
-        $product->length        = $request->length;
-        $product->width         = $request->width ;
-        $product->height        = $request->height;
-        
-        $product->warehouse_number= $request->whr_number;
-        $product->measurement_unit= $request->unit;
+        $product                 = new Product();
+        $product->user_id        = Auth::user()->isAdmin()? $request->user_id: auth()->id();
+        $product->name           = $request->name;
+        $product->price          = $request->price;
+        $product->sku            = $request->sku;
+        $product->status         = 'pending';
+        $product->order          = $request->order;
+        $product->category       = $request->category;
+        $product->brand          = $request->brand;
+        $product->manufacturer   = $request->manufacturer;
+        $product->barcode        = $request->barcode;
+        $product->description    = $request->description;
+        $product->quantity       = $request->quantity;
+        $product->item           = $request->item;
+        $product->lot            = $request->lot ;
+        $product->unit           = $request->unit ;
+        $product->case           = $request->case;
+        $product->inventory_alue = $request->inventory_alue;
+        $product->min_quantity   = $request->min_quantity;
+        $product->max_quantity   = $request->max_quantity;
+        $product->discontinued   = $request->discontinued;
+        $product->stor_day       = $request->stor_day;
+        $product->location       = $request->location;
         
         $product->save();
 
@@ -150,16 +151,7 @@ class ProductRepository
             
             $order = $productOrder->orders()->create([
                 "user_id" => $productOrder->user_id,
-                "merchant" => $productOrder->merchant,
-                "carrier" => $productOrder->carrier,
-                "tracking_id" => $productOrder->tracking_id,
-
-                "weight" => $productOrder->weight,
-                "length" => $productOrder->length,
-                "width" => $productOrder->width,
-                "height" => $productOrder->height,
-                "measurement_unit" => $productOrder->measurement_unit,
-                "status" => Order::STATUS_NEEDS_PROCESSING,
+                "status" => Order::STATUS_PREALERT_READY,
                 "order_date" => now(),
 
             ]);
@@ -167,8 +159,6 @@ class ProductRepository
             $order->update([
                 "warehouse_number" => "HD-{$order->id}",
             ]);
-
-            $this->addItem($order, $productOrder);
 
             $productOrder->update([
                 "quantity" => $productOrder->quantity -1,
@@ -184,16 +174,5 @@ class ProductRepository
             return false;
         }
     }
-
-    public function addItem($order, $productOrder)
-    {
-        $order->items()->create([
-            "quantity" => 1,
-            "value" => $productOrder->price,
-            "description" => $productOrder->description,
-            "sh_code" => $productOrder->sh_code,
-        ]);
-    }
-
 
 }
