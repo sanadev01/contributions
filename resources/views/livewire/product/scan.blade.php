@@ -19,6 +19,17 @@
 
         </div>
     </div>
+    @if ($productError)
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="alert alert-danger" role="alert">
+                        {{ $productError }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
     <table class="table table-bordered">
         <tr>
             <th>user</th>
@@ -31,13 +42,13 @@
         @if ($scannedProducts)
             @foreach ($scannedProducts as $product)
                 <tr>
-                    <td>{{ $product->user->name }}</td>
-                    <td>{{ $product->name }}</td>
-                    <td>{{ $product->quantity }}</td>
-                    <td>{{ $product->price }}</td>
-                    <td>{{ $product->sku }}</td>
+                    <td>{{ $product['user']['name'] }}</td>
+                    <td>{{ $product['name'] }}</td>
+                    <td>{{ $product['quantity'] }}</td>
+                    <td>{{ $product['price'] }}</td>
+                    <td>{{ $product['sku'] }}</td>
                     <td>
-                        <button wire:click="removeProduct({{ $product->id }})" class="btn btn-danger">Remove</button>
+                        <button wire:click="placeOrder({{ $product['id'] }})" class="btn btn-success">Place Order</button>
                     </td>
                 </tr>
             @endforeach
