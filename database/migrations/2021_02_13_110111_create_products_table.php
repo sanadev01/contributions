@@ -22,20 +22,21 @@ class CreateProductsTable extends Migration
             $table->string('status')->nullable();
             $table->longText('description')->nullable();
             $table->integer('quantity')->nullable();
-
-            $table->string('merchant')->nullable();
-            $table->string('sh_code')->nullable();
-            $table->string('carrier')->nullable();
-            $table->string('tracking_id')->nullable();
-            $table->timestamp('order_date')->nullable();
-
-            $table->double('weight')->default(0);
-            $table->double('length')->default(0);
-            $table->double('width')->default(0);
-            $table->double('height')->nullable();
-            $table->string('measurement_unit',10)->default('kg/cm')->comment('kg/cm,lbs/in');
-            $table->bigInteger('invoice_file')->nullable();
-            $table->string('warehouse_number',20)->nullable();
+            $table->string('order')->nullable();
+            $table->string('category')->nullable();
+            $table->string('brand')->nullable();
+            $table->string('manufacturer')->nullable();
+            $table->string('barcode')->nullable();
+            $table->string('item')->nullable();
+            $table->string('lot')->nullable();
+            $table->string('unit')->nullable();
+            $table->string('case')->nullable();
+            $table->string('inventory_alue')->nullable();
+            $table->integer('min_quantity')->nullable();
+            $table->integer('max_quantity')->nullable();
+            $table->string('discontinued')->nullable();
+            $table->integer('stor_day')->nullable();
+            $table->string('location')->nullable();
             
             $table->timestamps();
         });

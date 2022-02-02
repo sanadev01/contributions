@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers\Admin\Inventory;
 
-use App\Models\Product;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Repositories\Inventory\ProductRepository;
+use Illuminate\Http\Request;
 
-class ProductOrderController extends Controller
+class ProductImportController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -26,7 +24,7 @@ class ProductOrderController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.inventory.product.import');
     }
 
     /**
@@ -46,11 +44,9 @@ class ProductOrderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Product $product_order, ProductRepository $repository)
+    public function show($id)
     {
-        $parcel = $repository->storeOrder($product_order);
-        return redirect()->route('admin.parcels.edit',$parcel);
-        // return redirect()->route('admin.orders.sender.index',$order);
+        //
     }
 
     /**
@@ -59,9 +55,9 @@ class ProductOrderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Product $product_order)
+    public function edit($id)
     {
-        
+        //
     }
 
     /**
