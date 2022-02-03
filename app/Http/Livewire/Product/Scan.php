@@ -2,14 +2,20 @@
 
 namespace App\Http\Livewire\Product;
 
-use App\Models\Product;
 use Livewire\Component;
+use App\Repositories\Inventory\ProductRepository;
+use Illuminate\Http\Request;
 
 class Scan extends Component
 {
     public $search;
-    public $scannedProducts;
+    public $scannedProducts = [];
     public $productError;
+    public $totalProducts;
+
+    public $user_id;
+    protected $quantity = 0;
+
     
     protected $rules = [
         'search' => 'required|min:4',
@@ -17,6 +23,7 @@ class Scan extends Component
 
     public function render()
     {
+        $this->totalProducts();
         return view('livewire.product.scan');
     }
 
@@ -26,27 +33,99 @@ class Scan extends Component
         $this->getProduct();
     }
 
-    public function getProduct()
+    private function getProduct()
     {
-        $product = Product::where([
-            ['sku', $this->search],
-            ['status', 'approved'],
-            ['quantity', '>', 0],
-        ])->first();
+        if (!$this->scannedProducts) {
+           return $this->getProductFromDatabase();
+        }
 
+        if(!$this->searchProductFromExistingProducts())
+        {
+            return $this->getProductFromDatabase();
+        }
+    }
+    
+    private function getProductFromDatabase()
+    {
+        $productRepository = new ProductRepository();
+        $product = $productRepository->getProductBySku($this->search, $this->user_id);
+            
         if ($product) {
-            $this->scannedProducts[] = $product;
-            $this->search = '';
-            $this->productError = '';
 
+            $this->user_id = $product->user_id;
+            $productArr = [];
+
+            $productArr = [
+                'id' => $product->id,
+                'user_id' => $product->user_id,
+                'user' => $product->user,
+                'name' => $product->name,
+                'sku' => $product->sku,
+                'price' => $product->price,
+                'total_price' => $product->price,
+                'quantity' => 1,
+                'total_quantity' => $product->quantity,
+            ];
+            array_push($this->scannedProducts, $productArr);
+
+            $this->search = '';
+            $this->error = '';
+            return true;
+        }
+            
+        $this->productError = $productRepository->getError();
+        $this->search = '';
+        return false;
+    }
+
+    private function searchProductFromExistingProducts()
+    {
+        if (in_array($this->search, array_column($this->scannedProducts, 'sku'))) {
+            $index = array_search($this->search, array_column($this->scannedProducts, 'sku'));
+            if ($this->scannedProducts[$index]['quantity'] < $this->scannedProducts[$index]['total_quantity']) {
+                $this->scannedProducts[$index]['quantity'] += 1;
+                $this->scannedProducts[$index]['total_price'] = $this->scannedProducts[$index]['price'] * $this->scannedProducts[$index]['quantity'];
+
+                $this->search = '';
+                $this->productError = '';
+                return true;
+            }
+
+            $this->search = '';
+            $this->productError = 'product is out of stock';
             return true;
         }
 
-        $this->productError = 'Product not available';
+        return false;
     }
 
-    public function placeOrder($id)
+    public function totalProducts()
     {
-        return redirect()->route('admin.inventory.product-order.show', $id);
+        $this->totalProducts = count($this->scannedProducts);
     }
+    
+
+    public function placeOrder(ProductRepository $productRepository)
+    {
+        $this->validate([
+            'scannedProducts' => 'required',
+            'user_id' => 'required',
+        ]);
+
+        $order = $productRepository->placeInventoryOrder($this->createRequest());
+        if ($order) {
+            return redirect()->route('admin.parcels.edit', $order);
+        }
+
+        $this->productError = $productRepository->getError();
+    }
+
+    private function createRequest()
+    {
+        return new Request([
+            'order_items' => $this->scannedProducts,
+            'user_id' => $this->user_id,
+        ]);
+    }
+    
 }

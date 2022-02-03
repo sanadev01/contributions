@@ -87,10 +87,6 @@ class PreAlertController extends Controller
         $this->authorize('update', $parcel);
 
         if ( $order = $preAlertRepository->update($request, $parcel) ){
-            if(!$order->products->isEmpty()){
-                session()->flash('alert-success','parcel.Parcel Updated');
-                return redirect()->route('admin.orders.sender.index',$order);
-            }
             session()->flash('alert-success','parcel.Parcel Updated');
             return redirect()->route('admin.parcels.index');
         }

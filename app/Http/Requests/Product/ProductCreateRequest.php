@@ -44,6 +44,7 @@ class ProductCreateRequest extends FormRequest
             'discontinued' => 'required',
             'stor_day' => 'required',
             'location' => 'required',
+            'sh_code' => 'required',
 
         ];
 
