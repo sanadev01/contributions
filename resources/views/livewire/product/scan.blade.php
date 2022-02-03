@@ -42,7 +42,7 @@
         @empty
             <tr>
                 <td colspan="5" class="text-center">
-                    <h3>Scan SKU of product please!</h3>
+                    <h3 class="text-danger">No product has been scanned yet!</h3>
                 </td>
             </tr>
         @endforelse

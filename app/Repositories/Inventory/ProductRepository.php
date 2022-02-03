@@ -193,6 +193,7 @@ class ProductRepository
             foreach ($request->order_items as $item) {
 
                $product = Product::find($item['id']);
+               $order->products()->attach($product);
                 $product->update([
                      'quantity' => $product->quantity - $item['quantity'],
                 ]);

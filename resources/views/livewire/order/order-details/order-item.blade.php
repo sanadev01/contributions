@@ -3,7 +3,7 @@
         <div class="form-group col-12 col-sm-6 col-md-6">
             <div class="controls">
                 <label>@lang('orders.order-details.order-item.Harmonized Code')<span class="text-danger"></span></label>
-                <livewire:components.search-sh-code class="form-control" required name="items[{{$keyId}}][sh_code]" :code="optional($item)['sh_code']" />
+                    <livewire:components.search-sh-code class="form-control" required name="items[{{$keyId}}][sh_code]" :code="optional($item)['sh_code']"  :order="$order"/>
                 @error("items.{$keyId}.sh_code")
                     <div class="help-block text-danger">{{ $message }}</div>
                 @enderror
@@ -23,7 +23,7 @@
         <div class="form-group col-12 col-sm-4 col-md-4">
             <div class="controls">
                 <label>@lang('orders.order-details.order-item.Quantity') <span class="text-danger"></span></label>
-                <input type="number" class="form-control quantity" step="0.01" onkeydown="if(event.key==='.'){event.preventDefault();}"  oninput="event.target.value = event.target.value.replace(/[^0-9]*/g,'');"  min="1" required name="items[{{$keyId}}][quantity]" value="{{ optional($item)['quantity'] }}">
+                <input type="number" class="form-control quantity" step="0.01" onkeydown="if(event.key==='.'){event.preventDefault();}"  oninput="event.target.value = event.target.value.replace(/[^0-9]*/g,'');"  min="1" required name="items[{{$keyId}}][quantity]" value="{{ optional($item)['quantity'] }}" @if($order->products->isNotEmpty()) readonly @endif>
                 @error("items.{$keyId}.quantity")
                     <div class="help-block text-danger">{{ $message }}</div>
                 @enderror

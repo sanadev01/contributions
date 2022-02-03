@@ -136,16 +136,10 @@ class OrderRepository
         DB::beginTransaction();
 
         try {
-            $lastOrderItemQuantity = $order->items()->sum('quantity');
+          
             $order->items()->delete();
-            $product = $order->products->first();
-            $totalQuantity = 0;
-            // dd($product);
-            // $productQuantity = $product->quantity;
+            
             foreach ($request->get('items',[]) as $item) {
-                if($product && $product->quantity  >= $totalQuantity && $product->sh_code == $item['sh_code'] ){
-                    $totalQuantity+=$item['quantity'];
-                }
                 
                 $order->items()->create([
                     'sh_code' => optional($item)['sh_code'],
@@ -155,19 +149,6 @@ class OrderRepository
                     'contains_battery' => optional($item)['dangrous_item'] == 'contains_battery' ? true: false,
                     'contains_perfume' => optional($item)['dangrous_item'] == 'contains_perfume' ? true: false,
                     'contains_flammable_liquid' => optional($item)['dangrous_item'] == 'contains_flammable_liquid' ? true: false,
-                ]);
-            }
-
-            if($product && $product->quantity + $lastOrderItemQuantity < $totalQuantity){
-                $remainingQuantity = $product->quantity+1;
-                DB::rollback();
-                session()->flash('alert-danger','Your Quantity Is '. $remainingQuantity . ' You Cannot Add More Than '. $remainingQuantity );
-                return false;
-            }
-            $totalDifference = $totalQuantity - $lastOrderItemQuantity;
-            if($product){
-                $product->update([
-                    'quantity'=>$product->quantity - $totalDifference,
                 ]);
             }
 
