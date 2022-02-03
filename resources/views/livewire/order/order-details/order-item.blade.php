@@ -1,15 +1,5 @@
 <div class="items shadow p-4 border-top-success border-2 mt-2">
     <div class="row mt-1">
-        <div class="form-group col-12 col-sm-4 col-md-4">
-            <div class="controls">
-                <label>Select Product<span class="text-danger"></span></label>
-                <select class="form-control">
-                    @foreach ($order->user->products as $product)
-                        <option value="{{ $product->id }}">{{ $product->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
         <div class="form-group col-12 col-sm-6 col-md-6">
             <div class="controls">
                 <label>@lang('orders.order-details.order-item.Harmonized Code')<span class="text-danger"></span></label>

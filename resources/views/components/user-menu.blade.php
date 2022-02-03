@@ -289,20 +289,20 @@
                 <li class="nav-item has-sub sidebar-group">
                     <a href="#">
                         <i class="feather icon-shopping-cart"></i>
-                        <span class="menu-title">Inventory Management</span>
+                        <span class="menu-title">@lang('inventory.Inventory Management')</span>
                     </a>
                     <ul class="menu-content">
 
                         <li class="{{ $isActive(['admin.inventory.product.index','admin.inventory.product.create','admin.inventory.product.edit']) }}">
                             <a href="{{ route('admin.inventory.product.index') }}">
                                 <i class="feather icon-circle"></i>
-                                <span class="menu-title">Products</span>
+                                <span class="menu-title">@lang('inventory.Products')</span>
                             </a>
                         </li>
                         <li class="{{ $isActive(['admin.inventory.product.pickup']) }}">
                             <a href="{{ route('admin.inventory.product.pickup') }}">
                                 <i class="feather icon-circle"></i>
-                                <span class="menu-title">Pickup</span>
+                                <span class="menu-title">@lang('inventory.Pickup')</span>
                             </a>
                         </li>
                         {{-- <li class="{{ $isActive(['admin.inventory.status.approved']) }}">

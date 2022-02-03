@@ -81,6 +81,8 @@ class ProductController extends Controller
             session()->flash('alert-success','Product Update');
             return redirect()->route('admin.inventory.product.index');
         }
+
+        return back()->withInput();
     }
 
     /**

@@ -31,6 +31,16 @@
                     <div class="row mt-1">
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
+                                <label>Harmonized Code<span class="text-danger">*</span></label>
+                                <livewire:components.search-sh-code class="form-control" name="sh_code" :code="optional($product)->sh_code" required />
+                                @error('name')
+                                    <div class="help-block text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        
+                        <div class="form-group col-12 col-sm-6 col-md-4">
+                            <div class="controls">
                                 <label>Name<span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="name" value="{{ $product->name }}" placeholder="Enter Product Name">
                                 @error('name')
