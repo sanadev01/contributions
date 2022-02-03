@@ -24,7 +24,7 @@
 </div> --}}
 <div>
 
-<select required class="form-control" name="{{$name}}" wire:model.debounce.500ms="search" id="sh_code">
+<select required class="form-control" name="{{$name}}" wire:model.debounce.500ms="search" id="sh_code" @if($orderInventory) readonly @endif>
     <option value="">Select HS code / Selecione o código HS</option>
     @foreach ($codes as $code)
         <option value="{{ $code->code }}">
