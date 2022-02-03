@@ -14,13 +14,9 @@
         </div>
     </div>
     @if ($productError)
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="alert alert-danger" role="alert">
-                        {{ $productError }}
-                    </div>
-                </div>
+        <div class="col-md-12">
+            <div class="alert alert-danger" role="alert">
+                <h3>{{ $productError }}</h3>
             </div>
         </div>
     @endif
@@ -31,6 +27,7 @@
             <th>Quantity</th>
             <th>Price</th>
             <th>SKU</th>
+            <th>Action</th>
         </tr>
         @forelse ($scannedProducts as $product)
             <tr>
@@ -39,10 +36,14 @@
                 <td>{{ $product['quantity'] }}</td>
                 <td>{{ $product['total_price'] }}</td>
                 <td>{{ $product['sku'] }}</td>
-            </tr>
+                <td>
+                    <button wire:click="removeProduct({{ $product['id'] }})" class="btn btn-danger">Remove</button>
+                </tr>
         @empty
             <tr>
-                <td colspan="5">Scan SKU of product please!</td>
+                <td colspan="5" class="text-center">
+                    <h3>Scan SKU of product please!</h3>
+                </td>
             </tr>
         @endforelse
     </table>
