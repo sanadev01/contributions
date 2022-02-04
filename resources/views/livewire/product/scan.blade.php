@@ -50,7 +50,11 @@
 
     @if ($scannedProducts)
         <div class="col-12 row mb-5">
-            <button class="btn btn-primary" type="button" wire:click="placeOrder()">Place Order</button>
+            <div class="ml-auto">
+                <button class="btn btn-lg btn-primary" type="button" wire:click="placeOrder()">Place Order</button>
+            </div>
         </div>
     @endif
+
+    @include('layouts.livewire.loading')
 </div>
