@@ -46,6 +46,16 @@ class ContainerPackageRepository extends AbstractRepository{
         $containerOrder = $container->orders->first();
         $order          = Order::where('corrios_tracking_code',strtoupper($barcode))->first();
         
+        if ($order->status < Order::STATUS_PAYMENT_DONE) {
+            return [
+                'order' => [
+                    'corrios_tracking_code' => $barcode,
+                    'error' => 'Please check the Order Status, either the order has been canceled, refunded or not yet paid',
+                    'code' => 404
+                ],
+            ];
+        }
+
         if( $containerOrder ){
             if( $containerOrder->getOriginalWeight('kg') <= 3 && $order->getOriginalWeight('kg') > 3){
                 return [
