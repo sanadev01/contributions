@@ -249,7 +249,7 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 
 Route::get('test-profit/{id}',function($id){
     $invoice = PaymentInvoice::find($id);
-    Artisan::call('migrate');
+    // Artisan::call('migrate');
     dd($invoice->toArray());
     // $labelPrinter = new CN23LabelMaker();
 
