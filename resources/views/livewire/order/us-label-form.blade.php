@@ -46,7 +46,6 @@
             </div>
         @endif
         @if(count($usServicesErrors) < 2)
-        {
             <form wire:submit.prevent="getRates">
                 <div class="ml-3 mt-3">
                     <div class="row ml-3">
@@ -149,10 +148,11 @@
                 </div>
             </form>
         @endif    
-        @if ($upsError || $uspsError)
+        @if ($upsError || $uspsError || $fedexError)
             <div class="container">
                 <div class="alert alert-danger" role="alert">
                     {{ $upsError ? $upsError : $uspsError }}
+                    {{ $fedexError ? $fedexError : '' }}
                 </div>
             </div>
         @endif    

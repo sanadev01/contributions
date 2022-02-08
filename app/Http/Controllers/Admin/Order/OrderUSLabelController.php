@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin\Order;
 
 use App\Models\Order;
 use App\Models\State;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Repositories\USLabelRepository;
 

@@ -34,6 +34,14 @@ class USPSShippingService
         }
     }
 
+    public function isAvailableForInternational($shippingService)
+    {
+        if(($shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL || $shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) && $this->weight <= $shippingService->max_weight_allowed)
+        {
+            return true;
+        }
+    }
+
     public function weightCalculator()
     {
         $volumetric_weight =  $this->getVolumnWeight($this->length, $this->width, $this->height,$this->isWeightInKg($this->measurement_unit));
