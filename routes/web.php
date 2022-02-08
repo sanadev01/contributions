@@ -8,6 +8,7 @@ use App\Services\StoreIntegrations\Shopify;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -248,6 +249,7 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 
 Route::get('test-profit/{id}',function($id){
     $invoice = PaymentInvoice::find($id);
+    Artisan::call('migrate');
     dd($invoice->toArray());
     // $labelPrinter = new CN23LabelMaker();
 
