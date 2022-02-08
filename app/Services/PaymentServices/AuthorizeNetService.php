@@ -104,11 +104,10 @@ class AuthorizeNetService
             $transactionRequestType = new TransactionRequestType();
             $transactionRequestType->setTransactionType('authCaptureTransaction');
 
-            if ($invoice->total_amount > $invoice->amount_paid) {
-
-                $amountToPay = $invoice->total_amount - $invoice->paid_amount;
+            if ($invoice->differnceAmount()) {
+                
                 $transactionRequestType->setAmount(
-                    round($amountToPay, 2)
+                    round($invoice->differnceAmount(), 2)
                 );
                 
             } else 
