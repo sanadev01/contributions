@@ -3,6 +3,7 @@
 use App\Models\User;
 use App\Models\Order;
 use App\Models\ProfitPackage;
+use App\Models\PaymentInvoice;
 use App\Services\StoreIntegrations\Shopify;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
@@ -246,8 +247,8 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 })->name('order.us-label.download');
 
 Route::get('test-profit/{id}',function($id){
-    $profit = ProfitPackage::find($id);
-    dd($profit);
+    $invoice = PaymentInvoice::find($id);
+    dd($invoice->toArray());
     // $labelPrinter = new CN23LabelMaker();
 
     // $order = Order::find(53654);
