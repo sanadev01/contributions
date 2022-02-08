@@ -92,4 +92,13 @@ class PaymentInvoice extends Model
     {
         return round($value,2);
     }
+
+    public function differnceAmount()
+    {
+        if ($this->total_amount > $this->paid_amount) {
+            return $this->total_amount - $this->paid_amount;
+        }
+        
+        return null;
+    }
 }

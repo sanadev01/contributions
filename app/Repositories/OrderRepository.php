@@ -2,26 +2,15 @@
 
 namespace App\Repositories;
 
-use Stripe\Charge;
-use Stripe\Stripe;
-use Stripe\Customer;
 use App\Models\Order;
-use App\Models\State;
-use App\Models\Country;
-use App\Events\OrderPaid;
 use App\Facades\USPSFacade;
 use Illuminate\Http\Request;
-use App\Mail\User\PaymentPaid;
-use App\Models\PaymentInvoice;
-use App\Models\HandlingService;
 use App\Models\ShippingService;
-use App\Models\BillingInformation;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Services\UPS\UPSShippingService;
 use App\Services\USPS\USPSShippingService;
 use App\Services\FedEx\FedExShippingService;
-use App\Services\PaymentServices\AuthorizeNetService;
 
 class OrderRepository
 {
@@ -212,113 +201,6 @@ class OrderRepository
         }
     }
 
-    public function checkout(Request $request, PaymentInvoice $paymentInvoice)
-    {
-        DB::beginTransaction();
-
-        try {
-
-            $billingInformation = null;
-
-            if ( $request->billingInfo ){
-                $billingInformation = BillingInformation::find($request->billingInfo);
-            }
-
-            if ( !$billingInformation ){
-                $billingInformation = new BillingInformation([
-                    'user_id' => Auth::id(),
-                    'first_name' => $request->first_name,
-                    'last_name' => $request->last_name,
-                    'card_no' => ($request->payment_gateway == 'stripe_ach') ? $request->account_no : $request->card_no,
-                    'expiration' => ($request->payment_gateway == 'stripe_ach') ? null : $request->expiration,
-                    'cvv' => ($request->payment_gateway == 'stripe_ach') ? $request->routing_number : $request->cvv,
-                    'phone' => $request->phone,
-                    'address' => $request->address,
-                    'state' => State::find($request->state)->code,
-                    'zipcode' => $request->zipcode,
-                    'country' => Country::find($request->country)->name
-                ]);
-            }
-
-            if ( $request->has('save-address') ){
-                $billingInformation->save();
-            }
-
-            if($request->payment_gateway == 'stripe')
-            {
-                $transactionID = PaymentInvoice::generateUUID('DP-');
-                $this->stripePayment($request, $paymentInvoice->total_amount, $paymentInvoice->uuid);
-
-                if($this->error != null)
-                {
-                    DB::rollBack();
-                    return false;
-                }
-            }
-
-            if($request->payment_gateway == 'stripe_ach')
-            {
-                $transactionID = PaymentInvoice::generateUUID('DP-');
-                $this->stripeAchPayment($request, $paymentInvoice->total_amount);
-
-                if($this->error != null)
-                {
-                    DB::rollBack();
-                    return false;
-                }
-            }
-
-            if($request->payment_gateway == 'authorize')
-            {
-                $authorizeNetService = new AuthorizeNetService();
-
-                $response = $authorizeNetService->makeCreditCardPayement($billingInformation,$paymentInvoice);
-
-                if ( !$response->success ){
-                    $this->error = json_encode($response->message);
-                    DB::rollBack();
-                    return false;
-                }
-            }
-            
-
-            $paymentInvoice->update([ 
-                'last_four_digits' => substr($billingInformation->card_no,-4),
-                'is_paid' => true
-            ]);
-
-            $paymentInvoice->transactions()->create([
-                'transaction_id' => ($request->payment_gateway == 'stripe' || $request->payment_gateway == 'stripe_ach') ? $this->chargeID : $response->data->getTransId(),
-                'amount' => $paymentInvoice->total_amount
-            ]);
-
-            $paymentInvoice->orders()->update([
-                'is_paid' => true,
-                'status' => Order::STATUS_PAYMENT_DONE
-            ]);
-
-            event(new OrderPaid($paymentInvoice->orders, true));
-            
-            try {
-                \Mail::send(new PaymentPaid($paymentInvoice));
-            } catch (\Exception $ex) {
-                \Log::info('Payment Paid email send error: '.$ex->getMessage());
-            }
-
-            DB::commit();
-
-            return true;
-
-        } catch (\Exception $ex) {
-            DB::rollBack();
-            $this->error = $ex->getMessage();
-            return false;
-        }
-        
-    }
-    
-    
-
     public function getError()
     {
         return $this->error;
@@ -343,104 +225,6 @@ class OrderRepository
         return $orders->orderBy('id')->get();
     }
     
-    private function stripePayment($request, $total_amount, $InvoiceId)
-    {
-        $stripeSecret = setting('STRIPE_SECRET', null, null, true);
-        
-        Stripe::setApiKey($stripeSecret);
-        try {
-            $charge = Charge::create ([
-                'amount' => (float)$total_amount * 100,
-                'currency' => "usd",
-                'source' => $request->stripe_token,
-                'description' => auth()->user()->pobox_number.' '.'paid to HomeDelivery against payment invoice# '.$InvoiceId,
-            ]);
-            
-            $this->chargeID = $charge->id;
-            return true;
-
-        } catch (\Exception $ex) {
-            $this->error = $ex->getMessage();
-
-            return false;
-        }
-    }
-
-    private function stripeAchPayment($request, $total_amount)
-    {
-        $stripeSecret = setting('STRIPE_SECRET', null, null, true);
-        
-        Stripe::setApiKey($stripeSecret);
-
-        try {
-
-            $customer = Customer::create([
-                'description' => $request->first_name . ' ' . $request->last_name,
-                'source' => $request->stripe_token,
-            ]);
-
-            if($this->verifyCustomer($customer, $total_amount))
-            {
-                return true;
-            }
-
-        } catch (\Exception $th) {
-            $this->error = $th->getMessage();
-
-            return false;
-        }
-        
-    }
-
-    private function verifyCustomer($customer, $total_amount)
-    {
-        try {
-
-            // get the existing bank account of customer
-            $bank_account = Customer::retrieveSource(
-                $customer->id,
-                $customer->default_source
-            );
-
-            // verify the account(stripe default)
-            $bank_account->verify(['amounts' => [32, 45]]);
-
-            if($this->stripeAchCharge($customer, $total_amount))
-            {
-                return true;
-            }
-
-        } catch (\Exception $ex) {
-
-            $this->error = $ex->getMessage();
-
-            return false;
-        }
-        
-    }
-
-    private function stripeAchCharge($customer, $total_amount)
-    {
-        try {
-
-            $stripeSecret = setting('STRIPE_SECRET', null, null, true);
-
-            $stripe = new \Stripe\StripeClient($stripeSecret);
-
-            $charge = $stripe->charges->create([
-                'amount' => (float)$total_amount * 100, 
-                'currency' => 'usd', 
-                'customer' => $customer->id,
-            ]);
-
-            $this->chargeID = $charge->id;
-            return true;
-
-        } catch (\Exception $ex) {
-            return $this->error = $ex->getMessage();
-        }
-    }
-
     public function getShippingServices($order)
     {
         $shippingServices = collect() ;
