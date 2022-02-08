@@ -236,8 +236,6 @@ class OrderCheckoutRepository
                 'is_paid' => true,
                 'status' => Order::STATUS_PAYMENT_DONE
             ]);
-
-            event(new OrderPaid($this->invoice->orders, true));
             
             try {
                 Mail::send(new PaymentPaid($this->invoice));
