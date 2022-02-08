@@ -3,12 +3,10 @@
 use App\Models\User;
 use App\Models\Order;
 use App\Models\ProfitPackage;
-use App\Models\PaymentInvoice;
 use App\Services\StoreIntegrations\Shopify;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
-use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -247,16 +245,9 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
     return response()->download(storage_path("app/labels/{$order->us_api_tracking_code}.pdf"),"{$order->us_api_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.us-label.download');
 
-Route::get('test-profit/{status}',function($status){
-    // dd($status);
-    // $invoice = PaymentInvoice::find($id);
-    if ($status == 'true') {
-        Artisan::call('migrate:rollback --step=1');
-    }elseif($status == 'false'){
-        Artisan::call('migrate');
-    }
-    echo Artisan::output();
-    // dd($invoice->toArray());
+Route::get('test-profit/{id}',function($id){
+    $profit = ProfitPackage::find($id);
+    dd($profit);
     // $labelPrinter = new CN23LabelMaker();
 
     // $order = Order::find(53654);
