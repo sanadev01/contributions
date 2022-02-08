@@ -86,7 +86,8 @@ class PaymentInvoiceRepository
             $invoice->orders()->sync($orders->pluck('id')->toArray());
 
             $invoice->update([
-                'total_amount' => $invoice->orders()->sum('gross_total')
+                'total_amount' => $invoice->orders()->sum('gross_total'),
+                'paid_amount' => $invoice->orders()->sum('gross_total'),
             ]);
 
             return $invoice;

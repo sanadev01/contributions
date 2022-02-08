@@ -164,6 +164,27 @@ class OrderRepository
 
             $order->doCalculations();
 
+            if ($order->isPaid()) 
+            {
+                $orderInvoice = $order->getPaymentInvoice();
+               
+                $orderInvoice->update([
+                    'total_amount' => $orderInvoice->orders()->sum('gross_total'),
+                ]);
+
+                if ($orderInvoice->total_amount > $orderInvoice->paid_amount) {
+                    
+                    $orderInvoice->update([
+                        'is_paid' => 0,
+                    ]);
+                    
+                    $order->update([
+                        'status' => Order::STATUS_PAYMENT_PENDING,
+                        'is_paid' => 0,
+                    ]);
+                }
+            }
+
             DB::commit();
 
             return true;
