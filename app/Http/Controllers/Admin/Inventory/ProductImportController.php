@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Admin\Inventory;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Repositories\Inventory\ProductRepository;
 
 class ProductImportController extends Controller
 {
@@ -33,9 +34,22 @@ class ProductImportController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
+    public function store(Request $request, ProductRepository $repository)
+    {        
+        $this->validate($request,[
+            'excel_name' => 'nullable',
+            'excel_file' => 'required|file'
+        ]);
+
+        $response = $repository->importProduct($request);
+        
+        if($response){
+            return back()->withErrors(['errors' => $response]);
+        }
+
+        session()->flash('alert-success','Product Import Successfull');
+
+        return redirect()->route('admin.import.import-excel.index');
     }
 
     /**

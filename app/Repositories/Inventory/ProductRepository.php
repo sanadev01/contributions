@@ -221,5 +221,12 @@ class ProductRepository
         return $this->error;
     }
     
+    public function importProduct()
+    {
+        $importExcelService = new OrderImportService($request->file('excel_file'),$request);
+        $importOrder = $importExcelService->handle();
+        return;
+    }
+    
 
 }
