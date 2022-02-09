@@ -48,7 +48,7 @@ class ProductOrderController extends Controller
      */
     public function show(Product $product_order, ProductRepository $repository)
     {
-        $parcel = $repository->storeOrder($product_order);
+        $parcel = $repository->storeSingleOrder($product_order);
         return redirect()->route('admin.parcels.edit',$parcel);
         // return redirect()->route('admin.orders.sender.index',$order);
     }
