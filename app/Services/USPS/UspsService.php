@@ -92,7 +92,7 @@ class UspsService
     {
         $this->calculateVolumetricWeight($order);
 
-       return [
+        return [
             'request_id' => 'HD-'.$order->id,
             'from_address' => $this->getHercoAddress(),
             'to_address' => $this->getRecipientAddress($order),

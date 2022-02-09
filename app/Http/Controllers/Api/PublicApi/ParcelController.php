@@ -62,7 +62,7 @@ class ParcelController extends Controller
             $stateID = $state->id;
         }
 
-        if ($countryID == 250) {
+        if ($countryID == Country::US) {
            if(!$usShippingService->isAvalaible($request))
            {
                 return apiResponse(false, 'Seleceted Shipping service is not available for your account');

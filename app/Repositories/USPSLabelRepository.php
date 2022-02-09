@@ -25,7 +25,7 @@ class USPSLabelRepository
 
     public function handle($order)
     {
-        if($order->isPaid() && !$order->api_response)
+        if(!$order->api_response)
         {
     
             $this->getPrimaryLabel($order);

@@ -14,7 +14,7 @@ class ApiShippingServiceRepository
     {
         $shippingService = ShippingService::find($request->parcel['service_id']);
         
-        if($shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS)
+        if($shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS || $shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL || $shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL)
         {
             if(!setting('usps', null, auth()->user()->id))
             {
@@ -37,7 +37,7 @@ class ApiShippingServiceRepository
     {
         if ($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS) 
         {
-            $response = USPSFacade::getPrice($order, $order->shippingService->service_sub_class);
+            $response = USPSFacade::getRecipientRates($order, $order->shippingService->service_sub_class);
 
             if($response->success == true)
             {
