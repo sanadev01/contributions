@@ -17,6 +17,7 @@ class CreateProductsTable extends Migration
             $table->id();
             $table->bigInteger('user_id');
             $table->string('name')->nullable();
+            $table->bigInteger('sh_code')->nullable();
             $table->double('price')->default(0);
             $table->string('sku')->nullable();
             $table->string('status')->nullable();
