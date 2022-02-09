@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Inventory;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Repositories\Inventory\ProductRepository;
 
 class ProductImportController extends Controller
@@ -36,20 +37,22 @@ class ProductImportController extends Controller
      */
     public function store(Request $request, ProductRepository $repository)
     {        
-        $this->validate($request,[
-            'excel_name' => 'nullable',
+        $rules = [
             'excel_file' => 'required|file'
-        ]);
+        ];
+        if(Auth::user()->isAdmin()){
+            $rules['user_id'] = 'required';
+        }
 
+        $this->validate($request,$rules);
         $response = $repository->importProduct($request);
         
-        if($response){
+        if($response != true){
             return back()->withErrors(['errors' => $response]);
         }
 
         session()->flash('alert-success','Product Import Successfull');
-
-        return redirect()->route('admin.import.import-excel.index');
+        return redirect()->route('admin.inventory.product.index');
     }
 
     /**

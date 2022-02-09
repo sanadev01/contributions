@@ -38,11 +38,11 @@ class ProductCreateRequest extends FormRequest
             'lot' => 'required',
             'unit' => 'required',
             'case' => 'required',
-            'inventory_alue' => 'required',
+            'inventory_value' => 'required',
             'min_quantity' => 'required',
             'max_quantity' => 'required',
             'discontinued' => 'required',
-            'stor_day' => 'required',
+            'store_day' => 'required',
             'location' => 'required',
             'sh_code' => 'required',
 

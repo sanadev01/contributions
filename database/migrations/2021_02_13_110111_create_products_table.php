@@ -31,11 +31,11 @@ class CreateProductsTable extends Migration
             $table->string('lot')->nullable();
             $table->string('unit')->nullable();
             $table->string('case')->nullable();
-            $table->string('inventory_alue')->nullable();
+            $table->string('inventory_value')->nullable();
             $table->integer('min_quantity')->nullable();
             $table->integer('max_quantity')->nullable();
             $table->string('discontinued')->nullable();
-            $table->integer('stor_day')->nullable();
+            $table->integer('store_day')->nullable();
             $table->string('location')->nullable();
             
             $table->timestamps();

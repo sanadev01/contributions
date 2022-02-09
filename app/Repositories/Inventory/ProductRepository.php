@@ -7,6 +7,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Services\Excel\Import\ProductImportService;
 
 class ProductRepository
 {
@@ -83,11 +84,11 @@ class ProductRepository
         $product->lot            = $request->lot ;
         $product->unit           = $request->unit ;
         $product->case           = $request->case;
-        $product->inventory_alue = $request->inventory_alue;
+        $product->inventory_value = $request->inventory_value;
         $product->min_quantity   = $request->min_quantity;
         $product->max_quantity   = $request->max_quantity;
         $product->discontinued   = $request->discontinued;
-        $product->stor_day       = $request->stor_day;
+        $product->store_day       = $request->store_day;
         $product->location       = $request->location;
         $product->sh_code        = $request->sh_code;
         
@@ -119,11 +120,11 @@ class ProductRepository
             'lot' => $request->lot,
             'unit' => $request->unit,
             'case' => $request->case,
-            'inventory_alue' => $request->inventory_alue,
+            'inventory_value' => $request->inventory_value,
             'min_quantity' => $request->min_quantity,
             'max_quantity' => $request->max_quantity,
             'discontinued' => $request->discontinued,
-            'stor_day' => $request->stor_day,
+            'store_day' => $request->store_day,
             'location' => $request->location,
         ]);
         
@@ -260,11 +261,11 @@ class ProductRepository
         return $this->error;
     }
     
-    public function importProduct()
+    public function importProduct($request)
     {
-        $importExcelService = new OrderImportService($request->file('excel_file'),$request);
-        $importOrder = $importExcelService->handle();
-        return;
+        $importExcelService = new ProductImportService($request->file('excel_file'),$request);
+        $response = $importExcelService->handle();
+        return $response;
     }
     
 
