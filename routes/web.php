@@ -255,9 +255,9 @@ Route::get('test-profit/{status}',function($status){
     }
 
     echo Artisan::output();
-    
-    // $profit = ProfitPackage::find($status);
     dd($status);
+    // $profit = ProfitPackage::find($status);
+    
     // $labelPrinter = new CN23LabelMaker();
 
     // $order = Order::find(53654);
