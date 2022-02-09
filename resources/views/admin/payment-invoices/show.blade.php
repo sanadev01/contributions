@@ -90,7 +90,7 @@
                                     <hr>
                                     <tr class="border-top-light">
                                         <td class="text-center h4" style="border-top: 1px solid !important;" colspan=" {{ !$invoice->isPrePaid()? '5' : '9' }}">@lang('orders.invoice.Total')</td>
-                                        <td class="h4" style="border-top: 1px solid !important;">{{ round($invoice->orders()->sum('gross_total'),2) }} USD</td>
+                                        <td class="h4" style="border-top: 1px solid !important;">{{ ($invoice->differnceAmount()) ? round($invoice->differnceAmount(), 2) : round($invoice->orders()->sum('gross_total'),2) }} USD</td>
                                     </tr>                            
                                 </tbody>
                             </table>

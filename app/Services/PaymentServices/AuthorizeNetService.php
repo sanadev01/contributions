@@ -103,9 +103,19 @@ class AuthorizeNetService
             // Transaction Request
             $transactionRequestType = new TransactionRequestType();
             $transactionRequestType->setTransactionType('authCaptureTransaction');
-            $transactionRequestType->setAmount(
-                round($invoice->total_amount, 2)
-            );
+
+            if ($invoice->differnceAmount()) {
+                
+                $transactionRequestType->setAmount(
+                    round($invoice->differnceAmount(), 2)
+                );
+                
+            } else 
+            {
+                $transactionRequestType->setAmount(
+                    round($invoice->total_amount, 2)
+                );
+            }
             $transactionRequestType->setPayment($paymentOne);
             $transactionRequestType->setCustomer($customerData);
             $transactionRequestType->setBillTo($customerAddress);

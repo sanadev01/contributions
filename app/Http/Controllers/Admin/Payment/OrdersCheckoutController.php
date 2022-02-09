@@ -2,16 +2,11 @@
 
 namespace App\Http\Controllers\Admin\Payment;
 
-use App\Models\Order;
-use App\Models\Deposit;
-use App\Events\OrderPaid;
 use Illuminate\Http\Request;
 use App\Models\PaymentInvoice;
 use PhpParser\Node\Stmt\Foreach_;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use App\Repositories\OrderRepository;
+use App\Repositories\OrderCheckoutRepository;
 use App\Services\PaymentServices\AuthorizeNetService;
 
 class OrdersCheckoutController extends Controller
@@ -35,7 +30,7 @@ class OrdersCheckoutController extends Controller
         return view('admin.payment-invoices.checkout',compact('invoice', 'paymentGateway', 'stripeKey'));
     }
 
-    public function store(PaymentInvoice $invoice,Request $request, OrderRepository $orderRepository)
+    public function store(PaymentInvoice $invoice,Request $request, OrderCheckoutRepository $orderCheckoutRepository)
     {
         $this->authorize('view',$invoice);
         
@@ -43,53 +38,6 @@ class OrdersCheckoutController extends Controller
             abort(404);
         }
 
-        if($request->pay){
-
-            if(getBalance() < $invoice->total_amount){
-                session()->flash('alert-danger','Not Enough Balance. Please Recharge your account.');
-                return back();
-            }
-            
-            DB::beginTransaction();
-
-            try {
-                
-                foreach($invoice->orders as $order){
-                    if ( !$order->isPaid() &&  getBalance() >= $order->gross_total ){
-                        chargeAmount($order->gross_total,$order);
-                    }
-                }
-    
-                $invoice->update([
-                    'is_paid' => true
-                ]);
-    
-                $invoice->orders()->update([
-                    'is_paid' => true,
-                    'status' => Order::STATUS_PAYMENT_DONE
-                ]);
-
-                DB::commit();
-            } catch (\Exception $ex) {
-                DB::rollBack();
-                session()->flash('alert-danger',$ex->getMessage());
-                return back();
-            }
-            
-            
-            event(new OrderPaid($invoice->orders, true));
-
-            session()->flash('alert-success', __('orders.payment.alert-success'));
-            return redirect()->route('admin.payment-invoices.index');
-        }
-
-        if ( $orderRepository->checkout($request,$invoice) ){
-            session()->flash('alert-success', __('orders.payment.alert-success'));
-            return redirect()->route('admin.payment-invoices.index');
-        }
-
-        session()->flash('alert-danger',$orderRepository->getError());
-        return \back()->withInput();
-
+        return $orderCheckoutRepository->handle($invoice, $request);
     }
 }
