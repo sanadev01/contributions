@@ -4,6 +4,7 @@ namespace App\Http\Requests\Api\Parcel;
 
 use App\Rules\NcmValidator;
 use Illuminate\Http\Request;
+use App\Models\ShippingService;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Requests\Concerns\HasJsonResponse;
 
@@ -28,6 +29,7 @@ class CreateRequest extends FormRequest
      */
     public function rules(Request $request)
     {
+        $shippingService = ShippingService::find($request->parcel['service_id']);
         
         $rules = [
             "parcel.service_id" => "required|exists:shipping_services,id",
@@ -58,8 +60,13 @@ class CreateRequest extends FormRequest
             "recipient.account_type" => "required|in:individual,business",
             "recipient.tax_id" => "required",
             "recipient.zipcode" => "required",
-            // "recipient.state_id" => "required|exists:states,id",
-            // "recipient.country_id" => "required|exists:countries,id",
+            "recipient.state_id" => "required|exists:states,id",
+            "recipient.country_id" => "required|exists:countries,id",
+
+            'sender.sender_address' => 'required_if:recipient.country_id,250',
+            'sender.sender_country_id' => 'required_if:recipient.country_id,250',
+            'sender.sender_state_id' => 'required_if:recipient.country_id,250',
+            'sender.sender_city' => 'required_if:recipient.country_id,250',
             
             "products" => "required|array|min:1",
 
@@ -105,7 +112,11 @@ class CreateRequest extends FormRequest
     public function messages()
     {
         return [
-            "products.*.sh_code.*" => __('validation.ncm.invalid')." (:input)"
+            "products.*.sh_code.*" => __('validation.ncm.invalid')." (:input)",
+            'sender.sender_address.required_if' => __('validation.sender_address.required_if'),
+            'sender.sender_country_id.required_if' => __('validation.sender_country_id.required_if'),
+            'sender.sender_state_id.required_if' => __('validation.sender_state_id.required_if'),
+            'sender.sender_city.required_if' => __('validation.sender_city.required_if'),
         ];
     }
 }

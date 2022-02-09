@@ -27,8 +27,8 @@ class ParcelController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(CreateRequest $request, ApiShippingServiceRepository $usShippingService)
-    {
-        
+    { 
+
         $weight = optional($request->parcel)['weight']??0;
         $length = optional($request->parcel)['length']??0;
         $width = optional($request->parcel)['width']??0;
@@ -48,24 +48,27 @@ class ParcelController extends Controller
             }
         }
 
-        $countryID = optional($request->recipient)['country_id'];
+        $recipientCountryId = optional($request->recipient)['country_id'];
         $stateID = optional($request->recipient)['state_id'];
+
+        $senderCountryId = optional($request->sender)['sender_country_id'];
+        
         
         if (!is_numeric( optional($request->recipient)['country_id'])){
             
             $country = Country::where('code', optional($request->recipient)['country_id'])->orwhere('id', optional($request->recipient)['country_id'])->first();
-            $countryID = $country->id;
+            $recipientCountryId = $country->id;
         }
         if (!is_numeric( optional($request->recipient)['state_id'])){
 
-            $state = State::where('country_id', $countryID )->where('code', optional($request->recipient)['state_id'])->orwhere('id', optional($request->recipient)['state_id'])->first();
+            $state = State::where('country_id', $recipientCountryId )->where('code', optional($request->recipient)['state_id'])->orwhere('id', optional($request->recipient)['state_id'])->first();
             $stateID = $state->id;
         }
 
-        if ($countryID == Country::US) {
-           if(!$usShippingService->isAvalaible($request))
+        if ($recipientCountryId == Country::US) {
+           if(!$usShippingService->isAvalaible($request, $volumeWeight))
            {
-                return apiResponse(false, 'Seleceted Shipping service is not available for your account');
+                return apiResponse(false, $usShippingService->getError());
            }
         }
         
@@ -110,10 +113,10 @@ class ParcelController extends Controller
                 "tax_id" => optional($request->recipient)['tax_id'],
                 "zipcode" => optional($request->recipient)['zipcode'],
                 "state_id" => $stateID,
-                "country_id" =>$countryID 
+                "country_id" =>$recipientCountryId 
             ]);
             
-            if($countryID == Order::CHILE){
+            if($recipientCountryId == Order::CHILE){
 
                 $order->update([
                     "sender_address" => optional($request->sender)['sender_address'],
@@ -124,7 +127,7 @@ class ParcelController extends Controller
                 ]);
             }
 
-            if ($countryID == Order::US) {
+            if ($recipientCountryId == Order::US) {
               
                 $order->update([
                     "sender_country_id" => optional($request->sender)['sender_country_id'],
@@ -168,7 +171,7 @@ class ParcelController extends Controller
                 'shipping_service_name' => $order->shippingService->name
             ]);
             
-            if ($countryID == Order::US) {
+            if ($recipientCountryId == Order::US) {
                 if(!$usShippingService->getUSShippingServiceRate($order))
                 {
                     DB::rollback();
@@ -237,7 +240,7 @@ class ParcelController extends Controller
             }
         }
 
-        $countryID = optional($request->recipient)['country_id'];
+        $recipientCountryId = optional($request->recipient)['country_id'];
         $stateID = optional($request->recipient)['state_id'];
         
         if (!is_numeric( optional($request->recipient)['state_id'])){
@@ -248,7 +251,7 @@ class ParcelController extends Controller
         if (!is_numeric( optional($request->recipient)['country_id'])){
 
             $country = Country::where('code', optional($request->recipient)['country_id'])->orwhere('id', optional($request->recipient)['country_id'])->first();
-            $countryID = $country->id;
+            $recipientCountryId = $country->id;
         }
 
         DB::beginTransaction();
@@ -291,10 +294,10 @@ class ParcelController extends Controller
                 "tax_id" => optional($request->recipient)['tax_id'],
                 "zipcode" => optional($request->recipient)['zipcode'],
                 "state_id" => $stateID,
-                "country_id" =>$countryID 
+                "country_id" =>$recipientCountryId 
             ]);
             
-            if($countryID == 46){
+            if($recipientCountryId == 46){
 
                 $parcel->update([
                     "sender_address" => optional($request->sender)['sender_address'],
