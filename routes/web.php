@@ -7,6 +7,7 @@ use App\Services\StoreIntegrations\Shopify;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -245,16 +246,18 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
     return response()->download(storage_path("app/labels/{$order->us_api_tracking_code}.pdf"),"{$order->us_api_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.us-label.download');
 
-Route::get('test-profit/{id}',function($id){
-    $db_host = env('DB_HOST');
-    $db_port = env('DB_PORT');
-    $db_name = env('DB_DATABASE');
-    $db_user = env('DB_USERNAME');
-    $db_pass = env('DB_PASSWORD');
+Route::get('test-profit/{status}',function($status){
 
-    dd($db_host, $db_port, $db_name, $db_user, $db_pass);
-    $profit = ProfitPackage::find($id);
-    dd($profit);
+    if ($status == 'true') {
+        Artisan::call('migrate');
+    }elseif ($status == 'false') {
+        Artisan::call('migrate:rollback --step=1');
+    }
+
+    echo Artisan::output();
+    
+    // $profit = ProfitPackage::find($status);
+    dd($status);
     // $labelPrinter = new CN23LabelMaker();
 
     // $order = Order::find(53654);
