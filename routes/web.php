@@ -246,6 +246,13 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 })->name('order.us-label.download');
 
 Route::get('test-profit/{id}',function($id){
+    $db_host = env('DB_HOST');
+    $db_port = env('DB_PORT');
+    $db_name = env('DB_DATABASE');
+    $db_user = env('DB_USERNAME');
+    $db_pass = env('DB_PASSWORD');
+
+    dd($db_host, $db_port, $db_name, $db_user, $db_pass);
     $profit = ProfitPackage::find($id);
     dd($profit);
     // $labelPrinter = new CN23LabelMaker();
