@@ -30,6 +30,7 @@ class Scan extends Component
     public function updatedSearch()
     {
         $this->validate();
+        $this->search = strtoupper($this->search);
         $this->getProduct();
     }
 

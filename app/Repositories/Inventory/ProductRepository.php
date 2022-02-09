@@ -70,7 +70,7 @@ class ProductRepository
         $product->user_id        = Auth::user()->isAdmin()? $request->user_id: auth()->id();
         $product->name           = $request->name;
         $product->price          = $request->price;
-        $product->sku            = $request->sku;
+        $product->sku            = strtoupper($request->sku);
         $product->status         = 'pending';
         $product->order          = $request->order;
         $product->category       = $request->category;
@@ -106,8 +106,8 @@ class ProductRepository
             'user_id' => Auth::user()->isAdmin()? $request->user_id: auth()->id(),
             'name' => $request->name,
             'price' => $request->price,
-            'sku' => $request->sku,
-            'status' => $request->status,
+            'sku' => strtoupper($request->sku),
+            'status' => $product->status,
             'order' => $request->order,
             'category' => $request->category,
             'brand' => $request->brand,
@@ -174,6 +174,45 @@ class ProductRepository
         }
 
         return $product;
+    }
+
+    public function storeSingleOrder($productOrder)
+    {
+        DB::beginTransaction();
+
+        try {
+            
+            $order = $productOrder->orders()->create([
+                'user_id' => $productOrder->user_id,
+                'status' => Order::STATUS_PREALERT_READY,
+                'order_date' => now(),
+
+            ]);
+
+            $order->update([
+                'warehouse_number' => "HD-{$order->id}",
+            ]);
+
+            $productOrder->update([
+                'quantity' => $productOrder->quantity -1,
+            ]);
+
+            $order->items()->create([
+                'quantity' => 1,
+                'sh_code' =>$productOrder->sh_code,
+                'value' => $productOrder->price,
+                'description' => $productOrder->description,
+            ]);
+
+            DB::commit();
+
+            return $order;
+
+        } catch (\Exception $ex) {
+            DB::rollback();
+            $this->error = $ex->getMessage();
+            return false;
+        }
     }
 
     public function placeInventoryOrder(Request $request)
