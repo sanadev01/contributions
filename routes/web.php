@@ -233,15 +233,13 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 })->name('order.us-label.download');
 
 Route::get('test-profit/{id}',function($id){
-    $profit = ProfitPackage::find($id);
-    dd($profit);
-    // $labelPrinter = new CN23LabelMaker();
+    $order = Order::find($id);
+    $updatedOrder = $order->update([
+        'is_paid' => 1,
+        'status' => Order::STATUS_PAYMENT_DONE
+    ]);
 
-    // $order = Order::find(53654);
-    // $labelPrinter->setOrder($order);
-    // $labelPrinter->setService(2);
-
-    // return $labelPrinter->download();
+    dd($updatedOrder->toArray());
 });
 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
