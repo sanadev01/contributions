@@ -12,7 +12,7 @@
     </div>
     <div class="card-content">
         <div class="card-body no-print" style="overflow-y: visible">
-            <livewire:inventory.product :status="$status"/>
+            <livewire:inventory.product/>
         </div>
     </div>
    

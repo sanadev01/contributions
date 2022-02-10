@@ -50,14 +50,6 @@ class ProductRepository
                 return $query->where('sku',"{$request->sku}");
             });
         }
-        
-        if ( $request->status){
-            $query->where(function($query) use($request){
-                return $query->where('status',$request->status);
-            });
-        }
-
-      
 
         $products = $query;
 
@@ -88,7 +80,7 @@ class ProductRepository
         $product->min_quantity   = $request->min_quantity;
         $product->max_quantity   = $request->max_quantity;
         $product->discontinued   = $request->discontinued;
-        $product->store_day       = $request->store_day;
+        $product->store_day      = $request->store_day;
         $product->location       = $request->location;
         $product->sh_code        = $request->sh_code;
         
