@@ -181,8 +181,8 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>@lang('Inventory Value')<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="inventory_alue" value="{{ old('inventory_alue') }}" placeholder="">
-                                @error('inventory_alue')
+                                <input type="text" class="form-control" name="inventory_value" value="{{ old('inventory_value') }}" placeholder="">
+                                @error('inventory_value')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -221,8 +221,8 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>@lang('Store Days')<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="stor_day" value="{{ old('stor_day') }}" placeholder="">
-                                @error('stor_day')
+                                <input type="text" class="form-control" name="store_day" value="{{ old('store_day') }}" placeholder="">
+                                @error('store_day')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
                             </div>

@@ -39,16 +39,24 @@
                     <div class="row justify-content-center">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="projectinput1">@lang('orders.import-excel.Excel File Name')</label>
-                                <input type="text" class="form-control" name="excel_name" placeholder="Enter file name" required>
-                                @error('excel_name')
-                                    <div class="text-danger">
-                                        {{ $message }}
-                                    </div>
+                                <label>@lang('parcel.User POBOX Number') <span class="text-danger">*</span></label>
+                                <livewire:components.search-user />
+                                @error('pobox_number')
+                                <div class="help-block text-danger"> {{ $message }} </div>
                                 @enderror
                             </div>
                         </div>
                     </div>
+
+                    @admin
+                    <div class="row mt-1">
+                        <div class="form-group col-12 col-sm-6 col-md-4">
+                            <div class="controls">
+                                
+                            </div>
+                        </div>
+                    </div>
+                    @endadmin
                     
                     <div class="row justify-content-center">
                         <div class="col-md-6">
