@@ -46,7 +46,7 @@ class FedExLabelRepository
 
     public function handle($order)
     {
-        if($order->isPaid() && !$order->api_response)
+        if(!$order->api_response)
         {
            return $this->getPrimaryLabel($order);
         }

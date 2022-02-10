@@ -72,8 +72,7 @@ class FedExService
 
     public function createShipmentForRecipient($order)
     {
-        $data = $this->makeShipmentRequestForRecipient($order);
-        return $this->fedExApiCall($this->createShipmentUrl, $data);
+        return $this->fedExApiCall($this->createShipmentUrl, $this->makeShipmentRequestForRecipient($order));
     }
 
     private function makeRatesRequestBodyForSender($order, $request)

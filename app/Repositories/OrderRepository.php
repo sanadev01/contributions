@@ -316,6 +316,13 @@ class OrderRepository
                 });
             }
 
+            if (!setting('fedex', null, $order->user->id)) {
+                $this->shippingServiceError = 'FEDEX is not enabled for this user';
+                $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                    return $shippingService->service_sub_class != ShippingService::FEDEX_GROUND;
+                });
+            }
+            
             if($shippingServices->isNotEmpty()){
                 $this->shippingServiceError = null;
             }
