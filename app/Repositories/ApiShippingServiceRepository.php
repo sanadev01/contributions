@@ -10,14 +10,20 @@ class ApiShippingServiceRepository
 {
     public $error;
 
-    public function isAvalaible($request)
+    public function isAvalaible($request, $volumeWeight)
     {
         $shippingService = ShippingService::find($request->parcel['service_id']);
+
+        if ($volumeWeight > $shippingService->max_weight_allowed) {
+            $this->error = 'The weight of the package exceeds the maximum allowed weight for this service.';
+            return false;
+        }
         
         if($shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS)
         {
             if(!setting('usps', null, auth()->user()->id))
             {
+                $this->error = 'Seleceted Shipping service is not available for your account.';
                 return false;
             }
         }
@@ -26,6 +32,7 @@ class ApiShippingServiceRepository
         {
             if(!setting('ups', null, auth()->user()->id))
             {
+                $this->error = 'Seleceted Shipping service is not available for your account.';
                 return false;
             }
         }
@@ -35,9 +42,9 @@ class ApiShippingServiceRepository
 
     public function getUSShippingServiceRate($order)
     {
-        if ($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS) 
+        if ($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS || $order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||  $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) 
         {
-            $response = USPSFacade::getPrice($order, $order->shippingService->service_sub_class);
+            $response = USPSFacade::getRecipientRates($order, $order->shippingService->service_sub_class);
 
             if($response->success == true)
             {
@@ -48,7 +55,7 @@ class ApiShippingServiceRepository
                 return true;
             }
 
-            $this->error = 'server error, could not get rates';
+            $this->error = $response->message;
         }
 
         if ($order->shippingService->service_sub_class == ShippingService::UPS_GROUND)
