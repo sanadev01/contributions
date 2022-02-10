@@ -42,7 +42,7 @@ class ApiShippingServiceRepository
 
     public function getUSShippingServiceRate($order)
     {
-        if ($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS) 
+        if ($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS || $order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||  $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) 
         {
             $response = USPSFacade::getRecipientRates($order, $order->shippingService->service_sub_class);
 
@@ -55,7 +55,7 @@ class ApiShippingServiceRepository
                 return true;
             }
 
-            $this->error = 'server error, could not get rates';
+            $this->error = $response->message;
         }
 
         if ($order->shippingService->service_sub_class == ShippingService::UPS_GROUND)

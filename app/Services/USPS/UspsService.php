@@ -291,7 +291,7 @@ class UspsService
                 'shape' => 'Parcel',
                 'mail_class' => $this->setServiceClass($service),
                 'image_size' => '4x6',
-                'gde_origin_country_code' => 'CH',
+                'gde_origin_country_code' => optional($order->recipient)->country->code,
             ],
         ];
     }
@@ -404,13 +404,13 @@ class UspsService
         $singleItemWeight = $this->calulateItemWeight($order);
 
         if (count($order->items) >= 1) {
-            foreach ($order->items as $item) {
+            foreach ($order->items as $key => $item) {
                 $itemToPush = [];
                 $itemToPush = [
                     'description' => $item->description,
                     'quantity' => (int)$item->quantity,
                     'value' => (float)$item->value,
-                    'weight' => $singleItemWeight,
+                    'weight' => ($key == 0) ? $this->decreaseFirstItemWegiht($order->weight, $singleItemWeight) : $singleItemWeight,
                     'weight_unit' => ($order->measurement_unit == 'kg/cm') ? 'kg' : 'lb',
                 ];
                array_push($items, $itemToPush);
@@ -430,6 +430,17 @@ class UspsService
             return $itemWeight;
         }
         return $orderTotalWeight;
+    }
+
+    private function decreaseFirstItemWegiht($orderOriginalWeight, $singleItemWeight)
+    {
+        $orderTotalWeight = ($this->chargableWeight != null) ? (float)$this->chargableWeight : (float)$orderOriginalWeight;
+
+        $orderPercentage = (0.1 / 100) * $orderTotalWeight;
+
+        $decreasedWeight = $singleItemWeight - $orderPercentage;
+
+        return $decreasedWeight;
     }
 
     private function setServiceClass($service)

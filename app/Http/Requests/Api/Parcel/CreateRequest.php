@@ -29,10 +29,9 @@ class CreateRequest extends FormRequest
      */
     public function rules(Request $request)
     {
-        $shippingService = ShippingService::find($request->parcel['service_id']);
-        
+
         $rules = [
-            "parcel.service_id" => "required|exists:shipping_services,id",
+            "parcel.service_id" => "bail|required|exists:shipping_services,id",
             "parcel.merchant" => "required",
             "parcel.carrier" => "required",
             "parcel.tracking_id" => "sometimes|unique:orders,tracking_id",
@@ -62,11 +61,6 @@ class CreateRequest extends FormRequest
             "recipient.zipcode" => "required",
             "recipient.state_id" => "required|exists:states,id",
             "recipient.country_id" => "required|exists:countries,id",
-
-            'sender.sender_address' => 'required_if:recipient.country_id,250',
-            'sender.sender_country_id' => 'required_if:recipient.country_id,250',
-            'sender.sender_state_id' => 'required_if:recipient.country_id,250',
-            'sender.sender_city' => 'required_if:recipient.country_id,250',
             
             "products" => "required|array|min:1",
 
@@ -98,7 +92,9 @@ class CreateRequest extends FormRequest
             $rules["recipient.state_id"] = "required|exists:states,code";
         }
 
-        if (optional($request->recipient)['country_id'] == 250 || optional($request->recipient)['country_id'] == 'US') {
+        $shippingService = ShippingService::find($request->parcel['service_id']);
+
+        if (in_array($shippingService->service_sub_class, $this->shippingServicesSubClasses())) {
             $rules['sender.sender_country_id'] = 'required|integer|exists:countries,id';
             $rules['sender.sender_state_id'] = 'required|integer|exists:states,id';
             $rules['sender.sender_city'] = 'required|string|max:100';
@@ -117,6 +113,18 @@ class CreateRequest extends FormRequest
             'sender.sender_country_id.required_if' => __('validation.sender_country_id.required_if'),
             'sender.sender_state_id.required_if' => __('validation.sender_state_id.required_if'),
             'sender.sender_city.required_if' => __('validation.sender_city.required_if'),
+        ];
+    }
+
+    private function shippingServicesSubClasses()
+    {
+        return [
+            ShippingService::USPS_PRIORITY, 
+            ShippingService::USPS_FIRSTCLASS, 
+            ShippingService::USPS_PRIORITY_INTERNATIONAL, 
+            ShippingService::USPS_FIRSTCLASS_INTERNATIONAL, 
+            ShippingService::UPS_GROUND, 
+            ShippingService::FEDEX_GROUND
         ];
     }
 }
