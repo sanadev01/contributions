@@ -17,8 +17,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $status = '';
-        return view('admin.inventory.product.index',compact('status'));
+        return view('admin.inventory.product.index');
     }
 
     /**
