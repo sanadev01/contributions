@@ -29,6 +29,7 @@ class ConsolidateDomesticLabelForm extends Component
     public $senderAddress;
     public $senderCity;
     public $senderZipCode;
+    public $senderPhone;
     public $pickupType = false;
     public $pickupDate;
     public $earliestPickupTime;
@@ -63,6 +64,7 @@ class ConsolidateDomesticLabelForm extends Component
         'senderAddress' => 'required',
         'senderCity' => 'required',
         'senderZipCode' => 'required',
+        'senderPhone' => 'required|max:12',
         'pickupType' => 'required',
         'pickupDate' => 'required_if:pickupType,true',
         'earliestPickupTime' => 'required_if:pickupType,true',
@@ -84,6 +86,10 @@ class ConsolidateDomesticLabelForm extends Component
         $this->orders = $orders;
         $this->states = $states;
         $this->errors = $errors;
+        
+        if ($this->orders->count() > 0) {
+            $this->senderPhone = $this->orders->first()->user->phone;
+        }
     }
 
     public function render()
@@ -140,6 +146,11 @@ class ConsolidateDomesticLabelForm extends Component
     public function updatedsenderCity()
     {
         $this->validateUSAddress();
+    }
+
+    public function updatedsenderPhone()
+    {
+        $this->validate();
     }
 
     private function validateUSAddress()
