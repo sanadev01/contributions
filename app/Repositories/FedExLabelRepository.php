@@ -6,6 +6,8 @@ use App\Models\User;
 use App\Models\Order;
 use App\Facades\FedExFacade;
 use App\Models\ShippingService;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use App\Services\FedEx\FedExShippingService;
 
@@ -46,7 +48,7 @@ class FedExLabelRepository
 
     public function handle($order)
     {
-        if($order->isPaid() && !$order->api_response)
+        if(!$order->api_response)
         {
            return $this->getPrimaryLabel($order);
         }
@@ -84,31 +86,51 @@ class FedExLabelRepository
 
     public function getSecondaryLabel($request, $order)
     {
-        if ( $request->total_price > getBalance())
+        if($this->checkUserBalance($request->total_price))
         {
-            $this->fedExError = 'Not Enough Balance. Please Recharge your account.';
-           
+            if($this->getSecondaryLabelForSender($request, $order))
+            {
+                return true;
+            }
+
             return false;
         }
-        
+    }
+
+    private function getSecondaryLabelForSender($request, $order)
+    {
         $request->merge(['sender_phone' => $order->user->phone]);
         $response = FedExFacade::createShipmentForSender($order, $request);
         
         if ($response->success == true) {
             $this->totalFedExCost = $response->data['output']['transactionShipments'][0]['pieceResponses'][0]['baseRateAmount'];
-            $this->addProfit($order->user, $this->totalFedExCost);
+            ($request->exists('consolidated_order')) ? $this->addProfitForConslidatedOrder($order['user'], $this->totalFedExCost) 
+                                                        : $this->addProfit($order->user, $this->totalFedExCost);
+            if ($request->exists('consolidated_order')) 
+            {
+                if(!$this->updateConsolidatedOrders($request, $response))
+                {
+                    return false;
+                }
 
-            $order->update([
-                'us_api_response' => json_encode($response->data),
-                'us_api_tracking_code' => $response->data['output']['transactionShipments'][0]['pieceResponses'][0]['trackingNumber'],
-                'us_secondary_label_cost' => setUSCosts($this->totalFedExCost, $this->totalAmountWithProfit),
-                'us_api_service' => $request->service,
-            ]);
+                $this->order = $request->orders->first();
+            }else
+            {
+                $order->update([
+                    'us_api_response' => json_encode($response->data),
+                    'us_api_tracking_code' => $response->data['output']['transactionShipments'][0]['pieceResponses'][0]['trackingNumber'],
+                    'us_secondary_label_cost' => setUSCosts($this->totalFedExCost, $this->totalAmountWithProfit),
+                    'us_api_service' => $request->service,
+                ]);
+    
+                chargeAmount(round($this->totalAmountWithProfit, 2), $order, 'Bought FedEx Label For : '.$order->warehouse_number);
+    
+                $order->refresh();
+                $this->order = $order;
+            }
 
-            chargeAmount(round($this->totalAmountWithProfit, 2), $order, 'Bought FedEx Label For : '.$order->warehouse_number);
-
-            $order->refresh();
-            $this->downloadFedexLabel($order->getUSLabelResponse(), $order->us_api_tracking_code);
+            
+            $this->downloadFedexLabel($this->order->getUSLabelResponse(), $this->order->us_api_tracking_code);
             return true;
         }
 
@@ -152,7 +174,6 @@ class FedExLabelRepository
         $profit = $fedExRate * ($this->userApiProfit / 100);
 
         $this->totalAmountWithProfit = $fedExRate + $profit;
-
         return true;
     }
 
@@ -174,5 +195,53 @@ class FedExLabelRepository
     {
         $user = User::find($user['id']);
         return $this->addProfit($user, $fedexRate);
+    }
+
+    private function checkUserBalance($charges)
+    {
+        if ($charges > getBalance())
+        {
+            $this->fedExError = 'Not Enough Balance. Please Recharge your account.';
+            return false;
+        }
+
+        return true;
+    }
+
+    private function updateConsolidatedOrders($request, $response)
+    {
+        DB::transaction(function () use ($request, $response) {
+            try {
+                foreach ($request->orders as $order) {
+                    $order->update([
+                        'us_api_response' => json_encode($response->data),
+                        'us_api_tracking_code' => $response->data['output']['transactionShipments'][0]['pieceResponses'][0]['trackingNumber'],
+                        'us_secondary_label_cost' => setUSCosts($this->totalFedExCost, $this->totalAmountWithProfit),
+                        'us_api_service' => $request->service,
+                    ]);
+
+                    $order->refresh();
+                }
+
+            } catch (\Exception $ex) {
+                Log::error($ex->getMessage());
+                $this->fedExError = $ex->getMessage();
+                return false;
+            }
+        });
+
+        chargeAmount(round($this->totalAmountWithProfit, 2), $request->orders->first(), 'Bought USPS Label For '.$this->getOrderIds($request->orders));
+
+        return true;
+    }
+
+    private function getOrderIds($orders)
+    {
+        $warehouse_numbers = [];
+        foreach ($orders as $order) {
+            $warehouse_numbers[] = $order->warehouse_number;
+        }
+
+        return implode(' :,', $warehouse_numbers);
     }
 }

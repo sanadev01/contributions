@@ -169,6 +169,7 @@ class UsLabelForm extends Component
 
         $this->uspsError = $domesticLabelRepostory->getError();
         $this->upsError = $domesticLabelRepostory->getError();
+        $this->fedexError = $domesticLabelRepostory->getError();
         
     }
 

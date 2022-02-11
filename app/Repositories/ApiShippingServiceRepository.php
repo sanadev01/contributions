@@ -38,6 +38,15 @@ class ApiShippingServiceRepository
             }
         }
 
+        if($shippingService->service_sub_class == ShippingService::FEDEX_GROUND)
+        {
+            if(!setting('fedex', null, auth()->user()->id))
+            {
+                $this->error = 'Seleceted Shipping service is not available for your account.';
+                return false;
+            }
+        }
+
         return true;
     }
 

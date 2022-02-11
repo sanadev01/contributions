@@ -99,7 +99,13 @@ class DomesticLabelRepository
 
         if ($request->service == ShippingService::FEDEX_GROUND) 
         {
-            // return $this->fedexLabelRepository->getFedexGroundLabel($request, $order);
+            if($this->fedExLabelRepository->getSecondaryLabel($request, $order))
+            {
+                return true;
+            }
+
+            $this->error = $this->fedExLabelRepository->getFedExErrors();
+            return false;
         }
 
         if ($request->service == ShippingService::USPS_PRIORITY || $request->service == ShippingService::USPS_FIRSTCLASS) 
