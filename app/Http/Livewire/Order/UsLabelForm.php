@@ -27,6 +27,7 @@ class UsLabelForm extends Component
     public $senderAddress;
     public $senderCity;
     public $senderZipCode;
+    public $senderPhone;
     public $pickupType = false;
     public $pickupDate;
     public $earliestPickupTime;
@@ -46,6 +47,7 @@ class UsLabelForm extends Component
         'senderAddress' => 'required',
         'senderCity' => 'required',
         'senderZipCode' => 'required',
+        'senderPhone' => 'required|max:12',
         'pickupType' => 'required',
         'pickupDate' => 'required_if:pickupType,true',
         'earliestPickupTime' => 'required_if:pickupType,true',
@@ -59,6 +61,10 @@ class UsLabelForm extends Component
         $this->states = $states;
         $this->usShippingServices = $usShippingServices;
         $this->usServicesErrors = $errors;
+
+        if ($this->order) {
+            $this->senderPhone = $this->order->user->phone;
+        }
     }
 
     public function render()
@@ -68,7 +74,6 @@ class UsLabelForm extends Component
 
     public function updatedsenderState()
     {
-        
         $this->validateUSAddress();
     }
 
@@ -80,6 +85,11 @@ class UsLabelForm extends Component
     public function updatedsenderCity()
     {
         $this->validateUSAddress();
+    }
+
+    public function updatedsenderPhone()
+    {
+        $this->validate();
     }
 
     private function validateUSAddress()
@@ -170,7 +180,6 @@ class UsLabelForm extends Component
         $this->uspsError = $domesticLabelRepostory->getError();
         $this->upsError = $domesticLabelRepostory->getError();
         $this->fedexError = $domesticLabelRepostory->getError();
-        
     }
 
     private function createRequest()
@@ -182,6 +191,7 @@ class UsLabelForm extends Component
             'sender_address' => $this->senderAddress,
             'sender_city' => $this->senderCity,
             'sender_zipcode' => $this->senderZipCode,
+            'sender_phone' => $this->senderPhone,
             'order_id' => $this->order->id,
             'pickupShipment' => ($this->pickupType == 'true') ? true : false,
             'pickup_date' => $this->pickupDate,
