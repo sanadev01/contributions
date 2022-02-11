@@ -540,4 +540,9 @@ class Order extends Model implements Package
     {
         return $this->api_pickup_response ? json_decode($this->api_pickup_response) : null;
     }
+
+    public function isInternational()
+    {
+        return $this->recipient->country->id != Country::US;
+    }
 }

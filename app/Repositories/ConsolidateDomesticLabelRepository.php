@@ -22,7 +22,7 @@ class ConsolidateDomesticLabelRepository
                             ->where('corrios_tracking_code', '!=', null)
                             ->get();
         return $orders->filter(function ($order) {
-            return !$order->hasSecondLabel();
+            return (!$order->hasSecondLabel() && $order->isInternational());
         });
     }
 
