@@ -61,7 +61,6 @@ class ProductExport extends AbstractExportService
             $row++;
         }
 
-       
     }
 
 

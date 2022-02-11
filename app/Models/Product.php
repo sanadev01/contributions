@@ -8,25 +8,28 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     protected $fillable = [
-
         'user_id',
         'name',
         'price',
         'sku',
         'status',
-        'merchant',
-        'carrier',
-        'tracking_id',
-        'order_date',
-        'sh_code',
+        'order',
+        'category',
+        'brand',
+        'manufacturer',
+        'barcode',
         'description',
         'quantity',
-        'weight',
-        'length',
-        'width',
-        'height',
-        'warehouse_number',
-        'invoice_file',
+        'item', 
+        'lot',
+        'unit', 
+        'case', 
+        'inventory_value',
+        'min_quantity',
+        'max_quantity',
+        'discontinued',
+        'store_day',
+        'location',
     ];
     public function user()
     {
