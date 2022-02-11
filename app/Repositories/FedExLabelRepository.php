@@ -99,7 +99,6 @@ class FedExLabelRepository
 
     private function getSecondaryLabelForSender($request, $order)
     {
-        $request->merge(['sender_phone' => $order->user->phone]);
         $response = FedExFacade::createShipmentForSender($order, $request);
         
         if ($response->success == true) {

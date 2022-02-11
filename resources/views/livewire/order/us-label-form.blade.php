@@ -95,6 +95,11 @@
                                 @if($zipCodeResponse) <p class="{{ $zipCodeClass }}">{{ $zipCodeResponseMessage }}</p>@endif
                                 @error('senderZipCode') <span class="error text-danger">{{ $message }}</span> @enderror
                             </div>
+                            <div class="form-group col-md-6">
+                                <label for="sender_zipcode">Sender Phone <span class="text-danger">*</span></label>
+                                <input type="text" wire:model.lazy="senderPhone" class="form-control" name="sender_phone" id="sender_phone" placeholder="Enter your US phone">
+                                @error('senderPhone') <span class="error text-danger">{{ $message }}</span> @enderror
+                            </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group col-md-6">

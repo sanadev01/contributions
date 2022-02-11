@@ -267,6 +267,7 @@ class ConsolidateDomesticLabelForm extends Component
             'sender_address' => $this->senderAddress,
             'sender_city' => $this->senderCity,
             'sender_zipcode' => $this->senderZipCode,
+            'sender_phone' => $this->senderPhone,
             'user' => $this->orders->first()->user,
             'order' => $this->tempOrder,
             'pickupShipment' => ($this->pickupType == 'true') ? true : false,
