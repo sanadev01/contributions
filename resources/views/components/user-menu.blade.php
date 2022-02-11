@@ -94,7 +94,7 @@
             @can('viewAny', App\Models\Connect::class)
                 <li class="nav-item {{ $isActive(['admin.connect.index']) }}">
                     <a class="nav-link" href="{{ route('admin.connect.index') }}">
-                        <i class="fa fa-plug" style="color: #28c76f;"></i>
+                        <i class="fa fa-plug" style="color: #3db64c;"></i>
                         <span data-i18n="Apps">@lang('menu.connect')</span>
                     </a>
                 </li>
@@ -288,7 +288,7 @@
             {{-- @can('viewAny', App\Models\Product::class) --}}
                 <li class="nav-item has-sub sidebar-group">
                     <a href="#">
-                        <i class="feather icon-shopping-cart"></i>
+                        <i class="feather icon-shopping-cart" style="color: #3db64c;"></i>
                         <span class="menu-title">@lang('inventory.Inventory Management')</span>
                     </a>
                     <ul class="menu-content">
@@ -305,19 +305,6 @@
                                 <span class="menu-title">@lang('inventory.Pickup')</span>
                             </a>
                         </li>
-                        {{-- <li class="{{ $isActive(['admin.inventory.status.approved']) }}">
-                            <a href="{{ route('admin.inventory.status.approved','approved') }}">
-                                <i class="feather icon-circle"></i>
-                                <span class="menu-title">Approved Products</span>
-                            </a>
-                        </li>
-                        <li class="{{ $isActive(['admin.inventory.status.pending']) }}">
-                            <a href="{{ route('admin.inventory.status.pending','pending') }}">
-                                <i class="feather icon-circle"></i>
-                                <span class="menu-title">Pending Products</span>
-                            </a>
-                        </li> --}}
-                        
                     </ul>
                 </li>
             {{-- @endcan --}}
@@ -370,7 +357,7 @@
             @admin
             <li class="nav-item {{ $isActive(['admin.shcode.index','admin.shcode.create','admin.shcode.edit']) }}">
                 <a href="{{ route('admin.shcode.index') }}">
-                    <i class="fa fa-codepen" style="color: #28c76f;"></i>
+                    <i class="fa fa-codepen" style="color: #3db64c;"></i>
                     <span class="menu-title">SH Codes</span>
                 </a>
             </li>
@@ -378,7 +365,7 @@
 
             <li class="nav-item {{ $isActive(['admin.tickets.index','admin.tickets.show']) }}">
                 <a class="nav-link" href="{{ route('admin.tickets.index') }}">
-                    <i class="feather icon-message-circle" style="color: #28c76f;"></i>
+                    <i class="feather icon-message-circle" style="color: #3db64c;"></i>
                     <span data-i18n="Apps">@lang('menu.support tickets')</span>
                     <livewire:components.support-ticket/>
                 </a>
@@ -387,7 +374,7 @@
             @can('viewAny', App\Models\BillingInformation::class)
             <li class="nav-item {{ $isActive(['admin.billing-information.index','admin.billing-information.edit','admin.billing-information.create']) }}">
                 <a href="{{ route('admin.billing-information.index') }}">
-                    <i class="feather icon-alert-triangle" style="color: #28c76f;"></i>
+                    <i class="feather icon-alert-triangle" style="color: #3db64c;"></i>
                     <span class="menu-title">@lang('menu.Billing Informations')</span>
                 </a>
             </li>
@@ -405,7 +392,7 @@
             @can('viewAny', Spatie\Activitylog\Models\Activity::class)
             <li class="nav-item {{ $isActive(['admin.activity.log.index']) }}">
                 <a href="{{ route('admin.activity.log.index') }}">
-                    <i class="feather icon-activity" style="color: #28c76f;"></i>
+                    <i class="feather icon-activity" style="color: #3db64c;"></i>
                     <span class="menu-title">@lang('menu.activity')</span>
                 </a>
             </li>
