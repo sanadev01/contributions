@@ -22,13 +22,7 @@ class Product extends Component
     public $user;
     public $price;
     public $sku;
-    public $status;
     public $description;
-
-    public function mount($status)
-    {
-        $this->status = $status;
-    }
     
     public function render()
     {
@@ -45,7 +39,6 @@ class Product extends Component
             'name' => $this->name,
             'price' => $this->price,
             'sku' => $this->sku,
-            'status' => $this->status,
             'description' => $this->description,
         ]),true,$this->pageSize);
     }

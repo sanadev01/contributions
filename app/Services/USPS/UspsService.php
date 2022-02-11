@@ -410,7 +410,7 @@ class UspsService
                     'description' => $item->description,
                     'quantity' => (int)$item->quantity,
                     'value' => (float)$item->value,
-                    'weight' => ($key == 0) ? $this->decreaseFirstItemWegiht($order->weight, $singleItemWeight) : $singleItemWeight,
+                    'weight' => $singleItemWeight / (int)$item->quantity,
                     'weight_unit' => ($order->measurement_unit == 'kg/cm') ? 'kg' : 'lb',
                 ];
                array_push($items, $itemToPush);
@@ -430,17 +430,6 @@ class UspsService
             return $itemWeight;
         }
         return $orderTotalWeight;
-    }
-
-    private function decreaseFirstItemWegiht($orderOriginalWeight, $singleItemWeight)
-    {
-        $orderTotalWeight = ($this->chargableWeight != null) ? (float)$this->chargableWeight : (float)$orderOriginalWeight;
-
-        $orderPercentage = (0.1 / 100) * $orderTotalWeight;
-
-        $decreasedWeight = $singleItemWeight - $orderPercentage;
-
-        return $decreasedWeight;
     }
 
     private function setServiceClass($service)
