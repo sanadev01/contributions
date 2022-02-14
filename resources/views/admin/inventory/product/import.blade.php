@@ -93,7 +93,7 @@
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="{{ asset('uploads/order-import.xlsx') }}">
+                                                    <a href="{{ asset('uploads/product-import.xlsx') }}">
                                                         @lang('orders.import-excel.Download the Homedelivery')
                                                     </a>
                                                 </li>
