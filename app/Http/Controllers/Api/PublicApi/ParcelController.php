@@ -20,14 +20,19 @@ use App\Repositories\ApiShippingServiceRepository;
 
 class ParcelController extends Controller
 {
+    protected $usShippingService;
 
+    public function __construct(ApiShippingServiceRepository $usShippingService)
+    {
+        $this->usShippingService = $usShippingService;
+    }
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateRequest $request, ApiShippingServiceRepository $usShippingService)
+    public function store(CreateRequest $request)
     { 
 
         $weight = optional($request->parcel)['weight']??0;
@@ -35,16 +40,25 @@ class ParcelController extends Controller
         $width = optional($request->parcel)['width']??0;
         $height = optional($request->parcel)['height']??0;
 
+        $shippingService = ShippingService::find($request->parcel['service_id'] ?? null);
+
+        if (!$shippingService) {
+            return apiResponse(false,'Shipping service not found.');
+        }
+
         if ( optional($request->parcel)['measurement_unit'] == 'kg/cm' ){
             $volumetricWeight = WeightCalculator::getVolumnWeight($length,$width,$height,'cm');
             $volumeWeight = round($volumetricWeight > $weight ? $volumetricWeight : $weight,2);
-            if($volumeWeight > 30){
+            
+            if(in_array($shippingService->service_sub_class, $this->correiosShippingServices()) && $volumeWeight > 30){
                 return apiResponse(false,"Your ". $volumeWeight ." kg/cm weight has exceeded the limit. Please check the weight and dimensions. Weight shouldn't be greater than 30 kg/cm");
             }
+
         }else{
             $volumetricWeight = WeightCalculator::getVolumnWeight($length,$width,$height,'in');;
             $volumeWeight = round($volumetricWeight > $weight ? $volumetricWeight : $weight,2);
-            if($volumeWeight > 65.15){
+            
+            if(in_array($shippingService->service_sub_class, $this->correiosShippingServices()) && $volumeWeight > 65.15){
                 return apiResponse(false,"Your ". $volumeWeight ." lbs/in weight has exceeded the limit. Please check the weight and dimensions. Weight shouldn't be greater than 66.15 lbs/in");
             }
         }
@@ -63,12 +77,11 @@ class ParcelController extends Controller
             $stateID = $state->id;
         }
 
-        if ($recipientCountryId == Country::US) {
-           if(!$usShippingService->isAvalaible($request, $volumeWeight))
-           {
-                return apiResponse(false, $usShippingService->getError());
-           }
+        if(in_array($shippingService->service_sub_class, $this->domesticShippingServices()) && !$this->usShippingService->isAvalaible($shippingService, $volumeWeight))
+        {
+            return apiResponse(false, $this->this->usShippingService->getError());
         }
+        
         
         DB::beginTransaction();
 
@@ -158,11 +171,11 @@ class ParcelController extends Controller
                 'shipping_service_name' => $order->shippingService->name
             ]);
             
-            if (in_array($order->shippingService->service_sub_class, $this->shippingServicesSubClasses())) {
-                if(!$usShippingService->getUSShippingServiceRate($order))
+            if (in_array($order->shippingService->service_sub_class, $this->domesticShippingServices())) {
+                if(!$this->usShippingService->getUSShippingServiceRate($order))
                 {
                     DB::rollback();
-                    return apiResponse(false, $usShippingService->getError());
+                    return apiResponse(false, $this->usShippingService->getError());
                 }
             }
 
@@ -204,16 +217,25 @@ class ParcelController extends Controller
         $width = optional($request->parcel)['width']??0;
         $height = optional($request->parcel)['height']??0;
 
+        $shippingService = ShippingService::find($request->parcel['service_id'] ?? null);
+
+        if (!$shippingService) {
+            return apiResponse(false,'Shipping service not found.');
+        }
+
         if ( optional($request->parcel)['measurement_unit'] == 'kg/cm' ){
             $volumetricWeight = WeightCalculator::getVolumnWeight($length,$width,$height,'cm');
             $volumeWeight = round($volumetricWeight > $weight ? $volumetricWeight : $weight,2);
-            if($volumeWeight > 30){
+            
+            if(in_array($shippingService->service_sub_class, $this->correiosShippingServices()) && $volumeWeight > 30){
                 return apiResponse(false,"Your ". $volumeWeight ." kg/cm weight has exceeded the limit. Please check the weight and dimensions. Weight shouldn't be greater than 30 kg/cm");
             }
+
         }else{
             $volumetricWeight = WeightCalculator::getVolumnWeight($length,$width,$height,'in');;
             $volumeWeight = round($volumetricWeight > $weight ? $volumetricWeight : $weight,2);
-            if($volumeWeight > 65.15){
+            
+            if(in_array($shippingService->service_sub_class, $this->correiosShippingServices()) && $volumeWeight > 65.15){
                 return apiResponse(false,"Your ". $volumeWeight ." lbs/in weight has exceeded the limit. Please check the weight and dimensions. Weight shouldn't be greater than 66.15 lbs/in");
             }
         }
@@ -231,6 +253,13 @@ class ParcelController extends Controller
             $country = Country::where('code', optional($request->recipient)['country_id'])->orwhere('id', optional($request->recipient)['country_id'])->first();
             $recipientCountryId = $country->id;
         }
+
+       
+        if(in_array($shippingService->service_sub_class, $this->domesticShippingServices()) && !$this->usShippingService->isAvalaible($shippingService, $volumeWeight))
+        {
+            return apiResponse(false, $this->usShippingService->getError());
+        }
+        
 
         DB::beginTransaction();
 
@@ -257,6 +286,11 @@ class ParcelController extends Controller
                 "sender_last_name" => optional($request->sender)['sender_last_name'],
                 "sender_email" => optional($request->sender)['sender_email'],
                 "sender_taxId" => optional($request->sender)['sender_taxId'],
+                'sender_country_id' => optional($request->sender)['sender_country_id'],
+                'sender_state_id' => optional($request->sender)['sender_state_id'],
+                'sender_city' => optional($request->sender)['sender_city'],
+                'sender_address' => optional($request->sender)['sender_address'],
+                'sender_phone' => optional($request->sender)['sender_phone'],
             ]);
             
             $parcel->recipient()->update([
@@ -275,7 +309,7 @@ class ParcelController extends Controller
                 "country_id" =>$recipientCountryId 
             ]);
             
-            if($recipientCountryId == 46){
+            if($recipientCountryId ==  Country::Chile){
 
                 $parcel->update([
                     "sender_address" => optional($request->sender)['sender_address'],
@@ -319,6 +353,14 @@ class ParcelController extends Controller
                 "order_value" => $orderValue,
                 'shipping_service_name' => $parcel->shippingService->name
             ]);
+
+            if (in_array($parcel->shippingService->service_sub_class, $this->domesticShippingServices())) {
+                if(!$this->usShippingService->getUSShippingServiceRate($parcel))
+                {
+                    DB::rollback();
+                    return apiResponse(false, $this->usShippingService->getError());
+                }
+            }
 
             $parcel->doCalculations();
 
@@ -368,7 +410,7 @@ class ParcelController extends Controller
         }
     }
 
-    private function shippingServicesSubClasses()
+    private function domesticShippingServices()
     {
         return [
             ShippingService::USPS_PRIORITY, 
@@ -377,6 +419,15 @@ class ParcelController extends Controller
             ShippingService::USPS_FIRSTCLASS_INTERNATIONAL, 
             ShippingService::UPS_GROUND, 
             ShippingService::FEDEX_GROUND
+        ];
+    }
+
+    private function correiosShippingServices()
+    {
+        return [
+            ShippingService::Packet_Standard, 
+            ShippingService::Packet_Express, 
+            ShippingService::Packet_Mini,
         ];
     }
 }

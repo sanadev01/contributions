@@ -11,10 +11,8 @@ class ApiShippingServiceRepository
 {
     public $error;
 
-    public function isAvalaible($request, $volumeWeight)
+    public function isAvalaible($shippingService, $volumeWeight)
     {
-        $shippingService = ShippingService::find($request->parcel['service_id']);
-
         if ($volumeWeight > $shippingService->max_weight_allowed) {
             $this->error = 'The weight of the package exceeds the maximum allowed weight for this service.';
             return false;

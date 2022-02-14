@@ -26,6 +26,9 @@ class ShippingService extends Model
     const Courier_Express = 33;
     const UPS_GROUND = 03;
     const FEDEX_GROUND = 04;
+    const Packet_Standard = 33162;
+    const Packet_Express = 33170;
+    const Packet_Mini = 33197;
 
     protected $guarded = [];
 
