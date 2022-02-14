@@ -41,7 +41,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>Name<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="name" value="{{ old('name') }}" placeholder="Enter Product Name">
+                                <input type="text" class="form-control" name="name" value="{{ old('name') }}" placeholder="Enter Product Name" required>
                                 @error('name')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
@@ -51,7 +51,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>Order#<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="order" value="{{ old('order') }}" placeholder="Enter Product Order Number">
+                                <input type="text" class="form-control" name="order" value="{{ old('order') }}" placeholder="Enter Product Order Number" required>
                                 @error('order')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
@@ -61,7 +61,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>Price Per Item <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="price" value="{{ old('price') }}" placeholder="Enter Product Price">
+                                <input type="text" class="form-control" name="price" value="{{ old('price') }}" placeholder="Enter Product Price" required>
                                 @error('price')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
@@ -71,7 +71,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>Category <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="category" value="{{ old('category') }}" placeholder="Enter Product category">
+                                <input type="text" class="form-control" name="category" value="{{ old('category') }}" placeholder="Enter Product category" required>
                                 @error('category')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
@@ -81,7 +81,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>SKU<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="sku" value="{{ old('sku') }}" placeholder="Enter Product SKU">
+                                <input type="text" class="form-control" name="sku" value="{{ old('sku') }}" placeholder="Enter Product SKU" required>
                                 @error('sku')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
@@ -91,7 +91,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>Description<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="description" value="{{ old('description') }}" placeholder="Enter Product description">
+                                <input type="text" class="form-control" name="description" value="{{ old('description') }}" placeholder="Enter Product description" required>
                                 @error('description')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
@@ -101,7 +101,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>Quantity<span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" name="quantity" value="{{ old('quantity') }}" placeholder="Enter Product quantity">
+                                <input type="number" class="form-control" name="quantity" value="{{ old('quantity') }}" placeholder="Enter Product quantity" required>
                                 @error('quantity')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
@@ -111,7 +111,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>@lang('Brand')<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="brand" value="{{ old('brand') }}" placeholder="">
+                                <input type="text" class="form-control" name="brand" value="{{ old('brand') }}" placeholder="Enter Product Brand" required>
                                 @error('brand')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
@@ -121,7 +121,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>@lang('Manufacturer') <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" value="{{ old('manufacturer') }}" placeholder=""  name="manufacturer">
+                                <input type="text" class="form-control" value="{{ old('manufacturer') }}" placeholder="Enter Product Manufacturer"  name="manufacturer" required>
                                 @error('manufacturer')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
@@ -131,7 +131,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>@lang('BarCode')<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="barcode" value="{{ old('barcode') }}" placeholder="">
+                                <input type="text" class="form-control" name="barcode" value="{{ old('barcode') }}" placeholder="Enter Product Barcode" required>
                                 @error('barcode')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
@@ -141,7 +141,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>@lang('item#')<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="item" value="{{ old('item') }}" placeholder="">
+                                <input type="text" class="form-control" name="item" value="{{ old('item') }}" placeholder="Enter Item Number" required>
                                 @error('item')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
@@ -151,7 +151,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>@lang('lot#')<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="lot" value="{{ old('lot') }}" placeholder="">
+                                <input type="text" class="form-control" name="lot" value="{{ old('lot') }}" placeholder="Enter lot number" required>
                                 @error('lot')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
@@ -161,7 +161,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>@lang('Unit')<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="unit" value="{{ old('unit') }}" placeholder="">
+                                <input type="text" class="form-control" name="unit" value="{{ old('unit') }}" placeholder="Enter Product Unit" required>
                                 @error('unit')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
@@ -171,7 +171,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>@lang('Case')<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="case" value="{{ old('case') }}" placeholder="">
+                                <input type="text" class="form-control" name="case" value="{{ old('case') }}" placeholder="Enter Product Case" required>
                                 @error('case')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
@@ -181,7 +181,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>@lang('Inventory Value')<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="inventory_value" value="{{ old('inventory_value') }}" placeholder="">
+                                <input type="text" class="form-control" name="inventory_value" value="{{ old('inventory_value') }}" placeholder="Enter Product Inventory Value" required>
                                 @error('inventory_value')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
@@ -191,7 +191,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>@lang('Minimum Quantity')<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="min_quantity" value="{{ old('min_quantity') }}" placeholder="">
+                                <input type="text" class="form-control" name="min_quantity" value="{{ old('min_quantity') }}" placeholder="Enter Product Min Quantity" required>
                                 @error('min_quantity')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
@@ -201,7 +201,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>@lang('Maximum Quantity')<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="max_quantity" value="{{ old('max_quantity') }}" placeholder="">
+                                <input type="text" class="form-control" name="max_quantity" value="{{ old('max_quantity') }}" placeholder="Enter Product Max Quantity" required>
                                 @error('max_quantity')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
@@ -211,7 +211,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>@lang('Items Discontinued')<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="discontinued" value="{{ old('discontinued') }}" placeholder="">
+                                <input type="text" class="form-control" name="discontinued" value="{{ old('discontinued') }}" placeholder="Enter Discontinued Item" required>
                                 @error('discontinued')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
@@ -221,7 +221,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>@lang('Store Days')<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="store_day" value="{{ old('store_day') }}" placeholder="">
+                                <input type="text" class="form-control" name="store_day" value="{{ old('store_day') }}" placeholder="Enter Number of days" required>
                                 @error('store_day')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
@@ -231,7 +231,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>@lang('Warehouse Location')<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="location" value="{{ old('location') }}" placeholder="">
+                                <input type="text" class="form-control" name="location" value="{{ old('location') }}" placeholder="Enter warehouse location" required>
                                 @error('location')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
