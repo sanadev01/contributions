@@ -160,8 +160,6 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('product', ProductController::class);
             Route::get('product-pickup', [\App\Http\Controllers\Admin\Inventory\ProductController::class, 'pickup'])->name('product.pickup');
             Route::post('product/status', [\App\Http\Controllers\Admin\Inventory\ProductController::class, 'statusUpdate'])->name('status.update');
-            // Route::get('show/{status}/', [\App\Http\Controllers\Admin\Inventory\ProductController::class, 'status'])->name('status.approved');
-            // Route::get('{status}/show', [\App\Http\Controllers\Admin\Inventory\ProductController::class, 'status'])->name('status.pending');
             Route::resource('product-export', ProductExportController::class)->only('index');
             Route::resource('product-import', ProductImportController::class)->only(['create','store']);
             Route::resource('product-order', ProductOrderController::class)->only('show');
@@ -246,29 +244,15 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
     return response()->download(storage_path("app/labels/{$order->us_api_tracking_code}.pdf"),"{$order->us_api_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.us-label.download');
 
-Route::get('test-profit/{status}',function($status){
+Route::get('test-label',function(){
 
-    if ($status == 'true') {
-        Artisan::call('migrate');
-    }elseif ($status == 'false') {
-        Artisan::call('migrate:rollback --step=1');
-    }
+    $labelPrinter = new CN23LabelMaker();
 
-    echo Artisan::output();
-    dd($status);
-    // $profit = ProfitPackage::find($status);
-    
-    // $labelPrinter = new CN23LabelMaker();
+    $order = Order::find(53654);
+    $labelPrinter->setOrder($order);
+    $labelPrinter->setService(2);
 
-    // $order = Order::find(53654);
-    // $labelPrinter->setOrder($order);
-    // $labelPrinter->setService(2);
-
-    // return $labelPrinter->download();
+    return $labelPrinter->download();
 });
 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
-
-Route::get('/tests', function() {
-    return response()->json(['message' => 'Hello World']);
-})->middleware('auth')->name('test');
