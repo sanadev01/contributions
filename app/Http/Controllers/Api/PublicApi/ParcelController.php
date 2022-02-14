@@ -79,7 +79,7 @@ class ParcelController extends Controller
 
         if(in_array($shippingService->service_sub_class, $this->domesticShippingServices()) && !$this->usShippingService->isAvalaible($shippingService, $volumeWeight))
         {
-            return apiResponse(false, $this->this->usShippingService->getError());
+            return apiResponse(false, $this->usShippingService->getError());
         }
         
         
