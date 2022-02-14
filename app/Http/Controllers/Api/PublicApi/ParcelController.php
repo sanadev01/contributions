@@ -168,15 +168,6 @@ class ParcelController extends Controller
 
             $order->doCalculations();
 
-            // if ( getBalance() >= $order->gross_total ){
-            //     $order->update([
-            //         'is_paid' => true,
-            //         'status' => Order::STATUS_PAYMENT_DONE
-            //     ]);
-
-            //     chargeAmount($order->gross_total,$order);
-            // }
-
             DB::commit();
             return apiResponse(true,"Parcel Created", OrderResource::make($order) );
 
@@ -331,15 +322,6 @@ class ParcelController extends Controller
 
             $parcel->doCalculations();
 
-            // if ( getBalance() >= $order->gross_total ){
-            //     $order->update([
-            //         'is_paid' => true,
-            //         'status' => Order::STATUS_PAYMENT_DONE
-            //     ]);
-
-            //     chargeAmount($order->gross_total,$order);
-            // }
-
             DB::commit();
             return apiResponse(true,"Parcel Updated", OrderResource::make($parcel) );
 
@@ -359,9 +341,6 @@ class ParcelController extends Controller
     {
         if ( $soft ){
             
-            // if ( $parcel->isConsolidated() ){
-            //     $parcel->subOrders()->sync([]);
-            // }
             optional($parcel->affiliateSale)->delete();
             $parcel->delete();
             return apiResponse(true,"Order deleted" );
