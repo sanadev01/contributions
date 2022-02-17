@@ -118,6 +118,7 @@ return [
         'Use to add Price Per Item' => "Use para adicionar preço por item.",
         'Use to add Category' => "Use para adicionar Categoria",
         'Use to add SKU' => "Use para adicionar SKU",
+        'Use to add Status' => "Use para adicionar Status",
         'Use to add Description' => "Use para adicionar Descrição",
         'Use to add Quantity' => "Use para adicionar Quantidade",
         'Use to add Brand' => "Use para adicionar marca",
