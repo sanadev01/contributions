@@ -122,6 +122,7 @@ return [
         'Use to add Price Per Item' => "Use to add Price Per Item.",
         'Use to add Category' => "Use to add Category",
         'Use to add SKU' => "Use to add SKU",
+        'Use to add Status' => "Use to add Status, e.g 'pending' or 'approved'",
         'Use to add Description' => "Use to add Description",
         'Use to add Quantity' => "Use to add Quantity",
         'Use to add Brand' => "Use to add Brand",

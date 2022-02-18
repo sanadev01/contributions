@@ -134,6 +134,7 @@
                     <br><strong>price (Required)</strong>          @lang('orders.import-excel.Use to add Price Per Item')
                     <br><strong>category (Required)</strong>                      @lang('orders.import-excel.Use to add Category')
                     <br><strong>sku (Required)</strong>                      @lang('orders.import-excel.Use to add SKU')
+                    <br><strong>status (Required)</strong>                      @lang('orders.import-excel.Use to add Status')
                     <br><strong>description (Required)</strong>                       @lang('orders.import-excel.Use to add Description')
                     <br><strong>quantity (Required)</strong>                      @lang('orders.import-excel.Use to add Quantity')
                     <br><strong>brand (Required)</strong>             @lang('orders.import-excel.Use to add Brand')
