@@ -65,6 +65,7 @@ class ProductRepository
         $product->price          = $request->price;
         $product->sku            = strtoupper($request->sku);
         $product->status         = 'pending';
+        $product->order          = $request->order;
         $product->category       = $request->category;
         $product->brand          = $request->brand;
         $product->manufacturer   = $request->manufacturer;
@@ -100,6 +101,7 @@ class ProductRepository
             'price' => $request->price,
             'sku' => strtoupper($request->sku),
             'status' => $product->status,
+            'order' => $request->order,
             'category' => $request->category,
             'brand' => $request->brand,
             'manufacturer' => $request->manufacturer,

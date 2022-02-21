@@ -29,6 +29,7 @@ class ProductCreateRequest extends FormRequest
             'sku' => 'required',
             'description' => 'required',
             'quantity' => 'required|numeric|gt:0',
+            'order' => 'nullable',
             'category' => 'required',
             'brand' => 'required',
             'manufacturer' => 'required',
