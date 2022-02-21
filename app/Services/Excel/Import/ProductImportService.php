@@ -50,9 +50,8 @@ class ProductImportService extends AbstractImportService
         DB::beginTransaction();
         
         try {
-            $product = Product::where('order',$this->getValue("E{$row}"))->first();
             
-            if ($product || strlen($this->getValue("C{$row}")) <=0 || strlen($this->getValue("K{$row}")) <=0 ){
+            if ( strlen($this->getValue("C{$row}")) <=0 || strlen($this->getValue("K{$row}")) <=0 ){
                 return;
             }
 
@@ -73,12 +72,12 @@ class ProductImportService extends AbstractImportService
                 'lot'           => $this->getValue("M{$row}"),
                 'unit'          => $this->getValue("N{$row}"),
                 'case'          => $this->getValue("O{$row}"),
-                'inventory_value'=> $this->getValue("P{$row}"),
-                'min_quantity'  => $this->getValue("Q{$row}"),
-                'max_quantity'  => $this->getValue("R{$row}"),
-                'discontinued'  => $this->getValue("S{$row}"),
-                'store_day'     => $this->getValue("T{$row}"),
-                'location'      => $this->getValue("U{$row}")
+                'inventory_value'=> $this->getValue("B{$row}")*$this->getValue("K{$row}"),
+                'min_quantity'  => $this->getValue("P{$row}"),
+                'max_quantity'  => $this->getValue("Q{$row}"),
+                'discontinued'  => $this->getValue("R{$row}"),
+                'store_day'     => $this->getValue("S{$row}"),
+                'location'      => $this->getValue("T{$row}")
             ]);
             DB::commit();
             return $order;
