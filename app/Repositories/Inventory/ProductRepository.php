@@ -76,7 +76,7 @@ class ProductRepository
         $product->lot            = $request->lot ;
         $product->unit           = $request->unit ;
         $product->case           = $request->case;
-        $product->inventory_value = $request->inventory_value;
+        $product->inventory_value = $request->quantity * $request->price;
         $product->min_quantity   = $request->min_quantity;
         $product->max_quantity   = $request->max_quantity;
         $product->discontinued   = $request->discontinued;
@@ -112,7 +112,7 @@ class ProductRepository
             'lot' => $request->lot,
             'unit' => $request->unit,
             'case' => $request->case,
-            'inventory_value' => $request->inventory_value,
+            'inventory_value' => $request->quantity * $request->price,
             'min_quantity' => $request->min_quantity,
             'max_quantity' => $request->max_quantity,
             'discontinued' => $request->discontinued,

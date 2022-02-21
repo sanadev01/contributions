@@ -181,16 +181,6 @@
 
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
-                                <label>@lang('Inventory Value')<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="inventory_value" value="{{ old('inventory_value',$product->inventory_value) }}" placeholder="">
-                                @error('inventory_value')
-                                    <div class="help-block text-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group col-12 col-sm-6 col-md-4">
-                            <div class="controls">
                                 <label>@lang('Minimum Quantity')<span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="min_quantity" value="{{ old('min_quantity',$product->min_quantity) }}" placeholder="">
                                 @error('min_quantity')
