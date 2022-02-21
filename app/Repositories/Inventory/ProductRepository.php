@@ -65,7 +65,6 @@ class ProductRepository
         $product->price          = $request->price;
         $product->sku            = strtoupper($request->sku);
         $product->status         = 'pending';
-        $product->order          = $request->order;
         $product->category       = $request->category;
         $product->brand          = $request->brand;
         $product->manufacturer   = $request->manufacturer;
@@ -76,7 +75,7 @@ class ProductRepository
         $product->lot            = $request->lot ;
         $product->unit           = $request->unit ;
         $product->case           = $request->case;
-        $product->inventory_value = $request->inventory_value;
+        $product->inventory_value = $request->quantity * $request->price;
         $product->min_quantity   = $request->min_quantity;
         $product->max_quantity   = $request->max_quantity;
         $product->discontinued   = $request->discontinued;
@@ -101,7 +100,6 @@ class ProductRepository
             'price' => $request->price,
             'sku' => strtoupper($request->sku),
             'status' => $product->status,
-            'order' => $request->order,
             'category' => $request->category,
             'brand' => $request->brand,
             'manufacturer' => $request->manufacturer,
@@ -112,7 +110,7 @@ class ProductRepository
             'lot' => $request->lot,
             'unit' => $request->unit,
             'case' => $request->case,
-            'inventory_value' => $request->inventory_value,
+            'inventory_value' => $request->quantity * $request->price,
             'min_quantity' => $request->min_quantity,
             'max_quantity' => $request->max_quantity,
             'discontinued' => $request->discontinued,
