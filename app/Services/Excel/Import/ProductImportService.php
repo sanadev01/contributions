@@ -50,8 +50,9 @@ class ProductImportService extends AbstractImportService
         DB::beginTransaction();
         
         try {
+            $product = Product::where('order',$this->getValue("C{$row}"))->first();
             
-            if ( strlen($this->getValue("C{$row}")) <=0 || strlen($this->getValue("K{$row}")) <=0 ){
+            if ($product || strlen($this->getValue("C{$row}")) <=0 || strlen($this->getValue("K{$row}")) <=0 ){
                 return;
             }
 
