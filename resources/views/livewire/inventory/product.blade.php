@@ -13,9 +13,11 @@
                 </select>
             </div>
             <div class="col-11 text-right">
-                <a href="{{ route('admin.inventory.product-export.index') }}" class="btn btn-success" title="Download">
-                    <i class="fa fa-arrow-down">Download</i>
-                </a>
+                @admin
+                    <a href="{{ route('admin.inventory.product-export.index') }}" class="btn btn-success" title="Download">
+                        <i class="fa fa-arrow-down">Download</i>
+                    </a>
+                @endadmin
             </div>
         </div>
         <div class="table-wrapper position-relative">

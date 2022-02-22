@@ -32,9 +32,12 @@
                         </a>
                     @endif
                     
-                    <a href="{{ route('admin.inventory.product.edit',$product) }}" title="Edit" class="dropdown-item w-100">
-                        <i class="fa fa-pencil"></i> Edit
-                    </a>
+                    @can('update',  $product)
+                        <a href="{{ route('admin.inventory.product.edit',$product) }}" title="Edit" class="dropdown-item w-100">
+                            <i class="fa fa-pencil"></i> Edit
+                        </a>
+                    @endcan
+                    
                     <form action="{{ route('admin.inventory.product.destroy',$product) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
                         @csrf
                         @method('DELETE')
