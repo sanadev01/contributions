@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\ProfitPackage;
@@ -247,5 +248,6 @@ Route::get('test-profit/{id}',function($id){
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
 
 Route::get('/tests', function() {
-    return response()->json(['message' => 'Hello World']);
+        $date = Carbon::now()->format('Y-m-d H:i:s');
+        dd($date);
 })->middleware('auth')->name('test');
