@@ -246,16 +246,13 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 
 Route::get('test-label',function(){
 
-    // $labelPrinter = new CN23LabelMaker();
+    $labelPrinter = new CN23LabelMaker();
 
-    // $order = Order::find(53654);
-    // $labelPrinter->setOrder($order);
-    // $labelPrinter->setService(2);
+    $order = Order::find(53654);
+    $labelPrinter->setOrder($order);
+    $labelPrinter->setService(2);
 
-    // return $labelPrinter->download();
-
-    Artisan::call('db:seed --class=PermissionSeeder');
-    echo Artisan::output();
+    return $labelPrinter->download();
 });
 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
