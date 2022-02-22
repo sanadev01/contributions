@@ -63,7 +63,7 @@ class ProductRepository
         $product->user_id        = Auth::user()->isAdmin()? $request->user_id: auth()->id();
         $product->name           = $request->name;
         $product->price          = $request->price;
-        $product->sku            = strtoupper($request->sku);
+        $product->sku            = $request->sku;
         $product->status         = 'pending';
         $product->order          = $request->order;
         $product->category       = $request->category;
@@ -99,7 +99,7 @@ class ProductRepository
             'user_id' => Auth::user()->isAdmin()? $request->user_id: auth()->id(),
             'name' => $request->name,
             'price' => $request->price,
-            'sku' => strtoupper($request->sku),
+            'sku' => $request->sku,
             'status' => $product->status,
             'order' => $request->order,
             'category' => $request->category,
@@ -118,6 +118,7 @@ class ProductRepository
             'discontinued' => $request->discontinued,
             'store_day' => $request->store_day,
             'location' => $request->location,
+            'sh_code' => $request->sh_code,
         ]);
         
         if ( $request->hasFile('invoiceFile') ){

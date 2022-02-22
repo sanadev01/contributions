@@ -3,12 +3,13 @@
 namespace App\Policies;
 
 use App\Models\User;
-use App\Product;
+use App\Models\Product;
+use App\Traits\ByPassAdminCheck;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ProductPolicy
 {
-    use HandlesAuthorization;
+    use HandlesAuthorization, ByPassAdminCheck;
 
     /**
      * Determine whether the user can view any models.
@@ -18,7 +19,7 @@ class ProductPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return true;
     }
 
     /**
@@ -30,7 +31,7 @@ class ProductPolicy
      */
     public function view(User $user, Product $product)
     {
-        //
+        return $user->hasPermission('view_product') && $user->id == $product->user_id;
     }
 
     /**
@@ -41,7 +42,7 @@ class ProductPolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->hasPermission('create_product');
     }
 
     /**
@@ -53,7 +54,7 @@ class ProductPolicy
      */
     public function update(User $user, Product $product)
     {
-        //
+        return $user->hasPermission('update_product') && $user->id == $product->user_id;
     }
 
     /**
@@ -65,7 +66,7 @@ class ProductPolicy
      */
     public function delete(User $user, Product $product)
     {
-        //
+        return $user->hasPermission('delete_product') && $user->id == $product->user_id;
     }
 
     /**
