@@ -6,8 +6,10 @@
         <h4 class="mb-0">Inventory Products</h4>
         
         <div>
-            <a href="{{ route('admin.inventory.product.create') }}" class="btn btn-primary"> Add Product </a>
-            <a href="{{ route('admin.inventory.product-import.create') }}" class="btn btn-info"> Import Products </a>
+            @can('create', App\Product::class)
+                <a href="{{ route('admin.inventory.product.create') }}" class="btn btn-primary"> Add Product </a>
+                <a href="{{ route('admin.inventory.product-import.create') }}" class="btn btn-info"> Import Products </a>
+            @endcan
         </div>
     </div>
     <div class="card-content">

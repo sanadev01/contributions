@@ -30,6 +30,7 @@ class Product extends Model
         'discontinued',
         'store_day',
         'location',
+        'sh_code',
     ];
     public function user()
     {
@@ -76,5 +77,10 @@ class Product extends Model
     public function orders()
     {
         return $this->belongsToMany(Order::class);
+    }
+
+    public function setSkuAttribute($value)
+    {
+        $this->attributes['sku'] = strtoupper($value);
     }
 }

@@ -34,17 +34,16 @@ class ProductCreateRequest extends FormRequest
             'brand' => 'required',
             'manufacturer' => 'required',
             'barcode' => 'required',
-            'item' => 'required',
-            'lot' => 'required',
-            'unit' => 'required',
-            'case' => 'required',
+            'item' => 'nullable',
+            'lot' => 'nullable',
+            'unit' => 'nullable',
+            'case' => 'nullable',
             'min_quantity' => 'required',
             'max_quantity' => 'required',
             'discontinued' => 'required',
             'store_day' => 'required',
             'location' => 'required',
             'sh_code' => 'required',
-
         ];
 
         if ( $this->user()->isAdmin() ){

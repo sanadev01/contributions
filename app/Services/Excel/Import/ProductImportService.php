@@ -78,7 +78,8 @@ class ProductImportService extends AbstractImportService
                 'max_quantity'  => $this->getValue("Q{$row}"),
                 'discontinued'  => $this->getValue("R{$row}"),
                 'store_day'     => $this->getValue("S{$row}"),
-                'location'      => $this->getValue("T{$row}")
+                'location'      => $this->getValue("T{$row}"),
+                'sh_code'      => $this->getValue("U{$row}"),
             ]);
             DB::commit();
             return $order;

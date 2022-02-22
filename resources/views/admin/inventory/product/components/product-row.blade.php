@@ -32,16 +32,21 @@
                         </a>
                     @endif
                     
-                    <a href="{{ route('admin.inventory.product.edit',$product) }}" title="Edit" class="dropdown-item w-100">
-                        <i class="fa fa-pencil"></i> Edit
-                    </a>
-                    <form action="{{ route('admin.inventory.product.destroy',$product) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
-                        @csrf
-                        @method('DELETE')
-                        <button class="dropdown-item w-100 text-danger">
-                            <i class="feather icon-trash-2"></i> Delete
-                        </button>
-                    </form>
+                    @can('update',  $product)
+                        <a href="{{ route('admin.inventory.product.edit',$product) }}" title="Edit" class="dropdown-item w-100">
+                            <i class="fa fa-pencil"></i> Edit
+                        </a>
+                    @endcan
+                    
+                    @can('delete',  $product)
+                        <form action="{{ route('admin.inventory.product.destroy',$product) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
+                            @csrf
+                            @method('DELETE')
+                            <button class="dropdown-item w-100 text-danger">
+                                <i class="feather icon-trash-2"></i> Delete
+                            </button>
+                        </form>
+                    @endcan
                 </div>
             </div>
         </div>

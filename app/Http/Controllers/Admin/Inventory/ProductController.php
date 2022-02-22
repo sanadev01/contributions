@@ -27,6 +27,7 @@ class ProductController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Product::class);
         return view('admin.inventory.product.create');
     }
 
@@ -38,6 +39,7 @@ class ProductController extends Controller
      */
     public function store(ProductCreateRequest $request, ProductRepository $repository)
     {
+        $this->authorize('create', Product::class);
         if ( $repository->store($request) ){
             session()->flash('alert-success','Product Saved Successfull');
             return redirect()->back();
@@ -53,6 +55,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
+        $this->authorize('view', $product);
         return view('admin.modals.product.product',compact('product'));
     }
 
@@ -64,6 +67,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
+        $this->authorize('update', $product);
         return view('admin.inventory.product.edit',compact('product'));
     }
 
@@ -76,6 +80,7 @@ class ProductController extends Controller
      */
     public function update(ProductCreateRequest $request, Product $product, ProductRepository $repository)
     {
+        $this->authorize('update', $product);
         if ($repository->update($request,$product) ){
             session()->flash('alert-success','Product Update');
             return redirect()->route('admin.inventory.product.index');
@@ -92,6 +97,7 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        $this->authorize('delete', $product);
         $product->delete();
         session()->flash('alert-success','Product Deleted Successfull');
         return redirect()->back();
