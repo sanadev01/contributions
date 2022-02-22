@@ -38,13 +38,15 @@
                         </a>
                     @endcan
                     
-                    <form action="{{ route('admin.inventory.product.destroy',$product) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
-                        @csrf
-                        @method('DELETE')
-                        <button class="dropdown-item w-100 text-danger">
-                            <i class="feather icon-trash-2"></i> Delete
-                        </button>
-                    </form>
+                    @can('delete',  $product)
+                        <form action="{{ route('admin.inventory.product.destroy',$product) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
+                            @csrf
+                            @method('DELETE')
+                            <button class="dropdown-item w-100 text-danger">
+                                <i class="feather icon-trash-2"></i> Delete
+                            </button>
+                        </form>
+                    @endcan
                 </div>
             </div>
         </div>
