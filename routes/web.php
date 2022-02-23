@@ -233,21 +233,15 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
     return response()->download(storage_path("app/labels/{$order->us_api_tracking_code}.pdf"),"{$order->us_api_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.us-label.download');
 
-Route::get('test-profit/{id}',function($id){
-    $profit = ProfitPackage::find($id);
-    dd($profit);
-    // $labelPrinter = new CN23LabelMaker();
+Route::get('test-label',function(){
 
-    // $order = Order::find(53654);
-    // $labelPrinter->setOrder($order);
-    // $labelPrinter->setService(2);
+    $labelPrinter = new CN23LabelMaker();
 
-    // return $labelPrinter->download();
+    $order = Order::find(53654);
+    $labelPrinter->setOrder($order);
+    $labelPrinter->setService(2);
+
+    return $labelPrinter->download();
 });
 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
-
-Route::get('/tests', function() {
-        $date = Carbon::now()->format('Y-m-d H:i:s');
-        dd($date);
-})->middleware('auth')->name('test');
