@@ -46,7 +46,6 @@
             </div>
         @endif
         @if(count($usServicesErrors) < 2)
-        {
             <form wire:submit.prevent="getRates">
                 <div class="ml-3 mt-3">
                     <div class="row ml-3">
@@ -95,6 +94,11 @@
                                 <input type="text" wire:model.lazy="senderZipCode" class="form-control" name="sender_zipcode" id="sender_zipcode" placeholder="Enter your zipcode">
                                 @if($zipCodeResponse) <p class="{{ $zipCodeClass }}">{{ $zipCodeResponseMessage }}</p>@endif
                                 @error('senderZipCode') <span class="error text-danger">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="sender_zipcode">Sender Phone <span class="text-danger">*</span></label>
+                                <input type="text" wire:model.lazy="senderPhone" class="form-control" name="sender_phone" id="sender_phone" placeholder="Enter your US phone">
+                                @error('senderPhone') <span class="error text-danger">{{ $message }}</span> @enderror
                             </div>
                         </div>
                         <div class="form-row">
@@ -149,10 +153,11 @@
                 </div>
             </form>
         @endif    
-        @if ($upsError || $uspsError)
+        @if ($upsError || $uspsError || $fedexError)
             <div class="container">
                 <div class="alert alert-danger" role="alert">
                     {{ $upsError ? $upsError : $uspsError }}
+                    {{ $fedexError ? $fedexError : '' }}
                 </div>
             </div>
         @endif    
