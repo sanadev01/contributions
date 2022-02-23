@@ -30,6 +30,7 @@ use App\Models\Ticket;
 use App\Models\TicketComment;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Models\Product;
 use App\Policies\ActivityPolicy;
 use App\Policies\AddressPolicy;
 use App\Policies\AffiliateSalePolicy;
@@ -58,6 +59,7 @@ use App\Policies\TicketCommentPolicy;
 use App\Policies\TicketPolicy;
 use App\Policies\TransactionPolicy;
 use App\Policies\UserPolicy;
+use App\Policies\ProductPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -96,7 +98,8 @@ class AuthServiceProvider extends ServiceProvider
         Reports::class => ReportsPolicy::class,
         Connect::class => ConnectPolicy::class,
         AffiliateSale::class => AffiliateSalePolicy::class,
-        Activity::class => ActivityPolicy::class
+        Activity::class => ActivityPolicy::class,
+        Product::class => ProductPolicy::class,
     ];
 
     /**

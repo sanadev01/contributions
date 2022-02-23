@@ -2,7 +2,6 @@
 namespace App\Services\UPS;
 
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Response;
 use File;
 
 class UPSLabelMaker

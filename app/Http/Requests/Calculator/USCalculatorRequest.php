@@ -4,7 +4,7 @@ namespace App\Http\Requests\Calculator;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UPSCalculatorRequest extends FormRequest
+class USCalculatorRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

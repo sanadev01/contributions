@@ -150,7 +150,7 @@
                         @endif
                         @if($order->hasSecondLabel())
                             <a href="{{ route('admin.order.us-label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
-                                <i class="feather icon-printer"></i>@if($order->usLabelService() == \App\Models\ShippingService::UPS_GROUND)@lang('orders.actions.print-ups-label') @else @lang('orders.actions.print-usps-label') @endif
+                                <i class="feather icon-printer"></i>@if($order->usLabelService() == \App\Models\ShippingService::UPS_GROUND)@lang('orders.actions.print-ups-label') @elseif($order->usLabelService() == \App\Models\ShippingService::FEDEX_GROUND) @lang('orders.actions.print-fedex-label') @else @lang('orders.actions.print-usps-label') @endif
                             </a>
                             @if ($order->apiPickupResponse() != null)
                                 <a href="{{ route('admin.order.ups-label.cancel.pickup', $order->id) }}" class="dropdown-item" title="@lang('orders.actions.label')">

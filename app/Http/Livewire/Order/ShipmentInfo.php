@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Order;
 
 use App\Models\Order;
+use App\Models\Product;
 use App\Services\Calculators\WeightCalculator;
 use App\Services\Converters\UnitsConverter;
 use Livewire\Component;
@@ -24,7 +25,7 @@ class ShipmentInfo extends Component
     public $volumeWeight;
     public $currentWeightUnit;
 
-    public function mount(Order $order = null)
+    public function mount($order = null)
     {
         $this->order = optional($order)->toArray();
         $this->fillData();
@@ -39,26 +40,31 @@ class ShipmentInfo extends Component
     public function updatedUnit()
     {
         $this->calculateOtherUnits();
+        $this->emit('updatedUnit',$this->unit);
     }
 
     public function updatedWeight()
     {
         $this->calculateOtherUnits();
+        $this->emit('updatedWeight',$this->weight);
     }
 
     public function updatedLength()
     {
         $this->calculateOtherUnits();
+        $this->emit('updatedLength',$this->length);
     }
 
     public function updatedWidth()
     {
         $this->calculateOtherUnits();
+        $this->emit('updatedWidth',$this->width);
     }
 
     public function updatedHeight()
     {
         $this->calculateOtherUnits();
+        $this->emit('updatedHeight',$this->height);
     }
 
     private function fillData()
@@ -96,5 +102,7 @@ class ShipmentInfo extends Component
             $volumetricWeight = WeightCalculator::getVolumnWeight($this->length,$this->width,$this->height,'in');
             $this->volumeWeight = round($volumetricWeight > $this->weight ? $volumetricWeight : $this->weight,2);
         }
+
+        $this->emit('volumeWeight',$this->volumeWeight);
     }
 }

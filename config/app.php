@@ -175,7 +175,13 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        geekcom\ValidatorDocs\ValidatorProvider ::class
+        geekcom\ValidatorDocs\ValidatorProvider ::class,
+
+        // Other Service Providers
+        App\Providers\USPSServiceProvider::class,
+        App\Providers\UPSServiceProvider::class,
+        App\Providers\FedExServiceProvider::class,
+        App\Providers\ChileServiceProvider::class,
 
     ],
 

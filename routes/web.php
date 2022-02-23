@@ -8,6 +8,7 @@ use App\Services\StoreIntegrations\Shopify;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -82,6 +83,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('orders.label', OrderLabelController::class)->only('index','store');
             Route::get('order-exports', OrderExportController::class)->name('order.exports');
             Route::get('bulk-action', BulkActionController::class)->name('order.bulk-action');
+            Route::get('consolidate-domestic-label', ConsolidateDomesticLabelController::class)->name('order.consolidate-domestic-label');
             Route::get('order/{order}/us-label', [OrderUSLabelController::class, 'index'])->name('order.us-label.index');
             Route::resource('orders.usps-label', OrderUSPSLabelController::class)->only('index','store');
             Route::resource('orders.ups-label', OrderUPSLabelController::class)->only('index','store');
@@ -153,6 +155,16 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('commission', CommissionReportController::class)->only(['index','show']);
             Route::resource('audit-report', AuditReportController::class)->only(['index','create']);
 
+        });
+
+        Route::namespace('Inventory')->as('inventory.')->prefix('inventory')->group(function(){
+            Route::resource('product', ProductController::class);
+            Route::get('product-pickup', [\App\Http\Controllers\Admin\Inventory\ProductController::class, 'pickup'])->name('product.pickup');
+            Route::post('product/status', [\App\Http\Controllers\Admin\Inventory\ProductController::class, 'statusUpdate'])->name('status.update');
+            Route::resource('product-export', ProductExportController::class)->only('index');
+            Route::resource('product-import', ProductImportController::class)->only(['create','store']);
+            Route::resource('product-order', ProductOrderController::class)->only('show');
+           
         });
 
         Route::namespace('Affiliate')->as('affiliate.')->prefix('affiliate')->group(function(){
@@ -233,21 +245,15 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
     return response()->download(storage_path("app/labels/{$order->us_api_tracking_code}.pdf"),"{$order->us_api_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.us-label.download');
 
-Route::get('test-profit/{id}',function($id){
-    $profit = ProfitPackage::find($id);
-    dd($profit);
-    // $labelPrinter = new CN23LabelMaker();
+Route::get('test-label',function(){
 
-    // $order = Order::find(53654);
-    // $labelPrinter->setOrder($order);
-    // $labelPrinter->setService(2);
+    $labelPrinter = new CN23LabelMaker();
 
-    // return $labelPrinter->download();
+    $order = Order::find(53654);
+    $labelPrinter->setOrder($order);
+    $labelPrinter->setService(2);
+
+    return $labelPrinter->download();
 });
 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
-
-Route::get('/tests', function() {
-        $date = Carbon::now()->format('Y-m-d H:i:s');
-        dd($date);
-})->middleware('auth')->name('test');
