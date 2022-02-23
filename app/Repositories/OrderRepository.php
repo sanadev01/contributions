@@ -169,7 +169,7 @@ class OrderRepository
             
             $order->doCalculations();
 
-            if ($order->isPaid()) 
+            if ($order->isPaid() && $order->getPaymentInvoice()) 
             {
                 $orderInvoice = $order->getPaymentInvoice();
                
