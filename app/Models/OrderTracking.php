@@ -17,14 +17,14 @@ class OrderTracking extends Model
 
     public function setCreatedAtAttribute()
     {
-        $date = Carbon::now();
+        $date = Carbon::now()->setTimezone('America/New_York');
 
         $this->attributes['created_at'] = $date;
     }
 
     public function setUpdatedAtAttribute()
     {
-        $date = Carbon::now();
+        $date = Carbon::now()->setTimezone('America/New_York');
 
         $this->attributes['updated_at'] = $date;
     }
