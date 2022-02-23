@@ -217,7 +217,10 @@ class ParcelController extends Controller
      */
     public function update(UpdateRequest $request, Order $parcel)
     {
-        
+        if ($parcel->isPaid()) {
+            return apiResponse(false,'order can not be updated once payment has been paid');
+        }
+
         $weight = optional($request->parcel)['weight']??0;
         $length = optional($request->parcel)['length']??0;
         $width = optional($request->parcel)['width']??0;
