@@ -29,8 +29,8 @@ class ShipmentInfo extends Component
     public function mount(Order $order = null)
     {
         $this->order = optional($order)->toArray();
-        $this->fillData();
         $this->setVolumetricDiscount();
+        $this->fillData();
     }
 
     public function render()
@@ -99,7 +99,6 @@ class ShipmentInfo extends Component
                 if ($this->volumeWeight > $this->weight) {
                     $this->calculateDiscountedWeight();
                 }
-                
             }
 
         }else{
@@ -120,27 +119,17 @@ class ShipmentInfo extends Component
                 if ($this->volumeWeight > $this->weight) {
                     $this->calculateDiscountedWeight();
                 }
-                
             }
         }
     }
 
     private function setVolumetricDiscount()
     {
-        if ($this->order) 
-        {
-            $volumetric_discount = setting('volumetric_discount', null, $this->order['user_id']);
-            if ($volumetric_discount) {
-                $discountPercentage = setting('discount_percentage', null, $this->order['user_id']);
-                $this->discountPercentage = ($discountPercentage) ? $discountPercentage/100 : 0;
-            }
-            return true;
-        }
-
-        $volumetric_discount = setting('volumetric_discount', null, auth()->user()->id);
-        if ($volumetric_discount) 
-        {
-            $discountPercentage = setting('discount_percentage', null, auth()->user()->id);
+        $userId = ($this->order) ? optional($this->order)['user_id'] :auth()->user()->id;
+        $volumetricDiscount = setting('volumetric_discount', null, $userId);
+        $discountPercentage = setting('discount_percentage', null, $userId);
+        
+        if ($volumetricDiscount && $discountPercentage) {
             $this->discountPercentage = ($discountPercentage) ? $discountPercentage/100 : 0;
         }
         
