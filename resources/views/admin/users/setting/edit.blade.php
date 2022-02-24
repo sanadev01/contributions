@@ -201,8 +201,6 @@
                                             </div>
                                             <span class="offset-2 mr-2 mt-2">Profit Percentage (%) :</span>
                                             <input type="number" name="usps_profit" class="form-control col-2" id="usps_profit" value="{{ setting('usps_profit', null, $user->id) }}">
-                                            <span class="offset-2 mr-2 mt-2">Bulk Label Dimension (%) :</span>
-                                            <input type="number" name="usps_order_dimension" class="form-control col-2" id="usps_order_dimension" value="{{ setting('usps_order_dimension', null, $user->id) }}">
                                         </div>    
                                     </div>
                                 </div>
@@ -220,8 +218,6 @@
                                             </div>
                                             <span class="offset-2 mr-2 mt-2">Profit Percentage (%) :</span>
                                             <input type="number" name="ups_profit" class="form-control col-2" id="ups_profit" value="{{ setting('ups_profit', null, $user->id) }}">
-                                            <span class="offset-2 mr-2 mt-2">Bulk Label Dimension (%) :</span>
-                                            <input type="number" name="ups_order_dimension" class="form-control col-2" id="ups_order_dimension" value="{{ setting('ups_order_dimension', null, $user->id) }}">
                                         </div>    
                                     </div>
                                 </div>
@@ -252,6 +248,23 @@
                                             </span>
                                             <span class="h3 mx-2 text-primary my-0 py-0"></span>
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">Volumetric Discount<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="volumetric_discount">
+                                                <input type="checkbox" name="volumetric_discount" id="volumetric_discount" @if(setting('volumetric_discount', null, $user->id)) checked @endif>
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            <span class="offset-2 mr-2 mt-2">Discount Percentage (%) :</span>
+                                            <input type="number" name="discount_percentage" class="form-control col-2" id="discount_percentage" value="{{ setting('discount_percentage', null, $user->id) }}">
+                                        </div>    
                                     </div>
                                 </div>
                                 <div class="row mt-1">
