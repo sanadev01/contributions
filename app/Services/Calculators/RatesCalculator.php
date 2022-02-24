@@ -59,23 +59,12 @@ class RatesCalculator
     
     private function setVolumetricDiscount()
     {
-        if ($this->order) 
-        {
-            $volumetric_discount = setting('volumetric_discount', null, optional($this->order->user)->id);
-            if ($volumetric_discount) {
-                $discountPercentage = setting('discount_percentage', null, optional($this->order->user)->id);
-                $this->discountPercentage = ($discountPercentage) ? $discountPercentage/100 : 0;
-            }
-            return true;
-        }
-
-        $volumetric_discount = setting('volumetric_discount', null, auth()->user()->id);
-        if ($volumetric_discount) 
-        {
-            $discountPercentage = setting('discount_percentage', null, auth()->user()->id);
+        $volumetricDiscount = setting('volumetric_discount', null, optional($this->order)->user->id);
+        if ($volumetricDiscount) {
+            $discountPercentage = setting('discount_percentage', null, optional($this->order)->user->id);
             $this->discountPercentage = ($discountPercentage) ? $discountPercentage/100 : 0;
         }
-        
+
         return true;
     }
 
@@ -112,7 +101,7 @@ class RatesCalculator
                 return round($volumnWeight - ($volumnWeight * $this->discountPercentage), 2);
             }
 
-            $this->originalWeight;
+           return $this->originalWeight;
         }
         return $volumnWeight > $this->originalWeight ? $volumnWeight : $this->originalWeight;
     }
