@@ -94,7 +94,7 @@ class UspsService
 
         $request_body = [
             'request_id' => 'HD-'.$order->id,
-            'from_address' => $this->getHercoAddress(),
+            'from_address' => $this->getHercoAddress($order->warehouse_number),
             'to_address' => $this->getRecipientAddress($order),
             'weight' => (float)$this->chargableWeight,
             'weight_unit' => ($order->measurement_unit == 'kg/cm') ? 'kg' : 'lb',
@@ -121,7 +121,7 @@ class UspsService
 
         return [
             'request_id' => 'HD-'.$order->id,
-            'from_address' => $this->getHercoAddress(),
+            'from_address' => $this->getHercoAddress($order->warehouse_number),
             'to_address' => $this->getRecipientAddress($order),
             'weight' => (float)$this->chargableWeight,
             'weight_unit' => ($order->measurement_unit == 'kg/cm') ? 'kg' : 'lb',
@@ -262,7 +262,7 @@ class UspsService
         $this->calculateVolumetricWeight($order);
 
         $request_body = [
-            'from_address' => $this->getHercoAddress(),
+            'from_address' => $this->getHercoAddress($order->warehouse_number),
             'to_address' => $this->getRecipientAddress($order),
             'weight' => (float)$this->chargableWeight,
             'weight_unit' => ($order->measurement_unit == 'kg/cm') ? 'kg' : 'lb',
@@ -286,7 +286,7 @@ class UspsService
         $this->calculateVolumetricWeight($order);
 
         return [
-            'from_address' => $this->getHercoAddress(),
+            'from_address' => $this->getHercoAddress($order->warehouse_number),
             'to_address' => $this->getRecipientAddress($order),
             'weight' => (float)$this->chargableWeight,
             'weight_unit' => ($order->measurement_unit == 'kg/cm') ? 'kg' : 'lb',
@@ -355,7 +355,7 @@ class UspsService
                 'email' => 'homedelivery@homedeliverybr.com',
                 'country_code' => 'US',
             ],
-            'to_address' => $this->getHercoAddress(),
+            'to_address' => $this->getHercoAddress($order->warehouse_number),
             'weight' => ($this->chargableWeight != null) ? (float)$this->chargableWeight : (float)$order->weight,
             'weight_unit' => ($order->measurement_unit == 'kg/cm') ? 'kg' : 'lb',
             'image_format' => 'pdf',
@@ -367,10 +367,10 @@ class UspsService
         ];
     }
 
-    private function getHercoAddress()
+    private function getHercoAddress($warehouse_number)
     {
         return [
-            'company_name' => 'HERCO SUITE#100',
+            'company_name' => 'HERCO SUITE#100 -'.$warehouse_number,
             'line1' => '2200 NW 129TH AVE',
             'city' => 'Miami',
             'state_province' => 'FL',
