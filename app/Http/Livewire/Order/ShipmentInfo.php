@@ -2,11 +2,9 @@
 
 namespace App\Http\Livewire\Order;
 
-use App\Models\Order;
-use App\Models\Product;
-use App\Services\Calculators\WeightCalculator;
-use App\Services\Converters\UnitsConverter;
 use Livewire\Component;
+use App\Services\Converters\UnitsConverter;
+use App\Services\Calculators\WeightCalculator;
 
 class ShipmentInfo extends Component
 {
@@ -25,9 +23,12 @@ class ShipmentInfo extends Component
     public $volumeWeight;
     public $currentWeightUnit;
 
+    public $discountPercentage;
+    
     public function mount($order = null)
     {
         $this->order = optional($order)->toArray();
+        $this->setVolumetricDiscount();
         $this->fillData();
     }
 
@@ -35,7 +36,6 @@ class ShipmentInfo extends Component
     {
         return view('livewire.order.shipment-info');
     }
-
 
     public function updatedUnit()
     {
@@ -93,6 +93,19 @@ class ShipmentInfo extends Component
             $this->currentWeightUnit = 'kg';
             $volumetricWeight = WeightCalculator::getVolumnWeight($this->length,$this->width,$this->height,'cm');
             $this->volumeWeight = round($volumetricWeight > $this->weight ? $volumetricWeight : $this->weight,2);
+            
+            if ($this->discountPercentage && $this->discountPercentage > 0) {
+
+                if ($this->discountPercentage == 1) {
+                    return $this->volumeWeight = $this->weight;
+                }
+
+                if ($this->volumeWeight > $this->weight) {
+                    $this->calculateDiscountedWeight();
+                }
+                
+            }
+
         }else{
             $this->weightOther = UnitsConverter::poundToKg($this->weight);
             $this->lengthOther = UnitsConverter::inToCm($this->length);
@@ -101,8 +114,38 @@ class ShipmentInfo extends Component
             $this->currentWeightUnit = 'lbs';
             $volumetricWeight = WeightCalculator::getVolumnWeight($this->length,$this->width,$this->height,'in');
             $this->volumeWeight = round($volumetricWeight > $this->weight ? $volumetricWeight : $this->weight,2);
+
+            if ($this->discountPercentage && $this->discountPercentage > 0) {
+
+                if ($this->discountPercentage == 1) {
+                    return $this->volumeWeight = $this->weight;
+                }
+                
+                if ($this->volumeWeight > $this->weight) {
+                    $this->calculateDiscountedWeight();
+                }
+                
+            }
         }
 
         $this->emit('volumeWeight',$this->volumeWeight);
+    }
+
+    private function setVolumetricDiscount()
+    {
+        $userId = ($this->order) ? optional($this->order)['user_id'] :auth()->user()->id;
+        $volumetricDiscount = setting('volumetric_discount', null, $userId);
+        $discountPercentage = setting('discount_percentage', null, $userId);
+        
+        if ($volumetricDiscount && $discountPercentage) {
+            $this->discountPercentage = ($discountPercentage) ? $discountPercentage/100 : 0;
+        }
+        
+        return true;
+    }
+
+    private function calculateDiscountedWeight()
+    {
+        $this->volumeWeight = round($this->volumeWeight - ($this->volumeWeight * $this->discountPercentage), 2);
     }
 }

@@ -15,7 +15,7 @@ class UserSettingRepository {
             'email' => $request->user_email,
         ]);
 
-        $request->has('battery') ? saveSetting('perfume', true, $user->id) : saveSetting('battery', false, $user->id);
+        $request->has('battery') ? saveSetting('battery', true, $user->id) : saveSetting('battery', false, $user->id);
         $request->has('perfume') ? saveSetting('perfume', true, $user->id) : saveSetting('perfume', false, $user->id);
         $request->has('insurance') ? saveSetting('insurance', true, $user->id) : saveSetting('insurance', false, $user->id);
         $request->has('usps') ? saveSetting('usps', true, $user->id) : saveSetting('usps', false, $user->id);
@@ -23,12 +23,11 @@ class UserSettingRepository {
         $request->has('stripe') ? saveSetting('stripe', true, $user->id) : saveSetting('stripe', false, $user->id);
         $request->has('sinerlog') ? saveSetting('sinerlog', true, $user->id) : saveSetting('sinerlog', false, $user->id);
         $request->has('fedex') ? saveSetting('fedex', true, $user->id) : saveSetting('fedex', false, $user->id);
-        $request->has('battery') ? saveSetting('battery', true, $user->id) : saveSetting('battery', false, $user->id);
+        $request->has('volumetric_discount') ? saveSetting('volumetric_discount', true,$user->id) : saveSetting('volumetric_discount', false, $user->id);
 
         ($request->usps_profit != null ) ? saveSetting('usps_profit', $request->usps_profit, $user->id) : saveSetting('usps_profit', 0, $user->id);
-        ($request->usps_order_dimension != null ) ? saveSetting('usps_order_dimension', $request->usps_order_dimension, $user->id) : saveSetting('usps_order_dimension', 0, $user->id);
         ($request->ups_profit != null ) ? saveSetting('ups_profit', $request->ups_profit, $user->id) : saveSetting('ups_profit', 0, $user->id);
-        ($request->ups_order_dimension != null ) ? saveSetting('ups_order_dimension', $request->ups_order_dimension, $user->id) : saveSetting('ups_order_dimension', 0, $user->id);
+        ($request->discount_percentage != null ) ? saveSetting('discount_percentage', $request->discount_percentage, $user->id) : saveSetting('discount_percentage', 0, $user->id);
         ($request->fedex_profit != null ) ? saveSetting('fedex_profit', $request->fedex_profit, $user->id) : saveSetting('fedex_profit', 0, $user->id);
         
         if ( $request->password ){

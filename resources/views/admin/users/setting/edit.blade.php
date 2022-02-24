@@ -267,6 +267,23 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">Volumetric Discount<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="volumetric_discount">
+                                                <input type="checkbox" name="volumetric_discount" id="volumetric_discount" @if(setting('volumetric_discount', null, $user->id)) checked @endif>
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            <span class="offset-2 mr-2 mt-2">Discount Percentage (%) :</span>
+                                            <input type="number" name="discount_percentage" class="form-control col-2" id="discount_percentage" value="{{ setting('discount_percentage', null, $user->id) }}">
+                                        </div>    
+                                    </div>
+                                </div>
                                 <div class="row mt-1">
                                     <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
                                         <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">
