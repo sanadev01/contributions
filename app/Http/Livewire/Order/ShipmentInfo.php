@@ -2,8 +2,6 @@
 
 namespace App\Http\Livewire\Order;
 
-use App\Models\Order;
-use App\Models\Product;
 use Livewire\Component;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Calculators\WeightCalculator;
@@ -135,20 +133,11 @@ class ShipmentInfo extends Component
 
     private function setVolumetricDiscount()
     {
-        if ($this->order) 
-        {
-            $volumetric_discount = setting('volumetric_discount', null, $this->order['user_id']);
-            if ($volumetric_discount) {
-                $discountPercentage = setting('discount_percentage', null, $this->order['user_id']);
-                $this->discountPercentage = ($discountPercentage) ? $discountPercentage/100 : 0;
-            }
-            return true;
-        }
-
-        $volumetric_discount = setting('volumetric_discount', null, auth()->user()->id);
-        if ($volumetric_discount) 
-        {
-            $discountPercentage = setting('discount_percentage', null, auth()->user()->id);
+        $userId = ($this->order) ? optional($this->order)['user_id'] :auth()->user()->id;
+        $volumetricDiscount = setting('volumetric_discount', null, $userId);
+        $discountPercentage = setting('discount_percentage', null, $userId);
+        
+        if ($volumetricDiscount && $discountPercentage) {
             $this->discountPercentage = ($discountPercentage) ? $discountPercentage/100 : 0;
         }
         
