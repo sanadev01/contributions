@@ -92,7 +92,7 @@ class UspsService
     {
         $this->calculateVolumetricWeight($order);
 
-        return [
+        $request_body = [
             'request_id' => 'HD-'.$order->id,
             'from_address' => $this->getHercoAddress(),
             'to_address' => $this->getRecipientAddress($order),
@@ -107,6 +107,12 @@ class UspsService
                 'image_size' => '4x6',
             ],
         ];
+
+        if ($order->sender_country_id != Country::US) {
+            $request_body['usps']['gde_origin_country_code'] = Country::find($order->sender_country_id)->code;
+        }
+        
+        return $request_body;
     }
 
     private function makeRequestAttributeForInternationalLabel($order)
