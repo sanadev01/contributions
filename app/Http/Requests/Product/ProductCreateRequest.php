@@ -46,6 +46,10 @@ class ProductCreateRequest extends FormRequest
             'sh_code' => 'required',
         ];
 
+        if ($this->method() == 'POST') {
+            $rules['sku'] = 'required|unique:products';
+        }
+
         if ( $this->user()->isAdmin() ){
             $rules['user_id'] = 'required|exists:users,id';
         }

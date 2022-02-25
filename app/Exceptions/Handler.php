@@ -2,6 +2,8 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -50,6 +52,10 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
+        if (Request::capture()->expectsJson() && $exception instanceof ModelNotFoundException) {
+            return apiResponse(false, 'no record found');
+        }
+        
         return parent::render($request, $exception);
     }
 }
