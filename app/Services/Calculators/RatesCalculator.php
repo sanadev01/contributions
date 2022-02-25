@@ -191,7 +191,10 @@ class RatesCalculator
                 // self::$errors .= "Service not available for this Country <br>";
                 return false;
             }
-
+            $profitSetting = $this->order->user->profitSettings->where('service_id',$this->shippingService->id)->first();
+            if(!$profitSetting){
+                return false;
+            }
             if ( $this->shippingService->max_weight_allowed < $this->weight ){
                 self::$errors .= "service is not available for more then {$this->shippingService->max_weight_allowed}KG  weight";
                 return false;
