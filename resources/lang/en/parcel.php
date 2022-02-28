@@ -65,4 +65,7 @@ return [
     'Parcel Added' => 'Parcel Added',
     'Error Parcel Create' => 'Error Parcel Create',
     'correios tracking code' => 'Correios Tracking Code',
+    'Fulfillment Order Number' => 'Fulfillment Order Number',
+    'Fulfillment Order Date' => 'Fulfillment Order Date',
+    'SKU Code' => 'SKU Code',
 ];

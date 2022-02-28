@@ -21,7 +21,7 @@
             </div>
         </div>
         <div class="table-wrapper position-relative">
-            <table class="table mb-0 table-responsive-md" id="order-table">
+            <table class="table mb-0 table-responsive-md table-hover" id="order-table">
                 <thead>
                     <tr>
                         <th>Date</th>
@@ -32,6 +32,7 @@
                         <th>Price</th>
                         <th>Quantity</th>
                         <th>SKU</th>
+                        <th>Inventroy Value</th>
                         <th>Active</th>
                         <th>Description</th>
                         <th>Action</th>
@@ -55,6 +56,7 @@
                         <th>
                             <input type="search" class="form-control" wire:model.debounce.1000ms="sku">
                         </th>
+                        <th></th>
                         <th >
                             <select class="form-control" wire:model="status">
                                 <option value="">All </option>

@@ -71,6 +71,8 @@ class Scan extends Component
                 'user' => $product->user,
                 'name' => $product->name,
                 'sku' => $product->sku,
+                'sh_code' => $product->sh_code,
+                'order' => $product->order,
                 'price' => $product->price,
                 'total_price' => $product->price,
                 'quantity' => 1,

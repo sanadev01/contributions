@@ -57,7 +57,7 @@ class ProductExport extends AbstractExportService
             $this->setCellValue('U'.$row, $product->store_day);
             $this->setCellValue('V'.$row, $product->location);
             $this->setCellValue('W'.$row, $product->sh_code);
-            $this->setCellValue('W'.$row, $product->date);
+            $this->setCellValue('x'.$row, date('d-m-Y', strtotime($product->created_at)));
             $row++;
         }
 
@@ -136,6 +136,7 @@ class ProductExport extends AbstractExportService
         $this->setCellValue('W1', 'SH Code');
 
         $this->setColumnWidth('X', 20);
+        $this->sheet->getStyle('X')->getAlignment()->setHorizontal('right');
         $this->setCellValue('X1', 'Date');
 
         $this->setBackgroundColor('A1:X1', '2b5cab');
