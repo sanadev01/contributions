@@ -6,7 +6,10 @@ use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Admin\InventoryOrderPlaced;
 use App\Services\Excel\Import\ProductImportService;
 
 class ProductRepository
@@ -179,6 +182,9 @@ class ProductRepository
             $order = $productOrder->orders()->create([
                 'user_id' => $productOrder->user_id,
                 'status' => Order::STATUS_PREALERT_READY,
+                'customer_reference' => $productOrder->sh_code,
+                'carrier' => $productOrder->order,
+                'tracking_id' => $productOrder->order,
                 'order_date' => now(),
 
             ]);
@@ -197,6 +203,12 @@ class ProductRepository
                 'value' => $productOrder->price,
                 'description' => $productOrder->description,
             ]);
+
+            try {
+                Mail::send(new InventoryOrderPlaced($order));
+            } catch (\Exception $ex) {
+                Log::info('Inventory Order email error: '.$ex->getMessage());
+            }
 
             DB::commit();
 
@@ -217,6 +229,9 @@ class ProductRepository
             $order = Order::create([
                 'user_id' => Auth::user()->isAdmin()? $request->user_id: auth()->id(),
                 'status' => Order::STATUS_PREALERT_TRANSIT,
+                'customer_reference' => $this->setShCodes($request->order_items),
+                'carrier' => $this->setOrderNumbers($request->order_items),
+                'tracking_id' => $this->setOrderNumbers($request->order_items),
                 'order_date' => now(),
             ]);
             $order->update([
@@ -241,6 +256,12 @@ class ProductRepository
 
             DB::commit();
 
+            try {
+                Mail::send(new InventoryOrderPlaced($order));
+            } catch (\Exception $ex) {
+                Log::info('Inventory Order email error: '.$ex->getMessage());
+            }
+
             return $order;
         } catch (\Exception $ex) {
             DB::rollback();
@@ -259,6 +280,24 @@ class ProductRepository
         $importExcelService = new ProductImportService($request->file('excel_file'),$request);
         $response = $importExcelService->handle();
         return $response;
+    }
+
+    private function setShCodes($items)
+    {
+        $shCodes = [];
+        foreach ($items as $item) {
+            $shCodes[] = $item['sh_code'];
+        }
+        return implode(',', $shCodes);
+    }
+
+    private function setOrderNumbers($items)
+    {
+        $orderNumbers = [];
+        foreach ($items as $item) {
+            $orderNumbers[] = $item['order'];
+        }
+        return implode(',', $orderNumbers);
     }
     
 

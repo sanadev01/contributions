@@ -49,7 +49,7 @@
                                     </div>
                                     <div class="form-group col-12 col-sm-6 col-md-4">
                                         <div class="controls">
-                                            <label>@lang('parcel.Carrier Inside') <span class="text-danger">*</span></label>
+                                            <label>@if($parcel->products->isEmpty())@lang('parcel.Carrier Inside') @else @lang('parcel.Fulfillment Order Number') @endif<span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" value="{{ old('carrier',$parcel->carrier) }}" placeholder=""  name="carrier">
                                             @error('carrier')
                                                 <div class="help-block text-danger">{{ $message }}</div>
@@ -58,7 +58,7 @@
                                     </div>
                                     <div class="form-group col-12 col-sm-6 col-md-4">
                                         <div class="controls">
-                                            <label>@lang('parcel.Tracking Inside') <span class="text-danger">*</span></label>
+                                            <label>@if($parcel->products->isEmpty()) @lang('parcel.Tracking Inside') @else @lang('parcel.Fulfillment Order Number') @endif<span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" name="tracking_id" value="{{ old('tracking_id',$parcel->tracking_id) }}" placeholder="">
                                             @error('tracking_id')
                                                 <div class="help-block text-danger">{{ $message }}</div>
@@ -70,7 +70,7 @@
                                     @can('addShipmentDetails', App\Models\Order::class)
                                     <div class="form-group col-12 col-sm-6 col-md-4">
                                         <div class="controls">
-                                            <label>@lang('parcel.External Customer Reference') <span class="text-danger"></span></label>
+                                            <label>@if($parcel->products->isEmpty()) @lang('parcel.External Customer Reference') @else @lang('parcel.SKU Code') @endif<span class="text-danger"></span></label>
                                             <input type="text" class="form-control" value="{{ old('customer_reference',$parcel->customer_reference) }}" placeholder=""  name="customer_reference">
                                             @error('customer_reference')
                                                 <div class="help-block text-danger">{{ $message }}</div>
@@ -84,10 +84,10 @@
                                                 <div class="form-group">
                                                     <div class="controls">
                                                         @admin
-                                                        <label>@lang('parcel.Arrival Date') <span class="text-danger">*</span></label>
+                                                        <label>@if($parcel->products->isEmpty()) @lang('parcel.Arrival Date') @else @lang('parcel.Fulfillment Order Date') @endif<span class="text-danger">*</span></label>
                                                         @endadmin
                                                         @user
-                                                        <label>@lang('parcel.Order Date') <span class="text-danger">*</span></label>
+                                                        <label>@if($parcel->products->isEmpty()) @lang('parcel.Order Date')  @else @lang('parcel.Fulfillment Order Date') @endif<span class="text-danger">*</span></label>
                                                         @enduser
                                                         <input type="text" name="order_date" class="form-control order_date_picker datepicker" value="{{ old('order_date',$parcel->order_date) }}" required="" 
                                                         placeholder="@user @lang('parcel.Order Date') @enduser @admin @lang('parcel.Arrival Date') @endadmin"
