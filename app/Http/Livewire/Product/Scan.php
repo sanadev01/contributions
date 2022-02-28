@@ -39,7 +39,7 @@ class Scan extends Component
         $this->scannedProducts = array_filter($this->scannedProducts, function ($product) use ($id) {
             return $product['id'] != $id;
         });
-        
+        $this->scannedProducts = array_values($this->scannedProducts);
     }
     
 
