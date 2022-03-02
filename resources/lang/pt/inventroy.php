@@ -5,4 +5,5 @@
         'Products' => 'Produtos',
         'Pickup' => 'Escolher',
         'Scan SKU' => 'Varredura SKU',
+        'Sales Orders' => 'Pedidos de venda',
     ];

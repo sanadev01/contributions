@@ -64,6 +64,7 @@ return [
     'Error Parcel Create' => 'erroAoCriarPacote',
     'correios tracking code' => 'Código de Rastreamento dos Correios',
     'Fulfillment Order Number' => 'Número do Pedido de Cumprimento',
+    'Fulfillment Order Description' => 'Descrição do Pedido de Cumprimento',
     'Fulfillment Order Date' => 'Data do Pedido de Cumprimento',
     'SKU Code' => 'Código SKU',
 ];
