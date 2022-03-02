@@ -184,7 +184,7 @@ class ProductRepository
                 'status' => Order::STATUS_PREALERT_READY,
                 'customer_reference' => $productOrder->sh_code,
                 'carrier' => $productOrder->order,
-                'tracking_id' => $productOrder->order,
+                'tracking_id' => $productOrder->description,
                 'order_date' => now(),
 
             ]);
@@ -231,7 +231,7 @@ class ProductRepository
                 'status' => Order::STATUS_PREALERT_TRANSIT,
                 'customer_reference' => $this->setShCodes($request->order_items),
                 'carrier' => $this->setOrderNumbers($request->order_items),
-                'tracking_id' => $this->setOrderNumbers($request->order_items),
+                'tracking_id' => $this->setOrderDescriptions($request->order_items),
                 'order_date' => now(),
             ]);
             $order->update([
@@ -298,6 +298,15 @@ class ProductRepository
             $orderNumbers[] = $item['order'];
         }
         return implode(',', $orderNumbers);
+    }
+
+    private function setOrderDescriptions($items)
+    {
+        $orderDescriptions = [];
+        foreach ($items as $item) {
+            $orderDescriptions[] = $item['description'];
+        }
+        return implode(',', $orderDescriptions);
     }
     
 

@@ -305,6 +305,12 @@
                                 <span class="menu-title">@lang('inventory.Pickup')</span>
                             </a>
                         </li>
+                        <li class="{{ $isActive(['admin.inventory.orders']) }}">
+                            <a href="{{ route('admin.inventory.orders') }}">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title">@lang('inventory.Sales Orders')</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
             {{-- @endcan --}}

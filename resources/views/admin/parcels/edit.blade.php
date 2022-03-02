@@ -58,7 +58,7 @@
                                     </div>
                                     <div class="form-group col-12 col-sm-6 col-md-4">
                                         <div class="controls">
-                                            <label>@if($parcel->products->isEmpty()) @lang('parcel.Tracking Inside') @else @lang('parcel.Fulfillment Order Number') @endif<span class="text-danger">*</span></label>
+                                            <label>@if($parcel->products->isEmpty()) @lang('parcel.Tracking Inside') @else @lang('parcel.Fulfillment Order Description') @endif<span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" name="tracking_id" value="{{ old('tracking_id',$parcel->tracking_id) }}" placeholder="">
                                             @error('tracking_id')
                                                 <div class="help-block text-danger">{{ $message }}</div>
