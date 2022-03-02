@@ -17,6 +17,7 @@ class FedExLabelRepository
     protected $userApiProfit;
     protected $totalAmountWithProfit;
     protected $totalFedExCost;
+    protected $pickupResponse;
 
     public function getShippingServices($order)
     {
@@ -99,6 +100,17 @@ class FedExLabelRepository
 
     private function getSecondaryLabelForSender($request, $order)
     {
+        if ($request->pickupShipment) {
+            $pickupShipmentresponse = FedExFacade::createPickupShipment($request);
+            
+            if ($pickupShipmentresponse->success == false) {
+                $this->fedExError = $pickupShipmentresponse->error['errors'][0]['message'] ?? 'Pickup shipment not available';
+                return false;
+            }
+
+            $this->pickupResponse = $pickupShipmentresponse->data;
+        }
+
         $response = FedExFacade::createShipmentForSender($order, $request);
         
         if ($response->success == true) {
@@ -120,6 +132,7 @@ class FedExLabelRepository
                     'us_api_tracking_code' => $response->data['output']['transactionShipments'][0]['pieceResponses'][0]['trackingNumber'],
                     'us_secondary_label_cost' => setUSCosts($this->totalFedExCost, $this->totalAmountWithProfit),
                     'us_api_service' => $request->service,
+                    'api_pickup_response' => ($request->pickupShipment == true) ? $this->pickupResponse : null,
                 ]);
     
                 chargeAmount(round($this->totalAmountWithProfit, 2), $order, 'Bought FedEx Label For : '.$order->warehouse_number);
@@ -217,6 +230,7 @@ class FedExLabelRepository
                         'us_api_tracking_code' => $response->data['output']['transactionShipments'][0]['pieceResponses'][0]['trackingNumber'],
                         'us_secondary_label_cost' => setUSCosts($this->totalFedExCost, $this->totalAmountWithProfit),
                         'us_api_service' => $request->service,
+                        'api_pickup_response' => ($request->pickupShipment == true) ? $this->pickupResponse : null,
                     ]);
 
                     $order->refresh();

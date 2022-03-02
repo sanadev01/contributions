@@ -197,6 +197,7 @@ class UsLabelForm extends Component
             'pickup_date' => $this->pickupDate,
             'earliest_pickup_time' => $this->earliestPickupTime,
             'latest_pickup_time' => $this->latestPickupTime,
+            'pickup_location' => $this->pickupLocation,
         ]);
     }
 
