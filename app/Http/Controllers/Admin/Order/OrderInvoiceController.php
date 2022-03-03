@@ -25,8 +25,12 @@ class OrderInvoiceController extends Controller
                 $services = $this->calculateInsurance($order);
             }
         }
+
+        $volumeWeight = ($order->isWeightInKg()) ? $order->getWeight('kg') : $order->getWeight('lbs');
+
+        $appliedVolumeWeight = ($order->weight_discount) ? $this->calculateDiscountedWeight($volumeWeight, $order->weight_discount) : null;
         
-        return view('admin.orders.invoice.index',compact('order', 'services'));
+        return view('admin.orders.invoice.index',compact('order', 'services', 'appliedVolumeWeight'));
     }
 
     public function store(Request $request, Order $order)
@@ -51,5 +55,10 @@ class OrderInvoiceController extends Controller
         }
 
         return $order->services;
+    }
+
+    private function calculateDiscountedWeight($volumeWeight, $discountWeight)
+    {
+        return $volumeWeight - $discountWeight;
     }
 }
