@@ -22,8 +22,4 @@ class HomeController extends Controller
         return view('home',compact('orders'));   
     }
     
-    public function test()
-    {
-        return true;
-    }
 }

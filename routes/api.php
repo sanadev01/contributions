@@ -33,12 +33,15 @@ Route::get('orders/recipient/hd_chile_comunes', [App\Http\Controllers\Api\Order\
 
 // Routes for usps
 Route::get('orders/recipient/us_address', [App\Http\Controllers\Api\Order\RecipientController::class, 'validate_USAddress'])->name('api.orders.recipient.us_address');
-Route::get('order-usps-rates', [App\Http\Controllers\Admin\Order\OrderItemsController::class, 'usps_rates'])->name('api.usps_rates');
+Route::get('order-usps-rates', [App\Http\Controllers\Admin\Order\OrderItemsController::class, 'uspsRates'])->name('api.usps_rates');
 Route::get('order-usps-sender-rates', [App\Http\Controllers\Admin\Order\OrderUSPSLabelController::class, 'usps_sender_rates'])->name('api.usps_sender_rates');
 
 // Rates for UPS
 Route::get('order-ups-rates', [App\Http\Controllers\Admin\Order\OrderItemsController::class, 'ups_rates'])->name('api.ups_rates');
 Route::get('order-ups-sender-rates', [App\Http\Controllers\Admin\Order\OrderUPSLabelController::class, 'ups_sender_rates'])->name('api.ups_sender_rates');
+
+// Rates for FedEx
+Route::get('order-fedex-rates', [App\Http\Controllers\Admin\Order\OrderItemsController::class, 'fedExRates'])->name('api.fedExRates');
 
 Route::post('order/update/status',Api\OrderStatusController::class)->name('api.order.status.update');
 Route::post('buy-usps-label', [App\Http\Controllers\USPSCalculatorController::class, 'buy_usps_label'])->name('api.buy_usps_label');
@@ -68,6 +71,8 @@ Route::prefix('v1')->group(function(){
             Route::get('parcel/{order}/cn23',OrderLabelController::class);
             Route::get('order/tracking/{search}', OrderTrackingController::class);
             Route::get('services-rates', GetRateController::class);
+
+            Route::resource('products', 'ProductController')->only('index', 'show', 'store');
         });
     
         Route::get('countries', CountryController::class);

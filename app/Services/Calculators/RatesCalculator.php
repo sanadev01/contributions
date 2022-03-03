@@ -101,7 +101,7 @@ class RatesCalculator
                 return round($volumnWeight - ($volumnWeight * $this->discountPercentage), 2);
             }
 
-            return $this->originalWeight;
+           return $this->originalWeight;
         }
         return $volumnWeight > $this->originalWeight ? $volumnWeight : $this->originalWeight;
     }

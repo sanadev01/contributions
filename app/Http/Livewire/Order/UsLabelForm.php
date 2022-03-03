@@ -2,14 +2,11 @@
 
 namespace App\Http\Livewire\Order;
 
-use Exception;
 use Livewire\Component;
+use App\Facades\USPSFacade;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
-use App\Models\ShippingService;
-use Illuminate\Support\Facades\Http;
-use App\Repositories\UPSLabelRepository;
-use App\Repositories\USPSLabelRepository;
+use App\Repositories\DomesticLabelRepository;
 
 class UsLabelForm extends Component
 {
@@ -19,11 +16,9 @@ class UsLabelForm extends Component
     public $usServicesErrors;
     public $upsError;
     public $uspsError;
+    public $fedexError;
     public $hasRates = false;
     public $usRates = [];
-    public $api_url;
-    public $email;
-    public $password;
 
     public $selectedService;
     public $firstName;
@@ -32,6 +27,7 @@ class UsLabelForm extends Component
     public $senderAddress;
     public $senderCity;
     public $senderZipCode;
+    public $senderPhone;
     public $pickupType = false;
     public $pickupDate;
     public $earliestPickupTime;
@@ -51,6 +47,7 @@ class UsLabelForm extends Component
         'senderAddress' => 'required',
         'senderCity' => 'required',
         'senderZipCode' => 'required',
+        'senderPhone' => 'required|max:12',
         'pickupType' => 'required',
         'pickupDate' => 'required_if:pickupType,true',
         'earliestPickupTime' => 'required_if:pickupType,true',
@@ -65,7 +62,9 @@ class UsLabelForm extends Component
         $this->usShippingServices = $usShippingServices;
         $this->usServicesErrors = $errors;
 
-        $this->setUSPSAddressApiCredentials();
+        if ($this->order) {
+            $this->senderPhone = $this->order->user->phone;
+        }
     }
 
     public function render()
@@ -75,7 +74,6 @@ class UsLabelForm extends Component
 
     public function updatedsenderState()
     {
-        
         $this->validateUSAddress();
     }
 
@@ -89,6 +87,11 @@ class UsLabelForm extends Component
         $this->validateUSAddress();
     }
 
+    public function updatedsenderPhone()
+    {
+        $this->validate();
+    }
+
     private function validateUSAddress()
     {
         $this->validate([
@@ -97,79 +100,63 @@ class UsLabelForm extends Component
             'senderCity' => 'required|min:4',
         ]);
 
-        $this->callForUSPSAddressApi();
-    }
-
-    private function callForUSPSAddressApi()
-    {
-        $data = $this->makeRequestBodyForAddressValidation();
-
-        try {
-
-            $response = Http::withBasicAuth($this->email, $this->password)->post($this->api_url, $data);
-            
-            if($response->status() == 200) {
-                $this->senderZipCode = $response->json()['zip5'];
-                $this->zipCodeResponse = true;
-                $this->zipCodeResponseMessage = 'according to your given address your zipcode is: '.$this->senderZipCode;
-                $this->zipCodeClass = 'text-success';
-            }
-
-            if($response->status() != 200) {
-                $this->zipCodeResponse = true;
-                $this->zipCodeResponseMessage = $response->json()['message'];
-                $this->zipCodeClass = 'text-danger';
-            }
-        } catch (Exception $e) {
-            $this->zipCodeResponse = true;
-            $this->zipCodeResponseMessage = $e->getMessage();
-            $this->zipCodeClass = 'text-danger';
-        }
-    }
-
-    private function makeRequestBodyForAddressValidation()
-    {
-        $data = [
-            'company_name' => 'Herco',
-            'line1' => $this->senderAddress,
-            'state_province' => $this->senderState,
+        $request = new Request([
+            'state' => $this->senderState,
+            'address' => $this->senderAddress,
             'city' => $this->senderCity,
-            'postal_code' => '',
-            'country_code' => 'US'
-        ];
+        ]);
 
-        return $data;
+        $response = $this->callForUSPSAddressApi($request);
+        
+        if ($response['success'] == true) {
+            $this->senderZipCode = $response['zipcode'];
+            $this->zipCodeResponse = true;
+            $this->zipCodeResponseMessage = 'according to your given address your zipcode is: '.$this->senderZipCode;
+            $this->zipCodeClass = 'text-success';
+            return true;
+        }
+
+        $this->senderZipCode = '';
+        $this->zipCodeResponse = true;
+        $this->zipCodeResponseMessage = $response['message'];
+        $this->zipCodeClass = 'text-danger';
     }
 
-    private function setUSPSAddressApiCredentials()
+    private function callForUSPSAddressApi($request)
     {
-        $this->api_url = 'https://api.myibservices.com/v1/address/validate';
-        $this->email = config('usps.email');           
-        $this->password = config('usps.password');
+        return USPSFacade::validateAddress($request);
     }
 
-    public function getRates(UPSLabelRepository $upsLabelRepository, USPSLabelRepository $uspsLabelRepository)
+    public function getRates(DomesticLabelRepository $domesticLabelRepostory)
     {
         $this->validate();
         $this->usRates = [];
         
         if ($this->usShippingServices)
         {
-            $this->usShippingServices->each(function ($shippingService, $key) use ($upsLabelRepository, $uspsLabelRepository) {
-                if ($shippingService['service_sub_class'] == ShippingService::UPS_GROUND) {
-                    $this->getUPSRates($shippingService['service_sub_class'], $upsLabelRepository);
-                }
+            $domesticLabelRepostory->handle();
+            $this->usRates = $domesticLabelRepostory->getRatesForDomesticServices($this->createRequest(), $this->usShippingServices);
+            
+            $this->uspsError = $domesticLabelRepostory->getError();
+            $this->upsError = $domesticLabelRepostory->getError();
 
-                if ($shippingService['service_sub_class'] == ShippingService::USPS_PRIORITY
-                    || $shippingService['service_sub_class'] == ShippingService::USPS_FIRSTCLASS) 
-                {
-                    $this->getUSPSRates($shippingService['service_sub_class'], $uspsLabelRepository);
-                }
-            });
+            $this->excludeShippingServices();
         }    
     }
 
-    public function getLabel(UPSLabelRepository $upsLabelRepository, USPSLabelRepository $uspsLabelRepository)
+    private function excludeShippingServices()
+    {
+        $this->usShippingServices = $this->usShippingServices->filter(function ($service) {
+            foreach ($this->usRates as $rate) {
+                if($rate['service_code'] == $service['service_sub_class'])
+                {
+                    return true;
+                }
+            }
+        });
+    }
+
+    public function getLabel(DomesticLabelRepository $domesticLabelRepostory)
     {
         $this->validate();
 
@@ -178,74 +165,24 @@ class UsLabelForm extends Component
         }
 
         $this->getCostOfSelectedService();
-        if ($this->selectedService == ShippingService::UPS_GROUND) 
+        $request = $this->createRequest();
+        $request->merge([
+            'service' => $this->selectedService,
+            'total_price' => $this->selectedServiceCost,
+        ]);
+
+        $domesticLabelRepostory->handle();
+        if($domesticLabelRepostory->getDomesticLabel($request, $this->order))
         {
-            return $this->getUPSLabel($upsLabelRepository);
-        }
-
-        $this->getUSPSLabel($uspsLabelRepository);
-        
-    }
-
-    private function getUPSRates($service, $upsLabelRepository)
-    {
-        $request = $this->createRequest($service);
-
-        $request->merge(['pickup' => $this->pickupType]);
-
-        $upsRateResponse = $upsLabelRepository->getRates($request);
-        if ($upsRateResponse['success'] == true) {
-          return array_push($this->usRates, ['service' => 'UPS Ground', 'service_code' => $service, 'cost' => $upsRateResponse['total_amount']]);
-        }
-
-        $this->upsError = $upsRateResponse['message'];
-    }
-
-    private function getUSPSRates($service, $uspsLabelRepository)
-    {
-        $uspsRateResponse = $uspsLabelRepository->getRates($this->createRequest($service));
-        if ($uspsRateResponse['success'] == true) {
-            return array_push($this->usRates, ['service' => ($service == ShippingService::USPS_PRIORITY) ? 'USPS Priority' : 'USPS FirstClass', 'service_code' => $service, 'cost' => $uspsRateResponse['total_amount']]);
-        }
-
-        $this->uspsError = $uspsRateResponse['message'];
-    }
-
-    private function getUPSLabel($upsLabelRepository)
-    {
-        $request = $this->createRequest($this->selectedService);
-        $request->merge(['total_price' => $this->selectedServiceCost]);
-
-        $request = ($this->pickupType == true) ? $request->merge(['pickup' => $this->pickupType]) : $request;
-        
-        $upsLabelRepository->buyLabel($request, $this->order);
-
-        $this->upsError = $upsLabelRepository->getUPSErrors();
-        
-        if (!$this->upsError) {
             return redirect()->route('admin.order.us-label.index', $this->order->id);
         }
 
-        return false;
+        $this->uspsError = $domesticLabelRepostory->getError();
+        $this->upsError = $domesticLabelRepostory->getError();
+        $this->fedexError = $domesticLabelRepostory->getError();
     }
 
-    private function getUSPSLabel($uspsLabelRepository)
-    {
-        $request = $this->createRequest($this->selectedService);
-        $request->merge(['total_price' => $this->selectedServiceCost]);
-        
-        $uspsLabelRepository->buyLabel($request, $this->order);
-
-        $this->uspsError = $uspsLabelRepository->getUSPSErrors();
-
-        if ($this->uspsError == null) {
-            return redirect()->route('admin.order.us-label.index', $this->order->id);
-        }
-
-        return false;
-    }
-
-    private function createRequest($servcie)
+    private function createRequest()
     {
        return new Request([
             'first_name' => $this->firstName,
@@ -254,8 +191,9 @@ class UsLabelForm extends Component
             'sender_address' => $this->senderAddress,
             'sender_city' => $this->senderCity,
             'sender_zipcode' => $this->senderZipCode,
-            'service' => $servcie,
+            'sender_phone' => $this->senderPhone,
             'order_id' => $this->order->id,
+            'pickupShipment' => ($this->pickupType == 'true') ? true : false,
             'pickup_date' => $this->pickupDate,
             'earliest_pickup_time' => $this->earliestPickupTime,
             'latest_pickup_time' => $this->latestPickupTime,
