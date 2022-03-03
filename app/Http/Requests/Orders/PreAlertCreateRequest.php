@@ -28,24 +28,7 @@ class PreAlertCreateRequest extends FormRequest
         $rules = [
             'merchant' => 'required',
             'carrier' => 'required',
-            'tracking_id' => [
-                'required',
-                Rule::unique('orders')->where(function ($query) {
-                    return $query->where([
-                        ['tracking_id', $this->tracking_id],
-                        ['user_id', auth()->user()->id],
-                    ]);
-                }),
-            ],
-            'customer_reference' => [
-                'required',
-                Rule::unique('orders')->where(function ($query) {
-                    return $query->where([
-                        ['customer_reference', $this->customer_reference],
-                        ['user_id', auth()->user()->id],
-                    ]);
-                }),
-            ],
+            'tracking_id' => 'required',
             'order_date' => 'required|before:tomorrow',
         ];
 
