@@ -41,8 +41,6 @@ class RatesCalculator
         $this->shippingService = $service;
 
         $this->recipient = $order->recipient;
-        
-        $this->setVolumetricDiscount();
 
         if($this->recipient->commune_id != null)
         {
@@ -57,16 +55,6 @@ class RatesCalculator
         $this->weight = $calculateOnVolumeMetricWeight ? $this->calculateWeight(): $this->originalWeight;
     }
     
-    private function setVolumetricDiscount()
-    {
-        $volumetricDiscount = setting('volumetric_discount', null, optional($this->order)->user->id);
-        if ($volumetricDiscount) {
-            $discountPercentage = setting('discount_percentage', null, optional($this->order)->user->id);
-            $this->discountPercentage = ($discountPercentage) ? $discountPercentage/100 : 0;
-        }
-
-        return true;
-    }
 
     private function initializeDims()
     {
@@ -91,18 +79,11 @@ class RatesCalculator
     {
         $volumnWeight = WeightCalculator::getVolumnWeight($this->length, $this->width, $this->height);
 
-        if ($this->discountPercentage && $this->discountPercentage > 0) 
+        if ($this->order->weight_discount) 
         {
-            if ($this->discountPercentage == 1) {
-                return $this->originalWeight;
-            }
-
-            if ($volumnWeight > $this->originalWeight) {
-                return round($volumnWeight - ($volumnWeight * $this->discountPercentage), 2);
-            }
-
-           return $this->originalWeight;
+            return round($volumnWeight - $this->order->weight_discount, 2);
         }
+
         return $volumnWeight > $this->originalWeight ? $volumnWeight : $this->originalWeight;
     }
 
