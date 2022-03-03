@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api\Parcel;
 
+use App\Models\Order;
 use App\Rules\NcmValidator;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Http\FormRequest;
@@ -28,13 +29,22 @@ class CreateRequest extends FormRequest
      */
     public function rules(Request $request)
     {
+        $order = Order::where([
+                    ['user_id', auth()->user()->id],
+                    ['tracking_id', $request->parcel['tracking_id']]
+                ])
+                ->orWhere([
+                    ['user_id', auth()->user()->id],
+                    ['customer_reference', $request->parcel['customer_reference']]
+                ])
+                ->first();
         
         $rules = [
             "parcel.service_id" => "required|exists:shipping_services,id",
             "parcel.merchant" => "required",
             "parcel.carrier" => "required",
-            "parcel.tracking_id" => "sometimes|unique:orders,tracking_id",
-            "parcel.customer_reference" => "unique:orders,customer_reference",
+            'parcel.tracking_id' => 'required',
+            'parcel.customer_reference' => 'required',
             "parcel.measurement_unit" => "required|in:kg/cm,lbs/in",
             
             "parcel.length" => "required|numeric|gt:0",
@@ -74,6 +84,11 @@ class CreateRequest extends FormRequest
             "products.*.is_perfume" => "required|in:0,1",
             "products.*.is_flameable" => "required|in:0,1",
         ];
+
+        if ($order) {
+            $rules['parcel.tracking_id'] = 'required|unique:orders,tracking_id';
+            $rules['parcel.customer_reference'] = 'required|unique:orders,customer_reference';
+        }
 
         if(optional($request->parcel)['measurement_unit'] == 'kg/cm'){
             $rules["parcel.weight"] = "required|numeric|gt:0|max:30";
