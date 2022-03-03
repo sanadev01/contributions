@@ -6,31 +6,135 @@ use SoapClient;
 
 class CorreosChileService
 {
-    protected $wsdlUrl;
+    protected $createShipmentUrl;
+    protected $addressValidationUrl;
+    protected $getRegionsUrl;
+    protected $getCommunesUrl;
     protected $usuario;
     protected $contrasena;
     protected $codigoAdmision;
     protected $clienteRemitente;
 
-    public function __construct($wsdlUrl, $usuario, $contrasena, $codigoAdmision, $clienteRemitente)
+    public function __construct($createShipmentUrl, $addressValidationUrl, $getRegionsUrl, $getCommunesUrl, $usuario, $contrasena, $codigoAdmision, $clienteRemitente)
     {
-        $this->wsdlUrl = $wsdlUrl;
+        $this->createShipmentUrl = $createShipmentUrl;
+        $this->addressValidationUrl = $addressValidationUrl;
+        $this->getRegionsUrl = $getRegionsUrl;
+        $this->getCommunesUrl = $getCommunesUrl;
         $this->usuario = $usuario;
         $this->contrasena = $contrasena;
         $this->codigoAdmision = $codigoAdmision;
         $this->clienteRemitente = $clienteRemitente;
     }
 
-    public function generateLabel($order, $serviceType)
+    public function validateAddress($request)
     {
-        $request_body = $this->make_body_attributes($order, $serviceType);
-        
-        $correos_chile_api_response = $this->AdmitShipment($request_body);
-        
-        return $correos_chile_api_response;
+       return $this->apiCallForAddressValidation($request->coummne, $request->address);
     }
 
-    public function make_body_attributes($order, $serviceType)
+    private function apiCallForAddressValidation($commune, $address)
+    {
+        $direction = '1;'.$address.';'.$commune;
+
+        try
+        {
+            $options = array(
+                'soap_version' => SOAP_1_1,
+                'exceptions' => true,
+                'trace' => 1,
+                'connection_timeout' => 180,
+                'cache_wsdl' => WSDL_CACHE_MEMORY,
+            );
+
+            $client = new SoapClient($this->addressValidationUrl, $options);
+            $result = $client->__soapCall('Normalizar', array(
+                'Normalizar' => array(
+                    'usuario' => 'internacional',
+                    'password' => 'QRxYTu#v',
+                    'direccion' => trim($direction),
+                )), null, null);
+            return (Array)[
+                        'success' => true,
+                        'message' => 'Address Validated',
+                        'data'    => $result->NormalizarResult,
+                    ];
+        }
+        catch (Exception $e) {
+            return (Array)[
+                'success' => false,
+                'message' => 'According to Correos Chile Your Address or House No is Inavalid',
+            ];
+        }
+    }
+
+    public function getAllRegions()
+    {
+        return $this->apiCallTogetAllRegions();
+    }
+
+    private function apiCallTogetAllRegions()
+    {
+        $client = new SoapClient($this->getRegionsUrl, array('trace' => 1, 'exception' => 0));
+        try
+        {
+            $result = $client->__soapCall('listarTodasLasRegiones', array(
+                'listarTodasLasRegiones' => array(
+                    'usuario' => $this->usuario,
+                    'contrasena' => $this->contrasena
+                )), null, null);
+                
+            return (Array)[
+                'success' => true,
+                'message' => "Regions Fetched",
+                'data'    => $result->listarTodasLasRegionesResult->RegionTO,
+            ];
+        } 
+        catch (Exception $e) 
+        {
+            return (Array)[
+                'success' => false,
+                'message' => 'could not Load Regions plaease reload',
+            ];
+        }
+    }
+
+    public function getchileCommunes($request)
+    {
+        return $this->apiCallTogetChileCommunesByRegion($request->region_code);
+    }
+
+    private function apiCallTogetChileCommunesByRegion($region_code)
+    {
+        try 
+        {
+            $client = new SoapClient($this->getCommunesUrl, array('trace' => 1, 'exception' => 0));
+            $result = $client->__soapCall('listarComunasSegunRegion', array(
+                'listarComunasSegunRegion' => array(
+                    'usuario' => $this->usuario,
+                    'contrasena' => $this->contrasena,
+                    'codigoRegion' => $region_code
+            )), null, null);
+            return (Array)[
+                'success' => true,
+                'message' => "Communes Fetched",
+                'data'    => $result->listarComunasSegunRegionResult->ComunaTO,
+            ];
+        }
+        catch (Exception $e) 
+        {
+            return (Array)[
+                'success' => false,
+                'message' => 'could not load Communes, please select region',
+            ];
+        }
+    }
+
+    public function generateLabel($order, $serviceType)
+    {
+        return $this->createShipment($this->makeRequestBodyForLabel($order, $serviceType));
+    }
+
+    private function makeRequestBodyForLabel($order, $serviceType)
     {
         
         $orderArray = [
@@ -98,7 +202,7 @@ class CorreosChileService
         return $description;
     }
 
-    function AdmitShipment($request_body)
+    private function createShipment($request_body)
     {
         try
         {
@@ -108,7 +212,7 @@ class CorreosChileService
                     'user_agent' => 'PHPSoapClient'
                 )
             );
-            $client = new SoapClient($this->wsdlUrl, array('trace' => 1, 'exception' => 0, 'stream_context' => stream_context_create($opts)));
+            $client = new SoapClient($this->createShipmentUrl, array('trace' => 1, 'exception' => 0, 'stream_context' => stream_context_create($opts)));
             $result = $client->__soapCall('admitirEnvio', array(
                 'admitirEnvio' => array(
                     'usuario' => $this->usuario,

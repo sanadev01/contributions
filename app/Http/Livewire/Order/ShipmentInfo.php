@@ -2,7 +2,6 @@
 
 namespace App\Http\Livewire\Order;
 
-use App\Models\Order;
 use Livewire\Component;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Calculators\WeightCalculator;
@@ -25,8 +24,9 @@ class ShipmentInfo extends Component
     public $currentWeightUnit;
 
     public $discountPercentage;
-
-    public function mount(Order $order = null)
+    public $totalDiscountedWeight;
+    
+    public function mount($order = null)
     {
         $this->order = optional($order)->toArray();
         $this->setVolumetricDiscount();
@@ -41,26 +41,31 @@ class ShipmentInfo extends Component
     public function updatedUnit()
     {
         $this->calculateOtherUnits();
+        $this->emit('updatedUnit',$this->unit);
     }
 
     public function updatedWeight()
     {
         $this->calculateOtherUnits();
+        $this->emit('updatedWeight',$this->weight);
     }
 
     public function updatedLength()
     {
         $this->calculateOtherUnits();
+        $this->emit('updatedLength',$this->length);
     }
 
     public function updatedWidth()
     {
         $this->calculateOtherUnits();
+        $this->emit('updatedWidth',$this->width);
     }
 
     public function updatedHeight()
     {
         $this->calculateOtherUnits();
+        $this->emit('updatedHeight',$this->height);
     }
 
     private function fillData()
@@ -121,6 +126,8 @@ class ShipmentInfo extends Component
                 }
             }
         }
+
+        $this->emit('volumeWeight',$this->volumeWeight);
     }
 
     private function setVolumetricDiscount()
@@ -138,6 +145,8 @@ class ShipmentInfo extends Component
 
     private function calculateDiscountedWeight()
     {
+        $volumeWeightBeforeDiscount = $this->volumeWeight;
         $this->volumeWeight = round($this->volumeWeight - ($this->volumeWeight * $this->discountPercentage), 2);
+        $this->totalDiscountedWeight = $volumeWeightBeforeDiscount - $this->volumeWeight;
     }
 }

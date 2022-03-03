@@ -38,13 +38,13 @@ class USPSAccrualRateExport extends AbstractExportService
             $this->setCellValue('A'.$row, $order[0]->user->pobox_number);
             $this->setCellValue('B'.$row, $this->getPakagesWarehouse($order));
             $this->setCellValue('C'.$row, $order[0]->us_api_tracking_code);
-            $this->setCellValue('D'.$row, $order[0]->getUspsResponse()->total_amount);
+            $this->setCellValue('D'.$row, $order[0]->getUSLabelResponse()->total_amount);
             $this->setCellValue('E'.$row, $order[0]->us_api_cost);
-            $this->setCellValue('F'.$row, $order[0]->getUspsResponse()->usps->mail_class);
+            $this->setCellValue('F'.$row, $order[0]->getUSLabelResponse()->usps->mail_class);
             $this->setCellValue('G'.$row, $order->count());
-            $this->setCellValue('H'.$row, $order[0]->getUspsResponse()->weight.' '.$order[0]->getUspsResponse()->weight_unit);
-            $this->setCellValue('I'.$row, $order[0]->getUspsResponse()->from_address->postal_code);
-            $this->setCellValue('J'.$row, $order[0]->getUspsResponse()->to_address->postal_code);
+            $this->setCellValue('H'.$row, $order[0]->getUSLabelResponse()->weight.' '.$order[0]->getUSLabelResponse()->weight_unit);
+            $this->setCellValue('I'.$row, $order[0]->getUSLabelResponse()->from_address->postal_code);
+            $this->setCellValue('J'.$row, $order[0]->getUSLabelResponse()->to_address->postal_code);
             
             $row++;
         }

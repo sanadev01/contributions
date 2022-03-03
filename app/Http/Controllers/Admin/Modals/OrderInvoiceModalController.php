@@ -16,10 +16,15 @@ class OrderInvoiceModalController extends Controller
         {
            $services = $this->calculateInsurance($order);
         }
+
+        $volumeWeight = ($order->isWeightInKg()) ? $order->getWeight('kg') : $order->getWeight('lbs');
+
+        $appliedVolumeWeight = ($order->weight_discount) ? $this->calculateDiscountedWeight($volumeWeight, $order->weight_discount) : null;
+        
         if(!Auth::user()->isActive()){
             return redirect()->route('admin.modals.user.suspended');
         }
-        return view('admin.modals.orders.invoice',compact('order', 'services'));
+        return view('admin.modals.orders.invoice',compact('order', 'services', 'appliedVolumeWeight'));
     }
 
     private function calculateInsurance($order)
@@ -40,4 +45,11 @@ class OrderInvoiceModalController extends Controller
 
         return $order->services;
     }
+
+    private function calculateDiscountedWeight($volumeWeight, $discountWeight)
+    {
+        return $volumeWeight - $discountWeight;
+    }
+
+    
 }
