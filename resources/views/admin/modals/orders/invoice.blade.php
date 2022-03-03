@@ -95,14 +95,23 @@
                                 <th>@lang('orders.invoice.width')</th>
                                 <th>@lang('orders.invoice.height')</th>
                                 <th>@lang('orders.invoice.weight')</th>
-                                <th colspan="2">@lang('orders.invoice.unit')</th>
+                                <th @if (!$appliedVolumeWeight) colspan="2" @endif>@lang('orders.invoice.unit')</th>
+                                @if ($appliedVolumeWeight)
+                                <th>@lang('orders.invoice.Discount')</th>
+                                @endif
                             </tr>
                             <tr>
                                 <td>{{ $order->length }} {{ $order->isMeasurmentUnitCm() ? 'cm' : 'in' }}</td>
                                 <td>{{ $order->width }} {{ $order->isMeasurmentUnitCm() ? 'cm' : 'in' }}</td>
                                 <td>{{ $order->height }} {{ $order->isMeasurmentUnitCm() ? 'cm' : 'in' }}</td>
                                 <td>{{ $order->getWeight('kg') }} kg ( {{ $order->getWeight('lbs') }} lbs ) </td>
-                                <td colspan="2">{{ $order->measurement_unit }} </td>
+                                <td @if (!$appliedVolumeWeight) colspan="2" @endif>{{ $order->measurement_unit }} </td>
+                                @if ($appliedVolumeWeight)
+                                <td>
+                                    discount : <span class="text-primary font-weight-bold">{{ $order->weight_discount }}</span>
+                                    applied weight : <span class="text-primary font-weight-bold">{{ $appliedVolumeWeight }} {{ $order->measurement_unit }} </span>
+                                </td>
+                                @endif
                             </tr>                                
                         </tbody>
                     </table>

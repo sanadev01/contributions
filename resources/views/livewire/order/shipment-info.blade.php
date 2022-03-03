@@ -17,6 +17,7 @@
                     @enderror
                 </div>
             </div>
+            <input type="hidden" name="weight_discount" value="{{ $totalDiscountedWeight }}">
         </div>
         <div class="form-group col-12 col-sm-6">
             <div class="controls">

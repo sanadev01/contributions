@@ -25,6 +25,7 @@ class ShipmentInfo extends Component
     public $currentWeightUnit;
 
     public $discountPercentage;
+    public $totalDiscountedWeight;
 
     public function mount(Order $order = null)
     {
@@ -138,6 +139,8 @@ class ShipmentInfo extends Component
 
     private function calculateDiscountedWeight()
     {
+        $volumeWeightBeforeDiscount = $this->volumeWeight;
         $this->volumeWeight = round($this->volumeWeight - ($this->volumeWeight * $this->discountPercentage), 2);
+        $this->totalDiscountedWeight = $volumeWeightBeforeDiscount - $this->volumeWeight;
     }
 }
