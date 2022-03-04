@@ -76,13 +76,20 @@ class RatesCalculator
      */
     private function calculateWeight()
     {
-        $volumnWeight = WeightCalculator::getVolumnWeight($this->length, $this->width, $this->height);
-
         if ($this->order->weight_discount) 
         {
-            return round($volumnWeight - $this->order->weight_discount, 2);
+            $unit = ($this->order->measurement_unit == 'lbs/in') ? 'in' : 'cm';
+            
+            $volumnWeight = WeightCalculator::getVolumnWeight($this->order->length, $this->order->width, $this->order->height, $unit);
+            $volumnWeight = round($volumnWeight - $this->order->weight_discount, 2);
+            
+            $volumnWeight = ($this->order->measurement_unit == 'lbs/in') ? UnitsConverter::poundToKg($volumnWeight) : $volumnWeight;
+            
+            return $volumnWeight;
         }
-        
+
+        $volumnWeight = WeightCalculator::getVolumnWeight($this->length, $this->width, $this->height);
+
         return $volumnWeight > $this->originalWeight ? $volumnWeight : $this->originalWeight;
     }
 
@@ -199,7 +206,7 @@ class RatesCalculator
                 return false;
             }
             $profitSetting = $this->order->user->profitSettings->where('service_id',$this->shippingService->id)->first();
-            if(!$profitSetting){
+            if(!$profitSetting && !auth()->user()->isAdmin()){
                 return false;
             }
             if ( $this->shippingService->max_weight_allowed < $this->weight ){
