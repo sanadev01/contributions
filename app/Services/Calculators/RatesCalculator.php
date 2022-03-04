@@ -207,7 +207,7 @@ class RatesCalculator
                 return false;
             }
             $profitSetting = $this->order->user->profitSettings->where('service_id',$this->shippingService->id)->first();
-            if(!$profitSetting){
+            if(!$profitSetting && !auth()->user()->isAdmin()){
                 return false;
             }
             if ( $this->shippingService->max_weight_allowed < $this->weight ){
