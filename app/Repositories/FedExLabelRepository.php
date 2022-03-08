@@ -170,7 +170,7 @@ class FedExLabelRepository
         }
         return (Array)[
             'success' => false,
-            'message' => 'server error, could not get rates',
+            'message' => $response->error['errors'][0]['message'] ?? 'Unknown error',
         ]; 
     }
 

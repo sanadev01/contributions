@@ -153,6 +153,8 @@ class DomesticLabelRepository
         if ($fedExRateResponse['success'] == true) {
             return array_push($this->domesticRates, ['service' => 'FedEx Ground', 'service_code' => $service, 'cost' => $fedExRateResponse['total_amount']]);
         }
+
+        $this->error = $fedExRateResponse['message'];
     }
     
     private function callForUSPSAddressApi($request)
