@@ -62,6 +62,7 @@ class PreAlertRepository
             $data[] = 'length';
             $data[] = 'width';
             $data[] = 'height';
+            $data[] = 'weight_discount';
         }
 
         if ( !Auth::user()->isAdmin() ){
@@ -152,6 +153,7 @@ class PreAlertRepository
             $data[] = 'length';
             $data[] = 'width';
             $data[] = 'height';
+            $data[] = 'weight_discount';
 
         }
 

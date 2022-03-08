@@ -295,6 +295,7 @@ return [
         'height' => 'Altura',
         'weight' => 'Peso',
         'unit' => 'Unidad',
+        'Discount' => 'Descuento',
     ],
     'leve' => [
         'Upload Rates' => 'Cargar tarifas',

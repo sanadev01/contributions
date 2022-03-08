@@ -197,9 +197,9 @@ class ParcelController extends Controller
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function show(Order $order)
+    public function show(Order $parcel)
     {
-        //
+        return apiResponse(true,"Get Parcel Data successfully", OrderResource::make($parcel) );
     }
 
     /**

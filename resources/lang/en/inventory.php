@@ -5,4 +5,5 @@
         'Products' => 'Products',
         'Pickup' => 'Pickup',
         'Scan SKU' => 'Scan SKU',
+        'Sales Orders' => 'Sales Orders',
     ];
