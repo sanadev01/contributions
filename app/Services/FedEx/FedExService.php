@@ -18,10 +18,12 @@ class FedExService
     private $getTokenUrl;
     private $getRatesUrl;
     private $createShipmentUrl;
+    private $createPickupUrl;
+    private $cancelPickupUrl;
 
     private $chargableWeight;
 
-    public function __construct($clientId, $clientSecret, $accountNumber, $getTokenUrl, $getRatesUrl, $createShipmentUrl)
+    public function __construct($clientId, $clientSecret, $accountNumber, $getTokenUrl, $getRatesUrl, $createShipmentUrl, $createPickupUrl, $cancelPickupUrl)
     {
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
@@ -29,6 +31,8 @@ class FedExService
         $this->getTokenUrl = $getTokenUrl;
         $this->getRatesUrl = $getRatesUrl;
         $this->createShipmentUrl = $createShipmentUrl;
+        $this->createPickupUrl = $createPickupUrl;
+        $this->cancelPickupUrl = $cancelPickupUrl;
     }
 
     private function getToken()
@@ -70,9 +74,42 @@ class FedExService
         return $this->fedExApiCall($this->createShipmentUrl, $data);
     }
 
+    public function createPickupShipment($request)
+    {
+        return $this->fedExApiCall($this->createPickupUrl, $this->makeRequestBodyForPickup($request));
+    }
+
     public function createShipmentForRecipient($order)
     {
         return $this->fedExApiCall($this->createShipmentUrl, $this->makeShipmentRequestForRecipient($order));
+    }
+
+    private function makeRequestBodyForPickup($request)
+    {
+        return [
+            'associatedAccountNumber' => [
+                'value' => $this->accountNumber
+            ],
+            'originDetail' => [
+                'pickupLocation' => [
+                    'contact' => [
+                        'personName' => $request->first_name . ' ' . $request->last_name,
+                        'phoneNumber' => $request->sender_phone,
+                    ],
+                    'address' => [
+                        'streetLines' => [$request->sender_address],
+                        'city' => $request->sender_city,
+                        'stateOrProvinceCode' => $request->sender_state,
+                        'postalCode' => $request->sender_zipcode,
+                        'countryCode' => 'US',
+                    ],
+                ],
+                'packageLocation' => $request->pickup_location,
+                'readyDateTimestamp' => $request->pickup_date.'T'.$request->earliest_pickup_time.':00Z',
+                'customerCloseTime' => $request->latest_pickup_time.':00',
+            ],
+            'carrierCode' => 'FDXG',
+        ];
     }
 
     private function makeRatesRequestBodyForSender($order, $request)

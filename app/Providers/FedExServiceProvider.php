@@ -24,8 +24,10 @@ class FedExServiceProvider extends ServiceProvider
             $getTokenUrl = config('fedex.testing.getTokenUrl');
             $getRatesUrl = config('fedex.testing.getRatesUrl');
             $createShipmentUrl = config('fedex.testing.createShipmentUrl');
+            $createPickupUrl = config('fedex.testing.createPickupUrl');
+            $cancelPickupUrl = config('fedex.testing.cancelPickupUrl');
            
-            return new FedExService($clientId, $clientSecret, $accountNumber, $getTokenUrl, $getRatesUrl, $createShipmentUrl);
+            return new FedExService($clientId, $clientSecret, $accountNumber, $getTokenUrl, $getRatesUrl, $createShipmentUrl, $createPickupUrl, $cancelPickupUrl);
         });
     }
 

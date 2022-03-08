@@ -139,6 +139,7 @@ class UsLabelForm extends Component
             
             $this->uspsError = $domesticLabelRepostory->getError();
             $this->upsError = $domesticLabelRepostory->getError();
+            $this->fedexError = $domesticLabelRepostory->getError();
 
             $this->excludeShippingServices();
         }    
@@ -197,6 +198,7 @@ class UsLabelForm extends Component
             'pickup_date' => $this->pickupDate,
             'earliest_pickup_time' => $this->earliestPickupTime,
             'latest_pickup_time' => $this->latestPickupTime,
+            'pickup_location' => $this->pickupLocation,
         ]);
     }
 
