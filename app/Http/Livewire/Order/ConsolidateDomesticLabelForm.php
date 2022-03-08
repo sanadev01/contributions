@@ -206,6 +206,8 @@ class ConsolidateDomesticLabelForm extends Component
         ]);
 
         $this->usRates = $domesticLabelRepostory->getRatesForDomesticServices($request, $this->usShippingServices);
+        $this->fedexError = $domesticLabelRepostory->getError();
+        
         $this->excludeShippingServices();
     }
 
