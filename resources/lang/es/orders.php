@@ -172,6 +172,7 @@ return [
         'buy-domestic-label' => 'Buy Domestic Etiqueta',
         'buy-usps-label' => 'Comprar Etiqueta USPS',
         'print-usps-label' => 'Imprimir Etiqueta USPS',
+        'view-products' => 'Ver productos',
     ],
     'create' => [
         'shipment-and-destination' => 'Envío & Destino',

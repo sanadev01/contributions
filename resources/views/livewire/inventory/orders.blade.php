@@ -48,6 +48,7 @@
                         <th><a href="#" wire:click.prevent="sortBy('gross_total')">@lang('orders.amount')</a></th>
                         <th>@lang('orders.status')</th>
                         <th>@lang('orders.payment-status')</th>
+                        <th class="no-print">@lang('orders.actions.actions')</th>
                     </tr>
                     <tr class="no-print">
                         <th>
@@ -143,6 +144,11 @@
                             @else
                                 <i class="feather icon-x  @if( $order->user->hasRole('retailer') &&  !$order->isPaid()) text-white @else text-danger @endif"></i>
                             @endif
+                        </td>
+                        <td>
+                            <button data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.inventory.order.products',$order) }}" class="btn btn-primary">
+                                <i class="feather icon-list"></i> @lang('orders.actions.view-products')
+                            </button>
                         </td>
                     </tr>
                     @empty

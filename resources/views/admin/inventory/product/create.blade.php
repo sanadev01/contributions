@@ -110,6 +110,29 @@
 
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
+                                <label>Weight<span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" name="weight" value="{{ old('weight') }}" placeholder="Enter Product weight" required>
+                                @error('weight')
+                                    <div class="help-block text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group col-12 col-sm-6 col-md-4">
+                            <div class="controls">
+                                <label>Measuring Unit<span class="text-danger">*</span></label>
+                                <select name="measurement_unit" class="form-control" required>
+                                    <option {{ old('measurement_unit') == 'kg/cm' ? 'selected' : '' }} value="kg/cm">kg/cm</option>
+                                    <option {{ old('measurement_unit') == 'lbs/in' ? 'selected' : '' }} value="lbs/in">lbs/in</option>
+                                </select>
+                                @error('unit')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group col-12 col-sm-6 col-md-4">
+                            <div class="controls">
                                 <label>@lang('Brand')<span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="brand" value="{{ old('brand') }}" placeholder="Enter Product Brand" required>
                                 @error('brand')

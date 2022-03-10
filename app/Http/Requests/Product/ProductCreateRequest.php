@@ -44,6 +44,8 @@ class ProductCreateRequest extends FormRequest
             'store_day' => 'required',
             'location' => 'required',
             'sh_code' => 'required',
+            'weight' => 'required|numeric|gt:0',
+            'measurement_unit' => 'required|in:kg/cm,lbs/in',
         ];
 
         if ($this->method() == 'POST') {

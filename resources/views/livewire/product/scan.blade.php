@@ -26,6 +26,7 @@
             <th>Product</th>
             <th>Quantity</th>
             <th>Price</th>
+            <th>Weight (Kg)</th>
             <th>SKU</th>
             <th>Action</th>
         </tr>
@@ -35,6 +36,7 @@
                 <td>{{ $product['name'] }}</td>
                 <td>{{ $product['quantity'] }}</td>
                 <td>{{ $product['total_price'] }}</td>
+                <td>{{ $product['total_weight'] }}</td>
                 <td>{{ $product['sku'] }}</td>
                 <td>
                     <button wire:click="removeProduct({{ $product['id'] }})" class="btn btn-danger">Remove</button>

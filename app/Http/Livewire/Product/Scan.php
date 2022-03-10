@@ -3,8 +3,9 @@
 namespace App\Http\Livewire\Product;
 
 use Livewire\Component;
-use App\Repositories\Inventory\ProductRepository;
 use Illuminate\Http\Request;
+use App\Services\Converters\UnitsConverter;
+use App\Repositories\Inventory\ProductRepository;
 
 class Scan extends Component
 {
@@ -78,6 +79,8 @@ class Scan extends Component
                 'total_price' => $product->price,
                 'quantity' => 1,
                 'total_quantity' => $product->quantity,
+                'weight' => ($product->measurement_unit == 'kg/cm') ? $product->weight : UnitsConverter::poundToKg($product->weight),
+                'total_weight' => ($product->measurement_unit == 'kg/cm') ? $product->weight : UnitsConverter::poundToKg($product->weight),
             ];
             array_push($this->scannedProducts, $productArr);
 
@@ -98,6 +101,7 @@ class Scan extends Component
             if ($this->scannedProducts[$index]['quantity'] < $this->scannedProducts[$index]['total_quantity']) {
                 $this->scannedProducts[$index]['quantity'] += 1;
                 $this->scannedProducts[$index]['total_price'] = $this->scannedProducts[$index]['price'] * $this->scannedProducts[$index]['quantity'];
+                $this->scannedProducts[$index]['total_weight'] += $this->scannedProducts[$index]['weight'];
 
                 $this->search = '';
                 $this->productError = '';
