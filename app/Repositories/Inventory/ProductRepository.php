@@ -201,7 +201,7 @@ class ProductRepository
 
             $order->update([
                 'warehouse_number' => "HD-{$order->id}",
-                'weight' => number_format($order->weight + ($order->weight * 0.1), 2),
+                'weight' => number_format($order->weight + ($order->weight * Product::WEIGHT_PERCENTAGE), 2),
             ]);
 
             if ($productOrder->quantity > 0) {
@@ -335,7 +335,7 @@ class ProductRepository
             $weight += $item['total_weight'];
         }
 
-        $totalWeight = $weight + $weight * 0.1;
+        $totalWeight = $weight + ($weight * Product::WEIGHT_PERCENTAGE);
 
         return number_format($totalWeight, 2);
     }

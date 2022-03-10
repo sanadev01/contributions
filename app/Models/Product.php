@@ -8,6 +8,8 @@ use App\Services\Converters\UnitsConverter;
 
 class Product extends Model
 {
+    const WEIGHT_PERCENTAGE = 0.1;
+
     protected $fillable = [
         'user_id',
         'name',
