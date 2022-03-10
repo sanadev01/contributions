@@ -179,6 +179,7 @@ return [
         'print-ups-label' => 'Imprimir Etiqueta UPS',
         'cancel-ups-pickup' => 'Cancelar Pickup',
         'print-fedex-label' => 'Imprimir Etiqueta Fedex',
+        'view-products' => 'Ver produtos',
     ],
     'create' => [
         'shipment-and-destination' => 'Criação do envio',

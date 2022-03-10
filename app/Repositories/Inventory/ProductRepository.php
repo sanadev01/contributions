@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Admin\InventoryOrderPlaced;
+use App\Services\Converters\UnitsConverter;
 use App\Services\Excel\Import\ProductImportService;
 
 class ProductRepository
@@ -86,6 +87,8 @@ class ProductRepository
         $product->store_day      = $request->store_day;
         $product->location       = $request->location;
         $product->sh_code        = $request->sh_code;
+        $product->weight         = $request->weight;
+        $product->measurement_unit = $request->measurement_unit;
         
         $product->save();
 
@@ -122,6 +125,8 @@ class ProductRepository
             'store_day' => $request->store_day,
             'location' => $request->location,
             'sh_code' => $request->sh_code,
+            'weight' => $request->weight,
+            'measurement_unit' => $request->measurement_unit,
         ]);
         
         if ( $request->hasFile('invoiceFile') ){
@@ -185,17 +190,25 @@ class ProductRepository
                 'customer_reference' => $productOrder->sh_code,
                 'carrier' => $productOrder->order,
                 'tracking_id' => $productOrder->description,
+                'weight' => ($productOrder->measurement_unit == 'kg/cm') ? $productOrder->weight : UnitsConverter::poundToKg($productOrder->weight),
+                'length' => 5,
+                'width' => 4,
+                'height' => 5,
+                'measurement_unit' => 'kg/cm',
                 'order_date' => now(),
 
             ]);
 
             $order->update([
                 'warehouse_number' => "HD-{$order->id}",
+                'weight' => number_format($order->weight + ($order->weight * 0.1), 2),
             ]);
 
-            $productOrder->update([
-                'quantity' => $productOrder->quantity -1,
-            ]);
+            if ($productOrder->quantity > 0) {
+                $productOrder->update([
+                    'quantity' => $productOrder->quantity -1,
+                ]);
+            }
 
             $order->items()->create([
                 'quantity' => 1,
@@ -232,6 +245,11 @@ class ProductRepository
                 'customer_reference' => $this->setShCodes($request->order_items),
                 'carrier' => $this->setOrderNumbers($request->order_items),
                 'tracking_id' => $this->setOrderDescriptions($request->order_items),
+                'weight' => $this->setOrderWeights($request->order_items),
+                'length' => 5,
+                'width' => 4,
+                'height' => 5,
+                'measurement_unit' => 'kg/cm',
                 'order_date' => now(),
             ]);
             $order->update([
@@ -308,6 +326,18 @@ class ProductRepository
         }
         return implode(',', $orderDescriptions);
     }
-    
+
+    private function setOrderWeights($items)
+    {
+        $weight = 0;
+
+        foreach ($items as $item) {
+            $weight += $item['total_weight'];
+        }
+
+        $totalWeight = $weight + $weight * 0.1;
+
+        return number_format($totalWeight, 2);
+    }
 
 }

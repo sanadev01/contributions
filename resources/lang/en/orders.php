@@ -181,6 +181,7 @@ return [
         'print-ups-label' => 'Print UPS Label',
         'cancel-ups-pickup' => 'Cancel Pickup',
         'print-fedex-label' => 'Print Fedex Label',
+        'view-products' => 'View Products',
     ],
     'create' => [
         'shipment-and-destination' => 'Shipment & Destination',

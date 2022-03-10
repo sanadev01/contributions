@@ -77,6 +77,7 @@
                                 <td class="danger"></td>
                             </tr>
                             <tr>
+                                <th>Weight</th>
                                 <th>Min Quantity</th>
                                 <th>Max Quantity</th>
                                 <th>Discontinued</th>
@@ -84,6 +85,7 @@
                                 <th>Location</th>
                             </tr>
                             <tr>
+                                <td class="danger">{{ $product->weight }}</td>
                                 <td class="danger">{{ $product->min_quantity }}</td>
                                 <td class="danger">{{ $product->max_quantity }}</td>
                                 <td class="danger">{{ $product->discontinued }}</td>

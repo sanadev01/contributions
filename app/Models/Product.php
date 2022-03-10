@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Database\Eloquent\Model;
+use App\Services\Converters\UnitsConverter;
 
 class Product extends Model
 {
@@ -31,6 +32,8 @@ class Product extends Model
         'store_day',
         'location',
         'sh_code',
+        'weight',
+        'measurement_unit'
     ];
     public function user()
     {
@@ -82,5 +85,10 @@ class Product extends Model
     public function setSkuAttribute($value)
     {
         $this->attributes['sku'] = strtoupper($value);
+    }
+
+    public function getWeightInKg()
+    {
+        return ($this->measurement_unit == 'kg/cm') ? round($this->weight, 2) : UnitsConverter::poundToKg($this->weight);
     }
 }
