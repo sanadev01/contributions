@@ -303,6 +303,8 @@ return [
         'height' => 'Height',
         'weight' => 'Weight',
         'unit' => 'Unit',
+
+        'Discount' => 'Discount',
     ],
     'leve' => [
         'Upload Rates' => 'Upload Rates',

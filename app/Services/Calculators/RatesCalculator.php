@@ -41,8 +41,6 @@ class RatesCalculator
         $this->shippingService = $service;
 
         $this->recipient = $order->recipient;
-        
-        $this->setVolumetricDiscount();
 
         if($this->recipient->commune_id != null)
         {
@@ -55,17 +53,6 @@ class RatesCalculator
         $this->initializeDims();
 
         $this->weight = $calculateOnVolumeMetricWeight ? $this->calculateWeight(): $this->originalWeight;
-    }
-    
-    private function setVolumetricDiscount()
-    {
-        $volumetricDiscount = setting('volumetric_discount', null, optional($this->order)->user->id);
-        if ($volumetricDiscount) {
-            $discountPercentage = setting('discount_percentage', null, optional($this->order)->user->id);
-            $this->discountPercentage = ($discountPercentage) ? $discountPercentage/100 : 0;
-        }
-
-        return true;
     }
 
     private function initializeDims()
@@ -89,20 +76,20 @@ class RatesCalculator
      */
     private function calculateWeight()
     {
+        if ($this->order->weight_discount) 
+        {
+            $unit = ($this->order->measurement_unit == 'lbs/in') ? 'in' : 'cm';
+            
+            $volumnWeight = WeightCalculator::getVolumnWeight($this->order->length, $this->order->width, $this->order->height, $unit);
+            $volumnWeight = round($volumnWeight - $this->order->weight_discount, 2);
+            
+            $volumnWeight = ($this->order->measurement_unit == 'lbs/in') ? UnitsConverter::poundToKg($volumnWeight) : $volumnWeight;
+            
+            return $volumnWeight;
+        }
+
         $volumnWeight = WeightCalculator::getVolumnWeight($this->length, $this->width, $this->height);
 
-        if ($this->discountPercentage && $this->discountPercentage > 0) 
-        {
-            if ($this->discountPercentage == 1) {
-                return $this->originalWeight;
-            }
-
-            if ($volumnWeight > $this->originalWeight) {
-                return round($volumnWeight - ($volumnWeight * $this->discountPercentage), 2);
-            }
-
-            return $this->originalWeight;
-        }
         return $volumnWeight > $this->originalWeight ? $volumnWeight : $this->originalWeight;
     }
 
@@ -219,7 +206,7 @@ class RatesCalculator
                 return false;
             }
             $profitSetting = $this->order->user->profitSettings->where('service_id',$this->shippingService->id)->first();
-            if(!$profitSetting){
+            if(!$profitSetting && !auth()->user()->isAdmin()){
                 return false;
             }
             if ( $this->shippingService->max_weight_allowed < $this->weight ){
