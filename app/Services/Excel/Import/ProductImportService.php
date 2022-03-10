@@ -80,6 +80,8 @@ class ProductImportService extends AbstractImportService
                 'store_day'     => $this->getValue("S{$row}"),
                 'location'      => $this->getValue("T{$row}"),
                 'sh_code'      => $this->getValue("U{$row}"),
+                'weight'       => $this->getValue("V{$row}"),
+                'measurement_unit' => $this->getValue("W{$row}"),
             ]);
             DB::commit();
             return $order;
