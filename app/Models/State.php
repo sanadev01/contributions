@@ -14,6 +14,7 @@ class State extends Model
     protected static $logOnlyDirty = true;
     protected static $submitEmptyLogs = false;
     
+    const FL = 4622;
 
     public function country()
     {

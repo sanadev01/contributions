@@ -1,6 +1,5 @@
 <?php
 
-use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\ProfitPackage;
@@ -8,6 +7,7 @@ use App\Services\StoreIntegrations\Shopify;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -82,6 +82,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('orders.label', OrderLabelController::class)->only('index','store');
             Route::get('order-exports', OrderExportController::class)->name('order.exports');
             Route::get('bulk-action', BulkActionController::class)->name('order.bulk-action');
+            Route::get('consolidate-domestic-label', ConsolidateDomesticLabelController::class)->name('order.consolidate-domestic-label');
             Route::get('order/{order}/us-label', [OrderUSLabelController::class, 'index'])->name('order.us-label.index');
             Route::resource('orders.usps-label', OrderUSPSLabelController::class)->only('index','store');
             Route::resource('orders.ups-label', OrderUPSLabelController::class)->only('index','store');
@@ -155,6 +156,17 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
 
         });
 
+        Route::namespace('Inventory')->as('inventory.')->prefix('inventory')->group(function(){
+            Route::resource('product', ProductController::class);
+            Route::get('product-pickup', [\App\Http\Controllers\Admin\Inventory\ProductController::class, 'pickup'])->name('product.pickup');
+            Route::post('product/status', [\App\Http\Controllers\Admin\Inventory\ProductController::class, 'statusUpdate'])->name('status.update');
+            Route::resource('product-export', ProductExportController::class)->only('index');
+            Route::resource('product-import', ProductImportController::class)->only(['create','store']);
+            Route::resource('product-order', ProductOrderController::class)->only('show');
+            Route::get('inventory-orders', [\App\Http\Controllers\Admin\Inventory\InventoryOrderController::class, 'index'])->name('orders');
+            Route::get('inventory-orders-export', [\App\Http\Controllers\Admin\Inventory\InventoryOrderController::class, 'exportOrders'])->name('orders.export');
+        });
+
         Route::namespace('Affiliate')->as('affiliate.')->prefix('affiliate')->group(function(){
             Route::resource('dashboard', DashboardController::class)->only('index');
             Route::resource('sales-commission', SalesCommisionController::class)->only(['index','create','destroy']);
@@ -189,6 +201,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::get('order/{error}/edit/{edit?}', [\App\Http\Controllers\Admin\Modals\ImportOrderModalController::class,'edit'])->name('order.error.edit');
             Route::get('order/{error}/show', [\App\Http\Controllers\Admin\Modals\ImportOrderModalController::class,'show'])->name('order.error.show');
             Route::get('package/{package}/users', [\App\Http\Controllers\Admin\Rates\ProfitPackageController::class,'packageUsers'])->name('package.users');
+            Route::get('order/{order}/products', \ProductModalController::class)->name('inventory.order.products');
         });
 });
 

@@ -31,6 +31,10 @@
         <input type="hidden" name="command" id="command" value="">
         <input type="hidden" name="data" id="data" value="">
     </form>
+    <form action="{{ route('admin.order.consolidate-domestic-label') }}" method="GET" id="consolidate_domestic_label_actions_form">
+        <input type="hidden" name="command" id="command" value="">
+        <input type="hidden" name="data" id="data" value="">
+    </form>
 </div>
 @endsection
 
@@ -54,6 +58,15 @@
                 $('#bulk_actions_form #command').val('print-label');
                 $('#bulk_actions_form #data').val(JSON.stringify(orderIds));
                 $('#bulk_actions_form').submit();
+            }else if ($(this).val() == 'consolidate-domestic-label'){
+                var orderIds = [];
+                $.each($(".bulk-orders:checked"), function(){
+                    orderIds.push($(this).val());
+                });
+
+                $('#consolidate_domestic_label_actions_form #command').val('consolidate-domestic-label');
+                $('#consolidate_domestic_label_actions_form #data').val(JSON.stringify(orderIds));
+                $('#consolidate_domestic_label_actions_form').submit();
             }
         })
     </script>

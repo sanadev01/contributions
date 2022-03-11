@@ -108,7 +108,17 @@ class ExportDepositReport extends AbstractExportService
     private function getShippingCarrier($deposit, $order)
     {
         if ($deposit->firstOrder() && $deposit->firstOrder()->hasSecondLabel()) {
-            return ($deposit->firstOrder()->us_api_service == ShippingService::UPS_GROUND) ? 'UPS' : 'USPS';
+            switch ($deposit->firstOrder()->us_api_service) {
+                case ShippingService::UPS_GROUND:
+                        return 'UPS';
+                    break;
+                case ShippingService::FEDEX_GROUND:
+                        return 'FedEx';
+                    break;    
+                default:
+                        return 'USPS';
+                    break;
+            }
         }
 
         if ($order->shippingService) {
