@@ -39,7 +39,7 @@ class ExportDepositReport extends AbstractExportService
             $this->setCellValue('B'.$row, optional($deposit->getOrder($deposit->order_id))->warehouse_number);
             $this->setCellValue('C'.$row, optional(optional($deposit->getOrder($deposit->order_id))->recipient)->fullName());
             $this->setCellValue('D'.$row, optional($deposit->getOrder($deposit->order_id))->customer_reference);
-            $this->setCellValue('E'.$row, ($deposit->firstOrder()) ? optional($deposit->firstOrder())->us_api_tracking_code : optional($deposit->getOrder($deposit->order_id))->corrios_tracking_code);
+            $this->setCellValue('E'.$row, ($deposit->firstOrder() && $deposit->firstOrder()->hasSecondLabel()) ? optional($deposit->firstOrder())->us_api_tracking_code : optional($deposit->getOrder($deposit->order_id))->corrios_tracking_code);
             $this->setCellValue('F'.$row, $deposit->created_at->format('m/d/Y'));
             $this->setCellValue('G'.$row, $deposit->amount);
             $this->setCellValue('H'.$row, ($deposit->getOrder($deposit->order_id)) ? $this->getShippingCarrier($deposit ,$deposit->getOrder($deposit->order_id)) : '');
