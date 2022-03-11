@@ -54,7 +54,6 @@ class RatesCalculator
 
         $this->weight = $calculateOnVolumeMetricWeight ? $this->calculateWeight(): $this->originalWeight;
     }
-    
 
     private function initializeDims()
     {
