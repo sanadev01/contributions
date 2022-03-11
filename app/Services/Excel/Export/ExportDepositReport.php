@@ -126,7 +126,7 @@ class ExportDepositReport extends AbstractExportService
                         return 'Correios Brazil';
                     break;
                 default:
-                    return '';
+                    return ' ';
                    break;
             }
         }
