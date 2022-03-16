@@ -137,7 +137,7 @@ class FedExService
                     ]
                 ],
                 'serviceType' => ($request->service == ShippingService::FEDEX_GROUND) ? 'FEDEX_GROUND' : 'GROUND_HOME_DELIVERY',
-                'pickupType' => ($request->pickupShipment == "true") ? 'USE_SCHEDULED_PICKUP' : 'DROPOFF_AT_FEDEX_LOCATION',
+                'pickupType' => ($request->pickupShipment == true) ? 'CONTACT_FEDEX_TO_SCHEDULE' : 'DROPOFF_AT_FEDEX_LOCATION',
                 'rateRequestType' => [
                     'ACCOUNT'
                 ],
@@ -213,7 +213,7 @@ class FedExService
                 'shipDatestamp' => Carbon::now()->format('Y-m-d'),
                 'serviceType' => ($request->service == ShippingService::FEDEX_GROUND) ? 'FEDEX_GROUND' : 'GROUND_HOME_DELIVERY',
                 'packagingType' => 'YOUR_PACKAGING',
-                'pickupType' => ($request->pickup == "true") ? 'CONTACT_FEDEX_TO_SCHEDULE' : 'DROPOFF_AT_FEDEX_LOCATION',
+                'pickupType' => ($request->pickup == true) ? 'CONTACT_FEDEX_TO_SCHEDULE' : 'DROPOFF_AT_FEDEX_LOCATION',
                 'shippingChargesPayment' => [
                     'paymentType' => 'SENDER',
                 ],
