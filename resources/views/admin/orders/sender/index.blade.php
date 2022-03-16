@@ -12,11 +12,11 @@
             <div class="row mb-1">
                 <div class="col-md-3 form-group">
                     <label for="country">@lang('orders.sender.Select Country')</label>
-                    <select class="form-control countrySelect"  name="sender_country_id" required>
-                        <option {{ old('sender_country_id', __default($order->sender_country_id,optional($order->user)->country_id)) == 30 ? 'selected' : ''}}   value="30">Brazil</option>
-                        <option {{ old('sender_country_id', __default($order->sender_country_id, optional($order->user)->country_id)) == 46 ? 'selected' : ''}}   value="46">Chile</option>
-                        <option  {{ old('sender_country_id', __default($order->sender_country_id, optional($order->user)->country_id)) == 250 ? 'selected' : ''}} value="250">United States</option>
-                        <option  {{ old('sender_country_id', __default($order->sender_country_id, optional($order->user)->country_id)) == 47 ? 'selected' : ''}} value="47">China</option>
+                    <select id="country"  name="sender_country_id" class="form-control countrySelect selectpicker show-tick" data-live-search="true">
+                        <option value="">Select @lang('address.Country')</option>
+                        @foreach (countries() as $country)
+                            <option {{ old('sender_country_id', __default($order->sender_country_id,optional($order->user)->country_id)) == $country->id ? 'selected' : '' }} value="{{ $country->id }}">{{ $country->name }}</option>
+                        @endforeach
                     </select>
                     @error('sender_country_id')
                         <div class="text-danger">
@@ -160,7 +160,7 @@
         $("[name='sender_address']").prop( "disabled", true );
         $("[name='sender_city']").prop('disabled',true);
 
-        let selected = $('.countrySelect').val();
+        let selected = $('#country').val();
         
         if(selected == '46' || selected == '250') {
                 $('#address').css('display', 'block');
@@ -218,8 +218,8 @@
             window.validate_us_address();
         });
         
-        $('.countrySelect').change(function () {
-            let selected = $('.countrySelect').val();
+        $('#country').change(function () {
+            let selected = $('#country').val();
             
             if(selected == '46' || selected == '250') {
                 $('#address').css('display', 'block');
@@ -288,7 +288,7 @@
 
     validate_us_address = function()
     {
-        let country = $('.countrySelect').val();
+        let country = $('#country').val();
         let address = $('#sender_address').val();
         let state = $('#sender_state option:selected').text();
         let city = $('#sender_city').val();
