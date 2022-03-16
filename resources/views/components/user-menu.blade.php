@@ -299,7 +299,7 @@
                                 <span class="menu-title">@lang('inventory.Products')</span>
                             </a>
                         </li>
-                        <li class="{{ $isActive(['admin.inventory.orders']) }}">
+                        <li class="{{ $isActive(['admin.inventory.orders','admin.inventory.product.sale.order']) }}">
                             <a href="{{ route('admin.inventory.orders') }}">
                                 <i class="feather icon-circle"></i>
                                 <span class="menu-title">@lang('inventory.Sales Orders')</span>
@@ -308,7 +308,7 @@
                         <li class="{{ $isActive(['admin.inventory.product.pickup']) }}">
                             <a href="{{ route('admin.inventory.product.pickup') }}">
                                 <i class="feather icon-circle"></i>
-                                <span class="menu-title">@lang('inventory.Pickup')</span>
+                                <span class="menu-title">@lang('inventory.pickup')</span>
                             </a>
                         </li>
                     </ul>

@@ -21,6 +21,7 @@ class Product extends Component
     public $name;
     public $user;
     public $price;
+    public $status;
     public $sku;
     public $description;
     
@@ -39,6 +40,7 @@ class Product extends Component
             'name' => $this->name,
             'price' => $this->price,
             'sku' => $this->sku,
+            'status' => $this->status,
             'description' => $this->description,
         ]),true,$this->pageSize);
     }
