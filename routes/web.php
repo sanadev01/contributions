@@ -158,7 +158,8 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
 
         Route::namespace('Inventory')->as('inventory.')->prefix('inventory')->group(function(){
             Route::resource('product', ProductController::class);
-            Route::get('product-pickup', [\App\Http\Controllers\Admin\Inventory\ProductController::class, 'pickup'])->name('product.pickup');
+            Route::get('product/sale/order', [\App\Http\Controllers\Admin\Inventory\ProductController::class, 'saleOrder'])->name('product.sale.order');
+            Route::get('product/pickup', [\App\Http\Controllers\Admin\Inventory\ProductController::class, 'pickup'])->name('product.pickup');
             Route::post('product/status', [\App\Http\Controllers\Admin\Inventory\ProductController::class, 'statusUpdate'])->name('status.update');
             Route::resource('product-export', ProductExportController::class)->only('index');
             Route::resource('product-import', ProductImportController::class)->only(['create','store']);

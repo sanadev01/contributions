@@ -470,6 +470,12 @@ class Order extends Model implements Package
     {
         $class = "";
 
+        if ( $this->status == Order::STATUS_PREALERT_TRANSIT ){
+            $class = 'btn btn-sm btn-danger';
+        }
+        if ( $this->status == Order::STATUS_PREALERT_READY ){
+            $class = 'btn btn-sm btn-primary';
+        }
         if ( $this->status == Order::STATUS_ORDER ){
             $class = 'btn btn-sm btn-info';
         }

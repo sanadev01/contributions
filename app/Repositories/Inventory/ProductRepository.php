@@ -48,6 +48,12 @@ class ProductRepository
                 return $query->where('price', 'LIKE', "%{$request->price}%");
             });
         }
+        
+        if ( $request->status ){
+            $query->where(function($query) use($request){
+                return $query->where('status', 'LIKE', "%{$request->status}%");
+            });
+        }
 
         if ( $request->sku ){
             $query->where(function($query) use($request){

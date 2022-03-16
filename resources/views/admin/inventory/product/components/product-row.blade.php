@@ -28,8 +28,8 @@
                     </button>
 
                     @if ($product->status == 'approved')
-                        <a href="{{ route('admin.inventory.product-order.show',$product) }}" title="Edit" class="dropdown-item w-100">
-                            <i class="feather icon-truck"></i> Order
+                        <a href="{{ route('admin.inventory.product-order.show',$product) }}" title="Create Sale Order" class="dropdown-item w-100">
+                            <i class="feather icon-truck"></i> Sale Order
                         </a>
                     @endif
                     

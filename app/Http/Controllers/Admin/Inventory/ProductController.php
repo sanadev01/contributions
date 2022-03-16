@@ -126,9 +126,9 @@ class ProductController extends Controller
         return view('admin.inventory.product.index',compact('status'));
     }
 
-    public function pickup()
+    public function saleOrder()
     {
-        return view('admin.inventory.product.pickup');
+        return view('admin.inventory.product.saleOrder');
     }
 
 }
