@@ -115,7 +115,7 @@ class FedExService
     private function makeRatesRequestBodyForSender($order, $request)
     {
         $this->calculateVolumetricWeight($order);
-        return [
+        $data = [
             'accountNumber' => [
                 'value' => $this->accountNumber,
             ],
@@ -137,7 +137,7 @@ class FedExService
                     ]
                 ],
                 'serviceType' => ($request->service == ShippingService::FEDEX_GROUND) ? 'FEDEX_GROUND' : 'GROUND_HOME_DELIVERY',
-                'pickupType' => ($request->pickup == "true") ? 'CONTACT_FEDEX_TO_SCHEDULE' : 'DROPOFF_AT_FEDEX_LOCATION',
+                'pickupType' => ($request->pickupShipment == "true") ? 'USE_SCHEDULED_PICKUP' : 'DROPOFF_AT_FEDEX_LOCATION',
                 'rateRequestType' => [
                     'ACCOUNT'
                 ],
@@ -151,6 +151,26 @@ class FedExService
                 ]
             ],
         ];
+
+        if ($request->pickupShipment == true) {
+            $data['requestedShipment']['pickupDetail'] = [
+                'companyCloseTime' => $request->latest_pickup_time.':00',
+                'pickupOrigin' => [
+                    'accountNumber' => [
+                        'value' => $this->accountNumber
+                    ],
+                    'address' => [
+                        'city' => $request->sender_city,
+                        'stateOrProvinceCode' => $request->sender_state,
+                        'postalCode' => $request->sender_zipcode,
+                        'countryCode' => 'US',
+                        'streetLines' => [$request->sender_address],
+                    ],
+                ],
+            ];
+        }
+        
+        return $data;
     }
 
 
