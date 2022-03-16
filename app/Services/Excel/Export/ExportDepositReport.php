@@ -39,11 +39,13 @@ class ExportDepositReport extends AbstractExportService
             $this->setCellValue('B'.$row, optional($deposit->getOrder($deposit->order_id))->warehouse_number);
             $this->setCellValue('C'.$row, optional(optional($deposit->getOrder($deposit->order_id))->recipient)->fullName());
             $this->setCellValue('D'.$row, optional($deposit->getOrder($deposit->order_id))->customer_reference);
-            $this->setCellValue('E'.$row, ($deposit->firstOrder()) ? optional($deposit->firstOrder())->us_api_tracking_code : optional($deposit->getOrder($deposit->order_id))->corrios_tracking_code);
+            $this->setCellValue('E'.$row, ($deposit->firstOrder() && $deposit->firstOrder()->hasSecondLabel()) ? optional($deposit->firstOrder())->us_api_tracking_code : optional($deposit->getOrder($deposit->order_id))->corrios_tracking_code);
             $this->setCellValue('F'.$row, $deposit->created_at->format('m/d/Y'));
             $this->setCellValue('G'.$row, $deposit->amount);
             $this->setCellValue('H'.$row, ($deposit->getOrder($deposit->order_id)) ? $this->getShippingCarrier($deposit ,$deposit->getOrder($deposit->order_id)) : '');
-            $this->setCellValue('I'.$row, ($deposit->getOrder($deposit->order_id)) ? $this->getShippingCarrierCost($deposit ,$deposit->getOrder($deposit->order_id)) : '');
+            if (auth()->user()->isAdmin()) {
+                $this->setCellValue('I'.$row, ($deposit->getOrder($deposit->order_id)) ? $this->getShippingCarrierCost($deposit ,$deposit->getOrder($deposit->order_id)) : '');
+            }
             $this->setCellValue('J'.$row, ($deposit->getOrder($deposit->order_id)) ? $this->getOrderDimensions($deposit->getOrder($deposit->order_id)) : '');
             $this->setCellValue('K'.$row, ($deposit->getOrder($deposit->order_id)) ? $this->getOrderTotalWeight($deposit->getOrder($deposit->order_id)) : '');
             $this->setCellValue('L'.$row, ($deposit->getOrder($deposit->order_id)) ? $this->getOrderVolumetricWeight($deposit->getOrder($deposit->order_id)) : '');
@@ -80,8 +82,10 @@ class ExportDepositReport extends AbstractExportService
         $this->setColumnWidth('H', 20);
         $this->setCellValue('H1', 'Carrier');
 
-        $this->setColumnWidth('I', 20);
-        $this->setCellValue('I1', 'Carrier Cost');
+        if (auth()->user()->isAdmin()) {
+            $this->setColumnWidth('I', 20);
+            $this->setCellValue('I1', 'Carrier Cost');
+        }
 
         $this->setColumnWidth('J', 20);
         $this->setCellValue('J1', 'Order Dimensions');
@@ -122,7 +126,7 @@ class ExportDepositReport extends AbstractExportService
                         return 'Correios Brazil';
                     break;
                 default:
-                    return '';
+                    return ' ';
                    break;
             }
         }
