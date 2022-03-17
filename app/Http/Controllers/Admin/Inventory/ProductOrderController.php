@@ -24,9 +24,10 @@ class ProductOrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $products = Product::whereIn('id', json_decode($request->data))->get();
+        return view('admin.inventory.order.create-sale', compact('products'));
     }
 
     /**
@@ -37,7 +38,7 @@ class ProductOrderController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        dd($request);
     }
 
     /**

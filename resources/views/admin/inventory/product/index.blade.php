@@ -17,7 +17,10 @@
             <livewire:inventory.product/>
         </div>
     </div>
-   
+    <form action="{{ route('admin.inventory.product-order.create') }}" method="GET" id="bulk_actions_form">
+        <input type="hidden" name="command" id="command" value="">
+        <input type="hidden" name="data" id="data" value="">
+    </form>
 </div>
 @endsection
 
@@ -25,3 +28,23 @@
     <x-modal/>
 @endsection
 
+@section('js')
+    <script>
+        $('body').on('change','#bulk-actions',function(){
+            if ( $(this).val() == 'clear' ){
+                $('.bulk-orders').prop('checked',false)
+            }else if ( $(this).val() == 'checkAll' ){
+                $('.bulk-orders').prop('checked',true)
+            }else if ( $(this).val() == 'create-sale-order' ){
+                var productIds = [];
+                $.each($(".bulk-orders:checked"), function(){
+                    productIds.push($(this).val());
+                });
+                alert(productIds);
+                $('#bulk_actions_form #command').val('create-sale-order');
+                $('#bulk_actions_form #data').val(JSON.stringify(productIds));
+                $('#bulk_actions_form').submit();
+            }
+        })
+    </script>
+@endsection
