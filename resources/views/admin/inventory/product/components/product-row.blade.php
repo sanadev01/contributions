@@ -1,4 +1,15 @@
 <tr>
+    <td>
+        <div class="vs-checkbox-con vs-checkbox-primary" title="@lang('orders.Bulk Print')">
+            <input type="checkbox" name="orders[]" class="bulk-orders" value="{{$product->id}}">
+            <span class="vs-checkbox vs-checkbox-lg">
+                <span class="vs-checkbox--check">
+                    <i class="vs-icon feather icon-check"></i>
+                </span>
+            </span>
+            <span class="h3 mx-2 text-primary my-0 py-0"></span>
+        </div>
+    </td>
     <td>{{ optional($product->created_at)->format('m/d/Y') }}</td>
     @admin
         <td>{{ $product->user->name }}</td>

@@ -24,6 +24,7 @@
             <table class="table mb-0 table-responsive-md table-hover" id="order-table">
                 <thead>
                     <tr>
+                        <th> </th>
                         <th>Date</th>
                         @admin
                         <th>User</th>
@@ -38,6 +39,13 @@
                         <th>Action</th>
                     </tr>
                     <tr class="no-print">
+                        <th style="min-width: 100px;">
+                            <select name="" id="bulk-actions" class="form-control">
+                                <option value="clear">Clear All</option>
+                                <option value="checkAll">Select All</option>
+                                <option value="create-sale-order">Create Sale Order</option>
+                            </select>
+                        </th>
                         <th>
                             <input type="search" class="form-control col-md-9" wire:model.debounce.1000ms="date">
                         </th>
