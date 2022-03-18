@@ -2,6 +2,9 @@
 namespace App\Repositories;
 
 use App\Models\User;
+use App\Models\Deposit;
+use App\Models\PaymentInvoice;
+use App\Models\CommissionSetting;
 
 class UserSettingRepository {
 
@@ -13,6 +16,8 @@ class UserSettingRepository {
             'api_enabled' => $request->has('api_enabled'),
             'market_place_name' => $request->market_place_name,
             'email' => $request->user_email,
+            'amazon_api_enabled' => $request->has('amazon_api_enabled'),
+            'amazon_api_key' => $request->amazon_api_key,
         ]);
 
         $request->has('battery') ? saveSetting('battery', true, $user->id) : saveSetting('battery', false, $user->id);

@@ -4,12 +4,16 @@
         <span data-i18n="Apps"> @lang('menu.profile') </span>
     </a>
 </li>
-<li class="nav-item">
-    <a class="nav-link" target="__blank" href="https://amazon.aleem.dev/api-token-login/ecqypVh9sTO5cTuuQbhgGwK5TaihYEf1SMVgSYBQhtivv9BNeov1Ppoldy67un8U4AmQmyJsTQl5YGGfCjmxHfP0LDyc2c9IGZqB">
-        <i class="fa fa-list-alt" style="color: #90f3bc;"></i>
-        <span data-i18n="Apps"> Amazon Fulfilment </span>
-    </a>
-</li>
+@user
+    @if(Auth()->user()->amazon_api_enabled)
+        <li class="nav-item">
+            <a class="nav-link" target="__blank" href="https://amazon.aleem.dev/api-token-login/{{ Auth()->user()->amazon_api_enabled }}">
+                <i class="fa fa-list-alt" style="color: #90f3bc;"></i>
+                <span data-i18n="Apps"> Amazon Fulfilment</span>
+            </a>
+        </li>
+    @endif
+@enduser
 <li class="nav-item">
     <a class="nav-link" target="__blank" href="https://documenter.getpostman.com/view/16057364/TzeXmSxT">
         <i class="fa fa-list-alt" style="color: #28c76f;"></i>
