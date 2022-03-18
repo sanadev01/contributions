@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\State;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\ShippingService;
 use App\Repositories\UPSLabelRepository;
 
 class OrderUPSLabelController extends Controller
@@ -78,6 +79,12 @@ class OrderUPSLabelController extends Controller
     public function cancelUPSPickup($id)
     {
         $order = Order::findorfail($id);
+        
+        if ($order->us_api_service != ShippingService::UPS_GROUND) {
+            session()->flash('alert-danger', 'FedEx Pickup cannot be canceled');
+            return \back()->withInput();
+        }
+
         $this->authorize('canPrintLable',$order);
 
         $ups_labelRepository = new UPSLabelRepository();
