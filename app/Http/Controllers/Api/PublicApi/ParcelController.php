@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Repositories\OrderRepository;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Calculators\WeightCalculator;
 use App\Http\Requests\Api\Parcel\CreateRequest;
@@ -26,7 +27,7 @@ class ParcelController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateRequest $request, ApiShippingServiceRepository $usShippingService)
+    public function store(CreateRequest $request, ApiShippingServiceRepository $usShippingService, OrderRepository $orderRepository)
     {
         
         $weight = optional($request->parcel)['weight']??0;
@@ -96,7 +97,9 @@ class ParcelController extends Controller
                 "sender_email" => optional($request->sender)['sender_email'],
                 "sender_taxId" => optional($request->sender)['sender_taxId'],
             ]);
-            
+
+            $orderRepository->setVolumetricDiscount($order);
+           
             $order->recipient()->create([
                 "first_name" => optional($request->recipient)['first_name'],
                 "last_name" => optional($request->recipient)['last_name'],
