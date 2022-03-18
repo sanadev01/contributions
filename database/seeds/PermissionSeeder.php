@@ -422,8 +422,27 @@ class PermissionSeeder extends Seeder
                 'slug' => 'update_label',
                 'group' => 'Order',
                 'description' => 'User can update label'
+            ],
+            [
+                'slug' => 'view_product',
+                'group' => 'Product',
+                'description' => 'User can view product'
+            ],
+            [
+                'slug' => 'create_product',
+                'group' => 'Product',
+                'description' => 'User can creat product'
+            ],
+            [
+                'slug' => 'update_product',
+                'group' => 'Product',
+                'description' => 'User can update product'
+            ],
+            [
+                'slug' => 'delete_product',
+                'group' => 'Product',
+                'description' => 'User can delete product'
             ]
-            
         ];
     }
 }
