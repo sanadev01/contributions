@@ -11,6 +11,7 @@ use App\Models\ShippingService;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Repositories\OrderRepository;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Calculators\WeightCalculator;
 use App\Http\Requests\Api\Parcel\CreateRequest;
@@ -21,10 +22,12 @@ use App\Repositories\ApiShippingServiceRepository;
 class ParcelController extends Controller
 {
     protected $usShippingService;
+    protected $orderRepository;
 
-    public function __construct(ApiShippingServiceRepository $usShippingService)
+    public function __construct(ApiShippingServiceRepository $usShippingService, OrderRepository $orderRepository)
     {
         $this->usShippingService = $usShippingService;
+        $this->orderRepository = $orderRepository;
     }
     /**
      * Store a newly created resource in storage.
@@ -115,7 +118,9 @@ class ParcelController extends Controller
                 'sender_address' => optional($request->sender)['sender_address'],
                 'sender_phone' => optional($request->sender)['sender_phone'],
             ]);
-            
+
+            $this->orderRepository->setVolumetricDiscount($order);
+           
             $order->recipient()->create([
                 "first_name" => optional($request->recipient)['first_name'],
                 "last_name" => optional($request->recipient)['last_name'],
@@ -295,6 +300,8 @@ class ParcelController extends Controller
                 'sender_address' => optional($request->sender)['sender_address'],
                 'sender_phone' => optional($request->sender)['sender_phone'],
             ]);
+
+            $this->orderRepository->setVolumetricDiscount($parcel);
             
             $parcel->recipient()->update([
                 "first_name" => optional($request->recipient)['first_name'],

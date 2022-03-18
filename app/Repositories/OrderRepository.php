@@ -224,6 +224,35 @@ class OrderRepository
         
         return $orders->orderBy('id')->get();
     }
+
+    public function setVolumetricDiscount($order)
+    {
+        $totalDiscountPercentage = 0;
+        $volumetricDiscount = setting('volumetric_discount', null, $order->user->id);
+        $discountPercentage = setting('discount_percentage', null, $order->user->id);
+
+        if (!$volumetricDiscount || !$discountPercentage || $discountPercentage < 0) {
+            return false;
+        }
+
+        $volumetricWeight = round($order->getWeight() > $order->weight ? $order->getWeight() : $order->weight, 2);
+        
+        $totalDiscountPercentage = ($discountPercentage) ? $discountPercentage/100 : 0;
+
+        if ($volumetricWeight > $order->weight) {
+            
+            $volumeWeightBeforeDiscount = $volumetricWeight;
+            
+            $volumetricWeight = round($volumetricWeight - ($volumetricWeight * $totalDiscountPercentage), 2);
+            $totalDiscountedWeight = $volumeWeightBeforeDiscount - $volumetricWeight;
+
+            $order->update([
+                'weight_discount' => $totalDiscountedWeight,
+            ]);
+        }
+
+        return true;
+    }
     
     public function getShippingServices($order)
     {
