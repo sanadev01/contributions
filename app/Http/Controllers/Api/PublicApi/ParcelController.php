@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Repositories\OrderRepository;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Calculators\WeightCalculator;
 use App\Http\Requests\Api\Parcel\CreateRequest;
@@ -20,13 +21,22 @@ use App\Repositories\ApiShippingServiceRepository;
 class ParcelController extends Controller
 {
 
+    protected $usShippingService;
+    protected $orderRepository;
+
+    public function __construct(ApiShippingServiceRepository $usShippingService, OrderRepository $orderRepository)
+    {
+        $this->usShippingService = $usShippingService;
+        $this->orderRepository = $orderRepository;
+    }
+
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateRequest $request, ApiShippingServiceRepository $usShippingService)
+    public function store(CreateRequest $request)
     {
         
         $weight = optional($request->parcel)['weight']??0;
@@ -63,7 +73,7 @@ class ParcelController extends Controller
         }
 
         if ($countryID == 250) {
-           if(!$usShippingService->isAvalaible($request))
+           if(!$this->usShippingService->isAvalaible($request))
            {
                 return apiResponse(false, 'Seleceted Shipping service is not available for your account');
            }
@@ -96,7 +106,9 @@ class ParcelController extends Controller
                 "sender_email" => optional($request->sender)['sender_email'],
                 "sender_taxId" => optional($request->sender)['sender_taxId'],
             ]);
-            
+
+            $this->orderRepository->setVolumetricDiscount($order);
+           
             $order->recipient()->create([
                 "first_name" => optional($request->recipient)['first_name'],
                 "last_name" => optional($request->recipient)['last_name'],
@@ -169,10 +181,10 @@ class ParcelController extends Controller
             ]);
             
             if ($countryID == Order::US) {
-                if(!$usShippingService->getUSShippingServiceRate($order))
+                if(!$this->usShippingService->getUSShippingServiceRate($order))
                 {
                     DB::rollback();
-                    return apiResponse(false, $usShippingService->getError());
+                    return apiResponse(false, $this->usShippingService->getError());
                 }
             }
 
@@ -280,6 +292,8 @@ class ParcelController extends Controller
                 "sender_email" => optional($request->sender)['sender_email'],
                 "sender_taxId" => optional($request->sender)['sender_taxId'],
             ]);
+
+            $this->orderRepository->setVolumetricDiscount($parcel);
             
             $parcel->recipient()->update([
                 "first_name" => optional($request->recipient)['first_name'],
