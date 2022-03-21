@@ -224,10 +224,10 @@ class OrderRepository
 
         if ($volumetricWeight > $order->weight) {
             
-            $consideredWeight = $volumetricWeight - $order->getOriginalWeight();
+            $volumeWeightBeforeDiscount = $volumetricWeight;
             
-            $volumetricWeight = round($consideredWeight - ($consideredWeight * $totalDiscountPercentage), 2);
-            $totalDiscountedWeight = $consideredWeight - $volumetricWeight;
+            $volumetricWeight = round($volumetricWeight - ($volumetricWeight * $totalDiscountPercentage), 2);
+            $totalDiscountedWeight = $volumeWeightBeforeDiscount - $volumetricWeight;
 
             $order->update([
                 'weight_discount' => $totalDiscountedWeight,

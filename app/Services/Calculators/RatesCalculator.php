@@ -81,10 +81,7 @@ class RatesCalculator
             $unit = ($this->order->measurement_unit == 'lbs/in') ? 'in' : 'cm';
             
             $volumnWeight = WeightCalculator::getVolumnWeight($this->order->length, $this->order->width, $this->order->height, $unit);
-            
-            $consideredWeight = $volumnWeight - $this->order->getOriginalWeight();
-            
-            $volumnWeight = round($consideredWeight - $this->order->weight_discount, 2);
+            $volumnWeight = round($volumnWeight - $this->order->weight_discount, 2);
             
             $volumnWeight = ($this->order->measurement_unit == 'lbs/in') ? UnitsConverter::poundToKg($volumnWeight) : $volumnWeight;
             
