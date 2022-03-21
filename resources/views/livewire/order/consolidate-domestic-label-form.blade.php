@@ -37,6 +37,11 @@
                     @endforeach
                 </tbody>
             </table>
+            <div class="alert alert-danger" role="alert">
+                @foreach ($consolidationErrors as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </div>
         </div>
         <hr>
         <form wire:submit.prevent="getRates">

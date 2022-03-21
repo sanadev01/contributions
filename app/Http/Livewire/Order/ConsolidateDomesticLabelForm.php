@@ -49,6 +49,8 @@ class ConsolidateDomesticLabelForm extends Component
     public $unit = 'lbs/in';
     public $volumeWeight;
 
+    public $consolidationErrors;
+
     protected $tempOrder;
 
     protected $rules = [
@@ -85,7 +87,7 @@ class ConsolidateDomesticLabelForm extends Component
     {
         $this->orders = $orders;
         $this->states = $states;
-        $this->errors = $errors;
+        $this->consolidationErrors = $errors;
         
         if ($this->orders->count() > 0) {
             $this->senderPhone = $this->orders->first()->user->phone;

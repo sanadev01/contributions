@@ -16,12 +16,24 @@ class ConsolidateDomesticLabelRepository
     public $totalOrdersWidth = 0;
     public $totalOrdersHeight = 0;
 
+    public $errors = [];
+
     public function getInternationalOrders(array $ids)
     {
         $orders = Order::whereIn('id', $ids)
                             ->where('corrios_tracking_code', '!=', null)
                             ->get();
+
         return $orders->filter(function ($order) {
+
+            if ($order->hasSecondLabel()) {
+                array_push($this->errors, $order->warehouse_number.' already has a second label');
+            }
+
+            if (!$order->isInternational()) {
+                array_push($this->errors, $order->warehouse_number.' is of US origin');
+            }
+
             return (!$order->hasSecondLabel() && $order->isInternational());
         });
     }
@@ -63,5 +75,10 @@ class ConsolidateDomesticLabelRepository
         $this->totalOrdersHeight += ($order->isMeasurmentUnitCm()) ? UnitsConverter::cmToIn($order->height) : $order->height;
 
         return true;
+    }
+
+    public function getErrors()
+    {
+        return $this->errors;
     }
 }

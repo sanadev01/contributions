@@ -104,7 +104,7 @@ class FedExService
                         'countryCode' => 'US',
                     ],
                 ],
-                'packageLocation' => $request->pickup_location,
+                'packageLocation' => 'NONE',
                 'readyDateTimestamp' => $request->pickup_date.'T'.$request->earliest_pickup_time.':00Z',
                 'customerCloseTime' => $request->latest_pickup_time.':00',
             ],
@@ -359,7 +359,7 @@ class FedExService
             
             $response = Http::withHeaders($this->setHeaders())->acceptJson()->post($url, $data);
             return $this->setResponse($response);
-
+            
         } catch (\Exception $ex) {
            Log::info('FedEx Error ' . $ex->getMessage());
             return (object) [
