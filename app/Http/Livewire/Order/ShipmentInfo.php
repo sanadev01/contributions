@@ -143,5 +143,6 @@ class ShipmentInfo extends Component
         
         $this->volumeWeight = round($consideredWeight - ($consideredWeight * $this->discountPercentage), 2);
         $this->totalDiscountedWeight = $consideredWeight - $this->volumeWeight;
+        $this->volumeWeight = round($this->volumeWeight + $this->weight, 2);
     }
 }

@@ -49,7 +49,7 @@ class OrderInvoiceModalController extends Controller
     private function calculateDiscountedWeight($originalWeight, $volumeWeight, $discountWeight)
     {
         $consideredWeight = $volumeWeight - $originalWeight;
-        return $consideredWeight - $discountWeight;
+        return ($consideredWeight - $discountWeight) + $originalWeight;
     }
 
     
