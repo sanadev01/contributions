@@ -90,7 +90,6 @@ class RatesCalculator
             
             $volumnWeight = ($this->order->measurement_unit == 'lbs/in') ? UnitsConverter::poundToKg($volumnWeight) : $volumnWeight;
             
-            \Log::info('Volumn Weight: '.$volumnWeight);
             return $volumnWeight;
         }
 
