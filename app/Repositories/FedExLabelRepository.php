@@ -105,10 +105,15 @@ class FedExLabelRepository
             
             if ($pickupShipmentresponse->success == false) {
                 $this->fedExError = $pickupShipmentresponse->error['errors'][0]['message'] ?? 'Pickup shipment not available';
-                return false;
+
+                if ($this->fedExError != 'A pickup already exists.') {
+                    return false;
+                }
             }
 
-            $this->pickupResponse = $pickupShipmentresponse->data;
+            if ($pickupShipmentresponse->success == true) {
+                $this->pickupResponse = $pickupShipmentresponse->data;
+            }
         }
 
         $response = FedExFacade::createShipmentForSender($order, $request);
