@@ -28,7 +28,7 @@ class OrderInvoiceController extends Controller
 
         $volumeWeight = ($order->isWeightInKg()) ? $order->getWeight('kg') : $order->getWeight('lbs');
 
-        $appliedVolumeWeight = ($order->weight_discount) ? $this->calculateDiscountedWeight($volumeWeight, $order->weight_discount) : null;
+        $appliedVolumeWeight = ($order->weight_discount) ? $this->calculateDiscountedWeight($order->getOriginalWeight(), $volumeWeight, $order->weight_discount) : null;
         
         return view('admin.orders.invoice.index',compact('order', 'services', 'appliedVolumeWeight'));
     }
@@ -57,8 +57,9 @@ class OrderInvoiceController extends Controller
         return $order->services;
     }
 
-    private function calculateDiscountedWeight($volumeWeight, $discountWeight)
+    private function calculateDiscountedWeight($originalWeight, $volumeWeight, $discountWeight)
     {
-        return $volumeWeight - $discountWeight;
+        $consideredWeight = $volumeWeight - $originalWeight;
+        return ($consideredWeight - $discountWeight) + $originalWeight;
     }
 }
