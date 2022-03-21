@@ -19,7 +19,7 @@ class OrderInvoiceModalController extends Controller
 
         $volumeWeight = ($order->isWeightInKg()) ? $order->getWeight('kg') : $order->getWeight('lbs');
 
-        $appliedVolumeWeight = ($order->weight_discount) ? $this->calculateDiscountedWeight($order->getOriginalWeight(), $volumeWeight, $order->weight_discount) : null;
+        $appliedVolumeWeight = ($order->weight_discount) ? $this->calculateDiscountedWeight($volumeWeight, $order->weight_discount) : null;
         
         if(!Auth::user()->isActive()){
             return redirect()->route('admin.modals.user.suspended');
@@ -46,10 +46,9 @@ class OrderInvoiceModalController extends Controller
         return $order->services;
     }
 
-    private function calculateDiscountedWeight($originalWeight, $volumeWeight, $discountWeight)
+    private function calculateDiscountedWeight($volumeWeight, $discountWeight)
     {
-        $consideredWeight = $volumeWeight - $originalWeight;
-        return $consideredWeight - $discountWeight;
+        return $volumeWeight - $discountWeight;
     }
 
     
