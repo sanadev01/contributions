@@ -50,13 +50,18 @@ class CalculatorController extends Controller
         $this->validate($request, $rules, $message);
 
         $originalWeight =  $request->weight;
-        if ( $request->unit == 'kg/cm' ){
+
+        if ( $request->unit == 'kg/cm' && !$request->weight_discount){
             $volumetricWeight = WeightCalculator::getVolumnWeight($request->length,$request->width,$request->height,'cm');
             $chargableWeight = round($volumetricWeight >  $originalWeight ? $volumetricWeight :  $originalWeight,2);
-        }else{
+        }elseif($request->unit == 'lbs/in' && !$request->weight_discount){
             $volumetricWeight = WeightCalculator::getVolumnWeight($request->length,$request->width,$request->height,'in');
             $chargableWeight = round($volumetricWeight >  $originalWeight ? $volumetricWeight :  $originalWeight,2);
+        }else{
+            $chargableWeight = $request->discount_volume_weight;
         }
+
+
         $recipient = new Recipient();
         $recipient->state_id = $request->state_id;
         $recipient->country_id = $request->country_id;
@@ -69,6 +74,7 @@ class CalculatorController extends Controller
         $order->length = $request->length;
         $order->weight = $request->weight;
         $order->measurement_unit = $request->unit;
+        $order->weight_discount = $request->weight_discount;
         $order->recipient = $recipient;
 
         $shippingServices = collect();
