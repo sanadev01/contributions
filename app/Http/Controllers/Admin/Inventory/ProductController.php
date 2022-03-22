@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Inventory;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
 use App\Repositories\Inventory\ProductRepository;
 use App\Http\Requests\Product\ProductCreateRequest;
@@ -128,7 +129,9 @@ class ProductController extends Controller
 
     public function pickup()
     {
-        return view('admin.inventory.product.pickup');
+        $container = Container::find(1);
+        
+        return view('admin.inventory.product.pickup', compact('container'));
     }
 
 }
