@@ -22,12 +22,14 @@ class CalculatorRepository {
     {
 
         $originalWeight =  $request->weight;
-        if ( $request->unit == 'kg/cm' ){
+        if ( $request->unit == 'kg/cm' && !$request->weight_discount){
             $volumetricWeight = WeightCalculator::getVolumnWeight($request->length,$request->width,$request->height,'cm');
             $this->chargableWeight = round($volumetricWeight >  $originalWeight ? $volumetricWeight :  $originalWeight,2);
-        }else{
+        }elseif($request->unit == 'lbs/in' && !$request->weight_discount){
             $volumetricWeight = WeightCalculator::getVolumnWeight($request->length,$request->width,$request->height,'in');
             $this->chargableWeight = round($volumetricWeight >  $originalWeight ? $volumetricWeight :  $originalWeight,2);
+        }else{
+            $this->chargableWeight = $request->discount_volume_weight;
         }
 
         if($this->createRecipient($request)){
@@ -75,6 +77,7 @@ class CalculatorRepository {
             $order->length = $request->length;
             $order->weight = $request->weight;
             $order->measurement_unit = $request->unit;
+            $order->weight_discount = $request->weight_discount;
             $order->recipient = $this->recipient;
             DB::commit();
             $order->refresh();
@@ -104,20 +107,9 @@ class CalculatorRepository {
         return $shippingServices;
     }
 
-    public function getChargableWeight($request){
-
-        $originalWeight =  $request->weight;
-
-        if ( $request->unit == 'kg/cm' ){
-            $volumetricWeight = WeightCalculator::getVolumnWeight($request->length,$request->width,$request->height,'cm');
-            $chargableWeight = round($volumetricWeight >  $originalWeight ? $volumetricWeight :  $originalWeight,2);
-        }else{
-            $volumetricWeight = WeightCalculator::getVolumnWeight($request->length,$request->width,$request->height,'in');
-            $chargableWeight = round($volumetricWeight >  $originalWeight ? $volumetricWeight :  $originalWeight,2);
-        }
-        $this->chargableWeight = $chargableWeight;
-
-        return $chargableWeight;
+    public function getChargableWeight()
+    {
+       return $this->chargableWeight;
     }
 
     public function getWeightInOtherUnit($request){

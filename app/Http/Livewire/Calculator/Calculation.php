@@ -27,11 +27,20 @@ class Calculation extends Component
     public $volumeWeightOther;
     public $currentWeightUnit;
 
+    private $userId;
+    public $discountPercentage;
+    public $totalDiscountedWeight;
+
     public function mount(Order $order = null)
     {
         $this->order = optional($order)->toArray();
         $this->fillData();
         $this->checkUser();
+
+        if ($this->userId) {
+            $this->setVolumetricDiscount();
+        }
+        
     }
 
     public function render() 
@@ -92,6 +101,18 @@ class Calculation extends Component
             $volumetricWeight = WeightCalculator::getVolumnWeight($this->length,$this->width,$this->height,'cm');
             $this->volumeWeight = round($volumetricWeight > $this->weight ? $volumetricWeight : $this->weight,2);
             $this->volumeWeightOther = UnitsConverter::kgToPound($this->volumeWeight);
+
+            if ($this->discountPercentage && $this->discountPercentage > 0) {
+
+                if ($this->discountPercentage == 1) {
+                    return $this->volumeWeight = $this->weight;
+                }
+
+                if ($this->volumeWeight > $this->weight) {
+                    $this->calculateDiscountedWeight();
+                }
+            }
+
         }else{
             $this->weightOther = UnitsConverter::poundToKg($this->weight);
             $this->lengthOther = UnitsConverter::inToCm($this->length);
@@ -102,6 +123,17 @@ class Calculation extends Component
             $volumetricWeight = WeightCalculator::getVolumnWeight($this->length,$this->width,$this->height,'in');;
             $this->volumeWeight = round($volumetricWeight > $this->weight ? $volumetricWeight : $this->weight,2);
             $this->volumeWeightOther = UnitsConverter::poundToKg($this->volumeWeight);
+
+            if ($this->discountPercentage && $this->discountPercentage > 0) {
+
+                if ($this->discountPercentage == 1) {
+                    return $this->volumeWeight = $this->weight;
+                }
+                
+                if ($this->volumeWeight > $this->weight) {
+                    $this->calculateDiscountedWeight();
+                }
+            }
         }
     }
 
@@ -109,6 +141,7 @@ class Calculation extends Component
     {
         if (Auth::check()) {
             
+            $this->userId = Auth::user()->id;
             $country_id = Auth::user()->country_id;
             if($country_id)
             {
@@ -121,5 +154,26 @@ class Calculation extends Component
         }
 
         return;
+    }
+
+    private function setVolumetricDiscount()
+    {
+        $volumetricDiscount = setting('volumetric_discount', null, $this->userId);
+        $discountPercentage = setting('discount_percentage', null, $this->userId);
+
+        if ($volumetricDiscount && $discountPercentage) {
+            $this->discountPercentage = ($discountPercentage) ? $discountPercentage/100 : 0;
+        }
+
+        return true;
+    }
+
+    private function calculateDiscountedWeight()
+    {
+        $consideredWeight = $this->volumeWeight - $this->weight;
+        
+        $this->volumeWeight = round($consideredWeight - ($consideredWeight * $this->discountPercentage), 2);
+        $this->totalDiscountedWeight = $consideredWeight - $this->volumeWeight;
+        $this->volumeWeight = round($this->volumeWeight + $this->weight, 2);
     }
 }

@@ -15,7 +15,7 @@ class CalculatorController extends Controller
     {
         $order = $calculatorRepository->handel($request);
         $shippingServices =  $calculatorRepository->getShippingService();
-        $chargableWeight = $calculatorRepository->getChargableWeight($request);
+        $chargableWeight = $calculatorRepository->getChargableWeight();
         $weightInOtherUnit = $calculatorRepository->getWeightInOtherUnit($request);
 
         return view('calculator.show', compact('order', 'shippingServices', 'weightInOtherUnit', 'chargableWeight'));
