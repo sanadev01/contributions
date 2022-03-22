@@ -175,5 +175,6 @@ class Calculation extends Component
         $this->volumeWeight = round($consideredWeight - ($consideredWeight * $this->discountPercentage), 2);
         $this->totalDiscountedWeight = $consideredWeight - $this->volumeWeight;
         $this->volumeWeight = round($this->volumeWeight + $this->weight, 2);
+        $this->volumeWeightOther = ($this->unit == 'kg/cm') ? UnitsConverter::kgToPound($this->volumeWeight) : UnitsConverter::poundToKg($this->volumeWeight);
     }
 }
