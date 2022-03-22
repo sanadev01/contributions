@@ -79,7 +79,7 @@
 
                                 <h3>Api Settings</h3>
                                 <hr>
-
+                                
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">Enable API<span class="text-danger"></span></label>
                                     <div class="col-md-6">
@@ -88,6 +88,23 @@
                                     </div>
                                 </div>
                                 <livewire:token-generator :user_id="$user->id" />
+                                
+                                <hr>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">Enable Amazon API<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <input type="checkbox" name="amazon_api_enabled" id="api_enabled" @if( $user->amazon_api_enabled == 1 ) checked @endif> 
+                                        <div class="help-block"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">Amazon Api key<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <textarea name="amazon_api_key" class="form-control">{{ $user->amazon_api_key }}</textarea> 
+                                        <div class="help-block"></div>
+                                    </div>
+                                </div>
 
                                 <h3>Leve Settings</h3>
                                 <hr>
@@ -200,7 +217,7 @@
                                                 </span>
                                             </div>
                                             <span class="offset-2 mr-2 mt-2">Profit Percentage (%) :</span>
-                                            <input type="number" name="usps_profit" class="form-control col-2" id="usps_profit" value="{{ setting('usps_profit', null, $user->id) }}">
+                                            <input type="number" name="usps_profit" step="0.01" min=0 class="form-control col-2" id="usps_profit" value="{{ setting('usps_profit', null, $user->id) }}">
                                         </div>    
                                     </div>
                                 </div>
@@ -209,7 +226,7 @@
                                     <div class="col-md-6">
                                         <div class="input-group">
                                             <div class="vs-checkbox-con vs-checkbox-primary" title="ups">
-                                                <input type="checkbox" name="ups" id="ups" @if(setting('ups', null, $user->id)) checked @endif>
+                                                <input type="checkbox" name="ups"  id="ups" @if(setting('ups', null, $user->id)) checked @endif>
                                                 <span class="vs-checkbox vs-checkbox-lg">
                                                     <span class="vs-checkbox--check">
                                                         <i class="vs-icon feather icon-check"></i>
@@ -217,7 +234,24 @@
                                                 </span>
                                             </div>
                                             <span class="offset-2 mr-2 mt-2">Profit Percentage (%) :</span>
-                                            <input type="number" name="ups_profit" class="form-control col-2" id="ups_profit" value="{{ setting('ups_profit', null, $user->id) }}">
+                                            <input type="number" name="ups_profit" step="0.01" min=0 class="form-control col-2" id="ups_profit" value="{{ setting('ups_profit', null, $user->id) }}">
+                                        </div>    
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">FedEx<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="ups">
+                                                <input type="checkbox" name="fedex" id="fedex" @if(setting('fedex', null, $user->id)) checked @endif>
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            <span class="offset-2 mr-2 mt-2">Profit Percentage (%) :</span>
+                                            <input type="number" name="fedex_profit" step="0.01" min=0 class="form-control col-2" id="ups_profit" value="{{ setting('fedex_profit', null, $user->id) }}">
                                         </div>    
                                     </div>
                                 </div>
