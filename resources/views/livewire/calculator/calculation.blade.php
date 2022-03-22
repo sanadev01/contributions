@@ -33,6 +33,8 @@
                     @enderror
                 </div>
             </div>
+            <input type="hidden" name="weight_discount" value="{{ $totalDiscountedWeight }}">
+            <input type="hidden" name="discount_volume_weight" value="{{ $volumeWeight }}">
         </div>
     </div>
 
