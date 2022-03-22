@@ -126,6 +126,9 @@
                         <td>${{ number_format($order->gross_total,2) }}</td>
                         <td>
                             <span class="{{ $order->getStatusClass() }}">
+                                @if ($order->status == App\Models\Order::STATUS_INVENTORY)
+                                    INVENTORY
+                                @endif
                                 @if ($order->status == App\Models\Order::STATUS_PREALERT_TRANSIT)
                                     PREALERT TRANSIT
                                 @endif

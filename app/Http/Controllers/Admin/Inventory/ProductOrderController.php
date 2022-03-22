@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers\Admin\Inventory;
 
+use Exception;
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Repositories\Inventory\ProductRepository;
 
 class ProductOrderController extends Controller
@@ -38,7 +42,49 @@ class ProductOrderController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request);
+        $rules = [
+            'items.*.quantity' => 'required|gt:0',
+        ];
+        if ( Auth::user()->isAdmin() ){
+            $rules['user_id'] = 'required|exists:users,id';
+        }
+        $this->validate($request, $rules);
+        
+        DB::beginTransaction();
+        try{
+            $order = Order::create([
+                'user_id' => Auth::user()->isAdmin()? $request->user_id: auth()->id(),
+                'status' => Order::STATUS_INVENTORY,
+            ]);
+            
+            $order->update([
+                'warehouse_number' => "HD-{$order->id}"
+            ]);
+            $productsIds = $request->ids;
+            foreach($productsIds as $key=> $productId){
+                $product = Product::find($productId);
+            
+                if ($product->quantity > 0) {
+                    $order->products()->attach($product);
+                    $product->update([
+                        'quantity' => $product->quantity - $request->items[$key]['quantity'],
+                    ]);
+                    $order->items()->create([
+                        'quantity' => $request->items[$key]['quantity'],
+                        'sh_code' =>$product->sh_code,
+                        'value' => $product->price,
+                        'description' => $product->description,
+                    ]);
+                }
+            }
+            DB::commit();
+            session()->flash('alert-success','Sale Order Created Successfull');
+            return redirect()->route('admin.inventory.product.index');
+        }catch(Exception $ex){
+            return $ex->getMessage();
+        }
+
+       
     }
 
     /**

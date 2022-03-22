@@ -1,7 +1,7 @@
 <tr>
     <td>
         <div class="vs-checkbox-con vs-checkbox-primary" title="@lang('orders.Bulk Print')">
-            <input type="checkbox" name="orders[]" class="bulk-orders" value="{{$product->id}}">
+            <input type="checkbox" name="orders[]" class="bulk-orders" value="{{$product->id}}"  @if ($product->status == 'pending') disabled @endif>
             <span class="vs-checkbox vs-checkbox-lg">
                 <span class="vs-checkbox--check">
                     <i class="vs-icon feather icon-check"></i>
