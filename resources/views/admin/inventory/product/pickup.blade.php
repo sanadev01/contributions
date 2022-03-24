@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('page') 
-    <section id="prealerts">
+    <section id="app">
         <div class="row">
             <div class="col-12">
                 <div class="card">
@@ -12,7 +12,7 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <livewire:product.scan>
+                                    <scan-product :orders_prop="{{ json_encode($orders)}}" :base_url="{{ json_encode($baseUrl) }}"></scan-product>
                                 </div>
                             </div>
                         </div>
@@ -22,3 +22,6 @@
         </div>
     </section>
 @endsection
+@push('js')
+    <script src="{{ asset('js/app.js') }}"></script>
+@endpush

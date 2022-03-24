@@ -11,7 +11,20 @@
             <form class="form" action="{{ route('admin.inventory.product-order.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="form-body">
-                    @foreach ($products as $product)
+                    @admin
+                        <div class="row mt-1">
+                            <div class="form-group col-12 col-sm-6 col-md-4">
+                                <div class="controls">
+                                    <label>@lang('parcel.User POBOX Number') <span class="text-danger">*</span></label>
+                                    <livewire:components.search-user />
+                                    @error('pobox_number')
+                                    <div class="help-block text-danger"> {{ $message }} </div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                    @endadmin
+                    @foreach ($products as $key =>$product)
                         <div class="row col-12">
                             <div class="form-group col-6 col-sm-6 col-md-6">
                                 <div class="controls">
@@ -24,8 +37,10 @@
                             <div class="form-group col-6 col-sm-6 col-md-6">
                                 <div class="controls">
                                     <label>Quantity<span class="text-danger">*</span></label>
-                                    <input type="number" class="form-control" name="quantity[]" value="" required placeholder="Enter Product Quantity" required>
-                                </div>
+                                    <input type="number" class="form-control" name="items[{{$key}}][quantity]" value="" required placeholder="Enter Product Quantity" min="1" max="{{ $product->quantity }}" required>
+                                    @error("items.{$key}.quantity")
+                                        <div class="help-block text-danger">{{ $message }}</div>
+                                    @enderror</div>
                             </div>
                         </div>
                     @endforeach
