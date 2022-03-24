@@ -12,7 +12,7 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <example-component></example-component>
+                                    <scan-product :orders_prop="{{ json_encode($orders)}}" :base_url="{{ json_encode($baseUrl) }}"></scan-product>
                                 </div>
                             </div>
                         </div>

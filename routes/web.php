@@ -167,6 +167,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('product-order', ProductOrderController::class)->only('show','create','store');
             Route::get('inventory-orders', [\App\Http\Controllers\Admin\Inventory\InventoryOrderController::class, 'index'])->name('orders');
             Route::get('inventory-orders-export', [\App\Http\Controllers\Admin\Inventory\InventoryOrderController::class, 'exportOrders'])->name('orders.export');
+            Route::get('/place-inventory-order/{order}', [\App\Http\Controllers\Admin\Inventory\ProductController::class, 'placeOrder'])->name('place-order');
         });
 
         Route::namespace('Affiliate')->as('affiliate.')->prefix('affiliate')->group(function(){

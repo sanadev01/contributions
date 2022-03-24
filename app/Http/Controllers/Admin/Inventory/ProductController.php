@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Admin\Inventory;
 
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\Warehouse\Container;
+use Illuminate\Support\Facades\URL;
 use App\Http\Controllers\Controller;
 use App\Repositories\Inventory\ProductRepository;
 use App\Http\Requests\Product\ProductCreateRequest;
@@ -129,9 +131,13 @@ class ProductController extends Controller
 
     public function pickup()
     {
-        $container = Container::find(1);
-        
-        return view('admin.inventory.product.pickup', compact('container'));
+        $query = Order::query();
+        $query = (auth()->user()->isAdmin()) ? $query : $query->where('user_id', auth()->id);
+
+        $orders = $query->where('status', Order::STATUS_INVENTORY)->with('products:sku,name,id', 'user')->select('warehouse_number','user_id', 'status', 'id')->get();
+        $baseUrl = URL::to('/');
+
+        return view('admin.inventory.product.pickup', compact('orders', 'baseUrl'));
     }
 
 }
