@@ -132,7 +132,7 @@ class ProductController extends Controller
     public function pickup()
     {
         $query = Order::query();
-        $query = (auth()->user()->isAdmin()) ? $query : $query->where('user_id', auth()->id);
+        $query = (auth()->user()->isAdmin()) ? $query : $query->where('user_id', auth()->user()->id);
 
         $orders = $query->where('status', Order::STATUS_INVENTORY)->with('products:sku,name,id', 'user')->select('warehouse_number','user_id', 'status', 'id')->get();
         $baseUrl = URL::to('/');
