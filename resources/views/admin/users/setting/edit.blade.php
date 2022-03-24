@@ -270,7 +270,7 @@
                                         </div>    
                                     </div>
                                 </div>
-                                <div class="controls row mb-1 align-items-center">
+                                {{-- <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">Stripe<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <div class="vs-checkbox-con vs-checkbox-primary" title="Stripe">
@@ -283,7 +283,7 @@
                                             <span class="h3 mx-2 text-primary my-0 py-0"></span>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">Volumetric Discount<span class="text-danger"></span></label>
                                     <div class="col-md-6">

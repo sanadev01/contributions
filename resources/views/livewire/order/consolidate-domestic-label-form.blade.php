@@ -37,11 +37,13 @@
                     @endforeach
                 </tbody>
             </table>
-            <div class="alert alert-danger" role="alert">
-                @foreach ($consolidationErrors as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </div>
+            @if ($consolidationErrors)
+                <div class="alert alert-danger" role="alert">
+                    @foreach ($consolidationErrors as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </div>
+            @endif
         </div>
         <hr>
         <form wire:submit.prevent="getRates">
@@ -147,7 +149,8 @@
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="pickup_location">Preferred Pickup Location <span class="text-danger">*</span></label>
-                                <input type="text" wire:model.lazy="pickupLocation" class="form-control" name="pickup_location" value="{{ old('pickup_location') }}" id="pickup_location" placeholder="Enter your preferred prickup point e.g Front Door">
+                                <input type="text" wire:model.lazy="pickupLocation" class="form-control" name="pickup_location" value="{{ old('pickup_location') }}" id="pickup_location" placeholder="Enter your preferred prickup point e.g Front">
+                                <span class="error text-danger">available pickup locations are: 'FRONT', 'BACK', 'NONE'</span>
                                 @error('pickupLocation') <span class="error text-danger">{{ $message }}</span> @enderror
                             </div>
                         </div>
