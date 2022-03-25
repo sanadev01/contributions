@@ -129,12 +129,9 @@ class ProductController extends Controller
         return view('admin.inventory.product.index',compact('status'));
     }
 
-    public function pickup()
+    public function pickup(ProductRepository $productRepository)
     {
-        $query = Order::query();
-        $query = (auth()->user()->isAdmin()) ? $query : $query->where('user_id', auth()->user()->id);
-
-        $orders = $query->where('status', Order::STATUS_INVENTORY)->with('products:sku,name,id', 'user')->select('warehouse_number','user_id', 'status', 'id')->get();
+        $orders = $productRepository->getPickupOrders();
         $baseUrl = URL::to('/');
 
         return view('admin.inventory.product.pickup', compact('orders', 'baseUrl'));

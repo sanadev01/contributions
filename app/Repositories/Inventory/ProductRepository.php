@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Inventory;
 
+use Exception;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -64,6 +65,11 @@ class ProductRepository
         $products = $query;
 
         return $paginate ? $products->paginate($pageSize) : $products->get();
+    }
+
+    public function getProductsByIds($Ids)
+    {
+        return Product::whereIn('id', $Ids)->get();
     }
 
 
@@ -294,6 +300,71 @@ class ProductRepository
 
     }
 
+    public function createOrder($request)
+    {
+        DB::beginTransaction();
+        try {
+           $order = Order::create([
+                'user_id' => Auth::user()->isAdmin()? $request->user_id: auth()->id(),
+                'status' => Order::STATUS_INVENTORY,
+            ]);
+
+            $order->update([
+                'warehouse_number' => "HD-{$order->id}"
+            ]);
+
+            foreach($request->ids as $key=> $productId)
+            {
+                $product = Product::find($productId);
+            
+                if ($product->quantity > 0) {
+                    $order->products()->attach($product);
+                    $product->update([
+                        'quantity' => $product->quantity - $request->items[$key]['quantity'],
+                    ]);
+                    $order->items()->create([
+                        'quantity' => $request->items[$key]['quantity'],
+                        'sh_code' =>$product->sh_code,
+                        'value' => $product->price,
+                        'description' => $product->description,
+                    ]);
+                }
+            }
+
+            if ($order->products->isNotEmpty()) {
+                $items = $order->products->toArray();
+
+                $order->update([
+                    'customer_reference' => $this->setShCodes($items),
+                    'carrier' => $this->setOrderNumbers($items),
+                    'tracking_id' => $this->setOrderDescriptions($items),
+                ]);
+            }
+
+            DB::commit();
+
+            return true;
+
+        } catch (Exception $ex) {
+            DB::rollback();
+            $this->error = $ex->getMessage();
+            return false;
+        }
+    }
+
+    public function getPickupOrders()
+    {
+        $query = Order::query();
+        $query = (auth()->user()->isAdmin()) ? $query : $query->where('user_id', auth()->user()->id);
+
+        $orders = $query->where('status', Order::STATUS_INVENTORY)->with(
+                ['user' => function ($query){ $query->select('id', 'name', 'pobox_number');}, 
+                            'products' => function($query){ $query->select('sku','name','id');}
+                            ])->select('warehouse_number','user_id', 'status', 'id')->get();
+
+        return $orders;
+    }
+
     public function getError()
     {
         return $this->error;
@@ -312,6 +383,7 @@ class ProductRepository
         foreach ($items as $item) {
             $shCodes[] = $item['sh_code'];
         }
+
         return implode(',', $shCodes);
     }
 
