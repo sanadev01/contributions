@@ -13,6 +13,12 @@ use App\Repositories\Inventory\ProductRepository;
 
 class ProductOrderController extends Controller
 {
+    protected $productRepository;
+
+    public function __construct(ProductRepository $productRepo)
+    {
+        $this->productRepository = $productRepo;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -30,7 +36,8 @@ class ProductOrderController extends Controller
      */
     public function create(Request $request)
     {
-        $products = Product::whereIn('id', json_decode($request->data))->get();
+        $products = $this->productRepository->getProductsByIds(json_decode($request->data));
+
         return view('admin.inventory.order.create-sale', compact('products'));
     }
 
@@ -50,41 +57,14 @@ class ProductOrderController extends Controller
         }
         $this->validate($request, $rules);
         
-        DB::beginTransaction();
-        try{
-            $order = Order::create([
-                'user_id' => Auth::user()->isAdmin()? $request->user_id: auth()->id(),
-                'status' => Order::STATUS_INVENTORY,
-            ]);
-            
-            $order->update([
-                'warehouse_number' => "HD-{$order->id}"
-            ]);
-            $productsIds = $request->ids;
-            foreach($productsIds as $key=> $productId){
-                $product = Product::find($productId);
-            
-                if ($product->quantity > 0) {
-                    $order->products()->attach($product);
-                    $product->update([
-                        'quantity' => $product->quantity - $request->items[$key]['quantity'],
-                    ]);
-                    $order->items()->create([
-                        'quantity' => $request->items[$key]['quantity'],
-                        'sh_code' =>$product->sh_code,
-                        'value' => $product->price,
-                        'description' => $product->description,
-                    ]);
-                }
-            }
-            DB::commit();
+        if($this->productRepository->createOrder($request))
+        {
             session()->flash('alert-success','Sale Order Created Successfull');
             return redirect()->route('admin.inventory.product.index');
-        }catch(Exception $ex){
-            return $ex->getMessage();
         }
-
-       
+        
+        session()->flash('alert-danger', $this->productRepository->getError());
+        return redirect()->route('admin.inventory.product.index');
     }
 
     /**

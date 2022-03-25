@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="col-12 row mb-5">
+        <div class="col-12 row mb-5" id="card-form">
             <div class="form-group col-4">
                 <label>Select Order</label>
                 <v-select :options="options" v-model="selectedOption"></v-select>
@@ -9,6 +9,9 @@
                 <label>Scan Products</label>
                 <input type="text" class="form-control col-8" v-model="search">
             </div>
+        </div>
+        <div class="alert alert-danger" role="alert" v-if="error">
+            {{ error }}
         </div>
         <table class="table table-bordered">
             <thead>
@@ -38,7 +41,6 @@
                 </tr>
             </tbody>
         </table>
-        
     </div>
 </template>
 <script>
@@ -74,8 +76,10 @@ import 'vue-select/dist/vue-select.css';
                     });
                 }
             },
-            clearSearch(){
-                
+            error(){
+                if(this.search && this.selectedOption && this.filterOrder.length == 0){
+                    return 'No sales order found against this product';
+                }
             }
         },
         methods: {
