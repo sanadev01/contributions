@@ -214,18 +214,12 @@ class ProductRepository
                 'customer_reference' => $productOrder->sh_code,
                 'carrier' => $productOrder->order,
                 'tracking_id' => $productOrder->description,
-                'weight' => ($productOrder->measurement_unit == 'kg/cm') ? $productOrder->weight : UnitsConverter::poundToKg($productOrder->weight),
-                'length' => 5,
-                'width' => 4,
-                'height' => 5,
                 'measurement_unit' => 'kg/cm',
                 'order_date' => now(),
-
             ]);
 
             $order->update([
                 'warehouse_number' => "HD-{$order->id}",
-                'weight' => number_format($order->weight + ($order->weight * Product::WEIGHT_PERCENTAGE), 2),
             ]);
 
             if ($productOrder->quantity > 0) {
@@ -241,6 +235,7 @@ class ProductRepository
                 'description' => $productOrder->description,
             ]);
 
+            $this->setOrderWeight($order);
             try {
                 Mail::send(new InventoryOrderPlaced($order));
             } catch (\Exception $ex) {
@@ -344,6 +339,9 @@ class ProductRepository
             }
 
             if ($order->products->isNotEmpty()) {
+
+                $this->setOrderWeight($order);
+
                 $items = $order->products->toArray();
 
                 $order->update([
@@ -387,6 +385,43 @@ class ProductRepository
         $importExcelService = new ProductImportService($request->file('excel_file'),$request);
         $response = $importExcelService->handle();
         return $response;
+    }
+
+    private function setOrderWeight($order)
+    {
+        $userWeightPercentage = setting('weight', null, $order->user->id);
+        $length = setting('length', null, $order->user->id);
+        $width = setting('width', null, $order->user->id);
+        $height = setting('height', null, $order->user->id);
+
+        
+        $orderProductsWeight = $this->getOrderProductsWeight($order->products);
+
+        $weightToAdd = round(($userWeightPercentage / 100) * $orderProductsWeight, 2);
+
+        $totalWeight = round($orderProductsWeight + $weightToAdd, 2);
+
+
+        $order->update([
+            'weight' => $totalWeight,
+            'length' => $length,
+            'width' => $width,
+            'height' => $height,
+            'measurement_unit' => 'kg/cm',
+        ]);
+
+        return true;
+    }
+
+    private function getOrderProductsWeight($products)
+    {
+        $weight = 0;
+
+        foreach ($products as $product) {
+            $weight += $product->weight;
+        }
+
+        return $weight;
     }
 
     private function setShCodes($items)
