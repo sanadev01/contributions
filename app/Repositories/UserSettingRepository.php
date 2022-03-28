@@ -35,6 +35,11 @@ class UserSettingRepository {
         ($request->discount_percentage != null ) ? saveSetting('discount_percentage', $request->discount_percentage, $user->id) : saveSetting('discount_percentage', 0, $user->id);
         ($request->fedex_profit != null ) ? saveSetting('fedex_profit', $request->fedex_profit, $user->id) : saveSetting('fedex_profit', 0, $user->id);
         
+        ($request->weight != null ) ? saveSetting('weight', $request->weight, $user->id) : saveSetting('weight', 0, $user->id);
+        ($request->length != null ) ? saveSetting('length', $request->length, $user->id) : saveSetting('length', 0, $user->id);
+        ($request->width != null ) ? saveSetting('width', $request->width, $user->id) : saveSetting('width', 0, $user->id);
+        ($request->height != null ) ? saveSetting('height', $request->height, $user->id) : saveSetting('height', 0, $user->id);
+
         if ( $request->password ){
             $user->update([
                 'password' => bcrypt($request->password)

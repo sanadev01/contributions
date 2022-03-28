@@ -301,6 +301,22 @@
                                         </div>    
                                     </div>
                                 </div>
+                                <div class="controls row align-items-center mt-2">
+                                    <label class="col-md-3 text-md-right">Weight (%)<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div title="weight">
+                                                <input class="form-control" step="0.01" min=0 type="number" name="weight" value="{{ setting('weight', null, $user->id) }}">
+                                            </div>
+                                            <span class="ml-4 mr-2 mt-2">Length (%): </span>
+                                            <input type="number" name="length" class="form-control col-2" id="length" step="0.01" min=0 type="number" value="{{ setting('length', null, $user->id) }}">
+                                            <span class="ml-4 mr-2 mt-2">Width (%): </span>
+                                            <input type="number" name="width" class="form-control col-2" id="width" step="0.01" min=0 type="number" value="{{ setting('width', null, $user->id) }}">
+                                            <span class="ml-4 mr-2 mt-2">Height (%): </span>
+                                            <input type="number" name="height" class="form-control col-2" id="height" step="0.01" min=0 type="number" value="{{ setting('height', null, $user->id) }}">
+                                        </div>    
+                                    </div>
+                                </div>
                                 <div class="row mt-1">
                                     <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
                                         <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">
