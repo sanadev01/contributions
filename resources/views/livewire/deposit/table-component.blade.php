@@ -32,12 +32,14 @@
             <a href="{{$downloadLink}}" class="btn btn-primary">Download</a>
         </div>
     </div>
+    @if (auth()->user()->isAdmin())
     <div class="row justify-content-center mt-1">
         <div class="col-md-4">
             <label>Select User</label>
             <livewire:components.search-user />
         </div>
     </div>
+    @endif
     <div class="row">
         <div class="col-1 table-actions">
             <select wire:model='pageSize' class="form-control d-flex w-auto">
