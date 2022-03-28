@@ -40,7 +40,7 @@
                 $.each($(".bulk-orders:checked"), function(){
                     productIds.push($(this).val());
                 });
-                alert(productIds);
+                
                 $('#bulk_actions_form #command').val('create-sale-order');
                 $('#bulk_actions_form #data').val(JSON.stringify(productIds));
                 $('#bulk_actions_form').submit();

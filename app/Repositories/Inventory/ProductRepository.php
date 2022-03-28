@@ -61,6 +61,18 @@ class ProductRepository
                 return $query->where('sku',"{$request->sku}");
             });
         }
+        
+        if ( $request->weight ){
+            $query->where(function($query) use($request){
+                return $query->where('weight',"{$request->weight}");
+            });
+        }
+        
+        if ( $request->unit ){
+            $query->where(function($query) use($request){
+                return $query->where('measurement_unit',"{$request->unit}");
+            });
+        }
 
         $products = $query;
 

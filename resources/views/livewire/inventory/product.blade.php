@@ -33,6 +33,9 @@
                         <th>Price</th>
                         <th>Quantity</th>
                         <th>SKU</th>
+                        <th>Barcode</th>
+                        <th>Weight</th>
+                        <th>Unit</th>
                         <th>Inventroy Value</th>
                         <th>Active</th>
                         <th>Description</th>
@@ -63,6 +66,19 @@
                         <th></th>
                         <th>
                             <input type="search" class="form-control" wire:model.debounce.1000ms="sku">
+                        </th>
+                        <th>
+                            <input type="search" class="form-control" wire:model.debounce.1000ms="barcode">
+                        </th>
+                        <th>
+                            <input type="search" class="form-control" wire:model.debounce.1000ms="weight">
+                        </th>
+                        <th>
+                            <select class="form-control" wire:model="unit">
+                                <option value="">Select Unit</option>
+                                <option value="kg/cm">kg/cm</option>
+                                <option value="lbs/in">lbs/in</option>
+                            </select>
                         </th>
                         <th></th>
                         <th >

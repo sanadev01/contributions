@@ -23,6 +23,9 @@ class Product extends Component
     public $price;
     public $status;
     public $sku;
+    public $unit;
+    public $weight;
+    public $barcode;
     public $description;
     
     public function render()
@@ -40,6 +43,9 @@ class Product extends Component
             'name' => $this->name,
             'price' => $this->price,
             'sku' => $this->sku,
+            'unit' => $this->unit,
+            'weight' => $this->weight,
+            'barcode' => $this->barcode,
             'status' => $this->status,
             'description' => $this->description,
         ]),true,$this->pageSize);

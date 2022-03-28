@@ -1,4 +1,4 @@
-<tr>
+<tr @if ($product->quantity <= 0) style="background: red;" @endif>
     <td>
         <div class="vs-checkbox-con vs-checkbox-primary" title="@lang('orders.Bulk Print')">
             <input type="checkbox" name="orders[]" class="bulk-orders" value="{{$product->id}}"  @if ($product->status == 'pending') disabled @endif>
@@ -18,6 +18,9 @@
     <td>{{ $product->price }}</td>
     <td>{{ $product->quantity }}</td>
     <td>{{ $product->sku }}</td>
+    <td>{{ $product->barcode }}</td>
+    <td>{{ $product->weight }}</td>
+    <td>{{ $product->measurement_unit }}</td>
     <td class="text-right">{{ $product->inventory_value }}</td>
     <td>
         <select style="min-width:150px;" class="form-control {{ !auth()->user()->isAdmin() ? 'btn disabled' : ''  }} {{ $product->getStatusClass() }}" @if (auth()->user()->isAdmin())  wire:change="$emit('updated-status',{{$product->id}},$event.target.value)" @else disabled="disabled"  @endif>
