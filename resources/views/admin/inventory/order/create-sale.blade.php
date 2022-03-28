@@ -36,7 +36,7 @@
                             </div>
                             <div class="form-group col-6 col-sm-6 col-md-6">
                                 <div class="controls">
-                                    <label>Quantity<span class="text-danger">*</span></label>
+                                    <label>Quantity<span class="text-danger">*</span> <b>Quantity Available {{ $product->quantity }}</b></label>
                                     <input type="number" class="form-control" name="items[{{$key}}][quantity]" value="" required placeholder="Enter Product Quantity" min="1" max="{{ $product->quantity }}" required>
                                     @error("items.{$key}.quantity")
                                         <div class="help-block text-danger">{{ $message }}</div>
