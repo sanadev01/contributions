@@ -28,7 +28,13 @@ class TableComponent extends Component
     public $sortAsc = false;
     public $description;
     public $balance;
+    public $userId;
     
+    protected $listeners = [
+        'user:updated' => 'updateUser',
+        'clear-search' => 'clearSearch',
+    ];
+
     public function mount()
     {
         $this->dateFrom = Carbon::now()->startOfMonth()->format('Y-m-d');
@@ -57,6 +63,16 @@ class TableComponent extends Component
     public function getDeposits()
     {
         return (new DepositRepository)->get($this->getRequestData(),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc');
+    }
+
+    public function updateUser($userId)
+    {
+        $this->user = $userId;
+    }
+
+    public function clearSearch()
+    {
+        $this->user = null;
     }
 
     public function getRequestData()

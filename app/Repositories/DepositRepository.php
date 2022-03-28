@@ -41,7 +41,8 @@ class DepositRepository
                 return $query->where('pobox_number',"%{$request->user}%")
                             ->orWhere('name','LIKE',"%{$request->user}%")
                             ->orWhere('last_name','LIKE',"%{$request->user}%")
-                            ->orWhere('email','LIKE',"%{$request->user}%");
+                            ->orWhere('email','LIKE',"%{$request->user}%")
+                            ->orWhere('id', $request->user);
             });
         }
 
