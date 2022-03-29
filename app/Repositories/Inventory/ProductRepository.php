@@ -3,6 +3,7 @@
 namespace App\Repositories\Inventory;
 
 use Exception;
+use App\Models\User;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -389,10 +390,10 @@ class ProductRepository
 
     private function setOrderWeight($order)
     {
-        $userWeightPercentage = setting('weight', null, $order->user->id);
-        $length = setting('length', null, $order->user->id);
-        $width = setting('width', null, $order->user->id);
-        $height = setting('height', null, $order->user->id);
+        $userWeightPercentage = (setting('weight', 0, $order->user->id) != 0 ? setting('weight', null, $order->user->id) : setting('weight', null, User::ROLE_ADMIN));
+        $length = (setting('length', 0, $order->user->id) != 0 ? setting('length', null, $order->user->id) : setting('length', null, User::ROLE_ADMIN));
+        $width = (setting('width', 0, $order->user->id) != 0 ? setting('width', null, $order->user->id) : setting('width', null, User::ROLE_ADMIN));
+        $height = (setting('height', 0, $order->user->id) != 0 ? setting('height', null, $order->user->id) : setting('height', null, User::ROLE_ADMIN));
 
         
         $orderProductsWeight = $this->getOrderProductsWeight($order->products);
@@ -418,7 +419,7 @@ class ProductRepository
         $weight = 0;
 
         foreach ($products as $product) {
-            $weight += $product->weight;
+            $weight += ($product->measurement_unit == 'lbs/in') ? UnitsConverter::poundToKg($product->weight) : $product->weight;
         }
 
         return $weight;
