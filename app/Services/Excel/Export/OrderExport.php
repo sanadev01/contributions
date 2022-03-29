@@ -41,7 +41,7 @@ class OrderExport extends AbstractExportService
             $this->setCellValue('E'.$row, $order->tracking_id);
             $this->setCellValue('F'.$row, $order->customer_reference);
             $this->setCellFormat('G'.$row);
-            $this->setCellValue('G'.$row, (string)$order->corrios_tracking_code);
+            $this->setCellValue('G'.$row, $this->getOrderTrackingCodes($order));
             $this->setCellValue('H'.$row, $order->gross_total);
             $this->setCellValue('I'.$row, $this->checkValue(number_format($order->dangrous_goods,2)));
             $this->setCellValue('J'.$row, $order->getWeight('kg'));
@@ -169,5 +169,11 @@ class OrderExport extends AbstractExportService
     {
         $divisor = $unit == 'in' ? 166 : 6000;
         return round(($length * $width * $height) / $divisor,2);
+    }
+
+    private function getOrderTrackingCodes($order)
+    {
+        $trackingCodes = ($order->hasSecondLabel() ? $order->corrios_tracking_code.','.$order->us_api_tracking_code : $order->corrios_tracking_code);
+        return (string)$trackingCodes;
     }
 }
