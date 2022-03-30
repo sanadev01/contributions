@@ -36,18 +36,13 @@
                             <a href="#" wire:click.prevent="sortBy('created_at')">@lang('orders.date')</a>
                         </th>
                         <th>
-                            <a href="#" wire:click.prevent="sortBy('id')">@lang('orders.order-id')</a> <i>  </i>
+                            <a href="#" wire:click.prevent="sortBy('id')">Sale Order Number</a> <i>  </i>
                         </th>
                         @admin
                         <th>User Name</th>
                         @endadmin
-                        <th>Loja/Cliente</th>
-                        <th>Carrier Tracking</th>
-                        <th>Referência do Cliente</th>
-                        <th>Tracking Code</th>
-                        <th><a href="#" wire:click.prevent="sortBy('gross_total')">@lang('orders.amount')</a></th>
+                       
                         <th>@lang('orders.status')</th>
-                        <th>@lang('orders.payment-status')</th>
                         <th class="no-print">@lang('orders.actions.actions')</th>
                     </tr>
                     <tr class="no-print">
@@ -62,42 +57,18 @@
                             <input type="search" class="form-control" wire:model.debounce.1000ms="name">
                         </th>
                         @endadmin
-                        <th>
-                            <input type="search" class="form-control" wire:model.debounce.1000ms="merchant">
-                        </th>
-                        <th>
-                            <input type="search" class="form-control" wire:model.debounce.1000ms="tracking_id">
-                        </th>
-                        <th>
-                            <input type="search" class="form-control" wire:model.debounce.1000ms="customer_reference">
-                        </th>
-                        <th>
-                            <input type="search" class="form-control" wire:model.debounce.1000ms="tracking_code">
-                        </th>
-                        <th>
-                            <input type="search" class="form-control" wire:model.debounce.1000ms="amount">
-                        </th>
+                       
                         <th>
                             <select class="form-control" wire:model="status">
                                 <option value="">All</option>
-                                <option value="{{ App\Models\Order::STATUS_PREALERT_TRANSIT }}">PREALERT TRANSIT</option>
-                                <option value="{{ App\Models\Order::STATUS_PREALERT_READY }}">PREALERT READY</option>
-                                <option value="{{ App\Models\Order::STATUS_ORDER }}">ORDER</option>
-                                <option value="{{ App\Models\Order::STATUS_CANCEL }}">CANCELLED</option>
-                                <option value="{{ App\Models\Order::STATUS_REJECTED }}">REJECTED</option>
-                                <option value="{{ App\Models\Order::STATUS_RELEASE }}">RELEASED</option>
-                                <option value="{{ App\Models\Order::STATUS_PAYMENT_PENDING }}">PAYMENT_PENDING</option>
-                                <option value="{{ App\Models\Order::STATUS_PAYMENT_DONE }}">PAYMENT_DONE</option>
-                                <option value="{{ App\Models\Order::STATUS_SHIPPED }}">SHIPPED</option>
+                                <option value="{{ App\Models\Order::STATUS_INVENTORY_PENDING }}">PENDING</option>
+                                <option value="{{ App\Models\Order::STATUS_INVENTORY_IN_PROGRESS }}">IN_PROGRESS</option>
+                                <option value="{{ App\Models\Order::STATUS_INVENTORY_CANCELLED }}">CANCELLED</option>
+                                {{-- <option value="{{ App\Models\Order::STATUS_INVENTORY_REJECTED }}">REJECTED</option> --}}
+                                <option value="{{ App\Models\Order::STATUS_INVENTORY_FULFILLED }}">FULFILLED</option>
                             </select>
                         </th>
-                        <th>
-                            <select class="form-control" wire:model="paymentStatus">
-                                <option value="">All</option>
-                                <option value="paid">Paid</option>
-                                <option value="unpaid">Unpaid</option>
-                            </select>
-                        </th>
+                       
                     </tr>
                 </thead>
                 <tbody>
@@ -119,54 +90,14 @@
                         @admin
                         <td>{{ $order->user->name }} - {{ $order->user->hasRole('wholesale') ? 'W' : 'R' }}</td>
                         @endadmin
-                        <td>{{ ucfirst($order->merchant) }}</td>
-                        <td>{{ ucfirst($order->tracking_id) }}</td>
-                        <td>{{ ucfirst($order->customer_reference) }}</td>
-                        <td>{{ $order->corrios_tracking_code }}</td>
-                        <td>${{ number_format($order->gross_total,2) }}</td>
                         <td>
-                            <span class="{{ $order->getStatusClass() }}">
-                                @if ($order->status == App\Models\Order::STATUS_INVENTORY)
-                                    INVENTORY
-                                @endif
-                                @if ($order->status == App\Models\Order::STATUS_PREALERT_TRANSIT)
-                                    PREALERT TRANSIT
-                                @endif
-                                @if ($order->status == App\Models\Order::STATUS_PREALERT_READY)
-                                    PREALERT READY
-                                @endif
-                                @if ($order->status == App\Models\Order::STATUS_ORDER)
-                                    ORDER
-                                @endif
-                                @if ($order->status == App\Models\Order::STATUS_CANCEL)
-                                    CANCEL
-                                @endif
-                                @if ($order->status == App\Models\Order::STATUS_REJECTED)
-                                    REJECTED
-                                @endif
-                                @if ($order->status == App\Models\Order::STATUS_RELEASE)
-                                    RELEASE
-                                @endif
-                                @if ($order->status == App\Models\Order::STATUS_PAYMENT_PENDING)
-                                    PAYMENT PENDING
-                                @endif
-                                @if ($order->status == App\Models\Order::STATUS_PAYMENT_DONE)
-                                    PAYMENT DONE
-                                @endif
-                                @if ($order->status == App\Models\Order::STATUS_SHIPPED)
-                                    SHIPPED
-                                @endif
-                                @if ($order->status == App\Models\Order::STATUS_REFUND)
-                                    REFUND
-                                @endif
-                            </span>
-                        </td>
-                        <td class="font-large-1">
-                            @if( $order->isPaid() )
-                                <i class="feather icon-check text-success"></i>
-                            @else
-                                <i class="feather icon-x  @if( $order->user->hasRole('retailer') &&  !$order->isPaid()) text-white @else text-danger @endif"></i>
-                            @endif
+                            <select style="min-width:150px;" class="form-control {{ !auth()->user()->isAdmin() ? 'btn disabled' : ''  }} {{ $order->getStatusClass() }}" @if (auth()->user()->isAdmin())  wire:change="$emit('updated-status',{{$order->id}},$event.target.value)" @else disabled="disabled"  @endif>
+                                <option class="bg-info" value="{{ App\Models\Order::STATUS_INVENTORY_PENDING }}" {{ $order->status == App\Models\Order::STATUS_INVENTORY_PENDING ? 'selected': '' }}>Pending</option>
+                                <option class="bg-warning text-dark" value="{{ App\Models\Order::STATUS_INVENTORY_IN_PROGRESS }}" {{ $order->status == App\Models\Order::STATUS_INVENTORY_IN_PROGRESS ? 'selected': '' }}>In Progress</option>
+                                <option class="btn-danger" value="{{ App\Models\Order::STATUS_INVENTORY_CANCELLED }}" {{ $order->status == App\Models\Order::STATUS_INVENTORY_CANCELLED ? 'selected': '' }}>CANCELLED</option>
+                                {{-- <option class="btn-danger" value="{{ App\Models\Order::STATUS_INVENTORY_REJECTED }}" {{ $order->status == App\Models\Order::STATUS_INVENTORY_REJECTED ? 'selected': '' }}>REJECTED</option> --}}
+                                <option class="bg-success" value="{{ App\Models\Order::STATUS_INVENTORY_FULFILLED }}" {{ $order->status == App\Models\Order::STATUS_INVENTORY_FULFILLED ? 'selected': '' }}>Fulfilled</option>
+                            </select>
                         </td>
                         <td>
                             <button data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.inventory.order.products',$order) }}" class="btn btn-primary">
@@ -186,3 +117,27 @@
     </div>
     @include('layouts.livewire.loading')
 </div>
+
+@push('lvjs-stack')
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            
+            @this.on('updated-status',function(orderId,status){
+                $.post('{{route("api.order.status.update")}}',{
+                    order_id: orderId,
+                    status : status
+                })
+                .then(function(response){
+                    if ( response.success ){
+                        @this.call('render')
+                    }else{
+                        toastr.error(response.message)
+                    }
+                }).catch(function(data){
+                    toastr.error(response.message)
+                })
+            })
+
+        });
+    </script>
+@endpush

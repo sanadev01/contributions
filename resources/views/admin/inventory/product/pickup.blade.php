@@ -6,13 +6,68 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="mb-0">Scan Products</h4>
+                        <h4 class="mb-0">Pickup Products</h4>
                     </div>
                     <div class="card-content collapse show">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <scan-product :orders_prop="{{ json_encode($orders)}}" :base_url="{{ json_encode($baseUrl) }}"></scan-product>
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Sale Order</th>
+                                                <th>User Name</th>
+                                                <th>Pobox Number</th>
+                                                <th>Status</th>
+                                                <th>Products / SKU</th>
+                                                {{-- <th>SKU</th> --}}
+                                                {{-- <th>Barcode</th> --}}
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse ($orders as $order)
+                                                <tr>
+                                                    <td>{{ $order->warehouse_number }}</td>
+                                                    <td>{{ $order->user->name }}</td>
+                                                    <td>{{ $order->user->pobox_number  }}</td>
+                                                    <td>
+                                                        <select style="min-width:150px;" class="form-control btn disabled {{ $order->getStatusClass() }}" disabled="disabled">
+                                                            <option class="bg-info" value="{{ App\Models\Order::STATUS_INVENTORY_PENDING }}" {{ $order->status == App\Models\Order::STATUS_INVENTORY_PENDING ? 'selected': '' }}>Pending</option>
+                                                            <option class="bg-warning text-dark" value="{{ App\Models\Order::STATUS_INVENTORY_IN_PROGRESS }}" {{ $order->status == App\Models\Order::STATUS_INVENTORY_IN_PROGRESS ? 'selected': '' }}>In Progress</option>
+                                                            <option class="btn-danger" value="{{ App\Models\Order::STATUS_INVENTORY_CANCELLED }}" {{ $order->status == App\Models\Order::STATUS_INVENTORY_CANCELLED ? 'selected': '' }}>CANCELLED</option>
+                                                            {{-- <option class="btn-danger" value="{{ App\Models\Order::STATUS_INVENTORY_REJECTED }}" {{ $order->status == App\Models\Order::STATUS_INVENTORY_REJECTED ? 'selected': '' }}>REJECTED</option> --}}
+                                                            <option class="bg-success text-dark" value="{{ App\Models\Order::STATUS_INVENTORY_FULFILLED }}" {{ $order->status == App\Models\Order::STATUS_INVENTORY_FULFILLED ? 'selected': '' }}>Fulfilled</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <ul>
+                                                            @foreach ($order->products as $product)
+                                                                <li>{{ $product->name }} / <b>{{ $product->sku }}</b></li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </td>
+                                                    {{-- <td>
+                                                        @foreach ($order->products as $product)
+                                                            {{ dd($product)}}<br>
+                                                        @endforeach
+                                                        
+                                                    </td> --}}
+                                                    <td>
+                                                        <button data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.inventory.order.products',$order) }}" class="btn btn-primary">
+                                                            <i class="feather icon-list"></i> @lang('orders.actions.view-products')
+                                                        </button>
+                                                        |
+                                                        <a href="{{ route('admin.parcels.edit', $order) }}" class="btn btn-success">Place Order</a>
+                                                    </td>
+                                                </tr>
+                                            @empty
+                                            <tr>
+                                                <td colspan="6"></td>
+                                            </tr>
+                                            @endforelse   
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -22,16 +77,6 @@
         </div>
     </section>
 @endsection
-@push('js')
-    <script src="{{ asset('js/app.js') }}"></script>
-    <script>
-        var window_hegiht = screen.height;
-        var header_height = $('.header-navbar').css('height');
-        var card_header_height = $('#app .card-header').css('height');
-        var card_form_height = $('#card-form').css('height');
-        var card_thead_height = $('#app .card thead').css('height');
-        var total = parseFloat(header_height) + parseFloat(card_header_height) + parseFloat(card_form_height) + parseFloat(card_thead_height);
-        var remaining_hegiht = window_hegiht - Math.round(total* 100) / 100;
-        $('#app .card').css('height', remaining_hegiht);
-    </script>
-@endpush
+@section('modal')
+    <x-modal/>
+@endsection

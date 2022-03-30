@@ -308,7 +308,7 @@
                         <li class="{{ $isActive(['admin.inventory.product.pickup']) }}">
                             <a href="{{ route('admin.inventory.product.pickup') }}">
                                 <i class="feather icon-circle"></i>
-                                <span class="menu-title">@lang('inventory.pickup')</span>
+                                <span class="menu-title">@lang('inventory.Pickup')</span>
                             </a>
                         </li>
                     </ul>
