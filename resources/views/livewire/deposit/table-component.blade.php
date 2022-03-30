@@ -30,7 +30,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-1">
+        <div class="col-md-1 mt-4">
             <a href="{{$downloadLink}}" class="btn btn-primary">Download</a>
         </div>
     </div>
