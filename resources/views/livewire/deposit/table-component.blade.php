@@ -7,23 +7,25 @@
             <strong>Balance: <span style="font-size: 16px;">{{ getBalance() }} USD </span></strong>
         </div>
     </div>
-    <div class="row justify-content-end">
+    <div class="row justify-content-end mb-1">
+        @if (auth()->user()->isAdmin())
+        <div class="col-md-3">
+            <label>Select User</label>
+            <livewire:components.search-user />
+        </div>
+        @endif
         <div class="col-md-4">
             <div class="row justify-content-end">
-                <div class="col-md-3">
-                    <label for="">Date From</label>
-                </div>
                 <div class="col-md-9">
+                    <label for="">Date From</label>
                     <input type="date" class="form-control"  name="date" wire:model="dateFrom">
                 </div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="row justify-content-end">
-                <div class="col-md-3">
-                    <label for="">Date To</label>
-                </div>
                 <div class="col-md-9">
+                    <label for="">Date To</label>
                     <input type="date" class="form-control" name="date" wire:model="dateTo">
                 </div>
             </div>
@@ -32,14 +34,6 @@
             <a href="{{$downloadLink}}" class="btn btn-primary">Download</a>
         </div>
     </div>
-    @if (auth()->user()->isAdmin())
-    <div class="row justify-content-center mt-1">
-        <div class="col-md-4">
-            <label>Select User</label>
-            <livewire:components.search-user />
-        </div>
-    </div>
-    @endif
     <div class="row">
         <div class="col-1 table-actions">
             <select wire:model='pageSize' class="form-control d-flex w-auto">
