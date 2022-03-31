@@ -314,7 +314,7 @@ class ProductRepository
         try {
            $order = Order::create([
                 'user_id' => Auth::user()->isAdmin()? $request->user_id: auth()->id(),
-                'status' => Order::STATUS_INVENTORY,
+                'status' => Order::STATUS_INVENTORY_PENDING,
             ]);
 
             $order->update([
@@ -367,13 +367,7 @@ class ProductRepository
     {
         $query = Order::query();
         $query = (auth()->user()->isAdmin()) ? $query : $query->where('user_id', auth()->user()->id);
-
-        $orders = $query->where('status', Order::STATUS_INVENTORY)->with(
-                ['user' => function ($query){ $query->select('id', 'name', 'pobox_number');}, 
-                            'products' => function($query){ $query->select('sku','name','id');}
-                            ])->select('warehouse_number','user_id', 'status', 'id')->get();
-
-        return $orders;
+        return $query->where('status',Order::STATUS_INVENTORY_FULFILLED)->paginate(50);
     }
 
     public function getError()

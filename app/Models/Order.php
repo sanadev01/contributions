@@ -32,7 +32,12 @@ class Order extends Model implements Package
        'us_secondary_label_cost' => 'array',
     ];
 
-    const STATUS_INVENTORY = 5;
+    const STATUS_INVENTORY_PENDING = 1;
+    const STATUS_INVENTORY_IN_PROGRESS = 2;
+    const STATUS_INVENTORY_CANCELLED = 3;
+    const STATUS_INVENTORY_REJECTED = 4;
+    const STATUS_INVENTORY_FULFILLED = 5;
+    // const STATUS_INVENTORY = 5;
     const STATUS_PREALERT_TRANSIT = 10;
     const STATUS_PREALERT_READY = 20;
     const STATUS_CONSOLIDATOIN_REQUEST = 25;
@@ -471,8 +476,20 @@ class Order extends Model implements Package
     {
         $class = "";
 
-        if ( $this->status == Order::STATUS_INVENTORY ){
+        if ( $this->status == Order::STATUS_INVENTORY_PENDING ){
+            $class = 'btn btn-sm btn-info';
+        }
+        if ( $this->status == Order::STATUS_INVENTORY_IN_PROGRESS ){
             $class = 'btn btn-sm btn-warning';
+        }
+        if ( $this->status == Order::STATUS_INVENTORY_CANCELLED ){
+            $class = 'btn btn-sm btn-danger';
+        }
+        if ( $this->status == Order::STATUS_INVENTORY_REJECTED ){
+            $class = 'btn btn-sm btn-danger';
+        }
+        if ( $this->status == Order::STATUS_INVENTORY_FULFILLED ){
+            $class = 'btn btn-sm btn-success';
         }
         if ( $this->status == Order::STATUS_PREALERT_TRANSIT ){
             $class = 'btn btn-sm btn-danger';
