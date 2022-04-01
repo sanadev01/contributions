@@ -71,8 +71,9 @@ Route::prefix('v1')->group(function(){
             Route::get('parcel/{order}/cn23',OrderLabelController::class);
             Route::get('order/tracking/{search}', OrderTrackingController::class);
             Route::get('services-rates', GetRateController::class);
-
+            
             Route::resource('products', 'ProductController')->only('index', 'show', 'store');
+            Route::get('api/token', AmazonApiTokenController::class);
         });
     
         Route::get('countries', CountryController::class);
