@@ -41,7 +41,8 @@
                         @admin
                         <th>User Name</th>
                         @endadmin
-                       
+                        <th>Weight</th>
+                        <th>Unit</th>
                         <th>@lang('orders.status')</th>
                         <th class="no-print">@lang('orders.actions.actions')</th>
                     </tr>
@@ -58,6 +59,10 @@
                         </th>
                         @endadmin
                        
+                        <th>
+                        </th>
+                        <th>
+                        </th>
                         <th>
                             <select class="form-control" wire:model="status">
                                 <option value="">All</option>
@@ -90,6 +95,8 @@
                         @admin
                         <td>{{ $order->user->name }} - {{ $order->user->hasRole('wholesale') ? 'W' : 'R' }}</td>
                         @endadmin
+                        <td>{{ $order->weight }}</td>
+                        <td>{{ $order->measurement_unit }}</td>
                         <td>
                             <select style="min-width:150px;" class="form-control {{ !auth()->user()->isAdmin() ? 'btn disabled' : ''  }} {{ $order->getStatusClass() }}" @if (auth()->user()->isAdmin())  wire:change="$emit('updated-status',{{$order->id}},$event.target.value)" @else disabled="disabled"  @endif>
                                 <option class="bg-info" value="{{ App\Models\Order::STATUS_INVENTORY_PENDING }}" {{ $order->status == App\Models\Order::STATUS_INVENTORY_PENDING ? 'selected': '' }}>Pending</option>

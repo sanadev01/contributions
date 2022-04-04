@@ -20,8 +20,8 @@
                                                 <th>Pobox Number</th>
                                                 <th>Status</th>
                                                 <th>Products / SKU</th>
-                                                {{-- <th>SKU</th> --}}
-                                                {{-- <th>Barcode</th> --}}
+                                                <th>Weight</th>
+                                                <th>Unit</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -47,12 +47,8 @@
                                                             @endforeach
                                                         </ul>
                                                     </td>
-                                                    {{-- <td>
-                                                        @foreach ($order->products as $product)
-                                                            {{ dd($product)}}<br>
-                                                        @endforeach
-                                                        
-                                                    </td> --}}
+                                                    <td>{{ $order->weight }}</td>
+                                                    <td>{{ $order->measurement_unit }}</td>
                                                     <td>
                                                         <button data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.inventory.order.products',$order) }}" class="btn btn-primary">
                                                             <i class="feather icon-list"></i> @lang('orders.actions.view-products')
