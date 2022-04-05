@@ -1,5 +1,10 @@
 <div>
     <div class="p-2">
+        <div class="row text-left">
+            <div class="ml-auto mr-3 mb-2">
+                <h1>Total Value: <span class="text-primary">$ {{ $totalValue }}</span></h1>
+            </div>
+        </div>
         <div class="row mb-2 no-print">
             <div class="col-1">
                 <select class="form-control" wire:model="pageSize">

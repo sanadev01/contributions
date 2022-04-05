@@ -35,6 +35,7 @@ class Orders extends Component
     public $orderType = null;
     public $paymentStatus = null;
 
+    public $totalValue = 0;
     /**
      * Sort Asc.
      */
@@ -52,13 +53,11 @@ class Orders extends Component
             $this->query = $this->getQuery();
         }
 
+        $orders = $this->query->orderBy($this->sortBy, $this->sortAsc ? 'ASC' : 'DESC')->paginate($this->pageSize);
+        $this->calculateProductsPrice($orders);
+
         return view('livewire.inventory.orders', [
-            'orders' => $this->query
-            ->orderBy(
-                $this->sortBy,
-                $this->sortAsc ? 'ASC' : 'DESC'
-            )
-            ->paginate($this->pageSize)
+            'orders' => $orders
         ]);
     }
 
@@ -151,6 +150,19 @@ class Orders extends Component
         }
         
         return $orders;
+    }
+
+    private function calculateProductsPrice($orders)
+    {
+        $this->totalValue = 0;
+
+        $orders->each(function ($order) {
+            $order->items->each(function ($item) {
+                $this->totalValue += $item->value * $item->quantity;
+            });
+        });
+
+        return;
     }
 
 }
