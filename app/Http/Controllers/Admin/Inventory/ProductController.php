@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Warehouse\Container;
 use Illuminate\Support\Facades\URL;
 use App\Http\Controllers\Controller;
+use App\Repositories\Inventory\OrderRepository;
 use App\Repositories\Inventory\ProductRepository;
 use App\Http\Requests\Product\ProductCreateRequest;
 
@@ -129,9 +130,9 @@ class ProductController extends Controller
         return view('admin.inventory.product.index',compact('status'));
     }
 
-    public function pickup(ProductRepository $productRepository)
+    public function pickup(OrderRepository $orderRepository)
     {
-        $orders = $productRepository->getPickupOrders();
+        $orders = $orderRepository->getPickupOrders();
         $baseUrl = URL::to('/');
 
         return view('admin.inventory.product.pickup', compact('orders', 'baseUrl'));

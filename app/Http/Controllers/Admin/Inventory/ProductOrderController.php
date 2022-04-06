@@ -9,15 +9,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Repositories\Inventory\OrderRepository;
 use App\Repositories\Inventory\ProductRepository;
 
 class ProductOrderController extends Controller
 {
-    protected $productRepository;
+    protected $orderRepository;
 
-    public function __construct(ProductRepository $productRepo)
+    public function __construct(OrderRepository $orderRepository)
     {
-        $this->productRepository = $productRepo;
+        $this->orderRepository = $orderRepository;
     }
     /**
      * Display a listing of the resource.
@@ -36,7 +37,7 @@ class ProductOrderController extends Controller
      */
     public function create(Request $request)
     {
-        $products = $this->productRepository->getProductsByIds(json_decode($request->data));
+        $products = $this->orderRepository->getProductsByIds(json_decode($request->data));
 
         return view('admin.inventory.order.create-sale', compact('products'));
     }
@@ -57,13 +58,13 @@ class ProductOrderController extends Controller
         }
         $this->validate($request, $rules);
         
-        if($this->productRepository->createOrder($request))
+        if($this->orderRepository->createOrder($request))
         {
             session()->flash('alert-success','Sale Order Created Successfull');
             return redirect()->route('admin.inventory.product.index');
         }
         
-        session()->flash('alert-danger', $this->productRepository->getError());
+        session()->flash('alert-danger', $this->orderRepository->getError());
         return redirect()->route('admin.inventory.product.index');
     }
 
@@ -73,9 +74,9 @@ class ProductOrderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Product $product_order, ProductRepository $repository)
+    public function show(Product $product_order)
     {
-        $parcel = $repository->storeSingleOrder($product_order);
+        $parcel = $this->orderRepository->storeSingleOrder($product_order);
         if($parcel){
             return redirect()->route('admin.parcels.edit',$parcel);
         }
