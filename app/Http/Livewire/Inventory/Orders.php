@@ -53,8 +53,8 @@ class Orders extends Component
             $this->query = $this->getQuery();
         }
 
+        $this->calculateProductsPrice($this->query->get());
         $orders = $this->query->orderBy($this->sortBy, $this->sortAsc ? 'ASC' : 'DESC')->paginate($this->pageSize);
-        $this->calculateProductsPrice($orders);
 
         return view('livewire.inventory.orders', [
             'orders' => $orders
