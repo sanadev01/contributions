@@ -175,6 +175,12 @@ class ParcelController extends Controller
                 "order_value" => $orderValue,
                 'shipping_service_name' => $order->shippingService->name
             ]);
+
+            if($recipientCountryId == Order::US && !in_array($order->shippingService->service_sub_class, $this->domesticShippingServices())){
+                DB::rollback();
+
+                return apiResponse(false, 'this service can not be used for us address');
+            }
             
             if (in_array($order->shippingService->service_sub_class, $this->domesticShippingServices())) {
                 if(!$this->usShippingService->getUSShippingServiceRate($order))
