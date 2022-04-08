@@ -67,8 +67,7 @@ class ProductRepository
             });
         }
 
-        $products = $query;
-
+        $products = $query->orderBy('id','desc');
         return $paginate ? $products->paginate($pageSize) : $products->get();
     }
 
@@ -100,6 +99,7 @@ class ProductRepository
         $product->sh_code        = $request->sh_code;
         $product->weight         = $request->weight;
         $product->measurement_unit = $request->measurement_unit;
+        $product->exp_date = $request->exp_date;
         
         $product->save();
 
@@ -138,6 +138,7 @@ class ProductRepository
             'sh_code' => $request->sh_code,
             'weight' => $request->weight,
             'measurement_unit' => $request->measurement_unit,
+            'exp_date' => $request->exp_date,
         ]);
         
         if ( $request->hasFile('invoiceFile') ){

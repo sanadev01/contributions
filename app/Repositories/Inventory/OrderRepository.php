@@ -44,9 +44,10 @@ class OrderRepository
 
     public function createOrder($request)
     {
-        DB::beginTransaction();
-        try {
-           $order = Order::create([
+        // dd($request);
+        // DB::beginTransaction();
+        // try {
+            $order = Order::create([
                 'user_id' => Auth::user()->isAdmin()? $request->user_id: auth()->id(),
                 'status' => Order::STATUS_INVENTORY_PENDING,
                 'order_date' => now(),
@@ -90,15 +91,15 @@ class OrderRepository
                 ]);
             }
 
-            DB::commit();
+            // DB::commit();
 
             return true;
 
-        } catch (Exception $ex) {
-            DB::rollback();
-            $this->error = $ex->getMessage();
-            return false;
-        }
+        // } catch (Exception $ex) {
+        //     DB::rollback();
+        //     $this->error = $ex->getMessage();
+        //     return false;
+        // }
     }
     public function storeSingleOrder($productOrder)
     {
@@ -247,7 +248,7 @@ class OrderRepository
     {
         $query = Order::query();
         $query = (auth()->user()->isAdmin()) ? $query : $query->where('user_id', auth()->user()->id);
-        return $query->where('status',Order::STATUS_INVENTORY_FULFILLED)->paginate(50);
+        return $query->where('status',Order::STATUS_INVENTORY_FULFILLED)->orderBy('id','desc')->paginate(50);
     }
     
     private function setShCodes($items)
@@ -289,5 +290,10 @@ class OrderRepository
         $totalWeight = $weight + ($weight * Product::WEIGHT_PERCENTAGE);
 
         return number_format($totalWeight, 2);
+    }
+
+    public function getError()
+    {
+        return $this->error;
     }
 }

@@ -163,6 +163,8 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('product-export', ProductExportController::class)->only('index');
             Route::resource('product-import', ProductImportController::class)->only(['create','store']);
             Route::resource('product-order', ProductOrderController::class)->only('show','create','store');
+            // Route::resource('inventory-orders', InventoryOrderController::class)->only('index','store');
+
             Route::get('inventory-orders', [\App\Http\Controllers\Admin\Inventory\InventoryOrderController::class, 'index'])->name('orders');
             Route::get('inventory-orders-export', [\App\Http\Controllers\Admin\Inventory\InventoryOrderController::class, 'exportOrders'])->name('orders.export');
         });

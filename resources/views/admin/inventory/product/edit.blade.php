@@ -253,6 +253,16 @@
                         </div>
                     </div>
 
+                    <div class="form-group col-12 col-sm-6 col-md-4">
+                        <div class="controls">
+                            <label>@lang('Expiry Date')<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="exp_date" value="{{ old('exp_date',$product->exp_date) }}" placeholder="Enter Expiry Date" required>
+                            @error('exp_date')
+                                <div class="help-block text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
                     <div class="row mt-1">
                         <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
                             <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">
