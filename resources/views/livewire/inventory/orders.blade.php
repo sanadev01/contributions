@@ -19,7 +19,7 @@
             </div>
             <div class="col-11 text-right">
                 <form action="{{ route('admin.inventory.orders.export') }}" method="GET" target="_blank">
-                    @csrf
+                    <input type="hidden" name="pick" value="0">
                     <label>Start Date</label>
                     <input type="date" name="start_date" class="from-control col-2">
     

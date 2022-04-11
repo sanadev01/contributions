@@ -18,7 +18,12 @@ class OrderRepository
 
     public function getOdersForExport($request)
     {
-        $orders = Order::where('status','>=',Order::STATUS_ORDER)->has('products');
+        $orders = Order::has('products');
+        if ($request->pick) {
+            $orders->where('status','>=',Order::STATUS_INVENTORY_FULFILLED);
+        }else{
+            $orders->where('status','<=',Order::STATUS_INVENTORY_REJECTED);
+        }
         
         if (Auth::user()->isUser()) {
             $orders->where('user_id', Auth::id());
@@ -45,8 +50,8 @@ class OrderRepository
     public function createOrder($request)
     {
         // dd($request);
-        // DB::beginTransaction();
-        // try {
+        DB::beginTransaction();
+        try {
             $order = Order::create([
                 'user_id' => Auth::user()->isAdmin()? $request->user_id: auth()->id(),
                 'status' => Order::STATUS_INVENTORY_PENDING,
@@ -91,15 +96,15 @@ class OrderRepository
                 ]);
             }
 
-            // DB::commit();
+            DB::commit();
 
             return true;
 
-        // } catch (Exception $ex) {
-        //     DB::rollback();
-        //     $this->error = $ex->getMessage();
-        //     return false;
-        // }
+        } catch (Exception $ex) {
+            DB::rollback();
+            $this->error = $ex->getMessage();
+            return false;
+        }
     }
     public function storeSingleOrder($productOrder)
     {

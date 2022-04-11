@@ -7,6 +7,20 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">Pickup Products</h4>
+                        <div class="col-11 text-right">
+                            <form action="{{ route('admin.inventory.orders.export') }}" method="GET" target="_blank">
+                                <input type="hidden" name="pick" value="1">
+                                <label>Start Date</label>
+                                <input type="date" name="start_date" class="from-control col-2">
+                
+                                <label>End Date</label>
+                                <input type="date" name="end_date" class="from-control col-2">
+                
+                                <button class="btn btn-success" title="@lang('orders.import-excel.Download')">
+                                    @lang('orders.Download Orders') <i class="fa fa-arrow-down"></i>
+                                </button>
+                            </form>
+                        </div>
                     </div>
                     <div class="card-content collapse show">
                         <div class="card-body">
