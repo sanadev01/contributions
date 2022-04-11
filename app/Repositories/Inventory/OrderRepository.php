@@ -251,9 +251,9 @@ class OrderRepository
 
     public function getPickupOrders()
     {
-        $query = Order::query();
+        $query = Order::has('products');
         $query = (auth()->user()->isAdmin()) ? $query : $query->where('user_id', auth()->user()->id);
-        return $query->where('status',Order::STATUS_INVENTORY_FULFILLED)->orderBy('id','desc')->paginate(50);
+        return $query->where('status','>=',Order::STATUS_INVENTORY_FULFILLED)->orderBy('id','desc')->paginate(50);
     }
     
     private function setShCodes($items)
