@@ -37,9 +37,10 @@ class ProductOrderController extends Controller
      */
     public function create(Request $request)
     {
+        $isSingle = false;
         $products = $this->orderRepository->getProductsByIds(json_decode($request->data));
 
-        return view('admin.inventory.order.create-sale', compact('products'));
+        return view('admin.inventory.order.create-sale', compact('products','isSingle'));
     }
 
     /**
@@ -61,7 +62,7 @@ class ProductOrderController extends Controller
         if($this->orderRepository->createOrder($request))
         {
             session()->flash('alert-success','Sale Order Created Successfull');
-            return redirect()->route('admin.inventory.product.index');
+            return redirect()->route('admin.inventory.orders');
         }
         
         session()->flash('alert-danger', $this->orderRepository->getError());
@@ -76,13 +77,10 @@ class ProductOrderController extends Controller
      */
     public function show(Product $product_order)
     {
-        $parcel = $this->orderRepository->storeSingleOrder($product_order);
-        if($parcel){
-            return redirect()->route('admin.parcels.edit',$parcel);
-        }
-        session()->flash('alert-danger','Something Went wrong please check Product');
-        return redirect()->back();
-            // return redirect()->route('admin.orders.sender.index',$order);
+        $product = $product_order;
+        $isSingle = true;
+
+        return view('admin.inventory.order.create-sale', compact('product','isSingle'));
     }
 
     /**

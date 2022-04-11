@@ -23,6 +23,7 @@
                             <tr>
                                 <th>@lang('orders.invoice.ShCode')</th>
                                 <th>SKU</th>
+                                <th>Location</th>
                                 <th>@lang('orders.invoice.Description')</th>
                                 <th>Weight</th>
                                 <th>@lang('orders.invoice.Quantity')</th>
@@ -34,6 +35,7 @@
                                 <tr>
                                     <td>{{ $product->sh_code }}</td>
                                     <td>{{ $product->sku }}</td>
+                                    <td>{{ $product->location }}</td>
                                     <td>{{ $product->description }}</td>
                                     <td>
                                         {{ $product->getWeightInKg() * $order->items()->where([

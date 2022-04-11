@@ -18,7 +18,7 @@ class InventoryOrderController extends Controller
     public function exportOrders(Request $request, OrderRepository $orderRepository)
     {
         $orders = $orderRepository->getOdersForExport($request);
-
+        
         $exportService = new OrderExport($orders);
         return $exportService->handle();
     }

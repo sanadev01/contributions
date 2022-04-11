@@ -4,6 +4,8 @@ namespace App\Http\Livewire\Inventory;
 
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Product as ModelsProduct;
 use App\Repositories\Inventory\ProductRepository;
 
 class Product extends Component
@@ -31,7 +33,8 @@ class Product extends Component
     public function render()
     {
         return view('livewire.inventory.product',[
-            'products' => $this->getProduct() 
+            'products' => $this->getProduct(),
+            'inventoryValue' => number_format($this->getSumOfProduct(),2) 
         ]);
     }
 
@@ -49,6 +52,16 @@ class Product extends Component
             'status' => $this->status,
             'description' => $this->description,
         ]),true,$this->pageSize);
+    }
+    
+    public function getSumOfProduct()
+    {
+        $query = ModelsProduct::has('user');
+        if (Auth::user()->isUser()) {
+            $query->where('user_id', Auth::id());
+        }
+        $query->selectRaw('sum(price) as total');
+        return $query->first()->total;
     }
     
     public function updating()

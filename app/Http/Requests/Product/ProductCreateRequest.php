@@ -41,7 +41,7 @@ class ProductCreateRequest extends FormRequest
             'min_quantity' => 'required',
             'max_quantity' => 'required',
             'discontinued' => 'required',
-            'store_day' => 'required',
+            'store_day' => 'nullable',
             'location' => 'required',
             'sh_code' => 'required',
             'weight' => 'required|numeric|gt:0',

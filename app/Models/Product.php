@@ -35,7 +35,8 @@ class Product extends Model
         'location',
         'sh_code',
         'weight',
-        'measurement_unit'
+        'measurement_unit',
+        'exp_date'
     ];
     public function user()
     {

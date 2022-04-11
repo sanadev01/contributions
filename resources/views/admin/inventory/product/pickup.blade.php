@@ -7,6 +7,20 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">Pickup Products</h4>
+                        <div class="col-11 text-right">
+                            <form action="{{ route('admin.inventory.orders.export') }}" method="GET" target="_blank">
+                                <input type="hidden" name="pick" value="1">
+                                <label>Start Date</label>
+                                <input type="date" name="start_date" class="from-control col-2">
+                
+                                <label>End Date</label>
+                                <input type="date" name="end_date" class="from-control col-2">
+                
+                                <button class="btn btn-success" title="@lang('orders.import-excel.Download')">
+                                    @lang('orders.Download Orders') <i class="fa fa-arrow-down"></i>
+                                </button>
+                            </form>
+                        </div>
                     </div>
                     <div class="card-content collapse show">
                         <div class="card-body">
@@ -22,6 +36,7 @@
                                                 <th>Products / SKU</th>
                                                 <th>Weight</th>
                                                 <th>Unit</th>
+                                                <th>Tracking Code</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -49,6 +64,7 @@
                                                     </td>
                                                     <td>{{ $order->weight }}</td>
                                                     <td>{{ $order->measurement_unit }}</td>
+                                                    <td>{{ $order->corrios_tracking_code }}</td>
                                                     <td>
                                                         <button data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.inventory.order.products',$order) }}" class="btn btn-primary">
                                                             <i class="feather icon-list"></i> @lang('orders.actions.view-products')

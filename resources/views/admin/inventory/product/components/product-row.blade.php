@@ -22,6 +22,7 @@
     <td>{{ $product->weight }}</td>
     <td>{{ $product->measurement_unit }}</td>
     <td class="text-right">{{ $product->inventory_value }}</td>
+    <td class="text-right">{{ $product->exp_date ? date('Y-m-d', strtotime($product->exp_date)) : '' }}</td>
     <td>
         <select style="min-width:150px;" class="form-control {{ !auth()->user()->isAdmin() ? 'btn disabled' : ''  }} {{ $product->getStatusClass() }}" @if (auth()->user()->isAdmin())  wire:change="$emit('updated-status',{{$product->id}},$event.target.value)" @else disabled="disabled"  @endif>
             <option value="pending" {{ $product->status == 'pending' ? 'selected': '' }}>Pending</option>

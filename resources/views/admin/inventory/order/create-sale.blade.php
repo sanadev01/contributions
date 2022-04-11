@@ -24,27 +24,47 @@
                             </div>
                         </div>
                     @endadmin
-                    @foreach ($products as $key =>$product)
+                    @if ($isSingle)
                         <div class="row col-12">
-                            <div class="form-group col-6 col-sm-6 col-md-6">
-                                <div class="controls">
-                                    <label>Product Name<span class="text-danger">*</span></label>
-                                    <input type="text" disabled class="form-control" name="name[]" value="{{ $product->name }} | {{ $product->sku }}" required>
-                                    <input type="hidden" class="form-control" name="ids[]" value="{{ $product->id }}" required>
-                                    
+                                <div class="form-group col-6 col-sm-6 col-md-6">
+                                    <div class="controls">
+                                        <label>Product Name<span class="text-danger">*</span></label>
+                                        <input type="text" disabled class="form-control" name="name[]" value="{{ $product->name }} | {{ $product->sku }}" required>
+                                        <input type="hidden" class="form-control" name="ids[]" value="{{ $product->id }}" required>
+                                        
+                                    </div>
+                                </div>
+                                <div class="form-group col-6 col-sm-6 col-md-6">
+                                    <div class="controls">
+                                        <label>Quantity<span class="text-danger">*</span> <b>Quantity Available {{ $product->quantity }}</b></label>
+                                        <input type="number" class="form-control" name="items[{{0}}][quantity]" value="{{ old('quantity') }}" required placeholder="Enter Product Quantity" min="1" max="{{ $product->quantity }}" required>
+                                        @error("items.0.quantity")
+                                            <div class="help-block text-danger">{{ $message }}</div>
+                                        @enderror</div>
                                 </div>
                             </div>
-                            <div class="form-group col-6 col-sm-6 col-md-6">
-                                <div class="controls">
-                                    <label>Quantity<span class="text-danger">*</span> <b>Quantity Available {{ $product->quantity }}</b></label>
-                                    <input type="number" class="form-control" name="items[{{$key}}][quantity]" value="" required placeholder="Enter Product Quantity" min="1" max="{{ $product->quantity }}" required>
-                                    @error("items.{$key}.quantity")
-                                        <div class="help-block text-danger">{{ $message }}</div>
-                                    @enderror</div>
+                    @else
+                        @foreach ($products as $key =>$product)
+                            <div class="row col-12">
+                                <div class="form-group col-6 col-sm-6 col-md-6">
+                                    <div class="controls">
+                                        <label>Product Name<span class="text-danger">*</span></label>
+                                        <input type="text" disabled class="form-control" name="name[]" value="{{ $product->name }} | {{ $product->sku }}" required>
+                                        <input type="hidden" class="form-control" name="ids[]" value="{{ $product->id }}" required>
+                                        
+                                    </div>
+                                </div>
+                                <div class="form-group col-6 col-sm-6 col-md-6">
+                                    <div class="controls">
+                                        <label>Quantity<span class="text-danger">*</span> <b>Quantity Available {{ $product->quantity }}</b></label>
+                                        <input type="number" class="form-control" name="items[{{$key}}][quantity]" value="" required placeholder="Enter Product Quantity" min="1" max="{{ $product->quantity }}" required>
+                                        @error("items.{$key}.quantity")
+                                            <div class="help-block text-danger">{{ $message }}</div>
+                                        @enderror</div>
+                                </div>
                             </div>
-                        </div>
-                    @endforeach
-                    
+                        @endforeach
+                    @endif
                     <div class="row mt-1">
                         <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
                             <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">

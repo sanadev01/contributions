@@ -1,5 +1,10 @@
 <div>
     <div class="p-2" >
+        <div class="row text-left">
+            <div class="ml-auto mr-3 mb-2">
+                <h1>Inventory Value: <span class="text-primary">$ {{ $inventoryValue }}</span></h1>
+            </div>
+        </div>
         <div class="row mb-2 no-print">
             <div class="col-1">
                 <select class="form-control" wire:model="pageSize">
@@ -37,6 +42,7 @@
                         <th>Weight</th>
                         <th>Unit</th>
                         <th>Inventroy Value</th>
+                        <th>Exp Date</th>
                         <th>Active</th>
                         <th>Description</th>
                         <th>Action</th>
@@ -81,6 +87,7 @@
                             </select>
                         </th>
                         <th></th>
+                        <th></th>
                         <th >
                             <select class="form-control" wire:model="status">
                                 <option value="">All </option>
@@ -91,6 +98,7 @@
                         <th>
                             
                         </th>
+                        <th></th>
                         <th></th>
                        
                     </tr>

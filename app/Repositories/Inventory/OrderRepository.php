@@ -18,7 +18,12 @@ class OrderRepository
 
     public function getOdersForExport($request)
     {
-        $orders = Order::where('status','>=',Order::STATUS_ORDER)->has('products');
+        $orders = Order::has('products');
+        if ($request->pick) {
+            $orders->where('status','>=',Order::STATUS_INVENTORY_FULFILLED);
+        }else{
+            $orders->where('status','<=',Order::STATUS_INVENTORY_REJECTED);
+        }
         
         if (Auth::user()->isUser()) {
             $orders->where('user_id', Auth::id());
@@ -44,9 +49,10 @@ class OrderRepository
 
     public function createOrder($request)
     {
+        // dd($request);
         DB::beginTransaction();
         try {
-           $order = Order::create([
+            $order = Order::create([
                 'user_id' => Auth::user()->isAdmin()? $request->user_id: auth()->id(),
                 'status' => Order::STATUS_INVENTORY_PENDING,
                 'order_date' => now(),
@@ -247,7 +253,7 @@ class OrderRepository
     {
         $query = Order::query();
         $query = (auth()->user()->isAdmin()) ? $query : $query->where('user_id', auth()->user()->id);
-        return $query->where('status',Order::STATUS_INVENTORY_FULFILLED)->paginate(50);
+        return $query->where('status',Order::STATUS_INVENTORY_FULFILLED)->orderBy('id','desc')->paginate(50);
     }
     
     private function setShCodes($items)
@@ -289,5 +295,10 @@ class OrderRepository
         $totalWeight = $weight + ($weight * Product::WEIGHT_PERCENTAGE);
 
         return number_format($totalWeight, 2);
+    }
+
+    public function getError()
+    {
+        return $this->error;
     }
 }
