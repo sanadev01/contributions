@@ -29,7 +29,7 @@ class UsCalculatorRates extends Component
     {
         $this->apiRates = $apiRates;
         $this->ratesWithProfit = $ratesWithProfit;
-        $this->tempOrder = $tempOrder;
+        $this->tempOrder = $tempOrder->toArray();
         $this->weightInOtherUnit = $weightInOtherUnit;
         $this->chargableWeight = $chargableWeight;
         $this->userLoggedIn = $userLoggedIn;

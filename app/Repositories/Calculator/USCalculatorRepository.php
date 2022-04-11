@@ -107,9 +107,7 @@ class USCalculatorRepository
 
         foreach ($uspsShippingServices as $shippingService) 
         {
-            $requestBody = $this->mergeShippingServiceIntoRequest($request, $shippingService->service_sub_class);
             $uspsResponse = USPSFacade::getRecipientRates($order, $shippingService->service_sub_class);
-
             if ($uspsResponse->success == true) {
                 array_push($this->uspsShippingRates , ['name'=> $shippingService->name, 'service_sub_class' => $shippingService->service_sub_class, 'rate'=> number_format($uspsResponse->data['total_amount'], 2)]);
             }else
@@ -245,7 +243,7 @@ class USCalculatorRepository
         $recipient->phone = '+13058885191';
         $recipient->email = 'homedelivery@homedeliverybr.com';
         $recipient->country_id = (int)$this->request->destination_country;
-        $recipient->state_id = State::where([['code','SP'],['country_id', $this->request->destination_country]])->first()->id;
+        $recipient->state_id = State::where([['code', $this->request->recipient_state],['country_id', $this->request->destination_country]])->first()->id;
         $recipient->address = $this->request->recipient_address;
         $recipient->city = $this->request->recipient_city;
         $recipient->zipcode = $this->request->recipient_zipcode;
@@ -326,6 +324,7 @@ class USCalculatorRepository
 
     public function execute($request)
     {
+        $this->request = $request;
         $this->tempOrder = $request->temp_order;
         $this->shippingService = $this->getSippingService($request->service_sub_class);
 
@@ -373,6 +372,29 @@ class USCalculatorRepository
                     'status' => Order::STATUS_ORDER,
                 ]);
 
+                if (isset($this->tempOrder['items'])) {
+
+                    $totalValue = 0;
+
+                    foreach ($this->tempOrder['items'] as $item) {
+                        $order->items()->create([
+                            'sh_code' => $item['sh_code'],
+                            'description' => $item['description'],
+                            'quantity' => $item['quantity'],
+                            'value' => $item['value'],
+                            'contains_battery' => false,
+                            'contains_perfume' => false,
+                            'contains_flammable_liquid' => false,
+                        ]);
+
+                        $totalValue += ($item['quantity'] * $item['value']);
+                    }
+
+                    $order->update([
+                        'order_value' => $totalValue,
+                    ]);
+                }
+                
                 $this->order = $order;
                 return true;
 
@@ -449,7 +471,11 @@ class USCalculatorRepository
             }
         }
 
-        if ($this->order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $this->order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS) {
+        if ($this->order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || 
+            $this->order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS ||
+            $this->order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
+            $this->order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) 
+        {
             $uspsLabelRepository = new USPSLabelRepository();
             
             if(!$uspsLabelRepository->getPrimaryLabelForSender($this->order, $request))

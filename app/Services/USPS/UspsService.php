@@ -2,6 +2,8 @@
 namespace App\Services\USPS;
 
 use Exception;
+use App\Models\Order;
+use App\Models\State;
 use App\Models\Country;
 use App\Models\ShippingService;
 use Illuminate\Support\Facades\DB;
@@ -121,7 +123,7 @@ class UspsService
 
         return [
             'request_id' => 'HD-'.$order->id,
-            'from_address' => $this->getHercoAddress($order->warehouse_number),
+            'from_address' => ($order->sender_country_id == Order::US && $order->recipient->country_id != Order::US) ? $this->getSenderAddress($order) : $this->getHercoAddress($order->warehouse_number),
             'to_address' => $this->getRecipientAddress($order),
             'weight' => (float)$this->chargableWeight,
             'weight_unit' => ($order->measurement_unit == 'kg/cm') ? 'kg' : 'lb',
@@ -286,11 +288,11 @@ class UspsService
         $this->calculateVolumetricWeight($order);
 
         return [
-            'from_address' => $this->getHercoAddress($order->warehouse_number),
+            'from_address' => ($order->id === 1) ? $this->getSenderAddress($order) : $this->getHercoAddress($order->warehouse_number),
             'to_address' => $this->getRecipientAddress($order),
             'weight' => (float)$this->chargableWeight,
             'weight_unit' => ($order->measurement_unit == 'kg/cm') ? 'kg' : 'lb',
-            'value' => (float)$order->items()->sum(DB::raw('quantity * value')),
+            'value' => ($order->id === 1) ? $this->calculateItemsValue($order->items) : (float)$order->items()->sum(DB::raw('quantity * value')),
             'customs_form' => $this->setCustomsForm($order),
             'image_format' => 'pdf',
             'usps' => [
@@ -333,6 +335,10 @@ class UspsService
         {
             $consolidatedOrderService = new ConsolidatedOrderService();
             return $this->uspsApiCall($consolidatedOrderService->makeConsolidatedOrderRequestForSender($order, $request));
+        }
+
+        if ($request->service == ShippingService::USPS_PRIORITY_INTERNATIONAL || $request->service == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
+            return $this->uspsApiCall($this->makeRequestAttributeForInternationalLabel($order));
         }
 
         return $this->uspsApiCall($this->makeRequestForSender($order, $request));
@@ -382,6 +388,21 @@ class UspsService
         ];
     }
 
+    private function getSenderAddress($order)
+    {
+        return [
+            'company_name' => 'HERCO SUITE#100 -'.$order->warehouse_number,
+            'line1' => $order->sender_address,
+            'city' => $order->sender_city,
+            'state_province' => ($order->sender_state) ? $order->sender_state : State::where('id', $order->sender_state_id)->value('code'),
+            'postal_code' => $order->sender_zipcode,
+            'phone_number' => '+13058885191',
+            'sms' => '+17867024093',
+            'email' => 'homedelivery@homedeliverybr.com',
+            'country_code' => 'US',
+        ];
+    }
+
     private function getRecipientAddress($order)
     {
         return [
@@ -394,6 +415,16 @@ class UspsService
             'phone_number' => optional($order->recipient)->phone,
             'country_code' => optional($order->recipient)->country->code, 
         ];
+    }
+
+    private function calculateItemsValue($orderItems)
+    {
+        $itemsValue = 0;
+        foreach ($orderItems as $item) {
+            $itemsValue += $item->value * $item->quantity;
+        }
+       
+        return $itemsValue;
     }
 
     private function setCustomsForm($order)
