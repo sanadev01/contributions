@@ -6,7 +6,9 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\State;
+use App\Models\ShCode;
 use App\Models\Country;
+use App\Models\OrderItem;
 use App\Models\Recipient;
 use App\Facades\UPSFacade;
 use App\Facades\USPSFacade;
@@ -39,6 +41,7 @@ class USCalculatorRepository
 
     protected $tempOrder;
     protected $shippingService;
+    protected $orderItems;
 
     public function handle($request)
     {
@@ -54,9 +57,12 @@ class USCalculatorRepository
         }
 
         $this->createRecipient();
-
         $this->createTemporaryOrder();
 
+        if ($request->has('items')) {
+            $this->createOrderItems();
+        }
+        
         return $this->order;
     }
 
@@ -101,9 +107,7 @@ class USCalculatorRepository
 
         foreach ($uspsShippingServices as $shippingService) 
         {
-            $requestBody = $this->mergeShippingServiceIntoRequest($request, $shippingService->service_sub_class);
-            $uspsResponse = USPSFacade::getSenderPrice($order, $requestBody);
-
+            $uspsResponse = USPSFacade::getRecipientRates($order, $shippingService->service_sub_class);
             if ($uspsResponse->success == true) {
                 array_push($this->uspsShippingRates , ['name'=> $shippingService->name, 'service_sub_class' => $shippingService->service_sub_class, 'rate'=> number_format($uspsResponse->data['total_amount'], 2)]);
             }else
@@ -184,8 +188,18 @@ class USCalculatorRepository
 
         $uspsShippingService = new USPSShippingService($order);
         foreach (ShippingService::query()->active()->get() as $shippingService) {
-            if ( $uspsShippingService->isAvailableFor($shippingService) ){
-                $shippingServices->push($shippingService);
+            
+            if(optional($order->recipient)->country_id == Order::US){
+                
+                if ( $uspsShippingService->isAvailableFor($shippingService) ){
+                    $shippingServices->push($shippingService);
+                }
+
+            }else{
+
+                if ($uspsShippingService->isAvailableForInternational($shippingService)) {
+                    $shippingServices->push($shippingService);
+                }
             }
         }
 
@@ -228,11 +242,11 @@ class USCalculatorRepository
         $recipient->last_name = 'Fertias';
         $recipient->phone = '+13058885191';
         $recipient->email = 'homedelivery@homedeliverybr.com';
-        $recipient->country_id = Country::US;
-        $recipient->state_id = State::FL;
-        $recipient->address = '2200 NW 129TH AVE';
-        $recipient->city = 'Miami';
-        $recipient->zipcode = '33182';
+        $recipient->country_id = (int)$this->request->destination_country;
+        $recipient->state_id = State::where([['code', $this->request->recipient_state],['country_id', $this->request->destination_country]])->first()->id;
+        $recipient->address = $this->request->recipient_address;
+        $recipient->city = $this->request->recipient_city;
+        $recipient->zipcode = $this->request->recipient_zipcode;
         $recipient->account_type = 'individual';
 
         $this->recipient = $recipient;
@@ -242,6 +256,7 @@ class USCalculatorRepository
     {
         $order = new Order();
         $order->id = 1;
+        $order->warehouse_number = 'WHR-HD001';
         $order->user = Auth::user() ? Auth::user() :  User::where('role_id',1)->first();
         $order->sender_country_id = $this->request->origin_country;
         $order->sender_first_name = $order->user->name;
@@ -262,6 +277,28 @@ class USCalculatorRepository
         $order->recipient = $this->recipient;
 
         $this->order = $order;
+    }
+
+    private function createOrderItems()
+    {
+        $this->orderItems = collect();
+
+        foreach ($this->request->items as $key => $item) {
+            $orderItem = new OrderItem();
+            $orderItem->id = $key + 1;
+            $orderItem->sh_code = ShCode::first()->code;
+            $orderItem->description = $item['description'];
+            $orderItem->quantity = $item['quantity'];
+            $orderItem->value = $item['value'];
+            $orderItem->contains_battery = false;
+            $orderItem->contains_perfume = false;
+            $orderItem->contains_flammable_liquid = false;
+            $this->orderItems->push($orderItem);
+        }
+
+        $this->order->items = $this->orderItems;
+
+        return true;
     }
 
     private function createRequest($order)
@@ -287,6 +324,7 @@ class USCalculatorRepository
 
     public function execute($request)
     {
+        $this->request = $request;
         $this->tempOrder = $request->temp_order;
         $this->shippingService = $this->getSippingService($request->service_sub_class);
 
@@ -334,6 +372,29 @@ class USCalculatorRepository
                     'status' => Order::STATUS_ORDER,
                 ]);
 
+                if (isset($this->tempOrder['items'])) {
+
+                    $totalValue = 0;
+
+                    foreach ($this->tempOrder['items'] as $item) {
+                        $order->items()->create([
+                            'sh_code' => $item['sh_code'],
+                            'description' => $item['description'],
+                            'quantity' => $item['quantity'],
+                            'value' => $item['value'],
+                            'contains_battery' => false,
+                            'contains_perfume' => false,
+                            'contains_flammable_liquid' => false,
+                        ]);
+
+                        $totalValue += ($item['quantity'] * $item['value']);
+                    }
+
+                    $order->update([
+                        'order_value' => $totalValue,
+                    ]);
+                }
+                
                 $this->order = $order;
                 return true;
 
@@ -410,7 +471,11 @@ class USCalculatorRepository
             }
         }
 
-        if ($this->order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $this->order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS) {
+        if ($this->order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || 
+            $this->order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS ||
+            $this->order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
+            $this->order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) 
+        {
             $uspsLabelRepository = new USPSLabelRepository();
             
             if(!$uspsLabelRepository->getPrimaryLabelForSender($this->order, $request))
