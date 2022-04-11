@@ -133,9 +133,8 @@ class ProductController extends Controller
     public function pickup(OrderRepository $orderRepository)
     {
         $orders = $orderRepository->getPickupOrders();
-        $baseUrl = URL::to('/');
-
-        return view('admin.inventory.product.pickup', compact('orders', 'baseUrl'));
+        
+        return view('admin.inventory.product.pickup', compact('orders'));
     }
 
 }
