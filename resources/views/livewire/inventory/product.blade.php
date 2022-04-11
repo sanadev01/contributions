@@ -87,6 +87,7 @@
                             </select>
                         </th>
                         <th></th>
+                        <th></th>
                         <th >
                             <select class="form-control" wire:model="status">
                                 <option value="">All </option>

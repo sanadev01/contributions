@@ -22,6 +22,7 @@
                                                 <th>Products / SKU</th>
                                                 <th>Weight</th>
                                                 <th>Unit</th>
+                                                <th>Tracking Code</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -49,6 +50,7 @@
                                                     </td>
                                                     <td>{{ $order->weight }}</td>
                                                     <td>{{ $order->measurement_unit }}</td>
+                                                    <td>{{ $order->corrios_tracking_code }}</td>
                                                     <td>
                                                         <button data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.inventory.order.products',$order) }}" class="btn btn-primary">
                                                             <i class="feather icon-list"></i> @lang('orders.actions.view-products')

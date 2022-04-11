@@ -99,7 +99,7 @@ class ProductRepository
         $product->sh_code        = $request->sh_code;
         $product->weight         = $request->weight;
         $product->measurement_unit = $request->measurement_unit;
-        $product->exp_date = $request->exp_date;
+        $product->exp_date       = $request->exp_date;
         
         $product->save();
 

@@ -254,7 +254,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>@lang('Expiry Date')<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="exp_date" value="{{ old('exp_date') }}" placeholder="Enter Expiry Date" required>
+                                <input type="date" class="form-control" name="exp_date" value="{{ old('exp_date') }}" placeholder="Enter Expiry Date" required>
                                 @error('exp_date')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
