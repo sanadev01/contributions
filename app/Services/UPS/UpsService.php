@@ -2,23 +2,22 @@
 namespace App\Services\UPS;
 
 use Exception;
-use App\Models\ShippingService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Calculators\WeightCalculator;
+use Illuminate\Support\Facades\Log;
 
 class UpsService
 {
-    protected $create_package_url;
-    protected $delete_package_url;
-    protected $create_manifest_url;
-    protected $rating_package_url;
-    protected $pickup_rating_url;
-    protected $pickup_shipment_url;
-    protected $pickup_cancel_url;
-    protected $tracking_url;
+    protected $createPackageUrl;
+    protected $deletePackageUrl;
+    protected $createManifestUrl;
+    protected $ratingPackageUrl;
+    protected $pickupRatingUrl;
+    protected $pickupShipmentUrl;
+    protected $pickupCancelUrl;
+    protected $trackingUrl;
     protected $userName;
     protected $password;
     protected $transactionSrc;
@@ -32,16 +31,16 @@ class UpsService
     protected $length;
     protected $weight;
 
-    public function __construct($create_package_url, $delete_package_url, $create_manifest_url, $rating_package_url, $pickup_rating_url, $pickup_shipment_url, $pickup_cancel_url, $tracking_url, $transactionSrc, $userName, $password, $shipperNumber, $AccessLicenseNumber)
+    public function __construct($createPackageUrl, $deletePackageUrl, $createManifestUrl, $ratingPackageUrl, $pickupRatingUrl, $pickupShipmentUrl, $pickupCancelUrl, $trackingUrl, $transactionSrc, $userName, $password, $shipperNumber, $AccessLicenseNumber)
     {
-        $this->create_package_url = $create_package_url;
-        $this->delete_usps_label_url = $delete_package_url;
-        $this->create_manifest_url = $create_manifest_url;
-        $this->rating_package_url = $rating_package_url;
-        $this->pickup_rating_url = $pickup_rating_url;
-        $this->pickup_shipment_url = $pickup_shipment_url;
-        $this->pickup_cancel_url = $pickup_cancel_url;
-        $this->tracking_url = $tracking_url;
+        $this->createPackageUrl = $createPackageUrl;
+        $this->deletePackageUrl = $deletePackageUrl;
+        $this->createManifestUrl = $createManifestUrl;
+        $this->ratingPackageUrl = $ratingPackageUrl;
+        $this->pickupRatingUrl = $pickupRatingUrl;
+        $this->pickupShipmentUrl = $pickupShipmentUrl;
+        $this->pickupCancelUrl = $pickupCancelUrl;
+        $this->trackingUrl = $trackingUrl;
         $this->userName = $userName;
         $this->password = $password;
         $this->transactionSrc = $transactionSrc;
@@ -49,43 +48,55 @@ class UpsService
         $this->AccessLicenseNumber = $AccessLicenseNumber;
     }
 
-    public function generateLabel($order)
+    public function getLabelForRecipient($order)
     {
-        $data = $this->make_package_request_for_recipient($order);
-        return $this->ups_ApiCall($this->create_package_url, $data);
+        return $this->upsApiCall($this->createPackageUrl, $this->packageRequestForRecipient($order));
     }
 
-    public function getSenderPrice($order, $request_data)
-    {   
-       $data = $this->make_rates_request_for_sender($order, $request_data);
+    public function getSenderPrice($order, $request)
+    {  
+        if ($request->exists('consolidated_order') && $request->consolidated_order == false) {
+            $consolidatedOrderService = new ConsolidatedOrderService();
+
+            $consolidatedOrderService->handle($this->getPaymentDetails(), $this->shipperNumber);
+            return $this->upsApiCall($this->ratingPackageUrl,  $consolidatedOrderService->consolidatedOrderRatesRequestForSender($order, $request));
+        }
         
-       return $this->ups_ApiCall($this->rating_package_url, $data);
+        return $this->upsApiCall($this->ratingPackageUrl, $this->ratesRequestForSender($order, $request));
     }
 
-    public function buyLabel($order, $request_sender_data)
+    public function getLabelForSender($order, $request)
     {
-        $data = $this->make_package_request_for_sender($order, $request_sender_data);
-        
-        return $this->ups_ApiCall($this->create_package_url, $data);
+        if ($request->exists('consolidated_order') && $request->consolidated_order == false) {
+            $consolidatedOrderService = new ConsolidatedOrderService();
+
+            $consolidatedOrderService->handle($this->getPaymentDetails(), $this->shipperNumber);
+            return $this->upsApiCall($this->createPackageUrl,  $consolidatedOrderService->consolidatedOrderPackageRequestForSender($order, $request));
+        }
+
+        return $this->upsApiCall($this->createPackageUrl, $this->packageRequestForSender($order, $request));
     }
 
     public function getRecipientRates($order, $service)
     {
-        $data = $this->make_rates_request_for_recipient($order, $service);
-
-        return $this->ups_ApiCall($this->rating_package_url, $data);
+        return $this->upsApiCall($this->ratingPackageUrl, $this->rateRequestForRecipient($order, $service));
     }
 
     public function getPickupRates($request)
     {
-        $data = $this->make_request_for_pickup_rates($request);
-        return $this->upsApiCallForPickup($this->pickup_rating_url, $data);
+        return $this->upsApiCallForPickup($this->pickupRatingUrl, $this->requestForPickupRates($request));
     }
 
     public function createPickupShipment($order, $request)
     {
-       $data = $this->make_request_for_pickup_shipment($order, $request);
-       return $this->upsApiCallForPickup($this->pickup_shipment_url, $data);
+        if ($request->exists('consolidated_order')) {
+            $consolidatedOrderService = new ConsolidatedOrderService();
+            $consolidatedOrderService->handle($this->getPaymentDetails(), $this->shipperNumber);
+            
+            return $this->upsApiCall($this->pickupShipmentUrl,  $consolidatedOrderService->consolidatedOrderPickupRequest($order, $request));
+        }
+
+       return $this->upsApiCallForPickup($this->pickupShipmentUrl, $this->requestForPickupShipment($order, $request));
     }
 
     public function cancelPickup($prn)
@@ -98,7 +109,7 @@ class UpsService
         return $this->trackUPSOrder($trackingNumber);
     }
 
-    private function make_rates_request_for_sender($order, $request)
+    private function ratesRequestForSender($order, $request)
     {   
         $this->calculateVolumetricWeight($order);
 
@@ -185,7 +196,7 @@ class UpsService
         return $request_body;
     }
 
-    private function make_package_request_for_sender($order, $request)
+    private function packageRequestForSender($order, $request)
     {
         $this->calculateVolumetricWeight($order);
 
@@ -233,7 +244,7 @@ class UpsService
                             'CountryCode' => 'US',
                         ],
                         'Phone' => [
-                            'Number' => $request->sender_phone,
+                            'Number' => $order->sender_phone ? $order->sender_phone : '+13058885191',
                         ],
                     ],
                     'PaymentInformation' => $this->getPaymentDetails(),
@@ -285,7 +296,7 @@ class UpsService
         return $request_body;
     }
 
-    private function make_rates_request_for_recipient($order, $service)
+    private function rateRequestForRecipient($order, $service)
     {
         $this->calculateVolumetricWeight($order);
 
@@ -372,7 +383,7 @@ class UpsService
         return $request_body;
     }
 
-    private function make_package_request_for_recipient($order)
+    private function packageRequestForRecipient($order)
     {
         $this->calculateVolumetricWeight($order);
 
@@ -472,7 +483,7 @@ class UpsService
         return $request_body;
     }
 
-    private function make_request_for_pickup_rates($request)
+    private function requestForPickupRates($request)
     {
         $request_body = [
             'PickupRateRequest' => [
@@ -501,7 +512,7 @@ class UpsService
         return $request_body;
     }
 
-    private function make_request_for_pickup_shipment($order, $request)
+    private function requestForPickupShipment($order, $request)
     {
         $this->calculateVolumetricWeight($order);
 
@@ -586,14 +597,18 @@ class UpsService
         }
         $description = implode(' ', $this->itemDescription);
         
+        if (strlen($description) > 48){
+            $description = str_limit($description, 45);
+        }
+
         return $description;
     }
 
-    private function ups_ApiCall($url, $data)
+    private function upsApiCall($url, $data)
     {
         try {
             $response = Http::withHeaders($this->setHeaders())->acceptJson()->post($url, $data);
-           
+            
             if($response->successful())
             {
                 return (Object)[
@@ -615,7 +630,7 @@ class UpsService
                 ];
             }
        } catch (Exception $e) {
-           
+            Log::info('UPS Error'. $e->getMessage());
             return (object) [
                 'success' => false,
                 'error' => [
@@ -659,6 +674,7 @@ class UpsService
                 ];
             }
        } catch (Exception $e) {
+            Log::info('UPS Error'. $e->getMessage());
             return (object) [
                 'success' => false,
                 'error' => [
@@ -685,7 +701,7 @@ class UpsService
                 'Password' => $this->password,
                 'Username' => $this->userName,
                 'Prn' => $prn,
-            ])->acceptJson()->delete($this->pickup_cancel_url);
+            ])->acceptJson()->delete($this->pickupCancelUrl);
 
             if($response->successful())
             {
@@ -710,6 +726,7 @@ class UpsService
             }
 
        } catch (Exception $e) {
+           Log::info('UPS Error'. $e->getMessage());
             return (object) [
                 'success' => false,
                 'error' => [
@@ -730,7 +747,7 @@ class UpsService
     {
         try {
                 $response = Http::withHeaders($this->setHeaders())
-                        ->acceptJson()->get($this->tracking_url.$trackingNumber);
+                        ->acceptJson()->get($this->trackingUrl.$trackingNumber);
                 
                 if($response->successful())
                 {
@@ -753,6 +770,7 @@ class UpsService
                     ];
                 }
             } catch (Exception $e) {
+            Log::info('UPS Error'. $e->getMessage());
             return (object) [
                 'success' => false,
                 'error' => [

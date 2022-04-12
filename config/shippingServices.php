@@ -11,10 +11,13 @@ return [
             33 => 'Courier Express',
             3440 => 'Priority',
             3441 => 'FirstClass',
+            3442 => 'Priority International',
+            3443 => 'FirstClass International',
             03 => 'UPS Ground',
+            04 => 'Fedex Ground',
             33163 => 'SL Standard Modal',
             33171 => 'SL Express Modal',
-            33198 => 'SL Small Parcels'
+            33198 => 'SL Small Parcels',
         ]
     ]
 ];
