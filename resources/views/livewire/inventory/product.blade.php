@@ -30,7 +30,16 @@
                 <thead>
                     <tr>
                         <th> </th>
-                        <th>Date</th>
+                        <th>
+                            <a href="#" wire:click="sortBy('created_at')">
+                                Date
+                            </a>
+                            @if ( $sortBy == 'created_at' && $sortAsc )
+                                <i class="fa fa-arrow-down ml-2"></i>
+                            @elseif( $sortBy =='created_at' && !$sortAsc )
+                                <i class="fa fa-arrow-up ml-2"></i>
+                            @endif
+                        </th>
                         @admin
                         <th>User</th>
                         @endadmin

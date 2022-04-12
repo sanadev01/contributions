@@ -29,6 +29,9 @@ class Product extends Component
     public $weight;
     public $barcode;
     public $description;
+
+    public $sortBy = 'id';
+    public $sortAsc = false;
     
     public function render()
     {
@@ -38,6 +41,14 @@ class Product extends Component
         ]);
     }
 
+    public function sortBy($date)
+    {
+        if ($date == $this->sortBy) {
+            $this->sortAsc = ! $this->sortAsc;
+        } else {
+            $this->sortBy = $date;
+        }
+    }
     public function getProduct()
     {
         return (new ProductRepository)->get(request()->merge([
@@ -51,7 +62,7 @@ class Product extends Component
             'barcode' => $this->barcode,
             'status' => $this->status,
             'description' => $this->description,
-        ]),true,$this->pageSize);
+        ]),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc');
     }
     
     public function getSumOfProduct()
