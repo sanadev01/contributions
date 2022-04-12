@@ -7,6 +7,7 @@ use App\Models\OrderTracking;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use App\Models\Warehouse\Container;
+use App\Models\Warehouse\AccrualRate;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use App\Services\Converters\UnitsConverter;
@@ -311,6 +312,77 @@ class Order extends Model implements Package
     public function usLabelService()
     {
         return $this->hasSecondLabel() ? $this->us_api_service : null;
+    }
+
+    public function carrierService()
+    {
+        if ($this->shippingService()) {
+            if ($this->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || 
+                $this->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS ||
+                $this->shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
+                $this->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
+
+                return 'USPS';
+
+            }elseif($this->shippingService->service_sub_class == ShippingService::UPS_GROUND){
+
+                return 'UPS';
+
+            }elseif($this->shippingService->service_sub_class == ShippingService::FEDEX_GROUND){
+
+                return 'FEDEX';
+
+            }elseif($this->shippingService->service_sub_class == ShippingService::SRP || $this->shippingService->service_sub_class == ShippingService::SRM){
+                
+                return 'Correios Chile';
+
+            }
+            return 'Correios Brazil';
+        }
+
+        return null;
+    }
+
+    public function carrierCost()
+    {
+        if ($this->shippingService()) {
+            if ($this->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || 
+                $this->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS ||
+                $this->shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
+                $this->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL || 
+                $this->shippingService->service_sub_class == ShippingService::UPS_GROUND ||
+                $this->shippingService->service_sub_class == ShippingService::FEDEX_GROUND) {
+
+                return $this->user_declared_freight;
+            }
+
+            return $this->getValuePaidToCorreios();
+        }
+
+        return null;
+    }
+
+    private function getValuePaidToCorreios()
+    {
+        $rateSlab = AccrualRate::getCarrierRate($this->getWeight('kg'), $this->shippingService->service_sub_class);
+
+        if (!$rateSlab) {
+            return 0;
+        }
+
+        $container = $this->containers->first();
+
+        if (!$container) {
+            return $rateSlab->gru;
+        }
+
+        switch ($container->getDestinationAriport()) {
+            case "GRU" || "Santiago":
+                return $rateSlab->gru;
+
+            default:
+                return $rateSlab->cwb;
+        }
     }
 
     /**
