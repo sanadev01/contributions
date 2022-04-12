@@ -66,6 +66,10 @@
                     <th>Loja/Cliente</th>
                     <th>Carrier Tracking</th>
                     <th>Referência do Cliente</th>
+                    <th>Carrier</th>
+                    @admin
+                    <th>Carrier Cost</th>
+                    @endadmin
                     <th>Tracking Code</th>
                     <th><a href="#" wire:click.prevent="sortBy('gross_total')">@lang('orders.amount')</a></th>
                     <th>@lang('orders.status')</th>
@@ -103,6 +107,14 @@
                     <th>
                         <input type="search" class="form-control" wire:model.debounce.1000ms="customer_reference">
                     </th>
+                    <th>
+                        <input type="search" class="form-control">
+                    </th>
+                    @admin
+                    <th>
+                        <input type="search" class="form-control">
+                    </th>
+                    @endadmin
                     <th>
                         <input type="search" class="form-control" wire:model.debounce.1000ms="tracking_code">
                     </th>

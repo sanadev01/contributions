@@ -5,6 +5,7 @@ use App\Models\Order;
 use App\Models\ProfitPackage;
 use App\Services\StoreIntegrations\Shopify;
 use App\Http\Controllers\Admin\Deposit\DepositController;
+use App\Http\Controllers\Admin\HomeController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 use Illuminate\Support\Facades\Artisan;
@@ -258,5 +259,7 @@ Route::get('test-label',function(){
 
     return $labelPrinter->download();
 });
+
+Route::get('find-container/{order}', [HomeController::class, 'findContainer'])->name('find.container');
 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');

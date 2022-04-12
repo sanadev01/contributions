@@ -58,6 +58,14 @@
         {{ ucfirst($order->customer_reference) }}
     </td>
     <td>
+        {{ $order->carrierService() }}
+    </td>
+    @admin
+    <td>
+        {{ $order->carrierCost() }}
+    </td>
+    @endadmin
+    <td>
         {{ $order->corrios_tracking_code }}
         @if($order->hasSecondLabel())
             <hr>
