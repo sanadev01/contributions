@@ -317,22 +317,22 @@ class Order extends Model implements Package
     public function carrierService()
     {
         if ($this->shippingService()) {
-            if ($this->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || 
-                $this->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS ||
-                $this->shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
-                $this->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
+            if (optional($this->shippingService)->service_sub_class == ShippingService::USPS_PRIORITY || 
+                optional($this->shippingService)->service_sub_class == ShippingService::USPS_FIRSTCLASS ||
+                optional($this->shippingService)->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
+                optional($this->shippingService)->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
 
                 return 'USPS';
 
-            }elseif($this->shippingService->service_sub_class == ShippingService::UPS_GROUND){
+            }elseif(optional($this->shippingService)->service_sub_class == ShippingService::UPS_GROUND){
 
                 return 'UPS';
 
-            }elseif($this->shippingService->service_sub_class == ShippingService::FEDEX_GROUND){
+            }elseif(optional($this->shippingService)->service_sub_class == ShippingService::FEDEX_GROUND){
 
                 return 'FEDEX';
 
-            }elseif($this->shippingService->service_sub_class == ShippingService::SRP || $this->shippingService->service_sub_class == ShippingService::SRM){
+            }elseif(optional($this->shippingService)->service_sub_class == ShippingService::SRP || optional($this->shippingService)->service_sub_class == ShippingService::SRM){
                 
                 return 'Correios Chile';
 
