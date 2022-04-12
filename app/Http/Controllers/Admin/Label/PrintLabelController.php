@@ -70,18 +70,20 @@ class PrintLabelController extends Controller
 
                 foreach($request->order as $orderId){
                     $order = Order::find($orderId);
-                    $relativeNameInZipFile = storage_path("app/labels/{$order->corrios_tracking_code}.pdf");
-                    if(!file_exists($relativeNameInZipFile)){
-                        $labelData = $labelRepository->get($order);
-                    
-                        if ( $labelData ){
-                            Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
-                        }
+                    if($order->is_paid){
                         $relativeNameInZipFile = storage_path("app/labels/{$order->corrios_tracking_code}.pdf");
-                    }
-                    
-                    if (! $zip->addFile($relativeNameInZipFile, basename($relativeNameInZipFile))) {
-                        echo 'Could not add file to ZIP: ' . $relativeNameInZipFile;
+                        if(!file_exists($relativeNameInZipFile)){
+                            $labelData = $labelRepository->get($order);
+                            
+                            if ( $labelData ){
+                                Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
+                            }
+                            $relativeNameInZipFile = storage_path("app/labels/{$order->corrios_tracking_code}.pdf");
+                        }
+                        
+                        if (! $zip->addFile($relativeNameInZipFile, basename($relativeNameInZipFile))) {
+                            echo 'Could not add file to ZIP: ' . $relativeNameInZipFile;
+                        }
                     }
                     
                 }
@@ -109,17 +111,18 @@ class PrintLabelController extends Controller
         $order = $scan;
     
         $labelData = null;
+        if($order->is_paid){
+            if ( $request->update_label === 'true' ){
+                $labelData = $labelRepository->update($order);
+            }else{
+                $labelData = $labelRepository->get($order);
+            }
 
-        if ( $request->update_label === 'true' ){
-            $labelData = $labelRepository->update($order);
-        }else{
-            $labelData = $labelRepository->get($order);
-        }
+            $order->refresh();
 
-        $order->refresh();
-
-        if ( $labelData ){
-            Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
+            if ( $labelData ){
+                Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
+            }
         }
 
         return redirect()->route('order.label.download',[$order,'time'=>md5(microtime())]);
