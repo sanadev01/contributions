@@ -16,20 +16,24 @@ class CorrieosBrazilLabelRepository
 
     public function get(Order $order)
     {
-        if ( $order->getCN23() ){
-            $this->printLabel($order);
-            return null;
+        if($order->is_paid){
+            if ( $order->getCN23() ){
+                $this->printLabel($order);
+                return null;
+            }
+            
+            return $this->update($order);
         }
-
-        return $this->update($order);
     }
 
     public function update(Order $order)
     {
-        $cn23 = $this->generateLabel($order);
+        if($order->is_paid){
+            $cn23 = $this->generateLabel($order);
 
-        if ( $cn23 ){
-            $this->printLabel($order);
+            if ( $cn23 ){
+                $this->printLabel($order);
+            }
         }
 
         return null;
