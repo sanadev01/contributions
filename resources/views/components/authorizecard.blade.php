@@ -97,16 +97,16 @@
     </div>
     <div class="form-container m-auto" style="grid-template-rows:unset">
         <div class="field-container">
-            <div class="form-group col-md-4">
+            {{-- <div class="form-group col-md-4">
                 <label for="payment_gateway" class="h4">Select Payment Gateway</label>
                 <select id="payment_gateway" name="payment_gateway" class="form-control border border-danger" style="font-size: 18px !important;">
                   <option selected value="authorize">Credit Card (authorize.net)</option>
                   @if (setting('stripe', null, auth()->user()->id))
                     <option value="stripe">Debit Card (stripe)</option>
                   @endif
-                  {{-- <option value="stripe_ach">Stripe ACH</option> --}}
+                  <option value="stripe_ach">Stripe ACH</option>
                 </select>
-            </div>
+            </div> --}}
             <input type="hidden" name="stripe_token" id="stripe_token">
             <div class="d-block" id="div_card_number">
                 <label for="cardnumber">@lang('billing.Card Number') </label> @isset($billingInformation) <a  onclick="editInput('cardnumber')" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i></a> @endisset
