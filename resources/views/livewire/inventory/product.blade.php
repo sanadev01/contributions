@@ -116,7 +116,7 @@
                     @forelse ($products as $product)
                     @include('admin.inventory.product.components.product-row',['product'=>$product])    
                     @empty
-                        <x-tables.no-record colspan="9"></x-tables.no-record>
+                        <x-tables.no-record colspan="15"></x-tables.no-record>
                     @endforelse
                 </tbody>
             </table>
