@@ -84,6 +84,10 @@ class ParcelController extends Controller
         {
             return apiResponse(false, $this->usShippingService->getError());
         }
+
+        if(in_array($shippingService->service_sub_class, $this->internationalShippingServices()) && !$this->usShippingService->isAvailableForInternational($shippingService)){
+            return apiResponse(false, $this->usShippingService->getError());
+        }
         
         
         DB::beginTransaction();
@@ -179,7 +183,7 @@ class ParcelController extends Controller
             if($recipientCountryId == Order::US && !in_array($order->shippingService->service_sub_class, $this->domesticShippingServices())){
                 DB::rollback();
 
-                return apiResponse(false, 'this service can not be used for us address');
+                return apiResponse(false, 'this service can not be use against US address');
             }
             
             if (in_array($order->shippingService->service_sub_class, $this->domesticShippingServices())) {
@@ -271,6 +275,10 @@ class ParcelController extends Controller
        
         if(in_array($shippingService->service_sub_class, $this->domesticShippingServices()) && !$this->usShippingService->isAvalaible($shippingService, $volumeWeight))
         {
+            return apiResponse(false, $this->usShippingService->getError());
+        }
+
+        if(in_array($shippingService->service_sub_class, $this->internationalShippingServices()) && !$this->usShippingService->isAvailableForInternational($shippingService)){
             return apiResponse(false, $this->usShippingService->getError());
         }
         
@@ -430,11 +438,17 @@ class ParcelController extends Controller
     {
         return [
             ShippingService::USPS_PRIORITY, 
-            ShippingService::USPS_FIRSTCLASS, 
-            ShippingService::USPS_PRIORITY_INTERNATIONAL, 
-            ShippingService::USPS_FIRSTCLASS_INTERNATIONAL, 
+            ShippingService::USPS_FIRSTCLASS,
             ShippingService::UPS_GROUND, 
             ShippingService::FEDEX_GROUND
+        ];
+    }
+
+    private function internationalShippingServices()
+    {
+        return [
+            ShippingService::USPS_PRIORITY_INTERNATIONAL, 
+            ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,
         ];
     }
 

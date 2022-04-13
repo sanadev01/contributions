@@ -110,12 +110,12 @@ class CreateRequest extends FormRequest
         $shippingService = ShippingService::find($request->parcel['service_id'] ?? null);
 
         if ($shippingService && in_array($shippingService->service_sub_class, $this->shippingServicesSubClasses())) {
-            $rules['sender.sender_country_id'] = 'required|integer|exists:countries,id';
-            $rules['sender.sender_state_id'] = 'required|integer|exists:states,id';
+
+            $rules['sender.sender_country_id'] = 'required';
+            $rules['sender.sender_state_id'] = 'required';
             $rules['sender.sender_city'] = 'required|string|max:100';
             $rules['sender.sender_address'] = 'required|string|max:100';
             $rules['sender.sender_phone'] = 'sometimes|string|max:100';
-
             $rules['recipient.phone'] = 'required|string|max:12';
         }
 
