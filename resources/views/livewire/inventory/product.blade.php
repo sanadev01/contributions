@@ -52,8 +52,8 @@
                         <th>Unit</th>
                         <th>Inventroy Value</th>
                         <th>Exp Date</th>
-                        <th>Active</th>
                         <th>Description</th>
+                        <th>Active</th>
                         <th>Action</th>
                     </tr>
                     <tr class="no-print">
@@ -65,7 +65,7 @@
                             </select>
                         </th>
                         <th>
-                            <input type="search" class="form-control col-md-9" wire:model.debounce.1000ms="date">
+                            <input type="date" class="form-control col-md-9" wire:model.debounce.1000ms="date">
                         </th>
                         @admin
                         <th>
@@ -78,7 +78,9 @@
                         <th>
                             <input type="search" class="form-control" wire:model.debounce.1000ms="price">
                         </th>
-                        <th></th>
+                        <th>
+                            <input type="search" class="form-control" wire:model.debounce.1000ms="quantity">
+                        </th>
                         <th>
                             <input type="search" class="form-control" wire:model.debounce.1000ms="sku">
                         </th>
@@ -95,19 +97,22 @@
                                 <option value="lbs/in">lbs/in</option>
                             </select>
                         </th>
-                        <th></th>
-                        <th></th>
-                        <th >
+                        <th>
+                            <input type="search" class="form-control" wire:model.debounce.1000ms="weight">
+                        </th>
+                        <th>
+                            <input type="date" class="form-control" wire:model.debounce.1000ms="expdate">
+                        </th>
+                        <th>
+                            <input type="search" class="form-control" wire:model.debounce.1000ms="description">
+                        </th>
+                        <th>
                             <select class="form-control" wire:model="status">
                                 <option value="">All </option>
                                 <option value="pending">Pending</option>
                                 <option value="approved">Approved</option>
                             </select>
                         </th>
-                        <th>
-                            
-                        </th>
-                        <th></th>
                         <th></th>
                        
                     </tr>

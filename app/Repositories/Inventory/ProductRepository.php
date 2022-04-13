@@ -43,6 +43,12 @@ class ProductRepository
             });
         }
         
+        if ( $request->quantity ){
+            $query->where(function($query) use($request){
+                return $query->where('quantity', 'LIKE', "%{$request->quantity}%");
+            });
+        }
+        
         if ( $request->status ){
             $query->where(function($query) use($request){
                 return $query->where('status', 'LIKE', "%{$request->status}%");
@@ -64,6 +70,18 @@ class ProductRepository
         if ( $request->unit ){
             $query->where(function($query) use($request){
                 return $query->where('measurement_unit',"{$request->unit}");
+            });
+        }
+        
+        if ( $request->description ){
+            $query->where(function($query) use($request){
+                return $query->where('description',"{$request->description}");
+            });
+        }
+        
+        if ( $request->expdate ){
+            $query->where(function($query) use($request){
+                return $query->where('exp_date',"{$request->expdate}");
             });
         }
 

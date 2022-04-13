@@ -58,7 +58,7 @@ class ProductExport extends AbstractExportService
             $this->setCellValue('V'.$row, $product->location);
             $this->setCellValue('W'.$row, $product->sh_code);
             $this->setCellValue('X'.$row, date('d-m-Y', strtotime($product->created_at)));
-            $this->setCellValue('W'.$row, $product->exp_date);
+            $this->setCellValue('Y'.$row, $product->exp_date? date('d-m-Y', strtotime($product->exp_date)): '');
             $row++;
         }
 
@@ -138,13 +138,13 @@ class ProductExport extends AbstractExportService
         
         $this->setColumnWidth('X', 20);
         $this->sheet->getStyle('X')->getAlignment()->setHorizontal('right');
-        $this->setCellValue('X1', 'Date');
+        $this->setCellValue('X1', 'Created At');
         
         $this->setColumnWidth('Y', 20);
         $this->setCellValue('Y1', 'Expiry Date');
 
-        $this->setBackgroundColor('A1:X1', '2b5cab');
-        $this->setColor('A1:X1', 'FFFFFF');
+        $this->setBackgroundColor('A1:Y1', '2b5cab');
+        $this->setColor('A1:Y1', 'FFFFFF');
 
         $this->currentRow++;
     }

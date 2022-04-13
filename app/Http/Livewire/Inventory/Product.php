@@ -29,6 +29,8 @@ class Product extends Component
     public $weight;
     public $barcode;
     public $description;
+    public $quantity;
+    public $expdate;
 
     public $sortBy = 'id';
     public $sortAsc = false;
@@ -62,6 +64,8 @@ class Product extends Component
             'barcode' => $this->barcode,
             'status' => $this->status,
             'description' => $this->description,
+            'expdate' => $this->expdate,
+            'quantity' => $this->quantity,
         ]),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc');
     }
     
