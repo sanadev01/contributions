@@ -2,67 +2,102 @@
 namespace App\Services\USPS;
 
 use Exception;
+use App\Models\Order;
+use App\Models\State;
+use App\Models\Country;
 use App\Models\ShippingService;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
 use App\Services\Calculators\WeightCalculator;
+use App\Services\USPS\ConsolidatedOrderService;
 
 class UspsService
 {
-    protected $api_url;
-    protected $delete_usps_label_url;
-    protected $create_manifest_url;
+    protected $createLabelUrl;
+    protected $deleteLabelUrl;
+    protected $createManifestUrl;
     protected $email;
     protected $password;
-    protected $get_price_url;
+    protected $getPriceUrl;
     protected $chargableWeight;
+    protected $addressValidationUrl;
 
-    public function __construct($api_url, $delete_usps_label_url, $create_manifest_url, $get_price_url, $email, $password)
+    public function __construct($createLabelUrl, $deleteLabelUrl, $createManifestUrl, $getPriceUrl, $addressValidationUrl, $email, $password)
     {
-        $this->api_url = $api_url;
-        $this->delete_usps_label_url = $delete_usps_label_url;
-        $this->create_manifest_url = $create_manifest_url;
+        $this->createLabelUrl = $createLabelUrl;
+        $this->deleteLabelUrl = $deleteLabelUrl;
+        $this->createManifestUrl = $createManifestUrl;
         $this->email = $email;
         $this->password = $password;
-        $this->get_price_url = $get_price_url;
+        $this->getPriceUrl = $getPriceUrl;
+        $this->addressValidationUrl = $addressValidationUrl;
     }
 
-    public function generateLabel($order)
+    public function validateAddress($request)
     {
-        $data = $this->make_request_attributes($order);
+        return $this->apiCallForAddressValidation($this->getAddressValidationData($request));
+    }
+
+    private function getAddressValidationData($request)
+    {
+        return [
+            'company_name' => 'Herco',
+            'line1' => $request->address,
+            'state_province' => $request->state,
+            'city' => $request->city,
+            'postal_code' => '',
+            'country_code' => 'US'
+        ];
+    }
+
+    private function apiCallForAddressValidation($data)
+    {
+        try {
+            $response = Http::withBasicAuth($this->email, $this->password)->post($this->addressValidationUrl, $data);
+            
+            if($response->status() == 200) {
+                
+                return (Array)[
+                    'success' => true,
+                    'zipcode'    => $response->json()['zip5'],
+                ];
+            }
+
+            if($response->status() != 200) {
+                return (Array)[
+                    'success' => false,
+                    'message' => $response->json()['message'],
+                ];
+            }
+            
+        } catch (Exception $ex) {
+            Log::info('USPS Error'. $ex->getMessage());
+            return (Array)[
+                'success' => false,
+                'message' => $ex->getMessage(),
+            ];
+        }
         
-        $usps_response = $this->usps_ApiCall($data);
+    }
+
+    public function getPrimaryLabelForRecipient($order)
+    {
+        if ($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
+            return $this->uspsApiCall($this->makeRequestAttributeForInternationalLabel($order));
+        }
         
-        return $usps_response;
+        return $this->uspsApiCall($this->makeRequestAttributeForLabel($order));
     }
     
-    public function make_request_attributes($order)
+    private function makeRequestAttributeForLabel($order)
     {
         $this->calculateVolumetricWeight($order);
 
         $request_body = [
             'request_id' => 'HD-'.$order->id,
-            'from_address' => [
-                'company_name' => 'HERCO SUITE#100',
-                'line1' => '2200 NW 129TH AVE',
-                'city' => 'Miami',
-                'state_province' => 'FL',
-                'postal_code' => '33182',
-                'phone_number' => '+13058885191',
-                'sms' => '+17867024093',
-                'email' => 'homedelivery@homedeliverybr.com',
-                'country_code' => 'US',
-            ],
-            'to_address' => [
-                'first_name' => $order->recipient->first_name,
-                'last_name' => $order->recipient->last_name,
-                'line1' => $order->recipient->address.' '.$order->recipient->street_no,
-                'city' => $order->recipient->city,    //City validation required
-                'state_province' => $order->recipient->state->code,
-                'postal_code' => $order->recipient->zipcode,  //Zip validation required
-                'phone_number' => $order->recipient->phone,
-                'country_code' => 'US', 
-            ],
+            'from_address' => $this->getHercoAddress($order->warehouse_number),
+            'to_address' => $this->getRecipientAddress($order),
             'weight' => (float)$this->chargableWeight,
             'weight_unit' => ($order->measurement_unit == 'kg/cm') ? 'kg' : 'lb',
             'value' => (float)$order->order_value,
@@ -70,21 +105,45 @@ class UspsService
             'image_resolution' => 300,
             'usps' => [
                 'shape' => 'Parcel',
-                'mail_class' => $order->shipping_service_name,
+                'mail_class' => $this->setServiceClass($order->shippingService->service_sub_class),
                 'image_size' => '4x6',
             ],
         ];
 
+        if ($order->sender_country_id != Country::US) {
+            $request_body['usps']['gde_origin_country_code'] = Country::find($order->sender_country_id)->code;
+        }
+        
         return $request_body;
     }
 
-    public function usps_ApiCall($data)
+    private function makeRequestAttributeForInternationalLabel($order)
+    {
+        $this->calculateVolumetricWeight($order);
+
+        return [
+            'request_id' => 'HD-'.$order->id,
+            'from_address' => ($order->sender_country_id == Order::US && $order->recipient->country_id != Order::US) ? $this->getSenderAddress($order) : $this->getHercoAddress($order->warehouse_number),
+            'to_address' => $this->getRecipientAddress($order),
+            'weight' => (float)$this->chargableWeight,
+            'weight_unit' => ($order->measurement_unit == 'kg/cm') ? 'kg' : 'lb',
+            'value' => (float)$order->order_value,
+            'customs_form' => $this->setCustomsForm($order),
+            'image_format' => 'pdf',
+            'image_resolution' => 300,
+            'usps' => [
+                'shape' => 'Parcel',
+                'mail_class' => $this->setServiceClass($order->shippingService->service_sub_class),
+            ],
+        ];
+    }
+
+    public function uspsApiCall($data)
     {
         try {
             
-            $response = Http::withBasicAuth($this->email, $this->password)->post($this->api_url, $data);
-
-
+            $response = Http::withBasicAuth($this->email, $this->password)->post($this->createLabelUrl, $data);
+            
             if($response->status() == 201)
             {
                 return (Object)[
@@ -108,7 +167,7 @@ class UspsService
             }
             
         } catch (Exception $e) {
-
+            Log::info('USPS Error'. $e->getMessage());
             return (object) [
                 'success' => false,
                 'message' => $e->getMessage(),
@@ -120,7 +179,7 @@ class UspsService
     {
         try {
             
-            $response =  Http::withBasicAuth($this->email, $this->password)->delete($this->delete_usps_label_url.$tracking_number);
+            $response =  Http::withBasicAuth($this->email, $this->password)->delete($this->deleteLabelUrl.$tracking_number);
             
             if($response->status() == 204)
             {
@@ -136,6 +195,7 @@ class UspsService
             ];
 
         } catch (Exception $e) {
+            Log::info('USPS Error'. $e->getMessage());
             return (object) [
                 'success' => false,
                 'message' => $e->getMessage(),
@@ -157,7 +217,7 @@ class UspsService
         
         try {
 
-            $response = Http::withBasicAuth($this->email, $this->password)->post($this->create_manifest_url, $data);
+            $response = Http::withBasicAuth($this->email, $this->password)->post($this->createManifestUrl, $data);
            
             if($response->status() == 201)
             {
@@ -182,7 +242,7 @@ class UspsService
             }
 
         } catch (Exception $e) {
-
+            Log::info('USPS Error'. $e->getMessage());
             return (object) [
                 'success' => false,
                 'message' => $e->getMessage(),
@@ -191,80 +251,57 @@ class UspsService
         }
     }
 
-    public function getPrice($order, $service)
+    public function getRecipientRates($order, $service)
     {
-       $data = $this->make_rates_request_attributes($order, $service);
-       
-       try {
-
-        $response = Http::acceptJson()->withBasicAuth($this->email, $this->password)->post($this->get_price_url, $data);
-        
-        if($response->successful())
-        {
-            return (Object)[
-                'success' => true,
-                'data' => $response->json(),
-            ];
-        }elseif($response->clientError())
-        {
-            return (Object)[
-                'success' => false,
-                'message' => $response->json()['error'],
-            ];    
-        }elseif ($response->status() !== 200) 
-        {
-
-            return (object) [
-                'success' => false,
-                'message' => $response->json()['message'],
-            ];
+        if ($service == ShippingService::USPS_PRIORITY_INTERNATIONAL || $service == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
+            return $this->uspsApiCallForRates($this->makeRequestAttributeForInternationalRates($order, $service));
         }
-
-       } catch (Exception $e) {
-           
-            return (object) [
-                'success' => false,
-                'message' => $e->getMessage(),
-            ];
-       }
+        return $this->uspsApiCallForRates($this->makeRequestAttributeForRates($order, $service));
     }
 
-    public function make_rates_request_attributes($order, $service)
+    public function makeRequestAttributeForRates($order, $service)
     {
         $this->calculateVolumetricWeight($order);
 
         $request_body = [
-            'from_address' => [
-                'company_name' => 'HERCO SUITE#100',
-                'line1' => '2200 NW 129TH AVE',
-                'city' => 'Miami',
-                'state_province' => 'FL',
-                'postal_code' => '33182',
-                'phone_number' => '+13058885191',
-                'sms' => '+17867024093',
-                'email' => 'homedelivery@homedeliverybr.com',
-                'country_code' => 'US',
-            ],
-            'to_address' => [
-                'company_name' => 'HERCO SUITE#100',
-                'line1' => $order->recipient->address.' '.$order->recipient->street_no,
-                'city' => $order->recipient->city,    //City validation required
-                'state_province' => $order->recipient->state->code,
-                'postal_code' => $order->recipient->zipcode,  //Zip validation required
-                'phone_number' => '+13058885191',
-                'country_code' => 'US', 
-            ],
+            'from_address' => $this->getHercoAddress($order->warehouse_number),
+            'to_address' => $this->getRecipientAddress($order),
             'weight' => (float)$this->chargableWeight,
             'weight_unit' => ($order->measurement_unit == 'kg/cm') ? 'kg' : 'lb',
             'image_format' => 'pdf',
             'usps' => [
                 'shape' => 'Parcel',
-                'mail_class' => ($service == ShippingService::USPS_PRIORITY) ? 'Priority' : 'FirstClass',
+                'mail_class' => $this->setServiceClass($service),
                 'image_size' => '4x6',
             ],
         ];
 
+        if ($order->sender_country_id != Country::US) {
+            $request_body['usps']['gde_origin_country_code'] = Country::find($order->sender_country_id)->code;
+        }
+        
         return $request_body;
+    }
+
+    private function makeRequestAttributeForInternationalRates($order, $service)
+    {
+        $this->calculateVolumetricWeight($order);
+
+        return [
+            'from_address' => ($order->id === 1) ? $this->getSenderAddress($order) : $this->getHercoAddress($order->warehouse_number),
+            'to_address' => $this->getRecipientAddress($order),
+            'weight' => (float)$this->chargableWeight,
+            'weight_unit' => ($order->measurement_unit == 'kg/cm') ? 'kg' : 'lb',
+            'value' => ($order->id === 1) ? $this->calculateItemsValue($order->items) : (float)$order->items()->sum(DB::raw('quantity * value')),
+            'customs_form' => $this->setCustomsForm($order),
+            'image_format' => 'pdf',
+            'usps' => [
+                'shape' => 'Parcel',
+                'mail_class' => $this->setServiceClass($service),
+                'image_size' => '4x6',
+                'gde_origin_country_code' => optional($order->recipient)->country->code,
+            ],
+        ];
     }
 
     public function calculateVolumetricWeight($order)
@@ -281,61 +318,36 @@ class UspsService
         }
     }
 
-    // USPS BUY Label Logics
     public function getSenderPrice($order, $request)
     {
-        $data = $this->make_rates_request_for_sender($order, $request);
-        try {
+        if ($request->exists('consolidated_order') && $request->consolidated_order == false) {
 
-            $response = Http::acceptJson()->withBasicAuth($this->email, $this->password)->post($this->get_price_url, $data);
-            if($response->successful())
-            {
-                return (Object)[
-                    'success' => true,
-                    'data' => $response->json(),
-                ];
-            }elseif($response->clientError())
-            {
-                return (Object)[
-                    'success' => false,
-                    'message' => $response->json()['error'],
-                ];    
-            }elseif ($response->status() !== 200) 
-            {
-    
-                return (object) [
-                    'success' => false,
-                    'message' => $response->json()['message'],
-                ];
-            }
-    
-           } catch (Exception $e) {
-               
-                return (object) [
-                    'success' => false,
-                    'message' => $e->getMessage(),
-                ];
-           }
-
-    }
-
-    public function buyLabel($order, $request)
-    {
-        $data = $this->make_rates_request_for_sender($order, $request);
-        
-        $usps_response = $this->usps_ApiCall($data);
-        
-        return $usps_response;
-    }
-
-    public function make_rates_request_for_sender($order, $request)
-    {
-        if(!isset($request->uspsBulkLabel))
-        {
-            $this->calculateVolumetricWeight($order);
+            $consolidatedOrderService = new ConsolidatedOrderService();
+            return $this->uspsApiCallForRates($consolidatedOrderService->makeConsolidatedOrderRequestForSender($order, $request));
         }
-        
-        $request_body = [
+
+        return $this->uspsApiCallForRates($this->makeRequestForSender($order, $request));
+    }
+
+    public function getLabelForSender($order, $request)
+    {
+        if ($request->exists('consolidated_order') && $request->consolidated_order == false)
+        {
+            $consolidatedOrderService = new ConsolidatedOrderService();
+            return $this->uspsApiCall($consolidatedOrderService->makeConsolidatedOrderRequestForSender($order, $request));
+        }
+
+        if ($request->service == ShippingService::USPS_PRIORITY_INTERNATIONAL || $request->service == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
+            return $this->uspsApiCall($this->makeRequestAttributeForInternationalLabel($order));
+        }
+
+        return $this->uspsApiCall($this->makeRequestForSender($order, $request));
+    }
+
+    private function makeRequestForSender($order, $request)
+    {
+        $this->calculateVolumetricWeight($order); 
+        return [
             'from_address' => [
                 'company_name' => 'HERCO SUIT#100',
                 'first_name' => ($request->first_name) ? $request->first_name : '',
@@ -349,15 +361,7 @@ class UspsService
                 'email' => 'homedelivery@homedeliverybr.com',
                 'country_code' => 'US',
             ],
-            'to_address' => [
-                'company_name' => 'HERCO SUITE#100',
-                'line1' => '2200 NW 129TH AVE',
-                'city' => 'Miami',
-                'state_province' => 'FL',
-                'postal_code' => '33182',
-                'phone_number' => '+13058885191',
-                'country_code' => 'US', 
-            ],
+            'to_address' => $this->getHercoAddress($order->warehouse_number),
             'weight' => ($this->chargableWeight != null) ? (float)$this->chargableWeight : (float)$order->weight,
             'weight_unit' => ($order->measurement_unit == 'kg/cm') ? 'kg' : 'lb',
             'image_format' => 'pdf',
@@ -367,7 +371,168 @@ class UspsService
                 'image_size' => '4x6',
             ],
         ];
+    }
 
-        return $request_body;
+    private function getHercoAddress($warehouse_number)
+    {
+        return [
+            'company_name' => 'HERCO SUITE#100 -'.$warehouse_number,
+            'line1' => '2200 NW 129TH AVE',
+            'city' => 'Miami',
+            'state_province' => 'FL',
+            'postal_code' => '33182',
+            'phone_number' => '+13058885191',
+            'sms' => '+17867024093',
+            'email' => 'homedelivery@homedeliverybr.com',
+            'country_code' => 'US',
+        ];
+    }
+
+    private function getSenderAddress($order)
+    {
+        return [
+            'company_name' => 'HERCO SUITE#100 -'.$order->warehouse_number,
+            'line1' => $order->sender_address,
+            'city' => $order->sender_city,
+            'state_province' => ($order->sender_state) ? $order->sender_state : State::where('id', $order->sender_state_id)->value('code'),
+            'postal_code' => $order->sender_zipcode,
+            'phone_number' => '+13058885191',
+            'sms' => '+17867024093',
+            'email' => 'homedelivery@homedeliverybr.com',
+            'country_code' => 'US',
+        ];
+    }
+
+    private function getRecipientAddress($order)
+    {
+        return [
+            'first_name' => optional($order->recipient)->first_name,
+            'last_name' => optional($order->recipient)->last_name,
+            'line1' => optional($order->recipient)->address.' '.optional($order->recipient)->street_no,
+            'city' => optional($order->recipient)->city,    //City validation required
+            'state_province' => optional($order->recipient)->state->code,
+            'postal_code' => optional($order->recipient)->zipcode,  //Zip validation required
+            'phone_number' => optional($order->recipient)->phone,
+            'country_code' => optional($order->recipient)->country->code, 
+        ];
+    }
+
+    private function calculateItemsValue($orderItems)
+    {
+        $itemsValue = 0;
+        foreach ($orderItems as $item) {
+            $itemsValue += $item->value * $item->quantity;
+        }
+       
+        return $itemsValue;
+    }
+
+    private function setCustomsForm($order)
+    {
+        return [
+            'contents_type' => 'Merchandise',
+            'customs_items' => $this->setItemsDetails($order),
+        ];
+    }
+
+    private function setItemsDetails($order)
+    {
+        $items = [];
+        $singleItemWeight = $this->calulateItemWeight($order);
+
+        if (count($order->items) >= 1) {
+            foreach ($order->items as $key => $item) {
+                $itemToPush = [];
+                $itemToPush = [
+                    'description' => $item->description,
+                    'quantity' => (int)$item->quantity,
+                    'value' => (float)$item->value,
+                    'weight' => $singleItemWeight / (int)$item->quantity,
+                    'weight_unit' => ($order->measurement_unit == 'kg/cm') ? 'kg' : 'lb',
+                ];
+               array_push($items, $itemToPush);
+            }
+        }
+
+        return $items;
+    }
+
+    private function calulateItemWeight($order)
+    {
+        $orderTotalWeight = ($this->chargableWeight != null) ? (float)$this->chargableWeight : (float)$order->weight;
+        $itemWeight = 0;
+
+        if (count($order->items) > 1) {
+            $itemWeight = $orderTotalWeight / count($order->items);
+            return $itemWeight;
+        }
+        return $orderTotalWeight;
+    }
+
+    private function setServiceClass($service)
+    {
+        switch ($service) {
+            case ShippingService::USPS_PRIORITY:
+                return 'Priority';
+                break;
+            case 'Priority':
+                return 'Priority';
+                break;     
+            case ShippingService::USPS_FIRSTCLASS:
+                return 'FirstClass';
+                break;
+            case 'FirstClass':
+                return 'FirstClass';
+                break;    
+            case ShippingService::USPS_PRIORITY_INTERNATIONAL:
+                return 'PriorityInternational';
+                break;
+            case 'PriorityInternational':
+                return 'PriorityInternational';
+                break;    
+            case ShippingService::USPS_FIRSTCLASS_INTERNATIONAL:
+                return 'FirstClassInternational';
+                break;               
+            default:
+                return 'FirstClassInternational';
+                break;
+        }
+    }
+
+    private function uspsApiCallForRates($data)
+    {
+        try {
+
+            $response = Http::acceptJson()->withBasicAuth($this->email, $this->password)->post($this->getPriceUrl, $data);
+            
+            if($response->successful())
+            {
+                return (Object)[
+                    'success' => true,
+                    'data' => $response->json(),
+                ];
+            }elseif($response->clientError())
+            {
+                Log::info('USPS Error'.$response->json()['message']);
+                return (Object)[
+                    'success' => false,
+                    'message' => $response->json()['message'],
+                ];    
+            }elseif ($response->status() !== 200) 
+            {
+                Log::info('USPS Error'.$response->json()['message']);
+                return (object) [
+                    'success' => false,
+                    'message' => $response->json()['message'],
+                ];
+            }
+    
+        } catch (Exception $e) {
+            Log::info('USPS Error'. $e->getMessage());
+            return (object) [
+                'success' => false,
+                'message' => $e->getMessage(),
+            ];
+        }
     }
 }

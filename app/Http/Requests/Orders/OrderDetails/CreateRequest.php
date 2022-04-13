@@ -30,7 +30,7 @@ class CreateRequest extends FormRequest
             'shipping_service_id' => 'required|exists:shipping_services,id',
             'items' => 'required|array|min:1',
             'tax_modality' => 'required|in:ddu',
-            'items.*.sh_code' => [
+            'items.*.sh_code' => ($this->order->products->isNotEmpty()) ? 'sometimes' : [
                 'required',
                 'numeric',
                 new NcmValidator()

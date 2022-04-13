@@ -176,5 +176,5 @@
             }
         }
     </script>
-    @include('admin.payment-invoices.stripe')
+    {{-- @include('admin.payment-invoices.stripe') --}}
 @endsection

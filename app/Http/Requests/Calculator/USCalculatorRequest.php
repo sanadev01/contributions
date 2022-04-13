@@ -4,7 +4,7 @@ namespace App\Http\Requests\Calculator;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UPSCalculatorRequest extends FormRequest
+class USCalculatorRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -30,6 +30,10 @@ class UPSCalculatorRequest extends FormRequest
             'sender_address' => 'required',
             'sender_city' => 'required',
             'sender_zipcode' => 'required',
+            'recipient_state' => 'required|exists:states,code',
+            'recipient_address' => 'required',
+            'recipient_city' => 'required',
+            'recipient_zipcode' => 'required',
             'height' => 'sometimes|numeric',
             'width' => 'sometimes|numeric',
             'length' => 'sometimes|numeric',
@@ -58,6 +62,11 @@ class UPSCalculatorRequest extends FormRequest
             'sender_address.required' => 'Sender address is required',
             'sender_city.required' => 'Sender city is required',
             'sender_zipcode.required' => 'Sender zipcode is required',
+            'recipient_state.required' => 'Recipient state is required',
+            'recipient_state.exists' => 'Recipient state does not exist',
+            'recipient_address.required' => 'Recipient address is required',
+            'recipient_city.required' => 'Recipient city is required',
+            'recipient_zipcode.required' => 'Recipient zipcode is required',
             'height.numeric' => 'Height must be numeric',
             'width.numeric' => 'Width must be numeric',
             'length.numeric' => 'Length must be numeric',
