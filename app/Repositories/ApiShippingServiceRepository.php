@@ -48,6 +48,22 @@ class ApiShippingServiceRepository
         return true;
     }
 
+    public function isAvailableForInternational($shippingService)
+    {
+        if(($shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL || $shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) && $this->weight <= $shippingService->max_weight_allowed)
+        {
+            if(!setting('usps', null, auth()->user()->id))
+            {
+                $this->error = 'Seleceted Shipping service is not available for your account.';
+                return false;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
     public function getUSShippingServiceRate($order)
     {
         if ($order->weight > $order->shippingService->max_weight_allowed) {
