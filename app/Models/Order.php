@@ -357,12 +357,12 @@ class Order extends Model implements Package
     public function carrierCost()
     {
         if ($this->shippingService()) {
-            if ($this->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || 
-                $this->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS ||
-                $this->shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
-                $this->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL || 
-                $this->shippingService->service_sub_class == ShippingService::UPS_GROUND ||
-                $this->shippingService->service_sub_class == ShippingService::FEDEX_GROUND) {
+            if (optional($this->shippingService)->service_sub_class == ShippingService::USPS_PRIORITY || 
+                optional($this->shippingService)->service_sub_class == ShippingService::USPS_FIRSTCLASS ||
+                optional($this->shippingService)->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
+                optional($this->shippingService)->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL || 
+                optional($this->shippingService)->service_sub_class == ShippingService::UPS_GROUND ||
+                optional($this->shippingService)->service_sub_class == ShippingService::FEDEX_GROUND) {
 
                 return $this->user_declared_freight;
             }
@@ -375,7 +375,7 @@ class Order extends Model implements Package
 
     private function getValuePaidToCorreios()
     {
-        $rateSlab = AccrualRate::getCarrierRate($this->getWeight('kg'), $this->shippingService->service_sub_class);
+        $rateSlab = AccrualRate::getCarrierRate($this->getWeight('kg'), optional($this->shippingService)->service_sub_class);
 
         if (!$rateSlab) {
             return 0;
