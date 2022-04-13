@@ -151,12 +151,12 @@ class OrderLabelController extends Controller
                 $orders->push($order);
                 event(new OrderPaid($orders, true));
             }
-
-            return apiResponse(true,"Lable Generated successfully.",[
-                'url' => route('order.label.download',$order),
-                'tracking_code' => $order->corrios_tracking_code
-            ]);
+            
         }
+        return apiResponse(true,"Lable Generated successfully.",[
+            'url' => route('order.label.download',$order),
+            'tracking_code' => $order->corrios_tracking_code
+        ]);
 
     }
 }
