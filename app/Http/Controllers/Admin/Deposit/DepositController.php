@@ -45,6 +45,8 @@ class DepositController extends Controller
         $request->validate([
             'amount' => 'required|numeric',
         ]);
+        $request->merge(['payment_gateway' => 'authorize']);
+        
         if(Auth::user()->isAdmin()){
             
             if($request->adminpay){

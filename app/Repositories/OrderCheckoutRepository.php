@@ -221,32 +221,33 @@ class OrderCheckoutRepository
                 }
             }
             
-
-            $this->invoice->update([ 
-                'last_four_digits' => substr($billingInformation->card_no,-4),
-                'is_paid' => true
-            ]);
-
-            $this->invoice->transactions()->create([
-                'transaction_id' => ($this->request->payment_gateway == 'stripe' || $this->request->payment_gateway == 'stripe_ach') ? $this->chargeID : $response->data->getTransId(),
-                'amount' => $this->invoice->total_amount
-            ]);
-
-            $this->invoice->orders()->update([
-                'is_paid' => true,
-                'status' => Order::STATUS_PAYMENT_DONE
-            ]);
-            
-            try {
-                Mail::send(new PaymentPaid($this->invoice));
-            } catch (\Exception $ex) {
-                Log::info('Payment Paid email send error: '.$ex->getMessage());
+            if ( $response->success ){
+                $this->invoice->update([ 
+                    'last_four_digits' => substr($billingInformation->card_no,-4),
+                    'is_paid' => true
+                ]);
+    
+                $this->invoice->transactions()->create([
+                    'transaction_id' => ($this->request->payment_gateway == 'stripe' || $this->request->payment_gateway == 'stripe_ach') ? $this->chargeID : $response->data->getTransId(),
+                    'amount' => $this->invoice->total_amount
+                ]);
+    
+                $this->invoice->orders()->update([
+                    'is_paid' => true,
+                    'status' => Order::STATUS_PAYMENT_DONE
+                ]);
+                
+                try {
+                    Mail::send(new PaymentPaid($this->invoice));
+                } catch (\Exception $ex) {
+                    Log::info('Payment Paid email send error: '.$ex->getMessage());
+                }
+    
+                DB::commit();
+    
+                return true;
             }
-
-            DB::commit();
-
-            return true;
-
+            
         } catch (\Exception $ex) {
             DB::rollBack();
             $this->error = $ex->getMessage();

@@ -38,6 +38,8 @@ class OrdersCheckoutController extends Controller
             abort(404);
         }
 
+        $request->merge(['payment_gateway' => 'authorize']);
+        
         return $orderCheckoutRepository->handle($invoice, $request);
     }
 }
