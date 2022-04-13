@@ -244,5 +244,5 @@
             }
         }
     </script>
-    @include('admin.deposit.stripe')
+    {{-- @include('admin.deposit.stripe') --}}
 @endsection

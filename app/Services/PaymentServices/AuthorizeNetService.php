@@ -198,12 +198,15 @@ class AuthorizeNetService
                     is_object($tResponse->getErrors()) || is_array($tResponse->getErrors()) ? json_encode($tResponse->getErrors()): $tResponse->getErrors()
                 );
             }
-
-            return (object)[
-                'success' => true,
-                'data' => $tResponse,
-                'message' => 'Transaction Successfully Made With Transaction ID: '.$tResponse->getTransId()
-            ];
+            
+            if ($tResponse->getTransId() != null && $tResponse->getErrors() == null) {
+                return (object)[
+                    'success' => true,
+                    'data' => $tResponse,
+                    'message' => 'Transaction Successfully Made With Transaction ID: '.$tResponse->getTransId()
+                ];
+            }
+            
 
         } catch (Exception $ex) {
             return (object)[
