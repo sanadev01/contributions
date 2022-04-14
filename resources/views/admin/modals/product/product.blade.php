@@ -89,7 +89,7 @@
                                 <td class="danger">{{ $product->min_quantity }}</td>
                                 <td class="danger">{{ $product->max_quantity }}</td>
                                 <td class="danger">{{ $product->discontinued }}</td>
-                                <td class="danger">{{ $product->store_day }} </td>
+                                <td class="danger">{{ Carbon\Carbon::parse($product->created_at)->diffInDays(Carbon\Carbon::now()) }} </td>
                                 <td class="danger">{{ $product->location }} </td>
                             </tr>                                 
                             
