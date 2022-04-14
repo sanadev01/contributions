@@ -90,14 +90,15 @@ class OrderImportService extends AbstractImportService
                 if(!empty($this->errors)){
                     $orderError = $this->errors;
                 }
+                $user = Auth::user();
                 $order = ImportedOrder::create([
                     'user_id' => $this->userId,
                     'import_id' => $importOrder->id,
                     'shipping_service_id' => $shippingService->id,
                     'shipping_service_name' => $shippingService->name,
-                    "merchant" => $this->getValue("A{$row}"),
-                    "carrier" => $this->getValue("B{$row}"),
-                    "tracking_id" => $this->getValue("C{$row}"),
+                    "merchant" => $this->getValue("A{$row}")?$this->getValue("A{$row}"):"HomeDelivery",
+                    "carrier" => $this->getValue("B{$row}")?$this->getValue("B{$row}"):"HomeDelivery",
+                    "tracking_id" => $this->getValue("C{$row}")?$this->getValue("C{$row}"):"HomeDelivery",
                     "customer_reference" => $this->getValue("D{$row}"),
                     "weight" => $this->getValue("E{$row}")?$this->getValue("E{$row}"):0,
                     "length" => $this->getValue("F{$row}")?$this->getValue("F{$row}"):0,
@@ -109,14 +110,11 @@ class OrderImportService extends AbstractImportService
                     'status' => Order::STATUS_ORDER,
                     'order_date' => now(),
 
-                    "sender_first_name" => $this->getValue("J{$row}"),
-                    "sender_last_name" => $this->getValue("K{$row}"),
-                    "sender_email" => $this->getValue("L{$row}"),
-                    "sender_phone" => $this->getValue("M{$row}"),
+                    "sender_first_name" => $user->name,//$this->getValue("J{$row}"),
+                    "sender_last_name" => $user->last_name,//$this->getValue("K{$row}"),
+                    "sender_email" => $user->email,//$this->getValue("L{$row}"),
+                    "sender_phone" => $user->phone,//$this->getValue("M{$row}"),
                     "correios_tracking_code" => $this->getValue("AG{$row}"),
-
-
-
                     'user_declared_freight' => $this->getValue("Z{$row}"),
                     'error' => $orderError,
 
@@ -222,7 +220,7 @@ class OrderImportService extends AbstractImportService
                 'width' => 'required|numeric|gt:0',
                 'height' => 'required|numeric|gt:0',
 
-                'sender_first_name' => 'required',
+                'sender_first_name' => 'nullable',
                 'sender_last_name' => 'nullable',
                 'sender_email' => 'nullable',
                 'sender_phone' => 'nullable|max:15',
@@ -280,7 +278,7 @@ class OrderImportService extends AbstractImportService
                 'width.required' => 'width is required',
                 'height.required' => 'height is required',
 
-                'sender_first_name.required' => 'sender first name is required',
+                'sender_first_name.nullable' => 'sender first name is required',
                 'sender_last_name.nullable' => 'sender last name is required',
                 'sender_email.required' => 'sender Email is required',
                 'sender_phone.nullable' => 'sender phone is invalid',

@@ -26,7 +26,7 @@
             </div>
         </div>
         <div class="table-wrapper position-relative">
-            <table class="table mb-0 table-responsive-md table-hover" id="order-table">
+            <table class="table mb-0 table-responsive table-hover" id="order-table">
                 <thead>
                     <tr>
                         <th> </th>
