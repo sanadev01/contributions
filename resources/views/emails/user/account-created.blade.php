@@ -8,8 +8,8 @@
 @lang('email.welcome.Thank you for')
 @lang('email.welcome.You may begin shopping')
 <br>
-@lang('email.welcome.Your Home DeliveryBR suite') {{ $user->pobox_number }} <br>
 
+@lang('email.welcome.Your Home DeliveryBR suite') {{ $user->pobox_number }} <br>
 @lang('email.welcome.Your Home DeliveryBR address') <br>
 {{ $user->name }} {{ $user->last_name }} <br>
 @lang('email.welcome.Address line 1:'){!! $user->pobox? $user->pobox->address : ' 2200 NW, 129th Ave – Suite # 100' !!} <br>
