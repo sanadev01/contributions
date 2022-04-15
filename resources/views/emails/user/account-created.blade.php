@@ -7,7 +7,7 @@
 
 @lang('email.welcome.Thank you for')
 @lang('email.welcome.You may begin shopping')
-
+<br>
 @lang('email.welcome.Your Home DeliveryBR suite') {{ $user->pobox_number }} <br>
 
 @lang('email.welcome.Your Home DeliveryBR address') <br>
