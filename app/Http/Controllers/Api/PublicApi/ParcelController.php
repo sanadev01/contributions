@@ -37,7 +37,8 @@ class ParcelController extends Controller
      */
     public function store(CreateRequest $request)
     { 
-
+        \Log::info('request Data');
+        \Log::info($request);
         $weight = optional($request->parcel)['weight']??0;
         $length = optional($request->parcel)['length']??0;
         $width = optional($request->parcel)['width']??0;
