@@ -59,4 +59,5 @@ return [
     'PostPaid' => 'Post-Paid',
     'Pay Invoice' => 'Pay Invoice',
     'Paid with Balance' => 'Paid with Balance',
+    'Remaining' => 'Remaining'
 ];
