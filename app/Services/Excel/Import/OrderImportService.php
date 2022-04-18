@@ -91,12 +91,14 @@ class OrderImportService extends AbstractImportService
                     $orderError = $this->errors;
                 }
                 $user = Auth::user();
+                $countryId = optional( Country::where('code',$this->getValue("T{$row}"))->first() )->id;
+                $stateId = optional( State::where('country_id',$countryId)->where('code',$this->getValue("S{$row}"))->first() )->id;
                 $order = ImportedOrder::create([
                     'user_id' => $this->userId,
                     'import_id' => $importOrder->id,
                     'shipping_service_id' => $shippingService->id,
                     'shipping_service_name' => $shippingService->name,
-                    "merchant" => $this->getValue("A{$row}")?$this->getValue("A{$row}"):"HomeDelivery",
+                    "merchant" => "HomeDelivery",//$this->getValue("A{$row}")?$this->getValue("A{$row}"):
                     "carrier" => $this->getValue("B{$row}")?$this->getValue("B{$row}"):"HomeDelivery",
                     "tracking_id" => $this->getValue("C{$row}")?$this->getValue("C{$row}"):"HomeDelivery",
                     "customer_reference" => $this->getValue("D{$row}"),
@@ -114,24 +116,23 @@ class OrderImportService extends AbstractImportService
                     "sender_last_name" => $user->last_name,//$this->getValue("K{$row}"),
                     "sender_email" => $user->email,//$this->getValue("L{$row}"),
                     "sender_phone" => $user->phone,//$this->getValue("M{$row}"),
-                    "correios_tracking_code" => $this->getValue("AG{$row}"),
-                    'user_declared_freight' => $this->getValue("Z{$row}"),
+                    'user_declared_freight' => $this->getValue("V{$row}"),
                     'error' => $orderError,
 
                     'recipient' => [
-                        "first_name" =>$this->getValue("N{$row}"),
-                        "last_name" => $this->getValue("O{$row}"),
-                        "email" => $this->getValue("P{$row}"),
-                        "phone" => $this->getValue("Q{$row}"),
-                        "address" => $this->getValue("R{$row}"),
-                        "address2" => $this->getValue("S{$row}"),
-                        "street_no" => $this->getValue("T{$row}"),
-                        "zipcode" => $this->getValue("U{$row}"),
-                        "city" => $this->getValue("V{$row}"),
+                        "first_name" =>$this->getValue("J{$row}"),
+                        "last_name" => $this->getValue("K{$row}"),
+                        "email" => $this->getValue("L{$row}"),
+                        "phone" => $this->getValue("M{$row}"),
+                        "address" => $this->getValue("N{$row}"),
+                        "address2" => $this->getValue("O{$row}"),
+                        "street_no" => $this->getValue("P{$row}"),
+                        "zipcode" => $this->getValue("Q{$row}"),
+                        "city" => $this->getValue("R{$row}"),
                         "account_type" => 'individual',
-                        "state_id" => optional( State::where('code',$this->getValue("W{$row}"))->first() )->id,
-                        "country_id" => optional( Country::where('code',$this->getValue("X{$row}"))->first() )->id,
-                        "tax_id" => $this->getValue("Y{$row}"),
+                        "state_id" => $stateId,
+                        "country_id" => $countryId,
+                        "tax_id" => $this->getValue("U{$row}"),
                     ],
 
                 ]);
@@ -155,12 +156,12 @@ class OrderImportService extends AbstractImportService
         $this->validationRow($row, true);
 
         $item =[
-            "quantity" => $this->getValue("AA{$row}"),
-            "value" => $this->getValue("AB{$row}"),
-            "description" => $this->getValue("AC{$row}"),
-            "sh_code" => $this->getValue("AD{$row}"),
-            "contains_battery" => strtolower($this->getValue("AE{$row}")) == 'yes' ? true : false,
-            "contains_perfume" => strtolower($this->getValue("AF{$row}")) == 'yes' ? true : false
+            "quantity" => $this->getValue("W{$row}"),
+            "value" => $this->getValue("X{$row}"),
+            "description" => $this->getValue("Y{$row}"),
+            "sh_code" => $this->getValue("Z{$row}"),
+            "contains_battery" => strtolower($this->getValue("AA{$row}")) == 'yes' ? true : false,
+            "contains_perfume" => strtolower($this->getValue("AB{$row}")) == 'yes' ? true : false
         ];
 
         $items = $order->items ? $order->items : [];
@@ -236,15 +237,15 @@ class OrderImportService extends AbstractImportService
                 'country_id' => 'required|exists:countries,id',
 
                 'phone' => [
-                    'required','max:15','min:13', new PhoneNumberValidator(optional( Country::where('code',$this->getValue("X{$row}"))->first() )->id)
+                    'required','max:15','min:13', new PhoneNumberValidator(optional( Country::where('code',$this->getValue("T{$row}"))->first() )->id)
                 ],
                 'zipcode' => [
-                    'required', new ZipCodeValidator(optional( Country::where('code',$this->getValue("X{$row}"))->first() )->id,optional( State::where('code',$this->getValue("W{$row}"))->first() )->id)
+                    'required', new ZipCodeValidator(optional( Country::where('code',$this->getValue("T{$row}"))->first() )->id,optional( State::where('code',$this->getValue("S{$row}"))->first() )->id)
                 ],
 
             ];
 
-            if (Country::where('code', 'BR')->first()->id == optional( Country::where('code',$this->getValue("X{$row}"))->first() )->id ) {
+            if (Country::where('code', 'BR')->first()->id == optional( Country::where('code',$this->getValue("T{$row}"))->first() )->id ) {
                 // $rules['recipient_tax_id'] = ['required', "in:cpf,cnpj,CPF,CNPJ"];
                 $rules['cpf'] = 'sometimes|cpf|required_if:country_id,'.Country::where('code', 'BR')->first()->id;
             }
@@ -268,9 +269,9 @@ class OrderImportService extends AbstractImportService
 
         if($item == false){
             return [
-                'merchant.required' => 'merchant is required',
-                'carrier.required' => 'carrier is required',
-                'tracking_id.required' => 'tracking id is required',
+                'merchant.nullable' => 'merchant is required',
+                'carrier.nullable' => 'carrier is required',
+                'tracking_id.nullable' => 'tracking id is required',
                 'customer_reference.nullable' => 'customer reference is invalid',
                 'measurement_unit.required' => 'measurement unit is required',
                 'weight.required' => 'weight is required',
@@ -304,10 +305,10 @@ class OrderImportService extends AbstractImportService
         if($item == true){
 
             return [
-                "quantity" => $this->getValue("AA{$row}"),
-                "value" => $this->getValue("AB{$row}"),
-                "description" => $this->getValue("AC{$row}"),
-                "sh_code" => $this->getValue("AD{$row}"),
+                "quantity" => $this->getValue("W{$row}"),
+                "value" => $this->getValue("X{$row}"),
+                "description" => $this->getValue("Y{$row}"),
+                "sh_code" => $this->getValue("Z{$row}"),
             ];
         }
 
@@ -322,23 +323,23 @@ class OrderImportService extends AbstractImportService
             "width" => $this->getValue("G{$row}"),
             "height" => $this->getValue("H{$row}"),
 
-            "sender_first_name" => $this->getValue("J{$row}"),
-            "sender_last_name" => $this->getValue("K{$row}"),
-            "sender_email" => $this->getValue("L{$row}"),
-            "sender_phone" => $this->getValue("M{$row}"),
+            // "sender_first_name" => $this->getValue("J{$row}"),
+            // "sender_last_name" => $this->getValue("K{$row}"),
+            // "sender_email" => $this->getValue("L{$row}"),
+            // "sender_phone" => $this->getValue("M{$row}"),
 
-            "first_name" =>$this->getValue("N{$row}"),
-            "last_name" => $this->getValue("O{$row}"),
-            "email" => $this->getValue("P{$row}"),
-            "phone" => $this->getValue("Q{$row}"),
-            "address" => $this->getValue("R{$row}"),
-            "address2" => $this->getValue("S{$row}"),
-            "street_no" => $this->getValue("T{$row}"),
-            "city" => $this->getValue("V{$row}"),
-            "state_id" => optional( State::where('code',$this->getValue("W{$row}"))->first() )->id,
-            "country_id" => optional( Country::where('code',$this->getValue("X{$row}"))->first() )->id,
-            "zipcode" => $this->getValue("U{$row}"),
-            "recipient_tax_id" => $this->getValue("Y{$row}"),
+            "first_name" =>$this->getValue("J{$row}"),
+            "last_name" => $this->getValue("K{$row}"),
+            "email" => $this->getValue("L{$row}"),
+            "phone" => $this->getValue("M{$row}"),
+            "address" => $this->getValue("N{$row}"),
+            "address2" => $this->getValue("O{$row}"),
+            "street_no" => $this->getValue("P{$row}"),
+            "city" => $this->getValue("R{$row}"),
+            "state_id" => optional( State::where('code',$this->getValue("S{$row}"))->first() )->id,
+            "country_id" => optional( Country::where('code',$this->getValue("T{$row}"))->first() )->id,
+            "zipcode" => $this->getValue("Q{$row}"),
+            "recipient_tax_id" => $this->getValue("U{$row}"),
         ];
 
     }
