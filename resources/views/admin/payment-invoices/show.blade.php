@@ -68,6 +68,10 @@
                                             </th>
                                         @endif
                                         <th>@lang('invoice.Amount')</th>
+                                        @if ($invoice->differnceAmount())
+                                            <th>@lang('invoice.Paid')</th>
+                                            <th>@lang('invoice.Remaining')</th>
+                                        @endif
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -78,12 +82,16 @@
                                             <td>{{ $order->warehouse_number }}</td>
                                             <td>{{ $order->customer_reference }}</td>
                                             <td>{{ optional($order->created_at)->format('Y-m-d') }}</td>
-                                            <td>{{ $order->shipping_value }} USD</td>
+                                            <td>@if($invoice->differnceAmount()) {{ $order->gross_total }}  @else {{ $order->shipping_value }} @endif USD</td>
                                             @if ( auth()->user()->isAdmin() && $invoice->isPrePaid() )
                                                 <td>{{ $order->services()->sum( 'price' ) }} USD</td>
                                                 <td>{{ $order->consolidation }} USD</td>
                                                 <td>{{ $order->dangrous_goods??0 }} USD</td>
                                                 <td>{{ $order->gross_total }} USD</td>
+                                            @endif
+                                            @if ($invoice->differnceAmount())
+                                                <td>{{ $invoice->paid_amount }} USD</td>
+                                                <td>{{ $invoice->differnceAmount() }} USD</td>
                                             @endif
                                         </tr>  
                                     @endforeach   
