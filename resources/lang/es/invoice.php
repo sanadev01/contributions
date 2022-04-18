@@ -59,4 +59,5 @@ return [
     'PostPaid' => 'Pospago',
     'Pay Invoice' => 'Factura de pago',
     'Paid with Balance' => 'Pagado con saldo',
+    'Remaining' => 'Remanescente'
 ];
