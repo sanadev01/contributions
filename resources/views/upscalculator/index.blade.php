@@ -114,5 +114,5 @@
 @endsection
 @section('jquery')
 <script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
-@include('uspscalculator.script')
+@include('upscalculator.script')
 @endsection

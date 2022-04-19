@@ -4,7 +4,7 @@
     <div class="shadow-bottom"></div>
     <div class="main-menu-content ps ps--active-y">
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation" style="color: #454f5b; font-family: 'Karla-Regular', Helvetica, Arial, sans-serif;">
-            @if (auth()->user()->hasRole('scanner'))
+            @if (auth()->user()->hasRole('scanner') || auth()->user()->hasRole('driver'))
                 <li class="nav-item {{ $isActive('home') }}">
                     <a class="nav-link" href="{{ route('admin.home') }}">
                         {{-- <i class="feather icon-home"></i> --}}
@@ -94,7 +94,7 @@
             @can('viewAny', App\Models\Connect::class)
                 <li class="nav-item {{ $isActive(['admin.connect.index']) }}">
                     <a class="nav-link" href="{{ route('admin.connect.index') }}">
-                        <i class="fa fa-plug" style="color: #28c76f;"></i>
+                        <i class="fa fa-plug" style="color: #3db64c;"></i>
                         <span data-i18n="Apps">@lang('menu.connect')</span>
                     </a>
                 </li>
@@ -284,6 +284,36 @@
                 </ul>
             </li>
 
+            {{-- Inventory --}}
+            {{-- @can('viewAny', App\Models\Product::class) --}}
+                <li class="nav-item has-sub sidebar-group">
+                    <a href="#">
+                        <i class="feather icon-shopping-cart" style="color: #3db64c;"></i>
+                        <span class="menu-title">@lang('inventory.Inventory Management')</span>
+                    </a>
+                    <ul class="menu-content">
+
+                        <li class="{{ $isActive(['admin.inventory.product.index','admin.inventory.product.create','admin.inventory.product.edit']) }}">
+                            <a href="{{ route('admin.inventory.product.index') }}">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title">@lang('inventory.Products')</span>
+                            </a>
+                        </li>
+                        <li class="{{ $isActive(['admin.inventory.orders','admin.inventory.product.sale.order']) }}">
+                            <a href="{{ route('admin.inventory.orders') }}">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title">@lang('inventory.Sales Orders')</span>
+                            </a>
+                        </li>
+                        <li class="{{ $isActive(['admin.inventory.product.pickup']) }}">
+                            <a href="{{ route('admin.inventory.product.pickup') }}">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title">@lang('inventory.Pickup')</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            {{-- @endcan --}}
             {{-- Affiliate --}}
             @can('viewAny', App\Models\AffiliateSale::class)
                 <li class="nav-item has-sub sidebar-group">
@@ -333,7 +363,7 @@
             @admin
             <li class="nav-item {{ $isActive(['admin.shcode.index','admin.shcode.create','admin.shcode.edit']) }}">
                 <a href="{{ route('admin.shcode.index') }}">
-                    <i class="fa fa-codepen" style="color: #28c76f;"></i>
+                    <i class="fa fa-codepen" style="color: #3db64c;"></i>
                     <span class="menu-title">SH Codes</span>
                 </a>
             </li>
@@ -341,7 +371,7 @@
 
             <li class="nav-item {{ $isActive(['admin.tickets.index','admin.tickets.show']) }}">
                 <a class="nav-link" href="{{ route('admin.tickets.index') }}">
-                    <i class="feather icon-message-circle" style="color: #28c76f;"></i>
+                    <i class="feather icon-message-circle" style="color: #3db64c;"></i>
                     <span data-i18n="Apps">@lang('menu.support tickets')</span>
                     <livewire:components.support-ticket/>
                 </a>
@@ -350,7 +380,7 @@
             @can('viewAny', App\Models\BillingInformation::class)
             <li class="nav-item {{ $isActive(['admin.billing-information.index','admin.billing-information.edit','admin.billing-information.create']) }}">
                 <a href="{{ route('admin.billing-information.index') }}">
-                    <i class="feather icon-alert-triangle" style="color: #28c76f;"></i>
+                    <i class="feather icon-alert-triangle" style="color: #3db64c;"></i>
                     <span class="menu-title">@lang('menu.Billing Informations')</span>
                 </a>
             </li>
@@ -368,7 +398,7 @@
             @can('viewAny', Spatie\Activitylog\Models\Activity::class)
             <li class="nav-item {{ $isActive(['admin.activity.log.index']) }}">
                 <a href="{{ route('admin.activity.log.index') }}">
-                    <i class="feather icon-activity" style="color: #28c76f;"></i>
+                    <i class="feather icon-activity" style="color: #3db64c;"></i>
                     <span class="menu-title">@lang('menu.activity')</span>
                 </a>
             </li>

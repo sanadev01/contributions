@@ -3,11 +3,12 @@
 namespace App\Http\Livewire\Label;
 
 use Carbon\Carbon;
+use App\Models\Role;
 use App\Models\Order;
 use Livewire\Component;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Models\OrderTracking;
+use Illuminate\Support\Facades\Auth;
 use App\Repositories\LabelRepository;
 use Illuminate\Support\Facades\Storage;
 
@@ -143,7 +144,7 @@ class ScanLabel extends Component
 
                 array_push($this->newOrder,$this->order);
 
-                if($order->trackings->isNotEmpty() && $order->trackings()->latest()->first()->status_code == Order::STATUS_PAYMENT_DONE)
+                if($order->trackings->isNotEmpty() && $order->trackings()->latest()->first()->status_code >= Order::STATUS_PAYMENT_DONE && $order->trackings()->latest()->first()->status_code < Order::STATUS_ARRIVE_AT_WAREHOUSE)
                 {
                     $this->addOrderTracking($this->order);
                 }
@@ -235,9 +236,9 @@ class ScanLabel extends Component
     {
         OrderTracking::create([
             'order_id' => $order->id,
-            'status_code' => Order::STATUS_ARRIVE_AT_WAREHOUSE,
+            'status_code' => (Auth::user()->role->name == Role::Driver) ? Order::STATUS_DRIVER_RECIEVED : Order::STATUS_ARRIVE_AT_WAREHOUSE,
             'type' => 'HD',
-            'description' => 'Freight arrived at Homedelivery',
+            'description' => (Auth::user()->role->name == Role::Driver) ? 'Driver received from warehouse' : 'Freight arrived at Homedelivery',
             'country' => 'US',
             'city' => 'Miami'
         ]);
