@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Order;
+use App\Models\Country;
 use App\Facades\USPSFacade;
 use Illuminate\Http\Request;
 use App\Models\ShippingService;
@@ -17,6 +18,98 @@ class OrderRepository
     protected $error;
     protected $chargeID;
     public $shippingServiceError;
+
+    public function get(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='asc')
+    {
+        $query = Order::query()
+            ->where('status','>=',Order::STATUS_ORDER)
+            ->has('user')
+            ->with([
+                'paymentInvoices',
+                'user',
+                'subOrders',
+                'parentOrder'
+            ]);
+        if (Auth::user()->isUser()) {
+            $query->where('user_id', Auth::id());
+        }
+
+        if($request->userType == 'domestic')
+        {
+            $query->where('sender_country_id', Country::US);
+        }
+
+        if ($request->userType == 'pickups') {
+            $query->where('api_pickup_response' , '!=', null);
+        }
+        
+        if($request->userType){
+            $query->whereHas('user', function ($queryUser) use($request) {
+                $queryUser->whereHas('role', function ($queryRole) use($request) {
+                    return $queryRole->where('name', $request->userType);
+                });
+            });
+        }
+
+        if($request->order_date){
+            $query->where('order_date', 'LIKE', "%{$request->date}%");
+        }  
+        if($request->name){
+            $query->whereHas('user', function ($query) use($request) {
+                return $query->where('name', 'LIKE', "%{$request->name}%");
+            });
+        }
+        if($request->pobox_number){
+            $query->whereHas('user', function ($query) use($request) {
+                return $query->where('pobox_number', 'LIKE', "%{$request->pobox}%");
+            });
+        }
+        if($request->warehouse_number){
+            $query->where('warehouse_number', 'LIKE', "%{$request->warehouse_number}%");
+        }
+        if($request->merchant){
+            $query->where('merchant', 'LIKE', "%{$request->merchant}%");
+        }
+        if($request->carrier){
+            $query->where('carrier', 'LIKE', "%{$request->carrier}%");
+        }
+        if($request->gross_total){
+            $query->where('gross_total', 'LIKE', "%{$request->amount}%");
+        }
+        if($request->tracking_id){
+            $query->where('tracking_id', 'LIKE', "%{$request->tracking_id}%");
+        }
+        if($request->customer_reference){
+            $query->where('customer_reference', 'LIKE', "%{$request->customer_reference}%");
+        }
+        if($request->corrios_tracking_code){
+            $query->where('corrios_tracking_code', 'LIKE', "%{$request->tracking_code}%");
+        }
+        if($request->status){
+            $query->where('status',$request->status);
+        }
+        if($request->orderType){
+            if ($request->orderType === 'consolidated') {
+                $query->where('is_consolidated',true);
+            }
+
+            if ($request->orderType === 'non-consolidated') {
+                $query->where('is_consolidated',false);
+            }
+        }
+        if($request->paymentStatus){
+            if ($request->paymentStatus === 'paid') {
+                $query->where('is_paid',true);
+            }
+
+            if ($request->paymentStatus === 'unpaid') {
+                $query->where('is_paid',false);
+            }
+        }
+        $query->orderBy($orderBy,$orderType);
+
+        return $paginate ? $query->paginate($pageSize) : $query->get();
+    }
 
     public function getOrderByIds(array $ids)
     {
