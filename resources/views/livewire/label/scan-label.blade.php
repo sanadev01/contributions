@@ -36,17 +36,19 @@
                     </button>
                     
                 </form>
-                <form action="{{ route('admin.label.scan.store') }}" method="post">
-                    @csrf
-                    @foreach ($packagesRows as $key => $package)
-                        <input type="hidden" name="order[]" value="{{ $package['reference'] }}">
-                        <input type="hidden" name="excel" value="0">
-                    @endforeach
-                    <button type="submit" class="btn btn-success mr-2" title="@lang('orders.import-excel.Download')">
-                        <i class="feather icon-download"></i> @lang('orders.import-excel.Download') All
-                    </button>
+                @if (!auth()->user()->hasRole('driver'))
+                    <form action="{{ route('admin.label.scan.store') }}" method="post">
+                        @csrf
+                        @foreach ($packagesRows as $key => $package)
+                            <input type="hidden" name="order[]" value="{{ $package['reference'] }}">
+                            <input type="hidden" name="excel" value="0">
+                        @endforeach
+                        <button type="submit" class="btn btn-success mr-2" title="@lang('orders.import-excel.Download')">
+                            <i class="feather icon-download"></i> @lang('orders.import-excel.Download') All
+                        </button>
                     
-                </form>
+                    </form>
+                @endif
             @else
                 @if (!$searchOrder->isEmpty())
                     <br>
@@ -182,7 +184,7 @@
                     </td>
                     <td>
                         
-                        @if( !$error )
+                        @if( !$error && !auth()->user()->hasRole('driver'))
                             @if( $package['client'] )
                                 <a href="{{route('admin.label.scan.show',$package['reference'])}}" target="_blank" class="btn btn-success mr-2" onclick="addClass({{$key}})" title="@lang('orders.import-excel.Download')">
                                     <i class="feather icon-download"></i>@lang('orders.import-excel.Download')
