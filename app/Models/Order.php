@@ -49,6 +49,7 @@ class Order extends Model implements Package
 
     const STATUS_PAYMENT_PENDING = 60;
     const STATUS_PAYMENT_DONE = 70;
+    const STATUS_DRIVER_RECIEVED = 72;
     const STATUS_ARRIVE_AT_WAREHOUSE = 73;
     const STATUS_INSIDE_CONTAINER = 75;
     const STATUS_SHIPPED = 80;

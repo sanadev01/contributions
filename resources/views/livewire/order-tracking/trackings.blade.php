@@ -52,6 +52,14 @@
                                     @if ($trackingType == 'HD')
                                         <li class="@if($tracking->status_code >=  70) active @endif step0">
                                             <div class="icon-content">
+                                                <img class="icon offset-1" src="{{ asset('images/tracking/order-placed.png') }}">
+                                                <div class="d-flex flex-column mt-2">
+                                                    <p class="font-weight-bold">Order<br>Placed </p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="@if($tracking->status_code >=  72) active @endif step0">
+                                            <div class="icon-content">
                                                 <img class="icon offset-1" src="{{ asset('images/tracking/to-hd.png') }}">
                                                 <div class="d-flex flex-column mt-2">
                                                     <p class="font-weight-bold">Freight<br>in transit </p>
@@ -178,6 +186,14 @@
                                             </div>
                                         </li>
                                     @else
+                                        <li class="active step0">
+                                            <div class="icon-content">
+                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/order-placed.png') }}">
+                                                <div class="d-flex flex-column mt-2">
+                                                    <p class="font-weight-bold">Order<br>Placed </p>
+                                                </div>
+                                            </div>
+                                        </li>
                                         <li class="active step0">
                                             <div class="icon-content">
                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/to-hd.png') }}">

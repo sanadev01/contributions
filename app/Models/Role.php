@@ -13,6 +13,8 @@ class Role extends Model
     protected static $logOnlyDirty = true;
     protected static $submitEmptyLogs = false;
 
+    const Driver = 'driver';
+
     public function user()
     {
         return $this->belongsTo(User::class);
