@@ -52,7 +52,7 @@ class OrderRepository
         }
 
         if($request->order_date){
-            $query->where('order_date', 'LIKE', "%{$request->date}%");
+            $query->where('order_date', 'LIKE', "%{$request->order_date}%");
         }  
         if($request->name){
             $query->whereHas('user', function ($query) use($request) {
@@ -61,7 +61,7 @@ class OrderRepository
         }
         if($request->pobox_number){
             $query->whereHas('user', function ($query) use($request) {
-                return $query->where('pobox_number', 'LIKE', "%{$request->pobox}%");
+                return $query->where('pobox_number', 'LIKE', "%{$request->pobox_number}%");
             });
         }
         if($request->warehouse_number){
@@ -74,7 +74,7 @@ class OrderRepository
             $query->where('carrier', 'LIKE', "%{$request->carrier}%");
         }
         if($request->gross_total){
-            $query->where('gross_total', 'LIKE', "%{$request->amount}%");
+            $query->where('gross_total', 'LIKE', "%{$request->gross_total}%");
         }
         if($request->tracking_id){
             $query->where('tracking_id', 'LIKE', "%{$request->tracking_id}%");
@@ -83,7 +83,7 @@ class OrderRepository
             $query->where('customer_reference', 'LIKE', "%{$request->customer_reference}%");
         }
         if($request->corrios_tracking_code){
-            $query->where('corrios_tracking_code', 'LIKE', "%{$request->tracking_code}%");
+            $query->where('corrios_tracking_code', 'LIKE', "%{$request->corrios_tracking_code}%");
         }
         if($request->status){
             $query->where('status',$request->status);
