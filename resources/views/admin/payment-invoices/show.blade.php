@@ -41,7 +41,7 @@
                 </div>
                 <!--/ Invoice Recipient Details -->
 
-                <!-- Invoice Items Details -->
+                <!-- Invoice Items Details  -->
                 <div id="invoice-items-details" class="pt-1 invoice-items-table mt-5">
                     <div class="row">
                         <div class="table-responsive-md col-12">
