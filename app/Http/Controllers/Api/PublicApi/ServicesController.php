@@ -21,11 +21,11 @@ class ServicesController extends Controller
                 ], 400);
             }
 
-            if ($countryCode == 'BR') {
+            if (strtoupper($countryCode) == 'BR') {
 
                 $shippingServices = ShippingService::whereIn('service_sub_class', $this->correosShippingServices())->get();
             
-            }elseif ($countryCode == 'US') {
+            }elseif (strtoupper($countryCode) == 'US') {
 
                 $shippingServices = ShippingService::whereIn('service_sub_class', $this->usShippingServices())->get();
             }
