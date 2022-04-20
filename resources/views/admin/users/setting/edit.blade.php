@@ -105,7 +105,6 @@
                                         <div class="help-block"></div>
                                     </div>
                                 </div>
-
                                 <h3>Leve Settings</h3>
                                 <hr>
 
