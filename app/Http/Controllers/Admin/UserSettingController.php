@@ -40,6 +40,8 @@ class UserSettingController extends Controller
             'api_enabled' => $request->has('api_enabled'),
             'market_place_name' => $request->market_place_name,
             'email' => $request->user_email,
+            'amazon_api_enabled' => $request->has('amazon_api_enabled'),
+            'amazon_api_key' => $request->amazon_api_key,
         ]);
 
         $request->has('battery') ? saveSetting('perfume', true, $user->id) : saveSetting('battery', false, $user->id);
