@@ -88,7 +88,24 @@
                                     </div>
                                 </div>
                                 <livewire:token-generator :user_id="$user->id" />
-
+                                
+                                <hr>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">Enable Amazon API<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <input type="checkbox" name="amazon_api_enabled" id="api_enabled" @if( $user->amazon_api_enabled == 1 ) checked @endif> 
+                                        <div class="help-block"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">Amazon Api key<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <textarea name="amazon_api_key" class="form-control">{{ $user->amazon_api_key }}</textarea> 
+                                        <div class="help-block"></div>
+                                    </div>
+                                </div>
+                                
                                 <h3>Leve Settings</h3>
                                 <hr>
 
