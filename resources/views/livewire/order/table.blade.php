@@ -83,6 +83,7 @@
                             <option value="clear">Clear All</option>
                             <option value="checkAll">Select All</option>
                             <option value="print-label">Print Label</option>
+                            <option value="consolidate-domestic-label">Print Domestic Label</option>
                         </select>
                     </th>
                     <th>

@@ -74,7 +74,7 @@
                         </a>
                     @endif
                     
-                    @if ( auth()->user()->can('canPrintConsolidationForm',$parcel) && $parcel->isConsolidated() && !Auth::user()->isActive())
+                    @if ( auth()->user()->can('canPrintConsolidationForm',$parcel) && $parcel->isConsolidated() && Auth::user()->isActive())
                         <a href="#" class="dropdown-item btn" title="@lang('consolidation.Print Consolidation Request')" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.parcel.consolidation-print',$parcel) }}">
                             <i class="fa fa-print"></i> @lang('consolidation.Print Consolidation Request')
                         </a>
