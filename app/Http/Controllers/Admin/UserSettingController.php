@@ -39,7 +39,8 @@ class UserSettingController extends Controller
             'status' => $request->status,
             'api_enabled' => $request->has('api_enabled'),
             'market_place_name' => $request->market_place_name,
-            'email' => $request->user_email,'amazon_api_enabled' => $request->has('amazon_api_enabled'),
+            'email' => $request->user_email,
+            'amazon_api_enabled' => $request->has('amazon_api_enabled'),
             'amazon_api_key' => $request->amazon_api_key,
         ]);
 
