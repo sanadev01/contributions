@@ -50,8 +50,7 @@ class ProductImportService extends AbstractImportService
         DB::beginTransaction();
         
         try {
-            $product = Product::where('order',$this->getValue("C{$row}"))->first();
-            
+            $product = Product::where('sku',$this->getValue("C{$row}"))->first();
             if ($product || strlen($this->getValue("C{$row}")) <=0 || strlen($this->getValue("K{$row}")) <=0 ){
                 return;
             }
@@ -79,10 +78,10 @@ class ProductImportService extends AbstractImportService
                 'discontinued'  => $this->getValue("R{$row}"),
                 'store_day'     => $this->getValue("S{$row}"),
                 'location'      => $this->getValue("T{$row}"),
-                'sh_code'      => $this->getValue("U{$row}"),
+                'sh_code'      => is_numeric($this->getValue("U{$row}"))?$this->getValue("U{$row}"):null,
                 'weight'       => $this->getValue("V{$row}"),
                 'measurement_unit' => $this->getValue("W{$row}"),
-                'exp_date' => $this->getValue("X{$row}"),
+                'exp_date' => $this->getValue("X{$row}")?$this->getValue("X{$row}"):null,
             ]);
             DB::commit();
             return $order;
