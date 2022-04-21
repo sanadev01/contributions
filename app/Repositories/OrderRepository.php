@@ -4,15 +4,20 @@ namespace App\Repositories;
 
 use App\Models\Order;
 use App\Models\Country;
+use App\Facades\USPSFacade;
 use Illuminate\Http\Request;
 use App\Models\ShippingService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Services\UPS\UPSShippingService;
+use App\Services\USPS\USPSShippingService;
+use App\Services\FedEx\FedExShippingService;
 
 class OrderRepository
 {
     protected $error;
     protected $chargeID;
+    public $shippingServiceError;
 
     public function get(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='asc')
     {
@@ -47,7 +52,7 @@ class OrderRepository
         }
 
         if($request->order_date){
-            $query->where('order_date', 'LIKE', "%{$request->date}%");
+            $query->where('order_date', 'LIKE', "%{$request->order_date}%");
         }  
         if($request->name){
             $query->whereHas('user', function ($query) use($request) {
@@ -56,7 +61,7 @@ class OrderRepository
         }
         if($request->pobox_number){
             $query->whereHas('user', function ($query) use($request) {
-                return $query->where('pobox_number', 'LIKE', "%{$request->pobox}%");
+                return $query->where('pobox_number', 'LIKE', "%{$request->pobox_number}%");
             });
         }
         if($request->warehouse_number){
@@ -66,10 +71,44 @@ class OrderRepository
             $query->where('merchant', 'LIKE', "%{$request->merchant}%");
         }
         if($request->carrier){
-            $query->where('carrier', 'LIKE', "%{$request->carrier}%");
+            if($request->carrier == 'Brazil'){
+                $service = [
+                    ShippingService::Packet_Standard,
+                    ShippingService::Packet_Express,
+                    ShippingService::Packet_Mini
+                ];
+            }
+            if($request->carrier == 'USPS'){
+                $service = [
+                    ShippingService::USPS_PRIORITY,
+                    ShippingService::USPS_FIRSTCLASS,
+                    ShippingService::USPS_PRIORITY_INTERNATIONAL,
+                    ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,
+                ];
+            }
+            if($request->carrier == 'UPS'){
+                $service = [
+                    ShippingService::UPS_GROUND,
+                ];
+            }
+            if($request->carrier == 'FEDEX'){
+                $service = [
+                    ShippingService::FEDEX_GROUND
+                ];
+            }
+            if($request->carrier == 'Chile'){
+                $service = [
+                    ShippingService::SRP,
+                    ShippingService::SRM,
+                    ShippingService::Courier_Express
+                ];
+            }
+            $query->whereHas('shippingService', function ($query) use($service) {
+                return $query->whereIn('service_sub_class', $service);
+            });
         }
         if($request->gross_total){
-            $query->where('gross_total', 'LIKE', "%{$request->amount}%");
+            $query->where('gross_total', 'LIKE', "%{$request->gross_total}%");
         }
         if($request->tracking_id){
             $query->where('tracking_id', 'LIKE', "%{$request->tracking_id}%");
@@ -78,7 +117,7 @@ class OrderRepository
             $query->where('customer_reference', 'LIKE', "%{$request->customer_reference}%");
         }
         if($request->corrios_tracking_code){
-            $query->where('corrios_tracking_code', 'LIKE', "%{$request->tracking_code}%");
+            $query->where('corrios_tracking_code', 'LIKE', "%{$request->corrios_tracking_code}%");
         }
         if($request->status){
             $query->where('status',$request->status);
@@ -214,23 +253,34 @@ class OrderRepository
 
         try {
             
-            $order->items()->delete();
-
-            foreach ($request->get('items',[]) as $item) {
-
-                $order->items()->create([
-                    'sh_code' => optional($item)['sh_code'],
-                    'description' => optional($item)['description'],
-                    'quantity' => optional($item)['quantity'],
-                    'value' => optional($item)['value'],
-                    'contains_battery' => optional($item)['dangrous_item'] == 'contains_battery' ? true: false,
-                    'contains_perfume' => optional($item)['dangrous_item'] == 'contains_perfume' ? true: false,
-                    'contains_flammable_liquid' => optional($item)['dangrous_item'] == 'contains_flammable_liquid' ? true: false,
-                ]);
+            if ($order->products->isEmpty()) {
+                
+                $order->items()->delete();
+                
+                foreach ($request->get('items',[]) as $item) {
+                    
+                    $order->items()->create([
+                        'sh_code' => optional($item)['sh_code'],
+                        'description' => optional($item)['description'],
+                        'quantity' => optional($item)['quantity'],
+                        'value' => optional($item)['value'],
+                        'contains_battery' => optional($item)['dangrous_item'] == 'contains_battery' ? true: false,
+                        'contains_perfume' => optional($item)['dangrous_item'] == 'contains_perfume' ? true: false,
+                        'contains_flammable_liquid' => optional($item)['dangrous_item'] == 'contains_flammable_liquid' ? true: false,
+                    ]);
+                }
             }
 
-            
             $shippingService = ShippingService::find($request->shipping_service_id);
+
+            if ($shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||  $shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
+                if(!$this->getUSPSInternationServiceRates($request, $order, $shippingService->service_sub_class))
+                {
+                    DB::rollback();
+                    session()->flash('alert-danger','orders.Error While placing Order '.$this->error);
+                    return false;
+                }
+            }
 
             $order->update([
                 'customer_reference' => $request->customer_reference,
@@ -243,7 +293,7 @@ class OrderRepository
                 'insurance_value' => 0,
                 'status' => $order->isPaid() ? ($order->status < Order::STATUS_ORDER ? Order::STATUS_ORDER : $order->status) : Order::STATUS_ORDER
             ]);
-
+            
             $order->doCalculations();
 
             if ($order->isPaid() && $order->getPaymentInvoice()) 
@@ -268,11 +318,12 @@ class OrderRepository
             }
 
             DB::commit();
-
+            session()->flash('alert-success','orders.Sender Updated');
             return true;
         } catch (\Exception $ex) {
             DB::rollback();
             $this->error = $ex->getMessage();
+             session()->flash('alert-danger','orders.Error While placing Order'." ".$this->error);
             return false;
         }
     }
@@ -330,4 +381,148 @@ class OrderRepository
         return true;
     }
     
+    public function getShippingServices($order)
+    {
+        $shippingServices = collect() ;
+
+        if(optional($order->recipient)->country_id == Order::US)
+        {
+            $uspsShippingService = new USPSShippingService($order);
+            $upsShippingService = new UPSShippingService($order);
+            $fedExShippingService = new FedExShippingService($order);
+            
+            foreach (ShippingService::query()->active()->get() as $shippingService) 
+            {
+                if ($uspsShippingService->isAvailableFor($shippingService)) {
+                    $shippingServices->push($shippingService);
+                }
+
+                if ($upsShippingService->isAvailableFor($shippingService)) {
+                    $shippingServices->push($shippingService);
+                }
+
+                if ($fedExShippingService->isAvailableFor($shippingService)) {
+                    $shippingServices->push($shippingService);
+                }
+            }
+        } else
+        {
+            foreach (ShippingService::query()->has('rates')->active()->get() as $shippingService) 
+            {
+                if ($shippingService->isAvailableFor($order)) {
+                    $shippingServices->push($shippingService);
+                }elseif($shippingService->getCalculator($order)->getErrors() != null && $shippingServices->isEmpty()){
+                    $this->shippingServiceError = 'Shipping Service not Available Error: {'.$shippingService->getCalculator($order)->getErrors().'}';
+                }
+            }
+
+            // USPS Intenrational Services
+            if ($order->sender_country_id == Order::US && optional($order->recipient)->country_id != Order::US && setting('usps', null, $order->user->id)) 
+            {
+                $uspsShippingService = new USPSShippingService($order);
+
+                foreach (ShippingService::query()->active()->get() as $shippingService)
+                {
+                    if ($uspsShippingService->isAvailableForInternational($shippingService)) {
+                        $shippingServices->push($shippingService);
+                    }
+                }
+            }
+
+            if ($shippingServices->isEmpty() && $this->shippingServiceError == null) {
+                $this->shippingServiceError = ($order->recipient->commune_id != null) ? 'Shipping Service not Available for the Region you have selected' : 'Shipping Service not Available for the Country you have selected';
+            }
+        }
+
+        if ($shippingServices->isNotEmpty()) {
+           $shippingServices = $this->filterShippingServices($shippingServices, $order);
+        }
+
+        return $shippingServices;
+    }
+
+    public function getShippingServicesError()
+    {
+        return $this->shippingServiceError;
+    }
+
+    private function filterShippingServices($shippingServices, $order)
+    {
+        if($shippingServices->contains('service_sub_class', ShippingService::USPS_PRIORITY) 
+            || $shippingServices->contains('service_sub_class', ShippingService::USPS_FIRSTCLASS)
+            || $shippingServices->contains('service_sub_class', ShippingService::USPS_PRIORITY_INTERNATIONAL)
+            || $shippingServices->contains('service_sub_class', ShippingService::USPS_FIRSTCLASS_INTERNATIONAL)
+            || $shippingServices->contains('service_sub_class', ShippingService::UPS_GROUND))
+        {
+            if(!setting('usps', null, $order->user->id))
+            {
+                $this->shippingServiceError = 'USPS is not enabled for this user';
+                $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                    return $shippingService->service_sub_class != ShippingService::USPS_PRIORITY 
+                        && $shippingService->service_sub_class != ShippingService::USPS_FIRSTCLASS
+                        && $shippingService->service_sub_class != ShippingService::USPS_PRIORITY_INTERNATIONAL
+                        && $shippingService->service_sub_class != ShippingService::USPS_FIRSTCLASS_INTERNATIONAL;
+                });
+            }
+            if(!setting('ups', null, $order->user->id))
+            {
+                $this->shippingServiceError = 'UPS is not enabled for this user';
+                $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                    return $shippingService->service_sub_class != ShippingService::UPS_GROUND;
+                });
+            }
+
+            if (!setting('fedex', null, $order->user->id)) {
+                $this->shippingServiceError = 'FEDEX is not enabled for this user';
+                $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                    return $shippingService->service_sub_class != ShippingService::FEDEX_GROUND;
+                });
+            }
+            
+            if($shippingServices->isNotEmpty()){
+                $this->shippingServiceError = null;
+            }
+        }
+
+        if($order->recipient->country_id == Order::BRAZIL)
+        {
+            // If sinerlog is enabled for the user, then remove the Correios services
+            if(setting('sinerlog', null, $order->user->id))
+            {
+                $shippingServices = $shippingServices->filter(function ($item, $key)  {
+                    return $item->service_sub_class != '33162' && $item->service_sub_class != '33170' && $item->service_sub_class != '33197';
+                });
+            }
+
+            // If sinerlog is not enabled for the user then remove Sinerlog services from shipping service
+            if(!setting('sinerlog', null, $order->user->id))
+            {
+                $shippingServices = $shippingServices->filter(function ($item, $key)  {
+                    return $item->service_sub_class != '33163' && $item->service_sub_class != '33171' && $item->service_sub_class != '33198';
+                });
+            }
+            
+            if($shippingServices->isEmpty()){
+                $this->shippingServiceError = 'Please check your parcel dimensions';
+            }
+        }
+
+        return $shippingServices;
+    }
+
+    private function getUSPSInternationServiceRates($request, $order, $service)
+    {
+        $response  = USPSFacade::getRecipientRates($order, $service);
+        if ($response->success == true) {
+
+            $request->merge([
+                'user_declared_freight' => $response->data['total_amount'],
+            ]);
+
+            return true;
+        }
+        $this->error = $response->message;
+        return false;
+    }
+
 }
