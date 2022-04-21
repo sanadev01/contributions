@@ -5,7 +5,7 @@
                 <div class="card">
                     <div class="card-header">Barcode Scanner</div>
                     <div class="card-body">
-                        <!-- <ImageBarcodeReader @decode="onDecode" @error="onError" v-if="!scanning"></ImageBarcodeReader> -->
+                        <ImageBarcodeReader @decode="onDecode" @error="onError" v-if="!scanning"></ImageBarcodeReader>
                         <StreamBarcodeReader @decode="onDecode" @error="onError" v-if="!scanning"></StreamBarcodeReader>
                         <div v-show="scanning" class="spinner-border text-warning" role="status">
                             <span class="sr-only">Loading...</span>
@@ -61,7 +61,7 @@ export default {
             this.scanning = true;
 
             this.axios.post('/scan-label', this.form).then((response) => {
-                if (response.status == 200) {
+                if (response.status == 200 && response.data.success == true) {
                     this.message = response.data.message;
                 }else{
                     this.error = response.data.message;

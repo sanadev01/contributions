@@ -21,6 +21,7 @@ class ScanLabelController extends Controller
         
         if (!$order) {
             return response()->json([
+                'success' => false,
                'message' => 'sorry! parcel not found'
             ], 200);
         }
@@ -28,6 +29,7 @@ class ScanLabelController extends Controller
         $scanLabelRepository->handle($order);
 
         return response()->json([
+            'success' => $scanLabelRepository->getStatus(),
             'message' => $scanLabelRepository->getMessage(),
          ], 200);
     }
