@@ -2,13 +2,14 @@
 
 use App\Models\User;
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\ProfitPackage;
+use Illuminate\Support\Facades\Artisan;
 use App\Services\StoreIntegrations\Shopify;
-use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\HomeController;
+use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
-use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -251,6 +252,8 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 
 Route::get('test-label',function(){
 
+    Product::truncate();
+    dd(Product::all());
     $labelPrinter = new CN23LabelMaker();
 
     $order = Order::find(53654);
