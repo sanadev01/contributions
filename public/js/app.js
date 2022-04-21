@@ -20062,6 +20062,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -20069,14 +20071,24 @@ __webpack_require__.r(__webpack_exports__);
     ImageBarcodeReader: vue_barcode_reader__WEBPACK_IMPORTED_MODULE_0__["ImageBarcodeReader"],
     StreamBarcodeReader: vue_barcode_reader__WEBPACK_IMPORTED_MODULE_0__["StreamBarcodeReader"]
   },
+  data: function data() {
+    return {
+      barcode: null,
+      error: null
+    };
+  },
   mounted: function mounted() {
     console.log('Component mounted.');
   },
   methods: {
     onDecode: function onDecode(decodedData) {
+      this.barcode = decodedData;
+      alert(decodedData);
       console.log(decodedData);
     },
     onError: function onError(error) {
+      this.error = error;
+      alert(error);
       console.log(error);
     }
   }
@@ -21741,7 +21753,11 @@ var render = function() {
               _vm._v(" "),
               _c("StreamBarcodeReader", {
                 on: { decode: _vm.onDecode, error: _vm.onError }
-              })
+              }),
+              _vm._v(" "),
+              _c("h3", [_vm._v(_vm._s(_vm.barcode))]),
+              _vm._v(" "),
+              _c("h4", [_vm._v(_vm._s(_vm.error))])
             ],
             1
           )
