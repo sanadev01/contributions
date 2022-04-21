@@ -81,7 +81,7 @@ class ProductImportService extends AbstractImportService
                 'sh_code'      => is_numeric($this->getValue("U{$row}"))?$this->getValue("U{$row}"):null,
                 'weight'       => $this->getValue("V{$row}"),
                 'measurement_unit' => $this->getValue("W{$row}"),
-                'exp_date' => $this->getValue("X{$row}")?$this->getValue("X{$row}"):null,
+                'exp_date' => $this->getValue("X{$row}")?date('Y-m-d H:i:s', strtotime($this->getValue("X{$row}"))):null,
             ]);
             DB::commit();
             return $order;
