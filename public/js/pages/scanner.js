@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -15134,14 +15134,14 @@ if (document.getElementById('vue-scanner')) {
 
 /***/ }),
 
-/***/ 0:
+/***/ 1:
 /*!*********************************************!*\
   !*** multi ./resources/js/pages/scanner.js ***!
   \*********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\laragon\www\hd-v2\resources\js\pages\scanner.js */"./resources/js/pages/scanner.js");
+module.exports = __webpack_require__(/*! C:\laragon\www\hd-v2\resources\js\pages\scanner.js */"./resources/js/pages/scanner.js");
 
 
 /***/ })

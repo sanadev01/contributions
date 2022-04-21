@@ -247,4 +247,6 @@ Route::get('test-label',function(){
 
 Route::get('find-container/{order}', [HomeController::class, 'findContainer'])->name('find.container');
 
+Route::get('barcode-scanner', [HomeController::class, 'barcodeScanner'])->name('barcode.scanner');
+
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');

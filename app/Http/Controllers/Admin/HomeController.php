@@ -33,4 +33,9 @@ class HomeController extends Controller
             dump($container->deliveryBills->toArray());
         }
     }
+
+    public function barcodeScanner()
+    {
+        return view('barcode-scanner');
+    }
 }
