@@ -71,7 +71,41 @@ class OrderRepository
             $query->where('merchant', 'LIKE', "%{$request->merchant}%");
         }
         if($request->carrier){
-            $query->where('carrier', 'LIKE', "%{$request->carrier}%");
+            if($request->carrier == 'Brazil'){
+                $service = [
+                    ShippingService::Packet_Standard,
+                    ShippingService::Packet_Express,
+                    ShippingService::Packet_Mini
+                ];
+            }
+            if($request->carrier == 'USPS'){
+                $service = [
+                    ShippingService::USPS_PRIORITY,
+                    ShippingService::USPS_FIRSTCLASS,
+                    ShippingService::USPS_PRIORITY_INTERNATIONAL,
+                    ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,
+                ];
+            }
+            if($request->carrier == 'UPS'){
+                $service = [
+                    ShippingService::UPS_GROUND,
+                ];
+            }
+            if($request->carrier == 'FEDEX'){
+                $service = [
+                    ShippingService::FEDEX_GROUND
+                ];
+            }
+            if($request->carrier == 'Chile'){
+                $service = [
+                    ShippingService::SRP,
+                    ShippingService::SRM,
+                    ShippingService::Courier_Express
+                ];
+            }
+            $query->whereHas('shippingService', function ($query) use($service) {
+                return $query->whereIn('service_sub_class', $service);
+            });
         }
         if($request->gross_total){
             $query->where('gross_total', 'LIKE', "%{$request->gross_total}%");

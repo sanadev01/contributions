@@ -108,12 +108,19 @@
                         <input type="search" class="form-control" wire:model.debounce.1000ms="customer_reference">
                     </th>
                     <th>
-                        <input type="search" class="form-control">
+                        <select class="form-control" wire:model.debounce.1000ms="carrier">
+                            <option value="">All</option>
+                            <option value="Brazil">Correios Brazil</option>
+                            <option value="USPS">USPS</option>
+                            <option value="UPS">UPS</option>
+                            <option value="FEDEX">FEDEX</option>
+                            <option value="Chile">Correios Chile</option>
+                        </select>
                     </th>
                     @admin
-                    <th>
-                        <input type="search" class="form-control">
-                    </th>
+                        <th>
+                            
+                        </th>
                     @endadmin
                     <th>
                         <input type="search" class="form-control" wire:model.debounce.1000ms="tracking_code">
