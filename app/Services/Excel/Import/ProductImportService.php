@@ -34,22 +34,22 @@ class ProductImportService extends AbstractImportService
 
     public function importOrders()
     {
-        try{
+        // try{
             foreach (range(2, $this->noRows) as $row) {
                 $this->createOrUpdateProduct($row);
             }
-            return true;
-        } catch (\Exception $ex) {
-            DB::rollback();
-            return $ex->getMessage();
-        }
+            // return true;
+        // } catch (\Exception $ex) {
+        //     DB::rollback();
+        //     return $ex->getMessage();
+        // }
     }
 
     private function createOrUpdateProduct($row)
     {
-        DB::beginTransaction();
+        // DB::beginTransaction();
         
-        try {
+        // try {
             $product = Product::where('sku',$this->getValue("C{$row}"))->first();
             if ($product || strlen($this->getValue("C{$row}")) <=0 || strlen($this->getValue("K{$row}")) <=0 ){
                 return;
@@ -83,13 +83,13 @@ class ProductImportService extends AbstractImportService
                 'measurement_unit' => $this->getValue("W{$row}"),
                 'exp_date' => $this->getValue("X{$row}")?date('Y-m-d H:i:s', strtotime($this->getValue("X{$row}"))):null,
             ]);
-            DB::commit();
-            return $order;
+            // DB::commit();
+            // return $order;
 
-        } catch (\Exception $ex) {
-            DB::rollback();
-            return $ex->getMessage();
-        }
+        // } catch (\Exception $ex) {
+        //     DB::rollback();
+        //     return $ex->getMessage();
+        // }
     }
 
     // this function returns all validation errors after import:
