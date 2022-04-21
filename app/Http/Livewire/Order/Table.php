@@ -2,11 +2,8 @@
 
 namespace App\Http\Livewire\Order;
 
-use App\Models\Order;
-use App\Models\Country;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Illuminate\Support\Facades\Auth;
 use App\Repositories\OrderRepository;
 
 class Table extends Component
