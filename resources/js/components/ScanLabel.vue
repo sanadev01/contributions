@@ -16,6 +16,11 @@
                         <div class="alert alert-danger" role="alert" v-show="error">
                             {{error}}
                         </div>
+                        <div class="row mt-2">
+                            <div class="ml-auto mr-2">
+                                <button @click="scanning = !scanning" type="button" class="btn btn-sm btn-primary">Toggle Scanner</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -39,6 +44,11 @@ export default {
             message: ''
         };
     },
+    created() {
+        setInterval(() => {
+            this.disableScanner();
+        }, 45000)
+    },
     mounted() {
         console.log('Component mounted.')
     },
@@ -57,15 +67,23 @@ export default {
                     this.error = response.data.message;
                 }
 
+                this.form.tracking_code = '';
                 this.scanning = false;
+
             }).catch((error) => {
 
+                this.form.tracking_code = '';
                 this.error = error;
                 this.scanning = false;
             })
         },
         onError(error) {
             this.error = error;
+        },
+        disableScanner(){
+            if (this.form.tracking_code == '') {
+                this.scanning = true;
+            }
         }
     }
 }
