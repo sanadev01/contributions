@@ -6,11 +6,11 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Barcode Scanner</h4>
+                    <h4 class="card-title">Scan Parcel</h4>
                 </div>
                 <div class="card-content card-body">
                     <div class="mt-1">
-                        <example-component></example-component>
+                        <scan-label></scan-label>
                     </div>
                 </div>
             </div>
