@@ -47,6 +47,16 @@ class ContainerPackageRepository extends AbstractRepository{
         }
         $containerOrder = $container->orders->first();
         $order          = Order::where('corrios_tracking_code',strtoupper($barcode))->first();
+
+        if (!$order) {
+            return [
+                'order' => [
+                    'corrios_tracking_code' => $barcode,
+                    'error' => 'Order Not Found.',
+                    'code' => 404
+                ],
+            ];
+        }
         
         if ($order->status < Order::STATUS_PAYMENT_DONE) {
             return [
