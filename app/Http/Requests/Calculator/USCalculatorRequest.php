@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Calculator;
 
+use App\Models\Country;
 use Illuminate\Foundation\Http\FormRequest;
 
 class USCalculatorRequest extends FormRequest
@@ -76,5 +77,30 @@ class USCalculatorRequest extends FormRequest
             'weight.numeric' => 'Weight must be numeric',
             'weight.max' => 'weight exceed the delivery of UPS',
         ];
+    }
+
+    public function prepareForValidation()
+    {
+        if ($this->has('from_herco')) {
+            $this->merge([
+                'origin_country' => Country::US,
+                'sender_state' => 'FL',
+                'sender_address' => '2200 NW 129TH AVE',
+                'sender_city' => 'MIAMI',
+                'sender_zipcode' => '33182',
+                'from_herco' => true,
+            ]);
+        }
+
+        if ($this->has('to_herco')) {
+            $this->merge([
+                'destination_country' => Country::US,
+                'recipient_state' => 'FL',
+                'recipient_address' => '2200 NW 129TH AVE',
+                'recipient_city' => 'MIAMI',
+                'recipient_zipcode' => '33182',
+                'to_herco' => true,
+            ]);
+        }
     }
 }

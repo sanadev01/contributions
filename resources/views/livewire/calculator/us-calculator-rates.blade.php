@@ -83,7 +83,7 @@
                             <br>
                             <div class="row">
                                 <div class="col-md-12 d-flex justify-content-center">
-                                <a href="@if($shippingServiceTitle == 'UPS') {{route('ups-calculator.index')}} @else {{route('usps-calculator.index')}} @endif"  class="btn btn-primary btn-lg">
+                                <a href="@if($shippingServiceTitle == 'UPS') {{route('ups-calculator.index')}} @else {{route('us-calculator.index')}} @endif"  class="btn btn-primary btn-lg">
                                         Go Back
                                     </a>
                                 </div>
@@ -113,7 +113,7 @@
                                             </div></div> <div class="row justify-content-center"><div class="pb-1 pt-1 border-bottom-light col-md-5 bg-primary text-white">
                                                 Weight
                                             </div> <div class="border col-5 py-1">
-                                                @if($tempOrder->measurement_unit == 'kg/cm')
+                                                @if($tempOrder['measurement_unit'] == 'kg/cm')
                                                     {{$chargableWeight}} Kg ( {{$weightInOtherUnit}} lbs)
                                                 @else
                                                     {{$chargableWeight}} lbs ( {{$weightInOtherUnit}} kg)
