@@ -25,4 +25,6 @@ return [
     'Closed' => 'Ingresso fechado',
     'Save Note' => 'Salvar nota',
     'Notes' => 'Notas',
+    'Date' => 'Encontro',
+    'Open Days' => 'Dias Abertos',
 ];
