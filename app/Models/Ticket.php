@@ -63,5 +63,10 @@ class Ticket extends Model
             'open' => false
         ]);
     }
+
+    public function getOpenDays()
+    {
+        return Carbon::parse($this->created_at)->diffInDays($this->open ? Carbon::now() :$this->updated_at);
+    }
 }
  

@@ -26,4 +26,6 @@ return [
     'Closed' => 'Ticket Closed',
     'Save Note' => 'Save Note',
     'Notes' => 'Notes',
+    'Date' => 'Date',
+    'Open Days' => 'Open Days',
 ];

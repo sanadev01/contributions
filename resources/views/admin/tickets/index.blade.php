@@ -27,12 +27,14 @@
                                     <th>
                                         
                                     </th>
+                                    <th>@lang('tickets.Date')</th>
                                     <th>
                                         @lang('tickets.User')
                                     </th>
                                     {{-- @endadmin --}}
                                     <th>@lang('tickets.Issue')</th>
                                     <th>@lang('tickets.Status')</th>
+                                    <th>@lang('tickets.Open Days')</th>
                                     <th>@lang('tickets.Detail')</th>
                                 </tr>
                                 </thead>
@@ -50,6 +52,9 @@
                                             {{-- @endif --}}
                                         </td>
                                         <td>
+                                            {{ $ticket->user->created_at->format('Y-m-d') }}
+                                        </td>
+                                        <td>
                                             {{ $ticket->user->name }}
                                         </td>
                                         {{-- @endadmin --}}
@@ -58,7 +63,10 @@
                                             
                                         </td>
                                         <td>
-                                             @if($ticket->open == 1) <span class="badge badge-success">@lang('tickets.open')</span> @else <span class="badge badge-danger">@lang('tickets.close')</span> @endif 
+                                            @if($ticket->open == 1) <span class="badge badge-success">@lang('tickets.open')</span> @else <span class="badge badge-danger">@lang('tickets.close')</span> @endif 
+                                        </td>
+                                        <td>
+                                            {{ $ticket->getOpenDays() }}
                                         </td>
                                         <td class="d-flex">
                                             <a href="{{ route('admin.tickets.show',$ticket->id) }}" class="btn btn-primary mr-2" title="@lang('tickets.Detail')">
