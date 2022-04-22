@@ -22,7 +22,7 @@
             </tr>
             <tr v-if="editMode">
                 <td colspan="8">
-                    <input type="text" class="w-100 text-center" style="height:50px;font-size:30px;" v-on:keyup.enter="addOrder">
+                    <input type="text" class="w-100 text-center" style="height:50px;font-size:30px;" v-on:keyup.enter="addOrder" :disabled="hasError">
                 </td>
             </tr>
         </tbody>
@@ -53,6 +53,7 @@ export default {
     data() {
         return {
             orders: [],
+            hasError: false,
         }
     },
     computed:{
@@ -86,7 +87,12 @@ export default {
             if (this.container.services_subclass_code.includes('SL'))
             {
                 this.axios.post(`/sinerlog_container/${this.container.id}/packages/${barCode}`)
-                .then(response=>{
+                .then((response) => {
+                    if (response.data.order.code != 200) {
+                        this.hasError = true;
+                    }else{
+                        this.hasError = false;
+                    }
                     this.orders.push(response.data.order);
                 })
                 .catch(error=>{
@@ -96,7 +102,12 @@ export default {
             else
             {
                 this.axios.post(`/containers/${this.container.id}/packages/${barCode}`)
-                .then(response=>{
+                .then((response) => {
+                    if (response.data.order.code != 200) {
+                        this.hasError = true;
+                    }else{
+                        this.hasError = false;
+                    }
                     this.orders.push(response.data.order);
                 })
                 .catch(error=>{
@@ -111,6 +122,10 @@ export default {
             $(event.target).focus();
         },
         removeOrder(order,index){
+
+            if (this.hasError == true) {
+                this.hasError = false;
+            }
             if ( !order.id ){
                 return this.orders.splice(index,1);
             }
