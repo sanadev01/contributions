@@ -60,7 +60,7 @@ class Deposit extends Model
             'order_id' => $order->id,
             'balance' => Deposit::getCurrentBalance() - $amount,
             'is_credit' => false,
-            'description' => $description ? $description.$order->warehouse_number : null,
+            'description' => $description,
         ]);
 
         if ( $order ){
