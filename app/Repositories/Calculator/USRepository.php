@@ -92,9 +92,9 @@ class USRepository
 
         $uspsShippingServices = $this->getUSPSShippingServices();
 
-        $upsShippingServices = $this->getUPSShippingServices();
+        $upsShippingServices = ($this->order->recipient->country_id == Order::US) ? $this->getUPSShippingServices() : null;
 
-        $fedExShippingServices = $this->getFedExShippingServices();
+        $fedExShippingServices = ($this->order->recipient->country_id == Order::US) ? $this->getFedExShippingServices() : null;
 
         $this->shippingServices = $this->shippingServices->merge($uspsShippingServices)
                                             ->merge($upsShippingServices)
@@ -133,7 +133,11 @@ class USRepository
         }
 
         foreach ($this->shippingRates as $serviceRate) {
-            if ($serviceRate['service_sub_class'] == ShippingService::USPS_PRIORITY) {
+            if ($serviceRate['service_sub_class'] == ShippingService::USPS_PRIORITY || 
+                $serviceRate['service_sub_class'] == ShippingService::USPS_FIRSTCLASS ||
+                $serviceRate['service_sub_class'] == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
+                $serviceRate['service_sub_class'] == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) 
+            {
                 $profit = $serviceRate['rate'] * ($this->uspsProfit / 100);
 
                 $rate = $serviceRate['rate'] + $profit;
@@ -326,8 +330,16 @@ class USRepository
             return false;
         }
 
+        $request = ($this->request->has('to_herco')) ? $this->createRequest() : null;
+
         foreach ($uspsServices as $service) {
-            $uspsResponse = USPSFacade::getRecipientRates($this->order, $service->service_sub_class);
+            
+            if ($this->request->has('to_herco')) {
+                $request->merge(['service' => $service->service_sub_class]);
+            }
+
+            $uspsResponse = ($this->request->has('to_herco')) ? USPSFacade::getSenderPrice($this->order, $request) 
+                                                                : USPSFacade::getRecipientRates($this->order, $service->service_sub_class);
             if ($uspsResponse->success == true) {
                 array_push($this->shippingRates , ['name'=> $service->name, 'service_sub_class' => $service->service_sub_class, 'rate'=> number_format($uspsResponse->data['total_amount'], 2)]);
             }else
@@ -349,14 +361,15 @@ class USRepository
             return false;
         }
 
-        // $request = $this->createRequest();
+        $request = ($this->request->has('to_herco')) ? $this->createRequest() : null;
 
         foreach ($upsServices as $service) 
         {
-            // $request->merge([
-            //     'service' => $service->service_sub_class,
-            // ]);
-            $upsResponse = UPSFacade::getRecipientRates($this->order, $service->service_sub_class);
+            if ($this->request->has('to_herco')) {
+                $request->merge(['service' => $service->service_sub_class]);
+            }
+            $upsResponse = ($this->request->has('to_herco')) ? UPSFacade::getSenderPrice($this->order, $request) 
+                                                                : UPSFacade::getRecipientRates($this->order, $service->service_sub_class);
             if($upsResponse->success == true)
             {
                 array_push($this->shippingRates , ['name'=> $service->name , 'service_sub_class' => $service->service_sub_class, 'rate'=> number_format($upsResponse->data['RateResponse']['RatedShipment']['TotalCharges']['MonetaryValue'], 2)]);

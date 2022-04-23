@@ -25,6 +25,8 @@
             $('#destination').removeClass('d-none');
 
             $('#sender_info').removeClass('d-none');
+
+            $('input[name^="items"]').prop('disabled', true);
             window.toggleRecipientInputs();
         }
 
@@ -52,6 +54,7 @@
                 $('#sender_info').removeClass('d-none');
                 $('#recipient_info').addClass('d-none');
 
+                $('input[name^="items"]').prop('disabled', true);
                 window.toggleRecipientInputs();
             }
         });
