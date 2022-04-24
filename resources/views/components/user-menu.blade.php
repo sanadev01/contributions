@@ -218,23 +218,6 @@
                             <span data-i18n="Apps">@lang('menu.uscalculator')</span>
                         </a>
                     </li>
-                    @if (setting('usps', null, auth()->user()->id))
-                        <li class="nav-item {{ $isActive(['calculator.index']) }} ml-2">
-                            <a class="nav-link" href="{{ route('usps-calculator.index') }}"
-                                target="_blank">
-                                <img src="{{ asset('images/icon/calculator.svg') }}" alt="Calculator">
-                                <span data-i18n="Apps">@lang('menu.uspscalculator')</span>
-                            </a>
-                        </li>
-                    @endif
-                    @if (setting('ups', null, auth()->user()->id))
-                        <li class="nav-item {{ $isActive(['calculator.index']) }} ml-2">
-                            <a class="nav-link" href="{{ route('ups-calculator.index') }}" target="_blank">
-                                <img src="{{ asset('images/icon/calculator.svg') }}" alt="Calculator">
-                                <span data-i18n="Apps">@lang('menu.upscalculator')</span>
-                            </a>
-                        </li>
-                    @endif
                 </ul>
             </li>
 

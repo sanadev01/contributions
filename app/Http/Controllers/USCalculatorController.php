@@ -7,7 +7,7 @@ use App\Models\State;
 use App\Models\Country;
 use Illuminate\Support\Facades\Cache;
 use App\Services\Converters\UnitsConverter;
-use App\Repositories\Calculator\USRepository;
+use App\Repositories\Calculator\USCalculatorRepository;
 use App\Http\Requests\Calculator\USCalculatorRequest;
 
 class USCalculatorController extends Controller
@@ -26,7 +26,7 @@ class USCalculatorController extends Controller
         return view('uscalculator.calculator', compact('states'));
     }
 
-    public function store(USCalculatorRequest $request, USRepository $usCalculatorRepository)
+    public function store(USCalculatorRequest $request, USCalculatorRepository $usCalculatorRepository)
     {
         $tempOrder = $usCalculatorRepository->handle($request);
         $shippingServices = $usCalculatorRepository->getShippingServices();

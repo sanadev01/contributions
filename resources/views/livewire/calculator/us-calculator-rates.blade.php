@@ -41,13 +41,13 @@
                                     @endforeach
                                 </div>
                                 @if ($userLoggedIn)
-                                    @if(!setting($shippingServiceTitle, null, auth()->user()->id))
+                                    {{-- @if(!setting($shippingServiceTitle, null, auth()->user()->id))
                                         <div class="row mb-1 ml-4">
                                             <div class="controls col-12">
                                                 <h4 class="text-danger">{{$shippingServiceTitle}} is not enabled for your account</h4>
                                             </div>
                                         </div>
-                                    @endif
+                                    @endif --}}
                                     @if($serviceResponse)
                                         <div class="row mb-1 ml-4">
                                             <div class="controls col-12">
@@ -74,7 +74,7 @@
                                                 @error('selectedService') <span class="error text-danger">{{ $message }}</span> @enderror
                                             </div>
                                             <div class="controls col-6">
-                                                <button id="btn-submit" type="submit" class="btn btn-success btn-lg mt-4" @if(!setting($shippingServiceTitle, null, auth()->user()->id)) disabled @endif>Buy Label </button>
+                                                {{-- <button id="btn-submit" type="submit" class="btn btn-success btn-lg mt-4" @if(!setting($shippingServiceTitle, null, auth()->user()->id)) disabled @endif>Buy Label </button> --}}
                                             </div>
                                         </div>
                                     </form>

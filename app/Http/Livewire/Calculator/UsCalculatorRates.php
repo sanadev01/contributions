@@ -6,7 +6,6 @@ use Livewire\Component;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Repositories\Calculator\USCalculatorRepository;
-use FontLib\TrueType\Collection;
 
 class UsCalculatorRates extends Component
 {
@@ -53,12 +52,12 @@ class UsCalculatorRates extends Component
             return false;
         }
 
-        $order = $usCalculatorRepository->execute($this->createRequest());
-        $this->error = $usCalculatorRepository->getError();
+        // $order = $usCalculatorRepository->execute($this->createRequest());
+        // $this->error = $usCalculatorRepository->getError();
 
-        if (!$this->error && $order) {
-            return redirect()->route('admin.orders.label.index', $order->id);
-        }
+        // if (!$this->error && $order) {
+        //     return redirect()->route('admin.orders.label.index', $order->id);
+        // }
     }
 
     private function getCostOfSelectedService()
