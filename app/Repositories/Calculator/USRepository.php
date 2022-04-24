@@ -11,6 +11,7 @@ use App\Models\OrderItem;
 use App\Models\Recipient;
 use App\Facades\UPSFacade;
 use App\Facades\USPSFacade;
+use App\Facades\FedExFacade;
 use Illuminate\Http\Request;
 use App\Models\ShippingService;
 use Illuminate\Support\Facades\Auth;
@@ -121,6 +122,10 @@ class USRepository
             $this->getUPSRates();
         }
 
+        if ($this->shippingServices->contains('service_sub_class', ShippingService::FEDEX_GROUND)) {
+            $this->getFedExRates();
+        }
+
         return $this->shippingRates;
     }
 
@@ -147,6 +152,14 @@ class USRepository
 
             if($serviceRate['service_sub_class'] == ShippingService::UPS_GROUND){
                 $profit = $serviceRate['rate'] * ($this->upsProfit / 100);
+
+                $rate = $serviceRate['rate'] + $profit;
+
+                array_push($this->shippingRatesWithProfit, ['name'=> $serviceRate['name'], 'service_sub_class' => $serviceRate['service_sub_class'], 'rate'=> number_format($rate, 2)]);
+            }
+
+            if ($serviceRate['service_sub_class'] == ShippingService::FEDEX_GROUND) {
+                $profit = $serviceRate['rate'] * ($this->fedExProfit / 100);
 
                 $rate = $serviceRate['rate'] + $profit;
 
@@ -376,6 +389,36 @@ class USRepository
             }else
             {
                 $this->error = $upsResponse->error['response']['errors'][0]['message'] ?? 'Unknown Error';
+            }
+        }
+
+        return;
+    }
+
+    private function getFedExRates()
+    {
+        $fedExServices = $this->shippingServices->filter(function ($shippingService) {
+            return $shippingService->service_sub_class == ShippingService::FEDEX_GROUND;
+        });
+
+        if ($fedExServices->isEmpty()) {
+            return false;
+        }
+
+        $request = ($this->request->has('to_herco')) ? $this->createRequest() : null;
+
+        foreach ($fedExServices as $service) {
+
+            if ($this->request->has('to_herco')) {
+                $request->merge(['service' => $service->service_sub_class]);
+            }
+
+            $fedExResponse = ($this->request->has('to_herco')) ? FedExFacade::getSenderRates($this->order, $request) : FedExFacade::getRecipientRates($this->order, $service->service_sub_class);
+            
+            if ($fedExResponse->success == true) {
+                array_push($this->shippingRates , ['name'=> $service->name , 'service_sub_class' => $service->service_sub_class, 'rate'=> number_format($fedExResponse->data['output']['rateReplyDetails'][0]['ratedShipmentDetails'][0]['totalNetFedExCharge'], 2)]);
+            }else{
+                $this->error = $fedExResponse->error['response']['errors'][0]['message'] ?? 'server error, could not get rates';
             }
         }
 
