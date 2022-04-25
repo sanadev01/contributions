@@ -103,7 +103,7 @@
             @can('viewAny', App\Models\Connect::class)
                 <li class="nav-item {{ $isActive(['admin.connect.index']) }}">
                     <a class="nav-link" href="{{ route('admin.connect.index') }}">
-                        <i class="fa fa-plug" style="color: #28c76f;"></i>
+                        <i class="fa fa-plug" style="color: #3db64c;"></i>
                         <span data-i18n="Apps">@lang('menu.connect')</span>
                     </a>
                 </li>
@@ -154,7 +154,7 @@
                     <li class="{{ $isActive(['admin.rates.shipping-rates.index','admin.rates.shipping-rates.create', 'admin.rates.view-shipping-rates', 'admin.rates.region-rates', 'admin.rates.view-shipping-region-rates']) }}">
                         <a href="{{ route('admin.rates.shipping-rates.index') }}">
                             <i class="feather icon-circle"></i>
-                            <span class="menu-title">@lang('menu.Correios Cost')</span>
+                            <span class="menu-title">@lang('menu.Homedeliverybr Cost')</span>
                         </a>
                     </li>
                     @endcan
@@ -221,23 +221,12 @@
                             <span data-i18n="Apps">@lang('menu.calculator')</span>
                         </a>
                     </li>
-                    @if (setting('usps', null, auth()->user()->id))
-                        <li class="nav-item {{ $isActive(['calculator.index']) }} ml-2">
-                            <a class="nav-link" href="{{ route('usps-calculator.index') }}"
-                                target="_blank">
-                                <img src="{{ asset('images/icon/calculator.svg') }}" alt="Calculator">
-                                <span data-i18n="Apps">@lang('menu.uspscalculator')</span>
-                            </a>
-                        </li>
-                    @endif
-                    @if (setting('ups', null, auth()->user()->id))
-                        <li class="nav-item {{ $isActive(['calculator.index']) }} ml-2">
-                            <a class="nav-link" href="{{ route('ups-calculator.index') }}" target="_blank">
-                                <img src="{{ asset('images/icon/calculator.svg') }}" alt="Calculator">
-                                <span data-i18n="Apps">@lang('menu.upscalculator')</span>
-                            </a>
-                        </li>
-                    @endif
+                    <li class="nav-item {{ $isActive(['us-calculator.index']) }} ml-2">
+                        <a class="nav-link" href="{{ route('us-calculator.index') }}" target="_blank">
+                            <img src="{{ asset('images/icon/calculator.svg') }}" alt="Calculator">
+                            <span data-i18n="Apps">@lang('menu.uscalculator')</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
 
@@ -293,6 +282,36 @@
                 </ul>
             </li>
 
+            {{-- Inventory --}}
+            {{-- @can('viewAny', App\Models\Product::class) --}}
+                <li class="nav-item has-sub sidebar-group">
+                    <a href="#">
+                        <i class="feather icon-shopping-cart" style="color: #3db64c;"></i>
+                        <span class="menu-title">@lang('inventory.Inventory Management')</span>
+                    </a>
+                    <ul class="menu-content">
+
+                        <li class="{{ $isActive(['admin.inventory.product.index','admin.inventory.product.create','admin.inventory.product.edit']) }}">
+                            <a href="{{ route('admin.inventory.product.index') }}">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title">@lang('inventory.Products')</span>
+                            </a>
+                        </li>
+                        <li class="{{ $isActive(['admin.inventory.orders','admin.inventory.product.sale.order']) }}">
+                            <a href="{{ route('admin.inventory.orders') }}">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title">@lang('inventory.Sales Orders')</span>
+                            </a>
+                        </li>
+                        <li class="{{ $isActive(['admin.inventory.product.pickup']) }}">
+                            <a href="{{ route('admin.inventory.product.pickup') }}">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title">@lang('inventory.Pickup')</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            {{-- @endcan --}}
             {{-- Affiliate --}}
             @can('viewAny', App\Models\AffiliateSale::class)
                 <li class="nav-item has-sub sidebar-group">
@@ -342,7 +361,7 @@
             @admin
             <li class="nav-item {{ $isActive(['admin.shcode.index','admin.shcode.create','admin.shcode.edit']) }}">
                 <a href="{{ route('admin.shcode.index') }}">
-                    <i class="fa fa-codepen" style="color: #28c76f;"></i>
+                    <i class="fa fa-codepen" style="color: #3db64c;"></i>
                     <span class="menu-title">SH Codes</span>
                 </a>
             </li>
@@ -350,7 +369,7 @@
 
             <li class="nav-item {{ $isActive(['admin.tickets.index','admin.tickets.show']) }}">
                 <a class="nav-link" href="{{ route('admin.tickets.index') }}">
-                    <i class="feather icon-message-circle" style="color: #28c76f;"></i>
+                    <i class="feather icon-message-circle" style="color: #3db64c;"></i>
                     <span data-i18n="Apps">@lang('menu.support tickets')</span>
                     <livewire:components.support-ticket/>
                 </a>
@@ -359,7 +378,7 @@
             @can('viewAny', App\Models\BillingInformation::class)
             <li class="nav-item {{ $isActive(['admin.billing-information.index','admin.billing-information.edit','admin.billing-information.create']) }}">
                 <a href="{{ route('admin.billing-information.index') }}">
-                    <i class="feather icon-alert-triangle" style="color: #28c76f;"></i>
+                    <i class="feather icon-alert-triangle" style="color: #3db64c;"></i>
                     <span class="menu-title">@lang('menu.Billing Informations')</span>
                 </a>
             </li>
@@ -377,7 +396,7 @@
             @can('viewAny', Spatie\Activitylog\Models\Activity::class)
             <li class="nav-item {{ $isActive(['admin.activity.log.index']) }}">
                 <a href="{{ route('admin.activity.log.index') }}">
-                    <i class="feather icon-activity" style="color: #28c76f;"></i>
+                    <i class="feather icon-activity" style="color: #3db64c;"></i>
                     <span class="menu-title">@lang('menu.activity')</span>
                 </a>
             </li>

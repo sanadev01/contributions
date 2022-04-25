@@ -34,7 +34,9 @@ class ContainerPackageRepository extends AbstractRepository{
 
     public function addOrderToContainer(Container $container,string $barcode)
     {
-        if(strtolower($container->services_subclass_code)  != strtolower(substr($barcode,0,2))){
+        $subString = (strtolower(substr($barcode,0,2)) == 'na') ? 'nx' : strtolower(substr($barcode,0,2));
+
+        if(strtolower($container->services_subclass_code)  != $subString){
             return [
                 'order' => [
                     'corrios_tracking_code' => $barcode,
@@ -45,6 +47,16 @@ class ContainerPackageRepository extends AbstractRepository{
         }
         $containerOrder = $container->orders->first();
         $order          = Order::where('corrios_tracking_code',strtoupper($barcode))->first();
+
+        if (!$order) {
+            return [
+                'order' => [
+                    'corrios_tracking_code' => $barcode,
+                    'error' => 'Order Not Found.',
+                    'code' => 404
+                ],
+            ];
+        }
         
         if ($order->status < Order::STATUS_PAYMENT_DONE) {
             return [

@@ -24,6 +24,7 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
-        "vue-barcode-reader": "0.0.3"
+        "vue-barcode-reader": "0.0.3",
+        "vue-select": "^3.18.3"
     }
 }

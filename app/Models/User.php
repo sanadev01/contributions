@@ -33,7 +33,8 @@ class User extends Authenticatable
     protected static $logAttributes = [
         'pobox_number', 'package_id', 'state_id', 'country_id', 'role_id','name', 'email', 'last_name', 
         'phone', 'city', 'street_no', 'address', 'address2', 'account_type', 'tax_id', 'zipcode', 
-        'locale','market_place_name','image_id','reffered_by', 'reffer_code', 'battery', 'perfume','status', 'insurance', 'stripe', 'usps', 'ups', 'api_profit'
+        'locale','market_place_name','image_id','reffered_by', 'reffer_code', 'battery', 'perfume',
+        'status', 'insurance', 'stripe', 'usps', 'ups', 'api_profit','amazon_api_enabled','amazon_api_key'
     ];
     protected static $logOnlyDirty = true;
     protected static $submitEmptyLogs = false;
@@ -105,6 +106,10 @@ class User extends Authenticatable
         return $this->hasMany(AffiliateSale::class, 'user_id');
     }
     
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'user_id');
+    }
     public function profitSettings()
     {
         return $this->hasMany(ProfitSetting::class, 'user_id');
