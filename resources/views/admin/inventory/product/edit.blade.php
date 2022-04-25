@@ -42,7 +42,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>Name<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="name" value="{{ $product->name }}" placeholder="Enter Product Name">
+                                <input type="text" class="form-control" name="name" value="{{ old('name', $product->name) }}" placeholder="Enter Product Name">
                                 @error('name')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
@@ -52,7 +52,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>Order#<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="order" value="{{ $product->order }}" placeholder="Enter Product Order Number">
+                                <input type="text" class="form-control" name="order" value="{{ old('order',$product->order) }}" placeholder="Enter Product Order Number">
                                 @error('order')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
@@ -62,7 +62,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>Price <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="price" value="{{ $product->price }}" placeholder="Enter Product Price">
+                                <input type="text" class="form-control" name="price" value="{{ old('price',$product->price) }}" placeholder="Enter Product Price">
                                 @error('price')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
@@ -72,7 +72,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>Category <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="category" value="{{ $product->category }}" placeholder="Enter Product category">
+                                <input type="text" class="form-control" name="category" value="{{ old('category',$product->category) }}" placeholder="Enter Product category">
                                 @error('category')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
@@ -82,7 +82,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>SKU<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="sku" value="{{ $product->sku }}" placeholder="Enter Product SKU">
+                                <input type="text" class="form-control" name="sku" value="{{ old('sku',$product->sku) }}" placeholder="Enter Product SKU">
                                 @error('sku')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
@@ -92,7 +92,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>Description<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="description" value="{{ $product->description }}" placeholder="Enter Product description">
+                                <input type="text" class="form-control" name="description" value="{{ old('description',$product->description) }}" placeholder="Enter Product description">
                                 @error('description')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
@@ -102,7 +102,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>Quantity<span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" name="quantity" value="{{ $product->quantity }}" placeholder="Enter Product quantity">
+                                <input type="number" class="form-control" name="quantity" value="{{ old('quantity',$product->quantity) }}" placeholder="Enter Product quantity">
                                 @error('quantity')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
@@ -112,7 +112,7 @@
                         <div class="form-group col-12 col-sm-6 col-md-4">
                             <div class="controls">
                                 <label>Weight<span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" name="weight" value="{{ $product->weight }}" placeholder="Enter Product weight">
+                                <input type="number" class="form-control" name="weight" step=".01" value="{{ old('weight',$product->weight) }}" placeholder="Enter Product weight">
                                 @error('weight')
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
@@ -123,8 +123,8 @@
                             <div class="controls">
                                 <label>Measuring Unit<span class="text-danger">*</span></label>
                                 <select name="measurement_unit" class="form-control" required>
-                                    <option {{ ($product->measurement_unit) == 'kg/cm' ? 'selected' : ''  }} value="kg/cm">kg/cm</option>
-                                    <option {{ ($product->measurement_unit) == 'lbs/in' ? 'selected' : ''  }} value="lbs/in">lbs/in</option>
+                                    <option {{ old('measurement_unit',$product->measurement_unit) == 'kg/cm' ? 'selected' : ''  }} value="kg/cm">kg/cm</option>
+                                    <option {{ old('measurement_unit',$product->measurement_unit) == 'lbs/in' ? 'selected' : ''  }} value="lbs/in">lbs/in</option>
                                 </select>
                                 @error('unit')
                                     <div class="text-danger">{{ $message }}</div>
