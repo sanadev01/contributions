@@ -57,6 +57,14 @@ class OrderItemsController extends Controller
             abort(404);
         }
 
+        if($this->orderRepository->domesticService($request->shipping_service_id)){
+            $request->validate([
+                'user_declared_freight' => 'bail|required|gt:0',
+            ], [
+                'user_declared_freight.required' => __('validation.required', ['attribute' => 'shipping service rate not availaible for this service']),
+                'user_declared_freight.gt' => __('validation.gt', ['attribute' => 'shipping service rate not availaible for this service']),
+            ]);
+        }
         /**
          * Sinerlog modification
          * Get total of items declared to check if them more than US$ 50 when Sinerlog Small Parcels was selected

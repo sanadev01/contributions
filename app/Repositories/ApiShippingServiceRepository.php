@@ -18,7 +18,10 @@ class ApiShippingServiceRepository
             return false;
         }
         
-        if($shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS)
+        if($shippingService->service_sub_class == ShippingService::USPS_PRIORITY || 
+            $shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS || 
+            $shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
+            $shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL)
         {
             if(!setting('usps', null, auth()->user()->id))
             {
@@ -48,9 +51,15 @@ class ApiShippingServiceRepository
         return true;
     }
 
-    public function isAvailableForInternational($shippingService)
+    public function isAvailableForInternational($shippingService, $volumeWeight)
     {
-        if(($shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL || $shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) && $this->weight <= $shippingService->max_weight_allowed)
+
+        if ($volumeWeight > $shippingService->max_weight_allowed) {
+            $this->error = 'The weight of the package exceeds the maximum allowed weight for this service.';
+            return false;
+        }
+        
+        if(($shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL || $shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) && $volumeWeight <= $shippingService->max_weight_allowed)
         {
             if(!setting('usps', null, auth()->user()->id))
             {

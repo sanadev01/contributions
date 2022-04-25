@@ -67,8 +67,19 @@ class ParcelController extends Controller
             }
         }
 
+        $senderCountryID = $request->sender['sender_country_id'] ?? null;
+        $senderStateID = $request->sender['sender_state_id'] ?? null;
+        
         $recipientCountryId = optional($request->recipient)['country_id'];
-        $stateID = optional($request->recipient)['state_id'];        
+        $stateID = optional($request->recipient)['state_id'];
+        
+        if ($senderCountryID && !is_numeric($senderCountryID)) {
+            $senderCountryID = Country::where('code', $senderCountryID)->orWhere('name', $senderCountryID)->first()->id;
+        }
+
+        if ($senderStateID && !is_numeric($senderStateID)) {
+            $senderStateID = State::where([['code', $senderStateID],['country_id', $senderCountryID]])->orWhere([['name', $senderStateID], ['country_id', $senderCountryID]])->first()->id;
+        }
         
         if (!is_numeric( optional($request->recipient)['country_id'])){
             
@@ -86,8 +97,16 @@ class ParcelController extends Controller
             return apiResponse(false, $this->usShippingService->getError());
         }
 
-        if(in_array($shippingService->service_sub_class, $this->internationalShippingServices()) && !$this->usShippingService->isAvailableForInternational($shippingService)){
+        if (in_array($shippingService->service_sub_class, $this->domesticShippingServices()) && $recipientCountryId != Country::US) {
+            return apiResponse(false, 'this service is availaible for US address only');
+        }
+
+        if(in_array($shippingService->service_sub_class, $this->internationalShippingServices()) && !$this->usShippingService->isAvailableForInternational($shippingService, $volumeWeight)){
             return apiResponse(false, $this->usShippingService->getError());
+        }
+
+        if (in_array($shippingService->service_sub_class, $this->internationalShippingServices()) && $recipientCountryId == Country::US) {
+            return apiResponse(false, 'this service is not availaible for US address');
         }
         
         
@@ -117,11 +136,12 @@ class ParcelController extends Controller
                 "sender_last_name" => optional($request->sender)['sender_last_name'],
                 "sender_email" => optional($request->sender)['sender_email'],
                 "sender_taxId" => optional($request->sender)['sender_taxId'],
-                'sender_country_id' => optional($request->sender)['sender_country_id'],
-                'sender_state_id' => optional($request->sender)['sender_state_id'],
+                'sender_country_id' => $senderCountryID,
+                'sender_state_id' => $senderStateID,
                 'sender_city' => optional($request->sender)['sender_city'],
                 'sender_address' => optional($request->sender)['sender_address'],
                 'sender_phone' => optional($request->sender)['sender_phone'],
+                'sender_zipcode' => optional($request->sender)['sender_zipcode'],
             ]);
 
             $this->orderRepository->setVolumetricDiscount($order);
@@ -195,6 +215,13 @@ class ParcelController extends Controller
                 }
             }
 
+            if (in_array($order->shippingService->service_sub_class, $this->internationalShippingServices())) {
+                if(!$this->usShippingService->getUSShippingServiceRate($order))
+                {
+                    DB::rollback();
+                    return apiResponse(false, $this->usShippingService->getError());
+                }
+            }
             $order->doCalculations();
 
             DB::commit();
@@ -259,8 +286,19 @@ class ParcelController extends Controller
             }
         }
 
+        $senderCountryID = $request->sender['sender_country_id'] ?? null;
+        $senderStateID = $request->sender['sender_state_id'] ?? null;
+
         $recipientCountryId = optional($request->recipient)['country_id'];
         $stateID = optional($request->recipient)['state_id'];
+
+        if ($senderCountryID && !is_numeric($senderCountryID)) {
+            $senderCountryID = Country::where('code', $senderCountryID)->orWhere('name', $senderCountryID)->first()->id;
+        }
+
+        if ($senderStateID && !is_numeric($senderStateID)) {
+            $senderStateID = State::where([['code', $senderStateID],['country_id', $senderCountryID]])->orWhere([['name', $senderStateID], ['country_id', $senderCountryID]])->first()->id;
+        }
         
         if (!is_numeric( optional($request->recipient)['state_id'])){
 
@@ -277,10 +315,18 @@ class ParcelController extends Controller
         if(in_array($shippingService->service_sub_class, $this->domesticShippingServices()) && !$this->usShippingService->isAvalaible($shippingService, $volumeWeight))
         {
             return apiResponse(false, $this->usShippingService->getError());
+
+            if ($recipientCountryId != Country::US) {
+                return apiResponse(false, 'this service is availaible for US address only');
+            }
         }
 
-        if(in_array($shippingService->service_sub_class, $this->internationalShippingServices()) && !$this->usShippingService->isAvailableForInternational($shippingService)){
+        if(in_array($shippingService->service_sub_class, $this->internationalShippingServices()) && !$this->usShippingService->isAvailableForInternational($shippingService, $volumeWeight)){
             return apiResponse(false, $this->usShippingService->getError());
+
+            if ($recipientCountryId == Country::US) {
+                return apiResponse(false, 'this service is not availaible for US address');
+            }
         }
         
 
@@ -309,11 +355,12 @@ class ParcelController extends Controller
                 "sender_last_name" => optional($request->sender)['sender_last_name'],
                 "sender_email" => optional($request->sender)['sender_email'],
                 "sender_taxId" => optional($request->sender)['sender_taxId'],
-                'sender_country_id' => optional($request->sender)['sender_country_id'],
-                'sender_state_id' => optional($request->sender)['sender_state_id'],
+                'sender_country_id' => $senderCountryID,
+                'sender_state_id' => $senderStateID,
                 'sender_city' => optional($request->sender)['sender_city'],
                 'sender_address' => optional($request->sender)['sender_address'],
                 'sender_phone' => optional($request->sender)['sender_phone'],
+                'sender_zipcode' => optional($request->sender)['sender_zipcode'],
             ]);
 
             $this->orderRepository->setVolumetricDiscount($parcel);
@@ -380,6 +427,14 @@ class ParcelController extends Controller
             ]);
 
             if (in_array($parcel->shippingService->service_sub_class, $this->domesticShippingServices())) {
+                if(!$this->usShippingService->getUSShippingServiceRate($parcel))
+                {
+                    DB::rollback();
+                    return apiResponse(false, $this->usShippingService->getError());
+                }
+            }
+
+            if (in_array($parcel->shippingService->service_sub_class, $this->internationalShippingServices())) {
                 if(!$this->usShippingService->getUSShippingServiceRate($parcel))
                 {
                     DB::rollback();

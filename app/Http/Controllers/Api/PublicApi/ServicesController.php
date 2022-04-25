@@ -40,9 +40,9 @@ class ServicesController extends Controller
             return collect($service->toArray())->except([ 'active','created_at', 'updated_at'])->all();
         });
         
-        $usShippingServices = ShippingService::active()->where('service_sub_class', ShippingService::UPS_GROUND)
-                                                        ->orWhere('service_sub_class', ShippingService::USPS_PRIORITY)
-                                                        ->orWhere('service_sub_class', ShippingService::USPS_FIRSTCLASS)
+        $usShippingServices = ShippingService::active()->whereIn('service_sub_class', $this->usShippingServices())
+                                                        ->orWhere('service_sub_class', ShippingService::USPS_PRIORITY_INTERNATIONAL)
+                                                        ->orWhere('service_sub_class', ShippingService::USPS_FIRSTCLASS_INTERNATIONAL)
                                                         ->get()->map(function($service){
             return collect($service->toArray())->except([ 'active','created_at', 'updated_at'])->all();
         });
@@ -69,7 +69,9 @@ class ServicesController extends Controller
         return [
             ShippingService::Packet_Standard, 
             ShippingService::Packet_Express, 
-            ShippingService::Packet_Mini
+            ShippingService::Packet_Mini,
+            ShippingService::USPS_PRIORITY_INTERNATIONAL,
+            ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,
         ];
     }
 }
