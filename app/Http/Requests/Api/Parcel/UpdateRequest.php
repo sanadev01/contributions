@@ -4,6 +4,7 @@ namespace App\Http\Requests\Api\Parcel;
 
 use App\Rules\NcmValidator;
 use Illuminate\Http\Request;
+use App\Models\ShippingService;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Requests\Concerns\HasJsonResponse;
 
@@ -92,13 +93,41 @@ class UpdateRequest extends FormRequest
             $rules["recipient.state_id"] = "required|exists:states,code";
         }
 
+        $shippingService = ShippingService::find($request->parcel['service_id'] ?? null);
+
+        if ($shippingService && in_array($shippingService->service_sub_class, $this->shippingServicesSubClasses())) {
+            $rules['sender.sender_country_id'] = 'required|integer|exists:countries,id';
+            $rules['sender.sender_state_id'] = 'required|integer|exists:states,id';
+            $rules['sender.sender_city'] = 'required|string|max:100';
+            $rules['sender.sender_address'] = 'required|string|max:100';
+            $rules['sender.sender_phone'] = 'sometimes|string|max:100';
+
+            $rules['recipient.phone'] = 'required|string|max:12';
+        }
+
         return $rules;
     }
 
     public function messages()
     {
         return [
-            "products.*.sh_code.*" => __('validation.ncm.invalid')." (:input)"
+            "products.*.sh_code.*" => __('validation.ncm.invalid')." (:input)",
+            'sender.sender_address.required_if' => __('validation.sender_address.required_if'),
+            'sender.sender_country_id.required_if' => __('validation.sender_country_id.required_if'),
+            'sender.sender_state_id.required_if' => __('validation.sender_state_id.required_if'),
+            'sender.sender_city.required_if' => __('validation.sender_city.required_if'),
+        ];
+    }
+
+    private function shippingServicesSubClasses()
+    {
+        return [
+            ShippingService::USPS_PRIORITY, 
+            ShippingService::USPS_FIRSTCLASS, 
+            ShippingService::USPS_PRIORITY_INTERNATIONAL, 
+            ShippingService::USPS_FIRSTCLASS_INTERNATIONAL, 
+            ShippingService::UPS_GROUND, 
+            ShippingService::FEDEX_GROUND
         ];
     }
 }

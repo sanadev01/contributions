@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests\Calculator;
 
+use App\Models\Country;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UPSCalculatorRequest extends FormRequest
+class USCalculatorRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -30,6 +31,10 @@ class UPSCalculatorRequest extends FormRequest
             'sender_address' => 'required',
             'sender_city' => 'required',
             'sender_zipcode' => 'required',
+            'recipient_state' => 'required|exists:states,code',
+            'recipient_address' => 'required',
+            'recipient_city' => 'required',
+            'recipient_zipcode' => 'required',
             'height' => 'sometimes|numeric',
             'width' => 'sometimes|numeric',
             'length' => 'sometimes|numeric',
@@ -58,6 +63,11 @@ class UPSCalculatorRequest extends FormRequest
             'sender_address.required' => 'Sender address is required',
             'sender_city.required' => 'Sender city is required',
             'sender_zipcode.required' => 'Sender zipcode is required',
+            'recipient_state.required' => 'Recipient state is required',
+            'recipient_state.exists' => 'Recipient state does not exist',
+            'recipient_address.required' => 'Recipient address is required',
+            'recipient_city.required' => 'Recipient city is required',
+            'recipient_zipcode.required' => 'Recipient zipcode is required',
             'height.numeric' => 'Height must be numeric',
             'width.numeric' => 'Width must be numeric',
             'length.numeric' => 'Length must be numeric',
@@ -67,5 +77,30 @@ class UPSCalculatorRequest extends FormRequest
             'weight.numeric' => 'Weight must be numeric',
             'weight.max' => 'weight exceed the delivery of UPS',
         ];
+    }
+
+    public function prepareForValidation()
+    {
+        if ($this->has('from_herco')) {
+            $this->merge([
+                'origin_country' => Country::US,
+                'sender_state' => 'FL',
+                'sender_address' => '2200 NW 129TH AVE',
+                'sender_city' => 'MIAMI',
+                'sender_zipcode' => '33182',
+                'from_herco' => true,
+            ]);
+        }
+
+        if ($this->has('to_herco')) {
+            $this->merge([
+                'destination_country' => Country::US,
+                'recipient_state' => 'FL',
+                'recipient_address' => '2200 NW 129TH AVE',
+                'recipient_city' => 'MIAMI',
+                'recipient_zipcode' => '33182',
+                'to_herco' => true,
+            ]);
+        }
     }
 }

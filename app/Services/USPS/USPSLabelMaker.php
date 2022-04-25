@@ -11,7 +11,6 @@ class USPSLabelMaker
 
     public function setOrder($order)
     {
-        
         $this->order = $order;
     }
 
@@ -28,7 +27,7 @@ class USPSLabelMaker
         }
     }
     
-    public function saveUSPSLabel()
+    public function saveSecondaryLabel()
     {
         if($this->order->us_api_response != null)
         {
