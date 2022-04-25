@@ -2,11 +2,9 @@
 
 namespace App\Http\Livewire\Order;
 
-use App\Models\Order;
-use App\Models\Country;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Illuminate\Support\Facades\Auth;
+use App\Repositories\OrderRepository;
 
 class Table extends Component
 {
@@ -46,22 +44,17 @@ class Table extends Component
     public function mount($userType = null)
     {
         $this->userType = $userType;
-        $this->query = $this->getQuery();
+        $this->query = $this->getOrders();
     }
 
     public function render()
     {
         if (! $this->query) {
-            $this->query = $this->getQuery();
+            $this->query = $this->getOrders();
         }
 
         return view('livewire.order.table', [
-            'orders' => $this->query
-            ->orderBy(
-                $this->sortBy,
-                $this->sortAsc ? 'ASC' : 'DESC'
-            )
-            ->paginate($this->pageSize)
+            'orders' => $this->getOrders()
         ]);
     }
 
@@ -74,129 +67,24 @@ class Table extends Component
         }
     }
 
-    public function updatedDate()
+    public function getOrders()
     {
-        $this->query = $this->getQuery()->where('order_date', 'LIKE', "%{$this->date}%");
-    }
-
-    public function updatedName()
-    {
-        $this->query = $this->getQuery()->whereHas('user', function ($query) {
-            return $query->where('name', 'LIKE', "%{$this->name}%");
-        });
-    }
-
-    public function updatedPobox()
-    {
-        $this->query = $this->getQuery()->whereHas('user', function ($query) {
-            return $query->where('pobox_number', 'LIKE', "%{$this->pobox}%");
-        });
-    }
-
-    public function updatedWhrNumber()
-    {
-        if (strlen($this->whr_number) <= 0) {
-            return $this->query = $this->getQuery();
-        }
-
-        $this->query = $this->getQuery()->where('warehouse_number', 'LIKE', "%{$this->whr_number}%");
-    }
-
-    public function updatedMerchant()
-    {
-        $this->query = $this->getQuery()->where('merchant', 'LIKE', "%{$this->merchant}%");
-    }
-
-    public function updatedCarrier()
-    {
-        $this->query = $this->getQuery()->where('carrier', 'LIKE', "%{$this->carrier}%");
-    }
-    
-    public function updatedAmount()
-    {
-        $this->query = $this->getQuery()->where('gross_total', 'LIKE', "%{$this->amount}%");
-    }
-
-    
-    public function updatedTrackingId()
-    {
-        $this->query = $this->getQuery()->where('tracking_id', 'LIKE', "%{$this->tracking_id}%");
-    }
-
-    public function updatedCustomerReference()
-    {
-        $this->query = $this->getQuery()->where('customer_reference', 'LIKE', "%{$this->customer_reference}%");
-    }
-
-    public function updatedTrackingCode()
-    {
-        $this->query = $this->getQuery()->where('corrios_tracking_code', 'LIKE', "%{$this->tracking_code}%");
-    }
-
-    public function updatedStatus()
-    {
-        if ($this->status !== '') {
-            $this->query = $this->getQuery()->where('status',$this->status);
-        }
-    }
-
-    public function updatedOrderType()
-    {
-        if ($this->orderType === 'consolidated') {
-            $this->query = $this->getQuery()->where('is_consolidated',true);
-        }
-
-        if ($this->orderType === 'non-consolidated') {
-            $this->query = $this->getQuery()->where('is_consolidated',false);
-        }
-    }
-
-    public function updatedPaymentStatus()
-    {
-        if ($this->paymentStatus === 'paid') {
-            $this->query = $this->getQuery()->where('is_paid',true);
-        }
-
-        if ($this->paymentStatus === 'unpaid') {
-            $this->query = $this->getQuery()->where('is_paid',false);
-        }
-    }
-
-    public function getQuery()
-    {
-        $orders = Order::query()
-            ->where('status','>=',Order::STATUS_ORDER)
-            ->has('user')
-            ->with([
-                'paymentInvoices',
-                'user',
-                'subOrders',
-                'parentOrder'
-            ]);
-        if (Auth::user()->isUser()) {
-            $orders->where('user_id', Auth::id());
-        }
-
-        if($this->userType == 'domestic')
-        {
-            $orders = $orders->where('sender_country_id', Country::US);
-            return $orders;
-        }
-
-        if ($this->userType == 'pickups') {
-            $orders = $orders->where('api_pickup_response' , '!=', null);
-            return $orders;
-        }
-        
-        if($this->userType){
-            $orders = $orders->whereHas('user', function ($queryUser) {
-                $queryUser->whereHas('role', function ($queryRole) {
-                    return $queryRole->where('name', $this->userType);
-                });
-            });
-        }
-
-        return $orders;
+        return (new OrderRepository)->get(request()->merge([
+            'order_date' => $this->date,
+            'name' => $this->name,
+            'pobox_number' => $this->pobox,
+            'warehouse_number' => $this->whr_number,
+            'merchant' => $this->merchant,
+            'carrier' => $this->carrier,
+            'gross_total' => $this->amount,
+            'tracking_id' => $this->tracking_id,
+            'customer_reference' => $this->customer_reference,
+            'corrios_tracking_code' => $this->tracking_code,
+            'status' => $this->status,
+            'orderType' => $this->orderType,
+            'paymentStatus' => $this->paymentStatus,
+            'userType' => $this->userType,
+        ]),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc');
     }
 
     public function updating()

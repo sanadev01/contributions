@@ -11,13 +11,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use App\Repositories\UPSLabelRepository;
 use App\Repositories\USPSLabelRepository;
+use App\Repositories\FedExLabelRepository;
 use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
 
 class OrderLabelController extends Controller
 {
-    public function __invoke(Request $request, Order $order, CorrieosBrazilLabelRepository $labelRepository, CorrieosChileLabelRepository $chile_labelRepository, USPSLabelRepository $usps_labelRepository, UPSLabelRepository $upsLabelRepository)
+    public function __invoke(Request $request, Order $order, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, CorrieosChileLabelRepository $corrieosChileLabelRepository, USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, FedExLabelRepository $fedexLabelRepository)
     {
         $orders = new Collection;
         $this->authorize('canPrintLableViaApi',$order);
@@ -28,12 +29,11 @@ class OrderLabelController extends Controller
 
         $labelData = null;
 
-        // For Correos Chile
-        if($order->recipient->country_id == Order::CHILE)
-        {
-            $chile_labelRepository->handle($order);
-
-            $error = $chile_labelRepository->getChileErrors();
+        //For USPS International services
+        if ($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
+            
+            $uspsLabelRepository->handle($order);
+            $error = $uspsLabelRepository->getUSPSErrors();
 
             if(!$error)
             {
@@ -52,7 +52,32 @@ class OrderLabelController extends Controller
             }
 
             return apiResponse(false, $error);
-            
+        }
+
+        // For Correos Chile
+        if(($order->shippingService->service_sub_class == ShippingService::SRP || $order->shippingService->service_sub_class == ShippingService::SRM) && $order->recipient->country_id == Order::CHILE)
+        {
+            $corrieosChileLabelRepository->handle($order);
+
+            $error = $corrieosChileLabelRepository->getChileErrors();
+
+            if(!$error)
+            {
+                if ( !$order->isPaid() &&  getBalance() >= $order->gross_total ){
+                    $order->update([
+                        'is_paid' => true,
+                        'status' => Order::STATUS_PAYMENT_DONE
+                    ]);
+                    chargeAmount($order->gross_total,$order);
+                }
+                
+                return apiResponse(true,"Lable Generated successfully.",[
+                    'url' => route('order.label.download',$order),
+                    'tracking_code' => $order->corrios_tracking_code
+                ]);
+            }
+
+            return apiResponse(false, $error);
         }
 
         if($order->recipient->country_id == Order::US)
@@ -60,9 +85,9 @@ class OrderLabelController extends Controller
             // For USPS
             if ($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS) 
             {
-                $usps_labelRepository->handle($order);
+                $uspsLabelRepository->handle($order);
 
-                $error = $usps_labelRepository->getUSPSErrors();
+                $error = $uspsLabelRepository->getUSPSErrors();
             }
 
             // For UPS
@@ -71,8 +96,14 @@ class OrderLabelController extends Controller
                 $upsLabelRepository->handle($order);
                 $error = $upsLabelRepository->getUPSErrors();
             }
-           
 
+            // For FedEx
+            if ($order->shippingService->service_sub_class == ShippingService::FEDEX_GROUND) {
+
+                $fedexLabelRepository->handle($order);
+                $error = $fedexLabelRepository->getFedExErrors();
+            }
+           
             if(!$error)
             {
                 if ( !$order->isPaid() &&  getBalance() >= $order->gross_total ){
@@ -90,32 +121,36 @@ class OrderLabelController extends Controller
             }
 
             return apiResponse(false, $error);
-            
-        }
-        if ( $request->update_label === 'true' ){
-            $labelData = $labelRepository->update($order);
-        }else{
-            $labelData = $labelRepository->get($order);
         }
 
-        $order->refresh();
+        // For Correos Brazil
+        if ($order->recipient->country_id == Order::BRAZIL) {
+           
+            if ( $request->update_label === 'true' ){
+                $labelData = $corrieosBrazilLabelRepository->update($order);
+            }else{
+                $labelData = $corrieosBrazilLabelRepository->get($order);
+            }
 
-        if ( $labelData ){
-            Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
-        }
+            $order->refresh();
 
-        if ( $labelRepository->getError() ){
-            return apiResponse(false,$labelRepository->getError());
-        }
+            if ( $labelData ){
+                Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
+            }
 
-        if ( !$order->isPaid() &&  getBalance() >= $order->gross_total ){
-            $order->update([
-                'is_paid' => true,
-                'status' => Order::STATUS_PAYMENT_DONE
-            ]);
-            chargeAmount($order->gross_total,$order);
-            $orders->push($order);
-            event(new OrderPaid($orders, true));
+            if ( $corrieosBrazilLabelRepository->getError() ){
+                return apiResponse(false,$corrieosBrazilLabelRepository->getError());
+            }
+
+            if ( !$order->isPaid() &&  getBalance() >= $order->gross_total ){
+                $order->update([
+                    'is_paid' => true,
+                    'status' => Order::STATUS_PAYMENT_DONE
+                ]);
+                chargeAmount($order->gross_total,$order);
+                $orders->push($order);
+                event(new OrderPaid($orders, true));
+            }
             
         }
         return apiResponse(true,"Lable Generated successfully.",[

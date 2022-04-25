@@ -130,6 +130,7 @@ class Table extends Component
     public function getQuery()
     {
         $orders = Order::query()
+            ->where('status','>',Order::STATUS_INVENTORY_FULFILLED)
             ->where('status','<',Order::STATUS_ORDER)
             ->has('user')
             ->doesntHave('parentOrder');
