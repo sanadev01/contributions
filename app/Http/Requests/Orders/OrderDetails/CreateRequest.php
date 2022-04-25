@@ -48,4 +48,13 @@ class CreateRequest extends FormRequest
             'items.*.sh_code.*' => __('validation.ncm.invalid')
         ];
     }
+
+    public function prepareForValidation()
+    {
+        if ($this->filled('user_declared_freight')) {
+            $this->merge([
+                'user_declared_freight' => (float)$this->user_declared_freight
+            ]);
+        }
+    }
 }

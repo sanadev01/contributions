@@ -116,6 +116,7 @@ class CreateRequest extends FormRequest
             $rules['sender.sender_city'] = 'required|string|max:100';
             $rules['sender.sender_address'] = 'required|string|max:100';
             $rules['sender.sender_phone'] = 'sometimes|string|max:100';
+            $rules['sender.sender_zipcode'] = 'required';
             $rules['recipient.phone'] = 'required|string|max:12';
         }
 
