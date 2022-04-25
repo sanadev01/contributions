@@ -2,48 +2,41 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\State;
 use App\Models\Country;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use App\Services\Converters\UnitsConverter;
-use App\Http\Requests\Calculator\USCalculatorRequest;
 use App\Repositories\Calculator\USCalculatorRepository;
+use App\Http\Requests\Calculator\USCalculatorRequest;
 
-class USPSCalculatorController extends Controller
+class USCalculatorController extends Controller
 {
-    public $error;
-    public $shipping_rates = [];
-    public $user_api_profit;
-    public $userLoggedIn = false;
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function __construct()
     {
-        $states = State::query()->where("country_id", Country::US)->get(["name","code","id"]);
-        return view('uspscalculator.index', compact('states'));
+        # code...
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    public function index()
+    {
+        $states = Cache::remember('states', Carbon::now()->addDay(), function () {
+            return State::query()->where('country_id', Country::US)->get(['name','code','id']);
+        });
+        
+        return view('uscalculator.calculator', compact('states'));
+    }
+
     public function store(USCalculatorRequest $request, USCalculatorRepository $usCalculatorRepository)
     {
         $tempOrder = $usCalculatorRepository->handle($request);
-        $uspsShippingServices = $usCalculatorRepository->getUSPSShippingServices($tempOrder);
-        $usCalculatorRepository->setUserUSPSProfit();
+        $shippingServices = $usCalculatorRepository->getShippingServices();
 
-        $apiRates = $usCalculatorRepository->getUSPSRates($uspsShippingServices, $tempOrder);
-        $ratesWithProfit = $usCalculatorRepository->getUSPSRatesWithProfit();
-        
+        $apiRates = $usCalculatorRepository->getRates();
+        $ratesWithProfit = $usCalculatorRepository->getRatesWithProfit();
+
         $error = $usCalculatorRepository->getError();
 
-        if($uspsShippingServices->isEmpty()){
+        if($shippingServices->isEmpty()){
             $error = 'Shipping Service not Available for the Country you have selected';
         }
 
@@ -60,7 +53,8 @@ class USPSCalculatorController extends Controller
             $weightInOtherUnit = UnitsConverter::poundToKg($chargableWeight);
         }
 
-        $shippingServiceTitle = 'USPS';
+        $shippingServiceTitle = 'US Services';
+        $tempOrder = collect($tempOrder);
 
         return view('uscalculator.index', compact('apiRates','ratesWithProfit','tempOrder', 'weightInOtherUnit', 'chargableWeight', 'userLoggedIn', 'shippingServiceTitle'));
     }

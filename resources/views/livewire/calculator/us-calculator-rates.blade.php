@@ -41,13 +41,13 @@
                                     @endforeach
                                 </div>
                                 @if ($userLoggedIn)
-                                    @if(!setting($shippingServiceTitle, null, auth()->user()->id))
+                                    {{-- @if(!setting($shippingServiceTitle, null, auth()->user()->id))
                                         <div class="row mb-1 ml-4">
                                             <div class="controls col-12">
                                                 <h4 class="text-danger">{{$shippingServiceTitle}} is not enabled for your account</h4>
                                             </div>
                                         </div>
-                                    @endif
+                                    @endif --}}
                                     @if($serviceResponse)
                                         <div class="row mb-1 ml-4">
                                             <div class="controls col-12">
@@ -74,7 +74,7 @@
                                                 @error('selectedService') <span class="error text-danger">{{ $message }}</span> @enderror
                                             </div>
                                             <div class="controls col-6">
-                                                <button id="btn-submit" type="submit" class="btn btn-success btn-lg mt-4" @if(!setting($shippingServiceTitle, null, auth()->user()->id)) disabled @endif>Buy Label </button>
+                                                {{-- <button id="btn-submit" type="submit" class="btn btn-success btn-lg mt-4" @if(!setting($shippingServiceTitle, null, auth()->user()->id)) disabled @endif>Buy Label </button> --}}
                                             </div>
                                         </div>
                                     </form>
@@ -83,7 +83,7 @@
                             <br>
                             <div class="row">
                                 <div class="col-md-12 d-flex justify-content-center">
-                                <a href="@if($shippingServiceTitle == 'UPS') {{route('ups-calculator.index')}} @else {{route('usps-calculator.index')}} @endif"  class="btn btn-primary btn-lg">
+                                <a href="@if($shippingServiceTitle == 'UPS') {{route('ups-calculator.index')}} @else {{route('us-calculator.index')}} @endif"  class="btn btn-primary btn-lg">
                                         Go Back
                                     </a>
                                 </div>
@@ -113,7 +113,7 @@
                                             </div></div> <div class="row justify-content-center"><div class="pb-1 pt-1 border-bottom-light col-md-5 bg-primary text-white">
                                                 Weight
                                             </div> <div class="border col-5 py-1">
-                                                @if($tempOrder->measurement_unit == 'kg/cm')
+                                                @if($tempOrder['measurement_unit'] == 'kg/cm')
                                                     {{$chargableWeight}} Kg ( {{$weightInOtherUnit}} lbs)
                                                 @else
                                                     {{$chargableWeight}} lbs ( {{$weightInOtherUnit}} kg)

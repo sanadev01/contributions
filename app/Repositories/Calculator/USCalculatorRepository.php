@@ -7,31 +7,38 @@ use App\Models\User;
 use App\Models\Order;
 use App\Models\State;
 use App\Models\ShCode;
-use App\Models\Country;
 use App\Models\OrderItem;
 use App\Models\Recipient;
 use App\Facades\UPSFacade;
 use App\Facades\USPSFacade;
+use App\Facades\FedExFacade;
 use Illuminate\Http\Request;
-use App\Models\PaymentInvoice;
 use App\Models\ShippingService;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\UPSLabelRepository;
 use App\Services\UPS\UPSShippingService;
 use App\Repositories\USPSLabelRepository;
+use App\Repositories\FedExLabelRepository;
 use App\Services\USPS\USPSShippingService;
+use App\Services\FedEx\FedExShippingService;
 use App\Services\Calculators\WeightCalculator;
 
 class USCalculatorRepository
 {
+    public $upsShippingServices;
+    public $uspsShippingServices;
+    public $fedExShippingServices;
+
+    public $shippingServices;
+    
     protected $request;
     protected $recipient;
     public $order;
     public $uspsProfit;
     public $upsProfit;
-    public $uspsShippingRates = [];
+    public $fedExProfit;
+    public $shippingRates = [];
+    public $shippingRatesWithProfit = [];
     public $uspsRatesWithProfit = [];
     public $upsShippingRates = [];
     public $upsRatesWithProfit = [];
@@ -43,6 +50,20 @@ class USCalculatorRepository
     protected $shippingService;
     protected $orderItems;
 
+
+    public function __construct()
+    {
+        if (Auth::check()) 
+        {
+            $this->userLoggedIn = true;
+        }
+
+        $this->setUserProft();
+        // $this->upsLabelRepository = new UPSLabelRepository();
+        // $this->uspsLabelRepository = new USPSLabelRepository();
+        // $this->fedExLabelRepository = new FedExLabelRepository();
+    }
+    
     public function handle($request)
     {
         $this->request = $request;
@@ -66,158 +87,92 @@ class USCalculatorRepository
         return $this->order;
     }
 
-    public function setUserUSPSProfit()
+    public function getShippingServices()
     {
-        if (Auth::check()) 
-        {
-            $this->uspsProfit = setting('usps_profit', null, auth()->user()->id);
-            $this->userLoggedIn = true;
-        }
+        $this->shippingServices = collect();
 
-        if($this->uspsProfit == null || $this->uspsProfit == 0)
-        {
-            $this->uspsProfit = setting('usps_profit', null, User::ROLE_ADMIN);
-        }
+        $uspsShippingServices = $this->getUSPSShippingServices();
 
-        return $this->uspsProfit;
+        $upsShippingServices = ($this->order->recipient->country_id == Order::US) ? $this->getUPSShippingServices() : null;
+
+        $fedExShippingServices = ($this->order->recipient->country_id == Order::US) ? $this->getFedExShippingServices() : null;
+
+        $this->shippingServices = $this->shippingServices->merge($uspsShippingServices)
+                                            ->merge($upsShippingServices)
+                                            ->merge($fedExShippingServices);
+
+        return $this->shippingServices;
     }
 
-    public function setUserUPSProfit()
+    public function getRates()
     {
-        if (Auth::check()) 
-        {
-            $this->upsProfit = setting('ups_profit', null, auth()->user()->id);
-            $this->userLoggedIn = true;
+        if ($this->shippingServices->isEmpty()) {
+            return $this->shippingRates;
         }
 
-        if($this->upsProfit == null || $this->upsProfit == 0)
+        if($this->shippingServices->contains('service_sub_class', ShippingService::USPS_PRIORITY) 
+            || $this->shippingServices->contains('service_sub_class', ShippingService::USPS_FIRSTCLASS)
+            || $this->shippingServices->contains('service_sub_class', ShippingService::USPS_PRIORITY_INTERNATIONAL)
+            || $this->shippingServices->contains('service_sub_class', ShippingService::USPS_FIRSTCLASS_INTERNATIONAL))
         {
-            $this->upsProfit = setting('ups_profit', null, User::ROLE_ADMIN);
+            $this->getUSPSRates();
         }
 
-        return $this->upsProfit;
+        if ($this->shippingServices->contains('service_sub_class', ShippingService::UPS_GROUND)) {
+            $this->getUPSRates();
+        }
+
+        if ($this->shippingServices->contains('service_sub_class', ShippingService::FEDEX_GROUND)) {
+            $this->getFedExRates();
+        }
+
+        return $this->shippingRates;
     }
 
-    public function getUSPSRates($uspsShippingServices, $order)
+    public function getRatesWithProfit()
     {
-        if ($uspsShippingServices->isEmpty()) {
-            return $this->uspsShippingRates;
-        }
-        $request = $this->createRequest($order);
+        $this->shippingRatesWithProfit = [];
 
-        foreach ($uspsShippingServices as $shippingService) 
-        {
-            $uspsResponse = USPSFacade::getRecipientRates($order, $shippingService->service_sub_class);
-            if ($uspsResponse->success == true) {
-                array_push($this->uspsShippingRates , ['name'=> $shippingService->name, 'service_sub_class' => $shippingService->service_sub_class, 'rate'=> number_format($uspsResponse->data['total_amount'], 2)]);
-            }else
+        if (!$this->shippingRates) {
+            return $this->shippingRatesWithProfit;
+        }
+
+        foreach ($this->shippingRates as $serviceRate) {
+            if ($serviceRate['service_sub_class'] == ShippingService::USPS_PRIORITY || 
+                $serviceRate['service_sub_class'] == ShippingService::USPS_FIRSTCLASS ||
+                $serviceRate['service_sub_class'] == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
+                $serviceRate['service_sub_class'] == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) 
             {
-                $this->error = $uspsResponse->message;
+                $profit = $serviceRate['rate'] * ($this->uspsProfit / 100);
+
+                $rate = $serviceRate['rate'] + $profit;
+
+                array_push($this->shippingRatesWithProfit, ['name'=> $serviceRate['name'], 'service_sub_class' => $serviceRate['service_sub_class'], 'rate'=> number_format($rate, 2)]);
+            }
+
+            if($serviceRate['service_sub_class'] == ShippingService::UPS_GROUND){
+                $profit = $serviceRate['rate'] * ($this->upsProfit / 100);
+
+                $rate = $serviceRate['rate'] + $profit;
+
+                array_push($this->shippingRatesWithProfit, ['name'=> $serviceRate['name'], 'service_sub_class' => $serviceRate['service_sub_class'], 'rate'=> number_format($rate, 2)]);
+            }
+
+            if ($serviceRate['service_sub_class'] == ShippingService::FEDEX_GROUND) {
+                $profit = $serviceRate['rate'] * ($this->fedExProfit / 100);
+
+                $rate = $serviceRate['rate'] + $profit;
+
+                array_push($this->shippingRatesWithProfit, ['name'=> $serviceRate['name'], 'service_sub_class' => $serviceRate['service_sub_class'], 'rate'=> number_format($rate, 2)]);
             }
         }
 
-        return $this->uspsShippingRates;
+        return $this->shippingRatesWithProfit;
     }
 
-    public function getUPSRates($upsShippingServices, $order)
+    public function getError()
     {
-        if ($upsShippingServices->isEmpty()) {
-            return $this->upsShippingRates;
-        }
-
-        $request = $this->createRequest($order);
-
-        foreach ($upsShippingServices as $shippingService) {
-            $requestBody = $this->mergeShippingServiceIntoRequest($request, $shippingService->service_sub_class);
-            $upsResponse = UPSFacade::getSenderPrice($order, $requestBody);
-            
-            if($upsResponse->success == true)
-            {
-                array_push($this->upsShippingRates , ['name'=> $shippingService->name , 'service_sub_class' => $shippingService->service_sub_class, 'rate'=> number_format($upsResponse->data['RateResponse']['RatedShipment']['TotalCharges']['MonetaryValue'], 2)]);
-            }else
-            {
-                $this->error = $upsResponse->error['response']['errors'][0]['message'] ?? 'Unknown Error';
-            }
-        }
-
-        return $this->upsShippingRates;
-    }
-
-    public function getUSPSRatesWithProfit()
-    {
-        $this->uspsRatesWithProfit = [];
-
-        if (!$this->uspsShippingRates) {
-            return $this->uspsRatesWithProfit;
-        }
-
-        foreach ($this->uspsShippingRates as $uspsRate) {
-            $profit = $uspsRate['rate'] * ($this->uspsProfit / 100);
-
-            $rate = $uspsRate['rate'] + $profit;
-
-            array_push($this->uspsRatesWithProfit, ['name'=> $uspsRate['name'] , 'service_sub_class' => $uspsRate['service_sub_class'], 'rate'=> number_format($rate, 2)]);
-        }
-
-        return $this->uspsRatesWithProfit;
-    }
-
-    public function getUPSRatesWithProfit()
-    {
-        $this->upsRatesWithProfit = [];
-
-        if (!$this->upsShippingRates) {
-            return $this->upsRatesWithProfit;
-        }
-
-        foreach($this->upsShippingRates as $upsRate)
-        {
-            $profit = $upsRate['rate'] * ($this->upsProfit / 100);
-
-            $rate = $upsRate['rate'] + $profit;
-
-            array_push($this->upsRatesWithProfit, ['name'=> $upsRate['name'], 'service_sub_class' => $upsRate['service_sub_class'], 'rate'=> number_format($rate, 2)]);
-        }
-
-        return $this->upsRatesWithProfit;
-    }
-
-    public function getUSPSShippingServices($order)
-    {
-        $shippingServices = collect() ;
-
-        $uspsShippingService = new USPSShippingService($order);
-        foreach (ShippingService::query()->active()->get() as $shippingService) {
-            
-            if(optional($order->recipient)->country_id == Order::US){
-                
-                if ( $uspsShippingService->isAvailableFor($shippingService) ){
-                    $shippingServices->push($shippingService);
-                }
-
-            }else{
-
-                if ($uspsShippingService->isAvailableForInternational($shippingService)) {
-                    $shippingServices->push($shippingService);
-                }
-            }
-        }
-
-        return $shippingServices;
-    }
-
-    public function getUPSShippingServices($order)
-    {
-        $shippingServices = collect() ;
-
-        $upsShippingService = new UPSShippingService($order);
-        foreach (ShippingService::query()->active()->get() as $shippingService) {
-            if ( $upsShippingService->isAvailableFor($shippingService) ){
-                $shippingServices->push($shippingService);
-            }
-        }
-
-        return $shippingServices;
+        return $this->error;
     }
 
     public function getUserLoggedInStatus()
@@ -230,9 +185,28 @@ class USCalculatorRepository
         return $this->chargableWeight;
     }
 
-    public function getError()
+    private function setUserProft()
     {
-        return $this->error;
+        if ($this->userLoggedIn) {
+            $this->uspsProfit = setting('usps_profit', null, auth()->user()->id);
+            $this->upsProfit = setting('ups_profit', null, auth()->user()->id);
+            $this->fedexProfit = setting('fedex_profit', null, auth()->user()->id);
+        }
+
+        if($this->uspsProfit == null || $this->uspsProfit == 0)
+        {
+            $this->uspsProfit = setting('usps_profit', null, User::ROLE_ADMIN);
+        }
+
+        if($this->upsProfit == null || $this->upsProfit == 0)
+        {
+            $this->upsProfit = setting('ups_profit', null, User::ROLE_ADMIN);
+        }
+
+        if($this->fedexProfit == null || $this->fedexProfit == 0)
+        {
+            $this->fedexProfit = setting('fedex_profit', null, User::ROLE_ADMIN);
+        }
     }
 
     private function createRecipient()
@@ -301,218 +275,167 @@ class USCalculatorRepository
         return true;
     }
 
-    private function createRequest($order)
+    private function getUSPSShippingServices()
+    {
+        $shippingServices = collect() ;
+
+        $uspsShippingService = new USPSShippingService($this->order);
+        foreach (ShippingService::query()->active()->get() as $shippingService) {
+            
+            if(optional($this->order->recipient)->country_id == Order::US){
+                
+                if ( $uspsShippingService->isAvailableFor($shippingService) ){
+                    $shippingServices->push($shippingService);
+                }
+
+            }else{
+
+                if ($uspsShippingService->isAvailableForInternational($shippingService)) {
+                    $shippingServices->push($shippingService);
+                }
+            }
+        }
+
+        return $shippingServices;
+    }
+
+    private function getUPSShippingServices()
+    {
+        $shippingServices = collect() ;
+
+        $upsShippingService = new UPSShippingService($this->order);
+        foreach (ShippingService::query()->active()->get() as $shippingService) {
+            
+            if ( $upsShippingService->isAvailableFor($shippingService) ){
+                $shippingServices->push($shippingService);
+            }
+        }
+
+        return $shippingServices;
+    }
+
+    private function getFedExShippingServices()
+    {
+        $shippingServices = collect() ;
+
+        $fedExShippingService = new FedExShippingService($this->order);
+        foreach (ShippingService::query()->active()->get() as $shippingService) {
+            
+            if ( $fedExShippingService->isAvailableFor($shippingService) ){
+                $shippingServices->push($shippingService);
+            }
+        }
+
+        return $shippingServices;
+    }
+
+    private function getUSPSRates()
+    {
+        $uspsServices = $this->shippingServices->filter(function ($shippingService) {
+
+            return ($shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS || 
+                    $shippingService->service_sub_class == ShippingService::USPS_PRIORITY || 
+                    $shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
+                    $shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL);
+        });
+        
+        if ($uspsServices->isEmpty()) {
+            return false;
+        }
+
+        $request = ($this->request->has('to_herco')) ? $this->createRequest() : null;
+
+        foreach ($uspsServices as $service) {
+            
+            if ($this->request->has('to_herco')) {
+                $request->merge(['service' => $service->service_sub_class]);
+            }
+
+            $uspsResponse = ($this->request->has('to_herco')) ? USPSFacade::getSenderPrice($this->order, $request) 
+                                                                : USPSFacade::getRecipientRates($this->order, $service->service_sub_class);
+            if ($uspsResponse->success == true) {
+                array_push($this->shippingRates , ['name'=> $service->name, 'service_sub_class' => $service->service_sub_class, 'rate'=> number_format($uspsResponse->data['total_amount'], 2)]);
+            }else
+            {
+                $this->error = $uspsResponse->message;
+            }
+        }
+
+        return;
+    }
+
+    private function getUPSRates()
+    {
+        $upsServices = $this->shippingServices->filter(function ($shippingService) {
+            return $shippingService->service_sub_class == ShippingService::UPS_GROUND;
+        });
+
+        if ($upsServices->isEmpty()) {
+            return false;
+        }
+
+        $request = ($this->request->has('to_herco')) ? $this->createRequest() : null;
+
+        foreach ($upsServices as $service) 
+        {
+            if ($this->request->has('to_herco')) {
+                $request->merge(['service' => $service->service_sub_class]);
+            }
+            $upsResponse = ($this->request->has('to_herco')) ? UPSFacade::getSenderPrice($this->order, $request) 
+                                                                : UPSFacade::getRecipientRates($this->order, $service->service_sub_class);
+            if($upsResponse->success == true)
+            {
+                array_push($this->shippingRates , ['name'=> $service->name , 'service_sub_class' => $service->service_sub_class, 'rate'=> number_format($upsResponse->data['RateResponse']['RatedShipment']['TotalCharges']['MonetaryValue'], 2)]);
+            }else
+            {
+                $this->error = $upsResponse->error['response']['errors'][0]['message'] ?? 'Unknown Error';
+            }
+        }
+
+        return;
+    }
+
+    private function getFedExRates()
+    {
+        $fedExServices = $this->shippingServices->filter(function ($shippingService) {
+            return $shippingService->service_sub_class == ShippingService::FEDEX_GROUND;
+        });
+
+        if ($fedExServices->isEmpty()) {
+            return false;
+        }
+
+        $request = ($this->request->has('to_herco')) ? $this->createRequest() : null;
+
+        foreach ($fedExServices as $service) {
+
+            if ($this->request->has('to_herco')) {
+                $request->merge(['service' => $service->service_sub_class]);
+            }
+
+            $fedExResponse = ($this->request->has('to_herco')) ? FedExFacade::getSenderRates($this->order, $request) : FedExFacade::getRecipientRates($this->order, $service->service_sub_class);
+            
+            if ($fedExResponse->success == true) {
+                array_push($this->shippingRates , ['name'=> $service->name , 'service_sub_class' => $service->service_sub_class, 'rate'=> number_format($fedExResponse->data['output']['rateReplyDetails'][0]['ratedShipmentDetails'][0]['totalNetFedExCharge'], 2)]);
+            }else{
+                $this->error = $fedExResponse->error['response']['errors'][0]['message'] ?? 'server error, could not get rates';
+            }
+        }
+
+        return;
+    }
+
+    private function createRequest()
     {
         return new Request([
-            'sender_country_id' => $order->sender_country_id,
-            'first_name' => $order->sender_first_name,
-            'last_name' => $order->sender_last_name,
-            'pobox_number' => $order->pobox_number,
-            'sender_state' => $order->sender_state,
-            'sender_city' => $order->sender_city,
-            'sender_address' => $order->sender_address,
-            'sender_zipcode' => $order->sender_zipcode,
+            'sender_country_id' => $this->order->sender_country_id,
+            'first_name' => $this->order->sender_first_name,
+            'last_name' => $this->order->sender_last_name,
+            'pobox_number' => $this->order->pobox_number,
+            'sender_state' => $this->order->sender_state,
+            'sender_city' => $this->order->sender_city,
+            'sender_address' => $this->order->sender_address,
+            'sender_zipcode' => $this->order->sender_zipcode,
         ]);
-    }
-
-    private function mergeShippingServiceIntoRequest($request, $serviceSubClassCode)
-    {
-        return $request->merge([
-            'service' => $serviceSubClassCode,
-        ]);
-    }
-
-    public function execute($request)
-    {
-        $this->request = $request;
-        $this->tempOrder = $request->temp_order;
-        $this->shippingService = $this->getSippingService($request->service_sub_class);
-
-        if($this->createOrderForSender() && $this->assignRecipient() && $this->getPrimaryLabel())
-        {
-           return $this->order;
-        }
-        
-        return false;
-    }
-
-    private function getSippingService($service_sub_class)
-    {
-        return ShippingService::query()->where('service_sub_class', $service_sub_class)->first();
-    }
-
-    private function createOrderForSender()
-    {
-        DB::transaction(function () {
-            try {
-                $order = Order::create([
-                    'merchant' => 'HomeDeliveryBr',
-                    'user_id' => $this->tempOrder['user']['id'],
-                    'carrier' => 'HERCO',
-                    'tracking_id' => 'HERCO',
-                    'customer_reference' => 'HERCO',
-                    'carrier' => 'HERCO',
-                    'order_date' => Carbon::now(),
-                    'sender_first_name' => $this->tempOrder['sender_first_name'],
-                    'sender_last_name' => $this->tempOrder['sender_last_name'],
-                    'sender_email' => $this->tempOrder['sender_email'],
-                    'sender_phone' => $this->tempOrder['sender_phone'],
-                    'sender_country_id' => $this->tempOrder['sender_country_id'],
-                    'sender_state_id' => $this->getSenderState($this->tempOrder['sender_country_id'], $this->tempOrder['sender_state']),
-                    'sender_city' => $this->tempOrder['sender_city'],
-                    'sender_address' => $this->tempOrder['sender_address'],
-                    'sender_zipcode' => $this->tempOrder['sender_zipcode'],
-                    'weight' => $this->tempOrder['weight'],
-                    'length' => $this->tempOrder['length'],
-                    'height' => $this->tempOrder['height'],
-                    'width' => $this->tempOrder['width'],
-                    'measurement_unit' => $this->tempOrder['measurement_unit'],
-                    'shipping_service_id' => $this->shippingService->id,
-                    'shipping_service_name' => $this->shippingService->name,
-                    'status' => Order::STATUS_ORDER,
-                ]);
-
-                if (isset($this->tempOrder['items'])) {
-
-                    $totalValue = 0;
-
-                    foreach ($this->tempOrder['items'] as $item) {
-                        $order->items()->create([
-                            'sh_code' => $item['sh_code'],
-                            'description' => $item['description'],
-                            'quantity' => $item['quantity'],
-                            'value' => $item['value'],
-                            'contains_battery' => false,
-                            'contains_perfume' => false,
-                            'contains_flammable_liquid' => false,
-                        ]);
-
-                        $totalValue += ($item['quantity'] * $item['value']);
-                    }
-
-                    $order->update([
-                        'order_value' => $totalValue,
-                    ]);
-                }
-                
-                $this->order = $order;
-                return true;
-
-            } catch (\Exception $ex) {
-                $this->error = $ex->getMessage();
-                return false;
-            }
-        });
-
-        return true;
-    }
-
-    private function assignRecipient()
-    {
-        $order = $this->order->refresh();
-        $order->update([
-            'warehouse_number' => $order->getTempWhrNumber()
-        ]);
-
-        DB::transaction(function () use ($order) {
-            try {
-
-                $order->recipient()->create([
-                    'first_name' => $this->tempOrder['recipient']['first_name'],
-                    'last_name' => $this->tempOrder['recipient']['last_name'],
-                    'phone' => $this->tempOrder['recipient']['phone'],
-                    'email' => $this->tempOrder['recipient']['email'],
-                    'country_id' => $this->tempOrder['recipient']['country_id'],
-                    'state_id' => $this->tempOrder['recipient']['state_id'],
-                    'address' => $this->tempOrder['recipient']['address'],
-                    'city' => $this->tempOrder['recipient']['city'],
-                    'zipcode' => $this->tempOrder['recipient']['zipcode'],
-                    'account_type' => $this->tempOrder['recipient']['account_type'],
-                ]);
-               
-            } catch (\Exception $ex) {
-                $this->error = $ex->getMessage();
-                Log::info('Recipient Error '.$this->error);
-                return false;
-            }
-
-            return true;
-        });
-
-        return true;
-        
-    }
-
-    private function getSenderState($country_id, $state_code)
-    {
-        $state = State::query()->where([
-            ['country_id', $country_id],
-            ['code', $state_code]
-        ])->first();
-
-        return $state ? $state->id : null;
-    }
-
-    private function getPrimaryLabel()
-    {
-        $request = $this->createRequest($this->order);
-        $request->merge([
-            'service' => $this->order->shippingService->service_sub_class,
-            'sender_state' => $this->tempOrder['sender_state'],
-        ]);
-
-        if ($this->order->shippingService->service_sub_class == ShippingService::UPS_GROUND) {
-
-            $upsLabelRepository = new UPSLabelRepository();
-            if(!$upsLabelRepository->getPrimaryLabelForSender($this->order, $request))
-            {
-                $this->error = $upsLabelRepository->getUPSErrors();
-                return false;
-            }
-        }
-
-        if ($this->order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || 
-            $this->order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS ||
-            $this->order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
-            $this->order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) 
-        {
-            $uspsLabelRepository = new USPSLabelRepository();
-            
-            if(!$uspsLabelRepository->getPrimaryLabelForSender($this->order, $request))
-            {
-                $this->error = $uspsLabelRepository->getUSPSErrors();
-                return false;
-            }
-        }
-
-        $order = $this->order->refresh();
-        chargeAmount($order->gross_total, $order);
-        $this->createInvoice($order);
-
-        return true;
-    }
-
-    private function createInvoice($order)
-    {
-        $invoice = PaymentInvoice::create([
-            'uuid' => PaymentInvoice::generateUUID(),
-            'paid_by' => $order->user->id,
-            'is_paid' => 1,
-            'order_count' => 1,
-            'type' => PaymentInvoice::TYPE_PREPAID
-        ]);
-
-
-        $invoice->orders()->sync($order->id);
-
-        $invoice->update([
-            'total_amount' => $invoice->orders()->sum('gross_total')
-        ]);
-
-        $order->update([
-            'is_paid' => true,
-        ]);
-
-        return true;
     }
 }
