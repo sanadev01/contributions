@@ -6,7 +6,7 @@
                     <div class="card-header">Example Component</div>
 
                     <div class="card-body">
-                        <v-select :options="options"></v-select>
+                        
                     </div>
                 </div>
             </div>
@@ -15,21 +15,12 @@
 </template>
 
 <script>
-import vSelect from 'vue-select';
     export default {
-        components: {
-            vSelect
-        },
         mounted() {
             console.log('Component mounted.')
         },
         data() {
             return {
-                options: [
-                    'foo',
-                    'bar',
-                    'baz'
-                ]
             }
         }
     }
