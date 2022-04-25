@@ -69,7 +69,9 @@ class ServicesController extends Controller
         return [
             ShippingService::Packet_Standard, 
             ShippingService::Packet_Express, 
-            ShippingService::Packet_Mini
+            ShippingService::Packet_Mini,
+            ShippingService::USPS_PRIORITY_INTERNATIONAL,
+            ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,
         ];
     }
 }
