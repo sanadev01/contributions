@@ -95,16 +95,18 @@ class ParcelController extends Controller
         if(in_array($shippingService->service_sub_class, $this->domesticShippingServices()) && !$this->usShippingService->isAvalaible($shippingService, $volumeWeight))
         {
             return apiResponse(false, $this->usShippingService->getError());
-            if ($recipientCountryId != Country::US) {
-                return apiResponse(false, 'this service is availaible for US address only');
-            }
+        }
+
+        if (in_array($shippingService->service_sub_class, $this->domesticShippingServices()) && $recipientCountryId != Country::US) {
+            return apiResponse(false, 'this service is availaible for US address only');
         }
 
         if(in_array($shippingService->service_sub_class, $this->internationalShippingServices()) && !$this->usShippingService->isAvailableForInternational($shippingService, $volumeWeight)){
             return apiResponse(false, $this->usShippingService->getError());
-            if ($recipientCountryId == Country::US) {
-                return apiResponse(false, 'this service is not availaible for US address');
-            }
+        }
+
+        if (in_array($shippingService->service_sub_class, $this->internationalShippingServices()) && $recipientCountryId == Country::US) {
+            return apiResponse(false, 'this service is not availaible for US address');
         }
         
         
