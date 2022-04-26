@@ -74,6 +74,7 @@ export default {
                     });
 
                     this.message = response.data.message;
+                    this.scanning = false;
                 }else{
                     swal({
                         title: "Error!",
