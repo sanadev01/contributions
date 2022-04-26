@@ -11,6 +11,7 @@
                             <div v-show="scanning" class="spinner-border text-warning" role="status">
                                 <span class="sr-only">Loading...</span>
                             </div>
+
                         </div>
                         <div class="row mt-2">
                             <div class="ml-auto mr-2">
@@ -46,7 +47,7 @@ export default {
         }, 30000)
     },
     mounted() {
-        console.log('Component mounting.')
+        console.log('Component mounted.')
     },
     methods: {
         onDecode(decodedData) {
