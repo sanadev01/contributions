@@ -20106,6 +20106,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -20132,7 +20133,7 @@ __webpack_require__.r(__webpack_exports__);
     }, 30000);
   },
   mounted: function mounted() {
-    console.log('Component mounting.');
+    console.log('Component mounted.');
   },
   methods: {
     onDecode: function onDecode(decodedData) {

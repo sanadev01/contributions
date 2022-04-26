@@ -1,4 +1,4 @@
 {
-    "/js/app.js": "/js/app.js",
+    "/js/barcode/barcode.js": "/js/barcode/barcode.js",
     "/js/pages/scanner.js": "/js/pages/scanner.js"
 }
