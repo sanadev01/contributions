@@ -50,6 +50,10 @@ export default {
     },
     methods: {
         onDecode(decodedData) {
+            if (decodedData.length < 9) {
+                return false;
+            }
+
             this.scanning = true;
             swal({
                 title: "Scanning!",
@@ -69,13 +73,15 @@ export default {
                         title: "Success!",
                         text: response.data.message,
                         icon: "success",
-                        buttons: false,
-                        timer: 3000
+                        showConfirmButton: true,
+                    }).then ((value) => {
+                        setTimeout(() => { 
+                            this.form.tracking_code = '';
+                            this.scanning = false;
+                        }, 3000);
+                        
+                        this.message = response.data.message;
                     });
-                    this.message = response.data.message;
-                    this.scanning = false;
-                    this.form.tracking_code = '';
-                    return;
                 }else{
                     swal({
                         title: "Error!",
@@ -83,7 +89,10 @@ export default {
                         icon: "error",
                         showConfirmButton: true,
                     }).then((value) => {
-                        this.scanning = false;
+                        setTimeout(() => {
+                            this.scanning = false;
+                            this.form.tracking_code = '';
+                        }, 3000);
                     });
                     this.error = response.data.message;
                 }
@@ -96,9 +105,11 @@ export default {
                         icon: "error",
                         showConfirmButton: true,
                 }).then((value) => {
-                    this.scanning = false;
+                    setTimeout(() => {
+                        this.scanning = false;
+                        this.form.tracking_code = '';
+                    }, 3000);
                 });
-                this.form.tracking_code = '';
                 this.error = error;
             })
         },

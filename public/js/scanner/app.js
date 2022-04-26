@@ -20138,6 +20138,10 @@ __webpack_require__.r(__webpack_exports__);
     onDecode: function onDecode(decodedData) {
       var _this2 = this;
 
+      if (decodedData.length < 9) {
+        return false;
+      }
+
       this.scanning = true;
       swal({
         title: "Scanning!",
@@ -20156,13 +20160,14 @@ __webpack_require__.r(__webpack_exports__);
             title: "Success!",
             text: response.data.message,
             icon: "success",
-            buttons: false,
-            timer: 3000
+            showConfirmButton: true
+          }).then(function (value) {
+            setTimeout(function () {
+              _this2.form.tracking_code = '';
+              _this2.scanning = false;
+            }, 3000);
+            _this2.message = response.data.message;
           });
-          _this2.message = response.data.message;
-          _this2.scanning = false;
-          _this2.form.tracking_code = '';
-          return;
         } else {
           swal({
             title: "Error!",
@@ -20170,7 +20175,10 @@ __webpack_require__.r(__webpack_exports__);
             icon: "error",
             showConfirmButton: true
           }).then(function (value) {
-            _this2.scanning = false;
+            setTimeout(function () {
+              _this2.scanning = false;
+              _this2.form.tracking_code = '';
+            }, 3000);
           });
           _this2.error = response.data.message;
         }
@@ -20183,9 +20191,11 @@ __webpack_require__.r(__webpack_exports__);
           icon: "error",
           showConfirmButton: true
         }).then(function (value) {
-          _this2.scanning = false;
+          setTimeout(function () {
+            _this2.scanning = false;
+            _this2.form.tracking_code = '';
+          }, 3000);
         });
-        _this2.form.tracking_code = '';
         _this2.error = error;
       });
     },
