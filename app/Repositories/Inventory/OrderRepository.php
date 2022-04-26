@@ -62,7 +62,7 @@ class OrderRepository
                 'warehouse_number' => "HD-{$order->id}",
                 'merchant' => $order->user->name
             ]);
-
+            $weight = 0;
             foreach($request->ids as $key=> $productId)
             {
                 $product = Product::find($productId);
@@ -78,13 +78,18 @@ class OrderRepository
                         'value' => $product->price,
                         'description' => $product->description,
                     ]);
+                    $weightInKg = ($product->measurement_unit == 'lbs/in') ? UnitsConverter::poundToKg($product->weight) : $product->weight;
+                    $weight += $weightInKg * $request->items[$key]['quantity'];
                 }
             }
 
             if ($order->products->isNotEmpty()) {
 
-                $this->setOrderWeight($order);
-
+                $this->setOrderDemis($order);
+                $userWeightPercentage = (setting('weight', 0, $order->user->id) != 0 ? setting('weight', null, $order->user->id) : setting('weight', null, User::ROLE_ADMIN));
+                
+                $weightToAdd = round(($userWeightPercentage / 100) * $weight, 2);
+                $totalWeight = round($weight + $weightToAdd, 2);
                 $items = $order->products->toArray();
 
                 $order->update([
@@ -93,6 +98,7 @@ class OrderRepository
                     'tracking_id' => $this->setOrderDescriptions($items),
                     'sender_first_name' => $order->user->name,
                     'sender_last_name' => $order->user->last_name,
+                    'weight' => $totalWeight,
                 ]);
             }
 
@@ -106,75 +112,15 @@ class OrderRepository
             return false;
         }
     }
-    public function storeSingleOrder($productOrder)
+
+    private function setOrderDemis($order)
     {
-        DB::beginTransaction();
-
-        try {
-            
-            $order = $productOrder->orders()->create([
-                'user_id' => $productOrder->user_id,
-                'status' => Order::STATUS_PREALERT_READY,
-                'customer_reference' => $productOrder->sh_code,
-                'carrier' => $productOrder->order,
-                'tracking_id' => $productOrder->description,
-                'measurement_unit' => 'kg/cm',
-                'order_date' => now(),
-            ]);
-
-            $order->update([
-                'warehouse_number' => "HD-{$order->id}",
-                'merchant' => $order->user->name
-            ]);
-
-            if ($productOrder->quantity > 0) {
-                $productOrder->update([
-                    'quantity' => $productOrder->quantity -1,
-                ]);
-            }
-
-            $order->items()->create([
-                'quantity' => 1,
-                'sh_code' =>$productOrder->sh_code,
-                'value' => $productOrder->price,
-                'description' => $productOrder->description,
-            ]);
-
-            $this->setOrderWeight($order);
-            try {
-                Mail::send(new InventoryOrderPlaced($order));
-            } catch (\Exception $ex) {
-                \Log::info('Inventory Order email error: '.$ex->getMessage());
-            }
-
-            DB::commit();
-
-            return $order;
-
-        } catch (\Exception $ex) {
-            DB::rollback();
-            $this->error = $ex->getMessage();
-            return false;
-        }
-    }
-
-    private function setOrderWeight($order)
-    {
-        $userWeightPercentage = (setting('weight', 0, $order->user->id) != 0 ? setting('weight', null, $order->user->id) : setting('weight', null, User::ROLE_ADMIN));
+        
         $length = (setting('length', 0, $order->user->id) != 0 ? setting('length', null, $order->user->id) : setting('length', null, User::ROLE_ADMIN));
         $width = (setting('width', 0, $order->user->id) != 0 ? setting('width', null, $order->user->id) : setting('width', null, User::ROLE_ADMIN));
         $height = (setting('height', 0, $order->user->id) != 0 ? setting('height', null, $order->user->id) : setting('height', null, User::ROLE_ADMIN));
 
-        
-        $orderProductsWeight = $this->getOrderProductsWeight($order->products);
-
-        $weightToAdd = round(($userWeightPercentage / 100) * $orderProductsWeight, 2);
-
-        $totalWeight = round($orderProductsWeight + $weightToAdd, 2);
-
-
         $order->update([
-            'weight' => $totalWeight,
             'length' => $length,
             'width' => $width,
             'height' => $height,
@@ -182,17 +128,6 @@ class OrderRepository
         ]);
 
         return true;
-    }
-
-    private function getOrderProductsWeight($products)
-    {
-        $weight = 0;
-
-        foreach ($products as $product) {
-            $weight += ($product->measurement_unit == 'lbs/in') ? UnitsConverter::poundToKg($product->weight) : $product->weight;
-        }
-
-        return $weight;
     }
 
     public function placeInventoryOrder(Request $request)
