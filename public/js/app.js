@@ -20161,6 +20161,8 @@ __webpack_require__.r(__webpack_exports__);
           });
           _this2.message = response.data.message;
           _this2.scanning = false;
+          _this2.form.tracking_code = '';
+          return;
         } else {
           swal({
             title: "Error!",

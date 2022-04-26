@@ -72,9 +72,10 @@ export default {
                         buttons: false,
                         timer: 3000
                     });
-
                     this.message = response.data.message;
                     this.scanning = false;
+                    this.form.tracking_code = '';
+                    return;
                 }else{
                     swal({
                         title: "Error!",
