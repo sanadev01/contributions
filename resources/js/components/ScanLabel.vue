@@ -7,18 +7,14 @@
                     <div class="card-body">
                         <!-- <ImageBarcodeReader @decode="onDecode" @error="onError" v-if="!scanning"></ImageBarcodeReader> -->
                         <StreamBarcodeReader @decode="onDecode" @error="onError" v-if="!scanning"></StreamBarcodeReader>
-                        <div v-show="scanning" class="spinner-border text-warning" role="status">
-                            <span class="sr-only">Loading...</span>
-                        </div>
-                        <div class="alert alert-success" role="alert" v-show="message">
-                            {{message}}
-                        </div>
-                        <div class="alert alert-danger" role="alert" v-show="error">
-                            {{error}}
+                        <div class="row align-items-center justify-content-center">
+                            <div v-show="scanning" class="spinner-border text-warning" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
                         </div>
                         <div class="row mt-2">
                             <div class="ml-auto mr-2">
-                                <button @click="scanning = !scanning" type="button" class="btn btn-sm btn-primary">Toggle Scanner</button>
+                                <button @click="scanning = !scanning" type="button" class="btn btn-sm btn-primary">Scan</button>
                             </div>
                         </div>
                     </div>
@@ -47,34 +43,61 @@ export default {
     created() {
         setInterval(() => {
             this.disableScanner();
-        }, 45000)
+        }, 30000)
     },
     mounted() {
         console.log('Component mounted.')
     },
     methods: {
         onDecode(decodedData) {
+            this.scanning = true;
+            swal({
+                title: "Scanning!",
+                text: "scanning in process",
+                icon: "info",
+                buttons: false,
+            });
+
             this.message = '';
             this.error = '';
 
             this.form.tracking_code = decodedData;
-            this.scanning = true;
-
             this.axios.post('/scan-label', this.form).then((response) => {
+                swal.close();
                 if (response.status == 200 && response.data.success == true) {
+                    swal({
+                        title: "Success!",
+                        text: response.data.message,
+                        icon: "success",
+                        buttons: false,
+                        timer: 3000
+                    });
+
                     this.message = response.data.message;
                 }else{
+                    swal({
+                        title: "Error!",
+                        text: response.data.message,
+                        icon: "error",
+                        showConfirmButton: true,
+                    }).then((value) => {
+                        this.scanning = false;
+                    });
                     this.error = response.data.message;
                 }
-
                 this.form.tracking_code = '';
-                this.scanning = false;
-
             }).catch((error) => {
 
+                swal({
+                        title: "Error!",
+                        text: error,
+                        icon: "error",
+                        showConfirmButton: true,
+                }).then((value) => {
+                    this.scanning = false;
+                });
                 this.form.tracking_code = '';
                 this.error = error;
-                this.scanning = false;
             })
         },
         onError(error) {
