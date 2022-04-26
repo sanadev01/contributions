@@ -20160,6 +20160,7 @@ __webpack_require__.r(__webpack_exports__);
             timer: 3000
           });
           _this2.message = response.data.message;
+          _this2.scanning = false;
         } else {
           swal({
             title: "Error!",
