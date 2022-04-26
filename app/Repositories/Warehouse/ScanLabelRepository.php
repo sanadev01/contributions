@@ -72,7 +72,7 @@ class ScanLabelRepository
             'order_id' => $order->id,
             'status_code' => Order::STATUS_DRIVER_RECIEVED,
             'type' => 'HD',
-            'description' => 'Driver received from client',
+            'description' => 'Driver picked up package',
             'country' => 'US',
             'city' => 'Miami'
         ]);

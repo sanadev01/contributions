@@ -16,7 +16,6 @@ class ScanLabelController extends Controller
 
     public function store(Request $request, ScanLabelRepository $scanLabelRepository)
     {
-        \Log::info($request->tracking_code);
         $order = Order::where('corrios_tracking_code', $request->tracking_code)->first();
         
         if (!$order) {
