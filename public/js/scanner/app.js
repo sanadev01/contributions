@@ -20132,7 +20132,7 @@ __webpack_require__.r(__webpack_exports__);
     }, 30000);
   },
   mounted: function mounted() {
-    console.log('Component testing.');
+    console.log('Component mounting.');
   },
   methods: {
     onDecode: function onDecode(decodedData) {

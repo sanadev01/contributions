@@ -13,8 +13,8 @@ class ScanLabelRepository
     public function handle($order)
     {
         if($order->trackings->isNotEmpty() && $order->trackings()->latest()->first()->status_code >= Order::STATUS_DRIVER_RECIEVED){
-            $this->message = 'package has already been scanned';
-            $this->status = false;
+            $this->message = 'package is included successfully';
+            $this->status = true;
             return;
         }
 
