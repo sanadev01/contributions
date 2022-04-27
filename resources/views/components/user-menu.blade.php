@@ -65,6 +65,14 @@
                     </a>
                 </li>
             @endcan
+            @if (auth()->user()->isAdmin())
+                <li class="nav-item {{ $isActive(['warehouse.scan-label.index']) }}">
+                    <a class="nav-link" href="{{ route('warehouse.scan-label.index') }}">
+                        <i class="fab fa-searchengin"></i>
+                        <span class="menu-title">Scan Parcel</span>
+                    </a>
+                </li>
+            @endif
             
             @can('viewAny', App\Models\Order::class)
                 <li class="nav-item {{ $isActive(['admin.tracking.index']) }}">

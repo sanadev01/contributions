@@ -77,6 +77,8 @@ class ScanLabel extends Component
         if($this->order){
             $this->packagesRows[$index]['tracking_code'] = $trackingCode;
             $this->packagesRows[$index]['pobox'] = $this->order->user->pobox_number;
+            $this->packagesRows[$index]['driver'] =  optional(optional($this->order->driverTracking)->user)->name;
+            $this->packagesRows[$index]['pickup_date'] = optional(optional($this->order->driverTracking)->created_at)->format('m-d-Y');
             $this->packagesRows[$index]['client'] = $this->order->merchant;
             $this->packagesRows[$index]['dimensions'] = $this->order->length . ' x ' . $this->order->length . ' x ' . $this->order->height ;
             $this->packagesRows[$index]['kg'] = $this->order->getWeight('kg');
@@ -97,7 +99,7 @@ class ScanLabel extends Component
             
             if($this->order){
                 if($order->trackings->isNotEmpty() && $order->trackings()->latest()->first()->status_code >= Order::STATUS_ARRIVE_AT_WAREHOUSE){
-                    $lastScanned = $order->trackings()->where('status_code',Order::STATUS_ARRIVE_AT_WAREHOUSE)->pluck('updated_at')->first()->format('m/d/Y');
+                    $lastScanned = $order->trackings()->where('status_code',Order::STATUS_ARRIVE_AT_WAREHOUSE)->first()->value('created_at')->format('m/d/Y');
                     $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'package already scanned on '.$lastScanned.'']);
                 }
                 if(!$this->order->is_paid){
@@ -127,6 +129,8 @@ class ScanLabel extends Component
                 $newRow = [
                     'tracking_code' => $this->tracking,
                     'pobox' => $this->order->user->pobox_number,
+                    'driver' => optional(optional($this->order->driverTracking)->user)->name,
+                    'pickup_date' => optional(optional($this->order->driverTracking)->created_at)->format('m-d-Y'),
                     'client' => $this->order->merchant,
                     'dimensions' => $this->order->length . ' x ' . $this->order->length . ' x ' . $this->order->height,
                     'kg' => $this->order->getWeight('kg'),
@@ -236,9 +240,9 @@ class ScanLabel extends Component
     {
         OrderTracking::create([
             'order_id' => $order->id,
-            'status_code' => (Auth::user()->role->name == Role::Driver) ? Order::STATUS_DRIVER_RECIEVED : Order::STATUS_ARRIVE_AT_WAREHOUSE,
+            'status_code' => Order::STATUS_ARRIVE_AT_WAREHOUSE,
             'type' => 'HD',
-            'description' => (Auth::user()->role->name == Role::Driver) ? 'Driver received from warehouse' : 'Freight arrived at Homedelivery',
+            'description' => 'Freight arrived at Homedelivery',
             'country' => 'US',
             'city' => 'Miami'
         ]);
