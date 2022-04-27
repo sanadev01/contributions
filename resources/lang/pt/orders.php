@@ -74,7 +74,7 @@ return [
         'Address' => 'Morada',
         'City' => 'cidade',
         'Next' => 'Próximo',
-        'Select Country' => 'Selecione pais', 
+        'Select Country' => 'Selecione o país para o qual deseja enviar suas encomendas', 
         'State' => 'State',
         'Zip Code' => 'Código Postal',
     ],
@@ -340,5 +340,6 @@ return [
     'buy-label' => [
         'Warning' => 'Isenção de responsabilidade',
         'Message' => 'Insira a quantidade de dimensões corretas ,  se você estiver planejando consolidar mais de um pedido para o envio doméstico até o terminal da Homedeliverybr .O sistema podera fornecer uma estimativa do seu envio. Todas os envios serão auditados ao chegarem fisicamente ao terminal  , e podera ser reclassificado para a medida e peso correto,  seu cartão de crédito será debitado  para  o valor correto com base na dimensão aferidose no terminal'
-    ]
+    ],
+    'scrolling' => 'Agora você pode enviar suas encomendas para qualquer país que não seja o Brasil, incluindo Estados Unidos e todos os seus territórios. Vá em frente e selecione o País de destino',
 ];

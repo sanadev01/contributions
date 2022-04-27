@@ -77,7 +77,7 @@ return [
         'City' => 'City',
         'Next' => 'Next', 
         'Step 1' => 'Step 1',
-        'Select Country' => 'Select Country',
+        'Select Country' => 'Select Country you want to send  your parcels',
         'State' => 'State',
         'Zipcode' => 'Zipcode',
     ],
@@ -342,6 +342,7 @@ return [
     'buy-label' => [
         'Warning' => 'Warning Message',
         'Message' => 'Please enter accurate dimensions if you are planning to consolidate more than one order to send domestic to our terminal . if the information is accurately entered in the system, it may generate you an estimate cost.  your parcel will be reclassified upon arrival to our terminal , your credit card will be  used to pay the correct value based on the correct dimension'
-    ]
+    ],
+    'scrolling' => 'Now you can send your parcels to any countries other than Brazil which includes United States and all its territories. Go ahead and just select the Country of destination',
 
 ];
