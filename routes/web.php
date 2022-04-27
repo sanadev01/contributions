@@ -251,16 +251,30 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 })->name('order.us-label.download');
 
 Route::get('test-label',function(){
+    if (app()->isProduction()) {
+        // USPS Api Production Environment Credentials
+        $createLabelUrl = config('usps.production.createLabelUrl');
+        $deleteLabelUrl = config('usps.production.deleteLabelUrl');
+        $createManifestUrl = config('usps.production.createManifestUrl');
+        $getPriceUrl = config('usps.production.getPriceUrl');
+        $addressValidationUrl = config('usps.production.addressValidationUrl');
+        $email = config('usps.production.email');           
+        $password = config('usps.production.password');
+        
+    }else {
+        
+        // USPS Api Testing Environemtn Credentials
+        $createLabelUrl = config('usps.testing.createLabelUrl');
+        $deleteLabelUrl = config('usps.testing.deleteLabelUrl');
+        $createManifestUrl = config('usps.testing.createManifestUrl');
+        $getPriceUrl = config('usps.testing.getPriceUrl');
+        $addressValidationUrl = config('usps.testing.addressValidationUrl');
+        $email = config('usps.testing.email');           
+        $password = config('usps.testing.password');
+    }
 
-    Product::truncate();
-    dd(Product::all());
-    $labelPrinter = new CN23LabelMaker();
-
-    $order = Order::find(53654);
-    $labelPrinter->setOrder($order);
-    $labelPrinter->setService(2);
-
-    return $labelPrinter->download();
+    dd($createLabelUrl, $deleteLabelUrl, $createManifestUrl, $getPriceUrl, $addressValidationUrl, $email, $password);
+    
 });
 
 Route::get('find-container/{order}', [HomeController::class, 'findContainer'])->name('find.container');
