@@ -325,6 +325,8 @@ return [
         'Action' => 'Acción',
         'Remove' => 'Eliminar',
         'Add Row' => 'Añadir fila',
+        'Driver' => 'Conductor',
+        'Pickup Date' => 'Fecha de recogida',
     ],
     'buy-label' => [
         'Warning' => 'Descargo de responsabilidad',

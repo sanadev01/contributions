@@ -334,6 +334,8 @@ return [
         'Remove' => 'Remover',
         'Add Row' => 'Adicionar linha',
         'Date' => 'data do pedido',
+        'Driver' => 'Motorista',
+        'Pickup Date' => 'Data de retirada',
     ],
     'buy-label' => [
         'Warning' => 'Isenção de responsabilidade',
