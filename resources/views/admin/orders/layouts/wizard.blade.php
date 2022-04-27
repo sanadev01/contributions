@@ -14,6 +14,11 @@
                         <h4 class="mb-0">@lang('orders.order-details.Orders')</h4>
                         {{-- <a href="{{ route('admin.roles.create') }}" class="pull-right btn btn-primary"> Create Role </a> --}}
                     </div>
+                    @if (in_array(request()->route()->getName(),['admin.orders.sender.index']))
+                        <div class="col-12 m-2">
+                            <marquee direction="left" style="font-size: xx-large;font-family: cursive;color: #fff;background-color: #246bad;border-radius: 0%;">@lang('orders.scrolling')</marquee>
+                        </div>
+                    @endif
                     <div class="card-content">
                         <div class="card-body">
                             <p class="h4 text-danger pb-2 border-bottom mt-4">WHR# {{ optional($order)->warehouse_number }}</p>
