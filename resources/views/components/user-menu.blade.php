@@ -12,12 +12,21 @@
                         <span data-i18n="Dashboard"> @lang('menu.dashboard') </span>
                     </a>
                 </li>
+                @if (auth()->user()->hasRole('driver'))
+                    <li class="nav-item {{ $isActive(['warehouse.scan-label.index']) }}">
+                        <a class="nav-link" href="{{ route('warehouse.scan-label.index') }}">
+                            <i class="fab fa-searchengin"></i>
+                            <span class="menu-title">Scan Parcel</span>
+                        </a>
+                    </li>
+                @else
                 <li class="nav-item {{ $isActive(['warehouse.scan.index']) }}">
                     <a class="nav-link" href="{{ route('warehouse.scan.index') }}">
                         <i class="fab fa-searchengin"></i>
                         <span class="menu-title">Check In Parcel</span>
                     </a>
                 </li>
+                @endif
                 <li class="nav-item {{ $isActive(['admin.tracking.index']) }}">
                     <a href="{{ route('admin.tracking.index') }}" target="_blank">
                         <i class="feather icon-map-pin"></i>
