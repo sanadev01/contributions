@@ -332,5 +332,5 @@ return [
         'Warning' => 'Descargo de responsabilidad',
         'Message' => 'Insira a quantidade de dimensões corretas ,  se você estiver planejando consolidar mais de um pedido para o envio doméstico até o terminal da Homedeliverybr .O sistema podera fornecer uma estimativa do seu envio. Todas os envios serão auditados ao chegarem fisicamente ao terminal  , e podera ser reclassificado para a medida e peso correto,  seu cartão de crédito será debitado  para  o valor correto com base na dimensão aferidose no terminal'
     ],
-    'scrolling' => 'ahora puede enviar sus paquetes a otros países además de Brasil, incluidos los nacionales de EE. UU., solo seleccione el país',
+    'scrolling' => 'Ahora puede enviar sus pedidos a cualquier país que no sea Brasil, incluidos los Estados Unidos y todos sus territorios. Continúe y seleccione el país de destino',
 ];

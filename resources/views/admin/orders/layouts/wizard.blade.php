@@ -16,7 +16,7 @@
                     </div>
                     @if (in_array(request()->route()->getName(),['admin.orders.sender.index']))
                         <div class="col-12 m-2">
-                            <marquee direction="left" style="font-size: xx-large;font-family: cursive;color: #fff;background-color: #246bad;border-radius: 0%;">@lang('orders.scrolling')</marquee>
+                            <marquee direction="left" style="font-size: xx-large;color: #fff;background-color: #246bad;border-radius: 0%;">@lang('orders.scrolling')</marquee>
                         </div>
                     @endif
                     <div class="card-content">

@@ -343,6 +343,6 @@ return [
         'Warning' => 'Warning Message',
         'Message' => 'Please enter accurate dimensions if you are planning to consolidate more than one order to send domestic to our terminal . if the information is accurately entered in the system, it may generate you an estimate cost.  your parcel will be reclassified upon arrival to our terminal , your credit card will be  used to pay the correct value based on the correct dimension'
     ],
-    'scrolling' => 'Now you can send your parcels to other Countries more than Brazil including domestics USA just select the country',
+    'scrolling' => 'Now you can send your parcels to any countries other than Brazil which includes United States and all its territories. Go ahead and just select the Country of destination',
 
 ];
