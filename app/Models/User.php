@@ -164,6 +164,11 @@ class User extends Authenticatable
         return $this->belongsTo(Document::class,'image_id');
     }
 
+    public function trackings()
+    {
+        return $this->hasMany(Tracking::class, 'created_by');
+    }
+
     public function scopeAdmin(Builder $query)
     {
         return $query->where('role_id',self::ROLE_ADMIN);

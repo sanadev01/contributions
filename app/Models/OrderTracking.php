@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 
 class OrderTracking extends Model
@@ -10,9 +11,28 @@ class OrderTracking extends Model
     protected $guarded = [];
 
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->created_by = (Auth::check()) ? auth()->id() : null;
+            $model->updated_by =  (Auth::check()) ? auth()->id() : null;
+        });
+
+        static::updating(function ($model) {
+            $model->updated_by = auth()->id();
+        });
+    }
+
     public function order()
     {
         return $this->belongsTo(Order::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     public function setCreatedAtAttribute()

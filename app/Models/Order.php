@@ -631,6 +631,11 @@ class Order extends Model implements Package
         return $this->hasMany(OrderTracking::class, 'order_id');
     }
 
+    public function driverTracking()
+    {
+        return $this->hasOne(OrderTracking::class, 'order_id')->where('status_code', self::STATUS_DRIVER_RECIEVED);
+    }
+
     public function getUSLabelResponse()
     {
         return json_decode($this->us_api_response);
