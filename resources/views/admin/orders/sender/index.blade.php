@@ -15,7 +15,7 @@
                     <select id="country"  name="sender_country_id" class="form-control countrySelect selectpicker show-tick" data-live-search="true">
                         <option value="">Select @lang('address.Country')</option>
                         @foreach (countries() as $country)
-                            <option {{ old('sender_country_id', __default($order->sender_country_id,optional($order->user)->country_id)) == $country->id ? 'selected' : '' }} value="{{ $country->id }}">{{ $country->name }}</option>
+                            <option {{ old('sender_country_id', __default($order->sender_country_id,optional($order->user)->country_id)?__default($order->sender_country_id,optional($order->user)->country_id):30) == $country->id ? 'selected' : '' }} value="{{ $country->id }}">{{ $country->name }}</option>
                         @endforeach
                     </select>
                     @error('sender_country_id')

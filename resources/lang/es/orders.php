@@ -75,7 +75,7 @@ return [
         'City' => 'Ciudad',
         'Next' => 'Próximo', 
         'Step 1' => 'Paso 1',
-        'Select Country' => 'Seleccionar país', 
+        'Select Country' => 'Seleccione el país al que desea enviar sus paquetes', 
     ],
     'import-excel' =>[
         'Import Orders via Excel Sheet' => 'Importar pedidos a través de una hoja de Excel',
