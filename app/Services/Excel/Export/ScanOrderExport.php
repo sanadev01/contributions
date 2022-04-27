@@ -55,11 +55,13 @@ class ScanOrderExport extends AbstractExportService
             $this->setCellValue('H'.$row, $order->recipient->first_name);
             $this->setCellValue('I'.$row, $order->order_date->format('m-d-Y'));
             $this->setCellValue('J'.$row, $order->arrived_date);
+            $this->setCellValue('K'.$row, optional(optional($order->driverTracking)->user)->name);
+            $this->setCellValue('L'.$row, optional(optional($order->driverTracking)->created_at)->format('m-d-Y'));
             if($order->status < 80 ){
-                $this->setCellValue('K'.$row, 'Scanned in the warehouse');
+                $this->setCellValue('M'.$row, 'Scanned in the warehouse');
             }
             if($order->status >= 80 ){
-                $this->setCellValue('K'.$row, 'Shipped');
+                $this->setCellValue('M'.$row, 'Shipped');
             }
             $this->count++ ;
             $row++;
@@ -133,12 +135,18 @@ class ScanOrderExport extends AbstractExportService
         
         $this->setColumnWidth('J', 20);
         $this->setCellValue('J7', 'Arrival Date');
-        
-        $this->setColumnWidth('K', 20);
-        $this->setCellValue('K7', 'Status');
 
-        $this->setBackgroundColor('A7:K7', '2b5cab');
-        $this->setColor('A7:K7', 'FFFFFF');
+        $this->setColumnWidth('K', 20);
+        $this->setCellValue('K7', 'Driver');
+
+        $this->setColumnWidth('L', 20);
+        $this->setCellValue('L7', 'Pickup Date');
+        
+        $this->setColumnWidth('M', 20);
+        $this->setCellValue('M7', 'Status');
+
+        $this->setBackgroundColor('A7:M7', '2b5cab');
+        $this->setColor('A7:M7', 'FFFFFF');
         $this->currentRow++;
 
         return true;

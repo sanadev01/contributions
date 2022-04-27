@@ -120,14 +120,14 @@
         <tr>
             <th>@lang('orders.print-label.Barcode')</th>
             <th>PO Box#</th>
-            <th>Driver</th>
+            <th>@lang('orders.print-label.Driver')</th>
             <th>@lang('orders.print-label.Client')</th>
             <th>@lang('orders.print-label.Dimensions')</th>
             <th>@lang('orders.print-label.Kg')</th>
             <th>@lang('orders.print-label.Reference')#</th>
             <th>@lang('orders.print-label.Recpient')</th>
             <th>@lang('orders.print-label.Date')</th>
-            <th>Pickup Date</th>
+            <th>@lang('orders.print-label.Pickup Date')</th>
             <th>@if($searchOrder) Arrival Date @else @lang('orders.print-label.Action')@endif</th>
             @if($searchOrder)
                 <th> Status </th>
@@ -139,15 +139,14 @@
                     <td>{{ $package->corrios_tracking_code }}</td>
                     <td>{{ $package->user->pobox_number }}</td>
                     <td>{{ optional(optional($package->driverTracking)->user)->name }}</td>
-                    <td>{{ $package->user->name }}</td>
                     <td>{{ $package->merchant }}</td>
                     <td>{{ $package->length }} x {{ $package->length }} x {{ $package->height }}</td>
                     <td>{{ $package->getWeight('kg') }}</td>
                     <td>{{ $package->id }}</td>
                     <td>{{ $package->recipient->first_name }}</td>
                     <td>{{ $package->order_date }}</td>
-                    <td>{{ $package->arrived_date }}</td>
                     <td>{{ optional(optional($package->driverTracking)->created_at)->format('m-d-y') }}</td>
+                    <td>{{ $package->arrived_date }}</td>
                     <td>
                         @if($package->status < 80 )
                             Scanned in the warehouse
