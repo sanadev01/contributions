@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('page')
-<section id="app">
+<section id="vue-barcode">
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -20,5 +20,5 @@
 
 @endsection
 @push('js')
-    <script src="{{ asset('js/barcode/barcode.js') }}"></script>
+    <script src="{{ asset('js/pages/barcode.js') }}"></script>
 @endpush
