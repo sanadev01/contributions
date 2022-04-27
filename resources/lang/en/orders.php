@@ -336,6 +336,8 @@ return [
         'Remove' => 'Remove',
         'Add Row' => 'Add Row',
         'Date' => 'Order Date',
+        'Driver' => 'Driver',
+        'Pickup Date' => 'Pickup Date',
     ],
     'buy-label' => [
         'Warning' => 'Warning Message',

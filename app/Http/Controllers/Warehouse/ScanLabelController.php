@@ -11,10 +11,11 @@ class ScanLabelController extends Controller
 {
     public function index()
     {
-        if (!auth()->user()->hasRole('driver')) {
-            abort(403, 'Unauthorized action.');
+        if (auth()->user()->hasRole('driver') || auth()->user()->isAdmin()) {
+            return view('admin.scan-label.index');
         }
-        return view('admin.scan-label.index');
+
+        abort(403, 'Unauthorized action.');
     }
 
     public function store(Request $request, ScanLabelRepository $scanLabelRepository)
