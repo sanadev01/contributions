@@ -77,7 +77,7 @@ return [
         'City' => 'City',
         'Next' => 'Next', 
         'Step 1' => 'Step 1',
-        'Select Country' => 'Select Country',
+        'Select Country' => 'Select Country you want to send  your parcels',
         'State' => 'State',
         'Zipcode' => 'Zipcode',
     ],

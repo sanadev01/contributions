@@ -74,7 +74,7 @@ return [
         'Address' => 'Morada',
         'City' => 'cidade',
         'Next' => 'Próximo',
-        'Select Country' => 'Selecione pais', 
+        'Select Country' => 'Selecione o país para o qual deseja enviar suas encomendas', 
         'State' => 'State',
         'Zip Code' => 'Código Postal',
     ],
