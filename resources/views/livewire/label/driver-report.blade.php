@@ -74,7 +74,7 @@
                     <td>{{ $order->id }}</td>
                     <td>{{ $order->recipient->first_name }}</td>
                     <td>{{ $order->order_date }}</td>
-                    <td>{{ optional(optional($order->driverTracking)->created_at)->format('m-d-y h:i:s') }}</td>
+                    <td>{{ optional($order->driverTracking)->created_at }}</td>
                 </tr>
             @endforeach
         @endif
