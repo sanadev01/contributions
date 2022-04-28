@@ -37,4 +37,9 @@ class ScanLabelController extends Controller
             'message' => $scanLabelRepository->getMessage(),
          ], 200);
     }
+
+    public function create()
+    {
+        return view('admin.scan-label.show');
+    }
 }
