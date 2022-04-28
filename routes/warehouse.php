@@ -40,7 +40,7 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
 
     Route::resource('search_package', SearchPackageController::class)->only('index', 'show');
     Route::resource('scan', ScanPackageController::class)->only('index');
-    Route::resource('scan-label', ScanLabelController::class)->only('index', 'store');
+    Route::resource('scan-label', ScanLabelController::class)->only('index', 'store', 'create');
     
     Route::resource('containers', ContainerController::class);
     Route::get('awb/', AwbController::class)->name('container.awb');

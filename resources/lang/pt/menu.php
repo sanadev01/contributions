@@ -60,4 +60,6 @@ return [
     'activity' => 'Atividade',
     'Print Label' => 'Imprimir etiqueta em massa',
     'Bulk Usps Label' => 'Comprar etiqueta Domestic a granel',
+    'Scan Parcel' => 'Scan Parcela',
+    'Driver Report' => 'Relatório de Motorista',
 ];
