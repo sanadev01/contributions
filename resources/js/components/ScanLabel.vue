@@ -8,10 +8,7 @@
                         <!-- <ImageBarcodeReader @decode="onDecode" @error="onError" v-if="!scanning"></ImageBarcodeReader> -->
                         <StreamBarcodeReader @decode="onDecode" @error="onError" v-if="!scanning"></StreamBarcodeReader>
                         <div class="row align-items-center justify-content-center">
-                            <div v-show="scanning" class="spinner-border text-warning" role="status">
-                                <span class="sr-only">Loading...</span>
-                            </div>
-
+                            <h2 v-show="scanning" class="text-danger">Click scan button to open camera</h2>
                         </div>
                         <div class="row mt-2">
                             <div class="ml-auto mr-2">
