@@ -47,7 +47,7 @@ export default {
         // }, 60000)
     },
     mounted() {
-        console.log('Component mounted.')
+        console.log('Component testing.')
     },
     methods: {
         onDecode(decodedData) {

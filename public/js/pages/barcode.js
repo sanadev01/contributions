@@ -20094,7 +20094,7 @@ __webpack_require__.r(__webpack_exports__);
     // }, 60000)
   },
   mounted: function mounted() {
-    console.log('Component mounted.');
+    console.log('Component testing.');
   },
   methods: {
     onDecode: function onDecode(decodedData) {
