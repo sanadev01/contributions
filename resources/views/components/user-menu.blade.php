@@ -65,10 +65,20 @@
                     </a>
                 </li>
             @endcan
+            
+            @can('viewAny', App\Models\Order::class)
+                <li class="nav-item {{ $isActive(['admin.tracking.index']) }}">
+                    <a href="{{ route('admin.tracking.index') }}" target="_blank">
+                        <img src="{{ asset('images/icon/tracking.svg') }}" alt="Tracking">
+                        <span class="menu-title">@lang('menu.trackings')</span>
+                    </a>
+                </li>
+            @endcan
+
             @if (auth()->user()->isAdmin())
             <li class="nav-item has-sub sidebar-group">
                 <a href="#">
-                    <i class="fab fa-searchengin"></i>
+                    <i class="fab fa-searchengin" style="color: #3CB64B;"></i>
                     <span class="menu-title" data-i18n="Dashboard">Scan</span>
                 </a>
                 <ul class="menu-content">
@@ -87,15 +97,6 @@
                 </ul>
             </li>
             @endif
-            
-            @can('viewAny', App\Models\Order::class)
-                <li class="nav-item {{ $isActive(['admin.tracking.index']) }}">
-                    <a href="{{ route('admin.tracking.index') }}" target="_blank">
-                        <img src="{{ asset('images/icon/tracking.svg') }}" alt="Tracking">
-                        <span class="menu-title">@lang('menu.trackings')</span>
-                    </a>
-                </li>
-            @endcan
             
             @can('importExcel', App\Models\Order::class)
                 <li class="{{ $isActive(['admin.import.import-excel.index','admin.import.import-excel.show','admin.import.import-excel.create']) }}">
