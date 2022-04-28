@@ -20,5 +20,5 @@
 
 @endsection
 @push('js')
-    <script src="{{ asset('js/pages/barcode.js') }}"></script>
+
 @endpush
