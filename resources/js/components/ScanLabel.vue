@@ -8,10 +8,7 @@
                         <!-- <ImageBarcodeReader @decode="onDecode" @error="onError" v-if="!scanning"></ImageBarcodeReader> -->
                         <StreamBarcodeReader @decode="onDecode" @error="onError" v-if="!scanning"></StreamBarcodeReader>
                         <div class="row align-items-center justify-content-center">
-                            <div v-show="scanning" class="spinner-border text-warning" role="status">
-                                <span class="sr-only">Loading...</span>
-                            </div>
-
+                            <h2 v-show="scanning" class="text-danger">Click scan button to open camera</h2>
                         </div>
                         <div class="row mt-2">
                             <div class="ml-auto mr-2">
@@ -42,12 +39,12 @@ export default {
         };
     },
     created() {
-        setInterval(() => {
-            this.disableScanner();
-        }, 30000)
+        // setInterval(() => {
+        //     this.disableScanner();
+        // }, 60000)
     },
     mounted() {
-        console.log('Component mounted.')
+        console.log('Component testing.')
     },
     methods: {
         onDecode(decodedData) {
@@ -79,7 +76,7 @@ export default {
                         setTimeout(() => { 
                             this.form.tracking_code = '';
                             this.scanning = false;
-                        }, 3000);
+                        }, 1000);
                         
                         this.message = response.data.message;
                     });
@@ -93,7 +90,7 @@ export default {
                         setTimeout(() => {
                             this.scanning = false;
                             this.form.tracking_code = '';
-                        }, 3000);
+                        }, 1000);
                     });
                     this.error = response.data.message;
                 }
