@@ -42,12 +42,12 @@ export default {
         };
     },
     created() {
-        setInterval(() => {
-            this.disableScanner();
-        }, 30000)
+        // setInterval(() => {
+        //     this.disableScanner();
+        // }, 60000)
     },
     mounted() {
-        console.log('Component mounted.')
+        console.log('Component testing.')
     },
     methods: {
         onDecode(decodedData) {
@@ -79,7 +79,7 @@ export default {
                         setTimeout(() => { 
                             this.form.tracking_code = '';
                             this.scanning = false;
-                        }, 3000);
+                        }, 1000);
                         
                         this.message = response.data.message;
                     });
@@ -93,7 +93,7 @@ export default {
                         setTimeout(() => {
                             this.scanning = false;
                             this.form.tracking_code = '';
-                        }, 3000);
+                        }, 1000);
                     });
                     this.error = response.data.message;
                 }

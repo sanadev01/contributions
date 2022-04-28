@@ -16,7 +16,7 @@
                     <li class="nav-item {{ $isActive(['warehouse.scan-label.index']) }}">
                         <a class="nav-link" href="{{ route('warehouse.scan-label.index') }}">
                             <i class="fab fa-searchengin"></i>
-                            <span class="menu-title">Scan Parcel</span>
+                            <span class="menu-title">@lang('menu.Scan Parcel')</span>
                         </a>
                     </li>
                 @else
@@ -65,14 +65,6 @@
                     </a>
                 </li>
             @endcan
-            @if (auth()->user()->isAdmin())
-                <li class="nav-item {{ $isActive(['warehouse.scan-label.index']) }}">
-                    <a class="nav-link" href="{{ route('warehouse.scan-label.index') }}">
-                        <i class="fab fa-searchengin"></i>
-                        <span class="menu-title">Scan Parcel</span>
-                    </a>
-                </li>
-            @endif
             
             @can('viewAny', App\Models\Order::class)
                 <li class="nav-item {{ $isActive(['admin.tracking.index']) }}">
@@ -82,6 +74,29 @@
                     </a>
                 </li>
             @endcan
+
+            @if (auth()->user()->isAdmin())
+            <li class="nav-item has-sub sidebar-group">
+                <a href="#">
+                    <i class="fab fa-searchengin" style="color: #3CB64B;"></i>
+                    <span class="menu-title" data-i18n="Dashboard">Scan</span>
+                </a>
+                <ul class="menu-content">
+                    <li class="nav-item {{ $isActive(['warehouse.scan-label.index']) }} ml-2">
+                        <a class="nav-link" href="{{ route('warehouse.scan-label.index') }}">
+                            <i class="feather icon-circle"></i>
+                            <span data-i18n="Apps">@lang('menu.Scan Parcel')</span>
+                        </a>
+                    </li>
+                    <li class="nav-item {{ $isActive(['warehouse.scan-label.create']) }} ml-2">
+                        <a class="nav-link" href="{{ route('warehouse.scan-label.create') }}">
+                            <i class="feather icon-circle"></i>
+                            <span data-i18n="Apps">@lang('menu.Driver Report')</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            @endif
             
             @can('importExcel', App\Models\Order::class)
                 <li class="{{ $isActive(['admin.import.import-excel.index','admin.import.import-excel.show','admin.import.import-excel.create']) }}">

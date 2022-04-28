@@ -20,7 +20,7 @@ class ScanLabelController extends Controller
 
     public function store(Request $request, ScanLabelRepository $scanLabelRepository)
     {
-        sleep(3);
+        // sleep(1);
         $order = Order::where('corrios_tracking_code', $request->tracking_code)->first();
         
         if (!$order) {
@@ -36,5 +36,10 @@ class ScanLabelController extends Controller
             'success' => $scanLabelRepository->getStatus(),
             'message' => $scanLabelRepository->getMessage(),
          ], 200);
+    }
+
+    public function create()
+    {
+        return view('admin.scan-label.show');
     }
 }
