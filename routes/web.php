@@ -252,6 +252,8 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 
 Route::get('test-label',function(){
 
+    $trackings = \App\Models\OrderTracking::where('status_code', Order::STATUS_DRIVER_RECIEVED)->get();
+    dd($trackings->toArray());
     $labelPrinter = new CN23LabelMaker();
 
     $order = Order::find(53654);
