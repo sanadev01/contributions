@@ -20089,19 +20089,16 @@ __webpack_require__.r(__webpack_exports__);
       message: ''
     };
   },
-  created: function created() {
-    var _this = this;
-
-    setInterval(function () {
-      _this.disableScanner();
-    }, 30000);
+  created: function created() {// setInterval(() => {
+    //     this.disableScanner();
+    // }, 60000)
   },
   mounted: function mounted() {
     console.log('Component mounted.');
   },
   methods: {
     onDecode: function onDecode(decodedData) {
-      var _this2 = this;
+      var _this = this;
 
       if (decodedData.length < 9) {
         return false;
@@ -20128,10 +20125,10 @@ __webpack_require__.r(__webpack_exports__);
             showConfirmButton: true
           }).then(function (value) {
             setTimeout(function () {
-              _this2.form.tracking_code = '';
-              _this2.scanning = false;
-            }, 3000);
-            _this2.message = response.data.message;
+              _this.form.tracking_code = '';
+              _this.scanning = false;
+            }, 1000);
+            _this.message = response.data.message;
           });
         } else {
           swal({
@@ -20141,14 +20138,14 @@ __webpack_require__.r(__webpack_exports__);
             showConfirmButton: true
           }).then(function (value) {
             setTimeout(function () {
-              _this2.scanning = false;
-              _this2.form.tracking_code = '';
-            }, 3000);
+              _this.scanning = false;
+              _this.form.tracking_code = '';
+            }, 1000);
           });
-          _this2.error = response.data.message;
+          _this.error = response.data.message;
         }
 
-        _this2.form.tracking_code = '';
+        _this.form.tracking_code = '';
       })["catch"](function (error) {
         swal({
           title: "Error!",
@@ -20157,11 +20154,11 @@ __webpack_require__.r(__webpack_exports__);
           showConfirmButton: true
         }).then(function (value) {
           setTimeout(function () {
-            _this2.scanning = false;
-            _this2.form.tracking_code = '';
+            _this.scanning = false;
+            _this.form.tracking_code = '';
           }, 3000);
         });
-        _this2.error = error;
+        _this.error = error;
       });
     },
     onError: function onError(error) {
@@ -34180,7 +34177,7 @@ if (document.getElementById('vue-barcode')) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\laragon\www\hd-v2\resources\js\pages\barcode.js */"./resources/js/pages/barcode.js");
+module.exports = __webpack_require__(/*! D:\www\hd-v2\resources\js\pages\barcode.js */"./resources/js/pages/barcode.js");
 
 
 /***/ })
