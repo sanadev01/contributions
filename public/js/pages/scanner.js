@@ -15158,7 +15158,7 @@ if (document.getElementById('vue-scanner')) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\laragon\www\hd-v2\resources\js\pages\scanner.js */"./resources/js/pages/scanner.js");
+module.exports = __webpack_require__(/*! D:\www\hd-v2\resources\js\pages\scanner.js */"./resources/js/pages/scanner.js");
 
 
 /***/ })
