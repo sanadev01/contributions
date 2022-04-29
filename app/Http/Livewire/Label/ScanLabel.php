@@ -99,7 +99,7 @@ class ScanLabel extends Component
             
             if($this->order){
                 if($order->trackings->isNotEmpty() && $order->trackings()->latest()->first()->status_code >= Order::STATUS_ARRIVE_AT_WAREHOUSE){
-                    $lastScanned = $order->trackings()->where('status_code',Order::STATUS_ARRIVE_AT_WAREHOUSE)->first()->value('created_at')->format('m/d/Y');
+                    $lastScanned = $order->trackings()->where('status_code',Order::STATUS_ARRIVE_AT_WAREHOUSE)->first()->created_at->format('m/d/Y H:i:s');
                     $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'package already scanned on '.$lastScanned.'']);
                 }
                 if(!$this->order->is_paid){
