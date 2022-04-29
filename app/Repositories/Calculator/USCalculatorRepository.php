@@ -13,7 +13,9 @@ use App\Facades\UPSFacade;
 use App\Facades\USPSFacade;
 use App\Facades\FedExFacade;
 use Illuminate\Http\Request;
+use App\Models\PaymentInvoice;
 use App\Models\ShippingService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\UPSLabelRepository;
 use App\Services\UPS\UPSShippingService;
@@ -50,6 +52,10 @@ class USCalculatorRepository
     protected $shippingService;
     protected $orderItems;
 
+    protected $upsLabelRepository;
+    protected $uspsLabelRepository;
+    protected $fedExLabelRepository;
+
 
     public function __construct()
     {
@@ -59,9 +65,9 @@ class USCalculatorRepository
         }
 
         $this->setUserProft();
-        // $this->upsLabelRepository = new UPSLabelRepository();
-        // $this->uspsLabelRepository = new USPSLabelRepository();
-        // $this->fedExLabelRepository = new FedExLabelRepository();
+        $this->upsLabelRepository = new UPSLabelRepository();
+        $this->uspsLabelRepository = new USPSLabelRepository();
+        $this->fedExLabelRepository = new FedExLabelRepository();
     }
     
     public function handle($request)
@@ -209,6 +215,208 @@ class USCalculatorRepository
         }
     }
 
+    public function executeForLabel($request)
+    {
+        $this->request = $request;
+        $this->tempOrder = $request->temp_order;
+        
+        $this->shippingService = $this->getSippingService($request->service_sub_class);
+        
+        if ($this->createOrder() && $this->assignRecipient() && $this->getPrimaryLabel()) {
+            return $this->order;
+        }
+
+        return null;
+    }
+
+    private function getSippingService($service_sub_class)
+    {
+        return ShippingService::query()->where('service_sub_class', $service_sub_class)->first();
+    }
+
+    private function createOrder()
+    {
+        DB::beginTransaction();
+        try {
+            $order = Order::create([
+                'merchant' => 'HomeDeliveryBr',
+                'user_id' => $this->tempOrder['user']['id'],
+                'carrier' => 'HERCO',
+                'tracking_id' => 'HERCO',
+                'customer_reference' => 'HERCO',
+                'carrier' => 'HERCO',
+                'order_date' => Carbon::now(),
+                'sender_first_name' => $this->tempOrder['sender_first_name'],
+                'sender_last_name' => $this->tempOrder['sender_last_name'] ?? '',
+                'sender_email' => $this->tempOrder['sender_email'],
+                'sender_phone' => $this->tempOrder['sender_phone'],
+                'sender_country_id' => (int)$this->tempOrder['sender_country_id'],
+                'sender_state_id' => $this->getSenderState($this->tempOrder['sender_country_id'], $this->tempOrder['sender_state']),
+                'sender_city' => $this->tempOrder['sender_city'],
+                'sender_address' => $this->tempOrder['sender_address'],
+                'sender_zipcode' => $this->tempOrder['sender_zipcode'],
+                'weight' => $this->tempOrder['weight'],
+                'length' => $this->tempOrder['length'],
+                'height' => $this->tempOrder['height'],
+                'width' => $this->tempOrder['width'],
+                'measurement_unit' => $this->tempOrder['measurement_unit'],
+                'shipping_service_id' => $this->shippingService->id,
+                'shipping_service_name' => $this->shippingService->name,
+                'status' => Order::STATUS_ORDER,
+            ]);
+            
+            if (isset($this->tempOrder['items'])) {
+
+                $totalValue = 0;
+
+                foreach ($this->tempOrder['items'] as $item) {
+                    $order->items()->create([
+                        'sh_code' => $item['sh_code'],
+                        'description' => $item['description'],
+                        'quantity' => $item['quantity'],
+                        'value' => $item['value'],
+                        'contains_battery' => false,
+                        'contains_perfume' => false,
+                        'contains_flammable_liquid' => false,
+                    ]);
+
+                    $totalValue += ($item['quantity'] * $item['value']);
+                }
+
+                $order->update([
+                    'order_value' => $totalValue,
+                ]);
+            }
+            
+            $this->order = $order;
+            DB::commit();
+            return true;
+
+        } catch (\Exception $ex) {
+            $this->error = $ex->getMessage();
+            DB::rollBack();
+            return false;
+        }
+    }
+
+    private function assignRecipient()
+    {
+        $order = $this->order->refresh();
+        $order->update([
+            'warehouse_number' => $order->getTempWhrNumber()
+        ]);
+
+        DB::transaction(function () use ($order) {
+            try {
+
+                $order->recipient()->create([
+                    'first_name' => $this->tempOrder['recipient']['first_name'],
+                    'last_name' => $this->tempOrder['recipient']['last_name'],
+                    'phone' => $this->tempOrder['recipient']['phone'],
+                    'email' => $this->tempOrder['recipient']['email'],
+                    'country_id' => $this->tempOrder['recipient']['country_id'],
+                    'state_id' => $this->tempOrder['recipient']['state_id'],
+                    'address' => $this->tempOrder['recipient']['address'],
+                    'city' => $this->tempOrder['recipient']['city'],
+                    'zipcode' => $this->tempOrder['recipient']['zipcode'],
+                    'account_type' => $this->tempOrder['recipient']['account_type'],
+                ]);
+               
+            } catch (\Exception $ex) {
+                $this->error = $ex->getMessage();
+                return false;
+            }
+
+            return true;
+        });
+
+        return true;
+        
+    }
+
+    private function getPrimaryLabel()
+    {
+        $request = $this->createRequest();
+        $request->merge([
+            'service' => $this->order->shippingService->service_sub_class,
+            'sender_state' => $this->tempOrder['sender_state'],
+            'pobox_number' => optional(optional($this->order)->user)->pobox_number,
+        ]);
+
+        if ($this->order->shippingService->service_sub_class == ShippingService::UPS_GROUND) {
+            if ($this->tempOrder['to_herco'] && !$this->upsLabelRepository->getPrimaryLabelForSender($this->order, $request)) {
+                $this->error = $this->upsLabelRepository->getUPSErrors();
+                return false;
+            }
+
+            if ($this->tempOrder['from_herco'] && !$this->upsLabelRepository->getPrimaryLabelForRecipient($this->order)) {
+                $this->error = $this->upsLabelRepository->getUPSErrors();
+                return false;
+            }
+        }
+
+        if ($this->order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || 
+            $this->order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS ||
+            $this->order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
+            $this->order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) 
+        {
+            if ($this->tempOrder['to_herco'] && !$this->uspsLabelRepository->getPrimaryLabelForSender($this->order, $request)) {
+                $this->error = $this->uspsLabelRepository->getUSPSErrors();
+                return false;
+            }
+
+            if ($this->tempOrder['from_herco'] && !$this->uspsLabelRepository->getPrimaryLabelForRecipient($this->order)) {
+                $this->error = $this->uspsLabelRepository->getUSPSErrors();
+                return false;
+            }
+        }
+
+        if ($this->order->shippingService->service_sub_class == ShippingService::FEDEX_GROUND) {
+            return false;
+        }
+
+        $order = $this->order->refresh();
+        chargeAmount($order->gross_total, $order);
+        $this->createInvoice($order);
+
+        return true;
+        
+    }
+
+    private function createInvoice($order)
+    {
+        $invoice = PaymentInvoice::create([
+            'uuid' => PaymentInvoice::generateUUID(),
+            'paid_by' => $order->user->id,
+            'is_paid' => 1,
+            'order_count' => 1,
+            'type' => PaymentInvoice::TYPE_PREPAID
+        ]);
+
+
+        $invoice->orders()->sync($order->id);
+
+        $invoice->update([
+            'total_amount' => $invoice->orders()->sum('gross_total')
+        ]);
+
+        $order->update([
+            'is_paid' => true,
+        ]);
+
+        return true;
+    }
+
+    private function getSenderState($country_id, $state_code)
+    {
+        $state = State::query()->where([
+            ['country_id', $country_id],
+            ['code', $state_code]
+        ])->first();
+
+        return $state ? $state->id : null;
+    }
+
     private function createRecipient()
     {
         $recipient = new Recipient();
@@ -249,6 +457,8 @@ class USCalculatorRepository
         $order->weight = $this->request->weight;
         $order->measurement_unit = $this->request->unit;
         $order->recipient = $this->recipient;
+        $order->to_herco = ($this->request->has('to_herco')) ? true : false;
+        $order->from_herco = ($this->request->has('from_herco')) ? true : false;
 
         $this->order = $order;
     }
