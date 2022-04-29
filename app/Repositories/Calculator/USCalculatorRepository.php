@@ -226,7 +226,7 @@ class USCalculatorRepository
             return $this->order;
         }
 
-        return false;
+        return null;
     }
 
     private function getSippingService($service_sub_class)
@@ -287,7 +287,7 @@ class USCalculatorRepository
                     'order_value' => $totalValue,
                 ]);
             }
-
+            
             $this->order = $order;
             DB::commit();
             return true;
@@ -343,6 +343,18 @@ class USCalculatorRepository
             'pobox_number' => optional(optional($this->order)->user)->pobox_number,
         ]);
 
+        if ($this->order->shippingService->service_sub_class == ShippingService::UPS_GROUND) {
+            if ($this->tempOrder['to_herco'] && !$this->upsLabelRepository->getPrimaryLabelForSender($this->order, $request)) {
+                $this->error = $this->upsLabelRepository->getUPSErrors();
+                return false;
+            }
+
+            if ($this->tempOrder['from_herco'] && !$this->upsLabelRepository->getPrimaryLabelForRecipient($this->order)) {
+                $this->error = $this->upsLabelRepository->getUPSErrors();
+                return false;
+            }
+        }
+
         if ($this->order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || 
             $this->order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS ||
             $this->order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
@@ -357,13 +369,17 @@ class USCalculatorRepository
                 $this->error = $this->uspsLabelRepository->getUSPSErrors();
                 return false;
             }
-
-            $order = $this->order->refresh();
-            chargeAmount($order->gross_total, $order);
-            $this->createInvoice($order);
-
-            return true;
         }
+
+        if ($this->order->shippingService->service_sub_class == ShippingService::FEDEX_GROUND) {
+            return false;
+        }
+
+        $order = $this->order->refresh();
+        chargeAmount($order->gross_total, $order);
+        $this->createInvoice($order);
+
+        return true;
         
     }
 

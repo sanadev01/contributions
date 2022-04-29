@@ -62,10 +62,10 @@ class UsCalculatorRates extends Component
         if ($this->selectedServiceEnabledForUser()) {
             $order = $usCalculatorRepository->executeForLabel($this->createRequest());
             $this->addError('serviceError', $usCalculatorRepository->getError());
-        }
 
-        if (!$this->serviceError && $order) {
-            return redirect()->route('admin.orders.label.index', $order->id);
+            if ($order) {
+                return redirect()->route('admin.orders.label.index', $order->id);
+            }
         }
     }
 
@@ -81,8 +81,8 @@ class UsCalculatorRates extends Component
             $this->addError('serviceError', $serviceTitle.' service is not enabled for your account, contact admin please');
             return false; 
         }
-
-        return  $this->addError('serviceError', 'Please login to continue');
+        $this->addError('serviceError', 'Please login to continue');
+        return false; 
     }
 
     private function getCostOfSelectedService()

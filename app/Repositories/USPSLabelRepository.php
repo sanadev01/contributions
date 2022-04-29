@@ -72,27 +72,7 @@ class USPSLabelRepository
 
         if($response->success == true) 
         {
-            $this->totalUspsCost += $response->data['total_amount'] ?? 0;
-            $this->addProfit($order->user, $this->totalUspsCost);
-
-            $order->update([
-                'api_response' => json_encode($response->data),
-                'corrios_tracking_code' => $response->data['usps']['tracking_numbers'][0] ?? null,
-                'is_invoice_created' => true,
-                'is_shipment_added' => true,
-                'user_declared_freight' => $this->totalUspsCost,
-                'shipping_value' => $this->total_amount_with_profit,
-                'total' => $this->total_amount_with_profit,
-                'gross_total' => $this->total_amount_with_profit,
-                'status' => Order::STATUS_PAYMENT_DONE,
-            ]);
-
-            $order->refresh();
-
-            // store order status in order tracking
-            $this->addOrderTracking($order);
-
-            $this->printPrimaryLabel($order);
+            $this->handleApiResponse($response, $order);
 
             return true;
         }
@@ -107,33 +87,40 @@ class USPSLabelRepository
 
         if($response->success == true) 
         {
-            $this->totalUspsCost += $response->data['total_amount'] ?? 0;
-            $this->addProfit($order->user, $this->totalUspsCost);
-
-            $order->update([
-                'api_response' => json_encode($response->data),
-                'corrios_tracking_code' => $response->data['usps']['tracking_numbers'][0] ?? null,
-                'is_invoice_created' => true,
-                'is_shipment_added' => true,
-                'user_declared_freight' => $this->totalUspsCost,
-                'shipping_value' => $this->total_amount_with_profit,
-                'total' => $this->total_amount_with_profit,
-                'gross_total' => $this->total_amount_with_profit,
-                'status' => Order::STATUS_PAYMENT_DONE,
-            ]);
-
-            $order->refresh();
-
-            // store order status in order tracking
-            $this->addOrderTracking($order);
-
-            $this->printPrimaryLabel($order);
+            $this->handleApiResponse($response, $order);
 
             return true;
         }
 
         $this->uspsError = $response->message;
         return false;
+    }
+
+    private function handleApiResponse($response, $order)
+    {
+        $this->totalUspsCost += $response->data['total_amount'] ?? 0;
+        $this->addProfit($order->user, $this->totalUspsCost);
+
+        $order->update([
+            'api_response' => json_encode($response->data),
+            'corrios_tracking_code' => $response->data['usps']['tracking_numbers'][0] ?? null,
+            'is_invoice_created' => true,
+            'is_shipment_added' => true,
+            'user_declared_freight' => $this->totalUspsCost,
+            'shipping_value' => $this->total_amount_with_profit,
+            'total' => $this->total_amount_with_profit,
+            'gross_total' => $this->total_amount_with_profit,
+            'status' => Order::STATUS_PAYMENT_DONE,
+        ]);
+
+        $order->refresh();
+
+        // store order status in order tracking
+        $this->addOrderTracking($order);
+
+        $this->printPrimaryLabel($order);
+
+        return true;
     }
 
     public function printPrimaryLabel(Order $order)

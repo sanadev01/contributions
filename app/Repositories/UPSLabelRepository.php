@@ -31,7 +31,7 @@ class UPSLabelRepository
     {
         if($order->api_response == null && $order->shippingService->service_sub_class == ShippingService::UPS_GROUND)
         {
-            $this->getPrimaryLabelForRecipient($order);
+            $this->getPrimaryLabel($order);
         }
 
         return true;
@@ -39,7 +39,7 @@ class UPSLabelRepository
 
     public function update($order)
     {
-        $this->getPrimaryLabelForRecipient($order);
+        $this->getPrimaryLabel($order);
     }
 
     public function getSecondaryLabel($request, $order)
@@ -70,7 +70,7 @@ class UPSLabelRepository
         return false;
     }
 
-    private function getPrimaryLabelForRecipient($order)
+    private function getPrimaryLabel($order)
     {
         $response = UPSFacade::getLabelForRecipient($order);
         
@@ -102,36 +102,55 @@ class UPSLabelRepository
     public function getPrimaryLabelForSender($order, $request)
     {
         $response = UPSFacade::getLabelForSender($order, $request);
+
         if ($response->success == true) {
-
-            $this->totalUpsCost += $response->data['ShipmentResponse']['ShipmentResults']['ShipmentCharges']['TotalCharges']['MonetaryValue'];
-            $this->addProfit($order->user);
-
-            $order->update([
-                'api_response' => json_encode($response->data),
-                'corrios_tracking_code' => $response->data['ShipmentResponse']['ShipmentResults']['ShipmentIdentificationNumber'],
-                'is_invoice_created' => true,
-                'is_shipment_added' => true,
-                'user_declared_freight' => $this->totalUpsCost,
-                'shipping_value' => $this->total_amount_with_profit,
-                'total' => $this->total_amount_with_profit,
-                'gross_total' => $this->total_amount_with_profit,
-                'status' => Order::STATUS_PAYMENT_DONE,
-            ]);
-
-            $order->refresh();
-
-            // store order status in order tracking
-            $this->addOrderTracking($order);
-
-            // Connert PNG label To PDF
-            $this->convertLabelToPDF($order);
-
+            $this->handleApiResponse($response, $order);
             return true;
         }
 
         $this->upsError = $response->error['response']['errors'][0]['message'];
         return false;
+    }
+
+    public function getPrimaryLabelForRecipient($order)
+    {
+        $response = UPSFacade::getLabelForRecipient($order);
+        
+        if ($response->success == true) {
+            $this->handleApiResponse($response, $order);
+            return true;
+        }
+
+        $this->upsError = $response->error['response']['errors'][0]['message'];
+        return false;
+    }
+
+    private function handleApiResponse($response, $order)
+    {
+        $this->totalUpsCost += $response->data['ShipmentResponse']['ShipmentResults']['ShipmentCharges']['TotalCharges']['MonetaryValue'];
+        $this->addProfit($order->user);
+
+        $order->update([
+            'api_response' => json_encode($response->data),
+            'corrios_tracking_code' => $response->data['ShipmentResponse']['ShipmentResults']['ShipmentIdentificationNumber'],
+            'is_invoice_created' => true,
+            'is_shipment_added' => true,
+            'user_declared_freight' => $this->totalUpsCost,
+            'shipping_value' => $this->total_amount_with_profit,
+            'total' => $this->total_amount_with_profit,
+            'gross_total' => $this->total_amount_with_profit,
+            'status' => Order::STATUS_PAYMENT_DONE,
+        ]);
+
+        $order->refresh();
+
+        // store order status in order tracking
+        $this->addOrderTracking($order);
+
+        // Connert PNG label To PDF
+        $this->convertLabelToPDF($order);
+
+        return true;
     }
 
     public function getSecondaryLabelForSender($request, $order)
