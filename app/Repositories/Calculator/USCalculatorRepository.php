@@ -226,6 +226,7 @@ class USCalculatorRepository
             return $this->order;
         }
 
+        $this->order->delete();
         return null;
     }
 
@@ -372,7 +373,15 @@ class USCalculatorRepository
         }
 
         if ($this->order->shippingService->service_sub_class == ShippingService::FEDEX_GROUND) {
-            return false;
+            if ($this->tempOrder['to_herco'] && !$this->fedExLabelRepository->getPrimaryLabelForSender($this->order, $request)) {
+                $this->error = $this->fedExLabelRepository->getFedExErrors();
+                return false;
+            }
+
+            if ($this->tempOrder['from_herco'] && !$this->fedExLabelRepository->getPrimaryLabelForRecipient($this->order)) {
+                $this->error = $this->fedExLabelRepository->getFedExErrors();
+                return false;
+            }
         }
 
         $order = $this->order->refresh();
