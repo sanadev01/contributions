@@ -25,8 +25,10 @@ class OrderSenderController extends Controller
         }
         $states = State::query()->where("country_id", Country::US)->get(["name","code","id"]);
         $floridaStateId = State::query()->where([['country_id', Country::US],['code', 'FL']])->first()->id;
-        
-        return view('admin.orders.sender.index',compact('order', 'states', 'floridaStateId'));
+        $countryChile = Country::Chile;
+        $countryUS = Country::US;
+
+        return view('admin.orders.sender.index',compact('order', 'states', 'floridaStateId', 'countryChile', 'countryUS'));
     }
 
     /**

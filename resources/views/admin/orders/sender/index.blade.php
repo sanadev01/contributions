@@ -155,6 +155,11 @@
 <script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
 <script>
     $(document).ready(function(){
+
+        var countryChile = {!! $countryChile !!};
+        var countryUS = {!! $countryUS !!};
+
+        
         $('.selectpicker').prop('disabled', false);
         $('.selectpicker').selectpicker('refresh');
         $("[name='sender_address']").prop( "disabled", true );
@@ -162,7 +167,7 @@
 
         let selected = $('#country').val();
 
-        if(selected == '46' || selected == '250') {
+        if(selected == countryChile || selected == countryUS) {
                 $('#address').css('display', 'block');
                 $('#city').css('display', 'block');
                 $('#tax_id').css('display', 'none'); 
@@ -175,13 +180,13 @@
 
                 $("[name='sender_address']").prop('required',true);
                 $("[name='sender_city']").prop('required',true);
-                if (selected == '46') {
+                if (selected == countryChile) {
                     $("[name='phone']").prop('required',true);
                 }
                
                 $("[name='sender_zipcode']").prop('required', false);
 
-                if (selected == '250') {
+                if (selected == countryUS) {
                     $('#state').removeClass('d-none');
                     $('#zip_code').removeClass('d-none');
 
@@ -226,14 +231,14 @@
         $('#country').change(function () {
             let selected = $('#country').val();
             
-            if(selected == '46' || selected == '250') {
+            if(selected == countryChile || selected == countryUS) {
                 $('#address').css('display', 'block');
                 $('#city').css('display', 'block');
                 $('#tax_id').css('display', 'none'); 
                 $('#phone').css('display', 'inline-block');
                 $('#sender_state').prop('disabled', true);
 
-                if (selected == '250') {
+                if (selected == countryUS) {
                     $('#state').removeClass('d-none');
                     $('#zip_code').removeClass('d-none');
 
@@ -270,7 +275,7 @@
 
                 $("[name='sender_address']").prop('required',true);
                 $("[name='sender_city']").prop('required',true);
-                if (selected == '46') {
+                if (selected == countryChile) {
                     $("[name='phone']").prop('required',true);
                 }
                 

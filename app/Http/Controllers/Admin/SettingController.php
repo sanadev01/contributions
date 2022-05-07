@@ -32,8 +32,8 @@ class SettingController extends Controller
     {
         Setting::saveByKey('AUTHORIZE_ID', $request->AUTHORIZE_ID,null,true);
         Setting::saveByKey('AUTHORIZE_KEY', $request->AUTHORIZE_KEY,null,true);
-        Setting::saveByKey('STRIPE_KEY', $request->STRIPE_KEY,null,true);
-        Setting::saveByKey('STRIPE_SECRET', $request->STRIPE_SECRET,null,true);
+        // Setting::saveByKey('STRIPE_KEY', $request->STRIPE_KEY,null,true);
+        // Setting::saveByKey('STRIPE_SECRET', $request->STRIPE_SECRET,null,true);
         Setting::saveByKey('PAYMENT_GATEWAY', $request->PAYMENT_GATEWAY,null,true);
         Setting::saveByKey('TYPE', $request->TYPE,null,true);
         Setting::saveByKey('VALUE', $request->VALUE,null,true);
