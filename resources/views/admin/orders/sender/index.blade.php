@@ -91,7 +91,7 @@
                         <select name="sender_state_id" id="sender_state" class="form-control selectpicker show-tick" data-live-search="true" required>
                             <option value="">Select @lang('address.State')</option>
                             @foreach ($states as $state)
-                                <option {{ old('sender_state_id', optional($order)->sender_state_id) == $state->id ? 'selected' : '' }} value="{{ $state->id }}">{{ $state->code }}</option>
+                                <option {{ old('sender_state_id', __default($floridaStateId, optional($order)->sender_state_id)) == $state->id ? 'selected' : '' }} value="{{ $state->id }}">{{ $state->code }}</option>
                             @endforeach
                         </select>
                         @error('sender_state_id')
@@ -161,14 +161,26 @@
         $("[name='sender_city']").prop('disabled',true);
 
         let selected = $('#country').val();
-        
+
         if(selected == '46' || selected == '250') {
                 $('#address').css('display', 'block');
                 $('#city').css('display', 'block');
                 $('#tax_id').css('display', 'none'); 
                 $('#phone').css('display', 'inline-block');
                 $('#sender_state').prop('disabled', true);
-                
+
+                $("[name='sender_address']").prop( "disabled", false );
+                $("[name='sender_city']").prop('disabled',false);
+                $("[name='taxt_id']").prop('disabled', true);
+
+                $("[name='sender_address']").prop('required',true);
+                $("[name='sender_city']").prop('required',true);
+                if (selected == '46') {
+                    $("[name='phone']").prop('required',true);
+                }
+               
+                $("[name='sender_zipcode']").prop('required', false);
+
                 if (selected == '250') {
                     $('#state').removeClass('d-none');
                     $('#zip_code').removeClass('d-none');
@@ -180,16 +192,9 @@
                     $("[name='sender_zipcode']").prop('required', true);
 
                     $('#sender_state').prop('disabled', false);
+
+                    $("[name='phone']").prop('required',false);
                 }
-
-                $("[name='sender_address']").prop( "disabled", false );
-                $("[name='sender_city']").prop('disabled',false);
-                $("[name='taxt_id']").prop('disabled', true);
-
-                $("[name='sender_address']").prop('required',true);
-                $("[name='sender_city']").prop('required',true);
-                $("[name='phone']").prop('required',true);
-                $("[name='sender_zipcode']").prop('required', false);
         } else 
         {
                 $('#address').css('display', 'none');
@@ -240,6 +245,22 @@
                     
                     $('#sender_state').prop('disabled',false);
 
+                    let senderAddress = $('#sender_address').val();
+                    let senderCity = $('#sender_city').val();
+                    let senderZipcode = $('#sender_zipcode').val();
+
+                    if (senderAddress == undefined || senderAddress == '') {
+                        $('#sender_address').val('2200 NW 129TH AVE');
+                    }
+
+                    if (senderCity == undefined || senderCity == '') {
+                        $('#sender_city').val('Miami');
+                    }
+
+                    if (senderZipcode == undefined || senderZipcode == '') {
+                        $('#sender_zipcode').val('33182');
+                    }
+
                     window.validate_us_address();
                 }
 
@@ -249,7 +270,10 @@
 
                 $("[name='sender_address']").prop('required',true);
                 $("[name='sender_city']").prop('required',true);
-                $("[name='phone']").prop('required',true);
+                if (selected == '46') {
+                    $("[name='phone']").prop('required',true);
+                }
+                
             } else {
                 $('#address').css('display', 'none');
                 $('#city').css('display', 'none'); 

@@ -36,7 +36,7 @@ class FedExLabelRepository
             $this->fedExError = 'No shipping service is available for this order';
         }
 
-        if($shippingServices->isNotEmpty() && !setting('fedex', null, $order->user->id))
+        if($shippingServices->isNotEmpty() && !setting('fedex', null, User::ROLE_ADMIN))
         {
             $this->fedExError = 'FedEx is not enabled for your account';
             $shippingServices = $shippingServices->filter(function ($shippingService, $key) {

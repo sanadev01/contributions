@@ -285,7 +285,7 @@ class UPSLabelRepository
 
         if($this->user_api_profit == null || $this->user_api_profit == 0)
         {
-            $this->user_api_profit = setting('ups_profit', null, 1);
+            $this->user_api_profit = setting('ups_profit', null, User::ROLE_ADMIN);
         }
 
         $ups_rates = $this->totalUpsCost + $this->totalPickupCost;
@@ -360,7 +360,7 @@ class UPSLabelRepository
             $this->upsError = 'No shipping services available for this order';
         }
 
-        if($shippingServices->isNotEmpty() && !setting('ups', null, $order->user->id))
+        if($shippingServices->isNotEmpty() && !setting('ups', null, User::ROLE_ADMIN))
         {
             $this->upsError = "UPS is not enabled for your account";
             $shippingServices = $shippingServices->filter(function ($shippingService, $key) {

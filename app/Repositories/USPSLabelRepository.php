@@ -150,7 +150,7 @@ class USPSLabelRepository
         
         if($shippingServices->contains('service_sub_class', ShippingService::USPS_PRIORITY) || $shippingServices->contains('service_sub_class', ShippingService::USPS_FIRSTCLASS))
         {
-            if(!setting('usps', null, $order->user->id))
+            if(!setting('usps', null, User::ROLE_ADMIN))
             {
                 $this->uspsError = "USPS is not enabled for your account";
                 $shippingServices = collect() ;
@@ -243,7 +243,7 @@ class USPSLabelRepository
 
         if($this->user_api_profit == null || $this->user_api_profit == 0)
         {
-            $this->user_api_profit = setting('usps_profit', null, 1);
+            $this->user_api_profit = setting('usps_profit', null, User::ROLE_ADMIN);
         }
 
         $profit = $usps_rate * ($this->user_api_profit / 100);
