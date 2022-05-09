@@ -144,6 +144,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         Route::post('users/export', UserExportController::class)->name('users.export.index');
         Route::resource('users.setting', UserSettingController::class)->only('index','store');
         Route::resource('shcode', ShCodeController::class)->only(['index', 'create','store','edit','update','destroy']);
+        Route::resource('shcode-export', ShCodeImportExportController::class)->only(['index', 'create','store']);
 
         Route::resource('roles', RoleController::class);
         Route::resource('roles.permissions', RolePermissionController::class);
