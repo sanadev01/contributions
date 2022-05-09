@@ -17,6 +17,7 @@ return [
     'type' => 'Tipo',
     'payment-status' => 'Status do pagamento',
     'payment-method' => 'Método de pagamento',
+    'Trashed Orders' => 'Pedidos Excluídos',
     
     'recipient' => [
         'slect-from-list' => 'Selecione o endereço da lista',

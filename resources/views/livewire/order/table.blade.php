@@ -1,6 +1,7 @@
 <div class="p-2" >
     <div class="row mb-2 no-print">
         @admin
+            @if (request()->route()->getName() != 'admin.trash.orders')
             <div class="col-12">
                 <div class="p-1 mb-3">
                     <ul class="nav nav-pills">
@@ -18,7 +19,8 @@
                         </li>
                     </ul>
                 </div>        
-            </div> 
+            </div>
+            @endif 
         @endadmin       
         <div class="col-1">
             <select class="form-control" wire:model="pageSize">

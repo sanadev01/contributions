@@ -62,4 +62,5 @@ return [
     'Bulk Usps Label' => 'Comprar etiqueta Domestic a granel',
     'Scan Parcel' => 'Scan Parcela',
     'Driver Report' => 'Relatório de Motorista',
+    'Trashed Orders' => 'Pedidos Excluídos',
 ];

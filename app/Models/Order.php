@@ -650,4 +650,9 @@ class Order extends Model implements Package
     {
         return $this->recipient->country->id != Country::US;
     }
+
+    public function isTrashed()
+    {
+        return $this->deleted_at ? true : false;
+    }
 }

@@ -217,7 +217,7 @@ class PreAlertRepository
             // if ( $order->isConsolidated() ){
             //     $order->subOrders()->sync([]);
             // }
-            if(optional($order->recipient)->country_id == 250 && $order->api_response != null)
+            if(optional($order->recipient)->country_id == Order::US && $order->api_response != null)
             {
                 $response = USPSFacade::deleteUSPSLabel($order->corrios_tracking_code);
                 
@@ -311,7 +311,7 @@ class PreAlertRepository
 
     public function returnToParcel(Order $order)
     {
-        if($order->recipient->country_id == 250 && $order->api_response != null)
+        if($order->recipient->country_id == Order::US && $order->api_response != null)
         {
             $response = USPSFacade::deleteUSPSLabel($order->corrios_tracking_code);
             
@@ -322,6 +322,8 @@ class PreAlertRepository
         }
         
         try{
+                DB::beginTransaction();
+
                 $order->items()->delete();
                 $order->recipient()->delete();
                 optional($order->purchaseInvoice)->delete();
@@ -352,6 +354,8 @@ class PreAlertRepository
                 "corrios_tracking_code" => '',
 
             ]);
+
+            DB::commit();
             
             return true;
 
