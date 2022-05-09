@@ -2,11 +2,8 @@
 
 namespace App\Services\Excel\Import;
 
-use App\Models\Product;
 use App\Models\ShCode;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
 use App\Services\Excel\AbstractImportService;
 
 class ShcodeImportService extends AbstractImportService
