@@ -79,4 +79,7 @@
             @endforeach
         @endif
     </table>
+    <div class="d-flex justify-content-end my-2 pb-4 mx-2">
+        {{ $orders->links() }}
+    </div>
 </div>
