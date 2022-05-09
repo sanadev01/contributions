@@ -434,6 +434,15 @@
             </li>
             @endcan
 
+            @admin
+                <li class="nav-item {{ $isActive(['admin.trash.orders']) }}">
+                    <a href="{{ route('admin.trash.orders') }}">
+                        <i class="feather icon-trash" style="color: #3CB64B;"></i>
+                        <span class="menu-title">@lang('menu.Trashed Orders')</span>
+                    </a>
+                </li>
+            @endadmin
+
             <x-shared-menu></x-shared-menu>
             @endif
         </ul>

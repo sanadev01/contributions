@@ -49,7 +49,7 @@
     </td>
     @endadmin
     <td>
-        {{ ucfirst($order->merchant) }}
+        {{ str_limit(ucfirst($order->merchant), 30) }}
     </td>
     <td>
         {{ ucfirst($order->tracking_id) }}
@@ -177,7 +177,7 @@
                             <i class="feather icon-copy"></i>@lang('orders.actions.duplicate-order')
                         </a>
                    @endcan
-                    @if( Auth::user()->isActive())
+                    @if( Auth::user()->isActive() && !$order->isTrashed())
                     <form action="{{ route('admin.orders.destroy',$order->id) }}" method="post" onsubmit="return confirmDelete()">
                         @csrf
                         @method('DELETE')

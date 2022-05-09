@@ -20,17 +20,21 @@ class OrderRepository
     protected $chargeID;
     public $shippingServiceError;
 
-    public function get(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='asc')
+    public function get(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='asc', $trashed = false)
     {
-        $query = Order::query()
-            ->where('status','>=',Order::STATUS_ORDER)
-            ->has('user')
-            ->with([
-                'paymentInvoices',
-                'user',
-                'subOrders',
-                'parentOrder'
-            ]);
+        $query = Order::query();
+        if ($trashed) {
+           $query = $query->onlyTrashed();
+        }
+
+        $query = $query->where('status','>=',Order::STATUS_ORDER)
+                        ->has('user')
+                        ->with([
+                            'paymentInvoices',
+                            'user',
+                            'subOrders',
+                            'parentOrder'
+                        ]);
         if (Auth::user()->isUser()) {
             $query->where('user_id', Auth::id());
         }
