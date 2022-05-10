@@ -39,7 +39,7 @@
                                     </div>
                                 </div>
                                 
-                                <div class="controls row mb-1 align-items-center">
+                                {{-- <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('setting.Stripe Key')<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
                                         <input type="text" class="form-control" value="{{ old('STRIPE_KEY',setting('STRIPE_KEY')) }}" name="STRIPE_KEY" required placeholder="@lang('setting.Stripe Key')">
@@ -52,7 +52,7 @@
                                         <input type="text" class="form-control" name="STRIPE_SECRET" value="{{ old('STRIPE_SECRET',setting('STRIPE_SECRET')) }}" required placeholder="@lang('setting.Stripe Secret')">
                                         <div class="help-block"></div>
                                     </div>
-                                </div>
+                                </div> --}}
 
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('setting.Payment Gateway')<span class="text-danger">*</span></label>
@@ -88,6 +88,22 @@
                                         <input type="text" name="VALUE" value="{{ old('VALUE', setting('VALUE')) }}" class="form-control" id="VALUE"> 
                                     </div>  
                                     <div class="help-block"></div>
+                                </div>
+                                <h4>Correios Settings</h4>
+                                <hr>
+                                <div class="controls row mb-1 align-items-center ml-5">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="correios_setting" id="correios_api" value="correios_api" @if(!setting('anjun_api', null, $adminId)) checked @endif>
+                                        <label class="form-check-label h2" for="correios_api">
+                                          Correios Api
+                                        </label> 
+                                      </div>
+                                      <div class="form-check ml-2">
+                                        <input class="form-check-input" type="radio" name="correios_setting" id="anjun_api" value="anjun_api" @if(setting('anjun_api', null, $adminId)) checked @endif>
+                                        <label class="form-check-label h2" for="anjun_api">
+                                          Anjun Api
+                                        </label>
+                                      </div>
                                 </div>
 
                                 <div class="row mt-1">

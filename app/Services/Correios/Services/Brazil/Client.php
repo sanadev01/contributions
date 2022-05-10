@@ -30,11 +30,21 @@ class Client{
     private $password = '150495ca';
     private $numero = '0075745313';
 
+    private $anjun_username = 'anjun2020';
+    private $anjun_password = 'anjun';
+    private $anjun_numero = '0077053850';
+
     public function __construct()
     {
         $this->client = new GuzzleClient([
             'base_uri' => $this->baseUri
         ]);
+
+        if (setting('anjun_api', null, \App\Models\User::ROLE_ADMIN)) {
+            $this->username = $this->anjun_username;
+            $this->password = $this->anjun_password;
+            $this->numero = $this->anjun_numero;
+        }
     }
 
     public function getToken()
