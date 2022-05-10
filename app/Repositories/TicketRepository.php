@@ -26,7 +26,7 @@ class TicketRepository
         }
 
         $tickets->when($request->filled('date'), function ($query) use ($request) {
-            return $query->where('created_at', '>=', $request->date);
+            return $query->where('created_at', 'LIKE', "%{$request->date}%");
         });
 
         $tickets->when($request->filled('user'), function ($query) use ($request) {
