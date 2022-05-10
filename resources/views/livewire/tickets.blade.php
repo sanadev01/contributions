@@ -36,7 +36,7 @@
                     <tr>
                         <td>{{ $ticket->getHumanID() }}</td>
                         <td>
-                            {{ $ticket->created_at->format('y-m-d') }}
+                            {{ $ticket->created_at->format('Y-m-d') }}
                         </td>
                         <td>
                             {{ $ticket->user->name }}
