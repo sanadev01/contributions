@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\User;
 use App\Models\Order;
 use App\Models\Country;
 use App\Facades\USPSFacade;
@@ -19,17 +20,21 @@ class OrderRepository
     protected $chargeID;
     public $shippingServiceError;
 
-    public function get(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='asc')
+    public function get(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='asc', $trashed = false)
     {
-        $query = Order::query()
-            ->where('status','>=',Order::STATUS_ORDER)
-            ->has('user')
-            ->with([
-                'paymentInvoices',
-                'user',
-                'subOrders',
-                'parentOrder'
-            ]);
+        $query = Order::query();
+        if ($trashed) {
+           $query = $query->onlyTrashed();
+        }
+
+        $query = $query->where('status','>=',Order::STATUS_ORDER)
+                        ->has('user')
+                        ->with([
+                            'paymentInvoices',
+                            'user',
+                            'subOrders',
+                            'parentOrder'
+                        ]);
         if (Auth::user()->isUser()) {
             $query->where('user_id', Auth::id());
         }
@@ -426,9 +431,8 @@ class OrderRepository
                     $this->shippingServiceError = 'Shipping Service not Available Error: {'.$shippingService->getCalculator($order)->getErrors().'}';
                 }
             }
-
             // USPS Intenrational Services
-            if ($order->sender_country_id == Order::US && optional($order->recipient)->country_id != Order::US && setting('usps', null, $order->user->id)) 
+            if (optional($order->recipient)->country_id != Order::US && setting('usps', null, User::ROLE_ADMIN)) 
             {
                 $uspsShippingService = new USPSShippingService($order);
 
@@ -465,7 +469,7 @@ class OrderRepository
             || $shippingServices->contains('service_sub_class', ShippingService::USPS_FIRSTCLASS_INTERNATIONAL)
             || $shippingServices->contains('service_sub_class', ShippingService::UPS_GROUND))
         {
-            if(!setting('usps', null, $order->user->id))
+            if(!setting('usps', null, User::ROLE_ADMIN))
             {
                 $this->shippingServiceError = 'USPS is not enabled for this user';
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
@@ -475,7 +479,7 @@ class OrderRepository
                         && $shippingService->service_sub_class != ShippingService::USPS_FIRSTCLASS_INTERNATIONAL;
                 });
             }
-            if(!setting('ups', null, $order->user->id))
+            if(!setting('ups', null, User::ROLE_ADMIN))
             {
                 $this->shippingServiceError = 'UPS is not enabled for this user';
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
@@ -483,7 +487,7 @@ class OrderRepository
                 });
             }
 
-            if (!setting('fedex', null, $order->user->id)) {
+            if (!setting('fedex', null, User::ROLE_ADMIN)) {
                 $this->shippingServiceError = 'FEDEX is not enabled for this user';
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
                     return $shippingService->service_sub_class != ShippingService::FEDEX_GROUND;

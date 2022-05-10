@@ -2,9 +2,10 @@
 
 namespace App\Repositories;
 
-use Illuminate\Http\Request;
-use App\Models\ShCode;
 use Exception;
+use App\Models\ShCode;
+use Illuminate\Http\Request;
+use App\Services\Excel\Import\ShcodeImportService;
 
 class ShcodeRepository
 {
@@ -56,6 +57,13 @@ class ShcodeRepository
         $shcode->delete();
         return true;
 
+    }
+    
+    public function fileImport(Request $request)
+    {
+        $importExcelService = new ShcodeImportService($request->file('file'),$request);
+        $importShcode = $importExcelService->handle();
+        return $importShcode;
     }
 
 }

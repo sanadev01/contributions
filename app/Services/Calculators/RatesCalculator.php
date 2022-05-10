@@ -117,6 +117,9 @@ class RatesCalculator
 
     public function getRate($addProfit = true)
     {
+        if (!$this->rates) {
+            return null;
+        }
         $rate = 0;
         $weight = ceil(WeightCalculator::kgToGrams($this->weight));
 

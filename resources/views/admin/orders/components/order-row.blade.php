@@ -1,24 +1,28 @@
 <tr @if( $order->user->hasRole('retailer') &&  !$order->isPaid()) class="bg-danger text-white" @endif>
-    <td>
-        
-        <div class="vs-checkbox-con vs-checkbox-primary" title="@lang('orders.Bulk Print')">
-            <input type="checkbox" name="orders[]" class="bulk-orders" value="{{$order->id}}">
-            <span class="vs-checkbox vs-checkbox-lg">
-                <span class="vs-checkbox--check">
-                    <i class="vs-icon feather icon-check"></i>
+    @if(\Request::route()->getName() != 'admin.reports.order.index')
+        <td>
+            
+            <div class="vs-checkbox-con vs-checkbox-primary" title="@lang('orders.Bulk Print')">
+                <input type="checkbox" name="orders[]" class="bulk-orders" value="{{$order->id}}">
+                <span class="vs-checkbox vs-checkbox-lg">
+                    <span class="vs-checkbox--check">
+                        <i class="vs-icon feather icon-check"></i>
+                    </span>
                 </span>
-            </span>
-            <span class="h3 mx-2 text-primary my-0 py-0"></span>
-        </div>
-    </td>
+                <span class="h3 mx-2 text-primary my-0 py-0"></span>
+            </div>
+        </td>
+    @endif
     <td class="d-flex justify-content-between align-items-center">
-        <div class="vs-radio-con" wire:click="$emit('edit-order',{{$order->id}})" title="@lang('Edit Order')">
-            <input type="radio" name="edit_order" class="edit-order" value="false">
-            <span class="vs-radio vs-radio-lg">
-                <span class="vs-radio--border"></span>
-                <span class="vs-radio--circle"></span>
-            </span>
-        </div>
+        @if(\Request::route()->getName() != 'admin.reports.order.index')
+            <div class="vs-radio-con" wire:click="$emit('edit-order',{{$order->id}})" title="@lang('Edit Order')">
+                <input type="radio" name="edit_order" class="edit-order" value="false">
+                <span class="vs-radio vs-radio-lg">
+                    <span class="vs-radio--border"></span>
+                    <span class="vs-radio--circle"></span>
+                </span>
+            </div>
+        @endif
         {{ optional($order->order_date)->format('m/d/Y') }}
     </td>
     <td style="width: 200px;">
@@ -49,7 +53,7 @@
     </td>
     @endadmin
     <td>
-        {{ ucfirst($order->merchant) }}
+        {{ str_limit(ucfirst($order->merchant), 30) }}
     </td>
     <td>
         {{ ucfirst($order->tracking_id) }}
@@ -177,7 +181,7 @@
                             <i class="feather icon-copy"></i>@lang('orders.actions.duplicate-order')
                         </a>
                    @endcan
-                    @if( Auth::user()->isActive())
+                    @if( Auth::user()->isActive() && !$order->isTrashed())
                     <form action="{{ route('admin.orders.destroy',$order->id) }}" method="post" onsubmit="return confirmDelete()">
                         @csrf
                         @method('DELETE')
