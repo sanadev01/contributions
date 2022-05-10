@@ -23,8 +23,7 @@ class TicketController extends Controller
     {   
         $this->authorize('viewAny',Ticket::class);
 
-        $supportTickets = $repository->get();
-        return view('admin.tickets.index', compact('supportTickets'));
+        return view('admin.tickets.index');
     }
 
     /**
