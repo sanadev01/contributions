@@ -14,7 +14,13 @@ class Tickets extends Component
     public $date;
     public $user;
     public $status;
+    public $open;
     
+    public function mount()
+    {
+        $this->status = 'all';
+    }
+
     public function render()
     {
         return view('livewire.tickets', [
@@ -25,20 +31,20 @@ class Tickets extends Component
     public function updatedStatus($value)
     {
         if ($value == 'open') {
-            $this->status = true;
+            $this->open = true;
         }
 
         if ($value == 'close') {
-            $this->status = false;
+            $this->open = false;
         }
     }
 
     private function getTickets()
     {
         return (new TicketRepository)->get(request()->merge([
-            'date' => $this->date ? $this->date.' 00:00:00' : null,
+            'date' => $this->date ? $this->date : null,
             'user' => $this->user,
-            'status' => ($this->status != 'all') ? $this->status : null,
+            'status' => ($this->status != 'all') ? $this->open : null,
         ]));
     }
 }

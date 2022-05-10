@@ -14,7 +14,7 @@
                 <tr>
                     <th></th>
                     <th>
-                        <input type="date" class="form-control" wire:model.debounce.1000ms="date">
+                        <input type="search" class="form-control" wire:model.debounce.1000ms="date">
                     </th>
                     <th>
                         <input type="search" class="form-control" wire:model.debounce.1000ms="user">
@@ -36,7 +36,7 @@
                     <tr>
                         <td>{{ $ticket->getHumanID() }}</td>
                         <td>
-                            {{ $ticket->user->created_at->format('Y-m-d') }}
+                            {{ $ticket->created_at->format('y-m-d') }}
                         </td>
                         <td>
                             {{ $ticket->user->name }}
