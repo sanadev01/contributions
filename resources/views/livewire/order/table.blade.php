@@ -117,11 +117,7 @@
                             <option value="Chile">Correios Chile</option>
                         </select>
                     </th>
-                    @admin
-                        <th>
-                            
-                        </th>
-                    @endadmin
+                    @admin<th></th>@endadmin
                     <th>
                         <input type="search" class="form-control" wire:model.debounce.1000ms="tracking_code">
                     </th>
