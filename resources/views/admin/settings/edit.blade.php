@@ -145,21 +145,26 @@
                                 </div>
                                 <h4>Correios Settings</h4>
                                 <hr>
-                                <div class="controls row mb-1 align-items-center ml-5">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="correios_setting" id="correios_api" value="correios_api" @if(!setting('anjun_api', null, $adminId)) checked @endif>
-                                        <label class="form-check-label h2" for="correios_api">
-                                          Correios Api
-                                        </label> 
-                                      </div>
-                                      <div class="form-check ml-2">
-                                        <input class="form-check-input" type="radio" name="correios_setting" id="anjun_api" value="anjun_api" @if(setting('anjun_api', null, $adminId)) checked @endif>
-                                        <label class="form-check-label h2" for="anjun_api">
-                                          Anjun Api
-                                        </label>
-                                      </div>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right mt-4 h5" for="correios_api">Correios Api<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="form-check">
+                                                <input class="form-check-input admin-api-settings" type="radio" name="correios_setting" id="correios_api" value="correios_api" @if(!setting('anjun_api', null, $adminId)) checked @endif>
+                                            </div>
+                                        </div>    
+                                    </div>
                                 </div>
-
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right mt-4 h5" for="anjun_api">Anjun Api<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="form-check">
+                                                <input class="form-check-input admin-api-settings" type="radio" name="correios_setting" id="anjun_api" value="anjun_api" @if(setting('anjun_api', null, $adminId)) checked @endif>
+                                            </div>
+                                        </div>    
+                                    </div>
+                                </div>
                                 <div class="row mt-1">
                                     <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
                                         <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">

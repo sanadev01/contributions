@@ -165,5 +165,12 @@
     .big-label {
         font-size: 15px;
     }
+
+    .admin-api-settings {
+        height: 20px;
+        width: 20px;
+        vertical-align: middle;
+        margin-top: auto;
+    }
 </style>
 @yield('custom-css')

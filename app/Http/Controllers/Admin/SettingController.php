@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Setting;
+use Illuminate\Support\Facades\Cache;
 
 
 class SettingController extends Controller
@@ -37,6 +38,12 @@ class SettingController extends Controller
         Setting::saveByKey('PAYMENT_GATEWAY', $request->PAYMENT_GATEWAY,null,true);
         Setting::saveByKey('TYPE', $request->TYPE,null,true);
         Setting::saveByKey('VALUE', $request->VALUE,null,true);
+
+        if ($request->correios_setting == 'anjun_api' && !setting('anjun_api', null, $this->adminId)) {
+            Cache::forget('token');
+        }elseif ($request->correios_setting == 'correios_api' && setting('anjun_api', null, $this->adminId)) {
+            Cache::forget('token');
+        }
 
         ($request->correios_setting == 'anjun_api') ? saveSetting('anjun_api', true, $this->adminId) : saveSetting('anjun_api', false, $this->adminId);
         
