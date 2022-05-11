@@ -3,16 +3,16 @@
     <div class="row mb-2 col-4">
         <div class="col-md-2">
             <div class="form-check">
-                <input class="form-check-input" type="radio" name="scanning_source" id="camera" v-model="source" value="camera">
-                <label class="form-check-label" for="camera">
+                <input class="form-check-input admin-api-settings" type="radio" name="scanning_source" id="camera" v-model="source" value="camera">
+                <label class="form-check-label h5 ml-1" for="camera">
                     Camera
                 </label>
             </div>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-2 mt-1">
             <div class="form-check">
-                <input class="form-check-input" type="radio" name="scanning_source" id="scanner" v-model="source" value="scanner">
-                <label class="form-check-label" for="scanner">
+                <input class="form-check-input admin-api-settings" type="radio" name="scanning_source" id="scanner" v-model="source" value="scanner">
+                <label class="form-check-label h5 ml-1" for="scanner">
                     Scanner
                 </label>
             </div>
