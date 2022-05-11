@@ -38,6 +38,8 @@ class SettingController extends Controller
         Setting::saveByKey('TYPE', $request->TYPE,null,true);
         Setting::saveByKey('VALUE', $request->VALUE,null,true);
 
+        ($request->correios_setting == 'anjun_api') ? saveSetting('anjun_api', true, $this->adminId) : saveSetting('anjun_api', false, $this->adminId);
+        
         $request->has('usps') ? saveSetting('usps', true, $this->adminId) : saveSetting('usps', false, $this->adminId);
         $request->has('ups') ? saveSetting('ups', true, $this->adminId) : saveSetting('ups', false, $this->adminId);
         $request->has('fedex') ? saveSetting('fedex', true, $this->adminId) : saveSetting('fedex', false, $this->adminId);
