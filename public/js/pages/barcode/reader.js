@@ -20068,6 +20068,34 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -20078,9 +20106,11 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
+      source: '',
       form: {
         'tracking_code': ''
       },
+      scannerInput: '',
       error: null,
       scanning: false,
       message: ''
@@ -20091,11 +20121,31 @@ __webpack_require__.r(__webpack_exports__);
     // }, 60000)
   },
   mounted: function mounted() {
-    console.log('Component testing.');
+    console.log('Component versioning.');
+  },
+  watch: {
+    source: function source(value) {
+      var _this = this;
+
+      this.scannerInput = '';
+      this.form.tracking_code = '';
+
+      if (value == 'scanner') {
+        this.$nextTick(function () {
+          _this.$refs.search.focus();
+        });
+      }
+    },
+    scannerInput: function scannerInput(value) {
+      if (value.length > 10) {
+        this.form.tracking_code = value;
+        this.addParcel();
+      }
+    }
   },
   methods: {
     onDecode: function onDecode(decodedData) {
-      var _this = this;
+      var _this2 = this;
 
       if (decodedData.length < 9) {
         return false;
@@ -20122,10 +20172,10 @@ __webpack_require__.r(__webpack_exports__);
             showConfirmButton: true
           }).then(function (value) {
             setTimeout(function () {
-              _this.form.tracking_code = '';
-              _this.scanning = false;
+              _this2.form.tracking_code = '';
+              _this2.scanning = false;
             }, 1000);
-            _this.message = response.data.message;
+            _this2.message = response.data.message;
           });
         } else {
           swal({
@@ -20135,14 +20185,14 @@ __webpack_require__.r(__webpack_exports__);
             showConfirmButton: true
           }).then(function (value) {
             setTimeout(function () {
-              _this.scanning = false;
-              _this.form.tracking_code = '';
+              _this2.scanning = false;
+              _this2.form.tracking_code = '';
             }, 1000);
           });
-          _this.error = response.data.message;
+          _this2.error = response.data.message;
         }
 
-        _this.form.tracking_code = '';
+        _this2.form.tracking_code = '';
       })["catch"](function (error) {
         swal({
           title: "Error!",
@@ -20151,11 +20201,11 @@ __webpack_require__.r(__webpack_exports__);
           showConfirmButton: true
         }).then(function (value) {
           setTimeout(function () {
-            _this.scanning = false;
-            _this.form.tracking_code = '';
+            _this2.scanning = false;
+            _this2.form.tracking_code = '';
           }, 3000);
         });
-        _this.error = error;
+        _this2.error = error;
       });
     },
     onError: function onError(error) {
@@ -20165,6 +20215,61 @@ __webpack_require__.r(__webpack_exports__);
       if (this.form.tracking_code == '') {
         this.scanning = true;
       }
+    },
+    addParcel: function addParcel() {
+      var _this3 = this;
+
+      swal({
+        title: "Scanning!",
+        text: "scanning in process",
+        icon: "info",
+        buttons: false
+      });
+      this.message = '';
+      this.error = '';
+      this.axios.post('/scan-label', this.form).then(function (response) {
+        swal.close();
+
+        if (response.status == 200 && response.data.success == true) {
+          swal({
+            title: "Scanning!",
+            text: response.data.message,
+            icon: "success",
+            buttons: false,
+            timer: 3000
+          });
+          _this3.message = response.data.message;
+        } else {
+          swal({
+            title: "Error!",
+            text: response.data.message,
+            icon: "error",
+            showConfirmButton: true
+          }).then(function (value) {
+            _this3.form.tracking_code = '';
+            _this3.scannerInput = '';
+
+            _this3.$refs.search.focus();
+          });
+          _this3.error = response.data.message;
+        }
+
+        _this3.form.tracking_code = '';
+        _this3.scannerInput = '';
+      })["catch"](function (error) {
+        swal({
+          title: "Error!",
+          text: error,
+          icon: "error",
+          showConfirmButton: true
+        }).then(function (value) {
+          _this3.form.tracking_code = '';
+          _this3.scannerInput = '';
+
+          _this3.$refs.search.focus();
+        });
+        _this3.error = error;
+      });
     }
   }
 });
@@ -21822,68 +21927,195 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "container" }, [
-    _c("div", { staticClass: "row justify-content-center" }, [
-      _c("div", { staticClass: "col-md-8" }, [
-        _c("div", { staticClass: "card" }, [
-          _c("div", { staticClass: "card-header" }, [
-            _vm._v("Barcode Scanner")
-          ]),
+  return _c("div", [
+    _c("div", { staticClass: "row mb-2 col-4" }, [
+      _c("div", { staticClass: "col-md-2" }, [
+        _c("div", { staticClass: "form-check" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.source,
+                expression: "source"
+              }
+            ],
+            staticClass: "form-check-input admin-api-settings",
+            attrs: {
+              type: "radio",
+              name: "scanning_source",
+              id: "camera",
+              value: "camera"
+            },
+            domProps: { checked: _vm._q(_vm.source, "camera") },
+            on: {
+              change: function($event) {
+                _vm.source = "camera"
+              }
+            }
+          }),
           _vm._v(" "),
           _c(
-            "div",
-            { staticClass: "card-body" },
-            [
-              !_vm.scanning
-                ? _c("StreamBarcodeReader", {
-                    on: { decode: _vm.onDecode, error: _vm.onError }
-                  })
+            "label",
+            {
+              staticClass: "form-check-label h5 ml-1",
+              attrs: { for: "camera" }
+            },
+            [_vm._v("\r\n                    Camera\r\n                ")]
+          )
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-2 mt-1" }, [
+        _c("div", { staticClass: "form-check" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.source,
+                expression: "source"
+              }
+            ],
+            staticClass: "form-check-input admin-api-settings",
+            attrs: {
+              type: "radio",
+              name: "scanning_source",
+              id: "scanner",
+              value: "scanner"
+            },
+            domProps: { checked: _vm._q(_vm.source, "scanner") },
+            on: {
+              change: function($event) {
+                _vm.source = "scanner"
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c(
+            "label",
+            {
+              staticClass: "form-check-label h5 ml-1",
+              attrs: { for: "scanner" }
+            },
+            [_vm._v("\r\n                    Scanner\r\n                ")]
+          )
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "container" }, [
+      _c("div", { staticClass: "row justify-content-center" }, [
+        _c("div", { staticClass: "col-md-8" }, [
+          _c("div", { staticClass: "card" }, [
+            _c("div", { staticClass: "card-header" }, [
+              _vm._v("Barcode Scanner")
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "card-body" }, [
+              _vm.error
+                ? _c(
+                    "div",
+                    {
+                      staticClass: "alert alert-danger",
+                      attrs: { role: "alert" }
+                    },
+                    [
+                      _vm._v(
+                        "\r\n                            " +
+                          _vm._s(_vm.error) +
+                          "\r\n                        "
+                      )
+                    ]
+                  )
                 : _vm._e(),
               _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass: "row align-items-center justify-content-center"
-                },
-                [
-                  _c(
-                    "h2",
-                    {
+              _vm.source == "camera"
+                ? _c(
+                    "div",
+                    [
+                      !_vm.scanning
+                        ? _c("StreamBarcodeReader", {
+                            on: { decode: _vm.onDecode, error: _vm.onError }
+                          })
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          staticClass:
+                            "row align-items-center justify-content-center"
+                        },
+                        [
+                          _c(
+                            "h2",
+                            {
+                              directives: [
+                                {
+                                  name: "show",
+                                  rawName: "v-show",
+                                  value: _vm.scanning,
+                                  expression: "scanning"
+                                }
+                              ],
+                              staticClass: "text-danger"
+                            },
+                            [_vm._v("Click scan button to open camera")]
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "row mt-2" }, [
+                        _c("div", { staticClass: "ml-auto mr-2" }, [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-sm btn-primary",
+                              attrs: { type: "button" },
+                              on: {
+                                click: function($event) {
+                                  _vm.scanning = !_vm.scanning
+                                }
+                              }
+                            },
+                            [_vm._v("Scan")]
+                          )
+                        ])
+                      ])
+                    ],
+                    1
+                  )
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.source == "scanner"
+                ? _c("div", [
+                    _c("input", {
                       directives: [
                         {
-                          name: "show",
-                          rawName: "v-show",
-                          value: _vm.scanning,
-                          expression: "scanning"
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.scannerInput,
+                          expression: "scannerInput"
                         }
                       ],
-                      staticClass: "text-danger"
-                    },
-                    [_vm._v("Click scan button to open camera")]
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "row mt-2" }, [
-                _c("div", { staticClass: "ml-auto mr-2" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-sm btn-primary",
-                      attrs: { type: "button" },
+                      ref: "search",
+                      staticClass: "w-100 text-center",
+                      staticStyle: { height: "50px", "font-size": "30px" },
+                      attrs: { type: "text" },
+                      domProps: { value: _vm.scannerInput },
                       on: {
-                        click: function($event) {
-                          _vm.scanning = !_vm.scanning
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.scannerInput = $event.target.value
                         }
                       }
-                    },
-                    [_vm._v("Scan")]
-                  )
-                ])
-              ])
-            ],
-            1
-          )
+                    })
+                  ])
+                : _vm._e()
+            ])
+          ])
         ])
       ])
     ])
