@@ -21940,7 +21940,7 @@ var render = function() {
                 expression: "source"
               }
             ],
-            staticClass: "form-check-input",
+            staticClass: "form-check-input admin-api-settings",
             attrs: {
               type: "radio",
               name: "scanning_source",
@@ -21957,13 +21957,16 @@ var render = function() {
           _vm._v(" "),
           _c(
             "label",
-            { staticClass: "form-check-label", attrs: { for: "camera" } },
+            {
+              staticClass: "form-check-label h5 ml-1",
+              attrs: { for: "camera" }
+            },
             [_vm._v("\r\n                    Camera\r\n                ")]
           )
         ])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "col-md-2" }, [
+      _c("div", { staticClass: "col-md-2 mt-1" }, [
         _c("div", { staticClass: "form-check" }, [
           _c("input", {
             directives: [
@@ -21974,7 +21977,7 @@ var render = function() {
                 expression: "source"
               }
             ],
-            staticClass: "form-check-input",
+            staticClass: "form-check-input admin-api-settings",
             attrs: {
               type: "radio",
               name: "scanning_source",
@@ -21991,7 +21994,10 @@ var render = function() {
           _vm._v(" "),
           _c(
             "label",
-            { staticClass: "form-check-label", attrs: { for: "scanner" } },
+            {
+              staticClass: "form-check-label h5 ml-1",
+              attrs: { for: "scanner" }
+            },
             [_vm._v("\r\n                    Scanner\r\n                ")]
           )
         ])
