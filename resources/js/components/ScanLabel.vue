@@ -1,25 +1,53 @@
 <template>
+<div>
+    <div class="row mb-2 col-4">
+        <div class="col-md-2">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="scanning_source" id="camera" v-model="source" value="camera">
+                <label class="form-check-label" for="camera">
+                    Camera
+                </label>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="scanning_source" id="scanner" v-model="source" value="scanner">
+                <label class="form-check-label" for="scanner">
+                    Scanner
+                </label>
+            </div>
+        </div>
+    </div>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">Barcode Scanner</div>
                     <div class="card-body">
-                        <!-- <ImageBarcodeReader @decode="onDecode" @error="onError" v-if="!scanning"></ImageBarcodeReader> -->
-                        <StreamBarcodeReader @decode="onDecode" @error="onError" v-if="!scanning"></StreamBarcodeReader>
-                        <div class="row align-items-center justify-content-center">
-                            <h2 v-show="scanning" class="text-danger">Click scan button to open camera</h2>
+                        <div class="alert alert-danger" role="alert" v-if="error">
+                            {{error}}
                         </div>
-                        <div class="row mt-2">
-                            <div class="ml-auto mr-2">
-                                <button @click="scanning = !scanning" type="button" class="btn btn-sm btn-primary">Scan</button>
+                        <div v-if="source == 'camera'">
+                            <!-- <ImageBarcodeReader @decode="onDecode" @error="onError" v-if="!scanning"></ImageBarcodeReader> -->
+                            <StreamBarcodeReader @decode="onDecode" @error="onError" v-if="!scanning"></StreamBarcodeReader>
+                            <div class="row align-items-center justify-content-center">
+                                <h2 v-show="scanning" class="text-danger">Click scan button to open camera</h2>
                             </div>
+                            <div class="row mt-2">
+                                <div class="ml-auto mr-2">
+                                    <button @click="scanning = !scanning" type="button" class="btn btn-sm btn-primary">Scan</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-if="source == 'scanner'">
+                            <input type="text" class="w-100 text-center" style="height:50px;font-size:30px;" v-model="scannerInput" ref="search">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </template>
 <script>
 import { ImageBarcodeReader } from "vue-barcode-reader";
@@ -32,7 +60,9 @@ export default {
     },
     data() {
         return {
+            source: '',
             form: {'tracking_code' : ''},
+            scannerInput: '',
             error: null,
             scanning: false,
             message: ''
@@ -44,7 +74,25 @@ export default {
         // }, 60000)
     },
     mounted() {
-        console.log('Component testing.')
+        console.log('Component versioning.')
+    },
+    watch: {
+        source(value) {
+            this.scannerInput = '';
+            this.form.tracking_code = '';
+
+            if (value == 'scanner') {
+                this.$nextTick(() => {
+                    this.$refs.search.focus();
+                });
+            }
+        },
+        scannerInput(value) {
+            if(value.length > 10) {
+                this.form.tracking_code = value;
+                this.addParcel();
+            }
+        }
     },
     methods: {
         onDecode(decodedData) {
@@ -118,7 +166,57 @@ export default {
             if (this.form.tracking_code == '') {
                 this.scanning = true;
             }
-        }
+        },
+        addParcel(){
+            swal({
+                title: "Scanning!",
+                text: "scanning in process",
+                icon: "info",
+                buttons: false,
+            });
+            this.message = '';
+            this.error = '';
+
+            this.axios.post('/scan-label', this.form).then((response) => {
+                swal.close();
+                if (response.status == 200 && response.data.success == true) {
+                    swal({
+                        title: "Scanning!",
+                        text: response.data.message,
+                        icon: "success",
+                        buttons: false,
+                        timer: 3000
+                    });
+                    this.message = response.data.message;
+                }else{
+                    swal({
+                        title: "Error!",
+                        text: response.data.message,
+                        icon: "error",
+                        showConfirmButton: true,
+                    }).then((value) => {
+                         this.form.tracking_code = '';
+                         this.scannerInput = '';
+                         this.$refs.search.focus();
+                    });
+                    this.error = response.data.message;
+                }
+                this.form.tracking_code = '';
+                this.scannerInput = '';
+            }).catch((error) => {
+                swal({
+                        title: "Error!",
+                        text: error,
+                        icon: "error",
+                        showConfirmButton: true,
+                    }).then((value) => {
+                         this.form.tracking_code = '';
+                         this.scannerInput = '';
+                         this.$refs.search.focus();
+                });
+                this.error = error;
+            })
+        },
     }
 }
 </script>
