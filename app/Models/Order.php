@@ -613,6 +613,9 @@ class Order extends Model implements Package
 
     public function getDistributionModality(): int
     {
+        if ($this->shippingService && in_array($this->shippingService->service_sub_class, $this->anjunShippingServicesSubClasses())) {
+            return __default($this->getCorrespondenceServiceCode($this->shippingService->service_sub_class), ModelsPackage::SERVICE_CLASS_STANDARD);
+        }
         return __default( optional($this->shippingService)->service_sub_class ,ModelsPackage::SERVICE_CLASS_STANDARD );
     }
 
@@ -664,5 +667,18 @@ class Order extends Model implements Package
     public function isTrashed()
     {
         return $this->deleted_at ? true : false;
+    }
+
+    public function anjunShippingServicesSubClasses()
+    {
+        return [
+            ShippingService::AJ_Packet_Standard, 
+            ShippingService::AJ_Packet_Express,
+        ];
+    }
+
+    public function getCorrespondenceServiceCode($serviceCode)
+    {
+        return ($serviceCode == ShippingService::AJ_Packet_Express) ? ShippingService::Packet_Express : ShippingService::Packet_Standard;
     }
 }

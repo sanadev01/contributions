@@ -53,6 +53,8 @@
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_MINI}}">Mini</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_SRP}}">SRP</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_SRM}}">SRM</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_AJ_Standard}}">AJ Standard</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_AJ_EXPRESS}}">AJ Express</option>
                                         </select>
                                         <div class="help-block"></div>
                                     </div>
@@ -119,13 +121,17 @@
 @section('js')
 <script>
     $(document).ready(function(){ 
+        var countryChile = {!! $countryChile !!};
+
         $('#country').change(function () {
             let selected = $('#country').val();
             
-            if(selected == '46') {
+            if(selected == countryChile) {
                 $('#service').children("option[value=" + '33162' + "]").hide();
                 $('#service').children("option[value=" + '33170' + "]").hide();
                 $('#service').children("option[value=" + '33197' + "]").hide();
+                $('#service').children("option[value=" + '33164' + "]").hide();
+                $('#service').children("option[value=" + '33172' + "]").hide();
 
                 $('#service').children("option[value=" + '28' + "]").show();
                 $('#service').children("option[value=" + '32' + "]").show();
@@ -136,6 +142,9 @@
                 $('#service').children("option[value=" + '33162' + "]").show();
                 $('#service').children("option[value=" + '33170' + "]").show();
                 $('#service').children("option[value=" + '33197' + "]").show();
+                $('#service').children("option[value=" + '33164' + "]").show();
+                $('#service').children("option[value=" + '33172' + "]").show();
+                
             }
         });
 
