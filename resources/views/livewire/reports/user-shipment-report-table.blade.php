@@ -143,7 +143,9 @@
                         {{ $user->email }} 
                     </td>
                     <td class="h4">
-                        {{ number_format($user->order_count,2) }} 
+                        <a href="#" title="Click to see Shipment" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.report.shipment-user',$user) }}">
+                            {{ number_format($user->order_count,2) }}
+                        </a>
                     </td>
                     <td class="h4">
                         {{ number_format($user->weight,2) }} Kg

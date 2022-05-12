@@ -30,6 +30,9 @@
         </div>
     </section>
 @endsection
+@section('modal')
+    <x-modal/>
+@endsection
 @section('js')
     <script>
         function format () {
