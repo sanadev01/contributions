@@ -38,6 +38,14 @@ class IndexTable extends Component
             'name' => 'SRM',
             'value' => Package::SERVICE_CLASS_SRM,
         ];
+        $this->services[5] = [
+            'name' => 'Anjun Standard',
+            'value' => Package::SERVICE_CLASS_AJ_Standard,
+        ];
+        $this->services[6] = [
+            'name' => 'Anjun Express',
+            'value' => Package::SERVICE_CLASS_AJ_EXPRESS,
+        ];
         
         return $this->services;
     }

@@ -516,6 +516,21 @@ class OrderRepository
                     return $item->service_sub_class != '33163' && $item->service_sub_class != '33171' && $item->service_sub_class != '33198';
                 });
             }
+
+            if(setting('anjun_api', null, \App\Models\User::ROLE_ADMIN)){
+                    $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                        return $shippingService->service_sub_class != ShippingService::Packet_Standard 
+                            && $shippingService->service_sub_class != ShippingService::Packet_Express
+                            && $shippingService->service_sub_class != ShippingService::Packet_Mini;
+                    });
+            }
+
+            if(!setting('anjun_api', null, \App\Models\User::ROLE_ADMIN)){
+                    $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                        return $shippingService->service_sub_class != ShippingService::AJ_Packet_Standard 
+                            && $shippingService->service_sub_class != ShippingService::AJ_Packet_Express;
+                    });
+            }
             
             if($shippingServices->isEmpty()){
                 $this->shippingServiceError = 'Please check your parcel dimensions';
