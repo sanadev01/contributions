@@ -3,6 +3,7 @@
 namespace App\Repositories\Reports;
 
 use App\Models\Order;
+use App\Models\ShippingService;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -195,5 +196,41 @@ class OrderReportsRepository
             sum(CASE WHEN measurement_unit = 'kg/cm' THEN ROUND(weight,2) ELSE ROUND((weight/2.205),2) END) as weight"
         )->groupBy('month')->where('order_date', 'like', "$request->year%" )->orderBy('month','asc')->get();
         return $ordersByYear;
+    }
+
+    public function orderReportByService($user)
+    {
+        
+        $query = User::query();
+        $query->where('id', $user->id);
+        
+        $query->withCount(['orders as brazil_order_count'=> function($query){
+            $query->where('status','>',Order::STATUS_PAYMENT_PENDING);
+            $query->whereHas('shippingService', function ($query){
+                $query->whereIn('service_sub_class',[ShippingService::Packet_Standard, ShippingService::Packet_Express, ShippingService::Packet_Mini]);
+            });
+        },'orders as chile_order_count' => function($query) {
+            $query->where('status','>',Order::STATUS_PAYMENT_PENDING);
+            $query->whereHas('shippingService', function ($query){
+                $query->whereIn('service_sub_class',[ShippingService::SRP, ShippingService::SRM, ShippingService::Courier_Express]);
+            });
+        },'orders as ups_order_count' => function($query) {
+            $query->where('status','>',Order::STATUS_PAYMENT_PENDING);
+            $query->whereHas('shippingService', function ($query){
+                $query->whereIn('service_sub_class',[ShippingService::UPS_GROUND]);
+            });
+        },'orders as usps_order_count' => function($query) {
+            $query->where('status','>',Order::STATUS_PAYMENT_PENDING);
+            $query->whereHas('shippingService', function ($query){
+                $query->whereIn('service_sub_class',[ShippingService::USPS_PRIORITY, ShippingService::USPS_FIRSTCLASS,ShippingService::USPS_PRIORITY_INTERNATIONAL, ShippingService::USPS_FIRSTCLASS_INTERNATIONAL]);
+            });
+        },'orders as fedex_order_count' => function($query) {
+            $query->where('status','>',Order::STATUS_PAYMENT_PENDING);
+            $query->whereHas('shippingService', function ($query){
+                $query->whereIn('service_sub_class',[ShippingService::FEDEX_GROUND]);
+            });
+        }]);
+        $order = $query->first();
+        return $order;
     }
 }
