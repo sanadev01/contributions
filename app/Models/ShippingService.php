@@ -79,4 +79,21 @@ class ShippingService extends Model
     {
         return $this->hasMany(ProfitPackage::class);
     }
+
+    public function isAnjunService()
+    {
+        if (in_array($this->service_sub_class, $this->anjunShippingServices())) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function anjunShippingServices()
+    {
+        return [
+            self::AJ_Packet_Standard, 
+            self::AJ_Packet_Express,
+        ];
+    }
 }
