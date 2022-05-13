@@ -39,12 +39,6 @@ class Client{
         $this->client = new GuzzleClient([
             'base_uri' => $this->baseUri
         ]);
-
-        if (setting('anjun_api', null, \App\Models\User::ROLE_ADMIN)) {
-            $this->username = $this->anjun_username;
-            $this->password = $this->anjun_password;
-            $this->numero = $this->anjun_numero;
-        }
     }
 
     public function getToken()
@@ -57,6 +51,24 @@ class Client{
                 ],
                 'json' => [
                     'numero' => $this->numero
+                ]
+            ]);
+
+            return $response->getStatusCode() == 201 ? optional(json_decode($response->getBody()->getContents()))->token : null;
+        });
+
+    }
+
+    public function getAnjunToken()
+    {
+        return Cache::remember('anjun_token',Carbon::now()->addHours(24),function (){
+            $response = $this->client->post('/token/v1/autentica/cartaopostagem',[
+                'auth' => [
+                    $this->anjun_username,
+                    $this->anjun_password
+                ],
+                'json' => [
+                    'numero' => $this->anjun_numero
                 ]
             ]);
 
@@ -123,7 +135,7 @@ class Client{
         try {
             $response = $this->client->post('/packet/v1/packages',[
                'headers' => [
-                   'Authorization' => "Bearer {$this->getToken()}"
+                'Authorization' => ($order->shippingService->isAnjunService()) ? "Bearer {$this->getAnjunToken()}" :"Bearer {$this->getToken()}"
                ],
                 'json' => [
                     'packageList' => [

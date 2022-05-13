@@ -50,6 +50,24 @@ class ParcelController extends Controller
             return apiResponse(false,'Shipping service not found.');
         }
 
+        if (!setting('anjun_api', null, \App\Models\User::ROLE_ADMIN) && in_array($shippingService->service_sub_class, $this->anjunShippingServices())) {
+            return apiResponse(false,$shippingService->name.' is currently not available.');
+        }
+
+        if (setting('anjun_api', null, \App\Models\User::ROLE_ADMIN)) {
+            if ($shippingService->service_sub_class == ShippingService::Packet_Mini) {
+                return apiResponse(false,$shippingService->name.' is currently not available.');
+            }
+
+            if ($shippingService->service_sub_class == ShippingService::Packet_Standard) {
+                $shippingService = ShippingService::where('service_sub_class', ShippingService::AJ_Packet_Standard)->first();
+            }
+
+            if ($shippingService->service_sub_class == ShippingService::AJ_Packet_Express) {
+                $shippingService = ShippingService::where('service_sub_class', ShippingService::AJ_Packet_Express)->first();
+            }
+        }
+
         if ( optional($request->parcel)['measurement_unit'] == 'kg/cm' ){
             $volumetricWeight = WeightCalculator::getVolumnWeight($length,$width,$height,'cm');
             $volumeWeight = round($volumetricWeight > $weight ? $volumetricWeight : $weight,2);
@@ -115,7 +133,7 @@ class ParcelController extends Controller
         try {
 
             $order = Order::create([
-                'shipping_service_id' => optional($request->parcel)['service_id'],
+                'shipping_service_id' => $shippingService->id,
                 'user_id' => Auth::id(),
                 "merchant" => optional($request->parcel)['merchant'],
                 "carrier" => optional($request->parcel)['carrier'],
@@ -269,6 +287,24 @@ class ParcelController extends Controller
             return apiResponse(false,'Shipping service not found.');
         }
 
+        if (!setting('anjun_api', null, \App\Models\User::ROLE_ADMIN) && in_array($shippingService->service_sub_class, $this->anjunShippingServices())) {
+            return apiResponse(false,$shippingService->name.' is currently not available.');
+        }
+
+        if (setting('anjun_api', null, \App\Models\User::ROLE_ADMIN)) {
+            if ($shippingService->service_sub_class == ShippingService::Packet_Mini) {
+                return apiResponse(false,$shippingService->name.' is currently not available.');
+            }
+
+            if ($shippingService->service_sub_class == ShippingService::Packet_Standard) {
+                $shippingService = ShippingService::where('service_sub_class', ShippingService::AJ_Packet_Standard)->first();
+            }
+
+            if ($shippingService->service_sub_class == ShippingService::AJ_Packet_Express) {
+                $shippingService = ShippingService::where('service_sub_class', ShippingService::AJ_Packet_Express)->first();
+            }
+        }
+
         if ( optional($request->parcel)['measurement_unit'] == 'kg/cm' ){
             $volumetricWeight = WeightCalculator::getVolumnWeight($length,$width,$height,'cm');
             $volumeWeight = round($volumetricWeight > $weight ? $volumetricWeight : $weight,2);
@@ -334,7 +370,7 @@ class ParcelController extends Controller
 
         try {
             $parcel->update([
-                'shipping_service_id' => optional($request->parcel)['service_id'],
+                'shipping_service_id' => $shippingService->id,
                 'user_id' => Auth::id(),
                 "merchant" => optional($request->parcel)['merchant'],
                 "carrier" => optional($request->parcel)['carrier'],
@@ -514,6 +550,14 @@ class ParcelController extends Controller
             ShippingService::Packet_Standard, 
             ShippingService::Packet_Express, 
             ShippingService::Packet_Mini,
+        ];
+    }
+
+    private function anjunShippingServices()
+    {
+        return [
+            ShippingService::AJ_Packet_Standard, 
+            ShippingService::AJ_Packet_Express,
         ];
     }
 }
