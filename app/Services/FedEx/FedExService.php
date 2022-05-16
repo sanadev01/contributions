@@ -184,7 +184,7 @@ class FedExService
                 'shipper' => [
                     'contact' => [
                         'personName' => $request->first_name.' '.$request->last_name,
-                        'phoneNumber' => $request->sender_phone,
+                        'phoneNumber' => $request->sender_phone ? $request->sender_phone : '+13058885191',
                     ],
                     'address' => [
                         'streetLines' => [$request->sender_address],

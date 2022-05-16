@@ -226,7 +226,7 @@ class USCalculatorRepository
             return $this->order;
         }
 
-        $this->order->delete();
+        $this->order->forcedelete();
         return null;
     }
 
