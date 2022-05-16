@@ -208,7 +208,7 @@ class Client{
         try {
             $response = $this->client->post('/packet/v1/cn38request',[
                 'headers' => [
-                    'Authorization' => "Bearer {$this->getToken()}"
+                    'Authorization' => ($deliveryBill->containers()->first()->hasAnjunService()) ?  "Bearer {$this->getAnjunToken()}" : "Bearer {$this->getToken()}"
                 ],
                 'json' => [
                     'dispatchNumbers' => $deliveryBill->containers->pluck('dispatch_number')->toArray()
