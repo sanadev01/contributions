@@ -198,39 +198,102 @@ class OrderReportsRepository
         return $ordersByYear;
     }
 
-    public function orderReportByService($user)
+    public function orderReportByService(User $user, $request)
     {
-        
+        $correios = [
+            ShippingService::Packet_Standard,
+            ShippingService::Packet_Express,
+            ShippingService::Packet_Mini
+        ];
+        $chile = [
+            ShippingService::SRP,
+            ShippingService::SRM,
+            ShippingService::Courier_Express
+        ];
+        $ups = [
+            ShippingService::UPS_GROUND
+        ];
+        $fedex = [
+            ShippingService::FEDEX_GROUND
+        ];
+        $usps = [
+            ShippingService::USPS_PRIORITY,
+            ShippingService::USPS_FIRSTCLASS,
+            ShippingService::USPS_PRIORITY_INTERNATIONAL,
+            ShippingService::USPS_FIRSTCLASS_INTERNATIONAL
+        ];
+        $allServices = array_merge($correios, $chile, $ups, $fedex, $usps);
         $query = User::query();
         $query->where('id', $user->id);
         
-        $query->withCount(['orders as brazil_order_count'=> function($query){
+        $query->withCount(['orders as brazil_order_count'=> function($query) use ($correios,$request){
+
             $query->where('status','>',Order::STATUS_PAYMENT_PENDING);
-            $query->whereHas('shippingService', function ($query){
-                $query->whereIn('service_sub_class',[ShippingService::Packet_Standard, ShippingService::Packet_Express, ShippingService::Packet_Mini]);
+            $query = $this->requestFilterDate($query,$request);
+
+            $query->whereHas('shippingService', function ($query) use ($correios){
+                $query->whereIn('service_sub_class',$correios);
             });
-        },'orders as chile_order_count' => function($query) {
+
+        },'orders as chile_order_count' => function($query) use ($chile,$request){
+
             $query->where('status','>',Order::STATUS_PAYMENT_PENDING);
-            $query->whereHas('shippingService', function ($query){
-                $query->whereIn('service_sub_class',[ShippingService::SRP, ShippingService::SRM, ShippingService::Courier_Express]);
+            $query = $this->requestFilterDate($query,$request);
+
+            $query->whereHas('shippingService', function ($query) use ($chile){
+                $query->whereIn('service_sub_class',$chile);
             });
-        },'orders as ups_order_count' => function($query) {
+
+        },'orders as ups_order_count' => function($query) use ($ups,$request){
+
             $query->where('status','>',Order::STATUS_PAYMENT_PENDING);
-            $query->whereHas('shippingService', function ($query){
-                $query->whereIn('service_sub_class',[ShippingService::UPS_GROUND]);
+            $query = $this->requestFilterDate($query,$request);
+
+            $query->whereHas('shippingService', function ($query) use ($ups){
+                $query->whereIn('service_sub_class',$ups);
             });
-        },'orders as usps_order_count' => function($query) {
+
+        },'orders as usps_order_count' => function($query) use ($usps,$request){
+
             $query->where('status','>',Order::STATUS_PAYMENT_PENDING);
-            $query->whereHas('shippingService', function ($query){
-                $query->whereIn('service_sub_class',[ShippingService::USPS_PRIORITY, ShippingService::USPS_FIRSTCLASS,ShippingService::USPS_PRIORITY_INTERNATIONAL, ShippingService::USPS_FIRSTCLASS_INTERNATIONAL]);
+            $query = $this->requestFilterDate($query,$request);
+
+            $query->whereHas('shippingService', function ($query) use ($usps){
+                $query->whereIn('service_sub_class',$usps);
             });
-        },'orders as fedex_order_count' => function($query) {
+
+        },'orders as fedex_order_count' => function($query) use ($fedex,$request){
+
             $query->where('status','>',Order::STATUS_PAYMENT_PENDING);
-            $query->whereHas('shippingService', function ($query){
-                $query->whereIn('service_sub_class',[ShippingService::FEDEX_GROUND]);
+            $query = $this->requestFilterDate($query,$request);
+
+            $query->whereHas('shippingService', function ($query) use ($fedex){
+                $query->whereIn('service_sub_class',$fedex);
             });
+
+        },'orders as other_order_count' => function($query)  use ($allServices,$request){
+
+            $query->where('status','>',Order::STATUS_PAYMENT_PENDING);
+            $query = $this->requestFilterDate($query,$request);
+
+            $query->whereHas('shippingService', function ($query) use ($allServices){
+                $query->whereNotIn('service_sub_class',$allServices);
+            });
+            
         }]);
-        $order = $query->first();
-        return $order;
+        $user = $query->first();
+        return $user;
+    }
+
+    public function requestFilterDate($query, $request){
+        if ( $request->start_date) {
+            $startDate = $request->start_date.' 00:00:00';
+            $query->where('order_date','>=', $startDate);
+        }
+        if ($request->end_date ) {
+            $endDate = $request->end_date.' 23:59:59';
+            $query->where('order_date','<=', $endDate);
+        }
+        return $query;
     }
 }

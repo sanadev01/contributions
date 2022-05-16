@@ -35,6 +35,8 @@ class ShipmentReport extends AbstractExportService
         $orderReportsRepository = new OrderReportsRepository;
         foreach ($this->users as $user) {
             $report = $orderReportsRepository->getShipmentReportOfUsersByWeight($user->id, null, $this->request);
+            $reportByService = $orderReportsRepository->orderReportByService($user, $this->request);
+            
             $this->setCellValue('A'.$row, $user->pobox_number);
             $this->setCellValue('B'.$row, $user->name);
             $this->setCellValue('C'.$row, $user->email);
@@ -55,6 +57,12 @@ class ShipmentReport extends AbstractExportService
             $this->setCellValue('R'.$row, $report[11]['orders']);
             $this->setCellValue('S'.$row, $report[12]['orders']);
             $this->setCellValue('T'.$row, $report[13]['orders']);
+            $this->setCellValue('U'.$row, $reportByService->brazil_order_count);
+            $this->setCellValue('V'.$row, $reportByService->chile_order_count);
+            $this->setCellValue('W'.$row, $reportByService->ups_order_count);
+            $this->setCellValue('X'.$row, $reportByService->usps_order_count);
+            $this->setCellValue('Y'.$row, $reportByService->fedex_order_count);
+            $this->setCellValue('Z'.$row, $reportByService->other_order_count);
             $row++;
         }
         $this->setCellValue('D'.$row, "=SUM(D1:D{$row})");
@@ -74,7 +82,13 @@ class ShipmentReport extends AbstractExportService
         $this->setCellValue('R'.$row, "=SUM(R1:R{$row})");
         $this->setCellValue('S'.$row, "=SUM(S1:S{$row})");
         $this->setCellValue('T'.$row, "=SUM(T1:T{$row})");
-        $this->setBackgroundColor("A{$row}:T{$row}", 'adfb84');
+        $this->setCellValue('U'.$row, "=SUM(U1:U{$row})");
+        $this->setCellValue('V'.$row, "=SUM(V1:V{$row})");
+        $this->setCellValue('W'.$row, "=SUM(W1:W{$row})");
+        $this->setCellValue('X'.$row, "=SUM(X1:X{$row})");
+        $this->setCellValue('Y'.$row, "=SUM(Y1:Y{$row})");
+        $this->setCellValue('Z'.$row, "=SUM(Z1:Z{$row})");
+        $this->setBackgroundColor("A{$row}:Z{$row}", 'adfb84');
         $this->currentRow = $row;
     }
 
@@ -140,8 +154,26 @@ class ShipmentReport extends AbstractExportService
         $this->setColumnWidth('T', 20);
         $this->setCellValue('T1', '25.01 - 30.00 Kg');
 
-        $this->setBackgroundColor('A1:T1', '2b5cab');
-        $this->setColor('A1:T1', 'FFFFFF');
+        $this->setColumnWidth('U', 20);
+        $this->setCellValue('U1', 'Correios Brazil');
+        
+        $this->setColumnWidth('V', 20);
+        $this->setCellValue('V1', 'Correios Chile');
+        
+        $this->setColumnWidth('W', 20);
+        $this->setCellValue('W1', 'UPS');
+        
+        $this->setColumnWidth('X', 20);
+        $this->setCellValue('X1', 'Usps');
+        
+        $this->setColumnWidth('Y', 20);
+        $this->setCellValue('Y1', 'Fedex');
+        
+        $this->setColumnWidth('Z', 20);
+        $this->setCellValue('Z1', 'Old Services');
+        
+        $this->setBackgroundColor('A1:Z1', '2b5cab');
+        $this->setColor('A1:Z1', 'FFFFFF');
 
         $this->currentRow++;
     }

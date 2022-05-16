@@ -8,6 +8,7 @@
                     <th>UPS</th>
                     <th>USPS</th>
                     <th>Fedex</th>
+                    <th>Old Services</th>
                 </tr>
                 <tr>
                     <td>{{ $userOrderCount->brazil_order_count }}</td>
@@ -15,6 +16,7 @@
                     <td>{{ $userOrderCount->ups_order_count }}</td>
                     <td>{{ $userOrderCount->usps_order_count }} </td>
                     <td>{{ $userOrderCount->fedex_order_count }} </td>
+                    <td>{{ $userOrderCount->other_order_count }} </td>
                 </tr>  
             </tbody>
         </table>
