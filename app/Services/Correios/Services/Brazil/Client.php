@@ -271,7 +271,7 @@ class Client{
         try {
             $response = $this->client->delete("/packet/v1/units/dispatch/$container->dispatch_number",[
                 'headers' => [
-                    'Authorization' => "Bearer {$this->getToken()}"
+                    'Authorization' => ($container->hasAnjunService()) ? "Bearer {$this->getAnjunToken()}" : "Bearer {$this->getToken()}"
                 ]
             ]);
             return $response;
