@@ -36,7 +36,7 @@ class ShipmentReport extends AbstractExportService
         foreach ($this->users as $user) {
             $report = $orderReportsRepository->getShipmentReportOfUsersByWeight($user->id, null, $this->request);
             $reportByService = $orderReportsRepository->orderReportByService($user, $this->request);
-            
+
             $this->setCellValue('A'.$row, $user->pobox_number);
             $this->setCellValue('B'.$row, $user->name);
             $this->setCellValue('C'.$row, $user->email);
@@ -63,6 +63,7 @@ class ShipmentReport extends AbstractExportService
             $this->setCellValue('X'.$row, $reportByService->usps_order_count);
             $this->setCellValue('Y'.$row, $reportByService->fedex_order_count);
             $this->setCellValue('Z'.$row, $reportByService->other_order_count);
+            $this->setBackgroundColor("U{$row}:Z{$row}", 'd1d1d1');
             $row++;
         }
         $this->setCellValue('D'.$row, "=SUM(D1:D{$row})");
