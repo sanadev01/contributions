@@ -65,6 +65,8 @@
                                             <option value="NX">Packet Standard</option>
                                             <option value="IX">Packet Express</option>
                                             <option value="XP">Packet Mini</option>
+                                            <option value="AJ-NX">Anjun Packet Standard</option>
+                                            <option value="AJ-IX">Anjun Packet Express</option>
                                         </select>
                                     </th>
                                     
