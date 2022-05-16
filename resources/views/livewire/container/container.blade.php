@@ -145,10 +145,11 @@
                                                             <a href="{{ route('warehouse.containers.edit',$container) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
                                                             </a>
-                                                            
-                                                            <a href="{{ route('warehouse.container.register',$container) }}" class="dropdown-item w-100">
-                                                                <i class="feather icon-box"></i> Register Unit
-                                                            </a>
+                                                            @if( !$container->isRegistered())
+                                                                <a href="{{ route('warehouse.container.register',$container) }}" class="dropdown-item w-100">
+                                                                    <i class="feather icon-box"></i> Register Unit
+                                                                </a>
+                                                            @endif
                                                             <a href="{{ route('warehouse.container.cancel',$container) }}" class="dropdown-item w-100">
                                                                 <i class="feather icon-box"></i> Cancel Unit
                                                             </a>
