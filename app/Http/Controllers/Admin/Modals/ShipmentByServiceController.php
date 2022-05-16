@@ -9,9 +9,9 @@ use App\Repositories\Reports\OrderReportsRepository;
 
 class ShipmentByServiceController extends Controller
 {
-    public function __invoke(User $user, OrderReportsRepository $orderReportsRepository)
+    public function __invoke(Request $request, User $user, OrderReportsRepository $orderReportsRepository)
     {
-        $userOrderCount = $orderReportsRepository->orderReportByService($user);
+        $userOrderCount = $orderReportsRepository->orderReportByService($user,$request);
         return view('admin.modals.report.shipment-count',compact('userOrderCount'));
     }
 }
