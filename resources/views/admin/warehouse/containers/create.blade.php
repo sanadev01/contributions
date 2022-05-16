@@ -57,6 +57,8 @@
                                             <option value="NX" {{ old('services_subclass_code') == 'NX' ? 'selected': '' }}>Packet Standard service</option>
                                             <option value="IX" {{ old('services_subclass_code') == 'IX' ? 'selected': '' }}>Packet Express service</option>
                                             <option value="XP" {{ old('services_subclass_code') == 'XP' ? 'selected': '' }}>Packet Mini service</option>
+                                            <option value="AJ-NX" {{ old('services_subclass_code') == 'AJ-NX' ? 'selected': '' }}>Anjun Standard service</option>
+                                            <option value="AJ-IX" {{ old('services_subclass_code') == 'AJ-IX' ? 'selected': '' }}>Anjun Express service</option>
                                         </select>
                                         @error('services_subclass_code')
                                             <div class="help-block text-danger"> {{ $message }} </div>

@@ -13,8 +13,7 @@ class ContainerController extends Controller
 {
     public function index(Request $request,ContainerRepository $containerRepository)
     {
-        $containers = $containerRepository->get($request);
-        return view('admin.warehouse.containers.index',compact('containers'));
+        return view('admin.warehouse.containers.index');
     }
 
     public function create()

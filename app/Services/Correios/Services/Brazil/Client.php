@@ -174,7 +174,7 @@ class Client{
         try {
             $response = $this->client->post('/packet/v1/units',[
                 'headers' => [
-                    'Authorization' => "Bearer {$this->getToken()}"
+                    'Authorization' => ($container->hasAnjunService()) ? "Bearer {$this->getAnjunToken()}" : "Bearer {$this->getToken()}"
                 ],
                 'json' => [
                     "dispatchNumber" => $container->dispatch_number,
@@ -182,7 +182,7 @@ class Client{
                     "originOperatorName" => $container->origin_operator_name,
                     "destinationOperatorName" => $container->destination_operator_name,
                     "postalCategoryCode" => $container->postal_category_code,
-                    "serviceSubclassCode" => $container->services_subclass_code,
+                    "serviceSubclassCode" => $container->getSubClassCode(),
                     "unitList" => [
                         [
                             "sequence" => $container->sequence,

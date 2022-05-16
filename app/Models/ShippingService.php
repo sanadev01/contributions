@@ -80,9 +80,45 @@ class ShippingService extends Model
         return $this->hasMany(ProfitPackage::class);
     }
 
+    public function isOfUnitedStates()
+    {
+        if (collect($this->usShippingServices())->contains($this->service_sub_class)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isDomesticService()
+    {
+        if (collect($this->domesticShippingServices())->contains($this->service_sub_class)) {
+            return true;
+        }
+        
+        return false;
+    }
+
+    public function isInternationalService()
+    {
+        if (collect($this->internationalShippingServices())->contains($this->service_sub_class)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isCorreiosService()
+    {
+        if (collect($this->correiosShippingServices())->contains($this->service_sub_class)) {
+            return true;
+        }
+    
+        return false;
+    }
+
     public function isAnjunService()
     {
-        if (in_array($this->service_sub_class, $this->anjunShippingServices())) {
+        if (collect($this->anjunShippingServices())->contains($this->service_sub_class)) {
             return true;
         }
 
@@ -94,6 +130,45 @@ class ShippingService extends Model
         return [
             self::AJ_Packet_Standard, 
             self::AJ_Packet_Express,
+        ];
+    }
+
+    private function correiosShippingServices()
+    {
+        return [
+            self::Packet_Standard, 
+            self::Packet_Express,
+            self::Packet_Mini,
+        ];
+    }
+
+    private function usShippingServices()
+    {
+        return [
+            self::USPS_PRIORITY, 
+            self::USPS_FIRSTCLASS, 
+            self::USPS_PRIORITY_INTERNATIONAL, 
+            self::USPS_FIRSTCLASS_INTERNATIONAL, 
+            self::UPS_GROUND, 
+            self::FEDEX_GROUND
+        ];
+    }
+
+    private function domesticShippingServices()
+    {
+        return [
+            self::USPS_PRIORITY, 
+            self::USPS_FIRSTCLASS,
+            self::UPS_GROUND, 
+            self::FEDEX_GROUND
+        ];
+    }
+
+    private function internationalShippingServices()
+    {
+        return [
+            self::USPS_PRIORITY_INTERNATIONAL, 
+            self::USPS_FIRSTCLASS_INTERNATIONAL,
         ];
     }
 }
