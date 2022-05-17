@@ -16,8 +16,8 @@ return [
         'cancelPickupUrl' => '',
     ],
     'credentials' => [
-        'client_id' => 'l7bc13fa29ecab4417919ace5e6a089171',
-        'client_secret' => '1ea88a9850d24218bc4ca047a989e42d',
+        'client_id' => 'l7e9ac2a1c19254a42a8ec17a8683a8c3a',
+        'client_secret' => '454c469100f449d3ab5a15da0f77b6dc',
         'account_number' => '510087020'
     ]
 ];

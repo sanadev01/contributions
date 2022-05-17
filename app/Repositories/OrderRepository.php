@@ -256,7 +256,7 @@ class OrderRepository
     {
         $shippingService =  ShippingService::find($shippingServiceId);
 
-        if (in_array($shippingService->service_sub_class, $this->domesticShippingServices())) {
+        if ($shippingService->isDomesticService()) {
             return true;
         }
 
@@ -553,16 +553,6 @@ class OrderRepository
         }
         $this->error = $response->message;
         return false;
-    }
-
-    private function domesticShippingServices()
-    {
-        return [
-            ShippingService::USPS_PRIORITY, 
-            ShippingService::USPS_FIRSTCLASS,
-            ShippingService::UPS_GROUND, 
-            ShippingService::FEDEX_GROUND
-        ];
     }
 
 }
