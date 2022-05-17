@@ -37,7 +37,8 @@ class CreateRequest extends FormRequest
             'city' => 'required_if:service,==,postal_service',
             'commune_id' => 'required_if:service,==,courier_express',
             'phone' => [
-                'required',($this->country_id == Country::US) ? 'max:12' :'max:15','min:11', new PhoneNumberValidator($this->country_id)
+                'required','max:15','min:11', 
+                ($this->country_id == Country::Brazil) ? new PhoneNumberValidator($this->country_id) : ''
             ],
             'state_id' => 'sometimes|required|exists:states,id',
             'region' => 'sometimes|required',
