@@ -11,6 +11,7 @@ use App\Repositories\DomesticLabelRepository;
 class UsLabelForm extends Component
 {
     public $order;
+    public $userId;
     public $states;
     public $usShippingServices;
     public $usServicesErrors;
@@ -40,6 +41,11 @@ class UsLabelForm extends Component
     public $zipCodeResponseMessage;
     public $zipCodeClass;
 
+    protected $listeners = [
+        'searchedAddress' => 'searchAddress',
+        'phoneNumber' => 'enteredPhoneNumber',
+    ];
+
     protected $rules = [
         'firstName' => 'required',
         'lastName' => 'required',
@@ -64,12 +70,29 @@ class UsLabelForm extends Component
 
         if ($this->order) {
             $this->senderPhone = $this->order->user->phone;
+            $this->userId = $this->order->user_id;
         }
     }
 
     public function render()
     {
         return view('livewire.order.us-label-form');
+    }
+
+    public function enteredPhoneNumber($value)
+    {
+        $this->senderPhone = $value;
+    }
+
+    public function searchAddress($address)
+    {
+        $this->senderState = \App\Models\State::find($address['state_id'])->code;
+        $this->firstName = $address['first_name'];
+        $this->lastName = $address['last_name'];
+        $this->senderAddress = $address['address'];
+        $this->senderCity = $address['city'];
+        $this->senderZipCode = $address['zipcode'];
+        $this->senderPhone = $address['phone'];
     }
 
     public function updatedsenderState()
