@@ -200,6 +200,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         Route::namespace('Modals')->prefix('modals')->as('modals.')->group(function(){
             Route::get('user/suspended',\UserSuspendController::class)->name('user.suspended');
             Route::get('parcel/{parcel}/shipment-info', \ShipmentModalController::class)->name('parcel.shipment-info');
+            Route::get('report/{user}/shipment-user', \ShipmentByServiceController::class)->name('report.shipment-user');
             Route::get('parcel/{parcel}/consolidation-print', \ConsolidationPrintController::class)->name('parcel.consolidation-print');
             Route::get('order/{order}/invoice', \OrderInvoiceModalController::class)->name('order.invoice');
             Route::get('order/{error}/edit/{edit?}', [\App\Http\Controllers\Admin\Modals\ImportOrderModalController::class,'edit'])->name('order.error.edit');
