@@ -15,16 +15,31 @@ use App\Mail\User\NewTicketCommentAdded;
 
 class TicketRepository
 {
-    public function get()
+    public function get(Request $request)
     {   
-        $supportTickets = \auth()->user()->isAdmin() ? Ticket::has('user')->withCount(['comments' => function($q){
-                $q->where('read', '0')->where('user_id', '!=', auth()->id() ); 
-            }])->get() : Ticket::has('user')->where('user_id', auth()->id())->withCount(['comments' => function($q){
-                $q->where('read', '0')->where('user_id', '!=', auth()->id() ); 
-            }])->get();
-        
-        return $supportTickets;
 
+        $tickets = Ticket::query();
+
+        $tickets->has('user');
+        if (!auth()->user()->isAdmin()) {
+            $tickets->where('user_id', auth()->id());
+        }
+
+        $tickets->when($request->filled('date'), function ($query) use ($request) {
+            return $query->where('created_at', 'LIKE', "%{$request->date}%");
+        });
+
+        $tickets->when($request->filled('user'), function ($query) use ($request) {
+            return $query->whereHas('user', function ($query) use ($request) {
+                return $query->where('name', 'like', '%'.$request->user.'%');
+            });
+        });
+
+        $tickets->when($request->filled('status'), function ($query) use ($request) {
+            return $query->where('open', $request->status);
+        });
+
+        return $tickets->paginate(25);
     }
 
     public function store(Request $request)

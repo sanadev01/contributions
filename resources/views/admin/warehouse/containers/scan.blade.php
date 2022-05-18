@@ -26,5 +26,5 @@
 @endsection
 
 @push('js')
-    <script src="{{ asset('js/pages/scanner.js') }}"></script>
+    <script src="{{ mix('js/pages/scanner.js') }}"></script>
 @endpush

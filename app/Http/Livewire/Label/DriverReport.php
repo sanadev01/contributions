@@ -4,10 +4,14 @@ namespace App\Http\Livewire\Label;
 
 use App\Models\Order;
 use Livewire\Component;
+use Livewire\WithPagination;
 use App\Services\Excel\Export\ScanOrderExport;
 
 class DriverReport extends Component
 {
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
+    
     private $orders;
 
     public $start_date;
@@ -22,7 +26,7 @@ class DriverReport extends Component
     public function render()
     {
         return view('livewire.label.driver-report', [
-            'orders' => $this->orders,
+            'orders' => $this->getOrders(),
         ]);
     }
 
@@ -36,8 +40,6 @@ class DriverReport extends Component
         $this->start_date = $validated['start_date'].' 00:00:00';
         $this->end_date = $validated['end_date'].' 23:59:59';
 
-        $this->orders = $this->getOrders();
-
         $this->hasSearch = true;
         return;
     }
@@ -50,17 +52,16 @@ class DriverReport extends Component
         $this->start_date = null;
         $this->end_date = null;
 
-        $this->orders = $this->getOrders();
         return;
     }
 
     public function download()
     {
-        $exportService = new ScanOrderExport($this->getOrders());
+        $exportService = new ScanOrderExport($this->getOrders(false));
         return $exportService->handle();
     }
 
-    private function getOrders()
+    private function getOrders($paginate = true)
     {
         $orders = Order::query();
 
@@ -76,6 +77,6 @@ class DriverReport extends Component
             });
         });
 
-       return $orders->get();
+       return ($paginate) ? $orders->paginate(25) : $orders->get();
     }
 }

@@ -32,6 +32,10 @@
                 <th>Loja/Cliente</th>
                 <th>Carrier Tracking</th>
                 <th>Referência do Cliente</th>
+                <th>Carrier</th>
+                @admin
+                    <th>Carrier Cost</th>
+                @endadmin
                 <th>Tracking Code</th>
                 <th>@lang('orders.amount')</th>
                 <th>@lang('orders.status')</th>
@@ -60,6 +64,17 @@
                 <th>
                     <input type="search" class="form-control" wire:model.debounce.1000ms="customer_reference">
                 </th>
+                <th>
+                    <select class="form-control" wire:model.debounce.1000ms="carrier">
+                        <option value="">All</option>
+                        <option value="Brazil">Correios Brazil</option>
+                        <option value="USPS">USPS</option>
+                        <option value="UPS">UPS</option>
+                        <option value="FEDEX">FEDEX</option>
+                        <option value="Chile">Correios Chile</option>
+                    </select>
+                </th>
+                @admin<th></th>@endadmin
                 <th>
                     <input type="search" class="form-control" wire:model.debounce.1000ms="tracking_code">
                 </th>

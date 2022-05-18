@@ -22,7 +22,7 @@
         <label class="col-md-3 text-md-right">@lang('user.Package')<span class="text-danger"></span></label>
         <div class="col-md-6">
             <select class="form-control" data-live-search="true"  wire:model.defer="package_id">
-                <option value="" disabled hidden>@lang('user.Select Package')</option>
+                <option value="">@lang('user.Select Package')</option>
                 @isset($packages)
                     @foreach ($packages as $package)
                         <option value="{{ $package->id }}">{{ $package->name }}</option>
