@@ -33,9 +33,25 @@
         }
 
         if ($('#to_international').is(':checked')) {
-
             $('#to_herco').prop('checked', false);
             $('#from_herco').prop('checked', false);
+
+            $('#origin').addClass('d-none');
+            $('#destination').addClass('d-none');
+
+            $('#sender_info').removeClass('d-none');
+            $('#recipient_info').removeClass('d-none');
+
+            $('#recipient_personal_info').removeClass('d-none');
+            $('#recipient_personal_info').addClass('d-block');
+
+            window.toggleInternationalInputs();
+
+            $("#destination_country option[value='250']").each(function() {
+                $(this).remove();
+            });
+
+            $('#destination_country').selectpicker('refresh');
         }
 
         $('#from_herco').change(function(){

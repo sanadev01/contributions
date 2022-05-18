@@ -83,6 +83,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                <input type="hidden" name="user_id" id="user_id" value="{{ $userId }}">
                                 <div class="row mb-1 mt-3 d-none" id="origin">
                                     <div class="controls col-6">
                                         <h4 class="text-danger">Origin: Homedeliverybr MIA</h4>
@@ -224,5 +225,6 @@
 @section('jquery')
 <script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
 @include('uscalculator.script')
+@include('uscalculator.searchAddress')
 
 @endsection
