@@ -198,6 +198,7 @@ class UsLabelForm extends Component
         $domesticLabelRepostory->handle();
         if($domesticLabelRepostory->getDomesticLabel($request, $this->order))
         {
+            $this->saveAddress();
             return redirect()->route('admin.order.us-label.index', $this->order->id);
         }
 
@@ -233,5 +234,27 @@ class UsLabelForm extends Component
                 return $this->selectedServiceCost = $value['cost'];
             }
         });
+    }
+
+    private function saveAddress()
+    {
+        $existingAddress = \App\Models\Address::where([['user_id', $this->userId],['phone', $this->senderPhone]])->first();
+
+        if (!$existingAddress) {
+            \App\Models\Address::create([
+                            'user_id' => $this->userId,
+                            'first_name' => $this->firstName,
+                            'last_name' => $this->lastName,
+                            'phone' => $this->senderPhone,
+                            'address' => $this->senderAddress,
+                            'city' => $this->senderCity,
+                            'state_id' => \App\Models\State::where([['code', $this->senderState], ['country_id', \App\Models\Country::US]])->first()->id,
+                            'country_id' => \App\Models\Country::US,
+                            'zipcode' => $this->senderZipCode,
+                            'account_type' => 'individual',
+                        ]);
+        }
+
+        return;
     }
 }

@@ -35,6 +35,10 @@ class SearchAddress extends Component
         if (strlen($value) < 10 && $this->phoneNumberEmitted) {
             $this->emit('phoneNumber', $value);
         }
+
+        if (!$value && count($this->addresses) > 0) {
+            $this->addresses = null;
+        }
         
     }
 
