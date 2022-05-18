@@ -37,7 +37,7 @@
 
                             <div class="card-body">
                                 <div class="row justify-content-center">
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <div class="input-group">
                                             <div class="vs-checkbox-con vs-checkbox-primary" title="from_herco">
                                                 <input type="checkbox" name="from_herco" id="from_herco">
@@ -48,11 +48,11 @@
                                                 </span>
                                             </div>
                                             <span class="mt-2">
-                                                <h3 class="text-primary">From HERCO</h3>
+                                                <label class="h3 text-primary" for="from_herco">From HERCO</label>
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <div class="input-group">
                                             <div class="vs-checkbox-con vs-checkbox-primary" title="to_herco">
                                                 <input type="checkbox" name="to_herco" id="to_herco" checked>
@@ -63,7 +63,22 @@
                                                 </span>
                                             </div>
                                             <span class="mt-2">
-                                                <h3 class="text-primary">To HERCO</h3>
+                                                <label class="h3 text-primary" for="to_herco">To HERCO</label>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="input-group">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="to_international">
+                                                <input type="checkbox" name="to_international" id="to_international">
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            <span class="mt-2">
+                                                <label class="h3 text-primary" for="to_international">To International</label>
                                             </span>
                                         </div>
                                     </div>
@@ -120,6 +135,22 @@
                                     <div class="row mb-1 mt-3">
                                         <div class="controls col-6">
                                             <h4 class="text-danger">Recipeint Address</h4>
+                                        </div>
+                                    </div>
+                                    <div class="d-none" id="recipient_personal_info">
+                                        <div class="row mb-1">
+                                            <div class="controls col-4">
+                                                <label>Recipient Phone</label>
+                                                <input type="text" id="recipient_phone" name="recipient_phone" value="{{old('recipient_phone')}}" class="form-control"  required placeholder="Recipient phone"/>
+                                            </div>
+                                            <div class="controls col-4">
+                                                <label>Recipient First Name</label>
+                                                <input type="text" id="recipient_first_name" name="recipient_first_name" value="{{old('recipient_first_name')}}" class="form-control"  required placeholder="Recipient first name"/>
+                                            </div>
+                                            <div class="controls col-4">
+                                                <label>Recipient Last Name</label>
+                                                <input type="text" id="recipient_last_name" name="recipient_last_name" value="{{old('recipient_last_name')}}" class="form-control"  required placeholder="Recipient last name"/>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="row mb-1">

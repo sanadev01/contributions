@@ -90,9 +90,11 @@ class UsCalculatorRates extends Component
         Arr::where($this->ratesWithProfit, function ($value, $key) {
             if($value['service_sub_class'] == $this->selectedService)
             {
-                return $this->selectedServiceCost = $value['rate'];
+                $this->selectedServiceCost = $value['rate'];
             }
         });
+
+        return $this->selectedServiceCost;
     }
 
     private function getServiceTitle()

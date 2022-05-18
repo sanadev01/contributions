@@ -366,7 +366,7 @@ class USCalculatorRepository
                 return false;
             }
 
-            if ($this->tempOrder['from_herco'] && !$this->uspsLabelRepository->getPrimaryLabelForRecipient($this->order)) {
+            if (($this->tempOrder['from_herco'] || $this->tempOrder['to_international']) && !$this->uspsLabelRepository->getPrimaryLabelForRecipient($this->order)) {
                 $this->error = $this->uspsLabelRepository->getUSPSErrors();
                 return false;
             }
@@ -429,9 +429,9 @@ class USCalculatorRepository
     private function createRecipient()
     {
         $recipient = new Recipient();
-        $recipient->first_name = 'Marcio';
-        $recipient->last_name = 'Fertias';
-        $recipient->phone = '+13058885191';
+        $recipient->first_name = ($this->request->filled('recipient_first_name')) ? $this->request->recipient_first_name : 'Marcio';
+        $recipient->last_name = ($this->request->filled('recipient_first_name')) ? $this->request->recipient_last_name :'Fertias';
+        $recipient->phone = ($this->request->filled('recipient_phone')) ? $this->request->recipient_phone : '+13058885191';
         $recipient->email = 'homedelivery@homedeliverybr.com';
         $recipient->country_id = (int)$this->request->destination_country;
         $recipient->state_id = State::where([['code', $this->request->recipient_state],['country_id', $this->request->destination_country]])->first()->id;
@@ -449,7 +449,7 @@ class USCalculatorRepository
         $order->id = 1;
         $order->warehouse_number = 'WHR-HD001';
         $order->user = Auth::user() ? Auth::user() :  User::where('role_id',1)->first();
-        $order->sender_country_id = $this->request->origin_country;
+        $order->sender_country_id = (int)$this->request->origin_country;
         $order->sender_first_name = $order->user->name;
         $order->sender_last_name = $order->user->last_name ?? '';
         $order->sender_email = $order->user->email;
@@ -468,6 +468,7 @@ class USCalculatorRepository
         $order->recipient = $this->recipient;
         $order->to_herco = ($this->request->has('to_herco')) ? true : false;
         $order->from_herco = ($this->request->has('from_herco')) ? true : false;
+        $order->to_international = ($this->request->has('to_international')) ? true : false;
 
         $this->order = $order;
     }
@@ -562,7 +563,7 @@ class USCalculatorRepository
             return false;
         }
 
-        $request = ($this->request->has('to_herco')) ? $this->createRequest() : null;
+        $request = ($this->request->has('to_herco') || $this->request->has('to_international')) ? $this->createRequest() : null;
 
         foreach ($uspsServices as $service) {
             
