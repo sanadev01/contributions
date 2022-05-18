@@ -11,6 +11,7 @@ use App\Repositories\DomesticLabelRepository;
 class UsLabelForm extends Component
 {
     public $order;
+    public $userId;
     public $states;
     public $usShippingServices;
     public $usServicesErrors;
@@ -40,6 +41,11 @@ class UsLabelForm extends Component
     public $zipCodeResponseMessage;
     public $zipCodeClass;
 
+    protected $listeners = [
+        'searchedAddress' => 'searchAddress',
+        'phoneNumber' => 'enteredPhoneNumber',
+    ];
+
     protected $rules = [
         'firstName' => 'required',
         'lastName' => 'required',
@@ -64,12 +70,29 @@ class UsLabelForm extends Component
 
         if ($this->order) {
             $this->senderPhone = $this->order->user->phone;
+            $this->userId = $this->order->user_id;
         }
     }
 
     public function render()
     {
         return view('livewire.order.us-label-form');
+    }
+
+    public function enteredPhoneNumber($value)
+    {
+        $this->senderPhone = $value;
+    }
+
+    public function searchAddress($address)
+    {
+        $this->senderState = \App\Models\State::find($address['state_id'])->code;
+        $this->firstName = $address['first_name'];
+        $this->lastName = $address['last_name'];
+        $this->senderAddress = $address['address'];
+        $this->senderCity = $address['city'];
+        $this->senderZipCode = $address['zipcode'];
+        $this->senderPhone = $address['phone'];
     }
 
     public function updatedsenderState()
@@ -175,6 +198,7 @@ class UsLabelForm extends Component
         $domesticLabelRepostory->handle();
         if($domesticLabelRepostory->getDomesticLabel($request, $this->order))
         {
+            $this->saveAddress();
             return redirect()->route('admin.order.us-label.index', $this->order->id);
         }
 
@@ -210,5 +234,27 @@ class UsLabelForm extends Component
                 return $this->selectedServiceCost = $value['cost'];
             }
         });
+    }
+
+    private function saveAddress()
+    {
+        $existingAddress = \App\Models\Address::where([['user_id', $this->userId],['phone', $this->senderPhone]])->first();
+
+        if (!$existingAddress) {
+            \App\Models\Address::create([
+                            'user_id' => $this->userId,
+                            'first_name' => $this->firstName,
+                            'last_name' => $this->lastName,
+                            'phone' => $this->senderPhone,
+                            'address' => $this->senderAddress,
+                            'city' => $this->senderCity,
+                            'state_id' => \App\Models\State::where([['code', $this->senderState], ['country_id', \App\Models\Country::US]])->first()->id,
+                            'country_id' => \App\Models\Country::US,
+                            'zipcode' => $this->senderZipCode,
+                            'account_type' => 'individual',
+                        ]);
+        }
+
+        return;
     }
 }
