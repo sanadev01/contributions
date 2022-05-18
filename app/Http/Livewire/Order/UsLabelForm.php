@@ -2,6 +2,9 @@
 
 namespace App\Http\Livewire\Order;
 
+use App\Models\State;
+use App\Models\Address;
+use App\Models\Country;
 use Livewire\Component;
 use App\Facades\USPSFacade;
 use Illuminate\Support\Arr;
@@ -86,7 +89,7 @@ class UsLabelForm extends Component
 
     public function searchAddress($address)
     {
-        $this->senderState = \App\Models\State::find($address['state_id'])->code;
+        $this->senderState = State::find($address['state_id'])->code;
         $this->firstName = $address['first_name'];
         $this->lastName = $address['last_name'];
         $this->senderAddress = $address['address'];
@@ -238,21 +241,21 @@ class UsLabelForm extends Component
 
     private function saveAddress()
     {
-        $existingAddress = \App\Models\Address::where([['user_id', $this->userId],['phone', $this->senderPhone]])->first();
+        $existingAddress = Address::where([['user_id', $this->userId],['phone', $this->senderPhone]])->first();
 
         if (!$existingAddress) {
-            \App\Models\Address::create([
-                            'user_id' => $this->userId,
-                            'first_name' => $this->firstName,
-                            'last_name' => $this->lastName,
-                            'phone' => $this->senderPhone,
-                            'address' => $this->senderAddress,
-                            'city' => $this->senderCity,
-                            'state_id' => \App\Models\State::where([['code', $this->senderState], ['country_id', \App\Models\Country::US]])->first()->id,
-                            'country_id' => \App\Models\Country::US,
-                            'zipcode' => $this->senderZipCode,
-                            'account_type' => 'individual',
-                        ]);
+            Address::create([
+                'user_id' => $this->userId,
+                'first_name' => $this->firstName,
+                'last_name' => $this->lastName,
+                'phone' => $this->senderPhone,
+                'address' => $this->senderAddress,
+                'city' => $this->senderCity,
+                'state_id' => State::where([['code', $this->senderState], ['country_id', Country::US]])->first()->id,
+                'country_id' => Country::US,
+                'zipcode' => $this->senderZipCode,
+                'account_type' => 'individual',
+            ]);
         }
 
         return;
