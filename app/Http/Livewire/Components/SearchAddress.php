@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire\Components;
 
+use App\Models\Address;
+use App\Models\Country;
 use Livewire\Component;
 
 class SearchAddress extends Component
@@ -51,14 +53,14 @@ class SearchAddress extends Component
 
     private function getAddresses()
     {
-        $this->addresses = \App\Models\Address::where([
-                                                    ['user_id', $this->userId],
-                                                    ['country_id', \App\Models\Country::US],
-                                                    ['phone', 'LIKE',"%{$this->search}%"]
-                                                ])->take(5)->get(
-                                                    ['id','state_id','first_name','last_name',
-                                                        'phone','city','address','zipcode'
-                                                    ]
-                                                );
+        $this->addresses = Address::where([
+                                            ['user_id', $this->userId],
+                                            ['country_id', Country::US],
+                                            ['phone', 'LIKE',"%{$this->search}%"]
+                                        ])->take(5)->get(
+                                            ['id','state_id','first_name','last_name',
+                                                'phone','city','address','zipcode'
+                                            ]
+                                        );
     }
 }
