@@ -12,11 +12,6 @@ use App\Http\Requests\Calculator\USCalculatorRequest;
 
 class USCalculatorController extends Controller
 {
-    public function __construct()
-    {
-        # code...
-    }
-
     public function index()
     {
         $states = Cache::remember('states', Carbon::now()->addDay(), function () {
