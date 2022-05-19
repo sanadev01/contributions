@@ -40,7 +40,7 @@
                                     <div class="col-md-3">
                                         <div class="input-group">
                                             <div class="vs-checkbox-con vs-checkbox-primary" title="from_herco">
-                                                <input type="checkbox" name="from_herco" id="from_herco">
+                                                <input type="checkbox" name="from_herco" id="from_herco" @if(old('from_herco')) checked @endif>
                                                 <span class="vs-checkbox vs-checkbox-lg">
                                                     <span class="vs-checkbox--check">
                                                         <i class="vs-icon feather icon-check"></i>
@@ -55,7 +55,7 @@
                                     <div class="col-md-3">
                                         <div class="input-group">
                                             <div class="vs-checkbox-con vs-checkbox-primary" title="to_herco">
-                                                <input type="checkbox" name="to_herco" id="to_herco" checked>
+                                                <input type="checkbox" name="to_herco" id="to_herco" @if(!old('from_herco') && !old('to_international')) checked @endif>
                                                 <span class="vs-checkbox vs-checkbox-lg">
                                                     <span class="vs-checkbox--check">
                                                         <i class="vs-icon feather icon-check"></i>
@@ -70,7 +70,7 @@
                                     <div class="col-md-3">
                                         <div class="input-group">
                                             <div class="vs-checkbox-con vs-checkbox-primary" title="to_international">
-                                                <input type="checkbox" name="to_international" id="to_international">
+                                                <input type="checkbox" name="to_international" id="to_international" @if(old('to_international')) checked @endif>
                                                 <span class="vs-checkbox vs-checkbox-lg">
                                                     <span class="vs-checkbox--check">
                                                         <i class="vs-icon feather icon-check"></i>
@@ -142,7 +142,7 @@
                                         <div class="row mb-1">
                                             <div class="controls col-4">
                                                 <label>Recipient Phone</label>
-                                                <input type="text" id="recipient_phone" name="recipient_phone" value="{{old('recipient_phone')}}" class="form-control"  required placeholder="Recipient phone"/>
+                                                @livewire('components.search-address', ['user_id' => $userId, 'from_calculator' => true ])
                                             </div>
                                             <div class="controls col-4">
                                                 <label>Recipient First Name</label>

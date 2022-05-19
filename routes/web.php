@@ -37,8 +37,6 @@ Route::get('/', function (Shopify $shopifyClient) {
 Route::resource('calculator', CalculatorController::class)->only(['index', 'store']);
 Route::resource('us-calculator', USCalculatorController::class)->only(['index', 'store']);
 
-Route::post('search-user-address', SearchAddressController::class)->name('search.user-address');
-
 // Route::resource('tracking', TrackingController::class)->only(['index', 'show']);
 Route::get('/home', function () {
 
