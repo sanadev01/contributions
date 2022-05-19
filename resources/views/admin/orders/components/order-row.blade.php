@@ -1,5 +1,5 @@
 <tr @if( $order->user->hasRole('retailer') &&  !$order->isPaid()) class="bg-danger text-white" @endif>
-    @if(\Request::route()->getName() != 'admin.reports.order.index')
+    @if(\Request::route()->getName() != 'admin.reports.order.index'  && !$order->isTrashed())
         <td>
             
             <div class="vs-checkbox-con vs-checkbox-primary" title="@lang('orders.Bulk Print')">
@@ -14,7 +14,7 @@
         </td>
     @endif
     <td class="d-flex justify-content-between align-items-center">
-        @if(\Request::route()->getName() != 'admin.reports.order.index')
+        @if(\Request::route()->getName() != 'admin.reports.order.index'  && !$order->isTrashed())
             <div class="vs-radio-con" wire:click="$emit('edit-order',{{$order->id}})" title="@lang('Edit Order')">
                 <input type="radio" name="edit_order" class="edit-order" value="false">
                 <span class="vs-radio vs-radio-lg">
@@ -151,7 +151,7 @@
                         </a>
                     @endcan
 
-                    @if( $order->isPaid() && auth()->user()->can('canPrintLable',$order) && !$order->isRefund() && $order->is_paid && Auth::user()->isActive())
+                    @if( $order->isPaid() && auth()->user()->can('canPrintLable',$order) && !$order->isRefund() && $order->is_paid && Auth::user()->isActive() && !$order->isTrashed())
                         <a href="{{ route('admin.orders.label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
                             <i class="feather icon-printer"></i>@lang('orders.actions.label')
                         </a>
@@ -160,7 +160,7 @@
                                 <i class="feather icon-printer"></i>@lang('orders.actions.buy-us-label')
                             </a>
                         @endif
-                        @if($order->hasSecondLabel())
+                        @if($order->hasSecondLabel() && !$order->isTrashed())
                             <a href="{{ route('admin.order.us-label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
                                 <i class="feather icon-printer"></i>@if($order->usLabelService() == \App\Models\ShippingService::UPS_GROUND)@lang('orders.actions.print-ups-label') @elseif($order->usLabelService() == \App\Models\ShippingService::FEDEX_GROUND) @lang('orders.actions.print-fedex-label') @else @lang('orders.actions.print-usps-label') @endif
                             </a>

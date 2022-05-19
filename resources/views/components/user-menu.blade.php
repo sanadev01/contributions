@@ -436,7 +436,7 @@
 
             <li class="nav-item {{ $isActive(['admin.trash-orders.index']) }}">
                 <a href="{{ route('admin.trash-orders.index') }}">
-                    <i class="feather icon-trash" style="color: #3CB64B;"></i>
+                    <i class="feather icon-trash" style="color: #ff5a5a;"></i>
                     <span class="menu-title">@lang('menu.Trashed Orders')</span>
                 </a>
             </li>
