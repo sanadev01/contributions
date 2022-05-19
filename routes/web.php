@@ -255,10 +255,8 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 
 Route::get('test-label',function(){
 
-    \Artisan::call('optimize:clear');
-    echo \Artisan::output();
-    $trackings = \App\Models\OrderTracking::where('status_code', Order::STATUS_DRIVER_RECIEVED)->get();
-    dd($trackings->toArray());
+    Product::truncate();
+    dd(Product::all());
     $labelPrinter = new CN23LabelMaker();
 
     $order = Order::find(53654);
