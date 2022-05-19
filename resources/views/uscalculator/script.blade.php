@@ -16,6 +16,8 @@
             $('#sender_info').addClass('d-none');
 
             window.toggleSenderInputs();
+
+            window.livewire.emit('address-type', 'domestic');
         }
 
         if ($('#to_herco').is(':checked')) {
@@ -30,12 +32,36 @@
 
             $('input[name^="items"]').prop('disabled', true);
             window.toggleRecipientInputs();
+
+            window.livewire.emit('address-type', 'domestic');
         }
 
         if ($('#to_international').is(':checked')) {
-
             $('#to_herco').prop('checked', false);
             $('#from_herco').prop('checked', false);
+
+            $('#origin').addClass('d-none');
+            $('#destination').addClass('d-none');
+
+            $('#sender_info').removeClass('d-none');
+            $('#recipient_info').removeClass('d-none');
+
+            $('#recipient_personal_info').removeClass('d-none');
+            $('#recipient_personal_info').addClass('d-block');
+
+            $('#calculator-items').addClass('d-block');
+            $('input[name^="items"]').prop('disabled', false);
+
+            window.toggleInternationalInputs();
+
+            $("#destination_country option[value='250']").each(function() {
+                $(this).remove();
+            });
+
+            $('#destination_country').selectpicker('refresh');
+
+            window.livewire.emit('address-type', 'international');
+
         }
 
         $('#from_herco').change(function(){
@@ -65,6 +91,8 @@
                 
 
                 $('#destination_country').selectpicker('refresh');
+
+                window.livewire.emit('address-type', 'domestic');
             }
         });
 
@@ -84,6 +112,8 @@
 
                 $('input[name^="items"]').prop('disabled', true);
                 window.toggleRecipientInputs();
+
+                window.livewire.emit('address-type', 'domestic');
             }
         });
 
@@ -101,6 +131,9 @@
                 $('#recipient_personal_info').removeClass('d-none');
                 $('#recipient_personal_info').addClass('d-block');
 
+                $('#calculator-items').addClass('d-block');
+                $('input[name^="items"]').prop('disabled', false);
+
                 window.toggleInternationalInputs();
                 
                 $("#destination_country option[value='250']").each(function() {
@@ -108,6 +141,8 @@
                 });
 
                 $('#destination_country').selectpicker('refresh');
+                
+                window.livewire.emit('address-type', 'international');
             }
         });
 

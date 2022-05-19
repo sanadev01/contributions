@@ -108,5 +108,11 @@ class USCalculatorRequest extends FormRequest
                 'to_herco' => true,
             ]);
         }
+
+        if ($this->has('to_herco') || $this->has('to_international')) {
+            $this->merge([
+                'recipient_phone' => $this->phone,
+            ]);
+        }
     }
 }
