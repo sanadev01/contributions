@@ -7,9 +7,11 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">ShCodes</h4>
-                        
-                        <a href="{{ route('admin.shcode.create') }}" class="pull-right btn btn-primary"> Create ShCode </a>
-                        
+                        <div>
+                            <a href="{{ route('admin.shcode-export.create') }}" class="pull-right btn btn-secondary">@lang('shcode.Import Sh Code')</a>
+                            <a href="{{ route('admin.shcode-export.index') }}" class="pull-right btn btn-success mr-2">@lang('shcode.Download')</a>
+                            <a href="{{ route('admin.shcode.create') }}" class="pull-right btn btn-primary mr-2">@lang('shcode.Create Sh Code')</a>
+                        </div>
                     </div>
                     <div class="card-content">
                         <div class="mt-1">
@@ -49,20 +51,17 @@
                                                 {{ optional(explode('-------',$shCode->description))[2] }}
                                             </td>
                                             <td class="d-flex">
-
-                                                
                                                 <a href="{{ route('admin.shcode.edit',$shCode) }}" class="btn btn-primary mr-2" title="Edit Shcode">
                                                     <i class="feather icon-edit"></i>
                                                 </a>
                                                 
-                                                <form action="{{ route('admin.shcode.destroy',$shCode) }}" method="post">
+                                                <form action="{{ route('admin.shcode.destroy',$shCode) }}" method="post" onsubmit="return confirmDelete()">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button class="btn btn-danger" title="Delete Shcode">
                                                         <i class="feather icon-trash"></i>
                                                     </button>
                                                 </form>
-                                                
                                             </td>
                                         </tr>
                                     @endforeach
