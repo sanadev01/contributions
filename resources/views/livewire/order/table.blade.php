@@ -86,6 +86,7 @@
                             <option value="checkAll">Select All</option>
                             <option value="print-label">Print Label</option>
                             <option value="consolidate-domestic-label">Print Domestic Label</option>
+                            <option value="move-order-trash">Move Trash</option>
                         </select>
                     </th>
                     <th>
