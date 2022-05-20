@@ -155,7 +155,7 @@
                                         </div>
                                     </div>
                                     <div class="row mb-1">
-                                        <div class="controls col-4"> 
+                                        <div class="controls col-4" id="all_destination_countries"> 
                                             <label>Destination Country</label>
                                             <select id="destination_country"  name="destination_country" class="form-control selectpicker show-tick" data-live-search="true" required>
                                                 <option value="">Select @lang('address.Country')</option>
@@ -164,13 +164,30 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="controls col-4"> 
+                                        <div class="controls col-4" id="us_destination_country"> 
+                                            <label>Destination Country</label>
+                                            <select id="us_destination_country"  name="us_destination_country" class="form-control selectpicker show-tick" data-live-search="true" required>
+                                                <option value="">Select @lang('address.Country')</option>
+                                                <option value="250" selected>United States</option>
+                                            </select>
+                                        </div>
+                                        <div class="controls col-4" id="all_destination_states"> 
                                             <label>Recipient State</label>
                                             <option value="" selected disabled hidden>Select State</option>
                                             <select name="recipient_state" id="recipient_state" class="form-control selectpicker show-tick" data-live-search="true" required>
                                                 <option value="">Select @lang('address.State')</option>
                                                 @foreach (states() as $state)
                                                     <option {{ old('recipient_state') == $state->code ? 'selected' : '' }} value="{{ $state->code }}">{{ $state->code }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="controls col-4" id="us_destination_states"> 
+                                            <label>Recipient State</label>
+                                            <option value="" selected disabled hidden>Select State</option>
+                                            <select name="us_recipient_state" id="us_recipient_state" class="form-control selectpicker show-tick" data-live-search="true" required>
+                                                <option value="">Select @lang('address.State')</option>
+                                                @foreach ($states as $state)
+                                                    <option {{ old('sender_state') == $state->code ? 'selected' : '' }} value="{{ $state->code }}">{{ $state->code }}</option>
                                                 @endforeach
                                             </select>
                                         </div>

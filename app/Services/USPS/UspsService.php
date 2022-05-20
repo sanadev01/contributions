@@ -513,14 +513,14 @@ class UspsService
                 ];
             }elseif($response->clientError())
             {
-                Log::info('USPS Error'.$response->json()['message']);
+                Log::info('USPS Client Error'.$response->json()['message']);
                 return (Object)[
                     'success' => false,
                     'message' => $response->json()['message'],
                 ];    
             }elseif ($response->status() !== 200) 
             {
-                Log::info('USPS Error'.$response->json()['message']);
+                Log::info('USPS status Error'.$response->json()['message']);
                 return (object) [
                     'success' => false,
                     'message' => $response->json()['message'],

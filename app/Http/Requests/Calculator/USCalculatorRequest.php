@@ -109,7 +109,7 @@ class USCalculatorRequest extends FormRequest
             ]);
         }
 
-        if ($this->has('to_herco') || $this->has('to_international')) {
+        if ($this->has('from_herco') || $this->has('to_international')) {
             $this->merge([
                 'recipient_phone' => $this->phone,
             ]);
