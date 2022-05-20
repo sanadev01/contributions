@@ -106,6 +106,7 @@ class SearchAddress extends Component
             'phone' => $address['phone'],
             'email' => $address['email'],
             'zip_code' => $address['zipcode'],
+            'typeInternational' => $this->typeInternational,
         ];
     }
 }
