@@ -62,5 +62,6 @@ return [
     'Print Label' => 'Print Bulk Label',
     'Bulk Usps Label' => 'Buy Bulk Domestic Label',
     'Scan Parcel' => 'Scan Parcel',
-    'Driver Report' => 'Driver Report'
+    'Driver Report' => 'Driver Report',
+    'Trashed Orders' => 'Trashed Orders',
 ];

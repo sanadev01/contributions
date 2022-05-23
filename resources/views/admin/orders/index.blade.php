@@ -35,6 +35,12 @@
         <input type="hidden" name="command" id="command" value="">
         <input type="hidden" name="data" id="data" value="">
     </form>
+    <form action="{{ route('admin.trash-orders.destroy',1) }}" method="POST" id="trash_order_actions_form" onsubmit="return confirm('Are you Sure want to move trash?');">
+        @csrf
+        @method('DELETE')
+        <input type="hidden" name="command" id="command" value="">
+        <input type="hidden" name="data" id="data" value="">
+    </form>
 </div>
 @endsection
 
@@ -67,6 +73,15 @@
                 $('#consolidate_domestic_label_actions_form #command').val('consolidate-domestic-label');
                 $('#consolidate_domestic_label_actions_form #data').val(JSON.stringify(orderIds));
                 $('#consolidate_domestic_label_actions_form').submit();
+            }else if ($(this).val() == 'move-order-trash'){
+                var orderIds = [];
+                $.each($(".bulk-orders:checked"), function(){
+                    orderIds.push($(this).val());
+                });
+
+                $('#trash_order_actions_form #command').val('move-order-trash');
+                $('#trash_order_actions_form #data').val(JSON.stringify(orderIds));
+                $('#trash_order_actions_form').submit();
             }
         })
     </script>

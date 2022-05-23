@@ -1,6 +1,7 @@
 <div class="p-2" >
     <div class="row mb-2 no-print">
         @admin
+            @if (request()->route()->getName() != 'admin.trash-orders.index')
             <div class="col-12">
                 <div class="p-1 mb-3">
                     <ul class="nav nav-pills">
@@ -18,7 +19,8 @@
                         </li>
                     </ul>
                 </div>        
-            </div> 
+            </div>
+            @endif 
         @endadmin       
         <div class="col-1">
             <select class="form-control" wire:model="pageSize">
@@ -50,11 +52,15 @@
         <table class="table mb-0 table-responsive-md" id="order-table">
             <thead>
                 <tr>
+                    @if (\Request::route()->getName() != 'admin.trash-orders.index')
+                        <th>
+                            @lang('orders.Bulk Print')
+                        </th>
+                    @endif
                     <th>
-                        @lang('orders.Bulk Print')
-                    </th>
-                    <th>
-                        <span class="mr-4"> @lang('Edit Order')</span>
+                        @if (\Request::route()->getName() != 'admin.trash-orders.index')
+                            <span class="mr-4"> @lang('Edit Order')</span>
+                        @endif
                         <a href="#" wire:click.prevent="sortBy('created_at')">@lang('orders.date')</a>
                     </th>
                     <th>
@@ -78,14 +84,17 @@
                     <th class="no-print">@lang('orders.actions.actions')</th>
                 </tr>
                 <tr class="no-print">
-                    <th style="min-width: 100px;">
-                        <select name="" id="bulk-actions" class="form-control">
-                            <option value="clear">Clear All</option>
-                            <option value="checkAll">Select All</option>
-                            <option value="print-label">Print Label</option>
-                            <option value="consolidate-domestic-label">Print Domestic Label</option>
-                        </select>
-                    </th>
+                    @if (\Request::route()->getName() != 'admin.trash-orders.index')
+                        <th style="min-width: 100px;">
+                            <select name="" id="bulk-actions" class="form-control">
+                                <option value="clear">Clear All</option>
+                                <option value="checkAll">Select All</option>
+                                <option value="print-label">Print Label</option>
+                                <option value="consolidate-domestic-label">Print Domestic Label</option>
+                                <option value="move-order-trash">Move Trash</option>
+                            </select>
+                        </th>
+                    @endif
                     <th>
                         
                         <input type="search" class="form-control col-md-9 ml-5" wire:model.debounce.1000ms="date">

@@ -19,6 +19,7 @@ return [
     'payment-method' => 'Payment Method',
     'Delete' => 'Delete',
     'Remove' => 'Remove Order',
+    'Trashed Orders' => 'Trashed Orders',
     
     'recipient' => [
         'slect-from-list' => 'Select Address From List',

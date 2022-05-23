@@ -19,6 +19,7 @@ return [
     'payment-method' => 'Método de pago',
     'Delete' => 'borrar',
     'Remove' => 'eliminar orden',
+    'Trashed Orders' => 'Pedidos en la papelera',
     'recipient' => [
         'slect-from-list' => 'Seleccionar dirección de la lista',
         'Previous' => 'Previo', 

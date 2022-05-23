@@ -70,6 +70,8 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         });
 
         Route::resource('orders',OrderController::class)->only('index','destroy', 'show');
+        Route::resource('trash-orders',TrashOrderController::class)->only(['index','destroy']);
+
         Route::resource('tracking', TrackingController::class)->only(['index', 'show']);
         Route::get('/buy-usps-label', [\App\Http\Controllers\Admin\Order\OrderUSPSLabelController::class, 'uspsBulkView'])->name('bulk-usps-label');
 
@@ -254,10 +256,8 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 
 Route::get('test-label',function(){
 
-    \Artisan::call('optimize:clear');
-    echo \Artisan::output();
-    $trackings = \App\Models\OrderTracking::where('status_code', Order::STATUS_DRIVER_RECIEVED)->get();
-    dd($trackings->toArray());
+    Product::truncate();
+    dd(Product::all());
     $labelPrinter = new CN23LabelMaker();
 
     $order = Order::find(53654);
