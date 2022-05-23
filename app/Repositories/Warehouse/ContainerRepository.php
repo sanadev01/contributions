@@ -32,6 +32,16 @@ class ContainerRepository extends AbstractRepository{
     public function store(Request $request)
     {
         try {
+
+            if (in_array($request->services_subclass_code, [Container::CONTAINER_ANJUN_NX, Container::CONTAINER_ANJUN_IX]) ) {
+                
+                $latestAnujnContainer = Container::where('services_subclass_code', Container::CONTAINER_ANJUN_NX)
+                                                    ->orWhere('services_subclass_code', Container::CONTAINER_ANJUN_IX)
+                                                    ->latest()->first();
+
+                $anjunDispatchNumber = ($latestAnujnContainer) ? $latestAnujnContainer->dispatch_number + 1 : 900000;
+            }
+
             $container =  Container::create([
                 'user_id' => Auth::id(),
                 'dispatch_number' => 0,
@@ -45,7 +55,7 @@ class ContainerRepository extends AbstractRepository{
             ]);
 
             $container->update([
-                'dispatch_number' => $container->id
+                'dispatch_number' => ($container->hasAnjunService()) ? $anjunDispatchNumber : $container->id,
             ]);
 
             return $container;

@@ -22,6 +22,9 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     protected static $logOnlyDirty = true;
     protected static $submitEmptyLogs = false;
 
+    const CONTAINER_ANJUN_NX = 'AJ-NX';
+    const CONTAINER_ANJUN_IX = 'AJ-IX';
+
     public function user()
     {
         return $this->belongsTo(User::class);
