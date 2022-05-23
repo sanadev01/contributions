@@ -20138,9 +20138,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     scannerInput: function scannerInput(value) {
       if (value.length > 10 && this.scanning == false) {
-        console.log(value);
-        this.form.tracking_code = value;
-        this.addParcel();
+        this.form.tracking_code = value; // this.addParcel();
       }
     }
   },
@@ -20222,13 +20220,10 @@ __webpack_require__.r(__webpack_exports__);
 
       swal({
         title: "Scanning!",
-        text: this.form.tracking_code,
+        text: "scanning in process",
         icon: "info",
-        showConfirmButton: true
+        buttons: false
       });
-      this.form.tracking_code = '';
-      this.scannerInput = '';
-      return;
       this.message = '';
       this.error = '';
       this.scanning = true;
@@ -22019,7 +22014,7 @@ var render = function() {
         _c("div", { staticClass: "col-md-8" }, [
           _c("div", { staticClass: "card" }, [
             _c("div", { staticClass: "card-header" }, [
-              _vm._v("Barcode Scanner")
+              _vm._v("Barcode Scanner : " + _vm._s(_vm.scannerInput))
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "card-body" }, [
