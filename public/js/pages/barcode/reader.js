@@ -20138,6 +20138,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     scannerInput: function scannerInput(value) {
       if (value.length > 10 && this.scanning == false) {
+        console.log(value);
         this.form.tracking_code = value;
         this.addParcel();
       }
@@ -20221,10 +20222,13 @@ __webpack_require__.r(__webpack_exports__);
 
       swal({
         title: "Scanning!",
-        text: "scanning in process",
+        text: this.form.tracking_code,
         icon: "info",
-        buttons: false
+        showConfirmButton: true
       });
+      this.form.tracking_code = '';
+      this.scannerInput = '';
+      return;
       this.message = '';
       this.error = '';
       this.scanning = true;
