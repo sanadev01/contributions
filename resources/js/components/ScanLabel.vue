@@ -89,6 +89,7 @@ export default {
         },
         scannerInput(value) {
             if(value.length > 10 && this.scanning == false) {
+                console.log(value);
                 this.form.tracking_code = value;
                 this.addParcel();
             }
@@ -170,10 +171,13 @@ export default {
         addParcel(){
             swal({
                 title: "Scanning!",
-                text: "scanning in process",
+                text: this.form.tracking_code,
                 icon: "info",
-                buttons: false,
+               showConfirmButton: true,
             });
+            this.form.tracking_code = '';
+            this.scannerInput = '';
+            return;
             this.message = '';
             this.error = '';
             this.scanning = true;
