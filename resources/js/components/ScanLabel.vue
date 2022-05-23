@@ -88,7 +88,7 @@ export default {
             }
         },
         scannerInput(value) {
-            if(value.length > 10) {
+            if(value.length > 10 && this.scanning == false) {
                 this.form.tracking_code = value;
                 this.addParcel();
             }
@@ -176,6 +176,7 @@ export default {
             });
             this.message = '';
             this.error = '';
+            this.scanning = true;
 
             this.axios.post('/scan-label', this.form).then((response) => {
                 swal.close();
@@ -188,6 +189,7 @@ export default {
                         timer: 3000
                     });
                     this.message = response.data.message;
+                    this.scanning = false;
                 }else{
                     swal({
                         title: "Error!",
@@ -198,6 +200,7 @@ export default {
                          this.form.tracking_code = '';
                          this.scannerInput = '';
                          this.$refs.search.focus();
+                         this.scanning = false;
                     });
                     this.error = response.data.message;
                 }
@@ -213,6 +216,7 @@ export default {
                          this.form.tracking_code = '';
                          this.scannerInput = '';
                          this.$refs.search.focus();
+                         this.scanning = false;
                 });
                 this.error = error;
             })
