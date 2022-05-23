@@ -20137,8 +20137,9 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     scannerInput: function scannerInput(value) {
-      if (value.length > 10 && this.scanning == false) {
-        this.form.tracking_code = value; // this.addParcel();
+      if (value.length >= 13 && this.scanning == false) {
+        this.form.tracking_code = value;
+        this.addParcel();
       }
     }
   },
@@ -22014,7 +22015,7 @@ var render = function() {
         _c("div", { staticClass: "col-md-8" }, [
           _c("div", { staticClass: "card" }, [
             _c("div", { staticClass: "card-header" }, [
-              _vm._v("Barcode Scanner : " + _vm._s(_vm.scannerInput))
+              _vm._v("Barcode Scanner")
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "card-body" }, [
