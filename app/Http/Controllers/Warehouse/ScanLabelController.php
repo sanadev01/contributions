@@ -24,6 +24,7 @@ class ScanLabelController extends Controller
         $order = Order::where('corrios_tracking_code', $request->tracking_code)->first();
         
         \Log::info($order);
+        \Log::info('driver scan tracking', ['tracking_code' => $request->tracking_code]);
 
         if (!$order) {
             \Log::info("order not found");
