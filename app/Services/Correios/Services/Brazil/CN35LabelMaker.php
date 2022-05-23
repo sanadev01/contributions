@@ -42,10 +42,10 @@ class CN35LabelMaker implements HasLableExport
     {
         $this->service = $service;
 
-        if ( $this->service == 1 ){
+        if ( $this->service == 1 || $this->service == 9 ) {
             $this->packetType = 'PACKET EXPRESS';
         }
-        if ( $this->service == 2 ){
+        if ( $this->service == 2 || $this->service == 8 ) {
             $this->packetType = 'PACKET STANDARD';
         }
         if ( $this->service == 3 ){
