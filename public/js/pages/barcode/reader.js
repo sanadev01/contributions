@@ -20137,7 +20137,7 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     scannerInput: function scannerInput(value) {
-      if (value.length > 10) {
+      if (value.length > 10 && this.scanning == false) {
         this.form.tracking_code = value;
         this.addParcel();
       }
@@ -20227,6 +20227,7 @@ __webpack_require__.r(__webpack_exports__);
       });
       this.message = '';
       this.error = '';
+      this.scanning = true;
       this.axios.post('/scan-label', this.form).then(function (response) {
         swal.close();
 
@@ -20239,6 +20240,7 @@ __webpack_require__.r(__webpack_exports__);
             timer: 3000
           });
           _this3.message = response.data.message;
+          _this3.scanning = false;
         } else {
           swal({
             title: "Error!",
@@ -20250,6 +20252,8 @@ __webpack_require__.r(__webpack_exports__);
             _this3.scannerInput = '';
 
             _this3.$refs.search.focus();
+
+            _this3.scanning = false;
           });
           _this3.error = response.data.message;
         }
@@ -20267,6 +20271,8 @@ __webpack_require__.r(__webpack_exports__);
           _this3.scannerInput = '';
 
           _this3.$refs.search.focus();
+
+          _this3.scanning = false;
         });
         _this3.error = error;
       });

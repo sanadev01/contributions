@@ -23,6 +23,8 @@ class ScanLabelController extends Controller
         sleep(1);
         $order = Order::where('corrios_tracking_code', $request->tracking_code)->first();
         
+        \Log::info('driver scan tracking', ['tracking_code' => $request->tracking_code]);
+
         if (!$order) {
             return response()->json([
                 'success' => false,
