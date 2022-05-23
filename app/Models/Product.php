@@ -5,9 +5,15 @@ namespace App\Models;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Database\Eloquent\Model;
 use App\Services\Converters\UnitsConverter;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Product extends Model
 {
+    use LogsActivity;
+    protected static $logAttributes = ['*'];
+    protected static $logOnlyDirty = true;
+    protected static $submitEmptyLogs = false;
+    
     const WEIGHT_PERCENTAGE = 0.1;
 
     protected $fillable = [
