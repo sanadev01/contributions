@@ -20,13 +20,13 @@ class ScanLabelController extends Controller
 
     public function store(Request $request, ScanLabelRepository $scanLabelRepository)
     {
-        \Log::info('ScanLabelController@store: '. $request->tracking_code);
         sleep(1);
         $order = Order::where('corrios_tracking_code', $request->tracking_code)->first();
         
+        \Log::info($order);
+
         if (!$order) {
             \Log::info("order not found");
-            \Log::info($order);
             return response()->json([
                 'success' => false,
                'message' => 'sorry! parcel not found'
@@ -37,7 +37,7 @@ class ScanLabelController extends Controller
 
         \Log::info("order Status: ".$scanLabelRepository->getStatus());
         \Log::info("order Message: ".$scanLabelRepository->getMessage());
-        
+
         return response()->json([
             'success' => $scanLabelRepository->getStatus(),
             'message' => $scanLabelRepository->getMessage(),
