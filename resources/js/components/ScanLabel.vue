@@ -22,7 +22,7 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">Barcode Scanner : {{ scannerInput }}</div>
+                    <div class="card-header">Barcode Scanner</div>
                     <div class="card-body">
                         <div class="alert alert-danger" role="alert" v-if="error">
                             {{error}}
@@ -88,9 +88,9 @@ export default {
             }
         },
         scannerInput(value) {
-            if(value.length > 10 && this.scanning == false) {
+            if(value.length >= 13 && this.scanning == false) {
                 this.form.tracking_code = value;
-                // this.addParcel();
+                this.addParcel();
             }
         }
     },
