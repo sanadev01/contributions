@@ -12,7 +12,7 @@ class ProfileController extends Controller
 {
    public function __invoke()
    {
-       $user = User::findOrFail(Auth::id(),['id','name','last_name','pobox_number ','email','phone','street_no','address','address2','city','zipcode','state_id','country_id','zip']);
+       $user = User::findOrFail(Auth::id(),['id','name','last_name','pobox_number','email','phone','street_no','address','address2','city','zipcode','state_id','country_id','zip']);
        if ($user){
            return apiResponse(true,'User detail',$user);
        }
