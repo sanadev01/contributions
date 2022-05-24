@@ -93,6 +93,7 @@
                                                    </button>
                                                    <div class="dropdown-menu overlap-menu" aria-labelledby="dropdownMenuLink">
                                                         <a href="{{ asset('uploads/accrual.xlsx') }}" class="dropdown-item">@lang('shipping-rates.Download')</a>
+                                                        <a href="{{ asset('uploads/anjun-accrual.xlsx') }}" class="dropdown-item">@lang('shipping-rates.Anjun Download')</a>
                                                         <a href="{{ asset('uploads/chile-accural.xlsx') }}" class="dropdown-item">@lang('shipping-rates.Chile Rates')</a>
                                                    </div>
                                                </div>
