@@ -9,6 +9,13 @@ use App\Models\User;
 
 class ServicesController extends Controller
 {
+    private $adminId;
+
+    public function __construct()
+    {
+        $this->adminId = User::ROLE_ADMIN;
+    }
+
     public function __invoke($countryCode = null)
     {
 
@@ -71,7 +78,7 @@ class ServicesController extends Controller
 
     private function correosShippingServices()
     {
-        if(!setting('anjun_api', null, User::ROLE_ADMIN)){
+        if(!setting('anjun_api', null, $this->adminId)){
             $correiosServices =  [
                 ShippingService::Packet_Standard, 
                 ShippingService::Packet_Express, 
@@ -79,7 +86,7 @@ class ServicesController extends Controller
             ];
         }
 
-        if(setting('anjun_api', null, User::ROLE_ADMIN)){
+        if(setting('anjun_api', null, $this->adminId)){
             $correiosServices =  [
                 ShippingService::AJ_Packet_Standard, 
                 ShippingService::AJ_Packet_Express,
@@ -93,7 +100,7 @@ class ServicesController extends Controller
 
     private function filterCorreiosServices($correiosServices)
     {
-        if(setting('anjun_api', null, User::ROLE_ADMIN)){
+        if(setting('anjun_api', null, $this->adminId)){
             $correiosServices = $correiosServices->filter(function ($shippingService, $key) {
                 return $shippingService['service_sub_class'] != ShippingService::Packet_Standard 
                     && $shippingService['service_sub_class'] != ShippingService::Packet_Express
@@ -101,7 +108,7 @@ class ServicesController extends Controller
             });
         }
 
-        if(!setting('anjun_api', null, User::ROLE_ADMIN)){
+        if(!setting('anjun_api', null, $this->adminId)){
             $correiosServices = $correiosServices->filter(function ($shippingService, $key) {
                 return $shippingService['service_sub_class'] != ShippingService::AJ_Packet_Standard 
                     && $shippingService['service_sub_class'] != ShippingService::AJ_Packet_Express;
