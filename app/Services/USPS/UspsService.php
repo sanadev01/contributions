@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use App\Services\Calculators\WeightCalculator;
-use App\Services\USPS\ConsolidatedOrderService;
 
 class UspsService
 {
@@ -320,23 +319,11 @@ class UspsService
 
     public function getSenderPrice($order, $request)
     {
-        if ($request->exists('consolidated_order') && $request->consolidated_order == false) {
-
-            $consolidatedOrderService = new ConsolidatedOrderService();
-            return $this->uspsApiCallForRates($consolidatedOrderService->makeConsolidatedOrderRequestForSender($order, $request));
-        }
-
         return $this->uspsApiCallForRates($this->makeRequestForSender($order, $request));
     }
 
     public function getLabelForSender($order, $request)
     {
-        if ($request->exists('consolidated_order') && $request->consolidated_order == false)
-        {
-            $consolidatedOrderService = new ConsolidatedOrderService();
-            return $this->uspsApiCall($consolidatedOrderService->makeConsolidatedOrderRequestForSender($order, $request));
-        }
-
         if ($request->service == ShippingService::USPS_PRIORITY_INTERNATIONAL || $request->service == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
             return $this->uspsApiCall($this->makeRequestAttributeForInternationalLabel($order));
         }
