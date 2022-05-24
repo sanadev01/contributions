@@ -5,6 +5,7 @@ namespace App\Http\Livewire\AccrualRate;
 use Livewire\Component;
 use App\Models\Warehouse\AccrualRate;
 use App\Services\Correios\Models\Package;
+use App\Models\ShippingService;
 
 class Table extends Component
 {
@@ -15,10 +16,12 @@ class Table extends Component
     public $gru;
     public $service;
     public $chileService = false;
+    public $anjunService = false;
     
     public function mount($shippingService)
     {
         $this->service = $shippingService;
+        $this->anjunService = ($shippingService == ShippingService::AJ_Packet_Standard || $shippingService == ShippingService::AJ_Packet_Express) ? true : false;
     }
     
     public function render()

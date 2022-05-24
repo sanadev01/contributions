@@ -29,6 +29,11 @@
                 <th>
                     GRU  
                 </th>
+                    @if ($anjunService)
+                        <th>
+                            Commission
+                        </th>
+                    @endif
                 @endif
             </tr>
             <tr>
@@ -51,6 +56,11 @@
                 <th style="width: 20% !important;">
                     <input type="search" class="form-control" wire:model.debounce.500ms="gru">
                 </th>
+                @if ($anjunService)
+                    <th style="width: 20% !important;">
+                        
+                    </th>
+                @endif
             </tr>
         </thead>
         <tbody>
@@ -74,6 +84,11 @@
                     <th>
                         ${{ $rate->gru }}
                     </th>
+                    @if ($anjunService)
+                        <th>
+                            ${{ $rate->commission }}
+                        </th>
+                    @endif
                 </tr>
                 
             @endforeach
