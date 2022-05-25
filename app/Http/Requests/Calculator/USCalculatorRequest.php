@@ -94,6 +94,8 @@ class USCalculatorRequest extends FormRequest
                 'sender_address' => '2200 NW 129TH AVE',
                 'sender_city' => 'MIAMI',
                 'sender_zipcode' => '33182',
+                'destination_country' => Country::US,
+                'recipient_state' => $this->us_recipient_state,
                 'from_herco' => true,
             ]);
         }
