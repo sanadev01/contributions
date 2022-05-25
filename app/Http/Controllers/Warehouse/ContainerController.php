@@ -8,17 +8,20 @@ use App\Http\Requests\Warehouse\Container\UpdateContainerRequest;
 use App\Models\Warehouse\Container;
 use App\Repositories\Warehouse\ContainerRepository;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class ContainerController extends Controller
 {
-    public function index(Request $request,ContainerRepository $containerRepository)
+    public function index()
     {
         return view('admin.warehouse.containers.index');
     }
 
     public function create()
     {
-        return view('admin.warehouse.containers.create');
+        $anjunService = (setting('anjun_api', null, User::ROLE_ADMIN));
+
+        return view('admin.warehouse.containers.create', compact('anjunService'));
     }
 
     public function store(CreateContainerRequest  $createContainerRequest, ContainerRepository $containerRepository)
