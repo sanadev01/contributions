@@ -166,4 +166,9 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     {
         return $this->services_subclass_code == 'AJ-NX' || $this->services_subclass_code == 'AJ-IX';
     }
+
+    public function hasOrders()
+    {
+        return $this->orders->isNotEmpty();
+    }
 }
