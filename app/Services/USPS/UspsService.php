@@ -82,10 +82,6 @@ class UspsService
 
     public function getPrimaryLabelForRecipient($order)
     {
-        if ($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
-            return $this->uspsApiCall($this->makeRequestAttributeForInternationalLabel($order));
-        }
-        
         return $this->uspsApiCall($this->makeRequestAttributeForLabel($order));
     }
     
@@ -95,7 +91,7 @@ class UspsService
 
         $request_body = [
             'request_id' => 'HD-'.$order->id,
-            'from_address' => $this->getHercoAddress($order->warehouse_number),
+            'from_address' => ($order->sender_country_id == Order::US && $order->recipient->country_id != Order::US) ? $this->getSenderAddress($order) : $this->getHercoAddress($order->warehouse_number),
             'to_address' => $this->getRecipientAddress($order),
             'weight' => (float)$this->chargableWeight,
             'weight_unit' => ($order->measurement_unit == 'kg/cm') ? 'kg' : 'lb',
@@ -109,7 +105,12 @@ class UspsService
             ],
         ];
 
-        if ($order->sender_country_id != Country::US) {
+        if ($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
+            $request_body = array_add($request_body, 'customs_form', $this->setCustomsForm($order));
+            array_forget($request_body, 'usps.image_size');
+        }
+
+        if ($order->sender_country_id != Country::US && ($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS)) {
             $request_body['usps']['gde_origin_country_code'] = Country::find($order->sender_country_id)->code;
         }
         
@@ -304,7 +305,7 @@ class UspsService
         }
     }
 
-    public function getSenderPrice($order, $request)
+    public function getSenderRates($order, $request)
     {
         return $this->uspsApiCallForRates($this->makeRequestForSender($order, $request));
     }

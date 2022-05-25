@@ -61,7 +61,7 @@
                                         </div>
                                     </div>
                                     @enderror
-                                    <form wire:submit.prevent="getSenderLabel">
+                                    <form wire:submit.prevent="getLabel">
                                         <div class="row mb-1 ml-4">
                                             <div class="controls col-6">
                                                 <label>@lang('orders.order-details.Select Shipping Service')<span class="text-danger"></span></label>

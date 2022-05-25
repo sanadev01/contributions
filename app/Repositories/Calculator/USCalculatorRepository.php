@@ -571,7 +571,7 @@ class USCalculatorRepository
                 $request->merge(['service' => $service->service_sub_class]);
             }
 
-            $uspsResponse = ($this->request->has('to_herco')) ? USPSFacade::getSenderPrice($this->order, $request) 
+            $uspsResponse = ($this->request->has('to_herco')) ? USPSFacade::getSenderRates($this->order, $request) 
                                                                 : USPSFacade::getRecipientRates($this->order, $service->service_sub_class);
             if ($uspsResponse->success == true) {
                 array_push($this->shippingRates , ['name'=> $service->name, 'service_sub_class' => $service->service_sub_class, 'rate'=> number_format($uspsResponse->data['total_amount'], 2)]);
