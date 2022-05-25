@@ -37,27 +37,28 @@
                 @endif
             </tr>
             <tr>
-                <th style="width: 20% !important;">
+                <th>
                     
                 </th>
-                <th style="width: 20% !important;">
+                <th>
                     <select class="form-control" wire:model="selectedCountry">
                         <option value="" selected>ALL</option>
                         <option value="30">Brazil</option>
                         <option value="46">Chile</option>
                     </select>
                 </th>
-                <th style="width: 20% !important;">
+                <th>
                     <input type="search" class="form-control" wire:model.debounce.500ms="weight">
                 </th>
-                <th style="width: 20% !important;">
+                <th>
                     <input type="search" class="form-control" wire:model.debounce.500ms="cwb">
                 </th>
-                <th style="width: 20% !important;">
+                <th>
                     <input type="search" class="form-control" wire:model.debounce.500ms="gru">
                 </th>
                 @if ($anjunService)
-                    <th style="width: 20% !important;">
+                    <th>
+                        <input type="search" class="form-control" wire:model.debounce.500ms="commission">
                         
                     </th>
                 @endif
