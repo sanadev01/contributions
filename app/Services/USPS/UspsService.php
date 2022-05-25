@@ -252,9 +252,6 @@ class UspsService
 
     public function getRecipientRates($order, $service)
     {
-        // if ($service == ShippingService::USPS_PRIORITY_INTERNATIONAL || $service == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
-        //     return $this->uspsApiCallForRates($this->makeRequestAttributeForInternationalRates($order, $service));
-        // }
         return $this->uspsApiCallForRates($this->makeRequestAttributeForRates($order, $service));
     }
 
@@ -276,14 +273,14 @@ class UspsService
         ];
 
         if ($service == ShippingService::USPS_PRIORITY_INTERNATIONAL || $service == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
-            array_add($request_body, 'value', 
+            $request_body = array_add($request_body, 'value', 
             ($order->id === 1) ? $this->calculateItemsValue($order->items) 
                                         : (float)$order->items()->sum(DB::raw('quantity * value'))
             );
 
-            array_add($request_body, 'customs_form', $this->setCustomsForm($order));
+            $request_body = array_add($request_body, 'customs_form', $this->setCustomsForm($order));
 
-            array_add($request_body, 'usps.gde_origin_country_code', optional($order->recipient)->country->code);
+            $request_body = array_add($request_body, 'usps.gde_origin_country_code', optional($order->recipient)->country->code);
         }
 
         if ($order->sender_country_id != Country::US && ($service != ShippingService::USPS_PRIORITY_INTERNATIONAL || $service != ShippingService::USPS_FIRSTCLASS_INTERNATIONAL)) {
@@ -291,27 +288,6 @@ class UspsService
         }
         
         return $request_body;
-    }
-
-    private function makeRequestAttributeForInternationalRates($order, $service)
-    {
-        $this->calculateVolumetricWeight($order);
-
-        return [
-            'from_address' => ($order->id === 1) ? $this->getSenderAddress($order) : $this->getHercoAddress($order->warehouse_number),
-            'to_address' => $this->getRecipientAddress($order),
-            'weight' => (float)$this->chargableWeight,
-            'weight_unit' => ($order->measurement_unit == 'kg/cm') ? 'kg' : 'lb',
-            'value' => ($order->id === 1) ? $this->calculateItemsValue($order->items) : (float)$order->items()->sum(DB::raw('quantity * value')),
-            'customs_form' => $this->setCustomsForm($order),
-            'image_format' => 'pdf',
-            'usps' => [
-                'shape' => 'Parcel',
-                'mail_class' => $this->setServiceClass($service),
-                'image_size' => '4x6',
-                'gde_origin_country_code' => optional($order->recipient)->country->code,
-            ],
-        ];
     }
 
     public function calculateVolumetricWeight($order)
