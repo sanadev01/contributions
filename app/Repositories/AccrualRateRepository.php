@@ -2,17 +2,8 @@
 
 namespace App\Repositories;
 
-use Exception;
-use App\Models\User;
-use App\Models\Ticket;
-use App\Models\Document;
 use Illuminate\Http\Request;
-use App\Models\TicketComment;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use App\Models\Warehouse\AccrualRate;
-use App\Mail\User\NewTicketCommentAdded;
 
 class AccrualRateRepository
 {
