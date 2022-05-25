@@ -187,7 +187,7 @@ class USPSLabelRepository
     public function getRatesForSender($request)
     {
         $order = ($request->exists('consolidated_order') && $request->consolidated_order == true) ? $request->order : Order::find($request->order_id);
-        $response = USPSFacade::getSenderPrice($order, $request);
+        $response = USPSFacade::getSenderRates($order, $request);
 
         if($response->success == true)
         {

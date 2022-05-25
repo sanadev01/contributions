@@ -41,7 +41,7 @@ class UsCalculatorRates extends Component
         return view('livewire.calculator.us-calculator-rates');
     }
 
-    public function getSenderLabel(USCalculatorRepository $usCalculatorRepository)
+    public function getLabel(USCalculatorRepository $usCalculatorRepository)
     {
         if (!$this->selectedService) {
             $this->addError('selectedService', 'select service please.');
