@@ -196,6 +196,14 @@
                         
                         @if( !$error && !auth()->user()->hasRole('driver'))
                             @if( $package['client'] )
+                                {{-- <a href="{{route('admin.label.scan.show',$package['reference'].'?search=1')}}" class="btn btn-primary mr-2" onclick="addClass({{$key}})" title="@lang('orders.import-excel.Download')">
+                                    
+                                </a> --}}
+
+                                <a href="#" title="Click to see Tracking" class="btn btn-primary mr-2" data-toggle="modal" data-target="#hd-modal" data-url="{{route('admin.label.scan.show',$package['reference'].'?search=1')}}">
+                                    <i class="fa fa-search"></i>Find
+                                </a>
+
                                 <a href="{{route('admin.label.scan.show',$package['reference'])}}" target="_blank" class="btn btn-success mr-2" onclick="addClass({{$key}})" title="@lang('orders.import-excel.Download')">
                                     <i class="feather icon-download"></i>@lang('orders.import-excel.Download')
                                 </a>
@@ -209,14 +217,6 @@
                 </tr>
             @endforeach
         @endif
-        
-        {{-- <tr>
-            <td colspan="7">
-                <button class="btn btn-primary" role="button" type="button" wire:click='addRow'>
-                    @lang('orders.print-label.Add Row')
-                </button>
-            </td>
-        </tr> --}}
     </table>
     
     @if (count($packagesRows) == 300)

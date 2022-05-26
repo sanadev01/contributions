@@ -109,7 +109,9 @@ class PrintLabelController extends Controller
     public function show(Request $request, Order $scan, CorrieosBrazilLabelRepository $labelRepository)
     {
         $order = $scan;
-    
+        if($request->search){
+            return view('admin.modals.orders.tracking',compact('order'));
+        }
         $labelData = null;
         if($order->is_paid){
             if ( $request->update_label === 'true' ){
