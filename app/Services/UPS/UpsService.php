@@ -55,7 +55,7 @@ class UpsService
 
     public function getSenderPrice($order, $request)
     {  
-        return $this->upsApiCall($this->ratingPackageUrl, $this->ratesRequestForSender($order, $request));
+        return $this->upsApiCall($this->ratingPackageUrl, $this->createRequestForRates($order, $request->service, $request, false));
     }
 
     public function getLabelForSender($order, $request)
@@ -65,7 +65,7 @@ class UpsService
 
     public function getRecipientRates($order, $service)
     {
-        return $this->upsApiCall($this->ratingPackageUrl, $this->rateRequestForRecipient($order, $service));
+        return $this->upsApiCall($this->ratingPackageUrl, $this->createRequestForRates($order, $service, null, true));
     }
 
     public function getPickupRates($request)
@@ -86,93 +86,6 @@ class UpsService
     public function trackOrder($trackingNumber)
     {
         return $this->trackUPSOrder($trackingNumber);
-    }
-
-    private function ratesRequestForSender($order, $request)
-    {   
-        $this->calculateVolumetricWeight($order);
-
-        $request_body = [
-            'RateRequest' => [
-                'Request' => [
-                    'SubVersion' => '1703',
-                    'TransactionReference' => [
-                        'CustomerContext' => ''
-                    ]
-                ],
-                'CustomerClassification' => [
-                    'Code' => '01'
-                ],
-                'Shipment' => [
-                    'Shipper' => [
-                        'Name' => Auth::user() ? Auth::user()->pobox_number :  'HERCO SUITE#100',
-                        'AttentionName' => ($request->first_name) ? $request->first_name : 'HERCO SUITE#100',
-                        'ShipperNumber' => $this->shipperNumber,
-                        'Phone' => [
-                            'Number' => Auth::user() ? Auth::user()->phone : '+13058885191'
-                        ],
-                        'Address' => [
-                            'AddressLine' => $request->sender_address,
-                            'City' => $request->sender_city,
-                            'StateProvinceCode' => $request->sender_state,
-                            'PostalCode' => $request->sender_zipcode,
-                            'CountryCode' => 'US',
-                        ],
-                    ],
-                    'ShipFrom' => [
-                        'Name' => ($request->first_name) ? $request->first_name : 'HERCO SUITE#100',
-                        'Address' => [
-                            'AddressLine' => $request->sender_address,
-                            'City' => $request->sender_city,
-                            'StateProvinceCode' => $request->sender_state,
-                            'PostalCode' => $request->sender_zipcode,
-                            'CountryCode' => 'US',
-                        ],
-                    ],
-                    'ShipTo' => [
-                        'Name' => 'HERCO SUITE#100',
-                        'Address' => [
-                            'AddressLine' => '2200 NW 129TH AVE',
-                            'City' => 'Miami',
-                            'StateProvinceCode' => 'FL',
-                            'PostalCode' => '33182',
-                            'CountryCode' => 'US',
-                        ],
-                    ],
-                    'PaymentDetails' => $this->getPaymentDetails(),
-                    'Service' =>  [
-                        'Code' => '0'.$request->service,
-                        'Description' => 'Ground Service'
-                    ],
-                    'ShipmentTotalWeight' => $this->getShipmentTotalWeight(),
-                    'Package' => [
-                        'PackagingType' => [
-                            'Code' => '02',
-                            'Description' => 'Package'
-                        ],
-                        'Dimensions' => [
-                            'UnitOfMeasurement' => [
-                                'Code' => 'IN',
-                            ],
-                            'Length' => ($order->measurement_unit == 'kg/cm') ? "$this->length" :"$order->length",
-                            'Width' => ($order->measurement_unit == 'kg/cm') ? "$this->width" : "$order->width",
-                            'Height' => ($order->measurement_unit == 'kg/cm') ? "$this->height" : "$order->height",
-                        ],
-                        'PackageWeight' => [
-                            'UnitOfMeasurement' => [
-                                'Code' => 'LBS',
-                            ],
-                            'Weight' => ($this->chargableWeight != null) ? "$this->chargableWeight" : (($order->measurement_unit == 'kg/cm') ? "$this->weight" :"$order->weight"),
-                        ],
-                        'ShipmentServiceOptions' => [
-                            'DirectDeliveryOnlyIndicator' => '1'
-                        ],
-                    ],
-                ],
-            ],
-        ];
-
-        return $request_body;
     }
 
     private function packageRequestForSender($order, $request)
@@ -275,7 +188,7 @@ class UpsService
         return $request_body;
     }
 
-    private function rateRequestForRecipient($order, $service)
+    private function createRequestForRates($order, $service, $request = null, $typeRecipient = true)
     {
         $this->calculateVolumetricWeight($order);
 
@@ -293,39 +206,21 @@ class UpsService
                 'Shipment' => [
                     'Shipper' => [
                         'Name' => Auth::user() ? Auth::user()->pobox_number :  'HERCO SUITE#100',
-                        'AttentionName' => $order->sender_first_name.' '.$order->sender_last_name,
+                        'AttentionName' => ($typeRecipient) ? $order->sender_first_name.' '.$order->sender_last_name : 'HERCO SUITE#100',
                         'ShipperNumber' => $this->shipperNumber,
                         'Phone' => [
                             'Number' => Auth::user() ? Auth::user()->phone : '+13058885191'
                         ],
                         'Address' => [
-                            'AddressLine' => $order->sender_address,
-                            'City' => $order->sender_city,
-                            'StateProvinceCode' => optional($order->senderState)->code,
-                            'PostalCode' => $order->sender_zipcode,
+                            'AddressLine' => ($typeRecipient) ? $order->sender_address : $request->sender_address,
+                            'City' => ($typeRecipient) ? $order->sender_city : $request->sender_city,
+                            'StateProvinceCode' => ($typeRecipient) ? optional($order->senderState)->code : $request->sender_state,
+                            'PostalCode' => ($typeRecipient) ? $order->sender_zipcode : $request->sender_zipcode,
                             'CountryCode' => 'US',
                         ],
                     ],
-                    'ShipFrom' => [
-                        'Name' => 'HERCO SUITE#100',
-                        'Address' => [
-                            'AddressLine' => '2200 NW 129TH AVE',
-                            'City' => 'Miami',
-                            'StateProvinceCode' => 'FL',
-                            'PostalCode' => '33182',
-                            'CountryCode' => 'US',
-                        ],
-                    ],
-                    'ShipTo' => [
-                        'Name' => $order->recipient->first_name.' '.$order->recipient->last_name,
-                        'Address' => [
-                            'AddressLine' => $order->recipient->address.' '.$order->recipient->street_no,
-                            'City' => $order->recipient->city,
-                            'StateProvinceCode' => $order->recipient->state->code,
-                            'PostalCode' => $order->recipient->zipcode,
-                            'CountryCode' => 'US',
-                        ],
-                    ],
+                    'ShipFrom' => ($typeRecipient) ? $this->setHercoAddress() : $this->setCustomerAddress(null, $request),
+                    'ShipTo' => ($typeRecipient) ? $this->setCustomerAddress($order, null) : $this->setHercoAddress(),
                     'PaymentDetails' => $this->getPaymentDetails(),
                     'Service' =>  [
                         'Code' => '0'.$service,
@@ -800,5 +695,48 @@ class UpsService
             'transId' => $this->transactionSrc,
             'transactionSrc' => 'HERCO SUITE#100',
         ];
+    }
+
+    private function setHercoAddress()
+    {
+        return [
+            'Name' => 'HERCO SUITE#100',
+            'Address' => [
+                'AddressLine' => '2200 NW 129TH AVE',
+                'City' => 'Miami',
+                'StateProvinceCode' => 'FL',
+                'PostalCode' => '33182',
+                'CountryCode' => 'US',
+            ],
+        ];
+    }
+
+    private function setCustomerAddress($order = null, $request = null)
+    {
+        if ($request) {
+            return [
+                'Name' => ($request->first_name) ? $request->first_name : 'HERCO SUITE#100',
+                'Address' => [
+                    'AddressLine' => $request->sender_address,
+                    'City' => $request->sender_city,
+                    'StateProvinceCode' => $request->sender_state,
+                    'PostalCode' => $request->sender_zipcode,
+                    'CountryCode' => 'US',
+                ],
+            ];
+        }
+
+        if($order){
+            return [
+                'Name' => $order->recipient->first_name.' '.$order->recipient->last_name,
+                'Address' => [
+                    'AddressLine' => $order->recipient->address.' '.$order->recipient->street_no,
+                    'City' => $order->recipient->city,
+                    'StateProvinceCode' => $order->recipient->state->code,
+                    'PostalCode' => $order->recipient->zipcode,
+                    'CountryCode' => 'US',
+                ],
+            ];
+        }
     }
 }
