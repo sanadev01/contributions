@@ -256,8 +256,6 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 
 Route::get('test-label',function(){
 
-    Product::truncate();
-    dd(Product::all());
     $labelPrinter = new CN23LabelMaker();
 
     $order = Order::find(53654);
