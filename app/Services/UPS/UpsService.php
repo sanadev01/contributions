@@ -53,7 +53,7 @@ class UpsService
         return $this->upsApiCall($this->createPackageUrl, $this->packageRequestForRecipient($order));
     }
 
-    public function getSenderPrice($order, $request)
+    public function getSenderRates($order, $request)
     {  
         return $this->upsApiCall($this->ratingPackageUrl, $this->createRequestForRates($order, $request->service, $request, false));
     }

@@ -253,7 +253,7 @@ class UPSLabelRepository
     public function getRatesForSender($request)
     {  
         $order = ($request->exists('consolidated_order') && $request->consolidated_order == true) ? $request->order : Order::find($request->order_id);
-        $response = UPSFacade::getSenderPrice($order, $request);
+        $response = UPSFacade::getSenderRates($order, $request);
 
         if($response->success == true)
         {

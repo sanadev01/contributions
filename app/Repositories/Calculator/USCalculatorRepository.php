@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Order;
 use App\Models\State;
 use App\Models\ShCode;
+use App\Models\Country;
 use App\Models\OrderItem;
 use App\Models\Recipient;
 use App\Facades\UPSFacade;
@@ -457,6 +458,7 @@ class USCalculatorRepository
         $order->pobox_number = $order->user->pobox_number;
         $order->sender_city = $this->request->sender_city;
         $order->sender_state = $this->request->sender_state;
+        $order->sender_state_id = State::where([['country_id', Country::US],['code', $this->request->sender_state]])->first()->id;
         $order->sender_address = $this->request->sender_address;
         $order->sender_zipcode = $this->request->sender_zipcode;
         $order->order_date = Carbon::now();
@@ -601,7 +603,7 @@ class USCalculatorRepository
             if ($this->request->has('to_herco')) {
                 $request->merge(['service' => $service->service_sub_class]);
             }
-            $upsResponse = ($this->request->has('to_herco')) ? UPSFacade::getSenderPrice($this->order, $request) 
+            $upsResponse = ($this->request->has('to_herco')) ? UPSFacade::getSenderRates($this->order, $request) 
                                                                 : UPSFacade::getRecipientRates($this->order, $service->service_sub_class);
             if($upsResponse->success == true)
             {
