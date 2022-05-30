@@ -108,20 +108,6 @@ class RecipientController extends Controller
         return USPSFacade::validateAddress($request);
     }
 
-    // get chile regions from db
-    public function hdChileRegions()
-    {
-        try {
-            $regions = Region::select('id','name')->where('country_id', 46)->get();
-
-            return apiResponse(true,'Regions Fetched',$regions);
-
-        } catch (Exception $e) {
-            
-            return apiResponse(false,'could not Load Regions plaease reload',$e->getMessage());
-        }
-    }
-
     // get chile communes from db
     public function hdChileCommunes(Request $request)
     {

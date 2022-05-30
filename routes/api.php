@@ -27,8 +27,7 @@ Route::get('orders/recipient/chile_regions', [App\Http\Controllers\Api\Order\Rec
 Route::get('orders/recipient/chile_communes', [App\Http\Controllers\Api\Order\RecipientController::class, 'chileCommunes'])->name('api.orders.recipient.chile_comunes');
 Route::get('orders/recipient/normalize_address', [App\Http\Controllers\Api\Order\RecipientController::class, 'normalizeAddress'])->name('api.orders.recipient.normalize_address');
 
-// Route for getting chile regions from db
-Route::get('orders/recipient/hd_chile_regions', [App\Http\Controllers\Api\Order\RecipientController::class, 'hdChileRegions'])->name('api.orders.recipient.hd_chile_regions');
+// Route for getting chile communes from db
 Route::get('orders/recipient/hd_chile_comunes', [App\Http\Controllers\Api\Order\RecipientController::class, 'hdChileCommunes'])->name('api.orders.recipient.hd_chile_comunes');
 
 // Routes for usps
@@ -80,6 +79,8 @@ Route::prefix('v1')->group(function(){
         Route::get('country/{country}/states', StateController::class);
         Route::get('shipping-services/{country_code?}', ServicesController::class);
         Route::get('shcodes/{search?}', ShCodeController::class);
+        Route::get('hd-regions/{countryId}', RegionController::class)->name('api.hd-regions');
+
     });
 
 
