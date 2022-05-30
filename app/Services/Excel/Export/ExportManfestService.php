@@ -46,6 +46,7 @@ class ExportManfestService extends AbstractCsvExportService
             'Airport/ GRU/CWB',
             'Value paid to Correios',
             'Commission paid to Anjun',
+            'Referrer Commission',
             'Bag',
             'POBOX / NAME'
         ];
@@ -80,6 +81,7 @@ class ExportManfestService extends AbstractCsvExportService
                 $container->getDestinationAriport(),
                 $this->getValuePaidToCorrieos($container,$package)['airport'],
                 $this->getValuePaidToCorrieos($container,$package)['commission'],
+                optional($package->affiliateSale)->commission,
                 $container->dispatch_number,
                 optional($package->user)->pobox_number.' / '.optional($package->user)->getFullName()
             ];
