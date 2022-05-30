@@ -29,10 +29,10 @@
                                     @foreach($rates as $rate)
                                         <tr>
                                             <td>
-                                                {{ $rate['weight'] . ' g' }}
+                                                {{ optional($rate)['weight'] . ' g' }}
                                             </td>
                                             <td>
-                                                {{ number_format($rate['shipping'][0]*($rate['profit']/100)+$rate['shipping'][0],2) }}
+                                                {{ number_format(optional(optional($rate)['shipping'])[0]*(optional($rate)['profit']/100)+optional(optional($rate)['shipping'])[0],2) }}
                                             </td>
                                             
                                         </tr>
