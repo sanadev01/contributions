@@ -52,16 +52,17 @@ class ScanOrderExport extends AbstractExportService
             $this->setCellValue('E'.$row, $order->length . ' x ' . $order->length . ' x ' . $order->height );
             $this->setCellValue('F'.$row, $order->getWeight('kg'));
             $this->setCellValue('G'.$row, $order->id);
-            $this->setCellValue('H'.$row, $order->recipient->first_name);
-            $this->setCellValue('I'.$row, $order->order_date->format('m-d-Y'));
-            $this->setCellValue('J'.$row, $order->arrived_date);
-            $this->setCellValue('K'.$row, optional(optional($order->driverTracking)->user)->name);
-            $this->setCellValue('L'.$row, optional(optional($order->driverTracking)->created_at)->format('m-d-Y'));
+            $this->setCellValue('H'.$row, $order->tracking_id);
+            $this->setCellValue('I'.$row, $order->recipient->first_name);
+            $this->setCellValue('J'.$row, $order->order_date->format('m-d-Y'));
+            $this->setCellValue('K'.$row, $order->arrived_date);
+            $this->setCellValue('L'.$row, optional(optional($order->driverTracking)->user)->name);
+            $this->setCellValue('M'.$row, optional(optional($order->driverTracking)->created_at)->format('m-d-Y'));
             if($order->status < 80 ){
-                $this->setCellValue('M'.$row, 'Scanned in the warehouse');
+                $this->setCellValue('N'.$row, 'Scanned in the warehouse');
             }
             if($order->status >= 80 ){
-                $this->setCellValue('M'.$row, 'Shipped');
+                $this->setCellValue('N'.$row, 'Shipped');
             }
             $this->count++ ;
             $row++;
@@ -126,27 +127,30 @@ class ScanOrderExport extends AbstractExportService
 
         $this->setColumnWidth('G', 20);
         $this->setCellValue('G7', 'Reference#');
-
+        
         $this->setColumnWidth('H', 20);
-        $this->setCellValue('H7', 'Recpient');
+        $this->setCellValue('H7', 'Carrier Tracking');
 
         $this->setColumnWidth('I', 20);
-        $this->setCellValue('I7', 'Order Date');
-        
-        $this->setColumnWidth('J', 20);
-        $this->setCellValue('J7', 'Arrival Date');
+        $this->setCellValue('I7', 'Recpient');
 
+        $this->setColumnWidth('J', 20);
+        $this->setCellValue('J7', 'Order Date');
+        
         $this->setColumnWidth('K', 20);
-        $this->setCellValue('K7', 'Driver');
+        $this->setCellValue('K7', 'Arrival Date');
 
         $this->setColumnWidth('L', 20);
-        $this->setCellValue('L7', 'Pickup Date');
-        
-        $this->setColumnWidth('M', 20);
-        $this->setCellValue('M7', 'Status');
+        $this->setCellValue('L7', 'Driver');
 
-        $this->setBackgroundColor('A7:M7', '2b5cab');
-        $this->setColor('A7:M7', 'FFFFFF');
+        $this->setColumnWidth('M', 20);
+        $this->setCellValue('M7', 'Pickup Date');
+        
+        $this->setColumnWidth('N', 20);
+        $this->setCellValue('N7', 'Status');
+
+        $this->setBackgroundColor('A7:N7', '2b5cab');
+        $this->setColor('A7:N7', 'FFFFFF');
         $this->currentRow++;
 
         return true;
