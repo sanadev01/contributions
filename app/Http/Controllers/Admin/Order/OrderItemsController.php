@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin\Order;
 
 use App\Models\Order;
+use App\Models\Country;
 use App\Facades\UPSFacade;
 use App\Facades\USPSFacade;
 use App\Facades\FedExFacade;
 use Illuminate\Http\Request;
+use App\Models\ShippingService;
 use App\Http\Controllers\Controller;
 use App\Repositories\OrderRepository;
 use App\Http\Requests\Orders\OrderDetails\CreateRequest;
@@ -31,16 +33,32 @@ class OrderItemsController extends Controller
         if ( !$order->recipient ){
             abort(404);
         }
-        $chileCountryId =  Order::CHILE;
-        $usCountryId =  Order::US;
+
         $shippingServices = $this->orderRepository->getShippingServices($order);
         $error = $this->orderRepository->getShippingServicesError();
 
         if ($error) {
             session()->flash($error);
         }
+
+        $countryConstants = [
+            'Brazil' => Country::Brazil,
+            'Chile' => Country::Chile,
+            'Colombia' => Country::COLOMBIA,
+            'US' => Country::US,
+        ];
+
+        $shippingServiceCodes = [
+            'USPS_PRIORITY' => ShippingService::USPS_PRIORITY,
+            'USPS_FIRSTCLASS' => ShippingService::USPS_FIRSTCLASS,
+            'USPS_PRIORITY_INTERNATIONAL' => ShippingService::USPS_PRIORITY_INTERNATIONAL,
+            'USPS_FIRSTCLASS_INTERNATIONAL' => ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,
+            'UPS_GROUND' => ShippingService::UPS_GROUND,
+            'FEDEX_GROUND' => ShippingService::FEDEX_GROUND,
+            'COLOMBIA_Standard' => ShippingService::COLOMBIA_Standard,
+        ];
         
-        return view('admin.orders.order-details.index',compact('order','shippingServices', 'error','chileCountryId', 'usCountryId'));
+        return view('admin.orders.order-details.index',compact('order','shippingServices', 'error', 'countryConstants', 'shippingServiceCodes'));
     }
 
     /**
