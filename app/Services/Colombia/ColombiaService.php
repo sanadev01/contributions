@@ -32,6 +32,11 @@ class ColombiaService
         return $this->colombiaApiCall($this->shippingUrl, $this->makeRequestBody($order, true));
     }
 
+    public function getLabel($order)
+    {
+        return $this->colombiaApiCall($this->shippingUrl, $this->makeRequestBody($order, false));
+    }
+
     private function colombiaApiCall($url, $data)
     {
         try {
@@ -43,7 +48,7 @@ class ColombiaService
                 
                 $responseJson = $response->json()[0];
                 
-                if ($responseJson['intCodeError'] == 0 && $responseJson['strError'] == null) {
+                if ($responseJson['intCodeError'] == 0) {
                     return (Array)[
                         'success' => true,
                         'data' => $responseJson,
@@ -109,11 +114,10 @@ class ColombiaService
                     'strAditionalShipping' => '',
                     'strIdentification' => $order->warehouse_number,
                     'strObservation' => '',
-                    'strReference' => 'Referencia',
+                    'strReference' => ($order->customer_reference) ? $order->customer_reference : 'Referencia',
                 ]
             ],
             'boolMasterGuide' => false,
-            'byteGuidePDF' => false,
             'strAditionalOS' => '',
         ];
     }
@@ -140,7 +144,7 @@ class ColombiaService
             'intTypePlace' => 2,
             'strAddress' => ($data) ? $data['address'] : (($typeRecipient ? 'Colombia Receiver' : 'Colombia Sender')),
             'strAditional' => '',
-            'strEmail' => '',
+            'strEmail' => ($data) ? $data['email'] : '',
             'strLocker' => '',
             'strNameCountry' => 'CO',
             'strPhone' => ($data) ? $data['phone'] : '656565665',
@@ -161,7 +165,7 @@ class ColombiaService
             'strAditional' => '',
             'strCountry' => 'CO',
             'strDocument' => '',
-            'strEmail' => '',
+            'strEmail' => ($data) ? $data['email'] : '',
             'strLastNames' => ($data) ? $data['last_name'] : 'Fertias',
             'strNames' => ($data) ? $data['first_name'] : 'Marcio',
             'strPhone' => ($data) ? $data['phone'] : '656565665',

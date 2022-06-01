@@ -253,11 +253,11 @@ class OrderRepository
         return true;
     }
 
-    public function domesticService($shippingServiceId)
+    public function serviceRequireFreight($shippingServiceId)
     {
         $shippingService =  ShippingService::find($shippingServiceId);
 
-        if ($shippingService->isDomesticService()) {
+        if ($shippingService->isDomesticService() || $shippingService->isColombiaService()) {
             return true;
         }
 

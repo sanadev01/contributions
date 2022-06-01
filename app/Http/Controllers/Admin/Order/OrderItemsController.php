@@ -75,7 +75,7 @@ class OrderItemsController extends Controller
             abort(404);
         }
 
-        if($this->orderRepository->domesticService($request->shipping_service_id)){
+        if($this->orderRepository->serviceRequireFreight($request->shipping_service_id)){
             $request->validate([
                 'user_declared_freight' => 'bail|required|gt:0',
             ], [

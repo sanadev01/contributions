@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 
 class ColombiaServiceRateController extends Controller
 {
-    protected $currentUSDollar = 0.000266616;
+    protected $currentUSDollar = 0.000254;
     /**
      * Handle the incoming request.
      *

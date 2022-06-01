@@ -22,6 +22,8 @@
             <iframe src="{{$renderLabel}}" style="width:100%; height:700px;" frameborder="0">
                 
             </iframe>
+            @elseif($order->shippingService->isColombiaService() && $order->api_response)
+                <input type="hidden" id="colombia_label" value="{{ $order->colombiaLabelUrl() }}">
             @else
             <iframe src="https://docs.google.com/gview?url={{ route('order.label.download',$order) }}&embedded=true&time{{md5(microtime())}}" style="width:100%; height:700px;" frameborder="0">
                 <iframe src="{{ route('order.label.download',$order) }}" style="width:100%; height:700px;" frameborder="0"></iframe>
@@ -34,3 +36,17 @@
         @endif
     </div>
 @endif
+<script>
+    $(document).ready(function(){
+        let url = $('#colombia_label').val();
+        
+        if (url != undefined) {
+            var win = window.open(url, '_blank');
+            if (win) {
+                win.focus();
+            }else {
+                alert('Please allow popups for this website');
+            }
+        }
+    });
+</script>
