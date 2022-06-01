@@ -38,8 +38,8 @@ class TicketRepository
         $tickets->when($request->filled('status'), function ($query) use ($request) {
             return $query->where('open', $request->status);
         });
-
-        return $tickets->paginate(25);
+        
+        return $tickets->orderBy('id','DESC')->paginate(25);
     }
 
     public function store(Request $request)
