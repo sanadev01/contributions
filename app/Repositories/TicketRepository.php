@@ -20,7 +20,10 @@ class TicketRepository
 
         $tickets = Ticket::query();
 
-        $tickets->has('user');
+        $tickets->has('user')->withCount(['comments' => function($q){
+            $q->where('read', '0')->where('user_id', '!=', auth()->id() ); 
+        }]);
+
         if (!auth()->user()->isAdmin()) {
             $tickets->where('user_id', auth()->id());
         }
@@ -38,7 +41,7 @@ class TicketRepository
         $tickets->when($request->filled('status'), function ($query) use ($request) {
             return $query->where('open', $request->status);
         });
-        
+
         return $tickets->orderBy('id','DESC')->paginate(25);
     }
 
