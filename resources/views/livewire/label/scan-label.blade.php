@@ -69,7 +69,7 @@
         <div class="row col-12 d-flex justify-content-end">
             <form wire:submit.prevent="search" class="col-12">
                 <div class="row col-12">
-                    <div class="offset-7 col-2">
+                    <div class="offset-5 col-2">
                         <div class="form-group">
                             <div class="controls">
                                 <label class="d-flex">@lang('parcel.User POBOX Number')</label>
@@ -80,7 +80,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="offset-7 col-2">
+                    <div class="col-2">
                         <div class="form-group">
                             <div class="controls">
                                 <label class="d-flex">Start Date</label>

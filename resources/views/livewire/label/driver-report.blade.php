@@ -1,14 +1,9 @@
 <div>
     <div class="col-12 row mb-5">
-        <div class="col-12 d-flex justify-content-end">
-            <button type="button" wire:click="download" class="btn btn-success mr-2" @if(!$orders) disabled @endif>
-                <i class="feather icon-download"></i> @lang('orders.import-excel.Download') Report
-            </button>
-        </div>
         <div class="row col-12 d-flex justify-content-end">
-            <form wire:submit.prevent="search" class="col-12">
+            <form wire:submit.prevent="search" class="col-10">
                 <div class="row col-12">
-                    <div class="offset-7 col-2">
+                    <div class="offset-5 col-2">
                         <div class="form-group">
                             <div class="controls">
                                 <label class="d-flex">Start Date</label>
@@ -42,6 +37,15 @@
                                         <i class="feather icon-search"></i>  Search
                                     </button>
                                 @endif
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-2 mt-4">
+                        <div class="form-group">
+                            <div class="controls">
+                                <button type="button" wire:click="download" class="btn btn-success" @if(!$orders) disabled @endif>
+                                    <i class="feather icon-download"></i> @lang('orders.import-excel.Download') Report
+                                </button>
                             </div>
                         </div>
                     </div>

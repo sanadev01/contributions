@@ -10,7 +10,7 @@
                             @lang('handlingservice.Manage Services')
                         </h4>
                         @can('create', App\Models\HandlingService::class)
-                        <a href="{{ route('admin.handling-services.create') }}" class="btn btn-primary">
+                        <a href="{{ route('admin.handling-services.create') }}" class="btn btn-primary m-3">
                             @lang('handlingservice.Create Service')
                         </a>
                         @endcan

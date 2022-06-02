@@ -61,10 +61,10 @@
                         @if (\Request::route()->getName() != 'admin.trash-orders.index')
                             <span class="mr-4"> @lang('Edit Order')</span>
                         @endif
-                        <a href="#" wire:click.prevent="sortBy('created_at')">@lang('orders.date')</a>
+                        <a href="#" class="text-white" wire:click.prevent="sortBy('created_at')">@lang('orders.date')</a>
                     </th>
                     <th>
-                        <a href="#" wire:click.prevent="sortBy('id')">@lang('orders.order-id')</a> <i>  </i>
+                        <a href="#" class="text-white" wire:click.prevent="sortBy('id')">@lang('orders.order-id')</a> <i>  </i>
                     </th>
                     @admin
                     <th>User Name</th>
@@ -77,7 +77,7 @@
                     <th>Carrier Cost</th>
                     @endadmin
                     <th>Tracking Code</th>
-                    <th><a href="#" wire:click.prevent="sortBy('gross_total')">@lang('orders.amount')</a></th>
+                    <th><a href="#" class=" text-white" wire:click.prevent="sortBy('gross_total')">@lang('orders.amount')</a></th>
                     <th>@lang('orders.status')</th>
                     <th>@lang('orders.type')</th>
                     <th>@lang('orders.payment-status')</th>

@@ -172,5 +172,67 @@
         vertical-align: middle;
         margin-top: auto;
     }
+    .main-menu.menu-light .navigation#main-menu-navigation li a .icon_adjst {
+        margin-right:4px;
+    }
+
+    .main-menu.menu-light .navigation#main-menu-navigation li a img{
+        width: 16px;
+    }
+    .main-menu.menu-light .navigation#main-menu-navigation li a .icon_adjst {
+        margin-right: 3px;
+    }
+    .main-menu.menu-light .navigation#main-menu-navigation li a .icon_adjst:before{
+        font-size:1.28rem;
+    }
+    .green{
+        color:#3CB64B;
+    }
+    .red{
+        color:#ff5a5a
+    }
+    .main-menu.menu-light .navigation > li ul .active {
+        box-shadow: 0 0 0px 0px rgb(255 255 255 / 0%);
+        border-radius: 4px !important;
+        background: #1174b7 !important;
+    }
+    .main-menu.menu-light .navigation > li.active > a {
+        background:  #1174b7;
+        box-shadow: 0 0 0px 0px rgb(255 255 255 / 0%);
+        color: #fff;
+        font-weight: 400;
+        border-radius: 4px;
+    }
+    .btn-primary {
+        border-color: #1174b7 !important;
+        background-color: #1174b7 !important;
+        /* color: #fff; */
+    }
+    .btn-info {
+        border-color: #1174b7 !important;
+        background-color: #1174b7 !important;
+        color: #fff !important;
+    }
+    /* th {
+        background-color: blue;
+        color: white;
+    }  */
+    .table thead th {
+        background-color: #1174b7;
+        color: white;
+    }
+    tr:nth-child(even) {
+        background-color: #dbe9f2 !important;
+    }
+    .bg-danger-custom {
+        background-color: #fa9595
+    }
+    .table th, .table td {
+        border-top: 0px solid #f8f8f8 !important;
+    }
+    .vs-radio-con .vs-radio .vs-radio--border {
+        background: transparent;
+        border: 2px solid #1878b8;
+    }
 </style>
 @yield('custom-css')

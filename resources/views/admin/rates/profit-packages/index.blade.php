@@ -54,14 +54,14 @@
                                                 {{ $package->type }}
                                             </td>
                                             <td class="d-flex">
-                                                <a href="{{ route('admin.rates.rates.exports',$package) }}" class="btn btn-primary mr-2" title="@lang('profitpackage.download-profit-package')">
-                                                    <i class="feather icon-arrow-down"></i>
+                                                <a href="{{ route('admin.rates.rates.exports',$package) }}" class="btn btn-success mr-2" title="@lang('profitpackage.download-profit-package')">
+                                                    <i class="feather icon-download"></i>
                                                 </a>
                                                 @can('update', App\Models\ProfitPackage::class)
                                                     <a href="{{ route('admin.rates.profit-packages.edit',$package) }}" class="btn btn-primary mr-2" title="@lang('profitpackage.edit-profit-package')">
                                                         <i class="feather icon-edit"></i>
                                                     </a>
-                                                    <a href="{{ route('admin.rates.profit-packages-upload.edit',$package) }}" class="btn btn-secondary mr-2" title="@lang('profitpackage.edit-profit-package')">
+                                                    <a href="{{ route('admin.rates.profit-packages-upload.edit',$package) }}" class="btn btn-primary mr-2" title="@lang('profitpackage.edit-profit-package')">
                                                         <i class="feather icon-upload"></i>
                                                     </a>
                                                 @endcan
