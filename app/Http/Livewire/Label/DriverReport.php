@@ -77,6 +77,6 @@ class DriverReport extends Component
             });
         });
 
-       return ($paginate) ? $orders->paginate(25) : $orders->get();
+       return ($paginate) ? $orders->latest()->paginate(25) : $orders->latest()->get();
     }
 }
