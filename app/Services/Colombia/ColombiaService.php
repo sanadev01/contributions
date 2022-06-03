@@ -45,7 +45,7 @@ class ColombiaService
                                 ->post($url, $data);
             
             if ($response->status() == 200) {
-                $responseJson = $response->json()[0];
+                $responseJson = collect($response->json())->first();
                 
                 if ($responseJson['intCodeError'] == 0) {
                     return (Array)[
@@ -71,7 +71,6 @@ class ColombiaService
             }
             
         } catch (Exception $ex) {
-
             return (Array)[
                 'success' => false,
                 'data' => null,
@@ -104,7 +103,7 @@ class ColombiaService
                     'intAditionalShipping' => 0,
                     'intAditionalShipping1' => 0,
                     'intAditionalShipping2' => 0,
-                    'intDeclaredValue' => ($order->order_value > 0) ? ($order->order_value * 3976.49) : 100,
+                    'intDeclaredValue' => ($order->order_value > 0) ? (int)($order->order_value * 3976.49) : 100,
                     'intHeight' => ($order->measurement_unit != 'kg/cm') ? UnitsConverter::inToCm($order->height) : $order->height,
                     'intLength' => ($order->measurement_unit != 'kg/cm') ? UnitsConverter::inToCm($order->length) : $order->length,
                     'intWidth' => ($order->measurement_unit != 'kg/cm') ? UnitsConverter::inToCm($order->width) : $order->width,
