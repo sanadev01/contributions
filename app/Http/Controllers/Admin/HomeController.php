@@ -33,4 +33,26 @@ class HomeController extends Controller
             dump($container->deliveryBills->toArray());
         }
     }
+
+    public function updateArrivalDate()
+    {
+        $from = '2022-06-01 00:00:00';
+        $to = '2022-06-02 00:00:00';
+        
+        $orders = Order::where('arrived_date', null)->whereHas('trackings', function($query) use($from, $to) {
+            $query->where([['status_code', Order::STATUS_ARRIVE_AT_WAREHOUSE], ['created_at', '>=', $from], ['created_at', '<', $to]]);
+        })->get();
+
+        if ($orders->isEmpty()) {
+            return 'No order found';
+        }
+        
+        foreach ($orders as $order) {
+            $order->update([
+                'arrived_date' => $order->trackings->where('status_code', 73)->first()->created_at
+            ]);
+        }
+
+        return 'Done';
+    }
 }

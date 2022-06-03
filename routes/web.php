@@ -283,5 +283,6 @@ Route::get('test-label/{flag}/{id}',function($flag,$id){
 });
 
 Route::get('find-container/{order}', [HomeController::class, 'findContainer'])->name('find.container');
+Route::get('update-arrival-date', [HomeController::class, 'updateArrivalDate'])->name('update.arrival.date');
 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
