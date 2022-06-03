@@ -232,7 +232,49 @@
     }
     .vs-radio-con .vs-radio .vs-radio--border {
         background: transparent;
-        border: 2px solid #1878b8;
+        border: 2px solid #1174b7;
+    }
+    .font-large-1 {
+        text-align: center;
+        font-size: 1.5rem !important;
+    }
+    .vs-radio-con input:checked ~ .vs-radio .vs-radio--circle {
+        background: #1174b7;
+    }
+    .table td, .table th {
+        vertical-align: middle;
+    }
+
+    .app-content .wizard > .steps > ul > li.current .step {
+        border-color: #1174b7 !important;
+        background-color: #1174b7 !important;
+    }
+
+    .app-content .wizard > .steps > ul > li.current > a {
+        color: #1174b7;
+        cursor: default;
+    }
+
+    .app-content .wizard.wizard-circle > .steps > ul > li:before, .app-content .wizard.wizard-circle > .steps > ul > li:after {
+        background-color: #1174b7 !important;
+    }
+    .app-content .wizard.wizard-circle > .steps > ul > li.current ~ li:before {
+        background-color: transparent !important;
+    }
+    .app-content .wizard.wizard-circle > .steps > ul > li.current ~ li:after {
+        background-color: transparent !important;
+    }
+    .app-content .wizard.wizard-circle > .steps > ul > li.current:after {
+        background-color: transparent !important;
+    }
+    .app-content .wizard > .actions > ul > li > a {
+        background: #1174b7 !important;
+    }
+    input[type=text]:focus, textarea:focus {
+        box-shadow: 0 0 5px #1174b7;
+        padding: 3px 0px 3px 3px;
+        margin: 5px 1px 3px 0px;
+        border: 1px solid #1174b7;
     }
 </style>
 @yield('custom-css')

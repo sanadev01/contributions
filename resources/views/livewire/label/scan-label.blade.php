@@ -117,111 +117,117 @@
         
     </div>
     <table class="table table-bordered">
-        <tr>
-            <th>@lang('orders.print-label.Barcode')</th>
-            <th>PO Box#</th>
-            <th>@lang('orders.print-label.Driver')</th>
-            <th>@lang('orders.print-label.Client')</th>
-            <th>@lang('orders.print-label.Dimensions')</th>
-            <th>@lang('orders.print-label.Kg')</th>
-            <th>@lang('orders.print-label.Reference')#</th>
-            <th>@lang('Carrier Tracking')</th>
-            <th>@lang('orders.print-label.Recpient')</th>
-            <th>@lang('orders.print-label.Date')</th>
-            <th>@lang('orders.print-label.Pickup Date')</th>
-            <th>@if($searchOrder) Arrival Date @else @lang('orders.print-label.Action')@endif</th>
+        <thead>
+            <tr>
+                <th>@lang('orders.print-label.Barcode')</th>
+                <th>PO Box#</th>
+                <th>@lang('orders.print-label.Driver')</th>
+                <th>@lang('orders.print-label.Client')</th>
+                <th>@lang('orders.print-label.Dimensions')</th>
+                <th>@lang('orders.print-label.Kg')</th>
+                <th>@lang('orders.print-label.Reference')#</th>
+                <th>@lang('Carrier Tracking')</th>
+                <th>@lang('orders.print-label.Recpient')</th>
+                <th>@lang('orders.print-label.Date')</th>
+                <th>@lang('orders.print-label.Pickup Date')</th>
+                <th>@if($searchOrder) Arrival Date @else @lang('orders.print-label.Action')@endif</th>
+                @if($searchOrder)
+                    <th> Status </th>
+                @endif
+            </tr>
+        </thead>
+        <tbody>
             @if($searchOrder)
-                <th> Status </th>
-            @endif
-        </tr>
-        @if($searchOrder)
-            @foreach ($searchOrder as $package)
-                <tr>
-                    <td>{{ $package->corrios_tracking_code }}</td>
-                    <td>{{ $package->user->pobox_number }}</td>
-                    <td>{{ optional(optional($package->driverTracking)->user)->name }}</td>
-                    <td>{{ $package->merchant }}</td>
-                    <td>{{ $package->length }} x {{ $package->length }} x {{ $package->height }}</td>
-                    <td>{{ $package->getWeight('kg') }}</td>
-                    <td>{{ $package->id }}</td>
-                    <td>{{ $package->tracking_id }}</td>
-                    <td>{{ $package->recipient->first_name }}</td>
-                    <td>{{ $package->order_date }}</td>
-                    <td>{{ optional(optional($package->driverTracking)->created_at)->format('m-d-y') }}</td>
-                    <td>{{ $package->arrived_date }}</td>
-                    <td>
-                        @if($package->status < 80 )
-                            Scanned in the warehouse
-                        @endif
-                        @if($package->status >= 80 )
-                            Shipped
-                        @endif
-                    </td>
-                </tr>
-            @endforeach
-        @else
-            @foreach ($packagesRows as $key => $package)
-                <tr id="{{ $key }}">
-                    <td>
-                        {{ $package['tracking_code'] }}
-                    </td>
-                    <td>
-                        {{ $package['pobox'] }}
-                    </td>
-                    <td>
-                        {{ $package['driver'] }}
-                    </td>
-                    <td>
-                        {{ $package['client'] }}
-                    </td>
-                    <td>
-                        {{ $package['dimensions'] }}
-                    </td>
-                    <td>
-                        {{ $package['kg'] }}
-                    </td>
-                    <td>
-                        @if ($package['reference'])
-                            HD-{{ $package['reference'] }}
-                        @endif 
-                    </td>
-                    <td>
-                        {{ $package['tracking_id'] }}
-                    </td>
-                    <td>
-                        {{ $package['recpient'] }}
-                    </td>
-                    <td>
-                        {{ $package['order_date'] }}
-                    </td>
-                    <td>
-                        {{ $package['pickup_date'] }}
-                    </td>
-                    <td>
-                        
-                        @if( !$error && !auth()->user()->hasRole('driver'))
-                            @if( $package['client'] )
-                                {{-- <a href="{{route('admin.label.scan.show',$package['reference'].'?search=1')}}" class="btn btn-primary mr-2" onclick="addClass({{$key}})" title="@lang('orders.import-excel.Download')">
-                                    
-                                </a> --}}
-
-                                <a href="#" title="Click to see Tracking" class="btn btn-primary mr-2" data-toggle="modal" data-target="#hd-modal" data-url="{{route('admin.label.scan.show',$package['reference'].'?search=1')}}">
-                                    <i class="fa fa-search"></i>Find
-                                </a>
-
-                                <a href="{{route('admin.label.scan.show',$package['reference'])}}" target="_blank" class="btn btn-success mr-2" onclick="addClass({{$key}})" title="@lang('orders.import-excel.Download')">
-                                    <i class="feather icon-download"></i>@lang('orders.import-excel.Download')
-                                </a>
+                @foreach ($searchOrder as $package)
+                    <tr>
+                        <td>{{ $package->corrios_tracking_code }}</td>
+                        <td>{{ $package->user->pobox_number }}</td>
+                        <td>{{ optional(optional($package->driverTracking)->user)->name }}</td>
+                        <td>{{ $package->merchant }}</td>
+                        <td>{{ $package->length }} x {{ $package->length }} x {{ $package->height }}</td>
+                        <td>{{ $package->getWeight('kg') }}</td>
+                        <td>{{ $package->id }}</td>
+                        <td>{{ $package->tracking_id }}</td>
+                        <td>{{ $package->recipient->first_name }}</td>
+                        <td>{{ $package->order_date }}</td>
+                        <td>{{ optional(optional($package->driverTracking)->created_at)->format('m-d-y') }}</td>
+                        <td>{{ $package->arrived_date }}</td>
+                        <td>
+                            @if($package->status < 80 )
+                                Scanned in the warehouse
                             @endif
-                        @endif
-                        
-                        <button class="btn btn-danger" role="button" tabindex="-1" type="button" wire:click='removeRow({{$key}})'>
-                            @lang('orders.print-label.Remove')
-                        </button>
-                    </td>
-                </tr>
-            @endforeach
-        @endif
+                            @if($package->status >= 80 )
+                                Shipped
+                            @endif
+                        </td>
+                    </tr>
+                @endforeach
+            @elseif($packagesRows)
+                @foreach ($packagesRows as $key => $package)
+                    <tr id="{{ $key }}">
+                        <td>
+                            {{ $package['tracking_code'] }}
+                        </td>
+                        <td>
+                            {{ $package['pobox'] }}
+                        </td>
+                        <td>
+                            {{ $package['driver'] }}
+                        </td>
+                        <td>
+                            {{ $package['client'] }}
+                        </td>
+                        <td>
+                            {{ $package['dimensions'] }}
+                        </td>
+                        <td>
+                            {{ $package['kg'] }}
+                        </td>
+                        <td>
+                            @if ($package['reference'])
+                                HD-{{ $package['reference'] }}
+                            @endif 
+                        </td>
+                        <td>
+                            {{ $package['tracking_id'] }}
+                        </td>
+                        <td>
+                            {{ $package['recpient'] }}
+                        </td>
+                        <td>
+                            {{ $package['order_date'] }}
+                        </td>
+                        <td>
+                            {{ $package['pickup_date'] }}
+                        </td>
+                        <td>
+                            
+                            @if( !$error && !auth()->user()->hasRole('driver'))
+                                @if( $package['client'] )
+                                    {{-- <a href="{{route('admin.label.scan.show',$package['reference'].'?search=1')}}" class="btn btn-primary mr-2" onclick="addClass({{$key}})" title="@lang('orders.import-excel.Download')">
+                                        
+                                    </a> --}}
+
+                                    <a href="#" title="Click to see Tracking" class="btn btn-primary mr-2" data-toggle="modal" data-target="#hd-modal" data-url="{{route('admin.label.scan.show',$package['reference'].'?search=1')}}">
+                                        <i class="fa fa-search"></i>Find
+                                    </a>
+
+                                    <a href="{{route('admin.label.scan.show',$package['reference'])}}" target="_blank" class="btn btn-success mr-2" onclick="addClass({{$key}})" title="@lang('orders.import-excel.Download')">
+                                        <i class="feather icon-download"></i>@lang('orders.import-excel.Download')
+                                    </a>
+                                @endif
+                            @endif
+                            
+                            <button class="btn btn-danger" role="button" tabindex="-1" type="button" wire:click='removeRow({{$key}})'>
+                                @lang('orders.print-label.Remove')
+                            </button>
+                        </td>
+                    </tr>
+                @endforeach
+            @else
+            <x-tables.no-record colspan="12"></x-tables.no-record>
+            @endif
+        </tbody>
     </table>
     
     @if (count($packagesRows) == 300)

@@ -1,9 +1,9 @@
 <div>
-    <div class="col-12 row mb-5">
-        <div class="row col-12 d-flex justify-content-end">
-            <form wire:submit.prevent="search" class="col-10">
-                <div class="row col-12">
-                    <div class="offset-5 col-2">
+    <div class="mb-5">
+        <div class="d-flex">
+            <form wire:submit.prevent="search" class="col-12 p-0">
+                <div class="row col-12 p-0 m-0">
+                    <div class="col-2 pl-0">
                         <div class="form-group">
                             <div class="controls">
                                 <label class="d-flex">Start Date</label>
@@ -25,7 +25,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-1">
+                    <div class="col-2">
                         <div class="form-group">
                             <div class="controls">
                                 @if ($hasSearch)
@@ -40,10 +40,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-2 mt-4">
+                    <div class="col-6 d-flex justify-content-end p-0">
                         <div class="form-group">
                             <div class="controls">
-                                <button type="button" wire:click="download" class="btn btn-success" @if(!$orders) disabled @endif>
+                                <button type="button" wire:click="download" class=" mt-4 btn btn-success" @if(!$orders) disabled @endif>
                                     <i class="feather icon-download"></i> @lang('orders.import-excel.Download') Report
                                 </button>
                             </div>
@@ -54,34 +54,38 @@
         </div>
     </div>
     <table class="table table-bordered">
-        <tr>
-            <th>@lang('orders.print-label.Barcode')</th>
-            <th>PO Box#</th>
-            <th>@lang('orders.print-label.Driver')</th>
-            <th>@lang('orders.print-label.Client')</th>
-            <th>@lang('orders.print-label.Dimensions')</th>
-            <th>@lang('orders.print-label.Kg')</th>
-            <th>@lang('orders.print-label.Reference')#</th>
-            <th>@lang('orders.print-label.Recpient')</th>
-            <th>@lang('orders.print-label.Date')</th>
-            <th>@lang('orders.print-label.Pickup Date')</th>
-        </tr>
-        @if ($orders)
-            @foreach ($orders as $order)
-                <tr>
-                    <td>{{ $order->corrios_tracking_code }}</td>
-                    <td>{{ $order->user->pobox_number }}</td>
-                    <td>{{ optional(optional($order->driverTracking)->user)->name }}</td>
-                    <td>{{ $order->merchant }}</td>
-                    <td>{{ $order->length }} x {{ $order->length }} x {{ $order->height }}</td>
-                    <td>{{ $order->getWeight('kg') }}</td>
-                    <td>{{ $order->id }}</td>
-                    <td>{{ $order->recipient->first_name }}</td>
-                    <td>{{ $order->order_date }}</td>
-                    <td>{{ optional($order->driverTracking)->created_at }}</td>
-                </tr>
-            @endforeach
-        @endif
+        <thead>
+            <tr>
+                <th>@lang('orders.print-label.Barcode')</th>
+                <th>PO Box#</th>
+                <th>@lang('orders.print-label.Driver')</th>
+                <th>@lang('orders.print-label.Client')</th>
+                <th>@lang('orders.print-label.Dimensions')</th>
+                <th>@lang('orders.print-label.Kg')</th>
+                <th>@lang('orders.print-label.Reference')#</th>
+                <th>@lang('orders.print-label.Recpient')</th>
+                <th>@lang('orders.print-label.Date')</th>
+                <th>@lang('orders.print-label.Pickup Date')</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if ($orders)
+                @foreach ($orders as $order)
+                    <tr>
+                        <td>{{ $order->corrios_tracking_code }}</td>
+                        <td>{{ $order->user->pobox_number }}</td>
+                        <td>{{ optional(optional($order->driverTracking)->user)->name }}</td>
+                        <td>{{ $order->merchant }}</td>
+                        <td>{{ $order->length }} x {{ $order->length }} x {{ $order->height }}</td>
+                        <td>{{ $order->getWeight('kg') }}</td>
+                        <td>{{ $order->id }}</td>
+                        <td>{{ $order->recipient->first_name }}</td>
+                        <td>{{ $order->order_date }}</td>
+                        <td>{{ optional($order->driverTracking)->created_at }}</td>
+                    </tr>
+                @endforeach
+            @endif
+        </tbody>
     </table>
     <div class="d-flex justify-content-end my-2 pb-4 mx-2">
         {{ $orders->links() }}

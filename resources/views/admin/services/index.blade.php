@@ -16,8 +16,8 @@
                         @endcan
                     </div>
                     <div class="card-content">
-                        <div class="table-responsive-md mt-1">
-                            <table class="table table-hover-animation mb-0">
+                        <div class="table-responsive-md m-5">
+                            <table class="table table-hover-animation mb-0 table-bordered">
                                 <thead>
                                 <tr>
                                     <th>@lang('handlingservice.Name')</th>

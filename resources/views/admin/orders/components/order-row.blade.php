@@ -23,7 +23,9 @@
                 </span>
             </div>
         @endif
-        {{ optional($order->order_date)->format('m/d/Y') }}
+        <p>
+            {{ optional($order->order_date)->format('m/d/Y') }}
+        </p>
     </td>
     <td style="width: 200px;">
         @if ( $order->isArrivedAtWarehouse() )
@@ -108,7 +110,7 @@
     </td>
     <td class="font-large-1">
         @if( $order->isPaid() )
-            <i class="fa fa-check-circle-o text-success"></i>
+            <i class="fa fa-check-circle text-success"></i>
         @else
             <i class="fa fa-times-circle @if( $order->user->hasRole('retailer') &&  !$order->isPaid()) text-white @else text-danger @endif"></i>
         @endif
