@@ -254,35 +254,19 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
     return response()->download(storage_path("app/labels/{$order->us_api_tracking_code}.pdf"),"{$order->us_api_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.us-label.download');
 
-Route::get('test-label/{flag}/{id}',function($flag,$id){
+Route::get('test-label',function(){
 
-    if ($flag == 'true') {
-        $order =  (strlen($id) > 6) ? Order::where('corrios_tracking_code', $id)->first() : Order::find($id);
-        if ($order) {
-            dd($order->toArray());
-        }
+    Product::truncate();
+    dd(Product::all());
+    $labelPrinter = new CN23LabelMaker();
 
-        dd('Order not found');
-    }else {
-        $order =  (strlen($id) > 6) ? Order::where('corrios_tracking_code', $id)->first() : Order::find($id);
-        if ($order) {
-            dd($order->trackings->toArray());
-        }
+    $order = Order::find(53654);
+    $labelPrinter->setOrder($order);
+    $labelPrinter->setService(2);
 
-        dd('Order not found');
-    }
-    // Product::truncate();
-    // dd(Product::all());
-    // $labelPrinter = new CN23LabelMaker();
-
-    // $order = Order::find(53654);
-    // $labelPrinter->setOrder($order);
-    // $labelPrinter->setService(2);
-
-    // return $labelPrinter->download();
+    return $labelPrinter->download();
 });
 
 Route::get('find-container/{order}', [HomeController::class, 'findContainer'])->name('find.container');
-Route::get('update-arrival-date', [HomeController::class, 'updateArrivalDate'])->name('update.arrival.date');
 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
