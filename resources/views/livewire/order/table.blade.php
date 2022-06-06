@@ -1,10 +1,37 @@
 <div class="p-2" >
     <div class="row mb-2 no-print">
+        <div class="row col-12">
+            <div class="col-1">
+                <select class="form-control" wire:model="pageSize">
+                    <option value="1">1</option>
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="300">300</option>
+                </select>
+            </div>
+            <div class="col-11 text-right">
+                <form action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
+                    @csrf
+                    <label>Start Date</label>
+                    <input type="date" name="start_date" class="from-control col-2">
+
+                    <label>End Date</label>
+                    <input type="date" name="end_date" class="from-control col-2">
+                    
+                    <button class="btn btn-success" title="@lang('orders.import-excel.Download')">
+                        @lang('orders.Download Orders') <i class="fa fa-arrow-down"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
         @admin
             @if (request()->route()->getName() != 'admin.trash-orders.index')
             <div class="col-12">
-                <div class="p-1 mb-3">
-                    <ul class="nav nav-pills">
+                {{-- <div class="p-1 mb-3"> --}}
+                    <ul class="nav nav-pills m-0">
                         <li class="nav-item ">
                             <a class="nav-link border @if($userType == 'wholesale') btn btn-primary text-white @endif" href="{{ route('admin.orders.show','wholesale') }}"><span style="font-size: 22px;">Wholesales</span></a>
                         </li>
@@ -18,35 +45,11 @@
                             <a class="nav-link border @if($userType == 'pickups') btn btn-primary text-white @endif" href="{{ route('admin.orders.show','pickups') }}"><span style="font-size: 22px;">Pickups</span></a>
                         </li>
                     </ul>
-                </div>        
+                {{-- </div>         --}}
             </div>
             @endif 
         @endadmin       
-        <div class="col-1">
-            <select class="form-control" wire:model="pageSize">
-                <option value="1">1</option>
-                <option value="5">5</option>
-                <option value="10">10</option>
-                <option value="20">20</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-                <option value="300">300</option>
-            </select>
-        </div>
-        <div class="col-11 text-right">
-            <form action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
-                @csrf
-                <label>Start Date</label>
-                <input type="date" name="start_date" class="from-control col-2">
-
-                <label>End Date</label>
-                <input type="date" name="end_date" class="from-control col-2">
-
-                <button class="btn btn-success" title="@lang('orders.import-excel.Download')">
-                    @lang('orders.Download Orders') <i class="fa fa-arrow-down"></i>
-                </button>
-            </form>
-        </div>
+        
     </div>
     <div class="table-responsive order-table">
         <table class="table mb-0 table-responsive-md" id="order-table">

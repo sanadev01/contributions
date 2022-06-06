@@ -1,47 +1,44 @@
 <div>
-    <div class="p-2">
-        <div class="row mb-2 no-print">
-            <div class="col-1">
-                <select class="form-control" wire:model="pageSize">
-                    <option value="1">1</option>
-                    <option value="5">5</option>
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                    <option value="300">300</option>
-                </select>
-            </div>
-        </div>
-        <div class="mb-2 row col-12 no-print">
-            <div class="col-3">
-                <label>@lang('activity.Date')</label>
-                <input type="search" class="form-control" wire:model.defer="date">
-            </div>
-
-            <div class="col-3">
-                <label>@lang('activity.Name')</label>
-                <input type="search" class="form-control" wire:model.defer="name">
-            </div>
-
-            <div class="col-2">
-                <label>@lang('activity.Model')</label>
-                <select class="form-control" wire:model.defer="model">
-                    <option value="">@lang('Select Model')</option>
-                    @foreach ($models as $model)  
-                        <option value="{{ $model }}">{{ $model }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="col-3">
-                <label>@lang('activity.Content')</label>
-                <input type="search" class="form-control" wire:model.defer="content">
-            </div>
-            <div class="col-1 pt-4">
-                <button class="btn btn-success" title="search" wire:click.prevent="getActivities">
-                    @lang('activity.Search') <i class="fa fa-search"></i>
-                </button>
-                
+    <div class="col-md-12">
+        <div class="hd-card mt-4 mb-3">
+            <div class="mb-2 row col-md-12 d-flex justify-content-end p-0 m-0">
+                <div class="col-1 hd-mt-20 pl-0">
+                    <select class="form-control" wire:model="pageSize">
+                        <option value="1">1</option>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="300">300</option>
+                    </select>
+                </div>
+                <div class="col-2">
+                    <label>@lang('activity.Date')</label>
+                    <input type="search" class="form-control" wire:model.defer="date">
+                </div>
+                <div class="col-2">
+                    <label>@lang('activity.Name')</label>
+                    <input type="search" class="form-control" wire:model.defer="name">
+                </div>
+                <div class="col-2">
+                    <label>@lang('activity.Model')</label>
+                    <select class="form-control" wire:model.defer="model">
+                        <option value="">@lang('Select Model')</option>
+                        @foreach ($models as $model)
+                            <option value="{{ $model }}">{{ $model }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-3">
+                    <label>@lang('activity.Content')</label>
+                    <input type="search" class="form-control" wire:model.defer="content">
+                </div>
+                <div class="col-2 pt-4 d-flex justify-content-end p-0">
+                    <button class="mt-2 btn btn-success" title="search" wire:click.prevent="getActivities">
+                        @lang('activity.Search') <i class="fa fa-search"></i>
+                    </button>
+                </div>
             </div>
         </div>
         <div class="table-wrapper position-relative">
@@ -54,7 +51,7 @@
                 </thead>
                 <tbody>
                     @forelse ($activities as $activity)
-                        @include('admin.activity.components.log-row',['activity'=>$activity])    
+                        @include('admin.activity.components.log-row',['activity'=>$activity])
                     @empty
                         <x-tables.no-record colspan="7"></x-tables.no-record>
                     @endforelse
@@ -66,5 +63,4 @@
         </div>
         @include('layouts.livewire.loading')
     </div>
-    
 </div>

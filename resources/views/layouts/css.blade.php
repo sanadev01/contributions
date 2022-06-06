@@ -274,20 +274,11 @@
         box-shadow: 0 0 10px #1174b7;
         border-radius: 28px;
         border: 2px solid #1174b7;
-<<<<<<< HEAD
-        /* padding: 20px;  */
         height: 40px; 
-=======
-        padding: 20px;
-        height: 10px;
->>>>>>> b8b84397f25bc42ced00aa04831e5ccc00dddf00
     }
     input[type=date] {
-        /* box-shadow: 0 0 5px #1174b7; */
         border-radius: 28px;
         border: 1px solid #1174b7;
-<<<<<<< HEAD
-        /* padding: 20px;  */
         height: 40px; 
     }
     .hd-card {
@@ -297,14 +288,25 @@
     }
     .hd-mt-22{
         margin-top:2.2rem!important
-=======
-        padding: 20px;
-        height: 10px;
->>>>>>> b8b84397f25bc42ced00aa04831e5ccc00dddf00
     }
     .mt-25 {
         margin-top:26px !important
     }
 
+    .nav.nav-pills .nav-item .nav-link {
+        border-radius: 10px 55px 10px 10px;
+        border: solid 1px !important;
+        border-color: #1174b7 !important;
+        color: #1174b7;
+    }
+
+    .btn-primary:hover {
+        border-color: #1174b7 !important;
+        color: #fff !important;
+        box-shadow: 0 8px 25px -8px #1174b7;
+    }
+    .hd-mt-20{
+        margin-top:1.9rem!important
+    }
 </style>
 @yield('custom-css')

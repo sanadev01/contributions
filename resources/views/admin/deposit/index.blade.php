@@ -13,7 +13,7 @@
                             <i class="fa fa-plus"></i> Add Balance
                         </a>
                     </div>
-                    <div class="card-content card-body">
+                    <div class="card-content">
                         <div class="table-responsive-md mt-1" >
                             <livewire:deposit.table-component />
                         </div>

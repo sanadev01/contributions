@@ -1,5 +1,4 @@
 @extends('layouts.master')
-
 @section('page')
     <section>
         <div class="row">
@@ -7,35 +6,46 @@
                 <div class="card min-vh-100">
                     <div class="card-header">
                         <h4 class="mb-0">@lang('user.All Registered Users')</h4>
-
-                        <form action="{{ route('admin.users.export.index') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="search" value="{{ request('search') }}">
-                            <button href="" class="btn btn-primary">
-                                @lang('user.Export Excel')
-                            </button>
-                        </form>
                     </div>
                     <div class="card-content card-body">
-                        <div class="filters p-2">
-                            <form action="" method="GET">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <input type="search" class="form-control" name="search" value="{{ old('search',request('search')) }}" placeholder="@lang('user.Search By Name, Pobox, Email')">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <button class="btn btn-primary btn-lg">
-                                            @lang('user.Search')
-                                        </button>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="hd-card mt-1 mb-3">
+                                    <div class="d-flex">
+                                        <div class="row col-12 p-0 m-0">
+                                            <div class="col-11 pl-0">
+                                                <form action="" method="GET">
+                                                    <div class="row">
+                                                        <div class="col-4 mt-1">
+                                                            <input type="search" class="form-control" name="search" value="{{ old('search',request('search')) }}" placeholder="@lang('user.Search By Name, Pobox, Email')">
+                                                        </div>
+                                                        <div class="col-1">
+                                                            <button class="mt-1 btn btn-primary">
+                                                                <i class="feather icon-search"></i> @lang('user.Search')
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="col-1 text-right p-0">
+                                                <form action="{{ route('admin.users.export.index') }}" method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="search" value="{{ request('search') }}">
+                                                    <button href="" class="mt-1 btn btn-success">
+                                                        <i class="feather icon-download"></i> @lang('user.Export Excel')
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                         <div class="table-responsive-md mt-1">
-                            <table class="table mb-0">
+                            <table class="table table-bordered mb-0">
                                 <thead>
                                     <tr>
-                                        <th>@lang('user.Date')</th> 
+                                        <th>@lang('user.Date')</th>
                                         <th>@lang('user.POBOX')#</th>
                                         <th>@lang('user.Name')</th>
                                         <th>@lang('user.Email')</th>
@@ -48,7 +58,6 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-
                                 @foreach($users as $user)
                                     <tr>
                                         <td>
@@ -83,7 +92,7 @@
                                                 <div class="dropdown">
                                                     <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-success dropdown-toggle waves-effect waves-light">
                                                         @lang('user.Action')
-                                                    </button> 
+                                                    </button>
                                                     <div class="dropdown-menu dropdown-menu-right dropright">
                                                         {{-- <a href="{{ route('admin.call-flows.edit',$user) }}" title="Edit Call Flows" class="dropdown-item w-100">
                                                             <i class="feather icon-edit"></i> Edit
@@ -94,18 +103,15 @@
                                                         <a href="{{ route('admin.users.setting.index',$user) }}" title="@lang('user.User Setting')" class="dropdown-item w-100">
                                                             <i class="fa fa-cog"></i> @lang('user.User Setting')
                                                         </a>
-
                                                         <a href="{{ route('admin.activity.log.index', [ 'id'=> $user ]) }}" title="Check User Activity" class="dropdown-item w-100">
                                                             <i class="feather icon-activity"></i> Activity Logs
                                                         </a>
-                                                        
                                                         <form action="{{ route('admin.users.login',$user) }}" class="d-flex" method="post">
                                                             @csrf
                                                             <button class="dropdown-item w-100">
                                                                 <i class="feather icon-lock"></i> @lang('user.Login')
                                                             </button>
                                                         </form>
-
                                                         @can('delete', $user)
                                                             <form action="{{ route('admin.users.destroy',$user) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
                                                                 @csrf
@@ -115,7 +121,6 @@
                                                                 </button>
                                                             </form>
                                                         @endcan
-
                                                     </div>
                                                 </div>
                                             </div>
@@ -126,7 +131,6 @@
                             </table>
                         </div>
                     </div>
-
                     <div class="card-footer d-flex justify-content-end">
                         {{ $users->links('pagination::bootstrap-4') }}
                     </div>
