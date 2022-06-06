@@ -1,5 +1,5 @@
 <div>
-    <div class="mb-5">
+    <div class="hd-card mt-1 mb-3">
         <div class="d-flex">
             <form wire:submit.prevent="search" class="col-12 p-0">
                 <div class="row col-12 p-0 m-0">
@@ -29,11 +29,11 @@
                         <div class="form-group">
                             <div class="controls">
                                 @if ($hasSearch)
-                                    <button type="button" wire:click="clearSearch" class="btn btn-primary mt-4" wire:click="search">
+                                    <button type="button" wire:click="clearSearch" class="btn btn-primary hd-mt-22" wire:click="search">
                                         <i class="feather icon-search"></i>  clear search
                                     </button>
                                 @else
-                                    <button type="submit" class="btn btn-primary mt-4" wire:click="search">
+                                    <button type="submit" class="btn btn-primary hd-mt-22" wire:click="search">
                                         <i class="feather icon-search"></i>  Search
                                     </button>
                                 @endif
@@ -43,7 +43,7 @@
                     <div class="col-6 d-flex justify-content-end p-0">
                         <div class="form-group">
                             <div class="controls">
-                                <button type="button" wire:click="download" class=" mt-4 btn btn-success" @if(!$orders) disabled @endif>
+                                <button type="button" wire:click="download" class="hd-mt-22 btn btn-success mr-1" @if(!$orders) disabled @endif>
                                     <i class="feather icon-download"></i> @lang('orders.import-excel.Download') Report
                                 </button>
                             </div>

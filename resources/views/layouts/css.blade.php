@@ -271,18 +271,26 @@
         background: #1174b7 !important;
     }
     input[type=date]:focus {
-        box-shadow: 0 0 8px #1174b7;
+        box-shadow: 0 0 10px #1174b7;
         border-radius: 28px;
         border: 2px solid #1174b7;
-        padding: 20px; 
-        height: 10px; 
+        /* padding: 20px;  */
+        height: 40px; 
     }
     input[type=date] {
-        box-shadow: 0 0 5px #1174b7;
-        border-radius: 8px;
+        /* box-shadow: 0 0 5px #1174b7; */
+        border-radius: 28px;
         border: 1px solid #1174b7;
-        padding: 20px; 
-        height: 10px; 
+        /* padding: 20px;  */
+        height: 40px; 
+    }
+    .hd-card {
+        padding: 12px 16px !important;
+        background: #dbe9f2;
+        margin: -17px;
+    }
+    .hd-mt-22{
+        margin-top:2.2rem!important
     }
 </style>
 @yield('custom-css')
