@@ -270,11 +270,19 @@
     .app-content .wizard > .actions > ul > li > a {
         background: #1174b7 !important;
     }
-    input[type=text]:focus, textarea:focus {
+    input[type=date]:focus {
+        box-shadow: 0 0 8px #1174b7;
+        border-radius: 28px;
+        border: 2px solid #1174b7;
+        padding: 20px; 
+        height: 10px; 
+    }
+    input[type=date] {
         box-shadow: 0 0 5px #1174b7;
-        padding: 3px 0px 3px 3px;
-        margin: 5px 1px 3px 0px;
+        border-radius: 8px;
         border: 1px solid #1174b7;
+        padding: 20px; 
+        height: 10px; 
     }
 </style>
 @yield('custom-css')
