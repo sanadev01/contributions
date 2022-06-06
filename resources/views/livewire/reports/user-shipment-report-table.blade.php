@@ -1,9 +1,8 @@
 <div>
     <form action="{{ route('admin.reports.user-shipments.index') }}" method="GET" target="_blank">
         <div class="row">
-            <div class="col-md-12 row mb-3">
-
-                <div class="offset-6 col-md-4">
+            <div class="col-md-12 row mb-2 ">
+                <div class="offset-7 col-lg-3 col-md-3 col-sm-3 col-xs-3">
                     <label for="">Year</label>
                     <select class="form-control" name="year" id="DefaultSelect">
                         <option value="">Select Year </option>
@@ -12,25 +11,21 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-2 mt-4">
-                    <button type="submit" class="btn btn-primary"> Download Yearly</button>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 mt-25">
+                    <button type="submit" class="btn btn-primary mr-2">Download Yearly</button>
+                    <a href="{{ $downloadLink }}" class="btn btn-primary" {{ !$downloadLink ? 'disabled': '' }} target="_blank">
+                        Download
+                    </a>
                 </div>
             </div>
         </div>
     </form>
-    <div class="row">
-        <div class="col-12 text-right">
-            <a href="{{ $downloadLink }}" class="btn btn-primary" {{ !$downloadLink ? 'disabled': '' }} target="_blank">
-                Download
-            </a>
-        </div>
-    </div>
     <div class="row my-3">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <label for="">Start Date</label>
             <input type="date" class="form-control" wire:model='start_date'>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <label for="">End Date</label>
             <input type="date" class="form-control" wire:model='end_date'>
         </div>
@@ -39,7 +34,7 @@
         <thead>
             <tr>
                 <th>
-                    
+
                 </th>
                 <th>
                     <a href="#" wire:click="sortBy('name')">
@@ -104,7 +99,7 @@
             </tr>
             <tr>
                 <th>
-                    
+
                 </th>
                 <th>
                     <input type="search" class="form-control" wire:model.debounce.500ms="name">
@@ -116,13 +111,13 @@
                     <input type="search" class="form-control"  wire:model.debounce.500ms="email">
                 </th>
                 <th>
-                    
+
                 </th>
                 <th>
-                    
+
                 </th>
                 <th>
-                    
+
                 </th>
             </tr>
         </thead>
@@ -137,10 +132,10 @@
                         {{ $user->name }} {{ $user->last_name }}
                     </td>
                     <td>
-                        {{ $user->pobox_number }} 
+                        {{ $user->pobox_number }}
                     </td>
                     <td>
-                        {{ $user->email }} 
+                        {{ $user->email }}
                     </td>
                     <td class="h4">
                         <a href="#" title="Click to see Shipment" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.report.shipment-user',['user'=>$user,'start_date'=>$start_date,'end_date'=>$end_date]) }}">
