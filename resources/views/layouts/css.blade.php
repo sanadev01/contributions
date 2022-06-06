@@ -270,13 +270,13 @@
     .app-content .wizard > .actions > ul > li > a {
         background: #1174b7 !important;
     }
-    input[type=date]:focus {
+    .hd-search:focus {
         box-shadow: 0 0 10px #1174b7;
         border-radius: 28px;
         border: 2px solid #1174b7;
         height: 40px; 
     }
-    input[type=date] {
+    .hd-search {
         border-radius: 28px;
         border: 1px solid #1174b7;
         height: 40px; 

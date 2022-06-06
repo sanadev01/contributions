@@ -1,6 +1,6 @@
 <div>
     <div class="table-actions">
-        <select wire:model='pageSize' class="form-control d-flex w-auto">
+        <select wire:model='pageSize' class="form-control hd-search col-1 mb-2">
             <option value="10">10</option>
             <option value="30">30</option>
             <option value="50">50</option>
@@ -56,6 +56,7 @@
                 </th>
                 <th></th>
                 <th><input type="search" wire:model.debounce.500ms="phone" class="form-control"> </th>
+                <th></th>
                 <th></th>
             </tr>
         </thead>

@@ -63,7 +63,6 @@
                 @endif
             @endif
         </div>
-<<<<<<< Updated upstream
         <div class="row col-12 d-flex justify-content-end">
             <form wire:submit.prevent="search" class="col-12">
                 <div class="row col-12">
@@ -87,37 +86,6 @@
                                 <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
-=======
-        <div class="form-group row col-4">
-            @if($searchOrder)
-                <h4>Total Weight: <span class="text-danger">{{ number_format((float)$totalWeight, 2, '.', '') }} Kg</span></h4>
-                <h4 class="ml-2">Total Pieces: <span class="text-danger">{{ $totalPieces }}</span></h4>
-            @endif
-        </div>
-    </div>
-    <div class="row col-12 d-flex justify-content-end">
-        <form wire:submit.prevent="search" class="col-12">
-            <div class="row col-lg-12 col-md-12 col-sm-12 col-xs-12 pull-left">
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                    <div class="form-group">
-                        <div class="controls">
-                            <label class="d-flex">@lang('parcel.User POBOX Number')</label>
-                            <livewire:components.search-user />
-                            @error("start_date")
-                            <div class="help-block text-danger">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                    <div class="form-group">
-                        <div class="controls">
-                            <label class="d-flex">Start Date</label>
-                            <input class="form-control" type="date" wire:model.defer="start_date">
-                            @error("start_date")
-                            <div class="help-block text-danger">{{ $message }}</div>
-                            @enderror
->>>>>>> Stashed changes
                         </div>
                     </div>
                 </div>
@@ -166,7 +134,6 @@
         </thead>
         <tbody>
             @if($searchOrder)
-<<<<<<< Updated upstream
                 @foreach ($searchOrder as $package)
                     <tr>
                         <td>{{ $package->corrios_tracking_code }}</td>
@@ -236,81 +203,6 @@
                                     {{-- <a href="{{route('admin.label.scan.show',$package['reference'].'?search=1')}}" class="btn btn-primary mr-2" onclick="addClass({{$key}})" title="@lang('orders.import-excel.Download')">
                                         
                                     </a> --}}
-=======
-                <th> Status </th>
-            @endif
-        </tr>
-        @if($searchOrder)
-            @foreach ($searchOrder as $package)
-                <tr>
-                    <td>{{ $package->corrios_tracking_code }}</td>
-                    <td>{{ $package->user->pobox_number }}</td>
-                    <td>{{ optional(optional($package->driverTracking)->user)->name }}</td>
-                    <td>{{ $package->merchant }}</td>
-                    <td>{{ $package->length }} x {{ $package->length }} x {{ $package->height }}</td>
-                    <td>{{ $package->getWeight('kg') }}</td>
-                    <td>{{ $package->id }}</td>
-                    <td>{{ $package->tracking_id }}</td>
-                    <td>{{ $package->recipient->first_name }}</td>
-                    <td>{{ $package->order_date }}</td>
-                    <td>{{ optional(optional($package->driverTracking)->created_at)->format('m-d-y') }}</td>
-                    <td>{{ $package->arrived_date }}</td>
-                    <td>
-                        @if($package->status < 80 )
-                            Scanned in the warehouse
-                        @endif
-                        @if($package->status >= 80 )
-                            Shipped
-                        @endif
-                    </td>
-                </tr>
-            @endforeach
-        @else
-            @foreach ($packagesRows as $key => $package)
-                <tr id="{{ $key }}">
-                    <td>
-                        {{ $package['tracking_code'] }}
-                    </td>
-                    <td>
-                        {{ $package['pobox'] }}
-                    </td>
-                    <td>
-                        {{ $package['driver'] }}
-                    </td>
-                    <td>
-                        {{ $package['client'] }}
-                    </td>
-                    <td>
-                        {{ $package['dimensions'] }}
-                    </td>
-                    <td>
-                        {{ $package['kg'] }}
-                    </td>
-                    <td>
-                        @if ($package['reference'])
-                            HD-{{ $package['reference'] }}
-                        @endif
-                    </td>
-                    <td>
-                        {{ $package['tracking_id'] }}
-                    </td>
-                    <td>
-                        {{ $package['recpient'] }}
-                    </td>
-                    <td>
-                        {{ $package['order_date'] }}
-                    </td>
-                    <td>
-                        {{ $package['pickup_date'] }}
-                    </td>
-                    <td>
-
-                        @if( !$error && !auth()->user()->hasRole('driver'))
-                            @if( $package['client'] )
-                                {{-- <a href="{{route('admin.label.scan.show',$package['reference'].'?search=1')}}" class="btn btn-primary mr-2" onclick="addClass({{$key}})" title="@lang('orders.import-excel.Download')">
-
-                                </a> --}}
->>>>>>> Stashed changes
 
                                     <a href="#" title="Click to see Tracking" class="btn btn-primary mr-2" data-toggle="modal" data-target="#hd-modal" data-url="{{route('admin.label.scan.show',$package['reference'].'?search=1')}}">
                                         <i class="fa fa-search"></i>Find
@@ -321,7 +213,6 @@
                                     </a>
                                 @endif
                             @endif
-<<<<<<< Updated upstream
                             
                             <button class="btn btn-danger" role="button" tabindex="-1" type="button" wire:click='removeRow({{$key}})'>
                                 @lang('orders.print-label.Remove')
@@ -333,17 +224,6 @@
             <x-tables.no-record colspan="12"></x-tables.no-record>
             @endif
         </tbody>
-=======
-                        @endif
-
-                        <button class="btn btn-danger" role="button" tabindex="-1" type="button" wire:click='removeRow({{$key}})'>
-                            @lang('orders.print-label.Remove')
-                        </button>
-                    </td>
-                </tr>
-            @endforeach
-        @endif
->>>>>>> Stashed changes
     </table>
 
     @if (count($packagesRows) == 300)

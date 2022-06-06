@@ -4,11 +4,11 @@
             <div class="row my-3">
                 <div class="col-md-4">
                     <label for="">@lang('dashboard.Start Date')</label>
-                    <input type="date" class="form-control" wire:model="startDate">
+                    <input type="date" class="form-control hd-search" wire:model="startDate">
                 </div>
                 <div class="col-md-4">
                     <label for="">@lang('dashboard.End Date')</label>
-                    <input type="date" class="form-control" wire:model="endDate">
+                    <input type="date" class="form-control hd-search" wire:model="endDate">
                 </div>
             </div>
         </div>
