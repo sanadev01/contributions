@@ -7,7 +7,7 @@
                         <div class="form-group">
                             <div class="controls">
                                 <label class="d-flex">Start Date</label>
-                                <input class="form-control" type="date" wire:model.defer="start_date" required>
+                                <input class="form-control hd-search" type="date" wire:model.defer="start_date" required>
                                 @error("start_date")
                                 <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror
@@ -18,7 +18,7 @@
                         <div class="form-group">
                             <div class="controls">
                                 <label class="d-flex">End Date</label>
-                                <input class="form-control" type="date" wire:model.defer="end_date" required>
+                                <input class="form-control hd-search" type="date" wire:model.defer="end_date" required>
                                 @error("end_date")
                                     <div class="help-block text-danger">{{ $message }}</div>
                                 @enderror

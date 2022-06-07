@@ -13,7 +13,7 @@
             </div>
         </td>
     @endif
-    <td class="d-flex justify-content-between align-items-center">
+    <td class="d-flex justify-content-between align-items-center border-0">
         @if(\Request::route()->getName() != 'admin.reports.order.index'  && !$order->isTrashed())
             <div class="vs-radio-con" wire:click="$emit('edit-order',{{$order->id}})" title="@lang('Edit Order')">
                 <input type="radio" name="edit_order" class="edit-order" value="false">
@@ -23,7 +23,7 @@
                 </span>
             </div>
         @endif
-        <p>
+        <p class="mb-0">
             {{ optional($order->order_date)->format('m/d/Y') }}
         </p>
     </td>
