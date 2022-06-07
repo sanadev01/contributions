@@ -22,6 +22,7 @@ class User extends Authenticatable
     const ROLE_ADMIN = 1;
     const ROLE_USER = 2;
     const ROLE_DRIVER = 'driver';
+    const ROLE_SCANNER = 'scanner';
 
     const ACCOUNT_TYPE_BUSINESS = 'business';
     const ACCOUNT_TYPE_INDIVIDUAL = 'individual';
@@ -90,6 +91,11 @@ class User extends Authenticatable
     public function isDriver()
     {
         return $this->role->name == self::ROLE_DRIVER;
+    }
+
+    public function isScanner()
+    {
+        return $this->role->name == self::ROLE_SCANNER;
     }
 
     public function addresses()
