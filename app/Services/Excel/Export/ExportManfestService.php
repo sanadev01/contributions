@@ -48,7 +48,8 @@ class ExportManfestService extends AbstractCsvExportService
             'Commission paid to Anjun',
             'Referrer Commission',
             'Bag',
-            'POBOX / NAME'
+            'POBOX / NAME',
+            'Carrier Tracking'
         ];
     }
 
@@ -83,7 +84,8 @@ class ExportManfestService extends AbstractCsvExportService
                 $this->getValuePaidToCorrieos($container,$package)['commission'],
                 optional($package->affiliateSale)->commission,
                 $container->dispatch_number,
-                optional($package->user)->pobox_number.' / '.optional($package->user)->getFullName()
+                optional($package->user)->pobox_number.' / '.optional($package->user)->getFullName(),
+                $package->tracking_id
             ];
 
             $i=0;
@@ -123,7 +125,7 @@ class ExportManfestService extends AbstractCsvExportService
             $this->total_paid_to_correios,
             '',
             '',
-            '',
+            ''
         ];
 
     }
