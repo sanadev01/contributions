@@ -55,25 +55,11 @@ class UpsService
 
     public function getSenderPrice($order, $request)
     {  
-        if ($request->exists('consolidated_order') && $request->consolidated_order == false) {
-            $consolidatedOrderService = new ConsolidatedOrderService();
-
-            $consolidatedOrderService->handle($this->getPaymentDetails(), $this->shipperNumber);
-            return $this->upsApiCall($this->ratingPackageUrl,  $consolidatedOrderService->consolidatedOrderRatesRequestForSender($order, $request));
-        }
-        
         return $this->upsApiCall($this->ratingPackageUrl, $this->ratesRequestForSender($order, $request));
     }
 
     public function getLabelForSender($order, $request)
     {
-        if ($request->exists('consolidated_order') && $request->consolidated_order == false) {
-            $consolidatedOrderService = new ConsolidatedOrderService();
-
-            $consolidatedOrderService->handle($this->getPaymentDetails(), $this->shipperNumber);
-            return $this->upsApiCall($this->createPackageUrl,  $consolidatedOrderService->consolidatedOrderPackageRequestForSender($order, $request));
-        }
-
         return $this->upsApiCall($this->createPackageUrl, $this->packageRequestForSender($order, $request));
     }
 
@@ -89,13 +75,6 @@ class UpsService
 
     public function createPickupShipment($order, $request)
     {
-        if ($request->exists('consolidated_order')) {
-            $consolidatedOrderService = new ConsolidatedOrderService();
-            $consolidatedOrderService->handle($this->getPaymentDetails(), $this->shipperNumber);
-            
-            return $this->upsApiCall($this->pickupShipmentUrl,  $consolidatedOrderService->consolidatedOrderPickupRequest($order, $request));
-        }
-
        return $this->upsApiCallForPickup($this->pickupShipmentUrl, $this->requestForPickupShipment($order, $request));
     }
 
@@ -390,7 +369,7 @@ class UpsService
         $request_body = [
             'ShipmentRequest' => [
                 'Shipment' => [
-                    'Description' => $this->orderDescription($order->items),
+                    'Description' => ($order->items->isNotEmpty()) ? $this->orderDescription($order->items) : 'goods',
                     'Shipper' => [
                         'Name' => optional($order->user)->pobox_number.' - WRH#: '.$order->warehouse_number,
                         'AttentionName' => $order->sender_first_name.' '.$order->sender_last_name,
@@ -441,7 +420,7 @@ class UpsService
                     ],
                     'Package' => [
                         [
-                            'Description' => $this->orderDescription($order->items),
+                            'Description' => ($order->items->isNotEmpty()) ? $this->orderDescription($order->items) : 'goods',
                             'Packaging' => [
                                 'Code' => '02',
                                 'Description' => 'Customer Supplied Package'

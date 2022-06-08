@@ -2,10 +2,11 @@
 
 namespace App\Services\Excel\Export;
 
-use App\Models\Order;
-use App\Models\Warehouse\AccrualRate;
 use Carbon\Carbon;
+use App\Models\Order;
+use App\Models\ShippingService;
 use App\Models\Warehouse\Container;
+use App\Models\Warehouse\AccrualRate;
 use App\Models\Warehouse\DeliveryBill;
 
 class ExportManfestService extends AbstractCsvExportService
@@ -44,6 +45,8 @@ class ExportManfestService extends AbstractCsvExportService
             'Customer paid',
             'Airport/ GRU/CWB',
             'Value paid to Correios',
+            'Commission paid to Anjun',
+            'Referrer Commission',
             'Bag',
             'POBOX / NAME',
             'Carrier Tracking'
@@ -77,7 +80,9 @@ class ExportManfestService extends AbstractCsvExportService
                 $package->warehouse_number,
                 $package->gross_total,
                 $container->getDestinationAriport(),
-                $this->getValuePaidToCorrieos($container,$package),
+                $this->getValuePaidToCorrieos($container,$package)['airport'],
+                $this->getValuePaidToCorrieos($container,$package)['commission'],
+                optional($package->affiliateSale)->commission,
                 $container->dispatch_number,
                 optional($package->user)->pobox_number.' / '.optional($package->user)->getFullName(),
                 $package->tracking_id
@@ -100,7 +105,7 @@ class ExportManfestService extends AbstractCsvExportService
             $this->row++;
 
             $this->total_customerpaid +=  $package->gross_total;
-            $this->total_paid_to_correios += $this->getValuePaidToCorrieos($container,$package);
+            $this->total_paid_to_correios += $this->getValuePaidToCorrieos($container,$package)['airport'];
         }
 
         $this->csvData[$this->row] = [
@@ -127,16 +132,28 @@ class ExportManfestService extends AbstractCsvExportService
 
     protected function getValuePaidToCorrieos(Container $container, Order $order)
     {
+        $commission = false;
         $rateSlab = AccrualRate::getRateSlabFor($order->getWeight('kg'));
 
         if ( !$rateSlab ){
-            return 0;
+            return [
+                'airport'=> 0,
+                'commission'=> 0
+            ];
         }
-
+        $service = $order->shippingService->service_sub_class;
+        if($service == ShippingService::AJ_Packet_Standard || $service == ShippingService::AJ_Packet_Express){
+            $commission = true;
+        }
         if ( $container->getDestinationAriport() ==  "GRU"){
-            return $rateSlab->gru;
+            return [
+                'airport'=> $rateSlab->gru,
+                'commission'=> $commission ? $rateSlab->commission : 0
+            ];
         }
-
-        return $rateSlab->cwb;
+        return [
+            'airport'=> $rateSlab->cwb,
+            'commission'=> $commission ? $rateSlab->commission : 0
+        ];
     }
 }

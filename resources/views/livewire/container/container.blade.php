@@ -65,6 +65,8 @@
                                             <option value="NX">Packet Standard</option>
                                             <option value="IX">Packet Express</option>
                                             <option value="XP">Packet Mini</option>
+                                            <option value="AJ-NX">Anjun Packet Standard</option>
+                                            <option value="AJ-IX">Anjun Packet Express</option>
                                         </select>
                                     </th>
                                     
@@ -139,17 +141,20 @@
                                                         <a href="{{ route('warehouse.containers.packages.index',$container) }}" class="dropdown-item w-100">
                                                             <i class="feather icon-box"></i> @lang('warehouse.actions.Packages')
                                                         </a>
-                                                        @if( !$container->isRegistered() || !$container->isShipped() )
+                                                        @if( !$container->isShipped() )
                                                             <a href="{{ route('warehouse.containers.edit',$container) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
                                                             </a>
-                                                            
-                                                            <a href="{{ route('warehouse.container.register',$container) }}" class="dropdown-item w-100">
-                                                                <i class="feather icon-box"></i> Register Unit
-                                                            </a>
-                                                            <a href="{{ route('warehouse.container.cancel',$container) }}" class="dropdown-item w-100">
-                                                                <i class="feather icon-box"></i> Cancel Unit
-                                                            </a>
+                                                            @if( !$container->isRegistered() && $container->hasOrders())
+                                                                <a href="{{ route('warehouse.container.register',$container) }}" class="dropdown-item w-100">
+                                                                    <i class="feather icon-box"></i> Register Unit
+                                                                </a>
+                                                            @endif
+                                                            @if( $container->isRegistered())
+                                                                <a href="{{ route('warehouse.container.cancel',$container) }}" class="dropdown-item w-100">
+                                                                    <i class="feather icon-box"></i> Cancel Unit
+                                                                </a>
+                                                            @endif
                                                             <form action="{{ route('warehouse.containers.destroy',$container) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
                                                                 @csrf
                                                                 @method('DELETE')

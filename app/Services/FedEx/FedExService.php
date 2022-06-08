@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 use App\Services\Calculators\WeightCalculator;
-use App\Services\FedEx\ConsolidatedOrderService;
 
 class FedExService
 {
@@ -58,20 +57,12 @@ class FedExService
 
     public function getSenderRates($order, $request)
     {
-        if ($request->exists('consolidated_order') && $request->consolidated_order == false) {
-            $consolidatedOrderService = new ConsolidatedOrderService();
-
-            $consolidatedOrderService->handle($this->accountNumber);
-            return $this->fedExApiCall($this->getRatesUrl, $consolidatedOrderService->makeRequestForSenderRates($order, $request));
-        }
-
         return $this->fedExApiCall($this->getRatesUrl, $this->makeRatesRequestBodyForSender($order, $request));
     }
 
     public function createShipmentForSender($order, $request)
     {
-        $data = $this->makeShipmentRequestForSender($order, $request);
-        return $this->fedExApiCall($this->createShipmentUrl, $data);
+        return $this->fedExApiCall($this->createShipmentUrl, $this->makeShipmentRequestForSender($order, $request));
     }
 
     public function createPickupShipment($request)
@@ -184,7 +175,7 @@ class FedExService
                 'shipper' => [
                     'contact' => [
                         'personName' => $request->first_name.' '.$request->last_name,
-                        'phoneNumber' => $request->sender_phone,
+                        'phoneNumber' => $request->sender_phone ? $request->sender_phone : '+13058885191',
                     ],
                     'address' => [
                         'streetLines' => [$request->sender_address],
@@ -219,7 +210,7 @@ class FedExService
                 ],
                 'labelSpecification' => [
                     'imageType' => 'PDF',
-                    'labelStockType' => 'PAPER_85X11_TOP_HALF_LABEL',
+                    'labelStockType' => 'PAPER_4X6',
                 ],
                 'requestedPackageLineItems' => [
                     [
@@ -322,7 +313,7 @@ class FedExService
                 ],
                 'labelSpecification' => [
                     'imageType' => 'PDF',
-                    'labelStockType' => 'PAPER_85X11_TOP_HALF_LABEL',
+                    'labelStockType' => 'PAPER_4X6',
                 ],
                 'requestedPackageLineItems' => [
                     [

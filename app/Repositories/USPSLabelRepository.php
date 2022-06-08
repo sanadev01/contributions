@@ -72,33 +72,55 @@ class USPSLabelRepository
 
         if($response->success == true) 
         {
-            $this->totalUspsCost += $response->data['total_amount'] ?? 0;
-            $this->addProfit($order->user, $this->totalUspsCost);
-
-            $order->update([
-                'api_response' => json_encode($response->data),
-                'corrios_tracking_code' => $response->data['usps']['tracking_numbers'][0] ?? null,
-                'is_invoice_created' => true,
-                'is_shipment_added' => true,
-                'user_declared_freight' => $this->totalUspsCost,
-                'shipping_value' => $this->total_amount_with_profit,
-                'total' => $this->total_amount_with_profit,
-                'gross_total' => $this->total_amount_with_profit,
-                'status' => Order::STATUS_PAYMENT_DONE,
-            ]);
-
-            $order->refresh();
-
-            // store order status in order tracking
-            $this->addOrderTracking($order);
-
-            $this->printPrimaryLabel($order);
+            $this->handleApiResponse($response, $order);
 
             return true;
         }
 
         $this->uspsError = $response->message;
         return false;
+    }
+
+    public function getPrimaryLabelForRecipient($order)
+    {
+        $response = USPSFacade::getPrimaryLabelForRecipient($order);
+
+        if($response->success == true) 
+        {
+            $this->handleApiResponse($response, $order);
+
+            return true;
+        }
+
+        $this->uspsError = $response->message;
+        return false;
+    }
+
+    private function handleApiResponse($response, $order)
+    {
+        $this->totalUspsCost += $response->data['total_amount'] ?? 0;
+        $this->addProfit($order->user, $this->totalUspsCost);
+
+        $order->update([
+            'api_response' => json_encode($response->data),
+            'corrios_tracking_code' => $response->data['usps']['tracking_numbers'][0] ?? null,
+            'is_invoice_created' => true,
+            'is_shipment_added' => true,
+            'user_declared_freight' => $this->totalUspsCost,
+            'shipping_value' => $this->total_amount_with_profit,
+            'total' => $this->total_amount_with_profit,
+            'gross_total' => $this->total_amount_with_profit,
+            'status' => Order::STATUS_PAYMENT_DONE,
+        ]);
+
+        $order->refresh();
+
+        // store order status in order tracking
+        $this->addOrderTracking($order);
+
+        $this->printPrimaryLabel($order);
+
+        return true;
     }
 
     public function printPrimaryLabel(Order $order)
@@ -150,7 +172,7 @@ class USPSLabelRepository
         
         if($shippingServices->contains('service_sub_class', ShippingService::USPS_PRIORITY) || $shippingServices->contains('service_sub_class', ShippingService::USPS_FIRSTCLASS))
         {
-            if(!setting('usps', null, $order->user->id))
+            if(!setting('usps', null, User::ROLE_ADMIN))
             {
                 $this->uspsError = "USPS is not enabled for your account";
                 $shippingServices = collect() ;
@@ -165,7 +187,7 @@ class USPSLabelRepository
     public function getRatesForSender($request)
     {
         $order = ($request->exists('consolidated_order') && $request->consolidated_order == true) ? $request->order : Order::find($request->order_id);
-        $response = USPSFacade::getSenderPrice($order, $request);
+        $response = USPSFacade::getSenderRates($order, $request);
 
         if($response->success == true)
         {
@@ -243,7 +265,7 @@ class USPSLabelRepository
 
         if($this->user_api_profit == null || $this->user_api_profit == 0)
         {
-            $this->user_api_profit = setting('usps_profit', null, 1);
+            $this->user_api_profit = setting('usps_profit', null, User::ROLE_ADMIN);
         }
 
         $profit = $usps_rate * ($this->user_api_profit / 100);

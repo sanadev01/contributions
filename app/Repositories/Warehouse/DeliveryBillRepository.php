@@ -47,23 +47,18 @@ class DeliveryBillRepository extends AbstractRepository
     {
         try {
 
-            $isNX = false;
-            $isIX = false;
-            $isXP = false;
+            $containerService = null;
+
             foreach($request->get('container',[]) as $containerId){
                 $container = Container::find($containerId)->services_subclass_code;
-                if($container  == "NX"){
-                    $isNX = true;
+                
+                if ($container && !$containerService) {
+                    $containerService = $container;
                 }
-                if($container  == "IX"){
-                    $isIX = true;
+
+                if($container && $containerService != $container){
+                    throw new \Exception("Please don't use diffirent type of Container in one Delivery Bill",500);
                 }
-                if($container  == "XP"){
-                    $isXP = true;
-                }
-            }
-            if( ($isNX === true && $isIX === true) || ($isNX === true && $isXP === true) || ($isIX === true && $isXP === true)){
-                throw new \Exception("Please don't use diffirent type of Container in one Delivery Bill",500);
             }
 
             $deliveryBill = DeliveryBill::create([
@@ -74,7 +69,7 @@ class DeliveryBillRepository extends AbstractRepository
             
             foreach($deliveryBill->containers()->get() as $containers){
                 $containers->orders()->update([
-                    'status' =>  80,
+                    'status' =>  Order::STATUS_SHIPPED,
                     'api_tracking_status' => 'HD-Shipped',
                 ]);
 
@@ -95,30 +90,25 @@ class DeliveryBillRepository extends AbstractRepository
     {
         try {
 
-            $isNX = false;
-            $isIX = false;
-            $isXP = false;
+            $containerService = null;
+
             foreach($request->get('container',[]) as $containerId){
                 $container = Container::find($containerId)->services_subclass_code;
-                if($container  == "NX"){
-                    $isNX = true;
+                
+                if ($container && !$containerService) {
+                    $containerService = $container;
                 }
-                if($container  == "IX"){
-                    $isIX = true;
+
+                if($container && $containerService != $container){
+                    throw new \Exception("Please don't use diffirent type of Container in one Delivery Bill",500);
                 }
-                if($container  == "XP"){
-                    $isXP = true;
-                }
-            }
-            if( ($isNX === true && $isIX === true) || ($isNX === true && $isXP === true) || ($isIX === true && $isXP === true)){
-                throw new \Exception("Please don't use diffirent type of Container in one Delivery Bill",500);
             }
 
             $deliveryBill->containers()->sync($request->get('container',[]));
             
             foreach($deliveryBill->containers()->get() as $containers){
                 $containers->orders()->update([
-                    'status' =>  80,
+                    'status' =>  Order::STATUS_SHIPPED,
                 ]);
             }
             return $deliveryBill;
