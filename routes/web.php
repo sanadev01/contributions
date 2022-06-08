@@ -238,7 +238,10 @@ Route::get('order/{order}/label/get', function (App\Models\Order $order) {
      */
     if ( $order->sinerlog_url_label != '' ) {
         return redirect($order->sinerlog_url_label);
-    } else {
+    }elseif ($order->shippingService->isColombiaService() && $order->api_response) {
+        return redirect($order->colombiaLabelUrl());
+    } 
+    else {
         if ( !file_exists(storage_path("app/labels/{$order->corrios_tracking_code}.pdf")) ){
             return apiResponse(false,"Lable Expired or not generated yet please update lable");
         }

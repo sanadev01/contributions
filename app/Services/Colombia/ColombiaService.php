@@ -103,11 +103,11 @@ class ColombiaService
                     'intAditionalShipping' => 0,
                     'intAditionalShipping1' => 0,
                     'intAditionalShipping2' => 0,
-                    'intDeclaredValue' => ($order->order_value > 0) ? (int)($order->order_value * 3976.49) : 100,
-                    'intHeight' => ($order->measurement_unit != 'kg/cm') ? UnitsConverter::inToCm($order->height) : $order->height,
-                    'intLength' => ($order->measurement_unit != 'kg/cm') ? UnitsConverter::inToCm($order->length) : $order->length,
-                    'intWidth' => ($order->measurement_unit != 'kg/cm') ? UnitsConverter::inToCm($order->width) : $order->width,
-                    'intWeight' => ($order->measurement_unit != 'kg/cm') ? UnitsConverter::kgToGrams(UnitsConverter::poundToKg($this->chargableWeight)) : UnitsConverter::kgToGrams($this->chargableWeight),
+                    'intDeclaredValue' => ($order->order_value > 0) ? round(($order->order_value * 3976.49)) : 100,
+                    'intHeight' => ($order->measurement_unit != 'kg/cm') ? round(UnitsConverter::inToCm($order->height)) : round($order->height),
+                    'intLength' => ($order->measurement_unit != 'kg/cm') ? round(UnitsConverter::inToCm($order->length)) : round($order->length),
+                    'intWidth' => ($order->measurement_unit != 'kg/cm') ? round(UnitsConverter::inToCm($order->width)) : round($order->width),
+                    'intWeight' => ($order->measurement_unit != 'kg/cm') ? round(UnitsConverter::kgToGrams(UnitsConverter::poundToKg($this->chargableWeight))) : round(UnitsConverter::kgToGrams($this->chargableWeight)),
                     'strAditionalShipping' => '',
                     'strIdentification' => $order->warehouse_number,
                     'strObservation' => '',
@@ -130,8 +130,8 @@ class ColombiaService
 
     private function setPlace($data = null, $typeRecipient = true)
     {
-        $regionId = ($data) ? $data['region'] : '22';
-        $regionCode = Region::find($regionId)->code;
+        $regionId = ($data) ? $data['region'] : null;
+        $regionCode = ($regionId) ? Region::find($regionId)->code : Region::COLOMBIA_SENDER_CODE;
         
         return [
             'intAditional' => 0,
@@ -150,8 +150,8 @@ class ColombiaService
 
     private function setCustomer($data = null, $typeRecipient = true)
     {
-        $regionId = ($data) ? $data['region'] : '22';
-        $regionCode = Region::find($regionId)->code;
+        $regionId = ($data) ? $data['region'] : null;
+        $regionCode = ($regionId) ? Region::find($regionId)->code : Region::COLOMBIA_SENDER_CODE;
 
         return [
             'intAditional' => 0,
