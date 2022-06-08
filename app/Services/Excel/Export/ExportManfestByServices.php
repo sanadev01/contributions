@@ -51,6 +51,7 @@ class ExportManfestByServices extends AbstractCsvExportService
             'UPS',
             'USPS',
             'Fedex',
+            'Carrier Tracking'
         ];
     }
 
@@ -90,6 +91,7 @@ class ExportManfestByServices extends AbstractCsvExportService
                 $package->carrierService() == 'USPS'? 'USPS': '',
                 $package->carrierService() == 'UPS'? 'UPS': '',
                 $package->carrierService() == 'FEDEX'? 'FEDEX': '',
+                $package->tracking_id
             ];
 
             $i=0;
@@ -129,6 +131,7 @@ class ExportManfestByServices extends AbstractCsvExportService
             $this->total_paid_to_correios,
             '',
             '',
+            ''
         ];
 
     }
