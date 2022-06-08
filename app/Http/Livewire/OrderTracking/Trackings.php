@@ -80,7 +80,7 @@ class Trackings extends Component
             $this->tracking = null;
             $order_tracking_repository = new OrderTrackingRepository($this->trackingNumber);
             $response = $order_tracking_repository->handle();
-            
+            \Log::info([$response]);
             $this->CorreiosChile = false;
             $this->uspsService = false;
             $this->CorreiosBrazil = false;
