@@ -45,7 +45,8 @@ class ExportManfestService extends AbstractCsvExportService
             'Airport/ GRU/CWB',
             'Value paid to Correios',
             'Bag',
-            'POBOX / NAME'
+            'POBOX / NAME',
+            'Carrier Tracking'
         ];
     }
 
@@ -78,7 +79,8 @@ class ExportManfestService extends AbstractCsvExportService
                 $container->getDestinationAriport(),
                 $this->getValuePaidToCorrieos($container,$package),
                 $container->dispatch_number,
-                optional($package->user)->pobox_number.' / '.optional($package->user)->getFullName()
+                optional($package->user)->pobox_number.' / '.optional($package->user)->getFullName(),
+                $package->tracking_id
             ];
 
             $i=0;
@@ -118,6 +120,7 @@ class ExportManfestService extends AbstractCsvExportService
             $this->total_paid_to_correios,
             '',
             '',
+            ''
         ];
 
     }
