@@ -187,10 +187,10 @@ class ParcelController extends Controller
                 "tax_id" => optional($request->recipient)['tax_id'],
                 "zipcode" => optional($request->recipient)['zipcode'],
                 "state_id" => $stateID,
-                "country_id" =>$recipientCountryId 
+                "country_id" =>$recipientCountryId
             ]);
             
-            if($recipientCountryId == Order::CHILE){
+            if($recipientCountryId == Order::CHILE || $recipientCountryId == Order::COLOMBIA){
                 $order->recipient()->update([
                     "region" => optional($request->recipient)['region'],
                 ]);
@@ -373,6 +373,16 @@ class ParcelController extends Controller
                 return apiResponse(false, 'this service is not availaible for US address');
             }
         }
+
+        if ($shippingService->isColombiaService()) {
+            if ($recipientCountryId != Country::COLOMBIA) {
+                return apiResponse(false, 'this service is availaible for Colombia address only');          
+            }
+
+            if (!$this->apiShippingService->isAvalaible($shippingService, $volumeWeight)) {
+                return apiResponse(false, $this->apiShippingService->getError());
+            }
+        }
         
 
         DB::beginTransaction();
@@ -432,6 +442,9 @@ class ParcelController extends Controller
                     "sender_address" => optional($request->sender)['sender_address'],
                     "sender_city" => optional($request->sender)['sender_city'],
                 ]);
+            }
+
+            if ($recipientCountryId == Country::Chile || $recipientCountryId == Country::COLOMBIA) {
                 $parcel->recipient()->update([
                     "region" => optional($request->recipient)['region'],
                 ]);
@@ -477,6 +490,12 @@ class ParcelController extends Controller
                     DB::rollback();
                     return apiResponse(false, $this->apiShippingService->getError());
                 }
+            }
+
+            if ($shippingService->isColombiaService() && !$this->apiShippingService->getColombiaServiceRates($parcel)) {
+                
+                DB::rollback();
+                return apiResponse(false, $this->apiShippingService->getError());
             }
 
             $parcel->doCalculations();
