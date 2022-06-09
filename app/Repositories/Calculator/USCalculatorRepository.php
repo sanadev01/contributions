@@ -196,7 +196,7 @@ class USCalculatorRepository
         if ($this->userLoggedIn) {
             $this->uspsProfit = setting('usps_profit', null, auth()->user()->id);
             $this->upsProfit = setting('ups_profit', null, auth()->user()->id);
-            $this->fedexProfit = setting('fedex_profit', null, auth()->user()->id);
+            $this->fedExProfit = setting('fedex_profit', null, auth()->user()->id);
         }
 
         if($this->uspsProfit == null || $this->uspsProfit == 0)
@@ -209,9 +209,9 @@ class USCalculatorRepository
             $this->upsProfit = setting('ups_profit', null, User::ROLE_ADMIN);
         }
 
-        if($this->fedexProfit == null || $this->fedexProfit == 0)
+        if($this->fedExProfit == null || $this->fedExProfit == 0)
         {
-            $this->fedexProfit = setting('fedex_profit', null, User::ROLE_ADMIN);
+            $this->fedExProfit = setting('fedex_profit', null, User::ROLE_ADMIN);
         }
     }
 
