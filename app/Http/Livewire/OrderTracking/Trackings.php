@@ -31,7 +31,7 @@ class Trackings extends Component
     public $uspsService;
     public $upsTrackings;
     public $upsService;
-
+    public $apiResponse;
     public $upsRecieved;
     public $arrivedAtUPSFacility;
     public $departedFromUPSFacility;
@@ -69,6 +69,7 @@ class Trackings extends Component
             'trackings'  => $this->trackings,
             'status'    => $this->status,
             'message'   => $this->message,
+            'apiTracking'   =>$this->apiResponse,
         ]);
     }
 
@@ -80,86 +81,86 @@ class Trackings extends Component
             $this->tracking = null;
             $order_tracking_repository = new OrderTrackingRepository($this->trackingNumber);
             $response = $order_tracking_repository->handle();
-            \Log::info([$response]);
+            $this->apiResponse = $response;
             $this->CorreiosChile = false;
             $this->uspsService = false;
             $this->CorreiosBrazil = false;
             $this->upsService = false;
 
-            if($response->service == 'Correios_Brazil')
-            {
-                $this->CorreiosBrazil = true;
-                $this->tracking = (Array)$response->brazil_trackings;
-                $this->trackings = $response->trackings;
-                $this->order = $response->order;
-                $this->status   = $response->status;
-                $this->message  = null;
-                $this->trackingType = 'BL';
-                return true;
-            }
+            // if($response->service == 'Correios_Brazil')
+            // {
+            //     $this->CorreiosBrazil = true;
+            //     $this->tracking = (Array)$response->brazil_trackings;
+            //     $this->trackings = $response->trackings;
+            //     $this->order = $response->order;
+            //     $this->status   = $response->status;
+            //     $this->message  = null;
+            //     $this->trackingType = 'BL';
+            //     return true;
+            // }
 
-            if( $response->service == 'Correios_Chile' )
-            {
-                $this->CorreiosChile = true;
-                $this->tracking = last($response->chile_trackings);
-                $this->chileTrackings = $response->chile_trackings;
-                $this->trackings = $response->trackings;
-                $this->order = $response->order;
-                $this->status   = $response->status;
-                $this->message  = null;
-                $this->trackingType = 'CL';
-                Log::info($this->CorreiosChile);
-                return true;
+            // if( $response->service == 'Correios_Chile' )
+            // {
+            //     $this->CorreiosChile = true;
+            //     $this->tracking = last($response->chile_trackings);
+            //     $this->chileTrackings = $response->chile_trackings;
+            //     $this->trackings = $response->trackings;
+            //     $this->order = $response->order;
+            //     $this->status   = $response->status;
+            //     $this->message  = null;
+            //     $this->trackingType = 'CL';
+            //     Log::info($this->CorreiosChile);
+            //     return true;
 
-            }
+            // }
 
-            if( $response->service == 'USPS' )
-            {
-                $this->uspsService = true;
-                $this->tracking = last($response->usps_trackings);
-                $this->uspsTrackings = $response->usps_trackings;
-                $this->trackings = $response->trackings;
-                $this->order = $response->order;
-                $this->status   = $response->status;
-                $this->message  = null;
-                $this->trackingType = 'USPS';
-                return true;
-            }
+            // if( $response->service == 'USPS' )
+            // {
+            //     $this->uspsService = true;
+            //     $this->tracking = last($response->usps_trackings);
+            //     $this->uspsTrackings = $response->usps_trackings;
+            //     $this->trackings = $response->trackings;
+            //     $this->order = $response->order;
+            //     $this->status   = $response->status;
+            //     $this->message  = null;
+            //     $this->trackingType = 'USPS';
+            //     return true;
+            // }
 
-            if ($response->service == 'UPS') {
-                $this->upsService = true;
-                $this->tracking = last($response->ups_trackings);
-                $this->upsTrackings = $response->ups_trackings;
-                $this->trackings = $response->trackings;
-                $this->order = $response->order;
-                $this->status   = $response->status;
-                $this->message  = null;
-                $this->trackingType = 'UPS';
-                return true;
-            }
+            // if ($response->service == 'UPS') {
+            //     $this->upsService = true;
+            //     $this->tracking = last($response->ups_trackings);
+            //     $this->upsTrackings = $response->ups_trackings;
+            //     $this->trackings = $response->trackings;
+            //     $this->order = $response->order;
+            //     $this->status   = $response->status;
+            //     $this->message  = null;
+            //     $this->trackingType = 'UPS';
+            //     return true;
+            // }
             
-            if( $response->success == true && $response->status = 200){
+            // if( $response->success == true && $response->status = 200){
                 
-                $this->tracking = $response->trackings->last();
-                $this->trackings = $response->trackings;
-                $this->order = $response->order;
-                $this->status   = $response->status;
-                $this->message  = null;
-                if($this->tracking->type == 'HD')
-                {
-                    $this->trackingType = 'HD';
-                }
-                $this->chileTrackings = [];
-                $this->uspsTrackings = [];    
-            }
-            if( $response->success == false &&  $response->status == 201){
-                $this->status   = $response->status;
-                $this->message  = 'Order Under Process';
-            }
-            if( $response->success == false &&  $response->status == 404){
-                $this->status   = $response->status;
-                $this->message  = 'Order Not Found';
-            }
+            //     $this->tracking = $response->trackings->last();
+            //     $this->trackings = $response->trackings;
+            //     $this->order = $response->order;
+            //     $this->status   = $response->status;
+            //     $this->message  = null;
+            //     if($this->tracking->type == 'HD')
+            //     {
+            //         $this->trackingType = 'HD';
+            //     }
+            //     $this->chileTrackings = [];
+            //     $this->uspsTrackings = [];    
+            // }
+            // if( $response->success == false &&  $response->status == 201){
+            //     $this->status   = $response->status;
+            //     $this->message  = 'Order Under Process';
+            // }
+            // if( $response->success == false &&  $response->status == 404){
+            //     $this->status   = $response->status;
+            //     $this->message  = 'Order Not Found';
+            // }
 
         }
 
