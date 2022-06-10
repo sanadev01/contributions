@@ -13,8 +13,10 @@ class ExportManfestService extends AbstractCsvExportService
     private $deliveryBill;
     private $csvData = [];
     private $row = 0;
-    private $total_customerpaid;
-    private $total_paid_to_correios;
+    private $totalCustomerPaid;
+    private $totalPaidToCorreios;
+    private $totalPieces = 0;
+    private $totalWeight = 0;
 
     public function __construct(DeliveryBill $deliveryBill)
     {
@@ -99,8 +101,10 @@ class ExportManfestService extends AbstractCsvExportService
 
             $this->row++;
 
-            $this->total_customerpaid +=  $package->gross_total;
-            $this->total_paid_to_correios += $this->getValuePaidToCorrieos($container,$package);
+            $this->totalCustomerPaid +=  $package->gross_total;
+            $this->totalPaidToCorreios += $this->getValuePaidToCorrieos($container,$package);
+            $this->totalPieces++;
+            $this->totalWeight += $package->getOriginalWeight('kg');
         }
 
         $this->csvData[$this->row] = [
@@ -108,23 +112,24 @@ class ExportManfestService extends AbstractCsvExportService
             '',
             '',
             '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
             'Total',
-            $this->total_customerpaid,
+            $this->totalPieces,
+            $this->totalWeight,
             '',
-            $this->total_paid_to_correios,
+            '',
+            '',
+            '',
+            '',
+            $this->totalCustomerPaid,
+            '',
+            $this->totalPaidToCorreios,
             '',
             '',
             ''
         ];
 
     }
-
+// =SUM(G2:G989)
     protected function getValuePaidToCorrieos(Container $container, Order $order)
     {
         $rateSlab = AccrualRate::getRateSlabFor($order->getWeight('kg'));
