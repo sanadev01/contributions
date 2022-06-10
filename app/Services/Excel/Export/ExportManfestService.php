@@ -129,7 +129,7 @@ class ExportManfestService extends AbstractCsvExportService
         ];
 
     }
-// =SUM(G2:G989)
+
     protected function getValuePaidToCorrieos(Container $container, Order $order)
     {
         $rateSlab = AccrualRate::getRateSlabFor($order->getWeight('kg'));
