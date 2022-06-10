@@ -49,7 +49,7 @@ class OrderTrackingRepository
                                     'status' => 200,
                                     'service' => 'Correios_Chile',
                                     'trackings' => $order->trackings,
-                                    'chile_trackings' => $this->reverseTrackings($response->data),
+                                    'api_trackings' => collect($this->reverseTrackings($response->data))->last(),
                                     'order' => $order
                                 ];
                             } 
@@ -64,7 +64,7 @@ class OrderTrackingRepository
                                         'status' => 200,
                                         'service' => 'UPS',
                                         'trackings' => $order->trackings,
-                                        'ups_trackings' => $this->reverseTrackings($response->data['trackResponse']['shipment'][0]['package'][0]['activity']),
+                                        'api_trackings' => collect($this->reverseTrackings($response->data['trackResponse']['shipment'][0]['package'][0]['activity']))->last(),
                                         'order' => $order
                                     ];
     
@@ -78,7 +78,7 @@ class OrderTrackingRepository
                                     'status' => 200,
                                     'service' => 'USPS',
                                     'trackings' => $order->trackings,
-                                    'usps_trackings' => $this->reverseTrackings($response->data),
+                                    'api_trackings' => collect($this->reverseTrackings($response->data))->last(),
                                     'order' => $order
                                 ];
                             }
@@ -90,7 +90,7 @@ class OrderTrackingRepository
                                     'status' => 200,
                                     'service' => 'Correios_Brazil',
                                     'trackings' => $order->trackings,
-                                    'brazil_trackings' => $response->data,
+                                    'api_trackings' => collect( $response->data),
                                     'order' => $order
                                 ];
                             }else{
