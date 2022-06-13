@@ -4,6 +4,7 @@ namespace App\Http\Livewire\OrderTracking;
 
 use Livewire\Component;
 use App\Repositories\OrderTrackingRepository;
+use App\Services\Excel\Export\ExportTracking;
 
 class Trackings extends Component
 {
@@ -37,6 +38,14 @@ class Trackings extends Component
         }
 
     }
+
+    public function download()
+    {
+        if ($this->apiResponse) {
+            $exportTracking = new ExportTracking($this->apiResponse);
+            return $exportTracking->handle();
+        }
+    }    
 
     public function toggleBrazilStatus($tracking)
     {
@@ -88,19 +97,19 @@ class Trackings extends Component
 
     public function toggleUpsStatus($tracking)
     {
-        if ($this->tracking['status']['type'] == 'I' && $this->tracking['status']['code'] == 'OR') {
+        if ($tracking['status']['type'] == 'I' && $tracking['status']['code'] == 'OR') {
             return 90;
         }
 
-        if ($this->tracking['status']['type'] == 'I' && $this->tracking['status']['code'] == 'AR') {
+        if ($tracking['status']['type'] == 'I' && $tracking['status']['code'] == 'AR') {
             return 100;
         }
 
-        if ($this->tracking['status']['type'] == 'I' && $this->tracking['status']['code'] == 'DP') {
+        if ($tracking['status']['type'] == 'I' && $tracking['status']['code'] == 'DP') {
             return 110;
         }
 
-        if ($this->tracking['status']['type'] == 'D' && $this->tracking['status']['code'] == 'KB') {
+        if ($tracking['status']['type'] == 'D' && $tracking['status']['code'] == 'KB') {
             return 120;
         }
     }
