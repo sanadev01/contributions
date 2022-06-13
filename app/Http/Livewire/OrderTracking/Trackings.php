@@ -5,6 +5,7 @@ namespace App\Http\Livewire\OrderTracking;
 use Livewire\Component;
 use App\Repositories\OrderTrackingRepository;
 use App\Services\Excel\Export\ExportTracking;
+use Carbon\Carbon;
 
 class Trackings extends Component
 {
@@ -36,7 +37,7 @@ class Trackings extends Component
         }
     }    
 
-    public function toggleBrazilStatus($tracking)
+    public function toggleBrazilStatus($tracking, $hdTrackings)
     {
         if ($tracking['status'] == 16 && $tracking['tipo'] == 'PAR') {
             return 90;
@@ -63,7 +64,18 @@ class Trackings extends Component
         }
 
         if ($tracking['status'] == 01 && $tracking['tipo'] == 'PO') {
-            return 140;
+            $lastTracking = $hdTrackings->last();
+
+            $todayDate = date('Y-m-d');
+            $lastTrackingDate = $lastTracking->created_at;
+
+            $difference = Carbon::parse($todayDate)->diffInDays(Carbon::parse($lastTrackingDate));
+            
+            if ($difference > 2) {
+                return 140;
+            }
+
+            return 90;
         }
     }
 
