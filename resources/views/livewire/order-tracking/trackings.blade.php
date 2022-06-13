@@ -33,9 +33,9 @@
                 
                 @if(optional($tracking)['success'] && optional($tracking)['status'] == 200)
                 <div class="card">
-                    <div class="card-header pt-2" id="{{optional($tracking['order'])->warehouse_number}}">
+                    <div class="card-header pt-2" id="t-{{optional($tracking['order'])->warehouse_number}}">
                     <h5 class="col-12">
-                        <button class="col-12 btn btn-link collapsed" data-toggle="collapse" data-target="#{{optional($tracking['order'])->corrios_tracking_code}}" aria-expanded="false" aria-controls="{{optional($tracking['order'])->corrios_tracking_code}}">
+                        <button class="col-12 btn btn-link collapsed" data-toggle="collapse" data-target="#t-{{optional($tracking['order'])->corrios_tracking_code}}" aria-expanded="false" aria-controls="t-{{optional($tracking['order'])->corrios_tracking_code}}">
                             <div class="row col-12 d-flex justify-content-between">
                                 <div class="col-3 d-flex">
                                     <h6>HD WHR#: <span class="text-primary font-weight-bold">{{ optional($tracking['order'])->warehouse_number }}</span></h6>
@@ -53,15 +53,15 @@
                         </button>
                     </h5>
                     </div>
-                    <div id="{{optional($tracking['order'])->corrios_tracking_code}}" class="collapse" aria-labelledby="{{optional($tracking['order'])->warehouse_number}}" data-parent="#accordion">
+                    <div id="t-{{optional($tracking['order'])->corrios_tracking_code}}" class="collapse" aria-labelledby="t-{{optional($tracking['order'])->warehouse_number}}" data-parent="#accordion">
                     <div class="card-body">
                         
                         <div class="row">
                             <div class="col-12">
                                 <div class="card">
                                     <div class="row d-flex justify-content-center">
-                                        <div class="col-12 ml-5" @if($tracking['order']->recipient->country_id != \App\Models\Order::BRAZIL) style="margin-left: 30% !important;" @endif>
-                                            <ul id="progressbar" class="text-center">
+                                        <div class="col-12">
+                                            <ul id="progressbar" class="text-center d-flex justify-content-center">
                                                 @if ($tracking['service'] == 'HD')
                                                     <li class="@if($tracking['trackings']->last()->status_code >=  70) active @endif step0">
                                                         <div class="icon-content">
