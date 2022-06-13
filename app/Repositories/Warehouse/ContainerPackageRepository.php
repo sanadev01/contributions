@@ -36,7 +36,7 @@ class ContainerPackageRepository extends AbstractRepository{
     {
         $subString = (strtolower(substr($barcode,0,2)) == 'na') ? 'nx' : strtolower(substr($barcode,0,2));
 
-        if(strtolower($container->services_subclass_code)  != $subString){
+        if(strtolower($container->getSubClassCode())  != $subString){
             return [
                 'order' => [
                     'corrios_tracking_code' => $barcode,
@@ -67,6 +67,26 @@ class ContainerPackageRepository extends AbstractRepository{
                 ],
             ];
         }
+        
+        if ($container->hasAnjunService() && !$order->shippingService->isAnjunService()) {
+            return [
+                'order' => [
+                    'corrios_tracking_code' => $barcode,
+                    'error' => 'Order does not belongs to Anjun Service. Please Check Packet Service',
+                    'code' => 404
+                ],
+            ];
+        }
+
+        if (!$container->hasAnjunService() && $order->shippingService->isAnjunService()) {
+            return [
+                'order' => [
+                    'corrios_tracking_code' => $barcode,
+                    'error' => 'Order does not belongs to this container Service. Please Check Packet Service',
+                    'code' => 404
+                ],
+            ];
+        }
 
         if( $containerOrder ){
             if( $containerOrder->getOriginalWeight('kg') <= 3 && $order->getOriginalWeight('kg') > 3){
@@ -87,16 +107,6 @@ class ContainerPackageRepository extends AbstractRepository{
                     ],
                 ];
             }
-        }
-        
-        if ( !$order ){
-            return [
-                'order' => [
-                    'corrios_tracking_code' => $barcode,
-                    'error' => 'Order Not Found. Invalid BarCode',
-                    'code' => 404
-                ],
-            ];
         }
 
         if ( !$order->containers->isEmpty() ){

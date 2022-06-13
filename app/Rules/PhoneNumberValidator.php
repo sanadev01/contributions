@@ -31,6 +31,12 @@ class PhoneNumberValidator implements Rule
         $phoneUtil = \libphonenumber\PhoneNumberUtil::getInstance();
         try {
             $numberProto = $phoneUtil->parse($number, __default( optional($this->country)->code,'BR'));
+            $countryCode = $phoneUtil->getRegionCodeForNumber($numberProto);
+            
+            if ($countryCode != $this->country->code) {
+                return false;
+            }
+
             return $phoneUtil->isValidNumber($numberProto);
 
         } catch (\libphonenumber\NumberParseException $e) {
