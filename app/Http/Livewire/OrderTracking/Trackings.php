@@ -5,25 +5,17 @@ namespace App\Http\Livewire\OrderTracking;
 use Livewire\Component;
 use App\Repositories\OrderTrackingRepository;
 use App\Services\Excel\Export\ExportTracking;
+use Carbon\Carbon;
 
 class Trackings extends Component
 {
     public $trackingNumber = '';
-    public $tracking;
-    public $trackings;
-    public $order;
-    public $message;
-    public $status = null;
     public $apiResponse;
 
     public function render()
-    {  
+    {
         return view('livewire.order-tracking.trackings',[
-            'tracking'  => $this->tracking,
-            'trackings'  => $this->trackings,
-            'status'    => $this->status,
-            'message'   => $this->message,
-            'apiTracking'   =>$this->apiResponse,
+            'trackings'   =>$this->apiResponse,
         ]);
     }
 
@@ -31,8 +23,6 @@ class Trackings extends Component
     {
         if ( $this->trackingNumber != null && $this->trackingNumber != '' &&  strlen($this->trackingNumber) >= 12 )
         {
-            $this->status = null;
-            $this->tracking = null;
             $order_tracking_repository = new OrderTrackingRepository($this->trackingNumber);
             $this->apiResponse = $order_tracking_repository->handle();
         }
@@ -47,7 +37,7 @@ class Trackings extends Component
         }
     }    
 
-    public function toggleBrazilStatus($tracking)
+    public function toggleBrazilStatus($tracking, $hdTrackings)
     {
         if ($tracking['status'] == 16 && $tracking['tipo'] == 'PAR') {
             return 90;
@@ -74,7 +64,18 @@ class Trackings extends Component
         }
 
         if ($tracking['status'] == 01 && $tracking['tipo'] == 'PO') {
-            return 140;
+            $lastTracking = $hdTrackings->last();
+
+            $todayDate = date('Y-m-d');
+            $lastTrackingDate = $lastTracking->created_at;
+
+            $difference = Carbon::parse($todayDate)->diffInDays(Carbon::parse($lastTrackingDate));
+            
+            if ($difference > 2) {
+                return 140;
+            }
+
+            return 90;
         }
     }
 
