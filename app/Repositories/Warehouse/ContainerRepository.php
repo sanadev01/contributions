@@ -25,6 +25,9 @@ class ContainerRepository extends AbstractRepository{
         if($request->has('packetType')){
             $query->where('services_subclass_code', 'LIKE', '%' . $request->packetType . '%');
         } 
+        if($request->has('unitCode')){
+            $query->where('unit_code', 'LIKE', '%' . $request->unitCode . '%');
+        } 
         return $query->where(function($query) {
                  $query->where('services_subclass_code','NX')
                         ->orWhere('services_subclass_code','IX')
