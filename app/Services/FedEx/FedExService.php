@@ -108,7 +108,7 @@ class FedExService
         $this->calculateVolumetricWeight($order);
 
         return [
-            'labelResponseOptions' => 'URL_ONLY',
+            'labelResponseOptions' => 'LABEL',
             'requestedShipment' => [
                 'shipper' => [
                     'contact' => [
@@ -147,8 +147,8 @@ class FedExService
                     'paymentType' => 'SENDER',
                 ],
                 'labelSpecification' => [
-                    'imageType' => 'PDF',
-                    'labelStockType' => 'PAPER_4X6',
+                    'imageType' => 'ZPLII',
+                    'labelStockType' => 'STOCK_4X6',
                 ],
                 'requestedPackageLineItems' => [
                     [
@@ -217,7 +217,7 @@ class FedExService
         $this->calculateVolumetricWeight($order);
         
         return [
-            'labelResponseOptions' => 'URL_ONLY',
+            'labelResponseOptions' => 'LABEL',
             'requestedShipment' => [
                 'shipper' => [
                     'contact' => [
@@ -256,8 +256,8 @@ class FedExService
                     'paymentType' => 'SENDER',
                 ],
                 'labelSpecification' => [
-                    'imageType' => 'PDF',
-                    'labelStockType' => 'PAPER_4X6',
+                    'imageType' => 'ZPLII',
+                    'labelStockType' => 'STOCK_4X6',
                 ],
                 'requestedPackageLineItems' => [
                     [

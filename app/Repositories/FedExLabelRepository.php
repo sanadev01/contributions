@@ -9,7 +9,7 @@ use App\Models\OrderTracking;
 use App\Models\ShippingService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
+use App\Services\FedEx\FedExLabelMaker;
 use App\Services\FedEx\FedExShippingService;
 
 class FedExLabelRepository
@@ -78,7 +78,7 @@ class FedExLabelRepository
             ]);
 
             $order->refresh();
-            $this->downloadFedexLabel(json_decode($order->api_response), $order->corrios_tracking_code);
+            $this->printLabel($order->api_response, $order->corrios_tracking_code);
 
             // store order status in order tracking
             $this->addOrderTracking($order);
@@ -178,8 +178,7 @@ class FedExLabelRepository
                 $this->order = $order;
             }
 
-            
-            $this->downloadFedexLabel($this->order->getUSLabelResponse(), $this->order->us_api_tracking_code);
+            $this->printLabel($this->order->us_api_response, $this->order->us_api_tracking_code);
             return true;
         }
 
@@ -231,12 +230,13 @@ class FedExLabelRepository
         return $this->fedExError;
     }
 
-    private function downloadFedexLabel($fedExResponse, $fedExtrackingCode)
+    private function printLabel($apiResponse, $trackingCode)
     {
-        $labelUrl = $fedExResponse->output->transactionShipments[0]->pieceResponses[0]->packageDocuments[0]->url;
-        $contents = file_get_contents($labelUrl);
-        Storage::put("labels/{$fedExtrackingCode}.pdf", $contents);
-        
+        $labelMaker = new FedExLabelMaker($apiResponse, $trackingCode);
+        if($labelMaker->convertLabelToPdf()){
+            $labelMaker->saveLabel();
+        }
+
         return true;
     }
 
@@ -317,7 +317,7 @@ class FedExLabelRepository
         // store order status in order tracking
         $this->addOrderTracking($order);
 
-        $this->downloadFedexLabel(json_decode($order->api_response), $order->corrios_tracking_code);
+        $this->printLabel($order->api_response, $order->corrios_tracking_code);
         return true;
     }
 
