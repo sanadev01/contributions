@@ -25,6 +25,9 @@ class ContainerRepository extends AbstractRepository{
         if($request->has('packetType')){
             $query->where('services_subclass_code', 'LIKE', '%' . $request->packetType . '%');
         }
+        if($request->has('unitCode')){
+            $query->where('unit_code', 'LIKE', '%' . $request->unitCode . '%');
+        } 
         
         return $query->whereIn('services_subclass_code', ['NX','IX', 'XP','AJ-NX','AJ-IX'])->latest()->paginate(50);
     }
