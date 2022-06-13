@@ -29,147 +29,112 @@ class OrderTrackingRepository
 
     public function searchOrder()
     {
-        $order = Order::where('corrios_tracking_code', $this->trackingNumber)->first();
+
+        $trackingNumbers = explode(',', preg_replace('/\s+/', '', $this->trackingNumber));
         
-        if($order){
-            if($order->recipient->country_id == Order::CHILE && !$order->trackings->isEmpty())
-            {
-                if($order->trackings->last()->status_code == Order::STATUS_SHIPPED)
-                {
-                    $response = CorreiosChileTrackingFacade::trackOrder($this->trackingNumber);
-
-                    if($response->status == true && ($response->data != null || $response->data != []) )
-                    {
-                        // $trackings = $this->pushToTrackings($response->data, $order->trackings);
-
-                        return (Object) [
-                            'success' => true,
-                            'status' => 200,
-                            'service' => 'Correios_Chile',
-                            'trackings' => $order->trackings,
-                            'chile_trackings' => $this->reverseTrackings($response->data),
-                            'order' => $order
-                        ];
-                    }
-                   
-                }
-
-                return (Object)[
-                    'success' => true,
-                    'status' => 200,
-                    'service' => 'HD',
-                    'trackings' => $order->trackings,
-                    'order' => $order
-                ];
-            }
-            if($order->recipient->country_id == Order::US && !$order->trackings->isEmpty())
-            {
+        $orders = Order::whereIn('corrios_tracking_code', $trackingNumbers)->get();
+        $getTrackings = collect();
+        if($orders){
+            foreach($orders as $order){
                 
-                if($order->trackings->last()->status_code == Order::STATUS_SHIPPED)
-                {
-                    if($order->shippingService->service_sub_class == ShippingService::UPS_GROUND)
-                    {
-                        $response = UPSFacade::trackOrder($this->trackingNumber);
-                        
-                        if($response->success == true && !isset($response->data['trackResponse']['shipment'][0]['warnings']))
-                        {
-                            return (Object) [
-                                'success' => true,
-                                'status' => 200,
-                                'service' => 'UPS',
-                                'trackings' => $order->trackings,
-                                'ups_trackings' => $this->reverseTrackings($response->data['trackResponse']['shipment'][0]['package'][0]['activity']),
-                                'order' => $order
+                $apiResponse = [];
+                if($order->trackings->isNotEmpty()){
+                    if($order->trackings->last()->status_code == Order::STATUS_SHIPPED){
+
+                        if($order->recipient->country_id == Order::CHILE ){
+                            $response = CorreiosChileTrackingFacade::trackOrder($order->corrios_tracking_code);
+                            if($response->status == true && ($response->data != null || $response->data != []) ){
+                                $apiResponse = [
+                                    'success' => true,
+                                    'status' => 200,
+                                    'service' => 'Correios_Chile',
+                                    'trackings' => $order->trackings,
+                                    'api_trackings' => collect($this->reverseTrackings($response->data))->last(),
+                                    'order' => $order
+                                ];
+                            } 
+                        }elseif($order->recipient->country_id == Order::US ){
+                            if($order->shippingService->service_sub_class == ShippingService::UPS_GROUND){
+    
+                                $response = UPSFacade::trackOrder($order->corrios_tracking_code);
+                                if($response->success == true && !isset($response->data['trackResponse']['shipment'][0]['warnings']))
+                                {
+                                    $apiResponse = [
+                                        'success' => true,
+                                        'status' => 200,
+                                        'service' => 'UPS',
+                                        'trackings' => $order->trackings,
+                                        'api_trackings' => collect($this->reverseTrackings($response->data['trackResponse']['shipment'][0]['package'][0]['activity']))->last(),
+                                        'order' => $order
+                                    ];
+    
+                                }
+                            }
+    
+                            $response = USPSTrackingFacade::trackOrder($order->corrios_tracking_code);
+                            if($response->status == true){
+                                $apiResponse = [
+                                    'success' => true,
+                                    'status' => 200,
+                                    'service' => 'USPS',
+                                    'trackings' => $order->trackings,
+                                    'api_trackings' => collect($this->reverseTrackings($response->data))->last(),
+                                    'order' => $order
+                                ];
+                            }
+                        }elseif($order->recipient->country_id == Order::BRAZIL ){
+                            $response = CorreiosBrazilTrackingFacade::trackOrder($order->corrios_tracking_code);
+                            if($response->success == true){
+                                $apiResponse = [
+                                    'success' => true,
+                                    'status' => 200,
+                                    'service' => 'Correios_Brazil',
+                                    'trackings' => $order->trackings,
+                                    'api_trackings' => collect( $response->data),
+                                    'order' => $order
+                                ];
+                            }else{
+                                $apiResponse = [
+                                    'success' => true,
+                                    'status' => 200,
+                                    'service' => 'HD',
+                                    'trackings' => $order->trackings,
+                                    'order' => $order
+                                ]; 
+                            }
+                        }else{
+                            $apiResponse = [
+                                'success' => false,
+                                'status' => 201,
+                                'service' => 'HD',
+                                'trackings' => null,
+                                'order' => null
                             ];
                         }
-                        return (Object)[
+                        $getTrackings->push($apiResponse);
+                    }else{
+                        $apiResponse = [
                             'success' => true,
                             'status' => 200,
                             'service' => 'HD',
                             'trackings' => $order->trackings,
                             'order' => $order
                         ];
-                    }
-                    $response = USPSTrackingFacade::trackOrder($this->trackingNumber);
-
-                    if($response->status == true)
-                    {
-                        return (Object) [
-                            'success' => true,
-                            'status' => 200,
-                            'service' => 'USPS',
-                            'trackings' => $order->trackings,
-                            'usps_trackings' => $this->reverseTrackings($response->data),
-                            'order' => $order
-                        ];
+                        $getTrackings->push($apiResponse);
                     }
                 }
-
-                return (Object)[
-                    'success' => true,
-                    'status' => 200,
-                    'service' => 'HD',
-                    'trackings' => $order->trackings,
-                    'order' => $order
-                ];
             }
-
-            if($order->recipient->country_id == Order::BRAZIL && !$order->trackings->isEmpty())
-            {
-                if($order->trackings->last()->status_code == Order::STATUS_SHIPPED)
-                {
-                    $response = CorreiosBrazilTrackingFacade::trackOrder($this->trackingNumber);
-                    
-                    if($response->success == true)
-                    {
-                        return (Object) [
-                            'success' => true,
-                            'status' => 200,
-                            'service' => 'Correios_Brazil',
-                            'trackings' => $order->trackings,
-                            'brazil_trackings' => $response->data,
-                            'order' => $order
-                        ];
-                    }
-                }
-
-                return (Object)[
-                    'success' => true,
-                    'status' => 200,
-                    'service' => 'HD',
-                    'trackings' => $order->trackings,
-                    'order' => $order
-                ];
-            }
-            return (Object)[
+        }else{
+            $apiResponse = [
                 'success' => false,
-                'status' => 201,
+                'status' => 404,
                 'service' => 'HD',
                 'trackings' => null,
                 'order' => null
             ];
-
+            $getTrackings->push($apiResponse);
         }
-
-        return (Object)[
-            'success' => false,
-            'status' => 404,
-            'service' => 'HD',
-            'trackings' => null,
-            'order' => null
-        ];
-    }
-
-    private function pushToTrackings($response, $hd_trackings)
-    {
-        
-        foreach($response as $data)
-        {
-
-            $hd_trackings->push($data);
-        }
-
-        return $hd_trackings;
+        return $getTrackings;
     }
 
     private function reverseTrackings($response)
