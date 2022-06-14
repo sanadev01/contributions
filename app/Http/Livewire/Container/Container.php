@@ -29,7 +29,7 @@ class Container extends Component
             'dispatchNumber' => $this->dispatchNumber,
             'sealNo' => $this->sealNo,
             'packetType' => $this->packetType,
-            'unitCode' => $this->unitCode,
+            'unitCode' => $this->unitCode
         ]);
     }
 }

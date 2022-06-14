@@ -16,20 +16,19 @@ class ContainerRepository extends AbstractRepository{
         if ( !Auth::user()->isAdmin() ){
             $query->where('user_id',Auth::id());
         }
-        if($request->has('dispatchNumber')){
+        if($request->filled('dispatchNumber')){
            $query->where('dispatch_number', 'LIKE', '%' . $request->dispatchNumber . '%');
         } 
-        if($request->has('sealNo')){
+        if($request->filled('sealNo')){
           $query->where('seal_no', 'LIKE', '%' . $request->sealNo . '%');
         } 
-        if($request->has('packetType')){
+        if($request->filled('packetType')){
             $query->where('services_subclass_code', 'LIKE', '%' . $request->packetType . '%');
         }
-        if($request->has('unitCode')){
+        if($request->filled('unitCode')){
             $query->where('unit_code', 'LIKE', '%' . $request->unitCode . '%');
         } 
-        
-        return $query->whereIn('services_subclass_code', ['NX','IX', 'XP','AJ-NX','AJ-IX'])->latest()->paginate(50);
+        return $query->whereIn('services_subclass_code', ['NX','IX', 'XP'])->latest()->paginate(50);
     }
 
     public function store(Request $request)
