@@ -1,6 +1,6 @@
 <?php
 
-return [ 
+return [
     'name' => 'Nombre',
     'action' => 'Acción',
     'orders' => 'Pedidos',
@@ -22,16 +22,16 @@ return [
     'Trashed Orders' => 'Pedidos en la papelera',
     'recipient' => [
         'slect-from-list' => 'Seleccionar dirección de la lista',
-        'Previous' => 'Previo', 
-        'Next' => 'Próximo', 
+        'Previous' => 'Previo',
+        'Next' => 'Próximo',
     ],
     'order-details' => [
-        'Sender' => 'Remitente', 
-        'Recipient' => 'Destinatario', 
-        'Additional services' => 'Servicios adicionales', 
-        'Shipping & Items' => 'Transporte & Artículos', 
-        'Invoice' => 'Factura', 
-        'Orders' => 'Pedidos', 
+        'Sender' => 'Remitente',
+        'Recipient' => 'Destinatario',
+        'Additional services' => 'Servicios adicionales',
+        'Shipping & Items' => 'Transporte & Artículos',
+        'Invoice' => 'Factura',
+        'Orders' => 'Pedidos',
         'Step 1' => 'Paso 1',
         'Customer Reference' => 'Referencia de cliente',
         'WHR' => 'WHR',
@@ -72,11 +72,12 @@ return [
         'Email' => 'Email',
         'Phone' => 'Teléfono',
         'Tax Id' => 'Identificación fiscal o identificación personal (opcional)',
+        'Company' => 'Empresa',
         'Address' => 'Dirección en EE. UU.',
         'City' => 'Ciudad',
-        'Next' => 'Próximo', 
+        'Next' => 'Próximo',
         'Step 1' => 'Paso 1',
-        'Select Country' => 'Seleccione el país al que desea enviar sus paquetes', 
+        'Select Country' => 'Seleccione el país al que desea enviar sus paquetes',
     ],
     'import-excel' =>[
         'Import Orders via Excel Sheet' => 'Importar pedidos a través de una hoja de Excel',
@@ -185,7 +186,7 @@ return [
         'destination-address' => 'Dirección de destino',
         'select-address' => 'Seleccionar dirección',
         'create-address' => 'crear-destinatario',
-        
+
         'note' => 'Para crear un envío consolidado, arrastre más de 1 envío disponible a la lista de pedidos.',
         'save' => 'Ahorrar',
         'alert-success-consolidate' => 'Se recibe su solicitud de pedido consolidado. Tardará 24 horas en procesar su solicitud. se le notificará',

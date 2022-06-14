@@ -55,9 +55,9 @@ class UspsService
     {
         try {
             $response = Http::withBasicAuth($this->email, $this->password)->post($this->addressValidationUrl, $data);
-            
+
             if($response->status() == 200) {
-                
+
                 return (Array)[
                     'success' => true,
                     'zipcode'    => $response->json()['zip5'],
@@ -70,7 +70,7 @@ class UspsService
                     'message' => $response->json()['message'],
                 ];
             }
-            
+
         } catch (Exception $ex) {
             Log::info('USPS Error'. $ex->getMessage());
             return (Array)[
@@ -78,7 +78,7 @@ class UspsService
                 'message' => $ex->getMessage(),
             ];
         }
-        
+
     }
 
     public function getPrimaryLabelForRecipient($order)
@@ -86,10 +86,10 @@ class UspsService
         if ($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
             return $this->uspsApiCall($this->makeRequestAttributeForInternationalLabel($order));
         }
-        
+
         return $this->uspsApiCall($this->makeRequestAttributeForLabel($order));
     }
-    
+
     private function makeRequestAttributeForLabel($order)
     {
         $this->calculateVolumetricWeight($order);
@@ -113,7 +113,7 @@ class UspsService
         if ($order->sender_country_id != Country::US) {
             $request_body['usps']['gde_origin_country_code'] = Country::find($order->sender_country_id)->code;
         }
-        
+
         return $request_body;
     }
 
@@ -141,23 +141,23 @@ class UspsService
     public function uspsApiCall($data)
     {
         try {
-            
+
             $response = Http::withBasicAuth($this->email, $this->password)->post($this->createLabelUrl, $data);
-            
+
             if($response->status() == 201)
             {
                 return (Object)[
                     'success' => true,
                     'message' => 'Label has been generated',
                     'data'    => $response->json(),
-                ];    
+                ];
             }elseif($response->status() == 401)
             {
                 return (Object)[
                     'success' => false,
                     'message' => $response->json()['error'],
-                ];    
-            }elseif ($response->status() !== 201) 
+                ];
+            }elseif ($response->status() !== 201)
             {
 
                 return (object) [
@@ -165,7 +165,7 @@ class UspsService
                     'message' => $response->json()['message'],
                 ];
             }
-            
+
         } catch (Exception $e) {
             Log::info('USPS Error'. $e->getMessage());
             return (object) [
@@ -178,9 +178,9 @@ class UspsService
     public function deleteUSPSLabel($tracking_number)
     {
         try {
-            
+
             $response =  Http::withBasicAuth($this->email, $this->password)->delete($this->deleteLabelUrl.$tracking_number);
-            
+
             if($response->status() == 204)
             {
                 return (Object)[
@@ -188,7 +188,7 @@ class UspsService
                     'message' => 'Label has been deleted',
                 ];
             }
-            
+
             return (Object)[
                 'success' => false,
                 'message' => $response->json()['message'],
@@ -214,25 +214,25 @@ class UspsService
                 'tracking_numbers' => $container->orders->pluck('corrios_tracking_code')->toArray(),
             ],
         ];
-        
+
         try {
 
             $response = Http::withBasicAuth($this->email, $this->password)->post($this->createManifestUrl, $data);
-           
+
             if($response->status() == 201)
             {
                 return (Object)[
                     'success' => true,
                     'message' => 'Manifest has been generated',
                     'data'    => $response->json(),
-                ];    
+                ];
             }elseif($response->status() == 401)
             {
                 return (Object)[
                     'success' => false,
                     'message' => $response->json()['error'],
-                ];    
-            }elseif ($response->status() !== 201) 
+                ];
+            }elseif ($response->status() !== 201)
             {
 
                 return (object) [
@@ -279,7 +279,7 @@ class UspsService
         if ($order->sender_country_id != Country::US) {
             $request_body['usps']['gde_origin_country_code'] = Country::find($order->sender_country_id)->code;
         }
-        
+
         return $request_body;
     }
 
@@ -346,7 +346,7 @@ class UspsService
 
     private function makeRequestForSender($order, $request)
     {
-        $this->calculateVolumetricWeight($order); 
+        $this->calculateVolumetricWeight($order);
         return [
             'from_address' => [
                 'company_name' => 'HERCO SUIT#100',
@@ -413,7 +413,7 @@ class UspsService
             'state_province' => optional($order->recipient)->state->code,
             'postal_code' => optional($order->recipient)->zipcode,  //Zip validation required
             'phone_number' => optional($order->recipient)->phone,
-            'country_code' => optional($order->recipient)->country->code, 
+            'country_code' => optional($order->recipient)->country->code,
         ];
     }
 
@@ -423,7 +423,7 @@ class UspsService
         foreach ($orderItems as $item) {
             $itemsValue += $item->value * $item->quantity;
         }
-       
+
         return $itemsValue;
     }
 
@@ -477,22 +477,22 @@ class UspsService
                 break;
             case 'Priority':
                 return 'Priority';
-                break;     
+                break;
             case ShippingService::USPS_FIRSTCLASS:
                 return 'FirstClass';
                 break;
             case 'FirstClass':
                 return 'FirstClass';
-                break;    
+                break;
             case ShippingService::USPS_PRIORITY_INTERNATIONAL:
                 return 'PriorityInternational';
                 break;
             case 'PriorityInternational':
                 return 'PriorityInternational';
-                break;    
+                break;
             case ShippingService::USPS_FIRSTCLASS_INTERNATIONAL:
                 return 'FirstClassInternational';
-                break;               
+                break;
             default:
                 return 'FirstClassInternational';
                 break;
@@ -504,7 +504,7 @@ class UspsService
         try {
 
             $response = Http::acceptJson()->withBasicAuth($this->email, $this->password)->post($this->getPriceUrl, $data);
-            
+
             if($response->successful())
             {
                 return (Object)[
@@ -517,8 +517,8 @@ class UspsService
                 return (Object)[
                     'success' => false,
                     'message' => $response->json()['message'],
-                ];    
-            }elseif ($response->status() !== 200) 
+                ];
+            }elseif ($response->status() !== 200)
             {
                 Log::info('USPS Error'.$response->json()['message']);
                 return (object) [
@@ -526,7 +526,7 @@ class UspsService
                     'message' => $response->json()['message'],
                 ];
             }
-    
+
         } catch (Exception $e) {
             Log::info('USPS Error'. $e->getMessage());
             return (object) [

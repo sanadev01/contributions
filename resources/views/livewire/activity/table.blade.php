@@ -3,7 +3,7 @@
         <div class="hd-card mt-4 mb-3">
             <div class="mb-2 row col-md-12 d-flex justify-content-end p-0 m-0">
                 <div class="col-1 hd-mt-20 pl-0">
-                    <select class="form-control" wire:model="pageSize">
+                    <select class="form-control hd-search" wire:model="pageSize">
                         <option value="1">1</option>
                         <option value="5">5</option>
                         <option value="10">10</option>
@@ -15,15 +15,15 @@
                 </div>
                 <div class="col-2">
                     <label>@lang('activity.Date')</label>
-                    <input type="search" class="form-control" wire:model.defer="date">
+                    <input type="search" class="form-control hd-search" wire:model.defer="date">
                 </div>
                 <div class="col-2">
                     <label>@lang('activity.Name')</label>
-                    <input type="search" class="form-control" wire:model.defer="name">
+                    <input type="search" class="form-control hd-search" wire:model.defer="name">
                 </div>
                 <div class="col-2">
                     <label>@lang('activity.Model')</label>
-                    <select class="form-control" wire:model.defer="model">
+                    <select class="form-control hd-search" wire:model.defer="model">
                         <option value="">@lang('Select Model')</option>
                         @foreach ($models as $model)
                             <option value="{{ $model }}">{{ $model }}</option>
@@ -32,10 +32,10 @@
                 </div>
                 <div class="col-3">
                     <label>@lang('activity.Content')</label>
-                    <input type="search" class="form-control" wire:model.defer="content">
+                    <input type="search" class="form-control hd-search" wire:model.defer="content">
                 </div>
-                <div class="col-2 pt-4 d-flex justify-content-end p-0">
-                    <button class="mt-2 btn btn-success" title="search" wire:click.prevent="getActivities">
+                <div class="col-2 pt-4 ">
+                    <button class="mt-2 btn btn-primary" title="search" wire:click.prevent="getActivities">
                         @lang('activity.Search') <i class="fa fa-search"></i>
                     </button>
                 </div>

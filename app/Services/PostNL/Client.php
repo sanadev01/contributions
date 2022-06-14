@@ -1,0 +1,308 @@
+<?php
+
+namespace App\Services\PostNL;
+
+use Carbon\Carbon;
+use App\Models\Order;
+use App\Models\OrderTracking;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Warehouse\DeliveryBill;
+use App\Services\Correios\Models\PackageError;
+use App\Services\Calculators\WeightCalculator;
+use GuzzleHttp\Client as GuzzleClient;
+use App\Services\Converters\UnitsConverter;
+
+class Client{
+
+    protected $client;
+    protected $createLabelUrl;
+    protected $cancelLabelUrl;
+    protected $chargableWeight;
+
+    public function __construct($createLabelUrl=null, $cancelLabelUrl=null)
+    {
+        $this->client = new GuzzleClient([
+
+        ]);
+
+        if (app()->isProduction()) {
+            // POSTNL Api Production Environment Credentials
+            $createLabelUrl = config('postnl.production.createLabelUrl');
+            $cancelLabelUrl = config('postnl.production.deleteLabelUrl');
+        }else {
+
+            // POSTNL Api Testing Environment Credentials
+            $createLabelUrl = config('postnl.testing.createLabelUrl');
+            $cancelLabelUrl = config('postnl.testing.deleteLabelUrl');
+        }
+        $this->createLabelUrl = $createLabelUrl;
+        $this->cancelLabelUrl = $cancelLabelUrl;
+    }
+
+    private function getKeys()
+    {
+        $headers = [
+
+            'api_key' => "Eo3qtkGlOh6t9S1HZxMvFkBSJYDTocatwMhBNwhnEoG7Jngng89GtVFmQOrc05OzcMwyLMTeQSYU2h4GsOOp0iy9Rp0qoYlhpGLfLpjNc8CuV3xqbrTGFYNkiZW6TWzdJWVgEsVLg64hYMLY1UElGjrOvxBpA4aI5prbWIefoMrd85y5WkuL1RQrfkH9vRCwod0v8feftgdEeZLYUkQWfYa1TVeeEe4fcbdk9twD6ynpjmq4E7FSLwdeiFIhqicw7a1kY63Bksp5ECq1pefkn0ROrCNjpy3TPdeLKO5I6LBc",
+            'Accept' => "application/json",
+            'Content-Type' => "application/json",
+
+        ];
+        return $headers;
+    }
+
+    private function calulateItemWeight($order)
+    {
+        $orderTotalWeight = ($this->chargableWeight != null) ? (float)$this->chargableWeight : (float)$order->weight;
+        $itemWeight = 0;
+
+        if (count($order->items) > 1) {
+            $itemWeight = $orderTotalWeight / count($order->items);
+            return $itemWeight;
+        }
+        return $orderTotalWeight;
+    }
+
+    private function setItemsDetails($order)
+    {
+        $items = [];
+        $singleItemWeight = UnitsConverter::kgToGrams($this->calulateItemWeight($order));
+
+        if (count($order->items) >= 1) {
+            foreach ($order->items as $key => $item) {
+                $itemToPush = [];
+                $itemToPush = [
+                    'goods_description' => $item->description,
+                    'quantity' => (int)$item->quantity,
+                    'total_weight_grams' => (int)$singleItemWeight / (int)$item->quantity,
+                    'total_goods_value' => $item->value,
+                    'total_goods_value_eur' => '',
+                    'tariff' => "$item->sh_code",
+                    'manufacture_country_code' => $order->senderCountry->code,
+                ];
+               array_push($items, $itemToPush);
+            }
+        }
+
+        return $items;
+    }
+
+    public function calculateVolumetricWeight($order)
+    {
+        if ( $order->measurement_unit == 'kg/cm' ){
+
+            $volumetricWeight = WeightCalculator::getVolumnWeight($order->length,$order->width,$order->height,'cm');
+            return $this->chargableWeight = round($volumetricWeight >  $order->weight ? $volumetricWeight :  $order->weight);
+
+        }else{
+
+            $volumetricWeight = WeightCalculator::getVolumnWeight($order->length,$order->width,$order->height,'in');
+           return $this->chargableWeight = round($volumetricWeight >  $order->weight ? $volumetricWeight :  $order->weight);
+        }
+    }
+
+    private function calculateItemsValue($orderItems)
+    {
+        $itemsValue = 0;
+        foreach ($orderItems as $item) {
+            $itemsValue += $item->value * $item->quantity;
+        }
+
+        return $itemsValue;
+    }
+
+    public function createPackage($order)
+    {
+        if($order->isWeightInKg()) {
+            $weight = UnitsConverter::kgToGrams($order->getWeight('kg'));
+        }else{
+            $kg = UnitsConverter::poundToKg($order->getWeight('lbs'));
+            $weight = UnitsConverter::kgToGrams($kg);
+        }
+        $packet =
+        [
+            'product_code' => "MBX",
+            'label_type' => "PDF",
+            'customer_reference_number' => ($order->customer_reference) ? $order->customer_reference : '',
+            'gross_weight_grams' => (int)$weight,
+            'declaration_type' => 'SaleOfGoods',
+            'dangerous_goods' => false,
+            'currency' => "USD",
+            //'insurance_value' => '0',
+            'sender_details' => [
+                'name' => $order->sender_first_name.' '.$order->sender_last_name,
+                'company' => $order->user->pobox_number,
+                'address' => $order->sender_address,
+                'postal_code' => $order->sender_zipcode,
+                'city' => $order->sender_city,
+                'state' => $order->sender_state,
+                'country' => $order->senderCountry->name,
+                'country_code' => $order->senderCountry->code,
+                'email' => ($order->sender_email) ? $order->sender_email : '',
+                'phone' => ($order->sender_phone) ? $order->sender_phone : '',
+            ],
+            'addressee_details' => [
+                'name' => $order->recipient->getFullName(),
+                'address' => $order->recipient->address,
+                'postal_code' => cleanString($order->recipient->zipcode),
+                'city' => $order->recipient->city,
+                'state' => $order->recipient->state->code,
+                'country' => $order->recipient->country->name,
+                'country_code' => $order->recipient->country->code,
+                'phone' => $order->recipient->phone,
+            ],
+            'content_pieces' => $this->setItemsDetails($order)
+        ];
+        \Log::info(
+            $packet
+        );
+        //dd($packet);
+        try {
+            $response = $this->client->post($this->createLabelUrl,[
+                'headers' => $this->getKeys(),
+                'json' => $packet
+            ]);
+
+            $data = json_decode($response->getBody()->getContents());
+            //dd($data);
+            $trackingNumber = $data->data->item;
+            //dd($trackingNumber);
+
+            if ( $trackingNumber ){
+                $order->update([
+                    'corrios_tracking_code' => $trackingNumber,
+                    'cn23' => [
+                        "tracking_code" => $trackingNumber,
+                        "stamp_url" => route('warehouse.cn23.download',$order->id),
+                        'leve' => false
+                    ],
+                ]);
+
+                // store order status in order tracking
+                return $this->addOrderTracking($order);
+            }
+            return null;
+        }catch (\GuzzleHttp\Exception\ClientException $e) {
+            return new PackageError($e->getResponse()->getBody()->getContents());
+        }
+        catch (\Exception $exception){
+            return new PackageError($exception->getMessage());
+        }
+    }
+
+    public function createContainer(Container $container)
+    {
+        try {
+            $response = $this->client->post('/packet/v1/units',[
+                'headers' => [
+                    'Headers' => "{$this->getKeys()}"
+                ],
+                'json' => [
+                    "dispatchNumber" => $container->dispatch_number,
+                    "originCountry" => $container->origin_country,
+                    "originOperatorName" => $container->origin_operator_name,
+                    "destinationOperatorName" => $container->destination_operator_name,
+                    "postalCategoryCode" => $container->postal_category_code,
+                    "serviceSubclassCode" => $container->services_subclass_code,
+                    "unitList" => [
+                        [
+                            "sequence" => $container->sequence,
+                            "unitType" => $container->unit_type,
+                            "trackingNumbers" => $container->orders->pluck('corrios_tracking_code')->toArray()
+                        ]
+                   ]
+                ]
+            ]);
+
+            $data = json_decode($response->getBody()->getContents());
+            return $data->unitResponseList[0]->unitCode;
+        }catch (\GuzzleHttp\Exception\ClientException $e) {
+            return new PackageError($e->getResponse()->getBody()->getContents());
+        }
+        catch (\Exception $exception){
+            return new PackageError($exception->getMessage());
+        }
+    }
+
+    public function registerDeliveryBill(DeliveryBill $deliveryBill)
+    {
+        try {
+            $response = $this->client->post('/packet/v1/cn38request',[
+                'headers' => [
+                    'Authorization' => "Bearer {$this->getToken()}"
+                ],
+                'json' => [
+                    'dispatchNumbers' => $deliveryBill->containers->pluck('dispatch_number')->toArray()
+                ]
+            ]);
+
+            $data = json_decode($response->getBody()->getContents());
+            return $data->requestId;
+        }catch (\GuzzleHttp\Exception\ClientException $e) {
+            return new PackageError($e->getResponse()->getBody()->getContents());
+        }
+        catch (\Exception $exception){
+            return new PackageError($exception->getMessage());
+        }
+    }
+
+    public function getDeliveryBillStatus(DeliveryBill $deliveryBill)
+    {
+        try {
+            $response = $this->client->get("/packet/v1/cn38request?requestId={$deliveryBill->request_id}",[
+                'headers' => [
+                    'Authorization' => "Bearer {$this->getToken()}"
+                ]
+            ]);
+
+            $data = json_decode($response->getBody()->getContents());
+
+            if ( $data->requestStatus == 'Error' ){
+                throw new \Exception($data->errorMessage);
+            }
+
+            return $data->requestStatus == 'Success' ? $data->cn38Code : null;
+        }catch (\GuzzleHttp\Exception\ClientException $e) {
+            return new PackageError($e->getResponse()->getBody()->getContents());
+        }
+        catch (\Exception $exception){
+            return new PackageError($exception->getMessage());
+        }
+    }
+
+    public function addOrderTracking($order)
+    {
+        if($order->trackings->isEmpty())
+        {
+            OrderTracking::create([
+                'order_id' => $order->id,
+                'status_code' => Order::STATUS_PAYMENT_DONE,
+                'type' => 'HD',
+                'description' => 'Order Placed',
+                'country' => ($order->user->country != null) ? $order->user->country->code : 'US',
+                'city' => 'Miami',
+            ]);
+        }
+
+        return true;
+    }
+
+    public function destroy($container)
+    {
+        try {
+            $response = $this->client->delete("/packet/v1/units/dispatch/$container->dispatch_number",[
+                'headers' => [
+                    'Authorization' => "Bearer {$this->getToken()}"
+                ]
+            ]);
+            return $response;
+        }catch (\GuzzleHttp\Exception\ClientException $e) {
+            return new PackageError($e->getResponse()->getBody()->getContents());
+        }
+        catch (\Exception $exception){
+            return new PackageError($exception->getMessage());
+        }
+    }
+
+}

@@ -12,7 +12,7 @@
             <div class="hd-card mt-1 mb-3">
                 <div class="mb-2 row col-md-12 p-0 m-0">
                     <div class="col-1 hd-mt-20 pl-0 table-actions">
-                        <select wire:model='pageSize' class="form-control">
+                        <select wire:model='pageSize' class="form-control hd-search">
                             <option value="10">10</option>
                             <option value="30">30</option>
                             <option value="50">50</option>
@@ -29,14 +29,14 @@
                     @endif
                     <div class="col-2">
                         <label for="">Date From</label>
-                        <input type="date" class="form-control"  name="date" wire:model="dateFrom">
+                        <input type="date" class="form-control hd-search"  name="date" wire:model="dateFrom">
                     </div>
                     <div class="col-2 pl-0">
                         <label for="">Date To</label>
-                        <input type="date" class="form-control" name="date" wire:model="dateTo">
+                        <input type="date" class="form-control hd-search" name="date" wire:model="dateTo">
                     </div>
-                    <div class="col-1 pt-3 d-flex justify-content-end p-0">
-                        <a href="{{$downloadLink}}" class="mt-4 btn btn-primary">Download</a>
+                    <div class="col-1 mt-0 pt-3 d-flex justify-content-end p-0">
+                        <a href="{{$downloadLink}}" class="mt-4 btn btn-success"><i class="feather icon-download"></i> Download</a>
                     </div>
                 </div>
             </div>

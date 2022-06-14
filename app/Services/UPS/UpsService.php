@@ -54,15 +54,15 @@ class UpsService
     }
 
     public function getSenderPrice($order, $request)
-    {  
-        if ($request->exists('consolidated_order') && $request->consolidated_order == false) {
+    {
+        if ($request->exists('consolidated_order') && $  request->consolidated_order == false) {
             $consolidatedOrderService = new ConsolidatedOrderService();
 
             $consolidatedOrderService->handle($this->getPaymentDetails(), $this->shipperNumber);
             return $this->upsApiCall($this->ratingPackageUrl,  $consolidatedOrderService->consolidatedOrderRatesRequestForSender($order, $request));
         }
-        
-        return $this->upsApiCall($this->ratingPackageUrl, $this->ratesRequestForSender($order, $request));
+
+        return $this->upsApiCall($this->ratingPackageUrl, $thi        s->ratesRequestForSender($order, $request));
     }
 
     public function getLabelForSender($order, $request)
@@ -92,8 +92,8 @@ class UpsService
         if ($request->exists('consolidated_order')) {
             $consolidatedOrderService = new ConsolidatedOrderService();
             $consolidatedOrderService->handle($this->getPaymentDetails(), $this->shipperNumber);
-            
-            return $this->upsApiCall($this->pickupShipmentUrl,  $consolidatedOrderService->consolidatedOrderPickupRequest($order, $request));
+
+            return $this->upsApiCall($this->pickupShipmentUrl,  $consolidatedOrderService->co            nsolidatedOrderPickupRequest($order, $request));
         }
 
        return $this->upsApiCallForPickup($this->pickupShipmentUrl, $this->requestForPickupShipment($order, $request));
@@ -110,12 +110,12 @@ class UpsService
     }
 
     private function ratesRequestForSender($order, $request)
-    {   
+    {
         $this->calculateVolumetricWeight($order);
 
         $request_body = [
             'RateRequest' => [
-                'Request' => [
+                   'Request' => [
                     'SubVersion' => '1703',
                     'TransactionReference' => [
                         'CustomerContext' => ''
@@ -238,7 +238,7 @@ class UpsService
                         'AttentionName' => $request->first_name.' '.$request->last_name,
                         'Address' => [
                             'AddressLine' => $request->sender_address,
-                            'City' => $request->sender_city,
+                            'City' => $requestsender_zipcode,
                             'StateProvinceCode' => $request->sender_state,
                             'PostalCode' => $request->sender_zipcode,
                             'CountryCode' => 'US',
@@ -565,7 +565,7 @@ class UpsService
                         'ConfirmationEmailAddress' => $order->user->email,
                         'UndeliverableEmailAddress' => $order->user->email,
                     ]
-            ] 
+            ]
         ];
 
         return $request_body;
@@ -580,7 +580,7 @@ class UpsService
             $this->weight = UnitsConverter::kgToPound($order->weight);
 
             $volumetricWeight = WeightCalculator::getUPSVolumnWeight($this->length,$this->width,$this->height,'in');
-            return $this->chargableWeight = round($volumetricWeight >  $this->weight ? $volumetricWeight :  $this->weight,2);
+            r eturn $this->chargableWeight = round($volumetricWeight >  $this->weight ? $volumetricWeight :  $this->weight,2);
 
         }else{
 
@@ -596,7 +596,7 @@ class UpsService
             array_push($this->itemDescription, $item->description);
         }
         $description = implode(' ', $this->itemDescription);
-        
+
         if (strlen($description) > 48){
             $description = str_limit($description, 45);
         }
@@ -608,7 +608,7 @@ class UpsService
     {
         try {
             $response = Http::withHeaders($this->setHeaders())->acceptJson()->post($url, $data);
-            
+
             if($response->successful())
             {
                 return (Object)[
@@ -618,17 +618,17 @@ class UpsService
             }elseif($response->clientError())
             {
                 return (Object)[
-                    'success' => false,
+                            'success' => false,
                     'error' => $response->json(),
-                ];    
-            }elseif ($response->status() !== 200) 
+                ];
+            }elseif ($response->status() !== 200)
             {
 
                 return (object) [
                     'success' => false,
                     'error' => $response->json(),
                 ];
-            }
+                        }
        } catch (Exception $e) {
             Log::info('UPS Error'. $e->getMessage());
             return (object) [
@@ -639,7 +639,7 @@ class UpsService
                             [
                                 'code' => 501,
                                 'message' => $e->getMessage(),
-                            ]
+                                ]
                         ]
                     ]
                 ],
@@ -651,7 +651,7 @@ class UpsService
     {
         try {
             $response = Http::withHeaders($this->setHeaders())->acceptJson()->post($url, $data);
-            
+
             if($response->successful())
             {
                 return (Object)[
@@ -664,15 +664,15 @@ class UpsService
                 return (Object)[
                     'success' => false,
                     'error' => $response->json(),
-                ];    
-            }elseif ($response->status() !== 200) 
+                ];
+            }elseif ($response->status() !== 200)
             {
 
                 return (object) [
                     'success' => false,
                     'error' => $response->json(),
                 ];
-            }
+                        }
        } catch (Exception $e) {
             Log::info('UPS Error'. $e->getMessage());
             return (object) [
@@ -684,10 +684,10 @@ class UpsService
                                 'code' => 501,
                                 'message' => $e->getMessage(),
                             ]
-                        ]
+                            ]
                     ]
                 ],
-            ];
+             ];
        }
     }
 
@@ -715,8 +715,8 @@ class UpsService
                 return (Object)[
                     'success' => false,
                     'error' => $response->json(),
-                ];    
-            }elseif ($response->status() !== 200) 
+                ];
+            }elseif ($response->status() !== 200)
             {
 
                 return (object) [
@@ -739,16 +739,16 @@ class UpsService
                         ]
                     ]
                 ],
-            ];
+                ];
        }
     }
 
-    private function trackUPSOrder($trackingNumber)
+    private function t rackUPSOrder($trackingNumber)
     {
         try {
                 $response = Http::withHeaders($this->setHeaders())
                         ->acceptJson()->get($this->trackingUrl.$trackingNumber);
-                
+
                 if($response->successful())
                 {
                     return (Object)[
@@ -760,8 +760,8 @@ class UpsService
                     return (Object)[
                         'success' => false,
                         'error' => $response->json(),
-                    ];    
-                }elseif ($response->status() !== 200) 
+                    ];
+                }elseif ($response->status() !== 200)
                 {
 
                     return (object) [
@@ -770,7 +770,7 @@ class UpsService
                     ];
                 }
             } catch (Exception $e) {
-            Log::info('UPS Error'. $e->getMessage());
+            Log::i                nfo('UPS Error'. $e->getMessage());
             return (object) [
                 'success' => false,
                 'error' => [
@@ -787,7 +787,7 @@ class UpsService
         }
     }
 
-    private function getPaymentDetails()
+    private function getPaymentDetail s()
     {
         return [
             'ShipmentCharge' => [

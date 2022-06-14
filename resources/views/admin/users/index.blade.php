@@ -17,10 +17,10 @@
                                                 <form action="" method="GET">
                                                     <div class="row">
                                                         <div class="col-4 mt-1">
-                                                            <input type="search" class="form-control" name="search" value="{{ old('search',request('search')) }}" placeholder="@lang('user.Search By Name, Pobox, Email')">
+                                                            <input type="search" class="form-control hd-search" name="search" value="{{ old('search',request('search')) }}" placeholder="@lang('user.Search By Name, Pobox, Email')">
                                                         </div>
                                                         <div class="col-1">
-                                                            <button class="mt-1 btn btn-primary">
+                                                            <button class="mt-2 btn btn-primary">
                                                                 <i class="feather icon-search"></i> @lang('user.Search')
                                                             </button>
                                                         </div>
@@ -31,7 +31,7 @@
                                                 <form action="{{ route('admin.users.export.index') }}" method="POST">
                                                     @csrf
                                                     <input type="hidden" name="search" value="{{ request('search') }}">
-                                                    <button href="" class="mt-1 btn btn-success">
+                                                    <button href="" class="mt-2 btn btn-success">
                                                         <i class="feather icon-download"></i> @lang('user.Export Excel')
                                                     </button>
                                                 </form>

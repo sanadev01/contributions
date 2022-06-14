@@ -1,5 +1,5 @@
 <div class="position-relative">
-    <input type="search" autocomplete="off" class="form-control" name="user" wire:model.debounce.500ms="search">
+    <input type="search" autocomplete="off" class="form-control hd-search" name="user" wire:model.debounce.500ms="search">
     <input type="hidden" name="user_id" value="{{$userId}}">
     @error('user_id')
         <div class="help-block text-danger">{{ $message }}</div>
