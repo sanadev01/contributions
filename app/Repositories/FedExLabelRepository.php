@@ -5,10 +5,11 @@ namespace App\Repositories;
 use App\Models\User;
 use App\Models\Order;
 use App\Facades\FedExFacade;
+use App\Models\OrderTracking;
 use App\Models\ShippingService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
+use App\Services\FedEx\FedExLabelMaker;
 use App\Services\FedEx\FedExShippingService;
 
 class FedExLabelRepository
@@ -36,7 +37,7 @@ class FedExLabelRepository
             $this->fedExError = 'No shipping service is available for this order';
         }
 
-        if($shippingServices->isNotEmpty() && !setting('fedex', null, $order->user->id))
+        if($shippingServices->isNotEmpty() && !setting('fedex', null, User::ROLE_ADMIN))
         {
             $this->fedExError = 'FedEx is not enabled for your account';
             $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
@@ -77,7 +78,10 @@ class FedExLabelRepository
             ]);
 
             $order->refresh();
-            $this->downloadFedexLabel(json_decode($order->api_response), $order->corrios_tracking_code);
+            $this->printLabel($order->api_response, $order->corrios_tracking_code);
+
+            // store order status in order tracking
+            $this->addOrderTracking($order);
 
             return true;
         }
@@ -96,6 +100,34 @@ class FedExLabelRepository
 
             return false;
         }
+    }
+
+    public function getPrimaryLabelForSender($order, $request)
+    {
+        $response = FedExFacade::createShipmentForSender($order, $request);
+
+        if ($response->success == true) {
+            $this->handleApiResponse($response, $order);
+
+            return true;
+        }
+
+        $this->fedExError = $response->error['errors'][0]['message'] ?? 'Unknown error';
+        return false;
+    }
+
+    public function getPrimaryLabelForRecipient($order)
+    {
+        $response = FedExFacade::createShipmentForRecipient($order);
+
+        if ($response->success == true) {
+            $this->handleApiResponse($response, $order);
+
+            return true;
+        }
+
+        $this->fedExError = $response->error['errors'][0]['message'] ?? 'Unknown error';
+        return false;
     }
 
     private function getSecondaryLabelForSender($request, $order)
@@ -146,8 +178,7 @@ class FedExLabelRepository
                 $this->order = $order;
             }
 
-            
-            $this->downloadFedexLabel($this->order->getUSLabelResponse(), $this->order->us_api_tracking_code);
+            $this->printLabel($this->order->us_api_response, $this->order->us_api_tracking_code);
             return true;
         }
 
@@ -199,12 +230,13 @@ class FedExLabelRepository
         return $this->fedExError;
     }
 
-    private function downloadFedexLabel($fedExResponse, $fedExtrackingCode)
+    private function printLabel($apiResponse, $trackingCode)
     {
-        $labelUrl = $fedExResponse->output->transactionShipments[0]->pieceResponses[0]->packageDocuments[0]->url;
-        $contents = file_get_contents($labelUrl);
-        Storage::put("labels/{$fedExtrackingCode}.pdf", $contents);
-        
+        $labelMaker = new FedExLabelMaker($apiResponse, $trackingCode);
+        if($labelMaker->convertLabelToPdf()){
+            $labelMaker->saveLabel();
+        }
+
         return true;
     }
 
@@ -261,5 +293,47 @@ class FedExLabelRepository
         }
 
         return implode(' :,', $warehouse_numbers);
+    }
+
+    private function handleApiResponse($response, $order)
+    {
+        $this->totalFedExCost = $response->data['output']['transactionShipments'][0]['pieceResponses'][0]['baseRateAmount'];
+        $this->addProfit($order->user, $this->totalFedExCost);
+
+        $order->update([
+            'api_response' => json_encode($response->data),
+            'corrios_tracking_code' => $response->data['output']['transactionShipments'][0]['pieceResponses'][0]['trackingNumber'],
+            'is_invoice_created' => true,
+            'is_shipment_added' => true,
+            'user_declared_freight' => $this->totalFedExCost,
+            'shipping_value' => round($this->totalAmountWithProfit, 2),
+            'total' => round($this->totalAmountWithProfit, 2),
+            'gross_total' => round($this->totalAmountWithProfit, 2),
+            'status' => Order::STATUS_PAYMENT_DONE,
+        ]);
+
+        $order->refresh();
+
+        // store order status in order tracking
+        $this->addOrderTracking($order);
+
+        $this->printLabel($order->api_response, $order->corrios_tracking_code);
+        return true;
+    }
+
+    private function addOrderTracking($order)
+    {
+        if($order->trackings->isEmpty())
+        {
+            OrderTracking::create([
+                'order_id' => $order->id,
+                'status_code' => Order::STATUS_PAYMENT_DONE,
+                'type' => 'HD',
+                'description' => 'Order Placed',
+                'country' => ($order->user->country != null) ? $order->user->country->code : 'US',
+            ]);
+        }    
+
+        return true;
     }
 }

@@ -2,6 +2,9 @@
 
 namespace App\Http\Livewire\Order;
 
+use App\Models\State;
+use App\Models\Address;
+use App\Models\Country;
 use Livewire\Component;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
@@ -11,6 +14,7 @@ class ConsolidateDomesticLabelForm extends Component
 {
     public $consolidatedOrder;
     public $orders;
+    public $userId;
     public $states;
     public $usShippingServices;
     public $errors;
@@ -81,6 +85,8 @@ class ConsolidateDomesticLabelForm extends Component
         'updatedWidth',
         'updatedHeight',
         'volumeWeight',
+        'searchedAddress' => 'searchAddress',
+        'phoneNumber' => 'enteredPhoneNumber',
     ];
 
     public function mount($orders, $states, $errors)
@@ -90,13 +96,30 @@ class ConsolidateDomesticLabelForm extends Component
         $this->consolidationErrors = $errors;
         
         if ($this->orders->count() > 0) {
-            $this->senderPhone = $this->orders->first()->user->phone;
+            // $this->senderPhone = $this->orders->first()->user->phone;
+            $this->userId = $this->orders->first()->user_id;
         }
     }
 
     public function render()
     {
         return view('livewire.order.consolidate-domestic-label-form');
+    }
+
+    public function enteredPhoneNumber($value)
+    {
+        $this->senderPhone = $value;
+    }
+
+    public function searchAddress($address)
+    {
+        $this->senderState = State::find($address['state_id'])->code;
+        $this->firstName = $address['first_name'];
+        $this->lastName = $address['last_name'];
+        $this->senderAddress = $address['address'];
+        $this->senderCity = $address['city'];
+        $this->senderZipCode = $address['zipcode'];
+        $this->senderPhone = $address['phone'];
     }
 
     public function updatedWeight($weight)
@@ -249,6 +272,7 @@ class ConsolidateDomesticLabelForm extends Component
 
         if($domesticLabelRepostory->getDomesticLabel($request, $request->order))
         {
+            $this->saveAddress();
             return redirect()->route('admin.order.us-label.index', $this->orders->first()->id);
         }
 
@@ -291,5 +315,27 @@ class ConsolidateDomesticLabelForm extends Component
                 return $this->selectedServiceCost = $value['cost'];
             }
         });
+    }
+
+    private function saveAddress()
+    {
+        $existingAddress = Address::where([['user_id', $this->userId],['phone', $this->senderPhone]])->first();
+
+        if (!$existingAddress) {
+            Address::create([
+                            'user_id' => $this->userId,
+                            'first_name' => $this->firstName,
+                            'last_name' => $this->lastName,
+                            'phone' => $this->senderPhone,
+                            'address' => $this->senderAddress,
+                            'city' => $this->senderCity,
+                            'state_id' => State::where([['code', $this->senderState], ['country_id', Country::US]])->first()->id,
+                            'country_id' => Country::US,
+                            'zipcode' => $this->senderZipCode,
+                            'account_type' => 'individual',
+                        ]);
+        }
+
+        return;
     }
 }

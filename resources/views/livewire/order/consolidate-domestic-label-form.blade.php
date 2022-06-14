@@ -68,6 +68,13 @@
                 <div class="container">
                     <div class="form-row">
                         <div class="form-group col-md-6">
+                            <label for="sender_zipcode">Sender Phone <span class="text-danger">*</span></label>
+                            @livewire('components.search-address', ['user_id' => $userId])
+                            @error('senderPhone') <span class="error text-danger">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
                             <label for="first_name">First Name <span class="text-danger">*</span></label>
                             <input type="text" wire:model.lazy="firstName" class="form-control" name="first_name" id="first_name" placeholder="Enter your First Name" required>
                             @error('firstName') <span class="error text-danger">{{ $message }}</span> @enderror
@@ -106,11 +113,6 @@
                             <input type="text" wire:model.lazy="senderZipCode" class="form-control" name="sender_zipcode" id="sender_zipcode" placeholder="Enter your zipcode">
                             @if($zipCodeResponse) <p class="{{ $zipCodeClass }}">{{ $zipCodeResponseMessage }}</p>@endif
                             @error('senderZipCode') <span class="error text-danger">{{ $message }}</span> @enderror
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="sender_zipcode">Sender Phone <span class="text-danger">*</span></label>
-                            <input type="text" wire:model.lazy="senderPhone" class="form-control" name="sender_phone" id="sender_phone" placeholder="Enter your US phone">
-                            @error('senderPhone') <span class="error text-danger">{{ $message }}</span> @enderror
                         </div>
                     </div>
                     <div class="form-row">

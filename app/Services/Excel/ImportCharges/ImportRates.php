@@ -5,6 +5,7 @@ namespace App\Services\Excel\ImportCharges;
 use App\Models\Rate;
 use Illuminate\Http\UploadedFile;
 use App\Services\Excel\AbstractImportService;
+use App\Models\Country;
 
 class ImportRates extends AbstractImportService
 {
@@ -31,7 +32,7 @@ class ImportRates extends AbstractImportService
     public function readRatesFromFile()
     {
         $rates = [];
-        if($this->countryId == 46){
+        if($this->countryId == Country::Chile){
             $limit = 75;
         }else{
             $limit = 70;
