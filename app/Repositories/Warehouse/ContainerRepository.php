@@ -28,7 +28,7 @@ class ContainerRepository extends AbstractRepository{
         if($request->filled('unitCode')){
             $query->where('unit_code', 'LIKE', '%' . $request->unitCode . '%');
         } 
-        return $query->whereIn('services_subclass_code', ['NX','IX', 'XP'])->latest()->paginate(50);
+        return $query->whereIn('services_subclass_code', ['NX','IX', 'XP','AJ-NX','AJ-IX'])->latest()->paginate(50);
     }
 
     public function store(Request $request)
