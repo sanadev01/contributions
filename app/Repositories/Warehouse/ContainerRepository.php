@@ -26,6 +26,10 @@ class ContainerRepository extends AbstractRepository{
             $query->where('services_subclass_code', 'LIKE', '%' . $request->packetType . '%');
         }
         
+        if ($request->has('typeColombia')) {
+            return $query->whereIn('services_subclass_code', ['CO-NX'])->latest()->paginate(50);
+        }
+        
         return $query->whereIn('services_subclass_code', ['NX','IX', 'XP','AJ-NX','AJ-IX'])->latest()->paginate(50);
     }
 
@@ -96,6 +100,28 @@ class ContainerRepository extends AbstractRepository{
         } catch (\Exception $ex) {
             $this->error = $ex->getMessage();
             return null;
+        }
+    }
+
+    public function addOrderToContainer($container, $orderId)
+    {
+        try {
+            $container->orders()->attach($orderId);
+            return true;
+        } catch (\Exception $ex) {
+            $this->error = $ex->getMessage();
+            return false;
+        }
+    }
+
+    public function removeOrderFromContainer($container, $id)
+    {
+        try {
+            $container->orders()->detach($id);
+            return true;
+        } catch (\Exception $ex) {
+            $this->error = $ex->getMessage();
+            return false;
         }
     }
 }
