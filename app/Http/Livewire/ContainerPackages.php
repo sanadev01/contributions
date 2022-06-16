@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\Order;
 use Livewire\Component;
 use App\Models\OrderTracking;
+use App\Models\Region;
 use App\Models\ShippingService;
 use App\Models\Warehouse\Container;
 use App\Repositories\Warehouse\ContainerRepository;
@@ -23,6 +24,7 @@ class ContainerPackages extends Component
     public $orderRegion;
     public $containerService;
     public $shippingServiceCodes;
+    public $santiagoRegionCode;
     
     public function mount($container = null, $ordersCollection = null, $editMode = null)
     {
@@ -35,6 +37,11 @@ class ContainerPackages extends Component
 
         if ($this->containerService == 'USPS-Container') {
             $this->containerDestination = $container->destination_operator_name == 'MIA' ? 'Miami' : '';
+        }
+
+        if($this->containerService == 'Chile-Container'){
+            $this->containerDestination = ($container->destination_operator_name == 'MR') ? 'Santiago' : 'notSantiago';
+            $this->santiagoRegionCode = Region::REGION_SANTIAGO;
         }
 
         $this->setShippingServiceCodes();
@@ -79,6 +86,12 @@ class ContainerPackages extends Component
 
             if (!$this->validateOrderService($order)) {
                 $this->error = 'Order does not belong to this container. Please Check Packet Service';
+                $this->barcode = '';
+                return;
+            }
+
+            if ($this->containerService == 'Chile-Container' && !$this->validateOrderRegion($order)) {
+                $this->error = 'Order does not belong to this container, please check packet destination';
                 $this->barcode = '';
                 return;
             }
@@ -164,6 +177,15 @@ class ContainerPackages extends Component
         }
 
         if($this->containerService == 'Chile-Container' && $order->shippingService->isCorreiosChileService()){
+            
+            if ($this->service == 'SRP' &&  $order->shippingService->service_sub_class != $this->shippingServiceCodes['SRP']) {
+                return false;
+            }
+
+            if ($this->service == 'SRM' &&  $order->shippingService->service_sub_class != $this->shippingServiceCodes['SRM']) {
+                return false;
+            }
+
             return true;
         }
 
@@ -172,6 +194,21 @@ class ContainerPackages extends Component
         }
 
         return false;
+    }
+
+    private function validateOrderRegion($order)
+    {
+        if ($order->recipient->region != $this->santiagoRegionCode) {
+            $orderRegion = 'notSantiago';
+        }else{
+            $orderRegion = 'Santiago';
+        }
+
+        if ($orderRegion != $this->containerDestination) {
+            return false;
+        }
+
+        return true;
     }
 
     private function addOrderTracking($order)

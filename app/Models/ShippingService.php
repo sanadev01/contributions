@@ -135,6 +135,15 @@ class ShippingService extends Model
         return false;
     }
 
+    public function isCorreiosChileService()
+    {
+        if (collect($this->correiosChileShippingServices())->contains($this->service_sub_class)) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function isUSPSService()
     {
         if (collect($this->uspsShippingServices())->contains($this->service_sub_class)) {
@@ -205,6 +214,14 @@ class ShippingService extends Model
             self::USPS_FIRSTCLASS, 
             self::USPS_PRIORITY_INTERNATIONAL, 
             self::USPS_FIRSTCLASS_INTERNATIONAL,
+        ];
+    }
+
+    private function correiosChileShippingServices()
+    {
+        return [
+            self::SRP, 
+            self::SRM,
         ];
     }
 }
