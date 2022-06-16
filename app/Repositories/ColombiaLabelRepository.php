@@ -35,7 +35,7 @@ class ColombiaLabelRepository
 
     private function getPrimaryLabel()
     {
-        $response = ColombiaShippingFacade::getLabel($this->order);
+        $response = ColombiaShippingFacade::createShipment($this->order);
 
         if ($response['success'] == true) {
 

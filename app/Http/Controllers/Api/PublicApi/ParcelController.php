@@ -243,12 +243,6 @@ class ParcelController extends Controller
                 }
             }
 
-            if ($shippingService->isColombiaService() && !$this->apiShippingService->getColombiaServiceRates($order)) {
-                
-                DB::rollback();
-                return apiResponse(false, $this->apiShippingService->getError());
-            }
-
             $order->doCalculations();
 
             DB::commit();
@@ -490,12 +484,6 @@ class ParcelController extends Controller
                     DB::rollback();
                     return apiResponse(false, $this->apiShippingService->getError());
                 }
-            }
-
-            if ($shippingService->isColombiaService() && !$this->apiShippingService->getColombiaServiceRates($parcel)) {
-                
-                DB::rollback();
-                return apiResponse(false, $this->apiShippingService->getError());
             }
 
             $parcel->doCalculations();

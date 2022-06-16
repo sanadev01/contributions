@@ -5,7 +5,6 @@ namespace App\Repositories;
 use App\Facades\UPSFacade;
 use App\Facades\USPSFacade;
 use App\Facades\FedExFacade;
-use App\Facades\ColombiaShippingFacade;
 use App\Models\ShippingService;
 
 class ApiShippingServiceRepository
@@ -148,22 +147,6 @@ class ApiShippingServiceRepository
             $this->error = $response->error['response']['errors'][0]['message'] ?? 'server error, could not get rates';
         }
 
-        return false;
-    }
-
-    public function getColombiaServiceRates($order)
-    {
-        $response = ColombiaShippingFacade::getServiceRates($order);
-
-        if ($response['success'] == true) {
-            $order->update([
-                'user_declared_freight' => number_format(($response['data']['decTotalRate'] * $this->currentUSDollar), 2),
-            ]);
-
-            return true;
-        }
-
-        $this->error = $response['error'];
         return false;
     }
 

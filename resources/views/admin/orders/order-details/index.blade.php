@@ -35,7 +35,7 @@
                 <div class="form-group col-12 col-sm-6 col-md-6">
                     <div class="controls">
                         <label class="h4">Freight <span class="text-danger"></span></label>
-                        <input class="form-control" name="user_declared_freight" id="user_declared_freight" value="{{ old('user_declared_freight', $order->user_declared_freight) }}" placeholder="Freight" @if(optional($order)->sender_country_id == $countryConstants['US'] || optional($order->recipient)->country_id == $countryConstants['US'] || optional($order->recipient)->country_id == $countryConstants['Colombia']) readonly @endif/>
+                        <input class="form-control" name="user_declared_freight" id="user_declared_freight" value="{{ old('user_declared_freight', $order->user_declared_freight) }}" placeholder="Freight" @if(optional($order)->sender_country_id == $countryConstants['US'] || optional($order->recipient)->country_id == $countryConstants['US']) readonly @endif/>
                         {{-- <input class="form-control" name="user_declared_freight" id="user_declared_freight" value="{{ old('user_declared_freight',__default($order->user_declared_freight,$order->gross_total)) }}" placeholder="Freight"/> --}}
                         <div class="help-block"></div>
                         <span class="text-danger">@error('user_declared_freight') {{ $message }} @enderror</span>
@@ -114,11 +114,6 @@
                 parseFloat($('option:selected', this).attr("data-cost"))
             );
         }
-
-        if (service == shippingServiceCodes.COLOMBIA_Standard) {
-            return getColombiaServiceRates(service);
-        }
-        
     })
 
     $('#us_shipping_service').ready(function() {
@@ -243,28 +238,6 @@
             }).catch(function(error){
                 console.log(error);
                 $('#loading').fadeOut();
-        })
-    }
-
-    function getColombiaServiceRates(service){
-        $('#loading').fadeIn();
-        var order_id = $('#order_id').val();
-
-        $.get('{{ route("api.colombia-service-rates") }}', {
-            service: service,
-            order_id: order_id
-        }).then(function(response){
-            console.log(response);
-            if(response.success == true){
-                $('#user_declared_freight').val(response.total_amount);
-                $('#user_declared_freight').prop('readonly', true);
-            }else {
-                toastr.error(response.error);
-            }
-            $('#loading').fadeOut();
-        }).catch(function(error){
-            console.log(error);
-            $('#loading').fadeOut();
         })
     }
 </script>

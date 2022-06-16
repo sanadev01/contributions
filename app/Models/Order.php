@@ -369,8 +369,7 @@ class Order extends Model implements Package
                 optional($this->shippingService)->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
                 optional($this->shippingService)->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL || 
                 optional($this->shippingService)->service_sub_class == ShippingService::UPS_GROUND ||
-                optional($this->shippingService)->service_sub_class == ShippingService::FEDEX_GROUND || 
-                optional($this->shippingService)->service_sub_class == ShippingService::COLOMBIA_Standard) {
+                optional($this->shippingService)->service_sub_class == ShippingService::FEDEX_GROUND) {
 
                 return $this->user_declared_freight;
             }
@@ -444,7 +443,7 @@ class Order extends Model implements Package
         $shippingService = $this->shippingService;
 
         $additionalServicesCost = $this->calculateAdditionalServicesCost($this->services);
-        if ($shippingService && ($shippingService->isOfUnitedStates() || $shippingService->isColombiaService())) {
+        if ($shippingService && $shippingService->isOfUnitedStates()) {
             $shippingCost = $this->user_declared_freight;
             $this->calculateProfit($shippingCost, $shippingService);
         }else {
@@ -502,11 +501,7 @@ class Order extends Model implements Package
             
             $profit_percentage = (setting('fedex_profit', null, $this->user->id) != null &&  setting('fedex_profit', null, $this->user->id) != 0) ?  setting('fedex_profit', null, $this->user->id) : setting('fedex_profit', null, User::ROLE_ADMIN);
         
-        }elseif($shippingService->isColombiaService()) {
-
-            $profit_percentage = (setting('colombia_profit', null, $this->user->id) != null &&  setting('colombia_profit', null, $this->user->id) != 0) ?  setting('colombia_profit', null, $this->user->id) : setting('colombia_profit', null, User::ROLE_ADMIN);
-            
-        }else {
+        }else{
             
             $profit_percentage = (setting('usps_profit', null, $this->user->id) != null &&  setting('usps_profit', null, $this->user->id) != 0) ?  setting('usps_profit', null, $this->user->id) : setting('usps_profit', null, User::ROLE_ADMIN);
         }

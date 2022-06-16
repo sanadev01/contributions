@@ -32,7 +32,7 @@ class ColombiaService
         return $this->colombiaApiCall($this->shippingUrl, $this->makeRequestBody($order, true));
     }
 
-    public function getLabel($order)
+    public function createShipment($order)
     {
         return $this->colombiaApiCall($this->shippingUrl, $this->makeRequestBody($order, false));
     }

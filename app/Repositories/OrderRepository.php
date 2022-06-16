@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Services\UPS\UPSShippingService;
 use App\Services\USPS\USPSShippingService;
 use App\Services\FedEx\FedExShippingService;
-use App\Services\Colombia\ColombiaShippingService;
 
 class OrderRepository
 {
@@ -257,7 +256,7 @@ class OrderRepository
     {
         $shippingService =  ShippingService::find($shippingServiceId);
 
-        if ($shippingService->isDomesticService() || $shippingService->isColombiaService()) {
+        if ($shippingService->isDomesticService()) {
             return true;
         }
 
@@ -423,17 +422,7 @@ class OrderRepository
                     $shippingServices->push($shippingService);
                 }
             }
-        }elseif ((optional($order->recipient)->country_id == Order::COLOMBIA)) {
-            $colombiaShippingService = new ColombiaShippingService($order);
-
-            foreach ($shippingServicesWithoutRates as $shippingService) 
-            {
-                if ($colombiaShippingService->isAvailableFor($shippingService)) {
-                    $shippingServices->push($shippingService);
-                }
-            }
-
-        } else
+        }else
         {
             foreach (ShippingService::query()->has('rates')->active()->get() as $shippingService) 
             {
