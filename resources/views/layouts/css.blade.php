@@ -37,8 +37,38 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/pickers/pickadate/pickadate.css') }}">
 
 <style>
+    body.vertical-layout.vertical-menu-modern.menu-expanded .main-menu .navigation > li > a > i:before{
+        height: 15px;
+    }
+    body.vertical-layout.vertical-menu-modern.menu-expanded .main-menu .navigation li.has-sub > a:not(.mm-next):after{
+        padding-top: 5px;
+    }
     #pink{
        color: pink;
+    }
+    .main-menu{
+        background-color: #5784BA !important;
+        color: white !important;
+    }
+    .navigation{
+        background-color: #5784BA !important;
+        color: white !important;
+    }
+    .navigation li a{
+        color: white !important;
+        padding: 14px 15px 10px 15px !important;
+    }
+    .navigation .main-menu {
+        background-color: #5784BA !important;
+        color: white !important;
+    }
+    .main-menu.menu-light .navigation li.has-sub ul.menu-content{
+        background-color: #5784BA !important;
+        color: white !important;
+    }
+    .main-menu.menu-light .navigation > li.open > a{
+        background-color: #5784BA !important;
+        color: white !important;
     }
     /* .activityCard {
     background-image: url(../images/bg2.jpg);
