@@ -79,8 +79,8 @@
         {{-- <x-charts.orders-charts/> --}}
         
         <div class="card">
-            <livewire:dashboard.stats-filter/>
         </div>
+        <livewire:dashboard.stats-filter/>
         
     </section>
     <!-- Dashboard Analytics end -->

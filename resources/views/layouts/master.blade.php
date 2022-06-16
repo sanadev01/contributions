@@ -13,9 +13,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Karla&display=swap" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+
     {{-- <link href='https://fonts.googleapis.com/css?family=Karla' rel='stylesheet'> --}}
     @include('layouts.css')
     @yield('css')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <script>
         window.locale= "{{ app()->getLocale() }}";
     </script>
@@ -29,7 +33,7 @@
 <x-master-layout>
     <div class="viewport">
         <div class="position-fixed w-100 h-100 justify-content-center align-items-center" id="loading" style="z-index: 100000;top:0;right0; background-color:#ffffff75;display:flex;">
-            <img src="{{ asset('images/loading.gif') }}" class="h-25" alt="">
+            <img src="{{ asset('images/Loader.svg') }}" class="h-25" alt="">
         </div>
     
         <!-- BEGIN: Header-->

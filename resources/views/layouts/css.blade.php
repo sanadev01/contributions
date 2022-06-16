@@ -37,6 +37,25 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/pickers/pickadate/pickadate.css') }}">
 
 <style>
+    #pink{
+       color: pink;
+    }
+    /* .activityCard {
+    background-image: url(../images/bg2.jpg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    } */
+    .smallCharts{
+        display: flex !important;
+        justify-content: space-around !important;
+    }
+    .figures{
+        font-weight: 600 !important;
+        font-size: 1.75rem;
+        font-size: 28px;
+    }
     .border-0{
         border-width: 0px !important;
     }

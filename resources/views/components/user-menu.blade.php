@@ -7,50 +7,51 @@
             @if (auth()->user()->hasRole('scanner') || auth()->user()->hasRole('driver'))
                 <li class="nav-item {{ $isActive('home') }}">
                     <a class="nav-link" href="{{ route('admin.home') }}">
-                        <img src="{{ asset('images/icon/dashboard.svg') }}" alt="dashboard">
+                        {{-- <i class="feather icon-home"></i> --}}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
                         <span data-i18n="Dashboard"> @lang('menu.dashboard') </span>
                     </a>
                 </li>
                 @if (auth()->user()->hasRole('driver'))
                     <li class="nav-item {{ $isActive(['warehouse.scan-label.index']) }}">
                         <a class="nav-link" href="{{ route('warehouse.scan-label.index') }}">
-                            <i class="icon_adjst fab fa-searchengin"></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-credit-card"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
                             <span class="menu-title">@lang('menu.Scan Parcel')</span>
                         </a>
                     </li>
                 @else
                 <li class="nav-item {{ $isActive(['warehouse.scan.index']) }}">
                     <a class="nav-link" href="{{ route('warehouse.scan.index') }}">
-                        <i class="icon_adjst fab fa-searchengin"></i>
+                        <i class="fab fa-searchengin"></i>
                         <span class="menu-title">Check In Parcel</span>
                     </a>
                 </li>
                 @endif
                 <li class="nav-item {{ $isActive(['admin.tracking.index']) }}">
                     <a href="{{ route('admin.tracking.index') }}" target="_blank">
-                        <i class="icon_adjst feather icon-map-pin"></i>
+                        <i class="feather icon-map-pin"></i>
                         <span class="menu-title">@lang('menu.trackings')</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('admin.profile.index') }}">
-                        <i class="icon_adjst feather icon-user-check"></i>
+                        <i class="feather icon-user-check"></i>
                         <span data-i18n="Apps"> @lang('menu.profile') </span>
                     </a>
                 </li>
             @else
             <li class="nav-item {{ $isActive('home') }}">
                 <a class="nav-link" href="{{ route('admin.home') }}">
-                    <img src="{{ asset('images/icon/dashboard.svg') }}" alt="dashboard">
-                    {{-- <i class="icon_adjst feather icon-home"></i> --}}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                    {{-- <i class="feather icon-home"></i> --}}
                     <span data-i18n="Dashboard"> @lang('menu.dashboard') </span>
                 </a>
             </li>
 
             <li class="nav-item {{ $isActive(['admin.parcels.index','admin.parcels.shipments.edit','admin.parcels.shipments.create']) }}">
                 <a href="{{ route('admin.parcels.index') }}">
-                    <img src="{{ asset('images/icon/parcel.svg') }}" alt="Parcels">
-                    {{-- <i class="icon_adjst feather icon-alert-triangle"></i> --}}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-package"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                    {{-- <i class="feather icon-alert-triangle"></i> --}}
                     <span class="menu-title">@lang('menu.Parcels')</span>
                 </a>
             </li>
@@ -58,8 +59,8 @@
             @can('viewAny', App\Models\Order::class)
                 <li class="nav-item {{ $isActive(['admin.orders.index','admin.orders.edit','admin.orders.show']) }}">
                     <a href="{{ route('admin.orders.index') }}">
-                        <img src="{{ asset('images/icon/order.svg') }}" alt="Orders">
-                        {{-- <i class="icon_adjst feather icon-truck"></i> --}}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-cart"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                        {{-- <i class="feather icon-truck"></i> --}}
                         <span class="menu-title">@lang('menu.orders')</span>
                     </a>
                 </li>
@@ -68,7 +69,7 @@
             @can('viewAny', App\Models\Order::class)
                 <li class="nav-item {{ $isActive(['admin.tracking.index']) }}">
                     <a href="{{ route('admin.tracking.index') }}" target="_blank">
-                        <img src="{{ asset('images/icon/tracking.svg') }}" alt="Tracking">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                         <span class="menu-title">@lang('menu.trackings')</span>
                     </a>
                 </li>
@@ -77,19 +78,19 @@
             @if (auth()->user()->isAdmin())
             <li class="nav-item has-sub sidebar-group">
                 <a href="#">
-                    <i class="icon_adjst fab fa-searchengin" style="color: #3CB64B;"></i>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-zoom-in"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
                     <span class="menu-title" data-i18n="Dashboard">Scan</span>
                 </a>
                 <ul class="menu-content">
                     <li class="nav-item {{ $isActive(['warehouse.scan-label.index']) }} ml-2">
                         <a class="nav-link" href="{{ route('warehouse.scan-label.index') }}">
-                            <i class="icon_adjst feather icon-circle"></i>
+                            <i class="feather icon-circle"></i>
                             <span data-i18n="Apps">@lang('menu.Scan Parcel')</span>
                         </a>
                     </li>
                     <li class="nav-item {{ $isActive(['warehouse.scan-label.create']) }} ml-2">
                         <a class="nav-link" href="{{ route('warehouse.scan-label.create') }}">
-                            <i class="icon_adjst feather icon-circle"></i>
+                            <i class="feather icon-circle"></i>
                             <span data-i18n="Apps">@lang('menu.Driver Report')</span>
                         </a>
                     </li>
@@ -100,7 +101,7 @@
             @can('importExcel', App\Models\Order::class)
                 <li class="{{ $isActive(['admin.import.import-excel.index','admin.import.import-excel.show','admin.import.import-excel.create']) }}">
                     <a href="{{ route('admin.import.import-excel.index') }}">
-                        <img src="{{ asset('images/icon/upload.svg') }}" alt="Upload files">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-upload-cloud"><polyline points="16 16 12 12 8 16"></polyline><line x1="12" y1="12" x2="12" y2="21"></line><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"></path><polyline points="16 16 12 12 8 16"></polyline></svg>
                         <span class="menu-title">@lang('menu.import-excel-order.excel')</span>
                     </a>
                 </li>
@@ -108,7 +109,7 @@
             @can('labelPrint', App\Models\Order::class)
                 <li class="{{ $isActive(['admin.label.scan.create']) }}">
                     <a href="{{ route('admin.label.scan.create') }}">
-                        <img src="{{ asset('images/icon/print.svg') }}" alt="Printer">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-printer"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
                         <span class="menu-title">@lang('menu.Print Label')</span>
                     </a>
                 </li>
@@ -116,7 +117,7 @@
             @can('viewAny', App\Models\PaymentInvoice::class)
                 <li class="nav-item {{ $isActive(['admin.payment-invoices.index','admin.payment-invoices.edit']) }}">
                     <a href="{{ route('admin.payment-invoices.index') }}">
-                        <img src="{{ asset('images/icon/payment.svg') }}" alt="payment">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
                         <span class="menu-title">@lang('menu.payment-invoice')</span>
                     </a>
                 </li>
@@ -125,7 +126,7 @@
             @can('viewAny', App\Models\Connect::class)
                 <li class="nav-item {{ $isActive(['admin.connect.index']) }}">
                     <a class="nav-link" href="{{ route('admin.connect.index') }}">
-                        <i class="icon_adjst fa fa-plug" style="color: #3db64c;"></i>
+                        <i class="fa fa-plug" style=""></i>
                         <span data-i18n="Apps">@lang('menu.connect')</span>
                     </a>
                 </li>
@@ -140,7 +141,7 @@
 
             <li class="nav-item has-sub sidebar-group">
                 <a href="#">
-                    <img src="{{ asset('images/icon/dollar.png') }}" alt="Rates" width="19px">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
                     <span class="menu-title" data-i18n="Dashboard">@lang('menu.Rates')</span>
                 </a>
                 <ul class="menu-content">
@@ -148,16 +149,16 @@
                     @can('viewAny', App\Models\ProfitPackage::class)
                     <li class="{{ $isActive(['admin.rates.profit-packages.index','admin.rates.profit-packages.create','admin.rates.profit-packages.edit','admin.rates.profit-packages-upload.create']) }}">
                         <a href="{{ route('admin.rates.profit-packages.index') }}">
-                            <i class="icon_adjst feather icon-circle"></i>
+                            <i class="feather icon-circle"></i>
                             <span class="menu-title">@lang('menu.Profit Packages')</span>
                         </a>
                     </li>
                     @endcan
 
                     @can('viewAny', App\Models\HandlingService::class)
-                    <li class="{{ $isActive(['admin.handling-services.index','admin.handling-services.edit','admin.handling-services.create']) }}">
+                    <li class="{{ $isActive(['admin.services.index','admin.services.edit','admin.services.create']) }}">
                         <a href="{{ route('admin.handling-services.index') }}">
-                            <i class="icon_adjst feather icon-circle"></i>
+                            <i class="feather icon-circle"></i>
                             <span class="menu-title">@lang('menu.Handling Services')</span>
                         </a>
                     </li>
@@ -166,7 +167,7 @@
                     @can('viewAny', App\Models\ShippingService::class)
                     <li class="nav-item {{ $isActive(['admin.shipping-services.index','admin.shipping-services.create']) }}">
                         <a href="{{ route('admin.shipping-services.index') }}">
-                            <i class="icon_adjst feather icon-truck"></i>
+                            <i class="feather icon-truck"></i>
                             <span class="menu-title">@lang('menu.Shipping Services')</span>
                         </a>
                     </li>
@@ -175,7 +176,7 @@
                     @can('viewAny', App\Models\Rate::class)
                     <li class="{{ $isActive(['admin.rates.shipping-rates.index','admin.rates.shipping-rates.create', 'admin.rates.view-shipping-rates', 'admin.rates.region-rates', 'admin.rates.view-shipping-region-rates']) }}">
                         <a href="{{ route('admin.rates.shipping-rates.index') }}">
-                            <i class="icon_adjst feather icon-circle"></i>
+                            <i class="feather icon-circle"></i>
                             <span class="menu-title">@lang('menu.Homedeliverybr Cost')</span>
                         </a>
                     </li>
@@ -184,14 +185,14 @@
                     @can('viewAny', App\Models\Rate::class)
                     <li class="{{ $isActive(['admin.rates.accrual-rates.index','admin.rates.accrual-rates.create', 'admin.rates.show-accrual-rates']) }}">
                         <a href="{{ route('admin.rates.accrual-rates.index') }}">
-                            <i class="icon_adjst feather icon-circle"></i>
+                            <i class="feather icon-circle"></i>
                             <span class="menu-title">Accrual Rates</span>
                         </a>
                     </li>
 
                     <li class="{{ $isActive(['admin.rates.usps-accrual-rates.index']) }}">
                         <a href="{{ route('admin.rates.usps-accrual-rates.index') }}">
-                            <i class="icon_adjst feather icon-circle"></i>
+                            <i class="feather icon-circle"></i>
                             <span class="menu-title">USPS Accrual Rates</span>
                         </a>
                     </li>
@@ -200,7 +201,7 @@
                     @can('viewAny', App\Models\Rate::class)
                     <li class="{{ $isActive(['admin.rates.fixed-charges.index']) }}">
                         <a href="{{ route('admin.rates.fixed-charges.index') }}">
-                            <i class="icon_adjst feather icon-circle"></i>
+                            <i class="feather icon-circle"></i>
                             <span class="menu-title">@lang('menu.Fixed Charges')</span>
                         </a>
                     </li>
@@ -224,7 +225,7 @@
             @can('viewAny', App\Models\Address::class)
                 <li class="nav-item {{ $isActive(['admin.addresses.index','admin.addresses.edit','admin.addresses.create']) }}">
                     <a class="nav-link" href="{{ route('admin.addresses.index') }}">
-                        <img src="{{ asset('images/icon/address.svg') }}" alt="Address">
+                        <i class="feather icon-map-pin"></i>
                         <span data-i18n="Apps">@lang('menu.addresses')</span>
                     </a>
                 </li>
@@ -233,7 +234,7 @@
 
             <li class="nav-item has-sub sidebar-group">
                 <a href="#">
-                    <img src="{{ asset('images/icon/calculator.svg') }}" alt="Rates" width="19px">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-divide-square"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="8" y1="12" x2="16" y2="12"></line><line x1="12" y1="16" x2="12" y2="16"></line><line x1="12" y1="8" x2="12" y2="8"></line></svg>
                     <span class="menu-title" data-i18n="Dashboard">Calculators</span>
                 </a>
                 <ul class="menu-content">
@@ -255,7 +256,7 @@
             {{-- Reports --}}
             <li class="nav-item has-sub sidebar-group">
                 <a href="#">
-                    <img src="{{ asset('images/icon/report.svg') }}" alt="Orders">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
                     <span class="menu-title">@lang('menu.Reports.menu')</span>
                 </a>
                 <ul class="menu-content">
@@ -263,7 +264,7 @@
                     @can('viewUserShipmentReport', App\Models\Reports::class)
                     <li class="{{ $isActive(['admin.reports.user-shipments.index']) }}">
                         <a href="{{ route('admin.reports.user-shipments.index') }}">
-                            <i class="icon_adjst feather icon-circle"></i>
+                            <i class="feather icon-circle"></i>
                             <span class="menu-title">@lang('menu.Reports.Shipment Report')</span>
                         </a>
                     </li>
@@ -272,7 +273,7 @@
                     @can('downloadTrackingReport', App\Models\Reports::class)
                     <li class="{{ $isActive(['admin.reports.order-trackings.index']) }}">
                         <a href="{{ route('admin.reports.order-trackings.index') }}">
-                            <i class="icon_adjst feather icon-circle"></i>
+                            <i class="feather icon-circle"></i>
                             <span class="menu-title">@lang('menu.Reports.Tracking Report')</span>
                         </a>
                     </li>
@@ -280,7 +281,7 @@
                     @can('viewOrderReport', App\Models\Reports::class)
                     <li class="{{ $isActive(['admin.reports.order.index']) }}">
                         <a href="{{ route('admin.reports.order.index') }}">
-                            <i class="icon_adjst feather icon-circle"></i>
+                            <i class="feather icon-circle"></i>
                             <span class="menu-title">@lang('menu.Reports.Orders Report')</span>
                         </a>
                     </li>
@@ -288,7 +289,7 @@
                         @can('viewComissionReport', App\Models\Reports::class)
                         <li class="{{ $isActive(['admin.reports.commission.index','admin.reports.commission.show']) }}">
                             <a href="{{ route('admin.reports.commission.index') }}">
-                                <i class="icon_adjst feather icon-circle"></i>
+                                <i class="feather icon-circle"></i>
                                 <span class="menu-title">@lang('menu.Reports.Commission Report')</span>
                             </a>
                         </li>
@@ -296,7 +297,7 @@
                     @admin
                         {{-- <li class="{{ $isActive(['admin.reports.audit-report.index','admin.reports.audit-report.show']) }}">
                             <a href="{{ route('admin.reports.audit-report.index') }}">
-                                <i class="icon_adjst feather icon-circle"></i>
+                                <i class="feather icon-circle"></i>
                                 <span class="menu-title">@lang('menu.Reports.Audit Report')</span>
                             </a>
                         </li> --}}
@@ -308,26 +309,26 @@
             {{-- @can('viewAny', App\Models\Product::class) --}}
                 <li class="nav-item has-sub sidebar-group">
                     <a href="#">
-                        <i class="icon_adjst feather icon-shopping-cart" style="color: #3db64c;"></i>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-cart"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
                         <span class="menu-title">@lang('inventory.Inventory Management')</span>
                     </a>
                     <ul class="menu-content">
 
                         <li class="{{ $isActive(['admin.inventory.product.index','admin.inventory.product.create','admin.inventory.product.edit']) }}">
                             <a href="{{ route('admin.inventory.product.index') }}">
-                                <i class="icon_adjst feather icon-circle"></i>
+                                <i class="feather icon-circle"></i>
                                 <span class="menu-title">@lang('inventory.Products')</span>
                             </a>
                         </li>
                         <li class="{{ $isActive(['admin.inventory.orders','admin.inventory.product.sale.order']) }}">
                             <a href="{{ route('admin.inventory.orders') }}">
-                                <i class="icon_adjst feather icon-circle"></i>
+                                <i class="feather icon-circle"></i>
                                 <span class="menu-title">@lang('inventory.Sales Orders')</span>
                             </a>
                         </li>
                         <li class="{{ $isActive(['admin.inventory.product.pickup']) }}">
                             <a href="{{ route('admin.inventory.product.pickup') }}">
-                                <i class="icon_adjst feather icon-circle"></i>
+                                <i class="feather icon-circle"></i>
                                 <span class="menu-title">@lang('inventory.Pickup')</span>
                             </a>
                         </li>
@@ -338,21 +339,21 @@
             @can('viewAny', App\Models\AffiliateSale::class)
                 <li class="nav-item has-sub sidebar-group">
                     <a href="#">
-                        <img src="{{ asset('images/icon/affiliate.svg') }}" alt="Orders">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user-plus"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
                         <span class="menu-title">@lang('menu.Affiliate.menu')</span>
                     </a>
                     <ul class="menu-content">
 
                         <li class="{{ $isActive(['admin.affiliate.dashboard.index']) }}">
                             <a href="{{ route('admin.affiliate.dashboard.index') }}">
-                                <i class="icon_adjst feather icon-circle"></i>
+                                <i class="feather icon-circle"></i>
                                 <span class="menu-title">@lang('menu.Affiliate.Dashboard')</span>
                             </a>
                         </li>
 
                         <li class="{{ $isActive(['admin.affiliate.sales-commission.index']) }}">
                             <a href="{{ route('admin.affiliate.sales-commission.index') }}">
-                                <i class="icon_adjst feather icon-circle"></i>
+                                <i class="feather icon-circle"></i>
                                 <span class="menu-title">@lang('menu.Affiliate.Sale Commission')</span>
                             </a>
                         </li>
@@ -365,7 +366,7 @@
             @can('viewAny', App\Models\User::class)
             <li class="nav-item {{ $isActive(['admin.users.index']) }}">
                 <a href="{{ route('admin.users.index') }}">
-                    <img src="{{ asset('images/icon/users.svg') }}" alt="Users">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                     <span class="menu-title">@lang('menu.Users')</span>
                 </a>
             </li>
@@ -374,7 +375,7 @@
             @can('viewAny', App\Models\Role::class)
             <li class="nav-item {{ $isActive(['admin.roles.index']) }}">
                 <a href="{{ route('admin.roles.index') }}">
-                    <img src="{{ asset('images/icon/key.png') }}" alt="Role" width="19px">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-key"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path></svg>
                     <span class="menu-title">@lang('menu.Roles')</span>
                 </a>
             </li>
@@ -383,7 +384,7 @@
             @admin
             <li class="nav-item {{ $isActive(['admin.shcode.index','admin.shcode.create','admin.shcode.edit']) }}">
                 <a href="{{ route('admin.shcode.index') }}">
-                    <i class="icon_adjst fa fa-codepen" style="color: #3db64c;"></i>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-codepen"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"></polygon><line x1="12" y1="22" x2="12" y2="15.5"></line><polyline points="22 8.5 12 15.5 2 8.5"></polyline><polyline points="2 15.5 12 8.5 22 15.5"></polyline><line x1="12" y1="2" x2="12" y2="8.5"></line></svg>
                     <span class="menu-title">SH Codes</span>
                 </a>
             </li>
@@ -391,7 +392,7 @@
 
             <li class="nav-item {{ $isActive(['admin.tickets.index','admin.tickets.show']) }}">
                 <a class="nav-link" href="{{ route('admin.tickets.index') }}">
-                    <i class="icon_adjst feather icon-message-circle" style="color: #3db64c;"></i>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-circle"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
                     <span data-i18n="Apps">@lang('menu.support tickets')</span>
                     <livewire:components.support-ticket/>
                 </a>
@@ -400,7 +401,7 @@
             @can('viewAny', App\Models\BillingInformation::class)
             <li class="nav-item {{ $isActive(['admin.billing-information.index','admin.billing-information.edit','admin.billing-information.create']) }}">
                 <a href="{{ route('admin.billing-information.index') }}">
-                    <i class="icon_adjst feather icon-alert-triangle" style="color: #3db64c;"></i>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
                     <span class="menu-title">@lang('menu.Billing Informations')</span>
                 </a>
             </li>
@@ -409,8 +410,7 @@
             @can('viewAny', App\Models\BillingInformation::class)
                 <li class="nav-item {{ $isActive(['admin.deposit.index','admin.deposit.edit','admin.deposit.create']) }}">
                     <a href="{{ route('admin.deposit.index') }}">
-                        <img src="{{ asset('images/icon/balance.svg') }}" alt="Balance">
-                        <span class="menu-title">@lang('menu.Balance')</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-credit-card"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>                        <span class="menu-title">@lang('menu.Balance')</span>
                     </a>
                 </li>
             @endcan
@@ -418,7 +418,7 @@
             @can('viewAny', Spatie\Activitylog\Models\Activity::class)
             <li class="nav-item {{ $isActive(['admin.activity.log.index']) }}">
                 <a href="{{ route('admin.activity.log.index') }}">
-                    <i class="icon_adjst feather icon-activity" style="color: #3db64c;"></i>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-activity"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
                     <span class="menu-title">@lang('menu.activity')</span>
                 </a>
             </li>
@@ -427,7 +427,7 @@
             @can('viewAny', App\Models\Setting::class)
             <li class="nav-item {{ $isActive(['admin.settings.index']) }}">
                 <a href="{{ route('admin.settings.index') }}">
-                    <img src="{{ asset('images/icon/setting.svg') }}" alt="settings">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-settings"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                     <span class="menu-title">@lang('menu.Settings')</span>
                 </a>
             </li>
@@ -435,7 +435,7 @@
 
             <li class="nav-item {{ $isActive(['admin.trash-orders.index']) }}">
                 <a href="{{ route('admin.trash-orders.index') }}">
-                    <i class="icon_adjst feather icon-trash" style="color: #ff5a5a;"></i>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
                     <span class="menu-title">@lang('menu.Trashed Orders')</span>
                 </a>
             </li>

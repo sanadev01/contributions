@@ -25,10 +25,16 @@
                         <li class="nav-item mobile-menu d-xl-none mr-auto"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i class="ficon feather icon-menu"></i></a></li>
                     </ul>
                 </div>
+                <div class="fonticon-wrap"> 
+                    <a class="nav-link icon theme-layout nav-link-bg layout-setting"> 
+                        <span class="layout" onclick="darkMode()">
+                            <i id="toggle" class="fa fa-moon-o"></i>
+                        </span> 
+                    </a>
+                </div>
                 <ul class="nav navbar-nav float-right">
                    <x-lang-switcher></x-lang-switcher>
                     <li class="nav-item d-none d-lg-block"><a class="nav-link nav-link-expand"><i class="ficon feather icon-maximize"></i></a></li>
-
                     {{-- <x-web-search></x-web-search> --}}
                     {{--Notification--}}
                     {{-- <x-notification></x-notification> --}}
@@ -38,3 +44,39 @@
         </div>
     </div>
 </nav>
+<script>
+    function darkMode() {
+        const allcards = document.querySelectorAll('.card');
+        let layout = document.getElementById('toggle');
+        if(layout.classList.contains('fa-moon-o'))
+        {
+            layout.classList.remove("fa-moon-o");
+            layout.classList.add("fa-sun-o");
+        }
+        else
+        {
+            layout.classList.remove("fa-sun-o");
+            layout.classList.add("fa-moon-o");
+        }
+      allcards.forEach(card => card.classList.toggle('card-dark'));
+      document.body.classList.toggle('dark-mode');
+      const cards = document.querySelectorAll('.overflow-hidden');
+      cards.forEach(card => card.classList.toggle('card-dark'));
+      const chartCard = document.querySelectorAll('.card.overflow-hidden');
+      chartCard.forEach(card => card.classList.toggle('card-dark'));
+      let figures = document.querySelectorAll('.figures');
+      figures.forEach(card => card.classList.toggle('card-dark'));
+      let sidebar = document.querySelectorAll('.main-menu');
+      sidebar.forEach(card => card.classList.toggle('card-dark'));
+      let nav = document.querySelectorAll('.main-menu-content');
+      nav.forEach(card => card.classList.toggle('card-dark'));
+      let navigation = document.querySelectorAll('.navigation');
+      navigation.forEach(card => card.classList.toggle('card-dark'));
+      let navShadow = document.querySelectorAll('.navbar-shadow');
+      navShadow.forEach(card => card.classList.toggle('card-dark'));
+      let navFloating = document.querySelectorAll('.header-navbar-shadow');
+      navFloating.forEach(card => card.classList.toggle('card-dark'));
+      let cardHeader = document.querySelectorAll('.card-title');
+      cardHeader.forEach(card => card.classList.toggle('h3'));
+    }
+  </script>
