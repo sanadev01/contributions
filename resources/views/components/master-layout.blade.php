@@ -1,3 +1,3 @@
-<body {!! $bodyClass !!}  style="zoom: 0.8">
+<body {!! $bodyClass !!}>
     {{ $slot }}
 </body>

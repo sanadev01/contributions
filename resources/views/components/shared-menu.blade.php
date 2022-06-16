@@ -1,5 +1,5 @@
 @user
-<li class="sub-category"> <span  style="padding-left:16px; padding-top:10px;">Apps</span> </li>
+<li class="sub-category"> <span>Apps</span> </li>
 
     @php $user = Auth()->user(); @endphp
     @if($user->amazon_api_enabled && $user->api_enabled && $user->api_token)

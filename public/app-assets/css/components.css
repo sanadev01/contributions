@@ -12,18 +12,6 @@ html {
     /*
       * Blank page
       */ }
-      .dark-mode {
-        background-color: #1a1a3c !important;
-        color: white !important; 
-        background: none #1a1a3c !important;
-      }
-      .card-dark{
-        background-color: #2a2a4a !important;
-        color: white !important;
-      }
-      .h3{
-        color: white !important;
-      }
     html body .content {
       padding: 0;
       position: relative;

@@ -37,6 +37,36 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/pickers/pickadate/pickadate.css') }}">
 
 <style>
+    .body{
+        zoom: 0%;
+    }
+    .sub-category span{
+        padding-left:16px !important;
+        padding-top:15px !important;
+        padding-bottom:8px !important;
+        color: #f8f8ff !important;
+    }
+    #main-menu-navigation{
+        height: 100% !important;
+    }
+    body.vertical-layout.vertical-menu-modern.menu-expanded .main-menu .navigation > li > a > span{
+        vertical-align: middle;
+    }
+    svg {
+        vertical-align: middle;
+    }
+    .dark-mode {
+        background-color: #1a1a3c !important;
+        color: white !important; 
+        background: none #1a1a3c !important;
+      }
+      .card-dark{
+        background-color: #2a2a4a !important;
+        color: white !important;
+      }
+      .h3{
+        color: white !important;
+      }
     body.vertical-layout.vertical-menu-modern.menu-expanded .main-menu .navigation > li > a > i:before{
         height: 15px;
     }

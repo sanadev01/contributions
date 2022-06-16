@@ -4,7 +4,7 @@
     <div class="shadow-bottom"></div>
     <div class="main-menu-content ps ps--active-y">
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation" style="color: #454f5b; font-family: 'Karla-Regular', Helvetica, Arial, sans-serif;">
-            <li class="sub-category"> <span class="text-white" style=" padding-left:16px; padding-top:10px;">Main</span> </li>
+            <li class="sub-category"> <span class="text-white">Main</span> </li>
             @if (auth()->user()->hasRole('scanner') || auth()->user()->hasRole('driver'))
                 <li class="nav-item {{ $isActive('home') }}">
                     <a class="nav-link" href="{{ route('admin.home') }}">
@@ -48,7 +48,7 @@
                     <span data-i18n="Dashboard"> @lang('menu.dashboard') </span>
                 </a>
             </li>
-            <li class="sub-category"> <span class="text-white" style="padding-left:16px; padding-top:10px;">Order Management</span> </li>
+            <li class="sub-category"> <span class="text-white">Order Management</span> </li>
             <li class="nav-item {{ $isActive(['admin.parcels.index','admin.parcels.shipments.edit','admin.parcels.shipments.create']) }}">
                 <a href="{{ route('admin.parcels.index') }}">
                     <svg xmlns="http://www.w3.org/2000/svg"  height="15px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-package"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
@@ -129,7 +129,7 @@
                 </a>
             </li>
 
-            <li class="sub-category"> <h5 class="text-white" style="padding-left:16px; padding-top:10px;">Financials</h5> </li>
+            <li class="sub-category"> <span class="text-white">Financials</span> </li>
 
             @if (
                 auth()->user()->can('viewAny', App\Models\ProfitPackage::class) ||
@@ -233,7 +233,7 @@
                 </a>
             </li>
             @endcan
-            <li class="sub-category"> <span class="text-white" style="padding-left:16px; padding-top:10px;">Utilities</span> </li>
+            <li class="sub-category"> <span class="text-white" style="padding-left:16px; padding-top:15px; padding-bottom:8px">Utilities</span> </li>
             @if (auth()->user()->isAdmin())
             <li class="nav-item has-sub sidebar-group">
                 <a href="#">
@@ -389,7 +389,7 @@
                 </a>
             </li>
             @endadmin
-            <li class="sub-category"> <span class="text-white" style="padding-left:16px; padding-top:10px;">General</span> </li>
+            <li class="sub-category"> <span class="text-white" >General</span> </li>
             
 
             {{-- Inventory --}}
@@ -417,10 +417,6 @@
             </li>
             @endcan
             
-
-            
-
-
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('admin.profile.index') }}">
                     <svg xmlns="http://www.w3.org/2000/svg"  height="15px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
@@ -447,7 +443,7 @@
             @endcan
 
             <x-shared-menu></x-shared-menu>
-            <li class="sub-category"> <span class="text-white" style="padding-left:16px; padding-top:10px;">Help</span> </li>
+            <li class="sub-category"> <span class="text-white" >Help</span> </li>
             <li class="nav-item">
                 <a class="nav-link" target="__blank" href="https://documenter.getpostman.com/view/16057364/TzeXmSxT">
                     <i class="feather icon-file-text" style=""></i>
