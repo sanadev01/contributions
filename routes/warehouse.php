@@ -29,6 +29,7 @@ use App\Http\Controllers\Warehouse\DeliveryBillRegisterController;
 use App\Http\Controllers\Warehouse\SinerlogCN35DownloadController;
 use App\Http\Controllers\Warehouse\SinerlogUnitRegisterController;
 use App\Http\Controllers\Warehouse\USPSContainerPackageController;
+use App\Http\Controllers\Warehouse\USPSManifestDownloadController;
 use App\Http\Controllers\Warehouse\ChileContainerPackageController;
 use App\Http\Controllers\Warehouse\ColombiaContainerPackageController;
 use App\Http\Controllers\Warehouse\DeliveryBillStatusUpdateController;
@@ -71,13 +72,14 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('chile_container/{container}/upload_manifest', [ChileContainerController::class, 'upload_ManifestToChile'])->name('upload.manifest');
     Route::get('chile_container/{container}/download_chile_cn35', ChileCN35DownloadController::class)->name('download.chile_cn35');
     
-    // Routes for USPS Container
+    // Routes for USPS Container 
     Route::resource('usps_containers', USPSContainerController::class);
-    Route::resource('usps_container.packages', USPSContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('usps-container/{container}/packages', USPSContainerPackageController::class)->name('usps-container.packages');
     Route::get('usps_container/{container}/register', USPSUnitRegisterController::class)->name('usps_container.register');
     Route::get('usps_container/{container}/download', USPSCN35DownloadController::class)->name('usps_container.download');
     Route::get('usps_container/{container}/download_excel_manifest', [USPSContainerController::class, 'download_exceltManifest'])->name('download.usps_manifest_excel');
-
+    Route::get('usps-container/{container}/manifest', USPSManifestDownloadController::class)->name('usps-container.manifest');
+    
     // Routes for Sinerlog Container
     Route::resource('sinerlog_containers', SinerlogContainerController::class);
     Route::resource('sinerlog_container.packages', SinerlogContainerPackageController::class)->only('index','destroy', 'create');

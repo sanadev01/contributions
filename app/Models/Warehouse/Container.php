@@ -82,6 +82,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'Colombia Standard';
         }elseif($this->services_subclass_code == 'Priority'){
             return 'Priority';
+        }elseif($this->services_subclass_code == 'Priority International'){
+            return 'Priority International';
+        }elseif($this->services_subclass_code == 'FirstClass International'){
+            return 'FirstClass International';
         }else {
             return 'FirstClass';
         }
@@ -109,6 +113,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 9;
         }elseif($this->services_subclass_code == 'CO-NX'){
             return 10;
+        }elseif($this->services_subclass_code == 'Priority International'){
+            return 11;
+        }elseif($this->services_subclass_code == 'FirstClass International'){
+            return 12;
         }
         // return $this->services_subclass_code == 'NX' ? 2 : 1;
     }
@@ -195,7 +203,8 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'Chile-Container';
         }
 
-        if ($this->services_subclass_code == 'Priority' || $this->services_subclass_code == 'FirstClass') {
+        if ($this->services_subclass_code == 'Priority' || $this->services_subclass_code == 'FirstClass' ||
+            $this->services_subclass_code == 'Priority International' || $this->services_subclass_code == 'FirstClass International') {
             return 'USPS-Container';
         }
 

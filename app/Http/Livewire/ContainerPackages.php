@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\Order;
 use Livewire\Component;
 use App\Models\OrderTracking;
+use App\Models\ShippingService;
 use App\Models\Warehouse\Container;
 use App\Repositories\Warehouse\ContainerRepository;
 
@@ -21,6 +22,7 @@ class ContainerPackages extends Component
     public $containerDestination;
     public $orderRegion;
     public $containerService;
+    public $shippingServiceCodes;
     
     public function mount($container = null, $ordersCollection = null, $editMode = null)
     {
@@ -34,6 +36,8 @@ class ContainerPackages extends Component
         if ($this->containerService == 'USPS-Container') {
             $this->containerDestination = $container->destination_operator_name == 'MIA' ? 'Miami' : '';
         }
+
+        $this->setShippingServiceCodes();
     }
 
     public function render()
@@ -139,6 +143,23 @@ class ContainerPackages extends Component
         }
 
         if($this->containerService == 'USPS-Container' && $order->shippingService->isUSPSService()){
+
+            if($this->service == 'Priority International' && $order->shippingService->service_sub_class != $this->shippingServiceCodes['USPS_PRIORITY_INTERNATIONAL']) {
+                return false;
+            }
+
+            if($this->service == 'FirstClass International' && $order->shippingService->service_sub_class != $this->shippingServiceCodes['USPS_FIRSTCLASS_INTERNATIONAL']) {
+                return false;
+            }
+
+            if($this->service == 'Priority' && $order->shippingService->service_sub_class != $this->shippingServiceCodes['USPS_PRIORITY']) {
+                return false;
+            }
+
+            if($this->service == 'FirstClass' && $order->shippingService->service_sub_class != $this->shippingServiceCodes['USPS_FIRSTCLASS']) {
+                return false;
+            }
+            
             return true;
         }
 
@@ -174,5 +195,22 @@ class ContainerPackages extends Component
         $order_tracking->delete();
 
         return true;
+    }
+
+    private function setShippingServiceCodes()
+    {
+        $this->shippingServiceCodes = [
+            'USPS_PRIORITY' => ShippingService::USPS_PRIORITY,
+            'USPS_FIRSTCLASS' => ShippingService::USPS_FIRSTCLASS,
+            'USPS_PRIORITY_INTERNATIONAL' => ShippingService::USPS_PRIORITY_INTERNATIONAL,
+            'USPS_FIRSTCLASS_INTERNATIONAL' => ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,
+            'SRP' => ShippingService::SRP,
+            'SRM' => ShippingService::SRM,
+            'Courier_Express' => ShippingService::Courier_Express,
+            'UPS_GROUND' => ShippingService::UPS_GROUND,
+            'FEDEX_GROUND' => ShippingService::FEDEX_GROUND,
+        ];
+
+        return;
     }
 }
