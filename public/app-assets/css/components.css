@@ -7,7 +7,7 @@ html {
   letter-spacing: .01rem; }
   html body {
     height: 100%;
-    background-color: #f8f8f8;
+    background-color: #f0f0f5 !important;
     direction: ltr;
     /*
       * Blank page

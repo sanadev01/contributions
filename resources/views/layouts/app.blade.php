@@ -21,7 +21,7 @@
     @yield('css')
     <livewire:styles>
 </head>
-<body>
+<body style="background-color: #f0f0f5">
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">

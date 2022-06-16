@@ -39,12 +39,16 @@
 <style>
     .body{
         zoom: 0%;
+        background-color: #f0f0f5 !important;
     }
     .sub-category span{
         padding-left:16px !important;
         padding-top:15px !important;
         padding-bottom:8px !important;
-        color: #f8f8ff !important;
+        color: #d4d4d9 !important;
+        font-family: sans-serif !important;
+        font-weight: 500 !important;
+        font-size: 13px !important;
     }
     #main-menu-navigation{
         height: 100% !important;
