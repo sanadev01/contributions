@@ -41,6 +41,12 @@
         zoom: 0%;
         background-color: #f0f0f5 !important;
     }
+    body.vertical-layout.vertical-menu-modern.menu-collapsed .sub-category span{
+        display: none;
+    }
+    body.vertical-layout.vertical-menu-modern.menu-collapsed .main-menu.expanded .sub-category span {
+        display: block !important;
+    }
     .sub-category span{
         padding-left:16px !important;
         padding-top:8px !important;
@@ -48,7 +54,7 @@
         color: #d4d4d9 !important;
         font-family: "IBM Plex Sans", sans-serif !important;
         font-weight: 500 !important;
-        font-size: 13px !important;
+        font-size: 11px !important;
     }
     #main-menu-navigation{
         height: 100% !important;
@@ -76,6 +82,7 @@
     }
     body.vertical-layout.vertical-menu-modern.menu-expanded .main-menu .navigation li.has-sub > a:not(.mm-next):after{
         padding-top: 5px;
+        font-size: 0.7rem !important;
     }
     #pink{
        color: pink;
