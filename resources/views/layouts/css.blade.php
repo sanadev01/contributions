@@ -43,10 +43,10 @@
     }
     .sub-category span{
         padding-left:16px !important;
-        padding-top:15px !important;
-        padding-bottom:8px !important;
+        padding-top:8px !important;
+        padding-bottom:15px !important;
         color: #d4d4d9 !important;
-        font-family: sans-serif !important;
+        font-family: "IBM Plex Sans", sans-serif !important;
         font-weight: 500 !important;
         font-size: 13px !important;
     }
@@ -90,7 +90,7 @@
     }
     .navigation li a{
         color: white !important;
-        padding: 14px 15px 10px 15px !important;
+        padding: 8px 0px 8px 15px !important;
     }
     .navigation .main-menu {
         background-color: #5784BA !important;
