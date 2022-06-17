@@ -99,7 +99,7 @@ class DomesticLabelRepository
 
         if (request()->service == ShippingService::FEDEX_GROUND) 
         {
-            if($this->fedExLabelRepository->getSecondaryLabel(request(), $order))
+            if($this->fedExLabelRepository->getSecondaryLabel($order))
             {
                 return true;
             }
