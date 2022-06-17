@@ -7,7 +7,8 @@ use App\Models\Order;
 use App\Facades\FedExFacade;
 use App\Models\OrderTracking;
 use App\Models\ShippingService;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Pipeline\Pipeline;
+use App\Errors\SecondaryLabelError;
 use Illuminate\Support\Facades\Log;
 use App\Services\FedEx\FedExLabelMaker;
 use App\Services\FedEx\FedExShippingService;
@@ -89,17 +90,23 @@ class FedExLabelRepository
         $this->fedExError = $response->error['errors'][0]['message'] ?? 'Unknown error';
     }
 
-    public function getSecondaryLabel($request, $order)
+    public function getSecondaryLabel($order)
     {
-        if($this->checkUserBalance($request->total_price))
-        {
-            if($this->getSecondaryLabelForSender($request, $order))
-            {
-                return true;
-            }
-
+        $order = app(Pipeline::class)
+                ->send($order)
+                ->through([
+                    'App\Pipes\ValidateUserBalance:'.request()->total_price,
+                    'App\Pipes\SecondaryLabel\FedExLabel',
+                ])->thenReturn();
+        
+        
+        if($order instanceof SecondaryLabelError){
+            $this->uspsError = $order->getError();
             return false;
         }
+
+        $this->printLabel($order->us_api_response, $order->us_api_tracking_code);
+        return true;
     }
 
     public function getPrimaryLabelForSender($order, $request)
@@ -129,63 +136,7 @@ class FedExLabelRepository
         $this->fedExError = $response->error['errors'][0]['message'] ?? 'Unknown error';
         return false;
     }
-
-    private function getSecondaryLabelForSender($request, $order)
-    {
-        if ($request->pickupShipment) {
-            $pickupShipmentresponse = FedExFacade::createPickupShipment($request);
-            
-            if ($pickupShipmentresponse->success == false) {
-                $this->fedExError = $pickupShipmentresponse->error['errors'][0]['message'] ?? 'Pickup shipment not available';
-
-                if ($this->fedExError != 'A pickup already exists.') {
-                    return false;
-                }
-            }
-
-            if ($pickupShipmentresponse->success == true) {
-                $this->pickupResponse = $pickupShipmentresponse->data;
-            }
-        }
-
-        $response = FedExFacade::createShipmentForSender($order, $request);
-        
-        if ($response->success == true) {
-            $this->totalFedExCost = $response->data['output']['transactionShipments'][0]['pieceResponses'][0]['baseRateAmount'];
-            ($request->exists('consolidated_order')) ? $this->addProfitForConslidatedOrder($order['user'], $this->totalFedExCost) 
-                                                        : $this->addProfit($order->user, $this->totalFedExCost);
-            if ($request->exists('consolidated_order')) 
-            {
-                if(!$this->updateConsolidatedOrders($request, $response))
-                {
-                    return false;
-                }
-
-                $this->order = $request->orders->first();
-            }else
-            {
-                $order->update([
-                    'us_api_response' => json_encode($response->data),
-                    'us_api_tracking_code' => $response->data['output']['transactionShipments'][0]['pieceResponses'][0]['trackingNumber'],
-                    'us_secondary_label_cost' => setUSCosts($this->totalFedExCost, $this->totalAmountWithProfit),
-                    'us_api_service' => $request->service,
-                    'api_pickup_response' => ($request->pickupShipment == true) ? $this->pickupResponse : null,
-                ]);
     
-                chargeAmount(round($this->totalAmountWithProfit, 2), $order, 'Bought FedEx Label For : '.$order->warehouse_number);
-    
-                $order->refresh();
-                $this->order = $order;
-            }
-
-            $this->printLabel($this->order->us_api_response, $this->order->us_api_tracking_code);
-            return true;
-        }
-
-        $this->fedExError = $response->error['errors'][0]['message'] ?? 'Unknown error' ;
-        return false;
-    }
-
     public function getRatesForSender($request)
     {
         $order = ($request->exists('consolidated_order') && $request->consolidated_order == true) ? $request->order : Order::find($request->order_id);
@@ -255,44 +206,6 @@ class FedExLabelRepository
         }
 
         return true;
-    }
-
-    private function updateConsolidatedOrders($request, $response)
-    {
-        DB::transaction(function () use ($request, $response) {
-            try {
-                foreach ($request->orders as $order) {
-                    $order->update([
-                        'us_api_response' => json_encode($response->data),
-                        'us_api_tracking_code' => $response->data['output']['transactionShipments'][0]['pieceResponses'][0]['trackingNumber'],
-                        'us_secondary_label_cost' => setUSCosts($this->totalFedExCost, $this->totalAmountWithProfit),
-                        'us_api_service' => $request->service,
-                        'api_pickup_response' => ($request->pickupShipment == true) ? $this->pickupResponse : null,
-                    ]);
-
-                    $order->refresh();
-                }
-
-            } catch (\Exception $ex) {
-                Log::error($ex->getMessage());
-                $this->fedExError = $ex->getMessage();
-                return false;
-            }
-        });
-
-        chargeAmount(round($this->totalAmountWithProfit, 2), $request->orders->first(), 'Bought USPS Label For '.$this->getOrderIds($request->orders));
-
-        return true;
-    }
-
-    private function getOrderIds($orders)
-    {
-        $warehouse_numbers = [];
-        foreach ($orders as $order) {
-            $warehouse_numbers[] = $order->warehouse_number;
-        }
-
-        return implode(' :,', $warehouse_numbers);
     }
 
     private function handleApiResponse($response, $order)

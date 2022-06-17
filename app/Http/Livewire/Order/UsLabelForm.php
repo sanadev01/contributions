@@ -161,7 +161,8 @@ class UsLabelForm extends Component
         if ($this->usShippingServices)
         {
             $domesticLabelRepostory->handle();
-            $this->usRates = $domesticLabelRepostory->getRatesForDomesticServices($this->createRequest(), $this->usShippingServices);
+            $this->createRequest();
+            $this->usRates = $domesticLabelRepostory->getRatesForDomesticServices($this->usShippingServices);
             
             $this->uspsError = $domesticLabelRepostory->getError();
             $this->upsError = $domesticLabelRepostory->getError();
@@ -192,14 +193,14 @@ class UsLabelForm extends Component
         }
 
         $this->getCostOfSelectedService();
-        $request = $this->createRequest();
-        $request->merge([
+        $this->createRequest();
+        request()->merge([
             'service' => $this->selectedService,
             'total_price' => $this->selectedServiceCost,
         ]);
 
         $domesticLabelRepostory->handle();
-        if($domesticLabelRepostory->getDomesticLabel($request, $this->order))
+        if($domesticLabelRepostory->getDomesticLabel( $this->order))
         {
             $this->saveAddress();
             return redirect()->route('admin.order.us-label.index', $this->order->id);
@@ -212,7 +213,7 @@ class UsLabelForm extends Component
 
     private function createRequest()
     {
-       return new Request([
+        request()->merge([
             'first_name' => $this->firstName,
             'last_name' => $this->lastName,
             'sender_state' => $this->senderState,
