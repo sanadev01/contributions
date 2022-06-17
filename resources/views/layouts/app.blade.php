@@ -6,19 +6,21 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
     {{-- <title>{{ config('app.name', 'Laravel') }}</title> --}}
     <title>HD</title>
-
+    
     <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    {{-- <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet"> --}}
     <script>
         window.locale= "{{ app()->getLocale() == config('app.fallback_locale') ? null : '/'.app()->getLocale()  }}";
-    </script>
+        </script>
     <!-- Styles -->
     @include('layouts.css')
     @yield('css')
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500&display=swap" rel="stylesheet">
     <livewire:styles>
 </head>
 <body style="background-color: #f0f0f5">

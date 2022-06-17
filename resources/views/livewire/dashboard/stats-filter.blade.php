@@ -1,6 +1,9 @@
 <div>
-    <div class="row col-12">
-        <div class=" col-11 text-left mb-2 pl-0">
+    <div class="row filter-btn">
+        <button type="btn" onclick="toggleDateSearch()" id="customSwitch8" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-search"></i>&nbsp;Filter</button>
+    </div>
+    <div class="row col-10">
+        <div class=" col-10 text-left mb-2 pl-0" id="dateSearch">
             <div class="row my-3">
                 <div class="col-md-4">
                     <label for="">@lang('dashboard.Start Date')</label>
@@ -12,6 +15,25 @@
                 </div>
             </div>
         </div>
+        
+        {{-- <div class="custom-control custom-switch custom-control-inline">
+            <input id="dateToggle" onclick="toggleDateSearch()" type="checkbox" class="custom-control-input" id="customSwitch1">
+            <label class="custom-control-label" for="customSwitch1">
+            </label>
+            <span class="switch-label">Toggle this switch element</span>
+        </div> --}}
+        {{-- <div class="custom-control custom-switch custom-control-inline">
+            <input id="dateToggle"  type="checkbox" class="custom-control-input" >
+            <label class="custom-control-label" for="customSwitch1">
+            </label>
+            <span class="switch-label">Toggle this switch element</span>
+        </div>
+        <div class="circleBase type2">
+            <div class="fonticon-wrap date-toggle-btn">
+                <i class="feather icon-plus-square" onclick="toggleDateSearch()"></i>
+            </div>
+        </div> --}}
+        
         {{-- <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
             <div class="card_block bg-c-green order-card">
                 <div class="card-block">
@@ -56,10 +78,11 @@
             </div>
         </div> --}}
     </div>
-
+    
+        {{-- <label class="fonticon-classname mt-1">icon-plus-square</label> --}}
     @include('layouts.livewire.loading')
 </div>
-    <div class="row data"> 
+    <div class="row data chartsRow"> 
         <div class="col-lg-12 col-md-12 col-sm-12 col-xl-12"> 
         <div class="row"> 
             <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3"> 
@@ -175,7 +198,7 @@
                                                     <div class="mt-2"> 
                                                         <h6 class="">Total Cost</h6>
                                                          <h2 class="mb-0 number-font figures">$59,765</h2> 
-                                                        </div> 
+                                                    </div> 
                                                         <div class="ms-auto"> 
                                                             <div class="chart-wrapper mt-1">
                                                                 <div class="chartjs-size-monitor" style="position: absolute; inset: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
@@ -228,62 +251,49 @@
                 </div> <!-- COL END --> 
                 <div class="col-lg-3 col-12">
                     <div class="card activityCard">
-                        <div class="card-header">
-                            <h4 class="card-title">Activity Timeline</h4>
+                        <div class="card-title m-0 p-2 notification-card-right">
+                            <span class="notification-title">Notifications</span>
                         </div>
                         <div class="card-content">
                             <div class="card-body">
-                                <ul class="activity-timeline timeline-left list-unstyled">
-                                    <li>
-                                        <div class="timeline-icon bg-primary">
-                                            <i class="feather icon-plus font-medium-2 align-middle"></i>
-                                        </div>
-                                        <div class="timeline-info">
-                                            <p class="font-weight-bold mb-0">Client Meeting</p>
-                                            <span class="font-small-3">Bonbon macaroon jelly beans gummi bears jelly lollipop apple</span>
-                                        </div>
-                                        <small class="text-muted">25 mins ago</small>
-                                    </li>
-                                    <li>
-                                        <div class="timeline-icon bg-warning">
-                                            <i class="feather icon-alert-circle font-medium-2 align-middle"></i>
-                                        </div>
-                                        <div class="timeline-info">
-                                            <p class="font-weight-bold mb-0">Email Newsletter</p>
-                                            <span class="font-small-3">Cupcake gummi bears soufflé caramels candy</span>
-                                        </div>
-                                        <small class="text-muted">15 days ago</small>
-                                    </li>
-                                    <li>
-                                        <div class="timeline-icon bg-danger">
-                                            <i class="feather icon-check font-medium-2 align-middle"></i>
-                                        </div>
-                                        <div class="timeline-info">
-                                            <p class="font-weight-bold mb-0">Plan Webinar</p>
-                                            <span class="font-small-3">Candy ice cream cake. Halvah gummi bears</span>
-                                        </div>
-                                        <small class="text-muted">20 days ago</small>
-                                    </li>
-                                    <li>
-                                        <div class="timeline-icon bg-success">
-                                            <i class="feather icon-check font-medium-2 align-middle"></i>
-                                        </div>
-                                        <div class="timeline-info">
-                                            <p class="font-weight-bold mb-0">Launch Website</p>
-                                            <span class="font-small-3">Candy ice cream cake. </span>
-                                        </div>
-                                        <small class="text-muted">25 days ago</small>
-                                    </li>
-                                    <li>
-                                        <div class="timeline-icon bg-primary">
-                                            <i class="feather icon-check font-medium-2 align-middle"></i>
-                                        </div>
-                                        <div class="timeline-info">
-                                            <p class="font-weight-bold mb-0">Marketing</p>
-                                            <span class="font-small-3">Candy ice cream. Halvah bears Cupcake gummi bears.</span>
-                                        </div>
-                                        <small class="text-muted">28 days ago</small>
-                                    </li>
+                                <ul class="timeline-left list-unstyled">
+                                        <li class=""><a class=" justify-content-between">
+                                                <div class="media  align-items-start">
+                                                    <div class="media-body">
+                                                        <h6 class="primary media-heading">You have new order!</h6><small class="notification-text"> Are your going to meet me tonight?</small>
+                                                    </div><small>
+                                                        <time class="media-meta" datetime="2015-06-11T18:29:20+08:00">9 hours ago</time></small>
+                                                </div>
+                                            </a><a class="justify-content-between" href="javascript:void(0)">
+                                                <div class="media align-items-start">
+                                                    <div class="media-body">
+                                                        <h6 class="success media-heading red darken-1">99% Server load</h6><small class="notification-text">You got new order of goods.</small>
+                                                    </div><small>
+                                                        <time class="media-meta" datetime="2015-06-11T18:29:20+08:00">5 hour ago</time></small>
+                                                </div>
+                                            </a><a class=" justify-content-between" href="javascript:void(0)">
+                                                <div class="media  align-items-start">
+                                                    <div class="media-body">
+                                                        <h6 class="danger media-heading yellow darken-3">Warning notifixation</h6><small class="notification-text">Server have 99% CPU usage.</small>
+                                                    </div><small>
+                                                        <time class="media-meta" datetime="2015-06-11T18:29:20+08:00">Today</time></small>
+                                                </div>
+                                            </a><a class=" justify-content-between" href="javascript:void(0)">
+                                                <div class="media  align-items-start">
+                                                    <div class="media-body">
+                                                        <h6 class="info media-heading">Complete the task</h6><small class="notification-text">Cake sesame snaps cupcake</small>
+                                                    </div><small>
+                                                        <time class="media-meta" datetime="2015-06-11T18:29:20+08:00">Last week</time></small>
+                                                </div>
+                                            </a><a class=" justify-content-between" href="javascript:void(0)">
+                                                <div class="media  align-items-start">
+                                                    <div class="media-body">
+                                                        <h6 class="warning media-heading">Generate monthly report</h6><small class="notification-text">Chocolate cake oat cake tiramisu marzipan</small>
+                                                    </div><small>
+                                                        <time class="media-meta" datetime="2015-06-11T18:29:20+08:00">Last month</time></small>
+                                                </div>
+                                        <li class="dropdown-menu-footer"><a class="dropdown-item p-1 text-center" href="javascript:void(0)">Read all notifications</a></li>
+                                    
                                 </ul>
                             </div>
                         </div>
@@ -292,6 +302,23 @@
             </div>
             
 <script>
+    function toggleDateSearch()
+    {
+        var checkBox = document.getElementById("customSwitch8");
+        const div = document.getElementById('dateSearch');
+        if (div.style.display === 'none'){
+            div.style.display = 'block';
+        } else {
+            div.style.display = 'none';
+        }
+    //     const div = document.getElementById('dateSearch');
+    //     if (div.style.display === 'none') {
+    //         div.style.display = 'block';
+    // } else {
+    //         div.style.display = 'none';
+    // }
+
+    }
 var ctx = document.getElementById('myChart').getContext("2d");;
 var gradient = ctx.createLinearGradient(0, 0, 0, 400)
     gradient.addColorStop(0, '#978efc')
