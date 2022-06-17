@@ -7,37 +7,9 @@ use Illuminate\Support\Facades\Response;
 
 class USPSLabelMaker
 {
-    private $order;
-
-    public function setOrder($order)
+    public function saveLabel($base64_pdf, $fileName)
     {
-        $this->order = $order;
-    }
-
-    public function saveLabel()
-    {
-        if($this->order->api_response != null)
-        {
-            $usps_response = json_decode($this->order->api_response);
-            $base64_pdf = $usps_response->base64_labels[0];
-
-            Storage::put("labels/{$this->order->corrios_tracking_code}.pdf", base64_decode($base64_pdf));
-
-            return true;
-        }
-    }
-    
-    public function saveSecondaryLabel()
-    {
-        if($this->order->us_api_response != null)
-        {
-            $usps_response = json_decode($this->order->us_api_response);
-            $base64_pdf = $usps_response->base64_labels[0];
-
-            Storage::put("labels/{$this->order->us_api_tracking_code}.pdf", base64_decode($base64_pdf));
-
-            return true;
-        }
+        Storage::put("labels/{$fileName}.pdf", base64_decode($base64_pdf));
     }
     
     public function getContainerCN35($unit_response_list)
