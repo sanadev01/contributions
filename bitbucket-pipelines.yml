@@ -29,10 +29,6 @@ pipelines:
                   SERVER: '199.192.30.181'
                   MODE: 'script' # Optional
                   COMMAND: 'deploy-production.sh'
-      - step:
-          name: 'Deployment to Production'
-          deployment: production
-          script:
             - pipe: atlassian/ssh-run:0.3.0
               variables:
                   SSH_USER: 'homeqdba'
