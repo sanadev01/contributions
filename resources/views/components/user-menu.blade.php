@@ -241,13 +241,13 @@
                     <span class="menu-title" data-i18n="Dashboard">Scan</span>
                 </a>
                 <ul class="menu-content">
-                    <li class="nav-item {{ $isActive(['warehouse.scan-label.index']) }} ml-2">
+                    <li class="nav-item {{ $isActive(['warehouse.scan-label.index']) }}">
                         <a class="nav-link" href="{{ route('warehouse.scan-label.index') }}">
                             <i class="feather icon-circle"></i>
                             <span data-i18n="Apps">@lang('menu.Scan Parcel')</span>
                         </a>
                     </li>
-                    <li class="nav-item {{ $isActive(['warehouse.scan-label.create']) }} ml-2">
+                    <li class="nav-item {{ $isActive(['warehouse.scan-label.create']) }} ">
                         <a class="nav-link" href="{{ route('warehouse.scan-label.create') }}">
                             <i class="feather icon-circle"></i>
                             <span data-i18n="Apps">@lang('menu.Driver Report')</span>
@@ -321,13 +321,13 @@
                     <span class="menu-title" data-i18n="Dashboard">Calculators</span>
                 </a>
                 <ul class="menu-content">
-                    <li class="nav-item {{ $isActive(['calculator.index']) }} ml-2">
+                    <li class="nav-item {{ $isActive(['calculator.index']) }} ">
                         <a class="nav-link" href="{{ route('calculator.index') }}" target="_blank">
                             <i class="feather icon-circle"></i>
                             <span class="menu-title" data-i18n="Apps">@lang('menu.calculator')</span>
                         </a>
                     </li>
-                    <li class="nav-item {{ $isActive(['us-calculator.index']) }} ml-2">
+                    <li class="nav-item {{ $isActive(['us-calculator.index']) }} ">
                         <a class="nav-link" href="{{ route('us-calculator.index') }}" target="_blank">
                             <i class="feather icon-circle"></i>  
                             <span class="menu-title" data-i18n="Apps">@lang('menu.uscalculator')</span>

@@ -81,5 +81,6 @@
         <livewire:dashboard.stats-filter/>
         
     </section>
+    @include('layouts.charts')
     <!-- Dashboard Analytics end -->
 @endsection

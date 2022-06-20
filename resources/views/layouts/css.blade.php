@@ -65,6 +65,9 @@
     .icon-disc:after {
     color: white;
     }
+    .header-navbar{
+        font-family: 'IBM Plex Sans';
+    }
     body.vertical-layout.vertical-menu-modern .toggle-icon {
         color: white !important;
     }
@@ -94,8 +97,17 @@
       .card-dark{
         background-color: #2a2a4a !important;
         color: white !important;
+        text : white !important;
+      }
+      .navbar-dark{
+        background-color: #1a1a3c !important;
+        color: white !important; 
+        background: none #1a1a3c !important;
       }
       .h3{
+        color: white !important;
+      }
+      .h6{
         color: white !important;
       }
       .circleBase {
@@ -130,7 +142,7 @@
         height: 15px;
     }
     body.vertical-layout.vertical-menu-modern.menu-expanded .main-menu .navigation li.has-sub > a:not(.mm-next):after{
-        padding-top: 13px;
+        padding-top: 6px;
         font-size: 0.7rem !important;
     }
     #pink{
@@ -378,14 +390,23 @@
     .main-menu.menu-light .navigation > li ul .active {
         box-shadow: 0 0 0px 0px rgb(255 255 255 / 0%);
         border-radius: 4px !important;
+        padding-top: 8px !important;
         background: #1174b7 !important;
+        height: 46px;
+        /* background: transparent; */
+    }
+    .main-menu.menu-light .navigation li a {
+        padding : 2px 30px 2px 20px !important;
     }
     .main-menu.menu-light .navigation > li.active > a {
         background:  #1174b7;
+        /* background: transparent; */
+        padding-top: 8px !important;
         box-shadow: 0 0 0px 0px rgb(255 255 255 / 0%);
         color: #fff;
         font-weight: 400;
         border-radius: 4px;
+        /* color: var(--primary-bg-color) !important; */
     }
     .btn-primary {
         border-color: #1174b7 !important;
