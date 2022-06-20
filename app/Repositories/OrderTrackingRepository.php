@@ -15,7 +15,7 @@ class OrderTrackingRepository
 {
 
     private $trackingNumber;
-    private $order;
+    private $brazilTrackingCodes = [];
    
     public function __construct($trackingNumber)
     {
@@ -83,25 +83,16 @@ class OrderTrackingRepository
                                 ];
                             }
                         }elseif($order->recipient->country_id == Order::BRAZIL ){
-                            $response = CorreiosBrazilTrackingFacade::trackOrder($order->corrios_tracking_code);
-                            if($response->success == true){
-                                $apiResponse = [
-                                    'success' => true,
-                                    'status' => 200,
-                                    'service' => 'Correios_Brazil',
-                                    'trackings' => $order->trackings,
-                                    'api_trackings' => collect( $response->data),
-                                    'order' => $order
-                                ];
-                            }else{
-                                $apiResponse = [
-                                    'success' => true,
-                                    'status' => 200,
-                                    'service' => 'HD',
-                                    'trackings' => $order->trackings,
-                                    'order' => $order
-                                ]; 
-                            }
+
+                            array_push($this->brazilTrackingCodes, $order->corrios_tracking_code);
+
+                            $apiResponse = [
+                                'success' => true,
+                                'status' => 200,
+                                'service' => 'HD',
+                                'trackings' => $order->trackings,
+                                'order' => $order
+                            ];
                         }else{
                             $apiResponse = [
                                 'success' => false,
@@ -133,6 +124,27 @@ class OrderTrackingRepository
                 'order' => null
             ];
             $getTrackings->push($apiResponse);
+        }
+
+        if (count($this->brazilTrackingCodes) > 0) {
+            $response = CorreiosBrazilTrackingFacade::trackOrder(implode('' ,$this->brazilTrackingCodes));
+
+            if ($response->success == true) {
+
+                $getTrackings = $getTrackings->map(function($item, $key) use ($response){
+                    foreach ($response->data as $data) {
+                        if($data->erro ?? false){
+                            return $item;
+                        }
+                        elseif($item['order']->corrios_tracking_code == $data->numero){
+                            $item['api_trackings'] = collect($data->evento);
+                            $item['service'] = 'Correios_Brazil';
+                        }
+                    }
+                    
+                    return $item;
+                });
+            }
         }
         return $getTrackings;
     }
