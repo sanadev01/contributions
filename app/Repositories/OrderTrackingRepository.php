@@ -132,12 +132,24 @@ class OrderTrackingRepository
             if ($response->success == true) {
 
                 $getTrackings = $getTrackings->map(function($item, $key) use ($response){
-                    foreach ($response->data as $data) {
-                        if($data->erro ?? false){
+                    if (count($this->brazilTrackingCodes) > 1) {
+                        foreach ($response->data as $data) {
+                            if($data->erro ?? false){
+                                return $item;
+                            }
+                            if($item['order']->corrios_tracking_code == $data->numero){
+                                $item['api_trackings'] = collect($data->evento);
+                                $item['service'] = 'Correios_Brazil';
+                            }
+                        }
+                    }else{
+                        if ($response->data->erro ?? false) {
                             return $item;
                         }
-                        elseif($item['order']->corrios_tracking_code == $data->numero){
-                            $item['api_trackings'] = collect($data->evento);
+
+                        if ($response->data->numero == $item['order']->corrios_tracking_code) {
+
+                            $item['api_trackings'] = collect($response->data->evento);
                             $item['service'] = 'Correios_Brazil';
                         }
                     }
