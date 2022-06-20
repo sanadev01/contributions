@@ -66,11 +66,22 @@
         {
             layout.classList.remove("icon-moon");
             layout.classList.add("icon-sun");
+            const headings = document.getElementsByTagName("h6");
+            // console.log(h6);
+            for (let h6 of headings) {
+                h6.classList.add('text-white');
+            }
+        
         }
         else
         {
             layout.classList.remove("icon-sun");
             layout.classList.add("icon-moon");
+            const headings = document.getElementsByTagName("h6");
+            // console.log(h6);
+            for (let h6 of headings) {
+                h6.classList.remove('text-white');
+            }
         }
       allcards.forEach(card => card.classList.toggle('card-dark'));
       document.body.classList.toggle('dark-mode');
@@ -89,8 +100,9 @@
       let navShadow = document.querySelectorAll('.navbar-shadow');
       navShadow.forEach(card => card.classList.toggle('card-dark'));
       let navFloating = document.querySelectorAll('.header-navbar-shadow');
-      navFloating.forEach(card => card.classList.toggle('card-dark'));
+      navFloating.forEach(card => card.classList.toggle('navbar-dark'));
       let cardHeader = document.querySelectorAll('.');
       cardHeader.forEach(card => card.classList.toggle('h3'));
+
     }
   </script>
