@@ -25,16 +25,29 @@
                         <li class="nav-item mobile-menu d-xl-none mr-auto"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i class="ficon feather icon-menu"></i></a></li>
                     </ul>
                 </div>
-                <div class="fonticon-wrap"> 
-                    <a class="nav-link icon theme-layout nav-link-bg layout-setting"> 
-                        <span class="layout" onclick="darkMode()">
-                            <i id="toggle" class="fa fa-moon-o"></i>
-                        </span> 
-                    </a>
-                </div>
                 <ul class="nav navbar-nav float-right">
                    <x-lang-switcher></x-lang-switcher>
-                    <li class="nav-item d-none d-lg-block"><a class="nav-link nav-link-expand"><i class="ficon feather icon-maximize"></i></a></li>
+                   <li class="nav-item d-none d-lg-block">
+                    <a class="nav-link" onclick="darkMode()">
+                        <i id="toggle" class="ficon feather icon-moon"></i>
+                    </a>
+                </li> 
+                   <li class="nav-item d-none d-lg-block">
+                        <a class="nav-link nav-link-expand">
+                            <i class="ficon feather icon-maximize">
+                                </i>
+                            </a>
+                        </li>
+
+                    <li>
+                        {{-- <div class="fonticon-wrap"> 
+                            <a class="nav-link icon theme-layout nav-link-bg layout-setting"> 
+                                <span class="layout" onclick="darkMode()">
+                                    <i id="toggle" class="fa fa-moon-o"></i>
+                                </span> 
+                            </a>
+                        </div> --}}
+                    </li>
                     {{-- <x-web-search></x-web-search> --}}
                     {{--Notification--}}
                     {{-- <x-notification></x-notification> --}}
@@ -48,15 +61,16 @@
     function darkMode() {
         const allcards = document.querySelectorAll('.card');
         let layout = document.getElementById('toggle');
-        if(layout.classList.contains('fa-moon-o'))
+        console.log(layout.classList);
+        if(layout.classList.contains('icon-moon'))
         {
-            layout.classList.remove("fa-moon-o");
-            layout.classList.add("fa-sun-o");
+            layout.classList.remove("icon-moon");
+            layout.classList.add("icon-sun");
         }
         else
         {
-            layout.classList.remove("fa-sun-o");
-            layout.classList.add("fa-moon-o");
+            layout.classList.remove("icon-sun");
+            layout.classList.add("icon-moon");
         }
       allcards.forEach(card => card.classList.toggle('card-dark'));
       document.body.classList.toggle('dark-mode');
@@ -76,7 +90,7 @@
       navShadow.forEach(card => card.classList.toggle('card-dark'));
       let navFloating = document.querySelectorAll('.header-navbar-shadow');
       navFloating.forEach(card => card.classList.toggle('card-dark'));
-      let cardHeader = document.querySelectorAll('.card-title');
+      let cardHeader = document.querySelectorAll('.');
       cardHeader.forEach(card => card.classList.toggle('h3'));
     }
   </script>

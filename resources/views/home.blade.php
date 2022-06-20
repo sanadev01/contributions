@@ -78,8 +78,6 @@
         @endif
         {{-- <x-charts.orders-charts/> --}}
         
-        <div class="card">
-        </div>
         <livewire:dashboard.stats-filter/>
         
     </section>

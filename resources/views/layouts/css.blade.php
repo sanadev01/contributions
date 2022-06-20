@@ -1,7 +1,7 @@
 <title>Home Delivery Br</title>
 <link rel="apple-touch-icon" href="{{ asset('app-assets/images/ico/apple-icon-120.png') }}">
 <link rel="shortcut icon" type="image/x-icon" href="{{ asset('app-assets/images/ico/favicon.ico') }}">
-<link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600" rel="stylesheet">
+{{-- <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600" rel="stylesheet"> --}}
 
 <!-- BEGIN: Vendor CSS-->
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/vendors.min.css') }}">
@@ -41,14 +41,32 @@
         zoom: 0%;
         background-color: #f0f0f5 !important;
     }
+    body.vertical-layout.vertical-menu-modern.menu-collapsed .sub-category span{
+        display: none;
+    }
+    body.vertical-layout.vertical-menu-modern.menu-collapsed .main-menu.expanded .sub-category span {
+        display: block !important;
+    }
     .sub-category span{
-        padding-left:16px !important;
-        padding-top:15px !important;
-        padding-bottom:8px !important;
+        padding: 12px 30px 2px 20px;
         color: #d4d4d9 !important;
-        font-family: sans-serif !important;
-        font-weight: 500 !important;
-        font-size: 13px !important;
+        font-family: "IBM Plex Sans", sans-serif !important;
+        font-weight: 400 !important;
+        font-size: 11px !important;
+        letter-spacing: 0.5px;
+        line-height: 12px;
+    }
+    .li .sub-category{
+        margin-bottom: 0px;
+    }
+    .sub-category:not(:first-child){
+        margin-top: 1rem;
+        font-size: 15px;
+        padding-left: 7px;
+    }
+    .navigation li a svg {
+        width: 34px;
+        text-align: center;
     }
     #main-menu-navigation{
         height: 100% !important;
@@ -71,11 +89,40 @@
       .h3{
         color: white !important;
       }
+      .circleBase {
+        border-radius: 32%;
+        behavior: url(PIE.htc); /* remove if you don't care about IE8 */
+    }
+      .type2 {
+        width: 40px;
+        height: 40px;
+        background: #ccc;
+        top:10%; 
+        right:3%;
+        bottom: 60px;
+        z-index: 999; 
+        background-color: #5784BA;
+        /* padding-left: 97.6%; */
+        font-size: 1.7rem; 
+        vertical-align: center;
+    }
+    .date-toggle-btn{
+        padding-top: 7%;
+        right:4%;
+        bottom: 60px;
+        padding-left: 20%;
+        font-size: 1.7rem; 
+        vertical-align: center;
+    }
+    .icon-plus-square{
+        cursor: pointer;
+    }
     body.vertical-layout.vertical-menu-modern.menu-expanded .main-menu .navigation > li > a > i:before{
         height: 15px;
     }
     body.vertical-layout.vertical-menu-modern.menu-expanded .main-menu .navigation li.has-sub > a:not(.mm-next):after{
         padding-top: 5px;
+        font-size: 0.7rem !important;
     }
     #pink{
        color: pink;
@@ -90,7 +137,12 @@
     }
     .navigation li a{
         color: white !important;
-        padding: 14px 15px 10px 15px !important;
+        /* padding: 10px 0px 8px 15px !important; */
+        font-weight: 400 !important;
+        font-size: 15px;
+        padding: 10px 24px;
+        font-family: "IBM Plex Sans", sans-serif !important;
+
     }
     .navigation .main-menu {
         background-color: #5784BA !important;
@@ -99,10 +151,26 @@
     .main-menu.menu-light .navigation li.has-sub ul.menu-content{
         background-color: #5784BA !important;
         color: white !important;
+
     }
     .main-menu.menu-light .navigation > li.open > a{
         background-color: #5784BA !important;
         color: white !important;
+    }
+    .filter-btn{
+        display: flex;
+        justify-content: flex-end;
+        width: 101%;
+    }
+    .card{
+        border-radius: 8px;
+    }
+    .activityCard{
+        border-radius: 8px;
+        height: 95%;
+    }
+    .notification-card-right{
+        border-radius: 8px 8px 0px 0px;
     }
     /* .activityCard {
     background-image: url(../images/bg2.jpg);
@@ -119,6 +187,32 @@
         font-weight: 600 !important;
         font-size: 1.75rem;
         font-size: 28px;
+    }
+    .notification-card-right{
+        background-color: #5784BA;
+        width: 100%;
+        color: white !important;
+        display: flex;
+        justify-content: center;
+    }
+    .chartsRow{
+        padding-top: 16px;
+    }
+    #dateSearch{
+        display: none;
+    }
+    .ps__rail-x{
+        background-color: transparent !important;
+    }
+    .media-left{
+        padding-right: 5px;
+    }
+    .media-body{
+        padding-top: 2px;
+    }
+    .media-meta{
+        padding-top: 1px;
+        padding-right: 16px;
     }
     .border-0{
         border-width: 0px !important;
@@ -217,6 +311,7 @@
     @media only screen and (min-width: 1200px) {
         #main-menu-navigation {
             overflow-y: scroll;
+            scrollbar-color: transparent !important;
         }
     }
 
@@ -240,7 +335,6 @@
     .table-responsive.order-table {
         padding-bottom: 3rem;
     }
-
     .big-checkbox{
         height: 25px;
         width: 25px;
@@ -248,7 +342,6 @@
     .big-label {
         font-size: 15px;
     }
-
     .admin-api-settings {
         height: 20px;
         width: 20px;
@@ -258,7 +351,6 @@
     .main-menu.menu-light .navigation#main-menu-navigation li a .icon_adjst {
         margin-right:4px;
     }
-
     .main-menu.menu-light .navigation#main-menu-navigation li a img{
         width: 16px;
     }
@@ -418,5 +510,6 @@
     .affiliate .loader5 {
         display: block
     }
+    
 </style>
 @yield('custom-css')
