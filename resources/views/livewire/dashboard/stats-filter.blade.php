@@ -91,8 +91,8 @@
                         <div class="">
                             <div class="d-flex justify-content-space-around row smallCharts">
                             <div class="mt-2"> 
-                                <h6 class="">Total Users</h6> 
-                                <h2 class="mb-0 number-font figures">44,278</h2> 
+                                <h6 class="">@lang('dashboard.Today Orders')</h6> 
+                                <h2 class="mb-0 number-font figures">{{ $orders['currentDayTotal'] }}</h2> 
                             </div> 
                             <div class="ms-auto"> 
                                 <div class="chart-wrapper mt-1">
@@ -126,8 +126,8 @@
                                 <div class=""> 
                                     <div class="row smallCharts">
                                     <div class="mt-2"> 
-                                        <h6 class="">Total Profit</h6> 
-                                        <h2 class="mb-0 number-font figures">67,987</h2> 
+                                        <h6 class="">@lang('dashboard.Total Month Order',['month'=>$orders['monthName']])</h6> 
+                                        <h2 class="mb-0 number-font figures">{{ $orders['currentmonthTotal'] }}</h2> 
                                     </div> 
                                     <div class="ms-auto"> 
                                         <div class="chart-wrapper mt-1">
@@ -160,8 +160,8 @@
                                                 <div class=""> 
                                                 <div class="row smallCharts">
                                                     <div class="mt-2"> 
-                                                        <h6 class="">Total Expenses</h6> 
-                                                        <h2 class="mb-0 number-font figures">$76,965</h2> 
+                                                        <h6 class="">@lang('dashboard.Current Year')</h6> 
+                                                        <h2 class="mb-0 number-font figures">{{ $orders['currentYearTotal'] }}</h2> 
                                                     </div> 
                                                     <div class="ms-auto"> 
                                                         <div class="chart-wrapper mt-1">
@@ -196,8 +196,8 @@
                                                 <div class="">
                                                 <div class="row smallCharts">
                                                     <div class="mt-2"> 
-                                                        <h6 class="">Total Cost</h6>
-                                                         <h2 class="mb-0 number-font figures">$59,765</h2> 
+                                                        <h6 class="">@lang('dashboard.Total Orders')</h6>
+                                                         <h2 class="mb-0 number-font figures">{{ $orders['totalOrders'] }}</h2> 
                                                     </div> 
                                                         <div class="ms-auto"> 
                                                             <div class="chart-wrapper mt-1">

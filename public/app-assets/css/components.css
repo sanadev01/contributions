@@ -9,6 +9,7 @@ html {
     height: 100%;
     background-color: #f0f0f5 !important;
     direction: ltr;
+    font-family: 'IBM Plex Sans';
     /*
       * Blank page
       */ }
@@ -262,6 +263,27 @@ body.fixed-footer footer.footer-dark {
     Author: PIXINVENT
     Author URL: http://www.themeforest.net/user/pixinvent
 ==========================================================================================*/
+.main-menu.menu-light .navigation .menu-content .menu-title {
+  /* font-size: 0.7rem !important; */
+  padding-top: 3px;
+}
+
+element.style {
+}
+.main-menu.menu-light .navigation > li ul li {
+    color: #626262;
+    background: transparent;
+    height: 36px;
+}
+.navigation li .is-shown {
+padding-top: 0px;
+height: 35px;
+}
+.navigation li .is-shown a{
+  height: 36px !important;
+  font-size: 13.3px !important;
+  line-height: 20px !important;
+  }
 .main-menu {
   z-index: 1031;
   position: absolute;
@@ -291,9 +313,10 @@ body.fixed-footer footer.footer-dark {
           font-weight: 500; }
       .main-menu.menu-light .navigation li.has-sub ul.menu-content {
         padding: 7px;
-        margin: -7px -7px 0 -7px; }
+        margin: -7px -7px 0 9px; }
       .main-menu.menu-light .navigation li a {
         color: #565656;
+        height: 40px;
         padding: 12px 30px 2px 20px !important;
         line-height: 23px;
         transition: padding 0.35s ease 0s !important; 
@@ -589,6 +612,7 @@ body.fixed-footer footer.footer-dark {
     text-transform: uppercase; }
   .navigation li {
     position: relative;
+    padding-top: 8px;
     white-space: nowrap; }
     .navigation li a {
       display: block;
@@ -596,7 +620,7 @@ body.fixed-footer footer.footer-dark {
       overflow: hidden; }
       .navigation li a i {
         font-size: 0.8rem;
-        margin-right: 1.38rem; }
+        margin-right: 0.28rem !important; }
     .navigation li.disabled a {
       cursor: not-allowed; }
 

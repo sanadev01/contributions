@@ -59,6 +59,15 @@
     .li .sub-category{
         margin-bottom: 0px;
     }
+    .icon-disc:before {
+    color: white;
+    }
+    .icon-disc:after {
+    color: white;
+    }
+    body.vertical-layout.vertical-menu-modern .toggle-icon {
+        color: white !important;
+    }
     .sub-category:not(:first-child){
         margin-top: 1rem;
         font-size: 15px;
@@ -121,7 +130,7 @@
         height: 15px;
     }
     body.vertical-layout.vertical-menu-modern.menu-expanded .main-menu .navigation li.has-sub > a:not(.mm-next):after{
-        padding-top: 5px;
+        padding-top: 13px;
         font-size: 0.7rem !important;
     }
     #pink{

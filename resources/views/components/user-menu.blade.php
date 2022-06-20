@@ -166,7 +166,7 @@
                     @can('viewAny', App\Models\ShippingService::class)
                     <li class="nav-item {{ $isActive(['admin.shipping-services.index','admin.shipping-services.create']) }}">
                         <a href="{{ route('admin.shipping-services.index') }}">
-                            <i class="feather icon-truck"></i>
+                            <i class="feather icon-circle"></i>
                             <span class="menu-title">@lang('menu.Shipping Services')</span>
                         </a>
                     </li>
@@ -323,14 +323,14 @@
                 <ul class="menu-content">
                     <li class="nav-item {{ $isActive(['calculator.index']) }} ml-2">
                         <a class="nav-link" href="{{ route('calculator.index') }}" target="_blank">
-                            <img src="{{ asset('images/icon/calculator.svg') }}" alt="Calculator">
-                            <span data-i18n="Apps">@lang('menu.calculator')</span>
+                            <i class="feather icon-circle"></i>
+                            <span class="menu-title" data-i18n="Apps">@lang('menu.calculator')</span>
                         </a>
                     </li>
                     <li class="nav-item {{ $isActive(['us-calculator.index']) }} ml-2">
                         <a class="nav-link" href="{{ route('us-calculator.index') }}" target="_blank">
-                            <img src="{{ asset('images/icon/calculator.svg') }}" alt="Calculator">
-                            <span data-i18n="Apps">@lang('menu.uscalculator')</span>
+                            <i class="feather icon-circle"></i>  
+                            <span class="menu-title" data-i18n="Apps">@lang('menu.uscalculator')</span>
                         </a>
                     </li>
                 </ul>
