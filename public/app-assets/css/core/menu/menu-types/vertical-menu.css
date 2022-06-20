@@ -168,7 +168,8 @@ body.vertical-layout.vertical-menu-modern.menu-collapsed .main-menu {
       display: inline-block;
       position: absolute;
       right: 25px;
-      top: 10px;
+      top: 23px;
+      font-size: 0.7rem !important;
       transform: rotate(0deg);
       transition: -webkit-transform 0.2s ease-in-out; }
     body.vertical-layout.vertical-menu-modern.menu-collapsed .main-menu.expanded .navigation li.open > a:not(.mm-next):after {
