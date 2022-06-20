@@ -127,6 +127,9 @@ class ExportDepositReport extends AbstractExportService
                     if ($order->shippingService->sub_class_code == ShippingService::UPS_GROUND) {
                         return 'UPS';
                     }
+                    if ($order->shippingService->sub_class_code == ShippingService::FEDEX_GROUND) {
+                        return 'FedEx';
+                    }
                      return 'USPS';
                    break;
                 case ORDER::CHILE:

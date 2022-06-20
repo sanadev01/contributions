@@ -3,27 +3,25 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\User;
 use App\Models\State;
 use App\Models\Country;
 use Illuminate\Support\Facades\Cache;
 use App\Services\Converters\UnitsConverter;
-use App\Repositories\Calculator\USCalculatorRepository;
 use App\Http\Requests\Calculator\USCalculatorRequest;
+use App\Repositories\Calculator\USCalculatorRepository;
 
 class USCalculatorController extends Controller
 {
-    public function __construct()
-    {
-        # code...
-    }
-
     public function index()
     {
         $states = Cache::remember('states', Carbon::now()->addDay(), function () {
             return State::query()->where('country_id', Country::US)->get(['name','code','id']);
         });
+
+        $userId = (auth()->check()) ? auth()->user()->id : null;
         
-        return view('uscalculator.calculator', compact('states'));
+        return view('uscalculator.calculator', compact('states', 'userId'));
     }
 
     public function store(USCalculatorRequest $request, USCalculatorRepository $usCalculatorRepository)

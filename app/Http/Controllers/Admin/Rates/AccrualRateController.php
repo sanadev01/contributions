@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Rates;
 
 use Exception;
 use App\Models\Rate;
+use App\Models\Country;
 use App\Models\ShippingService;
 use App\Http\Controllers\Controller;
 use App\Repositories\RateRepository;
@@ -22,14 +23,15 @@ class AccrualRateController extends Controller
     public function index()
     {
         $this->authorizeResource(Rate::class);
-        $shippingRates = AccrualRate::all();
-        return view('admin.rates.accrual-rates.index', compact('shippingRates'));
+        
+        return view('admin.rates.accrual-rates.index');
     }
 
     public function create()
     {   
         $this->authorizeResource(Rate::class);
-        return view('admin.rates.accrual-rates.create');
+        $countryChile = Country::Chile;
+        return view('admin.rates.accrual-rates.create', compact('countryChile'));
     }
 
     public function store(CreateRequest $request)

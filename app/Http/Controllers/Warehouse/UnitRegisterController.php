@@ -12,6 +12,11 @@ class UnitRegisterController extends Controller
 {
     public function __invoke(Container $container)
     {
+        if ($container->orders->isEmpty()) {
+            session()->flash('alert-danger','Please add parcels to this container');
+            return back();
+        }
+       
         $client = new Client();
         $response = $client->createContainer($container);
 

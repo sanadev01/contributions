@@ -35,6 +35,9 @@ class USCalculatorRequest extends FormRequest
             'recipient_address' => 'required',
             'recipient_city' => 'required',
             'recipient_zipcode' => 'required',
+            'recipient_phone' => ($this->has('to_international') || $this->has('from_herco')) ? 'required' : 'sometimes',
+            'recipient_first_name' => ($this->has('to_international') || $this->has('from_herco')) ? 'required' : 'sometimes',
+            'recipient_last_name' => ($this->has('to_international') || $this->has('from_herco')) ? 'required' : 'sometimes',
             'height' => 'sometimes|numeric',
             'width' => 'sometimes|numeric',
             'length' => 'sometimes|numeric',
@@ -68,6 +71,9 @@ class USCalculatorRequest extends FormRequest
             'recipient_address.required' => 'Recipient address is required',
             'recipient_city.required' => 'Recipient city is required',
             'recipient_zipcode.required' => 'Recipient zipcode is required',
+            'recipient_phone.required' => 'Recipient phone is required',
+            'recipient_first_name.required' => 'Recipient first name is required',
+            'recipient_last_name.required' => 'Recipient last name is required',
             'height.numeric' => 'Height must be numeric',
             'width.numeric' => 'Width must be numeric',
             'length.numeric' => 'Length must be numeric',
@@ -88,6 +94,8 @@ class USCalculatorRequest extends FormRequest
                 'sender_address' => '2200 NW 129TH AVE',
                 'sender_city' => 'MIAMI',
                 'sender_zipcode' => '33182',
+                'destination_country' => Country::US,
+                'recipient_state' => $this->us_recipient_state,
                 'from_herco' => true,
             ]);
         }
@@ -100,6 +108,12 @@ class USCalculatorRequest extends FormRequest
                 'recipient_city' => 'MIAMI',
                 'recipient_zipcode' => '33182',
                 'to_herco' => true,
+            ]);
+        }
+
+        if ($this->has('from_herco') || $this->has('to_international')) {
+            $this->merge([
+                'recipient_phone' => $this->phone,
             ]);
         }
     }

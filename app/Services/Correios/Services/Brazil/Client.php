@@ -30,6 +30,10 @@ class Client{
     private $password = '150495ca';
     private $numero = '0075745313';
 
+    private $anjun_username = 'anjun2020';
+    private $anjun_password = 'anjun';
+    private $anjun_numero = '0077053850';
+
     public function __construct()
     {
         $this->client = new GuzzleClient([
@@ -47,6 +51,24 @@ class Client{
                 ],
                 'json' => [
                     'numero' => $this->numero
+                ]
+            ]);
+
+            return $response->getStatusCode() == 201 ? optional(json_decode($response->getBody()->getContents()))->token : null;
+        });
+
+    }
+
+    public function getAnjunToken()
+    {
+        return Cache::remember('anjun_token',Carbon::now()->addHours(24),function (){
+            $response = $this->client->post('/token/v1/autentica/cartaopostagem',[
+                'auth' => [
+                    $this->anjun_username,
+                    $this->anjun_password
+                ],
+                'json' => [
+                    'numero' => $this->anjun_numero
                 ]
             ]);
 
@@ -113,7 +135,7 @@ class Client{
         try {
             $response = $this->client->post('/packet/v1/packages',[
                'headers' => [
-                   'Authorization' => "Bearer {$this->getToken()}"
+                'Authorization' => ($order->shippingService->isAnjunService()) ? "Bearer {$this->getAnjunToken()}" :"Bearer {$this->getToken()}"
                ],
                 'json' => [
                     'packageList' => [
@@ -152,7 +174,7 @@ class Client{
         try {
             $response = $this->client->post('/packet/v1/units',[
                 'headers' => [
-                    'Authorization' => "Bearer {$this->getToken()}"
+                    'Authorization' => ($container->hasAnjunService()) ? "Bearer {$this->getAnjunToken()}" : "Bearer {$this->getToken()}"
                 ],
                 'json' => [
                     "dispatchNumber" => $container->dispatch_number,
@@ -160,7 +182,7 @@ class Client{
                     "originOperatorName" => $container->origin_operator_name,
                     "destinationOperatorName" => $container->destination_operator_name,
                     "postalCategoryCode" => $container->postal_category_code,
-                    "serviceSubclassCode" => $container->services_subclass_code,
+                    "serviceSubclassCode" => $container->getSubClassCode(),
                     "unitList" => [
                         [
                             "sequence" => $container->sequence,
@@ -186,7 +208,7 @@ class Client{
         try {
             $response = $this->client->post('/packet/v1/cn38request',[
                 'headers' => [
-                    'Authorization' => "Bearer {$this->getToken()}"
+                    'Authorization' => ($deliveryBill->containers()->first()->hasAnjunService()) ?  "Bearer {$this->getAnjunToken()}" : "Bearer {$this->getToken()}"
                 ],
                 'json' => [
                     'dispatchNumbers' => $deliveryBill->containers->pluck('dispatch_number')->toArray()
@@ -249,7 +271,7 @@ class Client{
         try {
             $response = $this->client->delete("/packet/v1/units/dispatch/$container->dispatch_number",[
                 'headers' => [
-                    'Authorization' => "Bearer {$this->getToken()}"
+                    'Authorization' => ($container->hasAnjunService()) ? "Bearer {$this->getAnjunToken()}" : "Bearer {$this->getToken()}"
                 ]
             ]);
             return $response;
