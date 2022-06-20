@@ -445,17 +445,17 @@
     .app-content .wizard > .actions > ul > li > a {
         background: #1174b7 !important;
     }
-    .hd-search:focus {
+    /* .hd-search:focus {
         box-shadow: 0 0 10px #1174b7;
         border-radius: 28px;
         border: 2px solid #1174b7;
         height: 40px; 
-    }
-    .hd-search {
+    } */
+    /* .hd-search {
         border-radius: 28px;
         border: 1px solid #1174b7;
         height: 40px; 
-    }
+    } */
     .hd-card {
         padding: 12px 16px !important;
         background: #dbe9f2;
@@ -482,6 +482,33 @@
     }
     .hd-mt-20{
         margin-top:1.9rem!important
+    }
+
+    .loader1, .loader2, .loader3, .loader4, .loader5, .loader6, .loader7 {
+        display: none;
+        height: 30%;
+    }
+    .parcels .loader1, .consolidation .loader1, .orders .loader1{
+        display: block;
+    }
+    .delivery_bill .loader2{
+        display: block;
+    }
+    .containers .loader3, .chile_containers .loader3, .sinerlog_containers .loader3, .usps_containers .loader3 {
+        display: block;
+    }
+    .search_package .loader4, .scan .loader4 {
+        display: block;
+    }
+    .rates .loader5, .handling-services .loader5, .shipping-services .loader5, .payment-invoices .loader5, .deposit .loader5, .billing-information .loader5 {
+        display: block;
+        height: 20%;
+    }
+    .tracking .loader5{
+        display: block;
+    }
+    .affiliate .loader5 {
+        display: block
     }
     
 </style>
