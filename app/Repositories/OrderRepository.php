@@ -374,13 +374,13 @@ class OrderRepository
         $volumetricDiscount = setting('volumetric_discount', null, $order->user->id);
         $discountPercentage = setting('discount_percentage', null, $order->user->id);
 
-        if(!$discountPercentage)
+        if(!$discountPercentage || !$volumetricDiscount)
         {
             $discountPercentage = setting('discount_percentage', null, User::ROLE_ADMIN);
             $volumetricDiscount = true;
         }
 
-        if (!$volumetricDiscount || !$discountPercentage || $discountPercentage < 0) {
+        if (!$volumetricDiscount || !$discountPercentage || $discountPercentage < 0 || $discountPercentage == 0) {
             return false;
         }
 

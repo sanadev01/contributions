@@ -142,7 +142,7 @@ class ShipmentInfo extends Component
         
         if ($volumetricDiscount && $discountPercentage) {
             $this->discountPercentage = ($discountPercentage) ? $discountPercentage/100 : 0;
-        }elseif ($discountPercentage == null || $discountPercentage == 0) {
+        }elseif ($discountPercentage == null || $discountPercentage == 0 || !$volumetricDiscount) {
             $adminDiscountPercentage = setting('discount_percentage', null, $this->adminId);
 
             $this->discountPercentage = ($adminDiscountPercentage) ? $adminDiscountPercentage/100 : 0;
