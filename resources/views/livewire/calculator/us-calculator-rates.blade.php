@@ -7,6 +7,11 @@
                         <div class="card-header pb-0">
                             <h2 class="mb-2 text-center w-100">
                                 Rate Calculated For {{$shippingServiceTitle}}
+                                @if ($ratesWithProfit)
+                                    <span>
+                                        <button wire:click="downloadRates" type="button" class="btn btn-sm btn-primary">Download Rates</button>
+                                    </span>
+                                @endif    
                             </h2>
                         </div>
                         <div class="col-md-12">

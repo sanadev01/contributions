@@ -23,6 +23,7 @@ use App\Services\UPS\UPSShippingService;
 use App\Repositories\USPSLabelRepository;
 use App\Repositories\FedExLabelRepository;
 use App\Services\USPS\USPSShippingService;
+use App\Services\Excel\Export\ExportUSRates;
 use App\Services\FedEx\FedExShippingService;
 use App\Services\Calculators\WeightCalculator;
 
@@ -190,6 +191,13 @@ class USCalculatorRepository
     public function getchargableWeight()
     {
         return $this->chargableWeight;
+    }
+
+    public function download($rates, $order, $chargableWeight, $weightInOtherUnit)
+    {
+        $exportService = new ExportUSRates($rates, $order, $chargableWeight, $weightInOtherUnit);
+
+        return $exportService->handle();
     }
 
     private function setUserProft()
