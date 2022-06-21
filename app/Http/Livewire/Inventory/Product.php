@@ -75,7 +75,7 @@ class Product extends Component
         if (Auth::user()->isUser()) {
             $query->where('user_id', Auth::id());
         }
-        $query->selectRaw('sum(price) as total');
+        $query->selectRaw('sum(price*quantity) as total');
         return $query->first()->total;
     }
     

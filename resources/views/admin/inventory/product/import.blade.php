@@ -35,7 +35,7 @@
                             <h4 class="form-section">@lang('orders.import-excel.Import Orders via Excel Sheet')</h4>
                         </div>
                     </div>
-
+                    @admin
                     <div class="row justify-content-center">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -44,15 +44,6 @@
                                 @error('pobox_number')
                                 <div class="help-block text-danger"> {{ $message }} </div>
                                 @enderror
-                            </div>
-                        </div>
-                    </div>
-
-                    @admin
-                    <div class="row mt-1">
-                        <div class="form-group col-12 col-sm-6 col-md-4">
-                            <div class="controls">
-                                
                             </div>
                         </div>
                     </div>
