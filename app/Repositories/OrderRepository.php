@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Services\UPS\UPSShippingService;
 use App\Services\USPS\USPSShippingService;
 use App\Services\FedEx\FedExShippingService;
+use App\Models\User;
 
 class OrderRepository
 {
@@ -373,7 +374,13 @@ class OrderRepository
         $volumetricDiscount = setting('volumetric_discount', null, $order->user->id);
         $discountPercentage = setting('discount_percentage', null, $order->user->id);
 
-        if (!$volumetricDiscount || !$discountPercentage || $discountPercentage < 0) {
+        if(!$discountPercentage || !$volumetricDiscount)
+        {
+            $discountPercentage = setting('discount_percentage', null, User::ROLE_ADMIN);
+            $volumetricDiscount = true;
+        }
+
+        if (!$volumetricDiscount || !$discountPercentage || $discountPercentage < 0 || $discountPercentage == 0) {
             return false;
         }
 

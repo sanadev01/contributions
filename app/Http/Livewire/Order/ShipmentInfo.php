@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Order;
 use Livewire\Component;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Calculators\WeightCalculator;
+use App\Models\User;
 
 class ShipmentInfo extends Component
 {
@@ -25,9 +26,12 @@ class ShipmentInfo extends Component
 
     public $discountPercentage;
     public $totalDiscountedWeight;
+
+    private $adminId;
     
     public function mount($order = null)
     {
+        $this->adminId = User::ROLE_ADMIN;
         $this->order = optional($order)->toArray();
         $this->setVolumetricDiscount();
         $this->fillData();
@@ -138,6 +142,10 @@ class ShipmentInfo extends Component
         
         if ($volumetricDiscount && $discountPercentage) {
             $this->discountPercentage = ($discountPercentage) ? $discountPercentage/100 : 0;
+        }elseif ($discountPercentage == null || $discountPercentage == 0 || !$volumetricDiscount) {
+            $adminDiscountPercentage = setting('discount_percentage', null, $this->adminId);
+
+            $this->discountPercentage = ($adminDiscountPercentage) ? $adminDiscountPercentage/100 : 0;
         }
         
         return true;
