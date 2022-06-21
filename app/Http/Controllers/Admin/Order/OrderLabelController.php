@@ -122,13 +122,16 @@ class OrderLabelController extends Controller
                 return $this->renderLabel($request, $order, $error);
             }
 
-            $this->upsLabelRepository->handle($order);
-            $error = $this->upsLabelRepository->getUPSErrors();
-            return $this->renderLabel($request, $order, $error);
+            if($order->shippingService->service_sub_class == ShippingService::UPS_GROUND)
+            {
+                $this->upsLabelRepository->handle($order);
+                $error = $this->upsLabelRepository->getUPSErrors();
+                return $this->renderLabel($request, $order, $error);
+            }
             
         }
 
-        if ($order->sender_country_id == Order::US && $order->recipient->country_id != Order::US && $request->update_label === 'false')
+        if ($order->recipient->country_id != Order::US && $request->update_label === 'false')
         {
             if($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL)
             {

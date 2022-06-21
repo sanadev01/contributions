@@ -37,6 +37,14 @@ class AccrualRate extends Model
             return "SRM";
         }
 
+        if ( $this->service == Package::SERVICE_CLASS_AJ_Standard ){
+            return "Anjun Standard";
+        }
+
+        if ( $this->service == Package::SERVICE_CLASS_AJ_EXPRESS ){
+            return "Anjun Express";
+        }
+
         return '';
     }
 

@@ -9,7 +9,8 @@ use App\Models\Order;
 use App\Facades\UPSFacade;
 use App\Models\OrderTracking;
 use App\Models\ShippingService;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Pipeline\Pipeline;
+use App\Errors\SecondaryLabelError;
 use App\Services\UPS\UPSLabelMaker;
 use Illuminate\Support\Facades\Log;
 use App\Services\UPS\UPSShippingService;
@@ -31,7 +32,7 @@ class UPSLabelRepository
     {
         if($order->api_response == null && $order->shippingService->service_sub_class == ShippingService::UPS_GROUND)
         {
-            $this->getPrimaryLabelForRecipient($order);
+            $this->getPrimaryLabel($order);
         }
 
         return true;
@@ -39,18 +40,27 @@ class UPSLabelRepository
 
     public function update($order)
     {
-        $this->getPrimaryLabelForRecipient($order);
+        $this->getPrimaryLabel($order);
     }
 
-    public function getSecondaryLabel($request, $order)
+    public function getSecondaryLabel($order)
     {
-        $approximateCost = $request->total_price + 5;
-        if($this->checkUserBalance($approximateCost) && $this->getSecondaryLabelForSender($request, $order))
-        {
-            return true;
-        }
+        $approximateCost = request()->total_price + 5;
+        $order = app(Pipeline::class)
+                ->send($order)
+                ->through([
+                    'App\Pipes\ValidateUserBalance:'.$approximateCost,
+                    'App\Pipes\SecondaryLabel\UPSLabel'
+                ])
+                ->thenReturn();
 
-        return false;
+        if($order instanceof SecondaryLabelError){
+            $this->upsError = $order->getError();
+            return false;
+        }
+        
+        $this->convertLabelToPDF($order);
+        return true;
     }
 
     public function cancelUPSPickup($order)
@@ -70,7 +80,7 @@ class UPSLabelRepository
         return false;
     }
 
-    private function getPrimaryLabelForRecipient($order)
+    private function getPrimaryLabel($order)
     {
         $response = UPSFacade::getLabelForRecipient($order);
         
@@ -102,31 +112,9 @@ class UPSLabelRepository
     public function getPrimaryLabelForSender($order, $request)
     {
         $response = UPSFacade::getLabelForSender($order, $request);
+
         if ($response->success == true) {
-
-            $this->totalUpsCost += $response->data['ShipmentResponse']['ShipmentResults']['ShipmentCharges']['TotalCharges']['MonetaryValue'];
-            $this->addProfit($order->user);
-
-            $order->update([
-                'api_response' => json_encode($response->data),
-                'corrios_tracking_code' => $response->data['ShipmentResponse']['ShipmentResults']['ShipmentIdentificationNumber'],
-                'is_invoice_created' => true,
-                'is_shipment_added' => true,
-                'user_declared_freight' => $this->totalUpsCost,
-                'shipping_value' => $this->total_amount_with_profit,
-                'total' => $this->total_amount_with_profit,
-                'gross_total' => $this->total_amount_with_profit,
-                'status' => Order::STATUS_PAYMENT_DONE,
-            ]);
-
-            $order->refresh();
-
-            // store order status in order tracking
-            $this->addOrderTracking($order);
-
-            // Connert PNG label To PDF
-            $this->convertLabelToPDF($order);
-
+            $this->handleApiResponse($response, $order);
             return true;
         }
 
@@ -134,50 +122,12 @@ class UPSLabelRepository
         return false;
     }
 
-    public function getSecondaryLabelForSender($request, $order)
+    public function getPrimaryLabelForRecipient($order)
     {
-
-        if ($request->pickupShipment && !$this->setPickupShipment($order, $request)) {
-            return false;
-        }
-
-        $response = UPSFacade::getLabelForSender($order, $request);
-
-        if($response->success == true)
-        {
-            $this->totalUpsCost += $response->data['ShipmentResponse']['ShipmentResults']['ShipmentCharges']['TotalCharges']['MonetaryValue'];
-
-            if($request->exists('consolidated_order'))
-            {
-                $this->addProfitForConslidatedOrder($order['user']);
-                if(!$this->updateConsolidatedOrders($request, $response))
-                {
-                    return false;
-                }
-
-                $this->order = $request->orders->first();
-            }else
-            {
-                $this->addProfit($order->user);
-
-                $totalUPSCharge = $this->totalUpsCost + $this->totalPickupCost;
-
-                $order->update([
-                    'us_api_response' => json_encode($response->data),
-                    'us_api_tracking_code' => $response->data['ShipmentResponse']['ShipmentResults']['ShipmentIdentificationNumber'],
-                    'us_secondary_label_cost' => setUSCosts($totalUPSCharge, $this->total_amount_with_profit),
-                    'us_api_service' => $request->service,
-                    'api_pickup_response' => ($request->pickupShipment == true) ? $this->pickupResponse : null,
-                ]);
-
-                chargeAmount(round($this->total_amount_with_profit, 2), $order, 'Bought UPS Label For : '.$order->warehouse_number);
-                $order->refresh();
-
-                $this->order = $order;
-            }
-
-            $this->convertLabelToPDF($this->order);
-
+        $response = UPSFacade::getLabelForRecipient($order);
+        
+        if ($response->success == true) {
+            $this->handleApiResponse($response, $order);
             return true;
         }
 
@@ -185,16 +135,31 @@ class UPSLabelRepository
         return false;
     }
 
-    private function setPickupShipment($order, $request)
+    private function handleApiResponse($response, $order)
     {
-        $pickupShipmentresponse = UPSFacade::createPickupShipment($order, $request);
-        if ($pickupShipmentresponse->success == false) {
-            $this->upsError = $pickupShipmentresponse->error['response']['errors'][0]['message'];
-            return false;
-        }
+        $this->totalUpsCost += $response->data['ShipmentResponse']['ShipmentResults']['ShipmentCharges']['TotalCharges']['MonetaryValue'];
+        $this->addProfit($order->user);
 
-        $this->totalPickupCost += $pickupShipmentresponse->data['PickupCreationResponse']['RateResult']['GrandTotalOfAllCharge'];
-        $this->pickupResponse = $pickupShipmentresponse->data;
+        $order->update([
+            'api_response' => json_encode($response->data),
+            'corrios_tracking_code' => $response->data['ShipmentResponse']['ShipmentResults']['ShipmentIdentificationNumber'],
+            'is_invoice_created' => true,
+            'is_shipment_added' => true,
+            'user_declared_freight' => $this->totalUpsCost,
+            'shipping_value' => $this->total_amount_with_profit,
+            'total' => $this->total_amount_with_profit,
+            'gross_total' => $this->total_amount_with_profit,
+            'status' => Order::STATUS_PAYMENT_DONE,
+        ]);
+
+        $order->refresh();
+
+        // store order status in order tracking
+        $this->addOrderTracking($order);
+
+        // Connert PNG label To PDF
+        $this->convertLabelToPDF($order);
+
         return true;
     }
 
@@ -231,18 +196,18 @@ class UPSLabelRepository
         return $this->upsError;
     }
 
-    public function getRatesForSender($request)
+    public function getRatesForSender()
     {  
-        $order = ($request->exists('consolidated_order') && $request->consolidated_order == true) ? $request->order : Order::find($request->order_id);
-        $response = UPSFacade::getSenderPrice($order, $request);
+        $order = (request()->exists('consolidated_order') && request()->consolidated_order == true) ? request()->order : Order::find(request()->order_id);
+        $response = UPSFacade::getSenderRates($order, request());
 
         if($response->success == true)
         {
             $this->totalUpsCost += $response->data['RateResponse']['RatedShipment']['TotalCharges']['MonetaryValue'];
 
-            if($request->pickupShipment)
+            if(request()->pickupShipment)
             {
-                $response = UPSFacade::getPickupRates($request);
+                $response = UPSFacade::getPickupRates(request());
                 if($response->success == true)
                 {
                     $this->totalPickupCost += $response->data['PickupRateResponse']['RateResult']['GrandTotalOfAllCharge'];
@@ -254,7 +219,7 @@ class UPSLabelRepository
                     ];
                 }
             }
-            ($request->exists('consolidated_order')) ? $this->addProfitForConslidatedOrder($order['user']) 
+            (request()->exists('consolidated_order')) ? $this->addProfitForConslidatedOrder($order['user']) 
                                                         : $this->addProfit($order->user);
             return (Array)[
                 'success' => true,
@@ -268,24 +233,13 @@ class UPSLabelRepository
         ]; 
     }
 
-    private function checkUserBalance($charges)
-    {
-        if ($charges > getBalance())
-        {
-            $this->upsError = 'Not Enough Balance. Please Recharge your account.';
-            return false;
-        }
-
-        return true;
-    }
-
     private function addProfit($user)
     {
         $this->user_api_profit = setting('ups_profit', null, $user->id);
 
         if($this->user_api_profit == null || $this->user_api_profit == 0)
         {
-            $this->user_api_profit = setting('ups_profit', null, 1);
+            $this->user_api_profit = setting('ups_profit', null, User::ROLE_ADMIN);
         }
 
         $ups_rates = $this->totalUpsCost + $this->totalPickupCost;
@@ -300,48 +254,6 @@ class UPSLabelRepository
     {
         $user = User::find($user['id']);
         return $this->addProfit($user);
-    }
-
-    private function updateConsolidatedOrders($request, $response)
-    {
-        DB::transaction(function () use ($request, $response) {
-            try {
-
-                $totalUPSCharge = $this->totalUpsCost + $this->totalPickupCost;
-                foreach ($request->orders as $order) {
-                    $order->update([
-                        'us_api_response' => json_encode($response->data),
-                        'us_api_tracking_code' => $response->data['ShipmentResponse']['ShipmentResults']['ShipmentIdentificationNumber'],
-                        'us_secondary_label_cost' => setUSCosts($totalUPSCharge, $this->total_amount_with_profit),
-                        'us_api_service' => $request->service,
-                        'api_pickup_response' => ($request->pickupShipment == true) ? $this->pickupResponse : null,
-                    ]);
-
-                    $order->refresh();
-                }
-
-                return true;
-            } catch (\Exception $ex) {
-                Log::error($ex->getMessage());
-                $this->upsError = $ex->getMessage();
-                return false;
-            }
-            
-        });
-
-        chargeAmount(round($this->total_amount_with_profit, 2), $request->orders->first(), 'Bought UPS Label For '.$this->getOrderIds($request->orders));
-
-        return true;
-    }
-
-    private function getOrderIds($orders)
-    {
-        $warehouse_numbers = [];
-        foreach ($orders as $order) {
-            $warehouse_numbers[] = $order->warehouse_number;
-        }
-
-        return implode(' :,', $warehouse_numbers);
     }
     
     public function getShippingServices($order)
@@ -360,7 +272,7 @@ class UPSLabelRepository
             $this->upsError = 'No shipping services available for this order';
         }
 
-        if($shippingServices->isNotEmpty() && !setting('ups', null, $order->user->id))
+        if($shippingServices->isNotEmpty() && !setting('ups', null, User::ROLE_ADMIN))
         {
             $this->upsError = "UPS is not enabled for your account";
             $shippingServices = $shippingServices->filter(function ($shippingService, $key) {

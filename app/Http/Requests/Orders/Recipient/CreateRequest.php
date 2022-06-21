@@ -58,7 +58,7 @@ class CreateRequest extends FormRequest
             $rules['zipcode'] = ['required', new ZipCodeValidator($this->country_id,$this->state_id)];
             $rules['street_no'] = 'sometimes|numeric';
         }
-        
+
         return $rules;
     }
 
