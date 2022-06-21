@@ -76,6 +76,10 @@ class OrderExport extends AbstractExportService
             if($order->status == Order::STATUS_SHIPPED){
                 $this->setCellValue('N'.$row, 'SHIPPED');
             }
+
+            $this->setCellValue('O'.$row, $order->weight_discount);
+
+            $this->setCellValue('P'.$row, $order->discountCost());
             
             
             $row++;
@@ -88,8 +92,10 @@ class OrderExport extends AbstractExportService
         $this->setCellValue('J'.$row, "=SUM(J1:J{$row})");
         $this->setCellValue('K'.$row, "=SUM(K1:K{$row})");
         $this->setCellValue('L'.$row, "=SUM(L1:L{$row})");
+        $this->setCellValue('O'.$row, "=SUM(O1:O{$row})");
+        $this->setCellValue('P'.$row, "=SUM(P1:P{$row})");
         $this->mergeCells("A{$row}:F{$row}");
-        $this->setBackgroundColor("A{$row}:N{$row}", 'adfb84');
+        $this->setBackgroundColor("A{$row}:P{$row}", 'adfb84');
         $this->setAlignment('A'.$row, Alignment::VERTICAL_CENTER);
         $this->setCellValue('A'.$row, 'Total Order: '.$this->orders->count());
 
@@ -143,10 +149,16 @@ class OrderExport extends AbstractExportService
         $this->setColumnWidth('N', 20);
         $this->setCellValue('N1', 'Status');
 
+        $this->setColumnWidth('O', 20);
+        $this->setCellValue('O1', 'Discount Weight');
+
+        $this->setColumnWidth('P', 20);
+        $this->setCellValue('P1', 'Discount Amount');
+
         
 
-        $this->setBackgroundColor('A1:N1', '2b5cab');
-        $this->setColor('A1:N1', 'FFFFFF');
+        $this->setBackgroundColor('A1:P1', '2b5cab');
+        $this->setColor('A1:P1', 'FFFFFF');
 
         $this->currentRow++;
     }

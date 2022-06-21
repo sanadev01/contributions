@@ -2,7 +2,6 @@
 
 namespace App\Repositories;
 
-use App\Models\User;
 use App\Models\Order;
 use App\Models\Country;
 use App\Facades\USPSFacade;
@@ -13,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Services\UPS\UPSShippingService;
 use App\Services\USPS\USPSShippingService;
 use App\Services\FedEx\FedExShippingService;
+use App\Models\User;
 
 class OrderRepository
 {
@@ -373,6 +373,12 @@ class OrderRepository
         $totalDiscountPercentage = 0;
         $volumetricDiscount = setting('volumetric_discount', null, $order->user->id);
         $discountPercentage = setting('discount_percentage', null, $order->user->id);
+
+        if(!$discountPercentage)
+        {
+            $discountPercentage = setting('discount_percentage', null, User::ROLE_ADMIN);
+            $volumetricDiscount = true;
+        }
 
         if (!$volumetricDiscount || !$discountPercentage || $discountPercentage < 0) {
             return false;
