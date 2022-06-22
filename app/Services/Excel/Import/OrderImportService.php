@@ -159,7 +159,7 @@ class OrderImportService extends AbstractImportService
             "quantity" => preg_replace("/[^0-9.]/", "", $this->getValue("W{$row}")),
             "value" => preg_replace("/[^0-9.]/", "", $this->getValue("X{$row}")),
             "description" => $this->getValue("Y{$row}"),
-            "sh_code" => $this->getValue("Z{$row}"),
+            "sh_code" => preg_replace("/[^0-9.]/", "", $this->getValue("Z{$row}")),
             "contains_battery" => strtolower($this->getValue("AA{$row}")) == 'yes' ? true : false,
             "contains_perfume" => strtolower($this->getValue("AB{$row}")) == 'yes' ? true : false
         ];
