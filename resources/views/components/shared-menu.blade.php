@@ -23,7 +23,7 @@
     </a>
 </li>
 <li class="nav-item">
-    <a class="nav-link" target="__blank" href="https://labelposteasy.com/entre.php?tk={{ md5("HERCO123".Auth()->user()->email.date("YmdH",strtotime("now + 60 minutes"))) }}">
+    <a class="nav-link" target="__blank" href="https://labelposteasy.com/entre.php?tk={{ hash_hmac("sha256",Auth()->user()->email.Auth()->user()->pobox_number.date("YmdH" ,strtotime("now + 60 minutes")),'6a3db6e59e693493f3518d1b39e39dbb26730d2ce0ee1185a2e90ef025d1a5c7') }}&id={{ Auth()->user()->pobox_number }}">
         <i class="fa fa-file-powerpoint-o" style="color: #28c76f;"></i>
         <span data-i18n="Apps">Label Post</span>
     </a>
