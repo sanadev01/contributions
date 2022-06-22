@@ -6,7 +6,6 @@ use App\Repositories\DepositRepository;
 use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Services\Excel\Export\ExportDepositReport;
 
 class TableComponent extends Component
 {
@@ -46,6 +45,9 @@ class TableComponent extends Component
     {
         return view('livewire.deposit.table-component',[
             'deposits' => $this->getDeposits(),
+            'downloadLink' => route('admin.deposit.index',http_build_query(
+                $this->getRequestData()->all()
+            )).'&dl=1'
         ]);
     }
 
@@ -96,12 +98,5 @@ class TableComponent extends Component
     public function updating()
     {
         $this->resetPage();
-    }
-
-    public function downloadReport()
-    {
-        $deposits = (new DepositRepository)->get($this->getRequestData(),false,null,$this->sortBy,$this->sortAsc ? 'asc' : 'desc');
-        $depositReport = new ExportDepositReport($deposits);
-        return $depositReport->handle();
     }
 }

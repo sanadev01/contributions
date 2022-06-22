@@ -35,8 +35,10 @@ class ExportDepositReport extends AbstractExportService
 
         foreach ($this->deposits as $deposit) {
 
-            $order = $deposit->getOrder($deposit->order_id);
-            $depositFirstOrder = $deposit->firstOrder();
+            // $order = $deposit->getOrder($deposit->order_id);
+            $order = ($deposit->orders) ? $deposit->orders->first() : null;
+            // $depositFirstOrder = $deposit->firstOrder();
+            $depositFirstOrder = ($order) ? $order : null;
 
             $this->setCellValue('A'.$row, $deposit->uuid);
             $this->setCellValue('B'.$row, optional($order)->warehouse_number);
@@ -45,13 +47,13 @@ class ExportDepositReport extends AbstractExportService
             $this->setCellValue('E'.$row, ($depositFirstOrder && $depositFirstOrder->hasSecondLabel()) ? optional($depositFirstOrder)->us_api_tracking_code : optional($order)->corrios_tracking_code);
             $this->setCellValue('F'.$row, $deposit->created_at->format('m/d/Y'));
             $this->setCellValue('G'.$row, $deposit->amount);
-            $this->setCellValue('H'.$row, ($order) ? $this->getShippingCarrier($depositFirstOrder ,$order) : '');
+            $this->setCellValue('H'.$row, '');
             if (auth()->user()->isAdmin()) {
-                $this->setCellValue('I'.$row, ($order) ? $this->getShippingCarrierCost($depositFirstOrder ,$order) : '');
+                $this->setCellValue('I'.$row, '');
             }
-            $this->setCellValue('J'.$row, ($order) ? $this->getOrderDimensions($order) : '');
-            $this->setCellValue('K'.$row, ($order) ? $this->getOrderTotalWeight($order) : '');
-            $this->setCellValue('L'.$row, ($order) ? $this->getOrderVolumetricWeight($order) : '');
+            $this->setCellValue('J'.$row, '');
+            $this->setCellValue('K'.$row, '');
+            $this->setCellValue('L'.$row, '');
             $this->setCellValue('M'.$row, $deposit->isCredit() ? 'Credit' : 'Debit');
             $row++;
         }
