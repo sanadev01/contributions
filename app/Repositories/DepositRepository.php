@@ -46,44 +46,44 @@ class DepositRepository
             });
         }
 
-        if ( $request->warehouseNumber ){
+        if ( $request->filled('warehouseNumber') ){
             $query->whereHas('orders',function($query) use($request){
                 return $query->where('warehouse_number','LIKE',"%{$request->warehouseNumber}%");
             });
         }
 
-        if ( $request->trackingCode ){
+        if ( $request->filled('trackingCode') ){
             $query->whereHas('orders',function($query) use($request){
                 return $query->where('corrios_tracking_code','LIKE',"%{$request->trackingCode}%");
             });
         }
 
-        if ( $request->type ){
+        if ( $request->filled('type') ){
             $query->where('is_credit',$request->type);
         }
 
-        if ( $request->uuid ){
+        if ( $request->filled('uuid') ){
             $query->where('uuid','LIKE',"%{$request->uuid}%");
         }
 
-        if ( $request->dateFrom ){
+        if ( $request->filled('dateFrom') ){
             $query->where('created_at','>=',$request->dateFrom. ' 00:00:00');
         }
 
-        if ( $request->dateTo ){
+        if ( $request->filled('dateTo') ){
             $query->where('created_at','<=',$request->dateTo. ' 23:59:59');
         }
 
 
-        if ( $request->last_four_digits ){
+        if ( $request->filled('last_four_digits') ){
             $query->where('last_four_digits','LIKE',"%{$request->last_four_digits}%");
         }
 
-        if ( $request->description ){
+        if ( $request->filled('description') ){
             $query->where('description','LIKE',"%{$request->description}%");
         }
 
-        if ( $request->balance ){
+        if ( $request->filled('balance') ){
             $query->where('balance','LIKE',"%{$request->balance}%");
         }
 
