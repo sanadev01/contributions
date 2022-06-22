@@ -8,21 +8,13 @@ use App\Models\Deposit;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Repositories\OrderRepository;
 use App\Repositories\DepositRepository;
 use Illuminate\Support\Facades\Response;
-use App\Services\Excel\Export\ExportDepositReport;
 
 class DepositController extends Controller
 {
-    public function index(Request $request, DepositRepository $depositRepository)
+    public function index()
     {
-        if ( $request->dl ==1 ){
-            $deposits = $depositRepository->get($request,false,0,$request->sortBy,$request->sortOrder);
-            $depositReport = new ExportDepositReport($deposits);
-            return $depositReport->handle();
-        }
-
         return view('admin.deposit.index');
     }
 
