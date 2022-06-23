@@ -116,7 +116,17 @@
         background: none #1a1a3c !important;
       }
       #userNameCol{
-        width: 300px;
+        width: 300px;   
+      }
+      #imageDecrption{
+        padding-left: 45px !important; 
+        font-weight:400 !important;
+        margin-top: -2px;
+      }
+      #imageDecrptionTop{
+        padding-left: 45px !important; 
+        font-weight:400 !important;
+        margin-top: -38px;
       }
       .card-dark{
         background-color: #2a2a4a !important;
