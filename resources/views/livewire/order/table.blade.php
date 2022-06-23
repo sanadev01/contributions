@@ -28,7 +28,7 @@
             <div class="row col-10" id="datefilters">
                 <div class=" col-10 text-left mb-2 pl-0" id="dateSearch" style="margin: 22px;">
                     <div class="row col-12 my-3">
-                        <form action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
+                        {{-- <form action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
                             @csrf
                             <div style="float: left">
                             <label>Start Date</label>
@@ -41,8 +41,9 @@
                                 <i class="fa fa-arrow-down"></i>
                                 </button>
                             </div>
-                        </form>
-                        <form class="form-inline">
+                        </form> --}}
+                        <form class="form-inline" action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
+                            @csrf
                             <div class="form-group mb-2">
                                 <label>Start Date</label>
                                 <input type="date" name="start_date" class="form-control">
@@ -51,8 +52,9 @@
                                 <label>End Date</label>
                                 <input type="date" name="end_date" class="form-control">
                             </div>
-                            <button type="submit" class="btn btn-primary mb-2">Confirm identity</button>
-                          </form>
+                            <button class="btn btn-primary btn-sm" style="margin-bottom: 4px;" title="@lang('orders.import-excel.Download')">
+                                <i class="fa fa-arrow-down"></i>
+                                </button>                          </form>
                     </div>
                 </div>
             </div>
