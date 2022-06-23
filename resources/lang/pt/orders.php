@@ -15,7 +15,7 @@ return [
     'Bulk Print' => 'Etiquetas em lote',
     'Download Orders' => 'Baixar pedidos',
     'type' => 'Tipo',
-    'payment-status' => 'Status do pagamento',
+    'payment-status' => 'pagamento',
     'payment-method' => 'Método de pagamento',
     'Trashed Orders' => 'Pedidos Excluídos',
     

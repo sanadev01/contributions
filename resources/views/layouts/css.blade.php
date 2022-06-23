@@ -1,6 +1,6 @@
 <title>Home Delivery Br</title>
-<link rel="apple-touch-icon" href="{{ asset('app-assets/images/ico/apple-icon-120.png') }}">
-<link rel="shortcut icon" type="image/x-icon" href="{{ asset('app-assets/images/ico/favicon.ico') }}">
+<link rel="apple-touch-icon" href="{{ asset('images/hd-label-logo.png') }}">
+<link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/hd-label-logo.png') }}">
 {{-- <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600" rel="stylesheet"> --}}
 
 <!-- BEGIN: Vendor CSS-->
@@ -59,6 +59,12 @@
     .li .sub-category{
         margin-bottom: 0px;
     }
+    #togglers{
+        height: 50px;
+    }
+    /* #datefilters{
+        height: 60px;
+    } */
     .icon-disc:before {
     color: white;
     }
@@ -100,14 +106,27 @@
     line-height: 16px !important;
 }
     #printBtnDiv{
-        padding-left: 0px;
-        padding-top: 13px;
+        padding-left: 20px;
+        padding-top: 0px;
         display: none;
     }
     .dark-mode {
         background-color: #1a1a3c !important;
         color: white !important; 
         background: none #1a1a3c !important;
+      }
+      #userNameCol{
+        width: 300px;   
+      }
+      #imageDecrption{
+        padding-left: 45px !important; 
+        font-weight:400 !important;
+        margin-top: -2px;
+      }
+      #imageDecrptionTop{
+        padding-left: 45px !important; 
+        font-weight:400 !important;
+        margin-top: -38px;
       }
       .card-dark{
         background-color: #2a2a4a !important;

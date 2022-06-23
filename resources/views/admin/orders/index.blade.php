@@ -16,7 +16,16 @@
 @section('page')
 <div class="card min-vh-100">
     <div class="card-header">
-        <h4 class="mb-0">@lang('orders.orders')</h4>
+    <div class="col-8" style="display: flex;">
+        <h4 class="mb-0 pt-1">@lang('orders.orders')</h4>
+        <div id="printBtnDiv">
+            <button type="btn" onclick="toggleDateSearch()" id="customSwitch1" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-check-square"></i></button>
+            <button type="btn" onclick="toggleDateSearch()" id="customSwitch2" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-printer"></i></button>
+            <button type="btn" onclick="toggleDateSearch()" id="customSwitch3" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-printer"></i></button>
+            <button type="btn" onclick="toggleDateSearch()" id="customSwitch4" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-trash"></i></button>
+        </div>
+    </div>
+       
         <div class="row filter" style="padding-right:1%;">
             <button type="btn" onclick="toggleDateSearch()" id="customSwitch8" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-filter"></i></button>
             @can('canImportLeveOrders', App\Models\Order::class)
@@ -28,6 +37,17 @@
     <div class="card-content">
         <div class="card-body no-print" style="overflow-y: visible">
             <livewire:order.table :userType="$userType"/>
+            <div class="col-1 pl-10 pb-10">
+                <select class="form-control hd-search" style="padding-left: initial" wire:model="pageSize">
+                    <option value="1">1</option>
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="300">300</option>
+                </select>
+            </div>
         </div>
     </div>
     <form action="{{ route('admin.order.bulk-action') }}" method="GET" id="bulk_actions_form">
@@ -44,6 +64,7 @@
         <input type="hidden" name="command" id="command" value="">
         <input type="hidden" name="data" id="data" value="">
     </form>
+    
 </div>
 @endsection
 

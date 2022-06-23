@@ -15,7 +15,7 @@ return [
     'Bulk Print' => 'Print Bulk',
     'Download Orders' => 'Download Orders',
     'type' => 'Type',
-    'payment-status' => 'Payment Status',
+    'payment-status' => 'Payment',
     'payment-method' => 'Payment Method',
     'Delete' => 'Delete',
     'Remove' => 'Remove Order',
