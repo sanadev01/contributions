@@ -60,7 +60,7 @@
         margin-bottom: 0px;
     }
     #togglers{
-        height: 50px;
+        /* height: 50px; */
     }
     /* #datefilters{
         height: 60px;
@@ -546,7 +546,7 @@
         height: 40px; 
     } */
     .hd-card {
-        padding: 12px 16px !important;
+        /* padding: 12px 16px !important; */
         /* background: #dbe9f2; */
         margin: -17px;
     }
