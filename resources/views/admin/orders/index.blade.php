@@ -14,10 +14,12 @@
     </style>
 @endsection
 @section('page')
+@section('title',__('orders.orders'))
+
 <div class="card min-vh-100">
     <div class="card-header">
     <div class="col-8" style="display: flex;">
-        <h4 class="mb-0 pt-1">@lang('orders.orders')</h4>
+        <h4 class="mb-0 pt-1"></h4>
         <div id="printBtnDiv">
             <button type="btn" onclick="toggleDateSearch()" id="customSwitch1" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-check-square"></i></button>
             <button type="btn" onclick="toggleDateSearch()" id="customSwitch2" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-printer"></i></button>
