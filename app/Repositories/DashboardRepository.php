@@ -49,6 +49,7 @@ class DashboardRepository
         $currentDayConfirm   = $CurentDay->where('status', '>=' ,$paymentDone)->count();
         $totalOrder          = $totalOrderQuery->count();
         $totalCompleteOrders = $totalOrderQuery->where('status', '>=' ,$paymentDone)->count();
+        $lastFiveOrders      = Order::orderBy('id', 'desc')->take(6)->get();
 
         return  $order[] = [
             'totalOrders'         => $totalOrder,
@@ -59,7 +60,8 @@ class DashboardRepository
             'currentDayConfirm'   => $currentDayConfirm,
             'currentYearTotal'    => $currentYearTotal,
             'currentYearConfirm'  => $currentYearConfirm,
-            'monthName'           => $monthName
+            'monthName'           => $monthName,
+            'lastFive'            => $lastFiveOrders
         ];
     }
 

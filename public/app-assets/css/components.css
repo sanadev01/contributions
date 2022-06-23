@@ -2757,10 +2757,15 @@ table.dataTable {
     border-bottom: 1px solid #f8f8f8;
     border-top: 0; }
   table.dataTable thead th, table.dataTable thead td, table.dataTable tfoot th, table.dataTable tfoot td {
-    font-size: 0.85rem;
-    border: 0; }
+    font-size: 14px;
+    line-height: 21px;
+    font-weight: 500;
+    /* border: 0; */
+   }
+  
   table.dataTable thead tr {
-    background-color: #f8f8f8; }
+    /* background-color: #f8f8f8; */
+   }
   table.dataTable thead .sorting, table.dataTable thead .sorting_asc, table.dataTable thead .sorting_desc {
     padding-right: inherit; }
     table.dataTable thead .sorting:before, table.dataTable thead .sorting_asc:before, table.dataTable thead .sorting_desc:before {

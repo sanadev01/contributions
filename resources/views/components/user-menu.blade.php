@@ -56,14 +56,35 @@
                     <span class="menu-title">@lang('menu.Parcels')</span>
                 </a>
             </li>
-
             @can('viewAny', App\Models\Order::class)
-                <li class="nav-item {{ $isActive(['admin.orders.index','admin.orders.edit','admin.orders.show']) }}">
+                <li class="nav-item nav-item has-sub sidebar-group">
                     <a href="{{ route('admin.orders.index') }}">
                         <svg xmlns="http://www.w3.org/2000/svg"  height="18px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-cart"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
                         {{-- <i class="feather icon-truck"></i> --}}
                         <span class="menu-title">@lang('menu.orders')</span>
                     </a>
+                    <ul class="menu-content">
+
+                        <li class="{{ $isActive(['admin.orders.index']) }}">
+                            <a href="{{ route('admin.orders.index') }}"><i class="feather icon-circle"></i><span class="menu-title">All Orders</span></a>
+
+                        </li>
+
+                        <li class=" @if (collect(request()->segments())->last()  == 'wholesale') active @endif ">
+                            <a href="{{ route('admin.orders.show','wholesale') }}"><i class="feather icon-circle"></i><span class="menu-title">Wholesales</span></a>
+
+                        </li>
+                        <li class="@if (collect(request()->segments())->last()  == 'retailer') active @endif ">
+                            <a href="{{ route('admin.orders.show','retailer') }}"><i class="feather icon-circle"></i><span class="menu-title">Retail</span></a>
+
+                        </li>
+                        <li class="@if (collect(request()->segments())->last()  == 'domestic') active @endif ">
+                            <a href="{{ route('admin.orders.show','domestic') }}"><i class="feather icon-circle"></i><span class="menu-title">Domestic</span></a>
+                        </li>
+                        <li class="@if (collect(request()->segments())->last()  == 'pickups') active @endif ">
+                            <a href="{{ route('admin.orders.show','pickups') }}"><i class="feather icon-circle"></i><span class="menu-title">Pickups</span></a>
+                        </li>
+                    </ul>
                 </li>
             @endcan
             

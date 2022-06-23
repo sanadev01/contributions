@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-12" >
         <div class="hd-card mt-1 mb-3">
-            <div class="row col-12 p-0 m-0 pb-2 pt-2">
+            <div class="row col-12 p-0 m-0 pb-2 pt-2" style="justify-content: space-between;">
                 <div class="col-1 pl-0">
                     <select class="form-control hd-search" wire:model="pageSize">
                         <option value="1">1</option>
@@ -13,7 +13,7 @@
                         <option value="300">300</option>
                     </select>
                 </div>
-                <div class="col-11 text-right p-0">
+                {{-- <div class="col-11 text-right p-0">
                     <form action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
                         @csrf
                         <label>Start Date</label>
@@ -26,12 +26,36 @@
                             @lang('orders.Download Orders') <i class="fa fa-arrow-down"></i>
                         </button>
                     </form>
+                </div> --}}
+            </div>
+            <div class="row col-10">
+                <div class=" col-10 text-left mb-2 pl-0" id="dateSearch" style="margin: 22px;">
+                    <div class="row my-3">
+                        <form action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
+                            @csrf
+                            <label>Start Date</label>
+                            <input type="date" name="start_date" class="from-control col-3 hd-search">
+    
+                            <label>End Date</label>
+                            <input type="date" name="end_date" class="from-control col-3 hd-search">
+    
+                            <button class="btn btn-success" title="@lang('orders.import-excel.Download')">
+                                @lang('orders.Download Orders') <i class="fa fa-arrow-down"></i>
+                            </button>
+                        </form>
+                    </div>
                 </div>
+            </div>
+            <div class="col-6" id="printBtnDiv">
+                <button type="btn" onclick="toggleDateSearch()" id="customSwitch8" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-check-square"></i></button>
+                <button type="btn" onclick="toggleDateSearch()" id="customSwitch8" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-printer"></i></button>
+                <button type="btn" onclick="toggleDateSearch()" id="customSwitch8" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-printer"></i></button>
+                <button type="btn" onclick="toggleDateSearch()" id="customSwitch8" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-trash"></i></button>
             </div>
         </div>
 
         @admin
-            <div class="row col-md-12 mb-2" >
+            {{-- <div class="row col-md-12 mb-2" >
                 @if (request()->route()->getName() != 'admin.trash-orders.index')
                     <div class="col-12 p-0">
                         <ul class="nav nav-pills m-0">
@@ -53,7 +77,7 @@
                         </ul>
                     </div>
                 @endif
-            </div>
+            </div> --}}
         @endadmin
 
         <div class="table-responsive order-table">
@@ -61,25 +85,26 @@
                 <thead>
                     <tr>
                         @if (\Request::route()->getName() != 'admin.trash-orders.index')
-                            <th>
-                                @lang('orders.Bulk Print')
+                            <th class="col-1">
+                                {{-- @lang('orders.Bulk Print') --}}
                             </th>
                         @endif
+                        @admin
+                            <th>User Name</th>
+                        @endadmin
                         <th>
                             @if (\Request::route()->getName() != 'admin.trash-orders.index')
                                 <span class="mr-4"> @lang('Edit Order')</span>
                             @endif
-                            <a href="#" class="text-white" wire:click.prevent="sortBy('created_at')">@lang('orders.date')</a>
+                            <a href="#" class="" wire:click.prevent="sortBy('created_at')">@lang('orders.date')</a>
                         </th>
                         <th>
-                            <a href="#" class="text-white" wire:click.prevent="sortBy('id')">@lang('orders.order-id')</a> <i>  </i>
+                            <a href="#" class="" wire:click.prevent="sortBy('id')">@lang('orders.order-id')</a> <i>  </i>
                         </th>
-                        @admin
-                            <th>User Name</th>
-                        @endadmin
+                        
                         <th>Loja/Cliente</th>
-                        <th>Carrier Tracking</th>
-                        <th>Referência do Cliente</th>
+                        {{-- <th>Carrier Tracking</th> --}}
+                        <th>Cliente</th>
                         <th>Carrier</th>
                         @admin
                             <th>Carrier Cost</th>
@@ -94,13 +119,13 @@
                     <tr class="no-print">
                         @if (\Request::route()->getName() != 'admin.trash-orders.index')
                             <th style="min-width: 100px;">
-                                <select name="" id="bulk-actions" class="form-control">
+                                {{-- <select name="" id="bulk-actions" class="form-control">
                                     <option value="clear">Clear All</option>
                                     <option value="checkAll">Select All</option>
                                     <option value="print-label">Print Label</option>
                                     <option value="consolidate-domestic-label">Print Domestic Label</option>
                                     <option value="move-order-trash">Move Trash</option>
-                                </select>
+                                </select> --}}
                             </th>
                         @endif
                         <th>
@@ -189,6 +214,18 @@
 
 @push('lvjs-stack')
     <script>
+
+        function toggleDateSearch()
+    {
+        var checkBox = document.getElementById("customSwitch8");
+        const div = document.getElementById('dateSearch');
+        if (div.style.display != 'block'){
+            div.style.display = 'block';
+        } else {
+            div.style.display = 'none';
+        }
+
+    }
         window.addEventListener('DOMContentLoaded', () => {
 
             @this.on('updated-status',function(orderId,status){
