@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Repositories\OrderRepository;
 use App\Http\Requests\Orders\Sender\CreateRequest;
+use App\Models\Country;
 use Auth;
 class OrderSenderController extends Controller
 {
@@ -22,8 +23,12 @@ class OrderSenderController extends Controller
         if(!Auth::user()->isActive()){
             return redirect()->route('admin.modals.user.suspended');
         }
-        $states = State::query()->where("country_id", 250)->get(["name","code","id"]);
-        return view('admin.orders.sender.index',compact('order', 'states'));
+        $states = State::query()->where("country_id", Country::US)->get(["name","code","id"]);
+        $floridaStateId = State::query()->where([['country_id', Country::US],['code', 'FL']])->first()->id;
+        $countryChile = Country::Chile;
+        $countryUS = Country::US;
+
+        return view('admin.orders.sender.index',compact('order', 'states', 'floridaStateId', 'countryChile', 'countryUS'));
     }
 
     /**

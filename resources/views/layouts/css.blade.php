@@ -172,5 +172,21 @@
         vertical-align: middle;
         margin-top: auto;
     }
+
+    .main-menu.menu-light .navigation#main-menu-navigation li a .icon_adjst {
+        margin-right:3px;
+    }
+    .main-menu.menu-light .navigation#main-menu-navigation li a img{
+        width: 16px;
+    }
+    .main-menu.menu-light .navigation#main-menu-navigation li a .icon_adjst:before{
+        font-size:1.28rem;
+    }
+    .green{
+        color:#3CB64B;
+    }
+    .red{
+        color:#ff5a5a
+    }
 </style>
 @yield('custom-css')

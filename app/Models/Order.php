@@ -437,12 +437,10 @@ class Order extends Model implements Package
         $shippingService = $this->shippingService;
 
         $additionalServicesCost = $this->calculateAdditionalServicesCost($this->services);
-        if($this->recipient->country_id == self::US || ($this->sender_country_id == self::US && $this->recipient->country_id != self::US))
-        {
+        if ($shippingService && in_array($shippingService->service_sub_class, $this->usShippingServicesSubClasses())) {
             $shippingCost = $this->user_declared_freight;
             $this->calculateProfit($shippingCost, $shippingService);
-
-        } else {
+        }else {
             $shippingCost = $shippingService->getRateFor($this,true,$onVolumetricWeight);
         }
 
@@ -505,6 +503,18 @@ class Order extends Model implements Package
         
         $this->user_profit = $shippingCost * $profit;
         return true;
+    }
+
+    public function usShippingServicesSubClasses()
+    {
+        return [
+            ShippingService::USPS_PRIORITY, 
+            ShippingService::USPS_FIRSTCLASS, 
+            ShippingService::USPS_PRIORITY_INTERNATIONAL, 
+            ShippingService::USPS_FIRSTCLASS_INTERNATIONAL, 
+            ShippingService::UPS_GROUND, 
+            ShippingService::FEDEX_GROUND
+        ];
     }
 
     private function getAdminProfit()
@@ -603,6 +613,9 @@ class Order extends Model implements Package
 
     public function getDistributionModality(): int
     {
+        if ($this->shippingService && in_array($this->shippingService->service_sub_class, $this->anjunShippingServicesSubClasses())) {
+            return __default($this->getCorrespondenceServiceCode($this->shippingService->service_sub_class), ModelsPackage::SERVICE_CLASS_STANDARD);
+        }
         return __default( optional($this->shippingService)->service_sub_class ,ModelsPackage::SERVICE_CLASS_STANDARD );
     }
 
@@ -686,5 +699,18 @@ class Order extends Model implements Package
         }
 
         return null;
+    }
+    
+    public function anjunShippingServicesSubClasses()
+    {
+        return [
+            ShippingService::AJ_Packet_Standard, 
+            ShippingService::AJ_Packet_Express,
+        ];
+    }
+
+    public function getCorrespondenceServiceCode($serviceCode)
+    {
+        return ($serviceCode == ShippingService::AJ_Packet_Express) ? ShippingService::Packet_Express : ShippingService::Packet_Standard;
     }
 }

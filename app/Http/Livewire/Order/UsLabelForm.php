@@ -2,6 +2,9 @@
 
 namespace App\Http\Livewire\Order;
 
+use App\Models\State;
+use App\Models\Address;
+use App\Models\Country;
 use Livewire\Component;
 use App\Facades\USPSFacade;
 use Illuminate\Support\Arr;
@@ -11,6 +14,7 @@ use App\Repositories\DomesticLabelRepository;
 class UsLabelForm extends Component
 {
     public $order;
+    public $userId;
     public $states;
     public $usShippingServices;
     public $usServicesErrors;
@@ -40,6 +44,11 @@ class UsLabelForm extends Component
     public $zipCodeResponseMessage;
     public $zipCodeClass;
 
+    protected $listeners = [
+        'searchedAddress' => 'searchAddress',
+        'phoneNumber' => 'enteredPhoneNumber',
+    ];
+
     protected $rules = [
         'firstName' => 'required',
         'lastName' => 'required',
@@ -64,12 +73,29 @@ class UsLabelForm extends Component
 
         if ($this->order) {
             $this->senderPhone = $this->order->user->phone;
+            $this->userId = $this->order->user_id;
         }
     }
 
     public function render()
     {
         return view('livewire.order.us-label-form');
+    }
+
+    public function enteredPhoneNumber($value)
+    {
+        $this->senderPhone = $value;
+    }
+
+    public function searchAddress($address)
+    {
+        $this->senderState = State::find($address['state_id'])->code;
+        $this->firstName = $address['first_name'];
+        $this->lastName = $address['last_name'];
+        $this->senderAddress = $address['address'];
+        $this->senderCity = $address['city'];
+        $this->senderZipCode = $address['zipcode'];
+        $this->senderPhone = $address['phone'];
     }
 
     public function updatedsenderState()
@@ -135,7 +161,8 @@ class UsLabelForm extends Component
         if ($this->usShippingServices)
         {
             $domesticLabelRepostory->handle();
-            $this->usRates = $domesticLabelRepostory->getRatesForDomesticServices($this->createRequest(), $this->usShippingServices);
+            $this->createRequest();
+            $this->usRates = $domesticLabelRepostory->getRatesForDomesticServices($this->usShippingServices);
             
             $this->uspsError = $domesticLabelRepostory->getError();
             $this->upsError = $domesticLabelRepostory->getError();
@@ -166,15 +193,16 @@ class UsLabelForm extends Component
         }
 
         $this->getCostOfSelectedService();
-        $request = $this->createRequest();
-        $request->merge([
+        $this->createRequest();
+        request()->merge([
             'service' => $this->selectedService,
             'total_price' => $this->selectedServiceCost,
         ]);
 
         $domesticLabelRepostory->handle();
-        if($domesticLabelRepostory->getDomesticLabel($request, $this->order))
+        if($domesticLabelRepostory->getDomesticLabel( $this->order))
         {
+            $this->saveAddress();
             return redirect()->route('admin.order.us-label.index', $this->order->id);
         }
 
@@ -185,7 +213,7 @@ class UsLabelForm extends Component
 
     private function createRequest()
     {
-       return new Request([
+        request()->merge([
             'first_name' => $this->firstName,
             'last_name' => $this->lastName,
             'sender_state' => $this->senderState,
@@ -210,5 +238,27 @@ class UsLabelForm extends Component
                 return $this->selectedServiceCost = $value['cost'];
             }
         });
+    }
+
+    private function saveAddress()
+    {
+        $existingAddress = Address::where([['user_id', $this->userId],['phone', $this->senderPhone]])->first();
+
+        if (!$existingAddress) {
+            Address::create([
+                'user_id' => $this->userId,
+                'first_name' => $this->firstName,
+                'last_name' => $this->lastName,
+                'phone' => $this->senderPhone,
+                'address' => $this->senderAddress,
+                'city' => $this->senderCity,
+                'state_id' => State::where([['code', $this->senderState], ['country_id', Country::US]])->first()->id,
+                'country_id' => Country::US,
+                'zipcode' => $this->senderZipCode,
+                'account_type' => 'individual',
+            ]);
+        }
+
+        return;
     }
 }

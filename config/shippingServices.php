@@ -18,6 +18,8 @@ return [
             33163 => 'SL Standard Modal',
             33171 => 'SL Express Modal',
             33198 => 'SL Small Parcels',
+            33164 => 'AJ Packet Standard',
+            33172 => 'AJ Packet Express',
         ]
     ]
 ];

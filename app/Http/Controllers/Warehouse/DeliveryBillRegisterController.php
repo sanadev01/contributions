@@ -12,6 +12,11 @@ class DeliveryBillRegisterController extends Controller
 {
     public function __invoke(DeliveryBill $deliveryBill)
     {
+        if ($deliveryBill->containers->isEmpty()) {
+            session()->flash('alert-danger','Please add containers to this delivery bill');
+            return back();
+        }
+
         $client = new Client();
         $response = $client->registerDeliveryBill($deliveryBill);
 

@@ -58,6 +58,9 @@
                                             <option value="">@lang('warehouse.containers.Distribution Service Class')</option>
                                             <option value="NX" {{ old('services_subclass_code',$container->services_subclass_code) == 'NX' ? 'selected': '' }}>Packet Standard service</option>
                                             <option value="IX" {{ old('services_subclass_code',$container->services_subclass_code) == 'IX' ? 'selected': '' }}>Packet Express service</option>
+                                            <option value="IX" {{ old('services_subclass_code',$container->services_subclass_code) == 'XP' ? 'selected': '' }}>Packet Mini service</option>
+                                            <option value="AJ-NX" {{ old('services_subclass_code',$container->services_subclass_code) == 'AJ-NX' ? 'selected': '' }}>Anjun Packet Standard service</option>
+                                            <option value="AJ-IX" {{ old('services_subclass_code',$container->services_subclass_code) == 'AJ-IX' ? 'selected': '' }}>Anjun Packet Express service</option>
                                         </select>
                                         @error('services_subclass_code')
                                             <div class="help-block text-danger"> {{ $message }} </div>
