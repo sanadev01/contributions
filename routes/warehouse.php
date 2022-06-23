@@ -32,6 +32,10 @@ use App\Http\Controllers\Warehouse\ChileContainerPackageController;
 use App\Http\Controllers\Warehouse\DeliveryBillStatusUpdateController;
 use App\Http\Controllers\Warehouse\SinerlogContainerPackageController;
 use App\Http\Controllers\Warehouse\SinerlogManifestDownloadController;
+use App\Http\Controllers\Warehouse\POSTNLContainerController;
+use App\Http\Controllers\Warehouse\POSTNLContainerPackageController;
+use App\Http\Controllers\Warehouse\POSTNLUnitRegisterController;
+use App\Http\Controllers\Warehouse\POSTNLCN35DownloadController;
 
 
 Route::middleware(['auth'])->as('warehouse.')->group(function () {
@@ -41,7 +45,7 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::resource('search_package', SearchPackageController::class)->only('index', 'show');
     Route::resource('scan', ScanPackageController::class)->only('index');
     Route::resource('scan-label', ScanLabelController::class)->only('index', 'store', 'create');
-    
+
     Route::resource('containers', ContainerController::class);
     Route::get('awb/', AwbController::class)->name('container.awb');
     Route::resource('containers.packages', ContainerPackageController::class)->only('index','destroy', 'create');
@@ -56,7 +60,7 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('delivery_bill/{delivery_bill}/status/refresh', DeliveryBillStatusUpdateController::class)->name('delivery_bill.status.refresh');
     Route::get('delivery_bill/{delivery_bill}/download', DeliveryBillDownloadController::class)->name('delivery_bill.download');
     Route::get('delivery_bill/{delivery_bill}/manifest', ManifestDownloadController::class)->name('delivery_bill.manifest');
-    
+
     Route::resource('audit-report', AuditReportController::class)->only(['show']);
 
     // ALL Routes for Chile Containers
@@ -67,7 +71,7 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('chile_container/{container?}/download_combine_manifest', [ChileContainerController::class, 'download_combine_manifest'])->name('download.combine_manifest');
     Route::get('chile_container/{container}/upload_manifest', [ChileContainerController::class, 'upload_ManifestToChile'])->name('upload.manifest');
     Route::get('chile_container/{container}/download_chile_cn35', ChileCN35DownloadController::class)->name('download.chile_cn35');
-    
+
     // Routes for USPS Container
     Route::resource('usps_containers', USPSContainerController::class);
     Route::resource('usps_container.packages', USPSContainerPackageController::class)->only('index','destroy', 'create');
@@ -82,6 +86,13 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('sinerlog_container/{container}/register', SinerlogUnitRegisterController::class)->name('sinerlog_container.register');
     Route::get('sinerlog_container/{container}/download', SinerlogCN35DownloadController::class)->name('sinerlog_container.download');
     Route::get('sinerlog_container/{container}/manifest', SinerlogManifestDownloadController::class)->name('sinerlog_container.manifest');
+
+    // Routes for POSTNL Container
+    Route::resource('postnl_containers', POSTNLContainerController::class);
+    Route::resource('postnl_container.packages', POSTNLContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('postnl_container/{container}/register', POSTNLUnitRegisterController::class)->name('postnl_container.register');
+    Route::get('postnl_container/{container}/download', POSTNLCN35DownloadController::class)->name('postnl_container.download');
+    Route::get('postnl_container/{container}/download_excel_manifest', [POSTNLContainerController::class, 'download_exceltManifest'])->name('download.postnl_manifest_excel');
 });
 
 
@@ -107,7 +118,7 @@ Route::get('test', function () {
     // echo $client->createPackage($order);
 
     // $order = Order::find(53654);
-    
+
     // $labelPrinter = new CN23LabelMaker();
     // $labelPrinter->setOrder($order);
     // $labelPrinter->setPacketType(Package::SERVICE_CLASS_STANDARD);

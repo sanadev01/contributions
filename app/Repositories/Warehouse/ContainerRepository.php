@@ -6,8 +6,34 @@ use App\Models\Warehouse\Container;
 use App\Repositories\AbstractRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use GuzzleHttp\Client as GuzzleClient;
+use App\Services\Correios\Models\PackageError;
 
 class ContainerRepository extends AbstractRepository{
+
+    protected $addAirwayBill;
+
+    public function __construct($addAirwayBill=null)
+    {
+        $this->client = new GuzzleClient([]);
+
+        if (app()->isProduction()) {
+            $addAirwayBill = config('postnl.production.addAirwayBill');
+        }else {
+            $addAirwayBill = config('postnl.testing.addAirwayBill');
+        }
+        $this->addAirwayBill = $addAirwayBill;
+    }
+
+    private function getKeys()
+    {
+        $headers = [
+            'api_key' => "Eo3qtkGlOh6t9S1HZxMvFkBSJYDTocatwMhBNwhnEoG7Jngng89GtVFmQOrc05OzcMwyLMTeQSYU2h4GsOOp0iy9Rp0qoYlhpGLfLpjNc8CuV3xqbrTGFYNkiZW6TWzdJWVgEsVLg64hYMLY1UElGjrOvxBpA4aI5prbWIefoMrd85y5WkuL1RQrfkH9vRCwod0v8feftgdEeZLYUkQWfYa1TVeeEe4fcbdk9twD6ynpjmq4E7FSLwdeiFIhqicw7a1kY63Bksp5ECq1pefkn0ROrCNjpy3TPdeLKO5I6LBc",
+            'Accept' => "application/json",
+            'Content-Type' => "application/json",
+        ];
+        return $headers;
+    }
 
     public function get(Request $request)
     {
@@ -18,13 +44,13 @@ class ContainerRepository extends AbstractRepository{
         }
         if($request->has('dispatchNumber')){
            $query->where('dispatch_number', 'LIKE', '%' . $request->dispatchNumber . '%');
-        } 
+        }
         if($request->has('sealNo')){
           $query->where('seal_no', 'LIKE', '%' . $request->sealNo . '%');
-        } 
+        }
         if($request->has('packetType')){
             $query->where('services_subclass_code', 'LIKE', '%' . $request->packetType . '%');
-        } 
+        }
         return $query->where(function($query) {
                  $query->where('services_subclass_code','NX')
                         ->orWhere('services_subclass_code','IX')
@@ -89,6 +115,41 @@ class ContainerRepository extends AbstractRepository{
         } catch (\Exception $ex) {
             $this->error = $ex->getMessage();
             return null;
+        }
+    }
+
+    public function updateawb($request)
+    {
+        if(json_decode($request->data)){
+            foreach(json_decode($request->data) as $containerId){
+                $container = Container::find($containerId);
+
+                if($container->services_subclass_code == 'PostNL' && !is_null($container->deliveryBills[0]->cnd38_code)) {
+                    try {
+                        $response = $this->client->post($this->addAirwayBill,[
+                            'headers' => $this->getKeys(),
+                            'json' => [
+                                "delivery" => $container->deliveryBills[0]->cnd38_code,
+                                "hawb" => '',
+                                "mawb" => $request->awb,
+                            ]
+                        ]);
+                        $data = json_decode($response->getBody()->getContents());
+                        if($data->status == 'success'){
+                            $container->awb  = $request->awb;
+                        } else {
+                            return session()->flash('alert-danger', $data->message->payload);
+                        }
+                    }catch (\ClientException $e) {
+                        return new PackageError($e->getResponse()->getBody()->getContents());
+                    }
+                } else {
+                    $container->awb  = $request->awb;
+                }
+                $container->save();
+                return session()->flash('alert-success', 'Airway Bill Assigned');
+
+            }
         }
     }
 }

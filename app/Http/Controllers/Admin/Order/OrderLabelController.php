@@ -145,9 +145,8 @@ class OrderLabelController extends Controller
 
         if($order->recipient->country_id == Order::NETHERLANDS ){
 
-            //dd($order->toArray());
-            $this->postNLLabelRepository->update($order);
-            //dd($order->packet);
+            $this->postNLLabelRepository->get($order);
+
             $error = $this->postNLLabelRepository->getError();
             return $this->renderLabel($request, $order, $error);
         }

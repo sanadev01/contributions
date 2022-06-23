@@ -12,12 +12,19 @@ class DeliveryBill extends Model
     protected static $logAttributes = ['*'];
     protected static $logOnlyDirty = true;
     protected static $submitEmptyLogs = false;
-    
+
     protected $guarded = [];
 
     public function containers()
     {
         return $this->belongsToMany(Container::class);
+    }
+
+    public function isPostNL()
+    {
+        if($this->containers->first()->services_subclass_code == 'PostNL'){
+            return true;
+        }
     }
 
     public function isRegistered()

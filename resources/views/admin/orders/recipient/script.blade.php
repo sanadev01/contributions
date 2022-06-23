@@ -23,7 +23,7 @@
         {
             window.service = service_type;
         }
-        
+
         if(window.service == 'courier_express')
         {
             window.activeChileFields();
@@ -33,7 +33,7 @@
 
     $('input:radio[name="service"]').change(function(){
         window.service = $(this).val();
-        
+
         if(window.service == 'courier_express')
         {
             window.activeChileFields();
@@ -63,7 +63,7 @@
             $('#loading').fadeOut();
         })
     })
-    
+
     $('#zipcode').on("change", function(){
         let country_id = $("#country").val();
         if(country_id == '30')
@@ -83,7 +83,7 @@
                     $('#zipcode_response').empty().append("<p style='color: red;'>"+response.message+"</p>");
                     toastr.error(response.message)
                 }
-            
+
             }).catch(function(error){
                 $('#loading').fadeOut();
             })
@@ -101,7 +101,7 @@
             if(val == '46'){
                 window.activeChileFields();
                 $('#loading').fadeIn();
-                
+
                 if(window.service != 'courier_express')
                 {
                     window.fetchChileRegions(old_region);
@@ -168,7 +168,7 @@
                 window.activeChileFields();
 
                 $('#loading').fadeIn();
-                
+
                 window.fetchChileRegions(old_region);
                 // Fetch Communes
                 if(old_region != undefined || old_region != '')
@@ -223,7 +223,7 @@
                 $('#communes_response').css('display', 'none');
                 if ( $(this).val() == undefined || $(this).val() == "" ) return;
                 let region_code = $('#region').val();
-                
+
                 $('#loading').fadeIn();
                 $.get('{{ route("api.orders.recipient.chile_comunes") }}',{
                     region_code: $(this).val(),
@@ -254,7 +254,7 @@
                 }).catch(function(error){
                     console.log(error);
                 })
-            }    
+            }
         });
 
         // For validating Address and Zipcode
@@ -264,7 +264,7 @@
             // let street_no = $('#street_no').val();
             let country = $('#country').val();
             // let direction = address.concat(" ",street_no);
-            
+
             if ( address == undefined || address == "" ) return;
 
             if(country == '46')
@@ -399,7 +399,7 @@
         $('#div_region').css('display', 'none')
         $('#div_communes').css('display', 'none')
         $('#commune').prop('disabled', true);
-        
+
         $('#label_address').css('display', 'inline-block')
         $('#label_chile_address').css('display', 'none')
 
@@ -409,7 +409,37 @@
         $('#region').prop('disabled', true);
         $('#commune').attr('disable', true);
     }
-        
+
+    //POST NL Logics
+    $(document).ready(function(){
+        $('#country').on('change', function() {
+            if($('#country').val() == '160'){
+                $('#div_street_number').css('display', 'none');
+                $('#address2').css('display', 'none');
+                $('#cpf_no').css('display', 'none');
+                $("[name='state_id']").prop('required',true);
+
+            }else{
+                $('#div_street_number').css('display', 'block');
+                $('#address2').css('display', 'block');
+                $('#cpf_no').css('display', 'block');
+            }
+        });
+
+        $('#country').ready(function() {
+            if($('#country').val() == '160'){
+                $('#div_street_number').css('display', 'none');
+                $('#address2').css('display', 'none');
+                $('#cpf_no').css('display', 'none');
+                $("[name='state_id']").prop('required',true);
+            }else{
+                $('#div_street_number').css('display', 'block');
+                $('#address2').css('display', 'block');
+                $('#cpf_no').css('display', 'block');
+            }
+        });
+    })
+
     // USPS Logics
 
     $(document).ready(function(){
@@ -464,7 +494,7 @@
                     state: state,
                     city: city,
                 }).then(function(response){
-                    
+
                     if ( response.success == true && response.zipcode != 0){
                         $('#loading').fadeOut();
                         $('#zipcode').val(response.zipcode);
@@ -581,5 +611,5 @@
             })
         }
     }
- 
+
 </script>

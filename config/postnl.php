@@ -3,11 +3,17 @@
 return [
     'production' => [
         'createLabelUrl' => 'https://clients.postnl.post/v7/api/contentlabel/generate',
-        'deleteLabelUrl' => 'https://clients.postnl.post/v7/api/label/cancel',
+        'canceLabelUrl' => 'https://clients.postnl.post/v7/api/label/cancel',
+        'createAssistLabelUrl' => 'https://clients.postnl.post/v7/api/assistlabel/generate',
+        'createManifest' => 'https://clients.postnl.post/v7/api/label/closeout',
+        'addAirwayBill' => 'https://clients.postnl.post/v7/api/manifest/addmawb',
     ],
     'testing' => [
         'createLabelUrl' => 'https://clients.postnl.a02.cldsvc.net/v7/api/contentlabel/generate',
-        'deleteLabelUrl' => 'https://clients.postnl.a02.cldsvc.net/v7/api/label/cancel',
+        'canceLabelUrl' => 'https://clients.postnl.a02.cldsvc.net/v7/api/label/cancel',
+        'createAssistLabelUrl' => 'https://clients.postnl.a02.cldsvc.net/v7/api/assistlabel/generate',
+        'createManifest' => 'https://clients.postnl.a02.cldsvc.net/v7/api/label/closeout',
+        'addAirwayBill' => 'https://clients.postnl.a02.cldsvc.net/v7/api/manifest/addmawb',
     ],
 
 ];

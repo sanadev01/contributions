@@ -8,6 +8,7 @@ return [
         'Edit Container' => 'Edit Container',
         'Dispatch Number' => 'Dispatch Number',
         'Origin Country' => 'Origin Country',
+        'Destination Country' => 'Destination Country',
         'Origin Airport' => 'Origin Airport',
         'Destination Airport' => 'Destination Airport',
         'Sorting' => 'Sorting',

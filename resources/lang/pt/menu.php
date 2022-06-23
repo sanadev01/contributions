@@ -50,6 +50,7 @@ return [
         'Delivery Bill' => 'Fatura de entrega',
         'Chile Containers' => 'Chile Recipientes',
         'USPS Containers' => 'USPS Recipientes',
+        'PostNL Containers' => 'PostNL Recipientes',
     ],
     'Affiliate' => [
         'menu' => 'Relatórios',

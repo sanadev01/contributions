@@ -16,7 +16,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     use SoftDeletes;
 
     protected $guarded = [];
-    
+
     use LogsActivity;
     protected static $logAttributes = ['*'];
     protected static $logOnlyDirty = true;
@@ -72,6 +72,8 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'SRP service';
         }elseif($this->services_subclass_code == 'Priority'){
             return 'Priority';
+        }elseif($this->services_subclass_code == 'PostNL'){
+            return 'PostNL';
         }else {
             return 'FirstClass';
         }
@@ -91,8 +93,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 5;
         }elseif($this->services_subclass_code == 'Priority') {
             return 6;
-        }else {
+        }elseif($this->services_subclass_code == 'PostNL') {
             return 7;
+        }else {
+            return 8;
         }
         // return $this->services_subclass_code == 'NX' ? 2 : 1;
     }

@@ -6,11 +6,11 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">@lang('warehouse.containers.Create Container')</h4>
-                        <a href="{{ route('warehouse.usps_containers.index') }}" class="pull-right btn btn-primary">@lang('warehouse.containers.List Containers')</a>
+                        <a href="{{ route('warehouse.postnl_containers.index') }}" class="pull-right btn btn-primary">@lang('warehouse.containers.List Containers')</a>
                     </div>
                     <div class="card-content">
                         <div class="card-body">
-                            <form action="{{ route('warehouse.usps_containers.store') }}" method="post" enctype="multipart/form-data">
+                            <form action="{{ route('warehouse.postnl_containers.store') }}" method="post" enctype="multipart/form-data">
                                 @csrf
 
                                 <div class="controls row mb-1 align-items-center my-2">
@@ -29,7 +29,6 @@
                                         <select class="form-control" name="unit_type" value="{{ old('unit_type') }}">
                                             <option value="">@lang('warehouse.containers.Container Type')</option>
                                             <option value="1" {{ old('unit_type') == '1' ? 'selected' : '' }}>BAG</option>
-                                            <option value="2" {{ old('unit_type') == '2' ? 'selected' : '' }}>BOX</option>
                                         </select>
                                         @error('unit_type')
                                             <div class="help-block text-danger"> {{ $message }} </div>
@@ -37,22 +36,29 @@
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center my-2">
-                                    <label class="col-md-3 text-md-right">@lang('warehouse.containers.Origin Airport')<span class="text-danger">*</span></label>
+                                    <label class="col-md-3 text-md-right">@lang('warehouse.containers.Origin Country')<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <livewire:chile-container.search-airport/>
-                                        @error('origin_operator_name')
+                                        <select class="form-control" data-live-search="true" name="origin_country">
+                                            <option value="">@lang('warehouse.containers.Origin Country')</option>
+                                            @foreach (countries() as $country)
+                                                <option value="{{ $country->code }}">{{ $country->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('origin_country')
                                             <div class="help-block text-danger"> {{ $message }} </div>
                                         @enderror
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center my-2">
-                                    <label class="col-md-3 text-md-right">@lang('warehouse.containers.Destination Airport')<span class="text-danger">*</span></label>
+                                    <label class="col-md-3 text-md-right">@lang('warehouse.containers.Destination Country')<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <select class="form-control" name="destination_operator_name">
-                                            <option value="">@lang('warehouse.containers.Destination Airport')</option>
-                                            <option value="MIA" {{ old('destination_operator_name') == 'MIA' ? 'selected' : '' }}>Miami</option>
+                                        <select class="form-control" name="destination_country">
+                                            <option value="">@lang('warehouse.containers.Destination Country')</option>
+                                            @foreach (countries() as $country)
+                                                <option value="{{ $country->code }}">{{ $country->name }}</option>
+                                            @endforeach
                                         </select>
-                                        @error('destination_operator_name')
+                                        @error('destination_country')
                                             <div class="help-block text-danger"> {{ $message }} </div>
                                         @enderror
                                     </div>
@@ -62,8 +68,7 @@
                                     <div class="col-md-6">
                                         <select class="form-control" name="services_subclass_code">
                                             <option value="">@lang('warehouse.containers.Distribution Service Class')</option>
-                                            <option value="Priority" {{ old('DDDDDDDDDDDDDDDDD') == 'Priority' ? 'selected': '' }}>Priority</option>
-                                            <option value="FirstClass" {{ old('services_subclass_code') == 'FirstClass' ? 'selected': '' }}>FirstClass</option>
+                                            <option value="PostNL" {{ old('services_subclass_code') == 'PostNL' ? 'selected': '' }}>PostNL</option>
                                         </select>
                                         @error('services_subclass_code')
                                             <div class="help-block text-danger"> {{ $message }} </div>

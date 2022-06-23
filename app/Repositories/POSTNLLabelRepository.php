@@ -5,6 +5,7 @@ namespace App\Repositories;
 
 use App\Models\Order;
 use App\Services\Converters\UnitsConverter;
+use Illuminate\Support\Facades\Storage;
 use App\Services\Correios\Models\PackageError;
 use App\Services\PostNL\Client;
 use App\Services\PostNL\CN23LabelMaker;
@@ -17,8 +18,7 @@ class POSTNLLabelRepository
     public function get(Order $order)
     {
         if ( $order->getCN23() ){
-            $this->printLabel($order);
-            return null;
+            return true;
         }
 
         return $this->update($order);
@@ -35,13 +35,16 @@ class POSTNLLabelRepository
         return null;
     }
 
-    public function printLabel(Order $order)
+    private function printLabel(Order $order)
     {
-        $labelPrinter = new CN23LabelMaker();
-        $labelPrinter->setOrder($order);
-        $labelPrinter->setService($order->getService());
-        $labelPrinter->setPacketType($order->getDistributionModality());
-        $labelPrinter->saveAs(storage_path("app/labels/{$order->corrios_tracking_code}.pdf"));
+        if($order->api_response)
+        {
+            $postnl_response = json_decode($order->api_response);
+            $base64_pdf = $postnl_response->data->base64string;
+            Storage::put("labels/{$order->corrios_tracking_code}.pdf", base64_decode($base64_pdf));
+
+            return true;
+        }
     }
 
     protected function generateLabel(Order $order)

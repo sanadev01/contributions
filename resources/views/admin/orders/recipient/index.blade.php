@@ -118,10 +118,10 @@
                         <div class="help-block"></div>
                     </div>
                 </div>
-                <div class="form-group col-12 col-sm-6 col-md-4">
+                <div class="form-group col-12 col-sm-6 col-md-4" id="address2">
                     <div class="controls">
                         <label>@lang('address.Address2')</label>
-                        <input type="text" class="form-control"  placeholder="@lang('address.Address2')" value="{{old('address2',optional($order->recipient)->address2)}}"  name="address2">
+                        <input type="text" class="form-control"  placeholder="@lang('address.Address2')" value="{{old('address2',optional($order->recipient)->address2)}}"  name="address2" id="address2">
                         <div class="help-block"></div>
                     </div>
                 </div>
@@ -200,7 +200,7 @@
                 </div>
 
                 <div class="form-group col-12 col-sm-6 col-md-4" id="cpf">
-                    <div class="controls">
+                    <div class="controls" id="cpf_no">
                             <label id="cnpj_label_id" style="{{ optional($order->recipient)->account_type != 'individual' ? 'display:block' : 'display:none' }}" >@lang('address.CNPJ') <span class="text-danger">* (Brazil Only)</span> </label>
                             <label id="cpf_label_id" style="{{ optional($order->recipient)->account_type == 'individual' ? 'display:block' : 'display:none' }}" >@lang('address.CPF') <span class="text-danger">* (Brazil Only)</span> </label>
                         <input type="text" name="tax_id" id="tax_id" value="{{old('tax_id',optional($order->recipient)->tax_id)}}" class="form-control" placeholder="CNPJ"/>

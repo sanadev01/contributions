@@ -68,7 +68,9 @@
                                             {{ $deliveryBill->name }}
                                         </td>
                                         <td>
+                                            @if(!$deliveryBill->isPostNL())
                                             {{ $deliveryBill->request_id }}
+                                            @endif
                                         </td>
                                         <td>{{ $deliveryBill->cnd38_code }}</td>
                                         <td>
@@ -89,14 +91,17 @@
                                                                 <i class="fa fa-cloud-download"></i> GET CN38
                                                             </a>
                                                         @endif
-                                                        <a href="{{ route('warehouse.delivery_bill.manifest',$deliveryBill) }}" class="dropdown-item w-100">
+                                                        @if($deliveryBill->isPostNL())
+                                                            <a href="{{ $deliveryBill->request_id }}" target="_blank" class="dropdown-item w-100">
+                                                        @else
+                                                            <a href="{{ route('warehouse.delivery_bill.manifest',$deliveryBill) }}" class="dropdown-item w-100">
+                                                        @endif
                                                             <i class="fa fa-cloud-download"></i> Download Manifest
                                                         </a>
-                                                        
                                                         <a href="{{ route('warehouse.delivery_bill.manifest',[$deliveryBill, 'service'=> true]) }}" class="dropdown-item w-100">
                                                             <i class="fa fa-cloud-download"></i> Download Manifest By Service
                                                         </a>
-                                                        
+
                                                         <a href="{{ route('warehouse.audit-report.show',$deliveryBill) }}" class="dropdown-item w-100">
                                                             <i class="fa fa-cloud-download"></i> Audit Report
                                                         </a>

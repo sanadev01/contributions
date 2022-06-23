@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Warehouse\DeliveryBill;
 use App\Services\Correios\Models\PackageError;
 use App\Services\Calculators\WeightCalculator;
+use Illuminate\Support\Facades\Http;
 use GuzzleHttp\Client as GuzzleClient;
 use App\Services\Converters\UnitsConverter;
 
@@ -18,9 +19,11 @@ class Client{
     protected $client;
     protected $createLabelUrl;
     protected $cancelLabelUrl;
+    protected $createAssistLabelUrl;
+    protected $createManifest;
     protected $chargableWeight;
 
-    public function __construct($createLabelUrl=null, $cancelLabelUrl=null)
+    public function __construct($createLabelUrl=null, $cancelLabelUrl=null, $createAssistLabelUrl=null, $createManifest=null)
     {
         $this->client = new GuzzleClient([
 
@@ -29,15 +32,21 @@ class Client{
         if (app()->isProduction()) {
             // POSTNL Api Production Environment Credentials
             $createLabelUrl = config('postnl.production.createLabelUrl');
-            $cancelLabelUrl = config('postnl.production.deleteLabelUrl');
+            $cancelLabelUrl = config('postnl.production.cancelLabelUrl');
+            $createAssistLabelUrl = config('postnl.production.createAssistLabelUrl');
+            $createManifest = config('postnl.production.createManifest');
         }else {
 
             // POSTNL Api Testing Environment Credentials
             $createLabelUrl = config('postnl.testing.createLabelUrl');
-            $cancelLabelUrl = config('postnl.testing.deleteLabelUrl');
+            $cancelLabelUrl = config('postnl.testing.cancelLabelUrl');
+            $createAssistLabelUrl = config('postnl.testing.createAssistLabelUrl');
+            $createManifest = config('postnl.testing.createManifest');
         }
         $this->createLabelUrl = $createLabelUrl;
         $this->cancelLabelUrl = $cancelLabelUrl;
+        $this->createAssistLabelUrl = $createAssistLabelUrl;
+        $this->createManifest = $createManifest;
     }
 
     private function getKeys()
@@ -157,7 +166,6 @@ class Client{
         \Log::info(
             $packet
         );
-        //dd($packet);
         try {
             $response = $this->client->post($this->createLabelUrl,[
                 'headers' => $this->getKeys(),
@@ -165,13 +173,12 @@ class Client{
             ]);
 
             $data = json_decode($response->getBody()->getContents());
-            //dd($data);
             $trackingNumber = $data->data->item;
-            //dd($trackingNumber);
 
             if ( $trackingNumber ){
                 $order->update([
                     'corrios_tracking_code' => $trackingNumber,
+                    'api_response' => json_encode($data),
                     'cn23' => [
                         "tracking_code" => $trackingNumber,
                         "stamp_url" => route('warehouse.cn23.download',$order->id),
@@ -191,32 +198,19 @@ class Client{
         }
     }
 
-    public function createContainer(Container $container)
+    public function createContainer($container)
     {
+        $items = [];
         try {
-            $response = $this->client->post('/packet/v1/units',[
-                'headers' => [
-                    'Headers' => "{$this->getKeys()}"
-                ],
+            $response = $this->client->post($this->createAssistLabelUrl,[
+                'headers' => $this->getKeys(),
                 'json' => [
-                    "dispatchNumber" => $container->dispatch_number,
-                    "originCountry" => $container->origin_country,
-                    "originOperatorName" => $container->origin_operator_name,
-                    "destinationOperatorName" => $container->destination_operator_name,
-                    "postalCategoryCode" => $container->postal_category_code,
-                    "serviceSubclassCode" => $container->services_subclass_code,
-                    "unitList" => [
-                        [
-                            "sequence" => $container->sequence,
-                            "unitType" => $container->unit_type,
-                            "trackingNumbers" => $container->orders->pluck('corrios_tracking_code')->toArray()
-                        ]
-                   ]
+                    "label_type" => "PDF",
+                    "destination_country_code" => $container->destination_operator_name,
                 ]
             ]);
-
             $data = json_decode($response->getBody()->getContents());
-            return $data->unitResponseList[0]->unitCode;
+            return $data;
         }catch (\GuzzleHttp\Exception\ClientException $e) {
             return new PackageError($e->getResponse()->getBody()->getContents());
         }
@@ -225,20 +219,81 @@ class Client{
         }
     }
 
-    public function registerDeliveryBill(DeliveryBill $deliveryBill)
+    public function generateManifest($container)
     {
-        try {
-            $response = $this->client->post('/packet/v1/cn38request',[
-                'headers' => [
-                    'Authorization' => "Bearer {$this->getToken()}"
-                ],
-                'json' => [
-                    'dispatchNumbers' => $deliveryBill->containers->pluck('dispatch_number')->toArray()
-                ]
-            ]);
+        $data = [
+            'request_id' => 'HD-'.$container->seal_no,
+            'image_format' => 'pdf',
+            'image_resolution' => 300,
+            'usps' => [
+                'tracking_numbers' => $container->orders->pluck('corrios_tracking_code')->toArray(),
+            ],
+        ];
 
+        try {
+
+            $response = Http::withBasicAuth($this->email, $this->password)->post($this->createManifestUrl, $data);
+
+            if($response->status() == 201)
+            {
+                return (Object)[
+                    'success' => true,
+                    'message' => 'Manifest has been generated',
+                    'data'    => $response->json(),
+                ];
+            }elseif($response->status() == 401)
+            {
+                return (Object)[
+                    'success' => false,
+                    'message' => $response->json()['error'],
+                ];
+            }elseif ($response->status() !== 201)
+            {
+
+                return (object) [
+                    'success' => false,
+                    'message' => $response->json()['message'],
+                ];
+            }
+
+        } catch (Exception $e) {
+            Log::info('USPS Error'. $e->getMessage());
+            return (object) [
+                'success' => false,
+                'message' => $e->getMessage(),
+            ];
+
+        }
+    }
+
+    public function registerDeliveryBillPostNL(DeliveryBill $deliveryBill)
+    {
+        $items = [];
+        foreach ($deliveryBill->containers[0]->orders as $key => $item) {
+            $itemToPush = [
+                $item->corrios_tracking_code,
+            ];
+            array_push($items, $itemToPush[0]);
+        }
+        $barcode = '';
+        $barcode = $deliveryBill->containers[0]->unit_code;
+        try {
+            $response = $this->client->post($this->createManifest,[
+                'headers' => $this->getKeys(),
+                'json' => [
+                    "type" => "ASSISTLABEL",
+                        "assistlabel_item" => [
+                            'assistlabel' => $barcode,
+                            'receptacle_type' => "BG",
+                            'format' => "E",
+                            'product_code' => "MBX",
+                            'items' => $items,
+                        ],
+                    ],
+                ]);
             $data = json_decode($response->getBody()->getContents());
-            return $data->requestId;
+            //dd($data);
+            return $data;
         }catch (\GuzzleHttp\Exception\ClientException $e) {
             return new PackageError($e->getResponse()->getBody()->getContents());
         }

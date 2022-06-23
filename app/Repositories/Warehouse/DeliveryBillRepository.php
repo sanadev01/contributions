@@ -12,13 +12,13 @@ use App\Models\Warehouse\Container;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Warehouse\DeliveryBill;
 use App\Repositories\AbstractRepository;
+use Illuminate\Support\Facades\DB;
 
 class DeliveryBillRepository extends AbstractRepository
 {
     public function get(Request $request)
     {
         $query = DeliveryBill::query();
-        
         if($request->startDate){
             $startDate = $request->startDate. ' 00:00:00';
             $query->where('created_at','>=', $startDate);
@@ -50,6 +50,7 @@ class DeliveryBillRepository extends AbstractRepository
             $isNX = false;
             $isIX = false;
             $isXP = false;
+            $isPostNL = false;
             foreach($request->get('container',[]) as $containerId){
                 $container = Container::find($containerId)->services_subclass_code;
                 if($container  == "NX"){
@@ -61,8 +62,11 @@ class DeliveryBillRepository extends AbstractRepository
                 if($container  == "XP"){
                     $isXP = true;
                 }
+                if($container  == "PostNL"){
+                    $isPostNL = true;
+                }
             }
-            if( ($isNX === true && $isIX === true) || ($isNX === true && $isXP === true) || ($isIX === true && $isXP === true)){
+            if( ($isNX === true && $isIX === true && $isPostNL = true) || ($isNX === true && $isXP === true && $isPostNL = true) || ($isIX === true && $isXP === true && $isPostNL = true)){
                 throw new \Exception("Please don't use diffirent type of Container in one Delivery Bill",500);
             }
 
@@ -71,7 +75,7 @@ class DeliveryBillRepository extends AbstractRepository
             ]);
 
             $deliveryBill->containers()->sync($request->get('container',[]));
-            
+
             foreach($deliveryBill->containers()->get() as $containers){
                 $containers->orders()->update([
                     'status' =>  80,
@@ -79,7 +83,7 @@ class DeliveryBillRepository extends AbstractRepository
                 ]);
 
                 foreach($containers->orders as $order)
-                { 
+                {
                     $this->addOrderTracking($order->id);
                 }
             }
@@ -98,6 +102,7 @@ class DeliveryBillRepository extends AbstractRepository
             $isNX = false;
             $isIX = false;
             $isXP = false;
+            $isPostNL = false;
             foreach($request->get('container',[]) as $containerId){
                 $container = Container::find($containerId)->services_subclass_code;
                 if($container  == "NX"){
@@ -109,13 +114,16 @@ class DeliveryBillRepository extends AbstractRepository
                 if($container  == "XP"){
                     $isXP = true;
                 }
+                if($container  == "PostNL"){
+                    $isPostNL = true;
+                }
             }
-            if( ($isNX === true && $isIX === true) || ($isNX === true && $isXP === true) || ($isIX === true && $isXP === true)){
+            if( ($isNX === true && $isIX === true && $isPostNL = true) || ($isNX === true && $isXP === true && $isPostNL = true) || ($isIX === true && $isXP === true && $isPostNL = true)){
                 throw new \Exception("Please don't use diffirent type of Container in one Delivery Bill",500);
             }
 
             $deliveryBill->containers()->sync($request->get('container',[]));
-            
+
             foreach($deliveryBill->containers()->get() as $containers){
                 $containers->orders()->update([
                     'status' =>  80,
