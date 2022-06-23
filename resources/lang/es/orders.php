@@ -15,7 +15,7 @@ return [
     'Bulk Print' => 'Imprimir a granel',
     'Download Orders' => 'Descargar pedidos',
     'type' => 'Tipo',
-    'payment-status' => 'Estado de pago',
+    'payment-status' => 'pago',
     'payment-method' => 'Método de pago',
     'Delete' => 'borrar',
     'Remove' => 'eliminar orden',

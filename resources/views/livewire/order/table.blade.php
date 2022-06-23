@@ -42,6 +42,17 @@
                                 </button>
                             </div>
                         </form>
+                        <form class="form-inline">
+                            <div class="form-group mb-2">
+                                <label>Start Date</label>
+                                <input type="date" name="start_date" class="form-control">
+                            </div>
+                            <div class="form-group mx-sm-3 mb-2">
+                                <label>End Date</label>
+                                <input type="date" name="end_date" class="form-control">
+                            </div>
+                            <button type="submit" class="btn btn-primary mb-2">Confirm identity</button>
+                          </form>
                     </div>
                 </div>
             </div>
@@ -87,7 +98,7 @@
                         @endadmin
                         <th>
                             @if (\Request::route()->getName() != 'admin.trash-orders.index')
-                                <span class="mr-4"> @lang('Edit Order')</span>
+                                {{-- <span class="mr-4"> @lang('Edit Order')</span> --}}
                             @endif
                             <a href="#" class="" wire:click.prevent="sortBy('created_at')">@lang('orders.date')</a>
                         </th>
@@ -97,13 +108,13 @@
                         
                         {{-- <th>Loja/Cliente</th>
                         <th>Carrier Tracking</th> --}}
-                        <th>Cliente</th>
+                        <th>Reference</th>
                         {{-- <th>Carrier</th>
                         @admin
                             <th>Carrier Cost</th>
                         @endadmin --}}
                         <th>Tracking Code</th>
-                        <th><a href="#" class=" text-white" wire:click.prevent="sortBy('gross_total')">@lang('orders.amount')</a></th>
+                        <th><a href="#" wire:click.prevent="sortBy('gross_total')">@lang('orders.amount')</a></th>
                         <th>@lang('orders.status')</th>
                         <th>@lang('orders.type')</th>
                         <th>@lang('orders.payment-status')</th>
