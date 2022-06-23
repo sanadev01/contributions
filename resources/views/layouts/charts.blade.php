@@ -3,7 +3,7 @@ function toggleDateSearch()
 {
     var checkBox = document.getElementById("customSwitch8");
     const div = document.getElementById('dateSearch');
-    if (div.style.display === 'none'){
+    if (div.style.display != 'block'){
         div.style.display = 'block';
     } else {
         div.style.display = 'none';

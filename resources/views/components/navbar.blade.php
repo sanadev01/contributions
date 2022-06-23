@@ -40,13 +40,6 @@
                         </li>
 
                     <li>
-                        {{-- <div class="fonticon-wrap"> 
-                            <a class="nav-link icon theme-layout nav-link-bg layout-setting"> 
-                                <span class="layout" onclick="darkMode()">
-                                    <i id="toggle" class="fa fa-moon-o"></i>
-                                </span> 
-                            </a>
-                        </div> --}}
                     </li>
                     {{-- <x-web-search></x-web-search> --}}
                     {{--Notification--}}
@@ -67,6 +60,13 @@
             layout.classList.remove("icon-moon");
             layout.classList.add("icon-sun");
             const headings = document.getElementsByTagName("h6");
+            document.getElementById("example").style.color = 'white';
+            document.getElementById("example").style.border = 'red';
+            let th = document.getElementById('th');
+            th.classList.add('table-dark-th');
+            document.getElementById("th").style.backgroundColor = '#1a1a3c ';
+            document.getElementById("th").style.color = 'white ';
+            document.getElementById("addressHeader").style.color = 'white ';
             // console.log(h6);
             for (let h6 of headings) {
                 h6.classList.add('text-white');
@@ -78,6 +78,12 @@
             layout.classList.remove("icon-sun");
             layout.classList.add("icon-moon");
             const headings = document.getElementsByTagName("h6");
+            document.getElementById("addressHeader").style.color = 'black ';
+            document.getElementById("example").style.color = 'black';
+            document.getElementById("th").style.backgroundColor = 'white ';
+            document.getElementById("th").style.color = 'black';
+
+
             // console.log(h6);
             for (let h6 of headings) {
                 h6.classList.remove('text-white');

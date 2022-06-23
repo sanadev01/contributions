@@ -27,6 +27,47 @@
 
 {{-- <script src="{{ mix('js/app.js') }}"></script> --}}
 <script>
+function handleChange(checkbox) {
+    if(checkbox.checked == true){
+        document.getElementById("printBtnDiv").style.display = 'block';
+        console.log('on');
+    }else{
+        document.getElementById("printBtnDiv").style.display = 'none';
+        console.log('off');
+   }
+}
+      var table = $('#example').DataTable({
+        searching: false,
+        paging: false,
+        columnDefs: [
+            { targets: [0, 1, 2, 3], visible: true},
+            { targets: '_all', visible: false },
+    ]
+});
+      $(document).ready(function () {
+        $('#visibilityToggle').change(function() {    
+    var item=$(this);
+    // Get the column API object
+    if(item.val() !== ' ' || item.val() !== null)
+    {
+    var column = table.column(item.val());
+    // Toggle the visibility
+    column.visible(!column.visible());
+    $("#visibilityToggle").val("");
+    }
+});
+  
+ 
+    $('a.toggle-vis').on('click', function (e) {
+        e.preventDefault();
+ 
+        // Get the column API object
+        var column = table.column($(this).attr('data-column'));
+
+        // Toggle the visibility
+        column.visible(!column.visible());
+    });
+});
     // script to adjust sidebar height as per screen resolution
     var body_height = $('body').css('height').replace('px','');
     var logo_height = $(".main-menu .navbar-header").css('height').replace('px','');

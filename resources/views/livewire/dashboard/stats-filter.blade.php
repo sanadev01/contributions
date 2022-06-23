@@ -88,8 +88,8 @@
             <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3"> 
                 <div class="card overflow-hidden"> 
                     <div class="card-body"> 
-                        <div class="row ml-4">
-                            <div class="d-flex justify-content-space-around row smallCharts">
+                        <div class="row" id="firstCard">
+                            <div class="d-flex justify-content-space-around row col-lg-12 smallCharts">
                             <div class="mt-2"> 
                                 <h6 class="">@lang('dashboard.Today Orders')</h6> 
                                 <h2 class="mb-0 number-font figures">{{ $orders['currentDayTotal'] }}</h2> 
@@ -123,8 +123,8 @@
                     <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3"> 
                         <div class="card overflow-hidden"> 
                             <div class="card-body"> 
-                                <div class="row ml-4"> 
-                                    <div class="row smallCharts">
+                                <div class="row" id="secondCard"> 
+                                    <div class="row col-lg-12 smallCharts">
                                     <div class="mt-2"> 
                                         <h6 class="">@lang('dashboard.Total Month Order',['month'=>$orders['monthName']])</h6> 
                                         <h2 class="mb-0 number-font figures">{{ $orders['currentmonthTotal'] }}</h2> 
@@ -157,8 +157,8 @@
                                     <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3"> 
                                         <div class="card overflow-hidden"> 
                                             <div class="card-body"> 
-                                                <div class="row ml-4"> 
-                                                <div class="row smallCharts">
+                                                <div class="row" id="thirdCard"> 
+                                                <div class="row col-lg-12 smallCharts">
                                                     <div class="mt-2"> 
                                                         <h6 class="">@lang('dashboard.Current Year')</h6> 
                                                         <h2 class="mb-0 number-font figures">{{ $orders['currentYearTotal'] }}</h2> 
@@ -193,8 +193,8 @@
                                     <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3"> 
                                         <div class="card overflow-hidden"> 
                                             <div class="card-body"> 
-                                                <div class="row ml-4">
-                                                <div class="row smallCharts">
+                                                <div class="row" id="fourthCard">
+                                                <div class="row col-lg-12 smallCharts">
                                                     <div class="mt-2"> 
                                                         <h6 class="">@lang('dashboard.Total Orders')</h6>
                                                          <h2 class="mb-0 number-font figures">{{ $orders['totalOrders'] }}</h2> 
@@ -252,48 +252,23 @@
                 <div class="col-lg-3 col-12">
                     <div class="card activityCard">
                         <div class="card-title m-0 p-2 notification-card-right">
-                            <span class="notification-title">Notifications</span>
+                            <span class="notification-title">Sent Orders</span>
                         </div>
                         <div class="card-content">
                             <div class="card-body">
                                 <ul class="timeline-left list-unstyled">
                                         <li class=""><a class=" justify-content-between">
-                                                <div class="media  align-items-start">
+                                            @foreach ($orders['lastFive'] as $order)
+                                                <div class="media  align-items-start border-bottom-10">
                                                     <div class="media-body">
-                                                        <h6 class="primary media-heading">You have new order!</h6><small class="notification-text"> Are your going to meet me tonight?</small>
+                                                        <h6 class="primary media-heading">{{$order->merchant}}</h6><small class="notification-text"> </small>
                                                     </div><small>
-                                                        <time class="media-meta" datetime="2015-06-11T18:29:20+08:00">9 hours ago</time></small>
+                                                        <time class="media-meta" datetime="2015-06-11T18:29:20+08:00">{{$order->warehouse_number}}</time></small>
                                                 </div>
+                                                <hr>
+                                            @endforeach
                                             </a><a class="justify-content-between" href="javascript:void(0)">
-                                                <div class="media align-items-start">
-                                                    <div class="media-body">
-                                                        <h6 class="success media-heading red darken-1">99% Server load</h6><small class="notification-text">You got new order of goods.</small>
-                                                    </div><small>
-                                                        <time class="media-meta" datetime="2015-06-11T18:29:20+08:00">5 hour ago</time></small>
-                                                </div>
-                                            </a><a class=" justify-content-between" href="javascript:void(0)">
-                                                <div class="media  align-items-start">
-                                                    <div class="media-body">
-                                                        <h6 class="danger media-heading yellow darken-3">Warning notifixation</h6><small class="notification-text">Server have 99% CPU usage.</small>
-                                                    </div><small>
-                                                        <time class="media-meta" datetime="2015-06-11T18:29:20+08:00">Today</time></small>
-                                                </div>
-                                            </a><a class=" justify-content-between" href="javascript:void(0)">
-                                                <div class="media  align-items-start">
-                                                    <div class="media-body">
-                                                        <h6 class="info media-heading">Complete the task</h6><small class="notification-text">Cake sesame snaps cupcake</small>
-                                                    </div><small>
-                                                        <time class="media-meta" datetime="2015-06-11T18:29:20+08:00">Last week</time></small>
-                                                </div>
-                                            </a><a class=" justify-content-between" href="javascript:void(0)">
-                                                <div class="media  align-items-start">
-                                                    <div class="media-body">
-                                                        <h6 class="warning media-heading">Generate monthly report</h6><small class="notification-text">Chocolate cake oat cake tiramisu marzipan</small>
-                                                    </div><small>
-                                                        <time class="media-meta" datetime="2015-06-11T18:29:20+08:00">Last month</time></small>
-                                                </div>
-                                        <li class="dropdown-menu-footer"><a class="dropdown-item p-1 text-center" href="javascript:void(0)">Read all notifications</a></li>
-                                    
+                                        <li class="dropdown-menu-footer pt-4"><a class="dropdown-item p-1 text-center" href="{{ route('admin.orders.index') }}">See all orders</a></li>
                                 </ul>
                             </div>
                         </div>

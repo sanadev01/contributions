@@ -1,10 +1,9 @@
 <tr @if( $order->user->hasRole('retailer') &&  !$order->isPaid()) class="bg-danger-custom text-white" @endif>
     @if(\Request::route()->getName() != 'admin.reports.order.index'  && !$order->isTrashed())
         <td>
-            
-            <div class="vs-checkbox-con vs-checkbox-primary" title="@lang('orders.Bulk Print')">
-                <input type="checkbox" name="orders[]" class="bulk-orders" value="{{$order->id}}">
-                <span class="vs-checkbox vs-checkbox-lg">
+            <div class="vs-checkbox-con vs-checkbox-primary" style="justify-content: center; margin-left:19px;" title="@lang('orders.Bulk Print')">
+                <input type="checkbox"  onchange='handleChange(this);' name="orders[]" class="bulk-orders"  value="{{$order->id}}">
+                <span class="vs-checkbox vs-checkbox-sm">
                     <span class="vs-checkbox--check">
                         <i class="vs-icon feather icon-check"></i>
                     </span>
@@ -13,19 +12,29 @@
             </div>
         </td>
     @endif
+    @admin
+    <td>
+        <div class="media media-xs overflow-visible">
+            <img class="corrioes-lable" src="{{asset('images/user-icon.png')}}" style="height: 40px; width: 40px" alt="">
+        </div>
+        <div class="media-body valign-middle">
+            {{ $order->user->name }} - {{ $order->user->hasRole('wholesale') ? 'W' : 'R' }}
+        </div>
+    </td>
+    @endadmin
     <td class="d-flex justify-content-between align-items-center border-0">
         @if(\Request::route()->getName() != 'admin.reports.order.index'  && !$order->isTrashed())
-            <div class="vs-radio-con" wire:click="$emit('edit-order',{{$order->id}})" title="@lang('Edit Order')">
+            {{-- <div class="vs-radio-con" wire:click="$emit('edit-order',{{$order->id}})" title="@lang('Edit Order')">
                 <input type="radio" name="edit_order" class="edit-order" value="false">
-                <span class="vs-radio vs-radio-lg">
+                <span class="vs-radio vs-radio-sm">
                     <span class="vs-radio--border"></span>
                     <span class="vs-radio--circle"></span>
                 </span>
-            </div>
+            </div> --}}
+            <p id="openEditModal" class="mb-0 " wire:click="$emit('edit-order',{{$order->id}})">
+                {{ optional($order->order_date)->format('m/d/Y') }}
+            </p>
         @endif
-        <p class="mb-0">
-            {{ optional($order->order_date)->format('m/d/Y') }}
-        </p>
     </td>
     <td style="width: 200px;">
         @if ( $order->isArrivedAtWarehouse() )
@@ -49,17 +58,12 @@
             @endforeach
         </span>
     </td>
-    @admin
-    <td>
-        {{ $order->user->name }} - {{ $order->user->hasRole('wholesale') ? 'W' : 'R' }}
-    </td>
-    @endadmin
     <td>
         {{ str_limit(ucfirst($order->merchant), 30) }}
     </td>
-    <td>
+    {{-- <td>
         {{ ucfirst($order->tracking_id) }}
-    </td>
+    </td> --}}
     <td>
         {{ ucfirst($order->customer_reference) }}
     </td>
@@ -197,3 +201,5 @@
         </div>
     </td>
 </tr>
+<script>
+</script>

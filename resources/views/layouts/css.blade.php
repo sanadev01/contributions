@@ -72,7 +72,7 @@
         color: white !important;
     }
     .sub-category:not(:first-child){
-        margin-top: 1rem;
+        margin-top: 0rem;
         font-size: 15px;
         padding-left: 7px;
     }
@@ -88,6 +88,21 @@
     }
     svg {
         vertical-align: middle;
+    }
+    .table-bordered thead td, .table-bordered thead th {
+    border-bottom-width: 2px;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+}
+.table-bordered tbody td{
+    font-size: 16px !important;
+    font-weight: 400 !important;
+    line-height: 16px !important;
+}
+    #printBtnDiv{
+        padding-left: 0px;
+        padding-top: 13px;
+        display: none;
     }
     .dark-mode {
         background-color: #1a1a3c !important;
@@ -114,6 +129,9 @@
         border-radius: 32%;
         behavior: url(PIE.htc); /* remove if you don't care about IE8 */
     }
+    .btn-primary{
+    background-color: #5784BA !important;
+   }
       .type2 {
         width: 40px;
         height: 40px;
@@ -127,6 +145,22 @@
         font-size: 1.7rem; 
         vertical-align: center;
     }
+    /* #colPhone, #colAddr, #colCnjp, #colActions{
+        display: none;
+    } */
+    .th{
+        font-size: inherit;
+        font-weight: inherit;
+        line-height: inherit;
+    }
+    .table-dark-th{
+        font-size: 14px;
+        line-height: 21px;
+        font-weight: 500;
+    }
+    #example{
+        width: 100% !important;
+    }
     .date-toggle-btn{
         padding-top: 7%;
         right:4%;
@@ -137,6 +171,12 @@
     }
     .icon-plus-square{
         cursor: pointer;
+    }
+    #openEditModal{
+        cursor: pointer;
+    }
+    #optionChkbx{
+        width: 30px !important;
     }
     body.vertical-layout.vertical-menu-modern.menu-expanded .main-menu .navigation > li > a > i:before{
         height: 15px;
@@ -188,21 +228,24 @@
     }
     .activityCard{
         border-radius: 8px;
-        height: 95%;
+        height: 94%;
     }
     .notification-card-right{
         border-radius: 8px 8px 0px 0px;
     }
-    /* .activityCard {
-    background-image: url(../images/bg2.jpg);
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    position: relative;
-    } */
     .smallCharts{
         display: flex !important;
-        justify-content: space-around !important;
+        justify-content: space-between !important;
+    }
+    #chart3{
+        width: 59px !important;
+    }
+    #cardChart ,#chart2, #chart4{
+        width: 48px !important;
+        height: 59px !important;
+    }
+    #firstCard, #secondCard, #thirdCard, #fourthCard{
+        padding-left: 16px;
     }
     .figures{
         font-weight: 600 !important;
@@ -408,32 +451,29 @@
         border-radius: 4px;
         /* color: var(--primary-bg-color) !important; */
     }
-    .btn-primary {
-        border-color: #1174b7 !important;
-        background-color: #1174b7 !important;
-        /* color: #fff; */
-    }
+
     .btn-info {
-        border-color: #1174b7 !important;
-        background-color: #1174b7 !important;
+        border-color: #5784BA !important;
+        background-color: #5784BA !important;
         color: #fff !important;
     }
+   
     /* th {
         background-color: blue;
         color: white;
     }  */
-    .table thead th {
+    /* .table thead th {
         background-color: #1174b7;
         color: white;
-    }
-    tr:nth-child(even) {
+    } */
+    /* tr:nth-child(even) {
         background-color: #dbe9f2 !important;
-    }
+    } */
     .bg-danger-custom {
         background-color: #fa9595
     }
     .table th, .table td {
-        border-top: 0px solid #f8f8f8 !important;
+        /* border-top: 0px solid #f8f8f8 !important; */
     }
     .vs-radio-con .vs-radio .vs-radio--border {
         background: transparent;
@@ -488,7 +528,7 @@
     } */
     .hd-card {
         padding: 12px 16px !important;
-        background: #dbe9f2;
+        /* background: #dbe9f2; */
         margin: -17px;
     }
     .hd-mt-22{
