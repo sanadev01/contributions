@@ -13,13 +13,19 @@
         </td>
     @endif
     @admin
-    <td>
+    <td id="userNameCol">
         <div class="media media-xs overflow-visible">
-            <img class="corrioes-lable" src="{{asset('images/user-icon.png')}}" style="height: 40px; width: 40px" alt="">
+            <img class="corrioes-lable position-absolute" src="{{asset('images/user-icon.png')}}" style="height: 40px; width: 40px" alt="">
         </div>
-        <div class="media-body valign-middle">
+        <div class="media-body valign-middle" style="padding-left: 45px">
             {{ $order->user->name }} - {{ $order->user->hasRole('wholesale') ? 'W' : 'R' }}
         </div>
+        <div style="padding-left: 45px !important; font-weight:400 !important;">
+            <span>{{ str_limit(ucfirst($order->merchant), 30) }} ,  {{ ucfirst($order->tracking_id) }}</span>
+        </div>
+        {{-- <div style="padding-left: 45px !important">
+          
+        </div> --}}
     </td>
     @endadmin
     <td class="d-flex justify-content-between align-items-center border-0">
@@ -58,9 +64,9 @@
             @endforeach
         </span>
     </td>
-    <td>
+    {{-- <td>
         {{ str_limit(ucfirst($order->merchant), 30) }}
-    </td>
+    </td> --}}
     {{-- <td>
         {{ ucfirst($order->tracking_id) }}
     </td> --}}
