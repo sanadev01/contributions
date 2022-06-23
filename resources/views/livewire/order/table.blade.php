@@ -2,14 +2,12 @@
     <div class="col-md-12" >
         <div class="hd-card mt-1 mb-3">
             <div class="row col-12 p-0 m-0 pb-2 pt-2" id="togglers" style="justify-content: space-between;">
-                <div class="col-12 h-50" >
                     <div id="printBtnDiv">
                         <button type="btn" onclick="toggleDateSearch()" id="customSwitch1" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-check-square"></i></button>
                         <button type="btn" onclick="toggleDateSearch()" id="customSwitch2" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-printer"></i></button>
                         <button type="btn" onclick="toggleDateSearch()" id="customSwitch3" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-printer"></i></button>
                         <button type="btn" onclick="toggleDateSearch()" id="customSwitch4" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-trash"></i></button>
                     </div>
-                </div>
                 {{-- <div class="col-11 text-right p-0">
                     <form action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
                         @csrf
@@ -54,7 +52,8 @@
                             </div>
                             <button class="btn btn-primary btn-sm" style="margin-bottom: 4px;" title="@lang('orders.import-excel.Download')">
                                 <i class="fa fa-arrow-down"></i>
-                                </button>                          </form>
+                                </button>                          
+                            </form>
                     </div>
                 </div>
             </div>
@@ -87,7 +86,7 @@
         @endadmin
 
         <div class="table-responsive order-table">
-            <table class="table mb-0  table-bordered" id="order-table">
+            <table class="table mb-0  table-bordered" id="">
                 <thead>
                     <tr>
                         @if (\Request::route()->getName() != 'admin.trash-orders.index')
