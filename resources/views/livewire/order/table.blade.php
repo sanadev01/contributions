@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-12" >
         <div class="hd-card mt-1 mb-3">
-            <div class="row col-12 p-0 m-0 pb-2 pt-2" id="togglers" style="justify-content: space-between;">
+            <div class="row col-12 p-0 m-0" id="togglers" style="justify-content: space-between;">
                     <div id="printBtnDiv">
                         <button type="btn" onclick="toggleDateSearch()" id="customSwitch1" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-check-square"></i></button>
                         <button type="btn" onclick="toggleDateSearch()" id="customSwitch2" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-printer"></i></button>
@@ -26,20 +26,6 @@
             <div class="row col-10" id="datefilters">
                 <div class=" col-10 text-left mb-2 pl-0" id="dateSearch" style="margin: 22px;">
                     <div class="row col-12 my-3">
-                        {{-- <form action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
-                            @csrf
-                            <div style="float: left">
-                            <label>Start Date</label>
-                            <input type="date" name="start_date" class="form-control">
-                            </div>
-                            <div style="float: right">
-                            <label>End Date</label>
-                            <input type="date" name="end_date" class="form-control">
-                            <button class="btn btn-primary btn-sm" style="margin-bottom: 4px;" title="@lang('orders.import-excel.Download')">
-                                <i class="fa fa-arrow-down"></i>
-                                </button>
-                            </div>
-                        </form> --}}
                         <form class="form-inline" action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
                             @csrf
                             <div class="form-group mb-2">
