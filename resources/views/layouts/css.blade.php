@@ -72,7 +72,7 @@
         opacity : 0 !important;
     }
     @media print
-    {
+    {    
         .no-print, .no-print *
         {
             display: none !important;
@@ -108,7 +108,7 @@
     .min-vh-100{
         min-height: 100vh !important
     }
-
+    
     /* Extra small devices (phones, 600px and down) */
     @media only screen and (max-width: 600px) {
         #main-menu-navigation {
@@ -144,7 +144,7 @@
         .modal-content {
             width: min-content;
         }
-    }
+    }    
     .dropdown-menu.overlap-menu {
         z-index: 10;
         right: 0px;
@@ -159,7 +159,7 @@
     }
 
     .big-checkbox{
-        height: 25px;
+        height: 25px; 
         width: 25px;
     }
     .big-label {
@@ -172,15 +172,12 @@
         vertical-align: middle;
         margin-top: auto;
     }
-    .main-menu.menu-light .navigation#main-menu-navigation li a .icon_adjst {
-        margin-right:4px;
-    }
 
+    .main-menu.menu-light .navigation#main-menu-navigation li a .icon_adjst {
+        margin-right:3px;
+    }
     .main-menu.menu-light .navigation#main-menu-navigation li a img{
         width: 16px;
-    }
-    .main-menu.menu-light .navigation#main-menu-navigation li a .icon_adjst {
-        margin-right: 3px;
     }
     .main-menu.menu-light .navigation#main-menu-navigation li a .icon_adjst:before{
         font-size:1.28rem;
@@ -190,123 +187,6 @@
     }
     .red{
         color:#ff5a5a
-    }
-    .main-menu.menu-light .navigation > li ul .active {
-        box-shadow: 0 0 0px 0px rgb(255 255 255 / 0%);
-        border-radius: 4px !important;
-        background: #1174b7 !important;
-    }
-    .main-menu.menu-light .navigation > li.active > a {
-        background:  #1174b7;
-        box-shadow: 0 0 0px 0px rgb(255 255 255 / 0%);
-        color: #fff;
-        font-weight: 400;
-        border-radius: 4px;
-    }
-    .btn-primary {
-        border-color: #1174b7 !important;
-        background-color: #1174b7 !important;
-        /* color: #fff; */
-    }
-    .btn-info {
-        border-color: #1174b7 !important;
-        background-color: #1174b7 !important;
-        color: #fff !important;
-    }
-    /* th {
-        background-color: blue;
-        color: white;
-    }  */
-    .table thead th {
-        background-color: #1174b7;
-        color: white;
-    }
-    tr:nth-child(even) {
-        background-color: #dbe9f2 !important;
-    }
-    .bg-danger-custom {
-        background-color: #fa9595
-    }
-    .table th, .table td {
-        border-top: 0px solid #f8f8f8 !important;
-    }
-    .vs-radio-con .vs-radio .vs-radio--border {
-        background: transparent;
-        border: 2px solid #1174b7;
-    }
-    .font-large-1 {
-        text-align: center;
-        font-size: 1.5rem !important;
-    }
-    .vs-radio-con input:checked ~ .vs-radio .vs-radio--circle {
-        background: #1174b7;
-    }
-    .table td, .table th {
-        vertical-align: middle;
-    }
-
-    .app-content .wizard > .steps > ul > li.current .step {
-        border-color: #1174b7 !important;
-        background-color: #1174b7 !important;
-    }
-
-    .app-content .wizard > .steps > ul > li.current > a {
-        color: #1174b7;
-        cursor: default;
-    }
-
-    .app-content .wizard.wizard-circle > .steps > ul > li:before, .app-content .wizard.wizard-circle > .steps > ul > li:after {
-        background-color: #1174b7 !important;
-    }
-    .app-content .wizard.wizard-circle > .steps > ul > li.current ~ li:before {
-        background-color: transparent !important;
-    }
-    .app-content .wizard.wizard-circle > .steps > ul > li.current ~ li:after {
-        background-color: transparent !important;
-    }
-    .app-content .wizard.wizard-circle > .steps > ul > li.current:after {
-        background-color: transparent !important;
-    }
-    .app-content .wizard > .actions > ul > li > a {
-        background: #1174b7 !important;
-    }
-    .hd-search:focus {
-        box-shadow: 0 0 10px #1174b7;
-        border-radius: 28px;
-        border: 2px solid #1174b7;
-        height: 40px;
-    }
-    .hd-search {
-        border-radius: 28px;
-        border: 1px solid #1174b7;
-        height: 40px;
-    }
-    .hd-card {
-        padding: 12px 16px !important;
-        background: #dbe9f2;
-        margin: -17px;
-    }
-    .hd-mt-22{
-        margin-top:2.2rem!important
-    }
-    .mt-25 {
-        margin-top:26px !important
-    }
-
-    .nav.nav-pills .nav-item .nav-link {
-        border-radius: 10px 55px 10px 10px;
-        border: solid 1px !important;
-        border-color: #1174b7 !important;
-        color: #1174b7;
-    }
-
-    .btn-primary:hover {
-        border-color: #1174b7 !important;
-        color: #fff !important;
-        box-shadow: 0 8px 25px -8px #1174b7;
-    }
-    .hd-mt-20{
-        margin-top:1.9rem!important
     }
 </style>
 @yield('custom-css')

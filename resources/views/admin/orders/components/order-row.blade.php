@@ -1,4 +1,4 @@
-<tr @if( $order->user->hasRole('retailer') &&  !$order->isPaid()) class="bg-danger-custom text-white" @endif>
+<tr @if( $order->user->hasRole('retailer') &&  !$order->isPaid()) class="bg-danger text-white" @endif>
     @if(\Request::route()->getName() != 'admin.reports.order.index'  && !$order->isTrashed())
         <td>
             
@@ -23,9 +23,7 @@
                 </span>
             </div>
         @endif
-        <p>
-            {{ optional($order->order_date)->format('m/d/Y') }}
-        </p>
+        {{ optional($order->order_date)->format('m/d/Y') }}
     </td>
     <td style="width: 200px;">
         @if ( $order->isArrivedAtWarehouse() )
@@ -97,22 +95,22 @@
 
         </select>
     </td>
-    <td style="zoom: 0.87">
+    <td style="zoom: 0.8">
         @if ( $order->is_consolidated )
-            <span class="btn btn-sm btn-primary">
+            <span class="btn btn-primary">
                 Consolidated
             </span>
         @else
-            <span class="btn btn-sm btn-primary">
+            <span class="btn btn-primary">
                 Non-Consolidated
             </span>
         @endif
     </td>
     <td class="font-large-1">
         @if( $order->isPaid() )
-            <i class="fa fa-check-circle text-success"></i>
+            <i class="feather icon-check text-success"></i>
         @else
-            <i class="fa fa-times-circle @if( $order->user->hasRole('retailer') &&  !$order->isPaid()) text-white @else text-danger @endif"></i>
+            <i class="feather icon-x  @if( $order->user->hasRole('retailer') &&  !$order->isPaid()) text-white @else text-danger @endif"></i>
         @endif
     </td>
     

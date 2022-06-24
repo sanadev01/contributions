@@ -255,9 +255,10 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 })->name('order.us-label.download');
 
 Route::get('test-label',function(){
-
-    Product::truncate();
-    dd(Product::all());
+    \Artisan::call('optimize:clear');
+    echo "<pre>";
+    echo \Artisan::output();
+    dd(132);
     $labelPrinter = new CN23LabelMaker();
 
     $order = Order::find(53654);

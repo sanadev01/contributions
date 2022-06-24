@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Calculator;
 use Livewire\Component;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
+use App\Models\ShippingService;
 use App\Repositories\Calculator\USCalculatorRepository;
 
 class UsCalculatorRates extends Component
@@ -18,7 +19,7 @@ class UsCalculatorRates extends Component
     public $shippingServiceTitle;
     public $serviceResponse = false;
 
-    public $error;
+    public $serviceError;
     public $selectedService;
     private $selectedServiceCost;
     private $order;
@@ -40,24 +41,58 @@ class UsCalculatorRates extends Component
         return view('livewire.calculator.us-calculator-rates');
     }
 
-    public function getSenderLabel(USCalculatorRepository $usCalculatorRepository)
+    public function getLabel(USCalculatorRepository $usCalculatorRepository)
     {
         if (!$this->selectedService) {
-            return $this->addError('selectedService', 'select service please.');
+            $this->addError('selectedService', 'select service please.');
+            return false;
+        }
+
+        if (!$this->userLoggedIn) {
+            $this->addError('serviceError', 'please login to continue.');
+            return false;
         }
         
         if ($this->getCostOfSelectedService() > getBalance())
         {
-            $this->error = 'Not Enough Balance. Please Recharge your account';
+            $this->addError('serviceError', 'insufficient balance, please recharge your account.');
             return false;
         }
 
-        // $order = $usCalculatorRepository->execute($this->createRequest());
-        // $this->error = $usCalculatorRepository->getError();
+        if ($this->selectedServiceEnabledForUser()) {
+            $order = $usCalculatorRepository->executeForLabel($this->createRequest());
+            $this->addError('serviceError', $usCalculatorRepository->getError());
 
-        // if (!$this->error && $order) {
-        //     return redirect()->route('admin.orders.label.index', $order->id);
-        // }
+            if ($order) {
+                return redirect()->route('admin.orders.label.index', $order->id);
+            }
+        }
+    }
+
+    public function downloadRates()
+    {
+        if ($this->ratesWithProfit) {
+            $usCalculatorRepository = new USCalculatorRepository();
+
+            return $usCalculatorRepository->download($this->ratesWithProfit, $this->tempOrder, $this->chargableWeight, $this->weightInOtherUnit);
+        }
+        
+    }
+
+    private function selectedServiceEnabledForUser()
+    {
+        if ($this->userLoggedIn) {
+            $serviceTitle = $this->getServiceTitle();
+            
+            if (setting($serviceTitle, null, auth()->user()->id)) {
+                return true;
+            }
+
+            $this->addError('serviceError', $serviceTitle.' service is not enabled for your account, contact admin please');
+            return false; 
+        }
+        $this->addError('serviceError', 'Please login to continue');
+        return false; 
     }
 
     private function getCostOfSelectedService()
@@ -65,9 +100,50 @@ class UsCalculatorRates extends Component
         Arr::where($this->ratesWithProfit, function ($value, $key) {
             if($value['service_sub_class'] == $this->selectedService)
             {
-                return $this->selectedServiceCost = $value['rate'];
+                $this->selectedServiceCost = $value['rate'];
             }
         });
+
+        return $this->selectedServiceCost;
+    }
+
+    private function getServiceTitle()
+    {
+        if (in_array($this->selectedService, $this->uspsServices())) {
+            return 'usps';
+        }
+
+        if (in_array($this->selectedService, $this->upsServices())) {
+            return 'ups';
+        }
+
+        if (in_array($this->selectedService, $this->fedexServices())) {
+            return 'fedex';
+        }
+    }
+
+    private function uspsServices()
+    {
+        return [
+            ShippingService::USPS_PRIORITY, 
+            ShippingService::USPS_FIRSTCLASS, 
+            ShippingService::USPS_PRIORITY_INTERNATIONAL, 
+            ShippingService::USPS_FIRSTCLASS_INTERNATIONAL, 
+        ];
+    }
+
+    private function upsServices()
+    {
+        return [
+            ShippingService::UPS_GROUND,
+        ];
+    }
+
+    private function fedexServices()
+    {
+        return [
+            ShippingService::FEDEX_GROUND,
+        ];
     }
 
     private function createRequest()

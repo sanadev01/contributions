@@ -53,33 +53,19 @@ class UpsService
         return $this->upsApiCall($this->createPackageUrl, $this->packageRequestForRecipient($order));
     }
 
-    public function getSenderPrice($order, $request)
-    {
-        if ($request->exists('consolidated_order') && $  request->consolidated_order == false) {
-            $consolidatedOrderService = new ConsolidatedOrderService();
-
-            $consolidatedOrderService->handle($this->getPaymentDetails(), $this->shipperNumber);
-            return $this->upsApiCall($this->ratingPackageUrl,  $consolidatedOrderService->consolidatedOrderRatesRequestForSender($order, $request));
-        }
-
-        return $this->upsApiCall($this->ratingPackageUrl, $thi        s->ratesRequestForSender($order, $request));
+    public function getSenderRates($order, $request)
+    {  
+        return $this->upsApiCall($this->ratingPackageUrl, $this->createRequestForRates($order, $request->service, $request, false));
     }
 
     public function getLabelForSender($order, $request)
     {
-        if ($request->exists('consolidated_order') && $request->consolidated_order == false) {
-            $consolidatedOrderService = new ConsolidatedOrderService();
-
-            $consolidatedOrderService->handle($this->getPaymentDetails(), $this->shipperNumber);
-            return $this->upsApiCall($this->createPackageUrl,  $consolidatedOrderService->consolidatedOrderPackageRequestForSender($order, $request));
-        }
-
         return $this->upsApiCall($this->createPackageUrl, $this->packageRequestForSender($order, $request));
     }
 
     public function getRecipientRates($order, $service)
     {
-        return $this->upsApiCall($this->ratingPackageUrl, $this->rateRequestForRecipient($order, $service));
+        return $this->upsApiCall($this->ratingPackageUrl, $this->createRequestForRates($order, $service, null, true));
     }
 
     public function getPickupRates($request)
@@ -89,13 +75,6 @@ class UpsService
 
     public function createPickupShipment($order, $request)
     {
-        if ($request->exists('consolidated_order')) {
-            $consolidatedOrderService = new ConsolidatedOrderService();
-            $consolidatedOrderService->handle($this->getPaymentDetails(), $this->shipperNumber);
-
-            return $this->upsApiCall($this->pickupShipmentUrl,  $consolidatedOrderService->co            nsolidatedOrderPickupRequest($order, $request));
-        }
-
        return $this->upsApiCallForPickup($this->pickupShipmentUrl, $this->requestForPickupShipment($order, $request));
     }
 
@@ -107,93 +86,6 @@ class UpsService
     public function trackOrder($trackingNumber)
     {
         return $this->trackUPSOrder($trackingNumber);
-    }
-
-    private function ratesRequestForSender($order, $request)
-    {
-        $this->calculateVolumetricWeight($order);
-
-        $request_body = [
-            'RateRequest' => [
-                   'Request' => [
-                    'SubVersion' => '1703',
-                    'TransactionReference' => [
-                        'CustomerContext' => ''
-                    ]
-                ],
-                'CustomerClassification' => [
-                    'Code' => '01'
-                ],
-                'Shipment' => [
-                    'Shipper' => [
-                        'Name' => Auth::user() ? Auth::user()->pobox_number :  'HERCO SUITE#100',
-                        'AttentionName' => ($request->first_name) ? $request->first_name : 'HERCO SUITE#100',
-                        'ShipperNumber' => $this->shipperNumber,
-                        'Phone' => [
-                            'Number' => Auth::user() ? Auth::user()->phone : '+13058885191'
-                        ],
-                        'Address' => [
-                            'AddressLine' => $request->sender_address,
-                            'City' => $request->sender_city,
-                            'StateProvinceCode' => $request->sender_state,
-                            'PostalCode' => $request->sender_zipcode,
-                            'CountryCode' => 'US',
-                        ],
-                    ],
-                    'ShipFrom' => [
-                        'Name' => ($request->first_name) ? $request->first_name : 'HERCO SUITE#100',
-                        'Address' => [
-                            'AddressLine' => $request->sender_address,
-                            'City' => $request->sender_city,
-                            'StateProvinceCode' => $request->sender_state,
-                            'PostalCode' => $request->sender_zipcode,
-                            'CountryCode' => 'US',
-                        ],
-                    ],
-                    'ShipTo' => [
-                        'Name' => 'HERCO SUITE#100',
-                        'Address' => [
-                            'AddressLine' => '2200 NW 129TH AVE',
-                            'City' => 'Miami',
-                            'StateProvinceCode' => 'FL',
-                            'PostalCode' => '33182',
-                            'CountryCode' => 'US',
-                        ],
-                    ],
-                    'PaymentDetails' => $this->getPaymentDetails(),
-                    'Service' =>  [
-                        'Code' => '0'.$request->service,
-                        'Description' => 'Ground Service'
-                    ],
-                    'ShipmentTotalWeight' => $this->getShipmentTotalWeight(),
-                    'Package' => [
-                        'PackagingType' => [
-                            'Code' => '02',
-                            'Description' => 'Package'
-                        ],
-                        'Dimensions' => [
-                            'UnitOfMeasurement' => [
-                                'Code' => 'IN',
-                            ],
-                            'Length' => ($order->measurement_unit == 'kg/cm') ? "$this->length" :"$order->length",
-                            'Width' => ($order->measurement_unit == 'kg/cm') ? "$this->width" : "$order->width",
-                            'Height' => ($order->measurement_unit == 'kg/cm') ? "$this->height" : "$order->height",
-                        ],
-                        'PackageWeight' => [
-                            'UnitOfMeasurement' => [
-                                'Code' => 'LBS',
-                            ],
-                            'Weight' => ($this->chargableWeight != null) ? "$this->chargableWeight" : (($order->measurement_unit == 'kg/cm') ? "$this->weight" :"$order->weight"),
-                        ],
-                        'ShipmentServiceOptions' => [
-                            'DirectDeliveryOnlyIndicator' => '1'
-                        ],
-                    ],
-                ],
-            ],
-        ];
-
-        return $request_body;
     }
 
     private function packageRequestForSender($order, $request)
@@ -238,7 +130,7 @@ class UpsService
                         'AttentionName' => $request->first_name.' '.$request->last_name,
                         'Address' => [
                             'AddressLine' => $request->sender_address,
-                            'City' => $requestsender_zipcode,
+                            'City' => $request->sender_city,
                             'StateProvinceCode' => $request->sender_state,
                             'PostalCode' => $request->sender_zipcode,
                             'CountryCode' => 'US',
@@ -296,7 +188,7 @@ class UpsService
         return $request_body;
     }
 
-    private function rateRequestForRecipient($order, $service)
+    private function createRequestForRates($order, $service, $request = null, $typeRecipient = true)
     {
         $this->calculateVolumetricWeight($order);
 
@@ -314,39 +206,21 @@ class UpsService
                 'Shipment' => [
                     'Shipper' => [
                         'Name' => Auth::user() ? Auth::user()->pobox_number :  'HERCO SUITE#100',
-                        'AttentionName' => $order->sender_first_name.' '.$order->sender_last_name,
+                        'AttentionName' => ($typeRecipient) ? $order->sender_first_name.' '.$order->sender_last_name : 'HERCO SUITE#100',
                         'ShipperNumber' => $this->shipperNumber,
                         'Phone' => [
                             'Number' => Auth::user() ? Auth::user()->phone : '+13058885191'
                         ],
                         'Address' => [
-                            'AddressLine' => $order->sender_address,
-                            'City' => $order->sender_city,
-                            'StateProvinceCode' => optional($order->senderState)->code,
-                            'PostalCode' => $order->sender_zipcode,
+                            'AddressLine' => ($typeRecipient) ? $order->sender_address : $request->sender_address,
+                            'City' => ($typeRecipient) ? $order->sender_city : $request->sender_city,
+                            'StateProvinceCode' => ($typeRecipient) ? optional($order->senderState)->code : $request->sender_state,
+                            'PostalCode' => ($typeRecipient) ? $order->sender_zipcode : $request->sender_zipcode,
                             'CountryCode' => 'US',
                         ],
                     ],
-                    'ShipFrom' => [
-                        'Name' => 'HERCO SUITE#100',
-                        'Address' => [
-                            'AddressLine' => '2200 NW 129TH AVE',
-                            'City' => 'Miami',
-                            'StateProvinceCode' => 'FL',
-                            'PostalCode' => '33182',
-                            'CountryCode' => 'US',
-                        ],
-                    ],
-                    'ShipTo' => [
-                        'Name' => $order->recipient->first_name.' '.$order->recipient->last_name,
-                        'Address' => [
-                            'AddressLine' => $order->recipient->address.' '.$order->recipient->street_no,
-                            'City' => $order->recipient->city,
-                            'StateProvinceCode' => $order->recipient->state->code,
-                            'PostalCode' => $order->recipient->zipcode,
-                            'CountryCode' => 'US',
-                        ],
-                    ],
+                    'ShipFrom' => ($typeRecipient) ? $this->setHercoAddress() : $this->setCustomerAddress(null, $request),
+                    'ShipTo' => ($typeRecipient) ? $this->setCustomerAddress($order, null) : $this->setHercoAddress(),
                     'PaymentDetails' => $this->getPaymentDetails(),
                     'Service' =>  [
                         'Code' => '0'.$service,
@@ -390,7 +264,7 @@ class UpsService
         $request_body = [
             'ShipmentRequest' => [
                 'Shipment' => [
-                    'Description' => $this->orderDescription($order->items),
+                    'Description' => ($order->items->isNotEmpty()) ? $this->orderDescription($order->items) : 'goods',
                     'Shipper' => [
                         'Name' => optional($order->user)->pobox_number.' - WRH#: '.$order->warehouse_number,
                         'AttentionName' => $order->sender_first_name.' '.$order->sender_last_name,
@@ -441,7 +315,7 @@ class UpsService
                     ],
                     'Package' => [
                         [
-                            'Description' => $this->orderDescription($order->items),
+                            'Description' => ($order->items->isNotEmpty()) ? $this->orderDescription($order->items) : 'goods',
                             'Packaging' => [
                                 'Code' => '02',
                                 'Description' => 'Customer Supplied Package'
@@ -565,7 +439,7 @@ class UpsService
                         'ConfirmationEmailAddress' => $order->user->email,
                         'UndeliverableEmailAddress' => $order->user->email,
                     ]
-            ]
+            ] 
         ];
 
         return $request_body;
@@ -580,7 +454,7 @@ class UpsService
             $this->weight = UnitsConverter::kgToPound($order->weight);
 
             $volumetricWeight = WeightCalculator::getUPSVolumnWeight($this->length,$this->width,$this->height,'in');
-            r eturn $this->chargableWeight = round($volumetricWeight >  $this->weight ? $volumetricWeight :  $this->weight,2);
+            return $this->chargableWeight = round($volumetricWeight >  $this->weight ? $volumetricWeight :  $this->weight,2);
 
         }else{
 
@@ -596,7 +470,7 @@ class UpsService
             array_push($this->itemDescription, $item->description);
         }
         $description = implode(' ', $this->itemDescription);
-
+        
         if (strlen($description) > 48){
             $description = str_limit($description, 45);
         }
@@ -608,7 +482,7 @@ class UpsService
     {
         try {
             $response = Http::withHeaders($this->setHeaders())->acceptJson()->post($url, $data);
-
+            
             if($response->successful())
             {
                 return (Object)[
@@ -618,17 +492,17 @@ class UpsService
             }elseif($response->clientError())
             {
                 return (Object)[
-                            'success' => false,
+                    'success' => false,
                     'error' => $response->json(),
-                ];
-            }elseif ($response->status() !== 200)
+                ];    
+            }elseif ($response->status() !== 200) 
             {
 
                 return (object) [
                     'success' => false,
                     'error' => $response->json(),
                 ];
-                        }
+            }
        } catch (Exception $e) {
             Log::info('UPS Error'. $e->getMessage());
             return (object) [
@@ -639,7 +513,7 @@ class UpsService
                             [
                                 'code' => 501,
                                 'message' => $e->getMessage(),
-                                ]
+                            ]
                         ]
                     ]
                 ],
@@ -651,7 +525,7 @@ class UpsService
     {
         try {
             $response = Http::withHeaders($this->setHeaders())->acceptJson()->post($url, $data);
-
+            
             if($response->successful())
             {
                 return (Object)[
@@ -664,15 +538,15 @@ class UpsService
                 return (Object)[
                     'success' => false,
                     'error' => $response->json(),
-                ];
-            }elseif ($response->status() !== 200)
+                ];    
+            }elseif ($response->status() !== 200) 
             {
 
                 return (object) [
                     'success' => false,
                     'error' => $response->json(),
                 ];
-                        }
+            }
        } catch (Exception $e) {
             Log::info('UPS Error'. $e->getMessage());
             return (object) [
@@ -684,10 +558,10 @@ class UpsService
                                 'code' => 501,
                                 'message' => $e->getMessage(),
                             ]
-                            ]
+                        ]
                     ]
                 ],
-             ];
+            ];
        }
     }
 
@@ -715,8 +589,8 @@ class UpsService
                 return (Object)[
                     'success' => false,
                     'error' => $response->json(),
-                ];
-            }elseif ($response->status() !== 200)
+                ];    
+            }elseif ($response->status() !== 200) 
             {
 
                 return (object) [
@@ -739,16 +613,16 @@ class UpsService
                         ]
                     ]
                 ],
-                ];
+            ];
        }
     }
 
-    private function t rackUPSOrder($trackingNumber)
+    private function trackUPSOrder($trackingNumber)
     {
         try {
                 $response = Http::withHeaders($this->setHeaders())
                         ->acceptJson()->get($this->trackingUrl.$trackingNumber);
-
+                
                 if($response->successful())
                 {
                     return (Object)[
@@ -760,8 +634,8 @@ class UpsService
                     return (Object)[
                         'success' => false,
                         'error' => $response->json(),
-                    ];
-                }elseif ($response->status() !== 200)
+                    ];    
+                }elseif ($response->status() !== 200) 
                 {
 
                     return (object) [
@@ -770,7 +644,7 @@ class UpsService
                     ];
                 }
             } catch (Exception $e) {
-            Log::i                nfo('UPS Error'. $e->getMessage());
+            Log::info('UPS Error'. $e->getMessage());
             return (object) [
                 'success' => false,
                 'error' => [
@@ -787,7 +661,7 @@ class UpsService
         }
     }
 
-    private function getPaymentDetail s()
+    private function getPaymentDetails()
     {
         return [
             'ShipmentCharge' => [
@@ -821,5 +695,48 @@ class UpsService
             'transId' => $this->transactionSrc,
             'transactionSrc' => 'HERCO SUITE#100',
         ];
+    }
+
+    private function setHercoAddress()
+    {
+        return [
+            'Name' => 'HERCO SUITE#100',
+            'Address' => [
+                'AddressLine' => '2200 NW 129TH AVE',
+                'City' => 'Miami',
+                'StateProvinceCode' => 'FL',
+                'PostalCode' => '33182',
+                'CountryCode' => 'US',
+            ],
+        ];
+    }
+
+    private function setCustomerAddress($order = null, $request = null)
+    {
+        if ($request) {
+            return [
+                'Name' => ($request->first_name) ? $request->first_name : 'HERCO SUITE#100',
+                'Address' => [
+                    'AddressLine' => $request->sender_address,
+                    'City' => $request->sender_city,
+                    'StateProvinceCode' => $request->sender_state,
+                    'PostalCode' => $request->sender_zipcode,
+                    'CountryCode' => 'US',
+                ],
+            ];
+        }
+
+        if($order){
+            return [
+                'Name' => $order->recipient->first_name.' '.$order->recipient->last_name,
+                'Address' => [
+                    'AddressLine' => $order->recipient->address.' '.$order->recipient->street_no,
+                    'City' => $order->recipient->city,
+                    'StateProvinceCode' => $order->recipient->state->code,
+                    'PostalCode' => $order->recipient->zipcode,
+                    'CountryCode' => 'US',
+                ],
+            ];
+        }
     }
 }

@@ -7,46 +7,105 @@
         if ($('#from_herco').is(':checked')) {
             
             $('#to_herco').prop('checked', false);
+            $('#to_international').prop('checked', false);
 
             $('#origin').removeClass('d-none');
             $('#destination').addClass('d-none');
 
+            $('#all_destination_countries').addClass('d-none');
+            $('#all_destination_states').addClass('d-none');
+
             $('#recipient_info').removeClass('d-none');
             $('#sender_info').addClass('d-none');
 
+            $('#recipient_personal_info').removeClass('d-none');
+            $('#recipient_personal_info').addClass('d-block');
+
             window.toggleSenderInputs();
+
+            window.livewire.emit('address-type', 'domestic');
         }
 
         if ($('#to_herco').is(':checked')) {
             
             $('#from_herco').prop('checked', false);
+            $('#to_international').prop('checked', false);
 
             $('#origin').addClass('d-none');
             $('#destination').removeClass('d-none');
 
             $('#sender_info').removeClass('d-none');
+            $('#recipient_info').addClass('d-none');
+
+            $('#recipient_personal_info').removeClass('d-block');
+            $('#recipient_personal_info').addClass('d-none');
 
             $('input[name^="items"]').prop('disabled', true);
             window.toggleRecipientInputs();
+
+            window.livewire.emit('address-type', 'domestic');
+        }
+
+        if ($('#to_international').is(':checked')) {
+            $('#to_herco').prop('checked', false);
+            $('#from_herco').prop('checked', false);
+
+            $('#origin').addClass('d-none');
+            $('#destination').addClass('d-none');
+
+            $('#sender_info').removeClass('d-none');
+            $('#recipient_info').removeClass('d-none');
+
+            $('#recipient_personal_info').removeClass('d-none');
+            $('#recipient_personal_info').addClass('d-block');
+
+            $('#calculator-items').addClass('d-block');
+            $('input[name^="items"]').prop('disabled', false);
+
+            window.toggleInternationalInputs();
+
+            $("#destination_country option[value='250']").each(function() {
+                $(this).remove();
+            });
+
+            $('#destination_country').selectpicker('refresh');
+
+            window.livewire.emit('address-type', 'international');
+
         }
 
         $('#from_herco').change(function(){
             if($(this).is(':checked')){
                 $('#to_herco').prop('checked', false);
+                $('#to_international').prop('checked', false);
 
                 $('#origin').removeClass('d-none');
                 $('#destination').addClass('d-none');
 
+                $('#all_destination_countries').addClass('d-none');
+                $('#all_destination_states').addClass('d-none');
+
+                $('#us_destination_country').removeClass('d-none');
+                $('#us_destination_states').removeClass('d-none');
+
                 $('#recipient_info').removeClass('d-none');
                 $('#sender_info').addClass('d-none');
 
+                $('#recipient_personal_info').removeClass('d-none');
+                $('#recipient_personal_info').addClass('d-block');
+
                 window.toggleSenderInputs();
+                
+                $('#destination_country').selectpicker('refresh');
+
+                window.livewire.emit('address-type', 'domestic');
             }
         });
 
         $('#to_herco').change(function(){
             if($(this).is(':checked')){
                 $('#from_herco').prop('checked', false);
+                $('#to_international').prop('checked', false);
 
                 $('#origin').addClass('d-none');
                 $('#destination').removeClass('d-none');
@@ -54,8 +113,48 @@
                 $('#sender_info').removeClass('d-none');
                 $('#recipient_info').addClass('d-none');
 
+                $('#recipient_personal_info').removeClass('d-block');
+                $('#recipient_personal_info').addClass('d-none');
+
                 $('input[name^="items"]').prop('disabled', true);
                 window.toggleRecipientInputs();
+
+                window.livewire.emit('address-type', 'domestic');
+            }
+        });
+
+        $('#to_international').change(function(){
+            if($(this).is(':checked')){
+                $('#to_herco').prop('checked', false);
+                $('#from_herco').prop('checked', false);
+
+                $('#origin').addClass('d-none');
+                $('#destination').addClass('d-none');
+
+                $('#all_destination_countries').removeClass('d-none');
+                $('#all_destination_states').removeClass('d-none');
+
+                $('#us_destination_country').addClass('d-none');
+                $('#us_destination_states').addClass('d-none');
+
+                $('#sender_info').removeClass('d-none');
+                $('#recipient_info').removeClass('d-none');
+
+                $('#recipient_personal_info').removeClass('d-none');
+                $('#recipient_personal_info').addClass('d-block');
+
+                $('#calculator-items').addClass('d-block');
+                $('input[name^="items"]').prop('disabled', false);
+
+                window.toggleInternationalInputs();
+                
+                $("#destination_country option[value='250']").each(function() {
+                    $(this).remove();
+                });
+
+                $('#destination_country').selectpicker('refresh');
+                
+                window.livewire.emit('address-type', 'international');
             }
         });
 
@@ -123,19 +222,37 @@
         $('#sender_zipcode').prop('required', false);
         $('#sender_address').prop('required', false);
 
-        $('#destination_country').prop('disabled', false);
+        $('#destination_country').prop('disabled', true);
         $('#destination_country').selectpicker('refresh');
-        $('#recipient_state').prop('disabled', false);
+        $('#recipient_state').prop('disabled', true);
         $('#recipient_state').selectpicker('refresh');
+
+        $('#us_destination_country').prop('disabled', false);
+        $('#us_destination_country').selectpicker('refresh');
+        $('#us_recipient_state').prop('disabled', false);
+        $('#us_recipient_state').selectpicker('refresh');
+
         $('#recipient_city').prop('disabled', false);
         $('#recipient_zipcode').prop('disabled', false);
         $('#recipient_address').prop('disabled', false);
 
-        $('#destination_country').prop('required', true);
-        $('#recipient_state').prop('required', true);
+        $('#recipient_phone').prop('disabled', false);
+        $('#recipient_first_name').prop('disabled', false);
+        $('#recipient_last_name').prop('disabled', false);
+
+        $('#destination_country').prop('required', false);
+        $('#recipient_state').prop('required', false);
         $('#recipient_city').prop('required', true);
         $('#recipient_zipcode').prop('required', true);
         $('#recipient_address').prop('required', true);
+
+        $('#recipient_phone').prop('required', true);
+        $('#recipient_first_name').prop('required', true);
+        $('#recipient_last_name').prop('required', true);
+
+        $('#calculator-items').removeClass('d-block');
+        $('input[name^="items"]').val('');
+        $('input[name^="items"]').prop('disabled', true);
     }
 
     toggleRecipientInputs = function () {
@@ -155,15 +272,75 @@
 
         $('#destination_country').prop('disabled', true);
         $('#recipient_state').prop('disabled', true);
+        $('#us_destination_country').prop('disabled', true);
+        $('#us_recipient_state').prop('disabled', true);
         $('#recipient_city').prop('disabled', true);
         $('#recipient_zipcode').prop('disabled', true);
         $('#recipient_address').prop('disabled', true);
 
+        $('#recipient_phone').prop('disabled', true);
+        $('#recipient_first_name').prop('disabled', true);
+        $('#recipient_last_name').prop('disabled', true);
+
         $('#destination_country').prop('required', false);
         $('#recipient_state').prop('required', false);
+        $('#us_destination_country').prop('required', false);
+        $('#us_recipient_state').prop('required', false);
         $('#recipient_city').prop('required', false);
         $('#recipient_zipcode').prop('required', false);
         $('#recipient_address').prop('required', false);
+
+        $('#recipient_phone').prop('required', false);
+        $('#recipient_first_name').prop('required', false);
+        $('#recipient_last_name').prop('required', false);
+
+        $('#calculator-items').removeClass('d-block');
+        $('input[name^="items"]').val('');
+        $('input[name^="items"]').prop('disabled', true);
+    }
+
+    toggleInternationalInputs = function() {
+
+        $('#origin_country').prop('disabled', false);
+        $('#sender_state').prop('disabled', false);
+        $('#sender_city').prop('disabled', false);
+        $('#sender_zipcode').prop('disabled', false);
+        $('#sender_address').prop('disabled', false);
+
+        $('#origin_country').prop('required', true);
+        $('#origin_country').selectpicker('refresh');
+        $('#sender_state').prop('required', true);
+        $('#sender_state').selectpicker('refresh');
+        $('#sender_city').prop('required', true);
+        $('#sender_zipcode').prop('required', true);
+        $('#sender_address').prop('required', true);
+
+        $('#destination_country').prop('disabled', false);
+        $('#destination_country').selectpicker('refresh');
+        $('#us_destination_country').prop('disabled', true);
+        $('#recipient_state').prop('disabled', false);
+        $('#recipient_state').selectpicker('refresh');
+        $('#us_recipient_state').prop('disabled', true);
+        $('#recipient_city').prop('disabled', false);
+        $('#recipient_zipcode').prop('disabled', false);
+        $('#recipient_address').prop('disabled', false);
+
+        $('#recipient_phone').prop('disabled', false);
+        $('#recipient_first_name').prop('disabled', false);
+        $('#recipient_last_name').prop('disabled', false);
+
+
+        $('#destination_country').prop('required', true);
+        $('#us_destination_country').prop('required', false);
+        $('#recipient_state').prop('required', true);
+        $('#us_recipient_state').prop('required', false);
+        $('#recipient_city').prop('required', true);
+        $('#recipient_zipcode').prop('required', true);
+        $('#recipient_address').prop('required', true);
+
+        $('#recipient_phone').prop('required', true);
+        $('#recipient_first_name').prop('required', true);
+        $('#recipient_last_name').prop('required', true);
     }
 
     function getStates(country_id, typeOfAddress){

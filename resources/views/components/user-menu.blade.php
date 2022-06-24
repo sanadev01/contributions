@@ -7,6 +7,7 @@
             @if (auth()->user()->hasRole('scanner') || auth()->user()->hasRole('driver'))
                 <li class="nav-item {{ $isActive('home') }}">
                     <a class="nav-link" href="{{ route('admin.home') }}">
+                        {{-- <i class="icon_adjst feather icon-home"></i> --}}
                         <img src="{{ asset('images/icon/dashboard.svg') }}" alt="dashboard">
                         <span data-i18n="Dashboard"> @lang('menu.dashboard') </span>
                     </a>

@@ -42,25 +42,34 @@ class ContainerRepository extends AbstractRepository{
         if ( !Auth::user()->isAdmin() ){
             $query->where('user_id',Auth::id());
         }
-        if($request->has('dispatchNumber')){
+        if($request->filled('dispatchNumber')){
            $query->where('dispatch_number', 'LIKE', '%' . $request->dispatchNumber . '%');
-        }
-        if($request->has('sealNo')){
+        } 
+        if($request->filled('sealNo')){
           $query->where('seal_no', 'LIKE', '%' . $request->sealNo . '%');
-        }
-        if($request->has('packetType')){
+        } 
+        if($request->filled('packetType')){
             $query->where('services_subclass_code', 'LIKE', '%' . $request->packetType . '%');
         }
-        return $query->where(function($query) {
-                 $query->where('services_subclass_code','NX')
-                        ->orWhere('services_subclass_code','IX')
-                        ->orWhere('services_subclass_code','XP');
-                })->latest()->paginate(50);
+        if($request->filled('unitCode')){
+            $query->where('unit_code', 'LIKE', '%' . $request->unitCode . '%');
+        } 
+        return $query->whereIn('services_subclass_code', ['NX','IX', 'XP','AJ-NX','AJ-IX'])->latest()->paginate(50);
     }
 
     public function store(Request $request)
     {
         try {
+
+            if (in_array($request->services_subclass_code, [Container::CONTAINER_ANJUN_NX, Container::CONTAINER_ANJUN_IX]) ) {
+                
+                $latestAnujnContainer = Container::where('services_subclass_code', Container::CONTAINER_ANJUN_NX)
+                                                    ->orWhere('services_subclass_code', Container::CONTAINER_ANJUN_IX)
+                                                    ->latest()->first();
+
+                $anjunDispatchNumber = ($latestAnujnContainer) ? $latestAnujnContainer->dispatch_number + 1 : 900000;
+            }
+
             $container =  Container::create([
                 'user_id' => Auth::id(),
                 'dispatch_number' => 0,
@@ -74,7 +83,7 @@ class ContainerRepository extends AbstractRepository{
             ]);
 
             $container->update([
-                'dispatch_number' => $container->id
+                'dispatch_number' => ($container->hasAnjunService()) ? $anjunDispatchNumber : $container->id,
             ]);
 
             return $container;

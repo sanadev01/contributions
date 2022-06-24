@@ -22,6 +22,9 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     protected static $logOnlyDirty = true;
     protected static $submitEmptyLogs = false;
 
+    const CONTAINER_ANJUN_NX = 'AJ-NX';
+    const CONTAINER_ANJUN_IX = 'AJ-IX';
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -66,6 +69,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'SL Express Modal';
         }elseif($this->services_subclass_code == 'SL-XP'){
             return 'SL Small Parcels';
+        }elseif ($this->services_subclass_code == 'AJ-NX') {
+            return 'AJ Packet Standard service';
+        }elseif ($this->services_subclass_code == 'AJ-IX') {
+            return 'AJ Packet Express service';
         }elseif($this->services_subclass_code == 'SRM'){
             return 'SRM service';
         }elseif($this->services_subclass_code == 'SRP'){
@@ -93,10 +100,14 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 5;
         }elseif($this->services_subclass_code == 'Priority') {
             return 6;
-        }elseif($this->services_subclass_code == 'PostNL') {
+        }elseif($this->services_subclass_code == 'FirstClass'){
             return 7;
-        }else {
+        }elseif($this->services_subclass_code == 'AJ-NX') {
             return 8;
+        }elseif($this->services_subclass_code == 'AJ-IX'){
+            return 9;
+        }elseif($this->services_subclass_code == 'PostNL') {
+            return 10;
         }
         // return $this->services_subclass_code == 'NX' ? 2 : 1;
     }
@@ -140,5 +151,28 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     public function isShipped()
     {
         return $this->deliveryBills()->count() > 0;
+    }
+
+    public function getSubClassCode()
+    {
+        if ($this->services_subclass_code == 'AJ-NX') {
+            return 'NX';
+        }
+
+        if ($this->services_subclass_code == 'AJ-IX') {
+            return 'IX';
+        }
+
+        return $this->services_subclass_code;
+    }
+
+    public function hasAnjunService()
+    {
+        return $this->services_subclass_code == 'AJ-NX' || $this->services_subclass_code == 'AJ-IX';
+    }
+
+    public function hasOrders()
+    {
+        return $this->orders->isNotEmpty();
     }
 }

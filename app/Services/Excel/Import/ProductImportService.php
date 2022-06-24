@@ -55,10 +55,11 @@ class ProductImportService extends AbstractImportService
             if ($product || strlen($this->getValue("C{$row}")) <=0 || strlen($this->getValue("K{$row}")) <=0 ){
                 return;
             }
+            $value = preg_replace("/[^0-9.]/", "", $this->getValue("B{$row}"));
             $order = Product::create([
                 'user_id'       => Auth::user()->isAdmin() ? $this->request->user_id : $this->userId,
                 'name'          => $this->getValue("A{$row}"),
-                'price'         => $this->getValue("B{$row}"),
+                'price'         =>  $value,
                 'sku'           => $this->getValue("C{$row}"),
                 'status'        => $this->getValue("D{$row}"),
                 'order'         => $this->getValue("E{$row}"),
@@ -72,7 +73,7 @@ class ProductImportService extends AbstractImportService
                 'lot'           => $this->getValue("M{$row}"),
                 'unit'          => $this->getValue("N{$row}"),
                 'case'          => $this->getValue("O{$row}"),
-                'inventory_value'=> $this->getValue("B{$row}")*$this->getValue("K{$row}"),
+                'inventory_value'=>  $value*$this->getValue("K{$row}"),
                 'min_quantity'  => $this->getValue("P{$row}"),
                 'max_quantity'  => $this->getValue("Q{$row}"),
                 'discontinued'  => $this->getValue("R{$row}"),

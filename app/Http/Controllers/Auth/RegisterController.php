@@ -59,7 +59,7 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'last_name' => ['sometimes', 'required_if:account_type,'.User::ACCOUNT_TYPE_INDIVIDUAL],
-            'phone' => ['required', new PhoneNumberValidator()],
+            'phone' => ['required', 'min:10', 'max:15'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'account_type' => 'required'

@@ -30,6 +30,8 @@ class ShippingService extends Model
     const Packet_Express = 33170;
     const Packet_Mini = 33197;
     const PostNL = 87765;
+    const AJ_Packet_Standard = 33164;
+    const AJ_Packet_Express = 33172;
 
     protected $guarded = [];
 
@@ -64,12 +66,12 @@ class ShippingService extends Model
         return $rate;
     }
 
-    public function getCalculator(Order $order, $calculateOnVolumeMetricWeight = true)
+    public function getCalculator(Order $order, $calculateOnVolumeMetricWeight = true, $originalRate = false)
     {
         // if ( self::$calculator && $this->cacheCalculator)
         //     return self::$calculator;
 
-        self::$calculator = new RatesCalculator($order,$this, $calculateOnVolumeMetricWeight);
+        self::$calculator = new RatesCalculator($order,$this, $calculateOnVolumeMetricWeight, $originalRate);
 
         return self::$calculator;
     }
@@ -77,5 +79,103 @@ class ShippingService extends Model
     public function profitPackages()
     {
         return $this->hasMany(ProfitPackage::class);
+    }
+
+    public function getOriginalRate(Order $order, $withProfit = true, $calculateOnVolumeMetricWeight = true, $originalRate = true)
+    {
+        $rate = round($this->getCalculator($order, $calculateOnVolumeMetricWeight, $originalRate)->getRate($withProfit),2);
+        return $rate;
+    }
+    
+    public function isOfUnitedStates()
+    {
+        if (collect($this->usShippingServices())->contains($this->service_sub_class)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isDomesticService()
+    {
+        if (collect($this->domesticShippingServices())->contains($this->service_sub_class)) {
+            return true;
+        }
+        
+        return false;
+    }
+
+    public function isInternationalService()
+    {
+        if (collect($this->internationalShippingServices())->contains($this->service_sub_class)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isCorreiosService()
+    {
+        if (collect($this->correiosShippingServices())->contains($this->service_sub_class)) {
+            return true;
+        }
+    
+        return false;
+    }
+
+    public function isAnjunService()
+    {
+        if (collect($this->anjunShippingServices())->contains($this->service_sub_class)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function anjunShippingServices()
+    {
+        return [
+            self::AJ_Packet_Standard, 
+            self::AJ_Packet_Express,
+        ];
+    }
+
+    private function correiosShippingServices()
+    {
+        return [
+            self::Packet_Standard, 
+            self::Packet_Express,
+            self::Packet_Mini,
+        ];
+    }
+
+    private function usShippingServices()
+    {
+        return [
+            self::USPS_PRIORITY, 
+            self::USPS_FIRSTCLASS, 
+            self::USPS_PRIORITY_INTERNATIONAL, 
+            self::USPS_FIRSTCLASS_INTERNATIONAL, 
+            self::UPS_GROUND, 
+            self::FEDEX_GROUND
+        ];
+    }
+
+    private function domesticShippingServices()
+    {
+        return [
+            self::USPS_PRIORITY, 
+            self::USPS_FIRSTCLASS,
+            self::UPS_GROUND, 
+            self::FEDEX_GROUND
+        ];
+    }
+
+    private function internationalShippingServices()
+    {
+        return [
+            self::USPS_PRIORITY_INTERNATIONAL, 
+            self::USPS_FIRSTCLASS_INTERNATIONAL,
+        ];
     }
 }

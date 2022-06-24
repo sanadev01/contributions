@@ -35,20 +35,25 @@ class ExportDepositReport extends AbstractExportService
 
         foreach ($this->deposits as $deposit) {
 
+            // $order = $deposit->getOrder($deposit->order_id);
+            $order = ($deposit->orders) ? $deposit->orders->first() : null;
+            // $depositFirstOrder = $deposit->firstOrder();
+            $depositFirstOrder = ($order) ? $order : null;
+
             $this->setCellValue('A'.$row, $deposit->uuid);
-            $this->setCellValue('B'.$row, optional($deposit->getOrder($deposit->order_id))->warehouse_number);
-            $this->setCellValue('C'.$row, optional(optional($deposit->getOrder($deposit->order_id))->recipient)->fullName());
-            $this->setCellValue('D'.$row, optional($deposit->getOrder($deposit->order_id))->customer_reference);
-            $this->setCellValue('E'.$row, ($deposit->firstOrder() && $deposit->firstOrder()->hasSecondLabel()) ? optional($deposit->firstOrder())->us_api_tracking_code : optional($deposit->getOrder($deposit->order_id))->corrios_tracking_code);
+            $this->setCellValue('B'.$row, optional($order)->warehouse_number);
+            $this->setCellValue('C'.$row, optional(optional($order)->recipient)->fullName());
+            $this->setCellValue('D'.$row, optional($order)->customer_reference);
+            $this->setCellValue('E'.$row, ($depositFirstOrder && $depositFirstOrder->hasSecondLabel()) ? optional($depositFirstOrder)->us_api_tracking_code : optional($order)->corrios_tracking_code);
             $this->setCellValue('F'.$row, $deposit->created_at->format('m/d/Y'));
             $this->setCellValue('G'.$row, $deposit->amount);
-            $this->setCellValue('H'.$row, ($deposit->getOrder($deposit->order_id)) ? $this->getShippingCarrier($deposit ,$deposit->getOrder($deposit->order_id)) : '');
+            $this->setCellValue('H'.$row, '');
             if (auth()->user()->isAdmin()) {
-                $this->setCellValue('I'.$row, ($deposit->getOrder($deposit->order_id)) ? $this->getShippingCarrierCost($deposit ,$deposit->getOrder($deposit->order_id)) : '');
+                $this->setCellValue('I'.$row, '');
             }
-            $this->setCellValue('J'.$row, ($deposit->getOrder($deposit->order_id)) ? $this->getOrderDimensions($deposit->getOrder($deposit->order_id)) : '');
-            $this->setCellValue('K'.$row, ($deposit->getOrder($deposit->order_id)) ? $this->getOrderTotalWeight($deposit->getOrder($deposit->order_id)) : '');
-            $this->setCellValue('L'.$row, ($deposit->getOrder($deposit->order_id)) ? $this->getOrderVolumetricWeight($deposit->getOrder($deposit->order_id)) : '');
+            $this->setCellValue('J'.$row, '');
+            $this->setCellValue('K'.$row, '');
+            $this->setCellValue('L'.$row, '');
             $this->setCellValue('M'.$row, $deposit->isCredit() ? 'Credit' : 'Debit');
             $row++;
         }
@@ -105,10 +110,10 @@ class ExportDepositReport extends AbstractExportService
         $this->currentRow++;
     }
 
-    private function getShippingCarrier($deposit, $order)
+    private function getShippingCarrier($depositFirstOrder, $order)
     {
-        if ($deposit->firstOrder() && $deposit->firstOrder()->hasSecondLabel()) {
-            switch ($deposit->firstOrder()->us_api_service) {
+        if ($depositFirstOrder && $depositFirstOrder->hasSecondLabel()) {
+            switch ($depositFirstOrder->us_api_service) {
                 case ShippingService::UPS_GROUND:
                         return 'UPS';
                     break;
@@ -127,6 +132,9 @@ class ExportDepositReport extends AbstractExportService
                     if ($order->shippingService->sub_class_code == ShippingService::UPS_GROUND) {
                         return 'UPS';
                     }
+                    if ($order->shippingService->sub_class_code == ShippingService::FEDEX_GROUND) {
+                        return 'FedEx';
+                    }
                      return 'USPS';
                    break;
                 case ORDER::CHILE:
@@ -143,9 +151,9 @@ class ExportDepositReport extends AbstractExportService
        return optional($order->shippingService)->name;
     }
 
-    private function getShippingCarrierCost($deposit, $order)
+    private function getShippingCarrierCost($depositFirstOrder, $order)
     {
-        if ($deposit->firstOrder() && $deposit->firstOrder()->hasSecondLabel()) {
+        if ($depositFirstOrder && $depositFirstOrder->hasSecondLabel()) {
             if ($order->us_secondary_label_cost) {
                 return $order->us_secondary_label_cost['api_cost'];
             }
