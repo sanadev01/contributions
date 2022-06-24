@@ -107,7 +107,7 @@
                         @admin
                             <th>Carrier Cost</th>
                         @endadmin --}}
-                        {{-- <th>Tracking Code</th> --}}
+                        <th>Tracking Code</th>
                         {{-- <a class="fas fa-sort text-right" wire:click.prevent="sortBy('gross_total')"></a> --}}
                         <th>@lang('orders.amount')</th>
                         <th>@lang('orders.status')</th>
