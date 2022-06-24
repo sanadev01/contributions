@@ -205,8 +205,8 @@
             <livewire:order.bulk-edit.modal/>
         </div>
         <div class="row">
-            <div class="col-2 pt-2">
-                <select class="form-control hd-search" style="padding-left: initial" wire:model="pageSize">
+            <div class="col-1 pt-2">
+                <select class="form-control hd-search"  wire:model="pageSize">
                     <option value="1">1</option>
                     <option value="5">5</option>
                     <option value="10">10</option>
