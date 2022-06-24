@@ -26,19 +26,19 @@
             <div class="row col-10" id="datefilters">
                 <div class=" col-10 text-left mb-2 pl-0" id="dateSearch" style="margin: 22px;">
                     <div class="row col-12 my-3">
-                        <form class="form-inline" action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
+                        <form action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
                             @csrf
-                            <div class="form-group mb-2">
+                            <div class="form-group mb-2" style="float:left;margin-right:20px;">
                                 <label>Start Date</label>
                                 <input type="date" name="start_date" class="form-control">
                             </div>
-                            <div class="form-group mx-sm-3 mb-2">
+                            <div class="form-group mx-sm-3 mb-2" style="float:left;margin-right:20px;">
                                 <label>End Date</label>
                                 <input type="date" name="end_date" class="form-control">
                             </div>
-                            <button class="btn btn-primary btn-sm" style="margin-bottom: 4px;" title="@lang('orders.import-excel.Download')">
+                            <button class="btn btn-success btn-sm searchDateBtn" title="@lang('orders.import-excel.Download')">
                                 <i class="fa fa-arrow-down"></i>
-                                </button>                          
+                                </button>                        
                             </form>
                     </div>
                 </div>

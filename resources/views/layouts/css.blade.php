@@ -106,9 +106,11 @@
     line-height: 16px !important;
 }
     #printBtnDiv{
-        padding-left: 20px;
         padding-top: 0px;
         display: none;
+    }
+    .btnsDiv{
+        padding-left: initial;
     }
     .dark-mode {
         background-color: #1a1a3c !important;
@@ -122,6 +124,16 @@
         padding-left: 45px !important; 
         font-weight:400 !important;
         margin-top: -2px;
+        color: #74829c !important;
+      }
+      .searchDateBtn{
+        margin-top: 30px !important;
+      }
+      .btn-width-sm{
+        width: 73px;
+      }
+      .btn-width-md{
+        width: 127px;
       }
       #imageDecrptionTop{
         padding-left: 45px !important; 

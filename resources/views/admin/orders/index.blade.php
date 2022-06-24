@@ -18,8 +18,7 @@
 
 <div class="card min-vh-100">
     <div class="card-header">
-    <div class="col-8" style="display: flex;">
-        <h4 class="mb-0 pt-1"></h4>
+    <div class="col-8 btnsDiv" style="display: flex;">
         <div id="printBtnDiv">
             <button title="Print Labels" id="print" type="btn" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-printer"></i></button>
             <button title="Print Domestic Labels" id="deomesticPrint" type="btn" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-printer"></i></button>
@@ -36,7 +35,7 @@
     </div>
     
     <div class="card-content">
-        <div class="card-body no-print" style="overflow-y: visible">
+        <div class="card-body no-print pt-0" style="overflow-y: visible">
             <livewire:order.table :userType="$userType"/>
             <div class="col-1 pl-10 pb-10">
                 <select class="form-control hd-search" style="padding-left: initial" wire:model="pageSize">
