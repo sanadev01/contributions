@@ -89,7 +89,7 @@
                             </th>
                         @endif
                         @admin
-                            <th id="userNameCol">User Name</th>
+                            <th id="userNameCol">USER NAME</th>
                         @endadmin
                         <th>
                             @if (\Request::route()->getName() != 'admin.trash-orders.index')
@@ -110,7 +110,7 @@
                         @admin
                             <th>Carrier Cost</th>
                         @endadmin --}}
-                        <th>Tracking Code</th>
+                        <th>TRACKING CODE</th>
                         {{-- <a class="fas fa-sort text-right" wire:click.prevent="sortBy('gross_total')"></a> --}}
                         <th>@lang('orders.amount')<a wire:click.prevent="sortBy('gross_total')"
                                 class="fas fa-sort text-right custom-sort-arrow"></a></th>

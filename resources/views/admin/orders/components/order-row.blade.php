@@ -111,7 +111,7 @@
     </td>
     <td>
         <select style="" data-toggle="dropdown"
-            class="form-control btn-width-md dropdown-toggle {{ !auth()->user()->isAdmin()? 'btn disabled': '' }} {{ $order->getStatusClass() }}"
+            class="form-control btn-width-sm dropdown-toggle {{ !auth()->user()->isAdmin()? 'btn disabled': '' }} {{ $order->getStatusClass() }}"
             @if (auth()->user()->isAdmin()) wire:change="$emit('updated-status',{{ $order->id }},$event.target.value)" @else disabled="disabled" @endif>
             <option class="bg-info" value="{{ App\Models\Order::STATUS_ORDER }}"
                 {{ $order->status == App\Models\Order::STATUS_ORDER ? 'selected' : '' }}>ORDER</option>
