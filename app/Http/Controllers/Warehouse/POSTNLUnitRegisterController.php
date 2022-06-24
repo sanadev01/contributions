@@ -20,25 +20,21 @@ class POSTNLUnitRegisterController extends Controller
     {
         if (count($container->orders) > 0)
         {
-            //dd($container->orders);
             $client = new Client();
             $response = $client->createContainer($container);
-            //dd($response->data->assist_labels[0]->base64string);
-            //dd($response);
-            if($response->status == 'success')
-            {
-                //storing response in container table
-                $container->update([
-                    'unit_code' => $response->data->assist_labels[0]->barcode,
-                    'unit_response_list' => json_encode($response->data->assist_labels[0]),
-                    'response' => true,
-                ]);
 
-                session()->flash('alert-success','Package Registration success. You can print Label now');
+            if ($response['success'] == false) {
+                session()->flash('alert-danger', $response['message']);
                 return back();
             }
+            //storing response in container table
+            $container->update([
+                'unit_code' => $response['data']->data->assist_labels[0]->barcode,
+                'unit_response_list' => json_encode($response['data']->data->assist_labels[0]),
+                'response' => true,
+            ]);
 
-            session()->flash('alert-danger',$response->message);
+            session()->flash('alert-success','Package Registration success. You can print Label now');
             return back();
         }
 

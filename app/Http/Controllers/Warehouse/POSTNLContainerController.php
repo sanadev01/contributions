@@ -42,7 +42,6 @@ class POSTNLContainerController extends Controller
      */
     public function store(CreateContainerRequest $createContainerRequest, POSTNLContainerRepository $postnl_containerRepository)
     {
-        //dd($createContainerRequest->all());
         if ( $container = $postnl_containerRepository->store($createContainerRequest) ){
             session()->flash('alert-success', 'PostNL Container Creation Successfull. Please Scan Packages');
             return redirect()->route('warehouse.postnl_containers.index');

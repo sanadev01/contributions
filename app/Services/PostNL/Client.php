@@ -210,59 +210,23 @@ class Client{
                 ]
             ]);
             $data = json_decode($response->getBody()->getContents());
-            return $data;
+            if ($data->status == 'fail') {
+                return [
+                    'success' => false,
+                    'message' => $data->message->payload ?? 'server error',
+                    'data' => null
+                ];
+            }
+
+            return [
+                'success' => true,
+                'data' => $data
+            ];
         }catch (\GuzzleHttp\Exception\ClientException $e) {
             return new PackageError($e->getResponse()->getBody()->getContents());
         }
         catch (\Exception $exception){
             return new PackageError($exception->getMessage());
-        }
-    }
-
-    public function generateManifest($container)
-    {
-        $data = [
-            'request_id' => 'HD-'.$container->seal_no,
-            'image_format' => 'pdf',
-            'image_resolution' => 300,
-            'usps' => [
-                'tracking_numbers' => $container->orders->pluck('corrios_tracking_code')->toArray(),
-            ],
-        ];
-
-        try {
-
-            $response = Http::withBasicAuth($this->email, $this->password)->post($this->createManifestUrl, $data);
-
-            if($response->status() == 201)
-            {
-                return (Object)[
-                    'success' => true,
-                    'message' => 'Manifest has been generated',
-                    'data'    => $response->json(),
-                ];
-            }elseif($response->status() == 401)
-            {
-                return (Object)[
-                    'success' => false,
-                    'message' => $response->json()['error'],
-                ];
-            }elseif ($response->status() !== 201)
-            {
-
-                return (object) [
-                    'success' => false,
-                    'message' => $response->json()['message'],
-                ];
-            }
-
-        } catch (Exception $e) {
-            Log::info('USPS Error'. $e->getMessage());
-            return (object) [
-                'success' => false,
-                'message' => $e->getMessage(),
-            ];
-
         }
     }
 
@@ -292,8 +256,18 @@ class Client{
                     ],
                 ]);
             $data = json_decode($response->getBody()->getContents());
-            //dd($data);
-            return $data;
+            if ($data->status == 'fail') {
+                return [
+                    'success' => false,
+                    'message' => $data->message->payload ?? 'server error',
+                    'data' => null
+                ];
+            }
+
+            return [
+                'success' => true,
+                'data' => $data
+            ];
         }catch (\GuzzleHttp\Exception\ClientException $e) {
             return new PackageError($e->getResponse()->getBody()->getContents());
         }

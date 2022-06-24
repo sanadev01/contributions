@@ -20,18 +20,16 @@ class DeliveryBillRegisterController extends Controller
 
         if($deliveryBill->containers[0]->services_subclass_code == 'PostNL') {
             $client = new NLClient();
-            
             $response = $client->registerDeliveryBillPostNL($deliveryBill);
-            if ( $response instanceof PackageError){
-                session()->flash('alert-danger',$response->getErrors());
+
+            if ($response['success'] == false) {
+                session()->flash('alert-danger', $response['message']);
                 return back();
             }
 
-            $result = $response->data->details;
-            
+            $result = $response['data']->data->details;
             $cn38 = $result[0]->manifest_codes[0];
             $url = $result[0]->url;
-
             $deliveryBill->update([
                 'request_id' => $url,
                 'cnd38_code' => $cn38
@@ -41,7 +39,7 @@ class DeliveryBillRegisterController extends Controller
 
             $client = new Client();
             $response = $client->registerDeliveryBill($deliveryBill);
-            
+
             if ( $response instanceof PackageError){
                 session()->flash('alert-danger',$response->getErrors());
                 return back();
