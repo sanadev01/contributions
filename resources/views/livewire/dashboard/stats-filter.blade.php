@@ -286,7 +286,7 @@
         <div class="col-lg-3 col-12">
             <div class="card activityCard">
                 <div class="card-title m-0 p-2 notification-card-right">
-                    <span class="notification-title">Resent Orders</span>
+                    <span class="notification-title">Recent Orders</span>
                 </div>
                 <div class="card-content">
                     <div class="card-body">
@@ -295,7 +295,7 @@
                                     @foreach ($orders['lastFive'] as $order)
                                         <div class="media  align-items-start border-bottom-10">
                                             <div class="media-body">
-                                                <h6 class="primary media-heading">{{ $order->merchant }}</h6><small
+                                                <h6 class="primary media-heading">{{ $order->user->name }}</h6><small
                                                     class="notification-text"> </small>
                                             </div><small>
                                                 <time class="media-meta"
