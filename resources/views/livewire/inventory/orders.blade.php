@@ -241,6 +241,9 @@
                                     if (response.errors.width) {
                                         $('#widthError').text(response.errors.width[0]);
                                     }
+                                    if (response.errors.height) {
+                                        $('#heightError').text(response.errors.height[0]);
+                                    }
                                     if (response.message) {
                                         toastr.error(response.message);
                                     }
