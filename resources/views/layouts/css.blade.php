@@ -128,6 +128,11 @@
       .fa-sort{
         padding-right: 0%;
       }
+      .custom-sort-arrow{
+        float: right;
+        padding-top: 5px;
+      }
+      
       #imageDecrption{
         padding-left: 45px !important;
         padding-top: 7px !important;
@@ -536,10 +541,9 @@
         background-color: blue;
         color: white;
     }  */
-    /* .table thead th {
-        background-color: #1174b7;
-        color: white;
-    } */
+    .table thead th {
+      border-bottom: 1px #dee2e6 !important;
+    }
     /* tr:nth-child(even) {
         background-color: #dbe9f2 !important;
     } */

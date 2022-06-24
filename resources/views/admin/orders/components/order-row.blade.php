@@ -102,7 +102,7 @@
         @endif
     </td>
     <td>
-        ${{ number_format($order->gross_total,2) }}
+        <span class="col-1">${{ number_format($order->gross_total,2) }}</span>
     </td>
     <td>
         <select style="" data-toggle="dropdown" class="form-control btn-width-md dropdown-toggle {{ !auth()->user()->isAdmin() ? 'btn disabled' : ''  }} {{ $order->getStatusClass() }}" @if (auth()->user()->isAdmin())  wire:change="$emit('updated-status',{{$order->id}},$event.target.value)" @else disabled="disabled"  @endif>

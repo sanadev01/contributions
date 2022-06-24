@@ -94,10 +94,10 @@
                             @if (\Request::route()->getName() != 'admin.trash-orders.index')
                                 {{-- <span class="mr-4"> @lang('Edit Order')</span> --}}
                             @endif
-                            @lang('orders.date')<a wire:click.prevent="sortBy('created_at')" class="fas fa-sort text-right"></a>
+                            @lang('orders.date')<a wire:click.prevent="sortBy('created_at')" class="fas fa-sort text-right custom-sort-arrow"></a>
                         </th>
                         <th>
-                            @lang('orders.order-id')<a wire:click.prevent="sortBy('id')" class="fas fa-sort text-right"></a>
+                            @lang('orders.order-id')<a wire:click.prevent="sortBy('id')" class="fas fa-sort text-right custom-sort-arrow"></a>
                         </th>
                         
                         {{-- <th>Loja/Cliente</th>
@@ -109,7 +109,7 @@
                         @endadmin --}}
                         <th>Tracking Code</th>
                         {{-- <a class="fas fa-sort text-right" wire:click.prevent="sortBy('gross_total')"></a> --}}
-                        <th>@lang('orders.amount')</th>
+                        <th>@lang('orders.amount')<a  wire:click.prevent="sortBy('gross_total')" class="fas fa-sort text-right custom-sort-arrow"></a></th>
                         <th>@lang('orders.status')</th>
                         {{-- <th>@lang('orders.type')</th> --}}
                         <th>@lang('orders.payment-status')</th>
