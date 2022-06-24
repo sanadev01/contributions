@@ -28,7 +28,7 @@
         </div> --}}
     </td>
     @endadmin
-    <td class="d-flex justify-content-between align-items-center border-0">
+    <td>
         @if(\Request::route()->getName() != 'admin.reports.order.index'  && !$order->isTrashed())
             {{-- <div class="vs-radio-con" wire:click="$emit('edit-order',{{$order->id}})" title="@lang('Edit Order')">
                 <input type="radio" name="edit_order" class="edit-order" value="false">
@@ -37,9 +37,9 @@
                     <span class="vs-radio--circle"></span>
                 </span>
             </div> --}}
-            <p id="openEditModal" class="mb-0 " wire:click="$emit('edit-order',{{$order->id}})">
+            <a href="#" id="openEditModal" class="mb-0 " wire:click="$emit('edit-order',{{$order->id}})">
                 {{ optional($order->order_date)->format('m/d/Y') }}
-            </p>
+            </a>
         @endif
     </td>
     <td style="width: 200px;">
@@ -207,5 +207,3 @@
         </div>
     </td>
 </tr>
-<script>
-</script>

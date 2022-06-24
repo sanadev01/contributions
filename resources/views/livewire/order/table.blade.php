@@ -1,15 +1,13 @@
 <div class="row">
     <div class="col-md-12" >
         <div class="hd-card mt-1 mb-3">
-            <div class="row col-12 p-0 m-0 pb-2 pt-2" id="togglers" style="justify-content: space-between;">
-                <div class="col-12 h-50" >
-                    <div id="printBtnDiv">
-                        <button type="btn" onclick="toggleDateSearch()" id="customSwitch1" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-check-square"></i></button>
-                        <button type="btn" onclick="toggleDateSearch()" id="customSwitch2" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-printer"></i></button>
-                        <button type="btn" onclick="toggleDateSearch()" id="customSwitch3" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-printer"></i></button>
-                        <button type="btn" onclick="toggleDateSearch()" id="customSwitch4" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-trash"></i></button>
-                    </div>
-                </div>
+            <div class="row col-12 p-0 m-0" id="togglers" style="justify-content: space-between;">
+                    {{-- <div id="printBtnDiv">
+                        <button type="btn" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-check-square"></i></button>
+                        <button type="btn" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-printer"></i></button>
+                        <button type="btn" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-printer"></i></button>
+                        <button type="btn" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-trash"></i></button>
+                    </div> --}}
                 {{-- <div class="col-11 text-right p-0">
                     <form action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
                         @csrf
@@ -28,21 +26,8 @@
             <div class="row col-10" id="datefilters">
                 <div class=" col-10 text-left mb-2 pl-0" id="dateSearch" style="margin: 22px;">
                     <div class="row col-12 my-3">
-                        <form action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
+                        <form class="form-inline" action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
                             @csrf
-                            <div style="float: left">
-                            <label>Start Date</label>
-                            <input type="date" name="start_date" class="form-control">
-                            </div>
-                            <div style="float: right">
-                            <label>End Date</label>
-                            <input type="date" name="end_date" class="form-control">
-                            <button class="btn btn-primary btn-sm" style="margin-bottom: 4px;" title="@lang('orders.import-excel.Download')">
-                                <i class="fa fa-arrow-down"></i>
-                                </button>
-                            </div>
-                        </form>
-                        <form class="form-inline">
                             <div class="form-group mb-2">
                                 <label>Start Date</label>
                                 <input type="date" name="start_date" class="form-control">
@@ -51,8 +36,10 @@
                                 <label>End Date</label>
                                 <input type="date" name="end_date" class="form-control">
                             </div>
-                            <button type="submit" class="btn btn-primary mb-2">Confirm identity</button>
-                          </form>
+                            <button class="btn btn-primary btn-sm" style="margin-bottom: 4px;" title="@lang('orders.import-excel.Download')">
+                                <i class="fa fa-arrow-down"></i>
+                                </button>                          
+                            </form>
                     </div>
                 </div>
             </div>
@@ -85,12 +72,20 @@
         @endadmin
 
         <div class="table-responsive order-table">
-            <table class="table mb-0  table-bordered" id="order-table">
+            <table class="table mb-0  table-bordered">
                 <thead>
                     <tr>
                         @if (\Request::route()->getName() != 'admin.trash-orders.index')
                             <th id="optionChkbx">
-                                {{-- @lang('orders.Bulk Print') --}}
+                                <div class="vs-checkbox-con vs-checkbox-primary" style="justify-content: center; margin-left:19px;" title="@lang('orders.Bulk Print')">
+                                    <input type="checkbox" id="checkAll" name="orders[]" class="check-all"  value="">
+                                    <span class="vs-checkbox vs-checkbox-sm">
+                                        <span class="vs-checkbox--check">
+                                            <i class="vs-icon feather icon-check"></i>
+                                        </span>
+                                    </span>
+                                    <span class="h3 mx-2 text-primary my-0 py-0"></span>
+                                </div>
                             </th>
                         @endif
                         @admin
@@ -219,16 +214,18 @@
 @push('lvjs-stack')
     <script>
 
+
+
         function toggleDateSearch()
     {
         var checkBox = document.getElementById("customSwitch8");
         const div = document.getElementById('dateSearch');
         if (div.style.display != 'block'){
             div.style.display = 'block';
-            console.log('asdasd');
+            // console.log('asdasd');
         } else {
             div.style.display = 'none';
-            console.log('aa');
+            // console.log('aa');
 
         }
 

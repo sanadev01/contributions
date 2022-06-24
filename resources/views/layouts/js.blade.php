@@ -30,10 +30,14 @@
 function handleChange(checkbox) {
     if(checkbox.checked == true){
         document.getElementById("printBtnDiv").style.display = 'block';
-        console.log('on');
+        // console.log('on');
     }else{
-        document.getElementById("printBtnDiv").style.display = 'none';
-        console.log('off');
+        // console.log();
+        if($(".bulk-orders:checked").length == 0)
+        {
+            document.getElementById("printBtnDiv").style.display = 'none';
+        }
+        // console.log('off');
    }
 }
       var table = $('#example').DataTable({
