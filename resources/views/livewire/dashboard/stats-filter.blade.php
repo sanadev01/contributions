@@ -302,7 +302,7 @@
                                                 WHR#: {{ $order->warehouse_number }}  
                                             </a>   
                                         </div>
-                                        <hr>
+                                        <hr class="custom-margin-hr">
                                     @endforeach
                             {{-- <li class="dropdown-menu-footer pt-4"></li> --}}
                             <a class="dropdown-item p-1 text-center" href="{{ route('admin.orders.index') }}">See all orders</a>

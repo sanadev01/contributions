@@ -1,27 +1,36 @@
 <tr @if( $order->user->hasRole('retailer') &&  !$order->isPaid()) class="bg-danger-custom text-white" @endif>
     @if(\Request::route()->getName() != 'admin.reports.order.index'  && !$order->isTrashed())
         <td>
-            <div class="vs-checkbox-con vs-checkbox-primary" style="justify-content: center; margin-left:19px;" title="@lang('orders.Bulk Print')">
+            <div class="vs-checkbox-con vs-checkbox-primary" title="@lang('orders.Bulk Print')">
                 <input type="checkbox"  onchange='handleChange(this);' name="orders[]" class="bulk-orders"  value="{{$order->id}}">
                 <span class="vs-checkbox vs-checkbox-sm">
                     <span class="vs-checkbox--check">
                         <i class="vs-icon feather icon-check"></i>
                     </span>
                 </span>
-                <span class="h3 mx-2 text-primary my-0 py-0"></span>
+                {{-- <span class="h3 mx-2 text-primary my-0 py-0"></span> --}}
             </div>
         </td>
     @endif
     @admin
     <td id="userNameCol">
         <div class="media media-xs overflow-visible">
-            <img class="corrioes-lable" src="{{asset('images/user-icon.png')}}" style="height: 40px; width: 40px" alt="">
+            <img class="corrioes-lable" src="{{asset('images/user-icon.png')}}" style="height: 40px; width: 40px; vertical-align:middle;" alt="">
         </div>
-        <div class="media-body valign-middle"  id="imageDecrptionTop">
-            {{ $order->user->name }} - {{ $order->user->hasRole('wholesale') ? 'W' : 'R' }}
+        <div class="media-body valign-middle" onclick="copyName(this)"  id="imageDecrptionTop" style="width:auto; font-size:15px !important">
+            <a href="#" title="Click to see Shipment" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.parcel.shipment-info',$order) }}">
+                {{ $order->user->name }} - {{ $order->user->hasRole('wholesale') ? 'W' : 'R' }}
+            </a>
         </div>
-        <div id="imageDecrption">
+        {{-- <div id="imageDecrption" onclick="copyCarrier(this)" style="font-size: 14px !important; width: 150px;">
             <span>{{ str_limit(ucfirst($order->merchant), 30) }} ,  {{ ucfirst($order->tracking_id) }}</span>
+        </div> --}}
+        <div id="imageDecrption" onclick="copyCarrier(this)" style="font-size: 14px !important; width: auto;">
+            <span>{{ $order->corrios_tracking_code }}
+                @if($order->hasSecondLabel())
+                    <hr>
+                    {{ $order->us_api_tracking_code }}
+                @endif</span>
         </div>
         {{-- <div style="padding-left: 45px !important">
           
@@ -42,7 +51,7 @@
             </a>
         @endif
     </td>
-    <td style="width: 200px;">
+    <td class="order-id" style="width: 200px;">
         @if ( $order->isArrivedAtWarehouse() )
             <i class="fa fa-star text-success p-1"></i>
         @endif
@@ -70,9 +79,9 @@
     {{-- <td>
         {{ ucfirst($order->tracking_id) }}
     </td> --}}
-    <td>
+    {{-- <td>
         {{ ucfirst($order->customer_reference) }}
-    </td>
+    </td> --}}
     {{-- <td>
         {{ $order->carrierService() }}
     </td>
@@ -81,13 +90,13 @@
         {{ $order->carrierCost() }}
     </td>
     @endadmin --}}
-    <td>
+    {{-- <td>
         {{ $order->corrios_tracking_code }}
         @if($order->hasSecondLabel())
             <hr>
             {{ $order->us_api_tracking_code }}
         @endif
-    </td>
+    </td> --}}
     <td>
         ${{ number_format($order->gross_total,2) }}
     </td>
@@ -126,7 +135,7 @@
         @endif
     </td>
     
-    <td class="d-flex no-print" >
+    <td class="no-print" >
         <div class="btn-group">
             <div class="dropdown">
                 <button type="button" class="btn btn-success btn-sm dropdown-toggle btn-width-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

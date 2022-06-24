@@ -99,9 +99,14 @@
     border-bottom-width: 2px;
     font-size: 14px !important;
     font-weight: 500 !important;
+} 
+.order-id{
+    text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
 }
 .table-bordered tbody td{
-    font-size: 16px !important;
+    font-size: 15px !important;
     font-weight: 400 !important;
     line-height: 16px !important;
 }
@@ -121,14 +126,34 @@
         width: 300px;   
       }
       #imageDecrption{
-        padding-left: 45px !important; 
+        padding-left: 45px !important;
+        padding-top: 7px !important;
         font-weight:400 !important;
         margin-top: -2px;
         color: #74829c !important;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
       }
       .searchDateBtn{
         margin-top: 30px !important;
       }
+      .custom-margin-hr{
+        margin-bottom: 0.5rem;
+        margin-top: 0.5rem;
+      }
+      @media (min-width:1500px) {
+        .custom-margin-hr{
+        margin-bottom: 0.8rem;
+        margin-top: 0.8rem;
+      }
+    }
+    @media (min-width:1700px) {
+        .custom-margin-hr{
+        margin-bottom: 1rem;
+        margin-top: 1rem;
+      }
+    }
       .btn-width-sm{
         width: 73px;
       }
@@ -139,11 +164,26 @@
         padding-left: 45px !important; 
         font-weight:400 !important;
         margin-top: -38px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
       }
       .card-dark{
         background-color: #2a2a4a !important;
         color: white !important;
         text : white !important;
+      }
+      .vs-checkbox-con input{
+        width: 10px;
+        margin: 0px;
+      }
+      .vs-checkbox-con{
+        margin: 0px;
+      }
+      .vs-checkbox {
+        margin: 0px;
+        margin-right: 0px !important;
+        margin-left: 0px !important;
       }
       .navbar-dark{
         background-color: #1a1a3c !important;

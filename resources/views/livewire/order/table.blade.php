@@ -77,14 +77,13 @@
                     <tr>
                         @if (\Request::route()->getName() != 'admin.trash-orders.index')
                             <th id="optionChkbx">
-                                <div class="vs-checkbox-con vs-checkbox-primary" style="justify-content: center; margin-left:19px;" title="@lang('orders.Bulk Print')">
+                                <div class="vs-checkbox-con vs-checkbox-primary" title="@lang('orders.Bulk Print')">
                                     <input type="checkbox" id="checkAll" name="orders[]" class="check-all"  value="">
                                     <span class="vs-checkbox vs-checkbox-sm">
                                         <span class="vs-checkbox--check">
                                             <i class="vs-icon feather icon-check"></i>
                                         </span>
                                     </span>
-                                    <span class="h3 mx-2 text-primary my-0 py-0"></span>
                                 </div>
                             </th>
                         @endif
@@ -95,21 +94,22 @@
                             @if (\Request::route()->getName() != 'admin.trash-orders.index')
                                 {{-- <span class="mr-4"> @lang('Edit Order')</span> --}}
                             @endif
-                            <a href="#" class="" wire:click.prevent="sortBy('created_at')">@lang('orders.date')</a>
+                            @lang('orders.date')<a wire:click.prevent="sortBy('created_at')" class="fas fa-sort text-right"></a>
                         </th>
                         <th>
-                            <a href="#" class="" wire:click.prevent="sortBy('id')">@lang('orders.order-id')</a> <i>  </i>
+                            @lang('orders.order-id')<a wire:click.prevent="sortBy('id')" class="fas fa-sort text-right"></a>
                         </th>
                         
                         {{-- <th>Loja/Cliente</th>
                         <th>Carrier Tracking</th> --}}
-                        <th>Reference</th>
+                        {{-- <th>Reference</th> --}}
                         {{-- <th>Carrier</th>
                         @admin
                             <th>Carrier Cost</th>
                         @endadmin --}}
-                        <th>Tracking Code</th>
-                        <th><a href="#" wire:click.prevent="sortBy('gross_total')">@lang('orders.amount')</a></th>
+                        {{-- <th>Tracking Code</th> --}}
+                        {{-- <a class="fas fa-sort text-right" wire:click.prevent="sortBy('gross_total')"></a> --}}
+                        <th>@lang('orders.amount')</th>
                         <th>@lang('orders.status')</th>
                         <th>@lang('orders.type')</th>
                         <th>@lang('orders.payment-status')</th>
@@ -204,8 +204,21 @@
             </table>
             <livewire:order.bulk-edit.modal/>
         </div>
-        <div class="d-flex justify-content-end my-2 pb-4 mx-2">
+        <div class="row">
+            <div class="col-2 pt-2">
+                <select class="form-control hd-search" style="padding-left: initial" wire:model="pageSize">
+                    <option value="1">1</option>
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="300">300</option>
+                </select>
+            </div>
+        <div class="col-9 pr-0 d-flex justify-content-end my-2 pb-4 mx-2 offset-4">
             {{ $orders->links() }}
+        </div>
         </div>
         @include('layouts.livewire.loading')
     </div>
