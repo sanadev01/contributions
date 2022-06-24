@@ -19,7 +19,7 @@ class RegionController extends Controller
     public function __invoke($countryId)
     {
         try {
-            $query = Region::where('country_id', $countryId)->get();
+            $query = Region::query();
 
             $query->where('country_id', $countryId);
 
