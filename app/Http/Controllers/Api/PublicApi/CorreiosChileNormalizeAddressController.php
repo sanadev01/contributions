@@ -17,11 +17,11 @@ class CorreiosChileNormalizeAddressController extends Controller
 
     public function __invoke(Request $request)
     {
-        if (!$request->filled('coummne') || !$request->filled('address')) {
+        if (!$request->filled('coummne') || !$request->filled('direction')) {
             return apiResponse(false, 'Missing required fields', null);
         }
 
-        $response = CorreosChileFacade::validateAddress($request->coummne, $request->address);
+        $response = CorreosChileFacade::validateAddress($request->coummne, $request->direction);
         
         if ($response['success'] == true) {
             return apiResponse(true, 'Address Fetched', $response['data']);
