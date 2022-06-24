@@ -81,6 +81,9 @@
         <livewire:dashboard.stats-filter/>
         
     </section>
+    @section('modal')
+        <x-modal/>
+    @endsection
     @include('layouts.charts')
     <!-- Dashboard Analytics end -->
 @endsection
