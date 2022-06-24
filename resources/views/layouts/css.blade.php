@@ -660,7 +660,7 @@
         background-color: #dbe9f2 !important;
     } */
     .bg-danger-custom {
-        background-color: #fa9595
+        background-color: #f5d9d9
     }
 
     .table th,

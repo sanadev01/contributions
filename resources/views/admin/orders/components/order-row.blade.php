@@ -1,4 +1,4 @@
-<tr @if ($order->user->hasRole('retailer') && !$order->isPaid()) class="bg-danger-custom text-white" @endif>
+<tr @if ($order->user->hasRole('retailer') && !$order->isPaid()) class="bg-danger-custom" @endif>
     @if (\Request::route()->getName() != 'admin.reports.order.index' && !$order->isTrashed())
         <td>
             <div class="vs-checkbox-con vs-checkbox-primary" title="@lang('orders.Bulk Print')">
@@ -16,8 +16,17 @@
     @admin
         <td id="userNameCol">
             <div class="media media-xs overflow-visible">
-                <img class="corrioes-lable" src="{{ asset('images/user-icon.png') }}"
-                    style="height: 40px; width: 40px; vertical-align:middle;" alt="">
+                @if ($order->carrierService() == 'Correios Brazil')
+                    <img class="corrioes-lable" src="{{ asset('images/tracking/brazil-flag.png') }}" style="height: 40px; width: 40px; vertical-align:middle;" alt="">
+                @elseif($order->carrierService() == 'USPS')  
+                    <img class="corrioes-lable" src="{{ asset('images/user-icon.png') }}" style="height: 40px; width: 40px; vertical-align:middle;" alt="">
+                @elseif($order->carrierService() == 'UPS')  
+                    <img class="corrioes-lable" src="{{ asset('images/tracking/ups-logo.png') }}" style="height: 40px; width: 40px; vertical-align:middle;" alt="">
+                @elseif($order->carrierService() == 'FEDEX')  
+                    <img class="corrioes-lable" src="{{ asset('images/user-icon.png') }}" style="height: 40px; width: 40px; vertical-align:middle;" alt="">
+                @elseif($order->carrierService() == 'Correios Chile')  
+                    <img class="corrioes-lable" src="{{ asset('images/tracking/chile-flag.png') }}" style="height: 40px; width: 40px; vertical-align:middle;" alt="">
+                @endif
             </div>
             <div class="media-body valign-middle" id="imageDecrptionTop" style="width:175px; font-size:15px !important">
                 <a href="#" title="Click to see Shipment" data-toggle="modal" data-target="#hd-modal"
