@@ -284,28 +284,29 @@
             </div>
         </div> <!-- COL END -->
         <div class="col-lg-3 col-12">
-            <div class="card activityCard">
-                <div class="card-title m-0 p-2 notification-card-right">
+            <div class="card">
+                <div class="card-header card-title m-0 p-2 notification-card-right">
                     <span class="notification-title">Recent Orders</span>
                 </div>
-                <div class="card-content">
+                {{-- <div class="card-content"> --}}
                     <div class="card-body">
                         <ul class="timeline-left list-unstyled">
-                            <li class=""><a class=" justify-content-between">
+                            <li class="">
                                     @foreach ($orders['lastFive'] as $order)
-                                        <div class="media  align-items-start border-bottom-10">
+                                        <div class="media align-items-start border-bottom-10">
                                             <div class="media-body">
                                                 <h6 class="primary media-heading">{{ $order->user->name }}</h6><small
                                                     class="notification-text"> </small>
-                                            </div><small>
-                                                <time class="media-meta"
-                                                    datetime="2015-06-11T18:29:20+08:00">{{ $order->warehouse_number }}</time></small>
+                                            </div>
+                                            <a href="#" class="mb-1 d-block" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$order) }}">
+                                                WHR#: {{ $order->warehouse_number }}  
+                                            </a>   
                                         </div>
                                         <hr class="custom-margin-hr">
                                     @endforeach
-                                </a><a class="justify-content-between" href="javascript:void(0)">
-                            <li ><a class="dropdown-item p-0 text-center"
-                                    href="{{ route('admin.orders.index') }}">See all orders</a></li>
+                            {{-- <li class="dropdown-menu-footer pt-4"></li> --}}
+                            <a class="dropdown-item p-1 text-center" href="{{ route('admin.orders.index') }}">See all orders</a>
+                            </li>
                         </ul>
                     </div>
                 </div>
