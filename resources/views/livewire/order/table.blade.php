@@ -77,14 +77,13 @@
                     <tr>
                         @if (\Request::route()->getName() != 'admin.trash-orders.index')
                             <th id="optionChkbx">
-                                <div class="vs-checkbox-con vs-checkbox-primary" style="justify-content: center; margin-left:19px;" title="@lang('orders.Bulk Print')">
+                                <div class="vs-checkbox-con vs-checkbox-primary" title="@lang('orders.Bulk Print')">
                                     <input type="checkbox" id="checkAll" name="orders[]" class="check-all"  value="">
                                     <span class="vs-checkbox vs-checkbox-sm">
                                         <span class="vs-checkbox--check">
                                             <i class="vs-icon feather icon-check"></i>
                                         </span>
                                     </span>
-                                    <span class="h3 mx-2 text-primary my-0 py-0"></span>
                                 </div>
                             </th>
                         @endif
@@ -103,12 +102,12 @@
                         
                         {{-- <th>Loja/Cliente</th>
                         <th>Carrier Tracking</th> --}}
-                        <th>Reference</th>
+                        {{-- <th>Reference</th> --}}
                         {{-- <th>Carrier</th>
                         @admin
                             <th>Carrier Cost</th>
                         @endadmin --}}
-                        <th>Tracking Code</th>
+                        {{-- <th>Tracking Code</th> --}}
                         {{-- <a class="fas fa-sort text-right" wire:click.prevent="sortBy('gross_total')"></a> --}}
                         <th>@lang('orders.amount')</th>
                         <th>@lang('orders.status')</th>
