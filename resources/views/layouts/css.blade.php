@@ -50,6 +50,15 @@
         display: block !important;
     }
 
+    .activityHeader {
+        color: black !important;
+        justify-content: center !important;
+    }
+
+    .activityHead {
+        justify-content: center !important;
+    }
+
     .sub-category span {
         padding: 12px 30px 2px 20px;
         color: #d4d4d9 !important;
