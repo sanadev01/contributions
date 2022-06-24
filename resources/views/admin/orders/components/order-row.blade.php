@@ -92,7 +92,7 @@
         ${{ number_format($order->gross_total,2) }}
     </td>
     <td>
-        <select style="min-width:150px;" class="form-control {{ !auth()->user()->isAdmin() ? 'btn disabled' : ''  }} {{ $order->getStatusClass() }}" @if (auth()->user()->isAdmin())  wire:change="$emit('updated-status',{{$order->id}},$event.target.value)" @else disabled="disabled"  @endif>
+        <select style="" data-toggle="dropdown" class="form-control btn-width-md dropdown-toggle {{ !auth()->user()->isAdmin() ? 'btn disabled' : ''  }} {{ $order->getStatusClass() }}" @if (auth()->user()->isAdmin())  wire:change="$emit('updated-status',{{$order->id}},$event.target.value)" @else disabled="disabled"  @endif>
             <option class="bg-info" value="{{ App\Models\Order::STATUS_ORDER }}" {{ $order->status == App\Models\Order::STATUS_ORDER ? 'selected': '' }}>ORDER</option>
             {{-- <option class="bg-warning" value="{{ App\Models\Order::STATUS_NEEDS_PROCESSING }}" {{ $order->status == App\Models\Order::STATUS_NEEDS_PROCESSING ? 'selected': '' }}>NEEDS PROCESSING</option> --}}
             <option class="btn-cancelled" value="{{ App\Models\Order::STATUS_CANCEL }}" {{ $order->status == App\Models\Order::STATUS_CANCEL ? 'selected': '' }}>CANCELLED</option>
@@ -129,7 +129,7 @@
     <td class="d-flex no-print" >
         <div class="btn-group">
             <div class="dropdown">
-                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="btn btn-success btn-sm dropdown-toggle btn-width-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     @lang('orders.actions.actions')
                 </button>
                 <div class="dropdown-menu overlap-menu" aria-labelledby="dropdownMenuLink">
