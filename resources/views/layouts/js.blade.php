@@ -27,6 +27,7 @@
 
 {{-- <script src="{{ mix('js/app.js') }}"></script> --}}
 <script>
+
 function handleChange(checkbox) {
     if(checkbox.checked == true){
         document.getElementById("printBtnDiv").style.display = 'block';

@@ -111,7 +111,7 @@
                         {{-- <a class="fas fa-sort text-right" wire:click.prevent="sortBy('gross_total')"></a> --}}
                         <th>@lang('orders.amount')</th>
                         <th>@lang('orders.status')</th>
-                        <th>@lang('orders.type')</th>
+                        {{-- <th>@lang('orders.type')</th> --}}
                         <th>@lang('orders.payment-status')</th>
                         <th class="no-print">@lang('orders.actions.actions')</th>
                     </tr>

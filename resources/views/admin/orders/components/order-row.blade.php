@@ -17,20 +17,24 @@
         <div class="media media-xs overflow-visible">
             <img class="corrioes-lable" src="{{asset('images/user-icon.png')}}" style="height: 40px; width: 40px; vertical-align:middle;" alt="">
         </div>
-        <div class="media-body valign-middle" onclick="copyName(this)"  id="imageDecrptionTop" style="width:auto; font-size:15px !important">
+        <div class="media-body valign-middle" id="imageDecrptionTop" style="width:auto; font-size:15px !important">
             <a href="#" title="Click to see Shipment" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.parcel.shipment-info',$order) }}">
                 {{ $order->user->name }} - {{ $order->user->hasRole('wholesale') ? 'W' : 'R' }}
             </a>
         </div>
-        {{-- <div id="imageDecrption" onclick="copyCarrier(this)" style="font-size: 14px !important; width: 150px;">
-            <span>{{ str_limit(ucfirst($order->merchant), 30) }} ,  {{ ucfirst($order->tracking_id) }}</span>
-        </div> --}}
-        <div id="imageDecrption" onclick="copyCarrier(this)" style="font-size: 14px !important; width: auto;">
-            <span>{{ $order->corrios_tracking_code }}
-                @if($order->hasSecondLabel())
-                    <hr>
-                    {{ $order->us_api_tracking_code }}
-                @endif</span>
+
+        <div id="imageDecrption" style="font-size: 14px !important; width: auto;">
+            {{-- <span id="tracking"> --}}
+                @if ( $order->is_consolidated )
+                <span>
+                    Consolidated
+                </span>
+                @else
+                <span>
+                    Non-Consolidated
+                </span>
+                @endif
+            {{-- </span> --}}
         </div>
         {{-- <div style="padding-left: 45px !important">
           
@@ -116,7 +120,7 @@
 
         </select>
     </td>
-    <td style="zoom: 0.87">
+    {{-- <td style="zoom: 0.87">
         @if ( $order->is_consolidated )
             <span class="btn btn-sm btn-primary">
                 Consolidated
@@ -126,7 +130,7 @@
                 Non-Consolidated
             </span>
         @endif
-    </td>
+    </td> --}}
     <td class="font-large-1">
         @if( $order->isPaid() )
             <i class="fa fa-check-circle text-success"></i>
