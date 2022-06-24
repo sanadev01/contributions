@@ -2,10 +2,10 @@
     <div class="navbar-header d-xl-block d-none">
         <ul class="nav navbar-nav flex-row">
             <li class="nav-item">
-                <a class="navbar-brand" href="/">
+                {{-- <a class="navbar-brand"> --}}
                     <h4 class="mb-0 pt-1">@yield('title')</h4>
                     {{-- <div class="brand-logo">@yield('title')</div> --}}
-                </a>
+                {{-- </a> --}}
             </li>
         </ul>
     </div>

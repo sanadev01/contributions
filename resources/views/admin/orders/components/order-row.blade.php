@@ -17,10 +17,10 @@
         <div class="media media-xs overflow-visible">
             <img class="corrioes-lable" src="{{asset('images/user-icon.png')}}" style="height: 40px; width: 40px" alt="">
         </div>
-        <div class="media-body valign-middle"  id="imageDecrptionTop">
+        <div class="media-body valign-middle" onclick="copyName(this)"  id="imageDecrptionTop" style="width:170px;">
             {{ $order->user->name }} - {{ $order->user->hasRole('wholesale') ? 'W' : 'R' }}
         </div>
-        <div id="imageDecrption">
+        <div id="imageDecrption" onclick="copyCarrier(this)">
             <span>{{ str_limit(ucfirst($order->merchant), 30) }} ,  {{ ucfirst($order->tracking_id) }}</span>
         </div>
         {{-- <div style="padding-left: 45px !important">
@@ -126,7 +126,7 @@
         @endif
     </td>
     
-    <td class="d-flex no-print" >
+    <td class="no-print" >
         <div class="btn-group">
             <div class="dropdown">
                 <button type="button" class="btn btn-success btn-sm dropdown-toggle btn-width-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

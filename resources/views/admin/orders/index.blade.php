@@ -37,17 +37,7 @@
     <div class="card-content">
         <div class="card-body no-print pt-0" style="overflow-y: visible">
             <livewire:order.table :userType="$userType"/>
-            <div class="col-1 pl-10 pb-10">
-                <select class="form-control hd-search" style="padding-left: initial" wire:model="pageSize">
-                    <option value="1">1</option>
-                    <option value="5">5</option>
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                    <option value="300">300</option>
-                </select>
-            </div>
+            
         </div>
     </div>
     <form action="{{ route('admin.order.bulk-action') }}" method="GET" id="bulk_actions_form">
@@ -74,6 +64,39 @@
 
 @section('js')
     <script>
+        function copyName(element)
+        {
+            var range, selection, worked;
+
+        if (document.body.createTextRange) {
+        range = document.body.createTextRange();
+        range.moveToElementText(element);
+        range.select();
+        } else if (window.getSelection) {
+        selection = window.getSelection();        
+        range = document.createRange();
+        range.selectNodeContents(element);
+        selection.removeAllRanges();
+        selection.addRange(range);
+        }
+
+        
+        }
+        function copyCarrier(element)
+        {
+            var range, selection, worked;
+            if (document.body.createTextRange) {
+            range = document.body.createTextRange();
+            range.moveToElementText(element);
+            range.select();
+            } else if (window.getSelection) {
+            selection = window.getSelection();        
+            range = document.createRange();
+            range.selectNodeContents(element);
+            selection.removeAllRanges();
+            selection.addRange(range);
+            }
+        }
         // $('body').on('change','#bulk-actions',function(){
         //     if ( $(this).val() == 'clear' ){
         //         $('.bulk-orders').prop('checked',false)

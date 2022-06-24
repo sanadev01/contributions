@@ -301,10 +301,10 @@
                                                 <time class="media-meta"
                                                     datetime="2015-06-11T18:29:20+08:00">{{ $order->warehouse_number }}</time></small>
                                         </div>
-                                        <hr>
+                                        <hr class="custom-margin-hr">
                                     @endforeach
                                 </a><a class="justify-content-between" href="javascript:void(0)">
-                            <li class="dropdown-menu-footer pt-4"><a class="dropdown-item p-1 text-center"
+                            <li ><a class="dropdown-item p-0 text-center"
                                     href="{{ route('admin.orders.index') }}">See all orders</a></li>
                         </ul>
                     </div>
