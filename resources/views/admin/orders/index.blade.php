@@ -64,39 +64,20 @@
 
 @section('js')
     <script>
-        function copyName(element)
-        {
-            var range, selection, worked;
+        // function copyCarrier(element)
+        // {
+        //   var copyText = document.getElementById("tracking");
+        //   copyText.select();
+        //   copyText.setSelectionRange(0, 99999)
+        //   document.execCommand("copy");
 
-        if (document.body.createTextRange) {
-        range = document.body.createTextRange();
-        range.moveToElementText(element);
-        range.select();
-        } else if (window.getSelection) {
-        selection = window.getSelection();        
-        range = document.createRange();
-        range.selectNodeContents(element);
-        selection.removeAllRanges();
-        selection.addRange(range);
-        }
-
-        
-        }
-        function copyCarrier(element)
-        {
-            var range, selection, worked;
-            if (document.body.createTextRange) {
-            range = document.body.createTextRange();
-            range.moveToElementText(element);
-            range.select();
-            } else if (window.getSelection) {
-            selection = window.getSelection();        
-            range = document.createRange();
-            range.selectNodeContents(element);
-            selection.removeAllRanges();
-            selection.addRange(range);
-            }
-        }
+        //     // var range = document.createRange();
+        //     //         range.selectNode(document.getElementById("tracking"));
+        //     //         window.getSelection().removeAllRanges(); // clear current selection
+        //     //         window.getSelection().addRange(range); // to select text
+        //     //         document.execCommand("copy");
+        //     //         window.getSelection().removeAllRanges();// to deselect
+        // }
         // $('body').on('change','#bulk-actions',function(){
         //     if ( $(this).val() == 'clear' ){
         //         $('.bulk-orders').prop('checked',false)

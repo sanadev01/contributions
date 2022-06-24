@@ -125,6 +125,9 @@
       #userNameCol{
         width: 300px;   
       }
+      .fa-sort{
+        padding-right: 0%;
+      }
       #imageDecrption{
         padding-left: 45px !important;
         padding-top: 7px !important;
