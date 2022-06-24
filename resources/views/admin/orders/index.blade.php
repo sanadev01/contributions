@@ -21,10 +21,9 @@
     <div class="col-8" style="display: flex;">
         <h4 class="mb-0 pt-1"></h4>
         <div id="printBtnDiv">
-            <button type="btn" onclick="toggleDateSearch()" id="customSwitch1" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-check-square"></i></button>
-            <button type="btn" onclick="toggleDateSearch()" id="customSwitch2" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-printer"></i></button>
-            <button type="btn" onclick="toggleDateSearch()" id="customSwitch3" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-printer"></i></button>
-            <button type="btn" onclick="toggleDateSearch()" id="customSwitch4" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-trash"></i></button>
+            <button title="Print Labels" id="print" type="btn" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-printer"></i></button>
+            <button title="Print Domestic Labels" id="deomesticPrint" type="btn" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-printer"></i></button>
+            <button title="Delete" id="trash" type="btn" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-trash"></i></button>
         </div>
     </div>
        
@@ -76,39 +75,119 @@
 
 @section('js')
     <script>
-        $('body').on('change','#bulk-actions',function(){
-            if ( $(this).val() == 'clear' ){
-                $('.bulk-orders').prop('checked',false)
-            }else if ( $(this).val() == 'checkAll' ){
+        // $('body').on('change','#bulk-actions',function(){
+        //     if ( $(this).val() == 'clear' ){
+        //         $('.bulk-orders').prop('checked',false)
+        //     }else if ( $(this).val() == 'checkAll' ){
+        //         $('.bulk-orders').prop('checked',true)
+        //     }else if ( $(this).val() == 'print-label' ){
+        //         var orderIds = [];
+        //         $.each($(".bulk-orders:checked"), function(){
+        //             orderIds.push($(this).val());
+        //         });
+
+        //         $('#bulk_actions_form #command').val('print-label');
+        //         $('#bulk_actions_form #data').val(JSON.stringify(orderIds));
+        //         $('#bulk_actions_form').submit();
+        //     }else if ($(this).val() == 'consolidate-domestic-label'){
+        //         var orderIds = [];
+        //         $.each($(".bulk-orders:checked"), function(){
+        //             orderIds.push($(this).val());
+        //         });
+
+        //         $('#consolidate_domestic_label_actions_form #command').val('consolidate-domestic-label');
+        //         $('#consolidate_domestic_label_actions_form #data').val(JSON.stringify(orderIds));
+        //         $('#consolidate_domestic_label_actions_form').submit();
+        //     }else if ($(this).val() == 'move-order-trash'){
+        //         var orderIds = [];
+        //         $.each($(".bulk-orders:checked"), function(){
+        //             orderIds.push($(this).val());
+        //         });
+
+        //         $('#trash_order_actions_form #command').val('move-order-trash');
+        //         $('#trash_order_actions_form #data').val(JSON.stringify(orderIds));
+        //         $('#trash_order_actions_form').submit();
+        //     }
+        // })
+        $('body').on('click','#print',function(){
+            var orderIds = [];
+            $.each($(".bulk-orders:checked"), function(){
+                orderIds.push($(this).val());
+                console.log($(this).val());
+            });
+            console.log(JSON.stringify(orderIds));
+            $('#bulk_actions_form #command').val('print-label');
+            $('#bulk_actions_form #data').val(JSON.stringify(orderIds));
+            $('#bulk_actions_form').submit();
+        })
+        $('body').on('click','#domesticPrint',function(){
+            var orderIds = [];
+            $.each($(".bulk-orders:checked"), function(){
+                orderIds.push($(this).val());
+                console.log($(this).val());
+            });
+            $('#consolidate_domestic_label_actions_form #command').val('consolidate-domestic-label');
+            $('#consolidate_domestic_label_actions_form #data').val(JSON.stringify(orderIds));
+            $('#consolidate_domestic_label_actions_form').submit();
+        })
+        $('body').on('click','#trash',function(){
+            var orderIds = [];
+            $.each($(".bulk-orders:checked"), function(){
+                orderIds.push($(this).val());
+                console.log($(this).val());
+            });
+            
+            $('#trash_order_actions_form #command').val('move-order-trash');
+            $('#trash_order_actions_form #data').val(JSON.stringify(orderIds));
+            $('#trash_order_actions_form').submit();
+
+        })
+        $('body').on('change','#checkAll',function(){
+
+            if($('#checkAll').is(':checked'))
+            {
                 $('.bulk-orders').prop('checked',true)
-            }else if ( $(this).val() == 'print-label' ){
-                var orderIds = [];
-                $.each($(".bulk-orders:checked"), function(){
-                    orderIds.push($(this).val());
-                });
-
-                $('#bulk_actions_form #command').val('print-label');
-                $('#bulk_actions_form #data').val(JSON.stringify(orderIds));
-                $('#bulk_actions_form').submit();
-            }else if ($(this).val() == 'consolidate-domestic-label'){
-                var orderIds = [];
-                $.each($(".bulk-orders:checked"), function(){
-                    orderIds.push($(this).val());
-                });
-
-                $('#consolidate_domestic_label_actions_form #command').val('consolidate-domestic-label');
-                $('#consolidate_domestic_label_actions_form #data').val(JSON.stringify(orderIds));
-                $('#consolidate_domestic_label_actions_form').submit();
-            }else if ($(this).val() == 'move-order-trash'){
-                var orderIds = [];
-                $.each($(".bulk-orders:checked"), function(){
-                    orderIds.push($(this).val());
-                });
-
-                $('#trash_order_actions_form #command').val('move-order-trash');
-                $('#trash_order_actions_form #data').val(JSON.stringify(orderIds));
-                $('#trash_order_actions_form').submit();
+                document.getElementById("printBtnDiv").style.display = 'block';
+            } 
+            else 
+            {
+                $('.bulk-orders').prop('checked',false)
+                console.log($(".bulk-orders:checked").length);
+                document.getElementById("printBtnDiv").style.display = 'none';
             }
+            // console.log(flag);
+                    // if ( $(this).val() == 'clear' ){
+                    //     $('.bulk-orders').prop('checked',false)
+                    // }else if ( $(this).val() == 'checkAll' ){
+                    //     $('.bulk-orders').prop('checked',true)
+                    // }else if ( $(this).val() == 'print-label' ){
+                    //     var orderIds = [];
+                    //     $.each($(".bulk-orders:checked"), function(){
+                    //         orderIds.push($(this).val());
+                    //     });
+
+                    //     $('#bulk_actions_form #command').val('print-label');
+                    //     $('#bulk_actions_form #data').val(JSON.stringify(orderIds));
+                    //     $('#bulk_actions_form').submit();
+                    // }else if ($(this).val() == 'consolidate-domestic-label'){
+                    //     var orderIds = [];
+                    //     $.each($(".bulk-orders:checked"), function(){
+                    //         orderIds.push($(this).val());
+                    //     });
+
+                    //     $('#consolidate_domestic_label_actions_form #command').val('consolidate-domestic-label');
+                    //     $('#consolidate_domestic_label_actions_form #data').val(JSON.stringify(orderIds));
+                    //     $('#consolidate_domestic_label_actions_form').submit();
+                    // }else if ($(this).val() == 'move-order-trash'){
+                    //     var orderIds = [];
+                    //     $.each($(".bulk-orders:checked"), function(){
+                    //         orderIds.push($(this).val());
+                    //     });
+
+                    //     $('#trash_order_actions_form #command').val('move-order-trash');
+                    //     $('#trash_order_actions_form #data').val(JSON.stringify(orderIds));
+                    //     $('#trash_order_actions_form').submit();
+                    // }
         })
     </script>
 @endsection
