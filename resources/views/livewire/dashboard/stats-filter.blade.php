@@ -286,7 +286,7 @@
         <div class="col-lg-3 col-12">
             <div class="card activityCard">
                 <div class="card-title m-0 p-2 notification-card-right">
-                    <span class="notification-title">Sent Orders</span>
+                    <span class="notification-title">Resent Orders</span>
                 </div>
                 <div class="card-content">
                     <div class="card-body">
