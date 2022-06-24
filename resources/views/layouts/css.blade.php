@@ -99,17 +99,17 @@
     border-bottom-width: 2px;
     font-size: 14px !important;
     font-weight: 500 !important;
-} 
-.order-id{
-    text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
-}
-.table-bordered tbody td{
-    font-size: 15px !important;
-    font-weight: 400 !important;
-    line-height: 16px !important;
-}
+    } 
+    .order-id{
+        text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+    }
+    .table-bordered tbody td{
+        font-size: 15px !important;
+        font-weight: 400 !important;
+        line-height: 16px !important;
+    }
     #printBtnDiv{
         padding-top: 0px;
         display: none;
@@ -182,7 +182,7 @@
         text : white !important;
       }
       .vs-checkbox-con input{
-        width: 10px;
+        width: 13px;
         margin: 0px;
       }
       .vs-checkbox-con{
