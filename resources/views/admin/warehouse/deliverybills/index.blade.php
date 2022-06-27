@@ -52,6 +52,16 @@
                             <table class="table mb-0">
                                 <thead>
                                 <tr>
+                                    <th class="text-center">
+                                        <form action="{{ route('warehouse.combine_delivery_bill.manifest.download') }}" method="post">
+                                            @csrf
+                                            <input type="hidden" name="dbills[]" id="dbills">
+                                            <button id="btn_combine" class="btn btn-sm btn-success d-none">
+                                                Download
+                                                <span class="ml-1"><i class="fa fa-download" aria-hidden="true"></i></span>
+                                            </button>
+                                        </form>
+                                    </th>
                                     <th>@lang('warehouse.deliveryBill.Name')</th>
                                     <th>Request ID</th>
                                     <th>@lang('warehouse.deliveryBill.CN38 Code')</th>
@@ -64,6 +74,9 @@
                                 <tbody>
                                 @foreach($deliveryBills as $deliveryBill)
                                     <tr>
+                                        <td>
+                                            <input type="checkbox" name="deliveryBills[]" class="form-control container" value="{{$deliveryBill->id}}">
+                                        </td>
                                         <td>
                                             {{ $deliveryBill->name }}
                                         </td>
@@ -144,3 +157,30 @@
         </div>
     </section>
 @endsection
+@push('js')
+<script>
+    totalChecked = 0;
+    deliveryBillIds = []
+    
+    $("[name='deliveryBills[]']").on('change', function(){
+        if($(this).is(':checked')){
+            totalChecked++;
+            deliveryBillIds.push($(this).val());
+        }else{
+            if (totalChecked > 0) {
+                totalChecked--;
+                deliveryBillIds.splice(deliveryBillIds.indexOf($(this).val()), 1);
+            }
+        }
+
+        if (totalChecked > 0) {
+            $('#btn_combine').removeClass('d-none');
+            $('#dbills').val(deliveryBillIds);
+        }
+
+        if (totalChecked == 0) {
+            $('#btn_combine').addClass('d-none');
+        }
+    });
+</script>
+@endpush
