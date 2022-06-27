@@ -356,7 +356,7 @@
                                                 @if (optional($tracking)['service'] == 'Correios_Brazil')
                                                     <tr>
                                                         <td>
-                                                            {{ date('YY-m-d', strtotime($tracking['api_trackings']['data'])) }} {{ $tracking['api_trackings']['hora'] }}
+                                                            {{ date('y-m-d', strtotime($tracking['api_trackings']['data'])) }} {{ $tracking['api_trackings']['hora'] }}
                                                         </td>
                                                         <td>
                                                             Brazil
