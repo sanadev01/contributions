@@ -32,6 +32,7 @@ use App\Http\Controllers\Warehouse\ChileContainerPackageController;
 use App\Http\Controllers\Warehouse\DeliveryBillStatusUpdateController;
 use App\Http\Controllers\Warehouse\SinerlogContainerPackageController;
 use App\Http\Controllers\Warehouse\SinerlogManifestDownloadController;
+use App\Http\Controllers\Warehouse\CombineManifestDownloadController;
 
 
 Route::middleware(['auth'])->as('warehouse.')->group(function () {
@@ -56,6 +57,7 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('delivery_bill/{delivery_bill}/status/refresh', DeliveryBillStatusUpdateController::class)->name('delivery_bill.status.refresh');
     Route::get('delivery_bill/{delivery_bill}/download', DeliveryBillDownloadController::class)->name('delivery_bill.download');
     Route::get('delivery_bill/{delivery_bill}/manifest', ManifestDownloadController::class)->name('delivery_bill.manifest');
+    Route::post('combine-delivery-bill/manifest/download', CombineManifestDownloadController::class)->name('combine_delivery_bill.manifest.download');
     
     Route::resource('audit-report', AuditReportController::class)->only(['show']);
 
