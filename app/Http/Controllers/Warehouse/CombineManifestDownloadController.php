@@ -31,6 +31,7 @@ class CombineManifestDownloadController extends Controller
         $deliveryBills = DeliveryBill::whereIn('id', $deliveryBillIds)->get();
         
         if ($deliveryBills->count() > 0) {
+            
             $exportService = new ExportCombineManfestService($deliveryBills);
             return $exportService->handle();
         }
