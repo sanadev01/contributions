@@ -2,18 +2,20 @@
     <form action="{{ route('admin.reports.user-shipments.index') }}" method="GET" target="_blank">
         <div class="row">
             <div class="col-md-12 row mb-2 ">
-                <div class="offset-7 col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                <div class="offset-7 col-lg-2 col-md-3 col-sm-3 col-xs-3">
                     <label for="">Year</label>
                     <select class="form-control" name="year" id="DefaultSelect">
                         <option value="">Select Year </option>
-                        @foreach( $years as $year )
-                        <option value="{{$year}}" @if($year == $year) selected @endif > {{$year}} </option>
+                        @foreach ($years as $year)
+                            <option value="{{ $year }}" @if ($year == $year) selected @endif>
+                                {{ $year }} </option>
                         @endforeach
                     </select>
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 mt-25">
+                <div class="col-lg-3 col-md-3 col-sm-2 col-xs-2 mt-25 padding-left">
                     <button type="submit" class="btn btn-primary mr-2">Download Yearly</button>
-                    <a href="{{ $downloadLink }}" class="btn btn-primary" {{ !$downloadLink ? 'disabled': '' }} target="_blank">
+                    <a href="{{ $downloadLink }}" class="btn btn-primary" {{ !$downloadLink ? 'disabled' : '' }}
+                        target="_blank">
                         Download
                     </a>
                 </div>
@@ -21,16 +23,16 @@
         </div>
     </form>
     <div class="row my-3">
-        <div class="col-md-3">
+        <div class="col-md-2">
             <label for="">Start Date</label>
             <input type="date" class="form-control" wire:model='start_date'>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <label for="">End Date</label>
             <input type="date" class="form-control" wire:model='end_date'>
         </div>
     </div>
-    <table class="table mb-0" id="example">
+    <table class="table mb-0 row-border" id="example">
         <thead>
             <tr>
                 <th>
@@ -40,9 +42,9 @@
                     <a href="#" wire:click="sortBy('name')">
                         Name
                     </a>
-                    @if ( $sortBy == 'name' && $sortAsc )
+                    @if ($sortBy == 'name' && $sortAsc)
                         <i class="fa fa-arrow-down ml-2"></i>
-                    @elseif( $sortBy =='name' && !$sortAsc )
+                    @elseif($sortBy == 'name' && !$sortAsc)
                         <i class="fa fa-arrow-up ml-2"></i>
                     @endif
                 </th>
@@ -50,9 +52,9 @@
                     <a href="#" wire:click="sortBy('pobox_number')">
                         Pobox Number
                     </a>
-                    @if ( $sortBy == 'pobox_number' && $sortAsc )
+                    @if ($sortBy == 'pobox_number' && $sortAsc)
                         <i class="fa fa-arrow-down ml-2"></i>
-                    @elseif( $sortBy =='pobox_number' && !$sortAsc )
+                    @elseif($sortBy == 'pobox_number' && !$sortAsc)
                         <i class="fa fa-arrow-up ml-2"></i>
                     @endif
                 </th>
@@ -60,9 +62,9 @@
                     <a href="#" wire:click="sortBy('email')">
                         Email
                     </a>
-                    @if ( $sortBy == 'email' && $sortAsc )
+                    @if ($sortBy == 'email' && $sortAsc)
                         <i class="fa fa-arrow-down ml-2"></i>
-                    @elseif( $sortBy =='email' && !$sortAsc )
+                    @elseif($sortBy == 'email' && !$sortAsc)
                         <i class="fa fa-arrow-up ml-2"></i>
                     @endif
                 </th>
@@ -70,9 +72,9 @@
                     <a href="#" wire:click="sortBy('order_count')">
                         Shipment Count
                     </a>
-                    @if ( $sortBy == 'order_count' && $sortAsc )
+                    @if ($sortBy == 'order_count' && $sortAsc)
                         <i class="fa fa-arrow-down ml-2"></i>
-                    @elseif( $sortBy =='order_count' && !$sortAsc )
+                    @elseif($sortBy == 'order_count' && !$sortAsc)
                         <i class="fa fa-arrow-up ml-2"></i>
                     @endif
                 </th>
@@ -80,9 +82,9 @@
                     <a href="#" wire:click="sortBy('weight')">
                         Weight
                     </a>
-                    @if ( $sortBy == 'weight' && $sortAsc )
+                    @if ($sortBy == 'weight' && $sortAsc)
                         <i class="fa fa-arrow-down ml-2"></i>
-                    @elseif( $sortBy =='weight' && !$sortAsc )
+                    @elseif($sortBy == 'weight' && !$sortAsc)
                         <i class="fa fa-arrow-up ml-2"></i>
                     @endif
                 </th>
@@ -90,9 +92,9 @@
                     <a href="#" wire:click="sortBy('spent')">
                         Spent
                     </a>
-                    @if ( $sortBy == 'spent' && $sortAsc )
+                    @if ($sortBy == 'spent' && $sortAsc)
                         <i class="fa fa-arrow-down ml-2"></i>
-                    @elseif( $sortBy =='spent' && !$sortAsc )
+                    @elseif($sortBy == 'spent' && !$sortAsc)
                         <i class="fa fa-arrow-up ml-2"></i>
                     @endif
                 </th>
@@ -105,10 +107,10 @@
                     <input type="search" class="form-control" wire:model.debounce.500ms="name">
                 </th>
                 <th>
-                    <input type="search" class="form-control"  wire:model.debounce.500ms="pobox_number">
+                    <input type="search" class="form-control" wire:model.debounce.500ms="pobox_number">
                 </th>
                 <th>
-                    <input type="search" class="form-control"  wire:model.debounce.500ms="email">
+                    <input type="search" class="form-control" wire:model.debounce.500ms="email">
                 </th>
                 <th>
 
@@ -122,11 +124,11 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($users as $user)
+            @foreach ($users as $user)
                 <tr>
 
                     <td class="details-control">
-                        <input type="hidden" class="user_id" value="{{$user->id}}">
+                        <input type="hidden" class="user_id" value="{{ $user->id }}">
                     </td>
                     <td>
                         {{ $user->name }} {{ $user->last_name }}
@@ -138,15 +140,16 @@
                         {{ $user->email }}
                     </td>
                     <td class="h4">
-                        <a href="#" title="Click to see Shipment" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.report.shipment-user',['user'=>$user,'start_date'=>$start_date,'end_date'=>$end_date]) }}">
-                            {{ number_format($user->order_count,2) }}
+                        <a href="#" title="Click to see Shipment" data-toggle="modal" data-target="#hd-modal"
+                            data-url="{{ route('admin.modals.report.shipment-user', ['user' => $user, 'start_date' => $start_date, 'end_date' => $end_date]) }}">
+                            {{ number_format($user->order_count, 2) }}
                         </a>
                     </td>
                     <td class="h4">
-                        {{ number_format($user->weight,2) }} Kg
+                        {{ number_format($user->weight, 2) }} Kg
                     </td>
                     <td class="h4">
-                        {{ number_format($user->spent,2) }} USD
+                        {{ number_format($user->spent, 2) }} USD
                     </td>
                 </tr>
             @endforeach

@@ -8,7 +8,7 @@
             <option value="200">200</option>
             <option value="500">500</option>
         </select>
-        <select  id="visibilityToggle" class="form-control hd-search col-3 mb-2">
+        {{-- <select id="visibilityToggle" class="form-control hd-search col-3 mb-2">
             <option selected value="">Column visibility</option>
             <option value="0">User</option>
             <option value="1">Name</option>
@@ -22,12 +22,10 @@
             <option value="9">CNPJ</option>
             <option value="10">Phone</option>
             <option value="11">Actions</option>
-        </select>
+        </select> --}}
     </div>
-    {{-- <div>
-        Toggle column: <a class="toggle-vis" data-column="0">User</a> - <a class="toggle-vis" data-column="1">Name</a> - <a class="toggle-vis" data-column="2">Address</a> - <a class="toggle-vis" data-column="3">Address2</a> - <a class="toggle-vis" data-column="4">House Number</a> - <a class="toggle-vis" data-column="5">Country</a>
-    </div> --}}
-    <table id="example" class="table table-responsive mb-0">
+
+    <table class="table mb-0  table-bordered">
         <thead>
             <tr id="th">
                 <th id="">
@@ -35,13 +33,13 @@
                 </th>
                 <th>
                     @lang('address.Name')
-                    {{-- <a href="#" wire:click.prevent="sortBy('first_name')">
-                        @if ( $sortBy == 'first_name' && $sortAsc )
+                    <a href="#" wire:click.prevent="sortBy('first_name')">
+                        @if ($sortBy == 'first_name' && $sortAsc)
                             <i class="fa fa-arrow-down ml-2"></i>
-                        @elseif( $sortBy =='first_name' && !$sortAsc )
+                        @elseif($sortBy == 'first_name' && !$sortAsc)
                             <i class="fa fa-arrow-up ml-2"></i>
                         @endif
-                    </a> --}}
+                    </a>
                 </th>
                 <th class="hidden-lg">@lang('address.Address') </th>
                 <th>@lang('address.Address')2 </th>
@@ -79,23 +77,20 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($addresses as $address)
+            @foreach ($addresses as $address)
                 @include('admin.addresses.address-row')
             @endforeach
         </tbody>
     </table>
     {{ $addresses->links() }}
-    @include('layouts.livewire.loading')    
+    @include('layouts.livewire.loading')
 </div>
 <script>
-    
-  
-    function toggleVisibility(value)
-    {
+    function toggleVisibility(value) {
         // console.log(value);
         const div = document.getElementById(value);
         console.log(div);
-        if (div.style.display != 'block'){
+        if (div.style.display != 'block') {
             div.style.display = 'block';
         } else {
             div.style.display = 'none';

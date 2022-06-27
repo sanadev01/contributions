@@ -56,8 +56,8 @@
     }
 
     .loader-center {
-        padding-left: 55%;
-        padding-top: 24%;
+        padding-left: 54%;
+        padding-top: 23%;
     }
 
     .activityHead {
@@ -787,8 +787,28 @@
 
     .parcels .loader1,
     .consolidation .loader1,
-    .orders .loader1 {
+    .orders .loader1,
+    .trash-orders .loader7,
+    .activity .loader7,
+    .profile .loader7,
+    .roles .loader7,
+    .users .loader7,
+    .shcode .loader7,
+    .addresses .loader7,
+    .connect .loader7,
+    .import .loader7,
+    .reports .loader7,
+    .label .loader7,
+    .scan-label .loader7 {
         display: block;
+    }
+
+    .width-100 {
+        width: 100px;
+    }
+
+    .padding-left {
+        padding-left: 8%;
     }
 
     .delivery_bill .loader2 {

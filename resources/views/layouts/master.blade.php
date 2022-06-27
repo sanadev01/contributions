@@ -41,7 +41,7 @@
             <img src="{{ asset('images/loader/search.gif') }}" class="loader4" alt="">
             <img src="{{ asset('images/loader/payment.gif') }}" class="loader5" alt="">
             <img src="{{ asset('images/loader/tracking.gif') }}" class="loader6" alt="">
-            <img src="{{ asset('images/loader/Loader.svg') }}" class="loader6" alt="">
+            <img src="{{ asset('images/loader/Loader.svg') }}" class="loader7" alt="">
         </div>
 
         <!-- BEGIN: Header-->

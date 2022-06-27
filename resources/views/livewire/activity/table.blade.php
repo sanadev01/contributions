@@ -2,7 +2,7 @@
     <div class="col-md-12">
         <div class="hd-card mt-4 mb-3">
             <div class="mb-2 row col-md-12 d-flex justify-content-end p-0 m-0">
-                <div class="col-1 hd-mt-20 pl-0">
+                <div class="col-1 hd-mt-20">
                     <select class="form-control hd-search" wire:model="pageSize">
                         <option value="1">1</option>
                         <option value="5">5</option>
@@ -51,7 +51,7 @@
                 </thead>
                 <tbody>
                     @forelse ($activities as $activity)
-                        @include('admin.activity.components.log-row',['activity'=>$activity])
+                        @include('admin.activity.components.log-row', ['activity' => $activity])
                     @empty
                         <x-tables.no-record colspan="7"></x-tables.no-record>
                     @endforelse

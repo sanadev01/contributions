@@ -12,22 +12,25 @@
                             <div class="col-md-12">
                                 <div class="hd-card mt-1 mb-3">
                                     <div class="d-flex">
-                                        <div class="row col-12 p-0 m-0">
-                                            <div class="col-11 pl-0">
+                                        <div class="row col-12">
+                                            <div class="col-10">
                                                 <form action="" method="GET">
                                                     <div class="row">
-                                                        <div class="col-4 mt-1">
-                                                            <input type="search" class="form-control hd-search" name="search" value="{{ old('search',request('search')) }}" placeholder="@lang('user.Search By Name, Pobox, Email')">
+                                                        <div class="col-3 mt-1">
+                                                            <input type="search" class="form-control hd-search"
+                                                                name="search"
+                                                                value="{{ old('search', request('search')) }}"
+                                                                placeholder="@lang('user.Search By Name, Pobox, Email')">
                                                         </div>
                                                         <div class="col-1">
                                                             <button class="mt-1 btn btn-primary">
-                                                                <i class="feather icon-search"></i> @lang('user.Search')
+                                                                <i class="feather icon-search"></i>
                                                             </button>
                                                         </div>
                                                     </div>
                                                 </form>
                                             </div>
-                                            <div class="col-1 text-right p-0">
+                                            <div class="col-2 text-right p-0" style="float: right">
                                                 <form action="{{ route('admin.users.export.index') }}" method="POST">
                                                     @csrf
                                                     <input type="hidden" name="search" value="{{ request('search') }}">
@@ -58,75 +61,82 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($users as $user)
-                                    <tr>
-                                        <td>
-                                            {{ $user->created_at->format('Y-m-d') }}
-                                        </td>
-                                        <td>
-                                            {{ $user->pobox_number }}
-                                        </td>
-                                        <td>
-                                            {{ $user->name.$user->last_name }}
-                                        </td>
-                                        <td>
-                                            {{ $user->email }}
-                                        </td>
-                                        <td>
-                                            {{ $user->phone }}
-                                        </td>
-                                        <td>
-                                            {{ optional($user->role)->name }}
-                                        </td>
-                                        <td>
-                                            {{ $user->accountType() }}
-                                        </td>
-                                        <td>
-                                            {{ optional($user->profitPackage)->name }}
-                                        </td>
-                                        <td>
-                                            {{ $user->come_from }}
-                                        </td>
-                                        <td class="d-flex">
-                                            <div class="btn-group">
-                                                <div class="dropdown">
-                                                    <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-success dropdown-toggle waves-effect waves-light">
-                                                        @lang('user.Action')
-                                                    </button>
-                                                    <div class="dropdown-menu dropdown-menu-right dropright">
-                                                        {{-- <a href="{{ route('admin.call-flows.edit',$user) }}" title="Edit Call Flows" class="dropdown-item w-100">
+                                    @foreach ($users as $user)
+                                        <tr>
+                                            <td>
+                                                {{ $user->created_at->format('Y-m-d') }}
+                                            </td>
+                                            <td>
+                                                {{ $user->pobox_number }}
+                                            </td>
+                                            <td>
+                                                {{ $user->name . $user->last_name }}
+                                            </td>
+                                            <td>
+                                                {{ $user->email }}
+                                            </td>
+                                            <td>
+                                                {{ $user->phone }}
+                                            </td>
+                                            <td>
+                                                {{ optional($user->role)->name }}
+                                            </td>
+                                            <td>
+                                                {{ $user->accountType() }}
+                                            </td>
+                                            <td>
+                                                {{ optional($user->profitPackage)->name }}
+                                            </td>
+                                            <td>
+                                                {{ $user->come_from }}
+                                            </td>
+                                            <td class="d-flex">
+                                                <div class="btn-group">
+                                                    <div class="dropdown">
+                                                        <button type="button" data-toggle="dropdown" aria-haspopup="true"
+                                                            aria-expanded="false"
+                                                            class="btn btn-success dropdown-toggle waves-effect waves-light">
+                                                            @lang('user.Action')
+                                                        </button>
+                                                        <div class="dropdown-menu dropdown-menu-right dropright">
+                                                            {{-- <a href="{{ route('admin.call-flows.edit',$user) }}" title="Edit Call Flows" class="dropdown-item w-100">
                                                             <i class="feather icon-edit"></i> Edit
                                                         </a> --}}
-                                                        {{-- <a href="{{ route('admin.users.permissions.index',$user) }}" title="Edit User Permissions" class="dropdown-item w-100">
+                                                            {{-- <a href="{{ route('admin.users.permissions.index',$user) }}" title="Edit User Permissions" class="dropdown-item w-100">
                                                             <i class="fa fa-key"></i> Roles & Permission
                                                         </a> --}}
-                                                        <a href="{{ route('admin.users.setting.index',$user) }}" title="@lang('user.User Setting')" class="dropdown-item w-100">
-                                                            <i class="fa fa-cog"></i> @lang('user.User Setting')
-                                                        </a>
-                                                        <a href="{{ route('admin.activity.log.index', [ 'id'=> $user ]) }}" title="Check User Activity" class="dropdown-item w-100">
-                                                            <i class="feather icon-activity"></i> Activity Logs
-                                                        </a>
-                                                        <form action="{{ route('admin.users.login',$user) }}" class="d-flex" method="post">
-                                                            @csrf
-                                                            <button class="dropdown-item w-100">
-                                                                <i class="feather icon-lock"></i> @lang('user.Login')
-                                                            </button>
-                                                        </form>
-                                                        @can('delete', $user)
-                                                            <form action="{{ route('admin.users.destroy',$user) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
+                                                            <a href="{{ route('admin.users.setting.index', $user) }}"
+                                                                title="@lang('user.User Setting')" class="dropdown-item w-100">
+                                                                <i class="fa fa-cog"></i> @lang('user.User Setting')
+                                                            </a>
+                                                            <a href="{{ route('admin.activity.log.index', ['id' => $user]) }}"
+                                                                title="Check User Activity" class="dropdown-item w-100">
+                                                                <i class="feather icon-activity"></i> Activity Logs
+                                                            </a>
+                                                            <form action="{{ route('admin.users.login', $user) }}"
+                                                                class="d-flex" method="post">
                                                                 @csrf
-                                                                @method('DELETE')
-                                                                <button class="dropdown-item w-100 text-danger">
-                                                                    <i class="feather icon-trash-2"></i> @lang('user.Delete')
+                                                                <button class="dropdown-item w-100">
+                                                                    <i class="feather icon-lock"></i> @lang('user.Login')
                                                                 </button>
                                                             </form>
-                                                        @endcan
+                                                            @can('delete', $user)
+                                                                <form action="{{ route('admin.users.destroy', $user) }}"
+                                                                    class="d-flex" method="post"
+                                                                    onsubmit="return confirmDelete()">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button class="dropdown-item w-100 text-danger">
+                                                                        <i class="feather icon-trash-2"></i> @lang('user.Delete')
+                                                                    </button>
+                                                                </form>
+                                                            @endcan
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
