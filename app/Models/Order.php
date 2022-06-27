@@ -601,6 +601,61 @@ class Order extends Model implements Package
     }
 
 
+    public function getStatus()
+    {
+        $class = "";
+
+        if ( $this->status == 1 ){
+            $class = 'INVENTORY_PENDING';
+        }
+        if ( $this->status == 2 ){
+            $class = 'INVENTORY_IN_PROGRESS';
+        }
+        if ( $this->status == 3 ){
+            $class = 'INVENTORY_CANCELLED';
+        }
+        if ( $this->status == 4 ){
+            $class = 'INVENTORY_REJECTED';
+        }
+        if ( $this->status == 5 ){
+            $class = 'INVENTORY_FULFILLED';
+        }
+        if ( $this->status == 10 ){
+            $class = 'PREALERT_TRANSIT';
+        }
+        if ( $this->status == 20 ){
+            $class = 'PREALERT_READY';
+        }
+        if ( $this->status == 30 ){
+            $class = 'ORDER';
+        }
+        if ( $this->status == 32 ){
+            $class = 'NEEDS_PROCESSING';
+        }
+        if ( $this->status == 35 ){
+            $class = 'CANCEL';
+        }
+        if ( $this->status == 38 ){
+            $class = 'REJECTED';
+        }
+        if ( $this->status == 40 ){
+            $class = 'RELEASE';
+        }
+        if ( $this->status == 60 ){
+            $class = 'PAYMENT_PENDING';
+        }
+        if ( $this->status == 70 ){
+            $class = 'PAYMENT_DONE';
+        }
+        if ( $this->status == 80 ){
+            $class = 'SHIPPED';
+        }
+        if ( $this->status == 50 ){
+            $class = 'REFUND';
+        }
+        return $class;
+    }
+
     public function getDistributionModality(): int
     {
         return __default( optional($this->shippingService)->service_sub_class ,ModelsPackage::SERVICE_CLASS_STANDARD );

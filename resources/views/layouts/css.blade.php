@@ -584,6 +584,11 @@
         left: unset !important;
     }
 
+    .dropdown-menu.overlap-menu-order {
+        transform: translate3d(57px, 25px, 0px) !important;
+        right: none !important;
+    }
+
     .table-responsive-md {
         min-height: 265px;
     }
