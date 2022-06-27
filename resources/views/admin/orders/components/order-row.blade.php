@@ -159,18 +159,6 @@
                 {{ $order->getStatus() }}
             </button>
             <div class="dropdown-menu overlap-menu overlap-menu-order" aria-labelledby="dropdownMenuLink">
-
-                @user
-                    <a @if (Auth::user()->isActive()) href="{{ route('admin.payment-invoices.invoice.show', optional($order)->getPaymentInvoice()) }}" @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" @endif
-                        class="dropdown-item" title="Pay Order">
-                        <i class="feather icon-dollar-sign"></i> @lang('orders.actions.pay-order')
-                    </a>
-
-                    <a @if (Auth::user()->isActive()) href="{{ route('admin.payment-invoices.orders.index', ['order' => $order]) }}" @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" @endif
-                        class="dropdown-item" title="Pay Order">
-                        <i class="feather icon-dollar-sign"></i> @lang('orders.actions.pay-order')
-                    </a>
-                @enduser
                 <button wire:click="$emit('updated-status',{{ $order->id }},$event.target.value)"
                     value="{{ App\Models\Order::STATUS_ORDER }}" class="dropdown-item" title="Show Order Details">
                     <i class="feather icon-list"></i> ORDER
