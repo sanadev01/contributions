@@ -12,10 +12,10 @@
                     <option value="300">300</option>
                 </select>
             </div>
-            
+
         </div>
         <div class="table-wrapper position-relative">
-            <table class="table mb-0 table-responsive-md" id="">
+            <table class="table table-bordered" id="">
                 <thead>
                     <tr>
                         <th>Date</th>
@@ -24,16 +24,16 @@
                         @endadmin
                         <th>@lang('orders.import-excel.File Name')</th>
                         <th>Total</th>
-                        <th>@lang('orders.actions.actions')</th>
+                        <th class="width-100">@lang('orders.actions.actions')</th>
                     </tr>
                     <tr class="no-print">
                         <th>
                             <input type="search" class="form-control col-md-9" wire:model.debounce.1000ms="date">
                         </th>
                         @admin
-                        <th>
-                            <input type="search" class="form-control" wire:model.debounce.1000ms="name">
-                        </th>
+                            <th>
+                                <input type="search" class="form-control" wire:model.debounce.1000ms="name">
+                            </th>
                         @endadmin
                         <th>
                             <input type="search" class="form-control" wire:model.debounce.1000ms="file_name">
@@ -46,7 +46,7 @@
                 </thead>
                 <tbody>
                     @forelse ($importOders as $order)
-                        @include('admin.import-excel.components.order-row',['order'=>$order])    
+                        @include('admin.import-excel.components.order-row', ['order' => $order])
                     @empty
                         <x-tables.no-record colspan="5"></x-tables.no-record>
                     @endforelse
@@ -59,5 +59,5 @@
         </div>
         @include('layouts.livewire.loading')
     </div>
-    
+
 </div>
