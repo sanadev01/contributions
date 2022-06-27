@@ -153,7 +153,8 @@ class ExportChileManifestService extends AbstractExportService
 
     private function getValuePaidToCorrieos(Container $container, Order $order)
     {
-        $rateSlab = AccrualRate::getRateSlabFor($order->getWeight('kg'));
+        $service  = $order->shippingService->service_sub_class;
+        $rateSlab = AccrualRate::getRateSlabFor($order->getWeight('kg'),$service);
 
         if ( !$rateSlab ){
             return 0;
