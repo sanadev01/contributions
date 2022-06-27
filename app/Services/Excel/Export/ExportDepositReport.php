@@ -169,7 +169,8 @@ class ExportDepositReport extends AbstractExportService
 
     private function getValuePaidToCorrieos($order)
     {
-        $rateSlab = AccrualRate::getRateSlabFor($order->getWeight('kg'));
+        $service  = $order->shippingService->service_sub_class;
+        $rateSlab = AccrualRate::getRateSlabFor($order->getWeight('kg'),$service);
 
         $container = $order->containers->first();
 

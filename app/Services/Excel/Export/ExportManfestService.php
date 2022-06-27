@@ -138,7 +138,8 @@ class ExportManfestService extends AbstractCsvExportService
     protected function getValuePaidToCorrieos(Container $container, Order $order)
     {
         $commission = false;
-        $rateSlab = AccrualRate::getRateSlabFor($order->getWeight('kg'));
+        $service  = $order->shippingService->service_sub_class;
+        $rateSlab = AccrualRate::getRateSlabFor($order->getWeight('kg'),$service);
 
         if ( !$rateSlab ){
             return [
@@ -146,7 +147,6 @@ class ExportManfestService extends AbstractCsvExportService
                 'commission'=> 0
             ];
         }
-        $service = $order->shippingService->service_sub_class;
         if($service == ShippingService::AJ_Packet_Standard || $service == ShippingService::AJ_Packet_Express){
             $commission = true;
         }
