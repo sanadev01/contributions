@@ -605,52 +605,52 @@ class Order extends Model implements Package
     {
         $class = "";
 
-        if ( $this->status == 1 ){
+        if ( $this->status == Order::STATUS_INVENTORY_PENDING ){
             $class = 'INVENTORY_PENDING';
         }
-        if ( $this->status == 2 ){
+        if ( $this->status == Order::STATUS_INVENTORY_IN_PROGRESS ){
             $class = 'INVENTORY_IN_PROGRESS';
         }
-        if ( $this->status == 3 ){
+        if ( $this->status == Order::STATUS_INVENTORY_CANCELLED ){
             $class = 'INVENTORY_CANCELLED';
         }
-        if ( $this->status == 4 ){
+        if ( $this->status == Order::STATUS_INVENTORY_REJECTED ){
             $class = 'INVENTORY_REJECTED';
         }
-        if ( $this->status == 5 ){
+        if ( $this->status == Order::STATUS_INVENTORY_FULFILLED ){
             $class = 'INVENTORY_FULFILLED';
         }
-        if ( $this->status == 10 ){
+        if ( $this->status == Order::STATUS_PREALERT_TRANSIT ){
             $class = 'PREALERT_TRANSIT';
         }
-        if ( $this->status == 20 ){
+        if ( $this->status == Order::STATUS_PREALERT_READY ){
             $class = 'PREALERT_READY';
         }
-        if ( $this->status == 30 ){
+        if ( $this->status == Order::STATUS_ORDER ){
             $class = 'ORDER';
         }
-        if ( $this->status == 32 ){
+        if ( $this->status == Order::STATUS_NEEDS_PROCESSING ){
             $class = 'NEEDS_PROCESSING';
         }
-        if ( $this->status == 35 ){
+        if ( $this->status == Order::STATUS_CANCEL ){
             $class = 'CANCEL';
         }
-        if ( $this->status == 38 ){
+        if ( $this->status == Order::STATUS_REJECTED ){
             $class = 'REJECTED';
         }
-        if ( $this->status == 40 ){
+        if ( $this->status == Order::STATUS_RELEASE ){
             $class = 'RELEASE';
         }
-        if ( $this->status == 60 ){
+        if ( $this->status == Order::STATUS_PAYMENT_PENDING ){
             $class = 'PAYMENT_PENDING';
         }
-        if ( $this->status == 70 ){
+        if ( $this->status == Order::STATUS_PAYMENT_DONE ){
             $class = 'PAYMENT_DONE';
         }
-        if ( $this->status == 80 ){
+        if ( $this->status == Order::STATUS_SHIPPED ){
             $class = 'SHIPPED';
         }
-        if ( $this->status == 50 ){
+        if ( $this->status == Order::STATUS_REFUND ){
             $class = 'REFUND';
         }
         return $class;

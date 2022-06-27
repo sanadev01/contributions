@@ -175,8 +175,12 @@
         padding-top: 5px;
     }
 
+    .vs-checkbox-con .vs-checkbox {
+        border-width: 1px !important;
+    }
+
     #imageDecrption {
-        padding-left: 45px !important;
+        padding-left: 50px !important;
         padding-top: 7px !important;
         font-weight: 400 !important;
         margin-top: -2px;
@@ -218,7 +222,7 @@
     }
 
     #imageDecrptionTop {
-        padding-left: 45px !important;
+        padding-left: 50px !important;
         font-weight: 400 !important;
         margin-top: -38px;
         text-overflow: ellipsis;
