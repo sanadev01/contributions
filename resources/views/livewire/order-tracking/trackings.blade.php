@@ -1,5 +1,5 @@
 <div>
-    
+
     {{-- @if ($message)
         <div class="content-header row col-8 offset-2">
             <div class="col-md-12">
@@ -23,11 +23,11 @@
             </div>
         @endif
     </div>
-    
+
     @if ($trackings)
         <div id="accordion">
             @foreach ($trackings as $tracking)
-                
+
                 @if(optional($tracking)['success'] && optional($tracking)['status'] == 200)
                 <div class="card">
                     <div class="card-header pt-2" id="t-{{optional($tracking['order'])->warehouse_number}}">
@@ -52,7 +52,7 @@
                     </div>
                     <div id="t-{{optional($tracking['order'])->corrios_tracking_code}}" class="collapse" aria-labelledby="t-{{optional($tracking['order'])->warehouse_number}}" data-parent="#accordion">
                     <div class="card-body">
-                        
+
                         <div class="row">
                             <div class="col-12">
                                 <div class="card">
@@ -84,7 +84,7 @@
                                                             </div>
                                                         </div>
                                                     </li>
-                                                    
+
                                                     <li class="@if($tracking['trackings']->last()->status_code >=  75) active @endif step0">
                                                         <div class="icon-content">
                                                             <img class="icon offset-1" src="{{ asset('images/tracking/container.png') }}">
@@ -101,7 +101,7 @@
                                                             </div>
                                                         </div>
                                                     </li>
-                                                    
+
                                                     <li class="step0">
                                                         <div class="icon-content">
                                                             @if ($tracking['order']->recipient->country_id == \App\Models\Order::BRAZIL)
@@ -110,14 +110,14 @@
                                                                 <img class="icon offset-1" src="{{ asset('images/tracking/chile-flag.png') }}">
                                                             @else
                                                                 <img class="icon offset-1" src="{{ asset('images/tracking/ups-logo.png') }}">
-                                                            @endif    
+                                                            @endif
                                                             <div class="d-flex flex-column" mt-4>
                                                                 @if ($tracking['order']->recipient->country_id == \App\Models\Order::BRAZIL)
                                                                     <p class="font-weight-bold">Received <br>by Correios</p>
                                                                 @elseif ($tracking['order']->recipient->country_id == \App\Models\Order::CHILE)
                                                                     <p class="font-weight-bold">Received <br>Correios Chile</p>
-                                                                @else 
-                                                                    <p class="font-weight-bold">Received <br>by UPS</p>    
+                                                                @else
+                                                                    <p class="font-weight-bold">Received <br>by UPS</p>
                                                                 @endif
                                                             </div>
                                                         </div>
@@ -142,7 +142,7 @@
                                                         </div>
                                                     </li>
                                                     @endif
-                                                    
+
                                                     @if ($tracking['order']->recipient->country_id == \App\Models\Order::BRAZIL)
                                                     <li class="step0">
                                                         <div class="icon-content">
@@ -245,7 +245,7 @@
                                                                 </div>
                                                             </div>
                                                         </li>
-                                                        
+
                                                         <li class="@if( $this->toggleBrazilStatus($tracking['api_trackings'], $tracking['trackings']) >= 120) active @endif step0">
                                                             <div class="icon-content">
                                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/left-to-buyer.png') }}">
@@ -321,12 +321,12 @@
                                                             </div>
                                                         </li>
                                                     @endif
-                                                @endif 
-                                                
+                                                @endif
+
                                             </ul>
                                         </div>
                                     </div>
-    
+
                                 </div>
                                 {{-- <hr> --}}
                                 <div class="card">
@@ -356,7 +356,7 @@
                                                 @if (optional($tracking)['service'] == 'Correios_Brazil')
                                                     <tr>
                                                         <td>
-                                                            {{ $tracking['api_trackings']['data'] }} {{ $tracking['api_trackings']['hora'] }}
+                                                            {{ date('Y-m-d', strtotime($tracking['api_trackings']['data'])) }} {{ $tracking['api_trackings']['hora'] }}
                                                         </td>
                                                         <td>
                                                             Brazil
@@ -395,7 +395,7 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                
+
                                 </div>
                             </div>
                         </div>
@@ -403,7 +403,7 @@
                     </div>
                     </div>
                 </div>
-                    
+
 
                 @endif
             @endforeach
