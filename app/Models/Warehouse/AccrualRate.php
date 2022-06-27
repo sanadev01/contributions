@@ -48,14 +48,14 @@ class AccrualRate extends Model
         return '';
     }
 
-    public static function getRateSlabFor($weight): AccrualRate
+    public static function getRateSlabFor($weight, $service  = null): AccrualRate
     {
         if($weight < 0.1){
             $weight = 0.1;
         }
         $weightToGrams = UnitsConverter::kgToGrams($weight);
 
-        return self::where('weight','<=',$weightToGrams)->orderBy('id','DESC')->take(1)->first();
+        return self::where('weight','<=',$weightToGrams)->where('service',$service)->orderBy('id','DESC')->take(1)->first();
     }
 
     public static function getCarrierRate($weight, $service)
