@@ -1,8 +1,8 @@
 <div class="row">
-    <div class="col-md-12" >
+    <div class="col-md-12">
         <div class="hd-card mt-1 mb-3">
             <div class="row col-12 p-0 m-0" id="togglers" style="justify-content: space-between;">
-                    {{-- <div id="printBtnDiv">
+                {{-- <div id="printBtnDiv">
                         <button type="btn" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-check-square"></i></button>
                         <button type="btn" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-printer"></i></button>
                         <button type="btn" class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-printer"></i></button>
@@ -38,8 +38,8 @@
                             </div>
                             <button class="btn btn-success btn-sm searchDateBtn" title="@lang('orders.import-excel.Download')">
                                 <i class="fa fa-arrow-down"></i>
-                                </button>                        
-                            </form>
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -51,19 +51,19 @@
                     <div class="col-12 p-0">
                         <ul class="nav nav-pills m-0">
                             <li class="nav-item ">
-                                <a class="nav-link border @if(!$userType) btn btn-primary text-white @endif" href="{{ route('admin.orders.index') }}"><span style="font-size: 22px;">All Orders</span></a>
+                                <a class="nav-link border @if (!$userType) btn btn-primary text-white @endif" href="{{ route('admin.orders.index') }}"><span style="font-size: 22px;">All Orders</span></a>
                             </li>
                             <li class="nav-item ">
-                                <a class="nav-link border @if($userType == 'wholesale') btn btn-primary text-white @endif" href="{{ route('admin.orders.show','wholesale') }}"><span style="font-size: 22px;">Wholesales</span></a>
+                                <a class="nav-link border @if ($userType == 'wholesale') btn btn-primary text-white @endif" href="{{ route('admin.orders.show','wholesale') }}"><span style="font-size: 22px;">Wholesales</span></a>
                             </li>
                             <li class="nav-item ">
-                                <a class="nav-link border @if($userType == 'retailer') btn btn-primary text-white @endif" href="{{ route('admin.orders.show','retailer') }}"><span style="font-size: 22px;">Retail</span></a>
+                                <a class="nav-link border @if ($userType == 'retailer') btn btn-primary text-white @endif" href="{{ route('admin.orders.show','retailer') }}"><span style="font-size: 22px;">Retail</span></a>
                             </li>
                             <li class="nav-item ">
-                                <a class="nav-link border @if($userType == 'domestic') btn btn-primary text-white @endif" href="{{ route('admin.orders.show','domestic') }}"><span style="font-size: 22px;">Domestic</span></a>
+                                <a class="nav-link border @if ($userType == 'domestic') btn btn-primary text-white @endif" href="{{ route('admin.orders.show','domestic') }}"><span style="font-size: 22px;">Domestic</span></a>
                             </li>
                             <li class="nav-item ">
-                                <a class="nav-link border @if($userType == 'pickups') btn btn-primary text-white @endif" href="{{ route('admin.orders.show','pickups') }}"><span style="font-size: 22px;">Pickups</span></a>
+                                <a class="nav-link border @if ($userType == 'pickups') btn btn-primary text-white @endif" href="{{ route('admin.orders.show','pickups') }}"><span style="font-size: 22px;">Pickups</span></a>
                             </li>
                         </ul>
                     </div>
@@ -78,7 +78,8 @@
                         @if (\Request::route()->getName() != 'admin.trash-orders.index')
                             <th id="optionChkbx">
                                 <div class="vs-checkbox-con vs-checkbox-primary" title="@lang('orders.Bulk Print')">
-                                    <input type="checkbox" id="checkAll" name="orders[]" class="check-all"  value="">
+                                    <input type="checkbox" id="checkAll" name="orders[]" class="check-all"
+                                        value="">
                                     <span class="vs-checkbox vs-checkbox-sm">
                                         <span class="vs-checkbox--check">
                                             <i class="vs-icon feather icon-check"></i>
@@ -88,18 +89,20 @@
                             </th>
                         @endif
                         @admin
-                            <th id="userNameCol">User Name</th>
+                            <th id="userNameCol">USER NAME</th>
                         @endadmin
                         <th>
                             @if (\Request::route()->getName() != 'admin.trash-orders.index')
                                 {{-- <span class="mr-4"> @lang('Edit Order')</span> --}}
                             @endif
-                            @lang('orders.date')<a wire:click.prevent="sortBy('created_at')" class="fas fa-sort text-right"></a>
+                            @lang('orders.date')<a wire:click.prevent="sortBy('created_at')"
+                                class="fas fa-sort text-right custom-sort-arrow"></a>
                         </th>
                         <th>
-                            @lang('orders.order-id')<a wire:click.prevent="sortBy('id')" class="fas fa-sort text-right"></a>
+                            @lang('orders.order-id')<a wire:click.prevent="sortBy('id')"
+                                class="fas fa-sort text-right custom-sort-arrow"></a>
                         </th>
-                        
+
                         {{-- <th>Loja/Cliente</th>
                         <th>Carrier Tracking</th> --}}
                         {{-- <th>Reference</th> --}}
@@ -107,9 +110,10 @@
                         @admin
                             <th>Carrier Cost</th>
                         @endadmin --}}
-                        <th>Tracking Code</th>
+                        <th>TRACKING CODE</th>
                         {{-- <a class="fas fa-sort text-right" wire:click.prevent="sortBy('gross_total')"></a> --}}
-                        <th>@lang('orders.amount')</th>
+                        <th>@lang('orders.amount')<a wire:click.prevent="sortBy('gross_total')"
+                                class="fas fa-sort text-right custom-sort-arrow"></a></th>
                         <th>@lang('orders.status')</th>
                         {{-- <th>@lang('orders.type')</th> --}}
                         <th>@lang('orders.payment-status')</th>
@@ -196,17 +200,17 @@
                 </thead>
                 <tbody>
                     @forelse ($orders as $order)
-                        @include('admin.orders.components.order-row',['order'=>$order])
+                        @include('admin.orders.components.order-row', ['order' => $order])
                     @empty
                         <x-tables.no-record colspan="15"></x-tables.no-record>
                     @endforelse
                 </tbody>
             </table>
-            <livewire:order.bulk-edit.modal/>
+            <livewire:order.bulk-edit.modal />
         </div>
         <div class="row">
-            <div class="col-2 pt-2">
-                <select class="form-control hd-search" style="padding-left: initial" wire:model="pageSize">
+            <div class="col-1 pt-2">
+                <select class="form-control hd-search" wire:model="pageSize">
                     <option value="1">1</option>
                     <option value="5">5</option>
                     <option value="10">10</option>
@@ -216,9 +220,9 @@
                     <option value="300">300</option>
                 </select>
             </div>
-        <div class="col-9 pr-0 d-flex justify-content-end my-2 pb-4 mx-2 offset-4">
-            {{ $orders->links() }}
-        </div>
+            <div class="col-11 pr-0 d-flex justify-content-end pr-3 pt-2">
+                {{ $orders->links() }}
+            </div>
         </div>
         @include('layouts.livewire.loading')
     </div>
@@ -226,39 +230,35 @@
 
 @push('lvjs-stack')
     <script>
+        function toggleDateSearch() {
+            var checkBox = document.getElementById("customSwitch8");
+            const div = document.getElementById('dateSearch');
+            if (div.style.display != 'block') {
+                div.style.display = 'block';
+                // console.log('asdasd');
+            } else {
+                div.style.display = 'none';
+                // console.log('aa');
 
-
-
-        function toggleDateSearch()
-    {
-        var checkBox = document.getElementById("customSwitch8");
-        const div = document.getElementById('dateSearch');
-        if (div.style.display != 'block'){
-            div.style.display = 'block';
-            // console.log('asdasd');
-        } else {
-            div.style.display = 'none';
-            // console.log('aa');
+            }
 
         }
-
-    }
         window.addEventListener('DOMContentLoaded', () => {
 
-            @this.on('updated-status',function(orderId,status){
-                $.post('{{route("api.order.status.update")}}',{
-                    order_id: orderId,
-                    status : status
-                })
-                .then(function(response){
-                    if ( response.success ){
-                        @this.call('render')
-                    }else{
+            @this.on('updated-status', function(orderId, status) {
+                $.post('{{ route('api.order.status.update') }}', {
+                        order_id: orderId,
+                        status: status
+                    })
+                    .then(function(response) {
+                        if (response.success) {
+                            @this.call('render')
+                        } else {
+                            toastr.error(response.message)
+                        }
+                    }).catch(function(data) {
                         toastr.error(response.message)
-                    }
-                }).catch(function(data){
-                    toastr.error(response.message)
-                })
+                    })
             })
 
             // @this.on('edit-order',function(){

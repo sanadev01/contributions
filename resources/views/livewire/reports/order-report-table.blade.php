@@ -1,4 +1,4 @@
-<div class="p-2" >
+<div class="p-2">
     <div class="row mb-2 no-print">
         <div class="col-1">
             <select class="form-control" wire:model="pageSize">
@@ -24,7 +24,7 @@
                     <a href="#" wire:click.prevent="sortBy('created_at')">@lang('orders.date')</a>
                 </th>
                 <th>
-                    <a href="#" wire:click.prevent="sortBy('id')">@lang('orders.order-id')</a> <i>  </i>
+                    <a href="#" wire:click.prevent="sortBy('id')">@lang('orders.order-id')</a> <i> </i>
                 </th>
                 @admin
                 <th>User Name</th>
@@ -34,7 +34,7 @@
                 <th>Referência do Cliente</th>
                 <th>Carrier</th>
                 @admin
-                    <th>Carrier Cost</th>
+                <th>Carrier Cost</th>
                 @endadmin
                 <th>Tracking Code</th>
                 <th>@lang('orders.amount')</th>
@@ -88,7 +88,7 @@
                         <option value="{{ App\Models\Order::STATUS_SHIPPED }}">SHIPPED</option>
                     </select>
                 </th>
-                <th >
+                <th>
                     <select class="form-control" wire:model="orderType">
                         <option value="">All</option>
                         <option value="consolidated">Consolidated</option>
@@ -106,9 +106,9 @@
             </tr>
         </thead>
         <tbody>
-            
+
             @forelse ($orders as $order)
-                @include('admin.orders.components.order-row',['order'=>$order])    
+                @include('admin.orders.components.order-row', ['order' => $order])
             @empty
                 <x-tables.no-record colspan="9"></x-tables.no-record>
             @endforelse
@@ -123,21 +123,21 @@
 @push('lvjs-stack')
     <script>
         window.addEventListener('DOMContentLoaded', () => {
-            
-            @this.on('updated-status',function(orderId,status){
-                $.post('{{route("api.order.status.update")}}',{
-                    order_id: orderId,
-                    status : status
-                })
-                .then(function(response){
-                    if ( response.success ){
-                        @this.call('render')
-                    }else{
+
+            @this.on('updated-status', function(orderId, status) {
+                $.post('{{ route('api.order.status.update') }}', {
+                        order_id: orderId,
+                        status: status
+                    })
+                    .then(function(response) {
+                        if (response.success) {
+                            @this.call('render')
+                        } else {
+                            toastr.error(response.message)
+                        }
+                    }).catch(function(data) {
                         toastr.error(response.message)
-                    }
-                }).catch(function(data){
-                    toastr.error(response.message)
-                })
+                    })
             })
         });
     </script>

@@ -110,7 +110,8 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <canvas id="cardChart" class="h-8 w-9 chart-dropshadow chartjs-render-monitor"
+                                            <canvas id="cardChart"
+                                                class="h-8 w-9 chart-dropshadow chartjs-render-monitor"
                                                 style="display: block; width: 64px; height: 64px;">
                                             </canvas>
                                         </div>
@@ -150,9 +151,9 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <canvas id="chart2" class="h-8 w-9 chart-dropshadow chartjs-render-monitor"
-                                                width="64" height="64"
-                                                style="display: block; width: 64px; height: 64px;">
+                                            <canvas id="chart2"
+                                                class="h-8 w-9 chart-dropshadow chartjs-render-monitor" width="64"
+                                                height="64" style="display: block; width: 64px; height: 64px;">
                                             </canvas>
                                         </div>
                                     </div>
@@ -190,9 +191,9 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <canvas id="chart3" class="h-8 w-9 chart-dropshadow chartjs-render-monitor"
-                                                width="64" height="64"
-                                                style="display: block; width: 64px; height: 64px;">
+                                            <canvas id="chart3"
+                                                class="h-8 w-9 chart-dropshadow chartjs-render-monitor" width="64"
+                                                height="64" style="display: block; width: 64px; height: 64px;">
                                             </canvas>
                                         </div>
                                     </div>
@@ -228,12 +229,14 @@
                                                 </div>
                                                 <div class="chartjs-size-monitor-shrink"
                                                     style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
-                                                    <div style="position:absolute;width:200%;height:200%;left:0; top:0">
+                                                    <div
+                                                        style="position:absolute;width:200%;height:200%;left:0; top:0">
                                                     </div>
                                                 </div>
                                             </div>
-                                            <canvas id="chart4" class="h-8 w-9 chart-dropshadow chartjs-render-monitor"
-                                                width="64" height="64"
+                                            <canvas id="chart4"
+                                                class="h-8 w-9 chart-dropshadow chartjs-render-monitor" width="64"
+                                                height="64"
                                                 style="display: block; width: 64px; height: 64px;"></canvas>
                                         </div>
                                     </div>
@@ -285,33 +288,37 @@
         </div> <!-- COL END -->
         <div class="col-lg-3 col-12">
             <div class="card">
-                <div class="card-header card-title m-0 p-2 notification-card-right">
-                    <span class="notification-title">Recent Orders</span>
+                <div class="card-header card-title m-0 p-2 notification-card-right activityHead"
+                    style="justify-content:  center !important">
+                    <span class="notification-title activityHeader">Recent Orders</span>
                 </div>
                 {{-- <div class="card-content"> --}}
-                    <div class="card-body">
-                        <ul class="timeline-left list-unstyled">
-                            <li class="">
-                                    @foreach ($orders['lastFive'] as $order)
-                                        <div class="media align-items-start border-bottom-10">
-                                            <div class="media-body">
-                                                <h6 class="primary media-heading">{{ $order->user->name }}</h6><small
-                                                    class="notification-text"> </small>
-                                            </div>
-                                            <a href="#" class="mb-1 d-block" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$order) }}">
-                                                WHR#: {{ $order->warehouse_number }}  
-                                            </a>   
-                                        </div>
-                                        <hr class="custom-margin-hr">
-                                    @endforeach
+                <div class="card-body">
+                    <ul class="timeline-left list-unstyled">
+                        <li class="">
+                            @foreach ($orders['lastFive'] as $order)
+                                <div class="media align-items-start border-bottom-10">
+                                    <div class="media-body">
+                                        <h6 class="primary media-heading">{{ $order->user->name }}</h6><small
+                                            class="notification-text"> </small>
+                                    </div>
+                                    <a href="#" class="mb-1 d-block" data-toggle="modal"
+                                        data-target="#hd-modal"
+                                        data-url="{{ route('admin.modals.order.invoice', $order) }}">
+                                        WHR#: {{ $order->warehouse_number }}
+                                    </a>
+                                </div>
+                                <hr class="custom-margin-hr">
+                            @endforeach
                             {{-- <li class="dropdown-menu-footer pt-4"></li> --}}
-                            <a class="dropdown-item p-1 text-center" href="{{ route('admin.orders.index') }}">See all orders</a>
-                            </li>
-                        </ul>
-                    </div>
+                            <a class="dropdown-item p-1 text-center" href="{{ route('admin.orders.index') }}">See
+                                all orders</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
-    @include('layouts.livewire.loading')
+</div>
+@include('layouts.livewire.loading')
 </div>
