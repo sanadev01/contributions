@@ -55,6 +55,11 @@
         justify-content: center !important;
     }
 
+    .loader-center {
+        padding-left: 55%;
+        padding-top: 24%;
+    }
+
     .activityHead {
         justify-content: center !important;
     }
