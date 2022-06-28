@@ -79,6 +79,8 @@ class RegisterController extends Controller
     {
         $locale = app()->getLocale();
         
+        $referrer = User::findRef($data['reffered_by']);
+
         $user = User::create([
             'name' => $data['name'],
             'last_name' => isset($data['last_name']) ? $data['last_name'] : null,
@@ -86,7 +88,7 @@ class RegisterController extends Controller
             'role_id' => 2,
             'pobox_number' => User::generatePoBoxNumber(),
             'email' => $data['email'],
-            'reffered_by' => User::findRef($data['reffered_by']),
+            'reffered_by' => ($referrer) ? $referrer->id : null,
             'reffer_code' => generateRandomString(),
             'come_from' => $data['come_from'],
             'password' => Hash::make($data['password']),
@@ -94,7 +96,7 @@ class RegisterController extends Controller
         ]);
 
         if ($user->reffered_by) {
-            $this->setReferererCommission($user);
+            $this->setReferererCommission($user, $referrer);
         }
 
         saveSetting('locale', $locale, $user->id);
@@ -107,10 +109,8 @@ class RegisterController extends Controller
         Mail::send(new NewRegistration($user));
     }
 
-    private function setReferererCommission($user)
+    private function setReferererCommission($user, $referrer)
     {
-        $referrer = User::find($user->reffered_by);
-        
         if ($referrer) {
             CommissionSetting::create([
                 'user_id' => $referrer->id,
