@@ -54,7 +54,8 @@
                     <span class="vs-radio--circle"></span>
                 </span>
             </div> --}}
-            <a href="#" id="openEditModal" class="mb-0 " wire:click="$emit('edit-order',{{ $order->id }})">
+            <a href="#" id="openEditModal" class="mb-0 " wire:click="$emit('edit-order',{{ $order->id }})"
+                title="Click to see">
                 {{ optional($order->order_date)->format('m/d/Y') }}
             </a>
         @endif
