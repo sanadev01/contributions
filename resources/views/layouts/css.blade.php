@@ -147,6 +147,14 @@
         line-height: 16px !important;
     }
 
+    .corrioes-lable {
+        border-radius: 10px;
+    }
+
+    #status-btn {
+        width: 100px;
+    }
+
     #printBtnDiv {
         padding-top: 0px;
         display: none;
@@ -175,8 +183,12 @@
         padding-top: 5px;
     }
 
+    .vs-checkbox-con .vs-checkbox {
+        border-width: 1px !important;
+    }
+
     #imageDecrption {
-        padding-left: 45px !important;
+        padding-left: 50px !important;
         padding-top: 7px !important;
         font-weight: 400 !important;
         margin-top: -2px;
@@ -218,7 +230,7 @@
     }
 
     #imageDecrptionTop {
-        padding-left: 45px !important;
+        padding-left: 50px !important;
         font-weight: 400 !important;
         margin-top: -38px;
         text-overflow: ellipsis;
@@ -355,7 +367,6 @@
         font-size: 15px;
         padding: 10px 24px;
         font-family: "IBM Plex Sans", sans-serif !important;
-
     }
 
     .navigation .main-menu {
@@ -582,6 +593,11 @@
         z-index: 10;
         right: 0px;
         left: unset !important;
+    }
+
+    .dropdown-menu.overlap-menu-order {
+        transform: translate3d(57px, 25px, 0px) !important;
+        right: none !important;
     }
 
     .table-responsive-md {

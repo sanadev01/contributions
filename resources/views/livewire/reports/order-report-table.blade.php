@@ -17,33 +17,33 @@
             </a>
         </div>
     </div>
-    <table class="table mb-0 table-responsive-md">
+    <table class="table mb-0 table-bordered table-responsive-md">
         <thead>
             <tr>
+                @admin
+                    <th>User Name</th>
+                @endadmin
                 <th>
                     <a href="#" wire:click.prevent="sortBy('created_at')">@lang('orders.date')</a>
                 </th>
                 <th>
                     <a href="#" wire:click.prevent="sortBy('id')">@lang('orders.order-id')</a> <i> </i>
                 </th>
-                @admin
-                <th>User Name</th>
-                @endadmin
-                <th>Loja/Cliente</th>
-                <th>Carrier Tracking</th>
+                {{-- <th>Loja/Cliente</th> --}}
+                {{-- <th>Carrier Tracking</th>
                 <th>Referência do Cliente</th>
-                <th>Carrier</th>
-                @admin
+                <th>Carrier</th> --}}
+                {{-- @admin
                 <th>Carrier Cost</th>
-                @endadmin
+                @endadmin --}}
                 <th>Tracking Code</th>
                 <th>@lang('orders.amount')</th>
                 <th>@lang('orders.status')</th>
-                <th>@lang('orders.type')</th>
+                {{-- <th>@lang('orders.type')</th> --}}
                 <th>@lang('orders.payment-status')</th>
                 <th class="no-print">@lang('orders.actions.actions')</th>
             </tr>
-            <tr class="no-print">
+            {{-- <tr class="no-print">
                 <th>
                     <input type="search" class="form-control" wire:model.debounce.1000ms="date">
                 </th>
@@ -103,7 +103,7 @@
                     </select>
                 </th>
                 <th></th>
-            </tr>
+            </tr> --}}
         </thead>
         <tbody>
 
