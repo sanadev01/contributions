@@ -451,7 +451,7 @@
 
     #singleSearch {
         display: none;
-        padding-top: 37px !important;
+        padding-top: 8px !important;
 
     }
 

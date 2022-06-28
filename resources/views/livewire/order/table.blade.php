@@ -23,9 +23,9 @@
                     </form>
                 </div> --}}
             </div>
-            <div class="row col-12" id="datefilters">
+            <div class="row col-12 pr-0 m-0" id="datefilters">
                 <div class=" col-6 text-left mb-2" id="dateSearch">
-                    <div class="row col-12 my-3">
+                    <div class="row col-12 my-3 p-0">
                         <form action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
                             @csrf
                             <div class="form-group mb-2" style="float:left;margin-right:20px;">
@@ -42,10 +42,12 @@
                         </form>
                     </div>
                 </div>
-                <div class="row col-6" id="singleSearch">
-                    <div class="form-group row col-12 singleSearchStyle d-flex justify-content-end">
-                        <label class="col-3 text-left"> Search</label>
-                        <input type="text" class="form-control col-6 hd-search">
+                <div class="row col-6 pr-0 p-0" id="singleSearch">
+                    <div class="form-group singleSearchStyle d-flex justify-content-end">
+                        <div class="form-group mb-2" style="float:left">
+                            <label class="col-12 text-left"> Search</label>
+                            <input type="text" class="form-control col-12 hd-search">
+                        </div>
                     </div>
                 </div>
             </div>
