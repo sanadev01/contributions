@@ -334,15 +334,15 @@ class Order extends Model implements Package
                 optional($this->shippingService)->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
                 optional($this->shippingService)->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
 
-                return 'USPS';
+                return 'Usps';
 
             }elseif(optional($this->shippingService)->service_sub_class == ShippingService::UPS_GROUND){
 
-                return 'UPS';
+                return 'Ups';
 
             }elseif(optional($this->shippingService)->service_sub_class == ShippingService::FEDEX_GROUND){
 
-                return 'FEDEX';
+                return 'FedEx';
 
             }elseif(optional($this->shippingService)->service_sub_class == ShippingService::SRP || optional($this->shippingService)->service_sub_class == ShippingService::SRM){
                 

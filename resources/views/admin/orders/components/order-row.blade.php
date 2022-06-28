@@ -15,23 +15,8 @@
     @endif
     @admin
         <td id="userNameCol">
-            <div class="media media-xs overflow-visible" title="{{ $order->carrierService() }}">
-                @if ($order->carrierService() == 'Correios Brazil')
-                    <img class="corrioes-lable" src="{{ asset('images/tracking/brazil-correios.png') }}"
-                        style="height: 45px; width: 45px; vertical-align:middle;" alt="">
-                @elseif($order->carrierService() == 'USPS')
-                    <img class="corrioes-lable" src="{{ asset('images/tracking/usps.png') }}"
-                        style="height: 45px; width: 45px; vertical-align:middle;" alt="">
-                @elseif($order->carrierService() == 'UPS')
-                    <img class="corrioes-lable" src="{{ asset('images/tracking/ups.png') }}"
-                        style="height: 45px; width: 45px; vertical-align:middle;" alt="">
-                @elseif($order->carrierService() == 'FEDEX')
-                    <img class="corrioes-lable" src="{{ asset('images/tracking/FedEx.png') }}"
-                        style="height: 45px; width: 45px; vertical-align:middle;" alt="">
-                @elseif($order->carrierService() == 'Correios Chile')
-                    <img class="corrioes-lable" src="{{ asset('images/tracking/correoschile.png') }}"
-                        style="height: 45px; width: 45px; vertical-align:middle;" alt="">
-                @endif
+            <div class="media media-xs overflow-visible">
+                <img class="corrioes-lable" src="{{ asset('images/tracking/'.$order->carrierService().'.png') }}" title="{{ $order->carrierService() }}"style="height: 45px; width: 45px; vertical-align:middle;" alt="">
             </div>
             <div class="media-body valign-middle" id="imageDecrptionTop" style="width:175px; font-size:15px !important">
                 <a href="#" title="Click to see Shipment" data-toggle="modal" data-target="#hd-modal"
