@@ -8,7 +8,6 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Calculators\WeightCalculator;
-use App\Models\User;
 
 class Calculation extends Component
 {   
@@ -29,18 +28,16 @@ class Calculation extends Component
     public $currentWeightUnit;
 
     private $userId;
-    private $adminId;
     public $discountPercentage;
     public $totalDiscountedWeight;
 
     public function mount(Order $order = null)
     {
-        $this->adminId = User::ROLE_ADMIN;
         $this->order = optional($order)->toArray();
         $this->fillData();
         $this->checkUser();
 
-        if ($this->userId || $this->adminId) {
+        if ($this->userId) {
             $this->setVolumetricDiscount();
         }
         
@@ -149,7 +146,7 @@ class Calculation extends Component
             if($country_id)
             {
                 $country = Country::find($country_id);
-                if($country->id == 250)
+                if($country->id == Country::US)
                 {
                    return $this->unit = 'lbs/in';
                 }
@@ -166,11 +163,6 @@ class Calculation extends Component
 
         if ($volumetricDiscount && $discountPercentage) {
             $this->discountPercentage = ($discountPercentage) ? $discountPercentage/100 : 0;
-        }elseif ($discountPercentage == null || $discountPercentage == 0) {
-            
-            $adminDiscountPercentage = setting('discount_percentage', null, $this->adminId);
-
-            $this->discountPercentage = ($adminDiscountPercentage) ? $adminDiscountPercentage/100 : 0;
         }
 
         return true;
