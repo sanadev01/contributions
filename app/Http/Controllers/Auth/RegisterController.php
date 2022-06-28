@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
+use App\Models\CommissionSetting;
 
 class RegisterController extends Controller
 {
@@ -92,6 +93,9 @@ class RegisterController extends Controller
             'account_type' => $data['account_type'] == 'business' ? User::ACCOUNT_TYPE_BUSINESS : User::ACCOUNT_TYPE_INDIVIDUAL
         ]);
 
+        if ($user->reffered_by) {
+            $this->setReferererCommission($user);
+        }
 
         saveSetting('locale', $locale, $user->id);
         return $user;
@@ -101,6 +105,22 @@ class RegisterController extends Controller
     {
         Mail::to($user->email)->send(new AccountCreated($user));
         Mail::send(new NewRegistration($user));
+    }
+
+    private function setReferererCommission($user)
+    {
+        $referrer = User::find($user->reffered_by);
+        
+        if ($referrer) {
+            CommissionSetting::create([
+                'user_id' => $referrer->id,
+                'referrer_id' => $user->id,
+                'type' => 'flat',
+                'value' => 0.1,
+            ]);
+        }
+
+        return true;
     }
     
 }
