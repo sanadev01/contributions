@@ -77,7 +77,7 @@
                     <tr>
                         @if (\Request::route()->getName() != 'admin.trash-orders.index')
                             <th id="optionChkbx">
-                                <div class="vs-checkbox-con vs-checkbox-primary" title="@lang('orders.Bulk Print')">
+                                <div class="vs-checkbox-con vs-checkbox-primary" title="Actions">
                                     <input type="checkbox" id="checkAll" name="orders[]" class="check-all"
                                         value="">
                                     <span class="vs-checkbox vs-checkbox-sm">

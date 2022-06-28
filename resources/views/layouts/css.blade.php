@@ -147,6 +147,14 @@
         line-height: 16px !important;
     }
 
+    .corrioes-lable {
+        border-radius: 10px;
+    }
+
+    #status-btn {
+        width: 100px;
+    }
+
     #printBtnDiv {
         padding-top: 0px;
         display: none;
@@ -359,7 +367,6 @@
         font-size: 15px;
         padding: 10px 24px;
         font-family: "IBM Plex Sans", sans-serif !important;
-
     }
 
     .navigation .main-menu {
