@@ -75,10 +75,6 @@
 
 @section('js')
 <script>
-    // $(function () {
-    //     $('[data-toggle="tooltip"]').tooltip({ boundary: 'window' })
-    // })
-    
     // function copyCarrier(element)
     // {
     //   var copyText = document.getElementById("tracking");

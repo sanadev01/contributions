@@ -449,6 +449,16 @@
         display: none;
     }
 
+    #singleSearch {
+        display: none;
+        padding-top: 37px !important;
+
+    }
+
+    .singleSearchStyle {
+        padding-right: 0px !important;
+    }
+
     .ps__rail-x {
         background-color: transparent !important;
     }

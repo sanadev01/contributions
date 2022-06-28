@@ -23,8 +23,8 @@
                     </form>
                 </div> --}}
             </div>
-            <div class="row col-10" id="datefilters">
-                <div class=" col-10 text-left mb-2 pl-0" id="dateSearch" style="margin: 22px;">
+            <div class="row col-12" id="datefilters">
+                <div class=" col-6 text-left mb-2" id="dateSearch">
                     <div class="row col-12 my-3">
                         <form action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
                             @csrf
@@ -42,7 +42,14 @@
                         </form>
                     </div>
                 </div>
+                <div class="row col-6" id="singleSearch">
+                    <div class="form-group row col-12 singleSearchStyle d-flex justify-content-end">
+                        <label class="col-3 text-left"> Search</label>
+                        <input type="text" class="form-control col-6 hd-search">
+                    </div>
+                </div>
             </div>
+
         </div>
 
         @admin
@@ -77,7 +84,7 @@
                     <tr>
                         @if (\Request::route()->getName() != 'admin.trash-orders.index')
                             <th id="optionChkbx">
-                                <div class="vs-checkbox-con vs-checkbox-primary" title="Actions">
+                                <div class="vs-checkbox-con vs-checkbox-primary" title="Select All">
                                     <input type="checkbox" id="checkAll" name="orders[]" class="check-all"
                                         value="">
                                     <span class="vs-checkbox vs-checkbox-sm">
@@ -238,6 +245,15 @@
                 // console.log('asdasd');
             } else {
                 div.style.display = 'none';
+                // console.log('aa');
+
+            }
+            const div1 = document.getElementById('singleSearch');
+            if (div1.style.display != 'block') {
+                div1.style.display = 'block';
+                // console.log('asdasd');
+            } else {
+                div1.style.display = 'none';
                 // console.log('aa');
 
             }

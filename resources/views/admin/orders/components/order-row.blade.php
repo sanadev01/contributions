@@ -1,7 +1,7 @@
 <tr @if ($order->user->hasRole('retailer') && !$order->isPaid()) class="bg-danger-custom" @endif>
     @if (\Request::route()->getName() != 'admin.reports.order.index' && !$order->isTrashed())
         <td>
-            <div class="vs-checkbox-con vs-checkbox-primary" title="Actions">
+            <div class="vs-checkbox-con vs-checkbox-primary" title="Select">
                 <input type="checkbox" onchange='handleChange(this);' name="orders[]" class="bulk-orders"
                     value="{{ $order->id }}">
                 <span class="vs-checkbox vs-checkbox-sm">
@@ -16,7 +16,9 @@
     @admin
         <td id="userNameCol">
             <div class="media media-xs overflow-visible">
-                <img class="corrioes-lable" src="{{ asset('images/tracking/'.$order->carrierService().'.png') }}" title="{{ $order->carrierService() }}"style="height: 45px; width: 45px; vertical-align:middle;" alt="">
+                <img class="corrioes-lable" src="{{ asset('images/tracking/' . $order->carrierService() . '.png') }}"
+                    title="{{ $order->carrierService() }}"style="height: 45px; width: 45px; vertical-align:middle;"
+                    alt="">
             </div>
             <div class="media-body valign-middle" id="imageDecrptionTop" style="width:175px; font-size:15px !important">
                 <a href="#" title="Click to see Shipment" data-toggle="modal" data-target="#hd-modal"
@@ -225,35 +227,35 @@
             <div class="dropdown-menu overlap-menu overlap-menu-order" aria-labelledby="dropdownMenuLink">
                 <a id="status-btn" wire:click="$emit('updated-status',{{ $order->id }},$event.target.value)"
                     value="{{ App\Models\Order::STATUS_ORDER }}" class="dropdown-item" title="Show Order Details">
-                    <i class="feather icon-list"></i> ORDER
+                    <i class="feather icon-circle"></i> ORDER
                 </a>
                 <a class="dropdown-item" wire:click="$emit('updated-status',{{ $order->id }},$event.target.value)"
                     value="{{ App\Models\Order::STATUS_CANCEL }}">
-                    <i class="feather icon-truck"></i>CANCELLED
+                    <i class="feather icon-circle"></i>CANCELLED
                 </a>
                 <a class="dropdown-item" value="{{ App\Models\Order::STATUS_REJECTED }}"
                     wire:click="$emit('updated-status',{{ $order->id }},$event.target.value)">
-                    <i class="feather icon-truck"></i>REJECTED
+                    <i class="feather icon-circle"></i>REJECTED
                 </a>
                 <a class="dropdown-item" value="{{ App\Models\Order::STATUS_RELEASE }}"
                     wire:click="$emit('updated-status',{{ $order->id }},$event.target.value)">
-                    <i class="feather icon-truck"></i>RELEASED
+                    <i class="feather icon-circle"></i>RELEASED
                 </a>
                 <a class="dropdown-item" value="{{ App\Models\Order::STATUS_PAYMENT_PENDING }}"
                     wire:click="$emit('updated-status',{{ $order->id }},$event.target.value)">
-                    <i class="feather icon-truck"></i>PAYMENT_PENDING
+                    <i class="feather icon-circle"></i>PAYMENT_PENDING
                 </a>
                 <a class="dropdown-item" value="{{ App\Models\Order::STATUS_PAYMENT_DONE }}"
                     wire:click="$emit('updated-status',{{ $order->id }},$event.target.value)">
-                    <i class="feather icon-truck"></i>PAYMENT_DONE
+                    <i class="feather icon-circle"></i>PAYMENT_DONE
                 </a>
                 <a class="dropdown-item" value="{{ App\Models\Order::STATUS_SHIPPED }}"
                     wire:click="$emit('updated-status',{{ $order->id }},$event.target.value)">
-                    <i class="feather icon-truck"></i>SHIPPED
+                    <i class="feather icon-circle"></i>SHIPPED
                 </a>
                 <a class="dropdown-item" value="{{ App\Models\Order::STATUS_REFUND }}"
                     wire:click="$emit('updated-status',{{ $order->id }},$event.target.value)">
-                    <i class="feather icon-truck"></i>REFUND / CANCELLED
+                    <i class="feather icon-circle"></i>REFUND / CANCELLED
                 </a>
             </div>
         </div>
@@ -283,7 +285,7 @@
         <div class="btn-group d-flex justify-content-center">
             <div class="dropdown">
 
-                <button title="Actions" type="button" class="btn btn-primary btn-sm" data-toggle="dropdown"
+                <button title="Action" type="button" class="btn btn-primary btn-sm" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
                     <i class="feather icon-edit-1 mr-0"></i>
                 </button>
