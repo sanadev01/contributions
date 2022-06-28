@@ -17,7 +17,7 @@
         <td id="userNameCol">
             <div class="media media-xs overflow-visible">
                 <img class="corrioes-lable" src="{{ asset('images/tracking/' . $order->carrierService() . '.png') }}"
-                    title="{{ $order->carrierService() }}"style="height: 45px; width: 45px; vertical-align:middle;"
+                    title="{{ $order->carrierService() }}"style="height: 30px; width: 30px; vertical-align:middle;"
                     alt="">
             </div>
             <div class="media-body valign-middle" id="imageDecrptionTop" style="width:175px; font-size:15px !important">

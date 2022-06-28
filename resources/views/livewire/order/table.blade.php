@@ -23,33 +23,39 @@
                     </form>
                 </div> --}}
             </div>
-            <div class="row col-12 pr-0 m-0" id="datefilters">
-                <div class=" col-6 text-left mb-2" id="dateSearch">
-                    <div class="row col-12 my-3 p-0">
+            {{-- <div class="row col-10"> --}}
+            <div class="row col-8 pr-0 pl-4 " id="singleSearch">
+                <div class="form-group singleSearchStyle col-12">
+                    <div class="form-group mb-2 col-12 row" style="float:left">
+                        {{-- <label class="col-12 text-left"> Search</label> --}}
+                        <input type="text" class="form-control col-8 hd-search">
+                        <button class="btn btn-primary ml-2">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {{-- </div> --}}
+            <div class="row col-12 pr-0 m-0 pl-0" id="datefilters">
+                <div class=" col-6 text-left mb-2">
+                    <div class="row col-12 my-3 pl-1" id="dateSearch">
                         <form action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
                             @csrf
-                            <div class="form-group mb-2" style="float:left;margin-right:20px;">
+                            <div class="form-group mb-2 col-4" style="float:left;margin-right:20px;">
                                 <label>Start Date</label>
                                 <input type="date" name="start_date" class="form-control">
                             </div>
-                            <div class="form-group mx-sm-3 mb-2" style="float:left;margin-right:20px;">
+                            <div class="form-group mx-sm-3 mb-2 col-4" style="float:left;margin-right:20px;">
                                 <label>End Date</label>
                                 <input type="date" name="end_date" class="form-control">
                             </div>
-                            <button class="btn btn-success btn-sm searchDateBtn" title="@lang('orders.import-excel.Download')">
+                            <button class="btn btn-success searchDateBtn" title="@lang('orders.import-excel.Download')">
                                 <i class="fa fa-arrow-down"></i>
                             </button>
                         </form>
                     </div>
                 </div>
-                <div class="row col-6 pr-0 p-0" id="singleSearch">
-                    <div class="form-group singleSearchStyle d-flex justify-content-end">
-                        <div class="form-group mb-2" style="float:left">
-                            <label class="col-12 text-left"> Search</label>
-                            <input type="text" class="form-control col-12 hd-search">
-                        </div>
-                    </div>
-                </div>
+
             </div>
 
         </div>
@@ -250,16 +256,29 @@
                 // console.log('aa');
 
             }
-            const div1 = document.getElementById('singleSearch');
-            if (div1.style.display != 'block') {
-                div1.style.display = 'block';
+            // const div1 = document.getElementById('singleSearch');
+            // if (div1.style.display != 'block') {
+            //     div1.style.display = 'block';
+            //     // console.log('asdasd');
+            // } else {
+            //     div1.style.display = 'none';
+            //     // console.log('aa');
+
+            // }
+
+        }
+
+        function toggleOrderPageSearch() {
+            const div = document.getElementById('singleSearch');
+            console.log(div);
+            if (div.style.display != 'block') {
+                div.style.display = 'block';
                 // console.log('asdasd');
             } else {
-                div1.style.display = 'none';
+                div.style.display = 'none';
                 // console.log('aa');
 
             }
-
         }
         window.addEventListener('DOMContentLoaded', () => {
 

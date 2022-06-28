@@ -199,7 +199,7 @@
     }
 
     .searchDateBtn {
-        margin-top: 30px !important;
+        margin-top: 24px !important;
     }
 
     .custom-margin-hr {
