@@ -356,7 +356,7 @@
                                                 @if (optional($tracking)['service'] == 'Correios_Brazil')
                                                     <tr>
                                                         <td>
-                                                            {{ date('Y-m-d', strtotime($tracking['api_trackings']['data'])) }} {{ $tracking['api_trackings']['hora'] }}
+                                                            {{ Carbon\Carbon::createFromFormat('d/m/Y', $tracking['api_trackings']['data'])->format('Y-m-d') }} {{ $tracking['api_trackings']['hora'] }}
                                                         </td>
                                                         <td>
                                                             Brazil
@@ -395,7 +395,6 @@
                                             </tbody>
                                         </table>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
