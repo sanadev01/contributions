@@ -38,7 +38,7 @@ class Product extends Component
     public function render()
     {
         return view('livewire.inventory.product',[
-            'products' => $this->getProduct(),
+            'products' => $this->products(),
             'inventoryValue' => number_format($this->getSumOfProduct(),2) 
         ]);
     }
@@ -50,6 +50,11 @@ class Product extends Component
         } else {
             $this->sortBy = $date;
         }
+    }
+
+    public function products()
+    {
+         return $this->pageSize ? $this->getProduct()->paginate($this->pageSize) : $this->getProduct()->get();
     }
     public function getProduct()
     {
@@ -66,15 +71,12 @@ class Product extends Component
             'description' => $this->description,
             'expdate' => $this->expdate,
             'quantity' => $this->quantity,
-        ]),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc');
+        ]),$this->sortBy,$this->sortAsc ? 'asc' : 'desc');
     }
     
     public function getSumOfProduct()
     {
-        $query = ModelsProduct::has('user');
-        if (Auth::user()->isUser()) {
-            $query->where('user_id', Auth::id());
-        }
+        $query = $this->getProduct();
         $query->selectRaw('sum(price*quantity) as total');
         return $query->first()->total;
     }
