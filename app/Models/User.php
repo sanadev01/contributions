@@ -18,7 +18,8 @@ use Milon\Barcode\DNS2D;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable,LogsActivity,CausesActivity;
+    
     const ROLE_ADMIN = 1;
     const ROLE_USER = 2;
     const ROLE_DRIVER = 'driver';
@@ -27,9 +28,7 @@ class User extends Authenticatable
     const ACCOUNT_TYPE_BUSINESS = 'business';
     const ACCOUNT_TYPE_INDIVIDUAL = 'individual';
 
-    use LogsActivity;
-    
-    use CausesActivity;
+    const GILBERTO_ACCOUNT_ID = 13;
     
     protected static $ignoreChangedAttributes = ['password','api_token','api_enabled'];
     protected static $logAttributes = [
@@ -291,5 +290,10 @@ class User extends Authenticatable
     
     public function isActive(){
         return ($this->status == "active" || $this->status == NULL) ? true :false;
+    }
+
+    public function isNotGilberto()
+    {
+        return $this->id != self::GILBERTO_ACCOUNT_ID;
     }
 }
