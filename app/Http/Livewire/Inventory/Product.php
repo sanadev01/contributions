@@ -54,7 +54,8 @@ class Product extends Component
 
     public function products()
     {
-         return $this->pageSize ? $this->getProduct()->paginate($this->pageSize) : $this->getProduct()->get();
+        $query = $this->getProduct()->orderBy($this->sortBy,$this->sortAsc ? 'asc' : 'desc');
+        return $this->pageSize ? $query->paginate($this->pageSize) : $query->get();
     }
     public function getProduct()
     {
@@ -71,7 +72,7 @@ class Product extends Component
             'description' => $this->description,
             'expdate' => $this->expdate,
             'quantity' => $this->quantity,
-        ]),$this->sortBy,$this->sortAsc ? 'asc' : 'desc');
+        ]));
     }
     
     public function getSumOfProduct()
