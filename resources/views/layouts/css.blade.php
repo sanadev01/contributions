@@ -199,7 +199,7 @@
     }
 
     .searchDateBtn {
-        margin-top: 30px !important;
+        margin-top: 24px !important;
     }
 
     .custom-margin-hr {
@@ -447,6 +447,16 @@
 
     #dateSearch {
         display: none;
+    }
+
+    #singleSearch {
+        display: none;
+        padding-top: 8px !important;
+
+    }
+
+    .singleSearchStyle {
+        padding-right: 0px !important;
     }
 
     .ps__rail-x {

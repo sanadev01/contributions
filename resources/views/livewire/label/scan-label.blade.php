@@ -11,7 +11,7 @@
 
     <div class="col-md-12">
         <div class="hd-card mt-4 mb-3">
-            <div class="row col-12 justify-content-space-between">
+            <div class="row col-12 d-flex justify-content-between pl-5">
                 <div class="form-group row col-4 p-0">
                     <label class="col-3 text-left"> @lang('orders.print-label.Scan Package')</label>
                     <input type="text" @if (count($packagesRows) == 300) readonly @endif
@@ -62,7 +62,7 @@
                     @endif
                 </div>
             </div>
-            <div class="row col-12 d-flex justify-content-end pl-0">
+            <div class="row col-12 d-flex justify-content-end">
                 <form wire:submit.prevent="search" class="col-12">
                     <div class="row mt-2">
                         <div class="col-2">
@@ -102,7 +102,7 @@
                             <div class="form-group">
                                 <div class="controls">
                                     <button type="submit" class="btn btn-primary hd-mt-22" wire:click="search">
-                                        <i class="feather icon-search"></i> Search
+                                        <i class="feather icon-search"></i>
                                     </button>
                                 </div>
                             </div>

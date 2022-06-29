@@ -23,26 +23,41 @@
                     </form>
                 </div> --}}
             </div>
-            <div class="row col-10" id="datefilters">
-                <div class=" col-10 text-left mb-2 pl-0" id="dateSearch" style="margin: 22px;">
-                    <div class="row col-12 my-3">
+            {{-- <div class="row col-10"> --}}
+            <div class="row col-8 pr-0 pl-4 " id="singleSearch">
+                <div class="form-group singleSearchStyle col-12">
+                    <div class="form-group mb-2 col-12 row" style="float:left">
+                        {{-- <label class="col-12 text-left"> Search</label> --}}
+                        <input type="text" class="form-control col-8 hd-search">
+                        <button class="btn btn-primary ml-2">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {{-- </div> --}}
+            <div class="row col-12 pr-0 m-0 pl-0" id="datefilters">
+                <div class=" col-6 text-left mb-2">
+                    <div class="row col-12 my-3 pl-1" id="dateSearch">
                         <form action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
                             @csrf
-                            <div class="form-group mb-2" style="float:left;margin-right:20px;">
+                            <div class="form-group mb-2 col-4" style="float:left;margin-right:20px;">
                                 <label>Start Date</label>
                                 <input type="date" name="start_date" class="form-control">
                             </div>
-                            <div class="form-group mx-sm-3 mb-2" style="float:left;margin-right:20px;">
+                            <div class="form-group mx-sm-3 mb-2 col-4" style="float:left;margin-right:20px;">
                                 <label>End Date</label>
                                 <input type="date" name="end_date" class="form-control">
                             </div>
-                            <button class="btn btn-success btn-sm searchDateBtn" title="@lang('orders.import-excel.Download')">
+                            <button class="btn btn-success searchDateBtn" title="@lang('orders.import-excel.Download')">
                                 <i class="fa fa-arrow-down"></i>
                             </button>
                         </form>
                     </div>
                 </div>
+
             </div>
+
         </div>
 
         @admin
@@ -77,7 +92,7 @@
                     <tr>
                         @if (\Request::route()->getName() != 'admin.trash-orders.index')
                             <th id="optionChkbx">
-                                <div class="vs-checkbox-con vs-checkbox-primary" title="Actions">
+                                <div class="vs-checkbox-con vs-checkbox-primary" title="Select All">
                                     <input type="checkbox" id="checkAll" name="orders[]" class="check-all"
                                         value="">
                                     <span class="vs-checkbox vs-checkbox-sm">
@@ -241,7 +256,29 @@
                 // console.log('aa');
 
             }
+            // const div1 = document.getElementById('singleSearch');
+            // if (div1.style.display != 'block') {
+            //     div1.style.display = 'block';
+            //     // console.log('asdasd');
+            // } else {
+            //     div1.style.display = 'none';
+            //     // console.log('aa');
 
+            // }
+
+        }
+
+        function toggleOrderPageSearch() {
+            const div = document.getElementById('singleSearch');
+            console.log(div);
+            if (div.style.display != 'block') {
+                div.style.display = 'block';
+                // console.log('asdasd');
+            } else {
+                div.style.display = 'none';
+                // console.log('aa');
+
+            }
         }
         window.addEventListener('DOMContentLoaded', () => {
 
