@@ -85,8 +85,8 @@ class ProductRepository
             });
         }
 
-        $products = $query->orderBy($orderBy,$orderType);
-        return $paginate ? $products->paginate($pageSize) : $products->get();
+        return $products = $query->orderBy($orderBy,$orderType);
+        // return $paginate ? $products->paginate($pageSize) : $products->get();
     }
 
     public function store(Request $request)
