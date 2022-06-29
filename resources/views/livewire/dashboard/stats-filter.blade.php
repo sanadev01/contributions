@@ -287,7 +287,7 @@
             </div>
         </div> <!-- COL END -->
         <div class="col-lg-3 col-12 col-xl-3">
-            <div class="card crd-height-custom" style="height: 94.4%">
+            <div class="card crd-height-custom" style="height: 93.1%">
                 <div class="card-header card-title m-0 p-2 notification-card-right activityHead"
                     style="justify-content:  center !important">
                     <span class="notification-title activityHeader">Recent Orders</span>
@@ -311,11 +311,12 @@
                                 <hr class="custom-margin-hr">
                             @endforeach
                             {{-- <li class="dropdown-menu-footer pt-4"></li> --}}
-                            <a class="dropdown-item p-1 text-center" href="{{ route('admin.orders.index') }}">See
-                                all orders</a>
                         </li>
                     </ul>
                 </div>
+                <div class="card-footer"> <a class="dropdown-item p-1 text-center"
+                        href="{{ route('admin.orders.index') }}">See
+                        all orders</a></div>
             </div>
         </div>
     </div>
