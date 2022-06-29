@@ -11,7 +11,7 @@ class ProductRepository
 {
     public $error;
     
-    public function get(Request $request,$orderBy = 'id',$orderType='desc')
+    public function get(Request $request)
     {
         $query = Product::has('user');
 
@@ -85,7 +85,7 @@ class ProductRepository
             });
         }
 
-        return $products = $query->orderBy($orderBy,$orderType);
+        return $products = $query;
     }
 
     public function store(Request $request)
