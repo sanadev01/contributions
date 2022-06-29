@@ -204,7 +204,7 @@
 
     .custom-margin-hr {
         margin-bottom: 0.5rem;
-        margin-top: 0.5rem;
+        margin-top: 0.54rem;
     }
 
     @media (min-width:1500px) {
