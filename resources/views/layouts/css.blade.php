@@ -202,6 +202,32 @@
         margin-top: 24px !important;
     }
 
+    .custom-margin-hr {
+        margin-bottom: 7px;
+        margin-top: 7px;
+    }
+
+    @media only screen and (min-width: 1200px) and (max-width: 1800px) {
+        #myChart {
+            height: 400px !important;
+        }
+    }
+
+    @media only screen and (min-width: 1650px) {
+        #myChart {
+            height: 700px !important;
+        }
+
+        .crd-height-custom {
+            height: 96.4% !important;
+        }
+
+        .custom-margin-hr {
+            margin-bottom: 22px !important;
+            margin-top: 22px !important;
+        }
+    }
+
     /* @media only screen and (min-width: 1200px) {
         .custom-margin-hr {
             margin-bottom: 0px;
