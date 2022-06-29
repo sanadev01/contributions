@@ -207,6 +207,10 @@
         margin-top: 7px;
     }
 
+    #hiddenSearch {
+        display: none;
+    }
+
     @media only screen and (min-width: 1200px) and (max-width: 1800px) {
         #myChart {
             height: 400px !important;

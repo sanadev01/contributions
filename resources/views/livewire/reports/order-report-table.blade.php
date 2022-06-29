@@ -1,23 +1,29 @@
 <div class="p-2">
     <div class="row mb-2 no-print">
-        <div class="col-1">
-            <select class="form-control" wire:model="pageSize">
-                <option value="1">1</option>
-                <option value="5">5</option>
-                <option value="10">10</option>
-                <option value="20">20</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-                <option value="300">300</option>
-            </select>
+        <div class="row filter col-12 d-flex justify-content-end pr-0">
+            <a href="{{ route('admin.reports.order.create') }}" class="btn btn-success mr-1 mb-1"
+                title="@lang('orders.import-excel.Download')">
+                <i class="fa fa-arrow-down"></i>
+            </a>
+            <button type="btn" onclick="toggleHiddenSearch()" id="orderSearch"
+                class="btn btn-primary mb-1 waves-effect waves-light"><i class="feather icon-search"></i></button>
         </div>
-        <div class="col-11 text-right">
+        <div id="hiddenSearch" class="form-group mb-2 col-12 pl-2">
+            <div class="row form-group mb-2 col-12 pl-4">
+
+                <input type="text" class="form-control col-4 hd-search">
+                <button class="btn btn-primary ml-2 waves-effect waves-light">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+        {{-- <div class="col-12 text-right">
             <a href="{{ route('admin.reports.order.create') }}" class="btn btn-success" title="@lang('orders.import-excel.Download')">
                 <i class="fa fa-arrow-down"></i>
             </a>
-        </div>
+        </div> --}}
     </div>
-    <table class="table mb-0 table-bordered table-responsive-md">
+    <table class="table table-bordered table-responsive-md pb-4">
         <thead>
             <tr>
                 @admin
@@ -114,14 +120,38 @@
             @endforelse
         </tbody>
     </table>
-    <div class="d-flex justify-content-end my-2 pb-4 mx-2">
-        {{ $orders->links() }}
+    <div class="row mt-4">
+        <div class="col-1 pt-2 mt-4">
+            <select class="form-control" wire:model="pageSize">
+                <option value="1">1</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="300">300</option>
+            </select>
+        </div>
+        <div class="col-11 pr-0 d-flex justify-content-end pr-3 pt-2 mt-4">
+            {{ $orders->links() }}
+        </div>
     </div>
     @include('layouts.livewire.loading')
 </div>
 
 @push('lvjs-stack')
     <script>
+        function toggleHiddenSearch() {
+            const div = document.getElementById('hiddenSearch');
+            if (div.style.display != 'block') {
+                div.style.display = 'block';
+                // console.log('asdasd');
+            } else {
+                div.style.display = 'none';
+                // console.log('aa');
+
+            }
+        }
         window.addEventListener('DOMContentLoaded', () => {
 
             @this.on('updated-status', function(orderId, status) {
