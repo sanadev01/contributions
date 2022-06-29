@@ -55,7 +55,7 @@
                 </span>
             </div> --}}
             <a href="#" id="openEditModal" class="mb-0 " wire:click="$emit('edit-order',{{ $order->id }})"
-                title="Click to see">
+                title="Click to edit">
                 {{ optional($order->order_date)->format('m/d/Y') }}
             </a>
         @endif
