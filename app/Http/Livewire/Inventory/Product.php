@@ -71,7 +71,7 @@ class Product extends Component
             'description' => $this->description,
             'expdate' => $this->expdate,
             'quantity' => $this->quantity,
-        ]),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc');
+        ]),$this->sortBy,$this->sortAsc ? 'asc' : 'desc');
     }
     
     public function getSumOfProduct()

@@ -11,7 +11,7 @@ class ProductRepository
 {
     public $error;
     
-    public function get(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='desc')
+    public function get(Request $request,$orderBy = 'id',$orderType='desc')
     {
         $query = Product::has('user');
 
@@ -86,7 +86,6 @@ class ProductRepository
         }
 
         return $products = $query->orderBy($orderBy,$orderType);
-        // return $paginate ? $products->paginate($pageSize) : $products->get();
     }
 
     public function store(Request $request)
