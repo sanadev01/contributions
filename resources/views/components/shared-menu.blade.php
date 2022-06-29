@@ -16,7 +16,7 @@
         </li>
     @endif
 @enduser
-@if(auth()->user()->isNotGilberto())
+@if(!auth()->user()->hideBoxControl())
 <li class="nav-item">
     <a class="nav-link" target="__blank" href="https://app.ideainfo.com.br/index.php?app=boxcontrol">
         <i class="fa fa-bold" style="color: #f4d03e;"></i>

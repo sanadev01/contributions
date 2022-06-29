@@ -292,8 +292,19 @@ class User extends Authenticatable
         return ($this->status == "active" || $this->status == NULL) ? true :false;
     }
 
-    public function isNotGilberto()
+    public function hideBoxControl()
     {
-        return $this->id != self::GILBERTO_ACCOUNT_ID;
+        if (collect($this->accountIds())->contains($this->id)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function accountIds()
+    {
+        return[
+            self::GILBERTO_ACCOUNT_ID,
+        ];
     }
 }
