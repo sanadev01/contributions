@@ -279,15 +279,15 @@
                                 </div>
                             </div>
                         </div>
-                        <canvas id="myChart" class="myChart chartjs-render-monitor" height="330"
-                            style="display: block; width: 705px; height: 330px;" width="705">
+                        <canvas id="myChart" class="myChart chartjs-render-monitor" height="400"
+                            style="display: block; width: 705px;" width="705">
                         </canvas>
                     </div>
                 </div>
             </div>
         </div> <!-- COL END -->
         <div class="col-lg-3 col-12">
-            <div class="card">
+            <div class="card" style="height: 96%">
                 <div class="card-header card-title m-0 p-2 notification-card-right activityHead"
                     style="justify-content:  center !important">
                     <span class="notification-title activityHeader">Recent Orders</span>
