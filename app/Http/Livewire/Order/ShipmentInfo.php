@@ -21,6 +21,7 @@ class ShipmentInfo extends Component
     public $heightOther;
     public $unit;
     public $volumeWeight;
+    public $actualVolumeWeight;
     public $currentWeightUnit;
 
     public $discountPercentage;
@@ -85,6 +86,7 @@ class ShipmentInfo extends Component
         $this->length = $this->length ? $this->length : 0;
         $this->width = $this->width ? $this->width : 0;
         $this->height = $this->height ? $this->height : 0;
+        $this->actualVolumeWeight = null;
 
         if ( $this->unit == 'kg/cm' ){
             $this->weightOther = UnitsConverter::kgToPound($this->weight);
@@ -145,6 +147,7 @@ class ShipmentInfo extends Component
 
     private function calculateDiscountedWeight()
     {
+        $this->actualVolumeWeight = $this->volumeWeight;
         $consideredWeight = $this->volumeWeight - $this->weight;
         
         $this->volumeWeight = round($consideredWeight - ($consideredWeight * $this->discountPercentage), 2);
