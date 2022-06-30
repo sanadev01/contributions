@@ -203,23 +203,109 @@
     }
 
     .custom-margin-hr {
-        margin-bottom: 0.5rem;
-        margin-top: 0.5rem;
+        margin-bottom: 7px;
+        margin-top: 7px;
     }
 
+    #hiddenSearch {
+        display: none;
+    }
+
+    @media only screen and (min-width: 1200px) and (max-width: 1800px) {
+        #myChart {
+            height: 400px !important;
+        }
+    }
+
+    @media only screen and (min-width: 1650px) {
+        #myChart {
+            height: 700px !important;
+        }
+
+        .crd-height-custom {
+            height: 96.4% !important;
+        }
+
+        .custom-margin-hr {
+            margin-bottom: 22px !important;
+            margin-top: 22px !important;
+        }
+    }
+
+    /* @media only screen and (min-width: 1200px) {
+        .custom-margin-hr {
+            margin-bottom: 0px;
+            margin-top: 0px;
+        }
+    }
+
+    @media only screen and (min-width: 1300px) {
+        .custom-margin-hr {
+            margin-bottom: 6px;
+            margin-top: 6px;
+        }
+    }
+
+    @media only screen and (min-width: 1400px) {
+        .custom-margin-hr {
+            margin-bottom: 8px;
+            margin-top: 8px;
+        }
+    }
+
+    @media only screen and (min-width: 1500px) {
+        .custom-margin-hr {
+            margin-bottom: 10.1px;
+            margin-top: 10.1px;
+        }
+    }
+
+    @media only screen and (min-width: 1600px) {
+        .custom-margin-hr {
+            margin-bottom: 12px;
+            margin-top: 11.8px;
+        }
+    }
+
+    @media only screen and (min-width: 1700px) {
+        .custom-margin-hr {
+            margin-bottom: 13.8px;
+            margin-top: 13.8px;
+        }
+    }
+
+    @media only screen and (min-width: 1800px) {
+        .custom-margin-hr {
+            margin-bottom: 15.9px;
+            margin-top: 15.8px;
+        }
+    }
+
+    @media only screen and (min-width: 1900px) {
+        .custom-margin-hr {
+            margin-bottom: 17.8px;
+            margin-top: 17.7px;
+        }
+    } */
+
+    /* .custom-margin-hr {
+        margin-bottom: 0.5rem;
+        margin-top: 0.54rem;
+    } */
+    /*
     @media (min-width:1500px) {
         .custom-margin-hr {
             margin-bottom: 0.8rem;
             margin-top: 0.8rem;
         }
-    }
+    } */
 
-    @media (min-width:1700px) {
+    /* @media (min-width:1700px) {
         .custom-margin-hr {
             margin-bottom: 1rem;
             margin-top: 1rem;
         }
-    }
+    } */
 
     .btn-width-sm {
         width: 73px;
