@@ -5,20 +5,21 @@ namespace App\Http\Controllers\Admin\Order;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Models\ShippingService;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Repositories\LabelRepository;
 use Illuminate\Support\Facades\Storage;
 use App\Repositories\UPSLabelRepository;
 use App\Repositories\USPSLabelRepository;
-use App\Repositories\CorrieosChileLabelRepository;
-use App\Repositories\CorrieosBrazilLabelRepository;
 use App\Repositories\FedExLabelRepository;
+use App\Repositories\SinerlogLabelRepository;
 
 /**
  * Use for Sinerlog integration
  */
-use App\Repositories\SinerlogLabelRepository;
-use Illuminate\Support\Facades\Log;
+use App\Repositories\MileExpressLabelRepository;
+use App\Repositories\CorrieosChileLabelRepository;
+use App\Repositories\CorrieosBrazilLabelRepository;
 
 class OrderLabelController extends Controller
 {
@@ -27,14 +28,18 @@ class OrderLabelController extends Controller
     protected $uspsLabelRepository;
     protected $upsLabelRepository;
     protected $fedExLabelRepository;
+    protected $mileExpressLabelRepository;
 
-    public function __construct(CorrieosChileLabelRepository $corrieosChileLabelRepository, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, FedExLabelRepository $fedExLabelRepository)
+    public function __construct(CorrieosChileLabelRepository $corrieosChileLabelRepository, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, 
+                                USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, 
+                                FedExLabelRepository $fedExLabelRepository, MileExpressLabelRepository $mileExpressLabelRepository)
     {
         $this->corrieosChileLabelRepository = $corrieosChileLabelRepository;
         $this->corrieosBrazilLabelRepository = $corrieosBrazilLabelRepository;
         $this->uspsLabelRepository = $uspsLabelRepository;
         $this->upsLabelRepository = $upsLabelRepository;
         $this->fedExLabelRepository = $fedExLabelRepository;
+        $this->mileExpressLabelRepository = $mileExpressLabelRepository;
     }
     
     public function index(Request $request, Order $order)
@@ -140,6 +145,10 @@ class OrderLabelController extends Controller
                 $error = $this->uspsLabelRepository->getUSPSErrors();
                 return $this->renderLabel($request, $order, $error);
             }
+        }
+
+        if ($order->shippingService->service_sub_class == ShippingService::Mile_Express) {
+            $this->mileExpressLabelRepository->handle($order);
         }
         
         if ( $request->update_label === 'true' ){

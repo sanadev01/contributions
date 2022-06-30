@@ -55,6 +55,7 @@
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_SRM}}">SRM</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_AJ_Standard}}">AJ Standard</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_AJ_EXPRESS}}">AJ Express</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_MILE_EXPRESS}}">Mile Express</option>
                                         </select>
                                         <div class="help-block"></div>
                                     </div>
