@@ -26,13 +26,15 @@
             {{-- <div class="row col-10"> --}}
             <div class="row col-8 pr-0 pl-4 " id="singleSearch">
                 <div class="form-group singleSearchStyle col-12">
-                    <div class="form-group mb-2 col-12 row" style="float:left">
-                        {{-- <label class="col-12 text-left"> Search</label> --}}
-                        <input type="text" class="form-control col-8 hd-search">
-                        <button class="btn btn-primary ml-2">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </div>
+                    <form wire:submit.prevent="submit">
+                        <div class="form-group mb-2 col-12 row">
+                            {{-- <label class="col-12 text-left"> Search</label> --}}
+                            <input type="text" class="form-control col-8 hd-search">
+                            <button type="submit" class="btn btn-primary ml-2">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
             {{-- </div> --}}
@@ -246,7 +248,6 @@
 @push('lvjs-stack')
     <script>
         function toggleDateSearch() {
-            var checkBox = document.getElementById("customSwitch8");
             const div = document.getElementById('dateSearch');
             if (div.style.display != 'block') {
                 div.style.display = 'block';
