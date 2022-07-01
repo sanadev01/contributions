@@ -149,6 +149,9 @@ class OrderLabelController extends Controller
 
         if ($order->shippingService->service_sub_class == ShippingService::Mile_Express) {
             $this->mileExpressLabelRepository->handle($order);
+
+            $error = $this->mileExpressLabelRepository->getError();
+            return $this->renderLabel($request, $order, $error);
         }
         
         if ( $request->update_label === 'true' ){
