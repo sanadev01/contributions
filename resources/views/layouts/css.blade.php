@@ -197,6 +197,16 @@
         white-space: nowrap;
         overflow: hidden;
     }
+    #imageDecrptionParcel{
+        padding-left: 40px !important;
+        padding-top: 7px !important;
+        font-weight: 400 !important;
+        margin-top: -2px;
+        color: #74829c !important;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
 
     .searchDateBtn {
         margin-top: 24px !important;
@@ -317,6 +327,14 @@
 
     #imageDecrptionTop {
         padding-left: 50px !important;
+        font-weight: 400 !important;
+        margin-top: -38px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+    #imageDecrptionTopParcel{
+        padding-left: 40px !important;
         font-weight: 400 !important;
         margin-top: -38px;
         text-overflow: ellipsis;
@@ -779,7 +797,8 @@
         color: white;
     }  */
     .table thead th {
-        border-bottom: 1px #dee2e6 !important;
+        /* border-bottom: 1px #dee2e6 !important; */
+        padding: 0.75rem !important;
     }
 
     /* tr:nth-child(even) {
