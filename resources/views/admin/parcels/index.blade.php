@@ -8,18 +8,18 @@
                     <div class="card-header">
                     @section('title', __('parcel.My Parcels'))
                     <div class="col-6 pl-0">
-                        <a @if (Auth::user()->isActive()) href="{{ route('admin.consolidation.parcels.index') }}" @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" @endif
-                            class="btn btn-lg btn-info"> @lang('consolidation.Create Consolidation') </a>
-                        <a @if (Auth::user()->isActive()) href="{{ route('admin.parcels.create') }}" @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" @endif
-                            class="btn btn-lg btn-primary"> @lang('parcel.Create Parcel') </a>
                     </div>
                     <div class="row filter col-6 d-flex justify-content-end pr-4">
                         <button type="btn" onclick="toggleDateSearch()" id="customSwitch8"
                             class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i
                                 class="feather icon-filter"></i></button>
                         <button type="btn" onclick="toggleOrderPageSearch()" id="orderSearch"
-                            class="btn btn-primary mb-1 waves-effect waves-light"><i
+                            class="btn btn-primary mb-1 waves-effect waves-light mr-1"><i
                                 class="feather icon-search"></i></button>
+                        <a @if (Auth::user()->isActive()) href="{{ route('admin.consolidation.parcels.index') }}" @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" @endif
+                            class="btn btn-primary mb-1 waves-effect waves-light mr-1"> @lang('consolidation.Create Consolidation') </a>
+                        <a @if (Auth::user()->isActive()) href="{{ route('admin.parcels.create') }}" @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" @endif
+                            class="btn btn-primary mb-1 waves-effect waves-light"> @lang('parcel.Create Parcel') </a>
                     </div>
                 </div>
                 <div class="card-content card-body">

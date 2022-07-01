@@ -197,8 +197,10 @@
         white-space: nowrap;
         overflow: hidden;
     }
-    #imageDecrptionParcel{
-        padding-left: 40px !important;
+
+    #imageDecrptionParcel {
+        /* padding-left: 40px !important; */
+        vertical-align: center;
         padding-top: 7px !important;
         font-weight: 400 !important;
         margin-top: -2px;
@@ -333,10 +335,12 @@
         white-space: nowrap;
         overflow: hidden;
     }
-    #imageDecrptionTopParcel{
-        padding-left: 40px !important;
+
+    #imageDecrptionTopParcel {
+        vertical-align: center;
+        /* padding-left: 40px !important; */
         font-weight: 400 !important;
-        margin-top: -38px;
+        /* margin-top: -38px; */
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;

@@ -4,11 +4,6 @@
     </td>
     @admin
         <td>
-            <div class="media media-xs overflow-visible">
-                <img class="corrioes-lable" src="{{ asset('images/tracking/' . $parcel->carrierService() . '.png') }}"
-                    title="{{ $parcel->carrierService() }}"style="height: 30px; width: 30px; vertical-align:middle;"
-                    alt="">
-            </div>
             <div class="media-body valign-middle" id="imageDecrptionTopParcel" style="width:175px; font-size:15px !important">
                 <a href="#" title="Click to see Shipment" data-toggle="modal" data-target="#hd-modal"
                     data-url="{{ route('admin.modals.parcel.shipment-info', $parcel) }}">
@@ -32,7 +27,7 @@
             </div>
             {{-- {{ optional($parcel->user)->name }} --}}
         </td>
-        <td>{{ optional($parcel->user)->pobox_number }}</td>
+        <td class="col-2">{{ optional($parcel->user)->pobox_number }}</td>
     @endadmin
     <td>
         @if ($parcel->isArrivedAtWarehouse())
