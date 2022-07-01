@@ -100,4 +100,26 @@ class ContainerRepository extends AbstractRepository{
             return null;
         }
     }
+
+    public function addOrderToContainer($container, $orderId)
+    {
+        try {
+            $container->orders()->attach($orderId);
+            return true;
+        } catch (\Exception $ex) {
+            $this->error = $ex->getMessage();
+            return false;
+        }
+    }
+
+    public function removeOrderFromContainer($container, $id)
+    {
+        try {
+            $container->orders()->detach($id);
+            return true;
+        } catch (\Exception $ex) {
+            $this->error = $ex->getMessage();
+            return false;
+        }
+    }
 }
