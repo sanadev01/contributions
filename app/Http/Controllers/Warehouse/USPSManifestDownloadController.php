@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Warehouse;
 
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
+use App\Services\Excel\Export\ContainerOrderExport;
 
-class ChileContainerPackageController extends Controller
+class USPSManifestDownloadController extends Controller
 {
     /**
      * Handle the incoming request.
@@ -19,9 +20,8 @@ class ChileContainerPackageController extends Controller
             abort(403);
         }
         
-        $ordersCollection = json_encode($container->getOrdersCollections());
-        $editMode = ($container->response == 0) ? true : false;
-        
-        return view('admin.warehouse.chileContainers.scan',compact('container', 'ordersCollection', 'editMode'));
+        $orders = $container->orders;
+        $exportService = new ContainerOrderExport($orders);
+        return $exportService->handle();
     }
 }

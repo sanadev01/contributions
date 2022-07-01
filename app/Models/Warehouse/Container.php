@@ -171,4 +171,30 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     {
         return $this->orders->isNotEmpty();
     }
+
+    public function getContainerService()
+    {
+        if ($this->services_subclass_code == 'NX' || $this->services_subclass_code == 'IX' || $this->services_subclass_code == 'XP') {
+            return 'Brazil-Container';
+        }
+
+        if ($this->services_subclass_code == 'AJ-NX' || $this->services_subclass_code == 'AJ-IX') {
+            return 'Anjun-Container';
+        }
+
+        if ($this->services_subclass_code == 'SL-NX' || $this->services_subclass_code == 'SL-IX' || $this->services_subclass_code == 'SL-XP') {
+            return 'Sinerlog-Container';
+        }
+
+        if ($this->services_subclass_code == 'SRM' || $this->services_subclass_code == 'SRP') {
+            return 'Chile-Container';
+        }
+
+        if ($this->services_subclass_code == 'Priority' || $this->services_subclass_code == 'FirstClass' ||
+            $this->services_subclass_code == 'Priority International' || $this->services_subclass_code == 'FirstClass International') {
+            return 'USPS-Container';
+        }
+
+        return 'Other-Container';
+    }
 }
