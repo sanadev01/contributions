@@ -3,9 +3,12 @@
 namespace App\Http\Livewire\PreAlert;
 
 use App\Models\Order;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Http\Request;
+
 
 class Table extends Component
 {
@@ -29,6 +32,7 @@ class Table extends Component
     public $carrier = '';
     public $tracking_id = '';
     public $status = '';
+    public $custom = '';
 
     /**
      * Sort Asc.
@@ -129,15 +133,21 @@ class Table extends Component
 
     public function getQuery()
     {
+        $searchString = $this->custom;
         $orders = Order::query()
-            ->where('status','>',Order::STATUS_INVENTORY_FULFILLED)
-            ->where('status','<',Order::STATUS_ORDER)
+        ->where('status','>',Order::STATUS_INVENTORY_FULFILLED)
+        ->where('status','<',Order::STATUS_ORDER)
+        ->orWhere('tracking_id','LIKE',"%{$this->custom}%")
+        ->orWhere('warehouse_number','LIKE',"%{$this->custom}%")
+        ->orWhereHas('user', function ($query) use ($searchString){
+            $query->where('name', 'like', '%'.$searchString.'%');
+        })
             ->has('user')
             ->doesntHave('parentOrder');
         if (Auth::user()->isUser()) {
             $orders->where('user_id', Auth::id());
         }
-
+        
         return $orders;
     }
 

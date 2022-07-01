@@ -1,5 +1,11 @@
 <div class="p-2">
     <div class="table-responsive order-table">
+        <div class="row col-8 pr-0 pl-1 " id="singleSearch">
+            <div class="form-group singleSearchStyle col-12">
+                <label>Start Date</label>
+                <input wire:model="custom" type="search" class="form-control col-8 hd-search" name="custom">
+            </div>
+        </div>
         <table class="table mb-0 table-bordered">
             <thead>
                 <tr>

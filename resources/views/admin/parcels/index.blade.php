@@ -44,19 +44,18 @@
                         </div>
 
                     </div>
-                    <div class="row col-8 pr-0 pl-1 " id="singleSearch">
+
+                    {{-- <div class="row col-8 pr-0 pl-1 " id="singleSearch">
                         <div class="form-group singleSearchStyle col-12">
-                            <form wire:submit.prevent="submit">
-                                <div class="form-group mb-2 col-12 row">
-                                    {{-- <label class="col-12 text-left"> Search</label> --}}
-                                    <input type="text" class="form-control col-8 hd-search">
-                                    <button type="submit" class="btn btn-primary ml-2">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </div>
-                            </form>
+                            <div class="form-group mb-2 col-12 row">
+                                <input wire:model="custom" type="search" class="form-control col-8 hd-search"
+                                    name="custom">
+                                <button type="submit" class="btn btn-primary ml-2">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="table-responsive-md mt-1">
                         <livewire:pre-alert.table />
                     </div>
