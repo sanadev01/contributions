@@ -69,6 +69,16 @@ class UsCalculatorRates extends Component
         }
     }
 
+    public function downloadRates()
+    {
+        if ($this->ratesWithProfit) {
+            $usCalculatorRepository = new USCalculatorRepository();
+
+            return $usCalculatorRepository->download($this->ratesWithProfit, $this->tempOrder, $this->chargableWeight, $this->weightInOtherUnit);
+        }
+        
+    }
+
     private function selectedServiceEnabledForUser()
     {
         if ($this->userLoggedIn) {

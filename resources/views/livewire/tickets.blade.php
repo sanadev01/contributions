@@ -4,6 +4,7 @@
             <thead>
                 <tr>
                     <th>@lang('tickets.TicketID')</th>
+                    <th></th>
                     <th>@lang('tickets.Date')</th>
                     <th>@lang('tickets.User')</th>
                     <th>@lang('tickets.Issue')</th>
@@ -12,6 +13,7 @@
                     <th>@lang('tickets.Detail')</th>
                 </tr>
                 <tr>
+                    <th></th>
                     <th></th>
                     <th>
                         <input type="search" class="form-control" wire:model.debounce.1000ms="date">
@@ -35,6 +37,11 @@
                 @foreach ($tickets as $ticket)
                     <tr>
                         <td>{{ $ticket->getHumanID() }}</td>
+                        <td>
+                            <span class="bg-danger border border-danger rounded-circle text-light m-2 p-2 justify-content-center align-items-center {{ $ticket->comments_count > 0 ? 'd-inline-flex' : 'd-none' }}" style="height: 25px; width:25px; top:0; right:0">
+                                {{ $ticket->comments_count }}
+                            </span>
+                        </td>
                         <td>
                             {{ $ticket->created_at->format('Y-m-d') }}
                         </td>

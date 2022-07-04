@@ -263,7 +263,6 @@
                 }
             }
         });
-        
     });
 
     function activeChileFields(selectedService) {
@@ -413,7 +412,7 @@
     function validateCorreiosChileAddress(commune, address) {
         $('#loading').fadeIn();
 
-        $.get('{{ route("api.orders.recipient.normalize_address") }}',{
+        $.get('{{ route("api.correios-chile-normalize-address") }}',{
             coummne: commune,
             direction: address,
         }).then(function(response){
@@ -529,7 +528,7 @@
 
     function getChileCommunesFromDB(regionId, oldCommune = null) {
         $('#loading').fadeIn();
-        $.get('{{ route("api.orders.recipient.hd_chile_comunes") }}',{
+        $.get('{{ route("api.hd-chile-communes") }}',{
             region_id: regionId
         }).then(function(response) {
             $('#loading').fadeOut();
@@ -564,7 +563,7 @@
     function getRegionsFromCorreiosChile()
     {   
         $('#loading').fadeIn();
-        $.get('{{ route("api.orders.recipient.chile_regions") }}')
+        $.get('{{ route("api.correios-chile-regions") }}')
         .then(function(response){
             $('#loading').fadeOut();
             
@@ -595,7 +594,7 @@
 
     function getChileCommunesFromCorreios(regionCode) {
         $('#loading').fadeIn();
-        $.get('{{ route("api.orders.recipient.chile_comunes") }}',{
+        $.get('{{ route("api.correios-chile-communes") }}',{
             region_code: regionCode,
         }).then(function(response) {
             $('#loading').fadeOut();

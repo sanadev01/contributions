@@ -125,6 +125,7 @@
             <th>@lang('orders.print-label.Dimensions')</th>
             <th>@lang('orders.print-label.Kg')</th>
             <th>@lang('orders.print-label.Reference')#</th>
+            <th>@lang('Carrier Tracking')</th>
             <th>@lang('orders.print-label.Recpient')</th>
             <th>@lang('orders.print-label.Date')</th>
             <th>@lang('orders.print-label.Pickup Date')</th>
@@ -143,6 +144,7 @@
                     <td>{{ $package->length }} x {{ $package->length }} x {{ $package->height }}</td>
                     <td>{{ $package->getWeight('kg') }}</td>
                     <td>{{ $package->id }}</td>
+                    <td>{{ $package->tracking_id }}</td>
                     <td>{{ $package->recipient->first_name }}</td>
                     <td>{{ $package->order_date }}</td>
                     <td>{{ optional(optional($package->driverTracking)->created_at)->format('m-d-y') }}</td>
@@ -182,6 +184,9 @@
                         @if ($package['reference'])
                             HD-{{ $package['reference'] }}
                         @endif 
+                    </td>
+                    <td>
+                        {{ $package['tracking_id'] }}
                     </td>
                     <td>
                         {{ $package['recpient'] }}

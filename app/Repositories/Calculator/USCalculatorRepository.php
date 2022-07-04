@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Order;
 use App\Models\State;
 use App\Models\ShCode;
+use App\Models\Country;
 use App\Models\OrderItem;
 use App\Models\Recipient;
 use App\Facades\UPSFacade;
@@ -22,6 +23,7 @@ use App\Services\UPS\UPSShippingService;
 use App\Repositories\USPSLabelRepository;
 use App\Repositories\FedExLabelRepository;
 use App\Services\USPS\USPSShippingService;
+use App\Services\Excel\Export\ExportUSRates;
 use App\Services\FedEx\FedExShippingService;
 use App\Services\Calculators\WeightCalculator;
 
@@ -191,12 +193,19 @@ class USCalculatorRepository
         return $this->chargableWeight;
     }
 
+    public function download($rates, $order, $chargableWeight, $weightInOtherUnit)
+    {
+        $exportService = new ExportUSRates($rates, $order, $chargableWeight, $weightInOtherUnit);
+
+        return $exportService->handle();
+    }
+
     private function setUserProft()
     {
         if ($this->userLoggedIn) {
             $this->uspsProfit = setting('usps_profit', null, auth()->user()->id);
             $this->upsProfit = setting('ups_profit', null, auth()->user()->id);
-            $this->fedexProfit = setting('fedex_profit', null, auth()->user()->id);
+            $this->fedExProfit = setting('fedex_profit', null, auth()->user()->id);
         }
 
         if($this->uspsProfit == null || $this->uspsProfit == 0)
@@ -209,9 +218,9 @@ class USCalculatorRepository
             $this->upsProfit = setting('ups_profit', null, User::ROLE_ADMIN);
         }
 
-        if($this->fedexProfit == null || $this->fedexProfit == 0)
+        if($this->fedExProfit == null || $this->fedExProfit == 0)
         {
-            $this->fedexProfit = setting('fedex_profit', null, User::ROLE_ADMIN);
+            $this->fedExProfit = setting('fedex_profit', null, User::ROLE_ADMIN);
         }
     }
 
@@ -457,6 +466,7 @@ class USCalculatorRepository
         $order->pobox_number = $order->user->pobox_number;
         $order->sender_city = $this->request->sender_city;
         $order->sender_state = $this->request->sender_state;
+        $order->sender_state_id = State::where([['country_id', Country::US],['code', $this->request->sender_state]])->first()->id;
         $order->sender_address = $this->request->sender_address;
         $order->sender_zipcode = $this->request->sender_zipcode;
         $order->order_date = Carbon::now();
@@ -601,7 +611,7 @@ class USCalculatorRepository
             if ($this->request->has('to_herco')) {
                 $request->merge(['service' => $service->service_sub_class]);
             }
-            $upsResponse = ($this->request->has('to_herco')) ? UPSFacade::getSenderPrice($this->order, $request) 
+            $upsResponse = ($this->request->has('to_herco')) ? UPSFacade::getSenderRates($this->order, $request) 
                                                                 : UPSFacade::getRecipientRates($this->order, $service->service_sub_class);
             if($upsResponse->success == true)
             {

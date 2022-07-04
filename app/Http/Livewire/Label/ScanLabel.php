@@ -56,6 +56,7 @@ class ScanLabel extends Component
             'reference' => '',
             'recpient' => '',
             'order_date' => '',
+            'tracking_id' => '',
         ]);
     }
 
@@ -83,6 +84,7 @@ class ScanLabel extends Component
             $this->packagesRows[$index]['dimensions'] = $this->order->length . ' x ' . $this->order->length . ' x ' . $this->order->height ;
             $this->packagesRows[$index]['kg'] = $this->order->getWeight('kg');
             $this->packagesRows[$index]['reference'] = $this->order->id;
+            $this->packagesRows[$index]['tracking_id'] = $this->order->tracking_id;
             $this->packagesRows[$index]['recpient'] = $this->order->recipient->first_name;
             $this->packagesRows[$index]['order_date'] = $this->order->order_date->format('m-d-Y');
             
@@ -138,6 +140,7 @@ class ScanLabel extends Component
                     'dimensions' => $this->order->length . ' x ' . $this->order->length . ' x ' . $this->order->height,
                     'kg' => $this->order->getWeight('kg'),
                     'reference' => $this->order->id,
+                    'tracking_id' => $this->order->tracking_id,
                     'recpient' => $this->order->recipient->first_name,
                     'order_date' => $this->order->order_date->format('m-d-Y'),
                 ];
@@ -151,19 +154,18 @@ class ScanLabel extends Component
 
                 array_push($this->newOrder,$this->order);
 
-                if($order->trackings->isNotEmpty() && $order->trackings()->latest()->first()->status_code >= Order::STATUS_PAYMENT_DONE && $order->trackings()->latest()->first()->status_code < Order::STATUS_ARRIVE_AT_WAREHOUSE)
+                if(auth()->user()->isScanner() && $order->trackings->isNotEmpty() && $order->trackings()->latest()->first()->status_code >= Order::STATUS_PAYMENT_DONE && $order->trackings()->latest()->first()->status_code < Order::STATUS_ARRIVE_AT_WAREHOUSE)
                 {
                     $this->addOrderTracking($this->order);
-                }
-                
-                $this->tracking = '';
-                if(Auth::user()->isUser() && Auth::user()->role->name == 'scanner'){
+
                     if(!$this->order->arrived_date){
                         $this->order->update([
                             'arrived_date' => date('Y-m-d H:i:s'), 
                         ]);
                     }
                 }
+                
+                $this->tracking = '';
             }
         }
         $this->tracking = '';

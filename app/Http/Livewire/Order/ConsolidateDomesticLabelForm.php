@@ -96,7 +96,6 @@ class ConsolidateDomesticLabelForm extends Component
         $this->consolidationErrors = $errors;
         
         if ($this->orders->count() > 0) {
-            // $this->senderPhone = $this->orders->first()->user->phone;
             $this->userId = $this->orders->first()->user_id;
         }
     }
@@ -213,10 +212,10 @@ class ConsolidateDomesticLabelForm extends Component
     {
         $this->validate();
         $this->usRates = [];
-        $request = $this->createRequest();
+        $this->createRequest();
 
         $domesticLabelRepostory->handle();
-        $this->tempOrder = $domesticLabelRepostory->getTempOrder($request);
+        $this->tempOrder = $domesticLabelRepostory->getTempOrder(request());
         $this->usShippingServices = $domesticLabelRepostory->getShippingServices($this->tempOrder);
         
         if ($this->usShippingServices->isEmpty()) {
@@ -226,11 +225,11 @@ class ConsolidateDomesticLabelForm extends Component
 
         $this->shippingSerivceErrors = null;
         
-        $request->merge([
+        request()->merge([
             'order' => $this->tempOrder,
         ]);
 
-        $this->usRates = $domesticLabelRepostory->getRatesForDomesticServices($request, $this->usShippingServices);
+        $this->usRates = $domesticLabelRepostory->getRatesForDomesticServices($this->usShippingServices);
         $this->fedexError = $domesticLabelRepostory->getError();
         
         $this->excludeShippingServices();
@@ -250,6 +249,9 @@ class ConsolidateDomesticLabelForm extends Component
 
     public function getLabel(DomesticLabelRepository $domesticLabelRepostory)
     {
+        $this->uspsError = '';
+        $this->upsError = '';
+
         $this->validate();
 
         if (!$this->selectedService) {
@@ -257,12 +259,12 @@ class ConsolidateDomesticLabelForm extends Component
         }
 
         $this->getCostOfSelectedService();
-        $request = $this->createRequest();
+        $this->createRequest();
 
         $domesticLabelRepostory->handle();
-        $this->tempOrder = $domesticLabelRepostory->getTempOrder($request);
+        $this->tempOrder = $domesticLabelRepostory->getTempOrder(request());
 
-        $request->merge([
+        request()->merge([
             'service' => $this->selectedService,
             'total_price' => $this->selectedServiceCost,
             'orders' => $this->orders,
@@ -270,7 +272,7 @@ class ConsolidateDomesticLabelForm extends Component
         ]);
 
 
-        if($domesticLabelRepostory->getDomesticLabel($request, $request->order))
+        if($domesticLabelRepostory->getDomesticLabel(request()->order))
         {
             $this->saveAddress();
             return redirect()->route('admin.order.us-label.index', $this->orders->first()->id);
@@ -282,7 +284,7 @@ class ConsolidateDomesticLabelForm extends Component
 
     private function createRequest()
     {
-        return new Request([
+        request()->merge([
             'weight' => (int)$this->weight,
             'length' => (int)$this->length,
             'width' => (int)$this->width,

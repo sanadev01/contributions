@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
+use App\Models\CommissionSetting;
 
 class RegisterController extends Controller
 {
@@ -59,7 +60,7 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'last_name' => ['sometimes', 'required_if:account_type,'.User::ACCOUNT_TYPE_INDIVIDUAL],
-            'phone' => ['required', new PhoneNumberValidator()],
+            'phone' => ['required', 'min:10', 'max:15'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'account_type' => 'required'
@@ -78,6 +79,8 @@ class RegisterController extends Controller
     {
         $locale = app()->getLocale();
         
+        $referrer = User::findRef($data['reffered_by']);
+
         $user = User::create([
             'name' => $data['name'],
             'last_name' => isset($data['last_name']) ? $data['last_name'] : null,
@@ -85,13 +88,16 @@ class RegisterController extends Controller
             'role_id' => 2,
             'pobox_number' => User::generatePoBoxNumber(),
             'email' => $data['email'],
-            'reffered_by' => User::findRef($data['reffered_by']),
+            'reffered_by' => ($referrer) ? $referrer->id : null,
             'reffer_code' => generateRandomString(),
             'come_from' => $data['come_from'],
             'password' => Hash::make($data['password']),
             'account_type' => $data['account_type'] == 'business' ? User::ACCOUNT_TYPE_BUSINESS : User::ACCOUNT_TYPE_INDIVIDUAL
         ]);
 
+        if ($user->reffered_by) {
+            $this->setReferererCommission($user, $referrer);
+        }
 
         saveSetting('locale', $locale, $user->id);
         return $user;
@@ -101,6 +107,20 @@ class RegisterController extends Controller
     {
         Mail::to($user->email)->send(new AccountCreated($user));
         Mail::send(new NewRegistration($user));
+    }
+
+    private function setReferererCommission($user, $referrer)
+    {
+        if ($referrer) {
+            CommissionSetting::create([
+                'user_id' => $referrer->id,
+                'referrer_id' => $user->id,
+                'type' => 'flat',
+                'value' => 0.1,
+            ]);
+        }
+
+        return true;
     }
     
 }

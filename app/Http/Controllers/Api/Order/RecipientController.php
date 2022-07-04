@@ -2,13 +2,9 @@
 
 namespace App\Http\Controllers\Api\Order;
 
-use App\Facades\CorreosChileFacade;
 use App\Facades\USPSFacade;
-use Exception;
 use App\Models\Order;
-use App\Models\Region;
 use App\Models\Address;
-use App\Models\Commune;
 use Illuminate\Http\Request;
 use FlyingLuscas\Correios\Client;
 use App\Http\Controllers\Controller;
@@ -87,38 +83,8 @@ class RecipientController extends Controller
         return apiResponse(true,'Zipcode success',$response);
     }
 
-    public function chileRegions()
-    {
-        return CorreosChileFacade::getAllRegions();
-        
-    }
-
-    public function chileCommunes(Request $request)
-    {
-        return CorreosChileFacade::getchileCommunes($request);
-    }
-
-    public function normalizeAddress(Request $request)
-    {
-       return CorreosChileFacade::validateAddress($request);
-    }
-
     public function validate_USAddress(Request $request)
     {
         return USPSFacade::validateAddress($request);
-    }
-
-    // get chile communes from db
-    public function hdChileCommunes(Request $request)
-    {
-        try {
-            $communes = Commune::select('id','name')->where('region_id', $request->region_id)->get();
-            
-            return apiResponse(true,'Communes Fetched',$communes);
-
-        } catch (Exception $e) {
-            
-            return apiResponse(false,'could not Load Communes, please select region',$e->getMessage());
-        }
     }
 }

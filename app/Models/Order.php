@@ -676,6 +676,38 @@ class Order extends Model implements Package
         return $this->deleted_at ? true : false;
     }
 
+    public function discountCost($onVolumetricWeight = true)
+    {
+        $shippingService = $this->shippingService;
+
+        if ($this->weight_discount && $shippingService && !in_array($shippingService->service_sub_class, [
+            ShippingService::USPS_PRIORITY, ShippingService::USPS_FIRSTCLASS,ShippingService::USPS_PRIORITY_INTERNATIONAL,
+            ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,ShippingService::UPS_GROUND,ShippingService::FEDEX_GROUND])) 
+        {
+
+            $additionalServicesCost = $this->calculateAdditionalServicesCost($this->services);
+
+            $battriesExtra = $shippingService->contains_battery_charges * ( $this->items()->batteries()->count() );
+            $pefumeExtra = $shippingService->contains_perfume_charges * ( $this->items()->perfumes()->count() );
+            $dangrousGoodsCost = (isset($this->user->perfume) && $this->user->perfume == 1 ? 0 : $pefumeExtra) + (isset($this->user->battery) && $this->user->battery == 1 ? 0 : $battriesExtra);
+            $consolidation = $this->isConsolidated() ?  setting('CONSOLIDATION_CHARGES',0,null,true) : 0;
+
+            $otherTotal = $additionalServicesCost + $this->insurance_value + $dangrousGoodsCost + $consolidation;
+
+            $discountShippingRate = $shippingService->getRateFor($this, true, $onVolumetricWeight);
+            $orignalShippingRate =  $shippingService->getOriginalRate($this);
+
+            $originalTotal = $orignalShippingRate + $otherTotal;
+            $discountedTotal = $discountShippingRate + $otherTotal;
+
+            $discount = $originalTotal - $discountedTotal;
+
+            return $discount;
+        }
+
+        return null;
+    }
+    
     public function anjunShippingServicesSubClasses()
     {
         return [

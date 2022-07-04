@@ -33,7 +33,7 @@ class PhoneNumberValidator implements Rule
             $numberProto = $phoneUtil->parse($number, __default( optional($this->country)->code,'BR'));
             $countryCode = $phoneUtil->getRegionCodeForNumber($numberProto);
             
-            if ($countryCode != $this->country->code) {
+            if ($countryCode != optional($this->country)->code) {
                 return false;
             }
 

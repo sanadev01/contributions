@@ -14,8 +14,10 @@ class ExportManfestService extends AbstractCsvExportService
     private $deliveryBill;
     private $csvData = [];
     private $row = 0;
-    private $total_customerpaid;
-    private $total_paid_to_correios;
+    private $totalCustomerPaid;
+    private $totalPaidToCorreios;
+    private $totalPieces = 0;
+    private $totalWeight = 0;
 
     public function __construct(DeliveryBill $deliveryBill)
     {
@@ -48,7 +50,8 @@ class ExportManfestService extends AbstractCsvExportService
             'Commission paid to Anjun',
             'Referrer Commission',
             'Bag',
-            'POBOX / NAME'
+            'POBOX / NAME',
+            'Carrier Tracking'
         ];
     }
 
@@ -83,7 +86,8 @@ class ExportManfestService extends AbstractCsvExportService
                 $this->getValuePaidToCorrieos($container,$package)['commission'],
                 optional($package->affiliateSale)->commission,
                 $container->dispatch_number,
-                optional($package->user)->pobox_number.' / '.optional($package->user)->getFullName()
+                optional($package->user)->pobox_number.' / '.optional($package->user)->getFullName(),
+                $package->tracking_id
             ];
 
             $i=0;
@@ -102,8 +106,10 @@ class ExportManfestService extends AbstractCsvExportService
 
             $this->row++;
 
-            $this->total_customerpaid +=  $package->gross_total;
-            $this->total_paid_to_correios += $this->getValuePaidToCorrieos($container,$package)['airport'];
+            $this->totalCustomerPaid +=  $package->gross_total;
+            $this->totalPaidToCorreios += $this->getValuePaidToCorrieos($container,$package)['airport'];
+            $this->totalPieces++;
+            $this->totalWeight += $package->getOriginalWeight('kg');
         }
 
         $this->csvData[$this->row] = [
@@ -111,19 +117,20 @@ class ExportManfestService extends AbstractCsvExportService
             '',
             '',
             '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
             'Total',
-            $this->total_customerpaid,
-            '',
-            $this->total_paid_to_correios,
-            '',
+            $this->totalPieces,
+            $this->totalWeight,
             '',
             '',
+            '',
+            '',
+            '',
+            $this->totalCustomerPaid,
+            '',
+            $this->totalPaidToCorreios,
+            '',
+            '',
+            ''
         ];
 
     }
@@ -131,7 +138,8 @@ class ExportManfestService extends AbstractCsvExportService
     protected function getValuePaidToCorrieos(Container $container, Order $order)
     {
         $commission = false;
-        $rateSlab = AccrualRate::getRateSlabFor($order->getWeight('kg'));
+        $service  = $order->shippingService->service_sub_class;
+        $rateSlab = AccrualRate::getRateSlabFor($order->getWeight('kg'),$service);
 
         if ( !$rateSlab ){
             return [
@@ -139,7 +147,6 @@ class ExportManfestService extends AbstractCsvExportService
                 'commission'=> 0
             ];
         }
-        $service = $order->shippingService->service_sub_class;
         if($service == ShippingService::AJ_Packet_Standard || $service == ShippingService::AJ_Packet_Express){
             $commission = true;
         }

@@ -2,15 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-// use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Shared\Ticket\Create;
 use App\Http\Requests\Shared\Ticket\Update;
 use App\Models\Ticket;
 use App\Repositories\TicketRepository;
-use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class TicketController extends Controller
 {
@@ -19,7 +15,7 @@ class TicketController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(TicketRepository $repository)
+    public function index()
     {   
         $this->authorize('viewAny',Ticket::class);
 

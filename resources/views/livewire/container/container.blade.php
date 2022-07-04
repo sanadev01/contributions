@@ -70,7 +70,9 @@
                                         </select>
                                     </th>
                                     
-                                    <th></th>
+                                    <th>
+                                        <input type="search" class="form-control" wire:model.debounce.1000ms="unitCode">
+                                    </th>
                                 </tr>
                                 </thead>
                                 <tbody>
