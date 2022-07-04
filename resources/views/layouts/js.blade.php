@@ -27,6 +27,41 @@
 
 {{-- <script src="{{ mix('js/app.js') }}"></script> --}}
 <script>
+    function toggleDateSearch() {
+        const div = document.getElementById('dateSearch');
+        if (div.style.display != 'block') {
+            div.style.display = 'block';
+            // console.log('asdasd');
+        } else {
+            div.style.display = 'none';
+            // console.log('aa');
+
+        }
+        // const div1 = document.getElementById('singleSearch');
+        // if (div1.style.display != 'block') {
+        //     div1.style.display = 'block';
+        //     // console.log('asdasd');
+        // } else {
+        //     div1.style.display = 'none';
+        //     // console.log('aa');
+
+        // }
+
+    }
+
+    function toggleOrderPageSearch() {
+        const div = document.getElementById('singleSearch');
+        console.log(div);
+        if (div.style.display != 'block') {
+            div.style.display = 'block';
+            // console.log('asdasd');
+        } else {
+            div.style.display = 'none';
+            // console.log('aa');
+
+        }
+    }
+
     function handleChange(checkbox) {
         if (checkbox.checked == true) {
             document.getElementById("printBtnDiv").style.display = 'block';
