@@ -135,9 +135,9 @@ class Table extends Component
     {
         $searchString = $this->custom;
         $orders = Order::query()
-        ->where('status','>',Order::STATUS_INVENTORY_FULFILLED)
-        ->where('status','<',Order::STATUS_ORDER)
-        ->orWhere('tracking_id','LIKE',"%{$this->custom}%")
+        ->whereIn('status',[10,20,25,26])
+        // ->orWhere('status','<',Order::STATUS_ORDER)
+        ->where('tracking_id','LIKE',"%{$this->custom}%")
         ->orWhere('warehouse_number','LIKE',"%{$this->custom}%")
         ->orWhereHas('user', function ($query) use ($searchString){
             $query->where('name', 'like', '%'.$searchString.'%');
