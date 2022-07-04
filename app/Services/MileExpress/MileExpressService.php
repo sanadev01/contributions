@@ -16,8 +16,10 @@ class MileExpressService
     private $getTokenUrl;
     private $houseUrl;
     private $trackingUrl;
+    private $createConsolidatorUrl;
+    private $registerConsolidatorUrl;
 
-    public function __construct($clientId, $clientSecret, $userName, $password, $getTokenUrl, $houseUrl, $trackingUrl)
+    public function __construct($clientId, $clientSecret, $userName, $password, $getTokenUrl, $houseUrl, $trackingUrl, $createConsolidatorUrl, $registerConsolidatorUrl)
     {
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
@@ -27,6 +29,8 @@ class MileExpressService
         $this->getTokenUrl = $getTokenUrl;
         $this->houseUrl = $houseUrl;
         $this->trackingUrl = $trackingUrl;
+        $this->createConsolidatorUrl = $createConsolidatorUrl;
+        $this->registerConsolidatorUrl = $registerConsolidatorUrl;
     }
 
     private function getToken()
@@ -59,6 +63,16 @@ class MileExpressService
     public function createShipment($order)
     {
         return $this->mileExpressApiCall($this->houseUrl, $this->makeRequestBodyForShipment($order));
+    }
+
+    public function createContainer($request)
+    {
+        return $this->mileExpressApiCall($this->createConsolidatorUrl, $this->makeRequestBodyForContainer($request));
+    }
+
+    public function registerContainer($consolidatorId, $airWayBillIds)
+    {
+        return $this->mileExpressApiCall($this->registerConsolidatorUrl, $this->makeRequestBodyForContainerRegistration($consolidatorId, $airWayBillIds));
     }
 
     private function mileExpressApiCall($url, $data)
@@ -204,6 +218,23 @@ class MileExpressService
         }
 
         return $description;
+    }
+
+    private function makeRequestBodyForContainer($request)
+    {
+        return [
+            'origin' => 'MIA',
+            'destination' => ($request->destination_operator_name == 'SAOD') ? 'GRU' : 'CWB',
+            'date' => Carbon::now()->format('Y-m-d'),
+        ];
+    }
+
+    private function makeRequestBodyForContainerRegistration($consolidatorId, $airWayBillIds)
+    {
+        return [
+            'consolidator_id' => $consolidatorId,
+            'airwaybill_id' => $airWayBillIds
+        ];
     }
 
     private function setHeaders()

@@ -24,6 +24,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     const CONTAINER_ANJUN_NX = 'AJ-NX';
     const CONTAINER_ANJUN_IX = 'AJ-IX';
+    const CONTAINER_MILE_EXPRESS = 'ML-EX';
 
     public function user()
     {
@@ -73,6 +74,8 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'AJ Packet Standard service';
         }elseif ($this->services_subclass_code == 'AJ-IX') {
             return 'AJ Packet Express service';
+        }elseif ($this->services_subclass_code == 'ML-EX') {
+            return 'Mile Express';
         }elseif($this->services_subclass_code == 'SRM'){
             return 'SRM service';
         }elseif($this->services_subclass_code == 'SRP'){
@@ -193,6 +196,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         if ($this->services_subclass_code == 'Priority' || $this->services_subclass_code == 'FirstClass' ||
             $this->services_subclass_code == 'Priority International' || $this->services_subclass_code == 'FirstClass International') {
             return 'USPS-Container';
+        }
+
+        if ($this->services_subclass_code == 'ML-EX') {
+            return 'MileExpress-Container';
         }
 
         return 'Other-Container';

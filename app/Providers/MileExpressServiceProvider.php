@@ -24,8 +24,10 @@ class MileExpressServiceProvider extends ServiceProvider
             $getTokenUrl = config('mileExpress.tokenUrl');
             $houseUrl = config('mileExpress.houseUrl');
             $trackingUrl = config('mileExpress.trackingUrl');
+            $createConsolidatorUrl = config('mileExpress.createConsolidatorUrl');
+            $registerConsolidatorUrl = config('mileExpress.registerConsolidatorUrl');
 
-            return new MileExpressService($clientId, $clientSecret, $userName, $password, $getTokenUrl, $houseUrl, $trackingUrl);
+            return new MileExpressService($clientId, $clientSecret, $userName, $password, $getTokenUrl, $houseUrl, $trackingUrl, $createConsolidatorUrl, $registerConsolidatorUrl);
         });
     }
 

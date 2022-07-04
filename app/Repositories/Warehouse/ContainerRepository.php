@@ -2,10 +2,11 @@
 
 namespace App\Repositories\Warehouse;
 
-use App\Models\Warehouse\Container;
-use App\Repositories\AbstractRepository;
 use Illuminate\Http\Request;
+use App\Facades\MileExpressFacade;
+use App\Models\Warehouse\Container;
 use Illuminate\Support\Facades\Auth;
+use App\Repositories\AbstractRepository;
 
 class ContainerRepository extends AbstractRepository{
 
@@ -27,7 +28,12 @@ class ContainerRepository extends AbstractRepository{
         }
         if($request->filled('unitCode')){
             $query->where('unit_code', 'LIKE', '%' . $request->unitCode . '%');
-        } 
+        }
+        
+        if ($request->has('typeMileExpress')) {
+            return $query->whereIn('services_subclass_code', ['ML-EX'])->latest()->paginate(50);
+        }
+        
         return $query->whereIn('services_subclass_code', ['NX','IX', 'XP','AJ-NX','AJ-IX'])->latest()->paginate(50);
     }
 
@@ -44,6 +50,17 @@ class ContainerRepository extends AbstractRepository{
                 $anjunDispatchNumber = ($latestAnujnContainer) ? $latestAnujnContainer->dispatch_number + 1 : 900000;
             }
 
+            if ($request->services_subclass_code == Container::CONTAINER_MILE_EXPRESS) {
+                $response = MileExpressFacade::createContainer($request);
+
+                if ($response->success == false) {
+                    $this->error = $response->error;
+                    return false;
+                }
+
+                $mileExpressContinerData = $response->data['data'];
+            }
+
             $container =  Container::create([
                 'user_id' => Auth::id(),
                 'dispatch_number' => 0,
@@ -53,7 +70,8 @@ class ContainerRepository extends AbstractRepository{
                 'postal_category_code' => 'A',
                 'destination_operator_name' => $request->destination_operator_name,
                 'unit_type' => $request->unit_type,
-                'services_subclass_code' => $request->services_subclass_code
+                'services_subclass_code' => $request->services_subclass_code,
+                'unit_response_list' => ($request->services_subclass_code == Container::CONTAINER_MILE_EXPRESS) ? json_encode($mileExpressContinerData) : null,
             ]);
 
             $container->update([
@@ -121,5 +139,18 @@ class ContainerRepository extends AbstractRepository{
             $this->error = $ex->getMessage();
             return false;
         }
+    }
+
+    public function getAirWayBillIdsForMileExpress($containerOrders)
+    {
+        $airWayBillIds = [];
+        
+        foreach ($containerOrders as $order) {
+            $orderApiResponse = json_decode($order->api_response);
+            
+            array_push($airWayBillIds, $orderApiResponse->data->volumes[0]->air_waybill_id);
+        }
+
+        return $airWayBillIds;
     }
 }

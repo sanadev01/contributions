@@ -15,5 +15,7 @@ return[
     ],
     'tokenUrl' => '/oauth/token',
     'houseUrl' => '/v1/airwaybills/house',
-    'trackingUrl' => '/v1/airwaybills/tracking?codes='
+    'trackingUrl' => '/v1/airwaybills/tracking?codes=',
+    'createConsolidatorUrl' => '/v1/airwaybills/consolidators',
+    'registerConsolidatorUrl' => '/v1/airwaybills/consolidators/attach'
 ];

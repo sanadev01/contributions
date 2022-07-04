@@ -189,6 +189,10 @@ class ContainerPackages extends Component
             return true;
         }
 
+        if($this->containerService == 'MileExpress-Container' && $order->shippingService->isMileExpressService()){
+            return true;
+        }
+
         return false;
     }
 
