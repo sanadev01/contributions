@@ -353,7 +353,7 @@
     }
 
     .vs-checkbox-con input {
-        width: 13px;
+        width: 13px !important;
         margin: 0px;
     }
 

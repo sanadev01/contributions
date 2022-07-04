@@ -3,24 +3,61 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
-                        <h4 class="mb-0">
-                            @lang('warehouse.containers.Containers')
-                        </h4>
+                    <div class="card-header d-flex justify-content-end">
+                        @section('title', __('warehouse.containers.Containers'))
+                        <button class="btn btn-primary waves-effect waves-light mr-1" title="search"
+                            onclick="toggleLogsSearch()">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </button>
                         <a href="{{ route('warehouse.containers.create') }}" class="pull-right btn btn-primary">
                             @lang('warehouse.containers.Create Container') </a>
                     </div>
                     <div class="card-content card-body" style="min-height: 100vh;">
+                        <div id="printBtnDiv">
+                            <button title="Assign AWB" id="assignAwb" type="btn"
+                                class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i
+                                    class="feather icon-printer"></i></button>
+
+                        </div>
+                        <div class="mb-2 row col-md-12" id="logSearch">
+                            <div class="col-2 pl-0">
+                                <label>Dispatch Number</label>
+                                <input type="search" class="form-control" wire:model.debounce.1000ms="dispatchNumber">
+                            </div>
+                            <div class="col-2">
+                                <label>Seal No</label>
+                                <input type="search" class="form-control" wire:model.debounce.1000ms="sealNo">
+                            </div>
+                            <div class="col-2">
+                                <label>Distribution Service Class</label>
+                                <select class="form-control" wire:model="packetType">
+                                    <option value="">Select Type</option>
+                                    <option value="NX">Packet Standard</option>
+                                    <option value="IX">Packet Express</option>
+                                    <option value="XP">Packet Mini</option>
+                                </select>
+
+                            </div>
+                        </div>
                         <div class="mt-1 table-bordered">
                             <table class="table mb-0 table-bordered">
                                 <thead>
                                     <tr>
-                                        <th style="min-width: 100px;">
-                                            <select name="" id="bulk-actions" class="form-control">
+                                        <th id="optionChkbx">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="Select All">
+                                                <input type="checkbox" id="checkAll" name="orders[]" class="check-all"
+                                                    value="">
+                                                <span class="vs-checkbox vs-checkbox-sm">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            {{-- <select name="" id="bulk-actions" class="form-control">
                                                 <option value="clear">Clear All</option>
                                                 <option value="checkAll">Select All</option>
                                                 <option value="assign-awb">Assign AWB</option>
-                                            </select>
+                                            </select> --}}
                                         </th>
                                         <th>@lang('warehouse.containers.Dispatch Number')</th>
                                         <th>@lang('warehouse.containers.Seal No')</th>
@@ -47,7 +84,7 @@
                                         </th>
                                         <th>@lang('warehouse.actions.Action')</th>
                                     </tr>
-                                    <tr>
+                                    {{-- <tr>
                                         <th></th>
                                         <th>
                                             <input type="search" class="form-control"
@@ -72,7 +109,7 @@
                                         </th>
 
                                         <th></th>
-                                    </tr>
+                                    </tr> --}}
                                 </thead>
                                 <tbody>
                                     @foreach ($containers as $container)
@@ -80,9 +117,10 @@
                                             <td>
                                                 <div class="vs-checkbox-con vs-checkbox-primary"
                                                     title="@lang('orders.Bulk Print')">
-                                                    <input type="checkbox" name="containers[]" class="bulk-container"
+                                                    <input type="checkbox" name="containers[]"
+                                                        onchange='handleChangeContainer(this);' class="bulk-container"
                                                         value="{{ $container->id }}">
-                                                    <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox vs-checkbox-sm">
                                                         <span class="vs-checkbox--check">
                                                             <i class="vs-icon feather icon-check"></i>
                                                         </span>
@@ -230,3 +268,47 @@
     @include('layouts.livewire.loading')
 
 </div>
+@section('js')
+    <script>
+        $('body').on('click', '#assignAwb', function() {
+            var containerIds = [];
+            $.each($(".bulk-container:checked"), function() {
+                containerIds.push($(this).val());
+            });
+            $('#bulk_sale_form #command').val('assign-awb');
+            $('#bulk_sale_form #data').val(JSON.stringify(containerIds));
+            $('#confirm').modal('show');
+        })
+        $('body').on('click', '#domesticPrint', function() {
+            var orderIds = [];
+            $.each($(".bulk-orders:checked"), function() {
+                orderIds.push($(this).val());
+                console.log($(this).val());
+            });
+            $('#consolidate_domestic_label_actions_form #command').val('consolidate-domestic-label');
+            $('#consolidate_domestic_label_actions_form #data').val(JSON.stringify(orderIds));
+            $('#consolidate_domestic_label_actions_form').submit();
+        })
+        $('body').on('click', '#trash', function() {
+            var orderIds = [];
+            $.each($(".bulk-orders:checked"), function() {
+                orderIds.push($(this).val());
+            });
+
+            $('#trash_order_actions_form #command').val('move-order-trash');
+            $('#trash_order_actions_form #data').val(JSON.stringify(orderIds));
+            $('#trash_order_actions_form').submit();
+
+        })
+        $('body').on('change', '#checkAll', function() {
+            if ($('#checkAll').is(':checked')) {
+                $('.bulk-container').prop('checked', true)
+                document.getElementById("printBtnDiv").style.display = 'block';
+            } else {
+                $('.bulk-container').prop('checked', false)
+                console.log($(".bulk-container:checked").length);
+                document.getElementById("printBtnDiv").style.display = 'none';
+            }
+        })
+    </script>
+@endsection

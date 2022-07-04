@@ -11,8 +11,8 @@
 
     <div class="col-md-12">
         <div class="hd-card mt-4 mb-3">
-            <div class="row col-12 d-flex justify-content-between pl-5">
-                <div class="form-group row col-4 p-0">
+            <div class="row col-12 d-flex justify-content-between pl-4">
+                <div class="form-group row col-4 pr-2">
                     <label class="col-3 text-left"> @lang('orders.print-label.Scan Package')</label>
                     <input type="text" @if (count($packagesRows) == 300) readonly @endif
                         class="form-control col-8 hd-search" wire:model.debounce.500ms="tracking">

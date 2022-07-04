@@ -73,7 +73,7 @@
             </select>
         </div>
 
-        <div class="d-flex justify-content-end my-2 pb-4">
+        <div class="col-11 d-flex justify-content-end my-2 pb-4">
             {{ $parcels->links() }}
         </div>
     </div>
