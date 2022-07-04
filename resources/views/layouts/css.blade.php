@@ -563,6 +563,14 @@
 
     }
 
+    .hide {
+        display: none !important;
+    }
+
+    #userSearch {
+        display: none;
+    }
+
     .singleSearchStyle {
         padding-right: 0px !important;
     }

@@ -62,6 +62,39 @@
         }
     }
 
+    function toggleUserSearch() {
+        const div = document.getElementById('userSearch');
+        if (div.style.display != 'block') {
+            div.style.display = 'block';
+            // console.log('asdasd');
+        } else {
+            div.style.display = 'none';
+            // console.log('aa');
+
+        }
+    }
+
+    function toggleLogsSearch() {
+        console.log('asdasd');
+        if ($('#logSearch').hasClass("hide")) {
+            $('#logSearch').removeClass('hide');
+        } else {
+            $('#logSearch').addClass('hide');
+        }
+
+
+        // const div = document.getElementById('logSearch');
+        // console.log(div);
+        // if (div.style.display != 'block') {
+        //     div.style.display = 'block';
+        //     // console.log('asdasd');
+        // } else {
+        //     div.style.display = 'none';
+        //     // console.log('aa');
+
+        // }
+    }
+
     function handleChange(checkbox) {
         if (checkbox.checked == true) {
             document.getElementById("printBtnDiv").style.display = 'block';
