@@ -5,11 +5,14 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header d-flex justify-content-end">
+                    <div class="card-header pr-1">
                     @section('title', __('role.Roles'))
                     @can('create', App\Models\Role::class)
-                        <a href="{{ route('admin.roles.create') }}" class="pull-right btn btn-primary"> @lang('role.Create Role')
-                        </a>
+                        <div class="col-12 d-flex justify-content-end">
+                            <a href="{{ route('admin.roles.create') }}" class="pull-right btn btn-primary">
+                                @lang('role.Create Role')
+                            </a>
+                        </div>
                     @endcan
                 </div>
                 <div class="card-content">

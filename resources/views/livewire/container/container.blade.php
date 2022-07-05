@@ -16,10 +16,10 @@
                         <div id="printBtnDiv">
                             <button title="Assign AWB" id="assignAwb" type="btn"
                                 class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i
-                                    class="feather icon-printer"></i></button>
+                                    class="fas fa-file-invoice"></i></button>
 
                         </div>
-                        <div class="mb-2 row col-md-12" id="logSearch">
+                        <div class="mb-2 row col-md-12 hide" id="logSearch">
                             <div class="col-2 pl-0">
                                 <label>Dispatch Number</label>
                                 <input type="search" class="form-control" wire:model.debounce.1000ms="dispatchNumber">
@@ -44,7 +44,8 @@
                                 <thead>
                                     <tr>
                                         <th id="optionChkbx">
-                                            <div class="vs-checkbox-con vs-checkbox-primary" title="Select All">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="Select All"
+                                                style="margin-left: 12px;">
                                                 <input type="checkbox" id="checkAll" name="orders[]" class="check-all"
                                                     value="">
                                                 <span class="vs-checkbox vs-checkbox-sm">
@@ -116,7 +117,7 @@
                                         <tr>
                                             <td>
                                                 <div class="vs-checkbox-con vs-checkbox-primary"
-                                                    title="@lang('orders.Bulk Print')">
+                                                    title="@lang('orders.Bulk Print')" style="margin-left: 12px;">
                                                     <input type="checkbox" name="containers[]"
                                                         onchange='handleChangeContainer(this);' class="bulk-container"
                                                         value="{{ $container->id }}">

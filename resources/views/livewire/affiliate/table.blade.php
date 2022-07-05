@@ -1,40 +1,72 @@
+<div class="p-0 pr-2 d-flex justify-content-end">
+    <button type="btn" onclick="toggleDateSearch()" id="customSwitch8"
+        class="btn btn-primary mr-1 waves-effect waves-light"><i class="feather icon-filter"></i></button>
+    <button onclick="toggleLogsSearch()" class="btn btn-primary waves-effect waves-light">
+        <i class="feather icon-search"></i>
+    </button>
+</div>
 <div class="p-2">
     @admin
         <div class="row">
             <div class="col-12 text-right mb-3">
-                <p class="mr-2 h5">Paid Commission:<span class="text-success h4"> $
+                <p class="mr-0 h5">Paid Commission:<span class="text-success h4"> $
                         {{ number_format($balance->where('is_paid', true)->sum('value'), 2) }}</span></p>
-                <p class="mr-2 h5">UnPaid Commission:<span class="text-danger h4"> $
+                <p class="mr-0 h5">UnPaid Commission:<span class="text-danger h4"> $
                         {{ number_format($balance->where('is_paid', false)->sum('value'), 2) }}</span></p>
             </div>
         </div>
     @endadmin
-    <div class="row mb-2 no-print">
-        <div class="col-11 text-left">
-            <form action="{{ route('admin.affiliate.sale.exports') }}" method="GET" target="_blank">
-                @csrf
-                <label>@lang('sales-commission.start date')</label>
-                <input type="date" name="start_date" class="from-control col-2">
-
-                <label>@lang('sales-commission.end date')</label>
-                <input type="date" name="end_date" class="from-control col-2">
-                <button class="btn btn-success" title="@lang('sales-commission.Download Sales')">
-                    <i class="fa fa-arrow-down"></i>
-                </button>
-            </form>
+    <div class="row col-12 pr-0 m-0 pl-0" id="datefilters">
+        <div class=" col-6 text-left mb-2 pl-0">
+            <div class="row col-12 my-3 pl-0" id="dateSearch" style="display: none;">
+                <form action="{{ route('admin.affiliate.sale.exports') }}" method="GET" target="_blank">
+                    @csrf
+                    <div class="form-group mb-2 col-4" style="float:left;margin-right:20px;">
+                        <label>Start Date</label>
+                        <input type="date" name="start_date" class="form-control">
+                    </div>
+                    <div class="form-group mx-sm-3 mb-2 col-4" style="float:left;margin-right:20px;">
+                        <label>End Date</label>
+                        <input type="date" name="end_date" class="form-control">
+                    </div>
+                    <button class="btn btn-success searchDateBtn waves-effect waves-light" title="@lang('sales-commission.Download Sales')">
+                        <i class="fa fa-arrow-down" aria-hidden="true"></i>
+                    </button>
+                </form>
+            </div>
         </div>
+
+    </div>
+    <div class="mb-2 row col-md-12 hide" id="logSearch">
+        <div class="col-6 pl-0">
+            <label>Search</label>
+            <input type="search" class="form-control" wire:model.debounce.1000ms="customSearch">
+        </div>
+
+    </div>
+    <div class="" id="printBtnDiv">
+        <button type="btn" id="pay-commission" class="btn btn-primary mr-1 waves-effect waves-light mb-4"><i
+                class="fa fa-credit-card-alt"></i></button>
     </div>
     <div class="table-wrapper position-relative">
-        <table class="table mb-0 table-responsive-md" id="">
+        <table class="table mb-0 table-bordered table-responsive-md" id="">
             <thead>
                 <tr>
                     @admin
-                        <th style="min-width: 100px;">
-                            <select name="" id="bulk-actions" class="form-control">
+                        <th id="optionChkbx">
+                            <div class="vs-checkbox-con vs-checkbox-primary" title="Select All">
+                                <input type="checkbox" id="checkAll" name="bulk-sales[]" class="check-all" value="">
+                                <span class="vs-checkbox vs-checkbox-sm">
+                                    <span class="vs-checkbox--check">
+                                        <i class="vs-icon feather icon-check"></i>
+                                    </span>
+                                </span>
+                            </div>
+                            {{-- <select name="" id="bulk-actions" class="form-control">
                                 <option value="clear">Clear All</option>
                                 <option value="checkAll">Select All</option>
                                 <option value="pay-commission">Pay Commission</option>
-                            </select>
+                            </select> --}}
                         </th>
                     @endadmin
                     <th>@lang('sales-commission.Date')</th>
@@ -57,7 +89,7 @@
                         <th>@lang('Action')</th>
                     @endadmin
                 </tr>
-                <tr class="no-print">
+                {{-- <tr class="no-print">
                     @admin
                         <th></th>
                     @endadmin
@@ -111,10 +143,7 @@
                     </th>
                     <th></th>
                     <th></th>
-                    @admin
-                        <th></th>
-                    @endadmin
-                </tr>
+                </tr> --}}
             </thead>
             <tbody>
                 @forelse ($sales as $sale)
@@ -126,8 +155,8 @@
         </table>
     </div>
     <div class="row pt-4">
-        <div class="col-1">
-            <select class="form-control hd-search mb-2" wire:model="pageSize">
+        <div class="col-1 pt-5">
+            <select class="form-control hd-search" wire:model="pageSize">
                 <option value="1">1</option>
                 <option value="5">5</option>
                 <option value="10">10</option>
@@ -138,7 +167,7 @@
             </select>
         </div>
 
-        <div class="col-11 d-flex justify-content-end my-2 pb-4">
+        <div class="col-11 d-flex justify-content-end pt-5">
             {{ $sales->links() }}
         </div>
     </div>

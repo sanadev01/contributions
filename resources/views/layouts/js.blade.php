@@ -64,6 +64,7 @@
     }
 
     function toggleLogsSearch() {
+        console.log('a');
         if ($('#logSearch').hasClass("hide")) {
             $('#logSearch').removeClass('hide');
         } else {
@@ -78,6 +79,16 @@
             document.getElementById("printBtnDiv").style.display = 'block';
         } else {
             if ($(".bulk-orders:checked").length == 0) {
+                document.getElementById("printBtnDiv").style.display = 'none';
+            }
+        }
+    }
+
+    function handleChangeSalesCommission(checkbox) {
+        if (checkbox.checked == true) {
+            document.getElementById("printBtnDiv").style.display = 'block';
+        } else {
+            if ($(".bulk-sales:checked").length == 0) {
                 document.getElementById("printBtnDiv").style.display = 'none';
             }
         }

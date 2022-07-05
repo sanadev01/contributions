@@ -4,23 +4,23 @@
         <div class="row">
             <div class="col-12">
                 <div class="card min-vh-100">
-                    <div class="col-12 d-flex justify-content-end">
-                        <div class="col-2 text-right p-0 pr-1" style="float: right">
-                            <form action="{{ route('admin.users.export.index') }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="search" value="{{ request('search') }}">
-                                <button href="" class="mt-1 btn btn-success">
-                                    <i class="feather icon-download"></i>
+                    <div class="card-header pr-3">
+                        <div class="col-12 d-flex justify-content-end pr-0">
+                            <div class="col-2 text-right p-0 pr-1" style="float: right">
+                                <form action="{{ route('admin.users.export.index') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="search" value="{{ request('search') }}">
+                                    <button href="" class="mt-1 btn btn-success">
+                                        <i class="feather icon-download"></i>
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="p-0 pr-1">
+                                <button onclick="toggleUserSearch()" class="mt-1 btn btn-primary">
+                                    <i class="feather icon-search"></i>
                                 </button>
-                            </form>
+                            </div>
                         </div>
-                        <div class="p-0 pr-1">
-                            <button onclick="toggleUserSearch()" class="mt-1 btn btn-primary">
-                                <i class="feather icon-search"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-header">
                     @section('title', __('user.All Registered Users'))
                 </div>
                 <div class="card-content card-body">
@@ -32,7 +32,7 @@
                                         <div class="col-10">
                                             <form action="" method="GET">
                                                 <div class="row">
-                                                    <div class="col-3 mt-1" id="userSearch">
+                                                    <div class="col-7 mt-1" id="userSearch">
                                                         <input type="search" class="form-control hd-search"
                                                             name="search"
                                                             value="{{ old('search', request('search')) }}"
