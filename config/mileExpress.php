@@ -17,5 +17,7 @@ return[
     'houseUrl' => '/v1/airwaybills/house',
     'trackingUrl' => '/v1/airwaybills/tracking?codes=',
     'createConsolidatorUrl' => '/v1/airwaybills/consolidators',
-    'registerConsolidatorUrl' => '/v1/airwaybills/consolidators/attach'
+    'registerConsolidatorUrl' => '/v1/airwaybills/consolidators/attach',
+    'createMasterUrl' => '/v1/airwaybills/master',
+    'registerMasterUrl' => '/v1/airwaybills/master'
 ];

@@ -2,6 +2,7 @@
 
 namespace App\Services\MileExpress;
 
+use App\Services\Converters\UnitsConverter;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -18,8 +19,13 @@ class MileExpressService
     private $trackingUrl;
     private $createConsolidatorUrl;
     private $registerConsolidatorUrl;
+    private $createMasterUrl;
+    private $registerMasterUrl;
 
-    public function __construct($clientId, $clientSecret, $userName, $password, $getTokenUrl, $houseUrl, $trackingUrl, $createConsolidatorUrl, $registerConsolidatorUrl)
+    const MILE_EXPRESS_BRAZIL_COUNTRY_CODE = 105;
+    const MILE_EXPRESS_US_COUNTRY_CODE = 249;
+
+    public function __construct($clientId, $clientSecret, $userName, $password, $getTokenUrl, $houseUrl, $trackingUrl, $createConsolidatorUrl, $registerConsolidatorUrl, $createMasterUrl, $registerMasterUrl)
     {
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
@@ -31,6 +37,8 @@ class MileExpressService
         $this->trackingUrl = $trackingUrl;
         $this->createConsolidatorUrl = $createConsolidatorUrl;
         $this->registerConsolidatorUrl = $registerConsolidatorUrl;
+        $this->createMasterUrl = $createMasterUrl;
+        $this->registerMasterUrl = $registerMasterUrl;
     }
 
     private function getToken()
@@ -73,6 +81,19 @@ class MileExpressService
     public function registerContainer($consolidatorId, $airWayBillIds)
     {
         return $this->mileExpressApiCall($this->registerConsolidatorUrl, $this->makeRequestBodyForContainerRegistration($consolidatorId, $airWayBillIds));
+    }
+
+    public function createDeilveryBill($deliverybill_Id, $destination)
+    {
+        return $this->mileExpressApiCall($this->createMasterUrl, $this->makeRequestBodyForDeliveryBill($deliverybill_Id, $destination));
+    }
+
+    public function registerDeliveryBill($masterId, $deliveryBillContainers)
+    {
+        $url = $this->registerMasterUrl.'/'.$masterId.'/attach';
+        return $this->mileExpressApiCall($url, [
+            'consolidators' => $deliveryBillContainers
+        ]);
     }
 
     private function mileExpressApiCall($url, $data)
@@ -122,10 +143,10 @@ class MileExpressService
         return [
             'volumes' => [
                 [
-                    'height' => '1500',
-                    'length' => '200',
-                    'width' => '200',
-                    'weight' => '3',
+                    'height' => ($order->measurement_unit == 'kg/cm') ? $order->height : UnitsConverter::inToCm($order->height),
+                    'length' => ($order->measurement_unit == 'kg/cm') ? $order->length : UnitsConverter::inToCm($order->length),
+                    'width' => ($order->measurement_unit == 'kg/cm') ? $order->width : UnitsConverter::inToCm($order->width),
+                    'weight' => ($order->measurement_unit == 'kg/cm') ? $order->weight : UnitsConverter::poundToKg($order->weight),
                     'items' => $this->setItems($order->items)
                 ]
             ],
@@ -134,14 +155,14 @@ class MileExpressService
             ],
             'description' => ($order->items->isNotEmpty()) ? $this->setOrderDescription($order->items) : 'goods',
             'amount_freight' => $order->user_declared_freight,
-            'gross_weight' => '3',
+            'gross_weight' => ($order->measurement_unit == 'kg/cm') ? $order->weight : UnitsConverter::poundToKg($order->weight),
             'importer' => [
                 'name' => $order->recipient->first_name.' '.$order->recipient->last_name,
                 'addresses' => [
                     [
-                        'number' => 123,
+                        'number' => $order->recipient->street_no,
                         'additional_info' => $order->recipient->street_no,
-                        'country_code' => 105,
+                        'country_code' => self::MILE_EXPRESS_BRAZIL_COUNTRY_CODE,
                         'zip_code' => $order->recipient->zipcode,
                         'address' => $order->recipient->address,
                         'city' => [
@@ -162,9 +183,9 @@ class MileExpressService
                 'name' => 'Herco inc',
                 'addresses' => [
                     [
-                        'number' => 440,
+                        'number' => 100,
                         'additional_info' => 'SUITE# 100',
-                        'country_code' => 249,
+                        'country_code' => self::MILE_EXPRESS_US_COUNTRY_CODE,
                         'zip_code' => '33182',
                         'address' => '2200 NW 129TH AVE',
                         'city' => [
@@ -237,6 +258,15 @@ class MileExpressService
         ];
     }
 
+    private function makeRequestBodyForDeliveryBill($deliverybill_Id, $destination)
+    {
+        return [
+            'code' => rand(1000, 9999).$deliverybill_Id,
+            'airport_origin' => 'MIA',
+            'airport_destination' => ($destination == 'SAOD') ? 'GRU' : 'CWB',
+        ];
+    }
+    
     private function setHeaders()
     {
         return [
