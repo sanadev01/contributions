@@ -26,7 +26,6 @@ class RegionController extends Controller
             }else {
                 $query->where('country_id', $countryId);
             }
-            $query->where('country_id', $countryId);
 
             $regions = $query->get();
             
