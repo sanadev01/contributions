@@ -424,7 +424,7 @@
                 </a>
             </li>
             @endcan
-
+            
             @can('viewAny', App\Models\Setting::class)
             <li class="nav-item {{ $isActive(['admin.settings.index']) }}">
                 <a href="{{ route('admin.settings.index') }}">
@@ -433,13 +433,22 @@
                 </a>
             </li>
             @endcan
-
+            
             <li class="nav-item {{ $isActive(['admin.trash-orders.index']) }}">
                 <a href="{{ route('admin.trash-orders.index') }}">
                     <i class="icon_adjst feather icon-trash" style="color: #ff5a5a;"></i>
                     <span class="menu-title">@lang('menu.Trashed Orders')</span>
                 </a>
             </li>
+
+            {{-- @can('viewAny', Spatie\Activitylog\Models\Activity::class) --}}
+            <li class="nav-item {{ $isActive(['admin.tax.index']) }}">
+                <a href="{{ route('admin.tax.index') }}">
+                    <i class="icon_adjst feather icon-activity" style="color: #3db64c;"></i>
+                    <span class="menu-title">Tax Payment</span>
+                </a>
+            </li>
+            {{-- @endcan --}}
             <x-shared-menu></x-shared-menu>
             @endif
         </ul>
