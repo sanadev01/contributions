@@ -84,6 +84,7 @@
         }
     }
 
+
     function handleChangeSalesCommission(checkbox) {
         if (checkbox.checked == true) {
             document.getElementById("printBtnDiv").style.display = 'block';

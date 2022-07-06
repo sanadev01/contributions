@@ -5,10 +5,17 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header d-flex justify-content-end">
+                    <div class="card-header d-flex justify-content-end pl-0">
                         <div class="row col-12 pr-0 mr-0">
-                            <div class="col-6 pr-0 mr-0">
+                            <div class="col-6 pl-0 pr-0 mr-0">
                             @section('title', __('warehouse.chileContainers.Containers'))
+                            <div id="col-6">
+                                <div class="col-12 pl-0" id="printBtnDiv">
+                                    <button title="Print Labels" id="assignAWB" type="btn"
+                                        class="btn btn-primary mr-1 ml-1 mb-1 waves-effect waves-light"><i
+                                            class="fas fa-file-invoice" aria-hidden="true"></i></button>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-6 pr-0 mr-0">
                             <a href="{{ route('warehouse.chile_containers.create') }}"
@@ -23,12 +30,16 @@
                         <table class="table mb-0 table-bordered">
                             <thead>
                                 <tr>
-                                    <th style="min-width: 100px;">
-                                        <select name="" id="bulk-actions" class="form-control">
-                                            <option value="clear">Clear All</option>
-                                            <option value="checkAll">Select All</option>
-                                            <option value="assign-awb">Assign AWB</option>
-                                        </select>
+                                    <th id="optionChkbx">
+                                        <div class="vs-checkbox-con vs-checkbox-primary" title="Select All">
+                                            <input type="checkbox" id="checkAll" name="orders[]" class="check-all"
+                                                value="">
+                                            <span class="vs-checkbox vs-checkbox-sm">
+                                                <span class="vs-checkbox--check">
+                                                    <i class="vs-icon feather icon-check"></i>
+                                                </span>
+                                            </span>
+                                        </div>
                                     </th>
                                     <th>@lang('warehouse.containers.Dispatch Number')</th>
                                     <th>@lang('warehouse.containers.Seal No')</th>
@@ -58,10 +69,11 @@
                                     <tr>
                                         <td>
                                             <div class="vs-checkbox-con vs-checkbox-primary" title="@lang('orders.Bulk Print')">
-                                                <input type="checkbox" name="containers[]" class="bulk-container"
+                                                <input type="checkbox" onchange="handleChangeContainer(this)"
+                                                    name="containers[]" class="bulk-container"
                                                     value="{{ $container->id }}"
                                                     data-container_awb=@if ($container->awb != null) true @else false @endif>
-                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                <span class="vs-checkbox vs-checkbox-sm">
                                                     <span class="vs-checkbox--check">
                                                         <i class="vs-icon feather icon-check"></i>
                                                     </span>
@@ -220,24 +232,29 @@
 </script>
 
 <script>
-    $('body').on('change', '#bulk-actions', function() {
-        if ($(this).val() == 'clear') {
-            $('.bulk-container').prop('checked', false)
-        } else if ($(this).val() == 'checkAll') {
+    $('body').on('change', '#checkAll', function() {
+
+        if ($('#checkAll').is(':checked')) {
             $('.bulk-container').prop('checked', true)
-        } else if ($(this).val() == 'assign-awb') {
-            var containerIds = [];
-            $.each($(".bulk-container:checked"), function() {
-                containerIds.push($(this).val());
-
-                // $(".result").append('HD-' + this.value + ',');
-            });
-
-            $('#bulk_sale_form #command').val('assign-awb');
-            $('#bulk_sale_form #data').val(JSON.stringify(containerIds));
-            $('#confirm').modal('show');
-            // $('#bulk_sale_form').submit();
+            document.getElementById("printBtnDiv").style.display = 'block';
+        } else {
+            $('.bulk-container').prop('checked', false)
+            document.getElementById("printBtnDiv").style.display = 'none';
         }
+
+    })
+    $('body').on('click', '#assignAWB', function() {
+        var containerIds = [];
+        $.each($(".bulk-container:checked"), function() {
+            containerIds.push($(this).val());
+
+            // $(".result").append('HD-' + this.value + ',');
+        });
+
+        $('#bulk_sale_form #command').val('assign-awb');
+        $('#bulk_sale_form #data').val(JSON.stringify(containerIds));
+        $('#confirm').modal('show');
+        // $('#bulk_sale_form').submit();
     })
     $('body').on('click', '#download-combine-manifest', function() {
         var containerIds = [];
