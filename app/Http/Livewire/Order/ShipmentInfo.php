@@ -100,6 +100,7 @@ class ShipmentInfo extends Component
             if ($this->discountPercentage && $this->discountPercentage > 0) {
 
                 if ($this->discountPercentage == 1) {
+                    $this->actualVolumeWeight = $this->weight;
                     return $this->volumeWeight = $this->weight;
                 }
 
@@ -120,6 +121,7 @@ class ShipmentInfo extends Component
             if ($this->discountPercentage && $this->discountPercentage > 0) {
 
                 if ($this->discountPercentage == 1) {
+                    $this->actualVolumeWeight = $this->weight;
                     return $this->volumeWeight = $this->weight;
                 }
                 
