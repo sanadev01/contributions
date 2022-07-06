@@ -1,15 +1,6 @@
 <div>
     <div class="row">
-        <div class="col-1 table-actions">
-            <select wire:model='pageSize' class="form-control d-flex w-auto">
-                <option value="10">10</option>
-                <option value="30">30</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-                <option value="200">200</option>
-                <option value="500">500</option>
-            </select>
-        </div>
+
         <div class="col-11 text-right">
             <form action="{{ route('admin.payment-invoices.exports') }}" method="GET" target="_blank">
                 @csrf
@@ -20,17 +11,17 @@
                 <input type="date" name="end_date" class="from-control col-2">
 
                 <button class="btn btn-success">
-                    Download Invoice <i class="fa fa-arrow-down"></i>
+                    <i class="fa fa-arrow-down"></i>
                 </button>
             </form>
         </div>
     </div>
-    <table class="table table-hover-animation mb-0">
+    <table class="table table-hover-animation table-bordered mb-0">
         <thead>
             <tr>
                 <th>Invoice #</th>
                 @admin
-                <th>User</th>
+                    <th>User</th>
                 @endadmin
                 <th>Orders Count</th>
                 <th>Amount</th>
@@ -45,9 +36,9 @@
                     <input type="search" wire:model.debounce.500ms="uuid" class="form-control">
                 </th>
                 @admin
-                <th>
-                    <input type="search" wire:model.debounce.500ms="user" class="form-control">
-                </th>
+                    <th>
+                        <input type="search" wire:model.debounce.500ms="user" class="form-control">
+                    </th>
                 @endadmin
                 <th></th>
                 <th></th>
@@ -72,11 +63,25 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($invoices as $invoice)
+            @foreach ($invoices as $invoice)
                 @include('admin.payment-invoices.components.table-row')
             @endforeach
         </tbody>
     </table>
-    {{ $invoices->links() }}
-    @include('layouts.livewire.loading')  
+    <div class="row d-flex justify-content-between ">
+        <div class="col-1 table-actions pt-5">
+            <select wire:model='pageSize' class="form-control d-flex w-auto">
+                <option value="10">10</option>
+                <option value="30">30</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="200">200</option>
+                <option value="500">500</option>
+            </select>
+        </div>
+        <div class="pt-5 mr-1">
+            {{ $invoices->links() }}
+        </div>
+    </div>
+    @include('layouts.livewire.loading')
 </div>

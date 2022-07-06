@@ -46,7 +46,7 @@
     </div>
     <div class="" id="printBtnDiv">
         <button type="btn" id="pay-commission" class="btn btn-primary mr-1 waves-effect waves-light mb-4"><i
-                class="fa fa-credit-card-alt"></i></button>
+                class="fa fa-dollar-sign"></i></button>
     </div>
     <div class="table-wrapper position-relative">
         <table class="table mb-0 table-bordered table-responsive-md" id="">
