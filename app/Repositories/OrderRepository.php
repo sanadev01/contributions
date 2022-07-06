@@ -378,16 +378,15 @@ class OrderRepository
             return false;
         }
 
-        $volumetricWeight = round($order->getWeight() > $order->weight ? $order->getWeight() : $order->weight, 2);
+        $volumetricWeight = round($order->getWeight(), 2);
         
         $totalDiscountPercentage = ($discountPercentage) ? $discountPercentage/100 : 0;
 
         if ($volumetricWeight > $order->weight) {
             
-            $volumeWeightBeforeDiscount = $volumetricWeight;
-            
-            $volumetricWeight = round($volumetricWeight - ($volumetricWeight * $totalDiscountPercentage), 2);
-            $totalDiscountedWeight = $volumeWeightBeforeDiscount - $volumetricWeight;
+            $consideredWeight = $volumetricWeight - $order->weight;
+            $volumeWeight = round($consideredWeight - ($consideredWeight * $totalDiscountPercentage), 2);
+            $totalDiscountedWeight = $consideredWeight - $volumeWeight;
 
             $order->update([
                 'weight_discount' => $totalDiscountedWeight,
