@@ -353,7 +353,7 @@
     }
 
     .vs-checkbox-con input {
-        width: 13px;
+        width: 13px !important;
         margin: 0px;
     }
 
@@ -561,6 +561,14 @@
         display: none;
         padding-top: 8px !important;
 
+    }
+
+    .hide {
+        display: none !important;
+    }
+
+    #userSearch {
+        display: none;
     }
 
     .singleSearchStyle {

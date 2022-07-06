@@ -84,6 +84,13 @@ class ProductRepository
                 return $query->where('exp_date',"{$request->expdate}");
             });
         }
+        if ( $request->search ){
+            $query->where('created_at', 'LIKE', "%{$request->search}%")->orwhere('name', 'LIKE', "%{$request->search}%")
+            ->orwhere('name', 'LIKE', "%{$request->search}%")->orwhere('price', 'LIKE', "%{$request->search}%")
+            ->orwhere('quantity', 'LIKE', "%{$request->search}%")->orwhere('sku',"{$request->search}")->orwhere('weight',"{$request->search}")
+            ->orwhere('measurement_unit',"{$request->search}")->orwhere('description',"{$request->search}")->orwhere('exp_date',"{$request->search}")
+            ->orwhere('inventory_value',"{$request->search}");
+        }
 
         $products = $query->orderBy($orderBy,$orderType);
         return $paginate ? $products->paginate($pageSize) : $products->get();

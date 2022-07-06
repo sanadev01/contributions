@@ -31,21 +31,10 @@
         const div = document.getElementById('dateSearch');
         if (div.style.display != 'block') {
             div.style.display = 'block';
-            // console.log('asdasd');
         } else {
             div.style.display = 'none';
-            // console.log('aa');
 
         }
-        // const div1 = document.getElementById('singleSearch');
-        // if (div1.style.display != 'block') {
-        //     div1.style.display = 'block';
-        //     // console.log('asdasd');
-        // } else {
-        //     div1.style.display = 'none';
-        //     // console.log('aa');
-
-        // }
 
     }
 
@@ -62,16 +51,57 @@
         }
     }
 
+    function toggleUserSearch() {
+        const div = document.getElementById('userSearch');
+        if (div.style.display != 'block') {
+            div.style.display = 'block';
+            // console.log('asdasd');
+        } else {
+            div.style.display = 'none';
+            // console.log('aa');
+
+        }
+    }
+
+    function toggleLogsSearch() {
+        console.log('a');
+        if ($('#logSearch').hasClass("hide")) {
+            $('#logSearch').removeClass('hide');
+        } else {
+            $('#logSearch').addClass('hide');
+        }
+
+
+    }
+
     function handleChange(checkbox) {
         if (checkbox.checked == true) {
             document.getElementById("printBtnDiv").style.display = 'block';
-            // console.log('on');
         } else {
-            // console.log();
             if ($(".bulk-orders:checked").length == 0) {
                 document.getElementById("printBtnDiv").style.display = 'none';
             }
-            // console.log('off');
+        }
+    }
+
+
+    function handleChangeSalesCommission(checkbox) {
+        if (checkbox.checked == true) {
+            document.getElementById("printBtnDiv").style.display = 'block';
+        } else {
+            if ($(".bulk-sales:checked").length == 0) {
+                document.getElementById("printBtnDiv").style.display = 'none';
+            }
+        }
+    }
+
+    function handleChangeContainer(checkbox) {
+        if (checkbox.checked == true) {
+            document.getElementById("printBtnDiv").style.display = 'block';
+        } else {
+            if ($(".bulk-container:checked").length == 0) {
+                document.getElementById("printBtnDiv").style.display = 'none';
+            }
         }
     }
     var table = $('#example').DataTable({
