@@ -104,9 +104,9 @@ class ShipmentInfo extends Component
                     return $this->volumeWeight = $this->weight;
                 }
 
-                // if ($this->volumeWeight > $this->weight) {
+                if ($this->volumeWeight > $this->weight) {
                     $this->calculateDiscountedWeight();
-                // }
+                }
             }
 
         }else{
@@ -125,9 +125,9 @@ class ShipmentInfo extends Component
                     return $this->volumeWeight = $this->weight;
                 }
                 
-                // if ($this->volumeWeight > $this->weight) {
+                if ($this->volumeWeight > $this->weight) {
                     $this->calculateDiscountedWeight();
-                // }
+                }
             }
         }
 
