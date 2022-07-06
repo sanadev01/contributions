@@ -139,7 +139,7 @@ class ExportManfestService extends AbstractCsvExportService
     {
         $commission = false;
         $service  = $order->shippingService->service_sub_class;
-        $rateSlab = AccrualRate::getRateSlabFor($order->getWeight('kg'),$service);
+        $rateSlab = AccrualRate::getRateSlabFor($order->getOriginalWeight('kg'),$service);
 
         if ( !$rateSlab ){
             return [
