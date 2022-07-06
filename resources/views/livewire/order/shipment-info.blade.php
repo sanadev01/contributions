@@ -97,15 +97,15 @@
                         </span> 
                     </strong>
                     @if($actualVolumeWeight)
-                    <span>
-                        @lang('parcel.Vol Weight')
-                        <strong class="text-danger h2">
-                            {{ $actualVolumeWeight }} 
-                            <span class="ml-1"> 
-                                {{ $currentWeightUnit }} 
-                            </span> 
-                        </strong>
-                    </span>
+                        <span>
+                            @lang('parcel.Vol Weight')
+                            <strong class="text-danger h2">
+                                {{ $actualVolumeWeight }}
+                                <span class="ml-1"> 
+                                    {{ $currentWeightUnit }}
+                                </span> 
+                            </strong>
+                        </span>
                     @endif
                 </label>
             </div>
