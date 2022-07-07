@@ -1,6 +1,28 @@
 <div>
 
-    <div class="form-row " id="dateSearch">
+    <div class="row col-12 pr-0 m-0 pl-0" id="datefilters">
+        <div class=" col-7 text-left mb-2 pl-0">
+            <div class="row col-12 my-3 pl-0" id="dateSearch">
+                <form action="http://hd-v2.test/affiliate/sale-exports" method="GET" target="_blank">
+                    <input type="hidden" name="_token" value="Ms68RWi4bWZCVayoFufKqgHgWFd34bT6Vv2xwWLt">
+                    <div class="form-group mb-2 col-3" style="float:left;margin-right:20px;">
+                        <label>Start Date</label>
+                        <input type="date" wire:model.defer="start_date" class="form-control" id="start_date">
+                    </div>
+                    <div class="form-group mx-sm-3 mb-2 col-3" style="float:left;margin-right:20px;">
+                        <label>End Date</label>
+                        <input type="date" wire:model.defer="end_date" class="form-control" id="end_date">
+                    </div>
+                    <div class="form-group mx-sm-3 mb-2 col-3 mt-1" style="float:left;margin-right:20px;">
+                        <button type="button" wire:click="download()" class="btn btn-primary mt-4"
+                            @if (!$searchOrders) disabled @endif>@lang('shipping-rates.Download')</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+    {{-- <div class="form-row " id="dateSearch">
         <div class="form-group col-md-2">
             <label for="start_date">Start Date</label>
             <input type="date" wire:model.defer="start_date" class="form-control" id="start_date">
@@ -16,7 +38,7 @@
             <button type="button" wire:click="download()" class="btn btn-primary"
                 @if (!$searchOrders) disabled @endif>@lang('shipping-rates.Download')</button>
         </div>
-    </div>
+    </div> --}}
     @if ($error)
         <div class="form-row">
             <div class="form-group col-md-12">

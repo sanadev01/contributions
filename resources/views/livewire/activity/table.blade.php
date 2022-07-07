@@ -8,7 +8,7 @@
         </div>
         <div class="hd-card mt-4 mb-3">
             <div class="mb-2 row col-md-12 hide" id="logSearch">
-                <div class="col-2">
+                {{-- <div class="col-2">
                     <label>@lang('activity.Date')</label>
                     <input type="search" class="form-control hd-search" wire:model.defer="date">
                 </div>
@@ -24,20 +24,20 @@
                             <option value="{{ $model }}">{{ $model }}</option>
                         @endforeach
                     </select>
-                </div>
+                </div> --}}
                 <div class="col-3">
-                    <label>@lang('activity.Content')</label>
-                    <input type="search" class="form-control hd-search" wire:model.defer="content">
+                    <label>Search</label>
+                    <input type="search" class="form-control hd-search" wire:model.debounce.1000ms="search">
                 </div>
-                <div>
+                {{-- <div>
                     <button class="mt-4 pt-2 btn btn-primary" wire:click.prevent="getActivities" title="search">
                         <i class="fa fa-search"></i>
                     </button>
-                </div>
+                </div> --}}
             </div>
         </div>
         <div class="table-wrapper position-relative">
-            <table class="table mb-0 table-responsive-md table-striped" id="">
+            <table class="table mb-0 table-responsive-md table-bordered table-striped" id="">
                 <thead>
                     <tr>
                         <th>@lang('activity.Created at')</th>

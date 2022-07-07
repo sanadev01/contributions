@@ -1,19 +1,32 @@
 <div>
     <div class="row">
+        <div class="row col-12 pr-0 m-0 pl-0" id="datefilters">
+            <div class=" col-6 text-left mb-2 pl-3">
+                <div class="row col-12 my-3 pl-0" id="dateSearch">
+                    <form action="{{ route('admin.payment-invoices.exports') }}" method="GET" target="_blank">
+                        @csrf
+                        <div class="form-group mb-2 col-4" style="float:left;margin-right:20px;">
+                            <label>Start Date</label>
+                            <input type="date" name="start_date" class="form-control">
+                        </div>
+                        <div class="form-group mx-sm-3 mb-2 col-4" style="float:left;margin-right:20px;">
+                            <label>End Date</label>
+                            <input type="date" name="end_date" class="form-control">
+                        </div>
+                        <button class="btn btn-success searchDateBtn waves-effect waves-light" title="Download Sales">
+                            <i class="fa fa-arrow-down" aria-hidden="true"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
 
-        <div class="col-11 text-right">
-            <form action="{{ route('admin.payment-invoices.exports') }}" method="GET" target="_blank">
-                @csrf
-                <label>Start Date</label>
-                <input type="date" name="start_date" class="from-control col-2">
+        </div>
+        <div class="mb-2 row col-md-12 pl-4 mb-1 hide" id="logSearch">
+            <div class="col-6 pl-2">
+                <label>Search</label>
+                <input type="search" class="form-control" wire:model.debounce.1000ms="search">
+            </div>
 
-                <label>End Date</label>
-                <input type="date" name="end_date" class="from-control col-2">
-
-                <button class="btn btn-success">
-                    <i class="fa fa-arrow-down"></i>
-                </button>
-            </form>
         </div>
     </div>
     <table class="table table-hover-animation table-bordered mb-0">
@@ -31,7 +44,7 @@
                 <th>Created At</th>
                 <th>Action</th>
             </tr>
-            <tr>
+            {{-- <tr>
                 <th>
                     <input type="search" wire:model.debounce.500ms="uuid" class="form-control">
                 </th>
@@ -60,7 +73,7 @@
                     </select>
                 </th>
                 <th></th>
-            </tr>
+            </tr> --}}
         </thead>
         <tbody>
             @foreach ($invoices as $invoice)
@@ -79,7 +92,7 @@
                 <option value="500">500</option>
             </select>
         </div>
-        <div class="pt-5 mr-1">
+        <div class="pt-5 mr-1 pr-3">
             {{ $invoices->links() }}
         </div>
     </div>
