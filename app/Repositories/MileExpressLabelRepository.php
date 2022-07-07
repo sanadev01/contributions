@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Order;
 use App\Models\OrderTracking;
 use App\Facades\MileExpressFacade;
+use Illuminate\Support\Facades\Storage;
 
 class MileExpressLabelRepository
 {
@@ -19,6 +20,7 @@ class MileExpressLabelRepository
             $this->getPrimaryLabel();
         }
 
+        $this->printCN23();
         return true;
     }
 
@@ -41,6 +43,8 @@ class MileExpressLabelRepository
 
             $this->addOrderTracking();
 
+            $this->printCN23();
+
             return true;
         }
 
@@ -62,5 +66,23 @@ class MileExpressLabelRepository
         }
 
         return true;
+    }
+
+    private function printCN23()
+    {
+        
+        if (Storage::disk('local')->exists('labels/'.$this->order->corrios_tracking_code.'.pdf')) {
+            return true;
+        }
+        
+        $mileExpressShipmentId = json_decode($this->order->api_response)->data->id;
+        
+        $labelResponse = MileExpressFacade::getLabel($mileExpressShipmentId);
+
+        if ($labelResponse->success == true) {
+            Storage::disk('local')->put("labels/{$this->order->corrios_tracking_code}.pdf", $labelResponse->data);
+        }
+
+        return;
     }
 }

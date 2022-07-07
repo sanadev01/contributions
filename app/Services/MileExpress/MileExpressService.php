@@ -68,6 +68,37 @@ class MileExpressService
         }
     }
 
+    public function getLabel($id)
+    {
+        try {
+            $client = new \GuzzleHttp\Client($this->setClientOptions());
+            $response = $client->request('POST', $this->houseUrl.'/label', [
+                'json' => [
+                    'id' => $id,
+                ]
+            ]);
+
+            if ($response->getStatusCode() == 200) {
+                return (Object)[
+                    'success' => true,
+                    'data' => $response->getBody()->getContents()
+                ];
+            }else{
+                return (Object)[
+                    'success' => false,
+                    'data' => null
+                ];
+            }
+
+        } catch (\Exception $ex) {
+            return (Object)[
+                'success' => false,
+                'data' => null,
+                'error' => $ex->getMessage()
+            ];
+        }
+    }
+
     public function createShipment($order)
     {
         return $this->mileExpressApiCall($this->houseUrl, $this->makeRequestBodyForShipment($order));
@@ -213,7 +244,7 @@ class MileExpressService
                 'description' => $item->description,
                 'commercial_value' => $item->value,
                 'quantity' => $item->quantity,
-                'tax_class_code' => '7',
+                'tax_class_code' => $this->setTaxClass($item->sh_code),
                 'customs_adm' => null
             ];
 
@@ -221,6 +252,19 @@ class MileExpressService
         }
 
         return $itemsArr;
+    }
+
+    private function setTaxClass($shCode)
+    {
+        if ($shCode == '490199') {
+            return '12';
+        }
+
+        if ($shCode == '293629' || $shCode == '210610') {
+            return '11';
+        }
+
+        return '7';
     }
 
     private function setorderDescription($items)
@@ -273,6 +317,16 @@ class MileExpressService
             'Authorization' => 'Bearer ' . $this->getToken(),
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
+        ];
+    }
+
+    private function setClientOptions()
+    {
+        return [
+            'base_uri' => (app()->isProduction()) ? 
+                                                config('mileExpress.production.baseUrl') 
+                                                : config('mileExpress.testing.baseUrl'),
+            'headers' => $this->setHeaders(),
         ];
     }
 }
