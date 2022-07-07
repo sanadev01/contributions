@@ -147,6 +147,10 @@ class ContainerPackages extends Component
 
     private function validateOrderService($order)
     {
+        if($this->containerService == 'Colombia-Container' && $order->shippingService->isColombiaService()){
+            return true;
+        }
+
         if($this->containerService == 'Anjun-Container' && $order->shippingService->isAnjunService()){
             return true;
         }

@@ -2,6 +2,7 @@
     const Countries = @json($countryConstants);
     const Brazil = Countries.Brazil;
     const Chile = Countries.Chile;
+    const Colombia = Countries.Colombia;
     const UnitedStates = Countries.US;
 
     const CourierExpress = 'courier_express';
@@ -59,7 +60,7 @@
         if (this.selectedService == PostalService) {
             console.log('postal service need to toggle');
         }
-
+        
         $('#country').ready(function() {
             let country = $('#country').val();
             let oldRegion = $('#region').data('value');
@@ -79,6 +80,7 @@
                 inactiveChileFields(serviceType);
 
                 if (country == UnitedStates) {
+                    inactiveColombiaFields();
                     activateUSFields();
                 }
 
@@ -87,10 +89,18 @@
                     activateBrazilFields();
                 }
 
-                return getStatesFromDB();
+                if (country != Colombia) {
+                    return getStatesFromDB();
+                }
 
+                if (country == Colombia) {
+                    console.log('colombia');
+                    inactiveUSFields();
+                    activeColombiaFields();
+                    return getColombiaRegionsFromDB(oldRegion);
+                }
             }
-
+            
         })
 
         $('input:radio[name="service"]').change(function(){
@@ -122,8 +132,9 @@
             }
 
             inactiveChileFields(serviceType);
+            inactiveColombiaFields();
             inactiveUSFields();
-
+            
             if (country == Chile && serviceType == CourierExpress) {
                 activeChileFields(serviceType);
                 return getChileRegionsFromDB();
@@ -139,7 +150,14 @@
                     activateUSFields();
                 }
 
-                return getStatesFromDB();
+                if (country != Colombia) {
+                    return getStatesFromDB();
+                }
+
+                if (country == Colombia) {
+                    activeColombiaFields();
+                    return getColombiaRegionsFromDB();
+                }
             }
 
             if (country == Chile && serviceType == PostalService) {
@@ -245,7 +263,6 @@
                 }
             }
         });
-
     });
 
     function activeChileFields(selectedService) {
@@ -340,6 +357,38 @@
         $('#region').prop('disabled', true);
         $('#commune').attr('disabled', true);
         $('#commune').prop('disabled', true);
+    }
+
+    function activeColombiaFields() {
+        $('#cpf').addClass('d-none');
+        $('#div_hd_state').addClass('d-none');
+        $('#div_city').addClass('d-none');
+        $('#div_street_number').addClass('d-none');
+        $('#div_zipcode').addClass('d-none');
+        $('#zipcode').prop('disabled', true);
+
+
+        $('#div_regions').removeClass('d-none');
+        $('#state').prop('disabled', true);
+        $('#city').attr('disabled', true);
+
+        $('#region').prop('disabled', false);
+    }
+
+    function inactiveColombiaFields() {
+        $('#cpf').removeClass('d-none');
+        $('#div_hd_state').removeClass('d-none');
+        $('#div_city').removeClass('d-none');
+        $('#div_street_number').removeClass('d-none');
+        $('#div_zipcode').removeClass('d-none');
+        $('#zipcode').prop('disabled', false);
+
+
+        $('#div_regions').addClass('d-none');
+        $('#state').prop('disabled', false);
+        $('#city').attr('disabled', false);
+
+        $('#region').prop('disabled', true);
     }
 
     function validateBrazilianZipcode(zipcode) {
@@ -444,42 +493,37 @@
 
     function getChileRegionsFromDB(oldRegion = null, oldCommune = null) {
        
-       $.ajaxSetup({
-           headers: {
-               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-           }
-       });
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
 
-       $('#loading').fadeIn();
-       $.ajax({ 
-           type: 'GET',
-           url: "{{route('api.hd-regions', ['countryId' => 46])}}",
-           success: function (response){
-               $('#loading').fadeOut();
-               $('#region').empty();
+        $('#loading').fadeIn();
+        $.ajax({ 
+            type: 'GET',
+            url: "{{route('api.hd-regions', ['countryId' => 46])}}",
+            success: function (response){
+                $('#loading').fadeOut();
+                $('#region').empty();
 
-               $.each(response.data, function(index, region){
-                   $('#region').append('<option value="'+region.id+'">'+region.name+'</option>');
-                   $('#region').selectpicker('refresh');
-               });
+                $.each(response.data, function(index, region){
+                    $('#region').append('<option value="'+region.id+'">'+region.name+'</option>');
+                    $('#region').selectpicker('refresh');
+                });
 
                 if (oldRegion != null) {
-                   $('#region').val(oldRegion);
-                   $('#region').selectpicker('refresh');
+                    $('#region').val(oldRegion);
+                    $('#region').selectpicker('refresh');
 
-                   getChileCommunesFromDB(oldRegion, oldCommune);
-                }else{
-                    
-                    var selectedRegion = $('#region').val();
-                    console.log(selectedRegion);
-                    getChileCommunesFromDB(selectedRegion, null);
+                    getChileCommunesFromDB(oldRegion, oldCommune);
                 }
-           }, 
-           error: function(e) {
-               $('#loading').fadeOut();
-               console.log(e);
-           }
-       });
+            }, 
+            error: function(e) {
+                $('#loading').fadeOut();
+                console.log(e);
+            }
+        });
     }
 
     function getChileCommunesFromDB(regionId, oldCommune = null) {
@@ -578,4 +622,35 @@
             toastr.error('server error')
         })
     }
+
+    function getColombiaRegionsFromDB(oldRegion = null) {
+        $.ajaxSetup({
+            headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $('#loading').fadeIn();
+        $.ajax({ 
+            type: 'GET',
+            url: "{{route('api.hd-regions', ['countryId' => 50])}}",
+            success: function (response){
+                $('#loading').fadeOut();
+                $('#region').empty();
+
+                $.each(response.data, function(index, region){
+                    $('#region').append('<option value="'+region.id+'">'+region.name+'</option>');
+                    $('#region').selectpicker('refresh');
+                });
+
+                if (oldRegion != null) {
+                    $('#region').val(oldRegion);
+                    $('#region').selectpicker('refresh');
+                }
+            }, 
+            error: function(e) {
+                $('#loading').fadeOut();
+                console.log(e);
+            }
+        });
+    }    
 </script>

@@ -64,6 +64,7 @@ class Order extends Model implements Package
     const BRAZIL = 30;
     const CHILE = 46;
     const US = 250;
+    const COLOMBIA = 50;
 
     public $user_profit = 0;
 
@@ -348,7 +349,12 @@ class Order extends Model implements Package
                 
                 return 'Correios Chile';
 
+            }elseif(optional($this->shippingService)->service_sub_class == ShippingService::COLOMBIA_Standard){
+                
+                return 'Colombia Service';
+
             }
+
             return 'Correios Brazil';
         }
 
@@ -437,7 +443,7 @@ class Order extends Model implements Package
         $shippingService = $this->shippingService;
 
         $additionalServicesCost = $this->calculateAdditionalServicesCost($this->services);
-        if ($shippingService && in_array($shippingService->service_sub_class, $this->usShippingServicesSubClasses())) {
+        if ($shippingService && $shippingService->isOfUnitedStates()) {
             $shippingCost = $this->user_declared_freight;
             $this->calculateProfit($shippingCost, $shippingService);
         }else {
@@ -494,8 +500,9 @@ class Order extends Model implements Package
         }elseif ($shippingService->service_sub_class == ShippingService::FEDEX_GROUND) {
             
             $profit_percentage = (setting('fedex_profit', null, $this->user->id) != null &&  setting('fedex_profit', null, $this->user->id) != 0) ?  setting('fedex_profit', null, $this->user->id) : setting('fedex_profit', null, User::ROLE_ADMIN);
-        }
-        else {
+        
+        }else{
+            
             $profit_percentage = (setting('usps_profit', null, $this->user->id) != null &&  setting('usps_profit', null, $this->user->id) != 0) ?  setting('usps_profit', null, $this->user->id) : setting('usps_profit', null, User::ROLE_ADMIN);
         }
         
@@ -712,5 +719,14 @@ class Order extends Model implements Package
     public function getCorrespondenceServiceCode($serviceCode)
     {
         return ($serviceCode == ShippingService::AJ_Packet_Express) ? ShippingService::Packet_Express : ShippingService::Packet_Standard;
+    }
+
+    public function colombiaLabelUrl()
+    {
+        if (!$this->api_response) {
+            return null;
+        }
+
+        return json_decode($this->api_response)->strUrlGuide;
     }
 }

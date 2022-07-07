@@ -44,13 +44,20 @@
                     <span class="menu-title">@lang('menu.Warehouse.Sinerlog Containers')</span>
                 </a>
             </li>
+            <li class="{{ $isActive(['warehouse.chile_containers.index','warehouse.chile_containers.create','warehouse.chile_containers.edit','warehouse.chile_container.packages.index']) }}">
+                <a href="{{ route('warehouse.chile_containers.index') }}">
+                    <i class="feather icon-circle"></i>
+                    <span class="menu-title">@lang('menu.Warehouse.Chile Containers')</span>
+                </a>
+            </li>
+            <li class="{{ $isActive(['warehouse.colombia-containers.index','warehouse.colombia-containers.create','warehouse.colombia-containers.edit','warehouse.colombia-container.packages']) }}">
+                <a href="{{ route('warehouse.colombia-containers.index') }}">
+                    <i class="feather icon-circle"></i>
+                    <span class="menu-title">@lang('menu.Warehouse.Colombia Containers')</span>
+                </a>
+            </li>
         @endadmin
-        <li class="{{ $isActive(['warehouse.chile_containers.index','warehouse.chile_containers.create','warehouse.chile_containers.edit','warehouse.chile-container.packages']) }}">
-            <a href="{{ route('warehouse.chile_containers.index') }}">
-                <i class="feather icon-circle"></i>
-                <span class="menu-title">@lang('menu.Warehouse.Chile Containers')</span>
-            </a>
-        </li>
+        
     </ul>
 </li>
 @endcan

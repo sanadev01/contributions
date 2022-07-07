@@ -22,6 +22,7 @@ use App\Http\Controllers\Warehouse\ManifestDownloadController;
 use App\Http\Controllers\Warehouse\USPSCN35DownloadController;
 use App\Http\Controllers\Warehouse\USPSUnitRegisterController;
 use App\Http\Controllers\Warehouse\ChileCN35DownloadController;
+use App\Http\Controllers\Warehouse\ColombiaContainerController;
 use App\Http\Controllers\Warehouse\SinerlogContainerController;
 use App\Http\Controllers\Warehouse\DeliveryBillDownloadController;
 use App\Http\Controllers\Warehouse\DeliveryBillRegisterController;
@@ -32,9 +33,11 @@ use App\Http\Controllers\Warehouse\USPSManifestDownloadController;
 use App\Http\Controllers\Warehouse\ChileContainerPackageController;
 use App\Http\Controllers\Warehouse\ChileManifestDownloadController;
 use App\Http\Controllers\Warehouse\CombineManifestDownloadController;
+use App\Http\Controllers\Warehouse\ColombiaContainerPackageController;
 use App\Http\Controllers\Warehouse\DeliveryBillStatusUpdateController;
 use App\Http\Controllers\Warehouse\SinerlogContainerPackageController;
 use App\Http\Controllers\Warehouse\SinerlogManifestDownloadController;
+use App\Http\Controllers\Warehouse\ColombiaContainerManifestController;
 
 
 Route::middleware(['auth'])->as('warehouse.')->group(function () {
@@ -80,7 +83,6 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('usps_container/{container}/download', USPSCN35DownloadController::class)->name('usps_container.download');
     Route::get('usps_container/{container}/download_excel_manifest', [USPSContainerController::class, 'download_exceltManifest'])->name('download.usps_manifest_excel');
     Route::get('usps-container/{container}/manifest', USPSManifestDownloadController::class)->name('usps-container.manifest');
-
     // Routes for Sinerlog Container
     Route::resource('sinerlog_containers', SinerlogContainerController::class);
     Route::resource('sinerlog_container.packages', SinerlogContainerPackageController::class)->only('index','destroy', 'create');
@@ -88,6 +90,11 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('sinerlog_container/{container}/register', SinerlogUnitRegisterController::class)->name('sinerlog_container.register');
     Route::get('sinerlog_container/{container}/download', SinerlogCN35DownloadController::class)->name('sinerlog_container.download');
     Route::get('sinerlog_container/{container}/manifest', SinerlogManifestDownloadController::class)->name('sinerlog_container.manifest');
+
+    // Routes for colombia Container
+    Route::resource('colombia-containers', ColombiaContainerController::class);
+    Route::get('colombia-container/{container}/packages', ColombiaContainerPackageController::class)->name('colombia-container.packages');
+    Route::get('colombia-container/{container}/manifest', ColombiaContainerManifestController::class)->name('colombia-container.manifest');
 });
 
 
