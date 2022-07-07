@@ -557,6 +557,14 @@
         display: none;
     }
 
+    #searchBlock {
+        display: none;
+    }
+
+    #downloadsDiv {
+        display: none
+    }
+
     #singleSearch {
         display: none;
         padding-top: 8px !important;

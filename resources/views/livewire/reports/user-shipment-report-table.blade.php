@@ -1,28 +1,6 @@
 <div>
-    <form action="{{ route('admin.reports.user-shipments.index') }}" method="GET" target="_blank">
-        <div class="row">
-            <div class="col-md-12 row mb-2 ">
-                <div class="offset-7 col-lg-2 col-md-3 col-sm-3 col-xs-3">
-                    <label for="">Year</label>
-                    <select class="form-control" name="year" id="DefaultSelect">
-                        <option value="">Select Year </option>
-                        @foreach ($years as $year)
-                            <option value="{{ $year }}" @if ($year == $year) selected @endif>
-                                {{ $year }} </option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-2 col-xs-2 mt-25 padding-left">
-                    <button type="submit" class="btn btn-primary mr-2">Download Yearly</button>
-                    <a href="{{ $downloadLink }}" class="btn btn-primary" {{ !$downloadLink ? 'disabled' : '' }}
-                        target="_blank">
-                        Download
-                    </a>
-                </div>
-            </div>
-        </div>
-    </form>
-    <div class="row my-3">
+
+    <div class="row my-3" id="dateSearch">
         <div class="col-md-2">
             <label for="">Start Date</label>
             <input type="date" class="form-control" wire:model='start_date'>
@@ -31,8 +9,47 @@
             <label for="">End Date</label>
             <input type="date" class="form-control" wire:model='end_date'>
         </div>
+        <div class="col-md-2 pt-4">
+            <a href="{{ $downloadLink }}" class="btn btn-primary" {{ !$downloadLink ? 'disabled' : '' }}
+                target="_blank">
+                Download
+            </a>
+        </div>
+
+
+
     </div>
-    <table class="table mb-0 row-border" id="example">
+    <div class="row col-12 my-3" id="downloadsDiv">
+        <form class="col-12" action="{{ route('admin.reports.user-shipments.index') }}" method="GET"
+            target="_blank">
+            <div class="row">
+                <div class="col-md-12 row mb-2 ">
+                    <div class="col-lg-2 pl-0 col-md-3 col-sm-3 col-xs-3">
+                        <label for="">Year</label>
+                        <select class="form-control" name="year" id="DefaultSelect">
+                            <option value="">Select Year </option>
+                            @foreach ($years as $year)
+                                <option value="{{ $year }}" @if ($year == $year) selected @endif>
+                                    {{ $year }} </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-2 col-xs-2 mt-25">
+                        <button type="submit" class="btn btn-primary mr-2">Download Yearly</button>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="mb-2 row col-md-12 pl-3 mb-1 {{ !$search ? 'hide' : '' }}" id="logSearch">
+        <div class="col-6 pl-0">
+            <label>Search</label>
+            <input type="search" class="form-control" wire:model.debounce.1000ms="search">
+        </div>
+
+    </div>
+    <table class="table table-bordered mb-0 row-border" id="example">
         <thead>
             <tr>
                 <th>
@@ -99,7 +116,7 @@
                     @endif
                 </th>
             </tr>
-            <tr>
+            {{-- <tr>
                 <th>
 
                 </th>
@@ -121,7 +138,7 @@
                 <th>
 
                 </th>
-            </tr>
+            </tr> --}}
         </thead>
         <tbody>
             @foreach ($users as $user)
@@ -155,7 +172,7 @@
             @endforeach
         </tbody>
     </table>
-    <div class="d-flex justify-content-end px-3">
+    <div class="d-flex justify-content-end pr-0">
         {{ $users->links() }}
     </div>
     @include('layouts.livewire.loading')

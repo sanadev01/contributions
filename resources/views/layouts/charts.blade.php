@@ -1,9 +1,8 @@
 <script>
     function toggleDateSearch() {
-        var checkBox = document.getElementById("customSwitch8");
         const div = document.getElementById('dateSearch');
-        if (div.style.display != 'block') {
-            div.style.display = 'block';
+        if (div.style.display != 'flex') {
+            div.style.display = 'flex';
         } else {
             div.style.display = 'none';
         }

@@ -1,14 +1,19 @@
 <div>
     <div>
         <div class="row">
-            <div class="col-12 text-right">
+            <div class="col-12 text-right mb-2">
+                <button onclick="toggleLogsSearch()" class="mr-1 btn btn-primary waves-effect waves-light">
+                    <i class="feather icon-search"></i>
+                </button>
+                <button type="btn" onclick="toggleDateSearch()" id="customSwitch8"
+                    class="btn btn-primary mr-1 waves-effect waves-light"><i class="feather icon-filter"></i></button>
                 <a href="{{ $downloadLink }}" class="btn btn-primary" {{ !$downloadLink ? 'disabled' : '' }}
                     target="_blank">
                     Download
                 </a>
             </div>
         </div>
-        <div class="row my-3">
+        <div class="row my-3" id="dateSearch">
             <div class="col-md-4">
                 <label for="">Start Date</label>
                 <input type="date" class="form-control" wire:model='start_date'>
@@ -17,6 +22,13 @@
                 <label for="">End Date</label>
                 <input type="date" class="form-control" wire:model='end_date'>
             </div>
+        </div>
+        <div class="mb-2 row col-md-12 pl-3 mb-3 {{ !$search ? 'hide' : '' }}" id="logSearch">
+            <div class="col-6 pl-0">
+                <label>Search</label>
+                <input type="search" class="form-control" wire:model.debounce.1000ms="search">
+            </div>
+
         </div>
         <div class="table-responsive order-table">
             <table class="table mb-0 table-bordered">
@@ -80,7 +92,7 @@
                             Action
                         </th>
                     </tr>
-                    <tr>
+                    {{-- <tr>
                         <th>
 
                         </th>
@@ -102,7 +114,7 @@
                         <th>
 
                         </th>
-                    </tr>
+                    </tr> --}}
                 </thead>
                 <tbody>
                     @if (\Auth::user()->isAdmin())
@@ -170,7 +182,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="d-flex justify-content-end px-3">
+        <div class="d-flex justify-content-end pr-0">
             {{ $users->links() }}
         </div>
         @include('layouts.livewire.loading')
