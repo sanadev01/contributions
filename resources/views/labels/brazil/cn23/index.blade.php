@@ -408,7 +408,7 @@
             @endif
         </div>
         <div class="right-block">
-            <h2>Remetente:</h2>
+            <h2>Remetente: @if($hasAnjunLabel) <span style="margin-left: 8px; border:solid 1px; padding-right:2px">A</span> @endif </h2>
             {{ $order->sender_first_name }} {{ $order->sender_last_name }} <br>
             {{ $order->sender_email }} <br>
             <strong>Order#:</strong>{{ $order->warehouse_number }} <br>
