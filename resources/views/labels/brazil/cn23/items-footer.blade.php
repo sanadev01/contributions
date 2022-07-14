@@ -30,7 +30,7 @@
     </td>
     <td>{{ number_format($totalQuantity,2) }}</td>
     <td></td>
-    <td>{{ $totalWeight }}Kg</td>
+    <td>{{ round($totalWeight,2) }}Kg</td>
     <td></td>
     <td>
         @if (number_format($order->user_declared_freight,2) == 0.01)
