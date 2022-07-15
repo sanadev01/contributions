@@ -20,7 +20,7 @@
                 @endadmin
             </div>
         </div>
-        <div class="row col-8 pr-0 pl-1 " id="singleSearch"
+        <div class="row col-8 pr-0 pl-0 " id="singleSearch"
             @if ($this->search) style="display: block !important;" @endif>
             <div class="form-group singleSearchStyle col-12">
                 <label>Search</label>
@@ -138,7 +138,7 @@
             </table>
 
         </div>
-        <div class="row pl-0 pt-5 d-flex justify-content-between">
+        <div class="row pl-3 pt-5 d-flex justify-content-between">
             <div class="col-1 pl-0 pt-5">
                 <select class="form-control" wire:model="pageSize">
                     <option value="1">1</option>

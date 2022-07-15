@@ -12,7 +12,7 @@
                             class="btn btn-primary mb-1 waves-effect waves-light"><i
                                 class="feather icon-filter"></i></button>
                     </div>
-                    <div class="row col-12 pr-0 m-0 pl-1" id="datefilters">
+                    <div class="row col-12 pr-0 m-0 pl-0" id="datefilters">
                         <div class=" col-6 text-left mb-2 pl-0">
                             <div class="row col-12 my-3 pl-0" id="dateSearch">
                                 <form action="{{ route('admin.inventory.orders.export') }}" method="GET"

@@ -33,6 +33,7 @@
             <option value="approved" {{ $product->status == 'approved' ? 'selected' : '' }}>Approved</option>
         </select>
     </td>
+
     <td class="d-flex">
         <div class="btn-group">
             <div class="dropdown">
