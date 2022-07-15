@@ -23,10 +23,11 @@
                     </div>
                 </div>
                 <div class="card-content card-body">
-                    <div class="row col-12 pr-0 m-0 pl-1" id="datefilters">
-                        <div class=" col-6 text-left mb-2 pl-0">
-                            <div class="row col-12 my-3 pl-0" id="dateSearch">
-                                <form action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
+                    <div class="row col-12 pr-0 pl-2" id="datefilters">
+                        <div class=" col-6 text-left mb-0 pl-0">
+                            <div class="row col-12 pl-0" id="dateSearch">
+                                <form class="col-12" action="{{ route('admin.order.exports') }}" method="GET"
+                                    target="_blank">
                                     @csrf
                                     <div class="form-group mb-2 col-4" style="float:left;margin-right:20px;">
                                         <label>Start Date</label>
@@ -56,7 +57,7 @@
                             </div>
                         </div>
                     </div> --}}
-                    <div class="table-responsive-md mt-1">
+                    <div class="table-responsive-md">
                         <livewire:pre-alert.table />
                     </div>
                 </div>

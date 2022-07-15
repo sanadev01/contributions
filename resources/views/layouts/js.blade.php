@@ -126,20 +126,21 @@
             }
         }
     }
-    var table = $('#example').DataTable({
-        searching: false,
-        paging: false,
-        columnDefs: [{
-                targets: [0, 1, 2, 3],
-                visible: true
-            },
-            {
-                targets: '_all',
-                visible: false
-            },
-        ]
-    });
+    // var table = $('#example').DataTable({
+    //     searching: false,
+    //     paging: false,
+    //     columnDefs: [{
+    //             targets: [0, 1, 2, 3],
+    //             visible: true
+    //         },
+    //         {
+    //             targets: '_all',
+    //             visible: false
+    //         },
+    //     ]
+    // });
     $(document).ready(function() {
+
         $('#visibilityToggle').change(function() {
             var item = $(this);
             // Get the column API object

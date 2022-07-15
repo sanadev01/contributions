@@ -604,8 +604,8 @@
                     </li>
                 @endcan
 
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('admin.profile.index') }}">
+                <li class="nav-item {{ $isActive(['admin.profile.index']) }} ">
+                    <a href="{{ route('admin.profile.index') }}">
                         <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                             class="feather feather-user">

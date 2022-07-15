@@ -12,7 +12,7 @@
                     <div class="row col-6 d-flex justify-content-end pr-0">
                     </div>
                     <div class="row col-6 d-flex justify-content-end pr-3">
-                        <button class="btn btn-success waves-effect waves-light" onclick="toggleLogsSearch()"
+                        <button class="btn btn-primary waves-effect waves-light" onclick="toggleLogsSearch()"
                             title="Search">
                             <i class="fa fa-search" aria-hidden="true"></i>
                         </button>
@@ -89,7 +89,8 @@
                                                 <div class="dropdown">
                                                     <button type="button" data-toggle="dropdown" aria-haspopup="true"
                                                         aria-expanded="false"
-                                                        class="btn btn-success dropdown-toggle waves-effect waves-light">
+                                                        class="btn btn-success btn-sm dropdown-toggle waves-effect waves-light"
+                                                        style="width:100px;">
                                                         @lang('user.Action')
                                                     </button>
                                                     <div class="dropdown-menu dropdown-menu-right dropright">

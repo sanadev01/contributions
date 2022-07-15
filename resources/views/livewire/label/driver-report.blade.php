@@ -31,16 +31,16 @@
                         <div class="form-group">
                             <div class="controls">
                                 @if ($hasSearch)
-                                    <button type="button" wire:click="clearSearch" class="btn btn-primary hd-mt-22"
+                                    <button type="button" wire:click="clearSearch" class="btn btn-primary hd-mt-20"
                                         wire:click="search">
                                         <i class="feather icon-search"></i> clear search
                                     </button>
                                 @else
-                                    <button type="submit" class="btn btn-primary hd-mt-22" wire:click="search">
+                                    <button type="submit" class="btn btn-primary hd-mt-20" wire:click="search">
                                         <i class="feather icon-search"></i> Search
                                     </button>
                                 @endif
-                                <button type="button" wire:click="download" class="hd-mt-22 btn btn-success mr-1"
+                                <button type="button" wire:click="download" class="hd-mt-20 btn btn-success mr-1"
                                     @if (!$orders) disabled @endif>
                                     <i class="feather icon-download"></i>
                                 </button>

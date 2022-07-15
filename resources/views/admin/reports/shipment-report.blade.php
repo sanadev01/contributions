@@ -23,11 +23,10 @@
                     <button onclick="toggleLogsSearch()" class="btn btn-primary waves-effect mr-1 waves-light">
                         <i class="feather icon-search"></i>
                     </button>
-                    <button type="btn" onclick="toggleDownloadsDiv()" id="customSwitch8"
-                        class="btn btn-success mr-1 waves-effect waves-light"><i class="fa fa-arrow-down"></i></button>
+                    {{-- <button type="btn" onclick="toggleDownloadsDiv()" id="customSwitch8"
+                        class="btn btn-success mr-1 waves-effect waves-light"><i class="fa fa-arrow-down"></i></button> --}}
                     <button type="btn" onclick="toggleDateSearch()" id="customSwitch8"
-                        class="btn btn-primary mr-1 waves-effect waves-light"><i
-                            class="feather icon-filter"></i></button>
+                        class="btn btn-success mr-1 waves-effect waves-light"><i class="fa fa-arrow-down"></i></button>
                 </div>
                 <div class="card-content">
                     <div class="card-body">

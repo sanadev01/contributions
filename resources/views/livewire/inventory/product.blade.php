@@ -11,14 +11,6 @@
                     class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="">Create Sale
                         Order</i></button>
             </div>
-            <div class="col-11 text-right">
-                @admin
-                    <a href="{{ route('admin.inventory.product-export.index') }}" class="btn btn-success"
-                        title="Download">
-                        <i class="fa fa-arrow-down"></i>
-                    </a>
-                @endadmin
-            </div>
         </div>
         <div class="row col-8 pr-0 pl-0 " id="singleSearch"
             @if ($this->search) style="display: block !important;" @endif>

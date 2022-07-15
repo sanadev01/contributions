@@ -26,7 +26,7 @@
                 <div class="card-content card-body">
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="hd-card mt-1 mb-3">
+                            <div class="hd-card mb-3">
                                 <div class="d-flex">
                                     <div class="row col-12">
                                         <div class="col-10">

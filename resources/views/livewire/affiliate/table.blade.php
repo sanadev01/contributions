@@ -1,9 +1,17 @@
-<div class="p-0 pr-2 d-flex justify-content-end">
-    <button type="btn" onclick="toggleDateSearch()" id="customSwitch8"
-        class="btn btn-primary mr-1 waves-effect waves-light"><i class="feather icon-filter"></i></button>
-    <button onclick="toggleLogsSearch()" class="btn btn-primary waves-effect waves-light">
-        <i class="feather icon-search"></i>
-    </button>
+<div class="p-0 pr-2 d-flex justify-content-between">
+    <div>
+        <div class="" id="printBtnDiv">
+            <button type="btn" id="pay-commission" class="btn btn-primary ml-2 waves-effect waves-light"><i
+                    class="fa fa-dollar-sign"></i></button>
+        </div>
+    </div>
+    <div>
+        <button type="btn" onclick="toggleDateSearch()" id="customSwitch8"
+            class="btn btn-primary mr-1 waves-effect waves-light"><i class="feather icon-filter"></i></button>
+        <button onclick="toggleLogsSearch()" class="btn btn-primary waves-effect waves-light">
+            <i class="feather icon-search"></i>
+        </button>
+    </div>
 </div>
 <div class="p-2">
     @admin
@@ -44,10 +52,7 @@
         </div>
 
     </div>
-    <div class="" id="printBtnDiv">
-        <button type="btn" id="pay-commission" class="btn btn-primary mr-1 waves-effect waves-light mb-4"><i
-                class="fa fa-dollar-sign"></i></button>
-    </div>
+
     <div class="table-wrapper position-relative">
         <table class="table mb-0 table-bordered table-responsive-md" id="">
             <thead>

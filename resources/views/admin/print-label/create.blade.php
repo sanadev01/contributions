@@ -5,9 +5,10 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
-                    @section('title', __('orders.print-label.Scan Packages'))
-                </div>
+                    {{-- <div class="card-header"> --}}
+                @section('title', __('orders.print-label.Scan Packages'))
+
+                {{-- </div> --}}
                 <div class="card-content collapse show">
                     <div class="card-body">
                         <div class="row">

@@ -74,8 +74,8 @@
         <td class="d-flex">
             <div class="btn-group">
                 <div class="dropdown">
-                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
+                    <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false" style="width: 100px;">
                         @lang('parcel.Action')
                     </button>
                     <div class="dropdown-menu dropdown-menu-right dropright">

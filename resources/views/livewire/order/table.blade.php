@@ -28,19 +28,20 @@
                 <div class="form-group singleSearchStyle col-12">
                     <form wire:submit.prevent="submit">
                         <div class="form-group mb-2 col-12 row">
-                            {{-- <label class="col-12 text-left"> Search</label> --}}
-                            <input type="text" class="form-control col-8 hd-search">
-                            <button type="submit" class="btn btn-primary ml-2">
+                            <label class="col-12 text-left pl-1"> Search</label>
+                            <input type="text" class="form-control col-8 hd-search"
+                                wire:model.debounce.1000ms="search">
+                            {{-- <button type="submit" class="btn btn-primary ml-2">
                                 <i class="fa fa-search"></i>
-                            </button>
+                            </button> --}}
                         </div>
                     </form>
                 </div>
             </div>
             {{-- </div> --}}
             <div class="row col-12 pr-0 m-0 pl-0" id="datefilters">
-                <div class=" col-6 text-left mb-2">
-                    <div class="row col-12 my-3 pl-1" id="dateSearch">
+                <div class=" col-6 text-left">
+                    <div class="row col-12 pl-1" id="dateSearch">
                         <form action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
                             @csrf
                             <div class="form-group mb-2 col-4" style="float:left;margin-right:20px;">

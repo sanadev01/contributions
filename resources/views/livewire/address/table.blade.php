@@ -1,16 +1,16 @@
 <div>
-    <div class="mb-2 row col-md-12 pl-3 hide" id="logSearch">
-        <div class="col-1 pl-0">
+    <div class="mb-2 row col-md-12 pl-0 hide" id="logSearch">
+        {{-- <div class="col-1 pl-0">
             <label>User</label>
-            <input type="search" wire:model.debounce.500ms="user" class="form-control">
-        </div>
+            <input type="search" wire:model.debounce.500ms="search" class="form-control">
+        </div> --}}
         @admin
             <div class="col-2">
-                <label>Name</label>
-                <input type="search" wire:model.debounce.500ms="name" class="form-control">
+                <label>Search</label>
+                <input type="search" wire:model.debounce.500ms="search" class="form-control">
             </div>
         @endadmin
-        <div class="col-2">
+        {{-- <div class="col-2">
             <label>Address</label>
             <input type="search" wire:model.debounce.500ms="address" class="form-control">
         </div>
@@ -38,7 +38,7 @@
         <div class="col-1">
             <label>CNPJ</label>
             <input type="search" wire:model.debounce.500ms="phone" class="form-control">
-        </div>
+        </div> --}}
 
     </div>
     <table class="table mb-0  table-bordered">

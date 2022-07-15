@@ -26,8 +26,9 @@
                         <label for="">Date To</label>
                         <input type="date" class="form-control hd-search" name="date" wire:model="dateTo">
                     </div>
-                    <div class="col-1 pt-1 d-flex justify-content-end p-0">
-                        <a href="{{ $downloadLink }}" class="mt-4 btn btn-primary">Download</a>
+                    <div class="col-1 pt-1 d-flex justify-content-start p-0">
+                        <a href="{{ $downloadLink }}" class="mt-4 btn btn-success"><i
+                                class="feather icon-download"></i></a>
                     </div>
                 </div>
             </div>
@@ -55,7 +56,7 @@
                             <th>Balance</th>
                             <th>Created At</th>
                         </tr>
-                        <tr>
+                        {{-- <tr>
                             <th>
                                 <input type="search" wire:model.debounce.500ms="uuid" class="form-control">
                             </th>
@@ -89,7 +90,7 @@
                                 <input type="search" wire:model.debounce.500ms="balance" class="form-control">
                             </th>
                             <th></th>
-                        </tr>
+                        </tr> --}}
                     </thead>
                     <tbody>
                         @foreach ($deposits as $deposit)

@@ -7,18 +7,18 @@
             </div>
             @admin
                 <div class="col-2">
-                    <label>User</label>
-                    <input type="search" class="form-control" wire:model.debounce.1000ms="name">
+                    <label>Search</label>
+                    <input type="search" class="form-control" wire:model.debounce.1000ms="search">
                 </div>
             @endadmin
-            <div class="col-2">
+            {{-- <div class="col-2">
                 <label>File Name</label>
                 <input type="search" class="form-control" wire:model.debounce.1000ms="file_name">
             </div>
             <div class="col-2">
                 <label>Total</label>
                 <input type="search" class="form-control" wire:model.debounce.1000ms="total">
-            </div>
+            </div> --}}
 
         </div>
         <div class="table-wrapper position-relative">

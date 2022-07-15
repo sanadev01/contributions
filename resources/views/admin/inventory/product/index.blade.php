@@ -6,17 +6,34 @@
         @section('title', __('Inventory Products'))
         {{-- <h4 class="mb-0">Inventory Products</h4> --}}
 
-        <div class="col-12 pr-0">
-            @can('create', App\Product::class)
-                <div class="col-12 d-flex justify-content-end pr-0">
-                    <button type="btn" onclick="toggleOrderPageSearch()" id="orderSearch"
-                        class="btn btn-primary mr-1 waves-effect waves-light"><i class="feather icon-search"></i></button>
-                    <a href="{{ route('admin.inventory.product.create') }}" class="btn btn-primary mr-1"> Add Product </a>
-                    <a href="{{ route('admin.inventory.product-import.create') }}" class="btn btn-info"> Import Products
-                    </a>
+        {{-- <div class="col-12 pl-1"> --}}
+        @can('create', App\Product::class)
+            {{-- <div class="col-12"> --}}
+            <div class="ml-2">
+                <div id="printBtnDiv">
+                    <button title="Print Labels" id="createSaleOrder" type="btn"
+                        class="btn btn-primary mr-1 mb-1 waves-effect waves-light">Create Sale
+                    </button>
                 </div>
-            @endcan
-        </div>
+            </div>
+            <div class="pr-0">
+                @admin
+                    <a href="{{ route('admin.inventory.product-export.index') }}" class="btn btn-success mr-1"
+                        title="Download">
+                        <i class="fa fa-arrow-down"></i>
+                    </a>
+                @endadmin
+                <button type="btn" onclick="toggleOrderPageSearch()" id="orderSearch"
+                    class="btn btn-primary mr-1 waves-effect waves-light"><i class="feather icon-search"></i></button>
+                <a href="{{ route('admin.inventory.product.create') }}" class="btn btn-primary mr-1"> Add Product
+                </a>
+                <a href="{{ route('admin.inventory.product-import.create') }}" class="btn btn-info"> Import
+                    Products
+                </a>
+            </div>
+            {{-- </div> --}}
+        @endcan
+        {{-- </div> --}}
     </div>
     <div class="card-content">
         <div class="card-body no-print" style="overflow-y: visible">

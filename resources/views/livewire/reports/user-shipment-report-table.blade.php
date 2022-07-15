@@ -9,11 +9,35 @@
             <label for="">End Date</label>
             <input type="date" class="form-control" wire:model='end_date'>
         </div>
-        <div class="col-md-2 pt-4">
-            <a href="{{ $downloadLink }}" class="btn btn-primary" {{ !$downloadLink ? 'disabled' : '' }}
+        <div class="col-md-1 pt-4">
+            <a href="{{ $downloadLink }}" class="btn btn-success" {{ !$downloadLink ? 'disabled' : '' }}
                 target="_blank">
-                Download
+                <i class="fa fa-arrow-down"></i>
             </a>
+        </div>
+        <div class="col-6">
+            <form class="col-12" action="{{ route('admin.reports.user-shipments.index') }}" method="GET"
+                target="_blank">
+                <div class="row">
+                    <div class="col-md-12 row mb-2 ">
+                        <div class="col-lg-2 pl-0 col-md-3 col-sm-3 col-xs-3">
+                            <label for="">Year</label>
+                            <select class="form-control" name="year" id="DefaultSelect">
+                                <option value="">Select Year </option>
+                                @foreach ($years as $year)
+                                    <option value="{{ $year }}"
+                                        @if ($year == $year) selected @endif>
+                                        {{ $year }} </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-2 col-xs-2 mt-25">
+                            <button type="submit" class="btn btn-primary mr-2">Download Yearly</button>
+
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
 
 
