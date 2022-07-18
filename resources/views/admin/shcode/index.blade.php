@@ -5,9 +5,9 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header pr-1">
                     @section('title', __('ShCodes'))
-                    <div class="col-12 d-flex justify-content-end pr-0">
+                    <div class="col-12 d-flex justify-content-end">
                         <a href="{{ route('admin.shcode-export.create') }}"
                             class="pull-right btn btn-secondary mr-1">@lang('shcode.Import Sh Code')</a>
                         <a href="{{ route('admin.shcode-export.index') }}"

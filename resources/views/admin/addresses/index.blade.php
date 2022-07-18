@@ -5,10 +5,10 @@
         <div class="row">
             <div class="col-12">
                 <div class="card min-vh-100">
-                    <div class="card-header">
+                    <div class="card-header pr-1">
                     @section('title', __('address.My Addresses'))
                     @can('create', App\Models\Address::class)
-                        <div class="col-12 d-flex justify-content-end pr-0">
+                        <div class="col-12 d-flex justify-content-end">
                             <button onclick="toggleLogsSearch()" class="mr-1 btn btn-primary waves-effect waves-light">
                                 <i class="feather icon-search"></i>
                             </button>
