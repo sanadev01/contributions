@@ -200,7 +200,6 @@ class Client{
 
     public function createContainer($container)
     {
-        $items = [];
         try {
             $response = $this->client->post($this->createAssistLabelUrl,[
                 'headers' => $this->getKeys(),
@@ -213,7 +212,7 @@ class Client{
             if ($data->status == 'fail') {
                 return [
                     'success' => false,
-                    'message' => $data->message->payload ?? 'server error',
+                    'message' => $data->message->payload ?? 'Something Went Wrong! Please Try Again..',
                     'data' => null
                 ];
             }
@@ -259,7 +258,7 @@ class Client{
             if ($data->status == 'fail') {
                 return [
                     'success' => false,
-                    'message' => $data->message->payload ?? 'server error',
+                    'message' => $data->message->payload ?? 'Something Went Wrong! Please Try Again..',
                     'data' => null
                 ];
             }
@@ -268,30 +267,6 @@ class Client{
                 'success' => true,
                 'data' => $data
             ];
-        }catch (\GuzzleHttp\Exception\ClientException $e) {
-            return new PackageError($e->getResponse()->getBody()->getContents());
-        }
-        catch (\Exception $exception){
-            return new PackageError($exception->getMessage());
-        }
-    }
-
-    public function getDeliveryBillStatus(DeliveryBill $deliveryBill)
-    {
-        try {
-            $response = $this->client->get("/packet/v1/cn38request?requestId={$deliveryBill->request_id}",[
-                'headers' => [
-                    'Authorization' => "Bearer {$this->getToken()}"
-                ]
-            ]);
-
-            $data = json_decode($response->getBody()->getContents());
-
-            if ( $data->requestStatus == 'Error' ){
-                throw new \Exception($data->errorMessage);
-            }
-
-            return $data->requestStatus == 'Success' ? $data->cn38Code : null;
         }catch (\GuzzleHttp\Exception\ClientException $e) {
             return new PackageError($e->getResponse()->getBody()->getContents());
         }

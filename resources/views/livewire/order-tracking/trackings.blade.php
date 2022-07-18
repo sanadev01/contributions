@@ -1,5 +1,5 @@
 <div>
-    
+
     {{-- @if ($message)
         <div class="content-header row col-8 offset-2">
             <div class="col-md-12">
@@ -23,11 +23,11 @@
             </div>
         @endif
     </div>
-    
+
     @if ($trackings)
         <div id="accordion">
             @foreach ($trackings as $tracking)
-                
+
                 @if(optional($tracking)['success'] && optional($tracking)['status'] == 200)
                 <div class="card">
                     <div class="card-header pt-2" id="t-{{optional($tracking['order'])->warehouse_number}}">
@@ -52,7 +52,7 @@
                     </div>
                     <div id="t-{{optional($tracking['order'])->corrios_tracking_code}}" class="collapse" aria-labelledby="t-{{optional($tracking['order'])->warehouse_number}}" data-parent="#accordion">
                     <div class="card-body">
-                        
+
                         <div class="row">
                             <div class="col-12">
                                 <div class="card">
@@ -84,7 +84,7 @@
                                                             </div>
                                                         </div>
                                                     </li>
-                                                    
+
                                                     <li class="@if($tracking['trackings']->last()->status_code >=  75) active @endif step0">
                                                         <div class="icon-content">
                                                             <img class="icon offset-1" src="{{ asset('images/tracking/container.png') }}">
@@ -101,23 +101,27 @@
                                                             </div>
                                                         </div>
                                                     </li>
-                                                    
+
                                                     <li class="step0">
                                                         <div class="icon-content">
                                                             @if ($tracking['order']->recipient->country_id == \App\Models\Order::BRAZIL)
                                                                 <img class="icon offset-1" src="{{ asset('images/tracking/brazil-flag.png') }}">
                                                             @elseif($tracking['order']->recipient->country_id == \App\Models\Order::CHILE)
                                                                 <img class="icon offset-1" src="{{ asset('images/tracking/chile-flag.png') }}">
+                                                            @elseif($tracking['order']->recipient->country_id == \App\Models\Order::NETHERLANDS)
+                                                                <img class="icon offset-1" src="{{ asset('images/tracking/postnl-logo.png') }}">
                                                             @else
                                                                 <img class="icon offset-1" src="{{ asset('images/tracking/ups-logo.png') }}">
-                                                            @endif    
+                                                            @endif
                                                             <div class="d-flex flex-column" mt-4>
                                                                 @if ($tracking['order']->recipient->country_id == \App\Models\Order::BRAZIL)
                                                                     <p class="font-weight-bold">Received <br>by Correios</p>
                                                                 @elseif ($tracking['order']->recipient->country_id == \App\Models\Order::CHILE)
                                                                     <p class="font-weight-bold">Received <br>Correios Chile</p>
-                                                                @else 
-                                                                    <p class="font-weight-bold">Received <br>by UPS</p>    
+                                                                @elseif ($tracking['order']->recipient->country_id == \App\Models\Order::NETHERLANDS)
+                                                                    <p class="font-weight-bold">Received <br>by PostNL</p>
+                                                                @else
+                                                                    <p class="font-weight-bold">Received <br>by UPS</p>
                                                                 @endif
                                                             </div>
                                                         </div>
@@ -142,7 +146,7 @@
                                                         </div>
                                                     </li>
                                                     @endif
-                                                    
+
                                                     @if ($tracking['order']->recipient->country_id == \App\Models\Order::BRAZIL)
                                                     <li class="step0">
                                                         <div class="icon-content">
@@ -245,7 +249,7 @@
                                                                 </div>
                                                             </div>
                                                         </li>
-                                                        
+
                                                         <li class="@if( $this->toggleBrazilStatus($tracking['api_trackings'], $tracking['trackings']) >= 120) active @endif step0">
                                                             <div class="icon-content">
                                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/left-to-buyer.png') }}">
@@ -320,13 +324,54 @@
                                                                 </div>
                                                             </div>
                                                         </li>
+                                                    @elseif($tracking['service'] == 'PostNL')
+                                                        <li class="@if( $this->togglePostNLStatus($tracking) >= 90) active @endif step0">
+                                                            <div class="icon-content">
+                                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/postnl-logo.png') }}">
+                                                                <div class="d-flex flex-column" mt-4>
+                                                                    <p class="font-weight-bold">Received by<br>PostNL </p>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li class="@if($this->togglePostNLStatus($tracking) >= 100) active @endif step0">
+                                                            <div class="icon-content">
+                                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/custom-finished.png') }}">
+                                                                <div class="d-flex flex-column" mt-4>
+                                                                    <p class="font-weight-bold">Item Released by <br> Customs @endif</p>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li class="@if($this->togglePostNLStatus($tracking) >= 110) active @endif step0">
+                                                            <div class="icon-content">
+                                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/to-hd.png') }}">
+                                                                <div class="d-flex flex-column" mt-4>
+                                                                    <p class="font-weight-bold">The item is in Transit</p>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li class="@if($this->togglePostNLStatus($tracking) >= 120) active @endif step0">
+                                                            <div class="icon-content">
+                                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/left-to-buyer.png') }}">
+                                                                <div class="d-flex flex-column" mt-4>
+                                                                    <p class="font-weight-bold">The item is Out for Delivery</p>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li class="@if($this->togglePostNLStatus($tracking) >= 130) active @endif step0">
+                                                            <div class="icon-content">
+                                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/delivered.png') }}">
+                                                                <div class="d-flex flex-column" mt-4>
+                                                                    <p class="font-weight-bold">Parcel Delivered</p>
+                                                                </div>
+                                                            </div>
+                                                        </li>
                                                     @endif
-                                                @endif 
-                                                
+                                                @endif
+
                                             </ul>
                                         </div>
                                     </div>
-    
+
                                 </div>
                                 {{-- <hr> --}}
                                 <div class="card">
@@ -356,7 +401,7 @@
                                                 @if (optional($tracking)['service'] == 'Correios_Brazil')
                                                     <tr>
                                                         <td>
-                                                            {{ $tracking['api_trackings']['data'] }} {{ $tracking['api_trackings']['hora'] }}
+                                                            {{ Carbon\Carbon::createFromFormat('d/m/Y', $tracking['api_trackings']['data'])->format('Y-m-d') }} {{ $tracking['api_trackings']['hora'] }}
                                                         </td>
                                                         <td>
                                                             Brazil
@@ -392,10 +437,32 @@
                                                         </td>
                                                     </tr>
                                                 @endif
+                                                @if(optional($tracking)['service'] == 'PostNL')
+                                                    <tr>
+                                                        <td>
+                                                            {{ date('Y-m-d H:i:s', strtotime($tracking['api_trackings']['datetime_local'])) }}
+                                                        </td>
+                                                        <td>
+                                                            {{ $tracking['api_trackings']['country_code'] }}
+                                                        </td>
+                                                        <td>
+                                                            @if( $tracking['api_trackings']['status'] == '1233' || $tracking['api_trackings']['status'] == '3')
+                                                                The item is received
+                                                                @elseif($tracking['api_trackings']['status'] == '38')
+                                                                    The item is released by customs
+                                                                @elseif($tracking['api_trackings']['status'] == '1239' || $tracking['api_trackings']['status'] == '1240')
+                                                                    The item is in transit
+                                                                @elseif($tracking['api_trackings']['status'] == '74')
+                                                                    The item is out for delivery
+                                                                @else
+                                                                    Item delivered
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                @endif
                                             </tbody>
                                         </table>
                                     </div>
-                                
                                 </div>
                             </div>
                         </div>
@@ -403,9 +470,9 @@
                     </div>
                     </div>
                 </div>
-                    
 
-                @endif
+
+
             @endforeach
         </div>
 
