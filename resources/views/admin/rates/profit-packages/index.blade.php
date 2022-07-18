@@ -5,9 +5,9 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header pr-1">
                     @section('title', __('profitpackage.profit-packages'))
-                    <div class="col-12 d-flex justify-content-end pr-0">
+                    <div class="col-12 d-flex justify-content-end">
                         @can('create', App\Models\ProfitPackage::class)
                             <a href="{{ route('admin.rates.profit-packages.create') }}" class="btn mr-1 btn-primary">
                                 @lang('profitpackage.create-profit-package') </a>

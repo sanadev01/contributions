@@ -5,13 +5,15 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header d-flex justify-content-end ">
-                    @section('title', __('shippingservice.Manage Shipping Services'))
-                    @can('create', App\Models\ShippingService::class)
-                        <a href="{{ route('admin.shipping-services.create') }}" class="btn btn-primary">
-                            @lang('shippingservice.Create Shipping Service')
-                        </a>
-                    @endcan
+                    <div class="card-header pr-1">
+                        <div class="col-12 d-flex justify-content-end">
+                        @section('title', __('shippingservice.Manage Shipping Services'))
+                        @can('create', App\Models\ShippingService::class)
+                            <a href="{{ route('admin.shipping-services.create') }}" class="btn btn-primary">
+                                @lang('shippingservice.Create Shipping Service')
+                            </a>
+                        @endcan
+                    </div>
                 </div>
                 <div class="card-content card-body">
                     <div class="table-responsive-md mt-1">

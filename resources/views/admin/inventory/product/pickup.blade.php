@@ -5,9 +5,9 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header pr-1">
                     @section('title', __('Pickup Products'))
-                    <div class="col-12 d-flex justify-content-end pr-0">
+                    <div class="col-12 d-flex justify-content-end">
                         <button type="btn" onclick="toggleDateSearch()" id="customSwitch8"
                             class="btn btn-primary mb-1 waves-effect waves-light"><i
                                 class="feather icon-filter"></i></button>

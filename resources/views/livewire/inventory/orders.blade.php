@@ -11,7 +11,7 @@
                 <h1>Total Value: <span class="text-primary">$ {{ $totalValue }}</span></h1>
             </div>
         </div>
-        <div class="row col-8 pr-0 pl-1" id="singleSearch"
+        <div class="row col-8 pr-0 pl-0" id="singleSearch"
             @if ($this->search) style="display: block !important" @endif>
             <div class="form-group singleSearchStyle col-12">
                 <label>Search</label>

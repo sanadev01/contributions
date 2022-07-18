@@ -5,12 +5,14 @@
         <div class="row">
             <div class="col-12">
                 <div class="card min-vh-100">
-                    <div class="card-header d-flex justify-content-end">
-                    @section('title', __('billing.Billing Informations'))
-                    @can('create', App\Models\BillingInformation::class)
-                        <a href="{{ route('admin.billing-information.create') }}" class="pull-right btn btn-primary">
-                            @lang('billing.Add Billing Information')</a>
-                    @endcan
+                    <div class="card-header pr-1">
+                        <div class="col-12 d-flex justify-content-end">
+                        @section('title', __('billing.Billing Informations'))
+                        @can('create', App\Models\BillingInformation::class)
+                            <a href="{{ route('admin.billing-information.create') }}" class="pull-right btn btn-primary">
+                                @lang('billing.Add Billing Information')</a>
+                        @endcan
+                    </div>
                 </div>
                 <div class="card-content">
                     <div class="card-body">
