@@ -27,6 +27,7 @@ class OrderReportsRepository
         } elseif ( $request->email)
         {
             $query->where('email','LIKE',"%{$request->email}%");
+
         } else if( $request->search )
         {
             $query->where('name','LIKE',"%{$request->search}%")

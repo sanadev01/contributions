@@ -19,14 +19,7 @@
                             class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i
                                 class="feather icon-filter"></i></button>
                     </div>
-                    <div id="hiddenSearch" class="form-group mb-2 col-12 pl-2">
-                        <div class="row form-group mb-2 col-12 pl-3">
-                            <input type="text" class="form-control col-4 hd-search">
-                            <button class="btn btn-primary ml-2 waves-effect waves-light">
-                                <i class="fa fa-search" aria-hidden="true"></i>
-                            </button>
-                        </div>
-                    </div>
+
                     <div class="row col-12 pr-0 m-0 pl-0" id="datefilters">
                         <div class=" col-6 text-left mb-2 pl-0">
                             <div class="row col-12 my-3 pl-1" id="dateSearch">

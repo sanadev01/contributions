@@ -11,6 +11,7 @@ class Container extends Component
     public $packetType='';
     public $dispatchNumber='';
     public $sealNo='';
+    public $search='';
     public function render(ContainerRepository $containerRepository)
     {
         return view('livewire.container.container',[
@@ -28,6 +29,7 @@ class Container extends Component
             'dispatchNumber' => $this->dispatchNumber,
             'sealNo' => $this->sealNo,
             'packetType' => $this->packetType,
+            'search' => $this->search,
         ]);
     }
 }

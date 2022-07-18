@@ -3,7 +3,7 @@
         <div class="row col-8 pr-0 pl-0 " id="singleSearch">
             <div class="form-group singleSearchStyle col-12">
                 <label>Search</label>
-                <input wire:model="custom" type="search" class="form-control col-8 hd-search" name="custom">
+                <input wire:model="search" type="search" class="form-control col-8 hd-search" name="search">
             </div>
         </div>
         <table class="table mb-0 table-bordered">

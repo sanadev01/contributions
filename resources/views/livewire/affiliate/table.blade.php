@@ -46,10 +46,11 @@
         </div>
 
     </div>
-    <div class="mb-2 row col-md-12 hide" id="logSearch">
+    <div class="mb-2 row col-md-12 hide " @if ($this->search) style="display: block !important;" @endif
+        id="logSearch">
         <div class="col-6 pl-0">
             <label>Search</label>
-            <input type="search" class="form-control" wire:model.debounce.1000ms="customSearch">
+            <input type="search" class="form-control" wire:model="search">
         </div>
 
     </div>
