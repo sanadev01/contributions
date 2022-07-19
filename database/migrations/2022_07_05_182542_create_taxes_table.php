@@ -15,6 +15,10 @@ class CreateTaxesTable extends Migration
     {
         Schema::create('taxes', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('user_id');
+            $table->bigInteger('order_id');
+            $table->double('tax1')->default(0);
+            $table->double('tax2')->default(0);
             $table->timestamps();
         });
     }
