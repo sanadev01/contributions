@@ -24,18 +24,20 @@
                 <button title="Print Labels" id="print" type="btn"
                     class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i
                         class="feather icon-printer"></i></button>
+
                 <button title="Print Domestic Labels" id="deomesticPrint" type="btn"
-                    class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i
-                        class="feather icon-printer"></i></button>
+                    class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-tag"></i></button>
                 <button title="Delete" id="trash" type="btn"
                     class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i
                         class="feather icon-trash"></i></button>
             </div>
         </div>
 
-        <div class="row filter" style="padding-right:1%;">
+        <div class="row filter pr-3">
             <button type="btn" onclick="toggleDateSearch()" id="customSwitch8"
                 class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-filter"></i></button>
+            <button type="btn" onclick="toggleOrderPageSearch()" id="orderSearch"
+                class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-search"></i></button>
             @can('canImportLeveOrders', App\Models\Order::class)
                 <a href="{{ route('admin.leve-order-import.index') }}" class="pull-right btn btn-primary"
                     style="height: max-content"> Import Leve Orders </a>
@@ -82,13 +84,6 @@
     //   copyText.setSelectionRange(0, 99999)
     //   document.execCommand("copy");
 
-    //     // var range = document.createRange();
-    //     //         range.selectNode(document.getElementById("tracking"));
-    //     //         window.getSelection().removeAllRanges(); // clear current selection
-    //     //         window.getSelection().addRange(range); // to select text
-    //     //         document.execCommand("copy");
-    //     //         window.getSelection().removeAllRanges();// to deselect
-    // }
     // $('body').on('change','#bulk-actions',function(){
     //     if ( $(this).val() == 'clear' ){
     //         $('.bulk-orders').prop('checked',false)
@@ -166,39 +161,7 @@
             console.log($(".bulk-orders:checked").length);
             document.getElementById("printBtnDiv").style.display = 'none';
         }
-        // console.log(flag);
-        // if ( $(this).val() == 'clear' ){
-        //     $('.bulk-orders').prop('checked',false)
-        // }else if ( $(this).val() == 'checkAll' ){
-        //     $('.bulk-orders').prop('checked',true)
-        // }else if ( $(this).val() == 'print-label' ){
-        //     var orderIds = [];
-        //     $.each($(".bulk-orders:checked"), function(){
-        //         orderIds.push($(this).val());
-        //     });
 
-        //     $('#bulk_actions_form #command').val('print-label');
-        //     $('#bulk_actions_form #data').val(JSON.stringify(orderIds));
-        //     $('#bulk_actions_form').submit();
-        // }else if ($(this).val() == 'consolidate-domestic-label'){
-        //     var orderIds = [];
-        //     $.each($(".bulk-orders:checked"), function(){
-        //         orderIds.push($(this).val());
-        //     });
-
-        //     $('#consolidate_domestic_label_actions_form #command').val('consolidate-domestic-label');
-        //     $('#consolidate_domestic_label_actions_form #data').val(JSON.stringify(orderIds));
-        //     $('#consolidate_domestic_label_actions_form').submit();
-        // }else if ($(this).val() == 'move-order-trash'){
-        //     var orderIds = [];
-        //     $.each($(".bulk-orders:checked"), function(){
-        //         orderIds.push($(this).val());
-        //     });
-
-        //     $('#trash_order_actions_form #command').val('move-order-trash');
-        //     $('#trash_order_actions_form #data').val(JSON.stringify(orderIds));
-        //     $('#trash_order_actions_form').submit();
-        // }
     })
 </script>
 @endsection

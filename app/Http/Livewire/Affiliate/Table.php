@@ -33,6 +33,7 @@ class Table extends Component
     public $value;
     public $saleType;
     public $commission;
+    public $customSearch;
 
     public function render()
     {

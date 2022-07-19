@@ -12,7 +12,7 @@ class Table extends Component
     protected $paginationTheme = 'bootstrap';
 
     public $pageSize = 50;
-    
+    public $search;
     public $user;
     public $uuid;
     public $last_four_digits;
@@ -46,6 +46,7 @@ class Table extends Component
             'last_four_digits' => $this->last_four_digits,
             'type' => $this->type,
             'is_paid' => $this->is_paid,
+            'search'  => $this->search,
         ]),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc');
     }
 

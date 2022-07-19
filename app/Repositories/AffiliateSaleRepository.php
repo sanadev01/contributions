@@ -103,6 +103,12 @@ class AffiliateSaleRepository
             });
         }
 
+        if ( $request->customSearch ){
+            $query->where(function($query) use($request){
+                return $query->where('commission', 'LIKE', "%{$request->commission}%");
+            });
+        }
+
         $sales = $query->orderBy('id','desc');
 
         return $paginate ? $sales->paginate($pageSize) : $sales->get();

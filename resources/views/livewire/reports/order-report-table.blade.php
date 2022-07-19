@@ -1,49 +1,45 @@
 <div class="p-2">
-    <div class="row mb-2 no-print">
-        <div class="col-1">
-            <select class="form-control" wire:model="pageSize">
-                <option value="1">1</option>
-                <option value="5">5</option>
-                <option value="10">10</option>
-                <option value="20">20</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-                <option value="300">300</option>
-            </select>
-        </div>
-        <div class="col-11 text-right">
-            <a href="{{ route('admin.reports.order.create') }}" class="btn btn-success" title="@lang('orders.import-excel.Download')">
-                <i class="fa fa-arrow-down"></i>
-            </a>
+    <div class="row mb-2 no-print pl-0">
+
+        <div class="mb-2 row col-md-12 pl-4 mb-1" id="hiddenSearch">
+            <div class="col-6 pl-2">
+                <label>Search</label>
+                <input type="search" class="form-control" wire:model.debounce.1000ms="search">
+            </div>
+
         </div>
     </div>
-    <table class="table mb-0 table-responsive-md">
+    <table class="table table-bordered table-responsive-md pb-4">
         <thead>
             <tr>
-                <th>
-                    <a href="#" wire:click.prevent="sortBy('created_at')">@lang('orders.date')</a>
-                </th>
-                <th>
-                    <a href="#" wire:click.prevent="sortBy('id')">@lang('orders.order-id')</a> <i> </i>
-                </th>
                 @admin
-                <th>User Name</th>
+                    <th>User Name</th>
                 @endadmin
-                <th>Loja/Cliente</th>
-                <th>Carrier Tracking</th>
+                <th>
+                    {{-- <a href="#" wire:click.prevent="sortBy('created_at')">@lang('orders.date')</a> --}}
+                    @lang('orders.date')<a wire:click.prevent="sortBy('created_at')"
+                        class="fas fa-sort text-right custom-sort-arrow"></a>
+                </th>
+                <th>
+                    {{-- <a href="#" wire:click.prevent="sortBy('id')">@lang('orders.order-id')</a> <i> </i> --}}
+                    @lang('orders.order-id')<a wire:click.prevent="sortBy('id')"
+                        class="fas fa-sort text-right custom-sort-arrow"></a>
+                </th>
+                {{-- <th>Loja/Cliente</th> --}}
+                {{-- <th>Carrier Tracking</th>
                 <th>Referência do Cliente</th>
-                <th>Carrier</th>
-                @admin
+                <th>Carrier</th> --}}
+                {{-- @admin
                 <th>Carrier Cost</th>
-                @endadmin
+                @endadmin --}}
                 <th>Tracking Code</th>
                 <th>@lang('orders.amount')</th>
                 <th>@lang('orders.status')</th>
-                <th>@lang('orders.type')</th>
+                {{-- <th>@lang('orders.type')</th> --}}
                 <th>@lang('orders.payment-status')</th>
-                <th class="no-print">@lang('orders.actions.actions')</th>
+                {{-- <th class="no-print">@lang('orders.actions.actions')</th> --}}
             </tr>
-            <tr class="no-print">
+            {{-- <tr class="no-print">
                 <th>
                     <input type="search" class="form-control" wire:model.debounce.1000ms="date">
                 </th>
@@ -103,7 +99,7 @@
                     </select>
                 </th>
                 <th></th>
-            </tr>
+            </tr> --}}
         </thead>
         <tbody>
 
@@ -114,14 +110,40 @@
             @endforelse
         </tbody>
     </table>
-    <div class="d-flex justify-content-end my-2 pb-4 mx-2">
-        {{ $orders->links() }}
+    {{-- <livewire:order.bulk-edit.modal /> --}}
+
+    <div class="row mt-4">
+        <div class="col-1 pt-2 mt-4">
+            <select class="form-control" wire:model="pageSize">
+                <option value="1">1</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="300">300</option>
+            </select>
+        </div>
+        <div class="col-11 pr-0 d-flex justify-content-end pr-3 pt-2 mt-4">
+            {{ $orders->links() }}
+        </div>
     </div>
     @include('layouts.livewire.loading')
 </div>
 
 @push('lvjs-stack')
     <script>
+        function toggleHiddenSearch() {
+            const div = document.getElementById('hiddenSearch');
+            if (div.style.display != 'block') {
+                div.style.display = 'block';
+                // console.log('asdasd');
+            } else {
+                div.style.display = 'none';
+                // console.log('aa');
+
+            }
+        }
         window.addEventListener('DOMContentLoaded', () => {
 
             @this.on('updated-status', function(orderId, status) {

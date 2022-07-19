@@ -266,7 +266,7 @@
                         </div>
                     </div>
                     <div class="chartjs-wrapper-demo">
-                        <div class="chartjs-size-monitor"
+                        {{-- <div class="chartjs-size-monitor"
                             style="position: absolute; inset: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
                             <div class="chartjs-size-monitor-expand"
                                 style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
@@ -278,16 +278,16 @@
                                 <div style="position:absolute;width:200%;height:200%;left:0; top:0">
                                 </div>
                             </div>
-                        </div>
-                        <canvas id="myChart" class="myChart chartjs-render-monitor" height="330"
-                            style="display: block; width: 705px; height: 330px;" width="705">
+                        </div> --}}
+                        <canvas id="myChart" class="myChart chartjs-render-monitor"
+                            style="display: block; width: 705px;" width="705">
                         </canvas>
                     </div>
                 </div>
             </div>
         </div> <!-- COL END -->
-        <div class="col-lg-3 col-12">
-            <div class="card">
+        <div class="col-lg-3 col-12 col-xl-3">
+            <div class="card crd-height-custom" style="height: 93.1%">
                 <div class="card-header card-title m-0 p-2 notification-card-right activityHead"
                     style="justify-content:  center !important">
                     <span class="notification-title activityHeader">Recent Orders</span>
@@ -311,11 +311,12 @@
                                 <hr class="custom-margin-hr">
                             @endforeach
                             {{-- <li class="dropdown-menu-footer pt-4"></li> --}}
-                            <a class="dropdown-item p-1 text-center" href="{{ route('admin.orders.index') }}">See
-                                all orders</a>
                         </li>
                     </ul>
                 </div>
+                <div class="card-footer"> <a class="dropdown-item p-1 text-center"
+                        href="{{ route('admin.orders.index') }}">See
+                        all orders</a></div>
             </div>
         </div>
     </div>

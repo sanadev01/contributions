@@ -147,6 +147,14 @@
         line-height: 16px !important;
     }
 
+    .corrioes-lable {
+        border-radius: 10px;
+    }
+
+    #status-btn {
+        width: 100px;
+    }
+
     #printBtnDiv {
         padding-top: 0px;
         display: none;
@@ -175,8 +183,24 @@
         padding-top: 5px;
     }
 
+    .vs-checkbox-con .vs-checkbox {
+        border-width: 1px !important;
+    }
+
     #imageDecrption {
-        padding-left: 45px !important;
+        padding-left: 50px !important;
+        padding-top: 7px !important;
+        font-weight: 400 !important;
+        margin-top: -2px;
+        color: #74829c !important;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    #imageDecrptionParcel {
+        /* padding-left: 40px !important; */
+        vertical-align: center;
         padding-top: 7px !important;
         font-weight: 400 !important;
         margin-top: -2px;
@@ -187,27 +211,113 @@
     }
 
     .searchDateBtn {
-        margin-top: 30px !important;
+        margin-top: 24px !important;
     }
 
     .custom-margin-hr {
-        margin-bottom: 0.5rem;
-        margin-top: 0.5rem;
+        margin-bottom: 7px;
+        margin-top: 7px;
     }
 
+    #hiddenSearch {
+        display: none;
+    }
+
+    @media only screen and (min-width: 1200px) and (max-width: 1800px) {
+        #myChart {
+            height: 400px !important;
+        }
+    }
+
+    @media only screen and (min-width: 1650px) {
+        #myChart {
+            height: 700px !important;
+        }
+
+        .crd-height-custom {
+            height: 96.4% !important;
+        }
+
+        .custom-margin-hr {
+            margin-bottom: 22px !important;
+            margin-top: 22px !important;
+        }
+    }
+
+    /* @media only screen and (min-width: 1200px) {
+        .custom-margin-hr {
+            margin-bottom: 0px;
+            margin-top: 0px;
+        }
+    }
+
+    @media only screen and (min-width: 1300px) {
+        .custom-margin-hr {
+            margin-bottom: 6px;
+            margin-top: 6px;
+        }
+    }
+
+    @media only screen and (min-width: 1400px) {
+        .custom-margin-hr {
+            margin-bottom: 8px;
+            margin-top: 8px;
+        }
+    }
+
+    @media only screen and (min-width: 1500px) {
+        .custom-margin-hr {
+            margin-bottom: 10.1px;
+            margin-top: 10.1px;
+        }
+    }
+
+    @media only screen and (min-width: 1600px) {
+        .custom-margin-hr {
+            margin-bottom: 12px;
+            margin-top: 11.8px;
+        }
+    }
+
+    @media only screen and (min-width: 1700px) {
+        .custom-margin-hr {
+            margin-bottom: 13.8px;
+            margin-top: 13.8px;
+        }
+    }
+
+    @media only screen and (min-width: 1800px) {
+        .custom-margin-hr {
+            margin-bottom: 15.9px;
+            margin-top: 15.8px;
+        }
+    }
+
+    @media only screen and (min-width: 1900px) {
+        .custom-margin-hr {
+            margin-bottom: 17.8px;
+            margin-top: 17.7px;
+        }
+    } */
+
+    /* .custom-margin-hr {
+        margin-bottom: 0.5rem;
+        margin-top: 0.54rem;
+    } */
+    /*
     @media (min-width:1500px) {
         .custom-margin-hr {
             margin-bottom: 0.8rem;
             margin-top: 0.8rem;
         }
-    }
+    } */
 
-    @media (min-width:1700px) {
+    /* @media (min-width:1700px) {
         .custom-margin-hr {
             margin-bottom: 1rem;
             margin-top: 1rem;
         }
-    }
+    } */
 
     .btn-width-sm {
         width: 73px;
@@ -218,9 +328,19 @@
     }
 
     #imageDecrptionTop {
-        padding-left: 45px !important;
+        padding-left: 50px !important;
         font-weight: 400 !important;
         margin-top: -38px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    #imageDecrptionTopParcel {
+        vertical-align: center;
+        /* padding-left: 40px !important; */
+        font-weight: 400 !important;
+        /* margin-top: -38px; */
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
@@ -233,7 +353,7 @@
     }
 
     .vs-checkbox-con input {
-        width: 13px;
+        width: 13px !important;
         margin: 0px;
     }
 
@@ -355,7 +475,6 @@
         font-size: 15px;
         padding: 10px 24px;
         font-family: "IBM Plex Sans", sans-serif !important;
-
     }
 
     .navigation .main-menu {
@@ -436,6 +555,32 @@
 
     #dateSearch {
         display: none;
+    }
+
+    #searchBlock {
+        display: none;
+    }
+
+    #downloadsDiv {
+        display: none
+    }
+
+    #singleSearch {
+        display: none;
+        padding-top: 8px !important;
+
+    }
+
+    .hide {
+        display: none !important;
+    }
+
+    #userSearch {
+        display: none;
+    }
+
+    .singleSearchStyle {
+        padding-right: 0px !important;
     }
 
     .ps__rail-x {
@@ -584,6 +729,11 @@
         left: unset !important;
     }
 
+    .dropdown-menu.overlap-menu-order {
+        transform: translate3d(57px, 25px, 0px) !important;
+        right: none !important;
+    }
+
     .table-responsive-md {
         min-height: 265px;
     }
@@ -667,7 +817,8 @@
         color: white;
     }  */
     .table thead th {
-        border-bottom: 1px #dee2e6 !important;
+        /* border-bottom: 1px #dee2e6 !important; */
+        padding: 0.75rem !important;
     }
 
     /* tr:nth-child(even) {

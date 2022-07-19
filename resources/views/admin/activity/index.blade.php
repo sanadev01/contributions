@@ -5,21 +5,25 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
+                    {{-- <div class="col-12 pt-0 d-flex justify-content-end "> --}}
+                    {{-- wire:click.prevent="getActivities" --}}
+                    {{-- <button class="mt-2 btn btn-primary" title="search" onclick="toggleLogsSearch()">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div> --}}
                     <div class="card-header">
-                        <h4 class="mb-0">
-                            Activity Logs
-                        </h4>
-                    </div>
-                    <div class="card-content">
-                        <div class="table-responsive-md mt-1">
-                            <livewire:activity.table/>
-                        </div>
+                    @section('title', __(' Activity Logs'))
+                </div>
+                <div class="card-content">
+                    <div class="table-responsive-md mt-1">
+                        <livewire:activity.table />
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 @endsection
 @section('modal')
-    <x-modal/>
+<x-modal />
 @endsection
