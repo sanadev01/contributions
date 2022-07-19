@@ -22,7 +22,7 @@
             </div>
 
         </div>
-        <div class="mb-2 row col-md-12 pl-4 mb-1 hide" id="logSearch">
+        <div class="mb-2 row col-md-12 pl-4 mb-1 hide"   @if ($this->search) style="display: block !important;" @endif id="logSearch">
             <div class="col-6 pl-2">
                 <label>Search</label>
                 <input type="search" class="form-control" wire:model.debounce.1000ms="search">

@@ -2,8 +2,9 @@
     <div class="p-0 pr-2 d-flex justify-content-between">
         <div>
             <div class="" id="printBtnDiv">
-                <button type="btn" id="pay-commission" class="btn btn-primary ml-2 waves-effect waves-light"><i
-                        class="fa fa-dollar-sign"></i></button>
+                <button type="btn" id="pay-commission" class="btn btn-primary ml-2 waves-effect waves-light">
+                    <i class="fa fa-dollar-sign"></i>
+                </button>
             </div>
         </div>
         <div>
@@ -48,10 +49,11 @@
             </div>
 
         </div>
-        <div class="mb-2 row col-md-12 hide " @if ($this->search) style="display: block !important;" @endif id="logSearch">
+        <div class="mb-2 row col-md-12 hide " @if ($this->search) style="display: block !important;" @endif
+            id="logSearch">
             <div class="col-6 pl-0">
                 <label>Search</label>
-                <input type="search" class="form-control" wire:model.debounce.1000ms="name">
+                <input type="search" class="form-control" wire:model.defer="search">
             </div>
         </div>
 

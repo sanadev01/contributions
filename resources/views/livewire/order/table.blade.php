@@ -24,7 +24,7 @@
                 </div> --}}
             </div>
             {{-- <div class="row col-10"> --}}
-            <div class="row col-8 pr-0 pl-4 " id="singleSearch">
+            <div class="row col-8 pr-0 pl-4 " id="singleSearch"   @if ($this->search) style="display: block !important;" @endif>
                 <div class="form-group singleSearchStyle col-12">
                     <form wire:submit.prevent="submit">
                         <div class="form-group mb-2 col-12 row">
@@ -93,6 +93,7 @@
             <table class="table mb-0  table-bordered">
                 <thead>
                     <tr>
+                        
                         @if (\Request::route()->getName() != 'admin.trash-orders.index')
                             <th id="optionChkbx">
                                 <div class="vs-checkbox-con vs-checkbox-primary" title="Select All">

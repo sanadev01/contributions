@@ -1,5 +1,5 @@
 <div>
-    <div class="mb-2 row col-md-12 pl-0 hide" id="logSearch">
+    <div class="mb-2 row col-md-12 pl-0 hide"@if ($this->search) style="display: block !important;" @endif id="logSearch">
         {{-- <div class="col-1 pl-0">
             <label>User</label>
             <input type="search" wire:model.debounce.500ms="search" class="form-control">
