@@ -380,7 +380,7 @@
                                             <thead>
                                                 <tr>
                                                     <th>Date</th>
-                                                    <th>@if($tracking['order']->recipient->country_id == \App\Models\Order::US)City @else Country @endif</th>
+                                                    <th>@if (optional($tracking['order']->recipient->country_id == \App\Models\Order::US))City @else Country @endif</th>
                                                     <th>Description</th>
                                                 </tr>
                                             </thead>
