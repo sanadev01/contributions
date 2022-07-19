@@ -35,7 +35,7 @@
                                                 <div class="row">
                                                     <div class="col-7 mt-1" id="userSearch">
                                                         <input type="search" class="form-control hd-search"
-                                                            name="search"
+                                                        wire:model.defer="search" name="search"
                                                             value="{{ old('search', request('search')) }}"
                                                             placeholder="@lang('user.Search By Name, Pobox, Email')">
                                                     </div>

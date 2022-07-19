@@ -1,6 +1,6 @@
 <div>
     <div class="p-2">
-        <div class="mb-2 row col-md-12 pl-3 hide" id="logSearch">
+        <div class="mb-2 row col-md-12 pl-3 hide" @if ($this->search || $this->date) style="display: flex !important;" @endif id="logSearch">
             <div class="col-2 pl-0">
                 <label>Date</label>
                 <input type="search" class="form-control" wire:model.debounce.1000ms="date">

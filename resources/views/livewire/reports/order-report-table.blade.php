@@ -1,7 +1,7 @@
 <div class="p-2">
     <div class="row mb-2 no-print pl-0">
 
-        <div class="mb-2 row col-md-12 pl-4 mb-1" id="hiddenSearch">
+        <div class="mb-2 row col-md-12 pl-4 mb-1" @if ($this->search) style="display: block !important;" @endif id="hiddenSearch">
             <div class="col-6 pl-2">
                 <label>Search</label>
                 <input type="search" class="form-control" wire:model.debounce.1000ms="search">

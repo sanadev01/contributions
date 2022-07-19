@@ -50,7 +50,7 @@
         id="logSearch">
         <div class="col-6 pl-0">
             <label>Search</label>
-            <input type="search" class="form-control" wire:model="search">
+            <input type="search" class="form-control" wire:model.defer="search">
         </div>
     </div>
 

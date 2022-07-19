@@ -24,7 +24,7 @@
                     </div>
                     <div class="card-content card-body" style="min-height: 100vh;">
 
-                        <div class="mb-2 row col-md-12 hide" id="logSearch">
+                        <div class="mb-2 row col-md-12 hide"   @if ($this->dispatchNumber || $this->sealNo) style="display: flex !important;" @endif id="logSearch">
                             <div class="col-2 pl-0">
                                 <label>Dispatch Number</label>
                                 <input type="search" class="form-control" wire:model.debounce.1000ms="dispatchNumber">

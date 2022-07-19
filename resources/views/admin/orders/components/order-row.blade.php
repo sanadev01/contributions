@@ -1,9 +1,8 @@
-<tr @if ($order->user->hasRole('retailer') && !$order->isPaid()) class="bg-danger-custom" @endif>
-    @if (\Request::route()->getName() != 'admin.reports.order.index' &&
-        \Request::route()->getName() != 'livewire.message' &&
-        !$order->isTrashed())
-        <td>
 
+<tr @if ($order->user->hasRole('retailer') && !$order->isPaid()) class="bg-danger-custom" @endif>
+    @if (\Request::route()->getName() != 'admin.reports.order.index' && \Request::route()->getName() != 'livewire.message' && !$order->isTrashed())
+        <td>
+          
             <div class="vs-checkbox-con vs-checkbox-primary" title="Select">
                 <input type="checkbox" onchange='handleChange(this);' name="orders[]" class="bulk-orders"
                     value="{{ $order->id }}">
@@ -112,6 +111,7 @@
     <td>
         <span class="col-1">${{ number_format($order->gross_total, 2) }}</span>
     </td>
+    @if(\Request::route()->getName() != 'livewire.message')
     <td>
         {{-- <select style="" data-toggle="dropdown"
             class="form-control dropdown-menu overlap-menu {{ !auth()->user()->isAdmin()? 'btn disabled': '' }} {{ $order->getStatusClass() }}"
@@ -264,6 +264,7 @@
         </div>
 
     </td>
+    @endif
     {{-- <td style="zoom: 0.87">
         @if ($order->is_consolidated)
             <span class="btn btn-sm btn-primary">

@@ -1,7 +1,7 @@
 <div class="p-2">
     <div class="table-responsive order-table">
-        <div class="row col-8 pr-0 pl-0 " id="singleSearch">
-            <div class="form-group singleSearchStyle col-12">
+        <div class="row col-8 pr-0 pl-0 " id="singleSearch"   @if ($this->search) style="display: block !important;" @endif>
+            <div class="form-group singleSearchStyle col-12" >
                 <label>Search</label>
                 <input wire:model="search" type="search" class="form-control col-8 hd-search" name="search">
             </div>
