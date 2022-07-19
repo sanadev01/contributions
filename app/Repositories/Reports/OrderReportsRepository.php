@@ -30,6 +30,7 @@ class OrderReportsRepository
 
         } else if( $request->search )
         {
+        
             $query->where('name','LIKE',"%{$request->search}%")
             ->orWhere('last_name','LIKE',"%{$request->search}%")
             ->orWhere('pobox_number','LIKE',"%{$request->search}%")

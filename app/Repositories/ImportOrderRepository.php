@@ -70,7 +70,7 @@ class ImportOrderRepository
         if ( $request->search ){
             $query->whereHas('user',function($query) use($request) {
                 return $query->where('name', 'LIKE', "%{$request->search}%");
-            })->orWhere('total_orders', $request->search)
+            })->orWhere('total_orders', 'LIKE', "%{$request->search}%")
             ->orWhere('file_name', 'LIKE', "%{$request->search}%");
         }
         

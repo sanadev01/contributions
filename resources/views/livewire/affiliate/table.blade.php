@@ -52,7 +52,6 @@
             <label>Search</label>
             <input type="search" class="form-control" wire:model="search">
         </div>
-
     </div>
 
     <div class="table-wrapper position-relative">

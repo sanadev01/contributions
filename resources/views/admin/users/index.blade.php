@@ -9,7 +9,8 @@
                             <div class="col-2 text-right p-0 pr-1" style="float: right">
                                 <form action="{{ route('admin.users.export.index') }}" method="POST">
                                     @csrf
-                                    <input type="hidden" name="search" value="{{ request('search') }}">
+                                    <input type="hidden" wire:model.debounce.500ms="search" name="search"
+                                        value="{{ request('search') }}">
                                     <button href="" class="mt-1 btn btn-success">
                                         <i class="feather icon-download"></i>
                                     </button>

@@ -54,7 +54,7 @@
             </table>
         </div>
         <div class="row d-flex justify-content-between">
-            <div class="col-1 hd-mt-1">
+            <div class="col-1 hd-mt-1 pt-5">
                 <select class="form-control hd-search" wire:model="pageSize">
                     <option value="1">1</option>
                     <option value="5">5</option>
@@ -65,7 +65,7 @@
                     <option value="300">300</option>
                 </select>
             </div>
-            <div class=" col-10 d-flex justify-content-end my-2 pb-4 mx-2">
+            <div class=" col-10 d-flex justify-content-end my-2 pt-5 mx-2">
                 {{ $activities->links() }}
             </div>
         </div>
