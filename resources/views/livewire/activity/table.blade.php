@@ -26,8 +26,8 @@
                     </select>
                 </div>
                 <div class="col-3">
-                    <label>@lang('activity.Content')</label>
-                    <input type="search" class="form-control hd-search" wire:model.defer="content">
+                    <label>Search</label>
+                    <input type="search" class="form-control hd-search" wire:model.debounce.1000ms="search">
                 </div>
                 <div>
                     <button class="mt-4 pt-2 btn btn-primary" wire:click.prevent="getActivities" title="search">
@@ -37,7 +37,7 @@
             </div>
         </div>
         <div class="table-wrapper position-relative">
-            <table class="table mb-0 table-responsive-md table-striped" id="">
+            <table class="table mb-0 table-responsive-md table-bordered table-striped" id="">
                 <thead>
                     <tr>
                         <th>@lang('activity.Created at')</th>
@@ -54,7 +54,7 @@
             </table>
         </div>
         <div class="row d-flex justify-content-between">
-            <div class="col-1 hd-mt-1">
+            <div class="col-1 hd-mt-1 pt-5">
                 <select class="form-control hd-search" wire:model="pageSize">
                     <option value="1">1</option>
                     <option value="5">5</option>
@@ -65,7 +65,7 @@
                     <option value="300">300</option>
                 </select>
             </div>
-            <div class=" col-10 d-flex justify-content-end my-2 pb-4 mx-2">
+            <div class=" col-10 d-flex justify-content-end my-2 pt-5 mx-2">
                 {{ $activities->links() }}
             </div>
         </div>

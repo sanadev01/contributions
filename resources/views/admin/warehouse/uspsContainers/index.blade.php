@@ -116,7 +116,8 @@
                                                 <div class="dropdown">
                                                     <button type="button" data-toggle="dropdown" aria-haspopup="true"
                                                         aria-expanded="false"
-                                                        class="btn btn-success dropdown-toggle waves-effect waves-light">
+                                                        class="btn btn-success btn-sm dropdown-toggle waves-effect waves-light"
+                                                        style="width:100px;">
                                                         @lang('user.Action')
                                                     </button>
                                                     <div class="dropdown-menu dropdown-menu-right dropright">

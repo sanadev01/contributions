@@ -25,12 +25,14 @@
                         </div>
                         <div class="row mt-1">
                             <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
-                                <button type="submit"
-                                    class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">
-                                    @lang('shippingservice.Save Changes')
-                                </button>
-                                <button type="reset"
-                                    class="btn btn-outline-warning waves-effect waves-light">@lang('shippingservice.Reset')</button>
+                                <div class="col-10 mr-5 d-flex justify-content-end">
+                                    <button type="submit"
+                                        class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">
+                                        @lang('shippingservice.Save Changes')
+                                    </button>
+                                    <button type="reset"
+                                        class="btn btn-outline-secondary waves-effect waves-light">@lang('shippingservice.Reset')</button>
+                                </div>
                             </div>
                         </div>
                     </form>

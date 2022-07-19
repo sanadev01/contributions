@@ -1,5 +1,5 @@
 <div>
-    <div class="row col-8 pr-0 pl-4 " id="singleSearch">
+    <div class="row col-8 pr-0 pl-0 " id="singleSearch">
         <div class="form-group singleSearchStyle col-12">
             <form wire:click="$emitSelf('submit')">
                 <div class="form-group mb-2 col-12 row">
@@ -73,7 +73,9 @@
                     <tr>
                         <td>{{ $ticket->getHumanID() }}</td>
                         <td>
-                            <span class="bg-danger border border-danger rounded-circle text-light m-2 p-2 justify-content-center align-items-center {{ $ticket->comments_count > 0 ? 'd-inline-flex' : 'd-none' }}" style="height: 25px; width:25px; top:0; right:0">
+                            <span
+                                class="bg-danger border border-danger rounded-circle text-light m-2 p-2 justify-content-center align-items-center {{ $ticket->comments_count > 0 ? 'd-inline-flex' : 'd-none' }}"
+                                style="height: 25px; width:25px; top:0; right:0">
                                 {{ $ticket->comments_count }}
                             </span>
                         </td>
@@ -85,20 +87,25 @@
                         </td>
                         <td>
                             {{ $ticket->subject }}
-                            
+
                         </td>
                         <td>
-                            @if($ticket->open == 1) <span class="badge badge-success">@lang('tickets.open')</span> @else <span class="badge badge-danger">@lang('tickets.close')</span> @endif 
+                            @if ($ticket->open == 1)
+                                <span class="badge badge-success">@lang('tickets.open')</span>
+                            @else
+                                <span class="badge badge-danger">@lang('tickets.close')</span>
+                            @endif
                         </td>
                         <td>
                             {{ $ticket->getOpenDays() }}
                         </td>
                         <td class="d-flex">
-                            <a href="{{ route('admin.tickets.show',$ticket->id) }}" class="btn btn-primary mr-2" title="@lang('tickets.Detail')">
+                            <a href="{{ route('admin.tickets.show', $ticket->id) }}" class="btn btn-primary mr-2"
+                                title="@lang('tickets.Detail')">
                                 <i class="feather icon-eye"></i>
                             </a>
-                            @if( auth()->user()->isAdmin() && $ticket->isOpen() )
-                                <form action="{{ route('admin.ticket.mark-closed',$ticket) }}" method="post">
+                            @if (auth()->user()->isAdmin() && $ticket->isOpen())
+                                <form action="{{ route('admin.ticket.mark-closed', $ticket) }}" method="post">
                                     @csrf
                                     <button class="btn btn-danger" title="@lang('tickets.Close Ticket')">
                                         <i class="feather icon-check"></i>

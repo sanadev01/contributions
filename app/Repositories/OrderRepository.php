@@ -144,6 +144,33 @@ class OrderRepository
                 $query->where('is_paid',false);
             }
         }
+
+        if($request->search){
+            $query->where('tracking_id', 'LIKE', "%{$request->search}%")
+            ->orWhere('status',$request->status)
+            ->orWhere('corrios_tracking_code', 'LIKE', "%{$request->search}%")
+            ->orWhere('customer_reference', 'LIKE', "%{$request->search}%")
+            ->orWhere('tracking_id', 'LIKE', "%{$request->search}%")
+            ->orWhere('gross_total', 'LIKE', "%{$request->search}%")
+            ->orWhere('order_date', 'LIKE', "%{$request->search}%")
+            ->orWhereHas('user', function ($queryUser) use($request) {
+                $queryUser->whereHas('role', function ($queryRole) use($request) {
+                    return $queryRole->where('name', $request->search);
+                });
+            })
+            ->orWhere('warehouse_number', 'LIKE', "%{$request->search}%")
+            ->orWhereHas('user', function ($query) use($request) {
+                return $query->where('pobox_number', 'LIKE', "%{$request->search}%");
+            })
+            ->orWhereHas('user', function ($query) use($request) {
+                return $query->where('name', 'LIKE', "%{$request->search}%");
+            })
+            ->orWhereHas('user', function ($query) use($request) {
+                return $query->where('name', 'LIKE', "%{$request->search}%");
+            })
+            ->orWhere('order_date', 'LIKE', "%{$request->search}%");
+
+        }
         $query->orderBy($orderBy,$orderType);
 
         return $paginate ? $query->paginate($pageSize) : $query->get();

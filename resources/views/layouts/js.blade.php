@@ -29,6 +29,28 @@
 <script>
     function toggleDateSearch() {
         const div = document.getElementById('dateSearch');
+        if (div.style.display != 'flex') {
+            div.style.display = 'flex';
+        } else {
+            div.style.display = 'none';
+
+        }
+
+    }
+
+    function toggleDownloadsDiv() {
+        const div = document.getElementById('downloadsDiv');
+        if (div.style.display != 'flex') {
+            div.style.display = 'flex';
+        } else {
+            div.style.display = 'none';
+
+        }
+
+    }
+
+    function toggleBlockSearch() {
+        const div = document.getElementById('searchBlock');
         if (div.style.display != 'block') {
             div.style.display = 'block';
         } else {
@@ -104,20 +126,21 @@
             }
         }
     }
-    var table = $('#example').DataTable({
-        searching: false,
-        paging: false,
-        columnDefs: [{
-                targets: [0, 1, 2, 3],
-                visible: true
-            },
-            {
-                targets: '_all',
-                visible: false
-            },
-        ]
-    });
+    // var table = $('#example').DataTable({
+    //     searching: false,
+    //     paging: false,
+    //     columnDefs: [{
+    //             targets: [0, 1, 2, 3],
+    //             visible: true
+    //         },
+    //         {
+    //             targets: '_all',
+    //             visible: false
+    //         },
+    //     ]
+    // });
     $(document).ready(function() {
+
         $('#visibilityToggle').change(function() {
             var item = $(this);
             // Get the column API object

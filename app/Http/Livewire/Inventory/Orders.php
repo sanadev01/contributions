@@ -151,11 +151,17 @@ class Orders extends Component
         if($this->search)
         {   
             $search = $this->search;
-            $orders->where('order_date', 'LIKE', "%{$this->search}%")->orwhere('warehouse_number', 'LIKE', "%{$this->search}%")
-            ->orwhere('merchant', 'LIKE', "%{$this->search}%")->orwhere('carrier', 'LIKE', "%{$this->search}%")
-            ->orwhere('measurement_unit',"{$this->search}")->orwhere('status',"{$this->search}")->orWhereHas('user', function ($query) use ($search){
+            // dd($search);
+            $orders->where('order_date', 'LIKE', "%{$this->search}%")
+            ->orWhere('warehouse_number', 'LIKE', "%{$this->search}%")
+            ->orWhere('merchant', 'LIKE', "%{$this->search}%")
+            ->orWhere('carrier', 'LIKE', "%{$this->search}%")
+            ->orWhere('measurement_unit',"{$this->search}")
+            ->orWhere('weight',"{$this->search}")
+            ->orWhereHas('user', function ($query) use ($search){
                 $query->where('name', 'like', '%'.$search.'%');
-            });
+            }) 
+            ->orWhere('corrios_tracking_code', 'LIKE', "%{$this->search}%");
         }
         
         return $orders;

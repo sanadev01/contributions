@@ -3,22 +3,27 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header d-flex justify-content-end">
+                    <div class="card-header d-flex justify-content-between">
                         @section('title', __('warehouse.containers.Containers'))
-                        <button class="btn btn-primary waves-effect waves-light mr-1" title="search"
-                            onclick="toggleLogsSearch()">
-                            <i class="fa fa-search" aria-hidden="true"></i>
-                        </button>
-                        <a href="{{ route('warehouse.containers.create') }}" class="pull-right btn btn-primary">
-                            @lang('warehouse.containers.Create Container') </a>
+                        <div>
+                            <div id="printBtnDiv">
+                                <button title="Assign AWB" id="assignAwb" type="btn"
+                                    class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i
+                                        class="fas fa-file-invoice"></i></button>
+
+                            </div>
+                        </div>
+                        <div>
+                            <button class="btn btn-primary waves-effect waves-light mr-1" title="search"
+                                onclick="toggleLogsSearch()">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                            </button>
+                            <a href="{{ route('warehouse.containers.create') }}" class="pull-right btn btn-primary">
+                                @lang('warehouse.containers.Create Container') </a>
+                        </div>
                     </div>
                     <div class="card-content card-body" style="min-height: 100vh;">
-                        <div id="printBtnDiv">
-                            <button title="Assign AWB" id="assignAwb" type="btn"
-                                class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i
-                                    class="fas fa-file-invoice"></i></button>
 
-                        </div>
                         <div class="mb-2 row col-md-12 hide" id="logSearch">
                             <div class="col-2 pl-0">
                                 <label>Dispatch Number</label>
@@ -178,7 +183,8 @@
                                                     <div class="dropdown">
                                                         <button type="button" data-toggle="dropdown"
                                                             aria-haspopup="true" aria-expanded="false"
-                                                            class="btn btn-success dropdown-toggle waves-effect waves-light">
+                                                            class="btn btn-success btn-sm dropdown-toggle waves-effect waves-light"
+                                                            style="width:100px;">
                                                             @lang('user.Action')
                                                         </button>
                                                         <div class="dropdown-menu dropdown-menu-right dropright">

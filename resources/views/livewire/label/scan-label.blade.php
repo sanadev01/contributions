@@ -10,15 +10,20 @@
     </div>
 
     <div class="col-md-12">
-        <div class="hd-card mt-4 mb-3">
-            <div class="row col-12 d-flex justify-content-between pl-4">
-                <div class="form-group row col-4 pr-2">
+        <div class="hd-card mb-3">
+            <div class="card-header d-flex justify-content-between">
+                <div class="form-group row col-5 pr-2 pl-0">
                     <label class="col-3 text-left"> @lang('orders.print-label.Scan Package')</label>
                     <input type="text" @if (count($packagesRows) == 300) readonly @endif
-                        class="form-control col-8 hd-search" wire:model.debounce.500ms="tracking">
-                    <span class="text-danger offset-2"> @lang('orders.print-label.Scan Package Message') {{ count($packagesRows) }} / 300</span>
+                        class="form-control col-9 hd-search" wire:model.debounce.500ms="tracking">
+                    <span class="text-danger offset-3"> @lang('orders.print-label.Scan Package Message') {{ count($packagesRows) }} / 300</span>
                 </div>
-                <div class="col-lg-4 cold-md-3 col-sm-3 col-xs-3 d-flex justify-content-end p-0">
+
+                <div class="col-lg-4 cold-md-3 col-sm-3 col-xs-3 d-flex justify-content-end mb-5 pr-0">
+                    <button onclick="toggleLogsSearch()" class="btn btn-primary mr-2 waves-effect waves-light"
+                        style="height:33px;">
+                        <i class="feather icon-search"></i>
+                    </button>
                     @if (!$searchOrder)
                         <form action="{{ route('admin.label.scan.store') }}" method="post">
                             @csrf
@@ -54,7 +59,7 @@
                                 <input type="hidden" name="end_date" value="{{ $end_date }}">
                                 <input type="hidden" name="userId" value="{{ $user_id }}">
                                 <button type="submit" class="btn btn-success mr-2" title="@lang('orders.import-excel.Download')">
-                                    <i class="feather icon-download"></i> @lang('orders.import-excel.Download') Sacn List
+                                    <i class="feather icon-download"></i> @lang('orders.import-excel.Download') Scan List
                                 </button>
 
                             </form>
@@ -64,7 +69,7 @@
             </div>
             <div class="row col-12 d-flex justify-content-end">
                 <form wire:submit.prevent="search" class="col-12">
-                    <div class="row mt-2">
+                    <div class="row mt-2 hide" id="logSearch">
                         <div class="col-2">
                             <div class="form-group">
                                 <div class="controls">
@@ -98,10 +103,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 mt-0">
                             <div class="form-group">
                                 <div class="controls">
-                                    <button type="submit" class="btn btn-primary hd-mt-22" wire:click="search">
+                                    <button type="submit" class="btn btn-primary hd-mt-20" wire:click="search">
                                         <i class="feather icon-search"></i>
                                     </button>
                                 </div>

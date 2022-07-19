@@ -5,9 +5,9 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header pr-0">
                     @section('title', __('orders.orders'))
-                    <div class="row filter col-12 d-flex justify-content-end pr-0">
+                    <div class="row filter col-12 d-flex justify-content-end pr-2">
                         <a href="{{ route('admin.reports.order.create') }}" class="btn btn-success mr-1 mb-1"
                             title="@lang('orders.import-excel.Download')">
                             <i class="fa fa-arrow-down"></i>
@@ -19,15 +19,7 @@
                             class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i
                                 class="feather icon-filter"></i></button>
                     </div>
-                    <div id="hiddenSearch" class="form-group mb-2 col-12 pl-2">
-                        <div class="row form-group mb-2 col-12 pl-3">
 
-                            <input type="text" class="form-control col-4 hd-search">
-                            <button class="btn btn-primary ml-2 waves-effect waves-light">
-                                <i class="fa fa-search" aria-hidden="true"></i>
-                            </button>
-                        </div>
-                    </div>
                     <div class="row col-12 pr-0 m-0 pl-0" id="datefilters">
                         <div class=" col-6 text-left mb-2 pl-0">
                             <div class="row col-12 my-3 pl-1" id="dateSearch">

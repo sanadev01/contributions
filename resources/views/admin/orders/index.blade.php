@@ -33,7 +33,7 @@
             </div>
         </div>
 
-        <div class="row filter" style="padding-right:1%;">
+        <div class="row filter pr-3">
             <button type="btn" onclick="toggleDateSearch()" id="customSwitch8"
                 class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-filter"></i></button>
             <button type="btn" onclick="toggleOrderPageSearch()" id="orderSearch"

@@ -1,9 +1,9 @@
 @extends('layouts.master')
 
 @section('page')
-@if(auth()->user()->isAdmin())
-    @section('title', __('tickets.Support Tickets'))
-@else
+    @if (auth()->user()->isAdmin())
+        @section('title', __('tickets.Support Tickets'))
+    @else
     @section('title', __('tickets.My Tickets'))
 @endif
 
@@ -26,7 +26,7 @@
         <div class="row filter" style="padding-right:0.5%;">
             <button type="btn" onclick="toggleOrderPageSearch()" id="orderSearch"
                 class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-search"></i></button>
-                
+
         </div>
     </div>
 
@@ -39,5 +39,5 @@
         </div>
     </div>
 </div>
-    
+
 @endsection

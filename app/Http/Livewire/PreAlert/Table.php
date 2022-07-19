@@ -32,7 +32,6 @@ class Table extends Component
     public $carrier = '';
     public $tracking_id = '';
     public $status = '';
-    public $custom = '';
 
     /**
      * Sort Asc.
@@ -133,12 +132,12 @@ class Table extends Component
 
     public function getQuery()
     {
-        $searchString = $this->custom;
+        $searchString = $this->search;
         $orders = Order::query()
         ->whereIn('status',[10,20,25,26])
         // ->orWhere('status','<',Order::STATUS_ORDER)
-        ->where('tracking_id','LIKE',"%{$this->custom}%")
-        ->orWhere('warehouse_number','LIKE',"%{$this->custom}%")
+        ->orWhere('tracking_id','LIKE',"%{$this->search}%")
+        ->orWhere('warehouse_number','LIKE',"%{$this->search}%")
         ->orWhereHas('user', function ($query) use ($searchString){
             $query->where('name', 'like', '%'.$searchString.'%');
         })

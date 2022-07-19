@@ -1,14 +1,22 @@
-<div class="p-0 pr-2 d-flex justify-content-end">
-    <button type="btn" onclick="toggleDateSearch()" id="customSwitch8"
-        class="btn btn-primary mr-1 waves-effect waves-light"><i class="feather icon-filter"></i></button>
-    <button onclick="toggleLogsSearch()" class="btn btn-primary waves-effect waves-light">
-        <i class="feather icon-search"></i>
-    </button>
+<div class="p-0 pr-2 d-flex justify-content-between">
+    <div>
+        <div class="" id="printBtnDiv">
+            <button type="btn" id="pay-commission" class="btn btn-primary ml-2 waves-effect waves-light"><i
+                    class="fa fa-dollar-sign"></i></button>
+        </div>
+    </div>
+    <div>
+        <button type="btn" onclick="toggleDateSearch()" id="customSwitch8"
+            class="btn btn-primary mr-1 waves-effect waves-light"><i class="feather icon-filter"></i></button>
+        <button onclick="toggleLogsSearch()" class="btn btn-primary waves-effect waves-light">
+            <i class="feather icon-search"></i>
+        </button>
+    </div>
 </div>
 <div class="p-2">
     @admin
         <div class="row">
-            <div class="col-12 text-right mb-3">
+            <div class="col-12 text-right">
                 <p class="mr-0 h5">Paid Commission:<span class="text-success h4"> $
                         {{ number_format($balance->where('is_paid', true)->sum('value'), 2) }}</span></p>
                 <p class="mr-0 h5">UnPaid Commission:<span class="text-danger h4"> $
@@ -18,8 +26,9 @@
     @endadmin
     <div class="row col-12 pr-0 m-0 pl-0" id="datefilters">
         <div class=" col-6 text-left mb-2 pl-0">
-            <div class="row col-12 my-3 pl-0" id="dateSearch" style="display: none;">
-                <form action="{{ route('admin.affiliate.sale.exports') }}" method="GET" target="_blank">
+            <div class="row" id="dateSearch" style="display: none;">
+                <form class="col-12 pl-0" action="{{ route('admin.affiliate.sale.exports') }}" method="GET"
+                    target="_blank">
                     @csrf
                     <div class="form-group mb-2 col-4" style="float:left;margin-right:20px;">
                         <label>Start Date</label>
@@ -37,17 +46,14 @@
         </div>
 
     </div>
-    <div class="mb-2 row col-md-12 hide" id="logSearch">
+    <div class="mb-2 row col-md-12 hide " @if ($this->search) style="display: block !important;" @endif
+        id="logSearch">
         <div class="col-6 pl-0">
             <label>Search</label>
-            <input type="search" class="form-control" wire:model.debounce.1000ms="customSearch">
+            <input type="search" class="form-control" wire:model="search">
         </div>
+    </div>
 
-    </div>
-    <div class="" id="printBtnDiv">
-        <button type="btn" id="pay-commission" class="btn btn-primary mr-1 waves-effect waves-light mb-4"><i
-                class="fa fa-credit-card-alt"></i></button>
-    </div>
     <div class="table-wrapper position-relative">
         <table class="table mb-0 table-bordered table-responsive-md" id="">
             <thead>

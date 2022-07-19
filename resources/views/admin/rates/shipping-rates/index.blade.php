@@ -5,13 +5,15 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header d-flex justify-content-end">
-                    @section('title', __('shipping-rates.shipping-rates'))
-                    @can('create', App\Models\Rate::class)
-                        <a href="{{ route('admin.rates.shipping-rates.create') }}" class="pull-right btn btn-primary">
-                            @lang('shipping-rates.Upload Rates')
-                        </a>
-                    @endcan
+                    <div class="card-header pr-1">
+                        <div class="col-12 d-flex justify-content-end">
+                        @section('title', __('shipping-rates.shipping-rates'))
+                        @can('create', App\Models\Rate::class)
+                            <a href="{{ route('admin.rates.shipping-rates.create') }}" class="pull-right btn btn-primary">
+                                @lang('shipping-rates.Upload Rates')
+                            </a>
+                        @endcan
+                    </div>
                 </div>
                 <div class="card-content card-body">
                     <table class="table table-bordered table-responsive-md">

@@ -1,6 +1,9 @@
 <tr @if ($order->user->hasRole('retailer') && !$order->isPaid()) class="bg-danger-custom" @endif>
-    @if (\Request::route()->getName() != 'admin.reports.order.index' && !$order->isTrashed())
+    @if (\Request::route()->getName() != 'admin.reports.order.index' &&
+        \Request::route()->getName() != 'livewire.message' &&
+        !$order->isTrashed())
         <td>
+
             <div class="vs-checkbox-con vs-checkbox-primary" title="Select">
                 <input type="checkbox" onchange='handleChange(this);' name="orders[]" class="bulk-orders"
                     value="{{ $order->id }}">
@@ -218,7 +221,8 @@
         </div> --}}
 
         <div class="dropdown">
-            <button id="status-btn" title="status" type="button" @if (\Request::route()->getName() == 'admin.trash-orders.index' || \Request::route()->getName() == 'admin.reports.order.index') disabled @endif
+            <button id="status-btn" title="status" type="button" @if (\Request::route()->getName() == 'admin.trash-orders.index' ||
+                \Request::route()->getName() == 'admin.reports.order.index') disabled @endif
                 class="btn {{ !auth()->user()->isAdmin()? 'btn disabled': '' }} {{ $order->getStatusClass() }}"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 {{ $order->getStatus() }}
@@ -334,7 +338,9 @@
                                 title="@lang('orders.actions.label')">
                                 <i class="feather icon-printer"></i>@lang('orders.actions.label')
                             </a>
-                            @if ($order->corrios_tracking_code && $order->recipient->country_id != \App\Models\Order::US && !$order->hasSecondLabel())
+                            @if ($order->corrios_tracking_code &&
+                                $order->recipient->country_id != \App\Models\Order::US &&
+                                !$order->hasSecondLabel())
                                 <a href="{{ route('admin.order.us-label.index', $order) }}" class="dropdown-item"
                                     title="@lang('orders.actions.label')">
                                     <i class="feather icon-printer"></i>@lang('orders.actions.buy-us-label')

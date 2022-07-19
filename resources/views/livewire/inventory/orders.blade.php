@@ -11,16 +11,17 @@
                 <h1>Total Value: <span class="text-primary">$ {{ $totalValue }}</span></h1>
             </div>
         </div>
-        <div class="row col-8 pr-0 pl-1" id="singleSearch"
+        <div class="row col-8 pr-0 pl-0" id="singleSearch"
             @if ($this->search) style="display: block !important" @endif>
             <div class="form-group singleSearchStyle col-12">
                 <label>Search</label>
                 <input wire:model="search" type="search" class="form-control col-8 hd-search" name="search">
             </div>
         </div>
-        <div class=" col-6 text-left mb-2 pl-0">
-            <div class="row col-12 my-3 pl-0" id="dateSearch">
-                <form action="{{ route('admin.inventory.orders.export') }}" method="GET" target="_blank">
+        <div class=" col-6 text-left  pl-0">
+            <div class="row col-12 pl-0" id="dateSearch">
+                <form class="col-12 pl-0" action="{{ route('admin.inventory.orders.export') }}" method="GET"
+                    target="_blank">
                     <input type="hidden" name="_token" value="RGExtuCnSp9IGnPJK9XiKT8te8itWcKs8lV5RynB">
                     <div class="form-group mb-2 col-4" style="float:left;margin-right:20px;">
                         <label>Start Date</label>

@@ -6,21 +6,9 @@
             </div>
         </div>
         <div class="row pl-3 mb-2 no-print d-flex justify-content-end">
-            <div id="printBtnDiv">
-                <button title="Print Labels" id="createSaleOrder" type="btn"
-                    class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="">Create Sale
-                        Order</i></button>
-            </div>
-            <div class="col-11 text-right">
-                @admin
-                    <a href="{{ route('admin.inventory.product-export.index') }}" class="btn btn-success"
-                        title="Download">
-                        <i class="fa fa-arrow-down"></i>
-                    </a>
-                @endadmin
-            </div>
+           
         </div>
-        <div class="row col-8 pr-0 pl-1 " id="singleSearch"
+        <div class="row col-8 pr-0 pl-0 " id="singleSearch"
             @if ($this->search) style="display: block !important;" @endif>
             <div class="form-group singleSearchStyle col-12">
                 <label>Search</label>
@@ -138,7 +126,7 @@
             </table>
 
         </div>
-        <div class="row pl-0 pt-5 d-flex justify-content-between">
+        <div class="row pl-3 pt-5 d-flex justify-content-between">
             <div class="col-1 pl-0 pt-5">
                 <select class="form-control" wire:model="pageSize">
                     <option value="1">1</option>
