@@ -69,7 +69,8 @@
             </div>
             <div class="row col-12 d-flex justify-content-end">
                 <form wire:submit.prevent="search" class="col-12">
-                    <div class="row mt-2 hide" id="logSearch">
+                    <div class="row mt-2 hide" @if ($this->start_date || $this->end_date) style="display: flex !important" @endif
+                        id="logSearch">
                         <div class="col-2">
                             <div class="form-group">
                                 <div class="controls">
