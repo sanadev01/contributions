@@ -31,14 +31,22 @@ class TaxRepository
 
     public function store(Request $request)
     {
-        $data = $request->all();
-        dd($data);
+        $data = [];
+
         try{
-            $insert = Tax::create( $request->except(['_token','user_name','tracking_code']));
-            return $insert;
+
+            foreach($request->order_id as $key=> $orderId) {
+                Tax::create([
+                    'user_id' => $request->user_id,
+                    'order_id' => $orderId,
+                    'tax_1' => $request->tax_1[$key],
+                    'tax_2' => $request->tax_2[$key],
+                ]);
+            }
+            return true;
+
         }catch(Exception $exception){
-            dd($exception->getMessage());
-            session()->flash('alert-danger','Error while Adding Tax');
+            session()->flash('alert-danger','Error while Adding Tax'. $exception->getMessage());
             return null;
         }
     }

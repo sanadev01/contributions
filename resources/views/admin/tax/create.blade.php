@@ -70,7 +70,8 @@
                                             <div class="row m-1 mb-3">
                                                 <div class="col-md-2">
                                                     <input type="hidden" class="form-control" name="user_id" value="{{ $order->user_id }}">
-                                                    <input type="text" class="form-control" name="order_id[]" value="{{ $order->warehouse_number }}" readonly required>
+                                                    <input type="hidden" class="form-control" name="order_id[]" value="{{ $order->id }}">
+                                                    <input type="text" class="form-control"  value="{{ $order->warehouse_number }}" readonly required>
                                                 </div>
                                                 <div class="col-md-2">
                                                     <input type="text" class="form-control" name="user_name[]" value="{{ $order->user->name }}" required>

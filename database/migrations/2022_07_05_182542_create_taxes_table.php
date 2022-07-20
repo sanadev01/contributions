@@ -17,8 +17,8 @@ class CreateTaxesTable extends Migration
             $table->id();
             $table->bigInteger('user_id');
             $table->bigInteger('order_id');
-            $table->double('tax1')->default(0);
-            $table->double('tax2')->default(0);
+            $table->double('tax_1')->default(0);
+            $table->double('tax_2')->default(0);
             $table->timestamps();
         });
     }
