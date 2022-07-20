@@ -1,16 +1,18 @@
-<div>
-    <div class="mb-2 row col-md-12 pl-0 hide"@if ($this->search) style="display: block !important;" @endif id="logSearch">
-        {{-- <div class="col-1 pl-0">
-            <label>User</label>
-            <input type="search" wire:model.debounce.500ms="search" class="form-control">
-        </div> --}}
-        @admin
-            <div class="col-2">
-                <label>Search</label>
-                <input type="search" wire:model.debounce.500ms="search" class="form-control">
-            </div>
-        @endadmin
-        {{-- <div class="col-2">
+        <div>
+            <div class="mb-2 row col-md-12 pl-0 hide"@if ($this->search) style="display: block !important;" @endif
+                id="logSearch">
+                @admin
+                    <form class="col-12 d-flex pl-0" wire:submit.prevent="render">
+                        <div class="col-6">
+                            <label>Search</label>
+                            <input type="search" wire:model.defer="search" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-primary ml-2 mt-4">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </form>
+                @endadmin
+                {{-- <div class="col-2">
             <label>Address</label>
             <input type="search" wire:model.debounce.500ms="address" class="form-control">
         </div>
@@ -40,37 +42,37 @@
             <input type="search" wire:model.debounce.500ms="phone" class="form-control">
         </div> --}}
 
-    </div>
-    <table class="table mb-0  table-bordered">
-        <thead>
-            <tr id="th">
-                <th id="">
-                    @lang('address.User')
-                </th>
-                <th>
-                    @lang('address.Name')
-                    <a wire:click.prevent="sortBy('first_name')" class="fas fa-sort text-right custom-sort-arrow"
-                        aria-hidden="true"></a>
-                    {{-- <a href="#" wire:click.prevent="sortBy('first_name')">
+            </div>
+            <table class="table mb-0  table-bordered">
+                <thead>
+                    <tr id="th">
+                        <th id="">
+                            @lang('address.User')
+                        </th>
+                        <th>
+                            @lang('address.Name')
+                            <a wire:click.prevent="sortBy('first_name')"
+                                class="fas fa-sort text-right custom-sort-arrow" aria-hidden="true"></a>
+                            {{-- <a href="#" wire:click.prevent="sortBy('first_name')">
                         @if ($sortBy == 'first_name' && $sortAsc)
                             <i class="fa fa-arrow-down ml-2"></i>
                         @elseif($sortBy == 'first_name' && !$sortAsc)
                             <i class="fa fa-arrow-up ml-2"></i>
                         @endif --}}
-                    </a>
-                </th>
-                <th class="hidden-lg">@lang('address.Address') </th>
-                <th>@lang('address.Address')2 </th>
-                <th>@lang('address.Street No')</th>
-                <th>@lang('address.Country') </th>
-                <th>@lang('address.City') </th>
-                <th>@lang('address.State') </th>
-                <th>@lang('address.CPF') </th>
-                <th id="colCnjp">@lang('address.CNPJ') </th>
-                <th id="colPhone">@lang('address.Telefone') </th>
-                <th id="colActions">@lang('address.Actions') </th>
-            </tr>
-            {{-- <tr id="th">
+                            </a>
+                        </th>
+                        <th class="hidden-lg">@lang('address.Address') </th>
+                        <th>@lang('address.Address')2 </th>
+                        <th>@lang('address.Street No')</th>
+                        <th>@lang('address.Country') </th>
+                        <th>@lang('address.City') </th>
+                        <th>@lang('address.State') </th>
+                        <th>@lang('address.CPF') </th>
+                        <th id="colCnjp">@lang('address.CNPJ') </th>
+                        <th id="colPhone">@lang('address.Telefone') </th>
+                        <th id="colActions">@lang('address.Actions') </th>
+                    </tr>
+                    {{-- <tr id="th">
                 <th>
                     <input type="search" wire:model.debounce.500ms="user" class="form-control">
                 </th>
@@ -93,39 +95,39 @@
                 <th></th>
                 <th></th>
             </tr> --}}
-        </thead>
-        <tbody>
-            @foreach ($addresses as $address)
-                @include('admin.addresses.address-row')
-            @endforeach
-        </tbody>
-    </table>
-    <div class="row d-flex justify-content-between">
-        <div class="col-1 hd-mt-1 pt-5 pr-0">
-            <select class="form-control hd-search" wire:model="pageSize">
-                <option value="1">1</option>
-                <option value="5">5</option>
-                <option value="10">10</option>
-                <option value="20">20</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-                <option value="300">300</option>
-            </select>
+                </thead>
+                <tbody>
+                    @foreach ($addresses as $address)
+                        @include('admin.addresses.address-row')
+                    @endforeach
+                </tbody>
+            </table>
+            <div class="row d-flex justify-content-between">
+                <div class="col-1 hd-mt-1 pt-5 pr-0">
+                    <select class="form-control hd-search" wire:model="pageSize">
+                        <option value="1">1</option>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="300">300</option>
+                    </select>
+                </div>
+                <div class=" col-10 d-flex justify-content-end pr-2 pt-5 mx-2">
+                    {{ $addresses->links() }}
+                </div>
+            </div>
+            @include('layouts.livewire.loading')
         </div>
-        <div class=" col-10 d-flex justify-content-end pr-2 pt-5 mx-2">
-            {{ $addresses->links() }}
-        </div>
-    </div>
-    @include('layouts.livewire.loading')
-</div>
-<script>
-    function toggleVisibility(value) {
-        // console.log(value);
-        const div = document.getElementById(value);
-        if (div.style.display != 'block') {
-            div.style.display = 'block';
-        } else {
-            div.style.display = 'none';
-        }
-    }
-</script>
+        <script>
+            function toggleVisibility(value) {
+                // console.log(value);
+                const div = document.getElementById(value);
+                if (div.style.display != 'block') {
+                    div.style.display = 'block';
+                } else {
+                    div.style.display = 'none';
+                }
+            }
+        </script>

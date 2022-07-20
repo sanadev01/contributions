@@ -1,12 +1,17 @@
 <div class="p-2">
     <div class="row mb-2 no-print pl-0">
 
-        <div class="mb-2 row col-md-12 pl-4 mb-1" @if ($this->search) style="display: block !important;" @endif id="hiddenSearch">
-            <div class="col-6 pl-2">
-                <label>Search</label>
-                <input type="search" class="form-control" wire:model.debounce.1000ms="search">
-            </div>
-
+        <div class="mb-2 row col-md-12 pl-4 mb-1"
+            @if ($this->search) style="display: flex !important;" @endif id="hiddenSearch">
+            <form class="col-12 d-flex pl-0" wire:submit.prevent="render">
+                <div class="col-6 pl-2">
+                    <label>Search</label>
+                    <input type="search" class="form-control" wire:model.defer="search">
+                </div>
+                <button type="submit" class="btn btn-primary ml-2 mt-4">
+                    <i class="fa fa-search"></i>
+                </button>
+            </form>
         </div>
     </div>
     <table class="table table-bordered table-responsive-md pb-4">

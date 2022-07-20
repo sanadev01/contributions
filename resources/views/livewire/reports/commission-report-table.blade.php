@@ -24,11 +24,15 @@
             </div>
         </div>
         <div class="mb-2 row col-md-12 pl-3 mb-3 {{ !$search ? 'hide' : '' }}" id="logSearch">
-            <div class="col-6 pl-0">
-                <label>Search</label>
-                <input type="search" class="form-control" wire:model.debounce.1000ms="search">
-            </div>
-
+            <form class="col-12 d-flex pl-0" wire:submit.prevent="render">
+                <div class="col-6 pl-0">
+                    <label>Search</label>
+                    <input type="search" class="form-control" wire:model.defer="search">
+                </div>
+                <button type="submit" class="btn btn-primary ml-2 mt-4">
+                    <i class="fa fa-search"></i>
+                </button>
+            </form>
         </div>
         <div class="table-responsive order-table">
             <table class="table mb-0 table-bordered">

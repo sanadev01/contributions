@@ -6,14 +6,21 @@
             </div>
         </div>
         <div class="row pl-3 mb-2 no-print d-flex justify-content-end">
-           
+
         </div>
+
         <div class="row col-8 pr-0 pl-0 " id="singleSearch"
             @if ($this->search) style="display: block !important;" @endif>
-            <div class="form-group singleSearchStyle col-12">
-                <label>Search</label>
-                <input wire:model="search" type="search" class="form-control col-8 hd-search" name="custom">
-            </div>
+            <form class="col-12 d-flex pl-0" wire:submit.prevent="render">
+                <div class="form-group singleSearchStyle col-8">
+                    <label>Search</label>
+                    <input wire:model.defer="search" type="search" class="form-control col-12 hd-search"
+                        name="custom">
+                </div>
+                <button type="submit" class="btn btn-primary ml-2 mt-4 mb-3">
+                    <i class="fa fa-search"></i>
+                </button>
+            </form>
         </div>
         <div class="table-wrapper position-relative">
             <table class="table mb-0 table-responsive table-bordered table-hover" id="order-table">

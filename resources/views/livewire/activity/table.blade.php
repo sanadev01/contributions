@@ -7,7 +7,8 @@
             </button>
         </div>
         <div class="hd-card mt-4 mb-3">
-            <div class="mb-2 row col-md-12 hide" @if ($this->search || $this->date || $this->name || $this->model) style="display: flex !important;" @endif id="logSearch">
+            <div class="mb-2 row col-md-12 hide"
+                @if ($this->search || $this->date || $this->name || $this->model) style="display: flex !important;" @endif id="logSearch">
                 <div class="col-2">
                     <label>@lang('activity.Date')</label>
                     <input type="search" class="form-control hd-search" wire:model.defer="date">
@@ -27,7 +28,7 @@
                 </div>
                 <div class="col-3">
                     <label>Search</label>
-                    <input type="search" class="form-control hd-search" wire:model.debounce.1000ms="search">
+                    <input type="search" class="form-control hd-search" wire:model.defer="search">
                 </div>
                 <div>
                     <button class="mt-4 pt-2 btn btn-primary" wire:click.prevent="getActivities" title="search">

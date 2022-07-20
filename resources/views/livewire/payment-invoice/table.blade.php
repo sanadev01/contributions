@@ -22,13 +22,19 @@
             </div>
 
         </div>
-        <div class="mb-2 row col-md-12 pl-4 mb-1 hide"   @if ($this->search) style="display: block !important;" @endif id="logSearch">
-            <div class="col-6 pl-2">
-                <label>Search</label>
-                <input type="search" class="form-control" wire:model.debounce.1000ms="search">
-            </div>
 
-        </div>
+        <form class="col-12 d-flex pl-0" wire:submit.prevent="render">
+            <div class="mb-2 row col-md-12 pl-4 mb-1 hide"
+                @if ($this->search) style="display: flex !important;" @endif id="logSearch">
+                <div class="col-6 pl-2">
+                    <label>Search</label>
+                    <input type="search" class="form-control" wire:model.defer="search">
+                </div>
+                <button type="submit" class="btn btn-primary ml-2 mt-4">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </form>
     </div>
     <table class="table table-hover-animation table-bordered mb-0">
         <thead>

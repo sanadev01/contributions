@@ -24,25 +24,32 @@
                     </div>
                     <div class="card-content card-body" style="min-height: 100vh;">
 
-                        <div class="mb-2 row col-md-12 hide"   @if ($this->dispatchNumber || $this->sealNo) style="display: flex !important;" @endif id="logSearch">
-                            <div class="col-2 pl-0">
-                                <label>Dispatch Number</label>
-                                <input type="search" class="form-control" wire:model.debounce.1000ms="dispatchNumber">
-                            </div>
-                            <div class="col-2">
-                                <label>Seal No</label>
-                                <input type="search" class="form-control" wire:model.debounce.1000ms="sealNo">
-                            </div>
-                            <div class="col-2">
-                                <label>Distribution Service Class</label>
-                                <select class="form-control" wire:model="packetType">
-                                    <option value="">Select Type</option>
-                                    <option value="NX">Packet Standard</option>
-                                    <option value="IX">Packet Express</option>
-                                    <option value="XP">Packet Mini</option>
-                                </select>
+                        <div class="mb-2 row col-md-12 hide"
+                            @if ($this->dispatchNumber || $this->sealNo) style="display: flex !important;" @endif id="logSearch">
+                            <form class="col-12 d-flex pl-0" wire:submit.prevent="render">
+                                <div class="col-2 pl-0">
+                                    <label>Dispatch Number</label>
+                                    <input type="search" class="form-control" wire:model.defer="dispatchNumber">
+                                </div>
+                                <div class="col-2">
+                                    <label>Seal No</label>
+                                    <input type="search" class="form-control" wire:model.defer="sealNo">
+                                </div>
+                                <div class="col-2">
+                                    <label>Distribution Service Class</label>
+                                    <select class="form-control" wire:model="packetType">
+                                        <option value="">Select Type</option>
+                                        <option value="NX">Packet Standard</option>
+                                        <option value="IX">Packet Express</option>
+                                        <option value="XP">Packet Mini</option>
+                                    </select>
 
-                            </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary ml-2 mt-4">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </form>
+
                         </div>
                         <div class="mt-1 table-bordered">
                             <table class="table mb-0 table-bordered">
