@@ -34,6 +34,7 @@ class TicketRepository
             $query->orWhere('created_at', 'LIKE', '%'. $request->searchTerm . '%');
             
             $query->orWhere('open', 'LIKE', '%'. $request->searchTerm . '%');
+            $query->orWhere('subject', 'LIKE', '%'. $request->searchTerm . '%');
         });
         return $tickets->orderBy('id','DESC')->paginate(25);
     }
