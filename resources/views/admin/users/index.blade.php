@@ -33,7 +33,8 @@
                                         <div class="col-10">
                                             <form action="" method="GET">
                                                 <div class="row">
-                                                    <div class="col-7 mt-1" id="userSearch">
+                                                    <div class="col-7 mt-1" id="userSearch"
+                                                        @if (request('search')) style="display: flex !important" @endif>
                                                         <input type="search" class="form-control hd-search"
                                                             wire:model.defer="search" name="search"
                                                             value="{{ old('search', request('search')) }}"
