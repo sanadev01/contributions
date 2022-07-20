@@ -75,8 +75,8 @@
 
     function toggleUserSearch() {
         const div = document.getElementById('userSearch');
-        if (div.style.display != 'block') {
-            div.style.display = 'block';
+        if (div.style.display != 'flex') {
+            div.style.display = 'flex';
             // console.log('asdasd');
         } else {
             div.style.display = 'none';

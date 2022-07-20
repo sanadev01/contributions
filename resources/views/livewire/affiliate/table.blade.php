@@ -41,7 +41,8 @@
                             <label>End Date</label>
                             <input type="date" name="end_date" class="form-control">
                         </div>
-                        <button class="btn btn-success searchDateBtn waves-effect waves-light" title="@lang('sales-commission.Download Sales')">
+                        <button class="btn btn-success searchDateBtn waves-effect waves-light"
+                            title="@lang('sales-commission.Download Sales')">
                             <i class="fa fa-arrow-down" aria-hidden="true"></i>
                         </button>
                     </form>
@@ -49,11 +50,11 @@
             </div>
 
         </div>
-        <div class="mb-2 row col-md-12 hide " @if ($this->search) style="display: block !important;" @endif
-            id="logSearch">
+        <div class="mb-2 row col-md-12 hide "
+            @if ($this->search) style="display: block !important;" @endif id="logSearch">
             <div class="col-6 pl-0">
                 <label>Search</label>
-                <input type="search" class="form-control" wire:model.defer="search">
+                <input type="search" class="form-control" wire:model="search">
             </div>
         </div>
 
@@ -64,7 +65,8 @@
                         @admin
                             <th id="optionChkbx">
                                 <div class="vs-checkbox-con vs-checkbox-primary" title="Select All">
-                                    <input type="checkbox" id="checkAll" name="bulk-sales[]" class="check-all" value="">
+                                    <input type="checkbox" id="checkAll" name="bulk-sales[]" class="check-all"
+                                        value="">
                                     <span class="vs-checkbox vs-checkbox-sm">
                                         <span class="vs-checkbox--check">
                                             <i class="vs-icon feather icon-check"></i>
