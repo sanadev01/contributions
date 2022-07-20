@@ -33,13 +33,17 @@
                                         <div class="col-10">
                                             <form action="" method="GET">
                                                 <div class="row">
-                                                    <div class="col-7 mt-1" id="userSearch">
+                                                    <div class="col-7 mt-1" id="userSearch"
+                                                        @if (request('search')) style="display: flex !important" @endif>
                                                         <input type="search" class="form-control hd-search"
-                                                        wire:model.defer="search" name="search"
+                                                            wire:model.defer="search" name="search"
                                                             value="{{ old('search', request('search')) }}"
                                                             placeholder="@lang('user.Search By Name, Pobox, Email')">
+                                                        <button type="submit"
+                                                            class="btn btn-primary ml-2 waves-effect waves-light">
+                                                            <i class="fa fa-search" aria-hidden="true"></i>
+                                                        </button>
                                                     </div>
-
                                                 </div>
                                             </form>
                                         </div>

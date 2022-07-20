@@ -1,9 +1,17 @@
 <div class="p-2">
     <div class="table-responsive order-table">
-        <div class="row col-8 pr-0 pl-0 " id="singleSearch"   @if ($this->search) style="display: block !important;" @endif>
-            <div class="form-group singleSearchStyle col-12" >
-                <label>Search</label>
-                <input wire:model="search" type="search" class="form-control col-8 hd-search" name="search">
+        <div class="row col-8 pr-0 pl-0 " id="singleSearch"
+            @if ($this->search) style="display: block !important;" @endif>
+            <div class="form-group singleSearchStyle col-12">
+                <form wire:submit.prevent="render">
+                    <label>Search</label>
+                    <div class="d-flex">
+                        <input wire:model.defer="search" type="search" class="form-control col-8 hd-search"
+                            name="search">
+                        <button type="submit" class="btn btn-primary mb-1 waves-effect waves-light ml-1"
+                            wire:click="render"><i class="feather icon-search"></i></button>
+                    </div>
+                </form>
             </div>
         </div>
         <table class="table mb-0 table-bordered">

@@ -11,12 +11,19 @@
                 <h1>Total Value: <span class="text-primary">$ {{ $totalValue }}</span></h1>
             </div>
         </div>
+
         <div class="row col-8 pr-0 pl-0" id="singleSearch"
             @if ($this->search) style="display: block !important" @endif>
-            <div class="form-group singleSearchStyle col-12">
-                <label>Search</label>
-                <input wire:model="search" type="search" class="form-control col-8 hd-search" name="search">
-            </div>
+            <form class="col-12 d-flex pl-0" wire:submit.prevent="render">
+                <div class="form-group singleSearchStyle col-8">
+                    <label>Search</label>
+                    <input wire:model.defer="search" type="search" class="form-control col-12 hd-search"
+                        name="search">
+                </div>
+                <button type="submit" class="btn btn-primary ml-2 mt-4 mb-3">
+                    <i class="fa fa-search"></i>
+                </button>
+            </form>
         </div>
         <div class=" col-6 text-left  pl-0">
             <div class="row col-12 pl-0" id="dateSearch">
