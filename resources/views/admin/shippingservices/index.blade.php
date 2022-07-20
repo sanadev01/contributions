@@ -47,23 +47,28 @@
                                         <td>{{ $service->contains_flammable_liquid_charges }}</td>
                                         <td>{{ $service->service_sub_class }}</td>
                                         <td>
-                                            @can('update', App\Models\ShippingService::class)
-                                                <a href="{{ route('admin.shipping-services.edit', $service) }}"
-                                                    title="@lang('shippingservice.Edit Service')" class="btn btn-sm btn-primary mr-2">
-                                                    <i class="feather icon-edit"></i>
-                                                </a>
-                                            @endcan
+                                            <div class="d-flex">
+                                                @can('update', App\Models\ShippingService::class)
+                                                    <a href="{{ route('admin.shipping-services.edit', $service) }}"
+                                                        title="@lang('shippingservice.Edit Service')" class="btn btn-sm btn-primary mr-2">
+                                                        <i class="feather icon-edit"></i>
+                                                    </a>
+                                                @endcan
 
-                                            @can('delete', App\Models\ShippingService::class)
-                                                <form action="{{ route('admin.shipping-services.destroy', $service) }}"
-                                                    method="POST" onsubmit="return confirmDelete()" class="d-inline-block">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button title="@lang('shippingservice.Delete Service')" class="btn btn-sm btn-danger mr-2">
-                                                        <i class="feather icon-trash"></i>
-                                                    </button>
-                                                </form>
-                                            @endcan
+                                                @can('delete', App\Models\ShippingService::class)
+                                                    <form
+                                                        action="{{ route('admin.shipping-services.destroy', $service) }}"
+                                                        method="POST" onsubmit="return confirmDelete()"
+                                                        class="d-inline-block">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button title="@lang('shippingservice.Delete Service')"
+                                                            class="btn btn-sm btn-danger mr-2">
+                                                            <i class="feather icon-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                @endcan
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach

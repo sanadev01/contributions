@@ -59,9 +59,13 @@
                     <label>Search</label>
                     <input type="search" class="form-control" wire:model.defer="search">
                 </div>
-                <button type="submit" class="btn btn-primary ml-2 mt-4">
-                    <i class="fa fa-search"></i>
-                </button>
+                <div class="mt-1">
+                    <button type="submit" class="btn btn-primary ml-2 mt-4">
+                        <i class="fa fa-search"></i>
+                    </button>
+                    <button class="btn btn-primary ml-2 mt-4" onClick="window.location.reload();">
+                        Clear Search</button>
+                </div>
             </form>
         </div>
 

@@ -104,12 +104,14 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 mt-0">
+                        <div class="col-lg-2 col-md-1 col-sm-1 col-xs-1 mt-0">
                             <div class="form-group">
                                 <div class="controls">
                                     <button type="submit" class="btn btn-primary hd-mt-20" wire:click="search">
                                         <i class="feather icon-search"></i>
                                     </button>
+                                    <button class="btn btn-primary ml-2 hd-mt-20" onClick="window.location.reload();">
+                                        Clear Search</button>
                                 </div>
                             </div>
                         </div>

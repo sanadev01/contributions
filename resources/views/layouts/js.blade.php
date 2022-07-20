@@ -119,7 +119,7 @@
 
     function handleChangeContainer(checkbox) {
         if (checkbox.checked == true) {
-            document.getElementById("printBtnDiv").style.display = 'block';
+            document.getElementById("printBtnDiv").style.display = 'flex';
         } else {
             if ($(".bulk-container:checked").length == 0) {
                 document.getElementById("printBtnDiv").style.display = 'none';

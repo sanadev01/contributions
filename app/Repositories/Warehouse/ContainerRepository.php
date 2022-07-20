@@ -16,11 +16,9 @@ class ContainerRepository extends AbstractRepository{
         if ( !Auth::user()->isAdmin() ){
             $query->where('user_id',Auth::id());
         }
-        if($request->has('dispatchNumber')){
-           $query->where('dispatch_number', 'LIKE', '%' . $request->dispatchNumber . '%');
-        } 
-        if($request->has('sealNo')){
-          $query->where('seal_no', 'LIKE', '%' . $request->sealNo . '%');
+        if($request->has('search')){
+            $query->where('dispatch_number', 'LIKE', '%' . $request->search . '%')
+            ->orWhere('seal_no', 'LIKE', '%' . $request->search . '%');
         } 
         if($request->has('packetType')){
             $query->where('services_subclass_code', 'LIKE', '%' . $request->packetType . '%');
