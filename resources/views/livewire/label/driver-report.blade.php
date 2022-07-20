@@ -47,7 +47,8 @@
                                 </button>
                                 <button class="btn btn-primary ml-1 hd-mt-20 waves-effect waves-light"
                                     onclick="window.location.reload();">
-                                    Clear Search</button>
+                                    <i class="fa fa-undo" data-bs-toggle="tooltip" title=""
+                                        data-bs-original-title="fa fa-undo" aria-label="fa fa-undo"></i></button>
                             </div>
                         </div>
                     </div>
