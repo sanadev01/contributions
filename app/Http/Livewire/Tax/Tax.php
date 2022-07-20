@@ -21,7 +21,7 @@ class Tax extends Component
         ]);
     }
 
-    public function submit()
+    public function search()
     {
         $data = $this->validate([
             'user_id' => 'required',

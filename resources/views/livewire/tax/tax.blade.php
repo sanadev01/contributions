@@ -20,7 +20,7 @@
                 </div>
             </div>
             <div class="form-group col-sm-6 col-md-3">
-                <button type="submit" class="btn btn-primary mt-5" wire:click="submit">Find</button>
+                <button type="submit" class="btn btn-primary mt-5" wire:click="search">Find</button>
             </div>
         </div>
     </form></br>
@@ -65,7 +65,7 @@
         <div class="row mt-4 mb-4">
             <div class="col-12 d-flex text-center flex-sm-row flex-column justify-content-end mt-1">
                 <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-4 waves-effect waves-light">
-                    @lang('taxservice.Save')
+                    @lang('taxservice.Pay')
                 </button>
             </div>
         </div>

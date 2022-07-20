@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'Manage Services' => 'Manage Services',
+    'Manage Tax Services' => 'Manage Tax Services',
     'Name' => 'Name',
     'Cost' => 'Cost',
     'Price' => 'Price',
@@ -35,6 +35,13 @@ return [
     'Tax Payment 1' => 'Tax Payment 1',
     'Tax Payment 2' => 'Tax Payment 2',
     'Save' => 'Save',
+    'Back to List' => 'Back to List',
+    'Add Tax' => 'Add Tax',
+    'Pay Tax' => 'Pay Tax',
+    'Pay' => 'Pay',
+
+
+
 
 
 

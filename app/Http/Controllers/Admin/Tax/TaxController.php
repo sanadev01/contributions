@@ -4,6 +4,10 @@ namespace App\Http\Controllers\Admin\Tax;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Order;
+use App\Models\Tax;
+use App\Repositories\TaxRepository;
+
 
 class TaxController extends Controller
 {
@@ -12,9 +16,10 @@ class TaxController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(TaxRepository $repository)
     {
-        return view('admin.tax.index');
+        $taxlist = $repository->get();
+        return view('admin.tax.index', compact('taxlist'));
     }
 
     /**
@@ -22,9 +27,11 @@ class TaxController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(TaxRepository $repository, Request $request)
     {
-        return view('admin.tax.create');
+        $orders = $repository->getOrders($request);
+        //return redirect()->back()->with(['orders']);
+        return view('admin.tax.create', compact('orders'));
     }
 
     /**
@@ -33,9 +40,14 @@ class TaxController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TaxRepository $repository, Request $request)
     {
-        //
+        if ($repository->store($request) ){
+            session()->flash('alert-success', 'Tax has been added successfully');
+            return  redirect()->route('admin.tax.create');
+        }
+
+        return back()->withInput();
     }
 
     /**
