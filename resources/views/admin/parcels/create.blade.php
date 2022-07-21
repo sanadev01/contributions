@@ -10,7 +10,7 @@
                         <a href="{{ route('admin.parcels.index') }}" class="pull-right btn btn-primary"> @lang('parcel.Back to List')</a>
                     </div>
                     <div class="card-content">
-                        <div class="card-body">
+                        <div class="card-body" style="padding-right: 120px; padding-left: 120px;">
                             @if( $errors->count() )
                                 <div class="alert alert-danger">
                                     <ul>
@@ -98,13 +98,22 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group col-12 col-sm-6 col-md-4">
-                                        <div class="controls">
-                                            <label>@lang('parcel.Invoice')</label>
-                                            <input type="file" name="invoiceFile" {{ auth()->user()->isUser() ? 'required': ''  }} class="form-control" placeholder="@lang('parcel.Choose Invoice File')">
-                                            @error('record')
-                                                <div class="help-block text-danger">{{ $message }}</div>
-                                            @enderror
+                                    <div class="form-group col-12 col-sm-6 col-md-4 mt-3">
+                                        <div class="controls mt-3">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                <span class="input-group-text">Upload</span>
+                                                </div>
+                                                <div class="custom-file">
+                                                    <input type="file" class="custom-file-input" name="invoiceFile" {{ auth()->user()->isUser() ? 'required': ''  }}>
+                                                    <label class="custom-file-label" for="inputGroupFile01">@lang('parcel.Invoice')<span class="text-danger">*</span></label>
+                                                    @error('record')
+                                                        <div class="help-block text-danger">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                            {{-- <label>@lang('parcel.Invoice')</label>
+                                            <input type="file" name="invoiceFile" {{ auth()->user()->isUser() ? 'required': ''  }} class="form-control" placeholder="@lang('parcel.Choose Invoice File')"> --}}
                                         </div>
                                     </div>
                                 </div>
@@ -122,41 +131,50 @@
                                         </div>
                                     </div>
                                 @endcan
-
+                                
                                 @can('addShipmentDetails', App\Models\Order::class)
-                                    <livewire:order.shipment-info />
+                                    <livewire:order.shipment-info />                          
                                     <h4 class="mt-2">@lang('parcel.Shipment Images') </h4>
-                                    <div class="row mt-1">
-                                        <div class="col-12 col-sm-6 col-md-4">
-                                            <div class="controls">
-                                                <label>@lang('parcel.Image 1')<span class="text-danger">*</span></label>
-                                                <input type="file" accept="image/*" name="images[]">
-                                                {{-- @error('record')
-                                                    <div class="help-block text-danger">{{ $message }}</div>
-                                                @enderror --}}
+                                    <div class="row mt-3">
+                                        <div class="col-12 col-sm-6 col-md-3">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                <span class="input-group-text">Upload</span>
+                                                </div>
+                                                <div class="custom-file">
+                                                <input type="file" class="custom-file-input" id="inputGroupFile01" accept="image/*" name="images[]"
+                                                    aria-describedby="inputGroupFileAddon01">
+                                                <label class="custom-file-label" for="inputGroupFile01">@lang('parcel.Image 1')<span class="text-danger">*</span></label>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-sm-6 col-md-4">
-                                            <div class="controls">
-                                                <label>@lang('parcel.Image 2')<span class="text-danger">*</span></label>
-                                                <input type="file" accept="image/*" name="images[]">
-                                                {{-- @error('record')
-                                                    <div class="help-block text-danger">{{ $message }}</div>
-                                                @enderror --}}
+                                        <div class="col-12 col-sm-6 col-md-3">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                <span class="input-group-text">Upload</span>
+                                                </div>
+                                                <div class="custom-file">
+                                                <input type="file" class="custom-file-input" id="inputGroupFile01" accept="image/*" name="images[]"
+                                                    aria-describedby="inputGroupFileAddon01">
+                                                <label class="custom-file-label" for="inputGroupFile01">@lang('parcel.Image 2')<span class="text-danger">*</span></label>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-sm-6 col-md-4">
-                                            <div class="controls">
-                                                <label>@lang('parcel.Image 3')<span class="text-danger">*</span></label>
-                                                <input type="file" accept="image/*" name="images[]">
-                                                {{-- @error('record')
-                                                    <div class="help-block text-danger">{{ $message }}</div>
-                                                @enderror --}}
+                                        <div class="col-12 col-sm-6 col-md-3">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                <span class="input-group-text">Upload</span>
+                                                </div>
+                                                <div class="custom-file">
+                                                <input type="file" class="custom-file-input" id="inputGroupFile01" accept="image/*" name="images[]"
+                                                    aria-describedby="inputGroupFileAddon01">
+                                                <label class="custom-file-label" for="inputGroupFile01">@lang('parcel.Image 3')<span class="text-danger">*</span></label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+                                    
                                 @endcan
-
 
                                 <div class="row mt-1">
                                     <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
