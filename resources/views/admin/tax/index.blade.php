@@ -15,50 +15,41 @@
                         </a>
                         @endcan
                     </div></br>
-                    <div class="card-content">
-                        <div class="table-responsive-md mt-1">
-                            <table class="table table-hover-animation mb-0">
-                                <thead>
+                    <div class="table-responsive-md mt-1 mr-4 ml-4">
+                        <table class="table mb-0 table-responsive-md">
+                            <thead>
                                 <tr>
-                                    <th>@lang('taxservice.Order ID')</th>
                                     <th>@lang('taxservice.User Name')</th>
+                                    <th>@lang('taxservice.Warehouse No.')</th>
                                     <th>@lang('taxservice.Tracking Code')</th>
                                     <th>@lang('taxservice.Tax Payment 1')</th>
                                     <th>@lang('taxservice.Tax Payment 2')</th>
-                                    <th>@lang('taxservice.Action')</th>
                                 </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>1137</td>
-                                        <td>Test Name</td>
-                                        <td>BN45680023440</td>
-                                        <td>20.0</td>
-                                        <td>25.0</td>
-                                        <td>
-                                            @can('update', App\Models\ShippingService::class)
-                                            <a href="{{ route('admin.shipping-services.edit',1) }}" title="@lang('shippingservice.Edit Service')" class="btn btn-sm btn-primary mr-2">
-                                                <i class="feather icon-edit"></i>
+                            </thead>
+                            <tbody>
+                                @foreach($taxlist as $tax)
+                                <tr>
+                                    <td>{{ $tax->user->name }}</td>
+                                    <td>
+                                        <span>
+                                            <a href="#" title="Click to see Shipment" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.parcel.shipment-info',$tax->order_id) }}">
+                                                WRH#: {{ $tax->order->warehouse_number }}
                                             </a>
-                                            @endcan
-
-                                            @can('delete', App\Models\ShippingService::class)
-                                            <form action="{{ route('admin.shipping-services.destroy',1) }}" method="POST" onsubmit="return confirmDelete()" class="d-inline-block">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button title="@lang('shippingservice.Delete Service')" class="btn btn-sm btn-danger mr-2">
-                                                    <i class="feather icon-trash"></i>
-                                                </button>
-                                            </form>
-                                            @endcan
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                                        </span>
+                                    </td>
+                                    <td>{{ $tax->order->corrios_tracking_code }}</td>
+                                    <td>{{ $tax->tax_1 }}</td>
+                                    <td>{{ $tax->tax_2 }}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+@endsection
+@section('modal')
+<x-modal />
 @endsection

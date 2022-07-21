@@ -50,8 +50,7 @@
                             </form></br>
                             <form class="form" action="{{ route('admin.tax.store') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
-
-                                    @if($orders)
+                                    @if($orders->isNotEmpty())
                                         <div class="row m-1 mb-2">
                                             <div class="col-md-2">
                                                 <label><b>@lang('taxservice.Order ID')</b></label>
@@ -87,15 +86,14 @@
                                                 </div>
                                             </div>
                                         @endforeach
+                                        <div class="row mt-4 mb-4">
+                                            <div class="col-12 d-flex text-center flex-sm-row flex-column justify-content-end mt-1">
+                                                <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-4 waves-effect waves-light">
+                                                    @lang('taxservice.Pay')
+                                                </button>
+                                            </div>
+                                        </div>
                                     @endif
-
-                                <div class="row mt-4 mb-4">
-                                    <div class="col-12 d-flex text-center flex-sm-row flex-column justify-content-end mt-1">
-                                        <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-4 waves-effect waves-light">
-                                            @lang('taxservice.Pay')
-                                        </button>
-                                    </div>
-                                </div>
                             </form>
                         </div>
                     </div>

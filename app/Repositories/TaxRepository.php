@@ -4,17 +4,18 @@ namespace App\Repositories;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\ShippingService;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\Tax;
+use App\Models\Deposit;
+use App\Models\PaymentInvoice;
 use Exception;
 
 class TaxRepository
 {
     public function get()
     {
-        $taxlist = ShippingService::all();
+        $taxlist = Tax::all();
         return $taxlist;
     }
 
@@ -32,7 +33,7 @@ class TaxRepository
     public function store(Request $request)
     {
         $data = [];
-
+        $amount = 0;
         try{
 
             foreach($request->order_id as $key=> $orderId) {
@@ -42,7 +43,23 @@ class TaxRepository
                     'tax_1' => $request->tax_1[$key],
                     'tax_2' => $request->tax_2[$key],
                 ]);
+                $amount += $request->tax_2[$key];
             }
+            $balance = Deposit::getCurrentBalance();
+            if($balance > 0) {
+                $charge = Deposit::create([
+                    'uuid' => PaymentInvoice::generateUUID('DP-'),
+                    'amount' => $amount,
+                    'user_id' => $request->user_id,
+                    'balance' => $balance - $amount,
+                    'is_credit' => false,
+                    'description' => "Pay Tax",
+                ]);
+            }
+            else {
+                session()->flash('alert-danger', 'Please recharge your account first!');
+                return redirect()->route('admin.tax.create');
+                }
             return true;
 
         }catch(Exception $exception){
@@ -51,44 +68,16 @@ class TaxRepository
         }
     }
 
-    public function update(Request $request,ShippingService $shippingService)
+    public function update(Request $request)
     {
 
-        try{
-
-            $shippingService->update(
-                $request->only([
-                    'name',
-                    'max_length_allowed',
-                    'max_width_allowed',
-                    'min_width_allowed',
-                    'min_length_allowed',
-                    'max_sum_of_all_sides',
-                    'max_weight_allowed',
-                    'contains_battery_charges',
-                    'contains_perfume_charges',
-                    'contains_flammable_liquid_charges',
-                    'active',
-                    'service_sub_class',
-                    'delivery_time',
-                ])
-            );
-
-            return true;
-
-        }catch(Exception $exception){
-            session()->flash('alert-danger','Error while ShippingService');
-            return null;
-        }
+        //
     }
 
 
-    public function delete(ShippingService $shippingService)
+    public function delete()
     {
-        $shippingService->rates()->delete();
-
-        $shippingService->delete();
-        return true;
+        //
 
     }
 

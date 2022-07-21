@@ -14,8 +14,9 @@ class Tax extends Model
         return $this->belongsTo(Order::class);
     }
 
-    // public function order()
-    // {
-    //     return $this->hasOne(Order::class,'order_id');
-    // }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }

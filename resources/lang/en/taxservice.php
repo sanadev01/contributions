@@ -39,6 +39,7 @@ return [
     'Add Tax' => 'Add Tax',
     'Pay Tax' => 'Pay Tax',
     'Pay' => 'Pay',
+    'Warehouse No.' => 'Warehouse No.',
 
 
 
