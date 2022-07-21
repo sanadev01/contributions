@@ -9,7 +9,7 @@
                         <a href="{{ route('admin.parcels.index') }}" class="pull-right btn btn-primary"> @lang('parcel.Back to List') </a>
                     </div>
                     <div class="card-content">
-                        <div class="card-body">
+                        <div class="card-body" style="padding-right: 120px; padding-left: 120px;">
                             @if( $errors->count() )
                                 <div class="alert alert-danger">
                                     <ul>
@@ -100,13 +100,20 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group col-12 col-sm-6 col-md-4">
-                                        <div class="controls">
-                                            <label>@lang('parcel.Invoice')</label>
-                                            <input type="file" name="invoiceFile" {{ auth()->user()->isUser() ? 'required': ''  }} class="form-control" placeholder="@lang('parcel.Choose Invoice File')">
-                                            @error('record')
-                                                <div class="help-block text-danger">{{ $message }}</div>
-                                            @enderror
+                                    <div class="form-group col-12 col-sm-6 col-md-4 mt-3">
+                                        <div class="controls mt-3">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                <span class="input-group-text">Upload</span>
+                                                </div>
+                                                <div class="custom-file">
+                                                    <input type="file" class="custom-file-input" name="invoiceFile" {{ auth()->user()->isUser() ? 'required': ''  }}>
+                                                    <label class="custom-file-label" for="inputGroupFile01">@lang('parcel.Invoice')<span class="text-danger">*</span></label>
+                                                    @error('record')
+                                                        <div class="help-block text-danger">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                            </div>
                                             @if ( $parcel->purchaseInvoice )
                                                 <div class="mt-2">
                                                     <a target="_blank" href="{{ $parcel->purchaseInvoice->getPath() }}" class="m-2"> {{ $parcel->purchaseInvoice->name }} </a>
@@ -136,8 +143,17 @@
                                     <div class="row mt-1">
                                         <div class="col-12 col-sm-6 col-md-4">
                                             <div class="controls">
-                                                <label>@lang('parcel.Select File') <span class="text-danger">*</span></label>
-                                                <input type="file" accept=".xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf" multiple name="images[]">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">Upload</span>
+                                                    </div>
+                                                    <div class="custom-file">
+                                                        <input type="file" class="custom-file-input"  accept=".xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf" multiple name="images[]">
+                                                        <label class="custom-file-label" for="inputGroupFile01">@lang('parcel.Select File')<span class="text-danger">*</span></label>
+                                                    </div>
+                                                </div>
+                                                {{-- <label>@lang('parcel.Select File') <span class="text-danger">*</span></label>
+                                                <input type="file" accept=".xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf" multiple name="images[]"> --}}
                                                 {{-- @error('record')
                                                     <div class="help-block text-danger">{{ $message }}</div>
                                                 @enderror --}}
