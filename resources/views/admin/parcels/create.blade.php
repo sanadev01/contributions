@@ -5,7 +5,6 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-<<<<<<< HEAD
                     <div class="card-header d-flex justify-content-end">
                     @section('title', __('parcel.Create Parcel'))
                     <a href="{{ route('admin.parcels.index') }}" class="pull-right btn btn-primary">
@@ -28,28 +27,6 @@
                             enctype="multipart/form-data">
                             @csrf
                             @admin
-=======
-                    <div class="card-header">
-                        <h4 class="mb-0">@lang('parcel.Create Parcel')</h4>
-                        <a href="{{ route('admin.parcels.index') }}" class="pull-right btn btn-primary"> @lang('parcel.Back to List')</a>
-                    </div>
-                    <div class="card-content">
-                        <div class="card-body" style="padding-right: 120px; padding-left: 120px;">
-                            @if( $errors->count() )
-                                <div class="alert alert-danger">
-                                    <ul>
-                                        @foreach($errors->all() as $error)
-                                            <li>
-                                                {{ $error }}
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
-                            <form novalidate="" action="{{ route('admin.parcels.store') }}" method="post" enctype="multipart/form-data">
-                                @csrf
-                                @admin
->>>>>>> 0009e4f670c1845c6f28b385e6977f893806d8b6
                                 <div class="row mt-1">
                                     <div class="form-group col-12 col-sm-6 col-md-4">
                                         <div class="controls">
@@ -134,9 +111,30 @@
                                             </div>
                                         </div>
                                     </div>
-<<<<<<< HEAD
                                 </div>
-                                <div class="form-group col-12 col-sm-6 col-md-4">
+                                <div class="form-group col-12 col-sm-6 col-md-4 mt-3">
+                                    <div class="controls mt-3">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Upload</span>
+                                            </div>
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input" name="invoiceFile"
+                                                    {{ auth()->user()->isUser()? 'required': '' }}>
+                                                <label class="custom-file-label"
+                                                    for="inputGroupFile01">@lang('parcel.Invoice')<span
+                                                        class="text-danger">*</span></label>
+                                                @error('record')
+                                                    <div class="help-block text-danger">{{ $message }}
+                                                    </div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        {{-- <label>@lang('parcel.Invoice')</label>
+                                <input type="file" name="invoiceFile" {{ auth()->user()->isUser() ? 'required': ''  }} class="form-control" placeholder="@lang('parcel.Choose Invoice File')"> --}}
+                                    </div>
+                                </div>
+                                {{-- <div class="form-group col-12 col-sm-6 col-md-4">
                                     <div class="controls">
                                         <label>@lang('parcel.Invoice')</label>
                                         <input type="file" name="invoiceFile"
@@ -146,7 +144,7 @@
                                             <div class="help-block text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
 
                             @can('addWarehouseNumber', App\Models\Order::class)
@@ -159,135 +157,82 @@
                                             @error('whr_number')
                                                 <div class="help-block text-danger">{{ $message }}</div>
                                             @enderror
-=======
-                                    <div class="form-group col-12 col-sm-6 col-md-4 mt-3">
-                                        <div class="controls mt-3">
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                <span class="input-group-text">Upload</span>
-                                                </div>
-                                                <div class="custom-file">
-                                                    <input type="file" class="custom-file-input" name="invoiceFile" {{ auth()->user()->isUser() ? 'required': ''  }}>
-                                                    <label class="custom-file-label" for="inputGroupFile01">@lang('parcel.Invoice')<span class="text-danger">*</span></label>
-                                                    @error('record')
-                                                        <div class="help-block text-danger">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                            {{-- <label>@lang('parcel.Invoice')</label>
-                                            <input type="file" name="invoiceFile" {{ auth()->user()->isUser() ? 'required': ''  }} class="form-control" placeholder="@lang('parcel.Choose Invoice File')"> --}}
->>>>>>> 0009e4f670c1845c6f28b385e6977f893806d8b6
-                                        </div>
-                                    </div>
-                                </div>
-                            @endcan
 
-<<<<<<< HEAD
-                            @can('addShipmentDetails', App\Models\Order::class)
-                                <livewire:order.shipment-info />
-                                <h4 class="mt-2">@lang('parcel.Shipment Images') </h4>
-=======
-                                @can('addWarehouseNumber', App\Models\Order::class)
-                                    <div class="row">
-                                        <div class="form-group col-12">
-                                            <div class="controls">
-                                                <label>@lang('parcel.Warehouse Number') <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" required name="whr_number" value="{{ old("whr_number") }}" placeholder="">
-                                                @error('whr_number')
-                                                    <div class="help-block text-danger">{{ $message }}</div>
-                                                @enderror
-                                            </div>
                                         </div>
-                                    </div>
-                                @endcan
-                                
-                                @can('addShipmentDetails', App\Models\Order::class)
-                                    <livewire:order.shipment-info />                          
-                                    <h4 class="mt-2">@lang('parcel.Shipment Images') </h4>
-                                    <div class="row mt-3">
-                                        <div class="col-12 col-sm-6 col-md-3">
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                <span class="input-group-text">Upload</span>
-                                                </div>
-                                                <div class="custom-file">
-                                                <input type="file" class="custom-file-input" id="inputGroupFile01" accept="image/*" name="images[]"
-                                                    aria-describedby="inputGroupFileAddon01">
-                                                <label class="custom-file-label" for="inputGroupFile01">@lang('parcel.Image 1')<span class="text-danger">*</span></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-sm-6 col-md-3">
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                <span class="input-group-text">Upload</span>
-                                                </div>
-                                                <div class="custom-file">
-                                                <input type="file" class="custom-file-input" id="inputGroupFile01" accept="image/*" name="images[]"
-                                                    aria-describedby="inputGroupFileAddon01">
-                                                <label class="custom-file-label" for="inputGroupFile01">@lang('parcel.Image 2')<span class="text-danger">*</span></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-sm-6 col-md-3">
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                <span class="input-group-text">Upload</span>
-                                                </div>
-                                                <div class="custom-file">
-                                                <input type="file" class="custom-file-input" id="inputGroupFile01" accept="image/*" name="images[]"
-                                                    aria-describedby="inputGroupFileAddon01">
-                                                <label class="custom-file-label" for="inputGroupFile01">@lang('parcel.Image 3')<span class="text-danger">*</span></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                @endcan
+                                    @endcan
 
->>>>>>> 0009e4f670c1845c6f28b385e6977f893806d8b6
-                                <div class="row mt-1">
-                                    <div class="col-12 col-sm-6 col-md-4">
-                                        <div class="controls">
-                                            <label>@lang('parcel.Image 1')<span class="text-danger">*</span></label>
-                                            <input type="file" accept="image/*" name="images[]">
-                                            {{-- @error('record')
-                                                    <div class="help-block text-danger">{{ $message }}</div>
-                                                @enderror --}}
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-sm-6 col-md-4">
-                                        <div class="controls">
-                                            <label>@lang('parcel.Image 2')<span class="text-danger">*</span></label>
-                                            <input type="file" accept="image/*" name="images[]">
-                                            {{-- @error('record')
-                                                    <div class="help-block text-danger">{{ $message }}</div>
-                                                @enderror --}}
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-sm-6 col-md-4">
-                                        <div class="controls">
-                                            <label>@lang('parcel.Image 3')<span class="text-danger">*</span></label>
-                                            <input type="file" accept="image/*" name="images[]">
-                                            {{-- @error('record')
-                                                    <div class="help-block text-danger">{{ $message }}</div>
-                                                @enderror --}}
-                                        </div>
-                                    </div>
-                                </div>
-                            @endcan
+                                    @can('addShipmentDetails', App\Models\Order::class)
+                                        <livewire:order.shipment-info />
+                                        <h4 class="mt-2">@lang('parcel.Shipment Images') </h4>
+                                        @can('addWarehouseNumber', App\Models\Order::class)
+                                            <div class="row">
+                                                <div class="form-group col-12">
+                                                    <div class="controls">
+                                                        <label>@lang('parcel.Warehouse Number') <span class="text-danger">*</span></label>
+                                                        <input type="text" class="form-control" required name="whr_number"
+                                                            value="{{ old('whr_number') }}" placeholder="">
+                                                        @error('whr_number')
+                                                            <div class="help-block text-danger">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endcan
+
+                                        @can('addShipmentDetails', App\Models\Order::class)
+                                            <livewire:order.shipment-info />
+                                            <h4 class="mt-2">@lang('parcel.Shipment Images') </h4>
+                                            <div class="row mt-3">
+                                                <div class="col-12 col-sm-6 col-md-3">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">Upload</span>
+                                                        </div>
+                                                        <div class="custom-file">
+                                                            <input type="file" class="custom-file-input"
+                                                                id="inputGroupFile01" accept="image/*" name="images[]"
+                                                                aria-describedby="inputGroupFileAddon01">
+                                                            <label class="custom-file-label"
+                                                                for="inputGroupFile01">@lang('parcel.Image 1')<span
+                                                                    class="text-danger">*</span></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-6 col-md-3">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">Upload</span>
+                                                        </div>
+                                                        <div class="custom-file">
+                                                            <input type="file" class="custom-file-input"
+                                                                id="inputGroupFile01" accept="image/*" name="images[]"
+                                                                aria-describedby="inputGroupFileAddon01">
+                                                            <label class="custom-file-label"
+                                                                for="inputGroupFile01">@lang('parcel.Image 2')<span
+                                                                    class="text-danger">*</span></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-6 col-md-3">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">Upload</span>
+                                                        </div>
+                                                        <div class="custom-file">
+                                                            <input type="file" class="custom-file-input"
+                                                                id="inputGroupFile01" accept="image/*" name="images[]"
+                                                                aria-describedby="inputGroupFileAddon01">
+                                                            <label class="custom-file-label"
+                                                                for="inputGroupFile01">@lang('parcel.Image 3')<span
+                                                                    class="text-danger">*</span></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endcan
 
 
-                            <div class="row mt-1">
-                                <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
-                                    <button type="submit"
-                                        class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">
-                                        @lang('parcel.Save Parcel')
-                                    </button>
-                                    <button type="reset"
-                                        class="btn btn-outline-danger waves-effect waves-light">@lang('parcel.Reset')</button>
-                                </div>
-                            </div>
+                                    @endcan
                         </form>
                     </div>
                 </div>

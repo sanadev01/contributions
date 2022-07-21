@@ -15,7 +15,7 @@
             </div>
         </div>
 
-        <div class="card-body">
+        <div class="card-body paddinglr">
             @if ($errors->count())
                 <div class="alert alert-danger">
                     <ul>
@@ -52,6 +52,8 @@
                         </div>
                     </div>
 
+
+
                     <div class="row justify-content-center">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -71,7 +73,7 @@
                         </div>
                     </div>
 
-                    <div class="row justify-content-center">
+                    {{-- <div class="row justify-content-center">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="projectinput1">@lang('orders.import-excel.Select Excel File to Upload')</label>
@@ -83,6 +85,30 @@
                                         {{ $message }}
                                     </div>
                                 @enderror
+                            </div>
+                        </div>
+                    </div> --}}
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="controls mt-3">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Upload</span>
+                                    </div>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" name="excel_file"
+                                            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel, text/xml"
+                                            required>
+                                        @error('excel_file')
+                                            <div class="text-danger">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                        <label class="custom-file-label" for="inputGroupFile01">@lang('orders.import-excel.Select Excel File to Upload')<span
+                                                class="text-danger">*</span></label>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                     </div>
