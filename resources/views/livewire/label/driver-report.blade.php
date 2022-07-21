@@ -28,7 +28,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-2">
+                    <div class="col-2 pl-0">
                         <div class="form-group">
                             <div class="controls">
                                 @if ($hasSearch)
@@ -38,7 +38,7 @@
                                     </button>
                                 @else
                                     <button type="submit" class="btn btn-primary hd-mt-20" wire:click="search">
-                                        <i class="feather icon-search"></i> Search
+                                        <i class="feather icon-search"></i>
                                     </button>
                                 @endif
                                 <button type="button" wire:click="download" class="hd-mt-20 btn btn-success"

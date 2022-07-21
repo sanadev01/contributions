@@ -2,7 +2,13 @@
     <div class="p-2">
         @admin
             <div class="row">
-                <div class="col-12 text-right mb-3">
+                <div class="col-1">
+                    <div id="printBtnDiv">
+                        <button title="Print Labels" id="print" type="btn" onclick="allCheckedOrders()"
+                            class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="fa fa-dollar"></i></button>
+                    </div>
+                </div>
+                <div class="col-11 text-right mb-3">
                     <p class="mr-2 h5">UserName:<span class="text-success h4"> {{ $user->name }}</span></p>
                     <p class="mr-2 h5">POBOX Number:<span class="text-success h4"> {{ $user->pobox_number }}</span></p>
                     <p class="mr-2 h5">Paid Commission:<span class="text-success h4"> $
@@ -20,6 +26,8 @@
             </a>
             <button type="btn" onclick="toggleOrderPageSearch()" id="orderSearch"
                 class="btn btn-primary waves-effect waves-light"><i class="feather icon-search"></i></button>
+            <button type="btn" onclick="toggleUserSearch()" id="customSwitch8"
+                class="btn btn-primary  waves-effect waves-light"><i class="feather icon-filter"></i></button>
         </div>
         <div class="row mb-2 no-print">
 
@@ -28,7 +36,7 @@
                     @csrf
                     <input type="hidden" name="user_id" value="{{ $user->id }}">
 
-                    <div class="row mt-1">
+                    <div class="row mt-1" id="userSearch">
                         <div class="form-group col-10 col-sm-6 col-md-3">
                             <div class="row">
                                 <label class="col-md-3 control-label">@lang('sales-commission.start date')</label>
@@ -58,7 +66,8 @@
                 </form>
             </div>
         </div>
-        <div class="mb-2 row col-md-12" id="logSearch">
+        <div class="mb-2 row col-md-12" @if ($this->search || $this->saleType || $this->start || $this->end) style="display: block !important" @endif
+            id="singleSearch">
             <form class="col-12 d-flex pl-0" wire:submit.prevent="render">
                 <div class="col-4 pl-0">
                     <label>Search</label>
@@ -79,9 +88,10 @@
                     <button type="submit" class="btn btn-primary ml-1 mt-4 waves-effect waves-light">
                         <i class="fa fa-search" aria-hidden="true"></i>
                     </button>
-                    <button class="btn btn-primary ml-2 mt-4 waves-effect waves-light"
+                    <button class="btn btn-primary ml-1 mt-4 waves-effect waves-light"
                         onclick="window.location.reload();">
-                        Clear Search</button>
+                        <i class="fa fa-undo" data-bs-toggle="tooltip" title=""
+                            data-bs-original-title="fa fa-undo" aria-label="fa fa-undo" aria-hidden="true"></i></button>
                 </div>
             </form>
         </div>
@@ -91,11 +101,21 @@
                     <tr>
                         @admin
                             <th style="min-width: 100px;">
-                                <select name="" id="bulk-actions" class="form-control">
+                                {{-- <select name="" id="bulk-actions" class="form-control">
                                     <option value="clear">Clear All</option>
                                     <option value="checkAll">Select All</option>
                                     <option value="pay-commission">Pay Commission</option>
-                                </select>
+                                </select> --}}
+                                <div class="vs-checkbox-con vs-checkbox-primary" title="Select All"
+                                    style="width: 15px !important">
+                                    <input type="checkbox" id="checkAll" name="orders[]" class="check-all"
+                                        value="">
+                                    <span class="vs-checkbox vs-checkbox-sm">
+                                        <span class="vs-checkbox--check">
+                                            <i class="vs-icon feather icon-check"></i>
+                                        </span>
+                                    </span>
+                                </div>
                             </th>
                         @endadmin
                         <th>@lang('sales-commission.Date')</th>
@@ -168,9 +188,9 @@
                     @forelse ($sales as $sale)
                         <tr>
                             @admin
-                                <td>
+                                <td class="optionChkbx">
                                     <div class="vs-checkbox-con vs-checkbox-primary" title="@lang('orders.Bulk Print')">
-                                        <input type="checkbox" name="sales[]" class="bulk-sales"
+                                        <input type="checkbox" id="bulksales" name="sales[]" class="bulk-sales"
                                             value="{{ $sale->id }}">
                                         <span class="vs-checkbox vs-checkbox-sm">
                                             <span class="vs-checkbox--check">
@@ -260,9 +280,9 @@
                 </tbody>
             </table>
         </div>
-        <div>
-            <div class="col-1">
-                <select class="form-control" wire:model="pageSize">
+        <div class="col-12 d-flex pl-0">
+            <div class="col-1 pl-0">
+                <select class="form-control mt-4" wire:model="pageSize">
                     <option value="1">1</option>
                     <option value="5">5</option>
                     <option value="10">10</option>
@@ -272,7 +292,7 @@
                     <option value="300">300</option>
                 </select>
             </div>
-            <div class="d-flex justify-content-end my-2 pb-4 mx-2">
+            <div class="col-11 d-flex justify-content-end my-2 pb-4 mx-2 mt-4 pr-0">
                 {{ $sales->links() }}
             </div>
         </div>
@@ -280,3 +300,62 @@
     </div>
 
 </div>
+@section('js')
+    <script>
+        function allCheckedOrders() {
+            var orderIds = [];
+            $.each($(".bulk-sales:checked"), function() {
+                orderIds.push($(this).val());
+
+            });
+            $('#bulk_sale_form #command').val('pay-commission');
+            $('#bulk_sale_form #data').val(JSON.stringify(orderIds));
+            $('#confirm').modal('show');
+        }
+        $('body').on('change', '#checkAll', function() {
+
+            if ($('#checkAll').is(':checked')) {
+                $('.bulk-sales').prop('checked', true)
+                document.getElementById("printBtnDiv").style.display = 'block';
+            } else {
+                $('.bulk-sales').prop('checked', false)
+                document.getElementById("printBtnDiv").style.display = 'none';
+            }
+
+        })
+        $('body').on('click', '#pay-commission', function() {
+            var orderIds = [];
+            $.each($(".bulk-sales:checked"), function() {
+                orderIds.push($(this).val());
+
+            });
+            $('#bulk_sale_form #command').val('pay-commission');
+            $('#bulk_sale_form #data').val(JSON.stringify(orderIds));
+            $('#confirm').modal('show');
+        })
+        $('body').on('change', '#bulksales', function() {
+            if ($('.bulk-sales').is(':checked')) {
+                document.getElementById("printBtnDiv").style.display = 'block';
+            } else {
+                document.getElementById("printBtnDiv").style.display = 'none';
+            }
+
+            if ($(this).val() == 'clear') {
+                $('.bulk-sales').prop('checked', false)
+            } else if ($(this).val() == 'checkAll') {
+                $('.bulk-sales').prop('checked', true)
+            } else if ($(this).val() == 'pay-commission') {
+                var orderIds = [];
+                $.each($(".bulk-sales:checked"), function() {
+                    orderIds.push($(this).val());
+                    // $(".result").append('HD-' + this.value + ',');
+                });
+
+                $('#bulk_sale_form #command').val('pay-commission');
+                $('#bulk_sale_form #data').val(JSON.stringify(orderIds));
+                $('#confirm').modal('show');
+                // $('#bulk_sale_form').submit();
+            }
+        })
+    </script>
+@endsection

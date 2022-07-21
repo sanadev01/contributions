@@ -40,9 +40,14 @@
                                                             value="{{ old('search', request('search')) }}"
                                                             placeholder="@lang('user.Search By Name, Pobox, Email')">
                                                         <button type="submit"
-                                                            class="btn btn-primary ml-2 waves-effect waves-light">
+                                                            class="btn btn-primary waves-effect ml-1 waves-light">
                                                             <i class="fa fa-search" aria-hidden="true"></i>
                                                         </button>
+                                                        <button class="btn btn-primary ml-1 waves-effect waves-light"
+                                                            onclick="window.location.reload();">
+                                                            <i class="fa fa-undo" data-bs-toggle="tooltip"
+                                                                title="" data-bs-original-title="fa fa-undo"
+                                                                aria-label="fa fa-undo" aria-hidden="true"></i></button>
                                                     </div>
                                                 </div>
                                             </form>

@@ -28,7 +28,9 @@
                     <div class="mt-1">
                         <div class="col-12 text-right">
                             <form action="">
-                                <div class="row justify-content-start hide" @if(Request('startDate') || Request('endDate')) style="display:flex !important" @endif id="logSearch">
+                                <div class="row justify-content-start hide"
+                                    @if (Request('startDate') || Request('endDate')) style="display:flex !important" @endif
+                                    id="logSearch">
                                     <div class="col-md-3">
                                         <div class="row justify-content-start">
                                             <div class="col-md-3 pl-0 text-left">
@@ -55,6 +57,11 @@
                                         <button class="btn btn-success waves-effect waves-light" title="Search">
                                             <i class="fa fa-search" aria-hidden="true"></i>
                                         </button>
+                                        <button class="btn btn-primary ml-1 waves-effect waves-light"
+                                            onclick="window.location.reload();">
+                                            <i class="fa fa-undo" data-bs-toggle="tooltip" title=""
+                                                data-bs-original-title="fa fa-undo" aria-label="fa fa-undo"
+                                                aria-hidden="true"></i></button>
                                     </div>
                                 </div>
                             </form>

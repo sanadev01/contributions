@@ -1,5 +1,6 @@
 <div>
-    <div class="row col-8 pr-0 pl-0 " @if ($this->searchTerm) style="display: block !important;" @endif id="singleSearch">
+    <div class="row col-8 pr-0 pl-0 " @if ($this->searchTerm) style="display: block !important;" @endif
+        id="singleSearch">
         <div class="form-group singleSearchStyle col-12">
             <form wire:click="$emitSelf('submit')">
                 <div class="form-group mb-2 col-12 row">
@@ -8,6 +9,9 @@
                     <button type="submit" class="btn btn-primary ml-2" onclick="getTickets()">
                         <i class="fa fa-search"></i>
                     </button>
+                    <button class="btn btn-primary ml-1 waves-effect waves-light" onclick="window.location.reload();">
+                        <i class="fa fa-undo" data-bs-toggle="tooltip" title=""
+                            data-bs-original-title="fa fa-undo" aria-label="fa fa-undo" aria-hidden="true"></i></button>
                 </div>
             </form>
         </div>

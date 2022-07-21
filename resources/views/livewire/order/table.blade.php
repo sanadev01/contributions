@@ -35,6 +35,11 @@
                             <button type="submit" class="btn btn-primary ml-2">
                                 <i class="fa fa-search"></i>
                             </button>
+                            <button class="btn btn-primary ml-1 waves-effect waves-light"
+                                onclick="window.location.reload();">
+                                <i class="fa fa-undo" data-bs-toggle="tooltip" title=""
+                                    data-bs-original-title="fa fa-undo" aria-label="fa fa-undo"
+                                    aria-hidden="true"></i></button>
                         </div>
                     </form>
                 </div>
