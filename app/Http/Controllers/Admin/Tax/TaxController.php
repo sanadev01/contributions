@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Admin\Tax;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Order;
-use App\Models\Tax;
 use App\Repositories\TaxRepository;
 
 
@@ -29,8 +27,10 @@ class TaxController extends Controller
      */
     public function create(TaxRepository $repository, Request $request)
     {
-        $orders = $repository->getOrders($request);
-        //return redirect()->back()->with(['orders']);
+        $orders = null;
+        if($request->trackingNumbers) {
+            $orders = $repository->getOrders($request);
+        }
         return view('admin.tax.create', compact('orders'));
     }
 
@@ -44,9 +44,9 @@ class TaxController extends Controller
     {
         if ($repository->store($request) ){
             session()->flash('alert-success', 'Tax has been added successfully');
-            return  redirect()->route('admin.tax.create');
+            return  redirect()->route('admin.tax.index');
         }
-
+        session()->flash('alert-danger', 'Please recharge your account first!');
         return back()->withInput();
     }
 

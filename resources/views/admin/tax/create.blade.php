@@ -50,7 +50,7 @@
                             </form></br>
                             <form class="form" action="{{ route('admin.tax.store') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
-                                    @if($orders->isNotEmpty())
+                                    @if($orders)
                                         <div class="row m-1 mb-2">
                                             <div class="col-md-2">
                                                 <label><b>@lang('taxservice.Order ID')</b></label>
