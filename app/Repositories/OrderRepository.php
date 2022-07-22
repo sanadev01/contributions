@@ -252,7 +252,7 @@ class OrderRepository
         return true;
     }
 
-    public function domesticService($shippingServiceId)
+    public function serviceRequireFreight($shippingServiceId)
     {
         $shippingService =  ShippingService::find($shippingServiceId);
 
@@ -378,16 +378,15 @@ class OrderRepository
             return false;
         }
 
-        $volumetricWeight = round($order->getWeight() > $order->weight ? $order->getWeight() : $order->weight, 2);
+        $volumetricWeight = round($order->getWeight(), 2);
         
         $totalDiscountPercentage = ($discountPercentage) ? $discountPercentage/100 : 0;
 
         if ($volumetricWeight > $order->weight) {
             
-            $volumeWeightBeforeDiscount = $volumetricWeight;
-            
-            $volumetricWeight = round($volumetricWeight - ($volumetricWeight * $totalDiscountPercentage), 2);
-            $totalDiscountedWeight = $volumeWeightBeforeDiscount - $volumetricWeight;
+            $consideredWeight = $volumetricWeight - $order->weight;
+            $volumeWeight = round($consideredWeight - ($consideredWeight * $totalDiscountPercentage), 2);
+            $totalDiscountedWeight = $consideredWeight - $volumeWeight;
 
             $order->update([
                 'weight_discount' => $totalDiscountedWeight,
@@ -399,6 +398,7 @@ class OrderRepository
     
     public function getShippingServices($order)
     {
+        $shippingServicesWithoutRates = ShippingService::query()->active()->get();
         $shippingServices = collect() ;
 
         if(optional($order->recipient)->country_id == Order::US)
@@ -407,7 +407,7 @@ class OrderRepository
             $upsShippingService = new UPSShippingService($order);
             $fedExShippingService = new FedExShippingService($order);
             
-            foreach (ShippingService::query()->active()->get() as $shippingService) 
+            foreach ($shippingServicesWithoutRates as $shippingService) 
             {
                 if ($uspsShippingService->isAvailableFor($shippingService)) {
                     $shippingServices->push($shippingService);
@@ -421,7 +421,7 @@ class OrderRepository
                     $shippingServices->push($shippingService);
                 }
             }
-        } else
+        }else
         {
             foreach (ShippingService::query()->has('rates')->active()->get() as $shippingService) 
             {
@@ -431,21 +431,22 @@ class OrderRepository
                     $this->shippingServiceError = 'Shipping Service not Available Error: {'.$shippingService->getCalculator($order)->getErrors().'}';
                 }
             }
-            // USPS Intenrational Services
-            if (optional($order->recipient)->country_id != Order::US && setting('usps', null, User::ROLE_ADMIN)) 
-            {
-                $uspsShippingService = new USPSShippingService($order);
-
-                foreach (ShippingService::query()->active()->get() as $shippingService)
-                {
-                    if ($uspsShippingService->isAvailableForInternational($shippingService)) {
-                        $shippingServices->push($shippingService);
-                    }
-                }
-            }
-
+            
             if ($shippingServices->isEmpty() && $this->shippingServiceError == null) {
                 $this->shippingServiceError = ($order->recipient->commune_id != null) ? 'Shipping Service not Available for the Region you have selected' : 'Shipping Service not Available for the Country you have selected';
+            }
+        }
+
+        // USPS International Services
+        if (optional($order->recipient)->country_id != Order::US && setting('usps', null, User::ROLE_ADMIN)) 
+        {
+            $uspsShippingService = new USPSShippingService($order);
+
+            foreach ($shippingServicesWithoutRates as $shippingService)
+            {
+                if ($uspsShippingService->isAvailableForInternational($shippingService)) {
+                    $shippingServices->push($shippingService);
+                }
             }
         }
 
