@@ -28,6 +28,7 @@ class UserSettingRepository {
         $request->has('stripe') ? saveSetting('stripe', true, $user->id) : saveSetting('stripe', false, $user->id);
         $request->has('sinerlog') ? saveSetting('sinerlog', true, $user->id) : saveSetting('sinerlog', false, $user->id);
         $request->has('fedex') ? saveSetting('fedex', true, $user->id) : saveSetting('fedex', false, $user->id);
+        $request->has('tax') ? saveSetting('tax', true, $user->id) : saveSetting('tax', false, $user->id);
         $request->has('colombia_service') ? saveSetting('colombia_service', true, $user->id) : saveSetting('colombia_service', false, $user->id);
         $request->has('volumetric_discount') ? saveSetting('volumetric_discount', true,$user->id) : saveSetting('volumetric_discount', false, $user->id);
 
