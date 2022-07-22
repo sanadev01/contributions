@@ -14,9 +14,9 @@ class TaxController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(TaxRepository $repository)
+    public function index(TaxRepository $repository, Request $request)
     {
-        $taxlist = $repository->get();
+        $taxlist = $repository->get($request);
         return view('admin.tax.index', compact('taxlist'));
     }
 

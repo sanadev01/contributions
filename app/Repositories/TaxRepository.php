@@ -12,13 +12,22 @@ use Exception;
 
 class TaxRepository
 {
-    public function get(Request $request)
+
+    public function get(Request $request, $paginated = true)
     {
-        $taxlist = Tax::query();
-        return $taxlist;
-    }
-    {
-        return Tax::all();
+        $query = Tax::has('user');
+        if ( $request->search ){
+            $query->whereHas('user',function($query) use($request) {
+                return $query->where('name', 'LIKE', "%{$request->search}%");
+            });
+            $query->orWhereHas('order',function($query) use($request) {
+                return $query->where('warehouse_number', 'LIKE', "%{$request->search}%")
+                ->orWhere('corrios_tracking_code', 'LIKE', "%{$request->search}%");
+            });
+        }
+        $query->latest();
+            return $query->paginate(50);
+        return $query->get();
     }
 
     public function getOrders(Request $request)
