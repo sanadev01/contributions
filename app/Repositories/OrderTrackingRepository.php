@@ -175,7 +175,7 @@ class OrderTrackingRepository
         if (count($this->postNLTrackingCodes) > 0) {
             $postNLTrackingService = new PostNLTrackingService();
             $response = $postNLTrackingService->trackOrder($this->postNLTrackingCodes);
-            if ($response->status == true) {
+            if ($response->status !== false) {
                 $getTrackings = $getTrackings->map(function($item, $key) use ($response){
                     if (count($this->postNLTrackingCodes) >= 1) {
                         foreach ($response->data->data->items as $data) {
@@ -190,7 +190,6 @@ class OrderTrackingRepository
                     }
                     return $item;
                 });
-
             }
         }
         return $getTrackings;

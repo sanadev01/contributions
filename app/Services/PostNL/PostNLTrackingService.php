@@ -9,24 +9,24 @@ use GuzzleHttp\Client as GuzzleClient;
 
 class PostNLTrackingService
 {
-    protected $getTracking;
+    protected $getTrackingURL;
 
-    public function __construct($getTracking = null)
+    public function __construct($getTrackingURL = null)
     {
         $this->client = new GuzzleClient([]);
 
         if (app()->isProduction()) {
-            $getTracking = config('postnl.production.getTracking');
+            $getTrackingURL = config('postnl.production.getTrackingUrl');
         }else {
-            $getTracking = config('postnl.testing.getTracking');
+            $getTrackingURL = config('postnl.testing.getTrackingUrl');
         }
-        $this->getTracking = $getTracking;
+        $this->getTrackingURL = $getTrackingURL;
+
     }
 
     private function getKeys()
     {
         $headers = [
-
             'api_key' => "Eo3qtkGlOh6t9S1HZxMvFkBSJYDTocatwMhBNwhnEoG7Jngng89GtVFmQOrc05OzcMwyLMTeQSYU2h4GsOOp0iy9Rp0qoYlhpGLfLpjNc8CuV3xqbrTGFYNkiZW6TWzdJWVgEsVLg64hYMLY1UElGjrOvxBpA4aI5prbWIefoMrd85y5WkuL1RQrfkH9vRCwod0v8feftgdEeZLYUkQWfYa1TVeeEe4fcbdk9twD6ynpjmq4E7FSLwdeiFIhqicw7a1kY63Bksp5ECq1pefkn0ROrCNjpy3TPdeLKO5I6LBc",
             'Accept' => "application/json",
             'Content-Type' => "application/json",
@@ -39,15 +39,14 @@ class PostNLTrackingService
     {
 
         try {
-
-            $response = $this->client->post($this->getTracking,[
+            $response = $this->client->post($this->getTrackingURL,[
                 'headers' => $this->getKeys(),
                 'json' => [
                     "items" => $trackingNumber
                 ]
             ]);
             $data = json_decode($response->getBody()->getContents());
-            if($data->status == 'success' && $data->data->items[0]->events[0] != [])
+            if($data->status !== 'false' && $data->data->items[0]->events[0] != [])
             {
                 return (Object)[
                     'status' => true,
