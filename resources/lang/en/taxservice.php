@@ -40,6 +40,7 @@ return [
     'Pay Tax' => 'Pay Tax',
     'Pay' => 'Pay',
     'Warehouse No.' => 'Warehouse No.',
+    'Search By Name, Warehouse No. or Tracking Code' => 'Search By Name, Warehouse No. or Tracking Code',
 
 
 
