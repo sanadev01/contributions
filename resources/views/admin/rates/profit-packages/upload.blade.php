@@ -78,19 +78,18 @@
                         </select>
                     </div>
                 </div>
-
-                <div class="row justify-content-center mt-1">
-                    <div class="col-md-6">
-                        <label for="">@lang('profitpackage.package-slab')</label>
-                        <input type="file" class="form-control" name="file" value="{{ old('file') }}">
-                        @error('file')
-                            <div class="text-danger">
-                                {{ $message }}
-                            </div>
-                        @enderror
+                <div class="col-12 d-flex justify-content-center mt-4">
+                    <div class="input-group col-md-6 p-0">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Upload</span>
+                        </div>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" name="file" value="{{ old('file') }}">
+                            <label class="custom-file-label" for="inputGroupFile01">@lang('profitpackage.package-slab')<span
+                                    class="text-danger">*</span></label>
+                        </div>
                     </div>
                 </div>
-                <hr>
 
 
                 <div class="form-actions pl-5 text-right">

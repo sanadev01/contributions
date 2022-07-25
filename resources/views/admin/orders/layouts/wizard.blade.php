@@ -23,7 +23,7 @@
                     </div>
                 @endif
                 <div class="card-content">
-                    <div class="card-body paddinglr">
+                    <div class="card-body">
                         <p class="h4 text-danger pb-2 border-bottom mt-4">WHR#
                             {{ optional($order)->warehouse_number }}</p>
                         <div class="number-tab-steps wizard-circle wizard clearfix" role="application" id="steps-uid-0">

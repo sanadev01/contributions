@@ -580,8 +580,8 @@
     }
 
     .paddinglr {
-        padding-left: 3rem;
-        padding-right: 3rem;
+        padding-left: 120px;
+        padding-right: 120px;
     }
 
     .singleSearchStyle {

@@ -8,7 +8,7 @@
                     @section('title', __('setting.Edit Settings'))
                 </div>
                 <div class="card-content">
-                    <div class="card-body">
+                    <div class="card-body paddinglr">
                         @if ($errors->count())
                             <div class="alert alert-danger">
                                 <ul>
