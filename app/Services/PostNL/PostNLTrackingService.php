@@ -37,7 +37,6 @@ class PostNLTrackingService
 
     public function trackOrder($trackingNumber)
     {
-
         try {
             $response = $this->client->post($this->getTrackingURL,[
                 'headers' => $this->getKeys(),

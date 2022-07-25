@@ -32,13 +32,12 @@ class OrderTrackingRepository
 
     public function searchOrder()
     {
-
         $trackingNumbers = explode(',', preg_replace('/\s+/', '', $this->trackingNumber));
         $orders = Order::whereIn('corrios_tracking_code', $trackingNumbers)->get();
+
         $getTrackings = collect();
         if($orders){
             foreach($orders as $order){
-
                 $apiResponse = [];
                 if($order->trackings->isNotEmpty()){
                     if($order->trackings->last()->status_code == Order::STATUS_SHIPPED){
@@ -85,7 +84,8 @@ class OrderTrackingRepository
                                 ];
                             }
                         }elseif($order->recipient->country_id == Order::BRAZIL ){
-
+                            \Log::info('BR');
+                            \Log::info($order->recipient->country_id);
                             array_push($this->brazilTrackingCodes, $order->corrios_tracking_code);
                             $apiResponse = [
                                 'success' => true,
@@ -94,6 +94,18 @@ class OrderTrackingRepository
                                 'trackings' => $order->trackings,
                                 'order' => $order
                             ];
+                        }elseif($order->recipient->country_id == Order::NETHERLANDS) {
+                            \Log::info('NL');
+                                \Log::info($order->recipient->country_id);
+                            array_push($this->postNLTrackingCodes, $order->corrios_tracking_code);
+
+                                $apiResponse = [
+                                    'success' => true,
+                                    'status' => 200,
+                                    'service' => 'PostNL',
+                                    'trackings' => $order->trackings,
+                                    'order' => $order
+                                ];
                         }else{
                             $apiResponse = [
                                 'success' => false,
@@ -105,16 +117,6 @@ class OrderTrackingRepository
                         }
                         $getTrackings->push($apiResponse);
 
-                    }elseif($order->recipient->country_id == Order::NETHERLANDS) {
-                        array_push($this->postNLTrackingCodes, $order->corrios_tracking_code);
-
-                            $apiResponse = [
-                                'success' => true,
-                                'status' => 200,
-                                'service' => 'PostNL',
-                                'trackings' => $order->trackings,
-                                'order' => $order
-                            ];
                     }else{
 
                         $apiResponse = [
