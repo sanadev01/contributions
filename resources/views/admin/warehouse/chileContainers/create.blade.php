@@ -10,7 +10,7 @@
                         class="pull-right btn btn-primary">@lang('warehouse.containers.List Containers')</a>
                 </div>
                 <div class="card-content">
-                    <div class="card-body">
+                    <div class="card-body paddinglr">
                         <form action="{{ route('warehouse.chile_containers.store') }}" method="post"
                             enctype="multipart/form-data">
                             @csrf

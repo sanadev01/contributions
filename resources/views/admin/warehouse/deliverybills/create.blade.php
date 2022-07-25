@@ -15,7 +15,7 @@
                             enctype="multipart/form-data">
                             @csrf
 
-                            <table class="table">
+                            <table class="table table-bordered">
                                 <tr>
                                     <th>
                                         <input type="checkbox" class="form-control" value="" id="selectAll">

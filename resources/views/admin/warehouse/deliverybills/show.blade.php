@@ -14,7 +14,7 @@
                 </div>
                 <div class="card-content card-body" style="min-height: 100vh;">
                     <div class="mt-1">
-                        <table class="table mb-0">
+                        <table class="table mb-0 table-bordered">
                             <thead>
                                 <tr>
                                     <th>@lang('warehouse.containers.Dispatch Number')</th>

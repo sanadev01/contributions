@@ -42,29 +42,6 @@
                 </tr>
             </thead>
             <tbody>
-                {{-- <tr>
-                    <th><input class="form-control" type="text" wire:model="date"></th>
-                    @admin
-                        <th><input class="form-control" type="text" wire:model="name"></th>
-                        <th><input class="form-control" type="text" wire:model="pobox"></th>
-                    @endadmin
-                    <th><input class="form-control" type="text" wire:model="whr_number"></th>
-                    <th></th>
-                    <th></th>
-                    <th><input class="form-control" type="text" wire:model="merchant"></th>
-                    <th><input class="form-control" type="text" wire:model="carrier"></th>
-                    <th><input class="form-control" type="text" wire:model="tracking_id"></th>
-                    <th>
-                        <select class="form-control" wire:model="status">
-                            <option value="">@lang('parcel.All')</option>
-                            <option value="transit">@lang('parcel.Transit')</option>
-                            <option value="ready">@lang('parcel.Ready')</option>
-                            <option value="25">@lang('consolidation.Consolidation Requested')</option>
-                            <option value="26">@lang('consolidation.Consolidated')</option>
-                        </select>
-                    </th>
-                    <th></th>
-                </tr> --}}
                 @forelse($parcels as $parcel)
                     @include('admin.parcels.components.parcel-row', ['parcel' => $parcel])
                 @empty

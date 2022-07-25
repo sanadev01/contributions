@@ -70,11 +70,6 @@
                                                     </span>
                                                 </span>
                                             </div>
-                                            {{-- <select name="" id="bulk-actions" class="form-control">
-                                                <option value="clear">Clear All</option>
-                                                <option value="checkAll">Select All</option>
-                                                <option value="assign-awb">Assign AWB</option>
-                                            </select> --}}
                                         </th>
                                         <th>@lang('warehouse.containers.Dispatch Number')</th>
                                         <th>@lang('warehouse.containers.Seal No')</th>
@@ -101,32 +96,6 @@
                                         </th>
                                         <th>@lang('warehouse.actions.Action')</th>
                                     </tr>
-                                    {{-- <tr>
-                                        <th></th>
-                                        <th>
-                                            <input type="search" class="form-control"
-                                                wire:model.debounce.1000ms="dispatchNumber">
-                                        </th>
-                                        <th>
-                                            <input type="search" class="form-control"
-                                                wire:model.debounce.1000ms="sealNo">
-                                        </th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th>
-                                            <select class="form-control" wire:model="packetType">
-                                                <option value="">Select Type</option>
-                                                <option value="NX">Packet Standard</option>
-                                                <option value="IX">Packet Express</option>
-                                                <option value="XP">Packet Mini</option>
-                                            </select>
-                                        </th>
-
-                                        <th></th>
-                                    </tr> --}}
                                 </thead>
                                 <tbody>
                                     @foreach ($containers as $container)

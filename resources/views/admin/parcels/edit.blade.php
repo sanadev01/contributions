@@ -182,8 +182,7 @@
                                         <div class="controls">
                                             <label>@lang('parcel.Warehouse Number') <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" required name="whr_number"
-                                                value="{{ old('whr_number', $parcel->warehouse_number) }}"
-                                                placeholder="">
+                                                value="{{ old('whr_number', $parcel->warehouse_number) }}" placeholder="">
                                             @error('whr_number')
                                                 <div class="help-block text-danger">{{ $message }}</div>
                                             @enderror
@@ -211,11 +210,6 @@
                                                             class="text-danger">*</span></label>
                                                 </div>
                                             </div>
-                                            {{-- <label>@lang('parcel.Select File') <span class="text-danger">*</span></label>
-                                                <input type="file" accept=".xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf" multiple name="images[]"> --}}
-                                            {{-- @error('record')
-                                                    <div class="help-block text-danger">{{ $message }}</div>
-                                                @enderror --}}
                                         </div>
 
                                         <div class="mt-2">

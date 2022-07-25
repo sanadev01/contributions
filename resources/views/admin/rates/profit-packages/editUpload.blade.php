@@ -89,19 +89,6 @@
                         </select>
                     </div>
                 </div>
-                {{-- <div class="row justify-content-center mt-1">
-                    <div class="input-group col-md-6">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">Upload</span>
-                        </div>
-                        <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="inputGroupFile01" accept="image/*"
-                                name="images[]" aria-describedby="inputGroupFileAddon01">
-                            <label class="custom-file-label" for="inputGroupFile01">Image 1<span
-                                    class="text-danger">*</span></label>
-                        </div>
-                    </div>
-                </div> --}}
                 <div class="row justify-content-center mt-3">
                     <div class="input-group col-md-6">
                         <div class="input-group-prepend">
@@ -119,15 +106,6 @@
                                     class="text-danger">*</span></label>
                         </div>
                     </div>
-                    {{-- <div class="col-md-6">
-                        <label for="">@lang('profitpackage.package-slab')</label>
-                        <input type="file" class="form-control" name="file" value="{{ old('file') }}">
-                        @error('file')
-                            <div class="text-danger">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div> --}}
                 </div>
                 <hr>
 

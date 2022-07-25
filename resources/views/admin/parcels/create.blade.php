@@ -130,21 +130,8 @@
                                                 @enderror
                                             </div>
                                         </div>
-                                        {{-- <label>@lang('parcel.Invoice')</label>
-                                <input type="file" name="invoiceFile" {{ auth()->user()->isUser() ? 'required': ''  }} class="form-control" placeholder="@lang('parcel.Choose Invoice File')"> --}}
                                     </div>
                                 </div>
-                                {{-- <div class="form-group col-12 col-sm-6 col-md-4">
-                                    <div class="controls">
-                                        <label>@lang('parcel.Invoice')</label>
-                                        <input type="file" name="invoiceFile"
-                                            {{ auth()->user()->isUser()? 'required': '' }} class="form-control"
-                                            placeholder="@lang('parcel.Choose Invoice File')">
-                                        @error('record')
-                                            <div class="help-block text-danger">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div> --}}
                             </div>
 
                             @can('addWarehouseNumber', App\Models\Order::class)

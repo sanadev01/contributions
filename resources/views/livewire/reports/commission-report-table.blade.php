@@ -102,29 +102,7 @@
                             Action
                         </th>
                     </tr>
-                    {{-- <tr>
-                        <th>
 
-                        </th>
-                        <th>
-                            <input type="search" class="form-control" wire:model.debounce.500ms="name">
-                        </th>
-                        <th>
-                            <input type="search" class="form-control" wire:model.debounce.500ms="pobox_number">
-                        </th>
-                        <th>
-                            <input type="search" class="form-control" wire:model.debounce.500ms="email">
-                        </th>
-                        <th>
-
-                        </th>
-                        <th>
-
-                        </th>
-                        <th>
-
-                        </th>
-                    </tr> --}}
                 </thead>
                 <tbody>
                     @if (\Auth::user()->isAdmin())

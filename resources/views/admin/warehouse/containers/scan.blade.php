@@ -12,8 +12,8 @@
                         <div>
                             <a href="{{ route('warehouse.containers.index') }}" class="btn btn-primary"> @lang('warehouse.containers.List Containers')
                             </a>
-                            <a href="{{ route('warehouse.containers.packages.create', $container) }}"
-                                class="btn btn-success"> <i class="fa fa-arrow-down"></i> Download </a>
+                            <a href="{{ route('warehouse.containers.packages.create', $container) }}" class="btn btn-success">
+                                <i class="fa fa-arrow-down"></i> Download </a>
                         </div>
                     </div>
                     <div class="card-content card-body">

@@ -4,7 +4,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header d-flex justify-content-end">
                     @section('title', __('connect.Integrate Shopify Store'))
                     <a href="{{ route('admin.connect.index') }}" class="pull-right btn btn-primary">@lang('role.Back to List')</a>
                 </div>

@@ -45,18 +45,6 @@
                         </div>
 
                     </div>
-
-                    {{-- <div class="row col-8 pr-0 pl-1 " id="singleSearch">
-                        <div class="form-group singleSearchStyle col-12">
-                            <div class="form-group mb-2 col-12 row">
-                                <input wire:model="custom" type="search" class="form-control col-8 hd-search"
-                                    name="custom">
-                                <button type="submit" class="btn btn-primary ml-2">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div> --}}
                     <div class="table-responsive-md">
                         <livewire:pre-alert.table />
                     </div>

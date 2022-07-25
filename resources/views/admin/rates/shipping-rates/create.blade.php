@@ -6,7 +6,6 @@
     <div class="card">
         <div class="card-header d-flex justify-content-end">
         @section('title', __('shipping-rates.BPS Rates'))
-        {{-- <h4 class="card-title" id="basic-layout-form">@lang('shipping-rates.BPS Rates')</h4> --}}
         <a href="{{ route('admin.rates.shipping-rates.index') }}" class="btn btn-primary pull-right">
             @lang('shipping-rates.Return to List')
         </a>
@@ -68,20 +67,6 @@
 
                     </div>
                     <div class="row justify-content-center">
-
-                        {{-- <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="projectinput1">@lang('shipping-rates.Select Excel File to Upload')</label>
-                                <input type="file" class="form-control" name="csv_file"
-                                    accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                                    required>
-                                @error('csv_file')
-                                    <div class="text-danger">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-                        </div> --}}
                         <div class="col-md-6">
                             <div class="input-group">
                                 <div class="input-group-prepend">

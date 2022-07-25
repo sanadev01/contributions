@@ -44,8 +44,7 @@
 
     </div>
     <div class="row col-12 my-3" id="downloadsDiv">
-        <form class="col-12" action="{{ route('admin.reports.user-shipments.index') }}" method="GET"
-            target="_blank">
+        <form class="col-12" action="{{ route('admin.reports.user-shipments.index') }}" method="GET" target="_blank">
             <div class="row">
                 <div class="col-md-12 row mb-2 ">
                     <div class="col-lg-2 pl-0 col-md-3 col-sm-3 col-xs-3">
@@ -150,29 +149,6 @@
                     @endif
                 </th>
             </tr>
-            {{-- <tr>
-                <th>
-
-                </th>
-                <th>
-                    <input type="search" class="form-control" wire:model.debounce.500ms="name">
-                </th>
-                <th>
-                    <input type="search" class="form-control" wire:model.debounce.500ms="pobox_number">
-                </th>
-                <th>
-                    <input type="search" class="form-control" wire:model.debounce.500ms="email">
-                </th>
-                <th>
-
-                </th>
-                <th>
-
-                </th>
-                <th>
-
-                </th>
-            </tr> --}}
         </thead>
         <tbody>
             @foreach ($users as $user)

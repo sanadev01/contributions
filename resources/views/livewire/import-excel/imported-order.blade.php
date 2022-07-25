@@ -36,37 +36,7 @@
                             <th>Errors</th>
                             <th>@lang('Action')</th>
                         </tr>
-                        {{-- <tr class="no-print">
-                            <th>
-                                <input type="search" class="form-control col-md-9" wire:model.debounce.1000ms="date">
-                            </th>
-                            @admin
-                                <th>
-                                    <input type="search" class="form-control" wire:model.debounce.1000ms="name">
-                                </th>
-                            @endadmin
-                            <th>
-                                <input type="search" class="form-control" wire:model.debounce.1000ms="client">
-                            </th>
-                            <td>
-                                <input type="search" class="form-control" wire:model.debounce.1000ms="carrier">
-                            </td>
-                            <td>
-                                <input type="search" class="form-control" wire:model.debounce.1000ms="reference">
-                            </td>
-                            <th>
-                                <input type="search" class="form-control" wire:model.debounce.1000ms="tracking">
-                            </th>
-                            <th>
-                                <select type="search" class="form-control" name="type"
-                                    wire:model.debounce.1000ms="type">
-                                    <option value="">@lang('orders.import-excel.Select Order')</option>
-                                    <option value="good">@lang('orders.import-excel.Good')</option>
-                                    <option value="error">@lang('orders.import-excel.Error')</option>
-                                </select>
-                            </th>
 
-                        </tr> --}}
                     </thead>
                     <tbody>
                         @forelse ($importedOrders as $order)

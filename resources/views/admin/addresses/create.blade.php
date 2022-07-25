@@ -9,7 +9,6 @@
                 <div class="card">
                     <div class="card-header">
                         <div>
-                            {{-- <h4 class="mb-0">@lang('address.Add Address')</h4> --}}
                         @section('title', __('address.Add Address'))
                         <p>@lang('address.corios-message')</p>
                     </div>

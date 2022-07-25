@@ -23,23 +23,6 @@
         </div>
 
     </div>
-    {{-- <div class="form-row " id="dateSearch">
-        <div class="form-group col-md-2">
-            <label for="start_date">Start Date</label>
-            <input type="date" wire:model.defer="start_date" class="form-control" id="start_date">
-        </div>
-        <div class="form-group col-md-2">
-            <label for="end_date">End Date</label>
-            <input type="date" wire:model.defer="end_date" class="form-control" id="end_date">
-        </div>
-        <div class="form-group col-md-2 mt-4 ml-3">
-            <button type="button" wire:click="search" class="btn btn-primary">Search</button>
-        </div>
-        <div class="form-group col-md-2 mt-4 ml-3">
-            <button type="button" wire:click="download()" class="btn btn-primary"
-                @if (!$searchOrders) disabled @endif>@lang('shipping-rates.Download')</button>
-        </div>
-    </div> --}}
     @if ($error)
         <div class="form-row">
             <div class="form-group col-md-12">

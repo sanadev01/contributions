@@ -24,15 +24,6 @@
                                     aria-hidden="true"></i></button>
                         </div>
                     </form>
-                    {{-- <div class="col-2">
-                <label>File Name</label>
-                <input type="search" class="form-control" wire:model.debounce.1000ms="file_name">
-            </div>
-            <div class="col-2">
-                <label>Total</label>
-                <input type="search" class="form-control" wire:model.debounce.1000ms="total">
-            </div> --}}
-
                 </div>
                 <div class="table-wrapper position-relative">
                     <table class="table table-bordered" id="">
@@ -46,23 +37,6 @@
                                 <th>Total</th>
                                 <th class="width-100">@lang('orders.actions.actions')</th>
                             </tr>
-                            {{-- <tr class="no-print">
-                        <th>
-                            <input type="search" class="form-control col-md-9" wire:model.debounce.1000ms="date">
-                        </th>
-                        @admin
-                            <th>
-                                <input type="search" class="form-control" wire:model.debounce.1000ms="name">
-                            </th>
-                        @endadmin
-                        <th>
-                            <input type="search" class="form-control" wire:model.debounce.1000ms="file_name">
-                        </th>
-                        <th>
-                            <input type="search" class="form-control" wire:model.debounce.1000ms="total">
-                        </th>
-                        <th></th>
-                    </tr> --}}
                         </thead>
                         <tbody>
                             @forelse ($importOders as $order)

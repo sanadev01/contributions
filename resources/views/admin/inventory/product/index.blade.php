@@ -4,7 +4,6 @@
     <div class="card min-vh-100">
         <div class="card-header">
         @section('title', __('Inventory Products'))
-        {{-- <h4 class="mb-0">Inventory Products</h4> --}}
 
         {{-- <div class="col-12 pl-1"> --}}
         @can('create', App\Product::class)
@@ -18,8 +17,7 @@
             </div>
             <div class="pr-0">
                 @admin
-                    <a href="{{ route('admin.inventory.product-export.index') }}" class="btn btn-success mr-1"
-                        title="Download">
+                    <a href="{{ route('admin.inventory.product-export.index') }}" class="btn btn-success mr-1" title="Download">
                         <i class="fa fa-arrow-down"></i>
                     </a>
                 @endadmin

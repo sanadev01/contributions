@@ -68,41 +68,6 @@
                             <th>Balance</th>
                             <th>Created At</th>
                         </tr>
-                        {{-- <tr>
-                            <th>
-                                <input type="search" wire:model.debounce.500ms="uuid" class="form-control">
-                            </th>
-                            @admin
-                                <th>
-                                    <input type="search" wire:model.debounce.500ms="user" class="form-control">
-                                </th>
-                            @endadmin
-                            <th>
-                                <input type="search" wire:model.debounce.500ms="trackingCode" class="form-control">
-                            </th>
-                            <th>
-                                <input type="search" wire:model.debounce.500ms="warehouseNumber" class="form-control">
-                            </th>
-                            <th>
-                                <input type="search" wire:model.debounce.500ms="card" class="form-control">
-                            </th>
-                            <th>
-                            </th>
-                            <th>
-                                <input type="search" wire:model.debounce.500ms="description" class="form-control">
-                            </th>
-                            <th>
-                                <select name="" class="form-control" wire:model="type">
-                                    <option value="">All</option>
-                                    <option value="1">Credit</option>
-                                    <option value="0">Debit</option>
-                                </select>
-                            </th>
-                            <th>
-                                <input type="search" wire:model.debounce.500ms="balance" class="form-control">
-                            </th>
-                            <th></th>
-                        </tr> --}}
                     </thead>
                     <tbody>
                         @foreach ($deposits as $deposit)

@@ -48,10 +48,7 @@
                     </form>
                 </div>
             </div>
-
         </div>
-
-
         <div class="mb-2 row col-md-12 hide "
             @if ($this->search) style="display: block !important;" @endif id="logSearch">
             <form class="col-12 d-flex pl-0" wire:submit.prevent="render">
@@ -86,11 +83,6 @@
                                         </span>
                                     </span>
                                 </div>
-                                {{-- <select name="" id="bulk-actions" class="form-control">
-                                    <option value="clear">Clear All</option>
-                                    <option value="checkAll">Select All</option>
-                                    <option value="pay-commission">Pay Commission</option>
-                                </select> --}}
                             </th>
                         @endadmin
                         <th>@lang('sales-commission.Date')</th>
@@ -113,61 +105,6 @@
                             <th>@lang('Action')</th>
                         @endadmin
                     </tr>
-                    {{-- <tr class="no-print">
-                        @admin
-                            <th></th>
-                        @endadmin
-                        <th>
-                            <div class="row">
-                                <input type="date" class="form-control col-md-6" wire:model.debounce.1000ms="start">
-                                <input type="date" class="form-control col-md-6" wire:model.debounce.1000ms="end">
-                            </div>
-
-                        </th>
-                        @admin
-                            <th>
-                                <input type="search" class="form-control" wire:model.debounce.1000ms="name">
-                            </th>
-                        @endadmin
-                        <th>
-                            <input type="search" class="form-control" wire:model.debounce.1000ms="user">
-                        </th>
-
-                        <th>
-                            <input type="search" class="form-control" wire:model.debounce.1000ms="order">
-                        </th>
-                        <th>
-                            <input type="search" class="form-control" wire:model.debounce.1000ms="whr">
-                        </th>
-                        <th>
-                            <input type="search" class="form-control" wire:model.debounce.1000ms="corrios_tracking">
-                        </th>
-                        <th>
-                            <input type="search" class="form-control" wire:model.debounce.1000ms="reference">
-                        </th>
-                        <th>
-                            <input type="search" class="form-control" wire:model.debounce.1000ms="tracking">
-                        </th>
-                        <th>
-                            <input type="search" class="form-control" wire:model.debounce.1000ms="weight">
-                        </th>
-
-                        <th>
-                            <input type="search" class="form-control" wire:model.debounce.1000ms="value">
-                        </th>
-                        <th>
-                            <select class="form-control" wire:model="saleType">
-                                <option value="">All</option>
-                                <option value="flat">Flat</option>
-                                <option value="percentage">Percentage</option>
-                            </select>
-                        </th>
-                        <th>
-                            <input type="search" class="form-control" wire:model.debounce.1000ms="commission">
-                        </th>
-                        <th></th>
-                        <th></th>
-                    </tr> --}}
                 </thead>
                 <tbody>
                     @forelse ($sales as $sale)
