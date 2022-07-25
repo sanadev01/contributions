@@ -25,15 +25,11 @@
                     <div class="card-content card-body" style="min-height: 100vh;">
 
                         <div class="mb-2 row col-md-12 hide"
-                            @if ($this->dispatchNumber || $this->sealNo) style="display: flex !important;" @endif id="logSearch">
+                            @if ($this->search || $this->packetType) style="display: flex !important;" @endif id="logSearch">
                             <form class="col-12 d-flex pl-0" wire:submit.prevent="render">
                                 <div class="col-2 pl-0">
-                                    <label>Dispatch Number</label>
-                                    <input type="search" class="form-control" wire:model.defer="dispatchNumber">
-                                </div>
-                                <div class="col-2">
-                                    <label>Seal No</label>
-                                    <input type="search" class="form-control" wire:model.defer="sealNo">
+                                    <label>Search</label>
+                                    <input type="search" class="form-control" wire:model.defer="search">
                                 </div>
                                 <div class="col-2">
                                     <label>Distribution Service Class</label>
@@ -45,10 +41,18 @@
                                     </select>
 
                                 </div>
-                                <button type="submit" class="btn btn-primary ml-2 mt-4">
-                                    <i class="fa fa-search"></i>
-                                </button>
+                                <div class="mt-1">
+                                    <button type="submit" class="btn btn-primary mt-4">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                    <button class="btn btn-primary ml-1 mt-4 waves-effect waves-light"
+                                        onclick="window.location.reload();">
+                                        <i class="fa fa-undo" data-bs-toggle="tooltip" title=""
+                                            data-bs-original-title="fa fa-undo" aria-label="fa fa-undo"
+                                            aria-hidden="true"></i></button>
+                                </div>
                             </form>
+
 
                         </div>
                         <div class="mt-1 table-bordered">

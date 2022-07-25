@@ -28,24 +28,26 @@
                     <div class="mt-1">
                         <div class="col-12 text-right">
                             <form action="">
-                                <div class="row justify-content-start hide" id="logSearch">
-                                    <div class="col-md-4">
+                                <div class="row justify-content-start hide"
+                                    @if (Request('startDate') || Request('endDate')) style="display:flex !important" @endif
+                                    id="logSearch">
+                                    <div class="col-md-3">
                                         <div class="row justify-content-start">
-                                            <div class="col-md-2 pl-0 text-left">
+                                            <div class="col-md-3 pl-0 text-left">
                                                 <label>Start Date</label>
                                             </div>
-                                            <div class="col-md-10">
+                                            <div class="col-md-9">
                                                 <input type="date" class="form-control col-md-12 mb-2 mr-sm-2"
                                                     value="{{ Request('startDate') }}" name="startDate">
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <div class="row justify-content-start">
-                                            <div class="col-md-2 pl-0 text-left">
+                                            <div class="col-md-3 pl-0 text-left">
                                                 <label>End Date</label>
                                             </div>
-                                            <div class="col-md-10">
+                                            <div class="col-md-9">
                                                 <input type="date" class="form-control col-md-12"
                                                     value="{{ Request('endDate') }}" name="endDate">
                                             </div>
@@ -55,6 +57,11 @@
                                         <button class="btn btn-success waves-effect waves-light" title="Search">
                                             <i class="fa fa-search" aria-hidden="true"></i>
                                         </button>
+                                        <button class="btn btn-primary ml-1 waves-effect waves-light"
+                                            onclick="window.location.reload();">
+                                            <i class="fa fa-undo" data-bs-toggle="tooltip" title=""
+                                                data-bs-original-title="fa fa-undo" aria-label="fa fa-undo"
+                                                aria-hidden="true"></i></button>
                                     </div>
                                 </div>
                             </form>

@@ -14,14 +14,16 @@
                                     <button title="Print Labels" id="assignAWB" type="btn"
                                         class="btn btn-primary mr-1 ml-1 mb-1 waves-effect waves-light"><i
                                             class="fas fa-file-invoice" aria-hidden="true"></i></button>
+                                    <a href="" id="download-combine-manifest"
+                                        class="pull-right mb-1 btn btn-success">
+                                        @lang('warehouse.containers.Download Manifest')</a>
+
                                 </div>
                             </div>
                         </div>
                         <div class="col-6 pr-0 mr-0">
                             <a href="{{ route('warehouse.chile_containers.create') }}"
                                 class="pull-right btn btn-primary ml-3"> @lang('warehouse.containers.Create Container')</a>
-                            <a href="" id="download-combine-manifest" class="pull-right btn btn-success">
-                                @lang('warehouse.containers.Download Manifest')</a>
                         </div>
                     </div>
                 </div>
@@ -237,7 +239,7 @@
 
         if ($('#checkAll').is(':checked')) {
             $('.bulk-container').prop('checked', true)
-            document.getElementById("printBtnDiv").style.display = 'block';
+            document.getElementById("printBtnDiv").style.display = 'flex';
         } else {
             $('.bulk-container').prop('checked', false)
             document.getElementById("printBtnDiv").style.display = 'none';

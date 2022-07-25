@@ -59,9 +59,15 @@
                     <label>Search</label>
                     <input type="search" class="form-control" wire:model.defer="search">
                 </div>
-                <button type="submit" class="btn btn-primary ml-2 mt-4">
-                    <i class="fa fa-search"></i>
-                </button>
+                <div class="mt-1">
+                    <button type="submit" class="btn btn-primary mt-4">
+                        <i class="fa fa-search"></i>
+                    </button>
+                    <button class="btn btn-primary ml-1 mt-4 waves-effect waves-light"
+                        onclick="window.location.reload();">
+                        <i class="fa fa-undo" data-bs-toggle="tooltip" title=""
+                            data-bs-original-title="fa fa-undo" aria-label="fa fa-undo" aria-hidden="true"></i></button>
+                </div>
             </form>
         </div>
 

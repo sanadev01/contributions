@@ -22,7 +22,7 @@
                                         <label>Start Date</label>
                                         <input type="date" name="start_date" class="form-control">
                                     </div>
-                                    <div class="form-group mx-sm-3 mb-2 col-4" style="float:left;margin-right:20px;">
+                                    <div class="form-group mx-sm-3 mb-2 col-4" style="float:left;margin-right:10px;">
                                         <label>End Date</label>
                                         <input type="date" name="end_date" class="form-control">
                                     </div>
@@ -30,6 +30,11 @@
                                         title="Download">
                                         <i class="fa fa-arrow-down" aria-hidden="true"></i>
                                     </button>
+                                    <button class="btn btn-primary ml-1 hd-mt-20 waves-effect waves-light"
+                                        onclick="window.location.reload();">
+                                        <i class="fa fa-undo" data-bs-toggle="tooltip" title=""
+                                            data-bs-original-title="fa fa-undo" aria-label="fa fa-undo"
+                                            aria-hidden="true"></i></button>
                                 </form>
                             </div>
                         </div>

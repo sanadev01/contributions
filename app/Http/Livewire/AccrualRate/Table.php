@@ -15,6 +15,7 @@ class Table extends Component
     public $gru;
     public $service;
     public $chileService = false;
+    public $search;
     
     public function mount($shippingService)
     {
@@ -53,6 +54,12 @@ class Table extends Component
         }elseif($this->selectedCountry && $this->weight && !$this->cwb && !$this->gru)
         {
             $this->searchByCountryAndWeight();
+        }
+        elseif($this->search)
+        {
+            return $this->shippingRates = AccrualRate::where('gru', 'LIKE', "%{$this->search}%")
+            ->orWhere('weight', 'LIKE', "%{$this->search}%")
+            ->orWhere('cwb', 'LIKE', "%{$this->search}%")->get();
         }
         else {
             $this->getShippingRates();

@@ -6,7 +6,7 @@
     </div>
     <div class="row col-10">
         <div class=" col-10 text-left mb-2 pl-0" id="dateSearch">
-            <div class="row my-3">
+            <div class="row my-3 col-8 pl-0">
                 <div class="col-md-4">
                     <label for="">@lang('dashboard.Start Date')</label>
                     <input type="date" class="form-control" wire:model="startDate">

@@ -23,8 +23,7 @@
                                 </ul>
                             </div>
                         @endif
-                        <form action="{{ route('admin.profile.store') }}" method="post"
-                            enctype="multipart/form-data">
+                        <form action="{{ route('admin.profile.store') }}" method="post" enctype="multipart/form-data">
                             @csrf
                             @if (auth()->user()->isBusinessAccount())
                                 <div class="controls row mb-1 align-items-center">
@@ -108,13 +107,23 @@
                                     <div class="help-block"></div>
                                 </div>
                             </div>
+
+
                             <div class="controls row mb-1 align-items-center">
                                 <label class="col-md-3 text-md-right">@lang('profile.Profile Picture')<span
                                         class="text-danger">*</span></label>
                                 <div class="col-md-6">
-                                    <input type="file" accept="image/*" class="form-control" name="image"
-                                        placeholder="">
-                                    <div class="help-block"></div>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Upload</span>
+                                        </div>
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input" accept="image/*"
+                                                class="form-control" name="image" placeholder="">
+                                            <label class="custom-file-label" for="inputGroupFile01">Select Files<span
+                                                    class="text-danger">*</span></label>
+                                        </div>
+                                    </div>
                                     <img src="{{ auth()->user()->getImage() }}" style="width: 100px; height:100px;"
                                         alt="">
                                 </div>

@@ -1,5 +1,6 @@
 <div>
-    <div class="hd-card mt-1 mb-3 pl-3" id="searchBlock">
+    <div class="hd-card mt-1 mb-3 pl-3" @if ($this->start_date || $this->end_date) style="display: block !important" @endif
+        id="searchBlock">
         <div class="d-flex pl-1">
             <form wire:submit.prevent="search" class="col-12 p-0">
                 <div class="row col-12 p-0 m-0">
@@ -27,7 +28,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-2">
+                    <div class="col-2 pl-0">
                         <div class="form-group">
                             <div class="controls">
                                 @if ($hasSearch)
@@ -37,13 +38,17 @@
                                     </button>
                                 @else
                                     <button type="submit" class="btn btn-primary hd-mt-20" wire:click="search">
-                                        <i class="feather icon-search"></i> Search
+                                        <i class="feather icon-search"></i>
                                     </button>
                                 @endif
-                                <button type="button" wire:click="download" class="hd-mt-20 btn btn-success mr-1"
+                                <button type="button" wire:click="download" class="hd-mt-20 btn btn-success"
                                     @if (!$orders) disabled @endif>
                                     <i class="feather icon-download"></i>
                                 </button>
+                                <button class="btn btn-primary ml-1 hd-mt-20 waves-effect waves-light"
+                                    onclick="window.location.reload();">
+                                    <i class="fa fa-undo" data-bs-toggle="tooltip" title=""
+                                        data-bs-original-title="fa fa-undo" aria-label="fa fa-undo"></i></button>
                             </div>
                         </div>
                     </div>

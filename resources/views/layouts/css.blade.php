@@ -579,6 +579,11 @@
         display: none;
     }
 
+    .paddinglr {
+        padding-left: 120px;
+        padding-right: 120px;
+    }
+
     .singleSearchStyle {
         padding-right: 0px !important;
     }
