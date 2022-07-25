@@ -19,7 +19,7 @@ class POSTNLContainerRepository {
         }
 
         return $query->where(function($query) {
-            $query->where('services_subclass_code','POSTNL');
+            $query->where('services_subclass_code','PostNL');
         })->latest()->paginate();
 
     }

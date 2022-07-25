@@ -113,14 +113,14 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 8;
         }elseif($this->services_subclass_code == 'AJ-IX'){
             return 9;
-        }elseif($this->services_subclass_code == 'PostNL') {
-            return 10;
         }elseif($this->services_subclass_code == 'CO-NX'){
             return 10;
         }elseif($this->services_subclass_code == 'Priority International'){
             return 11;
         }elseif($this->services_subclass_code == 'FirstClass International'){
             return 12;
+        }elseif($this->services_subclass_code == 'PostNL'){
+            return 13;
         }
         // return $this->services_subclass_code == 'NX' ? 2 : 1;
     }
@@ -214,6 +214,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
         if ($this->services_subclass_code == 'CO-NX') {
             return 'Colombia-Container';
+        }
+
+        if ($this->services_subclass_code == 'PostNL') {
+            return 'PostNL';
         }
 
         return 'Other-Container';
