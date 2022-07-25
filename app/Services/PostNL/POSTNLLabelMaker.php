@@ -4,7 +4,6 @@ namespace App\Services\POSTNL;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
 
-
 class POSTNLLabelMaker
 {
 
