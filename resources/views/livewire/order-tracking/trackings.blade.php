@@ -470,15 +470,7 @@
                     </div>
                     </div>
                 </div>
-
-
-
-            @endforeach
-        </div>
-
-    @endif
     <div wire:loading>
-        <div class="position-absolute bg-white d-flex justify-content-center align-items-center w-100 h-100" style="top: 0; right:0;font-size: 50px;">
             <i class="fa fa-spinner fa-spin"></i>
         </div>
     </div>

@@ -36,6 +36,8 @@ Route::get('order-fedex-rates', [App\Http\Controllers\Admin\Order\OrderItemsCont
 
 Route::post('order/update/status',Api\OrderStatusController::class)->name('api.order.status.update');
 
+Route::post('update/inventory-order', Api\InventoryOrderUpdateController::class)->name('api.inventory.order.update');
+
 Route::prefix('v1')->middleware('auth:api')->group(function(){
     
     Route::namespace('Api\Warehouse')->group(function () {

@@ -24,6 +24,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     const CONTAINER_ANJUN_NX = 'AJ-NX';
     const CONTAINER_ANJUN_IX = 'AJ-IX';
+    const CONTAINER_COLOMBIA_NX = 'CO-NX';
 
     public function user()
     {
@@ -77,10 +78,16 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'SRM service';
         }elseif($this->services_subclass_code == 'SRP'){
             return 'SRP service';
+        }elseif($this->services_subclass_code == 'CO-NX'){
+            return 'Colombia Standard';
         }elseif($this->services_subclass_code == 'Priority'){
             return 'Priority';
         }elseif($this->services_subclass_code == 'PostNL'){
             return 'PostNL';
+        }elseif($this->services_subclass_code == 'Priority International'){
+            return 'Priority International';
+        }elseif($this->services_subclass_code == 'FirstClass International'){
+            return 'FirstClass International';
         }else {
             return 'FirstClass';
         }
@@ -108,6 +115,12 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 9;
         }elseif($this->services_subclass_code == 'PostNL') {
             return 10;
+        }elseif($this->services_subclass_code == 'CO-NX'){
+            return 10;
+        }elseif($this->services_subclass_code == 'Priority International'){
+            return 11;
+        }elseif($this->services_subclass_code == 'FirstClass International'){
+            return 12;
         }
         // return $this->services_subclass_code == 'NX' ? 2 : 1;
     }
@@ -174,5 +187,35 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     public function hasOrders()
     {
         return $this->orders->isNotEmpty();
+    }
+
+    public function getContainerService()
+    {
+        if ($this->services_subclass_code == 'NX' || $this->services_subclass_code == 'IX' || $this->services_subclass_code == 'XP') {
+            return 'Brazil-Container';
+        }
+
+        if ($this->services_subclass_code == 'AJ-NX' || $this->services_subclass_code == 'AJ-IX') {
+            return 'Anjun-Container';
+        }
+
+        if ($this->services_subclass_code == 'SL-NX' || $this->services_subclass_code == 'SL-IX' || $this->services_subclass_code == 'SL-XP') {
+            return 'Sinerlog-Container';
+        }
+
+        if ($this->services_subclass_code == 'SRM' || $this->services_subclass_code == 'SRP') {
+            return 'Chile-Container';
+        }
+
+        if ($this->services_subclass_code == 'Priority' || $this->services_subclass_code == 'FirstClass' ||
+            $this->services_subclass_code == 'Priority International' || $this->services_subclass_code == 'FirstClass International') {
+            return 'USPS-Container';
+        }
+
+        if ($this->services_subclass_code == 'CO-NX') {
+            return 'Colombia-Container';
+        }
+
+        return 'Other-Container';
     }
 }

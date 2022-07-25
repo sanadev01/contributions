@@ -32,6 +32,7 @@ class ShippingService extends Model
     const PostNL = 87765;
     const AJ_Packet_Standard = 33164;
     const AJ_Packet_Express = 33172;
+    const COLOMBIA_Standard = 44162;
 
     protected $guarded = [];
 
@@ -132,6 +133,33 @@ class ShippingService extends Model
         return false;
     }
 
+    public function isColombiaService()
+    {
+        if (collect($this->colombiaShippingServices())->contains($this->service_sub_class)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isCorreiosChileService()
+    {
+        if (collect($this->correiosChileShippingServices())->contains($this->service_sub_class)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isUSPSService()
+    {
+        if (collect($this->uspsShippingServices())->contains($this->service_sub_class)) {
+            return true;
+        }
+
+        return false;
+    }
+
     private function anjunShippingServices()
     {
         return [
@@ -176,6 +204,31 @@ class ShippingService extends Model
         return [
             self::USPS_PRIORITY_INTERNATIONAL, 
             self::USPS_FIRSTCLASS_INTERNATIONAL,
+        ];
+    }
+
+    private function colombiaShippingServices()
+    {
+        return [
+            self::COLOMBIA_Standard,
+        ];
+    }
+
+    private function uspsShippingServices()
+    {
+        return [
+            self::USPS_PRIORITY, 
+            self::USPS_FIRSTCLASS, 
+            self::USPS_PRIORITY_INTERNATIONAL, 
+            self::USPS_FIRSTCLASS_INTERNATIONAL,
+        ];
+    }
+
+    private function correiosChileShippingServices()
+    {
+        return [
+            self::SRP, 
+            self::SRM,
         ];
     }
 }

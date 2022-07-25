@@ -38,7 +38,19 @@ class RatesCalculator
     public function __construct(Order $order,ShippingService $service, $calculateOnVolumeMetricWeight = true, $originalRate = false )
     {
         $this->order = $order;
-        $this->shippingService = $service;
+        
+        if ($service && $service->service_sub_class == ShippingService::AJ_Packet_Standard) {
+            
+            $this->shippingService = ShippingService::where('service_sub_class', ShippingService::Packet_Standard)->first();
+
+        }elseif($service && $service->service_sub_class == ShippingService::AJ_Packet_Express){
+            
+            $this->shippingService = ShippingService::where('service_sub_class', ShippingService::Packet_Express)->first();
+        
+        }else {
+            
+            $this->shippingService = $service;
+        }
 
         $this->recipient = $order->recipient;
 
@@ -47,7 +59,7 @@ class RatesCalculator
             $this->rates = $service->rates()->byRegion($this->recipient->country_id, optional($this->recipient->commune)->region->id)->first();
         
         }else{
-            $this->rates = $service->rates()->byCountry($this->recipient->country_id)->first();
+            $this->rates = $this->shippingService->rates()->byCountry($this->recipient->country_id)->first();
         }
         
         $this->initializeDims();

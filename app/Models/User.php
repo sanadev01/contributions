@@ -18,7 +18,8 @@ use Milon\Barcode\DNS2D;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable,LogsActivity,CausesActivity;
+    
     const ROLE_ADMIN = 1;
     const ROLE_USER = 2;
     const ROLE_DRIVER = 'driver';
@@ -27,9 +28,7 @@ class User extends Authenticatable
     const ACCOUNT_TYPE_BUSINESS = 'business';
     const ACCOUNT_TYPE_INDIVIDUAL = 'individual';
 
-    use LogsActivity;
-    
-    use CausesActivity;
+    const GILBERTO_ACCOUNT_ID = 13;
     
     protected static $ignoreChangedAttributes = ['password','api_token','api_enabled'];
     protected static $logAttributes = [
@@ -209,9 +208,14 @@ class User extends Authenticatable
     public static function findRef($reffer_code)
     {
         if($reffer_code){
-            $referral_id = self::query()->where('reffer_code', $reffer_code)->first();
-            return $referral_id->id;
+            $referral = self::query()->where('reffer_code', $reffer_code)->first();
+            if ($referral) {
+                return $referral;
+            }
+            return null;
         }
+
+        return null;
     }
 
     public static function generatePoBoxNumber()
@@ -286,5 +290,21 @@ class User extends Authenticatable
     
     public function isActive(){
         return ($this->status == "active" || $this->status == NULL) ? true :false;
+    }
+
+    public function hideBoxControl()
+    {
+        if (collect($this->accountIds())->contains($this->id)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function accountIds()
+    {
+        return[
+            self::GILBERTO_ACCOUNT_ID,
+        ];
     }
 }

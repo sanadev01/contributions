@@ -21,6 +21,7 @@ return [
             33164 => 'AJ Packet Standard',
             33172 => 'AJ Packet Express',
             87765 => 'PostNL',
+            44162 => 'Colombia Standard',
         ]
     ]
 ];

@@ -22,13 +22,18 @@ use App\Http\Controllers\Warehouse\ManifestDownloadController;
 use App\Http\Controllers\Warehouse\USPSCN35DownloadController;
 use App\Http\Controllers\Warehouse\USPSUnitRegisterController;
 use App\Http\Controllers\Warehouse\ChileCN35DownloadController;
+use App\Http\Controllers\Warehouse\ColombiaContainerController;
 use App\Http\Controllers\Warehouse\SinerlogContainerController;
 use App\Http\Controllers\Warehouse\DeliveryBillDownloadController;
 use App\Http\Controllers\Warehouse\DeliveryBillRegisterController;
 use App\Http\Controllers\Warehouse\SinerlogCN35DownloadController;
 use App\Http\Controllers\Warehouse\SinerlogUnitRegisterController;
 use App\Http\Controllers\Warehouse\USPSContainerPackageController;
+use App\Http\Controllers\Warehouse\USPSManifestDownloadController;
 use App\Http\Controllers\Warehouse\ChileContainerPackageController;
+use App\Http\Controllers\Warehouse\ChileManifestDownloadController;
+use App\Http\Controllers\Warehouse\CombineManifestDownloadController;
+use App\Http\Controllers\Warehouse\ColombiaContainerPackageController;
 use App\Http\Controllers\Warehouse\DeliveryBillStatusUpdateController;
 use App\Http\Controllers\Warehouse\SinerlogContainerPackageController;
 use App\Http\Controllers\Warehouse\SinerlogManifestDownloadController;
@@ -36,6 +41,7 @@ use App\Http\Controllers\Warehouse\POSTNLContainerController;
 use App\Http\Controllers\Warehouse\POSTNLContainerPackageController;
 use App\Http\Controllers\Warehouse\POSTNLUnitRegisterController;
 use App\Http\Controllers\Warehouse\POSTNLCN35DownloadController;
+use App\Http\Controllers\Warehouse\ColombiaContainerManifestController;
 
 
 Route::middleware(['auth'])->as('warehouse.')->group(function () {
@@ -61,24 +67,27 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('delivery_bill/{delivery_bill}/download', DeliveryBillDownloadController::class)->name('delivery_bill.download');
     Route::get('delivery_bill/{delivery_bill}/manifest', ManifestDownloadController::class)->name('delivery_bill.manifest');
 
+    Route::post('combine-delivery-bill/manifest/download', CombineManifestDownloadController::class)->name('combine_delivery_bill.manifest.download');
+    
     Route::resource('audit-report', AuditReportController::class)->only(['show']);
 
     // ALL Routes for Chile Containers
     Route::resource('chile_containers', ChileContainerController::class);
-    Route::resource('chile_container.packages', ChileContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('chile-container/{container}/packages', ChileContainerPackageController::class)->name('chile-container.packages');
     Route::get('chile_container/{container}/download_txt_manifest', [ChileContainerController::class, 'download_txtManifest'])->name('download.manifest_txt');
     Route::get('chile_container/{container}/download_excel_manifest', [ChileContainerController::class, 'download_exceltManifest'])->name('download.manifest_excel');
     Route::get('chile_container/{container?}/download_combine_manifest', [ChileContainerController::class, 'download_combine_manifest'])->name('download.combine_manifest');
     Route::get('chile_container/{container}/upload_manifest', [ChileContainerController::class, 'upload_ManifestToChile'])->name('upload.manifest');
     Route::get('chile_container/{container}/download_chile_cn35', ChileCN35DownloadController::class)->name('download.chile_cn35');
+    Route::get('chile-container/{container}/manifest', ChileManifestDownloadController::class)->name('chile-container.manifest');
 
     // Routes for USPS Container
     Route::resource('usps_containers', USPSContainerController::class);
-    Route::resource('usps_container.packages', USPSContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('usps-container/{container}/packages', USPSContainerPackageController::class)->name('usps-container.packages');
     Route::get('usps_container/{container}/register', USPSUnitRegisterController::class)->name('usps_container.register');
     Route::get('usps_container/{container}/download', USPSCN35DownloadController::class)->name('usps_container.download');
     Route::get('usps_container/{container}/download_excel_manifest', [USPSContainerController::class, 'download_exceltManifest'])->name('download.usps_manifest_excel');
-
+    Route::get('usps-container/{container}/manifest', USPSManifestDownloadController::class)->name('usps-container.manifest');
     // Routes for Sinerlog Container
     Route::resource('sinerlog_containers', SinerlogContainerController::class);
     Route::resource('sinerlog_container.packages', SinerlogContainerPackageController::class)->only('index','destroy', 'create');
@@ -93,6 +102,10 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('postnl_container/{container}/register', POSTNLUnitRegisterController::class)->name('postnl_container.register');
     Route::get('postnl_container/{container}/download', POSTNLCN35DownloadController::class)->name('postnl_container.download');
     Route::get('postnl_container/{container}/download_excel_manifest', [POSTNLContainerController::class, 'download_exceltManifest'])->name('download.postnl_manifest_excel');
+    // Routes for colombia Container
+    Route::resource('colombia-containers', ColombiaContainerController::class);
+    Route::get('colombia-container/{container}/packages', ColombiaContainerPackageController::class)->name('colombia-container.packages');
+    Route::get('colombia-container/{container}/manifest', ColombiaContainerManifestController::class)->name('colombia-container.manifest');
 });
 
 

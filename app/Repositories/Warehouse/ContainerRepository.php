@@ -2,11 +2,12 @@
 
 namespace App\Repositories\Warehouse;
 
-use App\Models\Warehouse\Container;
-use App\Repositories\AbstractRepository;
 use Illuminate\Http\Request;
+use App\Models\Warehouse\Container;
 use Illuminate\Support\Facades\Auth;
 use GuzzleHttp\Client as GuzzleClient;
+use App\Repositories\AbstractRepository;
+use GuzzleHttp\Exception\ClientException;
 use App\Services\Correios\Models\PackageError;
 
 class ContainerRepository extends AbstractRepository{
@@ -51,9 +52,15 @@ class ContainerRepository extends AbstractRepository{
         if($request->filled('packetType')){
             $query->where('services_subclass_code', 'LIKE', '%' . $request->packetType . '%');
         }
+
         if($request->filled('unitCode')){
             $query->where('unit_code', 'LIKE', '%' . $request->unitCode . '%');
-        } 
+        }
+        
+        if ($request->has('typeColombia')) {
+            return $query->whereIn('services_subclass_code', ['CO-NX'])->latest()->paginate(50);
+        }
+
         return $query->whereIn('services_subclass_code', ['NX','IX', 'XP','AJ-NX','AJ-IX'])->latest()->paginate(50);
     }
 
@@ -149,7 +156,7 @@ class ContainerRepository extends AbstractRepository{
                         } else {
                             return session()->flash('alert-danger', $data->message->payload);
                         }
-                    }catch (\ClientException $e) {
+                    }catch (ClientException $e) {
                         return new PackageError($e->getResponse()->getBody()->getContents());
                     }
                 } else {
@@ -159,6 +166,27 @@ class ContainerRepository extends AbstractRepository{
                 return session()->flash('alert-success', 'Airway Bill Assigned');
 
             }
+        }
+    }
+    public function addOrderToContainer($container, $orderId)
+    {
+        try {
+            $container->orders()->attach($orderId);
+            return true;
+        } catch (\Exception $ex) {
+            $this->error = $ex->getMessage();
+            return false;
+        }
+    }
+
+    public function removeOrderFromContainer($container, $id)
+    {
+        try {
+            $container->orders()->detach($id);
+            return true;
+        } catch (\Exception $ex) {
+            $this->error = $ex->getMessage();
+            return false;
         }
     }
 }

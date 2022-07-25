@@ -103,7 +103,7 @@
                         <td>{{ $order->weight }}</td>
                         <td>{{ $order->measurement_unit }}</td>
                         <td>
-                            <select style="min-width:150px;" class="form-control {{ !auth()->user()->isAdmin() ? 'btn disabled' : ''  }} {{ $order->getStatusClass() }}" @if (auth()->user()->isAdmin())  wire:change="$emit('updated-status',{{$order->id}},$event.target.value)" @else disabled="disabled"  @endif>
+                            <select style="min-width:150px;" class="form-control {{ !auth()->user()->isAdmin() ? 'btn disabled' : ''  }} {{ $order->getStatusClass() }}" @if (auth()->user()->isAdmin())  wire:change="$emit('updated-status',{{$order}},$event.target.value)" @else disabled="disabled"  @endif>
                                 <option class="bg-info" value="{{ App\Models\Order::STATUS_INVENTORY_PENDING }}" {{ $order->status == App\Models\Order::STATUS_INVENTORY_PENDING ? 'selected': '' }}>Pending</option>
                                 <option class="bg-warning text-dark" value="{{ App\Models\Order::STATUS_INVENTORY_IN_PROGRESS }}" {{ $order->status == App\Models\Order::STATUS_INVENTORY_IN_PROGRESS ? 'selected': '' }}>In Progress</option>
                                 <option class="btn-danger" value="{{ App\Models\Order::STATUS_INVENTORY_CANCELLED }}" {{ $order->status == App\Models\Order::STATUS_INVENTORY_CANCELLED ? 'selected': '' }}>CANCELLED</option>
@@ -127,6 +127,59 @@
     <div class="d-flex justify-content-end my-2 pb-4 mx-2">
         {{ $orders->links() }}
     </div>
+    {{-- Modal --}}
+    <div class="modal fade" id="orderUpdateModal" tabindex="-1" role="dialog" aria-labelledby="orderUpdateModal" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="orderUpdateModal">Update Order</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+                <form id="update_order_form">
+                    <div class="modal-body">
+                        <div class="form-row">
+                          <div class="form-group col-md-6">
+                            <label for="weight">Weight</label>
+                            <input type="number" step="0.001" name="weight" class="form-control" id="weight" placeholder="Weight" required>
+                            <span class="text-danger" id="weightError"></span>
+                          </div>
+                          <div class="form-group col-md-6">
+                            <label for="measurement_unit">Measuring Unit</label>
+                            <select id="measurement_unit" class="form-control" required>
+                                <option value="kg/cm">kg/cm</option>
+                                <option value="lbs/in">lbs/in</option>
+                            </select>
+                            <span class="text-danger" id="measurement_unitError"></span>
+                          </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="length">Length</label>
+                                <input type="number" step="0.001" name="length" class="form-control" id="length" placeholder="length" required>
+                                <span class="text-danger" id="lengthError"></span>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="width">Width</label>
+                                <input type="number" step="0.001" name="width" class="form-control" id="width" placeholder="width" required>
+                                <span class="text-danger" id="widthError"></span>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="height">Height</label>
+                                <input type="number" step="0.001" name="height" class="form-control" id="height" placeholder="height" required>
+                                <span class="text-danger" id="heightError"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     @include('layouts.livewire.loading')
 </div>
 
@@ -134,20 +187,90 @@
     <script>
         window.addEventListener('DOMContentLoaded', () => {
             
-            @this.on('updated-status',function(orderId,status){
-                $.post('{{route("api.order.status.update")}}',{
-                    order_id: orderId,
-                    status : status
-                })
-                .then(function(response){
-                    if ( response.success ){
-                        @this.call('render')
-                    }else{
+            @this.on('updated-status',function(order,status){
+
+                if (status == 5) {
+                    $('#orderUpdateModal').modal('show');
+
+                    $('#weight').val(order.weight);
+                    $('#measurement_unit').val(order.measurement_unit);
+                    $('#length').val(order.length);
+                    $('#width').val(order.width);
+                    $('#height').val(order.height);
+
+                    $('#update_order_form').submit(function(e) {
+                        e.preventDefault();
+                        
+                        var weight = $('#weight').val();
+                        let measurement_unit = $('#measurement_unit').val();
+                        var length = $('#length').val();
+                        var width = $('#width').val();
+                        var height = $('#height').val();
+                        var order_id = order.id;
+
+                        $.ajax({
+                            url: "{{ route('api.inventory.order.update') }}",
+                            type: "POST",
+                            data: {
+                                weight: weight,
+                                measurement_unit: measurement_unit,
+                                length: length,
+                                width: width,
+                                height: height,
+                                order_id: order_id,
+                                status: status,
+                            },
+                            success: function(response) {
+                                
+                                if (response.success == true) {
+                                    $('#orderUpdateModal').modal('hide');
+                                    @this.call('render')
+                                    return;
+                                }
+
+                                if (response.success == false) {
+                                    if (response.errors.weight) {
+                                        $('#weightError').text(response.errors.weight[0]);
+                                    }
+                                    if (response.errors.measurement_unit) {
+                                        $('#measurement_unitError').text(response.errors.measurement_unit[0]);
+                                    }
+                                    if (response.errors.length) {
+                                        $('#lengthError').text(response.errors.length[0]);
+                                    }
+                                    if (response.errors.width) {
+                                        $('#widthError').text(response.errors.width[0]);
+                                    }
+                                    if (response.errors.height) {
+                                        $('#heightError').text(response.errors.height[0]);
+                                    }
+                                    if (response.message) {
+                                        toastr.error(response.message);
+                                    }
+                                }
+                            },
+                            error: function(response) {
+                                console.log(response);
+                                toastr.error(response.message)
+                            }
+                        })
+                    });
+                }else {
+
+                    $.post('{{route("api.order.status.update")}}',{
+                        order_id: order.id,
+                        status : status
+                    })
+                    .then(function(response){
+                        if ( response.success ){
+                            @this.call('render')
+                        }else{
+                            toastr.error(response.message)
+                        }
+                    }).catch(function(data){
                         toastr.error(response.message)
-                    }
-                }).catch(function(data){
-                    toastr.error(response.message)
-                })
+                    })
+                }
             })
 
         });

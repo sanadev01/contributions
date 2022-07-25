@@ -51,6 +51,7 @@ return [
         'Chile Containers' => 'Chile Recipientes',
         'USPS Containers' => 'USPS Recipientes',
         'PostNL Containers' => 'PostNL Recipientes',
+        'Colombia Containers' => 'Colombia Recipientes',
     ],
     'Affiliate' => [
         'menu' => 'Relatórios',

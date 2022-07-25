@@ -14,7 +14,7 @@ use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
 use App\Repositories\FedExLabelRepository;
 use App\Repositories\POSTNLLabelRepository;
-
+use App\Repositories\ColombiaLabelRepository;
 
 /**
  * Use for Sinerlog integration
@@ -30,8 +30,9 @@ class OrderLabelController extends Controller
     protected $upsLabelRepository;
     protected $fedExLabelRepository;
     protected $postNLLabelRepository;
+    protected $colombiaLabelRepository;
 
-    public function __construct(CorrieosChileLabelRepository $corrieosChileLabelRepository, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, FedExLabelRepository $fedExLabelRepository, POSTNLLabelRepository $postNLLabelRepository)
+    public function __construct(CorrieosChileLabelRepository $corrieosChileLabelRepository, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, FedExLabelRepository $fedExLabelRepository, POSTNLLabelRepository $postNLLabelRepository, ColombiaLabelRepository $colombiaLabelRepository)
     {
         $this->corrieosChileLabelRepository = $corrieosChileLabelRepository;
         $this->corrieosBrazilLabelRepository = $corrieosBrazilLabelRepository;
@@ -39,6 +40,7 @@ class OrderLabelController extends Controller
         $this->upsLabelRepository = $upsLabelRepository;
         $this->fedExLabelRepository = $fedExLabelRepository;
         $this->postNLLabelRepository = $postNLLabelRepository;
+        $this->colombiaLabelRepository = $colombiaLabelRepository;
     }
 
     public function index(Request $request, Order $order)
@@ -155,6 +157,13 @@ class OrderLabelController extends Controller
         }
 
 
+        if ($order->recipient->country_id == Order::COLOMBIA && $order->shippingService->isColombiaService()) {
+            $this->colombiaLabelRepository->handle($order);
+
+            $error = $this->colombiaLabelRepository->getError();
+            return $this->renderLabel($request, $order, $error);
+        }
+        
         if ( $request->update_label === 'true' ){
 
             if($order->recipient->country_id == Order::CHILE)
@@ -186,6 +195,13 @@ class OrderLabelController extends Controller
                 $this->upsLabelRepository->update($order);
                 $error = $this->upsLabelRepository->getUPSErrors();
 
+                return $this->renderLabel($request, $order, $error);
+            }
+
+            if ($order->recipient->country_id == Order::COLOMBIA && $order->shippingService->isColombiaService()) {
+                $this->colombiaLabelRepository->updateLabel();
+    
+                $error = $this->colombiaLabelRepository->getError();
                 return $this->renderLabel($request, $order, $error);
             }
 

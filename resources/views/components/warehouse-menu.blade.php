@@ -32,7 +32,7 @@
                     <span class="menu-title">@lang('menu.Warehouse.Delivery Bill')</span>
                 </a>
             </li>
-            <li class="{{ $isActive(['warehouse.usps_containers.index','warehouse.usps_containers.create','warehouse.usps_containers.edit','warehouse.usps_container.packages.index']) }}">
+            <li class="{{ $isActive(['warehouse.usps_containers.index','warehouse.usps_containers.create','warehouse.usps_containers.edit','warehouse.usps-container.packages']) }}">
                 <a href="{{ route('warehouse.usps_containers.index') }}">
                     <i class="feather icon-circle"></i>
                     <span class="menu-title">@lang('menu.Warehouse.USPS Containers')</span>
@@ -48,15 +48,20 @@
                 <a href="{{ route('warehouse.postnl_containers.index') }}">
                     <i class="feather icon-circle"></i>
                     <span class="menu-title">@lang('menu.Warehouse.PostNL Containers')</span>
+            <li class="{{ $isActive(['warehouse.chile_containers.index','warehouse.chile_containers.create','warehouse.chile_containers.edit','warehouse.chile_container.packages.index']) }}">
+                <a href="{{ route('warehouse.chile_containers.index') }}">
+                    <i class="feather icon-circle"></i>
+                    <span class="menu-title">@lang('menu.Warehouse.Chile Containers')</span>
+                </a>
+            </li>
+            <li class="{{ $isActive(['warehouse.colombia-containers.index','warehouse.colombia-containers.create','warehouse.colombia-containers.edit','warehouse.colombia-container.packages']) }}">
+                <a href="{{ route('warehouse.colombia-containers.index') }}">
+                    <i class="feather icon-circle"></i>
+                    <span class="menu-title">@lang('menu.Warehouse.Colombia Containers')</span>
                 </a>
             </li>
         @endadmin
-        <li class="{{ $isActive(['warehouse.chile_containers.index','warehouse.chile_containers.create','warehouse.chile_containers.edit','warehouse.chile_container.packages.index']) }}">
-            <a href="{{ route('warehouse.chile_containers.index') }}">
-                <i class="feather icon-circle"></i>
-                <span class="menu-title">@lang('menu.Warehouse.Chile Containers')</span>
-            </a>
-        </li>
+        
     </ul>
 </li>
 @endcan

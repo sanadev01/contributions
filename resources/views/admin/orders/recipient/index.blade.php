@@ -64,7 +64,6 @@
                     </div>
                 </div>
             </div>
-
             <hr>
             <div class="row mt-1">
                 <div class="form-group col-12 col-sm-6 col-md-4">
@@ -87,7 +86,6 @@
                         <div class="help-block"></div>
                     </div>
                 </div>
-
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
                         <label>@lang('address.Last Name') <span class="text-danger">*</span></label>
@@ -95,7 +93,6 @@
                         <div class="help-block"></div>
                     </div>
                 </div>
-
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
                         <label>@lang('address.Email') <span class="text-danger">*</span></label>
@@ -188,7 +185,6 @@
                         <div class="help-block"></div>
                     </div>
                 </div>
-
                 <div class="form-group col-12 col-sm-6 col-md-4" id="cpf">
                     <div class="controls">
                         <label id="cnpj_label_id" style="{{ optional($order->recipient)->account_type != 'individual' ? 'display:block' : 'display:none' }}" >@lang('address.CNPJ') <span class="text-danger">* (Brazil Only)</span> </label>
@@ -204,7 +200,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="col-12 my-3 p-4 ">
                     <div class="row justify-content-end">
                         <fieldset class="col-md-4 text-right">
@@ -221,7 +216,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
 
         <div class="actions clearfix">

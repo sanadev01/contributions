@@ -64,8 +64,10 @@
                                     <div class="col-md-6">
                                         <select class="form-control" name="services_subclass_code" disabled>
                                             <option value="">@lang('warehouse.containers.Distribution Service Class')</option>
-                                            <option value="NX" {{ old('services_subclass_code',$container->services_subclass_code) == 'NX' ? 'selected': '' }}>Packet Standard service</option>
-                                            <option value="IX" {{ old('services_subclass_code',$container->services_subclass_code) == 'IX' ? 'selected': '' }}>Packet Express service</option>
+                                            <option value="Priority" {{ old('services_subclass_code',$container->services_subclass_code) == 'Priority' ? 'selected': '' }}>Priority</option>
+                                            <option value="FirstClass" {{ old('services_subclass_code',$container->services_subclass_code) == 'FirstClass' ? 'selected': '' }}>FirstClass</option>
+                                            <option value="Priority International" {{ old('services_subclass_code',$container->services_subclass_code) == 'Priority International' ? 'selected': '' }}>Priority International</option>
+                                            <option value="FirstClass International" {{ old('services_subclass_code',$container->services_subclass_code) == 'FirstClass International' ? 'selected': '' }}>FirstClass International</option>
                                         </select>
                                         @error('services_subclass_code')
                                             <div class="help-block text-danger"> {{ $message }} </div>

@@ -5,7 +5,6 @@ namespace App\Http\Livewire\Order;
 use Livewire\Component;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Calculators\WeightCalculator;
-use App\Models\User;
 
 class ShipmentInfo extends Component
 {
@@ -22,16 +21,14 @@ class ShipmentInfo extends Component
     public $heightOther;
     public $unit;
     public $volumeWeight;
+    public $actualVolumeWeight;
     public $currentWeightUnit;
 
     public $discountPercentage;
     public $totalDiscountedWeight;
-
-    private $adminId;
     
     public function mount($order = null)
     {
-        $this->adminId = User::ROLE_ADMIN;
         $this->order = optional($order)->toArray();
         $this->setVolumetricDiscount();
         $this->fillData();
@@ -89,6 +86,7 @@ class ShipmentInfo extends Component
         $this->length = $this->length ? $this->length : 0;
         $this->width = $this->width ? $this->width : 0;
         $this->height = $this->height ? $this->height : 0;
+        $this->actualVolumeWeight = null;
 
         if ( $this->unit == 'kg/cm' ){
             $this->weightOther = UnitsConverter::kgToPound($this->weight);
@@ -102,6 +100,7 @@ class ShipmentInfo extends Component
             if ($this->discountPercentage && $this->discountPercentage > 0) {
 
                 if ($this->discountPercentage == 1) {
+                    $this->actualVolumeWeight = $this->weight;
                     return $this->volumeWeight = $this->weight;
                 }
 
@@ -122,6 +121,7 @@ class ShipmentInfo extends Component
             if ($this->discountPercentage && $this->discountPercentage > 0) {
 
                 if ($this->discountPercentage == 1) {
+                    $this->actualVolumeWeight = $this->weight;
                     return $this->volumeWeight = $this->weight;
                 }
                 
@@ -142,10 +142,6 @@ class ShipmentInfo extends Component
         
         if ($volumetricDiscount && $discountPercentage) {
             $this->discountPercentage = ($discountPercentage) ? $discountPercentage/100 : 0;
-        }elseif ($discountPercentage == null || $discountPercentage == 0 || !$volumetricDiscount) {
-            $adminDiscountPercentage = setting('discount_percentage', null, $this->adminId);
-
-            $this->discountPercentage = ($adminDiscountPercentage) ? $adminDiscountPercentage/100 : 0;
         }
         
         return true;
@@ -153,6 +149,7 @@ class ShipmentInfo extends Component
 
     private function calculateDiscountedWeight()
     {
+        $this->actualVolumeWeight = $this->volumeWeight;
         $consideredWeight = $this->volumeWeight - $this->weight;
         
         $this->volumeWeight = round($consideredWeight - ($consideredWeight * $this->discountPercentage), 2);

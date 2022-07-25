@@ -143,7 +143,8 @@ class ExportManfestByServices extends AbstractCsvExportService
 
     protected function getValuePaidToCorrieos(Container $container, Order $order)
     {
-        $rateSlab = AccrualRate::getRateSlabFor($order->getWeight('kg'));
+        $service  = $order->shippingService->service_sub_class;
+        $rateSlab = AccrualRate::getRateSlabFor($order->getOriginalWeight('kg'),$service);
 
         if ( !$rateSlab ){
             return 0;

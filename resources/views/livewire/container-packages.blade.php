@@ -45,9 +45,11 @@
                     {{ $order->customer_reference }}
                 </td>
                 <td>
-                    <button wire:click="removeOrder({{ $order->id }}, '{{$key}}')" class="btn btn-danger">
-                        Remove
-                    </button>
+                    @if ($editMode == true)
+                        <button wire:click="removeOrder({{ $order->id }}, '{{$key}}')" class="btn btn-danger">
+                            Remove
+                        </button>
+                    @endif
                 </td>
             </tr>
             @endforeach
@@ -61,7 +63,7 @@
             @if($editMode == true)
             <tr>
                 <td colspan="8">
-                    <input id="barcode" type="text" wire:model.debounce.500ms="barcode" class="w-100 text-center" style="height:50px;font-size:30px;">
+                    <input id="barcode" type="text" wire:model.debounce.500ms="barcode" class="w-100 text-center" style="height:50px;font-size:30px;" autocomplete="off">
                 </td>
             </tr>
             @endif

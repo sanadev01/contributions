@@ -3,10 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 
-use App\Models\Rate;
 use App\Models\Order;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\Session;
 use App\Repositories\DashboardRepository;

@@ -52,6 +52,7 @@ return [
         'USPS Containers' => 'USPS Containers',
         'Sinerlog Containers' => 'Sinerlog Containers',
         'PostNL Containers' => 'PostNL Containers'
+        'Colombia Containers' => 'Colombia Containers',
     ],
     'Affiliate' => [
         'menu' => 'Affiliate',
