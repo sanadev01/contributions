@@ -14,11 +14,12 @@
                 </select>
             </div>
             <div class="mt-1">
-                <button type="submit" class="btn btn-primary ml-2 mt-4">
+                <button type="submit" class="btn btn-primary ml-1 mt-4">
                     <i class="fa fa-search" aria-hidden="true"></i>
                 </button>
-                <button class="btn btn-primary ml-2 mt-4 waves-effect waves-light" onclick="window.location.reload();">
-                    Clear Search</button>
+                <button class="btn btn-primary ml-1 mt-4 waves-effect waves-light" onclick="window.location.reload();">
+                    <i class="fa fa-undo" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-undo"
+                        aria-label="fa fa-undo" aria-hidden="true"></i></button>
             </div>
         </form>
     </div>
@@ -54,27 +55,6 @@
                     </th>
                 @endif
             </tr>
-            {{-- <tr>
-                <th style="width: 20% !important;">
-
-                </th>
-                <th style="width: 20% !important;">
-                    <select class="form-control" wire:model="selectedCountry">
-                        <option value="" selected>ALL</option>
-                        <option value="30">Brazil</option>
-                        <option value="46">Chile</option>
-                    </select>
-                </th>
-                <th style="width: 20% !important;">
-                    <input type="search" class="form-control" wire:model.debounce.500ms="weight">
-                </th>
-                <th style="width: 20% !important;">
-                    <input type="search" class="form-control" wire:model.debounce.500ms="cwb">
-                </th>
-                <th style="width: 20% !important;">
-                    <input type="search" class="form-control" wire:model.debounce.500ms="gru">
-                </th>
-            </tr> --}}
         </thead>
         <tbody>
             @foreach ($shippingRates as $rate)

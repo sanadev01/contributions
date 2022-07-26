@@ -19,35 +19,6 @@
                         </div>
                     </form>
                 @endadmin
-                {{-- <div class="col-2">
-            <label>Address</label>
-            <input type="search" wire:model.debounce.500ms="address" class="form-control">
-        </div>
-        <div class="col-2">
-            <label>Address 2</label>
-            <input type="search" wire:model.debounce.500ms="address" class="form-control">
-        </div>
-        <div class="col-2">
-            <label>House Number</label>
-            <input type="search" wire:model.debounce.500ms="streetNo" class="form-control">
-        </div>
-        <div class="col-1">
-            <label>City</label>
-            <input type="search" wire:model.debounce.500ms="city" class="form-control">
-        </div>
-        <div class="col-1">
-            <label>State</label>
-            <select wire:model.debounce.500ms="state" class="form-control">
-                <option value="">All</option>
-                @foreach (states(30) as $state)
-                    <option value="{{ $state->id }}">{{ $state->code }}</option>
-                @endforeach
-            </select>
-        </div>
-        <div class="col-1">
-            <label>CNPJ</label>
-            <input type="search" wire:model.debounce.500ms="phone" class="form-control">
-        </div> --}}
 
             </div>
             <table class="table mb-0  table-bordered">
@@ -60,12 +31,6 @@
                             @lang('address.Name')
                             <a wire:click.prevent="sortBy('first_name')"
                                 class="fas fa-sort text-right custom-sort-arrow" aria-hidden="true"></a>
-                            {{-- <a href="#" wire:click.prevent="sortBy('first_name')">
-                        @if ($sortBy == 'first_name' && $sortAsc)
-                            <i class="fa fa-arrow-down ml-2"></i>
-                        @elseif($sortBy == 'first_name' && !$sortAsc)
-                            <i class="fa fa-arrow-up ml-2"></i>
-                        @endif --}}
                             </a>
                         </th>
                         <th class="hidden-lg">@lang('address.Address') </th>
@@ -79,29 +44,7 @@
                         <th id="colPhone">@lang('address.Telefone') </th>
                         <th id="colActions">@lang('address.Actions') </th>
                     </tr>
-                    {{-- <tr id="th">
-                <th>
-                    <input type="search" wire:model.debounce.500ms="user" class="form-control">
-                </th>
-                <th><input type="search" wire:model.debounce.500ms="name" class="form-control"></th>
-                <th><input type="search" wire:model.debounce.500ms="address" class="form-control"></th>
-                <th><input type="search" wire:model.debounce.500ms="address" class="form-control"></th>
-                <th><input type="search" wire:model.debounce.500ms="streetNo" class="form-control"></th>
-                <th></th>
-                <th><input type="search" wire:model.debounce.500ms="city" class="form-control"></th>
-                <th>
-                    <select wire:model.debounce.500ms="state" class="form-control">
-                        <option value="">All</option>
-                        @foreach (states(30) as $state)
-                            <option value="{{ $state->id }}">{{ $state->code }}</option>
-                        @endforeach
-                    </select>
-                </th>
-                <th></th>
-                <th><input type="search" wire:model.debounce.500ms="phone" class="form-control"> </th>
-                <th></th>
-                <th></th>
-            </tr> --}}
+
                 </thead>
                 <tbody>
                     @foreach ($addresses as $address)
@@ -129,7 +72,6 @@
         </div>
         <script>
             function toggleVisibility(value) {
-                // console.log(value);
                 const div = document.getElementById(value);
                 if (div.style.display != 'block') {
                     div.style.display = 'block';

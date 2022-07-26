@@ -7,7 +7,6 @@
                     <div class="card-header">
                         <h4 class="mb-0">
                         @section('title', __('invoice.Select Orders To Pay'))
-                        {{-- @lang('invoice.Select Orders To Pay') --}}
                     </h4>
                     <a href="{{ route('admin.payment-invoices.index') }}" class="btn btn-primary">
                         @lang('invoice.Back to List')

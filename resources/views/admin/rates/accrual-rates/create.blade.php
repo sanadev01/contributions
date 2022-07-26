@@ -55,8 +55,7 @@
                                         <option
                                             value="{{ App\Services\Correios\Models\Package::SERVICE_CLASS_EXPRESS }}">
                                             Express</option>
-                                        <option
-                                            value="{{ App\Services\Correios\Models\Package::SERVICE_CLASS_MINI }}">
+                                        <option value="{{ App\Services\Correios\Models\Package::SERVICE_CLASS_MINI }}">
                                             Mini</option>
                                         <option value="{{ App\Services\Correios\Models\Package::SERVICE_CLASS_SRP }}">
                                             SRP</option>
@@ -70,20 +69,6 @@
                     </div>
 
                     <div class="row justify-content-center">
-
-                        {{-- <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="projectinput1">@lang('shipping-rates.Select Excel File to Upload')</label>
-                                <input type="file" class="form-control" name="csv_file"
-                                    accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                                    required>
-                                @error('csv_file')
-                                    <div class="text-danger">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-                        </div> --}}
                         <div class="col-md-6">
                             <div class="input-group">
                                 <div class="input-group-prepend">

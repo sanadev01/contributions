@@ -4,7 +4,6 @@
         <div class="form-group singleSearchStyle col-12">
             <form wire:click="$emitSelf('submit')">
                 <div class="form-group mb-2 col-12 row">
-                    {{-- <label class="col-12 text-left"> Search</label> --}}
                     <input type="text" name="searchTerm" class="form-control col-8 hd-search">
                     <button type="submit" class="btn btn-primary ml-2" onclick="getTickets()">
                         <i class="fa fa-search"></i>
@@ -16,24 +15,10 @@
             </form>
         </div>
     </div>
-    {{-- </div> --}}
     <div class="row col-12 pr-0 m-0 pl-0" id="datefilters">
         <div class=" col-6 text-left mb-2">
             <div class="row col-12 my-3 pl-1" id="dateSearch">
-                {{-- <form action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
-                    @csrf
-                    <div class="form-group mb-2 col-4" style="float:left;margin-right:20px;">
-                        <label>Start Date</label>
-                        <input type="date" name="start_date" class="form-control">
-                    </div>
-                    <div class="form-group mx-sm-3 mb-2 col-4" style="float:left;margin-right:20px;">
-                        <label>End Date</label>
-                        <input type="date" name="end_date" class="form-control">
-                    </div>
-                    <button class="btn btn-success searchDateBtn" title="@lang('orders.import-excel.Download')">
-                        <i class="fa fa-arrow-down"></i>
-                    </button>
-                </form> --}}
+
             </div>
         </div>
 
@@ -51,26 +36,6 @@
                     <th>@lang('tickets.Open Days')</th>
                     <th>@lang('tickets.Detail')</th>
                 </tr>
-                {{-- <tr>
-                    <th></th>
-                    <th></th>
-                    <th>
-                        <input type="search" class="form-control" wire:model.debounce.1000ms="date">
-                    </th>
-                    <th>
-                        <input type="search" class="form-control" wire:model.debounce.1000ms="user">
-                    </th>
-                    <th></th>
-                    <th style="min-width: 100px;">
-                        <select name="status" class="form-control" wire:model.debounce.1000ms="status">
-                            <option value="all">All</option>
-                            <option value="open">Open</option>
-                            <option value="close">Close</option>
-                        </select>
-                    </th>
-                    <th></th>
-                    <th></th>
-                </tr> --}}
             </thead>
             <tbody>
                 @foreach ($tickets as $ticket)

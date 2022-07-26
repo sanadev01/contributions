@@ -7,11 +7,10 @@
                 class="btn btn-primary mr-0 waves-effect waves-light"><i class="feather icon-filter"></i></button>
         </div>
         <div class="row text-left">
-            <div class="ml-auto mr-3 mb-2">
+            <div class="ml-auto mr-3">
                 <h1>Total Value: <span class="text-primary">$ {{ $totalValue }}</span></h1>
             </div>
         </div>
-
         <div class="row col-8 pr-0 pl-0" id="singleSearch"
             @if ($this->search) style="display: block !important" @endif>
             <form class="col-12 d-flex pl-0" wire:submit.prevent="render">
@@ -40,7 +39,7 @@
                         <label>Start Date</label>
                         <input type="date" name="start_date" class="form-control">
                     </div>
-                    <div class="form-group mx-sm-3 mb-2 col-4" style="float:left;margin-right:20px;">
+                    <div class="form-group mx-sm-0 mb-2 col-4" style="float:left;">
                         <label>End Date</label>
                         <input type="date" name="end_date" class="form-control">
                     </div>
@@ -69,36 +68,6 @@
                         <th>@lang('orders.status')</th>
                         <th class="no-print">@lang('orders.actions.actions')</th>
                     </tr>
-                    {{-- <tr class="no-print">
-                        <th>
-                            <input type="search" class="form-control col-md-9 ml-5" wire:model.debounce.1000ms="date">
-                        </th>
-                        <th>
-                            <input type="search" class="form-control" wire:model.debounce.1000ms="whr_number">
-                        </th>
-                        @admin
-                            <th>
-                                <input type="search" class="form-control" wire:model.debounce.1000ms="name">
-                            </th>
-                        @endadmin
-
-                        <th>
-                        </th>
-                        <th>
-                        </th>
-                        <th>
-                            <select class="form-control" wire:model="status">
-                                <option value="">All</option>
-                                <option value="{{ App\Models\Order::STATUS_INVENTORY_PENDING }}">PENDING</option>
-                                <option value="{{ App\Models\Order::STATUS_INVENTORY_IN_PROGRESS }}">IN_PROGRESS
-                                </option>
-                                <option value="{{ App\Models\Order::STATUS_INVENTORY_CANCELLED }}">CANCELLED</option> --}}
-                    {{-- <option value="{{ App\Models\Order::STATUS_INVENTORY_REJECTED }}">REJECTED</option> --}}
-                    {{-- <option value="{{ App\Models\Order::STATUS_INVENTORY_FULFILLED }}">FULFILLED</option>
-                        </select>
-                        </th>
-
-                    </tr> --}}
                 </thead>
                 <tbody>
                     @forelse($orders as $order)

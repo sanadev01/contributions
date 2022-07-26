@@ -68,66 +68,6 @@
                         <th>Active</th>
                         <th>Action</th>
                     </tr>
-                    {{-- <tr class="no-print">
-                        <th style="min-width: 100px;">
-                            <select name="" id="bulk-actions" class="form-control">
-                                <option value="clear">Clear All</option>
-                                <option value="checkAll">Select All</option>
-                                <option value="create-sale-order">Create Sale Order</option>
-                            </select>
-                        </th>
-                        <th>
-                            <input type="date" class="form-control col-md-9" wire:model.debounce.1000ms="date">
-                        </th>
-                        @admin
-                            <th>
-                                <input type="search" class="form-control" wire:model.debounce.1000ms="user">
-                            </th>
-                        @endadmin
-                        <th>
-                            <input type="search" class="form-control" wire:model.debounce.1000ms="name">
-                        </th>
-                        <th>
-                            <input type="search" class="form-control" wire:model.debounce.1000ms="price">
-                        </th>
-                        <th>
-                            <input type="search" class="form-control" wire:model.debounce.1000ms="quantity">
-                        </th>
-                        <th>
-                            <input type="search" class="form-control" wire:model.debounce.1000ms="sku">
-                        </th>
-                        <th>
-                            <input type="search" class="form-control" wire:model.debounce.1000ms="barcode">
-                        </th>
-                        <th>
-                            <input type="search" class="form-control" wire:model.debounce.1000ms="weight">
-                        </th>
-                        <th>
-                            <select class="form-control" wire:model="unit">
-                                <option value="">Select Unit</option>
-                                <option value="kg/cm">kg/cm</option>
-                                <option value="lbs/in">lbs/in</option>
-                            </select>
-                        </th>
-                        <th>
-                            <input type="search" class="form-control" wire:model.debounce.1000ms="weight">
-                        </th>
-                        <th>
-                            <input type="date" class="form-control" wire:model.debounce.1000ms="expdate">
-                        </th>
-                        <th>
-                            <input type="search" class="form-control" wire:model.debounce.1000ms="description">
-                        </th>
-                        <th>
-                            <select class="form-control" wire:model="status">
-                                <option value="">All </option>
-                                <option value="pending">Pending</option>
-                                <option value="approved">Approved</option>
-                            </select>
-                        </th>
-                        <th></th>
-
-                    </tr> --}}
                 </thead>
                 <tbody>
                     @forelse ($products as $product)

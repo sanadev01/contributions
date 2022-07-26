@@ -12,7 +12,6 @@
                 <label class="col-3 text-center" style="font-size: 30px;"> @lang('orders.print-label.Scan Package')</label>
                 <input type="text" class="form-control col-8 w-100 text-center border border-primary"
                     style="height: 50px; font-size: 30px;" wire:model.debounce.500ms="tracking">
-                {{-- <span class="text-danger offset-2"> @lang('orders.print-label.Scan Package Message') {{ count($packagesRows)}} / 50</span> --}}
             </div>
 
         </div>
@@ -68,13 +67,6 @@
                     </td>
                 </tr>
             @endforeach
-            {{-- <tr>
-                <td colspan="7">
-                    <button class="btn btn-primary" role="button" type="button" wire:click='addRow'>
-                        @lang('orders.print-label.Add Row')
-                    </button>
-                </td>
-            </tr> --}}
         </table>
 
         @if (count($packagesRows) == 50)

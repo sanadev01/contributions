@@ -10,7 +10,6 @@
                             <h4 class="mb-0 mr-3">
                             @section('title', __('shipping-rates.shipping-rates') . 'For' .
                                 optional($shipping_rate->shippingService)->name)
-                                {{-- @lang('shipping-rates.shipping-rates') For {{ optional($shipping_rate->shippingService)->name }} --}}
                             </h4>
                             <hr>
                         </div>
