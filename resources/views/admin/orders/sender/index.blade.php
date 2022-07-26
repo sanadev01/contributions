@@ -5,7 +5,7 @@
 @section('wizard-form')
 <form action="{{ route('admin.orders.sender.store',$order) }}" method="POST" class="wizard">
     @csrf
-    <div class="content clearfix"> 
+    <div class="content clearfix">
         <!-- Step 1 -->
         <h6 id="steps-uid-0-h-0" tabindex="-1" class="title current">@lang('orders.sender.Step 1')</h6>
         <fieldset id="steps-uid-0-p-0" role="tabpanel" aria-labelledby="steps-uid-0-h-0" class="body current" aria-hidden="false">
@@ -24,7 +24,7 @@
                         </div>
                     @enderror
                 </div>
-                
+
             </div>
             <div class="row">
                 <div class="col-sm-6">
@@ -38,7 +38,7 @@
                         @enderror
                     </div>
                 </div>
-    
+
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="lastName1">@lang('orders.sender.Last Name')</label>
@@ -50,7 +50,7 @@
                         @enderror
                     </div>
                 </div>
-    
+
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="emailAddress1">@lang('orders.sender.Email')</label>
@@ -155,14 +155,14 @@
 <script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
 <script>
     $(document).ready(function(){
-        
+
         const Countries = @json($countryConstants);
         const Brazil = Countries.Brazil;
         const Chile = Countries.Chile;
         const UnitedStates = Countries.US;
-        const NatherLands = Countries.Netherlands;
+        const NetherLands = Countries.Netherlands;
 
-        
+
         $('.selectpicker').prop('disabled', false);
         $('.selectpicker').selectpicker('refresh');
         $("[name='sender_address']").prop( "disabled", true );
@@ -173,7 +173,7 @@
         if(selected == Chile || selected == UnitedStates) {
             $('#address').css('display', 'block');
             $('#city').css('display', 'block');
-            $('#tax_id').css('display', 'none'); 
+            $('#tax_id').css('display', 'none');
             $('#phone').css('display', 'inline-block');
             $('#sender_state').prop('disabled', true);
 
@@ -186,7 +186,7 @@
             if (selected == Chile) {
                 $("[name='phone']").prop('required',true);
             }
-               
+
             $("[name='sender_zipcode']").prop('required', false);
 
             if (selected == UnitedStates) {
@@ -203,7 +203,7 @@
 
                 $("[name='phone']").prop('required',false);
             }
-        } else if(selected == NatherLands){
+        } else if(selected == NetherLands){
             $('#company').css('display', 'none');
             $('#address').css('display', 'block');
             $('#city').css('display', 'block');
@@ -227,10 +227,10 @@
 
             $('#sender_state').prop('disabled', true);
         }
-        else 
+        else
         {
                 $('#address').css('display', 'none');
-                $('#city').css('display', 'none'); 
+                $('#city').css('display', 'none');
                 $('#tax_id').css('display', 'block');
                 $('#phone').css('display', 'none');
                 $('#state').addClass('d-none');
@@ -254,14 +254,14 @@
         $('#sender_address').on('change', function(){
             window.validate_us_address();
         });
-        
+
         $('#country').change(function () {
             let selected = $('#country').val();
-            
+
             if(selected == Chile || selected == UnitedStates) {
                 $('#address').css('display', 'block');
                 $('#city').css('display', 'block');
-                $('#tax_id').css('display', 'none'); 
+                $('#tax_id').css('display', 'none');
                 $('#phone').css('display', 'inline-block');
                 $('#sender_state').prop('disabled', true);
 
@@ -274,7 +274,7 @@
 
                     $('#sender_state').prop('required',true);
                     $("[name='sender_zipcode']").prop('required', true);
-                    
+
                     $('#sender_state').prop('disabled',false);
 
                     let senderAddress = $('#sender_address').val();
@@ -305,8 +305,8 @@
                 if (selected == Chile) {
                     $("[name='phone']").prop('required',true);
                 }
-                
-            } else if(selected == Netherlands){
+
+            } else if(selected == NetherLands){
                 $('#company').css('display', 'none');
                 $('#address').css('display', 'block');
                 $('#city').css('display', 'block');
@@ -332,7 +332,7 @@
             }
             else {
                 $('#address').css('display', 'none');
-                $('#city').css('display', 'none'); 
+                $('#city').css('display', 'none');
                 $('#tax_id').css('display', 'block');
                 $('#phone').css('display', 'none');
                 $('#state').addClass('d-none');
@@ -381,7 +381,7 @@
                 state: state,
                 city: city,
             }).then(function(response){
-                
+
                 if ( response.success == true && response.zipcode != 0){
                     $('#loading').fadeOut();
                     $('#sender_zipcode').val(response.zipcode);

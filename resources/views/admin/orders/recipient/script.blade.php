@@ -53,7 +53,7 @@
         }else{
             this.selectedService = PostalService;
         }
-        
+
         if (this.selectedService == CourierExpress) {
             activeChileFields(serviceType);
         }
@@ -61,7 +61,7 @@
         if (this.selectedService == PostalService) {
             console.log('postal service need to toggle');
         }
-        
+
         $('#country').ready(function() {
             let country = $('#country').val();
             let oldRegion = $('#region').data('value');
@@ -89,11 +89,11 @@
                     inactiveUSFields();
                     activateBrazilFields();
                 }
-                
+
                 if (country == Netherlands) {
                     $('#div_street_number').css('display', 'none');
                     $('#address2').css('display', 'none');
-                    $('#cpf_no').css('display', 'none');
+                    $('#cpf').addClass('d-none');
                     $("[name='state_id']").prop('required',true);
                 }
 
@@ -108,7 +108,7 @@
                     return getColombiaRegionsFromDB(oldRegion);
                 }
             }
-            
+
         })
 
         $('input:radio[name="service"]').change(function(){
@@ -121,9 +121,9 @@
 
         $('#zipcode').on('change', function(){
             let country = $('#country').val();
-            
+
             if (country == Brazil) {
-                
+
                 if ( $(this).val() == undefined || $(this).val() == '' ) return;
                 $('#loading').fadeIn();
 
@@ -134,7 +134,7 @@
         $('#country').on('change', function(){
             let country = $(this).val();
             let serviceType = $('input[name="service"]:checked').val();
-            
+
             if (serviceType == undefined) {
                 serviceType = PostalService;
             }
@@ -142,7 +142,7 @@
             inactiveChileFields(serviceType);
             inactiveColombiaFields();
             inactiveUSFields();
-            
+
             if (country == Chile && serviceType == CourierExpress) {
                 activeChileFields(serviceType);
                 return getChileRegionsFromDB();
@@ -161,7 +161,7 @@
                 if (country == Netherlands) {
                     $('#div_street_number').css('display', 'none');
                     $('#address2').css('display', 'none');
-                    $('#cpf_no').css('display', 'none');
+                    $('#cpf').addClass('d-none');
                     $("[name='state_id']").prop('required',true);
                 }
 
@@ -191,11 +191,11 @@
                 console.log('chile region from correios chile');
                 return getChileCommunesFromCorreios(regionId);
             }
-            
+
             if (country == Chile && serviceType == CourierExpress) {
                 return getChileCommunesFromDB(regionId);
             }
-            
+
         });
 
         $('#address').on('change', function(){
@@ -249,7 +249,7 @@
             if (serviceType == undefined) {
                 serviceType = PostalService;
             }
-            
+
             if (country == UnitedStates  && serviceType == PostalService && address.length > 4) {
                 console.log('here us ');
                 let state = $('#state option:selected').text();
@@ -305,7 +305,7 @@
     }
 
     function inactiveChileFields(selectedService) {
-        
+
         if (selectedService != CourierExpress) {
             $('#cpf').removeClass('d-none');
         }
@@ -485,7 +485,7 @@
                      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
         });
-        $.ajax({ 
+        $.ajax({
             type: 'POST',
             url: "{{route('admin.ajax.state')}}",
             data: {country_id:  $('#country').val()},
@@ -500,7 +500,7 @@
                         $('#state').val(old_state);
                         $('#state').selectpicker('val', old_state);
                 }
-            }, 
+            },
             error: function(e) {
                     console.log(e);
             }
@@ -508,7 +508,7 @@
     }
 
     function getChileRegionsFromDB(oldRegion = null, oldCommune = null) {
-       
+
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -516,7 +516,7 @@
         });
 
         $('#loading').fadeIn();
-        $.ajax({ 
+        $.ajax({
             type: 'GET',
             url: "{{route('api.hd-regions', ['countryId' => 46])}}",
             success: function (response){
@@ -534,7 +534,7 @@
 
                     getChileCommunesFromDB(oldRegion, oldCommune);
                 }
-            }, 
+            },
             error: function(e) {
                 $('#loading').fadeOut();
                 console.log(e);
@@ -577,12 +577,12 @@
     }
 
     function getRegionsFromCorreiosChile()
-    {   
+    {
         $('#loading').fadeIn();
         $.get('{{ route("api.correios-chile-regions") }}')
         .then(function(response){
             $('#loading').fadeOut();
-            
+
             if(response.success == true)
             {
                 $('#region').attr('disabled', false);
@@ -646,7 +646,7 @@
             }
         });
         $('#loading').fadeIn();
-        $.ajax({ 
+        $.ajax({
             type: 'GET',
             url: "{{route('api.hd-regions', ['countryId' => 50])}}",
             success: function (response){
@@ -662,11 +662,11 @@
                     $('#region').val(oldRegion);
                     $('#region').selectpicker('refresh');
                 }
-            }, 
+            },
             error: function(e) {
                 $('#loading').fadeOut();
                 console.log(e);
             }
         });
-    }    
+    }
 </script>

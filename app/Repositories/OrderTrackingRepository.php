@@ -84,8 +84,6 @@ class OrderTrackingRepository
                                 ];
                             }
                         }elseif($order->recipient->country_id == Order::BRAZIL ){
-                            \Log::info('BR');
-                            \Log::info($order->recipient->country_id);
                             array_push($this->brazilTrackingCodes, $order->corrios_tracking_code);
                             $apiResponse = [
                                 'success' => true,
@@ -95,8 +93,6 @@ class OrderTrackingRepository
                                 'order' => $order
                             ];
                         }elseif($order->recipient->country_id == Order::NETHERLANDS) {
-                            \Log::info('NL');
-                                \Log::info($order->recipient->country_id);
                             array_push($this->postNLTrackingCodes, $order->corrios_tracking_code);
 
                                 $apiResponse = [
@@ -115,7 +111,6 @@ class OrderTrackingRepository
                                 'order' => null
                             ];
                         }
-                        $getTrackings->push($apiResponse);
 
                     }else{
 

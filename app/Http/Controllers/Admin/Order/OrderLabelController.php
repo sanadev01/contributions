@@ -134,7 +134,7 @@ class OrderLabelController extends Controller
                 $error = $this->upsLabelRepository->getUPSErrors();
                 return $this->renderLabel($request, $order, $error);
             }
-            
+
         }
 
         if ($order->recipient->country_id != Order::US && $request->update_label === 'false')
@@ -148,7 +148,7 @@ class OrderLabelController extends Controller
             }
         }
 
-        if($order->recipient->country_id == Order::NETHERLANDS ){
+        if($order->recipient->country_id == Order::NETHERLANDS && $order->shippingService->isPostNLService()){
 
             $this->postNLLabelRepository->get($order);
 
@@ -163,7 +163,7 @@ class OrderLabelController extends Controller
             $error = $this->colombiaLabelRepository->getError();
             return $this->renderLabel($request, $order, $error);
         }
-        
+
         if ( $request->update_label === 'true' ){
 
             if($order->recipient->country_id == Order::CHILE)
@@ -200,7 +200,7 @@ class OrderLabelController extends Controller
 
             if ($order->recipient->country_id == Order::COLOMBIA && $order->shippingService->isColombiaService()) {
                 $this->colombiaLabelRepository->updateLabel();
-    
+
                 $error = $this->colombiaLabelRepository->getError();
                 return $this->renderLabel($request, $order, $error);
             }
