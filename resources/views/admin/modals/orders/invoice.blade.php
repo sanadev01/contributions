@@ -108,8 +108,8 @@
                                 <td @if (!$appliedVolumeWeight) colspan="2" @endif>{{ $order->measurement_unit }} </td>
                                 @if ($appliedVolumeWeight)
                                 <td>
-                                    discount : <span class="text-primary font-weight-bold">{{ $order->weight_discount }}</span>
-                                    discount cost : <span class="text-primary font-weight-bold">{{ $order->discountCost() }}</span>
+                                    discount : <span class="text-primary font-weight-bold">{{ $order->weight_discount }}here</span>
+                                    discount cost : <span class="text-primary font-weight-bold">{{ $order->discountCost() }} here</span>
                                 </td>
                                 @endif
                             </tr>                                
