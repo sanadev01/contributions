@@ -2,8 +2,8 @@
 
 namespace App\Services\Colombia;
 
-use App\Models\Region;
 use Exception;
+use App\Models\Region;
 use Illuminate\Support\Facades\Http;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Calculators\WeightCalculator;
@@ -14,17 +14,21 @@ class ColombiaService
     private $password;
     private $contractCode;
     private $headquarterCode;
+    private $token;
     private $shippingUrl;
+    private $containerRegisterUrl;
 
     protected $chargableWeight;
 
-    public function __construct($userName, $password, $contractCode, $headquarterCode, $shippingUrl)
+    public function __construct($userName, $password, $contractCode, $headquarterCode, $token, $shippingUrl, $containerRegisterUrl)
     {
         $this->userName = $userName;
         $this->password = $password;
         $this->contractCode = $contractCode;
         $this->headquarterCode = $headquarterCode;
+        $this->token = $token;
         $this->shippingUrl = $shippingUrl;
+        $this->containerRegisterUrl = $containerRegisterUrl;
     }
 
     public function getServiceRates($order, $service = 44162)
@@ -35,6 +39,68 @@ class ColombiaService
     public function createShipment($order)
     {
         return $this->colombiaApiCall($this->shippingUrl, $this->makeRequestBody($order, false));
+    }
+
+    public function registerContainer($container)
+    {
+        return $this->colombiaApiCallWithToken($this->containerRegisterUrl, $this->makeContainerRequestBody($container));
+    }
+
+    private function makeContainerRequestBody($container)
+    {
+        return [
+            'cargaPruebasEntrega' => [
+                'nitEmpresa' => '900062917-9',
+                'listaGuias' => [
+                    'numerosGuia' => $this->setTrackingCodes($container),
+                ],
+            ]
+        ];
+    }
+
+    private function setTrackingCodes($container)
+    {
+        $orderTrackingCodes = [];
+
+        foreach ($container->orders as $order) {
+            $orderTrackingCodes[] = $order->corrios_tracking_code;
+        }
+
+        return $orderTrackingCodes;
+    }
+
+    private function colombiaApiCallWithToken($url, $data)
+    {
+        try {
+            
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+                'Authorization' => 'Bearer ' .$this->token,
+            ])->post($url, $data);
+
+            if ($response->status() == 200) {
+                return [
+                    'success' => true,
+                    'data' => $response->json(),
+                    'error' => null,
+                ];
+            }
+
+            return [
+                'success' => false,
+                'data' => null,
+                'error' => 'Error while calling Colombia API',
+            ];
+
+        } catch (Exception $ex) {
+            
+            return [
+                'success' => false,
+                'data' => null,
+                'error' => $ex->getMessage(),
+            ];
+        }
     }
 
     private function colombiaApiCall($url, $data)

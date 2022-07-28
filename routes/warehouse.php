@@ -24,6 +24,7 @@ use App\Http\Controllers\Warehouse\USPSUnitRegisterController;
 use App\Http\Controllers\Warehouse\ChileCN35DownloadController;
 use App\Http\Controllers\Warehouse\ColombiaContainerController;
 use App\Http\Controllers\Warehouse\SinerlogContainerController;
+use App\Http\Controllers\Warehouse\ColombiaUnitRegisterController;
 use App\Http\Controllers\Warehouse\DeliveryBillDownloadController;
 use App\Http\Controllers\Warehouse\DeliveryBillRegisterController;
 use App\Http\Controllers\Warehouse\SinerlogCN35DownloadController;
@@ -95,6 +96,7 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::resource('colombia-containers', ColombiaContainerController::class);
     Route::get('colombia-container/{container}/packages', ColombiaContainerPackageController::class)->name('colombia-container.packages');
     Route::get('colombia-container/{container}/manifest', ColombiaContainerManifestController::class)->name('colombia-container.manifest');
+    Route::get('colombia-container/{container}/register', ColombiaUnitRegisterController::class)->name('colombia-container.register');
 });
 
 

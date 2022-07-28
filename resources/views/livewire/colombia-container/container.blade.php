@@ -139,6 +139,11 @@
                                                         <a href="{{ route('warehouse.colombia-container.packages',$container) }}" class="dropdown-item w-100">
                                                             <i class="feather icon-box"></i> @lang('warehouse.actions.Packages')
                                                         </a>
+                                                        @if ($container->orders->isNotEmpty())
+                                                            <a href="{{ route('warehouse.colombia-container.register',$container) }}" class="dropdown-item w-100">
+                                                                <i class="feather icon-box"></i> Register Unit
+                                                            </a>
+                                                        @endif
                                                         @if( !$container->isRegistered() || !$container->isShipped() )
                                                             <a href="{{ route('warehouse.colombia-containers.edit',$container) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
