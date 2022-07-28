@@ -80,6 +80,11 @@
                                         </td>
                                         <td>
                                             {{ $deliveryBill->name }}
+                                            @if($deliveryBill->Containers->first()->orders->first()->shippingService->isAnjunService())
+                                                <span class="badge badge-success">A</span>
+                                            @else
+                                                <span class="badge badge-primary">H</span>
+                                            @endif
                                         </td>
                                         <td>
                                             {{ $deliveryBill->request_id }}
