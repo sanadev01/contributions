@@ -464,17 +464,15 @@ Route::get('test-label',function(){
 
     $anjunOrders = Order::whereIn('corrios_tracking_code', $orders)->get();
     $corriosBrazilRepository = new App\Repositories\CorrieosBrazilLabelRepository();
-
     foreach ($anjunOrders as $order) {
        $order->update([
         'shipping_service_id' => 1,
         'shipping_service_name' => 'Packet Standard'
        ]);
-
-       $corriosBrazilRepository->update($order);
     }
 
-    return response()->json(['success' => true]);
+
+
     // dd(132);
     // $labelPrinter = new CN23LabelMaker();
 
