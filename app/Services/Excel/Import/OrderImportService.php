@@ -157,7 +157,7 @@ class OrderImportService extends AbstractImportService
         $this->validationRow($row, true);
         $quantity = preg_replace("/[^0-9.]/", "", $this->getValue("W{$row}"));
         $item =[
-            "quantity" => preg_replace("/[^0-9.]/", "", $this->getValue("W{$row}")),
+            "quantity" => $quantity,
             "value" => preg_replace("/[^0-9.]/", "", $this->getValue("X{$row}")),
             "description" => $this->getValue("Y{$row}"),
             "sh_code" => preg_replace("/[^0-9.]/", "", $this->getValue("Z{$row}")),

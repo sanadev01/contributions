@@ -313,7 +313,6 @@
                         <span class="menu-title">@lang('inventory.Inventory Management')</span>
                     </a>
                     <ul class="menu-content">
-
                         <li class="{{ $isActive(['admin.inventory.product.index','admin.inventory.product.create','admin.inventory.product.edit', 'admin.inventory.product-import.create']) }}">
                             <a href="{{ route('admin.inventory.product.index') }}">
                                 <i class="icon_adjst feather icon-circle"></i>
@@ -440,6 +439,17 @@
                     <span class="menu-title">@lang('menu.Trashed Orders')</span>
                 </a>
             </li>
+
+            {{-- @can('viewAny', Spatie\Activitylog\Models\Activity::class) --}}
+            @admin
+            <li class="nav-item {{ $isActive(['admin.tax.index']) }}">
+                <a href="{{ route('admin.tax.index') }}">
+                    <i class="icon_adjst feather icon-activity" style="color: #3db64c;"></i>
+                    <span class="menu-title">Tax Payment</span>
+                </a>
+            </li>
+            @endadmin
+            {{-- @endcan --}}
             <x-shared-menu></x-shared-menu>
             @endif
         </ul>
