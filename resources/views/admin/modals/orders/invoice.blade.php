@@ -106,8 +106,10 @@
                                 <td>{{ $order->height }} {{ $order->isMeasurmentUnitCm() ? 'cm' : 'in' }}</td>
                                 <td>
                                     Weight: {{ $order->getOriginalWeight('kg') }} kg ( {{$order->getOriginalWeight('lbs')}} lbs ) <br>
-                                    Volumetric Weight: {{ $order->getWeight('kg') }} kg ( {{ $order->getWeight('lbs') }} lbs ) <br>
-                                    Applied Weight: {{ $appliedVolumeWeight }} {{ $order->measurement_unit }}
+                                    Vol. Weight: {{ $order->getWeight('kg') }} kg ( {{ $order->getWeight('lbs') }} lbs ) <br>
+                                    @if ($appliedVolumeWeight)
+                                        Applied Weight: {{ $appliedVolumeWeight }} {{ $order->measurement_unit }}
+                                    @endif
                                 </td>
                                 <td @if (!$appliedVolumeWeight) colspan="2" @endif>{{ $order->measurement_unit }} </td>
                                 @if ($appliedVolumeWeight)
