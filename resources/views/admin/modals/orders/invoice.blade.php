@@ -114,9 +114,11 @@
                                 <td @if (!$appliedVolumeWeight) colspan="2" @endif>{{ $order->measurement_unit }} </td>
                                 @if ($appliedVolumeWeight)
                                 <td>
-                                    Weight {{ $appliedVolumeWeight }} {{ $order->measurement_unit }} = <span class="text-primary font-weight-bold">{{ number_format($order->shipping_value,2) }} USD </span><br>
-                                    Vol. Weight {{ $order->getWeight('kg') }} kg ( {{ $order->getWeight('lbs') }} lbs ) = <span class="text-primary font-weight-bold">{{ number_format($order->shipping_value,2) + $order->discountCost()}} USD</span> <br>
-                                    Saved = <span class="text-primary font-weight-bold">{{ $order->discountCost() }} USD</span>
+                                    Vol. Weight {{ $order->getWeight('kg') }} kg = <span class="text-primary font-weight-bold">{{ number_format($order->shipping_value + $order->discountCost(), 2) }} USD</span> <br>
+                                    Weight {{ $appliedVolumeWeight }} {{ $order->measurement_unit }} = <span class="text-primary font-weight-bold">{{ number_format($order->shipping_value, 2) }} USD </span><br>
+                                    @if($order->shipping_value + $order->discountCost() - $order->shipping_value > 0)
+                                        Saved = <span class="text-primary font-weight-bold">{{ $order->discountCost() }} USD</span>
+                                    @endif
                                 </td>
                                 @endif
                             </tr>
