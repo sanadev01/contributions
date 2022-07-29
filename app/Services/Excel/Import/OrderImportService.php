@@ -5,6 +5,7 @@ namespace App\Services\Excel\Import;
 use App\Models\Order;
 use App\Models\State;
 use App\Models\Country;
+use App\Models\Product;
 use App\Models\ImportOrder;
 use App\Models\ImportedOrder;
 use App\Models\ShippingService;
@@ -154,7 +155,7 @@ class OrderImportService extends AbstractImportService
     public function addItem($order,$row)
     {
         $this->validationRow($row, true);
-
+        $quantity = preg_replace("/[^0-9.]/", "", $this->getValue("W{$row}"));
         $item =[
             "quantity" => preg_replace("/[^0-9.]/", "", $this->getValue("W{$row}")),
             "value" => preg_replace("/[^0-9.]/", "", $this->getValue("X{$row}")),
@@ -172,12 +173,19 @@ class OrderImportService extends AbstractImportService
         if(!empty($this->errors)){
             $orderError = $this->errors;
         }
+        if($this->getValue("AC{$row}")){
+            $product = Product::where('user_id', $order->user_id)->where('sku', $this->getValue("AC{$row}"))->where('order', $this->getValue("AD{$row}"))->first();
 
+            if($product && $product->quantity >= $quantity){
+                $product->update([
+                    'quantity' => $product->quantity - $quantity
+                ]);
+            }
+        }
         $order->update([
             'items' => $items,
             'error' => $orderError,
         ]);
-
         return $order;
     }
 
