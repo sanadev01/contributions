@@ -149,22 +149,7 @@
                                     @endcan
 
                                     @can('addShipmentDetails', App\Models\Order::class)
-                                        <livewire:order.shipment-info />
-                                        <h4 class="mt-2">@lang('parcel.Shipment Images') </h4>
-                                        @can('addWarehouseNumber', App\Models\Order::class)
-                                            <div class="row">
-                                                <div class="form-group col-12">
-                                                    <div class="controls">
-                                                        <label>@lang('parcel.Warehouse Number') <span class="text-danger">*</span></label>
-                                                        <input type="text" class="form-control" required name="whr_number"
-                                                            value="{{ old('whr_number') }}" placeholder="">
-                                                        @error('whr_number')
-                                                            <div class="help-block text-danger">{{ $message }}</div>
-                                                        @enderror
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endcan
+                                       
 
                                         @can('addShipmentDetails', App\Models\Order::class)
                                             <livewire:order.shipment-info />
@@ -220,6 +205,8 @@
 
 
                                     @endcan
+                                    <button type="submit" class="pull-right btn btn-primary waves-effect waves-light">
+                                        submit</button>
                         </form>
                     </div>
                 </div>

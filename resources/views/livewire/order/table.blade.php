@@ -140,7 +140,6 @@
 
         function toggleOrderPageSearch() {
             const div = document.getElementById('singleSearch');
-            console.log(div);
             if (div.style.display != 'block') {
                 div.style.display = 'block';
             } else {

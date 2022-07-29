@@ -22,7 +22,7 @@
     <td>{{ $product->barcode }}</td>
     <td>{{ $product->weight }}</td>
     <td>{{ $product->measurement_unit }}</td>
-    <td class="text-right">{{ $product->inventory_value }}</td>
+    <td class="text-right">{{ $product->quantity *  $product->price}}</td>
     <td class="text-right">{{ $product->exp_date ? date('Y-m-d', strtotime($product->exp_date)) : '' }}</td>
     <td>{{ $product->description }}</td>
     <td>

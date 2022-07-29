@@ -13,8 +13,10 @@ class ExportManfestByServices extends AbstractCsvExportService
     private $deliveryBill;
     private $csvData = [];
     private $row = 0;
-    private $total_customerpaid;
-    private $total_paid_to_correios;
+    private $totalCustomerPaid;
+    private $totalPaidToCorreios;
+    private $totalPieces = 0;
+    private $totalWeight = 0;
 
     public function __construct(DeliveryBill $deliveryBill)
     {
@@ -51,6 +53,7 @@ class ExportManfestByServices extends AbstractCsvExportService
             'UPS',
             'USPS',
             'Fedex',
+            'Carrier Tracking'
         ];
     }
 
@@ -90,6 +93,7 @@ class ExportManfestByServices extends AbstractCsvExportService
                 $package->carrierService() == 'USPS'? 'USPS': '',
                 $package->carrierService() == 'UPS'? 'UPS': '',
                 $package->carrierService() == 'FEDEX'? 'FEDEX': '',
+                $package->tracking_id
             ];
 
             $i=0;
@@ -108,8 +112,10 @@ class ExportManfestByServices extends AbstractCsvExportService
 
             $this->row++;
 
-            $this->total_customerpaid +=  $package->gross_total;
-            $this->total_paid_to_correios += $this->getValuePaidToCorrieos($container,$package);
+            $this->totalCustomerPaid +=  $package->gross_total;
+            $this->totalPaidToCorreios += $this->getValuePaidToCorrieos($container,$package);
+            $this->totalPieces++;
+            $this->totalWeight += $package->getOriginalWeight('kg');
         }
 
         $this->csvData[$this->row] = [
@@ -117,25 +123,28 @@ class ExportManfestByServices extends AbstractCsvExportService
             '',
             '',
             '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
             'Total',
-            $this->total_customerpaid,
+            $this->totalPieces,
+            $this->totalWeight,
             '',
-            $this->total_paid_to_correios,
             '',
             '',
+            '',
+            '',
+            $this->totalCustomerPaid,
+            '',
+            $this->totalPaidToCorreios,
+            '',
+            '',
+            ''
         ];
 
     }
 
     protected function getValuePaidToCorrieos(Container $container, Order $order)
     {
-        $rateSlab = AccrualRate::getRateSlabFor($order->getWeight('kg'));
+        $service  = $order->shippingService->service_sub_class;
+        $rateSlab = AccrualRate::getRateSlabFor($order->getOriginalWeight('kg'),$service);
 
         if ( !$rateSlab ){
             return 0;

@@ -6,7 +6,12 @@
                     <div class="card p-2">
                         <div class="card-header pb-0">
                             <h2 class="mb-2 text-center w-100">
-                                Rate Calculated For {{ $shippingServiceTitle }}
+                                Rate Calculated For {{$shippingServiceTitle}}
+                                @if ($ratesWithProfit)
+                                    <span>
+                                        <button wire:click="downloadRates" type="button" class="btn btn-sm btn-primary">Download Rates</button>
+                                    </span>
+                                @endif    
                             </h2>
                         </div>
                         <div class="col-md-12">
@@ -69,6 +74,7 @@
                                             </div>
                                         </div>
                                     @endif
+<<<<<<< HEAD
                                     @if ($error)
                                         <div class="row mb-1 ml-4">
                                             <div class="controls col-12 text-danger">
@@ -79,6 +85,29 @@
                                     <form wire:submit.prevent="getSenderLabel">
                                         <div class="row mb-1 ml-4">
                                             <div class="controls col-6">
+=======
+                                    @error($serviceError)
+                                    <div class="row mb-1 ml-4">
+                                        <div class="controls col-12 text-danger">
+                                            {{$message}}
+                                        </div>
+                                    </div>
+                                    @enderror
+                                    <form wire:submit.prevent="getLabel">
+                                        <div class="row mb-1 ml-4">
+                                            <div class="controls col-6">
+                                                <label>@lang('orders.order-details.Select Shipping Service')<span class="text-danger"></span></label>
+                                                <select name="shipping_service" wire:model.debounce.500ms="selectedService"  class="form-control" required>
+                                                    <option value="">Select Shipping Service</option>
+                                                    @foreach ($ratesWithProfit as $profitRate)
+                                                        <option value="{{$profitRate['service_sub_class']}}">{{$profitRate['name']}}</option>
+                                                    @endforeach
+                                                </select>
+                                                @error('selectedService') <span class="error text-danger">{{ $message }}</span> @enderror
+                                            </div>
+                                            <div class="controls col-6">
+                                                <button id="btn-submit" type="submit" class="btn btn-success btn-lg mt-4">Buy Label </button>
+>>>>>>> fa9798d74bfa1d6b205b7c352b89fb71654510d0
                                             </div>
                                         </div>
                                     </form>

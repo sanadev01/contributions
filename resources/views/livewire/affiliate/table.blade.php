@@ -90,12 +90,12 @@
                             <th>@lang('sales-commission.User')</th>
                         @endadmin
                         <th>Commission From</th>
-                        <th>@lang('sales-commission.Order ID')</th>
+                        {{-- <th>@lang('sales-commission.Order ID')</th> --}}
                         <th>WHR#</th>
-                        <th>Tracking Code</th>
-                        <th>Customer Reference</th>
+                        {{-- <th>Tracking Code</th> --}}
+                        {{-- <th>Customer Reference</th>
                         <th>Carrier Tracking#</th>
-                        <th>Weight</th>
+                        <th>Weight</th> --}}
                         <th>@lang('sales-commission.Value')</th>
                         <th>@lang('sales-commission.Type')</th>
                         <th>@lang('sales-commission.Commission')</th>

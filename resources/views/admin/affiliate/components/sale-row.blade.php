@@ -24,20 +24,23 @@
     <td>
         {{ optional($sale->order->user)->name }}
     </td>
-    <td>
+    {{-- <td>
         <a href="#" data-toggle="modal" data-target="#hd-modal"
             data-url="{{ route('admin.modals.order.invoice', $sale->order) }}" title="@lang('sales-commission.Show Order Details')">
             @lang('sales-commission.view-order')
         </a>
 
-    </td>
+    </td> --}}
     <td>
+        <a href="#" data-toggle="modal" data-target="#hd-modal"
+        data-url="{{ route('admin.modals.order.invoice', $sale->order) }}" title="@lang('sales-commission.Show Order Details')">
         {{ $sale->order->warehouse_number }}
+    </a>
     </td>
-    <td>
+    {{-- <td>
         {{ $sale->order->corrios_tracking_code }}
-    </td>
-    <td>
+    </td> --}}
+    {{-- <td>
         {{ $sale->order->customer_reference }}
     </td>
     <td>
@@ -45,7 +48,7 @@
     </td>
     <td>
         {{ $sale->order->weight . $sale->order->measurement_unit }}
-    </td>
+    </td> --}}
 
     <td>
         {{ $sale->value }}

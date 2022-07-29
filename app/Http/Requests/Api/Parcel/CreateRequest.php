@@ -109,7 +109,7 @@ class CreateRequest extends FormRequest
 
         $shippingService = ShippingService::find($request->parcel['service_id'] ?? null);
 
-        if ($shippingService && in_array($shippingService->service_sub_class, $this->shippingServicesSubClasses())) {
+        if ($shippingService && $shippingService->isOfUnitedStates()) {
 
             $rules['sender.sender_country_id'] = 'required';
             $rules['sender.sender_state_id'] = 'required';
@@ -118,6 +118,10 @@ class CreateRequest extends FormRequest
             $rules['sender.sender_phone'] = 'sometimes|string|max:100';
             $rules['sender.sender_zipcode'] = 'required';
             $rules['recipient.phone'] = 'required|string|max:12';
+        }
+
+        if ($shippingService && $shippingService->isColombiaService()) {
+            $rules['recipient.region'] = 'required|exists:regions,id';
         }
 
         return $rules;
@@ -131,18 +135,6 @@ class CreateRequest extends FormRequest
             'sender.sender_country_id.required_if' => __('validation.sender_country_id.required_if'),
             'sender.sender_state_id.required_if' => __('validation.sender_state_id.required_if'),
             'sender.sender_city.required_if' => __('validation.sender_city.required_if'),
-        ];
-    }
-
-    private function shippingServicesSubClasses()
-    {
-        return [
-            ShippingService::USPS_PRIORITY, 
-            ShippingService::USPS_FIRSTCLASS, 
-            ShippingService::USPS_PRIORITY_INTERNATIONAL, 
-            ShippingService::USPS_FIRSTCLASS_INTERNATIONAL, 
-            ShippingService::UPS_GROUND, 
-            ShippingService::FEDEX_GROUND
         ];
     }
 }

@@ -763,6 +763,11 @@
         margin-top: auto;
     }
 
+    .btn[class*="btn-outline-"] {
+    padding-top: 6px !important;
+    padding-bottom: 5px !important;
+}
+
     .main-menu.menu-light .navigation#main-menu-navigation li a .icon_adjst {
         margin-right: 4px;
     }

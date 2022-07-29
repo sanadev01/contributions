@@ -67,4 +67,5 @@ return [
     'Fulfillment Order Description' => 'Descrição do Pedido de Cumprimento',
     'Fulfillment Order Date' => 'Data do Pedido de Cumprimento',
     'SKU Code' => 'Código SKU',
+    'Vol Weight' => 'Peso Vol'
 ];

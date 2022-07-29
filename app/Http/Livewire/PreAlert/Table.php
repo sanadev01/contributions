@@ -135,14 +135,18 @@ class Table extends Component
         $searchString = $this->search;
         $orders = Order::query()
         ->whereIn('status',[10,20,25,26])
+        ->has('user')
+        ->doesntHave('parentOrder');;
+
+        if($this->search){
         // ->orWhere('status','<',Order::STATUS_ORDER)
-        ->orWhere('tracking_id','LIKE',"%{$this->search}%")
+        $orders->orWhere('tracking_id','LIKE',"%{$this->search}%")
         ->orWhere('warehouse_number','LIKE',"%{$this->search}%")
         ->orWhereHas('user', function ($query) use ($searchString){
             $query->where('name', 'like', '%'.$searchString.'%');
-        })
-            ->has('user')
-            ->doesntHave('parentOrder');
+        });
+    }
+           
         if (Auth::user()->isUser()) {
             $orders->where('user_id', Auth::id());
         }

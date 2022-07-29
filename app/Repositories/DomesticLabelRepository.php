@@ -63,32 +63,32 @@ class DomesticLabelRepository
         return $this->callForUSPSAddressApi($request);
     }
 
-    public function getRatesForDomesticServices($request, $usShippingServices)
+    public function getRatesForDomesticServices($usShippingServices)
     {
-        $usShippingServices->each(function ($shippingService, $key) use ($request) {
+        $usShippingServices->each(function ($shippingService, $key){
             if ($shippingService['service_sub_class'] == ShippingService::UPS_GROUND) {
-                $this->getUPSRates($request, $shippingService['service_sub_class']);
+                $this->getUPSRates( $shippingService['service_sub_class']);
             }
 
             if ($shippingService['service_sub_class'] == ShippingService::USPS_PRIORITY
                 || $shippingService['service_sub_class'] == ShippingService::USPS_FIRSTCLASS) 
             {
-                $this->getUSPSRates($request, $shippingService['service_sub_class']);
+                $this->getUSPSRates( $shippingService['service_sub_class']);
             }
 
             if ($shippingService['service_sub_class'] == ShippingService::FEDEX_GROUND) {
-               $this->getFedexRates($request, $shippingService['service_sub_class']);
+               $this->getFedexRates($shippingService['service_sub_class']);
             }
         });
 
         return $this->domesticRates;
     }
 
-    public function getDomesticLabel($request, $order)
+    public function getDomesticLabel($order)
     {
-        if ($request->service == ShippingService::UPS_GROUND)
+        if (request()->service == ShippingService::UPS_GROUND)
         {
-            if($this->upsLabelRepository->getSecondaryLabel($request, $order))
+            if($this->upsLabelRepository->getSecondaryLabel($order))
             {
                 return true;
             }
@@ -97,9 +97,9 @@ class DomesticLabelRepository
             return false;
         }
 
-        if ($request->service == ShippingService::FEDEX_GROUND) 
+        if (request()->service == ShippingService::FEDEX_GROUND) 
         {
-            if($this->fedExLabelRepository->getSecondaryLabel($request, $order))
+            if($this->fedExLabelRepository->getSecondaryLabel($order))
             {
                 return true;
             }
@@ -108,9 +108,9 @@ class DomesticLabelRepository
             return false;
         }
 
-        if ($request->service == ShippingService::USPS_PRIORITY || $request->service == ShippingService::USPS_FIRSTCLASS) 
+        if (request()->service == ShippingService::USPS_PRIORITY || request()->service == ShippingService::USPS_FIRSTCLASS) 
         {
-            if($this->uspsLabelRepository->getSecondaryLabel($request, $order))
+            if($this->uspsLabelRepository->getSecondaryLabel($order))
             {
                 return true;
             }
@@ -125,31 +125,31 @@ class DomesticLabelRepository
         return $this->error;
     }
 
-    private function getUPSRates($request, $service)
+    private function getUPSRates($service)
     {
-        $request->merge(['service' => $service]);
-
-        $upsRateResponse = $this->upsLabelRepository->getRatesForSender($request);
+        request()->merge(['service' => $service]);
+        
+        $upsRateResponse = $this->upsLabelRepository->getRatesForSender();
         if ($upsRateResponse['success'] == true) {
             return array_push($this->domesticRates, ['service' => 'UPS Ground', 'service_code' => $service, 'cost' => $upsRateResponse['total_amount']]);
         }
     }
 
-    private function getUSPSRates($request, $service)
+    private function getUSPSRates($service)
     {
-        $request->merge(['service' => $service]);
+        request()->merge(['service' => $service]);
 
-        $uspsRateResponse = $this->uspsLabelRepository->getRatesForSender($request);
+        $uspsRateResponse = $this->uspsLabelRepository->getRatesForSender();
         if ($uspsRateResponse['success'] == true) {
             return array_push($this->domesticRates, ['service' => ($service == ShippingService::USPS_PRIORITY) ? 'USPS Priority' : 'USPS FirstClass', 'service_code' => $service, 'cost' => $uspsRateResponse['total_amount']]);
         }
     }
 
-    private function getFedexRates($request, $service)
+    private function getFedexRates($service)
     {
-        $request->merge(['service' => $service]);
+        request()->merge(['service' => $service]);
 
-        $fedExRateResponse = $this->fedExLabelRepository->getRatesForSender($request);
+        $fedExRateResponse = $this->fedExLabelRepository->getRatesForSender(request());
         if ($fedExRateResponse['success'] == true) {
             return array_push($this->domesticRates, ['service' => 'FedEx Ground', 'service_code' => $service, 'cost' => $fedExRateResponse['total_amount']]);
         }

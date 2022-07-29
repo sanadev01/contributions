@@ -41,7 +41,6 @@
             </tr>
         </thead>
         <tbody>
-
             @forelse ($orders as $order)
                 @include('admin.orders.components.order-row', ['order' => $order])
             @empty

@@ -100,7 +100,7 @@
                 <thead>
                     <tr>
                         @admin
-                            <th style="min-width: 100px;">
+                            <th>
                                 <div class="vs-checkbox-con vs-checkbox-primary" title="Select All"
                                     style="width: 15px !important">
                                     <input type="checkbox" id="checkAll" name="orders[]" class="check-all"
@@ -197,7 +197,7 @@
                                 <td class="d-flex">
                                     <div class="btn-group">
                                         <div class="dropdown">
-                                            <button type="button" class="btn btn-success dropdown-toggle"
+                                            <button type="button" class="btn btn-sm btn-success width-100 dropdown-toggle"
                                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 @lang('parcel.Action')
                                             </button>

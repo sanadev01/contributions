@@ -12,9 +12,15 @@ class DeliveryBillDownloadController extends Controller
 {
     public function __invoke(DeliveryBill $deliveryBill)
     {
+        if ($deliveryBill->containers->isEmpty()) {
+            return redirect()->back()->with('error', 'please add a container to this delivery bill');
+        }
+
+        $contractNo = ($deliveryBill->containers->first()->hasAnjunService()) ? '9912501700' : '9912501576';
+        
             $labelPrinter = new CN38LabelMaker();
             $labelPrinter->setDeliveryBillNo($deliveryBill->cnd38_code)
-                        ->setContractNo('9912501576')
+                        ->setContractNo($contractNo)
                         ->setDate(Carbon::now()->format('Y-m-d'))
                         ->setTime(Carbon::now()->format('h:i'))
                         ->setService(2)

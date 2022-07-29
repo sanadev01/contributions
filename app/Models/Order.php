@@ -64,6 +64,7 @@ class Order extends Model implements Package
     const BRAZIL = 30;
     const CHILE = 46;
     const US = 250;
+    const COLOMBIA = 50;
 
     public $user_profit = 0;
 
@@ -348,7 +349,12 @@ class Order extends Model implements Package
                 
                 return 'Correios Chile';
 
+            }elseif(optional($this->shippingService)->service_sub_class == ShippingService::COLOMBIA_Standard){
+                
+                return 'Colombia Service';
+
             }
+
             return 'Correios Brazil';
         }
 
@@ -437,20 +443,19 @@ class Order extends Model implements Package
         $shippingService = $this->shippingService;
 
         $additionalServicesCost = $this->calculateAdditionalServicesCost($this->services);
-        if($this->recipient->country_id == self::US || ($this->sender_country_id == self::US && $this->recipient->country_id != self::US))
-        {
+        if ($shippingService && $shippingService->isOfUnitedStates()) {
             $shippingCost = $this->user_declared_freight;
             $this->calculateProfit($shippingCost, $shippingService);
-
-        } else {
+        }else {
             $shippingCost = $shippingService->getRateFor($this,true,$onVolumetricWeight);
         }
 
         $battriesExtra = $shippingService->contains_battery_charges * ( $this->items()->batteries()->count() );
         $pefumeExtra = $shippingService->contains_perfume_charges * ( $this->items()->perfumes()->count() );
 
-        $dangrousGoodsCost = (isset($this->user->perfume) && $this->user->perfume == 1 ? 0 : $pefumeExtra) + (isset($this->user->battery) && $this->user->battery == 1 ? 0 : $battriesExtra);
-        // $dangrousGoodsCost = (setting('perfume', null, $this->user->id) ? 0 : $pefumeExtra) + (setting('battery', null, $this->user->id) ? 0 : $battriesExtra);
+        // $dangrousGoodsCost = (isset($this->user->perfume) && $this->user->perfume == 1 ? 0 : $pefumeExtra) + (isset($this->user->battery) && $this->user->battery == 1 ? 0 : $battriesExtra);
+        
+        $dangrousGoodsCost = (setting('perfume', null, $this->user->id) ? 0 : $pefumeExtra) + (setting('battery', null, $this->user->id) ? 0 : $battriesExtra);
         $consolidation = $this->isConsolidated() ?  setting('CONSOLIDATION_CHARGES',0,null,true) : 0;
 
         $total = $shippingCost + $additionalServicesCost + $this->insurance_value + $dangrousGoodsCost + $consolidation + $this->user_profit;
@@ -496,8 +501,9 @@ class Order extends Model implements Package
         }elseif ($shippingService->service_sub_class == ShippingService::FEDEX_GROUND) {
             
             $profit_percentage = (setting('fedex_profit', null, $this->user->id) != null &&  setting('fedex_profit', null, $this->user->id) != 0) ?  setting('fedex_profit', null, $this->user->id) : setting('fedex_profit', null, User::ROLE_ADMIN);
-        }
-        else {
+        
+        }else{
+            
             $profit_percentage = (setting('usps_profit', null, $this->user->id) != null &&  setting('usps_profit', null, $this->user->id) != 0) ?  setting('usps_profit', null, $this->user->id) : setting('usps_profit', null, User::ROLE_ADMIN);
         }
         
@@ -505,6 +511,18 @@ class Order extends Model implements Package
         
         $this->user_profit = $shippingCost * $profit;
         return true;
+    }
+
+    public function usShippingServicesSubClasses()
+    {
+        return [
+            ShippingService::USPS_PRIORITY, 
+            ShippingService::USPS_FIRSTCLASS, 
+            ShippingService::USPS_PRIORITY_INTERNATIONAL, 
+            ShippingService::USPS_FIRSTCLASS_INTERNATIONAL, 
+            ShippingService::UPS_GROUND, 
+            ShippingService::FEDEX_GROUND
+        ];
     }
 
     private function getAdminProfit()
@@ -658,6 +676,9 @@ class Order extends Model implements Package
 
     public function getDistributionModality(): int
     {
+        if ($this->shippingService && in_array($this->shippingService->service_sub_class, $this->anjunShippingServicesSubClasses())) {
+            return __default($this->getCorrespondenceServiceCode($this->shippingService->service_sub_class), ModelsPackage::SERVICE_CLASS_STANDARD);
+        }
         return __default( optional($this->shippingService)->service_sub_class ,ModelsPackage::SERVICE_CLASS_STANDARD );
     }
 
@@ -709,5 +730,59 @@ class Order extends Model implements Package
     public function isTrashed()
     {
         return $this->deleted_at ? true : false;
+    }
+
+    public function discountCost($onVolumetricWeight = true)
+    {
+        $shippingService = $this->shippingService;
+
+        if ($this->weight_discount && $shippingService && !in_array($shippingService->service_sub_class, [
+            ShippingService::USPS_PRIORITY, ShippingService::USPS_FIRSTCLASS,ShippingService::USPS_PRIORITY_INTERNATIONAL,
+            ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,ShippingService::UPS_GROUND,ShippingService::FEDEX_GROUND])) 
+        {
+
+            $additionalServicesCost = $this->calculateAdditionalServicesCost($this->services);
+
+            $battriesExtra = $shippingService->contains_battery_charges * ( $this->items()->batteries()->count() );
+            $pefumeExtra = $shippingService->contains_perfume_charges * ( $this->items()->perfumes()->count() );
+            $dangrousGoodsCost = (isset($this->user->perfume) && $this->user->perfume == 1 ? 0 : $pefumeExtra) + (isset($this->user->battery) && $this->user->battery == 1 ? 0 : $battriesExtra);
+            $consolidation = $this->isConsolidated() ?  setting('CONSOLIDATION_CHARGES',0,null,true) : 0;
+
+            $otherTotal = $additionalServicesCost + $this->insurance_value + $dangrousGoodsCost + $consolidation;
+
+            $discountShippingRate = $shippingService->getRateFor($this, true, $onVolumetricWeight);
+            $orignalShippingRate =  $shippingService->getOriginalRate($this);
+
+            $originalTotal = $orignalShippingRate + $otherTotal;
+            $discountedTotal = $discountShippingRate + $otherTotal;
+
+            $discount = $originalTotal - $discountedTotal;
+
+            return $discount;
+        }
+
+        return null;
+    }
+    
+    public function anjunShippingServicesSubClasses()
+    {
+        return [
+            ShippingService::AJ_Packet_Standard, 
+            ShippingService::AJ_Packet_Express,
+        ];
+    }
+
+    public function getCorrespondenceServiceCode($serviceCode)
+    {
+        return ($serviceCode == ShippingService::AJ_Packet_Express) ? ShippingService::Packet_Express : ShippingService::Packet_Standard;
+    }
+
+    public function colombiaLabelUrl()
+    {
+        if (!$this->api_response) {
+            return null;
+        }
+
+        return json_decode($this->api_response)->strUrlGuide;
     }
 }

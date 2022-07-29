@@ -27,42 +27,41 @@
                     </div>
                     <div class="row justify-content-center">
 
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <div class="controls">
-                                    <label>@lang('shipping-rates.Country') <span class="text-danger">*</span></label>
-                                    <select name="country_id" id="country" required class="form-control">
-                                        <option value="" selected>@lang('shipping-rates.Select Country')</option>
-                                        <option value="30">Brazil</option>
-                                        <option value="46">Chile</option>
-                                    </select>
-                                    <div class="help-block"></div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="controls">
+                                        <label>@lang('shipping-rates.Country') <span class="text-danger">*</span></label>
+                                        <select name="country_id" id="country" required class="form-control">
+                                            <option value="" selected>@lang('shipping-rates.Select Country')</option>
+                                            <option value="30">Brazil</option>
+                                            <option value="46">Chile</option>
+                                            <option value="50">Colombia</option>
+                                        </select>
+                                        <div class="help-block"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="row justify-content-center">
 
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <div class="controls">
-                                    <label>@lang('shipping-rates.Shipping Service') <span class="text-danger">*</span></label>
-                                    <select name="service_id" id="service" required class="form-control">
-                                        <option value="" selected>Select Service</option>
-                                        <option
-                                            value="{{ App\Services\Correios\Models\Package::SERVICE_CLASS_STANDARD }}">
-                                            Standard</option>
-                                        <option
-                                            value="{{ App\Services\Correios\Models\Package::SERVICE_CLASS_EXPRESS }}">
-                                            Express</option>
-                                        <option value="{{ App\Services\Correios\Models\Package::SERVICE_CLASS_MINI }}">
-                                            Mini</option>
-                                        <option value="{{ App\Services\Correios\Models\Package::SERVICE_CLASS_SRP }}">
-                                            SRP</option>
-                                        <option value="{{ App\Services\Correios\Models\Package::SERVICE_CLASS_SRM }}">
-                                            SRM</option>
-                                    </select>
-                                    <div class="help-block"></div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="controls">
+                                        <label>@lang('shipping-rates.Shipping Service') <span class="text-danger">*</span></label>
+                                        <select name="service_id" id="service" required class="form-control">
+                                            <option value="" selected>Select Service</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_STANDARD}}">Standard</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_EXPRESS}}">Express</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_MINI}}">Mini</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_SRP}}">SRP</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_SRM}}">SRM</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_AJ_Standard}}">AJ Standard</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_AJ_EXPRESS}}">AJ Express</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_COLOMBIA_Standard}}">Colombia Standard</option>
+                                        </select>
+                                        <div class="help-block"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -137,14 +136,18 @@
 
 @section('js')
 <script>
-    $(document).ready(function() {
-        $('#country').change(function() {
-            let selected = $('#country').val();
+    $(document).ready(function(){ 
+        var countryChile = {!! $countryChile !!};
 
-            if (selected == '46') {
+        $('#country').change(function () {
+            let selected = $('#country').val();
+            
+            if(selected == countryChile) {
                 $('#service').children("option[value=" + '33162' + "]").hide();
                 $('#service').children("option[value=" + '33170' + "]").hide();
                 $('#service').children("option[value=" + '33197' + "]").hide();
+                $('#service').children("option[value=" + '33164' + "]").hide();
+                $('#service').children("option[value=" + '33172' + "]").hide();
 
                 $('#service').children("option[value=" + '28' + "]").show();
                 $('#service').children("option[value=" + '32' + "]").show();
@@ -155,6 +158,9 @@
                 $('#service').children("option[value=" + '33162' + "]").show();
                 $('#service').children("option[value=" + '33170' + "]").show();
                 $('#service').children("option[value=" + '33197' + "]").show();
+                $('#service').children("option[value=" + '33164' + "]").show();
+                $('#service').children("option[value=" + '33172' + "]").show();
+                
             }
         });
 

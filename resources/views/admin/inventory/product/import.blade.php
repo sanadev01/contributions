@@ -36,44 +36,47 @@
                             <h4 class="form-section">@lang('orders.import-excel.Import Orders via Excel Sheet')</h4>
                         </div>
                     </div>
-
-                    <div class="row justify-content-center">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>@lang('parcel.User POBOX Number') <span class="text-danger">*</span></label>
-                                <livewire:components.search-user />
-                                @error('pobox_number')
-                                    <div class="help-block text-danger"> {{ $message }} </div>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-
                     @admin
-                        <div class="row mt-1">
-                            <div class="form-group col-12 col-sm-6 col-md-4">
-                                <div class="controls">
-
+                        <div class="row justify-content-center">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>@lang('parcel.User POBOX Number') <span class="text-danger">*</span></label>
+                                    <livewire:components.search-user />
+                                    @error('pobox_number')
+                                        <div class="help-block text-danger"> {{ $message }} </div>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
                     @endadmin
-
-                    <div class="row justify-content-center">
+                    <div class="row justify-content-center mb-5">
+                        <div class="controls mt-3 col-6">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Upload</span>
+                                </div>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" name="excel_file"
+                                        accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel, text/xml"
+                                        required>
+                                    <label class="custom-file-label" for="inputGroupFile01">@lang('orders.import-excel.Select Excel File to Upload')<span
+                                            class="text-danger">*</span></label>
+                                    @error('excel_file')
+                                        <div class="text-danger">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- <div class="row justify-content-center">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Upload</span>
-                                    </div>
-                                    <div class="custom-file">
-                                        <input type="file" name="excel_file"
-                                            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel, text/xml"
-                                            required>
-                                        <label class="custom-file-label" for="inputGroupFile01">@lang('orders.import-excel.Select Excel File to Upload')<span
-                                                class="text-danger">*</span></label>
-                                    </div>
-                                </div>
+                                <label for="projectinput1">@lang('orders.import-excel.Select Excel File to Upload')</label>
+                                <input type="file" class="form-control" name="excel_file"
+                                    accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel, text/xml"
+                                    required>
                                 @error('excel_file')
                                     <div class="text-danger">
                                         {{ $message }}
@@ -81,8 +84,7 @@
                                 @enderror
                             </div>
                         </div>
-                    </div>
-
+                    </div> --}}
                     <div class="row justify-content-center">
                         <div class="col-md-10">
                             <div class="alert" style="background: #ffcaca !important;">

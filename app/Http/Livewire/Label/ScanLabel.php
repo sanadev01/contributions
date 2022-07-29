@@ -154,19 +154,18 @@ class ScanLabel extends Component
 
                 array_push($this->newOrder,$this->order);
 
-                if($order->trackings->isNotEmpty() && $order->trackings()->latest()->first()->status_code >= Order::STATUS_PAYMENT_DONE && $order->trackings()->latest()->first()->status_code < Order::STATUS_ARRIVE_AT_WAREHOUSE)
+                if(auth()->user()->isScanner() && $order->trackings->isNotEmpty() && $order->trackings()->latest()->first()->status_code >= Order::STATUS_PAYMENT_DONE && $order->trackings()->latest()->first()->status_code < Order::STATUS_ARRIVE_AT_WAREHOUSE)
                 {
                     $this->addOrderTracking($this->order);
-                }
-                
-                $this->tracking = '';
-                if(Auth::user()->isUser() && Auth::user()->role->name == 'scanner'){
+
                     if(!$this->order->arrived_date){
                         $this->order->update([
                             'arrived_date' => date('Y-m-d H:i:s'), 
                         ]);
                     }
                 }
+                
+                $this->tracking = '';
             }
         }
         $this->tracking = '';

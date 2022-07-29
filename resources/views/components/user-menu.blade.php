@@ -44,13 +44,13 @@
                 @endif
                 <li class="nav-item {{ $isActive(['admin.tracking.index']) }}">
                     <a href="{{ route('admin.tracking.index') }}" target="_blank">
-                        <i class="feather icon-map-pin"></i>
+                        <i class=" feather icon-map-pin"></i>
                         <span class="menu-title">@lang('menu.trackings')</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('admin.profile.index') }}">
-                        <i class="feather icon-user-check"></i>
+                        <i class=" feather icon-user-check"></i>
                         <span data-i18n="Apps"> @lang('menu.profile') </span>
                     </a>
                 </li>
@@ -192,22 +192,21 @@
                     <ul class="menu-content">
 
                         <li
-                            class="{{ $isActive(['admin.inventory.product.index', 'admin.inventory.product.create', 'admin.inventory.product.edit']) }}">
+                            class="{{ $isActive(['admin.inventory.product.index', 'admin.inventory.product.create', 'admin.inventory.product.edit', 'admin.inventory.product-import.create']) }}">
                             <a href="{{ route('admin.inventory.product.index') }}">
-                                <i class="feather icon-circle"></i>
+                                <i class=" feather icon-circle"></i>
                                 <span class="menu-title">@lang('inventory.Products')</span>
                             </a>
                         </li>
-                        <li
-                            class="{{ $isActive(['admin.inventory.orders', 'admin.inventory.product.sale.order']) }}">
+                        <li class="{{ $isActive(['admin.inventory.orders', 'admin.inventory.product.sale.order']) }}">
                             <a href="{{ route('admin.inventory.orders') }}">
-                                <i class="feather icon-circle"></i>
+                                <i class=" feather icon-circle"></i>
                                 <span class="menu-title">@lang('inventory.Sales Orders')</span>
                             </a>
                         </li>
                         <li class="{{ $isActive(['admin.inventory.product.pickup']) }}">
                             <a href="{{ route('admin.inventory.product.pickup') }}">
-                                <i class="feather icon-circle"></i>
+                                <i class=" feather icon-circle"></i>
                                 <span class="menu-title">@lang('inventory.Pickup')</span>
                             </a>
                         </li>
@@ -301,8 +300,7 @@
                     </li>
                 @endif
                 @can('viewAny', App\Models\PaymentInvoice::class)
-                    <li
-                        class="nav-item {{ $isActive(['admin.payment-invoices.index', 'admin.payment-invoices.edit']) }}">
+                    <li class="nav-item {{ $isActive(['admin.payment-invoices.index', 'admin.payment-invoices.edit']) }}">
                         <a href="{{ route('admin.payment-invoices.index') }}">
                             <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -629,6 +627,8 @@
                     </li>
                 @endcan
 
+
+
                 @can('viewAny', App\Models\Setting::class)
                     <li class="nav-item {{ $isActive(['admin.settings.index']) }}">
                         <a href="{{ route('admin.settings.index') }}">
@@ -644,7 +644,18 @@
                         </a>
                     </li>
                 @endcan
-
+                @admin
+                    <li class="nav-item {{ $isActive(['admin.tax.index']) }}">
+                        <a href="{{ route('admin.tax.index') }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                class="feather feather-activity">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                            </svg>
+                            <span class="menu-title">Tax Payment</span>
+                        </a>
+                    </li>
+                @endadmin
                 <x-shared-menu></x-shared-menu>
                 <li class="sub-category"> <span class="text-white">HELP</span> </li>
                 <li class="nav-item">

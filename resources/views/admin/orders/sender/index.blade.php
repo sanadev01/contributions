@@ -3,7 +3,7 @@
     <link rel="stylesheet" href="{{ asset('app-assets/select/css/bootstrap-select.min.css') }}">
 @endsection
 @section('wizard-form')
-    <form class="paddinglr" action="{{ route('admin.orders.sender.store', $order) }}" method="POST" class="wizard">
+    <form action="{{ route('admin.orders.sender.store', $order) }}" method="POST" class="wizard">
         @csrf
         <div class="content clearfix">
             <!-- Step 1 -->
@@ -169,24 +169,41 @@
 @endsection
 
 @section('js')
-    <script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
-    <script>
-        $(document).ready(function() {
-            $('.selectpicker').prop('disabled', false);
-            $('.selectpicker').selectpicker('refresh');
-            $("[name='sender_address']").prop("disabled", true);
-            $("[name='sender_city']").prop('disabled', true);
+<script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
+<script>
+    $(document).ready(function(){
 
-            let selected = $('#country').val();
+        var countryChile = {!! $countryChile !!};
+        var countryUS = {!! $countryUS !!};
 
-            if (selected == '46' || selected == '250') {
+        
+        $('.selectpicker').prop('disabled', false);
+        $('.selectpicker').selectpicker('refresh');
+        $("[name='sender_address']").prop( "disabled", true );
+        $("[name='sender_city']").prop('disabled',true);
+
+        let selected = $('#country').val();
+
+        if(selected == countryChile || selected == countryUS) {
                 $('#address').css('display', 'block');
                 $('#city').css('display', 'block');
                 $('#tax_id').css('display', 'none');
                 $('#phone').css('display', 'inline-block');
                 $('#sender_state').prop('disabled', true);
 
-                if (selected == '250') {
+                $("[name='sender_address']").prop( "disabled", false );
+                $("[name='sender_city']").prop('disabled',false);
+                $("[name='taxt_id']").prop('disabled', true);
+
+                $("[name='sender_address']").prop('required',true);
+                $("[name='sender_city']").prop('required',true);
+                if (selected == countryChile) {
+                    $("[name='phone']").prop('required',true);
+                }
+               
+                $("[name='sender_zipcode']").prop('required', false);
+
+                if (selected == countryUS) {
                     $('#state').removeClass('d-none');
                     $('#zip_code').removeClass('d-none');
 
@@ -197,16 +214,88 @@
                     $("[name='sender_zipcode']").prop('required', true);
 
                     $('#sender_state').prop('disabled', false);
+
+                    $("[name='phone']").prop('required',false);
+                }
+        } else 
+        {
+                $('#address').css('display', 'none');
+                $('#city').css('display', 'none'); 
+                $('#tax_id').css('display', 'block');
+                $('#phone').css('display', 'none');
+                $('#state').addClass('d-none');
+                $('#zip_code').addClass('d-none');
+
+                $('#state').removeClass('d-block');
+                $('#zip_code').removeClass('d-block');
+
+                $("[name='sender_address']").prop( 'disabled', true );
+                $("[name='sender_city']").prop('disabled', true);
+                $("[name='taxt_id']").prop('disabled', false);
+
+                $("[name='sender_address']").prop('required',false);
+                $("[name='sender_city']").prop('required', false);
+                $('#sender_state').prop('required',false);
+                $("[name='phone']").prop('required',false);
+
+                $('#sender_state').prop('disabled', true);
+        }
+
+        $('#sender_address').on('change', function(){
+            window.validate_us_address();
+        });
+        
+        $('#country').change(function () {
+            let selected = $('#country').val();
+            
+            if(selected == countryChile || selected == countryUS) {
+                $('#address').css('display', 'block');
+                $('#city').css('display', 'block');
+                $('#tax_id').css('display', 'none'); 
+                $('#phone').css('display', 'inline-block');
+                $('#sender_state').prop('disabled', true);
+
+                if (selected == countryUS) {
+                    $('#state').removeClass('d-none');
+                    $('#zip_code').removeClass('d-none');
+
+                    $('#state').addClass('d-block');
+                    $('#zip_code').addClass('d-block');
+
+                    $('#sender_state').prop('required',true);
+                    $("[name='sender_zipcode']").prop('required', true);
+                    
+                    $('#sender_state').prop('disabled',false);
+
+                    let senderAddress = $('#sender_address').val();
+                    let senderCity = $('#sender_city').val();
+                    let senderZipcode = $('#sender_zipcode').val();
+
+                    if (senderAddress == undefined || senderAddress == '') {
+                        $('#sender_address').val('2200 NW 129TH AVE');
+                    }
+
+                    if (senderCity == undefined || senderCity == '') {
+                        $('#sender_city').val('Miami');
+                    }
+
+                    if (senderZipcode == undefined || senderZipcode == '') {
+                        $('#sender_zipcode').val('33182');
+                    }
+
+                    window.validate_us_address();
                 }
 
-                $("[name='sender_address']").prop("disabled", false);
-                $("[name='sender_city']").prop('disabled', false);
+                $("[name='sender_address']").prop( "disabled", false );
+                $("[name='sender_city']").prop('disabled',false);
                 $("[name='taxt_id']").prop('disabled', true);
 
-                $("[name='sender_address']").prop('required', true);
-                $("[name='sender_city']").prop('required', true);
-                $("[name='phone']").prop('required', true);
-                $("[name='sender_zipcode']").prop('required', false);
+                $("[name='sender_address']").prop('required',true);
+                $("[name='sender_city']").prop('required',true);
+                if (selected == countryChile) {
+                    $("[name='phone']").prop('required',true);
+                }
+                
             } else {
                 $('#address').css('display', 'none');
                 $('#city').css('display', 'none');
@@ -337,5 +426,6 @@
                 })
             }
         }
+    })
     </script>
 @endsection

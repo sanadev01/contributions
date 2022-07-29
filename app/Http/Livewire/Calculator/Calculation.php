@@ -146,7 +146,7 @@ class Calculation extends Component
             if($country_id)
             {
                 $country = Country::find($country_id);
-                if($country->id == 250)
+                if($country->id == Country::US)
                 {
                    return $this->unit = 'lbs/in';
                 }

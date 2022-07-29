@@ -77,6 +77,11 @@
                     <th>
                         ${{ $rate->gru }}
                     </th>
+                    @if ($anjunService)
+                        <th>
+                            ${{ $rate->commission }}
+                        </th>
+                    @endif
                 </tr>
             @endforeach
         </tbody>

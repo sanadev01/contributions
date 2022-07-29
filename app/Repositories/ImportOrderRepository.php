@@ -46,6 +46,7 @@ class ImportOrderRepository
         }
         
         if ( $request->date ){
+            // dd($request->date);
             $query->where(function($query) use($request){
                 return $query->where('created_at', 'LIKE', "%{$request->date}%");
             });

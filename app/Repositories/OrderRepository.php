@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Services\UPS\UPSShippingService;
 use App\Services\USPS\USPSShippingService;
 use App\Services\FedEx\FedExShippingService;
+use App\Models\User;
 
 class OrderRepository
 {
@@ -278,11 +279,11 @@ class OrderRepository
         return true;
     }
 
-    public function domesticService($shippingServiceId)
+    public function serviceRequireFreight($shippingServiceId)
     {
         $shippingService =  ShippingService::find($shippingServiceId);
 
-        if (in_array($shippingService->service_sub_class, $this->domesticShippingServices())) {
+        if ($shippingService->isDomesticService()) {
             return true;
         }
 
@@ -399,21 +400,20 @@ class OrderRepository
         $totalDiscountPercentage = 0;
         $volumetricDiscount = setting('volumetric_discount', null, $order->user->id);
         $discountPercentage = setting('discount_percentage', null, $order->user->id);
-
-        if (!$volumetricDiscount || !$discountPercentage || $discountPercentage < 0) {
+        
+        if (!$volumetricDiscount || !$discountPercentage || $discountPercentage < 0 || $discountPercentage == 0) {
             return false;
         }
 
-        $volumetricWeight = round($order->getWeight() > $order->weight ? $order->getWeight() : $order->weight, 2);
+        $volumetricWeight = round($order->getWeight(), 2);
         
         $totalDiscountPercentage = ($discountPercentage) ? $discountPercentage/100 : 0;
 
         if ($volumetricWeight > $order->weight) {
             
-            $volumeWeightBeforeDiscount = $volumetricWeight;
-            
-            $volumetricWeight = round($volumetricWeight - ($volumetricWeight * $totalDiscountPercentage), 2);
-            $totalDiscountedWeight = $volumeWeightBeforeDiscount - $volumetricWeight;
+            $consideredWeight = $volumetricWeight - $order->weight;
+            $volumeWeight = round($consideredWeight - ($consideredWeight * $totalDiscountPercentage), 2);
+            $totalDiscountedWeight = $consideredWeight - $volumeWeight;
 
             $order->update([
                 'weight_discount' => $totalDiscountedWeight,
@@ -425,6 +425,7 @@ class OrderRepository
     
     public function getShippingServices($order)
     {
+        $shippingServicesWithoutRates = ShippingService::query()->active()->get();
         $shippingServices = collect() ;
 
         if(optional($order->recipient)->country_id == Order::US)
@@ -433,7 +434,7 @@ class OrderRepository
             $upsShippingService = new UPSShippingService($order);
             $fedExShippingService = new FedExShippingService($order);
             
-            foreach (ShippingService::query()->active()->get() as $shippingService) 
+            foreach ($shippingServicesWithoutRates as $shippingService) 
             {
                 if ($uspsShippingService->isAvailableFor($shippingService)) {
                     $shippingServices->push($shippingService);
@@ -447,7 +448,7 @@ class OrderRepository
                     $shippingServices->push($shippingService);
                 }
             }
-        } else
+        }else
         {
             foreach (ShippingService::query()->has('rates')->active()->get() as $shippingService) 
             {
@@ -457,22 +458,22 @@ class OrderRepository
                     $this->shippingServiceError = 'Shipping Service not Available Error: {'.$shippingService->getCalculator($order)->getErrors().'}';
                 }
             }
-
-            // USPS Intenrational Services
-            if ($order->sender_country_id == Order::US && optional($order->recipient)->country_id != Order::US && setting('usps', null, $order->user->id)) 
-            {
-                $uspsShippingService = new USPSShippingService($order);
-
-                foreach (ShippingService::query()->active()->get() as $shippingService)
-                {
-                    if ($uspsShippingService->isAvailableForInternational($shippingService)) {
-                        $shippingServices->push($shippingService);
-                    }
-                }
-            }
-
+            
             if ($shippingServices->isEmpty() && $this->shippingServiceError == null) {
                 $this->shippingServiceError = ($order->recipient->commune_id != null) ? 'Shipping Service not Available for the Region you have selected' : 'Shipping Service not Available for the Country you have selected';
+            }
+        }
+
+        // USPS International Services
+        if (optional($order->recipient)->country_id != Order::US && setting('usps', null, User::ROLE_ADMIN)) 
+        {
+            $uspsShippingService = new USPSShippingService($order);
+
+            foreach ($shippingServicesWithoutRates as $shippingService)
+            {
+                if ($uspsShippingService->isAvailableForInternational($shippingService)) {
+                    $shippingServices->push($shippingService);
+                }
             }
         }
 
@@ -496,7 +497,7 @@ class OrderRepository
             || $shippingServices->contains('service_sub_class', ShippingService::USPS_FIRSTCLASS_INTERNATIONAL)
             || $shippingServices->contains('service_sub_class', ShippingService::UPS_GROUND))
         {
-            if(!setting('usps', null, $order->user->id))
+            if(!setting('usps', null, User::ROLE_ADMIN))
             {
                 $this->shippingServiceError = 'USPS is not enabled for this user';
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
@@ -506,7 +507,7 @@ class OrderRepository
                         && $shippingService->service_sub_class != ShippingService::USPS_FIRSTCLASS_INTERNATIONAL;
                 });
             }
-            if(!setting('ups', null, $order->user->id))
+            if(!setting('ups', null, User::ROLE_ADMIN))
             {
                 $this->shippingServiceError = 'UPS is not enabled for this user';
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
@@ -514,7 +515,7 @@ class OrderRepository
                 });
             }
 
-            if (!setting('fedex', null, $order->user->id)) {
+            if (!setting('fedex', null, User::ROLE_ADMIN)) {
                 $this->shippingServiceError = 'FEDEX is not enabled for this user';
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
                     return $shippingService->service_sub_class != ShippingService::FEDEX_GROUND;
@@ -543,6 +544,21 @@ class OrderRepository
                     return $item->service_sub_class != '33163' && $item->service_sub_class != '33171' && $item->service_sub_class != '33198';
                 });
             }
+
+            if(setting('anjun_api', null, \App\Models\User::ROLE_ADMIN)){
+                    $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                        return $shippingService->service_sub_class != ShippingService::Packet_Standard 
+                            && $shippingService->service_sub_class != ShippingService::Packet_Express
+                            && $shippingService->service_sub_class != ShippingService::Packet_Mini;
+                    });
+            }
+
+            if(!setting('anjun_api', null, \App\Models\User::ROLE_ADMIN)){
+                    $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                        return $shippingService->service_sub_class != ShippingService::AJ_Packet_Standard 
+                            && $shippingService->service_sub_class != ShippingService::AJ_Packet_Express;
+                    });
+            }
             
             if($shippingServices->isEmpty()){
                 $this->shippingServiceError = 'Please check your parcel dimensions';
@@ -565,16 +581,6 @@ class OrderRepository
         }
         $this->error = $response->message;
         return false;
-    }
-
-    private function domesticShippingServices()
-    {
-        return [
-            ShippingService::USPS_PRIORITY, 
-            ShippingService::USPS_FIRSTCLASS,
-            ShippingService::UPS_GROUND, 
-            ShippingService::FEDEX_GROUND
-        ];
     }
 
 }

@@ -5,10 +5,8 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
-                        <h4 class="mb-0">
-                            @lang('warehouse.containers.Packages Inside Container')
-                        </h4>
+                    <div class="card-header d-flex justify-content-end">
+                            @section('title',__('warehouse.containers.Packages Inside Container'))
                         <div>
                             <a href="{{ route('warehouse.sinerlog_containers.index') }}" class="btn btn-primary">
                                 @lang('warehouse.containers.List Containers') </a>

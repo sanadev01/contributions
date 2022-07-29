@@ -49,7 +49,9 @@ class ScanLabelRepository
         }
 
         if($order->trackings->isNotEmpty() && $order->trackings()->latest()->first()->status_code >= Order::STATUS_PAYMENT_DONE && $order->trackings()->latest()->first()->status_code < Order::STATUS_ARRIVE_AT_WAREHOUSE){
-            $this->addOrderTracking($order);
+            if (auth()->user()->isDriver()) {
+                $this->addOrderTracking($order);
+            }
             $this->message = 'package is included successfully';
             $this->status = true;
             return;

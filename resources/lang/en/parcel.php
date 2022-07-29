@@ -69,4 +69,5 @@ return [
     'Fulfillment Order Description' => 'Fulfillment Order Description',
     'Fulfillment Order Date' => 'Fulfillment Order Date',
     'SKU Code' => 'SKU Code',
+    'Vol Weight' => 'Vol Weight'
 ];

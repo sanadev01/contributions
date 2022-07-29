@@ -6,7 +6,7 @@
             </div>
         </div>
     @endif
-    <div class="row mb-3 col-12" id="error_message">
+    <div class="mb-3 col-12" id="error_message">
     </div>
 
     <div class="col-md-12">
@@ -290,7 +290,7 @@
 </div>
 <script>
     window.addEventListener('get-error', event => {
-        $('#error_message').addClass('alert alert-danger');
+        $('#error_message').addClass('d-flex justify-content-center alert alert-danger');
         $('#error_message').empty().append("<h4 class='text-danger'>" + event.detail.errorMessage + "</h4>");
     })
 </script>

@@ -69,17 +69,14 @@
                                 </div>
                             </div>
                             <div class="controls row mb-1 align-items-center my-2">
-                                <label class="col-md-3 text-md-right">@lang('warehouse.containers.Distribution Service Class')<span
-                                        class="text-danger">*</span></label>
+                                <label class="col-md-3 text-md-right">@lang('warehouse.containers.Distribution Service Class')<span class="text-danger">*</span></label>
                                 <div class="col-md-6">
                                     <select class="form-control" name="services_subclass_code">
                                         <option value="">@lang('warehouse.containers.Distribution Service Class')</option>
-                                        <option value="Priority"
-                                            {{ old('services_subclass_code') == 'Priority' ? 'selected' : '' }}>
-                                            Priority</option>
-                                        <option value="FirstClass"
-                                            {{ old('services_subclass_code') == 'FirstClass' ? 'selected' : '' }}>
-                                            FirstClass</option>
+                                        <option value="Priority" {{ old('services_subclass_code') == 'Priority' ? 'selected': '' }}>Priority</option>
+                                        <option value="FirstClass" {{ old('services_subclass_code') == 'FirstClass' ? 'selected': '' }}>FirstClass</option>
+                                        <option value="Priority International" {{ old('services_subclass_code') == 'Priority International' ? 'selected': '' }}>Priority International</option>
+                                        <option value="FirstClass International" {{ old('services_subclass_code') == 'FirstClass International' ? 'selected': '' }}>FirstClass International</option>
                                     </select>
                                     @error('services_subclass_code')
                                         <div class="help-block text-danger"> {{ $message }} </div>

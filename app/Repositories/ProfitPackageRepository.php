@@ -102,18 +102,17 @@ class ProfitPackageRepository
     {
         $settings = ProfitSetting::where('package_id', $package->id)->get();
         
-        if(!$settings->isEmpty())
+        if($settings->isNotEmpty())
         {
             foreach ($settings as $setting) 
             {
                 $settingIds[] = $setting->user_id;
             }
 
-            $users = User::findMany($settingIds);
+            return User::findMany($settingIds);
         }
         
-
-        return $users;
+        return null;
     }
 
 }

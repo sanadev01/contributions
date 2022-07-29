@@ -38,12 +38,25 @@
                                     <label class="col-md-3 text-md-right">@lang('setting.Authorize Key')<span
                                             class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control" name="AUTHORIZE_KEY"
-                                            value="{{ old('AUTHORIZE_KEY', setting('AUTHORIZE_KEY')) }}" required
-                                            placeholder="@lang('setting.Authorize Key')">
+                                        <input type="text" class="form-control" name="AUTHORIZE_KEY" value="{{ old('AUTHORIZE_KEY',setting('AUTHORIZE_KEY')) }}" required placeholder="@lang('setting.Authorize Key')">
                                         <div class="help-block"></div>
                                     </div>
                                 </div>
+                                
+                                {{-- <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">@lang('setting.Stripe Key')<span class="text-danger">*</span></label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" value="{{ old('STRIPE_KEY',setting('STRIPE_KEY')) }}" name="STRIPE_KEY" placeholder="@lang('setting.Stripe Key')">
+                                        <div class="help-block"></div>
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">@lang('setting.Stripe Secret')<span class="text-danger">*</span></label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" name="STRIPE_SECRET" value="{{ old('STRIPE_SECRET',setting('STRIPE_SECRET')) }}" placeholder="@lang('setting.Stripe Secret')">
+                                        <div class="help-block"></div>
+                                    </div>
+                                </div> --}}
 
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('setting.Stripe Key')<span
@@ -71,12 +84,8 @@
                                             class="text-danger">*</span></label>
                                     <div class="col-md-6">
                                         <select class="form-control" name="PAYMENT_GATEWAY">
-                                            <option value="AUTHORIZE"
-                                                {{ setting('PAYMENT_GATEWAY') == 'AUTHORIZE' ? 'selected' : '' }}>
-                                                Authorize</option>
-                                            <option value="STRIPE"
-                                                {{ setting('PAYMENT_GATEWAY') == 'STRIPE' ? 'selected' : '' }}>Stripe
-                                            </option>
+                                            <option value="AUTHORIZE" {{ setting('PAYMENT_GATEWAY') == 'AUTHORIZE' ? 'selected' : '' }}>Authorize</option>
+                                            {{-- <option value="STRIPE" {{ setting('PAYMENT_GATEWAY') == 'STRIPE' ? 'selected' : '' }}>Stripe</option> --}}
                                         </select>
                                         <div class="help-block"></div>
                                     </div>
@@ -111,7 +120,99 @@
                                     </div>
                                     <div class="help-block"></div>
                                 </div>
-
+                                
+                                <h4>Services Settings</h4>
+                                <hr>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">USPS<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="usps">
+                                                <input type="checkbox" name="usps" id="usps" @if(setting('usps', null, $adminId)) checked @endif>
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            <span class="offset-2 mr-2 mt-2">Profit Percentage (%) :</span>
+                                            <input type="number" name="usps_profit" step="0.01" min=0 class="form-control col-2" id="usps_profit" value="{{ setting('usps_profit', null, $adminId) }}">
+                                        </div>    
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">UPS<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="ups">
+                                                <input type="checkbox" name="ups"  id="ups" @if(setting('ups', null, $adminId)) checked @endif>
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            <span class="offset-2 mr-2 mt-2">Profit Percentage (%) :</span>
+                                            <input type="number" name="ups_profit" step="0.01" min=0 class="form-control col-2" id="ups_profit" value="{{ setting('ups_profit', null, $adminId) }}">
+                                        </div>    
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">FedEx<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="ups">
+                                                <input type="checkbox" name="fedex" id="fedex" @if(setting('fedex', null, \App\Models\User::ROLE_ADMIN)) checked @endif>
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            <span class="offset-2 mr-2 mt-2">Profit Percentage (%) :</span>
+                                            <input type="number" name="fedex_profit" step="0.01" min=0 class="form-control col-2" id="ups_profit" value="{{ setting('fedex_profit', null, $adminId) }}">
+                                        </div>    
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">Colombia Service<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="ups">
+                                                <input type="checkbox" name="colombia_service" id="colombia_service" @if(setting('colombia_service', null, \App\Models\User::ROLE_ADMIN)) checked @endif>
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            <span class="offset-2 mr-2 mt-2">Profit Percentage (%) :</span>
+                                            <input type="number" name="colombia_profit" step="0.01" min=0 class="form-control col-2" id="ups_profit" value="{{ setting('colombia_profit', null, $adminId) }}">
+                                        </div>    
+                                    </div>
+                                </div>
+                                <h4>Correios Settings</h4>
+                                <hr>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right mt-4 h5" for="correios_api">Correios Api<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="form-check">
+                                                <input class="form-check-input admin-api-settings" type="radio" name="correios_setting" id="correios_api" value="correios_api" @if(!setting('anjun_api', null, $adminId)) checked @endif>
+                                            </div>
+                                        </div>    
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right mt-4 h5" for="anjun_api">Anjun Api<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="form-check">
+                                                <input class="form-check-input admin-api-settings" type="radio" name="correios_setting" id="anjun_api" value="anjun_api" @if(setting('anjun_api', null, $adminId)) checked @endif>
+                                            </div>
+                                        </div>    
+                                    </div>
+                                </div>
                                 <div class="row mt-1">
                                     <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
                                         <button type="submit"

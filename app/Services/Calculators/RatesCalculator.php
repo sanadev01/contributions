@@ -35,10 +35,22 @@ class RatesCalculator
 
     protected static $errors;
 
-    public function __construct(Order $order,ShippingService $service, $calculateOnVolumeMetricWeight = true )
+    public function __construct(Order $order,ShippingService $service, $calculateOnVolumeMetricWeight = true, $originalRate = false )
     {
         $this->order = $order;
-        $this->shippingService = $service;
+        
+        if ($service && $service->service_sub_class == ShippingService::AJ_Packet_Standard) {
+            
+            $this->shippingService = ShippingService::where('service_sub_class', ShippingService::Packet_Standard)->first();
+
+        }elseif($service && $service->service_sub_class == ShippingService::AJ_Packet_Express){
+            
+            $this->shippingService = ShippingService::where('service_sub_class', ShippingService::Packet_Express)->first();
+        
+        }else {
+            
+            $this->shippingService = $service;
+        }
 
         $this->recipient = $order->recipient;
 
@@ -47,12 +59,12 @@ class RatesCalculator
             $this->rates = $service->rates()->byRegion($this->recipient->country_id, optional($this->recipient->commune)->region->id)->first();
         
         }else{
-            $this->rates = $service->rates()->byCountry($this->recipient->country_id)->first();
+            $this->rates = $this->shippingService->rates()->byCountry($this->recipient->country_id)->first();
         }
         
         $this->initializeDims();
 
-        $this->weight = $calculateOnVolumeMetricWeight ? $this->calculateWeight(): $this->originalWeight;
+        $this->weight = $calculateOnVolumeMetricWeight ? $this->calculateWeight($originalRate): $this->originalWeight;
     }
 
     private function initializeDims()
@@ -74,9 +86,9 @@ class RatesCalculator
      * Calculate Rates. and rate is always in kg
      * because we converted dimensions to cm on above
      */
-    private function calculateWeight()
+    private function calculateWeight($originalRate)
     {
-        if ($this->order->weight_discount) 
+        if ($this->order->weight_discount && $originalRate == false) 
         {
             $unit = ($this->order->measurement_unit == 'lbs/in') ? 'in' : 'cm';
             
@@ -117,6 +129,9 @@ class RatesCalculator
 
     public function getRate($addProfit = true)
     {
+        if (!$this->rates) {
+            return null;
+        }
         $rate = 0;
         $weight = ceil(WeightCalculator::kgToGrams($this->weight));
 
