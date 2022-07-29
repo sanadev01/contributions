@@ -65,7 +65,7 @@
                     </a>
                 </li>
             @endcan
-            
+
             @can('viewAny', App\Models\Order::class)
                 <li class="nav-item {{ $isActive(['admin.tracking.index']) }}">
                     <a href="{{ route('admin.tracking.index') }}" target="_blank">
@@ -97,7 +97,7 @@
                 </ul>
             </li>
             @endif
-            
+
             @can('importExcel', App\Models\Order::class)
                 <li class="{{ $isActive(['admin.import.import-excel.index','admin.import.import-excel.show','admin.import.import-excel.create']) }}">
                     <a href="{{ route('admin.import.import-excel.index') }}">
@@ -181,7 +181,7 @@
                         </a>
                     </li>
                     @endcan
-                    
+
                     @can('viewAny', App\Models\Rate::class)
                     <li class="{{ $isActive(['admin.rates.accrual-rates.index','admin.rates.accrual-rates.create', 'admin.rates.show-accrual-rates']) }}">
                         <a href="{{ route('admin.rates.accrual-rates.index') }}">
@@ -221,7 +221,7 @@
                     </li>
                 @endcan
             @endif
-            
+
             @can('viewAny', App\Models\Address::class)
                 <li class="nav-item {{ $isActive(['admin.addresses.index','admin.addresses.edit','admin.addresses.create']) }}">
                     <a class="nav-link" href="{{ route('admin.addresses.index') }}">
@@ -380,7 +380,7 @@
                 </a>
             </li>
             @endcan
-            
+
             @admin
             <li class="nav-item {{ $isActive(['admin.shcode.index','admin.shcode.create','admin.shcode.edit']) }}">
                 <a href="{{ route('admin.shcode.index') }}">
@@ -424,7 +424,7 @@
                 </a>
             </li>
             @endcan
-            
+
             @can('viewAny', App\Models\Setting::class)
             <li class="nav-item {{ $isActive(['admin.settings.index']) }}">
                 <a href="{{ route('admin.settings.index') }}">
@@ -433,7 +433,7 @@
                 </a>
             </li>
             @endcan
-            
+
             <li class="nav-item {{ $isActive(['admin.trash-orders.index']) }}">
                 <a href="{{ route('admin.trash-orders.index') }}">
                     <i class="icon_adjst feather icon-trash" style="color: #ff5a5a;"></i>
@@ -442,12 +442,14 @@
             </li>
 
             {{-- @can('viewAny', Spatie\Activitylog\Models\Activity::class) --}}
+            @admin
             <li class="nav-item {{ $isActive(['admin.tax.index']) }}">
                 <a href="{{ route('admin.tax.index') }}">
                     <i class="icon_adjst feather icon-activity" style="color: #3db64c;"></i>
                     <span class="menu-title">Tax Payment</span>
                 </a>
             </li>
+            @endadmin
             {{-- @endcan --}}
             <x-shared-menu></x-shared-menu>
             @endif
