@@ -58,9 +58,9 @@
                                             @endisset
                                         </select>
                                         <div class="help-block"></div>
-                                    </div>  
+                                    </div>
                                 </div>
-                                
+
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('user.status')<span class="text-danger"></span></label>
                                     <div class="col-md-6">
@@ -69,39 +69,39 @@
                                             <option value="suspended" @if($user->status == 'suspended') selected @endif>Suspended</option>
                                         </select>
                                         <div class="help-block"></div>
-                                    </div>  
+                                    </div>
                                 </div>
 
                                 <h3>Profit Package Settings</h3>
-                                <hr> 
+                                <hr>
                                 <h4 class="ml-5">Multi Profit Services Settings</h4>
                                 <livewire:profit.profit-setting :user_id="$user->id"  />
 
                                 <h3>Api Settings</h3>
                                 <hr>
-                                
+
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">Enable API<span class="text-danger"></span></label>
                                     <div class="col-md-6">
-                                        <input type="checkbox" name="api_enabled" id="api_enabled" @if( $user->api_enabled == 1 ) checked @endif> 
+                                        <input type="checkbox" name="api_enabled" id="api_enabled" @if( $user->api_enabled == 1 ) checked @endif>
                                         <div class="help-block"></div>
                                     </div>
                                 </div>
                                 <livewire:token-generator :user_id="$user->id" />
-                                
+
                                 <hr>
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">Enable Amazon API<span class="text-danger"></span></label>
                                     <div class="col-md-6">
-                                        <input type="checkbox" name="amazon_api_enabled" id="api_enabled" @if( $user->amazon_api_enabled == 1 ) checked @endif> 
+                                        <input type="checkbox" name="amazon_api_enabled" id="api_enabled" @if( $user->amazon_api_enabled == 1 ) checked @endif>
                                         <div class="help-block"></div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">Amazon Api key<span class="text-danger"></span></label>
                                     <div class="col-md-6">
-                                        <textarea name="amazon_api_key" class="form-control">{{ $user->amazon_api_key }}</textarea> 
+                                        <textarea name="amazon_api_key" class="form-control">{{ $user->amazon_api_key }}</textarea>
                                         <div class="help-block"></div>
                                     </div>
                                 </div>
@@ -111,7 +111,7 @@
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">Market Place Name<span class="text-danger"></span></label>
                                     <div class="col-md-6">
-                                        <input type="text" name="market_place_name" class="form-control" value="{{ $user->market_place_name }}"> 
+                                        <input type="text" name="market_place_name" class="form-control" value="{{ $user->market_place_name }}">
                                         <div class="help-block"></div>
                                     </div>
                                 </div>
@@ -121,7 +121,7 @@
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">Email<span class="text-danger"></span></label>
                                     <div class="col-md-6">
-                                        <input type="text" name="user_email" class="form-control" value="{{ $user->email }}"> 
+                                        <input type="text" name="user_email" class="form-control" value="{{ $user->email }}">
                                         @error('user_email')
                                         <div class="help-block text-danger">{{ $message }}</div>
                                         @enderror
@@ -131,7 +131,7 @@
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">Update Password<span class="text-danger"></span></label>
                                     <div class="col-md-6">
-                                        <input type="password" name="password" class="form-control" value=""> 
+                                        <input type="password" name="password" class="form-control" value="">
                                         @error('password')
                                         <div class="help-block text-danger">{{ $message }}</div>
                                         @enderror
@@ -140,7 +140,7 @@
 
                                 <h3>Affiliate Settings</h3>
                                 <hr>
-                                
+
                                 <h4 class="ml-5">Referrer Settings</h4>
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('user.Referrer')<span class="text-danger"></span></label>
@@ -155,10 +155,10 @@
                                     </div>
                                 </div>
                                 <hr>
-                                
+
                                 <h4 class="ml-5">Commission Settings</h4>
                                 <livewire:affiliate.commision-setting :user_id="$user->id"  />
-                                
+
                                 <h3>Waiver Fee Settings</h3>
                                 <hr>
                                 <div class="controls row mb-1 align-items-center">
@@ -217,7 +217,7 @@
                                             </div>
                                             <span class="offset-2 mr-2 mt-2">Profit Percentage (%) :</span>
                                             <input type="number" name="usps_profit" step="0.01" min=0 class="form-control col-2" id="usps_profit" value="{{ setting('usps_profit', null, $user->id) }}">
-                                        </div>    
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center">
@@ -234,7 +234,7 @@
                                             </div>
                                             <span class="offset-2 mr-2 mt-2">Profit Percentage (%) :</span>
                                             <input type="number" name="ups_profit" step="0.01" min=0 class="form-control col-2" id="ups_profit" value="{{ setting('ups_profit', null, $user->id) }}">
-                                        </div>    
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center">
@@ -251,7 +251,7 @@
                                             </div>
                                             <span class="offset-2 mr-2 mt-2">Profit Percentage (%) :</span>
                                             <input type="number" name="fedex_profit" step="0.01" min=0 class="form-control col-2" id="ups_profit" value="{{ setting('fedex_profit', null, $user->id) }}">
-                                        </div>    
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center">
@@ -268,9 +268,26 @@
                                             </div>
                                             <span class="offset-2 mr-2 mt-2">Profit Percentage (%) :</span>
                                             <input type="number" name="colombia_profit" step="0.01" min=0 class="form-control col-2" id="ups_profit" value="{{ setting('colombia_profit', null, $user->id) }}">
-                                        </div>    
+                                        </div>
                                     </div>
                                 </div>
+                                @if(setting('postnl_service', null, \App\Models\User::ROLE_ADMIN))
+                                    <div class="controls row mb-1 align-items-center">
+                                        <label class="col-md-3 text-md-right">PostNL Service<span class="text-danger"></span></label>
+                                        <div class="col-md-6">
+                                            <div class="input-group">
+                                                <div class="vs-checkbox-con vs-checkbox-primary" title="PostNL">
+                                                    <input type="checkbox" name="postnl_service" id="postnl_service" @if(setting('postnl_service', null, $user->id)) checked @endif>
+                                                    <span class="vs-checkbox vs-checkbox-lg">
+                                                        <span class="vs-checkbox--check">
+                                                            <i class="vs-icon feather icon-check"></i>
+                                                        </span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">SinerLog<span class="text-danger"></span></label>
                                     <div class="col-md-6">
@@ -283,7 +300,7 @@
                                                     </span>
                                                 </span>
                                             </div>
-                                        </div>    
+                                        </div>
                                     </div>
                                 </div>
                                 {{-- <div class="controls row mb-1 align-items-center">
@@ -314,7 +331,7 @@
                                             </div>
                                             <span class="offset-2 mr-2 mt-2">Discount Percentage (%) :</span>
                                             <input type="number" name="discount_percentage" class="form-control col-2" id="discount_percentage" value="{{ setting('discount_percentage', null, $user->id) }}">
-                                        </div>    
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="controls row align-items-center mt-2">
@@ -330,7 +347,7 @@
                                             <input type="number" name="width" class="form-control col-2" id="width" step="0.01" min=0 type="number" value="{{ setting('width', null, $user->id) }}">
                                             <span class="ml-4 mr-2 mt-2">Height (%): </span>
                                             <input type="number" name="height" class="form-control col-2" id="height" step="0.01" min=0 type="number" value="{{ setting('height', null, $user->id) }}">
-                                        </div>    
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center">

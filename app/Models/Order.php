@@ -351,8 +351,12 @@ class Order extends Model implements Package
                 return 'Correios Chile';
 
             }elseif(optional($this->shippingService)->service_sub_class == ShippingService::COLOMBIA_Standard){
-                
+
                 return 'Colombia Service';
+
+            }elseif(optional($this->shippingService)->service_sub_class == ShippingService::PostNL){
+
+                return 'PostNL';
 
             }
 
@@ -370,7 +374,8 @@ class Order extends Model implements Package
                 optional($this->shippingService)->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
                 optional($this->shippingService)->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL ||
                 optional($this->shippingService)->service_sub_class == ShippingService::UPS_GROUND ||
-                optional($this->shippingService)->service_sub_class == ShippingService::FEDEX_GROUND) {
+                optional($this->shippingService)->service_sub_class == ShippingService::FEDEX_GROUND ||
+                optional($this->shippingService)->service_sub_class == ShippingService::PostNL) {
 
                 return $this->user_declared_freight;
             }
@@ -455,7 +460,7 @@ class Order extends Model implements Package
         $pefumeExtra = $shippingService->contains_perfume_charges * ( $this->items()->perfumes()->count() );
 
         // $dangrousGoodsCost = (isset($this->user->perfume) && $this->user->perfume == 1 ? 0 : $pefumeExtra) + (isset($this->user->battery) && $this->user->battery == 1 ? 0 : $battriesExtra);
-        
+
         $dangrousGoodsCost = (setting('perfume', null, $this->user->id) ? 0 : $pefumeExtra) + (setting('battery', null, $this->user->id) ? 0 : $battriesExtra);
         $consolidation = $this->isConsolidated() ?  setting('CONSOLIDATION_CHARGES',0,null,true) : 0;
 
@@ -502,9 +507,9 @@ class Order extends Model implements Package
         }elseif ($shippingService->service_sub_class == ShippingService::FEDEX_GROUND) {
 
             $profit_percentage = (setting('fedex_profit', null, $this->user->id) != null &&  setting('fedex_profit', null, $this->user->id) != 0) ?  setting('fedex_profit', null, $this->user->id) : setting('fedex_profit', null, User::ROLE_ADMIN);
-        
+
         }else{
-            
+
             $profit_percentage = (setting('usps_profit', null, $this->user->id) != null &&  setting('usps_profit', null, $this->user->id) != 0) ?  setting('usps_profit', null, $this->user->id) : setting('usps_profit', null, User::ROLE_ADMIN);
         }
 
@@ -517,11 +522,11 @@ class Order extends Model implements Package
     public function usShippingServicesSubClasses()
     {
         return [
-            ShippingService::USPS_PRIORITY, 
-            ShippingService::USPS_FIRSTCLASS, 
-            ShippingService::USPS_PRIORITY_INTERNATIONAL, 
-            ShippingService::USPS_FIRSTCLASS_INTERNATIONAL, 
-            ShippingService::UPS_GROUND, 
+            ShippingService::USPS_PRIORITY,
+            ShippingService::USPS_FIRSTCLASS,
+            ShippingService::USPS_PRIORITY_INTERNATIONAL,
+            ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,
+            ShippingService::UPS_GROUND,
             ShippingService::FEDEX_GROUND
         ];
     }
@@ -684,7 +689,7 @@ class Order extends Model implements Package
 
         if ($this->weight_discount && $shippingService && !in_array($shippingService->service_sub_class, [
             ShippingService::USPS_PRIORITY, ShippingService::USPS_FIRSTCLASS,ShippingService::USPS_PRIORITY_INTERNATIONAL,
-            ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,ShippingService::UPS_GROUND,ShippingService::FEDEX_GROUND])) 
+            ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,ShippingService::UPS_GROUND,ShippingService::FEDEX_GROUND]))
         {
 
             $additionalServicesCost = $this->calculateAdditionalServicesCost($this->services);
@@ -709,11 +714,11 @@ class Order extends Model implements Package
 
         return null;
     }
-    
+
     public function anjunShippingServicesSubClasses()
     {
         return [
-            ShippingService::AJ_Packet_Standard, 
+            ShippingService::AJ_Packet_Standard,
             ShippingService::AJ_Packet_Express,
         ];
     }
