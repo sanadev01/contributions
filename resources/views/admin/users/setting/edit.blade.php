@@ -255,6 +255,23 @@
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">Colombia Service<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="ups">
+                                                <input type="checkbox" name="colombia_service" id="colombia_service" @if(setting('colombia_service', null, $user->id)) checked @endif>
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            <span class="offset-2 mr-2 mt-2">Profit Percentage (%) :</span>
+                                            <input type="number" name="colombia_profit" step="0.01" min=0 class="form-control col-2" id="ups_profit" value="{{ setting('colombia_profit', null, $user->id) }}">
+                                        </div>    
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">SinerLog<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <div class="input-group">
@@ -314,6 +331,20 @@
                                             <span class="ml-4 mr-2 mt-2">Height (%): </span>
                                             <input type="number" name="height" class="form-control col-2" id="height" step="0.01" min=0 type="number" value="{{ setting('height', null, $user->id) }}">
                                         </div>    
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right" for="tax">Tax Payment<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="vs-checkbox-con vs-checkbox-primary" title="Tax Payment">
+                                            <input type="checkbox" name="tax" id="tax" @if(setting('tax', null, $user->id)) checked @endif>
+                                            <span class="vs-checkbox vs-checkbox-lg">
+                                                <span class="vs-checkbox--check">
+                                                    <i class="vs-icon feather icon-check"></i>
+                                                </span>
+                                            </span>
+                                            <span class="h3 mx-2 text-primary my-0 py-0"></span>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row mt-1">

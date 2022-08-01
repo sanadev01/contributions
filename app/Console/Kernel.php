@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        Commands\UpdateAnjunOrders::class,
+        Commands\DeleteLabel::class,
     ];
 
     /**
@@ -26,7 +26,8 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
 
-        $schedule->command('brazil:trackings')->everyMinute();
+        // $schedule->command('brazil:trackings')->everyMinute();
+        $schedule->command('delete:labels')->monthly();
     }
 
     /**
