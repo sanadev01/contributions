@@ -18,6 +18,7 @@ class ExportManfestService extends AbstractCsvExportService
     private $totalPaidToCorreios;
     private $totalPieces = 0;
     private $totalWeight = 0;
+    private $totalCommission = 0;
     private $totalAnjunCommission = 0;
 
     public function __construct(DeliveryBill $deliveryBill)
@@ -113,7 +114,8 @@ class ExportManfestService extends AbstractCsvExportService
             $this->totalPaidToCorreios += $this->getValuePaidToCorrieos($container,$package)['airport'];
             $this->totalPieces++;
             $this->totalWeight += $package->getOriginalWeight('kg');
-            $this->totalAnjunCommission += optional($package->affiliateSale)->commission;
+            $this->totalCommission += optional($package->affiliateSale)->commission;
+            $this->totalAnjunCommission += $this->getValuePaidToCorrieos($container,$package)['commission'];
         }
 
         $this->csvData[$this->row] = [
@@ -133,6 +135,7 @@ class ExportManfestService extends AbstractCsvExportService
             '',
             $this->totalPaidToCorreios,
             $this->totalAnjunCommission,
+            $this->totalCommission,
             '',
             '',
             ''
