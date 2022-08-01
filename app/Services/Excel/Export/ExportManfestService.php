@@ -18,6 +18,8 @@ class ExportManfestService extends AbstractCsvExportService
     private $totalPaidToCorreios;
     private $totalPieces = 0;
     private $totalWeight = 0;
+    private $totalCommission = 0;
+    private $totalAnjunCommission = 0;
 
     public function __construct(DeliveryBill $deliveryBill)
     {
@@ -86,7 +88,7 @@ class ExportManfestService extends AbstractCsvExportService
                 $this->getValuePaidToCorrieos($container,$package)['airport'],
                 $this->getValuePaidToCorrieos($container,$package)['commission'],
                 optional($package->affiliateSale)->commission,
-                optional(optional($package->affiliateSale)->user)->pobox_number  .' | '.optional(optional($package->affiliateSale)->user)->name,
+                optional(optional($package->affiliateSale)->user)->pobox_number  .' '.optional(optional($package->affiliateSale)->user)->name,
                 $container->dispatch_number,
                 optional($package->user)->pobox_number.' / '.optional($package->user)->getFullName(),
                 $package->tracking_id
@@ -112,6 +114,8 @@ class ExportManfestService extends AbstractCsvExportService
             $this->totalPaidToCorreios += $this->getValuePaidToCorrieos($container,$package)['airport'];
             $this->totalPieces++;
             $this->totalWeight += $package->getOriginalWeight('kg');
+            $this->totalCommission += optional($package->affiliateSale)->commission;
+            $this->totalAnjunCommission += $this->getValuePaidToCorrieos($container,$package)['commission'];
         }
 
         $this->csvData[$this->row] = [
@@ -130,6 +134,8 @@ class ExportManfestService extends AbstractCsvExportService
             $this->totalCustomerPaid,
             '',
             $this->totalPaidToCorreios,
+            $this->totalAnjunCommission,
+            $this->totalCommission,
             '',
             '',
             ''
