@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 
 class PermissionSeeder extends Seeder
 {
-    /** 
+    /**
      * Run the database seeds.
      *
      * @return void
@@ -194,7 +194,7 @@ class PermissionSeeder extends Seeder
                 'slug' => 'edit_profitPacakge',
                 'group' => 'Profit Package',
                 'description' => 'Edit Profit Package',
-            ], 
+            ],
             [
                 'slug' => 'delete_profitPacakge',
                 'group' => 'Profit Package',
@@ -417,6 +417,11 @@ class PermissionSeeder extends Seeder
                 'slug' => 'commission-report',
                 'group' => 'Reports',
                 'description' => 'User can see Commission Reports'
+            ],
+            [
+                'slug' => 'anjun-report',
+                'group' => 'Reports',
+                'description' => 'User can see Anjun Reports'
             ],
             [
                 'slug' => 'update_label',
