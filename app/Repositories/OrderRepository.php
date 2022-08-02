@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Services\UPS\UPSShippingService;
 use App\Services\USPS\USPSShippingService;
 use App\Services\FedEx\FedExShippingService;
+use App\Services\PostNL\PostNLShippingService;
 use App\Models\User;
 
 class OrderRepository
@@ -454,11 +455,22 @@ class OrderRepository
                 }
             }
         }
+        // PostNL Service
+        if (optional($order->recipient)->country_id != Order::US && setting('postnl_service', null, User::ROLE_ADMIN) && setting('postnl_service', null, auth()->user()->id))
+        {
+            $postnlShippingService = new PostNLShippingService($order);
+
+            foreach ($shippingServicesWithoutRates as $shippingService)
+            {
+                if ($postnlShippingService->isAvailableForInternational($shippingService)) {
+                    $shippingServices->push($shippingService);
+                }
+            }
+        }
 
         if ($shippingServices->isNotEmpty()) {
            $shippingServices = $this->filterShippingServices($shippingServices, $order);
         }
-
         return $shippingServices;
     }
 
@@ -501,7 +513,7 @@ class OrderRepository
                 });
             }
 
-            if (!setting('postnl_service', null, User::ROLE_ADMIN)) {
+            if (!setting('postnl_service', null, User::ROLE_ADMIN) && !setting('postnl_service', null, auth()->user()->id)) {
                 $this->shippingServiceError = 'PostNL is not enabled for this user';
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
                     return $shippingService->service_sub_class != ShippingService::PostNL;
@@ -550,7 +562,7 @@ class OrderRepository
                 $this->shippingServiceError = 'Please check your parcel dimensions';
             }
         }
-
+        //dd($shippingServices);
         return $shippingServices;
     }
 
