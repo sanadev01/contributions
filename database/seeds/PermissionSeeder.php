@@ -419,11 +419,6 @@ class PermissionSeeder extends Seeder
                 'description' => 'User can see Commission Reports'
             ],
             [
-                'slug' => 'anjun-report',
-                'group' => 'Reports',
-                'description' => 'User can see Anjun Reports'
-            ],
-            [
                 'slug' => 'update_label',
                 'group' => 'Order',
                 'description' => 'User can update label'
@@ -447,7 +442,12 @@ class PermissionSeeder extends Seeder
                 'slug' => 'delete_product',
                 'group' => 'Product',
                 'description' => 'User can delete product'
-            ]
+            ],
+            [
+                'slug' => 'anjun-report',
+                'group' => 'Reports',
+                'description' => 'User can see Anjun Reports'
+            ],
         ];
     }
 }
