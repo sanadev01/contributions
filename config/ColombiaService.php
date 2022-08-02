@@ -6,7 +6,7 @@ return [
         'containerRegisterUrl' => 'http://190.144.185.12:8290/servicio/pruebasEntrega/v1.0.0/pruebaEntrega',
     ],
     'production' => [
-        'shippingUrl' => 'http://ap;pcer.4-72.com.co/WcfServiceSPOKE/ServiceSPOKE.svc/PostShipping',
+        'shippingUrl' => 'http://appcer.4-72.com.co/WcfServiceSPOKE/ServiceSPOKE.svc/PostShipping',
         'containerRegisterUrl' => 'http://190.144.185.12:8290/servicio/pruebasEntrega/v1.0.0/pruebaEntrega',
     ],
     'credentials' => [
