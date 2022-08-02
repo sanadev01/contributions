@@ -32,6 +32,9 @@ class TaxRepository
 
     public function getOrders(Request $request)
     {
+        $request->validate([
+            'user' => 'required',
+        ]);
         $trackingNumber = explode(',', preg_replace('/\s+/', '', $request->trackingNumbers));
         return Order::where('user_id',$request->user_id)->whereIn('corrios_tracking_code', $trackingNumber)->get();
     }
