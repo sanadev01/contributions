@@ -173,6 +173,9 @@ class Client{
             ]);
 
             $data = json_decode($response->getBody()->getContents());
+            if($data->status !== "success" ) {
+                return new PackageError($data->message->payload);
+            }
             $trackingNumber = $data->data->item;
 
             if ( $trackingNumber ){
@@ -192,9 +195,6 @@ class Client{
             return null;
         }catch (\GuzzleHttp\Exception\ClientException $e) {
             return new PackageError($e->getResponse()->getBody()->getContents());
-        }
-        catch (\Exception $exception){
-            return new PackageError($exception->getMessage());
         }
     }
 

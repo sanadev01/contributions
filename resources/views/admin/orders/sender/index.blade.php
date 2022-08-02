@@ -203,7 +203,7 @@
 
                 $("[name='phone']").prop('required',false);
             }
-        } else if(selected == NetherLands){
+        } else if(selected !== UnitedStates || selected !== Brazil || selected !== Chile){
             $('#company').css('display', 'none');
             $('#address').css('display', 'block');
             $('#city').css('display', 'block');
@@ -306,7 +306,7 @@
                     $("[name='phone']").prop('required',true);
                 }
 
-            } else if(selected == NetherLands){
+            } else if(selected !== NetherLands){
                 $('#company').css('display', 'none');
                 $('#address').css('display', 'block');
                 $('#city').css('display', 'block');

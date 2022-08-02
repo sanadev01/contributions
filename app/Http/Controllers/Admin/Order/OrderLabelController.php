@@ -148,7 +148,7 @@ class OrderLabelController extends Controller
             }
         }
 
-        if($order->recipient->country_id == Order::NETHERLANDS && $order->shippingService->isPostNLService()){
+        if($order->shippingService->isPostNLService()){
 
             $this->postNLLabelRepository->get($order);
 
