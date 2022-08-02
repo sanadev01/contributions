@@ -140,19 +140,19 @@
                                                             <i class="feather icon-box"></i> @lang('warehouse.actions.Packages')
                                                         </a>
                                                         @if ($container->orders->isNotEmpty())
-                                                            <a href="{{ route('warehouse.colombia-container.register',$container) }}" class="dropdown-item w-100">
-                                                                <i class="feather icon-box"></i> Register Unit
+                                                            <a href="{{ route('warehouse.colombia-container.manifest',$container) }}" class="dropdown-item w-100">
+                                                                <i class="feather icon-box"></i> Export Manifest
                                                             </a>
+                                                            @if (!$container->isRegistered())
+                                                                <a href="{{ route('warehouse.colombia-container.register',$container) }}" class="dropdown-item w-100">
+                                                                    <i class="feather icon-box"></i> Register Unit
+                                                                </a>
+                                                            @endif
                                                         @endif
                                                         @if( !$container->isRegistered() || !$container->isShipped() )
                                                             <a href="{{ route('warehouse.colombia-containers.edit',$container) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
                                                             </a>
-                                                            @if ($container->orders->isNotEmpty())
-                                                                <a href="{{ route('warehouse.colombia-container.manifest',$container) }}" class="dropdown-item w-100">
-                                                                    <i class="feather icon-box"></i> Export Manifest
-                                                                </a>
-                                                            @endif
                                                             <form action="{{ route('warehouse.containers.destroy',$container) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
                                                                 @csrf
                                                                 @method('DELETE')

@@ -155,7 +155,7 @@
                 </td>
                 <td rowspan="2" colspan="2">
                     <div style="text-align:center; @if($OrderWeight <= 3) margin-top: 2% !important; @endif">
-                        <img style="width: 14cm; height:1.5cm;display:block;" src="data:image/png;base64,{{DNS1D::getBarcodePNG($unitCode, 'C128',1,100,[0,0,0])}}" alt="barcode"   />
+                        <img style="width: @if($colombiaContainer) 7cm @else 14cm @endif; height:1.5cm;display:block;" src="data:image/png;base64,{{DNS1D::getBarcodePNG($unitCode, 'C128',1,100,[0,0,0])}}" alt="barcode"   />
                         <div class="unit-code" style="width: 100%;display:block;">
                             {{$unitCode}}
                         </div>
