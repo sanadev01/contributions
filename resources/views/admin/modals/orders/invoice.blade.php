@@ -108,7 +108,7 @@
                                     Weight: {{ $order->getOriginalWeight('kg') }} kg ( {{$order->getOriginalWeight('lbs')}} lbs ) <br>
                                     Vol. Weight: {{ $order->getWeight('kg') }} kg ( {{ $order->getWeight('lbs') }} lbs ) <br>
                                     @if ($appliedVolumeWeight)
-                                        Applied Weight: {{ round(App\Services\Converters\UnitsConverter::poundToKg($appliedVolumeWeight),2) }} kg ( {{ $appliedVolumeWeight }} {{ $order->measurement_unit }} )
+                                        Applied Weight: {{ round($appliedVolumeWeight / 2.205, 2) }} kg ( {{ $appliedVolumeWeight }} {{ $order->measurement_unit }} )
                                     @endif
                                 </td>
                                 <td @if (!$appliedVolumeWeight) colspan="2" @endif>{{ $order->measurement_unit }} </td>
