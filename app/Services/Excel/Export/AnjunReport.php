@@ -2,9 +2,10 @@
 
 namespace App\Services\Excel\Export;
 
-use Illuminate\Http\Request;
+use App\Models\Order;
+use App\Models\ShippingService;
 use Illuminate\Support\Collection;
-use App\Repositories\Reports\AnjunReportsRepository;
+use App\Models\Warehouse\AccrualRate;
 
 class AnjunReport extends AbstractExportService
 {
@@ -36,13 +37,20 @@ class AnjunReport extends AbstractExportService
             $this->setCellValue('B'.$row, $order->warehouse_number);
             $this->setCellValue('C'.$row, $order->user->name);
             $this->setCellValue('D'.$row, $order->corrios_tracking_code);
-            $this->setCellValue('E'.$row, round($order->shipping_value,2));
-            $this->setCellValue('F'.$row, round($order->total,2));
-            $this->setCellValue('G'.$row, round($order->comission,2));
+            $this->setCellValue('E'.$row, round($order->total,2));
+            $this->setCellValue('F'.$row, $this->getValuePaidToCorrieos($order)['airport']);
+            $this->setCellValue('G'.$row, $this->getValuePaidToCorrieos($order)['commission']);
+            $this->setCellValue('H'.$row, round(optional($order->affiliateSale)->commission,2));
             $row++;
         }
 
         $this->currentRow = $row;
+
+        $this->setCellValue('E'.$row, "=SUM(E1:E{$row})");
+        $this->setCellValue('F'.$row, "=SUM(F1:F{$row})");
+        $this->setCellValue('G'.$row, "=SUM(G1:G{$row})");
+        $this->setCellValue('H'.$row, "=SUM(H1:H{$row})");
+        $this->setBackgroundColor("A{$row}:H{$row}", 'adfb84');
     }
 
     private function setExcelHeaderRow()
@@ -60,18 +68,42 @@ class AnjunReport extends AbstractExportService
         $this->setCellValue('D1', 'Tracking Code');
 
         $this->setColumnWidth('E', 20);
-        $this->setCellValue('E1', 'Carrier Cost USD');
+        $this->setCellValue('E1', 'Amount');
 
         $this->setColumnWidth('F', 20);
-        $this->setCellValue('F1', 'Amount USD');
+        $this->setCellValue('F1', 'Carrier Cost');
 
         $this->setColumnWidth('G', 20);
-        $this->setCellValue('G1', 'Anjun Amount USD');
+        $this->setCellValue('G1', 'Anjun Commission');
 
-        $this->setBackgroundColor('A1:G1', '2b5cab');
-        $this->setColor('A1:G1', 'FFFFFF');
+        $this->setColumnWidth('H', 20);
+        $this->setCellValue('H1', 'Referral Commission');
+
+        $this->setBackgroundColor('A1:H1', '2b5cab');
+        $this->setColor('A1:H1', 'FFFFFF');
 
         $this->currentRow++;
 
+    }
+
+    protected function getValuePaidToCorrieos(Order $order)
+    {
+        $commission = false;
+        $service  = $order->shippingService->service_sub_class;
+        $rateSlab = AccrualRate::getRateSlabFor($order->getOriginalWeight('kg'),$service);
+
+        if ( !$rateSlab ){
+            return [
+                'airport'=> 0,
+                'commission'=> 0
+            ];
+        }
+        if($service == ShippingService::AJ_Packet_Standard || $service == ShippingService::AJ_Packet_Express){
+            $commission = true;
+        }
+        return [
+            'airport'=> $rateSlab->cwb,
+            'commission'=> $commission ? $rateSlab->commission : 0
+        ];
     }
 }
