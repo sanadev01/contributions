@@ -76,9 +76,10 @@
                                         <th>@lang('orders.warehouse-no')</th>
                                         <th>@lang('orders.user-name')</th>
                                         <th>@lang('orders.tracking-code')</th>
-                                        <th>@lang('orders.carrier-cost')</th>
                                         <th>@lang('orders.amount')</th>
-                                        <th>@lang('orders.anjun-amount')</th>
+                                        <th>@lang('orders.carrier-cost')</th>
+                                        <th>@lang('Anjun Commission')</th>
+                                        <th>@lang('Commission')</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -94,9 +95,10 @@
                                             </td>
                                             <td>{{ $order->user->name }}</td>
                                             <td>{{ $order->corrios_tracking_code }}</td>
-                                            <td>{{ $order->shipping_value }}</td>
                                             <td>{{ $order->total }}</td>
-                                            <td>{{ $order->comission }}</td>
+                                            <td><livewire:reports.anjun-report :order="$order" :isCommission="false"/></td>
+                                            <td><livewire:reports.anjun-report :order="$order" :isCommission="true"/></td>
+                                            <td>{{ round(optional($order->affiliateSale)->commission,2) }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
