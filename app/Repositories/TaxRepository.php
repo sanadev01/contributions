@@ -42,6 +42,7 @@ class TaxRepository
     public function store(Request $request)
     {
         $amount = 0;
+        $trackingNos = [];
         try{
             $user = User::find($request->user_id);
             if($user) {
@@ -53,8 +54,12 @@ class TaxRepository
                         'tax_2' => $request->tax_2[$key],
                     ]);
                     $amount += $request->tax_2[$key];
+                    $trackingNos[] = array(
+                        'Tracking_Code' => $request->tracking_code[$key],
+                    );
                 }
                 $balance = Deposit::getCurrentBalance($user);
+                $codes = json_encode($trackingNos);
                 if($balance >= $amount) {
                     Deposit::create([
                         'uuid' => PaymentInvoice::generateUUID('DP-'),
@@ -63,7 +68,7 @@ class TaxRepository
                         'balance' => $balance - $amount,
                         'is_credit' => false,
                         'last_four_digits' => 'Pay Tax',
-                        'description' => "Pay Tax",
+                        'description' => 'Pay Tax'.' '.$codes,
                     ]);
                     return true;
                 }
