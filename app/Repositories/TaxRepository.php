@@ -36,31 +36,34 @@ class TaxRepository
             'user_id' => 'required',
         ]);
         $trackingNumber = explode(',', preg_replace('/\s+/', '', $request->trackingNumbers));
-        return Order::where('user_id',$request->user_id)->whereIn('corrios_tracking_code', $trackingNumber)->get();
+        return Order::where('user_id',$request->user_id)->whereDoesntHave('tax')->whereIn('corrios_tracking_code', $trackingNumber)->get();
     }
 
     public function store(Request $request)
     {
+        //dd($request->all());
         $amount = 0;
         $trackingNos = [];
         try{
             $user = User::find($request->user_id);
             if($user) {
                 foreach($request->order_id as $key=> $orderId) {
-                    Tax::create([
-                        'user_id' => $request->user_id,
-                        'order_id' => $orderId,
-                        'tax_1' => $request->tax_1[$key],
-                        'tax_2' => $request->tax_2[$key],
-                    ]);
-                    $amount += $request->tax_2[$key];
-                    $trackingNos[] = array(
-                        'Tracking_Code' => $request->tracking_code[$key],
-                    );
+                    $order = Order::find($orderId);
+                    if($order) {
+                        Tax::create([
+                            'user_id' => $request->user_id,
+                            'order_id' => $orderId,
+                            'tax_1' => $request->tax_1[$key],
+                            'tax_2' => $request->tax_2[$key],
+                        ]);
+                        $amount += $request->tax_2[$key];
+                        $trackingNos[] = array('Code' => $request->tracking_code[$key], );
+                    }
                 }
                 $balance = Deposit::getCurrentBalance($user);
                 $codes = json_encode($trackingNos);
-                if($balance >= $amount) {
+                if(!empty($codes) && $balance >= $amount) {
+
                     Deposit::create([
                         'uuid' => PaymentInvoice::generateUUID('DP-'),
                         'amount' => $amount,
