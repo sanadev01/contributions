@@ -79,7 +79,6 @@
                                         <th>@lang('orders.amount')</th>
                                         <th>@lang('orders.carrier-cost')</th>
                                         <th>@lang('Anjun Commission')</th>
-                                        <th>@lang('Commission')</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -98,7 +97,6 @@
                                             <td>{{ $order->total }}</td>
                                             <td><livewire:reports.anjun-report :order="$order" :isCommission="false"/></td>
                                             <td><livewire:reports.anjun-report :order="$order" :isCommission="true"/></td>
-                                            <td>{{ round(optional($order->affiliateSale)->commission,2) }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
