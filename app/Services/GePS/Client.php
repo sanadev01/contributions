@@ -59,13 +59,15 @@ class Client{
             foreach ($order->items as $key => $item) {
                 $itemToPush = [];
                 $itemToPush = [
-                    'goods_description' => $item->description,
-                    'quantity' => (int)$item->quantity,
-                    'total_weight_grams' => (int)$singleItemWeight / (int)$item->quantity,
-                    'total_goods_value' => $item->value,
-                    'total_goods_value_eur' => '',
-                    'tariff' => "$item->sh_code",
-                    'manufacture_country_code' => $order->senderCountry->code,
+                    'description' => $item->description,
+                    'qty' => (int)$item->quantity,
+                    //'total_weight_grams' => (int)$singleItemWeight / (int)$item->quantity,
+                    'value' => $item->value,
+                    'hscode' => "$item->sh_code",
+                    'currency' => "USD",
+                    'origin' => $order->senderCountry->code,
+                    'exportreason' => 'sale',
+                    'exporttype' => 'Permanent',
                 ];
                array_push($items, $itemToPush);
             }
