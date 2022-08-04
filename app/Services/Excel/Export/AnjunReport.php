@@ -40,7 +40,6 @@ class AnjunReport extends AbstractExportService
             $this->setCellValue('E'.$row, round($order->total,2));
             $this->setCellValue('F'.$row, $this->getValuePaidToCorrieos($order)['airport']);
             $this->setCellValue('G'.$row, $this->getValuePaidToCorrieos($order)['commission']);
-            $this->setCellValue('H'.$row, round(optional($order->affiliateSale)->commission,2));
             $row++;
         }
 
@@ -49,8 +48,7 @@ class AnjunReport extends AbstractExportService
         $this->setCellValue('E'.$row, "=SUM(E1:E{$row})");
         $this->setCellValue('F'.$row, "=SUM(F1:F{$row})");
         $this->setCellValue('G'.$row, "=SUM(G1:G{$row})");
-        $this->setCellValue('H'.$row, "=SUM(H1:H{$row})");
-        $this->setBackgroundColor("A{$row}:H{$row}", 'adfb84');
+        $this->setBackgroundColor("A{$row}:G{$row}", 'adfb84');
     }
 
     private function setExcelHeaderRow()
@@ -76,10 +74,7 @@ class AnjunReport extends AbstractExportService
         $this->setColumnWidth('G', 20);
         $this->setCellValue('G1', 'Anjun Commission');
 
-        $this->setColumnWidth('H', 20);
-        $this->setCellValue('H1', 'Referral Commission');
-
-        $this->setBackgroundColor('A1:H1', '2b5cab');
+        $this->setBackgroundColor('A1:G1', '2b5cab');
         $this->setColor('A1:H1', 'FFFFFF');
 
         $this->currentRow++;
