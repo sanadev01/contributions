@@ -41,7 +41,6 @@ class TaxRepository
 
     public function store(Request $request)
     {
-        //dd($request->all());
         $amount = 0;
         $trackingNos = [];
         try{
