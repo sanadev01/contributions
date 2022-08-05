@@ -39,7 +39,7 @@ class GePSLabelRepository
         if($order->api_response)
         {
             $geps_response = json_decode($order->api_response);
-            $base64_pdf = $postnl_response->data->base64string;
+            $base64_pdf = $geps_response->shipmentresponse->label;
             Storage::put("labels/{$order->corrios_tracking_code}.pdf", base64_decode($base64_pdf));
 
             return true;

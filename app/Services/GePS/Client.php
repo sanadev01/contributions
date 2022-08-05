@@ -21,9 +21,7 @@ class Client{
 
     public function __construct()
     {
-        $this->client = new GuzzleClient([
-
-        ]);
+        $this->client = new GuzzleClient(['verify' => false]);
     }
 
     private function getKeys()
@@ -61,12 +59,11 @@ class Client{
                 $itemToPush = [
                     'description' => $item->description,
                     'qty' => (int)$item->quantity,
-                    //'total_weight_grams' => (int)$singleItemWeight / (int)$item->quantity,
-                    'value' => $item->value,
+                    'value' => $item->value * (int)$item->quantity,
                     'hscode' => "$item->sh_code",
                     'currency' => "USD",
                     'origin' => $order->senderCountry->code,
-                    'exportreason' => 'sale',
+                    'exportreason' => 'Sale of Goods',
                     'exporttype' => 'Permanent',
                 ];
                array_push($items, $itemToPush);
@@ -110,52 +107,54 @@ class Client{
         }
         $packet =
         [
-            'servicecode' => "KP",
-            'reference' => ($order->customer_reference) ? $order->customer_reference : '',
-            'custtracknbr' => "123-44557",
-            'uom' => "KG",
-            'weight' => (int)$weight,
-            'length' => $order->length,
-            'width' => $order->width,
-            'height' => $order->height,
-            'inco' => "DDU",
-            'contentcategory' => "NP",
-            'shipperaddress' => [
-                'name' => $order->sender_first_name.' '.$order->sender_last_name,
-                'addr1' => $order->sender_address,
-                'state' => ($order->sender_state) ? $order->sender_state : '',
-                'city' => $order->sender_city,
-                'country' => $order->senderCountry->name,
-                'postal' => cleanString($order->sender_zipcode),
-                'phone' => ($order->sender_phone) ? $order->sender_phone : '',
-                'email' => ($order->sender_email) ? $order->sender_email : '',
+            'shipment' => [
+                    'servicecode' => "KP",
+                    'reference' => ($order->customer_reference) ? $order->customer_reference : '',
+                    'custtracknbr' => "12389744537",
+                    'uom' => "LB",
+                    'weight' => $order->weight,
+                    'length' => $order->length,
+                    'width' => $order->width,
+                    'height' => $order->height,
+                    'inco' => "DDU",
+                    'contentcategory' => "NP",
+                'shipperaddress' => [
+                    'name' => $order->sender_first_name.' '.$order->sender_last_name,
+                    'addr1' => $order->sender_address,
+                    'state' => ($order->sender_state) ? $order->sender_state : '',
+                    'city' => $order->sender_city,
+                    'country' => $order->senderCountry->code,
+                    'postal' => cleanString($order->sender_zipcode),
+                    'phone' => ($order->sender_phone) ? $order->sender_phone : '',
+                    'email' => ($order->sender_email) ? $order->sender_email : '',
+                ],
+                'consigneeaddress' => [
+                    'name' => $order->recipient->getFullName(),
+                    'addr1' => $order->recipient->address,
+                    'state' => $order->recipient->state->code,
+                    'city' => $order->recipient->city,
+                    'country' => $order->recipient->country->code,
+                    'postal' => cleanString($order->recipient->zipcode),
+                    'phone' => ($order->recipient->phone) ? $order->recipient->phone: '',
+                    'taxid' => ($order->recipient->tax_id) ? $order->recipient->tax_id: '',
+                ],
+                'item' => $this->setItemsDetails($order)
             ],
-            'consigneeaddress' => [
-                'name' => $order->recipient->getFullName(),
-                'addr1' => $order->recipient->address,
-                'state' => $order->recipient->state->code,
-                'city' => $order->recipient->city,
-                'country' => $order->recipient->country->name,
-                'postal' => cleanString($order->recipient->zipcode),
-                'phone' => ($order->recipient->phone) ? $order->recipient->phone: '',
-                'taxid' => '',
-            ],
-            'item' => $this->setItemsDetails($order)
         ];
         \Log::info(
             $packet
         );
         try {
-            $response = $this->client->post($this->createLabelUrl,[
+            $response = $this->client->post('https://globaleparcel.com/api.aspx',[
                 'headers' => $this->getKeys(),
                 'json' => $packet
             ]);
 
             $data = json_decode($response->getBody()->getContents());
-            if($data->status !== "success" ) {
-                return new PackageError($data->message->payload);
+            if(isset($data->err)) {
+                return new PackageError($data->err);
             }
-            $trackingNumber = $data->data->item;
+            $trackingNumber = $data->shipmentresponse->tracknbr;
 
             if ( $trackingNumber ){
                 $order->update([
