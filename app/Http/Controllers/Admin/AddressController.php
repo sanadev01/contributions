@@ -14,6 +14,8 @@ use App\Repositories\AddressRepository;
 use App\Models\Address;
 use App\Models\Country;
 use App\Models\State;
+use App\Services\Excel\Export\ExportAddresses;
+
 
 class AddressController extends Controller
 {
@@ -21,13 +23,13 @@ class AddressController extends Controller
     {
         $this->authorizeResource(Address::class);
     }
-    
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() 
+    public function index()
     {
         return view('admin.addresses.index');
     }
@@ -38,7 +40,7 @@ class AddressController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {   
+    {
         return view('admin.addresses.create');
     }
 
@@ -117,12 +119,21 @@ class AddressController extends Controller
         //     session()->flash('alert-warning', 'Address has Orders Cannot delete');
         //     return back();
         // }
-        
+
         if ($address) {
             $address->delete();
         }
 
         session()->flash('alert-success', 'address.Deleted');
         return back();
+    }
+
+    public function exportAddresses(Request $request, AddressRepository $addressRepository)
+    {
+        $addresses = $addressRepository->getAddresses($request);
+
+        $exportService = new ExportAddresses($addresses);
+
+        return $exportService->handle();
     }
 }
