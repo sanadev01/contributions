@@ -105,13 +105,18 @@ class Client{
             $kg = UnitsConverter::poundToKg($order->getWeight('lbs'));
             $weight = UnitsConverter::kgToGrams($kg);
         }
+        if($order->measurement_unit == "lbs/in") {
+            $uom = "LB";
+        }else {
+            $uom = "KG";
+        }
         $packet =
         [
             'shipment' => [
                     'servicecode' => "KP",
                     'reference' => ($order->customer_reference) ? $order->customer_reference : '',
-                    'custtracknbr' => "12389744537",
-                    'uom' => "LB",
+                    'custtracknbr' => $order->tracking_id,
+                    'uom' => $uom,
                     'weight' => $order->weight,
                     'length' => $order->length,
                     'width' => $order->width,
