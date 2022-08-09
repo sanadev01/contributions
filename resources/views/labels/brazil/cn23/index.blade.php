@@ -154,11 +154,11 @@
         .serivce-zipcode .left-block{
             width: 6cm;
             display: inline-block;
-            font-family: Arial;
+            /* font-family: Arial; */
             font-size: 8pt;
         }
         .return-address{
-            color: rgb(124, 124, 124);
+            /* color: rgb(124, 124, 124); */
         }
         .right-block{
             display: inline-block;
