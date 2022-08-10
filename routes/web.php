@@ -62,6 +62,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
 
         Route::resource('handling-services', HandlingServiceController::class)->except('show');
         Route::resource('addresses', AddressController::class);
+        Route::get('addresses-export', [\App\Http\Controllers\Admin\AddressController::class, 'exportAddresses'])->name('export.addresses');
         Route::resource('shipping-services', ShippingServiceController::class);
 
         Route::namespace('Import')->prefix('import')->as('import.')->group(function () {
@@ -145,6 +146,11 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         Route::resource('users.setting', UserSettingController::class)->only('index','store');
         Route::resource('shcode', ShCodeController::class)->only(['index', 'create','store','edit','update','destroy']);
         Route::resource('shcode-export', ShCodeImportExportController::class)->only(['index', 'create','store']);
+
+        Route::namespace('Tax')->group(function(){
+            Route::resource('tax', TaxController::class);
+        });
+
 
         Route::resource('roles', RoleController::class);
         Route::resource('roles.permissions', RolePermissionController::class);
@@ -239,7 +245,10 @@ Route::get('order/{order}/label/get', function (App\Models\Order $order) {
      */
     if ( $order->sinerlog_url_label != '' ) {
         return redirect($order->sinerlog_url_label);
-    } else {
+    }elseif ($order->shippingService->isColombiaService() && $order->api_response) {
+        return redirect($order->colombiaLabelUrl());
+    } 
+    else {
         if ( !file_exists(storage_path("app/labels/{$order->corrios_tracking_code}.pdf")) ){
             return apiResponse(false,"Lable Expired or not generated yet please update lable");
         }

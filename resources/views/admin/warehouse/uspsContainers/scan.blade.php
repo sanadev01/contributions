@@ -11,12 +11,12 @@
                         </h4>
                         <div>
                             <a href="{{ route('warehouse.usps_containers.index') }}" class="btn btn-primary"> @lang('warehouse.containers.List Containers') </a>
-                            <a href="{{ route('warehouse.usps_container.packages.create',$container) }}" class="btn btn-success"> <i class="fa fa-arrow-down"></i> Download </a>
+                            <a href="{{ route('warehouse.usps-container.manifest',$container) }}" class="btn btn-success"> <i class="fa fa-arrow-down"></i> Download </a>
                         </div>
                     </div>
                     <div class="card-content card-body">
                         <div class="mt-1">
-                            <livewire:usps-container.packages :container="$container" :editMode="$editMode" :ordersCollection="$ordersCollection">
+                            <livewire:container-packages :container="$container" :ordersCollection="$ordersCollection" :editMode="$editMode">
                         </div>
                     </div>
                 </div>
@@ -24,7 +24,3 @@
         </div>
     </section>
 @endsection
-
-@push('js')
-    <script src="{{ asset('js/pages/scanner.js') }}"></script>
-@endpush

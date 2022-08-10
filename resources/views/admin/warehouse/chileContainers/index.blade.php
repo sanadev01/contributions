@@ -112,7 +112,7 @@
                                                         @lang('user.Action')
                                                     </button>
                                                     <div class="dropdown-menu dropdown-menu-right dropright">
-                                                        <a href="{{ route('warehouse.chile_container.packages.index',$container) }}" class="dropdown-item w-100">
+                                                        <a href="{{ route('warehouse.chile-container.packages',$container) }}" class="dropdown-item w-100">
                                                             <i class="feather icon-box"></i> @lang('warehouse.actions.Packages')
                                                         </a>
                                                         @if( $container->response == 0 )
