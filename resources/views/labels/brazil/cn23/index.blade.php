@@ -155,7 +155,7 @@
             width: 6cm;
             display: inline-block;
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 7pt;
+            font-size: 8pt;
         }
         .return-address{
             /* color: rgb(124, 124, 124); */
