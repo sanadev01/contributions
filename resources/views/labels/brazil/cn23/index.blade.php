@@ -154,8 +154,8 @@
         .serivce-zipcode .left-block{
             width: 6cm;
             display: inline-block;
-            /* font-family: Arial; */
-            font-size: 8pt;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 7pt;
         }
         .return-address{
             /* color: rgb(124, 124, 124); */
