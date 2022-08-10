@@ -25,7 +25,8 @@ return [
     'user-name' => 'User Name',
     'tracking-code' => 'Tracking Code',
     'carrier-cost' => 'Carrier Cost',
-    'anjun-amount' => 'Anjun Amount',
+    'Amount Customers Paid' => 'Amount Customers Paid',
+    'Correios Anjun' => 'Correios (Anjun)',
     'Search By Name, Warehouse No. or Tracking Code' => 'Search By Name, Warehouse No. or Tracking Code',
 
     'recipient' => [
