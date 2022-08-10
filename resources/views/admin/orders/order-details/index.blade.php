@@ -51,7 +51,7 @@
                         <select class="form-control selectpicker show-tick" data-live-search="true" name="shipping_service_id" id="shipping_service_id" required placeholder="Select Shipping Service">
                             <option value="">@lang('orders.order-details.Select Shipping Service')</option>
                             @foreach ($shippingServices as $shippingService)
-                                <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-cost="{{$shippingService->getRateFor($order)}}" data-services-cost="{{ $order->services()->sum('price') }}">@if($shippingService->getRateFor($order)){{ "{$shippingService->name} - $". $shippingService->getRateFor($order) }}@else{{ $shippingService->name }}@endif</option>
+                                <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-service-name= "{{$shippingService->name}}" data-cost="{{$shippingService->getRateFor($order)}}" data-services-cost="{{ $order->services()->sum('price') }}">@if($shippingService->getRateFor($order)){{ "{$shippingService->name} - $". $shippingService->getRateFor($order) }}@else{{ $shippingService->name }}@endif</option>
                             @endforeach
                         </select>
                         @else
@@ -90,7 +90,7 @@
     <div class="actions clearfix">
         <ul role="menu" aria-label="Pagination">
             <li class="disabled" aria-disabled="true">
-                <a href="{{ route('admin.orders.recipient.index',$order) }}" role="menuitem">@lang('orders.order-details.Previous')</a>   
+                <a href="{{ route('admin.orders.recipient.index',$order) }}" role="menuitem">@lang('orders.order-details.Previous')</a>
             </li>
             <li aria-hidden="false" aria-disabled="false">
                 <button class="btn btn-primary">@lang('orders.order-details.Place Order')</button>
@@ -98,6 +98,7 @@
         </ul>
     </div>
 </form>
+
 @endsection
 
 @section('js')
@@ -122,12 +123,12 @@
         {
             return getFedExRates();
         }
-        
+
     })
 
     $('#us_shipping_service').on('change',function(){
         const service = $('#us_shipping_service option:selected').attr('data-service-code');
-        
+
         if(service == 3440 || service == 3441) {
 
            return getUspsRates();
@@ -135,14 +136,14 @@
         }else if(service == 4)
         {
             return getFedExRates();
-            
+
         } else if(service != undefined && service == 03) {
             return getUpsRates();
         }
     })
-   
+
     function change(id){
-        var id = "dangrous_"+id;  
+        var id = "dangrous_"+id;
         value = $('#'+id).val();
         if(value == 'contains_battery'){
             $(".dangrous").children("option[value^='contains_perfume']").hide()
@@ -159,7 +160,7 @@
     function getUspsRates(){
         const service = $('#us_shipping_service option:selected').attr('data-service-code');
         var order_id = $('#order_id').val();
-        
+
         $('#loading').fadeIn();
         $.get('{{ route("api.usps_rates") }}',{
                 service: service,
@@ -175,13 +176,13 @@
                 console.log(error);
                 $('#loading').fadeOut();
         })
-        
+
     }
 
     function getUpsRates(){
         const service = $('#us_shipping_service option:selected').attr('data-service-code');
         var order_id = $('#order_id').val();
-        
+
         $('#loading').fadeIn();
         $.get('{{ route("api.ups_rates") }}',{
                 service: service,

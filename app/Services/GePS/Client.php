@@ -124,7 +124,7 @@ class Client{
                     'inco' => "DDU",
                     'contentcategory' => "NP",
                 'shipperaddress' => [
-                    'name' => $order->sender_first_name.' '.$order->sender_last_name,
+                    'name' => $order->getSenderFullName(),
                     'addr1' => $order->sender_address,
                     'state' => ($order->sender_state) ? $order->sender_state : '',
                     'city' => $order->sender_city,

@@ -258,6 +258,17 @@ class OrderRepository
         return true;
     }
 
+    public function GePSService($shippingServiceId)
+    {
+        $shippingService =  ShippingService::find($shippingServiceId);
+
+        if ($shippingService->isGePSService()) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function domesticService($shippingServiceId)
     {
         $shippingService =  ShippingService::find($shippingServiceId);
