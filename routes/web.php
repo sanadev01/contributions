@@ -158,12 +158,13 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('order', OrderReportController::class)->only(['index','create']);
             Route::resource('commission', CommissionReportController::class)->only(['index','show']);
             Route::resource('audit-report', AuditReportController::class)->only(['index','create']);
+            Route::resource('anjun', AnjunReportController::class)->only(['index','create']);
 
         });
 
         Route::namespace('Inventory')->as('inventory.')->prefix('inventory')->group(function(){
             Route::resource('product', ProductController::class);
-            Route::get('products/pickup', [\App\Http\Controllers\Admin\Inventory\ProductController::class, 'pickup'])->name('product.pickup'); 
+            Route::get('products/pickup', [\App\Http\Controllers\Admin\Inventory\ProductController::class, 'pickup'])->name('product.pickup');
             Route::post('product/status', [\App\Http\Controllers\Admin\Inventory\ProductController::class, 'statusUpdate'])->name('status.update');
             Route::resource('product-export', ProductExportController::class)->only('index');
             Route::resource('product-import', ProductImportController::class)->only(['create','store']);
@@ -189,7 +190,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         Route::get('view-deposit-description/{deposit?}', [DepositController::class,'showDescription'])->name('deposit.description');
         Route::post('update/deposit/description/{deposit?}', [DepositController::class,'updateDescription'])->name('deposit.description.update');
 
-        
+
         Route::namespace('Activity')->as('activity.')->prefix('activity')->group(function(){
             Route::resource('log', ActivityLogController::class)->only('index');
         });
@@ -242,7 +243,7 @@ Route::get('order/{order}/label/get', function (App\Models\Order $order) {
         if ( !file_exists(storage_path("app/labels/{$order->corrios_tracking_code}.pdf")) ){
             return apiResponse(false,"Lable Expired or not generated yet please update lable");
         }
-    }    
+    }
 
     return response()->download(storage_path("app/labels/{$order->corrios_tracking_code}.pdf"),"{$order->corrios_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.label.download');
@@ -255,7 +256,7 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 })->name('order.us-label.download');
 
 Route::get('test-label',function(){
-    
+
     // dd(132);
     // $labelPrinter = new CN23LabelMaker();
 
