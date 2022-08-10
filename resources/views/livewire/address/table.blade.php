@@ -1,13 +1,26 @@
 <div>
     <div class="table-actions">
-        <select wire:model='pageSize' class="form-control d-flex w-auto">
-            <option value="10">10</option>
-            <option value="30">30</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-            <option value="200">200</option>
-            <option value="500">500</option>
-        </select>
+        <div class="row mb-3">
+            <div class="col-2">
+                <select wire:model='pageSize' class="form-control d-flex w-auto">
+                    <option value="10">10</option>
+                    <option value="30">30</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="200">200</option>
+                    <option value="500">500</option>
+                </select>
+            </div>
+            <div class="offset-8 col-2">
+                <form action="{{ route('admin.export.addresses') }}" method="GET" target="_blank">
+                    <div class="col-md-12 text-right pr-0">
+                        <button class="btn btn-success" title="@lang('orders.import-excel.Download')">
+                            Export Addresses <i class="fa fa-arrow-down"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
     <table class="table table-responsive-md mb-0">
         <thead>
@@ -66,5 +79,5 @@
         </tbody>
     </table>
     {{ $addresses->links() }}
-    @include('layouts.livewire.loading')    
+    @include('layouts.livewire.loading')
 </div>
