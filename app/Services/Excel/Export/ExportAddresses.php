@@ -45,7 +45,7 @@ class ExportAddresses extends AbstractExportService
             if ( $address->account_type == 'business' ) {
                 $this->setCellValue('J'.$row, $address->tax_id);
             }
-            $this->setCellValue('K'.$row, $address->city);
+            $this->setCellValue('K'.$row, $address->phone);
             $row++;
         }
 
