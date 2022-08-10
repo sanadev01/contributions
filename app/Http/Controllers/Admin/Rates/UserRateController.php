@@ -64,6 +64,14 @@ class UserRateController extends Controller
                 'packageId' => $packageId,
             ];
         }
+        $service = ShippingService::where('service_sub_class', ShippingService::Brazil_Redispatch)->first();
+        if($service){
+            $this->rates[] = [
+                'service' => $service->name,
+                'rates' => collect($service->rates[0]->data),
+                'packageId' => optional(optional($service->profitPackages)[0])->id,
+            ];
+        }
 
         $rates = $this->rates;
         return view('admin.rates.profit-packages.user-profit-package.index', compact('rates'));

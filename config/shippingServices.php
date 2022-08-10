@@ -21,6 +21,7 @@ return [
             33164 => 'AJ Packet Standard',
             33172 => 'AJ Packet Express',
             44162 => 'Colombia Standard',
+            100 => 'Brazil Redispatch',
         ]
     ]
 ];
