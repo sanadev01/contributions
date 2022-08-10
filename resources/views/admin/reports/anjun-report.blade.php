@@ -76,8 +76,8 @@
                                         <th>@lang('orders.warehouse-no')</th>
                                         <th>@lang('orders.user-name')</th>
                                         <th>@lang('orders.tracking-code')</th>
-                                        <th>@lang('orders.amount')</th>
-                                        <th>@lang('orders.carrier-cost')</th>
+                                        <th>@lang('orders.Amount Customers Paid')</th>
+                                        <th>@lang('orders.Correios Anjun')</th>
                                         <th>@lang('Anjun Commission')</th>
                                     </tr>
                                 </thead>

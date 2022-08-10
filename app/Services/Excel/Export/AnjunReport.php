@@ -66,10 +66,10 @@ class AnjunReport extends AbstractExportService
         $this->setCellValue('D1', 'Tracking Code');
 
         $this->setColumnWidth('E', 20);
-        $this->setCellValue('E1', 'Amount');
+        $this->setCellValue('E1', 'Amount Customers Paid');
 
         $this->setColumnWidth('F', 20);
-        $this->setCellValue('F1', 'Carrier Cost');
+        $this->setCellValue('F1', 'Correios (Anjun)');
 
         $this->setColumnWidth('G', 20);
         $this->setCellValue('G1', 'Anjun Commission');
