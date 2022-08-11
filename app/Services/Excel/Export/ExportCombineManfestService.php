@@ -11,7 +11,7 @@ use App\Services\Excel\Export\AbstractCsvExportService;
 
 class ExportCombineManfestService extends AbstractCsvExportService
 {
-    private $deliveryBill;
+    private $deliveryBills;
     private $csvData = [];
     private $row = 0;
     private $totalCustomerPaid;
