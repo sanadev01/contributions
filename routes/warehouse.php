@@ -32,6 +32,10 @@ use App\Http\Controllers\Warehouse\ChileContainerPackageController;
 use App\Http\Controllers\Warehouse\DeliveryBillStatusUpdateController;
 use App\Http\Controllers\Warehouse\SinerlogContainerPackageController;
 use App\Http\Controllers\Warehouse\SinerlogManifestDownloadController;
+use App\Http\Controllers\Warehouse\GePSContainerController;
+use App\Http\Controllers\Warehouse\GePSContainerPackageController;
+use App\Http\Controllers\Warehouse\GePSUnitRegisterController;
+use App\Http\Controllers\Warehouse\GePSCN35DownloadController;
 use App\Http\Controllers\Warehouse\CombineManifestDownloadController;
 
 
@@ -84,6 +88,13 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('sinerlog_container/{container}/register', SinerlogUnitRegisterController::class)->name('sinerlog_container.register');
     Route::get('sinerlog_container/{container}/download', SinerlogCN35DownloadController::class)->name('sinerlog_container.download');
     Route::get('sinerlog_container/{container}/manifest', SinerlogManifestDownloadController::class)->name('sinerlog_container.manifest');
+
+    // Routes for GePS Container
+    Route::resource('geps_containers', GePSContainerController::class);
+    Route::resource('geps_container.packages', GePSContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('geps_container/{container}/register', GePSUnitRegisterController::class)->name('geps_container.register');
+    Route::get('geps_container/{container}/download', GePSCN35DownloadController::class)->name('geps_container.download');
+    Route::get('gepss_container/{container}/download_excel_manifest', [GePSContainerController::class, 'download_exceltManifest'])->name('download.postnl_manifest_excel');
 });
 
 
