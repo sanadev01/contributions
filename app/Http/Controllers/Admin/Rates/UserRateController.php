@@ -69,7 +69,7 @@ class UserRateController extends Controller
             $this->rates[] = [
                 'service' => $service->name,
                 'rates' => collect($service->rates[0]->data),
-                'packageId' => optional(optional($service->profitPackages)[0])->id,
+                'packageId' => 0,
             ];
         }
 
