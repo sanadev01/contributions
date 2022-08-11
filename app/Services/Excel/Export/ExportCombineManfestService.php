@@ -82,6 +82,8 @@ class ExportCombineManfestService extends AbstractCsvExportService
             $this->totalCustomerPaid,
             '',
             $this->totalPaidToCorreios,
+            $this->totalAnjunCommission,
+            $this->totalCommission,
             '',
             '',
             ''

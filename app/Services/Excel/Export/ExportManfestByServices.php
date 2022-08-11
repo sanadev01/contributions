@@ -145,6 +145,8 @@ class ExportManfestByServices extends AbstractCsvExportService
             $this->totalCustomerPaid,
             '',
             $this->totalPaidToCorreios,
+            $this->totalAnjunCommission,
+            $this->totalCommission,
             '',
             '',
             ''
