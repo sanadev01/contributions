@@ -37,7 +37,7 @@ class AnjunReport extends AbstractExportService
             $this->setCellValue('B'.$row, $order->warehouse_number);
             $this->setCellValue('C'.$row, $order->user->name);
             $this->setCellValue('D'.$row, $order->corrios_tracking_code);
-            $this->setCellValue('E'.$row, round($order->total,2));
+            $this->setCellValue('E'.$row, round($order->gross_total,2));
             $this->setCellValue('F'.$row, $this->getValuePaidToCorrieos($order)['airport']);
             $this->setCellValue('G'.$row, $this->getValuePaidToCorrieos($order)['commission']);
             $row++;
