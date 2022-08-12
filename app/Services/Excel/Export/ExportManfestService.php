@@ -44,7 +44,7 @@ class ExportManfestService extends AbstractCsvExportService
             'Volumetric Weigth',
             'Contents',
             'NCM',
-            'Value',
+            'Value of product',
             'WHR#',
             'Customer paid',
             'Airport/ GRU/CWB',
