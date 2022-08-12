@@ -35,10 +35,10 @@ class PreAlertMailController extends Controller
         }
 
         if($orders) {
-            
+            $name = Auth::user()->getFullName();
+            $poBox = Auth::user()->pobox_number;
             try {
-                
-                Mail::send(new PreAlert($request->message, $orders));
+                Mail::send(new PreAlert($request->message, $orders, $name, $poBox));
                 session()->flash('alert-success', 'Pre Alert Email Sent Successfully!');
                 return back();
             } catch (\Exception $ex) {

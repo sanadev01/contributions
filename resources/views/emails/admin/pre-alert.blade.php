@@ -1,9 +1,11 @@
 @component('mail::message')
-@lang('email.Hello')
-
-<p class="text-muted">This</p>
+Hello,
+<p class="text-justify">{{$message}}</p>
 <br>
-
+<p>{{$codes}}</p>
+<br><br>
+Name: {{$name}}<br>
+POBOX#: {{$poBox}}
 @component('mail::button', ['url' => route('login')])
 Dashboard
 @endcomponent
