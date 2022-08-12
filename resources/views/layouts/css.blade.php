@@ -1005,5 +1005,12 @@
     .affiliate .loader5 {
         display: block
     }
+    .no-resize {
+        resize: none;
+    }
+    .modal-head {
+        background-color: #fa857d !important;
+        color: white;
+    }
 </style>
 @yield('custom-css')

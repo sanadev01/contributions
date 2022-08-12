@@ -24,9 +24,14 @@
                 <button title="Print Labels" id="print" type="btn"
                     class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i
                         class="feather icon-printer"></i></button>
-
                 <button title="Print Domestic Labels" id="deomesticPrint" type="btn"
-                    class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-tag"></i></button>
+                    class="btn btn-primary mr-1 mb-1 waves-effect waves-light">
+                    <i class="feather icon-tag"></i>
+                </button>
+                <button title="Send Email" id="sendMail" type="btn"
+                    class="btn btn-primary mr-1 mb-1 waves-effect waves-light">
+                    <i class="feather icon-mail"></i>
+                </button>
                 <button title="Delete" id="trash" type="btn"
                     class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i
                         class="feather icon-trash"></i></button>
@@ -60,6 +65,7 @@
         <input type="hidden" name="command" id="command" value="">
         <input type="hidden" name="data" id="data" value="">
     </form>
+    </form>
     <form action="{{ route('admin.trash-orders.destroy', 1) }}" method="POST" id="trash_order_actions_form"
         onsubmit="return confirm('Are you Sure want to move trash?');">
         @csrf
@@ -68,6 +74,27 @@
         <input type="hidden" name="data" id="data" value="">
     </form>
 
+</div>
+
+<!--SEND MAIL MODAL-->
+<div class="modal fade" id="mailModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header modal-head">
+                <h5 class="modal-title text-white"><b>Pre Alert Mail</b></h5>
+            </div>
+            <form action="{{ route('admin.order.pre-alert') }}" method="GET" id="mail_form">
+                <input type="hidden" name="command" id="command" value="">
+                <input type="hidden" name="data" id="data" value="">
+                <div class="modal-body">
+                    <textarea class="form-control no-resize" name="message" rows="5"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger">Pre-Alert</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 @endsection
 
@@ -138,6 +165,16 @@
         $('#consolidate_domestic_label_actions_form #command').val('consolidate-domestic-label');
         $('#consolidate_domestic_label_actions_form #data').val(JSON.stringify(orderIds));
         $('#consolidate_domestic_label_actions_form').submit();
+    })
+    $('body').on('click', '#sendMail', function() {
+        var orderIds = [];
+        $.each($(".bulk-orders:checked"), function() {
+            orderIds.push($(this).val());
+            console.log($(this).val());
+        });
+        $('#mailModal').modal('show');
+        $('#mail_form #command').val('mail');
+        $('#mail_form #data').val(JSON.stringify(orderIds));
     })
     $('body').on('click', '#trash', function() {
         var orderIds = [];
