@@ -181,7 +181,7 @@
                             <i class="feather icon-copy"></i>@lang('orders.actions.duplicate-order')
                         </a>
                    @endcan
-                    @if( Auth::user()->isActive() && !$order->isTrashed() && !$order->isPaid())
+                    @if( Auth::user()->isActive() && !$order->isTrashed() && Auth::user()->isAdmin() || !$order->isPaid())
                     <form action="{{ route('admin.orders.destroy',$order->id) }}" method="post" onsubmit="return confirmDelete()">
                         @csrf
                         @method('DELETE')
