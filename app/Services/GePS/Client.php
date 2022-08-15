@@ -7,7 +7,7 @@ use App\Models\Order;
 use App\Models\OrderTracking;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Warehouse\DeliveryBill;
+use App\Models\Warehouse\Container;
 use App\Services\Correios\Models\PackageError;
 use App\Services\Calculators\WeightCalculator;
 use Illuminate\Support\Facades\Http;
@@ -98,7 +98,34 @@ class Client{
     }
 
     public function createPackage($order)
-    {
+    {   
+        //GET CONTAINER FOR PARCEL
+
+        $container = Container::where('services_subclass_code','KP')
+            ->where('destination_operator_name', $order->recipient->country->code)->whereNull('unit_code')->first();
+
+        if(!$container) {
+            $container =  Container::create([
+                'user_id' => Auth::id(),
+                'dispatch_number' => 0,
+                'origin_country' => 'US',
+                'origin_operator_name' => 'HERC',
+                'postal_category_code' => 'A',
+                'destination_operator_name' => $order->recipient->country->code,
+                'unit_type' => 1,
+                'services_subclass_code' => 'KP'
+            ]);
+
+            $container->update([
+                'dispatch_number' => $container->id
+            ]);
+
+            return $container;
+
+        }
+        //dd($container);
+
+        
         if($order->isWeightInKg()) {
             $weight = UnitsConverter::kgToGrams($order->getWeight('kg'));
         }else{
@@ -122,6 +149,7 @@ class Client{
                     'width' => $order->width,
                     'height' => $order->height,
                     'inco' => "DDU",
+                    'manifestnbr' => $container->destination_operator_name.'-'.$container->dispatch_number,
                     'contentcategory' => "NP",
                 'shipperaddress' => [
                     'name' => $order->getSenderFullName(),
@@ -171,7 +199,8 @@ class Client{
                         'leve' => false
                     ],
                 ]);
-
+                // add orders to container
+                $container->orders()->attach($order->id);
                 // store order status in order tracking
                 return $this->addOrderTracking($order);
             }
