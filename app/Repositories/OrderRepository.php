@@ -374,21 +374,20 @@ class OrderRepository
         $totalDiscountPercentage = 0;
         $volumetricDiscount = setting('volumetric_discount', null, $order->user->id);
         $discountPercentage = setting('discount_percentage', null, $order->user->id);
-
+        
         if (!$volumetricDiscount || !$discountPercentage || $discountPercentage < 0 || $discountPercentage == 0) {
             return false;
         }
 
-        $volumetricWeight = round($order->getWeight(), 2);
-
+        $volumetricWeight = WeightCalculator::getVolumnWeight($order->length,$order->width,$order->height,'in');
+        $volumeWeight = round($volumetricWeight > $order->weight ? $volumetricWeight : $order->weight,2);
         $totalDiscountPercentage = ($discountPercentage) ? $discountPercentage/100 : 0;
-
-        if ($volumetricWeight > $order->weight) {
-
-            $consideredWeight = $volumetricWeight - $order->weight;
+        
+        if ($volumeWeight > $order->weight) {
+            
+            $consideredWeight = $volumeWeight - $order->weight;
             $volumeWeight = round($consideredWeight - ($consideredWeight * $totalDiscountPercentage), 2);
             $totalDiscountedWeight = $consideredWeight - $volumeWeight;
-
             $order->update([
                 'weight_discount' => $totalDiscountedWeight,
             ]);
