@@ -7,8 +7,8 @@ use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
 use App\Services\GePS\ExportExcelGePSManifestService;
 use App\Repositories\Warehouse\GePSContainerRepository;
-use App\Http\Requests\Warehouse\Container\CreateContainerRequest;
-use App\Http\Requests\Warehouse\Container\UpdateContainerRequest;
+use App\Http\Requests\Warehouse\GePSContainer\CreateContainerRequest;
+use App\Http\Requests\Warehouse\GePSContainer\UpdateContainerRequest;
 
 class GePSContainerController extends Controller
 {
@@ -70,7 +70,6 @@ class GePSContainerController extends Controller
     public function edit($container)
     {
         $container = Container::find($container);
-
         if ( $container->response != 0 ){
             abort(405);
         }

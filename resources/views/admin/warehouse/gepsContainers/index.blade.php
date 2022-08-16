@@ -106,7 +106,7 @@
                                                         <a href="{{ route('warehouse.geps_container.packages.index',$container) }}" class="dropdown-item w-100">
                                                             <i class="feather icon-box"></i> @lang('warehouse.actions.Packages')
                                                         </a>
-                                                        @if( !$container->isShipped() )
+                                                        @if( !$container->isRegistered() )
                                                             <a href="{{ route('warehouse.geps_containers.edit',$container) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
                                                             </a>

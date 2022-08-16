@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Warehouse\Container;
+namespace App\Http\Requests\Warehouse\GePSContainer;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -25,7 +25,6 @@ class CreateContainerRequest extends FormRequest
     {
         return [
             'unit_type' => 'required|integer|in:1,2',
-            'destination_operator_name' => 'required|in:SAOD,CRBA',
             'services_subclass_code' => 'required',
             'seal_no' => 'required|unique:containers,seal_no',
         ];
@@ -35,7 +34,6 @@ class CreateContainerRequest extends FormRequest
     {
         return [
             'unit_type.*' => __('warehouse.containers.validations.Container Type'),
-            'destination_operator_name.*' => __('warehouse.containers.validations.Destination Airport'),
             'services_subclass_code.*' => __('warehouse.containers.validations.Distribution Service Class'),
         ];
     }
