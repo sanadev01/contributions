@@ -105,22 +105,22 @@
                                 <td>{{ $order->width }} {{ $order->isMeasurmentUnitCm() ? 'cm' : 'in' }}</td>
                                 <td>{{ $order->height }} {{ $order->isMeasurmentUnitCm() ? 'cm' : 'in' }}</td>
                                 <td>
-                                    Weight: {{ round($order->getOriginalWeight('kg'),2) }} kg ( {{ round($order->getOriginalWeight('lbs'),2) }} lbs ) <br>
-                                    Vol. Weight: {{ round($order->getWeight('kg'),2) }} kg ( {{ round($order->getWeight('lbs'),2) }} lbs ) <br>
+                                    Weight: {{ $order->getOriginalWeight('kg') }} kg ( {{$order->getOriginalWeight('lbs')}} lbs ) <br>
+                                    Vol. Weight: {{ $order->getWeight('kg') }} kg ( {{ $order->getWeight('lbs') }} lbs ) <br>
                                     @if ($appliedVolumeWeight)
                                         Applied Weight:
                                         @if($order->measurement_unit == 'kg/cm')
-                                            {{ round($appliedVolumeWeight,2) }} kg ( {{ round($appliedVolumeWeight * 2.205, 2) }} lbs )
+                                            {{ $appliedVolumeWeight }} kg ( {{ round($appliedVolumeWeight * 2.205, 2) }} lbs )
                                         @else
-                                            {{ round($appliedVolumeWeight / 2.205, 2) }} kg ( {{ round($appliedVolumeWeight,2) }} lbs )
+                                            {{ round($appliedVolumeWeight / 2.205, 2) }} kg ( {{ $appliedVolumeWeight }} lbs )
                                         @endif
                                     @endif
                                 </td>
                                 <td @if (!$appliedVolumeWeight) colspan="2" @endif>{{ $order->measurement_unit }} </td>
                                 @if ($appliedVolumeWeight)
                                 <td>
-                                    Vol. Weight {{ round($order->getWeight('kg'),2) }} kg = <span class="text-primary font-weight-bold">{{ number_format($order->shipping_value + $order->discountCost(), 2) }} USD</span> <br>
-                                    Weight {{ round($appliedVolumeWeight,2) }} {{ round($order->measurement_unit,2) }} = <span class="text-primary font-weight-bold">{{ number_format($order->shipping_value, 2) }} USD </span><br>
+                                    Vol. Weight {{ $order->getWeight('kg') }} kg = <span class="text-primary font-weight-bold">{{ number_format($order->shipping_value + $order->discountCost(), 2) }} USD</span> <br>
+                                    Weight {{ $appliedVolumeWeight }} {{ $order->measurement_unit }} = <span class="text-primary font-weight-bold">{{ number_format($order->shipping_value, 2) }} USD </span><br>
                                     @if($order->shipping_value + $order->discountCost() - $order->shipping_value > 0)
                                         Saved = <span class="text-primary font-weight-bold">{{ $order->discountCost() }} USD</span>
                                     @endif
