@@ -12,6 +12,7 @@ use App\Services\Correios\Models\PackageError;
 use App\Services\Calculators\WeightCalculator;
 use Illuminate\Support\Facades\Http;
 use GuzzleHttp\Client as GuzzleClient;
+use App\Models\Warehouse\DeliveryBill;
 use App\Services\Converters\UnitsConverter;
 
 class Client{
@@ -225,6 +226,40 @@ class Client{
         }
 
         return true;
+    }
+
+    public function registerDeliveryBillGePS(DeliveryBill $deliveryBill)
+    {
+        //dd($deliveryBill->containers[0]->id);
+        $manifest = [
+            'manifest' => [
+                'manifestnbr' => "HD".'-'.$deliveryBill->containers[0]->id,
+            ],
+        ];
+        try {
+            $response = $this->client->post('https://globaleparcel.com/api.aspx',[
+                'headers' => $this->getKeys(),
+                'json' => $manifest,
+                ]);
+            $data = json_decode($response->getBody()->getContents());
+            if (isset($data->err)) {
+                return [
+                    'success' => false,
+                    'message' => $data->err ?? 'Something Went Wrong! Please Try Again..',
+                    'data' => null
+                ];
+            }
+
+            return [
+                'success' => true,
+                'data' => $data
+            ];
+        }catch (\GuzzleHttp\Exception\ClientException $e) {
+            return new PackageError($e->getResponse()->getBody()->getContents());
+        }
+        catch (\Exception $exception){
+            return new PackageError($exception->getMessage());
+        }
     }
 
 
