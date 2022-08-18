@@ -208,7 +208,7 @@
                                         <i class="vs-icon feather icon-check"></i>
                                     </span>
                                 </span>
-                                <span class="h3 mx-2 text-primary my-0 py-0">@lang('address.save Address')</span>
+                                <span class="h3 mx-2 text-primary my-0 py-0" style="color: black !important;">@lang('address.save Address')</span>
                             </div>
                         </fieldset>
                     </div>
