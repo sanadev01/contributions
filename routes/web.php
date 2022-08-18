@@ -262,15 +262,15 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 })->name('order.us-label.download');
 
 Route::get('test-label',function(){
+    
+    $labelPrinter = new CN23LabelMaker();
 
-    // dd(132);
-    // $labelPrinter = new CN23LabelMaker();
-
-    // $order = Order::find(53654);
-    // $labelPrinter->setOrder($order);
-    // $labelPrinter->setService(2);
-
-    // return $labelPrinter->download();
+    $order = Order::find(53654);
+    // $order = Order::find(90354);
+    $labelPrinter->setOrder($order);
+    $labelPrinter->setService(2);
+    
+    return $labelPrinter->download();
 });
 
 Route::get('find-container/{order}', [HomeController::class, 'findContainer'])->name('find.container');
