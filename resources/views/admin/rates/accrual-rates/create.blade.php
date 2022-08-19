@@ -34,6 +34,7 @@
                                             <option value="" selected>@lang('shipping-rates.Select Country')</option>
                                             <option value="30">Brazil</option>
                                             <option value="46">Chile</option>
+                                            <option value="50">Colombia</option>
                                         </select>
                                         <div class="help-block"></div>
                                     </div>
@@ -55,6 +56,7 @@
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_SRM}}">SRM</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_AJ_Standard}}">AJ Standard</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_AJ_EXPRESS}}">AJ Express</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_COLOMBIA_Standard}}">Colombia Standard</option>
                                         </select>
                                         <div class="help-block"></div>
                                     </div>
