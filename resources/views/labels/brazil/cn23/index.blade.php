@@ -301,7 +301,7 @@
         }
         .bottom-block{
             position: absolute;
-            top: 12mm;
+            top: 11mm;
             left: 48mm;
             font-size: 8pt !important;
         }
@@ -345,10 +345,10 @@
             margin-left:20px;
         }
         .return-box{
-            /* margin-top: -1px !important; */
             margin-bottom: 2px !important;
             border-style: solid;
-            border-width: 2px;
+            border-width: 1px;
+            border-radius: 1mm;
             white-space:pre;
             width:4px !important;
             height:4px !important;
@@ -356,8 +356,13 @@
         .site-text{
             position: absolute;
             top: 15px !important;
-            /* margin-bottom: 2px !important; */
-            /* top: 15px !important; */
+        }
+        .return-box-text{
+            position: absolute;
+            top: 0.6mm;
+            /* left: 0.1mm; */
+            /* font-size: 16px !important; */
+            margin-left: -2.3px !important;
         }
     </style>
 </head>
@@ -412,8 +417,8 @@
     <div class="serivce-zipcode">
         <div class="left-block">
             <div class="return-address">
-                <span class="return-box"> X </span> Retorno a origem  <span class="return-box">   </span> Tratar como abandono<br>
-                <span class="site-text">Dúvidas e reclamações: e-mail/ site</span><br><br>
+                <span class="return-box"> <i class="return-box-text">X</i> </span> &nbsp; Retorno a origem  <span class="return-box">   </span> Tratar como abandono<br>
+                <span class="site-text">Dúvidas e reclamações: homedeliverybr.com</span><br><br>
                 <strong>DEVOLUCÃO:</strong> <br>
                 {!! $returnAddress !!}
             </div>
