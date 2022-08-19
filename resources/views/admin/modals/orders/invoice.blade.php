@@ -105,22 +105,22 @@
                                 <td>{{ $order->width }} {{ $order->isMeasurmentUnitCm() ? 'cm' : 'in' }}</td>
                                 <td>{{ $order->height }} {{ $order->isMeasurmentUnitCm() ? 'cm' : 'in' }}</td>
                                 <td>
-                                    Weight: {{ $order->getOriginalWeight('kg') }} kg ( {{$order->getOriginalWeight('lbs')}} lbs ) <br>
-                                    Vol. Weight: {{ $order->getWeight('kg') }} kg ( {{ $order->getWeight('lbs') }} lbs ) <br>
+                                    Weight: {{ $order->getOriginalWeight('kg') }} Kg ( {{$order->getOriginalWeight('lbs')}} lbs ) <br>
+                                    Vol. Weight: {{ $order->getWeight('kg') }} Kg ( {{ $order->getWeight('lbs') }} lbs ) <br>
                                     @if ($appliedVolumeWeight)
                                         Applied Weight:
                                         @if($order->measurement_unit == 'kg/cm')
-                                            {{ $appliedVolumeWeight }} kg ( {{ round($appliedVolumeWeight * 2.205, 2) }} lbs )
+                                            {{ $appliedVolumeWeight }} Kg ( {{ round($appliedVolumeWeight * 2.205, 2) }} lbs )
                                         @else
-                                            {{ round($appliedVolumeWeight / 2.205, 2) }} kg ( {{ $appliedVolumeWeight }} lbs )
+                                            {{ round($appliedVolumeWeight / 2.205, 2) }} Kg ( {{ $appliedVolumeWeight }} lbs )
                                         @endif
                                     @endif
                                 </td>
                                 <td @if (!$appliedVolumeWeight) colspan="2" @endif>{{ $order->measurement_unit }} </td>
                                 @if ($appliedVolumeWeight)
                                 <td>
-                                    Actual Rate <span class="text-primary font-weight-bold">${{ number_format($order->shipping_value + $order->discountCost(), 2) }}</span> to {{ round($order->getWeight('kg'),2) }} kg<br>
-                                    Applied Rate <span class="text-primary font-weight-bold">${{ number_format($order->shipping_value, 2) }}</span> to {{ $order->measurement_unit == 'kg/cm'? round($appliedVolumeWeight,2):round($appliedVolumeWeight / 2.205, 2) }} <br>
+                                    Actual Rate <span class="text-primary font-weight-bold">${{ number_format($order->shipping_value + $order->discountCost(), 2) }}</span> to {{ round($order->getWeight('kg'),2) }} Kg<br>
+                                    Applied Rate <span class="text-primary font-weight-bold">${{ number_format($order->shipping_value, 2) }}</span> to {{ $order->measurement_unit == 'kg/cm'? round($appliedVolumeWeight,2):round($appliedVolumeWeight / 2.205, 2) }} Kg <br>
                                     @if($order->shipping_value + $order->discountCost() - $order->shipping_value > 0)
                                         Difference <span class="text-primary font-weight-bold">${{ $order->discountCost() }} </span>Saving
                                     @endif
