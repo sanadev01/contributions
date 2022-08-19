@@ -46,6 +46,10 @@ class IndexTable extends Component
             'name' => 'Anjun Express',
             'value' => Package::SERVICE_CLASS_AJ_EXPRESS,
         ];
+        $this->services[7] = [
+            'name' => 'Colombia Standard',
+            'value' => Package::SERVICE_CLASS_COLOMBIA_Standard,
+        ];
         
         return $this->services;
     }
