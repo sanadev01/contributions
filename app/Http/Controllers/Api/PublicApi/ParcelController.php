@@ -127,7 +127,6 @@ class ParcelController extends Controller
             return apiResponse(false, 'this service is not availaible for US address');
         }
         
-        
         DB::beginTransaction();
 
         try {
@@ -140,10 +139,10 @@ class ParcelController extends Controller
                 "tracking_id" => optional($request->parcel)['tracking_id'],
                 "customer_reference" => optional($request->parcel)['customer_reference'],
                 "measurement_unit" => optional($request->parcel)['measurement_unit'],
-                "weight" => optional($request->parcel)['weight'],
-                "length" => optional($request->parcel)['length'],
-                "width" => optional($request->parcel)['width'],
-                "height" => optional($request->parcel)['height'],
+                "weight" =>  round(optional($request->parcel)['weight'],2),
+                "length" =>  round(optional($request->parcel)['length'],2),
+                "width" =>   round(optional($request->parcel)['width'],2),
+                "height" =>  round(optional($request->parcel)['height'],2),
                 "is_invoice_created" => true,
                 "order_date" => now(),
                 "is_shipment_added" => true,
