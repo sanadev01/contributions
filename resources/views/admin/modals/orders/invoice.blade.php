@@ -105,14 +105,14 @@
                                 <td>{{ $order->width }} {{ $order->isMeasurmentUnitCm() ? 'cm' : 'in' }}</td>
                                 <td>{{ $order->height }} {{ $order->isMeasurmentUnitCm() ? 'cm' : 'in' }}</td>
                                 <td>
-                                    Weight: {{ $order->getOriginalWeight('kg') }} Kg ( {{$order->getOriginalWeight('lbs')}} lbs ) <br>
-                                    Vol. Weight: {{ $order->getWeight('kg') }} Kg ( {{ $order->getWeight('lbs') }} lbs ) <br>
+                                    Weight: {{ round($order->getOriginalWeight('kg'),2) }} Kg ( {{ round($order->getOriginalWeight('lbs'),2) }} lbs ) <br>
+                                    Vol. Weight: {{ round($order->getWeight('kg'),2) }} Kg ( {{ round($order->getWeight('lbs'),2) }} lbs ) <br>
                                     @if ($appliedVolumeWeight)
                                         Applied Weight:
                                         @if($order->measurement_unit == 'kg/cm')
-                                            {{ $appliedVolumeWeight }} Kg ( {{ round($appliedVolumeWeight * 2.205, 2) }} lbs )
+                                            {{ round($appliedVolumeWeight,2) }} Kg ( {{ round($appliedVolumeWeight * 2.205, 2) }} lbs )
                                         @else
-                                            {{ round($appliedVolumeWeight / 2.205, 2) }} Kg ( {{ $appliedVolumeWeight }} lbs )
+                                            {{ round($appliedVolumeWeight / 2.205, 2) }} Kg ( {{ round($appliedVolumeWeight,2) }} lbs )
                                         @endif
                                     @endif
                                 </td>
