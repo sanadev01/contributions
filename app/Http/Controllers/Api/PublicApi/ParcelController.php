@@ -126,7 +126,10 @@ class ParcelController extends Controller
         if ($shippingService->isInternationalService() && $recipientCountryId == Country::US) {
             return apiResponse(false, 'this service is not availaible for US address');
         }
-        
+        $weight = optional($request->parcel)['weight'] ? round(optional($request->parcel)['weight'],2) : 0;
+        $length = optional($request->parcel)['length'] ? round(optional($request->parcel)['length'],2) : 0;
+        $width = optional($request->parcel)['width'] ?   round(optional($request->parcel)['width'],2) : 0;
+        $height = optional($request->parcel)['height'] ? round(optional($request->parcel)['height'],2) : 0;
         
         DB::beginTransaction();
 
@@ -140,10 +143,10 @@ class ParcelController extends Controller
                 "tracking_id" => optional($request->parcel)['tracking_id'],
                 "customer_reference" => optional($request->parcel)['customer_reference'],
                 "measurement_unit" => optional($request->parcel)['measurement_unit'],
-                "weight" => optional($request->parcel)['weight'],
-                "length" => optional($request->parcel)['length'],
-                "width" => optional($request->parcel)['width'],
-                "height" => optional($request->parcel)['height'],
+                "weight" =>  $weight,
+                "length" =>  $length,
+                "width" =>   $width,
+                "height" =>  $height,
                 "is_invoice_created" => true,
                 "order_date" => now(),
                 "is_shipment_added" => true,
