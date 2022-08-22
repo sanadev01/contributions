@@ -37,6 +37,20 @@
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center my-2">
+                                    <label class="col-md-3 text-md-right">@lang('warehouse.containers.Destination Country')<span class="text-danger">*</span></label>
+                                    <div class="col-md-6">
+                                        <select class="form-control" name="destination_country">
+                                            <option value="">@lang('warehouse.containers.Destination Country')</option>
+                                            @foreach (countries() as $country)
+                                                <option value="{{ $country->code }}">{{ $country->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('destination_country')
+                                            <div class="help-block text-danger"> {{ $message }} </div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center my-2">
                                     <label class="col-md-3 text-md-right">@lang('warehouse.containers.Distribution Service Class')<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
                                         <select class="form-control" name="services_subclass_code">

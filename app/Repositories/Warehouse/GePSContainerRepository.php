@@ -34,7 +34,7 @@ class GePSContainerRepository {
                 'seal_no' => $request->seal_no,
                 'origin_operator_name' => 'HERC',
                 'postal_category_code' => 'A',
-                'destination_operator_name' => 'SAOD',
+                'destination_operator_name' => $request->destination_country,
                 'unit_type' => $request->unit_type,
                 'services_subclass_code' => $request->services_subclass_code
             ]);
