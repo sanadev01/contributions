@@ -124,7 +124,6 @@ class Client{
             return $container;
 
         }
-        //dd($container);
 
         
         if($order->isWeightInKg()) {
@@ -150,7 +149,7 @@ class Client{
                     'width' => $order->width,
                     'height' => $order->height,
                     'inco' => "DDU",
-                    'manifestnbr' => $container->destination_operator_name.'-'.$container->dispatch_number,
+                    'manifestnbr' => "HD".'-'.$container->destination_operator_name.''.$container->dispatch_number,
                     'contentcategory' => "NP",
                 'shipperaddress' => [
                     'name' => $order->getSenderFullName(),
@@ -230,10 +229,42 @@ class Client{
 
     public function registerDeliveryBillGePS(DeliveryBill $deliveryBill)
     {
-        //dd($deliveryBill->containers[0]->id);
         $manifest = [
             'manifest' => [
-                'manifestnbr' => "HD".'-'.$deliveryBill->containers[0]->id,
+                'manifestnbr' => "HD".'-'.$deliveryBill->containers[0]->destination_operator_name.''.$deliveryBill->containers[0]->id,
+            ],
+        ];
+        try {
+            $response = $this->client->post('https://globaleparcel.com/api.aspx',[
+                'headers' => $this->getKeys(),
+                'json' => $manifest,
+                ]);
+            $data = json_decode($response->getBody()->getContents());
+            if (isset($data->err)) {
+                return [
+                    'success' => false,
+                    'message' => $data->err ?? 'Something Went Wrong! Please Try Again..',
+                    'data' => null
+                ];
+            }
+
+            return [
+                'success' => true,
+                'data' => $data
+            ];
+        }catch (\GuzzleHttp\Exception\ClientException $e) {
+            return new PackageError($e->getResponse()->getBody()->getContents());
+        }
+        catch (\Exception $exception){
+            return new PackageError($exception->getMessage());
+        }
+    }
+
+    public function downloadGePSManifest(DeliveryBill $deliveryBill)
+    {
+        $manifest = [
+            'manifest' => [
+                'manifestnbr' => "HD".'-'.$deliveryBill->containers[0]->destination_operator_name.''.$deliveryBill->containers[0]->id,
             ],
         ];
         try {

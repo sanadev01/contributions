@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Warehouse;
 use Illuminate\Http\Request;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
-use App\Services\GePS\ExportExcelGePSManifestService;
 use App\Repositories\Warehouse\GePSContainerRepository;
 use App\Http\Requests\Warehouse\GePSContainer\CreateContainerRequest;
 use App\Http\Requests\Warehouse\GePSContainer\UpdateContainerRequest;
@@ -121,9 +120,4 @@ class GePSContainerController extends Controller
         return back()->withInput();        
     }
 
-    public function download_exceltManifest(Container $container)
-    {
-        $exportChileManifestService = new ExportExcelUSPSManifestService($container);
-        return $exportChileManifestService->handle();
-    }
 }

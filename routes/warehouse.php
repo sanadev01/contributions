@@ -36,6 +36,7 @@ use App\Http\Controllers\Warehouse\GePSContainerController;
 use App\Http\Controllers\Warehouse\GePSContainerPackageController;
 use App\Http\Controllers\Warehouse\GePSUnitRegisterController;
 use App\Http\Controllers\Warehouse\GePSCN35DownloadController;
+use App\Http\Controllers\Warehouse\GePSManifestDownloadController;
 use App\Http\Controllers\Warehouse\CombineManifestDownloadController;
 
 
@@ -94,7 +95,8 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::resource('geps_container.packages', GePSContainerPackageController::class)->only('index','destroy', 'create');
     Route::get('geps_container/{container}/register', GePSUnitRegisterController::class)->name('geps_container.register');
     Route::get('geps_container/{container}/download', GePSCN35DownloadController::class)->name('geps_container.download');
-    Route::get('gepss_container/{container}/download_excel_manifest', [GePSContainerController::class, 'download_exceltManifest'])->name('download.postnl_manifest_excel');
+    Route::get('geps/{delivery_bill}/manifest', GePSManifestDownloadController::class)->name('geps.manifest.download');
+
 });
 
 

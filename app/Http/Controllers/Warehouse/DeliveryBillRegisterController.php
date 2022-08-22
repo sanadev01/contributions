@@ -27,11 +27,12 @@ class DeliveryBillRegisterController extends Controller
                 session()->flash('alert-danger', $response['message']);
                 return back();
             }
-
-            $result = $response->manifestresponse;
+            $result = $response['data']->manifestresponse;
             $cn38 = $result->manifestnbr;
             $manifest_pdf = $result->manifestpdf;
+            $request_id = $response['data']->perfmilli;
             $deliveryBill->update([
+                'request_id' => $request_id,
                 'cnd38_code' => $cn38
             ]);
             Storage::put("labels/{$cn38}.pdf", base64_decode($manifest_pdf));

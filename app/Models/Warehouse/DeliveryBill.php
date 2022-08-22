@@ -45,4 +45,11 @@ class DeliveryBill extends Model
         return $weight;
     }
 
+    public function isGePS()
+    {
+        if($this->containers->first()->services_subclass_code == 'KP'){
+            return true;
+        }
+    }
+
 }
