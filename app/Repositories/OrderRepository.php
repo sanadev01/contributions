@@ -454,18 +454,6 @@ class OrderRepository
                 }
             }
         }
-        // PostNL Service
-        if (optional($order->recipient)->country_id != Order::US && setting('postnl_service', null, User::ROLE_ADMIN) && setting('postnl_service', null, auth()->user()->id))
-        {
-            $postnlShippingService = new PostNLShippingService($order);
-
-            foreach ($shippingServicesWithoutRates as $shippingService)
-            {
-                if ($postnlShippingService->isAvailableForInternational($shippingService)) {
-                    $shippingServices->push($shippingService);
-                }
-            }
-        }
 
         if ($shippingServices->isNotEmpty()) {
            $shippingServices = $this->filterShippingServices($shippingServices, $order);
@@ -561,7 +549,6 @@ class OrderRepository
                 $this->shippingServiceError = 'Please check your parcel dimensions';
             }
         }
-        //dd($shippingServices);
         return $shippingServices;
     }
 
