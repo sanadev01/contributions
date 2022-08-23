@@ -4,8 +4,10 @@ use App\Models\User;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProfitPackage;
+use App\Models\ShippingService;
 use Illuminate\Support\Facades\Artisan;
 use App\Services\StoreIntegrations\Shopify;
+use App\Services\Excel\Export\OrderExportAug;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
@@ -263,14 +265,18 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 
 Route::get('test-label',function(){
     
-    $labelPrinter = new CN23LabelMaker();
+    $orders = Order::where('created_at', '>=', '2022-08-01 00:00:00')->where('status','>=',Order::STATUS_PAYMENT_DONE)->get();
 
-    $order = Order::find(53654);
+    $exportService = new OrderExportAug($orders);
+    return $exportService->handle();
+    // $labelPrinter = new CN23LabelMaker();
+
+    // $order = Order::find(53654);
     // $order = Order::find(90354);
-    $labelPrinter->setOrder($order);
-    $labelPrinter->setService(2);
+    // $labelPrinter->setOrder($order);
+    // $labelPrinter->setService(2);
     
-    return $labelPrinter->download();
+    // return $labelPrinter->download();
 });
 
 Route::get('find-container/{order}', [HomeController::class, 'findContainer'])->name('find.container');
