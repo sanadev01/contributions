@@ -195,6 +195,11 @@ class Order extends Model implements Package
         return $this->belongsToMany(Document::class);
     }
 
+    public function tax()
+    {
+        return $this->hasOne(Tax::class, 'order_id');
+    }
+
     public function products()
     {
         return $this->belongsToMany(Product::class);

@@ -21,7 +21,7 @@
                     @else
                         <p>{{ now()->format('d M Y') }}</p>
                     @endif
-                    
+
                 </div>
             </div>
         </div>
@@ -33,7 +33,7 @@
                 <h5>@lang('orders.invoice.Recipient')</h5>
                 <div class="recipient-info my-2">
                     <p> {{ optional($order->recipient)->first_name }} {{ optional($order->recipient)->last_name }} </p>
-                    <p>{{ optional($order->recipient)->address }} {{ optional($order->recipient)->address2 }} {{ optional($order->recipient)->street_no }}<br> 
+                    <p>{{ optional($order->recipient)->address }} {{ optional($order->recipient)->address2 }} {{ optional($order->recipient)->street_no }}<br>
                         {{ optional($order->recipient)->city }}, {{ optional(optional($order->recipient)->state)->code }}, {{ optional($order->recipient)->zipcode }}<br>
                         {{ optional(optional($order->recipient)->country)->name }}<br>
                         <i class="feather icon-phone"></i> Ph#: {{ optional($order->recipient)->phone }}
@@ -89,7 +89,7 @@
                                 <td>{{ $order->warehouse_number }} </td>
                                 <td>{{ $order->customer_reference }} </td>
                                 <td>{{ $order->corrios_tracking_code }} </td>
-                            </tr>                                
+                            </tr>
                             <tr>
                                 <th>@lang('orders.invoice.length')</th>
                                 <th>@lang('orders.invoice.width')</th>
@@ -104,15 +104,29 @@
                                 <td>{{ $order->length }} {{ $order->isMeasurmentUnitCm() ? 'cm' : 'in' }}</td>
                                 <td>{{ $order->width }} {{ $order->isMeasurmentUnitCm() ? 'cm' : 'in' }}</td>
                                 <td>{{ $order->height }} {{ $order->isMeasurmentUnitCm() ? 'cm' : 'in' }}</td>
-                                <td>{{ $order->getWeight('kg') }} kg ( {{ $order->getWeight('lbs') }} lbs ) </td>
+                                <td>
+                                    Weight: {{ round($order->getOriginalWeight('kg'),2) }} Kg ( {{ round($order->getOriginalWeight('lbs'),2) }} lbs ) <br>
+                                    Vol. Weight: {{ round($order->getWeight('kg'),2) }} Kg ( {{ round($order->getWeight('lbs'),2) }} lbs ) <br>
+                                    @if ($appliedVolumeWeight)
+                                        Applied Weight:
+                                        @if($order->measurement_unit == 'kg/cm')
+                                            {{ round($appliedVolumeWeight,2) }} Kg ( {{ round($appliedVolumeWeight * 2.205, 2) }} lbs )
+                                        @else
+                                            {{ round($appliedVolumeWeight / 2.205, 2) }} Kg ( {{ round($appliedVolumeWeight,2) }} lbs )
+                                        @endif
+                                    @endif
+                                </td>
                                 <td @if (!$appliedVolumeWeight) colspan="2" @endif>{{ $order->measurement_unit }} </td>
                                 @if ($appliedVolumeWeight)
                                 <td>
-                                    discount : <span class="text-primary font-weight-bold">{{ $order->weight_discount }}</span>
-                                    discount cost : <span class="text-primary font-weight-bold">{{ $order->discountCost() }}</span>
+                                    Actual Rate <span class="text-primary font-weight-bold">${{ number_format($order->shipping_value + $order->discountCost(), 2) }}</span> to {{ round($order->getWeight('kg'),2) }} Kg<br>
+                                    Applied Rate <span class="text-primary font-weight-bold">${{ number_format($order->shipping_value, 2) }}</span> to {{ $order->measurement_unit == 'kg/cm'? round($appliedVolumeWeight,2):round($appliedVolumeWeight / 2.205, 2) }} Kg <br>
+                                    @if($order->shipping_value + $order->discountCost() - $order->shipping_value > 0)
+                                        Difference <span class="text-primary font-weight-bold">${{ $order->discountCost() }} </span>Saving
+                                    @endif
                                 </td>
                                 @endif
-                            </tr>                                
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -134,7 +148,7 @@
                             <tr>
                                 <td>{{ $order->shipping_service_name }}</td>
                                 <td>{{ number_format($order->shipping_value,2) }} USD</td>
-                            </tr>                                
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -155,12 +169,12 @@
                                 <tr>
                                     <td>{{ $service->name }}</td>
                                     <td>{{ number_format($service->price,2) }} USD</td>
-                                </tr>  
-                            @endforeach   
+                                </tr>
+                            @endforeach
                             <tr class="border-top-light">
                                 <td class="text-center h4">@lang('orders.invoice.Total')</td>
                                 <td class="h4">{{ number_format($services->sum('price'),2) }} USD</td>
-                            </tr>                            
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -199,7 +213,7 @@
                                         {{ $item->contains_perfume ? 'perfume' : '' }}
                                         {{ $item->contains_flammable_liquid ? 'flameable' : '' }}
                                     </td>
-                                </tr>  
+                                </tr>
                             @endforeach
                             <tr class="border-top-light">
                                 <td colspan="4" class="text-center h4">@lang('orders.invoice.Order Value')</td>
@@ -207,7 +221,7 @@
                                     {{ number_format($order->items()->sum(\DB::raw('quantity * value')),2) }} USD
                                 </td>
                                 <td></td>
-                            </tr>                             
+                            </tr>
                             <tr class="border-top-light">
                                 <td colspan="4" class="text-center h4">@lang('orders.invoice.Freight Declared to Custom')</td>
                                 <td class="h4">
@@ -218,7 +232,7 @@
                                     @endif
                                 </td>
                                 <td></td>
-                            </tr>                             
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -230,7 +244,7 @@
                     <div class="table-responsive-md">
                         <table class="table table-bordered">
                             <tbody>
-                                
+
                                 <tr>
                                     <th>@lang('orders.invoice.Shipping')</th>
                                     <td>{{ number_format($order->shipping_value,2) }} USD</td>

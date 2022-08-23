@@ -43,6 +43,7 @@ return [
         'Orders Report' => 'Orders Report',
         'Commission Report' => 'Commission Report',
         'Audit Report' => 'Audit Report',
+        'Anjun Report' => 'Anjun Report',
     ],
     'Warehouse' => [
         'menu' => 'Warehouse',

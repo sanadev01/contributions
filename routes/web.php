@@ -62,6 +62,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
 
         Route::resource('handling-services', HandlingServiceController::class)->except('show');
         Route::resource('addresses', AddressController::class);
+        Route::get('addresses-export', [\App\Http\Controllers\Admin\AddressController::class, 'exportAddresses'])->name('export.addresses');
         Route::resource('shipping-services', ShippingServiceController::class);
 
         Route::namespace('Import')->prefix('import')->as('import.')->group(function () {
@@ -163,6 +164,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('order', OrderReportController::class)->only(['index','create']);
             Route::resource('commission', CommissionReportController::class)->only(['index','show']);
             Route::resource('audit-report', AuditReportController::class)->only(['index','create']);
+            Route::resource('anjun', AnjunReportController::class)->only(['index','create']);
 
         });
 
@@ -263,16 +265,14 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 })->name('order.us-label.download');
 
 Route::get('test-label',function(){
-    // \Artisan::call('optimize:clear');
-    // echo "<pre>";
-    // echo \Artisan::output();
-    // dd(132);
+    
     $labelPrinter = new CN23LabelMaker();
 
     $order = Order::find(53654);
+    // $order = Order::find(90354);
     $labelPrinter->setOrder($order);
     $labelPrinter->setService(2);
-
+    
     return $labelPrinter->download();
 });
 

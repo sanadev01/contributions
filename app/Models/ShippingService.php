@@ -33,6 +33,7 @@ class ShippingService extends Model
     const AJ_Packet_Standard = 33164;
     const AJ_Packet_Express = 33172;
     const COLOMBIA_Standard = 44162;
+    const Brazil_Redispatch = 100;
 
     protected $guarded = [];
 

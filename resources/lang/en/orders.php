@@ -20,6 +20,14 @@ return [
     'Delete' => 'Delete',
     'Remove' => 'Remove Order',
     'Trashed Orders' => 'Trashed Orders',
+    'Anjun Orders' => 'Anjun Orders',
+    'warehouse-no' => 'Warehouse No.',
+    'user-name' => 'User Name',
+    'tracking-code' => 'Tracking Code',
+    'carrier-cost' => 'Carrier Cost',
+    'Amount Customers Paid' => 'Amount Customers Paid',
+    'Correios Anjun' => 'Correios (Anjun)',
+    'Search By Name, Warehouse No. or Tracking Code' => 'Search By Name, Warehouse No. or Tracking Code',
 
     'recipient' => [
         'slect-from-list' => 'Select Address From List',

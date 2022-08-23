@@ -18,7 +18,8 @@ return [
     'payment-status' => 'Status do pagamento',
     'payment-method' => 'Método de pagamento',
     'Trashed Orders' => 'Pedidos Excluídos',
-
+    'Amount Customers Paid' => 'Valor Pago Pelos Clientes',
+    'Correios Anjun' => 'Correios (Anjun)',
     'recipient' => [
         'slect-from-list' => 'Selecione o endereço da lista',
         'Previous' => 'Anterior',

@@ -393,7 +393,6 @@ class OrderRepository
             $consideredWeight = $volumetricWeight - $order->weight;
             $volumeWeight = round($consideredWeight - ($consideredWeight * $totalDiscountPercentage), 2);
             $totalDiscountedWeight = $consideredWeight - $volumeWeight;
-
             $order->update([
                 'weight_discount' => $totalDiscountedWeight,
             ]);

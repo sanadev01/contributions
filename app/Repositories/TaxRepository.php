@@ -32,27 +32,37 @@ class TaxRepository
 
     public function getOrders(Request $request)
     {
+        $request->validate([
+            'user_id' => 'required',
+        ]);
         $trackingNumber = explode(',', preg_replace('/\s+/', '', $request->trackingNumbers));
-        return Order::where('user_id',$request->user_id)->whereIn('corrios_tracking_code', $trackingNumber)->get();
+        return Order::where('user_id',$request->user_id)->whereDoesntHave('tax')->whereIn('corrios_tracking_code', $trackingNumber)->get();
     }
 
     public function store(Request $request)
     {
         $amount = 0;
+        $trackingNos = [];
         try{
             $user = User::find($request->user_id);
             if($user) {
                 foreach($request->order_id as $key=> $orderId) {
-                    Tax::create([
-                        'user_id' => $request->user_id,
-                        'order_id' => $orderId,
-                        'tax_1' => $request->tax_1[$key],
-                        'tax_2' => $request->tax_2[$key],
-                    ]);
-                    $amount += $request->tax_2[$key];
+                    $order = Order::find($orderId);
+                    if($order) {
+                        Tax::create([
+                            'user_id' => $request->user_id,
+                            'order_id' => $orderId,
+                            'tax_1' => $request->tax_1[$key],
+                            'tax_2' => $request->tax_2[$key],
+                        ]);
+                        $amount += $request->tax_2[$key];
+                        $trackingNos[] = array('Code' => $request->tracking_code[$key], );
+                    }
                 }
                 $balance = Deposit::getCurrentBalance($user);
-                if($balance >= $amount) {
+                $codes = json_encode($trackingNos);
+                if(!empty($codes) && $balance >= $amount) {
+
                     Deposit::create([
                         'uuid' => PaymentInvoice::generateUUID('DP-'),
                         'amount' => $amount,
@@ -60,7 +70,7 @@ class TaxRepository
                         'balance' => $balance - $amount,
                         'is_credit' => false,
                         'last_four_digits' => 'Pay Tax',
-                        'description' => "Pay Tax",
+                        'description' => 'Pay Tax'.' '.$codes,
                     ]);
                     return true;
                 }

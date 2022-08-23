@@ -20,6 +20,8 @@ return [
     'Delete' => 'borrar',
     'Remove' => 'eliminar orden',
     'Trashed Orders' => 'Pedidos en la papelera',
+    'Amount Customers Paid' => 'Cantidad Pagada Por Las Clientas',
+    'Correios Anjun' => 'Correios (Anjun)',
     'recipient' => [
         'slect-from-list' => 'Seleccionar dirección de la lista',
         'Previous' => 'Previo',
