@@ -55,6 +55,8 @@ class ConsolidateDomesticLabelForm extends Component
 
     public $consolidationErrors;
 
+    public $totalWeight;
+
     protected $tempOrder;
 
     protected $rules = [
@@ -89,11 +91,12 @@ class ConsolidateDomesticLabelForm extends Component
         'phoneNumber' => 'enteredPhoneNumber',
     ];
 
-    public function mount($orders, $states, $errors)
+    public function mount($orders, $states, $errors, $totalWeight)
     {
         $this->orders = $orders;
         $this->states = $states;
         $this->consolidationErrors = $errors;
+        $this->totalWeight = $totalWeight;
         
         if ($this->orders->count() > 0) {
             $this->userId = $this->orders->first()->user_id;
