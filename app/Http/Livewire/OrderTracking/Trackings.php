@@ -116,7 +116,6 @@ class Trackings extends Component
 
     public function togglePostNLStatus($tracking)
     {
-        //dd($tracking['api_trackings']['status']);
         if ($tracking['api_trackings']['status'] == '1233' || $tracking['api_trackings']['status'] == '3') {
             return 90;
         }
