@@ -41,7 +41,6 @@ class OrderTrackingRepository
                 $apiResponse = [];
                 if($order->trackings->isNotEmpty()){
                     if($order->trackings->last()->status_code == Order::STATUS_SHIPPED){
-
                         if($order->recipient->country_id == Order::CHILE ){
                             $response = CorreiosChileTrackingFacade::trackOrder($order->corrios_tracking_code);
                             if($response->status == true && ($response->data != null || $response->data != []) ){
@@ -92,7 +91,7 @@ class OrderTrackingRepository
                                 'trackings' => $order->trackings,
                                 'order' => $order
                             ];
-                        }elseif($order->recipient->country_id == Order::NETHERLANDS) {
+                        }elseif($order->shippingService->service_sub_class == ShippingService::PostNL) {
                             array_push($this->postNLTrackingCodes, $order->corrios_tracking_code);
 
                                 $apiResponse = [
