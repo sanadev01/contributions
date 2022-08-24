@@ -40,13 +40,12 @@ class OrderExportAug extends AbstractExportService
             $this->setCellValue('E'.$row, $order->gross_total);
             $this->setCellValue('F'.$row, $order->getWeight('kg'));
             $this->setCellValue('G'.$row, $this->getVolumnWeight($order->length, $order->width, $order->height,$this->isWeightInKg($order->measurement_unit)));
-            $this->setCellValue('H'.$row, $order->shippingService->getRateFor($order));
+            $this->setCellValue('H'.$row, $this->rate($order));
             
             $row++;
         }
 
     }
-
 
     private function setExcelHeaderRow()
     {
@@ -91,6 +90,19 @@ class OrderExportAug extends AbstractExportService
     {
         $divisor = $unit == 'in' ? 166 : 6000;
         return round(($length * $width * $height) / $divisor,2);
+    }
+
+    public function rate($order){
+        $rate = 0;
+        $service = $order->shippingService;
+        if($service){
+            $service->cacheCalculator = false;
+            if ( $service->isAvailableFor($order) ){
+                $rate = $service->getRateFor($order,true,false);
+            }
+        }
+
+        return $rate;
     }
 
    

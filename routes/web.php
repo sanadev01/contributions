@@ -1,11 +1,14 @@
 <?php
 
+use App\Models\Tax;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Recipient;
 use App\Models\ProfitPackage;
 use App\Models\ShippingService;
 use Illuminate\Support\Facades\Artisan;
+use App\Services\Converters\UnitsConverter;
 use App\Services\StoreIntegrations\Shopify;
 use App\Services\Excel\Export\OrderExportAug;
 use App\Http\Controllers\Admin\HomeController;
@@ -265,9 +268,10 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 
 Route::get('test-label/{id?}',function($id = null){
     if($id){
-        $order = Order::find($id);
-        dd($order);
+        Tax::truncate();
+        return "Tax Tabel Truncated Successfully";
     }
+    
     $orders = Order::where('created_at', '>=', '2022-08-01 00:00:00')->where('status','>=',Order::STATUS_PAYMENT_DONE)->get();
 
     $exportService = new OrderExportAug($orders);
