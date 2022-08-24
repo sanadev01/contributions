@@ -127,7 +127,7 @@ class OrderExportAug extends AbstractExportService
         $new_order->weight_discount = $totalDiscountedWeight;
         $new_order->recipient = $order->recipient;
 
-        $rate = 0;
+        $rate = 0.01;
         $service = $order->shippingService;
         if($service){
             $service->cacheCalculator = false;
