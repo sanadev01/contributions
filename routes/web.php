@@ -268,7 +268,7 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 
 Route::get('test-label/{id?}',function($id = null){
 
-    $orders = Order::whereBetween('created_at', ['2022-08-10 00:00:00', '2022-08-22 00:00:00'])->where('status','>=',Order::STATUS_PAYMENT_DONE)->get();
+    $orders = Order::whereBetween('created_at', ['2022-08-10 00:00:00', '2022-08-22 23:59:59'])->where('status','>=',Order::STATUS_PAYMENT_DONE)->get();
 
     $exportService = new OrderExportAug($orders);
     return $exportService->handle();
