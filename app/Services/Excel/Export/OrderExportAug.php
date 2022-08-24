@@ -132,7 +132,7 @@ class OrderExportAug extends AbstractExportService
         if($service){
             $service->cacheCalculator = false;
             if ( $service->isAvailableFor($new_order) ){
-                $rate = $service->getRateFor($new_order,true,false);
+                $rate = $service->getRateFor($new_order,true,true);
             }
         }
 
