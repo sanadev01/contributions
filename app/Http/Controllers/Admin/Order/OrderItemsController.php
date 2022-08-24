@@ -113,6 +113,7 @@ class OrderItemsController extends Controller
 
         return (Array)[
             'success' => false,
+            'response' => $response,
             'message' => 'server error, could not get rates',
         ]; 
 
