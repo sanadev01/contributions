@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Rate;
 use App\Models\Order;
 use App\Http\Controllers\Controller;
+use App\Models\Warehouse\Container;
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\Session;
@@ -24,13 +25,16 @@ class HomeController extends Controller
         return view('home',compact('orders'));   
     }
     
-    public function findContainer(Order $order)
+    public function findContainer(Container $container)
     {
-        $container = $order->containers()->first();
+        
         if ($container) {
             dump($container->toArray());
 
-            dump($container->deliveryBills->toArray());
+            foreach($container->orders as $order){
+                echo $order->id ."=>" . $order->shippingService->name . "<br>";
+            }
+            
         }
     }
 }
