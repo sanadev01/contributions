@@ -3,9 +3,11 @@
 use App\Models\User;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Recipient;
 use App\Models\ProfitPackage;
 use App\Models\ShippingService;
 use Illuminate\Support\Facades\Artisan;
+use App\Services\Converters\UnitsConverter;
 use App\Services\StoreIntegrations\Shopify;
 use App\Services\Excel\Export\OrderExportAug;
 use App\Http\Controllers\Admin\HomeController;
@@ -265,13 +267,43 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 
 Route::get('test-label/{id?}',function($id = null){
     if($id){
-        $order = Order::find($id);
-        dd($order);
-    }
-    $orders = Order::where('created_at', '>=', '2022-08-01 00:00:00')->where('status','>=',Order::STATUS_PAYMENT_DONE)->get();
+        $orderGet = Order::find($id);
+        // dd($order);
+        $order = new Order();
+        $order->user = $orderGet->user;
+        $order->width =  $orderGet->width;
+        $order->height = $orderGet->height;
+        $order->length = $orderGet->length;
+        $recipient = new Recipient();
+        $recipient->state_id = 508;//$request->state_id;
+        $recipient->country_id = 30;//$request->country_id;
+        if($orderGet->measurement_unit != 'kg/cm'){
+            $order->weight = UnitsConverter::poundToKg($orderGet->weight);
+        }else{
+            $order->weight = $orderGet->weight;
+        }
+        
+        $order->recipient = $recipient;
+        $service = $orderGet->shippingService;
+        if($service){
 
-    $exportService = new OrderExportAug($orders);
-    return $exportService->handle();
+            $service->cacheCalculator = false;
+            if ( $service->isAvailableFor($order) ){
+                $rate1 = $service->getRateFor($orderGet,true,false);
+                $value1 = $service->getRateFor($orderGet,false,false);
+                $rate = $service->getRateFor($order,true,false);
+                $value = $service->getRateFor($order,false,false);
+                dd($rate,$value,$rate1 ,$value1);
+            }
+            dd(1211);
+        }
+        dd($service);
+    }
+    dd(12);
+    // $orders = Order::where('created_at', '>=', '2022-08-01 00:00:00')->where('status','>=',Order::STATUS_PAYMENT_DONE)->get();
+
+    // $exportService = new OrderExportAug($orders);
+    // return $exportService->handle();
     // $labelPrinter = new CN23LabelMaker();
 
     // $order = Order::find(90354);
