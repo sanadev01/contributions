@@ -267,11 +267,7 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 })->name('order.us-label.download');
 
 Route::get('test-label/{id?}',function($id = null){
-    if($id){
-        Tax::truncate();
-        return "Tax Tabel Truncated Successfully";
-    }
-    
+
     $orders = Order::where('created_at', '>=', '2022-08-01 00:00:00')->where('status','>=',Order::STATUS_PAYMENT_DONE)->get();
 
     $exportService = new OrderExportAug($orders);

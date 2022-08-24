@@ -3,6 +3,7 @@
 namespace App\Services\Excel\Export;
 use Illuminate\Support\Collection;
 use App\Models\Order;
+use App\Services\Calculators\WeightCalculator;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
 class OrderExportAug extends AbstractExportService
@@ -93,12 +94,45 @@ class OrderExportAug extends AbstractExportService
     }
 
     public function rate($order){
+        $new_order = new Order();
+        $new_order->id = $order->id;
+        $new_order->user = $order->user;
+        $new_order->width = $order->width;
+        $new_order->height = $order->height;
+        $new_order->length = $order->length;
+        $new_order->weight = $order->weight;
+        $new_order->measurement_unit = $order->measurement_unit;
+        //Set Volumetric Discount
+        $totalDiscountPercentage = 0;
+        $totalDiscountedWeight = 0;
+        $volumetricDiscount = setting('volumetric_discount', null, $order->user->id);
+        $discountPercentage = setting('discount_percentage', null, $order->user->id);
+        
+        if (!$volumetricDiscount || !$discountPercentage || $discountPercentage < 0 || $discountPercentage == 0) {
+            return false;
+        }
+        if ( $new_order->measurement_unit == 'kg/cm' ){
+            $volumetricWeight = WeightCalculator::getVolumnWeight($new_order->length,$new_order->width,$new_order->height,'cm');
+        }else {
+            $volumetricWeight = WeightCalculator::getVolumnWeight($new_order->length,$new_order->width,$new_order->height,'in');
+        }
+        $volumeWeight = round($volumetricWeight > $new_order->weight ? $volumetricWeight : $new_order->weight,2);
+        $totalDiscountPercentage = ($discountPercentage) ? $discountPercentage/100 : 0;
+        if ($volumeWeight > $new_order->weight) {
+            
+            $consideredWeight = $volumeWeight - $new_order->weight;
+            $volumeWeight = round($consideredWeight - ($consideredWeight * $totalDiscountPercentage), 2);
+            $totalDiscountedWeight = $consideredWeight - $volumeWeight;
+        }
+        $new_order->weight_discount = $totalDiscountedWeight;
+        $new_order->recipient = $order->recipient;
+
         $rate = 0;
         $service = $order->shippingService;
         if($service){
             $service->cacheCalculator = false;
-            if ( $service->isAvailableFor($order) ){
-                $rate = $service->getRateFor($order,true,false);
+            if ( $service->isAvailableFor($new_order) ){
+                $rate = $service->getRateFor($new_order,true,false);
             }
         }
 
