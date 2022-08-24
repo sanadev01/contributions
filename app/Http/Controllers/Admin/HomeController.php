@@ -32,7 +32,7 @@ class HomeController extends Controller
             dump($container->toArray());
 
             foreach($container->orders as $order){
-                echo $order->id ."=>" . $order->shippingService->name . "<br>";
+                echo $order->id ."=>" . $order->shippingService->name . "=>" . $order->corrios_tracking_code . "<br>";
             }
             
         }
