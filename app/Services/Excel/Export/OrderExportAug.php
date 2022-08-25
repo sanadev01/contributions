@@ -39,8 +39,8 @@ class OrderExportAug extends AbstractExportService
             $this->setCellValue('C'.$row, $user->name);
             $this->setCellValue('D'.$row, $order->corrios_tracking_code);
             $this->setCellValue('E'.$row, $order->gross_total);
-            $this->setCellValue('F'.$row, $order->getWeight('kg'));
-            $this->setCellValue('G'.$row, $this->getVolumnWeight($order->length, $order->width, $order->height,$this->isWeightInKg($order->measurement_unit)));
+            $this->setCellValue('F'.$row, $order->getOriginalWeight('kg'));
+            $this->setCellValue('G'.$row, $order->getWeight('kg'));
             $this->setCellValue('H'.$row, $this->rate($order));
             
             $row++;
@@ -94,45 +94,46 @@ class OrderExportAug extends AbstractExportService
     }
 
     public function rate($order){
-        $new_order = new Order();
-        $new_order->id = $order->id;
-        $new_order->user = $order->user;
-        $new_order->width = $order->width;
-        $new_order->height = $order->height;
-        $new_order->length = $order->length;
-        $new_order->weight = $order->weight;
-        $new_order->measurement_unit = $order->measurement_unit;
+        $newOrder = new Order();
+        $newOrder->id = $order->id;
+        $newOrder->user = $order->user;
+        $newOrder->width = $order->width;
+        $newOrder->height = $order->height;
+        $newOrder->length = $order->length;
+        $newOrder->weight = $order->weight;
+        $newOrder->measurement_unit = $order->measurement_unit;
         //Set Volumetric Discount
         $totalDiscountPercentage = 0;
         $totalDiscountedWeight = 0;
         $volumetricDiscount = setting('volumetric_discount', null, $order->user->id);
         $discountPercentage = setting('discount_percentage', null, $order->user->id);
         
-        if (!$volumetricDiscount || !$discountPercentage || $discountPercentage < 0 || $discountPercentage == 0) {
-            return false;
-        }
-        if ( $new_order->measurement_unit == 'kg/cm' ){
-            $volumetricWeight = WeightCalculator::getVolumnWeight($new_order->length,$new_order->width,$new_order->height,'cm');
+        if ( $newOrder->measurement_unit == 'kg/cm' ){
+            $volumetricWeight = WeightCalculator::getVolumnWeight($newOrder->length,$newOrder->width,$newOrder->height,'cm');
         }else {
-            $volumetricWeight = WeightCalculator::getVolumnWeight($new_order->length,$new_order->width,$new_order->height,'in');
+            $volumetricWeight = WeightCalculator::getVolumnWeight($newOrder->length,$newOrder->width,$newOrder->height,'in');
         }
-        $volumeWeight = round($volumetricWeight > $new_order->weight ? $volumetricWeight : $new_order->weight,2);
-        $totalDiscountPercentage = ($discountPercentage) ? $discountPercentage/100 : 0;
-        if ($volumeWeight > $new_order->weight) {
+        $volumeWeight = round($volumetricWeight > $newOrder->weight ? $volumetricWeight : $newOrder->weight,2);
+        
+        if ($volumetricDiscount && $discountPercentage && $discountPercentage > 0 && $discountPercentage != 0) {
+            $totalDiscountPercentage = ($discountPercentage) ? $discountPercentage/100 : 0;
+        }
+
+        if ($volumeWeight > $newOrder->weight && $totalDiscountPercentage > 0) {
             
-            $consideredWeight = $volumeWeight - $new_order->weight;
+            $consideredWeight = $volumeWeight - $newOrder->weight;
             $volumeWeight = round($consideredWeight - ($consideredWeight * $totalDiscountPercentage), 2);
             $totalDiscountedWeight = $consideredWeight - $volumeWeight;
         }
-        $new_order->weight_discount = $totalDiscountedWeight;
-        $new_order->recipient = $order->recipient;
+        $newOrder->weight_discount = $totalDiscountedWeight;
+        $newOrder->recipient = $order->recipient;
 
-        $rate = 0.01;
+        $rate = 0;
         $service = $order->shippingService;
         if($service){
             $service->cacheCalculator = false;
-            if ( $service->isAvailableFor($new_order) ){
-                $rate = $service->getRateFor($new_order,true,true);
+            if ( $service->isAvailableFor($newOrder) ){
+                $rate = $service->getRateFor($newOrder,true,true);
             }
         }
 
