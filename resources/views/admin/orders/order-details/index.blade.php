@@ -87,43 +87,66 @@
             </div>
         </fieldset>
     </div>
-    <div class="actions clearfix">
+    <div class="actions clearfix" id="actions">
         <ul role="menu" aria-label="Pagination">
             <li class="disabled" aria-disabled="true">
                 <a href="{{ route('admin.orders.recipient.index',$order) }}" role="menuitem">@lang('orders.order-details.Previous')</a>   
             </li>
             <li aria-hidden="false" aria-disabled="false">
+                <button type="button" class="btn btn-success" id="rateBtn" onClick="checkService()">Get Rate</button>
                 <button class="btn btn-primary">@lang('orders.order-details.Place Order')</button>
             </li>
         </ul>
     </div>
 </form>
+
 @endsection
 
 @section('js')
 <script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
 
 <script>
+    $("#rateBtn").hide();
     $('#shipping_service_id').on('change',function(){
         $('#user_declared_freight').val(
             parseFloat($('option:selected', this).attr("data-cost"))
         );
-        //USPS PRIORITY INTERNATIONAL SERVICE FOR RATES CALL 
         const service = $('#shipping_service_id option:selected').attr('data-service-code');
-        //alert(service);
+        if(service == 3442 || service == 3443) {
+            $("#rateBtn").show();
+        }else {
+            $("#rateBtn").hide();
+        }
+    })
+
+    //USPS PRIORITY INTERNATIONAL SERVICE FOR RATES CALL 
+    function checkService(){
+        const service = $('#shipping_service_id option:selected').attr('data-service-code');
         if(service == 3442) {
             return  getUspsPriorityIntlRates();
         }
-    })
+    }
 
     function getUspsPriorityIntlRates(){
         const service = $('#shipping_service_id option:selected').attr('data-service-code');
         var order_id = $('#order_id').val();
-
+        var descpall = []; var qtyall = []; var valueall = [];
+        $.each($(".descp"), function(){
+            descpall.push($(this).val());
+        });
+        $.each($(".quantity"), function(){
+            qtyall.push($(this).val());
+        });
+        $.each($(".value"), function(){
+            valueall.push($(this).val());
+        });
         $('#loading').fadeIn();
         $.get('{{ route("api.usps_rates") }}',{
                 service: service,
                 order_id: order_id,
+                descp: descpall,
+                qty: qtyall,
+                value: valueall,
             }).then(function(response){
                 console.log(response);
                 if(response.success == true){
