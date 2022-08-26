@@ -2,11 +2,11 @@
 Hello, <br>
 Login User details<br>
 IP address: {{ $request->ip() }}<br>
-Admin UserName: {{ auth()->user()->name }} {{ auth()->user()->last_name }} Pobox No.: {{ auth()->user()->pobox_number }} setting has been updated on 
+<strong>Admin UserName:</strong> {{ auth()->user()->name }} {{ auth()->user()->last_name }} <strong>Pobox No.:</strong> {{ auth()->user()->pobox_number }} setting has been updated on 
 <strong>Date:</strong> {{ $user->updated_at->format('Y-m-d') }} 
 <strong>Time:</strong> {{ $user->updated_at->format('g:i:s a') }}<br>
 User Setting's Details<br>
-Username:{{ $user->name }} {{ $user->last_name }} Pobox No.: {{ $user->pobox_number }}<br>
+<strong>Username:</strong> {{ $user->name }} {{ $user->last_name }} <strong>Pobox No.:</strong> {{ $user->pobox_number }}<br>
 Which has following Diffrence <br>
 
 @component('mail::table')
@@ -31,4 +31,10 @@ Which has following Diffrence <br>
 | Height		| {{ $oldData['height'] }} | {{$request->height}}			|
 @endcomponent
 
+@component('mail::button', ['url' => route('login') ])
+Dashboard
+@endcomponent
+
+@lang('email.contactUs') <br>
+@lang('email.Home DeliveryBR Team')
 @endcomponent
