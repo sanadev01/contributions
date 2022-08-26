@@ -101,7 +101,7 @@ class OrderItemsController extends Controller
     public function uspsRates(Request $request)
     {
         $items = collect();
-        if(!empty($request->descp) && !empty($request->qty) && !empty($request->value)){
+        if(!is_null($request->descp) && !is_null($request->qty) && !is_null($request->value)){
             foreach ($request->descp as $key => $descp) {
                 $items = $items->push((object)[
                     'description' => $descp, 

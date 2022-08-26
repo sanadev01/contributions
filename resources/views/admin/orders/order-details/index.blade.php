@@ -9,7 +9,7 @@
     </div>
 @endif
 <div class="alert alert-danger" role="alert" id="ups_response" style="display: none;"></div>
-<form action="{{ route('admin.orders.order-details.store',$order) }}" method="POST" class="wizard">
+<form action="{{ route('admin.orders.order-details.store',$order) }}" method="POST" class="wizard" id="order-form">
     @csrf
     <input type="hidden" name="order_id" id="order_id" value="{{$order->id}}">
     <div class="content clearfix">
@@ -87,7 +87,7 @@
             </div>
         </fieldset>
     </div>
-    <div class="actions clearfix" id="actions">
+    <div class="actions clearfix">
         <ul role="menu" aria-label="Pagination">
             <li class="disabled" aria-disabled="true">
                 <a href="{{ route('admin.orders.recipient.index',$order) }}" role="menuitem">@lang('orders.order-details.Previous')</a>   
@@ -99,7 +99,26 @@
         </ul>
     </div>
 </form>
-
+<!--USPS PRIORITY INTERNATIONAL RATE ALERT MODAL-->
+<div class="modal fade" id="uspsModal" role="dialog">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">USPS Priority Intrernational</h5>
+            </div>
+            <div class="modal-body">
+                <h4>Parcel Rate</h4>
+                <ul>
+                    <li>You will be charged <span class="badge badge-light" id="uspsVal"></span> for your parcel</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="uspsAccept">Accept</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('js')
@@ -132,35 +151,49 @@
         var order_id = $('#order_id').val();
         var descpall = []; var qtyall = []; var valueall = [];
         $.each($(".descp"), function(){
-            descpall.push($(this).val());
+            if(!($(this).val()) == '') {
+                descpall.push($(this).val());
+            }
         });
         $.each($(".quantity"), function(){
-            qtyall.push($(this).val());
+            if(!($(this).val()) == '') {
+                qtyall.push($(this).val());
+            }
         });
         $.each($(".value"), function(){
-            valueall.push($(this).val());
+            if(!($(this).val()) == '') {
+                valueall.push($(this).val());
+            }
         });
-        $('#loading').fadeIn();
-        $.get('{{ route("api.usps_rates") }}',{
-                service: service,
-                order_id: order_id,
-                descp: descpall,
-                qty: qtyall,
-                value: valueall,
-            }).then(function(response){
-                console.log(response);
-                if(response.success == true){
-                    $('#user_declared_freight').val(response.total_amount);
-                    $('#user_declared_freight').prop('readonly', true);
-                }
-                $('#loading').fadeOut();
+        if(descpall.length && qtyall.length && valueall.length) {
+            $('#loading').fadeIn();
+            $.get('{{ route("api.usps_rates") }}',{
+                    service: service,
+                    order_id: order_id,
+                    descp: descpall,
+                    qty: qtyall,
+                    value: valueall,
+                }).then(function(response){
+                    console.log(response);
+                    if(response.success == true){
+                        $('#user_declared_freight').val(response.total_amount);
+                        $('#user_declared_freight').prop('readonly', true);
+                        $("#uspsVal").text('$' + response.total_amount);
+                        $('#uspsModal').modal('show');
+                        $("#uspsAccept").click(function(){        
+                            $("#order-form").submit();
+                        });
+                    }
+                    $('#loading').fadeOut();
 
-            }).catch(function(error){
-                console.log('error');
-                console.log(error);
-                $('#loading').fadeOut();
-        })
-        
+                }).catch(function(error){
+                    console.log('error');
+                    console.log(error);
+                    $('#loading').fadeOut();
+            })
+        }else {
+            alert('Add items to get rates!');
+        }    
     }
 
     $('#us_shipping_service').ready(function() {
