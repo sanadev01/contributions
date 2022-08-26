@@ -107,14 +107,14 @@
                 <h5 class="modal-title">USPS Priority Intrernational</h5>
             </div>
             <div class="modal-body">
-                <h4>Parcel Rate</h4>
+                <h4>@lang('orders.order-details.Parcel Rate')</h4>
                 <ul>
-                    <li>You will be charged <span class="badge badge-light" id="uspsVal"></span> for your parcel</li>
+                    <li>@lang('orders.order-details.Charge-msg1') <span class="badge badge-light" id="uspsVal"></span> @lang('orders.order-details.Charge-msg2')</li>
                 </ul>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success" id="uspsAccept">Accept</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" id="uspsAccept">@lang('orders.order-details.Proceed Order')</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">@lang('orders.order-details.Decline')</button>
             </div>
         </div>
     </div>
