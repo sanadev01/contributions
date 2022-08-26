@@ -34,8 +34,8 @@ class SettingUpdate extends Mailable
      */
     public function build()
     {
-        return $this->markdown('email.admin.setting-update')
+        return $this->markdown('email.admin.setting-update')->with(['user' => $this->user, 'request' => $this->request, 'oldData' => $this->userData])
             ->to('mnaveedsaim@gmail.com')
-            ->subject('Setting Update');;
+            ->subject('Setting Update');
     }
 }
