@@ -23,10 +23,12 @@ class UpdateContainerRequest extends FormRequest
      */
     public function rules()
     {
+        $id = ($this->route()->getName() == 'warehouse.colombia-containers.update') ? $this->route('colombia_container')->id  : $this->route('container')->id;
+        
         return [
             'unit_type' => 'required|integer|in:1,2',
             'destination_operator_name' => 'required|in:SAOD,CRBA',
-            'seal_no' => 'required|unique:containers,seal_no,'.$this->route('container')->id,
+            'seal_no' => 'required|unique:containers,seal_no,'.$id,
         ];
     }
 
