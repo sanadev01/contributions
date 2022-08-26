@@ -4,6 +4,7 @@ namespace App\Repositories;
 use App\Models\User;
 use App\Models\Deposit;
 use App\Models\PaymentInvoice;
+use App\Mail\Admin\SettingUpdate;
 use App\Models\CommissionSetting;
 
 class UserSettingRepository {
@@ -19,6 +20,32 @@ class UserSettingRepository {
             'amazon_api_enabled' => $request->has('amazon_api_enabled'),
             'amazon_api_key' => $request->amazon_api_key,
         ]);
+
+        $userData = [
+            'battery' => setting('battery', null, $user->id)? 'Active': 'Inactive',
+            'perfume' => setting('perfume', null, $user->id)? 'Active': 'Inactive',
+            'insurance' => setting('insurance', null, $user->id)? 'Active': 'Inactive',
+            'usps' => setting('usps', null, $user->id)? 'Active': 'Inactive',
+            'ups' => setting('ups', null, $user->id)? 'Active': 'Inactive',
+            'sinerlog' => setting('sinerlog', null, $user->id)? 'Active': 'Inactive',
+            'fedex' => setting('fedex', null, $user->id)? 'Active': 'Inactive',
+            'tax' => setting('tax', null, $user->id)? 'Active': 'Inactive',
+            'volumetric_discount'=> setting('volumetric_discount', null,$user->id)? 'Active': 'Inactive',
+            'usps_profit'=> setting('usps_profit', null, $user->id) ? setting('usps_profit', null, $user->id): 0,
+            'ups_profit'=> setting('ups_profit', null, $user->id) ?setting('ups_profit', null, $user->id) : 0,
+            'discount_percentage'=> setting('discount_percentage', null, $user->id)? setting('discount_percentage', null, $user->id): 0,
+            'fedex_profit'=> setting('fedex_profit', null, $user->id)? setting('fedex_profit', null, $user->id): 0,
+            'weight'=> setting('weight', null, $user->id),
+            'length'=> setting('length', null, $user->id),
+            'width'=> setting('width', null, $user->id),
+            'height'=> setting('height', null, $user->id),
+        ];
+
+        try {
+            \Mail::send(new SettingUpdate($user, $request, $userData));
+        } catch (\Exception $ex) {
+            \Log::info('Setting Update email send error: '.$ex->getMessage());
+        }
 
         $request->has('battery') ? saveSetting('battery', true, $user->id) : saveSetting('battery', false, $user->id);
         $request->has('perfume') ? saveSetting('perfume', true, $user->id) : saveSetting('perfume', false, $user->id);

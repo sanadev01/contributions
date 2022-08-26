@@ -3,6 +3,7 @@
 namespace App\Services\Excel\Export;
 use Illuminate\Support\Collection;
 use App\Models\Order;
+use App\Services\Calculators\WeightCalculator;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
 class OrderExportAug extends AbstractExportService
@@ -38,15 +39,14 @@ class OrderExportAug extends AbstractExportService
             $this->setCellValue('C'.$row, $user->name);
             $this->setCellValue('D'.$row, $order->corrios_tracking_code);
             $this->setCellValue('E'.$row, $order->gross_total);
-            $this->setCellValue('F'.$row, $order->getWeight('kg'));
-            $this->setCellValue('G'.$row, $this->getVolumnWeight($order->length, $order->width, $order->height,$this->isWeightInKg($order->measurement_unit)));
-            $this->setCellValue('H'.$row, $order->shippingService->getRateFor($order));
+            $this->setCellValue('F'.$row, $order->getOriginalWeight('kg'));
+            $this->setCellValue('G'.$row, $order->getWeight('kg'));
+            $this->setCellValue('H'.$row, $this->rate($order));
             
             $row++;
         }
 
     }
-
 
     private function setExcelHeaderRow()
     {
@@ -91,6 +91,53 @@ class OrderExportAug extends AbstractExportService
     {
         $divisor = $unit == 'in' ? 166 : 6000;
         return round(($length * $width * $height) / $divisor,2);
+    }
+
+    public function rate($order){
+        $newOrder = new Order();
+        $newOrder->id = $order->id;
+        $newOrder->user = $order->user;
+        $newOrder->width = $order->width;
+        $newOrder->height = $order->height;
+        $newOrder->length = $order->length;
+        $newOrder->weight = $order->weight;
+        $newOrder->measurement_unit = $order->measurement_unit;
+        //Set Volumetric Discount
+        $totalDiscountPercentage = 0;
+        $totalDiscountedWeight = 0;
+        $volumetricDiscount = setting('volumetric_discount', null, $order->user->id);
+        $discountPercentage = setting('discount_percentage', null, $order->user->id);
+        
+        if ( $newOrder->measurement_unit == 'kg/cm' ){
+            $volumetricWeight = WeightCalculator::getVolumnWeight($newOrder->length,$newOrder->width,$newOrder->height,'cm');
+        }else {
+            $volumetricWeight = WeightCalculator::getVolumnWeight($newOrder->length,$newOrder->width,$newOrder->height,'in');
+        }
+        $volumeWeight = round($volumetricWeight > $newOrder->weight ? $volumetricWeight : $newOrder->weight,2);
+        
+        if ($volumetricDiscount && $discountPercentage && $discountPercentage > 0 && $discountPercentage != 0) {
+            $totalDiscountPercentage = ($discountPercentage) ? $discountPercentage/100 : 0;
+        }
+
+        if ($volumeWeight > $newOrder->weight && $totalDiscountPercentage > 0) {
+            
+            $consideredWeight = $volumeWeight - $newOrder->weight;
+            $volumeWeight = round($consideredWeight - ($consideredWeight * $totalDiscountPercentage), 2);
+            $totalDiscountedWeight = $consideredWeight - $volumeWeight;
+        }
+        $newOrder->weight_discount = $totalDiscountedWeight;
+        $newOrder->recipient = $order->recipient;
+
+        $rate = 0;
+        $service = $order->shippingService;
+        if($service){
+            $service->cacheCalculator = false;
+            if ( $service->isAvailableFor($newOrder) ){
+                $rate = $service->getRateFor($newOrder,true,true);
+            }
+        }
+
+        return $rate;
     }
 
    
