@@ -4,11 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Role;
 use App\Models\User;
-use App\Models\Deposit;
 use Illuminate\Http\Request;
 use App\Models\ProfitPackage;
-use App\Models\PaymentInvoice;
-use App\Models\CommissionSetting;
 use App\Http\Controllers\Controller;
 use App\Repositories\UserSettingRepository;
 

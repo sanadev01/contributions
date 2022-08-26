@@ -321,8 +321,7 @@
                         <span class="menu-title">@lang('inventory.Inventory Management')</span>
                     </a>
                     <ul class="menu-content">
-
-                        <li class="{{ $isActive(['admin.inventory.product.index','admin.inventory.product.create','admin.inventory.product.edit']) }}">
+                        <li class="{{ $isActive(['admin.inventory.product.index','admin.inventory.product.create','admin.inventory.product.edit', 'admin.inventory.product-import.create']) }}">
                             <a href="{{ route('admin.inventory.product.index') }}">
                                 <i class="icon_adjst feather icon-circle"></i>
                                 <span class="menu-title">@lang('inventory.Products')</span>

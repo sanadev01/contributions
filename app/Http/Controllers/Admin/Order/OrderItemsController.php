@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin\Order;
 
 use App\Models\Order;
+use App\Models\Country;
 use App\Facades\UPSFacade;
 use App\Facades\USPSFacade;
 use App\Facades\FedExFacade;
 use Illuminate\Http\Request;
+use App\Models\ShippingService;
 use App\Http\Controllers\Controller;
 use App\Repositories\OrderRepository;
 use App\Http\Requests\Orders\OrderDetails\CreateRequest;
@@ -31,16 +33,32 @@ class OrderItemsController extends Controller
         if ( !$order->recipient ){
             abort(404);
         }
-        $chileCountryId =  Order::CHILE;
-        $usCountryId =  Order::US;
+
         $shippingServices = $this->orderRepository->getShippingServices($order);
         $error = $this->orderRepository->getShippingServicesError();
 
         if ($error) {
             session()->flash($error);
         }
+
+        $countryConstants = [
+            'Brazil' => Country::Brazil,
+            'Chile' => Country::Chile,
+            'Colombia' => Country::COLOMBIA,
+            'US' => Country::US,
+        ];
+
+        $shippingServiceCodes = [
+            'USPS_PRIORITY' => ShippingService::USPS_PRIORITY,
+            'USPS_FIRSTCLASS' => ShippingService::USPS_FIRSTCLASS,
+            'USPS_PRIORITY_INTERNATIONAL' => ShippingService::USPS_PRIORITY_INTERNATIONAL,
+            'USPS_FIRSTCLASS_INTERNATIONAL' => ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,
+            'UPS_GROUND' => ShippingService::UPS_GROUND,
+            'FEDEX_GROUND' => ShippingService::FEDEX_GROUND,
+            'COLOMBIA_Standard' => ShippingService::COLOMBIA_Standard,
+        ];
         
-        return view('admin.orders.order-details.index',compact('order','shippingServices', 'error','chileCountryId', 'usCountryId'));
+        return view('admin.orders.order-details.index',compact('order','shippingServices', 'error', 'countryConstants', 'shippingServiceCodes'));
     }
 
     /**
@@ -57,7 +75,7 @@ class OrderItemsController extends Controller
             abort(404);
         }
 
-        if($this->orderRepository->domesticService($request->shipping_service_id)){
+        if($this->orderRepository->serviceRequireFreight($request->shipping_service_id)){
             $request->validate([
                 'user_declared_freight' => 'bail|required|gt:0',
             ], [
@@ -100,7 +118,20 @@ class OrderItemsController extends Controller
 
     public function uspsRates(Request $request)
     {
-        $order = Order::find($request->order_id);
+        $items = collect();
+        if(!is_null($request->descp) && !is_null($request->qty) && !is_null($request->value)){
+            foreach ($request->descp as $key => $descp) {
+                $items = $items->push((object)[
+                    'description' => $descp, 
+                    'quantity' => $request->qty[$key], 
+                    'value' => $request->value[$key]
+                ]);
+            }
+            $order = Order::find($request->order_id);
+            $order->items = $items;
+        }else{
+            $order = Order::find($request->order_id);
+        }
         $response = USPSFacade::getRecipientRates($order, $request->service);
 
         if($response->success == true)
