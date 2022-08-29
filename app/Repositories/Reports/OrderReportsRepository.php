@@ -190,7 +190,11 @@ class OrderReportsRepository
 
     public function getShipmentReportOfUsersByMonth(Request $request)
     {
-        $ordersByYear = Order::where('status','>',Order::STATUS_PAYMENT_PENDING)->selectRaw(
+        $query = Order::where('status','>',Order::STATUS_PAYMENT_PENDING);
+        if($request->user_id){
+            $query->where('user_id',$request->user_id);
+        }
+        $ordersByYear = $query->selectRaw(
             "count(*) as total, Month(order_date) as month, 
             sum(gross_total) as spent,
             sum(CASE WHEN measurement_unit = 'kg/cm' THEN ROUND(weight,2) ELSE ROUND((weight/2.205),2) END) as weight"
