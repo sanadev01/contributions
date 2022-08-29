@@ -81,7 +81,7 @@ class OrderReportsRepository
         $orders = Order::where('status','>',Order::STATUS_PAYMENT_PENDING)
         ->has('user')->get();
         if (Auth::user()->isUser()) {
-            $orders->where('user_id', 1233)->get();
+            $orders->where('user_id', Auth::id())->get();
         }
         return $orders;
     }
