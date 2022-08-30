@@ -14,11 +14,11 @@
             </div>
         </div>
         <div class="row my-3" id="dateSearch">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <label for="">Start Date</label>
                 <input type="date" class="form-control" wire:model='start_date'>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <label for="">End Date</label>
                 <input type="date" class="form-control" wire:model='end_date'>
             </div>

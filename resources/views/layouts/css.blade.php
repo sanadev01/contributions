@@ -1012,5 +1012,8 @@
         background-color: #fa857d !important;
         color: white;
     }
+    .bg-white {
+        background: white !important;
+    }
 </style>
 @yield('custom-css')

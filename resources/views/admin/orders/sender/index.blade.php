@@ -8,7 +8,7 @@
         <div class="content clearfix">
             <!-- Step 1 -->
             <h6 id="steps-uid-0-h-0" tabindex="-1" class="title current">@lang('orders.sender.Step 1')</h6>
-            <fieldset id="steps-uid-0-p-0" role="tabpanel" aria-labelledby="steps-uid-0-h-0" class="body current"
+            <fieldset id="steps-uid-0-p-0" role="tabpanel" aria-labelledby="steps-uid-0-h-0" class="body current bg-white"
                 aria-hidden="false">
                 <div class="row mb-1">
                     <div class="col-md-3 form-group">
@@ -161,7 +161,7 @@
                     {{-- <a href="{{ route('admin.orders.packages.index') }}" role="menuitem">Previous</a> --}}
                 </li>
                 <li aria-hidden="false" aria-disabled="false">
-                    <button class="btn btn-primary">@lang('orders.sender.Next')</button>
+                    <button class="btn btn-primary mt-2">@lang('orders.sender.Next')</button>
                 </li>
             </ul>
         </div>

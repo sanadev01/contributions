@@ -15,7 +15,7 @@
     <div class="content clearfix">
         <!-- Step 1 -->
         <h6 id="steps-uid-0-h-0" tabindex="-1" class="title current">@lang('orders.order-details.Step 1')</h6>
-        <fieldset role="tabpanel" aria-labelledby="steps-uid-0-h-0" class="body current p-4" aria-hidden="false">
+        <fieldset role="tabpanel" aria-labelledby="steps-uid-0-h-0" class="body current p-4 bg-white" aria-hidden="false">
             <div class="row">
                 <div class="form-group col-12 col-sm-6 col-md-6">
                     <div class="controls">
@@ -89,11 +89,11 @@
     </div>
     <div class="actions clearfix">
         <ul role="menu" aria-label="Pagination">
-            <li class="disabled" aria-disabled="true">
+            <li class="disabled mt-2" aria-disabled="true">
                 <a href="{{ route('admin.orders.recipient.index',$order) }}" role="menuitem">@lang('orders.order-details.Previous')</a>   
             </li>
             <li aria-hidden="false" aria-disabled="false">
-                <button class="btn btn-primary">@lang('orders.order-details.Place Order')</button>
+                <button class="btn btn-primary mt-2">@lang('orders.order-details.Place Order')</button>
             </li>
         </ul>
     </div>
