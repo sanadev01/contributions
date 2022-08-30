@@ -1,50 +1,50 @@
 <div>
-    <div class="row col-md-12">
-            <div class="row col-md-6">
-                <div class="col-md-4">
-                    <label for="">Start Date</label>
-                    <input type="date" class="form-control" wire:model='start_date'>
-                </div>
-                <div class="col-md-4">
-                    <label for="">End Date</label>
-                    <input type="date" class="form-control" wire:model='end_date'>
-                </div>
-                <div class="col-md-4 mt-4">
-                    <a href="{{ $downloadLink }}" class="btn btn-primary" {{ !$downloadLink ? 'disabled': '' }} target="_blank">
-                        Download
-                    </a>
-                </div>
+    <div class="row col-md-12 mb-2">
+        <div class="row col-md-6">
+            <div class="col-md-4">
+                <label for="">Start Date</label>
+                <input type="date" class="form-control" wire:model='start_date'>
             </div>
-            <div class="col-md-6">
-                <form action="{{ route('admin.reports.user-shipments.index') }}" method="GET" target="_blank">
-                    <div class="row">
-                        <div class="col-md-12 row">
-            
-                            <div class="col-md-4">
-                                <div class="controls">
-                                    <label>@lang('parcel.User POBOX Number') <span class="text-danger">*</span></label>
-                                    <livewire:components.search-user />
-                                    @error('pobox_number')
-                                    <div class="help-block text-danger"> {{ $message }} </div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="">Year</label>
-                                <select class="form-control" name="year" id="DefaultSelect">
-                                    <option value="">Select Year </option>
-                                    @foreach( $years as $year )
-                                    <option value="{{$year}}" @if($year == $year) selected @endif > {{$year}} </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-2 mt-4">
-                                <button type="submit" class="btn btn-primary"> Download Yearly</button>
+            <div class="col-md-4">
+                <label for="">End Date</label>
+                <input type="date" class="form-control" wire:model='end_date'>
+            </div>
+            <div class="col-md-4 mt-4">
+                <a href="{{ $downloadLink }}" class="btn btn-primary" {{ !$downloadLink ? 'disabled': '' }} target="_blank">
+                    Download
+                </a>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <form action="{{ route('admin.reports.user-shipments.index') }}" method="GET" target="_blank">
+                <div class="row">
+                    <div class="col-md-12 row">
+        
+                        <div class="col-md-4">
+                            <div class="controls">
+                                <label>@lang('parcel.User POBOX Number') <span class="text-danger">*</span></label>
+                                <livewire:components.search-user />
+                                @error('pobox_number')
+                                <div class="help-block text-danger"> {{ $message }} </div>
+                                @enderror
                             </div>
                         </div>
+                        <div class="col-md-4">
+                            <label for="">Year</label>
+                            <select class="form-control" name="year" id="DefaultSelect">
+                                <option value="">Select Year </option>
+                                @foreach( $years as $year )
+                                <option value="{{$year}}" @if($year == $year) selected @endif > {{$year}} </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-2 mt-4">
+                            <button type="submit" class="btn btn-primary"> Download Yearly</button>
+                        </div>
                     </div>
-                </form>
-            </div>
+                </div>
+            </form>
+        </div>
     </div>
     <table class="table mb-0" id="example">
         <thead>
