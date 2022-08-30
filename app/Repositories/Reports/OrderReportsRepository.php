@@ -92,6 +92,9 @@ class OrderReportsRepository
         if($id){
             $query->has('user')->where('user_id', $id);
         }
+        if( $request->user_id){
+            $query->has('user')->where('user_id', $request->user_id);
+        }
         if($month){
             $month = date("m",strtotime($month));
             $firatDateOfMonth = $request->year.'-'.$month.'-01';
