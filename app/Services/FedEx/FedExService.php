@@ -127,7 +127,7 @@ class FedExService
                 'recipients' => [
                     [
                         'contact' => [
-                            'personName' => 'Marcio Fertias'.$poBoxNumber,
+                            'personName' => 'Marcio Fertias -'.$poBoxNumber,
                             'phoneNumber' => '+13058885191',
                             'companyName' => 'HERCO SUITE#100'
                         ],
@@ -237,7 +237,7 @@ class FedExService
                 'recipients' => [
                     [
                         'contact' => [
-                            'personName' => $order->recipient->first_name.' '.$order->recipient->last_name.' '.$order->user->pobox_number,
+                            'personName' => $order->recipient->first_name.' '.$order->recipient->last_name.' - '.$order->user->pobox_number,
                             'phoneNumber' => $order->recipient->phone,
                         ],
                         'address' => [
