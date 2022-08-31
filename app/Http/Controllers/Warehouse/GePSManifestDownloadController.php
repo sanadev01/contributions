@@ -17,7 +17,7 @@ class GePSManifestDownloadController extends Controller
             return redirect()->back()->with('error', 'please add a container to this delivery bill');
         } 
 
-        if($deliveryBill->containers[0]->services_subclass_code == 'KP') {
+        if($deliveryBill->containers[0]->services_subclass_code == '537') {
             $client = new Client();
             $response = $client->downloadGePSManifest($deliveryBill);
 

@@ -47,7 +47,7 @@ class DeliveryBill extends Model
 
     public function isGePS()
     {
-        if($this->containers->first()->services_subclass_code == 'KP'){
+        if($this->containers->first()->services_subclass_code == '537'){
             return true;
         }
     }

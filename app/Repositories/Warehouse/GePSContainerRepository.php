@@ -19,7 +19,7 @@ class GePSContainerRepository {
         }
 
         return $query->where(function($query) {
-            $query->where('services_subclass_code','KP');
+            $query->where('services_subclass_code','537');
         })->latest()->paginate();
 
     }

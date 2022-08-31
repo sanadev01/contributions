@@ -31,7 +31,7 @@ class ShippingService extends Model
     const Packet_Mini = 33197;
     const AJ_Packet_Standard = 33164;
     const AJ_Packet_Express = 33172;
-    const GePS = 'KP';
+    const GePS = 537;
 
     protected $guarded = [];
 

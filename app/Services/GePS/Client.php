@@ -102,7 +102,7 @@ class Client{
     {   
         //GET CONTAINER FOR PARCEL
 
-        $container = Container::where('services_subclass_code','KP')
+        $container = Container::where('services_subclass_code','537')
             ->where('destination_operator_name', $order->recipient->country->code)->whereNull('unit_code')->first();
 
         if(!$container) {
@@ -114,7 +114,7 @@ class Client{
                 'postal_category_code' => 'A',
                 'destination_operator_name' => $order->recipient->country->code,
                 'unit_type' => 1,
-                'services_subclass_code' => 'KP'
+                'services_subclass_code' => '537'
             ]);
 
             $container->update([

@@ -19,7 +19,7 @@ class DeliveryBillRegisterController extends Controller
             return back();
         }
 
-        if($deliveryBill->containers[0]->services_subclass_code == 'KP') {
+        if($deliveryBill->containers[0]->services_subclass_code == '537') {
             $client = new GePSClient();
             $response = $client->registerDeliveryBillGePS($deliveryBill);
 

@@ -84,7 +84,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'Priority';
         }elseif($this->services_subclass_code == 'PostNL'){
             return 'PostNL';
-        }elseif($this->services_subclass_code == 'KP'){
+        }elseif($this->services_subclass_code == '537'){
             return 'GePS';
         }elseif($this->services_subclass_code == 'Priority International'){
             return 'Priority International';
@@ -123,7 +123,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 12;
         }elseif($this->services_subclass_code == 'PostNL'){
             return 13;
-        }elseif($this->services_subclass_code == 'KP'){
+        }elseif($this->services_subclass_code == '537'){
             return 14;
         }
         // return $this->services_subclass_code == 'NX' ? 2 : 1;
@@ -180,7 +180,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'IX';
         }
 
-        if ($this->services_subclass_code == 'KP') {
+        if ($this->services_subclass_code == '537') {
             return 'IX';
         }
 
@@ -228,7 +228,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'PostNL';
         }
 
-        if ($this->services_subclass_code == 'KP') {
+        if ($this->services_subclass_code == '537') {
             return 'GePS';
         }
 
