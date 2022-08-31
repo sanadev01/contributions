@@ -51,6 +51,22 @@ class DashboardRepository
         $totalCompleteOrders = $totalOrderQuery->where('status', '>=' ,$paymentDone)->count();
         $lastFiveOrders      = Order::where('status', Order::STATUS_ORDER)->latest()->take(10)->get();
 
+        //TOTAL ORDERS
+        $total_orders = Order::selectRaw("count(id) as count, Month(created_at) as month ")->groupBy('month')->get()->toArray();
+        $yearOrders = [];
+            foreach ($total_orders as $key => $value) {
+                array_push($yearOrders, $value['count']);
+            }
+        $totalMonthOrders = implode (", ", $yearOrders);
+        
+        //TOTAL AMOUNT
+        $total_amount = Order::selectRaw("round(sum(total),0) as total, Month(created_at) as month ")->groupBy('month')->get()->toArray();
+        $yearAmount = [];
+            foreach ($total_amount as $key => $value) {
+                array_push($yearAmount, $value['total']);
+            }
+        $totalMonthAmount = implode (", ", $yearAmount);
+
         return  $order[] = [
             'totalOrders'         => $totalOrder,
             'totalCompleteOrders' => $totalCompleteOrders,
@@ -61,7 +77,9 @@ class DashboardRepository
             'currentYearTotal'    => $currentYearTotal,
             'currentYearConfirm'  => $currentYearConfirm,
             'monthName'           => $monthName,
-            'lastFive'            => $lastFiveOrders
+            'lastFive'            => $lastFiveOrders,
+            'allMonthsOrders'     => $totalMonthOrders,
+            'totalMonthAmount'    => $totalMonthAmount
         ];
     }
 

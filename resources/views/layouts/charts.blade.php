@@ -15,34 +15,25 @@
     var myChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
             datasets: [{
-                    label: '# of Votes',
-                    data: [9, 13, 7, 8, 19, 11],
+                    label: 'Orders',
+                    data: [{!!$orders['allMonthsOrders']!!}],
                     backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
                         'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
                     ],
                     borderColor: [
-                        'rgba(255, 99, 132, 1)',
                         'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
                     ],
                     borderWidth: 4,
-                    fill: false,
+                    fill: true,
                     borderColor: '#05c3fb',
+                    yAxisID: 'y',
 
                 },
                 {
-                    label: '# of Votes',
-                    data: [12, 19, 12, 18, 10, 11],
+                    label: 'Sales',
+                    data: [{!!$orders['totalMonthAmount']!!}],
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
                         'rgba(54, 162, 235, 0.2)',
@@ -63,22 +54,45 @@
                     fill: true,
                     borderColor: '#6c5ffc',
                     backgroundColor: gradient,
+                    yAxisID: 'y1',
                 }
+                
             ]
         },
         options: {
+            responsive: true,
+            interaction: {
+            mode: 'index',
+            intersect: false,
+            },
+            stacked: false,
             plugins: {
                 legend: {
                     display: false
                 },
+                title: {
+                    display: true,
+                },
             },
             tension: 0.2,
             scales: {
-                x: {
-                    display: false,
-                }
+                y: {
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
+                },
+                y1: {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+
+                    // grid line settings
+                    grid: {
+                    drawOnChartArea: false, // only want the grid lines for one axis to show up
+                    },
+                },
             }
-        }
+        },
     });
     var card1 = document.getElementById('cardChart').getContext("2d");;
 

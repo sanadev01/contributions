@@ -5,7 +5,8 @@
                 class="feather icon-filter"></i>&nbsp;Filter</button>
     </div>
     <div class="row col-10">
-        <div class=" col-10 text-left mb-2 pl-0" id="dateSearch">
+        <div class=" col-10 text-left mb-2 pl-0" id="dateSearch"
+        @if(!empty($startDate) || !empty($endDate)) style="display:block !important" @endif>
             <div class="row my-3 col-8 pl-0">
                 <div class="col-md-6">
                     <label for="">@lang('dashboard.Start Date')</label>
@@ -259,10 +260,10 @@
                 <div class="card-body">
                     <div class="d-flex mx-auto text-center justify-content-center mb-4">
                         <div class="d-flex text-center justify-content-center me-3">
-                            <span class="fa fa-circle font-small-3 text-primary mr-25"></span>Total Sales
+                            <span class="fa fa-circle mt-1 font-small-3 text-primary mr-25"></span>Total Sales
                         </div>
                         <div class="d-flex text-center justify-content-center">
-                            <span class="fa fa-circle font-small-3 text-info mr-25"></span>Total Orders
+                            <span class="fa fa-circle mt-1 ml-2 font-small-3 text-info mr-25"></span>Total Orders
                         </div>
                     </div>
                     <div class="chartjs-wrapper-demo">
