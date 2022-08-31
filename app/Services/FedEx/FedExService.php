@@ -105,7 +105,7 @@ class FedExService
 
     private function makeShipmentRequestForSender($order, $request)
     {
-        $wareHouseNumber = $order->warehouse_number ? ' '.$order->warehouse_number : '';
+        $poBoxNumber = $order->user ? ' '.$order->user->pobox_number : auth()->user()->pobox_number;
         $this->calculateVolumetricWeight($order);
 
         return [
@@ -127,7 +127,7 @@ class FedExService
                 'recipients' => [
                     [
                         'contact' => [
-                            'personName' => 'Marcio Fertias'.$wareHouseNumber,
+                            'personName' => 'Marcio Fertias -'.$poBoxNumber,
                             'phoneNumber' => '+13058885191',
                             'companyName' => 'HERCO SUITE#100'
                         ],
@@ -237,7 +237,7 @@ class FedExService
                 'recipients' => [
                     [
                         'contact' => [
-                            'personName' => $order->recipient->first_name.' '.$order->recipient->last_name.' '.$order->warehouse_number,
+                            'personName' => $order->recipient->first_name.' '.$order->recipient->last_name.' - '.$order->user->pobox_number,
                             'phoneNumber' => $order->recipient->phone,
                         ],
                         'address' => [
