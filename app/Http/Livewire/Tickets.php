@@ -15,6 +15,7 @@ class Tickets extends Component
     public $user;
     public $status;
     public $open;
+    public $pobox;
     
     public function mount()
     {
@@ -43,6 +44,7 @@ class Tickets extends Component
     {
         return (new TicketRepository)->get(request()->merge([
             'date' => $this->date ? $this->date : null,
+            'pobox' => $this->pobox,
             'user' => $this->user,
             'status' => ($this->status != 'all') ? $this->open : null,
         ]));

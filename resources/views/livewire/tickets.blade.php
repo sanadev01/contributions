@@ -6,6 +6,7 @@
                     <th>@lang('tickets.TicketID')</th>
                     <th></th>
                     <th>@lang('tickets.Date')</th>
+                    <th>@lang('tickets.pobox')</th>
                     <th>@lang('tickets.User')</th>
                     <th>@lang('tickets.Issue')</th>
                     <th>@lang('tickets.Status')</th>
@@ -17,6 +18,9 @@
                     <th></th>
                     <th>
                         <input type="search" class="form-control" wire:model.debounce.1000ms="date">
+                    </th>
+                    <th>
+                        <input type="search" class="form-control" wire:model.debounce.1000ms="pobox">
                     </th>
                     <th>
                         <input type="search" class="form-control" wire:model.debounce.1000ms="user">
@@ -44,6 +48,9 @@
                         </td>
                         <td>
                             {{ $ticket->created_at->format('Y-m-d') }}
+                        </td>
+                        <td>
+                            {{ $ticket->user->pobox_number }}
                         </td>
                         <td>
                             {{ $ticket->user->name }}
