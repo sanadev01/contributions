@@ -13,6 +13,7 @@ use App\Services\UPS\UPSShippingService;
 use App\Services\USPS\USPSShippingService;
 use App\Services\FedEx\FedExShippingService;
 use App\Models\User;
+use App\Services\Colombia\ColombiaPostalCodes;
 
 class OrderRepository
 {
@@ -537,6 +538,27 @@ class OrderRepository
                 $this->shippingServiceError = 'Please check your parcel dimensions';
             }
         }
+
+        if($shippingServices->contains('service_sub_class', ShippingService::COLOMBIA_URBANO)
+            || $shippingServices->contains('service_sub_class', ShippingService::COLOMBIA_NACIONAL)
+            || $shippingServices->contains('service_sub_class', ShippingService::COLOMBIA_TRAYETOS)) {
+
+            $colombiaPostalCodeService = new ColombiaPostalCodes();
+            $service = $colombiaPostalCodeService->getServiceByPostalCode($order->recipient->zipcode);
+
+            if($service) {
+                $shippingServices = $shippingServices->filter(function ($shippingService, $key) use($service) {
+                    return $shippingService->service_sub_class == $service;
+                });
+            } else {
+                $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                    return $shippingService->service_sub_class != ShippingService::COLOMBIA_URBANO
+                            && $shippingService->service_sub_class != ShippingService::COLOMBIA_NACIONAL
+                            && $shippingService->service_sub_class != ShippingService::COLOMBIA_TRAYETOS;
+                });
+            }
+
+        } 
 
         return $shippingServices;
     }

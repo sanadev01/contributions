@@ -364,8 +364,8 @@
         $('#div_hd_state').addClass('d-none');
         $('#div_city').addClass('d-none');
         $('#div_street_number').addClass('d-none');
-        $('#div_zipcode').addClass('d-none');
-        $('#zipcode').prop('disabled', true);
+        $('#div_zipcode').addClass('d-block');
+        $('#zipcode').prop('disabled', false);
 
 
         $('#div_regions').removeClass('d-none');
