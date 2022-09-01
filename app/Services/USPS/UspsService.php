@@ -253,8 +253,10 @@ class UspsService
         ];
 
         if ($service == ShippingService::USPS_PRIORITY_INTERNATIONAL || $service == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
-            
-            $request_body = array_add($request_body, 'value', $this->calculateItemsValue($order->items));
+            $request_body = array_add($request_body, 'value', 
+            ($order->id === 1) ? $this->calculateItemsValue($order->items) 
+                                        : (float)$order->items()->sum(DB::raw('quantity * value'))
+            );
 
             $request_body = array_add($request_body, 'customs_form', $this->setCustomsForm($order));
 
@@ -377,9 +379,10 @@ class UspsService
     private function calculateItemsValue($orderItems)
     {
         $itemsValue = 0;
-        foreach ($orderItems as $key => $item) {
+        foreach ($orderItems as $item) {
             $itemsValue += $item->value * $item->quantity;
         }
+       
         return $itemsValue;
     }
 
@@ -409,6 +412,7 @@ class UspsService
                array_push($items, $itemToPush);
             }
         }
+
         return $items;
     }
 
