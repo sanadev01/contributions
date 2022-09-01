@@ -31,6 +31,12 @@ class TicketRepository
         $tickets->when($request->filled('date'), function ($query) use ($request) {
             return $query->where('created_at', 'LIKE', "%{$request->date}%");
         });
+        \Log::info($request->pobox);
+        $tickets->when($request->filled('pobox'), function ($query) use ($request) {
+            return $query->whereHas('user', function ($query) use ($request) {
+                return $query->where('pobox_number', 'like', '%'.$request->pobox.'%');
+            });
+        });
 
         $tickets->when($request->filled('user'), function ($query) use ($request) {
             return $query->whereHas('user', function ($query) use ($request) {
