@@ -266,9 +266,9 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
     return response()->download(storage_path("app/labels/{$order->us_api_tracking_code}.pdf"),"{$order->us_api_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.us-label.download');
 
-Route::get('test-label/{id?}/{orderID?}/{weight?}',function($id = null, $orderID = null, $weight = null){
+Route::get('test-label/{id?}/{weight?}',function($id = null, $weight = null){
 
-    $order = Order::find($orderID);
+    $order = Order::find($id);
     if($order) {
         $order->update(['weight_discount' => $weight]);
         return "Discount Weight Updated";
