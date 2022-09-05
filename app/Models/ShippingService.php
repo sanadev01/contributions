@@ -34,6 +34,7 @@ class ShippingService extends Model
     const COLOMBIA_URBANO = 44162;
     const COLOMBIA_NACIONAL = 44163;
     const COLOMBIA_TRAYETOS = 44164;
+    const Brazil_Redispatch = 100;
 
     protected $guarded = [];
 

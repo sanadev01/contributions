@@ -1,6 +1,6 @@
 <?php
 
-return [ 
+return [
     'name' => 'Name',
     'action' => 'Action',
     'orders' => 'Orders',
@@ -20,19 +20,27 @@ return [
     'Delete' => 'Delete',
     'Remove' => 'Remove Order',
     'Trashed Orders' => 'Trashed Orders',
-    
+    'Anjun Orders' => 'Anjun Orders',
+    'warehouse-no' => 'Warehouse No.',
+    'user-name' => 'User Name',
+    'tracking-code' => 'Tracking Code',
+    'carrier-cost' => 'Carrier Cost',
+    'Amount Customers Paid' => 'Amount Customers Paid',
+    'Correios Anjun' => 'Correios (Anjun)',
+    'Search By Name, Warehouse No. or Tracking Code' => 'Search By Name, Warehouse No. or Tracking Code',
+
     'recipient' => [
         'slect-from-list' => 'Select Address From List',
-        'Previous' => 'Previous', 
-        'Next' => 'Next', 
+        'Previous' => 'Previous',
+        'Next' => 'Next',
     ],
     'order-details' => [
-        'Sender' => 'Sender', 
-        'Recipient' => 'Recipient', 
-        'Additional services' => 'Additional services', 
-        'Shipping & Items' => 'Shipping & Items', 
-        'Invoice' => 'Invoice', 
-        'Orders' => 'Orders', 
+        'Sender' => 'Sender',
+        'Recipient' => 'Recipient',
+        'Additional services' => 'Additional services',
+        'Shipping & Items' => 'Shipping & Items',
+        'Invoice' => 'Invoice',
+        'Orders' => 'Orders',
         'Step 1' => 'Step 1',
         'Customer Reference' => 'Customer Reference',
         'WHR' => 'WHR',
@@ -60,7 +68,13 @@ return [
             'Contains Flammable Liquid' => 'Contains Flammable Liquid',
         ],
         'declaration' => '<h3 class="text-danger">Disclaimer</h3> <br> <p class="h3 text-danger">By clicking on save order you agree that you have read and confirm that all information in this statement has been filled out by me and is correct and I am 100% responsible for the information contained herein.</p>',
-        'Warning Message' => 'Please do not include other goods within the same box containing books, newspapers and magazines or taxes will be applied to those additional items. These products must be the sole items with the box to obtain the tax exemption (i.e. books, newspapers and magazines).'
+        'Warning Message' => 'Please do not include other goods within the same box containing books, newspapers and magazines or taxes will be applied to those additional items. These products must be the sole items with the box to obtain the tax exemption (i.e. books, newspapers and magazines).',
+        'Parcel Rate' => 'Parcel Rate',
+        'Charge-msg1' => 'You will be charged',
+        'Charge-msg2' => 'for your parcel',
+        'Proceed Order' => 'Proceed Order',
+        'Decline' => 'Decline',
+
     ],
     'services' => [
         'handling-services' => 'Additional Services',
@@ -76,7 +90,7 @@ return [
         'Tax Id' => 'Tax Id',
         'Address' => 'Address',
         'City' => 'City',
-        'Next' => 'Next', 
+        'Next' => 'Next',
         'Step 1' => 'Step 1',
         'Select Country' => 'Select Country you want to send  your parcels',
         'State' => 'State',
@@ -194,7 +208,7 @@ return [
         'destination-address' => 'Destination Address',
         'select-address' => 'Select Address',
         'create-address' => 'create-address',
-        
+
         'note' => 'To create a consolidated shipment drag more than 1 available shipment to ‘’order list’’.',
         'save' => 'Save',
         'alert-success-consolidate' => 'Your Request for Consolidate Order is Received. it will take 24 hours to process your request. you will be notified',

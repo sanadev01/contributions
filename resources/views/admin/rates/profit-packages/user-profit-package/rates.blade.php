@@ -32,7 +32,11 @@
                                                 {{ optional($rate)['weight'] . ' g' }}
                                             </td>
                                             <td>
-                                                {{ number_format(optional(optional($rate)['shipping'])[0]*(optional($rate)['profit']/100)+optional(optional($rate)['shipping'])[0],2) }}
+                                                @if ($service == 'Brazil Redispatch')
+                                                    ${{ optional($rate)['leve'] }}
+                                                @else
+                                                    {{ number_format(optional(optional($rate)['shipping'])[0]*(optional($rate)['profit']/100)+optional(optional($rate)['shipping'])[0],2) }}
+                                                @endif
                                             </td>
                                             
                                         </tr>

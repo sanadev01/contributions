@@ -117,7 +117,20 @@ class OrderItemsController extends Controller
 
     public function uspsRates(Request $request)
     {
-        $order = Order::find($request->order_id);
+        $items = collect();
+        if(!is_null($request->descp) && !is_null($request->qty) && !is_null($request->value)){
+            foreach ($request->descp as $key => $descp) {
+                $items = $items->push((object)[
+                    'description' => $descp, 
+                    'quantity' => $request->qty[$key], 
+                    'value' => $request->value[$key]
+                ]);
+            }
+            $order = Order::find($request->order_id);
+            $order->items = $items;
+        }else{
+            $order = Order::find($request->order_id);
+        }
         $response = USPSFacade::getRecipientRates($order, $request->service);
 
         if($response->success == true)

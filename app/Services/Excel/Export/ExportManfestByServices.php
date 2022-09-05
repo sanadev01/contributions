@@ -2,10 +2,11 @@
 
 namespace App\Services\Excel\Export;
 
-use App\Models\Order;
-use App\Models\Warehouse\AccrualRate;
 use Carbon\Carbon;
+use App\Models\Order;
+use App\Models\ShippingService;
 use App\Models\Warehouse\Container;
+use App\Models\Warehouse\AccrualRate;
 use App\Models\Warehouse\DeliveryBill;
 
 class ExportManfestByServices extends AbstractCsvExportService
@@ -17,6 +18,8 @@ class ExportManfestByServices extends AbstractCsvExportService
     private $totalPaidToCorreios;
     private $totalPieces = 0;
     private $totalWeight = 0;
+    private $totalCommission = 0;
+    private $totalAnjunCommission = 0;
 
     public function __construct(DeliveryBill $deliveryBill)
     {
@@ -46,6 +49,9 @@ class ExportManfestByServices extends AbstractCsvExportService
             'Customer paid',
             'Airport/ GRU/CWB',
             'Value paid to Correios',
+            'Commission paid to Anjun',
+            'Referrer Commission',
+            'Commission Paid to',
             'Bag',
             'POBOX / NAME',
             'Correios Brazil',
@@ -85,7 +91,10 @@ class ExportManfestByServices extends AbstractCsvExportService
                 $package->warehouse_number,
                 $package->gross_total,
                 $container->getDestinationAriport(),
-                $this->getValuePaidToCorrieos($container,$package),
+                $this->getValuePaidToCorrieos($container,$package)['airport'],
+                $this->getValuePaidToCorrieos($container,$package)['commission'],
+                optional($package->affiliateSale)->commission,
+                optional(optional($package->affiliateSale)->user)->pobox_number  .' '.optional(optional($package->affiliateSale)->user)->name,
                 $container->dispatch_number,
                 optional($package->user)->pobox_number.' / '.optional($package->user)->getFullName(),
                 $package->carrierService() == 'Correios Brazil'? 'Correios Brazil': '',
@@ -113,9 +122,11 @@ class ExportManfestByServices extends AbstractCsvExportService
             $this->row++;
 
             $this->totalCustomerPaid +=  $package->gross_total;
-            $this->totalPaidToCorreios += $this->getValuePaidToCorrieos($container,$package);
+            $this->totalPaidToCorreios += $this->getValuePaidToCorrieos($container,$package)['airport'];
             $this->totalPieces++;
             $this->totalWeight += $package->getOriginalWeight('kg');
+            $this->totalCommission += optional($package->affiliateSale)->commission;
+            $this->totalAnjunCommission += $this->getValuePaidToCorrieos($container,$package)['commission'];
         }
 
         $this->csvData[$this->row] = [
@@ -134,6 +145,8 @@ class ExportManfestByServices extends AbstractCsvExportService
             $this->totalCustomerPaid,
             '',
             $this->totalPaidToCorreios,
+            $this->totalAnjunCommission,
+            $this->totalCommission,
             '',
             '',
             ''
@@ -143,17 +156,28 @@ class ExportManfestByServices extends AbstractCsvExportService
 
     protected function getValuePaidToCorrieos(Container $container, Order $order)
     {
+        $commission = false;
         $service  = $order->shippingService->service_sub_class;
         $rateSlab = AccrualRate::getRateSlabFor($order->getOriginalWeight('kg'),$service);
 
         if ( !$rateSlab ){
-            return 0;
+            return [
+                'airport'=> 0,
+                'commission'=> 0
+            ];
         }
-
+        if($service == ShippingService::AJ_Packet_Standard || $service == ShippingService::AJ_Packet_Express){
+            $commission = true;
+        }
         if ( $container->getDestinationAriport() ==  "GRU"){
-            return $rateSlab->gru;
+            return [
+                'airport'=> $rateSlab->gru,
+                'commission'=> $commission ? $rateSlab->commission : 0
+            ];
         }
-
-        return $rateSlab->cwb;
+        return [
+            'airport'=> $rateSlab->cwb,
+            'commission'=> $commission ? $rateSlab->commission : 0
+        ];
     }
 }

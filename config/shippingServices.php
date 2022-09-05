@@ -23,6 +23,7 @@ return [
             44162 => 'Colombia Urbano',
             44163 => 'Colombia Nacional',
             44164 => 'Colombia Trayetos',
+            100 => 'Brazil Redispatch',
         ]
     ]
 ];

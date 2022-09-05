@@ -27,4 +27,5 @@ return [
     'Notes' => 'Notas',
     'Date' => 'Encontro',
     'Open Days' => 'Dias Abertos',
+    'pobox' => 'Caixa Postal #',
 ];
