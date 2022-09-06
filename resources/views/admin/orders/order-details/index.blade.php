@@ -20,7 +20,7 @@
                 <div class="form-group col-12 col-sm-6 col-md-6">
                     <div class="controls">
                         <label>@lang('orders.order-details.Customer Reference') <span class="text-danger"></span></label>
-                        <input name="customer_reference" class="form-control" {{($order->recipient->country_id == $chileCountryId) ? 'required' : ''}} value="{{ $order->customer_reference }}" placeholder="@lang('orders.order-details.Customer Reference')"/>
+                        <input name="customer_reference" class="form-control" {{($order->recipient->country_id == $countryConstants['Chile']) ? 'required' : ''}} value="{{ $order->customer_reference }}" placeholder="@lang('orders.order-details.Customer Reference')"/>
                         <p class="text-danger">{{ $errors->first('customer_reference') }}</p>
                         <div class="help-block"></div>
                     </div>
@@ -35,7 +35,7 @@
                 <div class="form-group col-12 col-sm-6 col-md-6">
                     <div class="controls">
                         <label class="h4">Freight <span class="text-danger"></span></label>
-                        <input class="form-control" name="user_declared_freight" id="user_declared_freight" value="{{ old('user_declared_freight', $order->user_declared_freight) }}" placeholder="Freight" @if(optional($order)->sender_country_id == $usCountryId || optional($order->recipient)->country_id == $usCountryId) readonly @endif/>
+                        <input class="form-control" name="user_declared_freight" id="user_declared_freight" value="{{ old('user_declared_freight', $order->user_declared_freight) }}" placeholder="Freight" @if(optional($order)->sender_country_id == $countryConstants['US'] || optional($order->recipient)->country_id == $countryConstants['US']) readonly @endif/>
                         {{-- <input class="form-control" name="user_declared_freight" id="user_declared_freight" value="{{ old('user_declared_freight',__default($order->user_declared_freight,$order->gross_total)) }}" placeholder="Freight"/> --}}
                         <div class="help-block"></div>
                         <span class="text-danger">@error('user_declared_freight') {{ $message }} @enderror</span>
@@ -47,11 +47,11 @@
                 <div class="form-group col-12 col-sm-6 col-md-6">
                     <div class="controls">
                         <label>@lang('orders.order-details.Select Shipping Service')<span class="text-danger"></span></label>
-                        @if ($order->recipient->country_id != $usCountryId)
+                        @if ($order->recipient->country_id != $countryConstants['US'])
                         <select class="form-control selectpicker show-tick" data-live-search="true" name="shipping_service_id" id="shipping_service_id" required placeholder="Select Shipping Service">
                             <option value="">@lang('orders.order-details.Select Shipping Service')</option>
                             @foreach ($shippingServices as $shippingService)
-                                <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-cost="{{$shippingService->getRateFor($order)}}" data-services-cost="{{ $order->services()->sum('price') }}">@if($shippingService->getRateFor($order)){{ "{$shippingService->name} - $". $shippingService->getRateFor($order) }}@else{{ $shippingService->name }}@endif</option>
+                                <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-cost="{{$shippingService->getRateFor($order)}}" data-services-cost="{{ $order->services()->sum('price') }}" data-service-code="{{$shippingService->service_sub_class}}" data-service-code="{{$shippingService->service_sub_class}}">@if($shippingService->getRateFor($order)){{ "{$shippingService->name} - $". $shippingService->getRateFor($order) }}@else{{ $shippingService->name }}@endif</option>
                             @endforeach
                         </select>
                         @else
@@ -104,23 +104,95 @@
 <script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
 
 <script>
+    const shippingServiceCodes = @json($shippingServiceCodes)
+
+    $("#rateBtn").hide();
     $('#shipping_service_id').on('change',function(){
-        $('#user_declared_freight').val(
-            parseFloat($('option:selected', this).attr("data-cost"))
-        );
+        const service = $('#shipping_service_id option:selected').attr('data-service-code');
+        
+        if (service != shippingServiceCodes.COLOMBIA_Standard) {
+            $('#user_declared_freight').val(
+                parseFloat($('option:selected', this).attr("data-cost"))
+            );
+        }
+        if(service == shippingServiceCodes.USPS_PRIORITY_INTERNATIONAL || service == shippingServiceCodes.USPS_FIRSTCLASS_INTERNATIONAL) {
+            $("#rateBtn").show();
+        }else {
+            $("#rateBtn").hide();
+        }
     })
+
+    //USPS PRIORITY INTERNATIONAL SERVICE FOR RATES CALL 
+    function checkService(){
+        const service = $('#shipping_service_id option:selected').attr('data-service-code');
+        if(service == shippingServiceCodes.USPS_PRIORITY_INTERNATIONAL) {
+            return  getUspsPriorityIntlRates();
+        }
+    }
+
+    function getUspsPriorityIntlRates(){
+        const service = $('#shipping_service_id option:selected').attr('data-service-code');
+        var order_id = $('#order_id').val();
+        var descpall = []; var qtyall = []; var valueall = [];
+        $.each($(".descp"), function(){
+            if(!($(this).val()) == '') {
+                descpall.push($(this).val());
+            }
+        });
+        $.each($(".quantity"), function(){
+            if(!($(this).val()) == '') {
+                qtyall.push($(this).val());
+            }
+        });
+        $.each($(".value"), function(){
+            if(!($(this).val()) == '') {
+                valueall.push($(this).val());
+            }
+        });
+        if(descpall.length && qtyall.length && valueall.length) {
+            $('#loading').fadeIn();
+            $.get('{{ route("api.usps_rates") }}',{
+                    service: service,
+                    order_id: order_id,
+                    descp: descpall,
+                    qty: qtyall,
+                    value: valueall,
+                }).then(function(response){
+                    console.log(response);
+                    if(response.success == true){
+                        $('#user_declared_freight').val(response.total_amount);
+                        $('#user_declared_freight').prop('readonly', true);
+                        $("#uspsVal").text('$' + response.total_amount);
+                        $('#uspsModal').modal('show');
+                        $("#uspsAccept").click(function(){        
+                            $("#order-form").submit();
+                        });
+                    }
+                    $('#loading').fadeOut();
+
+                }).catch(function(error){
+                    console.log('error');
+                    console.log(error);
+                    $('#loading').fadeOut();
+            })
+        }else {
+            alert('Add items to get rates!');
+        }    
+    }
 
     $('#us_shipping_service').ready(function() {
         const service = $('#us_shipping_service option:selected').attr('data-service-code');
-        if(service == 3440 || service == 3441) {
+        if(service == shippingServiceCodes.USPS_PRIORITY || service == shippingServiceCodes.USPS_FIRSTCLASS) {
 
-          return  getUspsRates();
+        //   return  getUspsRates();
 
-        } else if(service == 3) {
-            return getUpsRates();
-        } else if(service == 4)
+        } else if(service == shippingServiceCodes.UPS_GROUND) {
+
+            // return getUpsRates();
+
+        } else if(service == shippingServiceCodes.FEDEX_GROUND)
         {
-            return getFedExRates();
+            // return getFedExRates();
         }
         
     })
@@ -128,15 +200,15 @@
     $('#us_shipping_service').on('change',function(){
         const service = $('#us_shipping_service option:selected').attr('data-service-code');
         
-        if(service == 3440 || service == 3441) {
+        if(service == shippingServiceCodes.USPS_PRIORITY || service == shippingServiceCodes.USPS_FIRSTCLASS) {
 
            return getUspsRates();
 
-        }else if(service == 4)
+        }else if(service == shippingServiceCodes.FEDEX_GROUND)
         {
             return getFedExRates();
             
-        } else if(service != undefined && service == 03) {
+        } else if(service == shippingServiceCodes.UPS_GROUND) {
             return getUpsRates();
         }
     })

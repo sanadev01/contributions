@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 
-use App\Models\Rate;
 use App\Models\Order;
 use App\Http\Controllers\Controller;
 use App\Models\Warehouse\Container;
