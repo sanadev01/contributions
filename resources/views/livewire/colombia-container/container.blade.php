@@ -3,15 +3,13 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
-                        <h4 class="mb-0">
-                            @lang('warehouse.containers.Colombia Containers')
-                        </h4>
+                    <div class="card-header d-flex justify-content-end">
+                            @section('title',__('warehouse.containers.Colombia Containers'))
                         <a href="{{ route('warehouse.colombia-containers.create') }}" class="pull-right btn btn-primary"> @lang('warehouse.containers.Create Container') </a>
                     </div>
                     <div class="card-content card-body" style="min-height: 100vh;">
                         <div class="mt-1">
-                            <table class="table mb-0">
+                            <table class="table table-bordered mb-0">
                                 <thead>
                                     <tr>
                                         <th style="min-width: 100px;">
@@ -185,7 +183,7 @@
                         <div class="modal-body" style="font-size: 15px;">
                             <p>
                                 Are you Sure want to Assign AWB number to Selected Containers  {{-- <span class="result"></span> --}}
-                            </p>
+                            </p> 
                             <input type="text" name="awb" required class="form-control" value="">
                             <input type="hidden" name="command" id="command" value="">
                             <input type="hidden" name="data" id="data" value="">
