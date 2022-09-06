@@ -46,7 +46,7 @@ class OrderExport extends AbstractExportService
             $this->setCellValue('I'.$row, $this->checkValue(number_format($order->dangrous_goods,2)));
             $this->setCellValue('J'.$row, $this->chargeWeight($order));
             $this->setCellValue('K'.$row, round(($this->chargeWeight($order)*2.205),2));
-            $this->setCellValue('L'.$row, $order->getWeight($this->isWeightInKg($order->measurement_unit)));
+            $this->setCellValue('L'.$row, $order->getWeight('kg'));
             $this->setCellValue('M'.$row, $order->length. ' X '. $order->width.' X '.$order->height);
 
             if($order->status == Order::STATUS_ORDER){
@@ -140,7 +140,7 @@ class OrderExport extends AbstractExportService
         $this->setCellValue('K1', 'Weight(Lbs)');
 
         $this->setColumnWidth('L', 20);
-        $this->setCellValue('L1', 'Metric Weight');
+        $this->setCellValue('L1', 'Metric Weight(kg)');
 
         $this->setColumnWidth('M', 20);
         $this->sheet->getStyle('M')->getAlignment()->setHorizontal('center');
