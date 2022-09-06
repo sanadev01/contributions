@@ -30,6 +30,7 @@
                     <th>@lang('tickets.TicketID')</th>
                     <th></th>
                     <th>@lang('tickets.Date')</th>
+                    <th>@lang('tickets.pobox')</th>
                     <th>@lang('tickets.User')</th>
                     <th>@lang('tickets.Issue')</th>
                     <th>@lang('tickets.Status')</th>
@@ -50,6 +51,9 @@
                         </td>
                         <td>
                             {{ $ticket->created_at->format('Y-m-d') }}
+                        </td>
+                        <td>
+                            {{ $ticket->user->pobox_number }}
                         </td>
                         <td>
                             {{ $ticket->user->name }}

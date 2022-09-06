@@ -13,6 +13,7 @@ use App\Mail\User\ShipmentTransit;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\User\ConsolidationRequest;
+use App\Services\Calculators\WeightCalculator;
 
 class PreAlertRepository
 {
@@ -138,7 +139,6 @@ class PreAlertRepository
         if ( $order->status < Order::STATUS_ORDER ){
             $status = $order->isConsolidated() ? Order::STATUS_CONSOLIDATED : Order::STATUS_PREALERT_READY;
         }
-
         if ( Auth::user()->can('addShipmentDetails',Order::class) ){
             $request->merge([
                 'measurement_unit' => $request->unit,
@@ -156,7 +156,35 @@ class PreAlertRepository
             $data[] = 'weight_discount';
 
         }
+        //CHECK VOL WEIGHT OF PARCEL AND SET DISCOUNT
+        $totalDiscountPercentage = 0;
+        $volumetricDiscount = setting('volumetric_discount', null, $order->user->id);
+        $discountPercentage = setting('discount_percentage', null, $order->user->id);
+        
+        if (!$volumetricDiscount || !$discountPercentage || $discountPercentage < 0 || $discountPercentage == 0) {
+            return false;
+        }
+        if ( $request->measurement_unit == 'kg/cm' ){
+            $volumetricWeight = WeightCalculator::getVolumnWeight($request->length,$request->width,$request->height,'cm');
+        }else {
+            $volumetricWeight = WeightCalculator::getVolumnWeight($request->length,$request->width,$request->height,'in');
+        }
+        $volumeWeight = round($volumetricWeight > $request->weight ? $volumetricWeight : $request->weight,2);
+        $totalDiscountPercentage = ($discountPercentage) ? $discountPercentage/100 : 0;
+        if ($volumeWeight > $request->weight) {
 
+            $consideredWeight = $volumeWeight - $request->weight;
+            $volumeWeight = round($consideredWeight - ($consideredWeight * $totalDiscountPercentage), 2);
+            $totalDiscountedWeight = $consideredWeight - $volumeWeight;
+            $request->merge([
+                'weight_discount' => $totalDiscountedWeight,
+            ]);
+        }else {
+            $request->merge([
+                'weight_discount' => null,
+            ]);
+        }
+        
         $order->update(
             $request->only($data)
         );

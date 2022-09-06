@@ -33,7 +33,7 @@ class OrderExport extends AbstractExportService
 
         foreach ($this->orders as $order) {
             $user = $order->user;
-        
+            
             $this->setCellValue('A'.$row, $order->order_date);
             $this->setCellValue('B'.$row, $order->warehouse_number);
             $this->setCellValue('C'.$row, $user->name);
@@ -44,9 +44,9 @@ class OrderExport extends AbstractExportService
             $this->setCellValue('G'.$row, $this->getOrderTrackingCodes($order));
             $this->setCellValue('H'.$row, $order->gross_total);
             $this->setCellValue('I'.$row, $this->checkValue(number_format($order->dangrous_goods,2)));
-            $this->setCellValue('J'.$row, $order->getWeight('kg'));
-            $this->setCellValue('K'.$row, $order->getWeight('lbs'));
-            $this->setCellValue('L'.$row, $this->getVolumnWeight($order->length, $order->width, $order->height,$this->isWeightInKg($order->measurement_unit)));
+            $this->setCellValue('J'.$row, $this->chargeWeight($order));
+            $this->setCellValue('K'.$row, round(($this->chargeWeight($order)*2.205),2));
+            $this->setCellValue('L'.$row, $order->getWeight($this->isWeightInKg($order->measurement_unit)));
             $this->setCellValue('M'.$row, $order->length. ' X '. $order->width.' X '.$order->height);
 
             if($order->status == Order::STATUS_ORDER){
@@ -140,7 +140,7 @@ class OrderExport extends AbstractExportService
         $this->setCellValue('K1', 'Weight(Lbs)');
 
         $this->setColumnWidth('L', 20);
-        $this->setCellValue('L1', 'Metric Weight(kg)');
+        $this->setCellValue('L1', 'Metric Weight');
 
         $this->setColumnWidth('M', 20);
         $this->sheet->getStyle('M')->getAlignment()->setHorizontal('center');
@@ -174,13 +174,22 @@ class OrderExport extends AbstractExportService
 
     public function isWeightInKg($measurement_unit)
     {
-        return $measurement_unit == 'kg/cm' ? 'cm' : 'in';
+        return $measurement_unit == 'kg/cm' ? 'kg' : 'lbs';
     }
 
-    public function getVolumnWeight($length, $width, $height, $unit)
+    public function chargeWeight($order)
     {
-        $divisor = $unit == 'in' ? 166 : 6000;
-        return round(($length * $width * $height) / $divisor,2);
+        $chargeWeight = $order->getOriginalWeight('kg');
+        if($order->getWeight('kg') > $order->getOriginalWeight('kg') && $order->weight_discount){
+            $discountWeight = $order->weight_discount;
+            if($order->measurement_unit == 'lbs/in'){
+                $discountWeight = $order->weight_discount/2.205;
+            }
+            $consideredWeight = $order->getWeight('kg') - $order->getOriginalWeight('kg');
+            $chargeWeight = ($consideredWeight - $discountWeight) + $order->getOriginalWeight('kg');
+        }
+        
+        return round($chargeWeight,2);
     }
 
     private function getOrderTrackingCodes($order)

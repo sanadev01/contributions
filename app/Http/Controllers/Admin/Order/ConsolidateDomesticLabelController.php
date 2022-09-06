@@ -36,9 +36,11 @@ class ConsolidateDomesticLabelController extends Controller
             return back();
         }
 
+        $totalWeight = $domesticLabelRepository->getTotalWeight($orders);
+
         $errors = $domesticLabelRepository->getErrors();
         $states = $domesticLabelRepository->getStates();
         
-        return view('admin.orders.consolidate-domestic-label', compact('orders', 'states', 'errors'));
+        return view('admin.orders.consolidate-domestic-label', compact('orders', 'states', 'errors', 'totalWeight'));
     }
 }

@@ -5,6 +5,7 @@ namespace App\Repositories;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Address;
+use App\Services\Excel\Export\ExportAddresses;
 use Exception;
 
 class AddressRepository
@@ -86,13 +87,12 @@ class AddressRepository
 
         $addresses = $query
             ->orderBy($orderBy,$orderType);
-
         return $paginate ? $addresses->paginate($pageSize) : $addresses->get();
 
     }
 
     public function store(Request $request)
-    {   
+    {
         try{
 
             $request->merge([
@@ -112,8 +112,8 @@ class AddressRepository
     }
 
     public function update(Request $request,Address $Address)
-    {   
-        
+    {
+
         try{
 
             // if (! $request->has('default')) {
@@ -133,7 +133,7 @@ class AddressRepository
             $request->merge([
                 'phone' => "+".cleanString($request->phone)
             ]);
-            
+
             $Address->update(
                 $request->only(['first_name','last_name','email', 'phone', 'city', 'street_no','address', 'address2', 'country_id', 'state_id', 'account_type', 'tax_id', 'zipcode'])
             );
@@ -144,6 +144,18 @@ class AddressRepository
             session()->flash('alert-danger','Error while Address');
             return null;
         }
+    }
+
+    public function getAddresses(Request $request)
+    {
+        $query = Address::query()->has('user');
+
+        if ( Auth::user()->isUser() ){
+            $query->where('user_id',Auth::id());
+        }
+
+        return $query->get();
+
     }
 
 }

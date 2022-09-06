@@ -28,4 +28,5 @@ return [
     'Notes' => 'Notes',
     'Date' => 'Date',
     'Open Days' => 'Open Days',
+    'pobox' => 'Pobox #',
 ];

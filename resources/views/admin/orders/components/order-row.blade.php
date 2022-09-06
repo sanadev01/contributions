@@ -1,9 +1,8 @@
 <tr @if ($order->user->hasRole('retailer') && !$order->isPaid()) class="bg-danger-custom" @endif>
     @if (\Request::route()->getName() != 'admin.reports.order.index' &&
-        !$order->isTrashed() &&
-        \Request::route()->getName() != 'livewire.message' &&
-        \Request::route()->getName() != 'admin.reports.order.index' &&
-        Request::path() != 'livewire/message/reports.order-report-table')
+    !$order->isTrashed() &&
+    \Request::route()->getName() != 'admin.reports.order.index' &&
+    Request::path() != 'livewire/message/reports.order-report-table')
         <td>
             <div class="vs-checkbox-con vs-checkbox-primary" title="Select">
                 <input type="checkbox" onchange='handleChange(this);' name="orders[]" class="bulk-orders"
@@ -45,8 +44,8 @@
                 {{-- </span> --}}
             </div>
             {{-- <div style="padding-left: 45px !important">
-          
-        </div> --}}
+            
+            </div> --}}
         </td>
     @endadmin
     <td>

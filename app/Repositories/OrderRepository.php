@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Services\UPS\UPSShippingService;
 use App\Services\USPS\USPSShippingService;
 use App\Services\FedEx\FedExShippingService;
+use App\Services\Calculators\WeightCalculator;
 use App\Models\User;
 
 class OrderRepository
@@ -404,17 +405,19 @@ class OrderRepository
         if (!$volumetricDiscount || !$discountPercentage || $discountPercentage < 0 || $discountPercentage == 0) {
             return false;
         }
-
-        $volumetricWeight = round($order->getWeight(), 2);
-        
+        if ( $order->measurement_unit == 'kg/cm' ){
+            $volumetricWeight = WeightCalculator::getVolumnWeight($order->length,$order->width,$order->height,'cm');
+        }else {
+            $volumetricWeight = WeightCalculator::getVolumnWeight($order->length,$order->width,$order->height,'in');
+        }
+        $volumeWeight = round($volumetricWeight > $order->weight ? $volumetricWeight : $order->weight,2);
         $totalDiscountPercentage = ($discountPercentage) ? $discountPercentage/100 : 0;
-
-        if ($volumetricWeight > $order->weight) {
+        
+        if ($volumeWeight > $order->weight) {
             
-            $consideredWeight = $volumetricWeight - $order->weight;
+            $consideredWeight = $volumeWeight - $order->weight;
             $volumeWeight = round($consideredWeight - ($consideredWeight * $totalDiscountPercentage), 2);
             $totalDiscountedWeight = $consideredWeight - $volumeWeight;
-
             $order->update([
                 'weight_discount' => $totalDiscountedWeight,
             ]);

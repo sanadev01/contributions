@@ -1,6 +1,6 @@
 <?php
 
-return [ 
+return [
     'name' => 'Name',
     'action' => 'Action',
     'orders' => 'Orders',
@@ -20,19 +20,27 @@ return [
     'Delete' => 'Delete',
     'Remove' => 'Remove Order',
     'Trashed Orders' => 'Trashed Orders',
-    
+    'Anjun Orders' => 'Anjun Orders',
+    'warehouse-no' => 'Warehouse No.',
+    'user-name' => 'User Name',
+    'tracking-code' => 'Tracking Code',
+    'carrier-cost' => 'Carrier Cost',
+    'Amount Customers Paid' => 'Amount Customers Paid',
+    'Correios Anjun' => 'Correios (Anjun)',
+    'Search By Name, Warehouse No. or Tracking Code' => 'Search By Name, Warehouse No. or Tracking Code',
+
     'recipient' => [
         'slect-from-list' => 'Select Address From List',
-        'Previous' => 'Previous', 
-        'Next' => 'Next', 
+        'Previous' => 'Previous',
+        'Next' => 'Next',
     ],
     'order-details' => [
-        'Sender' => 'Sender', 
-        'Recipient' => 'Recipient', 
-        'Additional services' => 'Additional services', 
-        'Shipping & Items' => 'Shipping & Items', 
-        'Invoice' => 'Invoice', 
-        'Orders' => 'Orders', 
+        'Sender' => 'Sender',
+        'Recipient' => 'Recipient',
+        'Additional services' => 'Additional services',
+        'Shipping & Items' => 'Shipping & Items',
+        'Invoice' => 'Invoice',
+        'Orders' => 'Orders',
         'Step 1' => 'Step 1',
         'Customer Reference' => 'Customer Reference',
         'WHR' => 'WHR',
@@ -76,7 +84,7 @@ return [
         'Tax Id' => 'Tax Id',
         'Address' => 'Address',
         'City' => 'City',
-        'Next' => 'Next', 
+        'Next' => 'Next',
         'Step 1' => 'Step 1',
         'Select Country' => 'Select Country you want to send  your parcels',
         'State' => 'State',
@@ -194,7 +202,7 @@ return [
         'destination-address' => 'Destination Address',
         'select-address' => 'Select Address',
         'create-address' => 'create-address',
-        
+
         'note' => 'To create a consolidated shipment drag more than 1 available shipment to ‘’order list’’.',
         'save' => 'Save',
         'alert-success-consolidate' => 'Your Request for Consolidate Order is Received. it will take 24 hours to process your request. you will be notified',

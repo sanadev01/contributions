@@ -89,10 +89,12 @@
                                         </td> --}}
                                         <td>
                                             {{ $deliveryBill->name }}
-                                            @if($deliveryBill->Containers->first()->orders->first()->shippingService->isAnjunService())
+                                            @if ($deliveryBill->Containers->count() > 0)
+                                                @if($deliveryBill->Containers->first()->orders->first()->shippingService->isAnjunService())
                                                 <span class="badge badge-success">A</span>
-                                            @else
+                                                @else
                                                 <span class="badge badge-primary">H</span>
+                                                @endif
                                             @endif
                                         </td>
                                         <td>

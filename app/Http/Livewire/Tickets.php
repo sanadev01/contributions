@@ -16,6 +16,7 @@ class Tickets extends Component
     public $user;
     public $status;
     public $open;
+    public $pobox;
     
     public function mount()
     {
