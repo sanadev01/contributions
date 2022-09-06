@@ -9,7 +9,7 @@
     </div>
 @endif
 <div class="alert alert-danger" role="alert" id="ups_response" style="display: none;"></div>
-<form action="{{ route('admin.orders.order-details.store',$order) }}" method="POST" class="wizard" id="order-form">
+<form action="{{ route('admin.orders.order-details.store',$order) }}" method="POST" class="wizard">
     @csrf
     <input type="hidden" name="order_id" id="order_id" value="{{$order->id}}">
     <div class="content clearfix">
@@ -93,32 +93,11 @@
                 <a href="{{ route('admin.orders.recipient.index',$order) }}" role="menuitem">@lang('orders.order-details.Previous')</a>   
             </li>
             <li aria-hidden="false" aria-disabled="false">
-                <button type="button" class="btn btn-success" id="rateBtn" onClick="checkService()">Get Rate</button>
                 <button class="btn btn-primary">@lang('orders.order-details.Place Order')</button>
             </li>
         </ul>
     </div>
 </form>
-<!--USPS PRIORITY INTERNATIONAL RATE ALERT MODAL-->
-<div class="modal fade" id="uspsModal" role="dialog">
-    <div class="modal-dialog modal-md">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">USPS Priority Intrernational</h5>
-            </div>
-            <div class="modal-body">
-                <h4>@lang('orders.order-details.Parcel Rate')</h4>
-                <ul>
-                    <li>@lang('orders.order-details.Charge-msg1') <span class="badge badge-light" id="uspsVal"></span> @lang('orders.order-details.Charge-msg2')</li>
-                </ul>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" id="uspsAccept">@lang('orders.order-details.Proceed Order')</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">@lang('orders.order-details.Decline')</button>
-            </div>
-        </div>
-    </div>
-</div>
 @endsection
 
 @section('js')
