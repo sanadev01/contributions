@@ -12,7 +12,7 @@
                         <i class="vs-icon feather icon-check"></i>
                     </span>
                 </span>
-                {{-- <span class="h3 mx-2 text-primary my-0 py-0"></span> --}}
+                
             </div>
         </td>
     @endif
@@ -31,7 +31,7 @@
             </div>
 
             <div id="imageDecrption" style="font-size: 14px !important; width: 175px;">
-                {{-- <span id="tracking"> --}}
+                
                 @if ($order->is_consolidated)
                     <span>
                         Consolidated
@@ -41,27 +41,19 @@
                         Non-Consolidated
                     </span>
                 @endif
-                {{-- </span> --}}
+                
             </div>
-            {{-- <div style="padding-left: 45px !important">
-            
-            </div> --}}
+           
         </td>
     @endadmin
     <td>
-        {{-- <div class="vs-radio-con" wire:click="$emit('edit-order',{{$order->id}})" title="@lang('Edit Order')">
-                <input type="radio" name="edit_order" class="edit-order" value="false">
-                <span class="vs-radio vs-radio-sm">
-                    <span class="vs-radio--border"></span>
-                    <span class="vs-radio--circle"></span>
-                </span>
-            </div> --}}
+       
         <a href="#" id="openEditModal" class="mb-0 " wire:click="$emit('edit-order',{{ $order->id }})"
             title="Click to edit">
             {{ optional($order->order_date)->format('m/d/Y') }}
         </a>
     </td>
-    <td class="order-id" style="width: 200px;">
+    <td class="order-id" style="width: 100px;">
         @if ($order->isArrivedAtWarehouse())
             <i class="fa fa-star text-success p-1"></i>
         @endif
@@ -69,7 +61,7 @@
             <span>
                 <a href="#" title="Click to see Shipment" data-toggle="modal" data-target="#hd-modal"
                     data-url="{{ route('admin.modals.parcel.shipment-info', $order) }}">
-                    WRH#: {{ $order->warehouse_number }}
+                    {{ $order->warehouse_number }}
                 </a>
             </span>
         @endif
@@ -80,28 +72,12 @@
             @foreach ($order->subOrders as $subOrder)
                 <a href="#" class="mb-1 d-block" data-toggle="modal" data-target="#hd-modal"
                     data-url="{{ route('admin.modals.parcel.shipment-info', $subOrder) }}">
-                    WHR#: {{ $subOrder->warehouse_number }}
+                    {{ $subOrder->warehouse_number }}
                 </a>
             @endforeach
         </span>
     </td>
-    {{-- <td>
-        {{ str_limit(ucfirst($order->merchant), 30) }}
-    </td> --}}
-    {{-- <td>
-        {{ ucfirst($order->tracking_id) }}
-    </td> --}}
-    {{-- <td>
-        {{ ucfirst($order->customer_reference) }}
-    </td> --}}
-    {{-- <td>
-        {{ $order->carrierService() }}
-    </td>
-    @admin
-    <td>
-        {{ $order->carrierCost() }}
-    </td>
-    @endadmin --}}
+    
     <td>
         {{ $order->corrios_tracking_code }}
         @if ($order->hasSecondLabel())
@@ -114,114 +90,7 @@
     </td>
 
     <td>
-        {{-- <select style="" data-toggle="dropdown"
-            class="form-control dropdown-menu overlap-menu {{ !auth()->user()->isAdmin()? 'btn disabled': '' }} {{ $order->getStatusClass() }}"
-            @if (auth()->user()->isAdmin()) wire:change="$emit('updated-status',{{ $order->id }},$event.target.value)" @else disabled="disabled" @endif>
-            <option class="bg-info dropdown-item" value="{{ App\Models\Order::STATUS_ORDER }}"
-                {{ $order->status == App\Models\Order::STATUS_ORDER ? 'selected' : '' }}>ORDER</option> --}}
-        {{-- <option class="bg-warning" value="{{ App\Models\Order::STATUS_NEEDS_PROCESSING }}" {{ $order->status == App\Models\Order::STATUS_NEEDS_PROCESSING ? 'selected': '' }}>NEEDS PROCESSING</option>
-        <option class="btn-cancelled dropdown-item" value="{{ App\Models\Order::STATUS_CANCEL }}" --}}
-        {{-- {{ $order->status == App\Models\Order::STATUS_CANCEL ? 'selected' : '' }}>CANCELLED</option>
-            <option class="btn-cancelled dropdown-item" value="{{ App\Models\Order::STATUS_REJECTED }}"
-                {{ $order->status == App\Models\Order::STATUS_REJECTED ? 'selected' : '' }}>REJECTED</option>
-            <option class="bg-warning text-dark dropdown-item" value="{{ App\Models\Order::STATUS_RELEASE }}"
-                {{ $order->status == App\Models\Order::STATUS_RELEASE ? 'selected' : '' }}>RELEASED</option>
-            <option class="bg-danger dropdown-item" value="{{ App\Models\Order::STATUS_PAYMENT_PENDING }}"
-                {{ $order->status == App\Models\Order::STATUS_PAYMENT_PENDING ? 'selected' : '' }}>PAYMENT_PENDING
-            </option>
-            <option class="bg-success dropdown-item" value="{{ App\Models\Order::STATUS_PAYMENT_DONE }}"
-                {{ $order->status == App\Models\Order::STATUS_PAYMENT_DONE ? 'selected' : '' }}>PAYMENT_DONE</option>
-            <option class="bg-secondary dropdown-item" value="{{ App\Models\Order::STATUS_SHIPPED }}"
-                {{ $order->status == App\Models\Order::STATUS_SHIPPED ? 'selected' : '' }}>SHIPPED</option>
-            @if ($order->isPaid() || ($order->isRefund() && !$order->isShipped()))
-                <option class="btn-refund dropdown-item" value="{{ App\Models\Order::STATUS_REFUND }}"
-                    {{ $order->status == App\Models\Order::STATUS_REFUND ? 'selected' : '' }}>REFUND / CANCELLED
-                </option>
-            @endif --}}
-
-        {{-- </select> --}}
-        {{-- <div class="btn-group mb-1">
-            <div class="dropdown">
-                <button
-                    class="dropdown-toggle mr-1  {{ !auth()->user()->isAdmin()? 'btn disabled': '' }} {{ $order->getStatusClass() }}"
-                    type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                    aria-expanded="false">
-                    {{ $order->getStatus() }}
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a wire:click="$emit('updated-status',{{ $order->id }},$event.target.value)"
-                        value="{{ App\Models\Order::STATUS_ORDER }}" class="dropdown-item"
-                        title="Show Order Details">
-                        <i class="feather icon-list"></i> ORDER
-                    </a>
-                    <a class="dropdown-item"
-                        wire:click="$emit('updated-status',{{ $order->id }},$event.target.value)"
-                        value="{{ App\Models\Order::STATUS_CANCEL }}">
-                        <i class="feather icon-truck"></i>CANCELLED
-                    </a>
-                    <a class="dropdown-item" value="{{ App\Models\Order::STATUS_REJECTED }}"
-                        wire:click="$emit('updated-status',{{ $order->id }},$event.target.value)">
-                        <i class="feather icon-truck"></i>REJECTED
-                    </a>
-                    <a class="dropdown-item" value="{{ App\Models\Order::STATUS_RELEASE }}"
-                        wire:click="$emit('updated-status',{{ $order->id }},$event.target.value)">
-                        <i class="feather icon-truck"></i>RELEASED
-                    </a>
-                    <a class="dropdown-item" value="{{ App\Models\Order::STATUS_PAYMENT_PENDING }}"
-                        wire:click="$emit('updated-status',{{ $order->id }},$event.target.value)">
-                        <i class="feather icon-truck"></i>PAYMENT_PENDING
-                    </a>
-                    <a class="dropdown-item" value="{{ App\Models\Order::STATUS_PAYMENT_DONE }}"
-                        wire:click="$emit('updated-status',{{ $order->id }},$event.target.value)">
-                        <i class="feather icon-truck"></i>PAYMENT_DONE
-                    </a>
-                    <a class="dropdown-item" value="{{ App\Models\Order::STATUS_SHIPPED }}"
-                        wire:click="$emit('updated-status',{{ $order->id }},$event.target.value)">
-                        <i class="feather icon-truck"></i>SHIPPED
-                    </a>
-                    <a class="dropdown-item" value="{{ App\Models\Order::STATUS_REFUND }}"
-                        wire:click="$emit('updated-status',{{ $order->id }},$event.target.value)">
-                        <i class="feather icon-truck"></i>REFUND / CANCELLED
-                    </a>
-                </div>
-            </div>
-        </div> --}}
-
-        {{-- <div class="dropdown">
-
-            <div class="form-group">
-                <select
-                    class="select2 form-control  {{ !auth()->user()->isAdmin()? 'btn disabled': '' }} {{ $order->getStatusClass() }}">
-                    <option class="bg-info dropdown-item" value="{{ App\Models\Order::STATUS_ORDER }}"
-                        {{ $order->status == App\Models\Order::STATUS_ORDER ? 'selected' : '' }}>ORDER</option>
-                    <option class="bg-primary" value="{{ App\Models\Order::STATUS_NEEDS_PROCESSING }}"
-                        {{ $order->status == App\Models\Order::STATUS_NEEDS_PROCESSING ? 'selected' : '' }}>NEEDS
-                        PROCESSING</option>
-                    <option class="btn-primary dropdown-item" value="{{ App\Models\Order::STATUS_CANCEL }}"
-                        {{ $order->status == App\Models\Order::STATUS_CANCEL ? 'selected' : '' }}>CANCELLED</option>
-                    <option class="btn-primary dropdown-item" value="{{ App\Models\Order::STATUS_REJECTED }}"
-                        {{ $order->status == App\Models\Order::STATUS_REJECTED ? 'selected' : '' }}>REJECTED</option>
-                    <option class="bg-primary dropdown-item" value="{{ App\Models\Order::STATUS_RELEASE }}"
-                        {{ $order->status == App\Models\Order::STATUS_RELEASE ? 'selected' : '' }}>RELEASED</option>
-                    <option class="bg-primary dropdown-item" value="{{ App\Models\Order::STATUS_PAYMENT_PENDING }}"
-                        {{ $order->status == App\Models\Order::STATUS_PAYMENT_PENDING ? 'selected' : '' }}>
-                        PAYMENT_PENDING
-                    </option>
-                    <option class="bg-primary dropdown-item" value="{{ App\Models\Order::STATUS_PAYMENT_DONE }}"
-                        {{ $order->status == App\Models\Order::STATUS_PAYMENT_DONE ? 'selected' : '' }}>PAYMENT_DONE
-                    </option>
-                    <option class="bg-primary dropdown-item" value="{{ App\Models\Order::STATUS_SHIPPED }}"
-                        {{ $order->status == App\Models\Order::STATUS_SHIPPED ? 'selected' : '' }}>SHIPPED</option>
-                    @if ($order->isPaid() || ($order->isRefund() && !$order->isShipped()))
-                        <option class="btn-primary dropdown-item" value="{{ App\Models\Order::STATUS_REFUND }}"
-                            {{ $order->status == App\Models\Order::STATUS_REFUND ? 'selected' : '' }}>REFUND /
-                            CANCELLED
-                        </option>
-                    @endif
-                </select>
-            </div>
-        </div> --}}
-
+        
         <div class="dropdown col-12">
             <button id="status-btn col-12" title="status" type="button"
                 @if (\Request::route()->getName() == 'admin.trash-orders.index' ||
@@ -266,34 +135,10 @@
                 </button>
             </div>
         </div>
-        {{-- <select style="min-width:150px;" class="form-control {{ !auth()->user()->isAdmin() ? 'btn disabled' : ''  }} {{ $order->getStatusClass() }}" @if (auth()->user()->isAdmin())  wire:change="$emit('updated-status',{{$order->id}},$event.target.value)" @else disabled="disabled"  @endif>
-            <option class="bg-info" value="{{ App\Models\Order::STATUS_ORDER }}" {{ $order->status == App\Models\Order::STATUS_ORDER ? 'selected': '' }}>ORDER</option> --}}
-        {{-- <option class="bg-warning" value="{{ App\Models\Order::STATUS_NEEDS_PROCESSING }}" {{ $order->status == App\Models\Order::STATUS_NEEDS_PROCESSING ? 'selected': '' }}>NEEDS PROCESSING</option> --}}
-        {{-- <option class="btn-cancelled dropdown-item" value="{{ App\Models\Order::STATUS_CANCEL }}" {{ $order->status == App\Models\Order::STATUS_CANCEL ? 'selected': '' }}>CANCELLED</option>
-            <option class="btn-cancelled dropdown-item" value="{{ App\Models\Order::STATUS_REJECTED }}" {{ $order->status == App\Models\Order::STATUS_REJECTED ? 'selected': '' }}>REJECTED</option>
-            <option class="bg-warning text-dark dropdown-item" value="{{ App\Models\Order::STATUS_RELEASE }}" {{ $order->status == App\Models\Order::STATUS_RELEASE ? 'selected': '' }}>RELEASED</option>
-            <option class="bg-danger dropdown-item" value="{{ App\Models\Order::STATUS_PAYMENT_PENDING }}" {{ $order->status == App\Models\Order::STATUS_PAYMENT_PENDING ? 'selected': '' }}>PAYMENT_PENDING</option>
-            <option class="bg-success" value="{{ App\Models\Order::STATUS_PAYMENT_DONE }}" {{ $order->status == App\Models\Order::STATUS_PAYMENT_DONE ? 'selected': '' }}>PAYMENT_DONE</option>
-            <option class="bg-secondary" value="{{ App\Models\Order::STATUS_SHIPPED }}" {{ $order->status == App\Models\Order::STATUS_SHIPPED ? 'selected': '' }}>SHIPPED</option>
-            @if ($order->isPaid() || ($order->isRefund() && !$order->isShipped()))
-                <option class="btn-refund" value="{{ App\Models\Order::STATUS_REFUND }}" {{ $order->status == App\Models\Order::STATUS_REFUND ? 'selected': '' }}>REFUND / CANCELLED</option>
-            @endif
-
-        </select> --}}
+    
 
     </td>
 
-    {{-- <td style="zoom: 0.87">
-        @if ($order->is_consolidated)
-            <span class="btn btn-sm btn-primary">
-                Consolidated
-            </span>
-        @else
-            <span class="btn btn-sm btn-primary">
-                Non-Consolidated
-            </span>
-        @endif
-    </td> --}}
     <td class="font-large-1">
         @if ($order->isPaid())
             <i class="fa fa-check-circle text-success" title="Payment Done"></i>
