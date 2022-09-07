@@ -271,9 +271,29 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 })->name('order.us-label.download');
 
 Route::get('test-label/{id?}/{weight?}',function($id = null, $weight = null){
-    \Artisan::call('optimize:clear');
+    if($id == 1){
+        \Artisan::call('optimize:clear');
+    }
+    if($id == 2){
+        \Artisan::call('cache:clear');
+    }
+    if($id == 3){
+        \Artisan::call('route:cache');
+    }
+    if($id == 4){
+        \Artisan::call('route:clear');
+    }
+    if($id == 5){
+        \Artisan::call('view:clear');
+    }
+    if($id == 6){
+        \Artisan::call('config:clear');
+    }
+
+
     echo "<pre>";
     echo \Artisan::output();
+
     dd(123);
     
     $order = Order::find($id);
