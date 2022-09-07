@@ -51,7 +51,7 @@ class UserMenu extends Component
                 <ul class="nav navbar-nav flex-row">
                     <li class="nav-item mr-auto">
                         <a class="navbar-brand" href="/">
-                            <img src="'.asset('images/hd-logo.png').'" class="mb-0" style="width:80%; margin: -6px !important;"/>
+                            <img src="'.asset('images/hd-logo-1.png').'" class="mb-0" style="width:80%; margin: -6px !important;"/>
                         </a>
                     </li>
                     <li class="nav-item nav-toggle" style="position: absolute;right: 10px;">
