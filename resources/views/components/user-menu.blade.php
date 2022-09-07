@@ -11,7 +11,6 @@
                 auth()->user()->hasRole('driver'))
                 <li class="nav-item {{ $isActive('home') }}">
                     <a class="nav-link" href="{{ route('admin.home') }}">
-                        {{-- <i class="feather icon-home"></i> --}}
                         <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                             class="feather feather-home">
@@ -63,7 +62,6 @@
                             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                             <polyline points="9 22 9 12 15 12 15 22"></polyline>
                         </svg>
-                        {{-- <i class="feather icon-home"></i> --}}
                         <span data-i18n="Dashboard"> @lang('menu.dashboard') </span>
                     </a>
                 </li>
@@ -81,7 +79,6 @@
                             <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
                             <line x1="12" y1="22.08" x2="12" y2="12"></line>
                         </svg>
-                        {{-- <i class="feather icon-alert-triangle"></i> --}}
                         <span class="menu-title">@lang('menu.Parcels')</span>
                     </a>
                 </li>
@@ -95,7 +92,6 @@
                                 <circle cx="20" cy="21" r="1"></circle>
                                 <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                             </svg>
-                            {{-- <i class="feather icon-truck"></i> --}}
                             <span class="menu-title">@lang('menu.orders')</span>
                         </a>
                         <ul class="menu-content">
@@ -126,16 +122,6 @@
                             </li>
                             <li class="nav-item {{ $isActive(['admin.trash-orders.index']) }}">
                                 <a href="{{ route('admin.trash-orders.index') }}">
-                                    {{-- <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="feather feather-trash-2">
-                                        <polyline points="3 6 5 6 21 6"></polyline>
-                                        <path
-                                            d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
-                                        </path>
-                                        <line x1="10" y1="11" x2="10" y2="17"></line>
-                                        <line x1="14" y1="11" x2="14" y2="17"></line>
-                                    </svg> --}}
                                     <i class="feather icon-circle"></i>
                                     <span class="menu-title">@lang('menu.Trashed Orders')</span>
                                 </a>
@@ -437,14 +423,7 @@
                                 </a>
                             </li>
                         @endcan
-                        @admin
-                            {{-- <li class="{{ $isActive(['admin.reports.audit-report.index','admin.reports.audit-report.show']) }}">
-                            <a href="{{ route('admin.reports.audit-report.index') }}">
-                                <i class="feather icon-circle"></i>
-                                <span class="menu-title">@lang('menu.Reports.Audit Report')</span>
-                            </a>
-                        </li> --}}
-                        @endadmin
+                       
                     </ul>
                 </li>
                 <li class="nav-item has-sub sidebar-group">
@@ -686,8 +665,6 @@
                 </a>
             </li>
         </ul>
-        {{-- <div class="ps__rail-x" style="left: 0px; bottom: 0px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div> --}}
-        {{-- <div class="ps__rail-y" style="top: 0px; height: 274px; right: 0px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 22px;"></div></div> --}}
     </div>
 </div>
 <!-- END: Main Menu-->
