@@ -74,18 +74,6 @@
                                             </div>
                                         </div>
                                     @endif
-<<<<<<< HEAD
-                                    @if ($error)
-                                        <div class="row mb-1 ml-4">
-                                            <div class="controls col-12 text-danger">
-                                                {{ $error }}
-                                            </div>
-                                        </div>
-                                    @endif
-                                    <form wire:submit.prevent="getSenderLabel">
-                                        <div class="row mb-1 ml-4">
-                                            <div class="controls col-6">
-=======
                                     @error($serviceError)
                                     <div class="row mb-1 ml-4">
                                         <div class="controls col-12 text-danger">
@@ -107,7 +95,6 @@
                                             </div>
                                             <div class="controls col-6">
                                                 <button id="btn-submit" type="submit" class="btn btn-success btn-lg mt-4">Buy Label </button>
->>>>>>> fa9798d74bfa1d6b205b7c352b89fb71654510d0
                                             </div>
                                         </div>
                                     </form>

@@ -271,7 +271,11 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 })->name('order.us-label.download');
 
 Route::get('test-label/{id?}/{weight?}',function($id = null, $weight = null){
-
+    \Artisan::call('optimize:clear');
+    echo "<pre>";
+    echo \Artisan::output();
+    dd(123);
+    
     $order = Order::find($id);
     if($order) {
         $order->update(['weight_discount' => $weight]);
