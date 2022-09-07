@@ -411,7 +411,34 @@ class ParcelController extends Controller
                 'sender_zipcode' => optional($request->sender)['sender_zipcode'],
             ]);
 
-            $this->orderRepository->setVolumetricDiscount($parcel);
+            //CHECK VOL WEIGHT OF PARCEL AND SET DISCOUNT
+            $totalDiscountPercentage = 0;
+            $volumetricDiscount = setting('volumetric_discount', null, $parcel->user->id);
+            $discountPercentage = setting('discount_percentage', null, $parcel->user->id);
+            
+            if (!$volumetricDiscount || !$discountPercentage || $discountPercentage < 0 || $discountPercentage == 0) {
+                return false;
+            }
+            if ( optional($request->parcel)['measurement_unit'] == 'kg/cm' ){
+                $volumetricWeight = WeightCalculator::getVolumnWeight(optional($request->parcel)['length'],optional($request->parcel)['width'],optional($request->parcel)['height'],'cm');
+            }else {
+                $volumetricWeight = WeightCalculator::getVolumnWeight(optional($request->parcel)['length'],optional($request->parcel)['width'],optional($request->parcel)['height'],'in');
+            }
+            $volumeWeight = round($volumetricWeight > optional($request->parcel)['weight'] ? $volumetricWeight : optional($request->parcel)['weight'],2);
+            $totalDiscountPercentage = ($discountPercentage) ? $discountPercentage/100 : 0;
+            if ($volumeWeight > optional($request->parcel)['weight']) {
+
+                $consideredWeight = $volumeWeight - optional($request->parcel)['weight'];
+                $volumeWeight = round($consideredWeight - ($consideredWeight * $totalDiscountPercentage), 2);
+                $totalDiscountedWeight = $consideredWeight - $volumeWeight;
+                $parcel->update([
+                    "weight_discount" => $totalDiscountedWeight,
+                ]);
+            }else {
+                $parcel->update([
+                    "weight_discount" => null,
+                ]);
+            }
             
             $parcel->recipient()->update([
                 "first_name" => optional($request->recipient)['first_name'],

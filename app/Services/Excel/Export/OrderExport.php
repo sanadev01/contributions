@@ -40,46 +40,46 @@ class OrderExport extends AbstractExportService
             $this->setCellValue('D'.$row, $order->merchant);
             $this->setCellValue('E'.$row, $order->tracking_id);
             $this->setCellValue('F'.$row, $order->customer_reference);
-            $this->setCellFormat('G'.$row);
             $this->setCellValue('G'.$row, $this->getOrderTrackingCodes($order));
             $this->setCellValue('H'.$row, $order->gross_total);
             $this->setCellValue('I'.$row, $this->checkValue(number_format($order->dangrous_goods,2)));
             $this->setCellValue('J'.$row, $this->chargeWeight($order));
-            $this->setCellValue('K'.$row, round(($this->chargeWeight($order)*2.205),2));
-            $this->setCellValue('L'.$row, $order->getWeight($this->isWeightInKg($order->measurement_unit)));
-            $this->setCellValue('M'.$row, $order->length. ' X '. $order->width.' X '.$order->height);
+            $this->setCellValue('K'.$row, $order->getWeight('kg'));
+            $this->setCellValue('L'.$row, round(($this->chargeWeight($order)*2.205),2));
+            $this->setCellValue('M'.$row, $order->getWeight('lbs'));
+            $this->setCellValue('N'.$row, $order->length. ' X '. $order->width.' X '.$order->height);
 
             if($order->status == Order::STATUS_ORDER){
-                $this->setCellValue('N'.$row, 'ORDER');
+                $this->setCellValue('O'.$row, 'ORDER');
             }
             if($order->status == Order::STATUS_NEEDS_PROCESSING){
-                $this->setCellValue('N'.$row, 'PROCESSING');
+                $this->setCellValue('O'.$row, 'PROCESSING');
             }
             if($order->status == Order::STATUS_CANCEL){
-                $this->setCellValue('N'.$row, 'CANCEL');
+                $this->setCellValue('O'.$row, 'CANCEL');
             }
             if($order->status == Order::STATUS_REJECTED){
-                $this->setCellValue('N'.$row, 'REJECTED');
+                $this->setCellValue('O'.$row, 'REJECTED');
             }
             if($order->status == Order::STATUS_RELEASE){
-                $this->setCellValue('N'.$row, 'RELEASED');
+                $this->setCellValue('O'.$row, 'RELEASED');
             }
             if($order->status == Order::STATUS_REFUND){
-                $this->setCellValue('N'.$row, 'REFUND');
+                $this->setCellValue('O'.$row, 'REFUND');
             }
             if($order->status == Order::STATUS_PAYMENT_PENDING){
-                $this->setCellValue('N'.$row, 'PAYMENT PENDING');
+                $this->setCellValue('O'.$row, 'PAYMENT PENDING');
             }
             if($order->status == Order::STATUS_PAYMENT_DONE){
-                $this->setCellValue('N'.$row, 'PAYMENT DONE');
+                $this->setCellValue('O'.$row, 'PAYMENT DONE');
             }
             if($order->status == Order::STATUS_SHIPPED){
-                $this->setCellValue('N'.$row, 'SHIPPED');
+                $this->setCellValue('O'.$row, 'SHIPPED');
             }
 
-            $this->setCellValue('O'.$row, $order->weight_discount);
+            $this->setCellValue('P'.$row, $order->weight_discount);
 
-            $this->setCellValue('P'.$row, $order->discountCost());
+            $this->setCellValue('Q'.$row, $order->discountCost());
             
             
             $row++;
@@ -92,17 +92,15 @@ class OrderExport extends AbstractExportService
         $this->setCellValue('J'.$row, "=SUM(J1:J{$row})");
         $this->setCellValue('K'.$row, "=SUM(K1:K{$row})");
         $this->setCellValue('L'.$row, "=SUM(L1:L{$row})");
-        $this->setCellValue('O'.$row, "=SUM(O1:O{$row})");
+        $this->setCellValue('M'.$row, "=SUM(M1:M{$row})");
         $this->setCellValue('P'.$row, "=SUM(P1:P{$row})");
+        $this->setCellValue('Q'.$row, "=SUM(Q1:Q{$row})");
         $this->mergeCells("A{$row}:F{$row}");
-        $this->setBackgroundColor("A{$row}:P{$row}", 'adfb84');
+        $this->setBackgroundColor("A{$row}:Q{$row}", 'adfb84');
         $this->setAlignment('A'.$row, Alignment::VERTICAL_CENTER);
         $this->setCellValue('A'.$row, 'Total Order: '.$this->orders->count());
 
-
-
     }
-
 
     private function setExcelHeaderRow()
     {
@@ -137,28 +135,29 @@ class OrderExport extends AbstractExportService
         $this->setCellValue('J1', 'Weight(Kg)');
         
         $this->setColumnWidth('K', 20);
-        $this->setCellValue('K1', 'Weight(Lbs)');
+        $this->setCellValue('K1', 'Metric Weight(kg)');
 
         $this->setColumnWidth('L', 20);
-        $this->setCellValue('L1', 'Metric Weight');
-
+        $this->setCellValue('L1', 'Weight(Lbs)');
+        
         $this->setColumnWidth('M', 20);
-        $this->sheet->getStyle('M')->getAlignment()->setHorizontal('center');
-        $this->setCellValue('M1', 'Dimesnsions');
+        $this->setCellValue('M1', 'Metric Weight(Lbs)');
 
         $this->setColumnWidth('N', 20);
-        $this->setCellValue('N1', 'Status');
+        $this->sheet->getStyle('N')->getAlignment()->setHorizontal('center');
+        $this->setCellValue('N1', 'Dimesnsions');
 
         $this->setColumnWidth('O', 20);
-        $this->setCellValue('O1', 'Discount Weight');
+        $this->setCellValue('O1', 'Status');
 
         $this->setColumnWidth('P', 20);
-        $this->setCellValue('P1', 'Discount Amount');
+        $this->setCellValue('P1', 'Discount Weight');
 
-        
+        $this->setColumnWidth('Q', 20);
+        $this->setCellValue('Q1', 'Discount Amount');
 
-        $this->setBackgroundColor('A1:P1', '2b5cab');
-        $this->setColor('A1:P1', 'FFFFFF');
+        $this->setBackgroundColor('A1:Q1', '2b5cab');
+        $this->setColor('A1:Q1', 'FFFFFF');
 
         $this->currentRow++;
     }

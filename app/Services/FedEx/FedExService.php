@@ -127,7 +127,7 @@ class FedExService
                 'recipients' => [
                     [
                         'contact' => [
-                            'personName' => 'Marcio Fertias -'.$poBoxNumber,
+                            'personName' => 'Marcio Freitas -'.$poBoxNumber,
                             'phoneNumber' => '+13058885191',
                             'companyName' => 'HERCO SUITE#100'
                         ],
@@ -222,7 +222,7 @@ class FedExService
             'requestedShipment' => [
                 'shipper' => [
                     'contact' => [
-                        'personName' => 'Marcio Fertias',
+                        'personName' => 'Marcio Freitas',
                         'phoneNumber' => '+13058885191',
                         'companyName' => 'HERCO SUITE#100'
                     ],

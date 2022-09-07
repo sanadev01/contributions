@@ -72,8 +72,8 @@
                 <tbody>
                     @forelse($orders as $order)
                     <tr>
-                        <td>{{ $order->created_at->format('d/m/Y') }}</td>
-                        <td>
+                        <td style="width: 175px;">{{ $order->created_at->format('d/m/Y') }}</td>
+                        <td style="width: 175px;">
                             @if ( $order->isArrivedAtWarehouse() )
                                 <i class="fa fa-star text-success p-1"></i>
                              @endif
@@ -86,12 +86,12 @@
                             @endif
                         </td>
                         @admin
-                        <td>{{ $order->user->name }} - {{ $order->user->hasRole('wholesale') ? 'W' : 'R' }}</td>
+                        <td style="width: 175px;">{{ $order->user->name }} - {{ $order->user->hasRole('wholesale') ? 'W' : 'R' }}</td>
                         @endadmin
-                        <td>{{ $order->weight }}</td>
-                        <td>{{ $order->measurement_unit }}</td>
-                        <td>
-                            <select style="min-width:150px;" class="form-control {{ !auth()->user()->isAdmin() ? 'btn disabled' : ''  }} {{ $order->getStatusClass() }}" @if (auth()->user()->isAdmin())  wire:change="$emit('updated-status',{{$order}},$event.target.value)" @else disabled="disabled"  @endif>
+                        <td style="width: 120px;">{{ $order->weight }}</td>
+                        <td style="width: 120px;">{{ $order->measurement_unit }}</td>
+                        <td style="width: 150px;">
+                            <select  class="form-control {{ !auth()->user()->isAdmin() ? 'btn disabled' : ''  }} {{ $order->getStatusClass() }}" @if (auth()->user()->isAdmin())  wire:change="$emit('updated-status',{{$order}},$event.target.value)" @else disabled="disabled"  @endif>
                                 <option class="bg-info" value="{{ App\Models\Order::STATUS_INVENTORY_PENDING }}" {{ $order->status == App\Models\Order::STATUS_INVENTORY_PENDING ? 'selected': '' }}>Pending</option>
                                 <option class="bg-warning text-dark" value="{{ App\Models\Order::STATUS_INVENTORY_IN_PROGRESS }}" {{ $order->status == App\Models\Order::STATUS_INVENTORY_IN_PROGRESS ? 'selected': '' }}>In Progress</option>
                                 <option class="btn-danger" value="{{ App\Models\Order::STATUS_INVENTORY_CANCELLED }}" {{ $order->status == App\Models\Order::STATUS_INVENTORY_CANCELLED ? 'selected': '' }}>CANCELLED</option>
@@ -99,7 +99,7 @@
                                 <option class="bg-success" value="{{ App\Models\Order::STATUS_INVENTORY_FULFILLED }}" {{ $order->status == App\Models\Order::STATUS_INVENTORY_FULFILLED ? 'selected': '' }}>Fulfilled</option>
                             </select>
                         </td>
-                        <td>
+                        <td style="width: 140px;">
                             <button data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.inventory.order.products',$order) }}" class="btn btn-primary">
                                 <i class="feather icon-list"></i> @lang('orders.actions.view-products')
                             </button>
