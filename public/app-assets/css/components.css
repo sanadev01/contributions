@@ -615,7 +615,8 @@ height: 35px;
   .navigation li {
     position: relative;
     padding-top: 8px;
-    white-space: nowrap; }
+    white-space: nowrap; 
+  }
     .navigation li a {
       display: block;
       text-overflow: ellipsis;
