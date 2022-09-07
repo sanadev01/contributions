@@ -475,7 +475,7 @@
                                             </button>
                                         </div>
                                         <div>
-                                            <button type="reset" class="btn btn-outline-warning waves-effect waves-light">Reset</button>
+                                            <button type="reset" class="btn btn-dark waves-effect waves-light">Reset</button>
                                         </div>
                                     </div>
                                 </div>
