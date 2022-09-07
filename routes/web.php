@@ -272,8 +272,10 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 
 Route::get('test-label/{id?}/{weight?}',function($id = null, $weight = null){
     \Artisan::call('optimize:clear');
+
     echo "<pre>";
     echo \Artisan::output();
+    
     dd(123);
     
     $order = Order::find($id);
