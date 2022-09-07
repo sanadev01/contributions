@@ -17,13 +17,13 @@
         </td>
     @endif
     @admin
-        <td id="userNameCol">
+        <td id="userNameCol" style="width: 175px;">
             <div class="media media-xs overflow-visible">
                 <img class="corrioes-lable" src="{{ asset('images/tracking/' . $order->carrierService() . '.png') }}"
                     title="{{ $order->carrierService() }}"style="height: 30px; width: 30px; vertical-align:middle;"
                     alt="">
             </div>
-            <div class="media-body valign-middle" id="imageDecrptionTop" style="width:175px; font-size:15px !important">
+            <div class="media-body valign-middle" id="imageDecrptionTop" style="width:100%; font-size:15px !important">
                 <a href="#" title="Click to see Shipment" data-toggle="modal" data-target="#hd-modal"
                     data-url="{{ route('admin.modals.parcel.shipment-info', $order) }}">
                     {{ $order->user->name }} - {{ $order->user->hasRole('wholesale') ? 'W' : 'R' }}
@@ -46,14 +46,14 @@
            
         </td>
     @endadmin
-    <td>
+    <td style="width: 195px;">
        
         <a href="#" id="openEditModal" class="mb-0 " wire:click="$emit('edit-order',{{ $order->id }})"
             title="Click to edit">
             {{ optional($order->order_date)->format('m/d/Y') }}
         </a>
     </td>
-    <td class="order-id" style="width: 100px;">
+    <td class="order-id" style="width: 195px;">
         @if ($order->isArrivedAtWarehouse())
             <i class="fa fa-star text-success p-1"></i>
         @endif
@@ -78,18 +78,18 @@
         </span>
     </td>
     
-    <td>
+    <td style="width: 290px;">
         {{ $order->corrios_tracking_code }}
         @if ($order->hasSecondLabel())
             <hr>
             {{ $order->us_api_tracking_code }}
         @endif
     </td>
-    <td>
+    <td style="width: 195px;">
         <span class="col-1">${{ number_format($order->gross_total, 2) }}</span>
     </td>
 
-    <td>
+    <td style="width: 195px;">
         
         <div class="dropdown col-12">
             <button id="status-btn col-12" title="status" type="button"
