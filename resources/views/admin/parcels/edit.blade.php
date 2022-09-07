@@ -137,10 +137,10 @@
                                                         value="{{ old('order_date', $parcel->order_date) }}"
                                                         required=""
                                                         placeholder="@user
-@lang('parcel.Order Date')
-@enduser @admin
-@lang('parcel.Arrival Date')
-@endadmin">
+                                                        @lang('parcel.Order Date')
+                                                        @enduser @admin
+                                                        @lang('parcel.Arrival Date')
+                                                        @endadmin">
                                                     @error('order_date')
                                                         <div class="help-block text-danger">{{ $message }}</div>
                                                     @enderror
@@ -231,7 +231,7 @@
                                         @lang('parcel.Save Parcel')
                                     </button>
                                     <button type="reset"
-                                        class="btn btn-outline-danger waves-effect waves-light">@lang('parcel.Reset')</button>
+                                        class="btn btn-dark waves-effect waves-light">@lang('parcel.Reset')</button>
                                 </div>
                             </div>
                         </form>

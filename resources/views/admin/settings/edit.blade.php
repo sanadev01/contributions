@@ -220,7 +220,7 @@
                                             @lang('setting.Save Changes')
                                         </button>
                                         <button type="reset"
-                                            class="btn btn-outline-warning waves-effect waves-light">@lang('setting.Reset')</button>
+                                            class="btn btn-dark waves-effect waves-light">@lang('setting.Reset')</button>
                                     </div>
                                 </div>
                             </form>

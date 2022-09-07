@@ -100,10 +100,10 @@
                                                         class="form-control order_date_picker datepicker"
                                                         value="{{ old('order_date') }}" required=""
                                                         placeholder="@user
-@lang('parcel.Order Date')
-@enduser @admin
-@lang('parcel.Arrival Date')
-@endadmin" />
+                                                        @lang('parcel.Order Date')
+                                                        @enduser @admin
+                                                        @lang('parcel.Arrival Date')
+                                                        @endadmin" />
                                                     @error('order_date')
                                                         <div class="help-block text-danger">{{ $message }}</div>
                                                     @enderror
@@ -206,7 +206,7 @@
 
                                     @endcan
                                     <button type="submit" class="pull-right btn btn-primary waves-effect waves-light">
-                                        submit</button>
+                                    Submit</button>
                         </form>
                     </div>
                 </div>
