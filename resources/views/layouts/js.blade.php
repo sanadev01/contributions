@@ -73,6 +73,20 @@
         }
     }
 
+    function toggleOrdersPageSearch() {
+        $('#tblOrders').find('thead tr:eq(1)').toggle();
+        //const div = document.getElementById('ordersSearch');
+        //console.log(div);
+        // if ($('#tblOrders').find('thead tr:eq(1)').style.display != 'block') {
+        //     $('#tblOrders').find('thead tr:eq(1)').style.display = 'block';
+        //     // console.log('asdasd');
+        // } else {
+        //     $('#tblOrders').find('thead tr:eq(1)').style.display = 'none';
+        //     // console.log('aa');
+
+        // }
+    }
+
     function toggleUserSearch() {
         const div = document.getElementById('userSearch');
         if (div.style.display != 'flex') {

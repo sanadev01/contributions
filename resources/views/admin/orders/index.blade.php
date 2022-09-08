@@ -41,8 +41,8 @@
         <div class="row filter pr-3">
             <button type="btn" onclick="toggleDateSearch()" id="customSwitch8"
                 class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-filter"></i></button>
-            <!-- <button type="btn" onclick="toggleOrderPageSearch()" id="orderSearch"
-                class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-search"></i></button> -->
+            <button type="btn" onclick="toggleOrdersPageSearch()" id="ordersSearch"
+                class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-search"></i></button>
             {{-- @can('canImportLeveOrders', App\Models\Order::class)
                 <a href="{{ route('admin.leve-order-import.index') }}" class="pull-right btn btn-primary"
                     style="height: max-content"> Import Leve Orders </a>

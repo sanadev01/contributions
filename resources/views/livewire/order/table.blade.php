@@ -48,7 +48,7 @@
         </div>
 
         <div class="table-responsive order-table">
-            <table class="table mb-0  table-bordered">
+            <table class="table mb-0  table-bordered" id="tblOrders">
                 <thead>
                     <tr>
 
