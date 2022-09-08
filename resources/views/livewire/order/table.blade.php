@@ -18,7 +18,9 @@
                                 onclick="window.location.reload();">
                                 <i class="fa fa-undo" data-bs-toggle="tooltip" title=""
                                     data-bs-original-title="fa fa-undo" aria-label="fa fa-undo"
-                                    aria-hidden="true"></i></button>
+                                    aria-hidden="true">
+                                </i>
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -42,16 +44,13 @@
                         </form>
                     </div>
                 </div>
-
             </div>
-
         </div>
 
         <div class="table-responsive order-table">
-            <table class="table mb-0  table-bordered">
+            <table class="table mb-0  table-bordered" id="tblOrders">
                 <thead>
                     <tr>
-
                         @if (\Request::route()->getName() != 'admin.trash-orders.index')
                             <th id="optionChkbx">
                                 <div class="vs-checkbox-con vs-checkbox-primary" title="Select All">
@@ -69,38 +68,34 @@
                             <th id="userNameCol">USER NAME</th>
                         @endadmin
                         <th>
-                            @if (\Request::route()->getName() != 'admin.trash-orders.index')
-                                {{-- <span class="mr-4"> @lang('Edit Order')</span> --}}
-                            @endif
-                            @lang('orders.date')<a wire:click.prevent="sortBy('created_at')"
-                                class="fas fa-sort text-right custom-sort-arrow"></a>
+                            <a title="Click to Sort" wire:click.prevent="sortBy('created_at')">
+                                @lang('orders.date')</a><a wire:click.prevent="sortBy('created_at')"
+                                class="fas fa-sort text-right custom-sort-arrow">
+                            </a>
                         </th>
                         <th>
-                            @lang('orders.order-id')<a wire:click.prevent="sortBy('id')"
-                                class="fas fa-sort text-right custom-sort-arrow"></a>
+                            <a title="Click to Sort" wire:click.prevent="sortBy('id')">
+                                @lang('orders.order-id')</a><a wire:click.prevent="sortBy('id')"
+                                class="fas fa-sort text-right custom-sort-arrow">
+                            </a>
                         </th>
-
-                        {{-- <th>Loja/Cliente</th>
-                        <th>Carrier Tracking</th> --}}
-                        {{-- <th>Reference</th> --}}
-                        {{-- <th>Carrier</th>
-                        @admin
-                            <th>Carrier Cost</th>
-                        @endadmin --}}
                         <th>TRACKING CODE</th>
-                        <th>@lang('orders.amount')<a wire:click.prevent="sortBy('gross_total')"
-                                class="fas fa-sort text-right custom-sort-arrow"></a></th>
+                        <th>
+                            <a title="Click to Sort" wire:click.prevent="sortBy('gross_total')">
+                                @lang('orders.amount')</a><a wire:click.prevent="sortBy('gross_total')"
+                                class="fas fa-sort text-right custom-sort-arrow">
+                            </a>
+                        </th>
                         <th>@lang('orders.status')</th>
-                        {{-- <th>@lang('orders.type')</th> --}}
                         <th>@lang('orders.payment-status')</th>
                         <th class="no-print">@lang('orders.actions.actions')</th>
                     </tr>
                     <tr>
                         <th></th>
                         @admin
-                        <th>
-                            <input type="search" class="form-control" wire:model.debounce.1000ms="name">
-                        </th>
+                            <th>
+                                <input type="search" class="form-control" wire:model.debounce.1000ms="name">
+                            </th>
                         @endadmin
                         <th>
                             <input type="search" class="form-control" wire:model.debounce.1000ms="date">
@@ -203,11 +198,6 @@
                         toastr.error(response.message)
                     })
             })
-
-            // @this.on('edit-order',function(){
-            //     $('#order-table').addClass('w-25');
-            //     $('#order-table').removeClass('w-100');
-            // })
         });
     </script>
 @endpush

@@ -17,9 +17,10 @@
                             <i class="fa fa-search" aria-hidden="true"></i>
                         </button>
                         <a href="{{ route('warehouse.delivery_bill.create') }}"
-                            class="pull-right btn btn-primary ml-1">
-                            @lang('warehouse.deliveryBill.Create Delivery Bill') </a>
-                        <a class="btn btn-success waves-effect waves-light ml-1" href="{{ url('delivery_bill') }}">
+                            class="pull-right btn btn-success ml-1">
+                            @lang('warehouse.deliveryBill.Create Delivery Bill')
+                        </a>
+                        <a class="btn btn-primary waves-effect waves-light ml-1" href="{{ url('delivery_bill') }}">
                             back to lists
                         </a>
                     </div>
@@ -89,7 +90,7 @@
                                         </td> --}}
                                         <td>
                                             {{ $deliveryBill->name }}
-                                            @if ($deliveryBill->Containers->count() > 0)
+                                            @if ($deliveryBill->Containers->count() > 0 && $deliveryBill->Containers->first()->orders->count() > 0)
                                                 @if($deliveryBill->Containers->first()->orders->first()->shippingService->isAnjunService())
                                                 <span class="badge badge-success">A</span>
                                                 @else

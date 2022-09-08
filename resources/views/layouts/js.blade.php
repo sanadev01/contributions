@@ -65,22 +65,22 @@
         console.log(div);
         if (div.style.display != 'block') {
             div.style.display = 'block';
-            // console.log('asdasd');
         } else {
             div.style.display = 'none';
-            // console.log('aa');
 
         }
+    }
+
+    function toggleOrdersPageSearch() {
+        $('#tblOrders').find('thead tr:eq(1)').toggle();
     }
 
     function toggleUserSearch() {
         const div = document.getElementById('userSearch');
         if (div.style.display != 'flex') {
             div.style.display = 'flex';
-            // console.log('asdasd');
         } else {
             div.style.display = 'none';
-            // console.log('aa');
 
         }
     }
@@ -140,6 +140,7 @@
     //     ]
     // });
     $(document).ready(function() {
+        $('#tblOrders').find('thead tr:eq(1)').hide();
 
         $('#visibilityToggle').change(function() {
             var item = $(this);
