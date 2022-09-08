@@ -110,11 +110,9 @@
     $('#shipping_service_id').on('change',function(){
         const service = $('#shipping_service_id option:selected').attr('data-service-code');
         
-        if (service != shippingServiceCodes.COLOMBIA_Standard) {
-            $('#user_declared_freight').val(
-                parseFloat($('option:selected', this).attr("data-cost"))
-            );
-        }
+        $('#user_declared_freight').val(
+            parseFloat($('option:selected', this).attr("data-cost"))
+        );
         if(service == shippingServiceCodes.USPS_PRIORITY_INTERNATIONAL || service == shippingServiceCodes.USPS_FIRSTCLASS_INTERNATIONAL) {
             $("#rateBtn").show();
         }else {

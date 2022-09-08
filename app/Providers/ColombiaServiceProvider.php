@@ -21,17 +21,21 @@ class ColombiaServiceProvider extends ServiceProvider
                 $password = config('ColombiaService.credentials.password');
                 $contractCode = config('ColombiaService.credentials.contractCode');
                 $headquarterCode = config('ColombiaService.credentials.headquarterCode');
+                $token = config('ColombiaService.credentials.token');
                 $shippingUrl = config('ColombiaService.production.shippingUrl');
+                $containerRegisterUrl = config('ColombiaService.production.containerRegisterUrl');
 
             }else{
                 $userName = config('ColombiaService.credentials.username');
                 $password = config('ColombiaService.credentials.password');
                 $contractCode = config('ColombiaService.credentials.contractCode');
                 $headquarterCode = config('ColombiaService.credentials.headquarterCode');
+                $token = config('ColombiaService.credentials.token');
                 $shippingUrl = config('ColombiaService.testing.shippingUrl');
+                $containerRegisterUrl = config('ColombiaService.testing.containerRegisterUrl');
             }
 
-            return new ColombiaService($userName, $password, $contractCode, $headquarterCode, $shippingUrl);
+            return new ColombiaService($userName, $password, $contractCode, $headquarterCode, $token, $shippingUrl, $containerRegisterUrl);
         });
     }
 

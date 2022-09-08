@@ -31,7 +31,9 @@ class ShippingService extends Model
     const Packet_Mini = 33197;
     const AJ_Packet_Standard = 33164;
     const AJ_Packet_Express = 33172;
-    const COLOMBIA_Standard = 44162;
+    const COLOMBIA_URBANO = 44162;
+    const COLOMBIA_NACIONAL = 44163;
+    const COLOMBIA_TRAYETOS = 44164;
     const Brazil_Redispatch = 100;
 
     protected $guarded = [];
@@ -210,7 +212,9 @@ class ShippingService extends Model
     private function colombiaShippingServices()
     {
         return [
-            self::COLOMBIA_Standard,
+            self::COLOMBIA_URBANO,
+            self::COLOMBIA_NACIONAL,
+            self::COLOMBIA_TRAYETOS,
         ];
     }
 
