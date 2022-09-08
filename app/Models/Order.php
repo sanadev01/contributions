@@ -64,6 +64,7 @@ class Order extends Model implements Package
     const BRAZIL = 30;
     const CHILE = 46;
     const US = 250;
+    const COLOMBIA = 50;
 
     public $user_profit = 0;
 
@@ -129,7 +130,7 @@ class Order extends Model implements Package
     {
         return $this->belongsToMany(Container::class);
     }
-    
+
     public function deposits()
     {
         return $this->belongsToMany(Deposit::class);
@@ -149,7 +150,7 @@ class Order extends Model implements Package
     {
         return $this->is_consolidated;
     }
-    
+
     public function isPaid()
     {
         if ( !$this->getPaymentInvoice() ){
@@ -167,12 +168,12 @@ class Order extends Model implements Package
     {
         return $this->status == self::STATUS_NEEDS_PROCESSING;
     }
-    
+
     public function isShipped()
     {
         return $this->status == self::STATUS_SHIPPED;
     }
-    
+
     public function isRefund()
     {
         return $this->status == self::STATUS_REFUND;
@@ -191,6 +192,11 @@ class Order extends Model implements Package
     public function images()
     {
         return $this->belongsToMany(Document::class);
+    }
+
+    public function tax()
+    {
+        return $this->hasOne(Tax::class, 'order_id');
     }
 
     public function products()
@@ -329,26 +335,35 @@ class Order extends Model implements Package
     public function carrierService()
     {
         if ($this->shippingService()) {
-            if (optional($this->shippingService)->service_sub_class == ShippingService::USPS_PRIORITY || 
+            if (optional($this->shippingService)->service_sub_class == ShippingService::USPS_PRIORITY ||
                 optional($this->shippingService)->service_sub_class == ShippingService::USPS_FIRSTCLASS ||
                 optional($this->shippingService)->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
                 optional($this->shippingService)->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
 
-                return 'USPS';
+                return 'usps';
 
             }elseif(optional($this->shippingService)->service_sub_class == ShippingService::UPS_GROUND){
 
-                return 'UPS';
+                return 'Ups';
 
             }elseif(optional($this->shippingService)->service_sub_class == ShippingService::FEDEX_GROUND){
 
-                return 'FEDEX';
+                return 'FedEx';
 
             }elseif(optional($this->shippingService)->service_sub_class == ShippingService::SRP || optional($this->shippingService)->service_sub_class == ShippingService::SRM){
-                
+
                 return 'Correios Chile';
 
+            }elseif(in_array(optional($this->shippingService)->service_sub_class, [
+                ShippingService::COLOMBIA_URBANO,
+                ShippingService::COLOMBIA_NACIONAL,
+                ShippingService::COLOMBIA_TRAYETOS,
+            ])){
+                
+                return 'Colombia Service';
+
             }
+
             return 'Correios Brazil';
         }
 
@@ -358,10 +373,10 @@ class Order extends Model implements Package
     public function carrierCost()
     {
         if ($this->shippingService()) {
-            if (optional($this->shippingService)->service_sub_class == ShippingService::USPS_PRIORITY || 
+            if (optional($this->shippingService)->service_sub_class == ShippingService::USPS_PRIORITY ||
                 optional($this->shippingService)->service_sub_class == ShippingService::USPS_FIRSTCLASS ||
                 optional($this->shippingService)->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
-                optional($this->shippingService)->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL || 
+                optional($this->shippingService)->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL ||
                 optional($this->shippingService)->service_sub_class == ShippingService::UPS_GROUND ||
                 optional($this->shippingService)->service_sub_class == ShippingService::FEDEX_GROUND) {
 
@@ -425,7 +440,7 @@ class Order extends Model implements Package
         $this->update([
             'sinerlog_url_label' => $url
         ]);
-    }    
+    }
 
     public function getTempWhrNumber()
     {
@@ -437,7 +452,7 @@ class Order extends Model implements Package
         $shippingService = $this->shippingService;
 
         $additionalServicesCost = $this->calculateAdditionalServicesCost($this->services);
-        if ($shippingService && in_array($shippingService->service_sub_class, $this->usShippingServicesSubClasses())) {
+        if ($shippingService && $shippingService->isOfUnitedStates()) {
             $shippingCost = $this->user_declared_freight;
             $this->calculateProfit($shippingCost, $shippingService);
         }else {
@@ -483,7 +498,7 @@ class Order extends Model implements Package
                 }
             }
         }
-        
+
         return $services->sum('price');
     }
     public function calculateProfit($shippingCost, $shippingService)
@@ -493,15 +508,16 @@ class Order extends Model implements Package
             $profit_percentage = (setting('ups_profit', null, $this->user->id) != null &&  setting('ups_profit', null, $this->user->id) != 0) ?  setting('ups_profit', null, $this->user->id) : setting('ups_profit', null, User::ROLE_ADMIN);
 
         }elseif ($shippingService->service_sub_class == ShippingService::FEDEX_GROUND) {
-            
+
             $profit_percentage = (setting('fedex_profit', null, $this->user->id) != null &&  setting('fedex_profit', null, $this->user->id) != 0) ?  setting('fedex_profit', null, $this->user->id) : setting('fedex_profit', null, User::ROLE_ADMIN);
-        }
-        else {
+        
+        }else{
+            
             $profit_percentage = (setting('usps_profit', null, $this->user->id) != null &&  setting('usps_profit', null, $this->user->id) != 0) ?  setting('usps_profit', null, $this->user->id) : setting('usps_profit', null, User::ROLE_ADMIN);
         }
-        
+
         $profit = $profit_percentage / 100;
-        
+
         $this->user_profit = $shippingCost * $profit;
         return true;
     }
@@ -509,11 +525,11 @@ class Order extends Model implements Package
     public function usShippingServicesSubClasses()
     {
         return [
-            ShippingService::USPS_PRIORITY, 
-            ShippingService::USPS_FIRSTCLASS, 
-            ShippingService::USPS_PRIORITY_INTERNATIONAL, 
-            ShippingService::USPS_FIRSTCLASS_INTERNATIONAL, 
-            ShippingService::UPS_GROUND, 
+            ShippingService::USPS_PRIORITY,
+            ShippingService::USPS_FIRSTCLASS,
+            ShippingService::USPS_PRIORITY_INTERNATIONAL,
+            ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,
+            ShippingService::UPS_GROUND,
             ShippingService::FEDEX_GROUND
         ];
     }
@@ -612,6 +628,61 @@ class Order extends Model implements Package
     }
 
 
+    public function getStatus()
+    {
+        $class = "";
+
+        if ( $this->status == Order::STATUS_INVENTORY_PENDING ){
+            $class = 'INVENTORY_PENDING';
+        }
+        if ( $this->status == Order::STATUS_INVENTORY_IN_PROGRESS ){
+            $class = 'INVENTORY_IN_PROGRESS';
+        }
+        if ( $this->status == Order::STATUS_INVENTORY_CANCELLED ){
+            $class = 'INVENTORY_CANCELLED';
+        }
+        if ( $this->status == Order::STATUS_INVENTORY_REJECTED ){
+            $class = 'INVENTORY_REJECTED';
+        }
+        if ( $this->status == Order::STATUS_INVENTORY_FULFILLED ){
+            $class = 'INVENTORY_FULFILLED';
+        }
+        if ( $this->status == Order::STATUS_PREALERT_TRANSIT ){
+            $class = 'PREALERT_TRANSIT';
+        }
+        if ( $this->status == Order::STATUS_PREALERT_READY ){
+            $class = 'PREALERT_READY';
+        }
+        if ( $this->status == Order::STATUS_ORDER ){
+            $class = 'ORDER';
+        }
+        if ( $this->status == Order::STATUS_NEEDS_PROCESSING ){
+            $class = 'NEEDS_PROCESSING';
+        }
+        if ( $this->status == Order::STATUS_CANCEL ){
+            $class = 'CANCEL';
+        }
+        if ( $this->status == Order::STATUS_REJECTED ){
+            $class = 'REJECTED';
+        }
+        if ( $this->status == Order::STATUS_RELEASE ){
+            $class = 'RELEASE';
+        }
+        if ( $this->status == Order::STATUS_PAYMENT_PENDING ){
+            $class = 'PAYMENT_PENDING';
+        }
+        if ( $this->status == Order::STATUS_PAYMENT_DONE ){
+            $class = 'PAYMENT_DONE';
+        }
+        if ( $this->status == Order::STATUS_SHIPPED ){
+            $class = 'SHIPPED';
+        }
+        if ( $this->status == Order::STATUS_REFUND ){
+            $class = 'REFUND';
+        }
+        return $class;
+    }
+
     public function getDistributionModality(): int
     {
         if ($this->shippingService && in_array($this->shippingService->service_sub_class, $this->anjunShippingServicesSubClasses())) {
@@ -676,7 +747,7 @@ class Order extends Model implements Package
 
         if ($this->weight_discount && $shippingService && !in_array($shippingService->service_sub_class, [
             ShippingService::USPS_PRIORITY, ShippingService::USPS_FIRSTCLASS,ShippingService::USPS_PRIORITY_INTERNATIONAL,
-            ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,ShippingService::UPS_GROUND,ShippingService::FEDEX_GROUND])) 
+            ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,ShippingService::UPS_GROUND,ShippingService::FEDEX_GROUND]))
         {
 
             $additionalServicesCost = $this->calculateAdditionalServicesCost($this->services);
@@ -701,11 +772,11 @@ class Order extends Model implements Package
 
         return null;
     }
-    
+
     public function anjunShippingServicesSubClasses()
     {
         return [
-            ShippingService::AJ_Packet_Standard, 
+            ShippingService::AJ_Packet_Standard,
             ShippingService::AJ_Packet_Express,
         ];
     }
@@ -713,5 +784,14 @@ class Order extends Model implements Package
     public function getCorrespondenceServiceCode($serviceCode)
     {
         return ($serviceCode == ShippingService::AJ_Packet_Express) ? ShippingService::Packet_Express : ShippingService::Packet_Standard;
+    }
+
+    public function colombiaLabelUrl()
+    {
+        if (!$this->api_response) {
+            return null;
+        }
+
+        return json_decode($this->api_response)->strUrlGuide;
     }
 }

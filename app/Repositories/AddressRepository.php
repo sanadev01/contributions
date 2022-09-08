@@ -5,6 +5,7 @@ namespace App\Repositories;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Address;
+use App\Services\Excel\Export\ExportAddresses;
 use Exception;
 
 class AddressRepository
@@ -32,6 +33,25 @@ class AddressRepository
                     ->orWhere('first_name','LIKE',"%{$request->name}%" )
                     ->orWhere('last_name','LIKE',"%{$request->name}%" );
             });
+        }
+
+        if ( $request->search ){
+            $query->where(function($query) use($request){
+                return $query->whereRaw("CONCAT( first_name, ' ', last_name ) LIKE '%{$request->search}%'")
+                ->orWhere('first_name','LIKE',"%{$request->search}%" )
+                ->orWhere('last_name','LIKE',"%{$request->search}%" );
+            })->orWhereHas('user',function($query) use($request) {
+                return $query->where('pobox_number',"%{$request->search}%")
+                            ->orWhere('name','LIKE',"%{$request->search}%")
+                            ->orWhere('last_name','LIKE',"%{$request->search}%")
+                            ->orWhere('email','LIKE',"%{$request->search}%");
+            })
+            ->orWhere('address','LIKE',"%{$request->search}%")
+            ->orWhere('address2','LIKE',"%{$request->search}%")
+            ->orWhere('city','LIKE',"%{$request->search}%")
+            ->orWhere('street_no','LIKE',"%{$request->search}%")
+            ->orWhere('phone','LIKE',"%{$request->search}%")
+            ->orWhere('state_id',"{$request->search}");
         }
 
         if ( $request->address ){
@@ -67,13 +87,12 @@ class AddressRepository
 
         $addresses = $query
             ->orderBy($orderBy,$orderType);
-
         return $paginate ? $addresses->paginate($pageSize) : $addresses->get();
 
     }
 
     public function store(Request $request)
-    {   
+    {
         try{
 
             $request->merge([
@@ -93,8 +112,8 @@ class AddressRepository
     }
 
     public function update(Request $request,Address $Address)
-    {   
-        
+    {
+
         try{
 
             // if (! $request->has('default')) {
@@ -114,7 +133,7 @@ class AddressRepository
             $request->merge([
                 'phone' => "+".cleanString($request->phone)
             ]);
-            
+
             $Address->update(
                 $request->only(['first_name','last_name','email', 'phone', 'city', 'street_no','address', 'address2', 'country_id', 'state_id', 'account_type', 'tax_id', 'zipcode'])
             );
@@ -125,6 +144,18 @@ class AddressRepository
             session()->flash('alert-danger','Error while Address');
             return null;
         }
+    }
+
+    public function getAddresses(Request $request)
+    {
+        $query = Address::query()->has('user');
+
+        if ( Auth::user()->isUser() ){
+            $query->where('user_id',Auth::id());
+        }
+
+        return $query->get();
+
     }
 
 }

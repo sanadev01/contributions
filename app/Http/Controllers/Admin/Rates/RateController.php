@@ -28,6 +28,10 @@ class RateController extends Controller
     {   
         $this->authorizeResource(Rate::class);
         $shipping_services = ShippingService::all();
+        $shipping_services = $shipping_services->filter(function($shippingService, $key){
+            return !$shippingService->isOfUnitedStates();
+        });
+
         return view('admin.rates.shipping-rates.create', compact('shipping_services'));
     }
 

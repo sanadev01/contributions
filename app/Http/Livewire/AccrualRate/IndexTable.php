@@ -46,6 +46,18 @@ class IndexTable extends Component
             'name' => 'Anjun Express',
             'value' => Package::SERVICE_CLASS_AJ_EXPRESS,
         ];
+        $this->services[7] = [
+            'name' => 'Colombia Urbano',
+            'value' => Package::SERVICE_CLASS_COLOMBIA_URBANO,
+        ];
+        $this->services[8] = [
+            'name' => 'Colombia Nacional',
+            'value' => Package::SERVICE_CLASS_COLOMBIA_NACIONAL,
+        ];
+        $this->services[9] = [
+            'name' => 'Colombia Trayetos',
+            'value' => Package::SERVICE_CLASS_COLOMBIA_TRAYETOS,
+        ];
         
         return $this->services;
     }

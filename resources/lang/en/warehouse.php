@@ -27,7 +27,8 @@ return [
             'Container Type' => 'Container Type Required',
             'Destination Airport' => 'Destination Airport Required',
             'Distribution Service Class' => 'Distribution Service Class Required',
-        ]
+        ],
+        'Colombia Containers' => 'Colombia Containers',
     ],
     'deliveryBill' => [
         'Delivery Bills' => 'Delivery Bills',

@@ -12,8 +12,10 @@ use Illuminate\Support\Facades\Auth;
 use App\Services\UPS\UPSShippingService;
 use App\Services\USPS\USPSShippingService;
 use App\Services\FedEx\FedExShippingService;
+use App\Services\Calculators\WeightCalculator;
 use App\Services\GePS\GePSShippingService;
 use App\Models\User;
+use App\Services\Colombia\ColombiaPostalCodes;
 
 class OrderRepository
 {
@@ -151,6 +153,33 @@ class OrderRepository
                 $query->where('is_paid',false);
             }
         }
+
+        if($request->search){
+            $query->where('tracking_id', 'LIKE', "%{$request->search}%")
+            ->orWhere('status',$request->status)
+            ->orWhere('corrios_tracking_code', 'LIKE', "%{$request->search}%")
+            ->orWhere('customer_reference', 'LIKE', "%{$request->search}%")
+            ->orWhere('tracking_id', 'LIKE', "%{$request->search}%")
+            ->orWhere('gross_total', 'LIKE', "%{$request->search}%")
+            ->orWhere('order_date', 'LIKE', "%{$request->search}%")
+            ->orWhereHas('user', function ($queryUser) use($request) {
+                $queryUser->whereHas('role', function ($queryRole) use($request) {
+                    return $queryRole->where('name', $request->search);
+                });
+            })
+            ->orWhere('warehouse_number', 'LIKE', "%{$request->search}%")
+            ->orWhereHas('user', function ($query) use($request) {
+                return $query->where('pobox_number', 'LIKE', "%{$request->search}%");
+            })
+            ->orWhereHas('user', function ($query) use($request) {
+                return $query->where('name', 'LIKE', "%{$request->search}%");
+            })
+            ->orWhereHas('user', function ($query) use($request) {
+                return $query->where('name', 'LIKE', "%{$request->search}%");
+            })
+            ->orWhere('order_date', 'LIKE', "%{$request->search}%");
+
+        }
         $query->orderBy($orderBy,$orderType);
 
         return $paginate ? $query->paginate($pageSize) : $query->get();
@@ -269,7 +298,7 @@ class OrderRepository
         return false;
     }
 
-    public function domesticService($shippingServiceId)
+    public function serviceRequireFreight($shippingServiceId)
     {
         $shippingService =  ShippingService::find($shippingServiceId);
 
@@ -394,17 +423,19 @@ class OrderRepository
         if (!$volumetricDiscount || !$discountPercentage || $discountPercentage < 0 || $discountPercentage == 0) {
             return false;
         }
-
-        $volumetricWeight = round($order->getWeight(), 2);
-
+        if ( $order->measurement_unit == 'kg/cm' ){
+            $volumetricWeight = WeightCalculator::getVolumnWeight($order->length,$order->width,$order->height,'cm');
+        }else {
+            $volumetricWeight = WeightCalculator::getVolumnWeight($order->length,$order->width,$order->height,'in');
+}
+        $volumeWeight = round($volumetricWeight > $order->weight ? $volumetricWeight : $order->weight,2);
         $totalDiscountPercentage = ($discountPercentage) ? $discountPercentage/100 : 0;
+        
+        if ($volumeWeight > $order->weight) {
 
-        if ($volumetricWeight > $order->weight) {
-
-            $consideredWeight = $volumetricWeight - $order->weight;
+            $consideredWeight = $volumeWeight - $order->weight;
             $volumeWeight = round($consideredWeight - ($consideredWeight * $totalDiscountPercentage), 2);
             $totalDiscountedWeight = $consideredWeight - $volumeWeight;
-
             $order->update([
                 'weight_discount' => $totalDiscountedWeight,
             ]);
@@ -415,6 +446,7 @@ class OrderRepository
 
     public function getShippingServices($order)
     {
+        $shippingServicesWithoutRates = ShippingService::query()->active()->get();
         $shippingServices = collect() ;
 
         if(optional($order->recipient)->country_id == Order::US)
@@ -423,7 +455,7 @@ class OrderRepository
             $upsShippingService = new UPSShippingService($order);
             $fedExShippingService = new FedExShippingService($order);
 
-            foreach (ShippingService::query()->active()->get() as $shippingService)
+            foreach ($shippingServicesWithoutRates as $shippingService)
             {
                 if ($uspsShippingService->isAvailableFor($shippingService)) {
                     $shippingServices->push($shippingService);
@@ -437,7 +469,7 @@ class OrderRepository
                     $shippingServices->push($shippingService);
                 }
             }
-        } else
+        }else
         {
             foreach (ShippingService::query()->has('rates')->active()->get() as $shippingService)
             {
@@ -569,11 +601,32 @@ class OrderRepository
                             && $shippingService->service_sub_class != ShippingService::AJ_Packet_Express;
                     });
             }
-
+            
             if($shippingServices->isEmpty()){
                 $this->shippingServiceError = 'Please check your parcel dimensions';
             }
         }
+
+        if($shippingServices->contains('service_sub_class', ShippingService::COLOMBIA_URBANO)
+            || $shippingServices->contains('service_sub_class', ShippingService::COLOMBIA_NACIONAL)
+            || $shippingServices->contains('service_sub_class', ShippingService::COLOMBIA_TRAYETOS)) {
+
+            $colombiaPostalCodeService = new ColombiaPostalCodes();
+            $service = $colombiaPostalCodeService->getServiceByPostalCode($order->recipient->zipcode);
+
+            if($service) {
+                $shippingServices = $shippingServices->filter(function ($shippingService, $key) use($service) {
+                    return $shippingService->service_sub_class == $service;
+                });
+            } else {
+                $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                    return $shippingService->service_sub_class != ShippingService::COLOMBIA_URBANO
+                            && $shippingService->service_sub_class != ShippingService::COLOMBIA_NACIONAL
+                            && $shippingService->service_sub_class != ShippingService::COLOMBIA_TRAYETOS;
+                });
+            }
+
+        } 
 
         return $shippingServices;
     }

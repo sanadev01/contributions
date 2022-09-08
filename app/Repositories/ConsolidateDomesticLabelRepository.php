@@ -15,6 +15,7 @@ class ConsolidateDomesticLabelRepository
     public $totalOrdersLength = 0;
     public $totalOrdersWidth = 0;
     public $totalOrdersHeight = 0;
+    public $totalWeightInKg = 0;
 
     public $errors = [];
 
@@ -36,6 +37,19 @@ class ConsolidateDomesticLabelRepository
 
             return (!$order->hasSecondLabel() && $order->isInternational());
         });
+    }
+
+    public function getTotalWeight($orders)
+    {
+
+        $orders->each(function ($order) {
+            $this->totalWeightInKg += $order->getWeight('kg');
+        });
+
+        return [
+            'totalWeightInKg' => $this->totalWeightInKg,
+            'totalWeightInLbs' => UnitsConverter::kgToPound($this->totalWeightInKg),
+        ];
     }
 
     public function consolidateOrders($orders)

@@ -43,6 +43,10 @@ class ContainerRepository extends AbstractRepository{
         if ( !Auth::user()->isAdmin() ){
             $query->where('user_id',Auth::id());
         }
+        if($request->has('search')){
+            $query->where('dispatch_number', 'LIKE', '%' . $request->search . '%')
+            ->orWhere('seal_no', 'LIKE', '%' . $request->search . '%');
+        }
         if($request->filled('dispatchNumber')){
            $query->where('dispatch_number', 'LIKE', '%' . $request->dispatchNumber . '%');
         } 
@@ -52,6 +56,7 @@ class ContainerRepository extends AbstractRepository{
         if($request->filled('packetType')){
             $query->where('services_subclass_code', 'LIKE', '%' . $request->packetType . '%');
         }
+
 
         if($request->filled('unitCode')){
             $query->where('unit_code', 'LIKE', '%' . $request->unitCode . '%');
@@ -134,6 +139,28 @@ class ContainerRepository extends AbstractRepository{
         }
     }
 
+    public function addOrderToContainer($container, $orderId)
+    {
+        try {
+            $container->orders()->attach($orderId);
+            return true;
+        } catch (\Exception $ex) {
+            $this->error = $ex->getMessage();
+            return false;
+        }
+    }
+
+    public function removeOrderFromContainer($container, $id)
+    {
+        try {
+            $container->orders()->detach($id);
+            return true;
+        } catch (\Exception $ex) {
+            $this->error = $ex->getMessage();
+            return false;
+        }
+    }
+
     public function updateawb($request)
     {
         if(json_decode($request->data)){
@@ -166,27 +193,6 @@ class ContainerRepository extends AbstractRepository{
                 return session()->flash('alert-success', 'Airway Bill Assigned');
 
             }
-        }
-    }
-    public function addOrderToContainer($container, $orderId)
-    {
-        try {
-            $container->orders()->attach($orderId);
-            return true;
-        } catch (\Exception $ex) {
-            $this->error = $ex->getMessage();
-            return false;
-        }
-    }
-
-    public function removeOrderFromContainer($container, $id)
-    {
-        try {
-            $container->orders()->detach($id);
-            return true;
-        } catch (\Exception $ex) {
-            $this->error = $ex->getMessage();
-            return false;
         }
     }
 }

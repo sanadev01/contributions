@@ -5,34 +5,38 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="mb-0">@lang('setting.Edit Settings')</h4>
-                    </div>
-                    <div class="card-content">
-                        <div class="card-body">
-                            @if( $errors->count() )
-                                <div class="alert alert-danger">
-                                    <ul>
-                                        @foreach($errors->all() as $error)
-                                            <li>
-                                                {{ $error }}
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
-                            @can('update', App\Models\Setting::class)
+                    @section('title', __('setting.Edit Settings'))
+                </div>
+                <div class="card-content">
+                    <div class="card-body paddinglr">
+                        @if ($errors->count())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>
+                                            {{ $error }}
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                        @can('update', App\Models\Setting::class)
                             <form action="{{ route('admin.settings.store') }}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">@lang('setting.Authorize ID')<span class="text-danger">*</span></label>
+                                    <label class="col-md-3 text-md-right">@lang('setting.Authorize ID')<span
+                                            class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control" value="{{ old('AUTHORIZE_ID',setting('AUTHORIZE_ID')) }}" name="AUTHORIZE_ID" required placeholder="@lang('setting.Authorize ID')">
+                                        <input type="text" class="form-control"
+                                            value="{{ old('AUTHORIZE_ID', setting('AUTHORIZE_ID')) }}" name="AUTHORIZE_ID"
+                                            required placeholder="@lang('setting.Authorize ID')">
                                         <div class="help-block"></div>
                                         {{-- setting('AUTHORIZE_ID') --}}
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">@lang('setting.Authorize Key')<span class="text-danger">*</span></label>
+                                    <label class="col-md-3 text-md-right">@lang('setting.Authorize Key')<span
+                                            class="text-danger">*</span></label>
                                     <div class="col-md-6">
                                         <input type="text" class="form-control" name="AUTHORIZE_KEY" value="{{ old('AUTHORIZE_KEY',setting('AUTHORIZE_KEY')) }}" required placeholder="@lang('setting.Authorize Key')">
                                         <div class="help-block"></div>
@@ -55,7 +59,29 @@
                                 </div> --}}
 
                                 <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">@lang('setting.Payment Gateway')<span class="text-danger">*</span></label>
+                                    <label class="col-md-3 text-md-right">@lang('setting.Stripe Key')<span
+                                            class="text-danger">*</span></label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control"
+                                            value="{{ old('STRIPE_KEY', setting('STRIPE_KEY')) }}" name="STRIPE_KEY"
+                                            required placeholder="@lang('setting.Stripe Key')">
+                                        <div class="help-block"></div>
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">@lang('setting.Stripe Secret')<span
+                                            class="text-danger">*</span></label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" name="STRIPE_SECRET"
+                                            value="{{ old('STRIPE_SECRET', setting('STRIPE_SECRET')) }}" required
+                                            placeholder="@lang('setting.Stripe Secret')">
+                                        <div class="help-block"></div>
+                                    </div>
+                                </div>
+
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">@lang('setting.Payment Gateway')<span
+                                            class="text-danger">*</span></label>
                                     <div class="col-md-6">
                                         <select class="form-control" name="PAYMENT_GATEWAY">
                                             <option value="AUTHORIZE" {{ setting('PAYMENT_GATEWAY') == 'AUTHORIZE' ? 'selected' : '' }}>Authorize</option>
@@ -66,26 +92,31 @@
                                 </div>
 
                                 <hr>
-                                <livewire:token-generator :user-id="auth()->id()"/>
+                                <livewire:token-generator :user-id="auth()->id()" />
 
                                 <h4>Commision Settings</h4>
                                 <hr>
                                 <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">@lang('user.Select Commision Type')<span class="text-danger"></span></label>
+                                    <label class="col-md-3 text-md-right">@lang('user.Select Commision Type')<span
+                                            class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <select name="TYPE" class="form-control">
                                             <option value="" selected disabled hidden>@lang('user.Select Commision Type')</option>
-                                            <option @if(setting('VALUE')) == 'flat') selected @endif value="flat">Flat</option>
-                                            <option  @if(setting('VALUE')) == 'percentage') selected @endif value="percentage">Percentage</option>
+                                            <option @if (setting('VALUE')) == 'flat') selected @endif
+                                                value="flat">Flat</option>
+                                            <option @if (setting('VALUE')) == 'percentage') selected @endif
+                                                value="percentage">Percentage</option>
                                         </select>
                                         <div class="help-block"></div>
                                     </div>
                                 </div>
 
                                 <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">@lang('user.Commision Value')<span class="text-danger"></span></label>
+                                    <label class="col-md-3 text-md-right">@lang('user.Commision Value')<span
+                                            class="text-danger"></span></label>
                                     <div class="col-md-6">
-                                        <input type="text" name="VALUE" value="{{ old('VALUE', setting('VALUE')) }}" class="form-control" id="VALUE">
+                                        <input type="text" name="VALUE" value="{{ old('VALUE', setting('VALUE')) }}"
+                                            class="form-control" id="VALUE">
                                     </div>
                                     <div class="help-block"></div>
                                 </div>
@@ -140,22 +171,24 @@
                                             </div>
                                             <span class="offset-2 mr-2 mt-2">Profit Percentage (%) :</span>
                                             <input type="number" name="fedex_profit" step="0.01" min=0 class="form-control col-2" id="ups_profit" value="{{ setting('fedex_profit', null, $adminId) }}">
-                                        </div>
+                                        </div>    
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">GePS Service<span class="text-danger"></span></label>
+                                    <label class="col-md-3 text-md-right">Colombia Service<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <div class="input-group">
-                                            <div class="vs-checkbox-con vs-checkbox-primary" title="Global E Parcel">
-                                                <input type="checkbox" name="geps_service" id="geps_service" @if(setting('geps_service', null, \App\Models\User::ROLE_ADMIN)) checked @endif>
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="ups">
+                                                <input type="checkbox" name="colombia_service" id="colombia_service" @if(setting('colombia_service', null, \App\Models\User::ROLE_ADMIN)) checked @endif>
                                                 <span class="vs-checkbox vs-checkbox-lg">
                                                     <span class="vs-checkbox--check">
                                                         <i class="vs-icon feather icon-check"></i>
                                                     </span>
                                                 </span>
                                             </div>
-                                        </div>
+                                            <span class="offset-2 mr-2 mt-2">Profit Percentage (%) :</span>
+                                            <input type="number" name="colombia_profit" step="0.01" min=0 class="form-control col-2" id="ups_profit" value="{{ setting('colombia_profit', null, $adminId) }}">
+                                        </div>    
                                     </div>
                                 </div>
                                 <h4>Correios Settings</h4>
@@ -182,19 +215,21 @@
                                 </div>
                                 <div class="row mt-1">
                                     <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
-                                        <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">
+                                        <button type="submit"
+                                            class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">
                                             @lang('setting.Save Changes')
                                         </button>
-                                        <button type="reset" class="btn btn-outline-warning waves-effect waves-light">@lang('setting.Reset')</button>
+                                        <button type="reset"
+                                            class="btn btn-dark waves-effect waves-light">@lang('setting.Reset')</button>
                                     </div>
                                 </div>
                             </form>
-                            @endcan
+                        @endcan
 
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 @endsection

@@ -20,14 +20,19 @@ class ReportsPolicy
     {
         return $user->hasPermission('can-download-tracking-report');
     }
-    
+
     public function viewOrderReport(User $user)
     {
         return $user->hasPermission('order-report');
     }
-    
+
     public function viewComissionReport(User $user)
     {
         return $user->hasPermission('commission-report');
+    }
+
+    public function viewAnjunReport(User $user)
+    {
+        return $user->hasPermission('anjun-report');
     }
 }

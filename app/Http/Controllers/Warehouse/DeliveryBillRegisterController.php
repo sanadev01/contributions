@@ -9,6 +9,7 @@ use App\Services\Correios\Services\Brazil\Client;
 use App\Services\GePS\Client as GePSClient;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+use App\Models\Warehouse\Container;
 
 class DeliveryBillRegisterController extends Controller
 {
@@ -19,7 +20,17 @@ class DeliveryBillRegisterController extends Controller
             return back();
         }
 
-        if($deliveryBill->containers[0]->services_subclass_code == '537') {
+        if ($deliveryBill->containers->first()->services_subclass_code == Container::CONTAINER_COLOMBIA_NX) {
+            
+            $response = random_int(100000, 999999).'-'.random_int(1000, 9999).'-'.random_int(100000, 999999);
+            $cnd38Code = $deliveryBill->id.random_int(1000, 9999);
+
+            $deliveryBill->update([
+                'cnd38_code' => $cnd38Code,
+                'request_id' => $response
+            ]);
+
+        }elseif($deliveryBill->containers[0]->services_subclass_code == '537')  {
             $client = new GePSClient();
             $response = $client->registerDeliveryBillGePS($deliveryBill);
 
@@ -40,16 +51,16 @@ class DeliveryBillRegisterController extends Controller
         } else {
 
             $client = new Client();
-            $response = $client->registerDeliveryBill($deliveryBill);
+                $response = $client->registerDeliveryBill($deliveryBill);
 
-            if ( $response instanceof PackageError){
-                session()->flash('alert-danger',$response->getErrors());
-                return back();
-            }
+                if ( $response instanceof PackageError){
+                    session()->flash('alert-danger',$response->getErrors());
+                    return back();
+                }
 
-            $deliveryBill->update([
-                'request_id' => $response
-            ]);
+                $deliveryBill->update([
+                    'request_id' => $response
+                ]);
         }
 
         session()->flash('alert-success','Delivery Bill Request Created. Please Check 30 minutes later to download bill');

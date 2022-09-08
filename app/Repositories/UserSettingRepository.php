@@ -4,6 +4,7 @@ namespace App\Repositories;
 use App\Models\User;
 use App\Models\Deposit;
 use App\Models\PaymentInvoice;
+use App\Mail\Admin\SettingUpdate;
 use App\Models\CommissionSetting;
 
 class UserSettingRepository {
@@ -20,6 +21,32 @@ class UserSettingRepository {
             'amazon_api_key' => $request->amazon_api_key,
         ]);
 
+        $userData = [
+            'battery' => setting('battery', null, $user->id)? 'Active': 'Inactive',
+            'perfume' => setting('perfume', null, $user->id)? 'Active': 'Inactive',
+            'insurance' => setting('insurance', null, $user->id)? 'Active': 'Inactive',
+            'usps' => setting('usps', null, $user->id)? 'Active': 'Inactive',
+            'ups' => setting('ups', null, $user->id)? 'Active': 'Inactive',
+            'sinerlog' => setting('sinerlog', null, $user->id)? 'Active': 'Inactive',
+            'fedex' => setting('fedex', null, $user->id)? 'Active': 'Inactive',
+            'tax' => setting('tax', null, $user->id)? 'Active': 'Inactive',
+            'volumetric_discount'=> setting('volumetric_discount', null,$user->id)? 'Active': 'Inactive',
+            'usps_profit'=> setting('usps_profit', null, $user->id) ? setting('usps_profit', null, $user->id): 0,
+            'ups_profit'=> setting('ups_profit', null, $user->id) ?setting('ups_profit', null, $user->id) : 0,
+            'discount_percentage'=> setting('discount_percentage', null, $user->id)? setting('discount_percentage', null, $user->id): 0,
+            'fedex_profit'=> setting('fedex_profit', null, $user->id)? setting('fedex_profit', null, $user->id): 0,
+            'weight'=> setting('weight', null, $user->id),
+            'length'=> setting('length', null, $user->id),
+            'width'=> setting('width', null, $user->id),
+            'height'=> setting('height', null, $user->id),
+        ];
+
+        try {
+            \Mail::send(new SettingUpdate($user, $request, $userData));
+        } catch (\Exception $ex) {
+            \Log::info('Setting Update email send error: '.$ex->getMessage());
+        }
+
         $request->has('battery') ? saveSetting('battery', true, $user->id) : saveSetting('battery', false, $user->id);
         $request->has('perfume') ? saveSetting('perfume', true, $user->id) : saveSetting('perfume', false, $user->id);
         $request->has('insurance') ? saveSetting('insurance', true, $user->id) : saveSetting('insurance', false, $user->id);
@@ -28,6 +55,8 @@ class UserSettingRepository {
         $request->has('stripe') ? saveSetting('stripe', true, $user->id) : saveSetting('stripe', false, $user->id);
         $request->has('sinerlog') ? saveSetting('sinerlog', true, $user->id) : saveSetting('sinerlog', false, $user->id);
         $request->has('fedex') ? saveSetting('fedex', true, $user->id) : saveSetting('fedex', false, $user->id);
+        $request->has('tax') ? saveSetting('tax', true, $user->id) : saveSetting('tax', false, $user->id);
+        $request->has('colombia_service') ? saveSetting('colombia_service', true, $user->id) : saveSetting('colombia_service', false, $user->id);
         $request->has('geps_service') ? saveSetting('geps_service', true, $user->id) : saveSetting('geps_service', false, $user->id);
         $request->has('volumetric_discount') ? saveSetting('volumetric_discount', true,$user->id) : saveSetting('volumetric_discount', false, $user->id);
 
@@ -35,6 +64,7 @@ class UserSettingRepository {
         ($request->ups_profit != null ) ? saveSetting('ups_profit', $request->ups_profit, $user->id) : saveSetting('ups_profit', 0, $user->id);
         ($request->discount_percentage != null ) ? saveSetting('discount_percentage', $request->discount_percentage, $user->id) : saveSetting('discount_percentage', 0, $user->id);
         ($request->fedex_profit != null ) ? saveSetting('fedex_profit', $request->fedex_profit, $user->id) : saveSetting('fedex_profit', 0, $user->id);
+        ($request->colombia_profit != null ) ? saveSetting('colombia_profit', $request->colombia_profit, $user->id) : saveSetting('colombia_profit', 0, $user->id);
 
         ($request->weight != null ) ? saveSetting('weight', $request->weight, $user->id) : saveSetting('weight', 0, $user->id);
         ($request->length != null ) ? saveSetting('length', $request->length, $user->id) : saveSetting('length', 0, $user->id);
