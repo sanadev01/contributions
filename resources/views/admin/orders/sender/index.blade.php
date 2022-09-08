@@ -297,35 +297,16 @@
                 }
                 
             } else {
-<<<<<<< HEAD
-                console.log("here");
-                $('#address').addClass('d-block');
-                $('#city').addClass('d-block'); 
-                $('#tax_id').addClass('d-block');
-                $('#phone').addClass('d-block');
-=======
                 $('#address').css('display', 'none');
                 $('#city').css('display', 'none');
                 $('#tax_id').css('display', 'block');
                 $('#phone').css('display', 'none');
->>>>>>> 8ef7e9282a998ce4cbcdd398c541e3fcf7382b69
                 $('#state').addClass('d-none');
                 $('#zip_code').addClass('d-block');
 
                 //$('#state').removeClass('d-block');
                 //$('#zip_code').removeClass('d-block');
 
-<<<<<<< HEAD
-                $("[name='sender_address']").prop( 'disabled', false );
-                $("[name='sender_city']").prop('disabled', false);
-                $("[name='taxt_id']").prop('disabled', false);
-
-                $("[name='sender_address']").prop('required',true);
-                $("[name='sender_city']").prop('required', true);
-                $('#sender_state').prop('required',false);
-                $("[name='phone']").prop('required',true);
-                $("[name='sender_zipcode']").prop('required', true);
-=======
                 $("[name='sender_address']").prop('disabled', true);
                 $("[name='sender_city']").prop('disabled', true);
                 $("[name='taxt_id']").prop('disabled', false);
@@ -334,7 +315,6 @@
                 $("[name='sender_city']").prop('required', false);
                 $('#sender_state').prop('required', false);
                 $("[name='phone']").prop('required', false);
->>>>>>> 8ef7e9282a998ce4cbcdd398c541e3fcf7382b69
 
                 $('#sender_state').prop('disabled', true);
             }

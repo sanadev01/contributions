@@ -36,124 +36,6 @@
                             enctype="multipart/form-data">
                             @csrf
 
-<<<<<<< HEAD
-                                <div class="controls row align-items-center" style="margin-bottom: 2.25rem !important;">
-                                    <label class="col-md-3 text-md-right">@lang('user.Default Package')<span class="text-danger"></span></label>
-                                    <div class="col-md-6">
-                                        <select name="package_id" class="form-control selectpicker" data-live-search="true">
-                                            <option value="" disabled hidden>@lang('user.Select Package')</option>
-                                            @isset($packages)
-                                                @foreach ($packages as $package)
-                                                    <option @if( $user->package_id == $package->id ) selected @endif value="{{ $package->id }}">{{ $package->name }}</option>
-                                                @endforeach
-                                            @endisset
-                                        </select>
-                                        <div class="help-block"></div>
-                                    </div>
-                                </div>
-                                <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">@lang('user.Role')<span class="text-danger"></span></label>
-                                    <div class="col-md-6">
-                                        <select name="role_id" class="form-control">
-                                            @isset($roles)
-                                                @foreach ($roles as $role)
-                                                    <option @if( $user->role_id == $role->id ) selected @endif value="{{ $role->id }}">{{ $role->name }}</option>
-                                                @endforeach
-                                            @endisset
-                                        </select>
-                                        <div class="help-block"></div>
-                                    </div>
-                                </div>
-
-                                <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">@lang('user.status')<span class="text-danger"></span></label>
-                                    <div class="col-md-6">
-                                        <select name="status" class="form-control">
-                                            <option value="active" @if($user->status == 'active') selected @endif>Active</option>
-                                            <option value="suspended" @if($user->status == 'suspended') selected @endif>Suspended</option>
-                                        </select>
-                                        <div class="help-block"></div>
-                                    </div>
-                                </div>
-
-                                <h3>Profit Package Settings</h3>
-                                <hr>
-                                <h4 class="ml-5">Multi Profit Services Settings</h4>
-                                <livewire:profit.profit-setting :user_id="$user->id"  />
-
-                                <h3>Api Settings</h3>
-                                <hr>
-
-                                <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">Enable API<span class="text-danger"></span></label>
-                                    <div class="col-md-6">
-                                        <input type="checkbox" name="api_enabled" id="api_enabled" @if( $user->api_enabled == 1 ) checked @endif>
-                                        <div class="help-block"></div>
-                                    </div>
-                                </div>
-                                <livewire:token-generator :user_id="$user->id" />
-
-                                <hr>
-                                <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">Enable Amazon API<span class="text-danger"></span></label>
-                                    <div class="col-md-6">
-                                        <input type="checkbox" name="amazon_api_enabled" id="api_enabled" @if( $user->amazon_api_enabled == 1 ) checked @endif>
-                                        <div class="help-block"></div>
-                                    </div>
-                                </div>
-
-                                <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">Amazon Api key<span class="text-danger"></span></label>
-                                    <div class="col-md-6">
-                                        <textarea name="amazon_api_key" class="form-control">{{ $user->amazon_api_key }}</textarea>
-                                        <div class="help-block"></div>
-                                    </div>
-                                </div>
-                                <h3>Leve Settings</h3>
-                                <hr>
-
-                                <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">Market Place Name<span class="text-danger"></span></label>
-                                    <div class="col-md-6">
-                                        <input type="text" name="market_place_name" class="form-control" value="{{ $user->market_place_name }}">
-                                        <div class="help-block"></div>
-                                    </div>
-                                </div>
-
-                                <h3>Profile Settings</h3>
-                                <hr>
-                                <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">Email<span class="text-danger"></span></label>
-                                    <div class="col-md-6">
-                                        <input type="text" name="user_email" class="form-control" value="{{ $user->email }}">
-                                        @error('user_email')
-                                        <div class="help-block text-danger">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">Update Password<span class="text-danger"></span></label>
-                                    <div class="col-md-6">
-                                        <input type="password" name="password" class="form-control" value="">
-                                        @error('password')
-                                        <div class="help-block text-danger">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <h3>Affiliate Settings</h3>
-                                <hr>
-
-                                <h4 class="ml-5">Referrer Settings</h4>
-                                <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">@lang('user.Referrer')<span class="text-danger"></span></label>
-                                    <div class="col-md-6">
-                                        <select name="referrer_id[]" class="form-control selectpicker" multiple data-live-search="true">
-                                            <option value="" disabled>@lang('user.Select Referrer')</option>
-                                            @foreach ($users as $userRefferer)
-                                                <option value="{{ $userRefferer->id }}" @if ($userRefferer->reffered_by == $user->id) selected @endif>{{ $userRefferer->name }} | {{ $userRefferer->pobox_number }}</option>
-=======
                             <div class="controls row align-items-center" style="margin-bottom: 2.25rem !important;">
                                 <label class="col-md-3 text-md-right">@lang('user.Default Package')<span
                                         class="text-danger"></span></label>
@@ -164,7 +46,6 @@
                                             @foreach ($packages as $package)
                                                 <option @if ($user->package_id == $package->id) selected @endif
                                                     value="{{ $package->id }}">{{ $package->name }}</option>
->>>>>>> 8ef7e9282a998ce4cbcdd398c541e3fcf7382b69
                                             @endforeach
                                         @endisset
                                     </select>
@@ -318,20 +199,6 @@
                                         <span class="h3 mx-2 text-primary my-0 py-0"></span>
                                     </div>
                                 </div>
-<<<<<<< HEAD
-                                <hr>
-
-                                <h4 class="ml-5">Commission Settings</h4>
-                                <livewire:affiliate.commision-setting :user_id="$user->id"  />
-
-                                <h3>Waiver Fee Settings</h3>
-                                <hr>
-                                <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right" for="battery">Waive battery fee<span class="text-danger"></span></label>
-                                    <div class="col-md-6">
-                                        <div class="vs-checkbox-con vs-checkbox-primary" title="Waive battery fee">
-                                            <input type="checkbox" name="battery" id="battery" @if(setting('battery', null, $user->id)) checked @endif>
-=======
                             </div>
                             <div class="controls row mb-1 align-items-center">
                                 <label class="col-md-3 text-md-right">Waive perfume/aerosol/nail polish fee<span
@@ -373,7 +240,6 @@
                                         <div class="vs-checkbox-con vs-checkbox-primary" title="usps">
                                             <input type="checkbox" name="usps" id="usps"
                                                 @if (setting('usps', null, $user->id)) checked @endif>
->>>>>>> 8ef7e9282a998ce4cbcdd398c541e3fcf7382b69
                                             <span class="vs-checkbox vs-checkbox-lg">
                                                 <span class="vs-checkbox--check">
                                                     <i class="vs-icon feather icon-check"></i>
@@ -571,19 +437,12 @@
                                                 <span class="vs-checkbox--check">
                                                     <i class="vs-icon feather icon-check"></i>
                                                 </span>
-<<<<<<< HEAD
-                                            </div>
-                                            <span class="offset-2 mr-2 mt-2">Discount Percentage (%) :</span>
-                                            <input type="number" name="discount_percentage" class="form-control col-2" id="discount_percentage" value="{{ setting('discount_percentage', null, $user->id) }}">
-                                        </div>
-=======
                                             </span>
                                         </div>
                                         <span class="offset-2 mr-2 mt-2">Discount Percentage (%) :</span>
                                         <input type="number" name="discount_percentage" class="form-control col-2"
                                             id="discount_percentage"
                                             value="{{ setting('discount_percentage', null, $user->id) }}">
->>>>>>> 8ef7e9282a998ce4cbcdd398c541e3fcf7382b69
                                     </div>
                                 </div>
                             </div>
@@ -614,18 +473,6 @@
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right" for="tax">Tax Payment<span class="text-danger"></span></label>
                                     <div class="col-md-6">
-<<<<<<< HEAD
-                                        <div class="input-group">
-                                            <div title="weight">
-                                                <input class="form-control" step="0.01" min=0 type="number" name="weight" value="{{ setting('weight', null, $user->id) }}">
-                                            </div>
-                                            <span class="ml-4 mr-2 mt-2">Length (%): </span>
-                                            <input type="number" name="length" class="form-control col-2" id="length" step="0.01" min=0 type="number" value="{{ setting('length', null, $user->id) }}">
-                                            <span class="ml-4 mr-2 mt-2">Width (%): </span>
-                                            <input type="number" name="width" class="form-control col-2" id="width" step="0.01" min=0 type="number" value="{{ setting('width', null, $user->id) }}">
-                                            <span class="ml-4 mr-2 mt-2">Height (%): </span>
-                                            <input type="number" name="height" class="form-control col-2" id="height" step="0.01" min=0 type="number" value="{{ setting('height', null, $user->id) }}">
-=======
                                         <div class="vs-checkbox-con vs-checkbox-primary" title="Tax Payment">
                                             <input type="checkbox" name="tax" id="tax" @if(setting('tax', null, $user->id)) checked @endif>
                                             <span class="vs-checkbox vs-checkbox-lg">
@@ -634,7 +481,6 @@
                                                 </span>
                                             </span>
                                             <span class="h3 mx-2 text-primary my-0 py-0"></span>
->>>>>>> 8ef7e9282a998ce4cbcdd398c541e3fcf7382b69
                                         </div>
                                     </div>
                                 </div>
