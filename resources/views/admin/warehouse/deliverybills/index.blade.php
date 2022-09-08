@@ -133,6 +133,9 @@
                                                         @endif
                                                             <i class="fa fa-cloud-download"></i> Download Manifest
                                                         </a>
+                                                        <!-- <a href="{{ route('warehouse.delivery_bill.manifest',$deliveryBill) }}" class="dropdown-item w-100">
+                                                            <i class="fa fa-cloud-download"></i> Download Manifest
+                                                        </a> -->
 
                                                         <a href="{{ route('warehouse.delivery_bill.manifest', [$deliveryBill, 'service' => true]) }}"
                                                             class="dropdown-item w-100">
@@ -171,8 +174,7 @@
                                                                 @csrf
                                                                 @method('DELETE')
                                                                 <button class="dropdown-item w-100 text-danger">
-                                                                    <i class="feather icon-trash-2"></i>
-                                                                    @lang('warehouse.actions.Delete')
+                                                                    <i class="feather icon-trash-2"></i> @lang('warehouse.actions.Delete')
                                                                 </button>
                                                             </form>
                                                         @endif
