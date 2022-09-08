@@ -90,11 +90,11 @@
                                         </td> --}}
                                         <td>
                                             {{ $deliveryBill->name }}
-                                            @if ($deliveryBill->Containers->count() > 0 && $deliveryBill->Containers->first()->orders->count() > 0)
-                                                @if($deliveryBill->Containers->first()->orders->first()->shippingService->isAnjunService())
-                                                <span class="badge badge-success">A</span>
+                                            @if ($deliveryBill->Containers->count() > 0 && optional(optional($deliveryBill->Containers->first())->orders)->count() > 0)
+                                                @if( optional($deliveryBill->Containers->first()->orders->first())->shippingService && $deliveryBill->Containers->first()->orders->first()->shippingService->isAnjunService())
+                                                    <span class="badge badge-success">A</span>
                                                 @else
-                                                <span class="badge badge-primary">H</span>
+                                                    <span class="badge badge-primary">H</span>
                                                 @endif
                                             @endif
                                         </td>

@@ -17,7 +17,7 @@
         </td>
     @endif
     @admin
-        <td id="userNameCol" style="width: 175px;">
+        <td id="userNameCol">
             <div class="media media-xs overflow-visible">
                 <img class="corrioes-lable" src="{{ asset('images/tracking/' . $order->carrierService() . '.png') }}"
                     title="{{ $order->carrierService() }}"style="height: 30px; width: 30px; vertical-align:middle;"
@@ -30,7 +30,7 @@
                 </a>
             </div>
 
-            <div id="imageDecrption" style="font-size: 14px !important; width: 175px;">
+            <div id="imageDecrption" style="font-size: 14px !important;">
                 
                 @if ($order->is_consolidated)
                     <span>
@@ -46,25 +46,29 @@
            
         </td>
     @endadmin
-    <td style="width: 195px;">
+    <td>
        
         <a href="#" id="openEditModal" class="mb-0 " wire:click="$emit('edit-order',{{ $order->id }})"
             title="Click to edit">
             {{ optional($order->order_date)->format('m/d/Y') }}
         </a>
     </td>
-    <td class="order-id" style="width: 195px;">
+    <td class="order-id">
         @if ($order->isArrivedAtWarehouse())
             <i class="fa fa-star text-success p-1"></i>
         @endif
-        @if ($order->warehouse_number)
-            <span>
-                <a href="#" title="Click to see Shipment" data-toggle="modal" data-target="#hd-modal"
-                    data-url="{{ route('admin.modals.parcel.shipment-info', $order) }}">
-                    {{ $order->warehouse_number }}
-                </a>
-            </span>
-        @endif
+        <span>
+            <a href="#" title="Click to see Shipment" data-toggle="modal" data-target="#hd-modal"
+                data-url="{{ route('admin.modals.parcel.shipment-info', $order) }}">
+                {{ $order->warehouse_number }}
+            </a>
+        </span>
+        <td>
+            {{ ucfirst($order->tracking_id) }}
+        </td>
+        <td>
+            {{ ucfirst($order->customer_reference) }}
+        </td>
         @if ($order->isConsolidated())
             <hr>
         @endif
@@ -78,18 +82,18 @@
         </span>
     </td>
     
-    <td style="width: 290px;">
+    <td>
         {{ $order->corrios_tracking_code }}
         @if ($order->hasSecondLabel())
             <hr>
             {{ $order->us_api_tracking_code }}
         @endif
     </td>
-    <td style="width: 195px;">
+    <td>
         <span class="col-1">${{ number_format($order->gross_total, 2) }}</span>
     </td>
 
-    <td style="width: 195px;">
+    <td>
         
         <div class="dropdown col-12">
             <button id="status-btn col-12" title="status" type="button"
