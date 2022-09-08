@@ -95,6 +95,46 @@
                         <th>@lang('orders.payment-status')</th>
                         <th class="no-print">@lang('orders.actions.actions')</th>
                     </tr>
+                    <tr>
+                        <th></th>
+                        @admin
+                        <th>
+                            <input type="search" class="form-control" wire:model.debounce.1000ms="name">
+                        </th>
+                        @endadmin
+                        <th>
+                            <input type="search" class="form-control" wire:model.debounce.1000ms="date">
+                        </th>
+                        <th>
+                            <input type="search" class="form-control" wire:model.debounce.1000ms="whr_number">
+                        </th>
+                        <th>
+                            <input type="search" class="form-control" wire:model.debounce.1000ms="tracking_code">
+                        </th>
+                        <th>
+                            <input type="search" class="form-control" wire:model.debounce.1000ms="amount">
+                        </th>
+                        <th>
+                            <select class="form-control" wire:model="status">
+                                <option value="">All</option>
+                                <option value="{{ App\Models\Order::STATUS_ORDER }}">ORDER</option>
+                                <option value="{{ App\Models\Order::STATUS_CANCEL }}">CANCELLED</option>
+                                <option value="{{ App\Models\Order::STATUS_REJECTED }}">REJECTED</option>
+                                <option value="{{ App\Models\Order::STATUS_RELEASE }}">RELEASED</option>
+                                <option value="{{ App\Models\Order::STATUS_PAYMENT_PENDING }}">PAYMENT_PENDING</option>
+                                <option value="{{ App\Models\Order::STATUS_PAYMENT_DONE }}">PAYMENT_DONE</option>
+                                <option value="{{ App\Models\Order::STATUS_SHIPPED }}">SHIPPED</option>
+                            </select>
+                        </th>
+                        <th>
+                            <select class="form-control" wire:model="paymentStatus">
+                                <option value="">All</option>
+                                <option value="paid">Paid</option>
+                                <option value="unpaid">Unpaid</option>
+                            </select>
+                        </th>
+                        <th></th>
+                    </tr>
                 </thead>
                 <tbody>
                     @forelse ($orders as $order)
