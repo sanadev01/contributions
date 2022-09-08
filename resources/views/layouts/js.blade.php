@@ -65,36 +65,22 @@
         console.log(div);
         if (div.style.display != 'block') {
             div.style.display = 'block';
-            // console.log('asdasd');
         } else {
             div.style.display = 'none';
-            // console.log('aa');
 
         }
     }
 
     function toggleOrdersPageSearch() {
         $('#tblOrders').find('thead tr:eq(1)').toggle();
-        //const div = document.getElementById('ordersSearch');
-        //console.log(div);
-        // if ($('#tblOrders').find('thead tr:eq(1)').style.display != 'block') {
-        //     $('#tblOrders').find('thead tr:eq(1)').style.display = 'block';
-        //     // console.log('asdasd');
-        // } else {
-        //     $('#tblOrders').find('thead tr:eq(1)').style.display = 'none';
-        //     // console.log('aa');
-
-        // }
     }
 
     function toggleUserSearch() {
         const div = document.getElementById('userSearch');
         if (div.style.display != 'flex') {
             div.style.display = 'flex';
-            // console.log('asdasd');
         } else {
             div.style.display = 'none';
-            // console.log('aa');
 
         }
     }
@@ -154,6 +140,7 @@
     //     ]
     // });
     $(document).ready(function() {
+        $('#tblOrders').find('thead tr:eq(1)').hide();
 
         $('#visibilityToggle').change(function() {
             var item = $(this);
