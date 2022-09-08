@@ -40,13 +40,11 @@
 
         <div class="row filter pr-3">
             <button type="btn" onclick="toggleDateSearch()" id="customSwitch8"
-                class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-filter"></i></button>
+                class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-filter"></i>
+            </button>
             <button type="btn" onclick="toggleOrdersPageSearch()" id="ordersSearch"
-                class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-search"></i></button>
-            {{-- @can('canImportLeveOrders', App\Models\Order::class)
-                <a href="{{ route('admin.leve-order-import.index') }}" class="pull-right btn btn-primary"
-                    style="height: max-content"> Import Leve Orders </a>
-            @endcan --}}
+                class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-search"></i>
+            </button>
         </div>
     </div>
 
@@ -104,47 +102,6 @@
 
 @section('js')
 <script>
-    // function copyCarrier(element)
-    // {
-    //   var copyText = document.getElementById("tracking");
-    //   copyText.select();
-    //   copyText.setSelectionRange(0, 99999)
-    //   document.execCommand("copy");
-
-    // $('body').on('change','#bulk-actions',function(){
-    //     if ( $(this).val() == 'clear' ){
-    //         $('.bulk-orders').prop('checked',false)
-    //     }else if ( $(this).val() == 'checkAll' ){
-    //         $('.bulk-orders').prop('checked',true)
-    //     }else if ( $(this).val() == 'print-label' ){
-    //         var orderIds = [];
-    //         $.each($(".bulk-orders:checked"), function(){
-    //             orderIds.push($(this).val());
-    //         });
-
-    //         $('#bulk_actions_form #command').val('print-label');
-    //         $('#bulk_actions_form #data').val(JSON.stringify(orderIds));
-    //         $('#bulk_actions_form').submit();
-    //     }else if ($(this).val() == 'consolidate-domestic-label'){
-    //         var orderIds = [];
-    //         $.each($(".bulk-orders:checked"), function(){
-    //             orderIds.push($(this).val());
-    //         });
-
-    //         $('#consolidate_domestic_label_actions_form #command').val('consolidate-domestic-label');
-    //         $('#consolidate_domestic_label_actions_form #data').val(JSON.stringify(orderIds));
-    //         $('#consolidate_domestic_label_actions_form').submit();
-    //     }else if ($(this).val() == 'move-order-trash'){
-    //         var orderIds = [];
-    //         $.each($(".bulk-orders:checked"), function(){
-    //             orderIds.push($(this).val());
-    //         });
-
-    //         $('#trash_order_actions_form #command').val('move-order-trash');
-    //         $('#trash_order_actions_form #data').val(JSON.stringify(orderIds));
-    //         $('#trash_order_actions_form').submit();
-    //     }
-    // })
     $('body').on('click', '#print', function() {
         var orderIds = [];
         $.each($(".bulk-orders:checked"), function() {
