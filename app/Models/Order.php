@@ -354,6 +354,10 @@ class Order extends Model implements Package
 
                 return 'Correios Chile';
 
+            }elseif(optional($this->shippingService)->service_sub_class == ShippingService::GePS){
+
+                return 'GePS';
+
             }elseif(in_array(optional($this->shippingService)->service_sub_class, [
                 ShippingService::COLOMBIA_URBANO,
                 ShippingService::COLOMBIA_NACIONAL,

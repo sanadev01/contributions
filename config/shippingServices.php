@@ -24,6 +24,7 @@ return [
             44163 => 'Colombia Nacional',
             44164 => 'Colombia Trayetos',
             100 => 'Brazil Redispatch',
+            537 => 'Global eParcel',
         ]
     ]
 ];

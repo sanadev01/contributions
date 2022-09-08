@@ -79,6 +79,8 @@
                                 class="fas fa-sort text-right custom-sort-arrow">
                             </a>
                         </th>
+                        <th>Carrier Tracking</th>
+                        <th>Referência do Cliente</th>
                         <th>TRACKING CODE</th>
                         <th>
                             <a title="Click to Sort" wire:click.prevent="sortBy('gross_total')">
@@ -102,6 +104,12 @@
                         </th>
                         <th>
                             <input type="search" class="form-control" wire:model.debounce.1000ms="whr_number">
+                        </th>
+                        <th>
+                            <input type="search" class="form-control" wire:model.debounce.1000ms="tracking_id">
+                        </th>
+                        <th>
+                            <input type="search" class="form-control" wire:model.debounce.1000ms="customer_reference">
                         </th>
                         <th>
                             <input type="search" class="form-control" wire:model.debounce.1000ms="tracking_code">

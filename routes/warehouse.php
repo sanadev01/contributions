@@ -38,6 +38,11 @@ use App\Http\Controllers\Warehouse\ColombiaContainerPackageController;
 use App\Http\Controllers\Warehouse\DeliveryBillStatusUpdateController;
 use App\Http\Controllers\Warehouse\SinerlogContainerPackageController;
 use App\Http\Controllers\Warehouse\SinerlogManifestDownloadController;
+use App\Http\Controllers\Warehouse\GePSContainerController;
+use App\Http\Controllers\Warehouse\GePSContainerPackageController;
+use App\Http\Controllers\Warehouse\GePSUnitRegisterController;
+use App\Http\Controllers\Warehouse\GePSCN35DownloadController;
+use App\Http\Controllers\Warehouse\GePSManifestDownloadController;
 use App\Http\Controllers\Warehouse\ColombiaContainerManifestController;
 
 
@@ -98,6 +103,14 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('colombia-container/{container}/packages', ColombiaContainerPackageController::class)->name('colombia-container.packages');
     Route::get('colombia-container/{container}/manifest', ColombiaContainerManifestController::class)->name('colombia-container.manifest');
     Route::get('colombia-container/{container}/register', ColombiaUnitRegisterController::class)->name('colombia-container.register');
+
+    // Routes for GePS Container
+    Route::resource('geps_containers', GePSContainerController::class);
+    Route::resource('geps_container.packages', GePSContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('geps_container/{container}/register', GePSUnitRegisterController::class)->name('geps_container.register');
+    Route::get('geps_container/{container}/download', GePSCN35DownloadController::class)->name('geps_container.download');
+    Route::get('geps/{delivery_bill}/manifest', GePSManifestDownloadController::class)->name('geps.manifest.download');
+
 });
 
 
