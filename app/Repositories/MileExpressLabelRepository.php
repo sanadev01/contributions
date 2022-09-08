@@ -17,7 +17,7 @@ class MileExpressLabelRepository
         $this->order = $order;
 
         if ($this->order->api_response == null) {
-            $this->getPrimaryLabel();
+            return $this->getPrimaryLabel();
         }
 
         $this->printCN23();
