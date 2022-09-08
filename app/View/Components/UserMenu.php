@@ -47,7 +47,7 @@ class UserMenu extends Component
     public function header()
     {
         return '
-            <div class="navbar-header expanded mb-2 bg-white">
+            <div class="navbar-header expanded bg-white">
                 <ul class="nav navbar-nav flex-row">
                     <li class="nav-item mr-auto">
                         <a class="navbar-brand" href="/">
