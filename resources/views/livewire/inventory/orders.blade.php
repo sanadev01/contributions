@@ -63,6 +63,8 @@
                         @admin
                             <th>User Name</th>
                         @endadmin
+                        <th>Carrier Tracking</th>
+                        <th>Customer Reference</th>
                         <th>Weight</th>
                         <th>Unit</th>
                         <th>@lang('orders.status')</th>
@@ -72,8 +74,8 @@
                 <tbody>
                     @forelse($orders as $order)
                     <tr>
-                        <td style="width: 175px;">{{ $order->created_at->format('d/m/Y') }}</td>
-                        <td style="width: 175px;">
+                        <td>{{ $order->created_at->format('d/m/Y') }}</td>
+                        <td>
                             @if ( $order->isArrivedAtWarehouse() )
                                 <i class="fa fa-star text-success p-1"></i>
                              @endif
@@ -86,11 +88,13 @@
                             @endif
                         </td>
                         @admin
-                        <td style="width: 175px;">{{ $order->user->name }} - {{ $order->user->hasRole('wholesale') ? 'W' : 'R' }}</td>
+                        <td>{{ $order->user->name }} - {{ $order->user->hasRole('wholesale') ? 'W' : 'R' }}</td>
                         @endadmin
-                        <td style="width: 120px;">{{ $order->weight }}</td>
-                        <td style="width: 120px;">{{ $order->measurement_unit }}</td>
-                        <td style="width: 150px;">
+                        <td>{{ ucfirst($order->tracking_id) }}</td>
+                        <td>{{ ucfirst($order->customer_reference) }}</td>
+                        <td>{{ $order->weight }}</td>
+                        <td>{{ $order->measurement_unit }}</td>
+                        <td>
                             <select  class="form-control {{ !auth()->user()->isAdmin() ? 'btn disabled' : ''  }} {{ $order->getStatusClass() }}" @if (auth()->user()->isAdmin())  wire:change="$emit('updated-status',{{$order}},$event.target.value)" @else disabled="disabled"  @endif>
                                 <option class="bg-info" value="{{ App\Models\Order::STATUS_INVENTORY_PENDING }}" {{ $order->status == App\Models\Order::STATUS_INVENTORY_PENDING ? 'selected': '' }}>Pending</option>
                                 <option class="bg-warning text-dark" value="{{ App\Models\Order::STATUS_INVENTORY_IN_PROGRESS }}" {{ $order->status == App\Models\Order::STATUS_INVENTORY_IN_PROGRESS ? 'selected': '' }}>In Progress</option>
@@ -99,7 +103,7 @@
                                 <option class="bg-success" value="{{ App\Models\Order::STATUS_INVENTORY_FULFILLED }}" {{ $order->status == App\Models\Order::STATUS_INVENTORY_FULFILLED ? 'selected': '' }}>Fulfilled</option>
                             </select>
                         </td>
-                        <td style="width: 140px;">
+                        <td>
                             <button data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.inventory.order.products',$order) }}" class="btn btn-primary">
                                 <i class="feather icon-list"></i> @lang('orders.actions.view-products')
                             </button>
