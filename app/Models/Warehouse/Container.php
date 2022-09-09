@@ -16,7 +16,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     use SoftDeletes;
 
     protected $guarded = [];
-    
+
     use LogsActivity;
     protected static $logAttributes = ['*'];
     protected static $logOnlyDirty = true;
@@ -84,6 +84,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'Colombia Nacional';
         }elseif($this->services_subclass_code == 'CO-TR'){
             return 'Colombia Trayetos';
+        }elseif($this->services_subclass_code == 'PostNL'){
+            return 'PostNL';
+        }elseif($this->services_subclass_code == '537'){
+            return 'GePS';
         }elseif($this->services_subclass_code == 'Priority'){
             return 'Priority';
         }elseif($this->services_subclass_code == 'Priority International'){
@@ -121,6 +125,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 11;
         }elseif($this->services_subclass_code == 'FirstClass International'){
             return 12;
+        }elseif($this->services_subclass_code == 'PostNL'){
+            return 13;
+        }elseif($this->services_subclass_code == '537'){
+            return 14;
         }
         // return $this->services_subclass_code == 'NX' ? 2 : 1;
     }
@@ -176,6 +184,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'IX';
         }
 
+        if ($this->services_subclass_code == '537') {
+            return 'IX';
+        }
+
         return $this->services_subclass_code;
     }
 
@@ -214,6 +226,13 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
         if ($this->services_subclass_code == 'CO-NX') {
             return 'Colombia-Container';
+        }
+        if ($this->services_subclass_code == 'PostNL') {
+            return 'PostNL';
+        }
+
+        if ($this->services_subclass_code == '537') {
+            return 'GePS';
         }
 
         return 'Other-Container';

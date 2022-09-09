@@ -219,24 +219,24 @@
                 }
         } else 
         {
-                $('#address').css('display', 'none');
-                $('#city').css('display', 'none'); 
+                //$('#address').css('display', 'none');
+                //$('#city').css('display', 'none'); 
                 $('#tax_id').css('display', 'block');
-                $('#phone').css('display', 'none');
+                //$('#phone').css('display', 'none');
                 $('#state').addClass('d-none');
-                $('#zip_code').addClass('d-none');
+                //$('#zip_code').addClass('d-none');
 
                 $('#state').removeClass('d-block');
                 $('#zip_code').removeClass('d-block');
 
-                $("[name='sender_address']").prop( 'disabled', true );
-                $("[name='sender_city']").prop('disabled', true);
+                $("[name='sender_address']").prop( 'disabled', false );
+                $("[name='sender_city']").prop('disabled', false);
                 $("[name='taxt_id']").prop('disabled', false);
 
-                $("[name='sender_address']").prop('required',false);
-                $("[name='sender_city']").prop('required', false);
-                $('#sender_state').prop('required',false);
-                $("[name='phone']").prop('required',false);
+                $("[name='sender_address']").prop('required',true);
+                $("[name='sender_city']").prop('required', true);
+                $('#sender_state').prop('required',true);
+                $("[name='phone']").prop('required',true);
 
                 $('#sender_state').prop('disabled', true);
         }
@@ -302,10 +302,10 @@
                 $('#tax_id').css('display', 'block');
                 $('#phone').css('display', 'none');
                 $('#state').addClass('d-none');
-                $('#zip_code').addClass('d-none');
+                $('#zip_code').addClass('d-block');
 
-                $('#state').removeClass('d-block');
-                $('#zip_code').removeClass('d-block');
+                //$('#state').removeClass('d-block');
+                //$('#zip_code').removeClass('d-block');
 
                 $("[name='sender_address']").prop('disabled', true);
                 $("[name='sender_city']").prop('disabled', true);

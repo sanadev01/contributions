@@ -98,6 +98,7 @@
         </ul>
     </div>
 </form>
+
 @endsection
 
 @section('js')
@@ -192,7 +193,7 @@
         {
             // return getFedExRates();
         }
-        
+
     })
 
     $('#us_shipping_service').on('change',function(){
@@ -210,9 +211,9 @@
             return getUpsRates();
         }
     })
-   
+
     function change(id){
-        var id = "dangrous_"+id;  
+        var id = "dangrous_"+id;
         value = $('#'+id).val();
         if(value == 'contains_battery'){
             $(".dangrous").children("option[value^='contains_perfume']").hide()
@@ -229,7 +230,7 @@
     function getUspsRates(){
         const service = $('#us_shipping_service option:selected').attr('data-service-code');
         var order_id = $('#order_id').val();
-        
+
         $('#loading').fadeIn();
         $.get('{{ route("api.usps_rates") }}',{
                 service: service,
@@ -245,13 +246,13 @@
                 console.log(error);
                 $('#loading').fadeOut();
         })
-        
+
     }
 
     function getUpsRates(){
         const service = $('#us_shipping_service option:selected').attr('data-service-code');
         var order_id = $('#order_id').val();
-        
+
         $('#loading').fadeIn();
         $.get('{{ route("api.ups_rates") }}',{
                 service: service,
