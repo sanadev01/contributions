@@ -152,7 +152,7 @@
     }
 
     #status-btn {
-        width: 100%;
+        width: 88%;
     }
 
     #printBtnDiv {
