@@ -157,7 +157,7 @@ class Client{
                     'addr1' => "2200 NW 129TH AVE",
                     'state' => "FL",
                     'city' => "Miami",
-                    'country' => "United States",
+                    'country' => "US",
                     'postal' => "33182",
                     'phone' => ($order->sender_phone) ? $order->sender_phone : '',
                     'email' => ($order->sender_email) ? $order->sender_email : '',
