@@ -202,10 +202,8 @@
                                                 </div>
                                             </div>
                                         @endcan
-
-
                                     @endcan
-                                    <button type="submit" class="pull-right btn btn-primary waves-effect waves-light">
+                                    <button type="submit" class="pull-right btn btn-primary waves-effect waves-light mb-4">
                                     Submit</button>
                         </form>
                     </div>

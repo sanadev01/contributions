@@ -503,7 +503,12 @@
                     @can('userSellingRates', App\Models\ProfitPackage::class)
                         <li class="nav-item {{ $isActive(['admin.rates.user-rates.index']) }}">
                             <a class="nav-link" href="{{ route('admin.rates.user-rates.index') }}">
-                                <img src="{{ asset('images/icon/dollar.png') }}" alt="Rates" width="19px">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                    class="feather feather-dollar-sign">
+                                    <line x1="12" y1="1" x2="12" y2="23"></line>
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                </svg>
                                 <span data-i18n="Apps">@lang('menu.My Rates')</span>
                             </a>
                         </li>
