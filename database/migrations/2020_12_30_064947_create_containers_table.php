@@ -17,7 +17,7 @@ class CreateContainersTable extends Migration
             $table->id();
 
             $table->bigInteger('user_id');
-            $table->string('seal_no');
+            $table->string('seal_no')->nullable();
             $table->string('dispatch_number');
             $table->string('tax_modality')->default('ddu')->comment('ddu,dpp');
             $table->string('origin_country')->default('US');
