@@ -54,7 +54,7 @@
     <td>
         @if ($parcel->isShipmentAdded())
             {{ number_format($parcel->getOriginalWeight('kg'), 2) }} kg
-            <hr>
+            |
             {{ number_format($parcel->getOriginalWeight('lbs'), 2) }} lbs
         @else
             @lang('parcel.Un Available')
@@ -63,19 +63,15 @@
     <td>
         @if ($parcel->isShipmentAdded())
             {{ number_format($parcel->getWeight('kg'), 2) }} kg
-            <hr>
+            |
             {{ number_format($parcel->getWeight('lbs'), 2) }} lbs
         @else
             @lang('parcel.Un Available')
         @endif
     </td>
-    {{-- <td>{{ $parcel->merchant }}</td> --}}
-    {{-- <td>
-        {{ $parcel->carrier }}
-    </td> --}}
-    <td class="p-1">
-        {{ $parcel->tracking_id }}
-    </td>
+    <td>{{ $parcel->merchant }}</td>
+    <td>{{ $parcel->carrier }}</td>
+    <td class="p-1">{{ $parcel->tracking_id }}</td>
     <td class="text-center">
         @if (!$parcel->isConsolidated() && $parcel->isShipmentAdded())
             <span class="btn col-9 btn-sm btn-primary" title="@lang('parcel.Shipment Is Ready Please Click on basket icon to Proceed to Order')">@lang('parcel.Ready') </span>
