@@ -142,7 +142,7 @@
                     <td>{{ optional(optional($package->driverTracking)->user)->name }}</td>
                     <td>{{ $package->merchant }}</td>
                     <td>{{ $package->length }} x {{ $package->length }} x {{ $package->height }}</td>
-                    <td>{{ $package->getWeight('kg') }}</td>
+                    <td>{{ number_format($package->getWeight('kg'),2)}}</td>
                     <td>{{ $package->id }}</td>
                     <td>{{ $package->tracking_id }}</td>
                     <td>{{ $package->recipient->first_name }}</td>
