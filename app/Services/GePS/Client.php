@@ -108,6 +108,7 @@ class Client{
         if(!$container) {
             $container =  Container::create([
                 'user_id' => Auth::id(),
+                'seal_no' => '',
                 'dispatch_number' => 0,
                 'origin_country' => 'US',
                 'origin_operator_name' => 'HERC',
@@ -153,11 +154,11 @@ class Client{
                     'contentcategory' => "NP",
                 'shipperaddress' => [
                     'name' => $order->getSenderFullName(),
-                    'addr1' => $order->sender_address,
-                    'state' => ($order->sender_state) ? $order->sender_state : '',
-                    'city' => $order->sender_city,
-                    'country' => $order->senderCountry->code,
-                    'postal' => cleanString($order->sender_zipcode),
+                    'addr1' => "2200 NW 129TH AVE",
+                    'state' => "FL",
+                    'city' => "Miami",
+                    'country' => "United States",
+                    'postal' => "33182",
                     'phone' => ($order->sender_phone) ? $order->sender_phone : '',
                     'email' => ($order->sender_email) ? $order->sender_email : '',
                 ],
