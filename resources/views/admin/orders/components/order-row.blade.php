@@ -95,7 +95,7 @@
 
     <td>
         
-        <div class="dropdown col-12">
+        <div class="dropdown">
             <button id="status-btn col-12" title="status" type="button"
                 @if (\Request::route()->getName() == 'admin.trash-orders.index' ||
                     \Request::route()->getName() == 'admin.reports.order.index') disabled @endif
