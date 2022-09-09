@@ -192,7 +192,7 @@
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">GePS Service<span class="text-danger"></span></label>
+                                    <label class="col-md-3 text-md-right">GePS<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <div class="input-group">
                                             <div class="vs-checkbox-con vs-checkbox-primary" title="Global E Parcel">
