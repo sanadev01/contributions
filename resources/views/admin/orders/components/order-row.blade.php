@@ -95,8 +95,8 @@
 
     <td>
         
-        <div class="dropdown col-auto">
-            <button id="status-btn col-12" title="status" type="button"
+        <div class="dropdown">
+            <button id="status-btn d-flex" title="status" type="button"
                 @if (\Request::route()->getName() == 'admin.trash-orders.index' ||
                     \Request::route()->getName() == 'admin.reports.order.index') disabled @endif
                 class="btn {{ !auth()->user()->isAdmin()? 'btn disabled': '' }} {{ $order->getStatusClass() }}"
