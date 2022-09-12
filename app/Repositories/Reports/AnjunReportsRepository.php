@@ -35,7 +35,7 @@ class AnjunReportsRepository
 
     public function getAnjunReport($request)
     {
-        $orders = Order::has('user')->where('status', '=', Order::STATUS_PAYMENT_DONE);
+        $orders = Order::has('user')->where('status', '>=', Order::STATUS_PAYMENT_DONE);
         $orders->whereHas('shippingService',function($orders) {
             return $orders->whereIn('service_sub_class', [ShippingService::AJ_Packet_Standard, ShippingService::AJ_Packet_Express]);
         });
