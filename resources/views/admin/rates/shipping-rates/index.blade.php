@@ -41,15 +41,22 @@
                                             {{ optional($rate->country)->name }}
                                         </th>
                                         <th>
-                                            <a href="{{ route('admin.rates.view-shipping-rates', $rate) }}"
-                                                class="btn btn-primary btn-sm">
-                                                <i class="feather icon-eye"></i> View
-                                            </a>
-                                            |
-                                            <a href="{{ route('admin.rates.download-shipping-rates', $rate) }}"
-                                                class="btn btn-success btn-sm">
-                                                <i class="feather icon-download"></i> Download
-                                            </a>
+                                            @if(optional($rate->shippingService)->name == "PostNL")
+                                                <a href="{{ route('admin.rates.country-rates', $rate->shippingService) }}"
+                                                    class="btn btn-primary btn-sm">
+                                                    <i class="feather icon-eye"></i> View Country Rates
+                                                </a>
+                                            @else
+                                                <a href="{{ route('admin.rates.view-shipping-rates', $rate) }}"
+                                                    class="btn btn-primary btn-sm">
+                                                    <i class="feather icon-eye"></i> View
+                                                </a>
+                                                |
+                                                <a href="{{ route('admin.rates.download-shipping-rates', $rate) }}"
+                                                    class="btn btn-success btn-sm">
+                                                    <i class="feather icon-download"></i> Download
+                                                </a>
+                                            @endif
                                         </th>
                                     </tr>
                                 @endif
@@ -69,6 +76,7 @@
                                         </th>
                                     </tr>
                                 @endif
+                                
                             @endforeach
                         </tbody>
                     </table>
