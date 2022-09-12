@@ -13,7 +13,7 @@
                             <hr>
                         </div>
                         @can('create', App\Models\Rate::class)
-                            <a href="{{ route('admin.rates.region-rates', $shipping_rate->shippingService) }}" class="pull-right btn btn-primary">
+                            <a href="{{ route('admin.rates.country-rates', $shipping_rate->shippingService) }}" class="pull-right btn btn-primary">
                                 @lang('shipping-rates.Return to List')
                             </a>
                         @endcan

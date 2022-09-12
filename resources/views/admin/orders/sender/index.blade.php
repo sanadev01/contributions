@@ -173,13 +173,10 @@
 <script>
     $(document).ready(function(){
 
-        const Countries = @json($countryConstants);
-        const Brazil = Countries.Brazil;
-        const Chile = Countries.Chile;
-        const UnitedStates = Countries.US;
-        const NetherLands = Countries.Netherlands;
+        var countryChile = {!! $countryChile !!};
+        var countryUS = {!! $countryUS !!};
 
-
+        
         $('.selectpicker').prop('disabled', false);
         $('.selectpicker').selectpicker('refresh');
         $("[name='sender_address']").prop( "disabled", true );
@@ -194,60 +191,36 @@
                 $('#phone').css('display', 'inline-block');
                 $('#sender_state').prop('disabled', true);
 
-            $("[name='sender_address']").prop( "disabled", false );
-            $("[name='sender_city']").prop('disabled',false);
-            $("[name='taxt_id']").prop('disabled', true);
+                $("[name='sender_address']").prop( "disabled", false );
+                $("[name='sender_city']").prop('disabled',false);
+                $("[name='taxt_id']").prop('disabled', true);
 
-            $("[name='sender_address']").prop('required',true);
-            $("[name='sender_city']").prop('required',true);
-            if (selected == Chile) {
-                $("[name='phone']").prop('required',true);
-            }
+                $("[name='sender_address']").prop('required',true);
+                $("[name='sender_city']").prop('required',true);
+                if (selected == countryChile) {
+                    $("[name='phone']").prop('required',true);
+                }
+               
+                $("[name='sender_zipcode']").prop('required', false);
 
-            $("[name='sender_zipcode']").prop('required', false);
-
-            if (selected == UnitedStates) {
-                $('#state').removeClass('d-none');
-                $('#zip_code').removeClass('d-none');
+                if (selected == countryUS) {
+                    $('#state').removeClass('d-none');
+                    $('#zip_code').removeClass('d-none');
 
                     $('#state').addClass('d-block');
                     $('#zip_code').addClass('d-block');
 
-                $('#sender_state').prop('required', true);
-                $("[name='sender_zipcode']").prop('required', true);
+                    $('#sender_state').prop('required', true);
+                    $("[name='sender_zipcode']").prop('required', true);
 
-                $('#sender_state').prop('disabled', false);
+                    $('#sender_state').prop('disabled', false);
 
-                $("[name='phone']").prop('required',false);
-            }
-        } else if(selected !== UnitedStates || selected !== Brazil || selected !== Chile){
-            $('#company').css('display', 'none');
-            $('#address').css('display', 'block');
-            $('#city').css('display', 'block');
-            $('#tax_id').css('display', 'none');
-            $('#phone').css('display', 'none');
-            $('#state').addClass('d-none');
-            $('#zip_code').addClass('d-none');
-
-            $('#state').removeClass('d-block');
-            $('#zip_code').removeClass('d-block');
-
-            $("[name='sender_company']").prop( 'disabled', true );
-            $("[name='sender_address']").prop( 'disabled', false );
-            $("[name='sender_city']").prop('disabled', false);
-
-            $("[name='sender_company']").prop('required',false);
-            $("[name='sender_address']").prop('required',true);
-            $("[name='sender_city']").prop('required', false);
-            $('#sender_state').prop('required',false);
-            $("[name='phone']").prop('required',false);
-
-            $('#sender_state').prop('disabled', true);
-        }
-        else
+                    $("[name='phone']").prop('required',false);
+                }
+        } else 
         {
                 $('#address').css('display', 'none');
-                $('#city').css('display', 'none');
+                $('#city').css('display', 'none'); 
                 $('#tax_id').css('display', 'block');
                 $('#phone').css('display', 'none');
                 $('#state').addClass('d-none');
@@ -263,18 +236,18 @@
         $('#sender_address').on('change', function(){
             window.validate_us_address();
         });
-
+        
         $('#country').change(function () {
             let selected = $('#country').val();
-
-            if(selected == Chile || selected == UnitedStates) {
+            
+            if(selected == countryChile || selected == countryUS) {
                 $('#address').css('display', 'block');
                 $('#city').css('display', 'block');
-                $('#tax_id').css('display', 'none');
+                $('#tax_id').css('display', 'none'); 
                 $('#phone').css('display', 'inline-block');
                 $('#sender_state').prop('disabled', true);
 
-                if (selected == UnitedStates) {
+                if (selected == countryUS) {
                     $('#state').removeClass('d-none');
                     $('#zip_code').removeClass('d-none');
 
@@ -283,7 +256,7 @@
 
                     $('#sender_state').prop('required',true);
                     $("[name='sender_zipcode']").prop('required', true);
-
+                    
                     $('#sender_state').prop('disabled',false);
 
                     let senderAddress = $('#sender_address').val();
@@ -311,7 +284,7 @@
 
                 $("[name='sender_address']").prop('required',true);
                 $("[name='sender_city']").prop('required',true);
-                if (selected == Chile) {
+                if (selected == countryChile) {
                     $("[name='phone']").prop('required',true);
                 }
                 

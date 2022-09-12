@@ -46,7 +46,6 @@ class ImportPostNLRates extends AbstractImportService
         $this->countryCodes['J'] = $this->workSheet->getCell('J1')->getValue();
         $this->countryCodes['K'] = $this->workSheet->getCell('K1')->getValue();
         $this->countryCodes['L'] = $this->workSheet->getCell('L1')->getValue();
-        //dd($this->countryCodes['C']);
         
     }
 
@@ -54,7 +53,7 @@ class ImportPostNLRates extends AbstractImportService
     {
         $limit = 49;
         foreach ($this->countryCodes as $cell => $countryCodes) {
-           $country = $this->country->firstWhere('name',  ucfirst(strtolower($countryCodes)));
+           $country = $this->country->firstWhere('name',  $countryCodes);
            $rates = [];
             if ($country) {
                 foreach (range(2, $limit) as $row)
@@ -73,7 +72,6 @@ class ImportPostNLRates extends AbstractImportService
 
     private function storeCountryRates(array $data, $country)
     {
-        //dd($country);
         $rates = Rate::where([
             ['shipping_service_id',$this->shippingService->id],
             ['country_id',$country],

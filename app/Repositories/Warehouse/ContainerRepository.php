@@ -195,38 +195,4 @@ class ContainerRepository extends AbstractRepository{
         }
     }
 
-    public function updateawb($request)
-    {
-        if(json_decode($request->data)){
-            foreach(json_decode($request->data) as $containerId){
-                $container = Container::find($containerId);
-
-                if($container->services_subclass_code == 'PostNL' && !is_null($container->deliveryBills[0]->cnd38_code)) {
-                    try {
-                        $response = $this->client->post($this->addAirwayBill,[
-                            'headers' => $this->getKeys(),
-                            'json' => [
-                                "delivery" => $container->deliveryBills[0]->cnd38_code,
-                                "hawb" => '',
-                                "mawb" => $request->awb,
-                            ]
-                        ]);
-                        $data = json_decode($response->getBody()->getContents());
-                        if($data->status == 'success'){
-                            $container->awb  = $request->awb;
-                        } else {
-                            return session()->flash('alert-danger', $data->message->payload);
-                        }
-                    }catch (ClientException $e) {
-                        return new PackageError($e->getResponse()->getBody()->getContents());
-                    }
-                } else {
-                    $container->awb  = $request->awb;
-                }
-                $container->save();
-                return session()->flash('alert-success', 'Airway Bill Assigned');
-
-            }
-        }
-    }
 }
