@@ -4,9 +4,7 @@ namespace App\Repositories\Reports;
 
 use App\Models\Order;
 use App\Models\ShippingService;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class AnjunReportsRepository
@@ -15,7 +13,7 @@ class AnjunReportsRepository
 
     public function get(Request $request, $paginate = true, $pageSize=50)
     {
-        $query = Order::has('user')->where('status', '=', Order::STATUS_SHIPPED);
+        $query = Order::has('user')->where('status', '>=', Order::STATUS_PAYMENT_DONE);
         $query->whereHas('shippingService',function($query) {
             return $query->whereIn('service_sub_class', [ShippingService::AJ_Packet_Standard, ShippingService::AJ_Packet_Express]);
         });
@@ -37,7 +35,7 @@ class AnjunReportsRepository
 
     public function getAnjunReport($request)
     {
-        $orders = Order::has('user')->where('status', '=', Order::STATUS_SHIPPED);
+        $orders = Order::has('user')->where('status', '>=', Order::STATUS_PAYMENT_DONE);
         $orders->whereHas('shippingService',function($orders) {
             return $orders->whereIn('service_sub_class', [ShippingService::AJ_Packet_Standard, ShippingService::AJ_Packet_Express]);
         });
