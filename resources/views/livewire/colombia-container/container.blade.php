@@ -3,15 +3,13 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
-                        <h4 class="mb-0">
-                            @lang('warehouse.containers.Colombia Containers')
-                        </h4>
+                    <div class="card-header d-flex justify-content-end">
+                            @section('title',__('warehouse.containers.Colombia Containers'))
                         <a href="{{ route('warehouse.colombia-containers.create') }}" class="pull-right btn btn-primary"> @lang('warehouse.containers.Create Container') </a>
                     </div>
                     <div class="card-content card-body" style="min-height: 100vh;">
                         <div class="mt-1">
-                            <table class="table mb-0">
+                            <table class="table table-bordered mb-0">
                                 <thead>
                                     <tr>
                                         <th style="min-width: 100px;">
@@ -139,15 +137,20 @@
                                                         <a href="{{ route('warehouse.colombia-container.packages',$container) }}" class="dropdown-item w-100">
                                                             <i class="feather icon-box"></i> @lang('warehouse.actions.Packages')
                                                         </a>
+                                                        @if ($container->orders->isNotEmpty())
+                                                            <a href="{{ route('warehouse.colombia-container.manifest',$container) }}" class="dropdown-item w-100">
+                                                                <i class="feather icon-box"></i> Export Manifest
+                                                            </a>
+                                                            @if (!$container->isRegistered())
+                                                                <a href="{{ route('warehouse.colombia-container.register',$container) }}" class="dropdown-item w-100">
+                                                                    <i class="feather icon-box"></i> Register Unit
+                                                                </a>
+                                                            @endif
+                                                        @endif
                                                         @if( !$container->isRegistered() || !$container->isShipped() )
                                                             <a href="{{ route('warehouse.colombia-containers.edit',$container) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
                                                             </a>
-                                                            @if ($container->orders->isNotEmpty())
-                                                                <a href="{{ route('warehouse.colombia-container.manifest',$container) }}" class="dropdown-item w-100">
-                                                                    <i class="feather icon-box"></i> Export Manifest
-                                                                </a>
-                                                            @endif
                                                             <form action="{{ route('warehouse.containers.destroy',$container) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
                                                                 @csrf
                                                                 @method('DELETE')
@@ -155,6 +158,11 @@
                                                                     <i class="feather icon-trash-2"></i> @lang('warehouse.actions.Delete')
                                                                 </button>
                                                             </form>
+                                                        @endif
+                                                        @if( $container->isRegistered() )
+                                                            <a href="{{ route('warehouse.container.download',$container) }}" class="dropdown-item w-100">
+                                                                <i class="feather icon-box"></i> Get CN35
+                                                            </a>
                                                         @endif
                                                     </div>
                                                 </div>
@@ -185,7 +193,7 @@
                         <div class="modal-body" style="font-size: 15px;">
                             <p>
                                 Are you Sure want to Assign AWB number to Selected Containers  {{-- <span class="result"></span> --}}
-                            </p>
+                            </p> 
                             <input type="text" name="awb" required class="form-control" value="">
                             <input type="hidden" name="command" id="command" value="">
                             <input type="hidden" name="data" id="data" value="">

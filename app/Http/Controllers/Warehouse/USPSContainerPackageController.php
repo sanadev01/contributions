@@ -26,4 +26,5 @@ class USPSContainerPackageController extends Controller
 
         return view('admin.warehouse.uspsContainers.scan',compact('container', 'ordersCollection', 'editMode'));
     }
+    
 }

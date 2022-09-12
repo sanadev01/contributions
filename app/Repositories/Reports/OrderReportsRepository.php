@@ -27,6 +27,14 @@ class OrderReportsRepository
         } elseif ( $request->email)
         {
             $query->where('email','LIKE',"%{$request->email}%");
+
+        } else if( $request->search )
+        {
+        
+            $query->where('name','LIKE',"%{$request->search}%")
+            ->orWhere('last_name','LIKE',"%{$request->search}%")
+            ->orWhere('pobox_number','LIKE',"%{$request->search}%")
+            ->orWhere('email','LIKE',"%{$request->search}%");
         }
 
         $query->withCount(['orders as order_count'=> function($query) use ($request){
@@ -52,6 +60,8 @@ class OrderReportsRepository
                 $endDate = $request->end_date.' 23:59:59';
                 $query->where('order_date','<=', $endDate);
             }
+
+            
 
             $query->select(DB::raw('sum(CASE WHEN measurement_unit = "kg/cm" THEN ROUND(weight,2) ELSE ROUND((weight/2.205),2) END) as weight'));
 
@@ -91,6 +101,9 @@ class OrderReportsRepository
         $query = Order::where('status','>',Order::STATUS_PAYMENT_PENDING);
         if($id){
             $query->has('user')->where('user_id', $id);
+        }
+        if( $request->user_id){
+            $query->has('user')->where('user_id', $request->user_id);
         }
         if($month){
             $month = date("m",strtotime($month));
@@ -190,7 +203,11 @@ class OrderReportsRepository
 
     public function getShipmentReportOfUsersByMonth(Request $request)
     {
-        $ordersByYear = Order::where('status','>',Order::STATUS_PAYMENT_PENDING)->selectRaw(
+        $query = Order::where('status','>',Order::STATUS_PAYMENT_PENDING);
+        if($request->user_id){
+            $query->where('user_id',$request->user_id);
+        }
+        $ordersByYear = $query->selectRaw(
             "count(*) as total, Month(order_date) as month, 
             sum(gross_total) as spent,
             sum(CASE WHEN measurement_unit = 'kg/cm' THEN ROUND(weight,2) ELSE ROUND((weight/2.205),2) END) as weight"

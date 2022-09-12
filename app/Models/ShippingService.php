@@ -32,8 +32,11 @@ class ShippingService extends Model
     const PostNL = 87765;
     const AJ_Packet_Standard = 33164;
     const AJ_Packet_Express = 33172;
-    const COLOMBIA_Standard = 44162;
+    const COLOMBIA_URBANO = 44162;
+    const COLOMBIA_NACIONAL = 44163;
+    const COLOMBIA_TRAYETOS = 44164;
     const Brazil_Redispatch = 100;
+    const GePS = 537;
 
     protected $guarded = [];
 
@@ -110,6 +113,15 @@ class ShippingService extends Model
     public function isInternationalService()
     {
         if (collect($this->internationalShippingServices())->contains($this->service_sub_class)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isGePSService()
+    {
+        if (collect($this->gepsShippingServices())->contains($this->service_sub_class)) {
             return true;
         }
 
@@ -220,7 +232,9 @@ class ShippingService extends Model
     private function colombiaShippingServices()
     {
         return [
-            self::COLOMBIA_Standard,
+            self::COLOMBIA_URBANO,
+            self::COLOMBIA_NACIONAL,
+            self::COLOMBIA_TRAYETOS,
         ];
     }
 
@@ -246,6 +260,13 @@ class ShippingService extends Model
         return [
             self::SRP,
             self::SRM,
+        ];
+    }
+
+    private function gepsShippingServices()
+    {
+        return [
+            self::GePS,
         ];
     }
 }

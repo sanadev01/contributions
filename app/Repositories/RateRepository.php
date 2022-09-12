@@ -28,17 +28,14 @@ class RateRepository
             $shippingService = ShippingService::where('id', $request->shipping_service_id)->first();
             
             try {
-
                 if ($shippingService && $shippingService->service_sub_class == ShippingService::Courier_Express) {
-                   
                     $importCourierExpressService = new ImportCourierExpressRates($file, $shippingService, $request);
                     $importCourierExpressService->handle();
                 }else
                 {
-                    $importService = new ImportRates($file, $request->shipping_service_id, $request->country_id);
+                    $importService = new ImportRates($file, $shippingService, $request->country_id);
                     $importService->handle();
                 }
-                
                 
                 session()->flash('alert-success', 'shipping-rates.Rates Updated Successfully');
                 return true;

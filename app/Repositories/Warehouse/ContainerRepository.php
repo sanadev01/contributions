@@ -43,6 +43,10 @@ class ContainerRepository extends AbstractRepository{
         if ( !Auth::user()->isAdmin() ){
             $query->where('user_id',Auth::id());
         }
+        if($request->has('search')){
+            $query->where('dispatch_number', 'LIKE', '%' . $request->search . '%')
+            ->orWhere('seal_no', 'LIKE', '%' . $request->search . '%');
+        }
         if($request->filled('dispatchNumber')){
            $query->where('dispatch_number', 'LIKE', '%' . $request->dispatchNumber . '%');
         } 
@@ -52,6 +56,7 @@ class ContainerRepository extends AbstractRepository{
         if($request->filled('packetType')){
             $query->where('services_subclass_code', 'LIKE', '%' . $request->packetType . '%');
         }
+
 
         if($request->filled('unitCode')){
             $query->where('unit_code', 'LIKE', '%' . $request->unitCode . '%');
@@ -187,6 +192,41 @@ class ContainerRepository extends AbstractRepository{
         } catch (\Exception $ex) {
             $this->error = $ex->getMessage();
             return false;
+        }
+    }
+
+    public function updateawb($request)
+    {
+        if(json_decode($request->data)){
+            foreach(json_decode($request->data) as $containerId){
+                $container = Container::find($containerId);
+
+                if($container->services_subclass_code == 'PostNL' && !is_null($container->deliveryBills[0]->cnd38_code)) {
+                    try {
+                        $response = $this->client->post($this->addAirwayBill,[
+                            'headers' => $this->getKeys(),
+                            'json' => [
+                                "delivery" => $container->deliveryBills[0]->cnd38_code,
+                                "hawb" => '',
+                                "mawb" => $request->awb,
+                            ]
+                        ]);
+                        $data = json_decode($response->getBody()->getContents());
+                        if($data->status == 'success'){
+                            $container->awb  = $request->awb;
+                        } else {
+                            return session()->flash('alert-danger', $data->message->payload);
+                        }
+                    }catch (ClientException $e) {
+                        return new PackageError($e->getResponse()->getBody()->getContents());
+                    }
+                } else {
+                    $container->awb  = $request->awb;
+                }
+                $container->save();
+                return session()->flash('alert-success', 'Airway Bill Assigned');
+
+            }
         }
     }
 }

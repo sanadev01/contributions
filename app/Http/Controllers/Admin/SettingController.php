@@ -44,6 +44,7 @@ class SettingController extends Controller
         $request->has('usps') ? saveSetting('usps', true, $this->adminId) : saveSetting('usps', false, $this->adminId);
         $request->has('ups') ? saveSetting('ups', true, $this->adminId) : saveSetting('ups', false, $this->adminId);
         $request->has('fedex') ? saveSetting('fedex', true, $this->adminId) : saveSetting('fedex', false, $this->adminId);
+        $request->has('geps_service') ? saveSetting('geps_service', true, $this->adminId) : saveSetting('geps_service', false, $this->adminId);
         $request->has('colombia_service') ? saveSetting('colombia_service', true, $this->adminId) : saveSetting('colombia_service', false, $this->adminId);
         $request->has('postnl_service') ? saveSetting('postnl_service', true, $this->adminId) : saveSetting('postnl_service', false, $this->adminId);
 

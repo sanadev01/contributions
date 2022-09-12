@@ -20,9 +20,12 @@ return [
             33198 => 'SL Small Parcels',
             33164 => 'AJ Packet Standard',
             33172 => 'AJ Packet Express',
-            87765 => 'PostNL',
-            44162 => 'Colombia Standard',
+            44162 => 'Colombia Urbano',
+            44163 => 'Colombia Nacional',
+            44164 => 'Colombia Trayetos',
             100 => 'Brazil Redispatch',
+            537 => 'Global eParcel',
+            87765 => 'PostNL',
         ]
     ]
 ];

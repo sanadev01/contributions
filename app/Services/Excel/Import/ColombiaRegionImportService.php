@@ -37,5 +37,28 @@ class ColombiaRegionImportService extends AbstractImportService
         foreach ($regions->chunk(100) as $regionsChunk) {
             Region::insert($regionsChunk->toArray());
         }
+
+        $colombiaRgions = [
+            [
+                'country_id' => Country::COLOMBIA,
+                'state_id' => null,
+                'name' => 'URBANO',
+                'code' => '479800051',
+            ],
+            [
+                'country_id' => Country::COLOMBIA,
+                'state_id' => null,
+                'name' => 'NACIONAL',
+                'code' => '479800052',
+            ],
+            [
+                'country_id' => Country::COLOMBIA,
+                'state_id' => null,
+                'name' => 'TRAYETOS',
+                'code' => '479800053',
+            ]
+        ];
+
+        Region::insert($colombiaRgions);
     }
 }

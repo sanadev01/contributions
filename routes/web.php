@@ -1,11 +1,16 @@
 <?php
 
+use App\Models\Tax;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Recipient;
 use App\Models\ProfitPackage;
+use App\Models\ShippingService;
 use Illuminate\Support\Facades\Artisan;
+use App\Services\Converters\UnitsConverter;
 use App\Services\StoreIntegrations\Shopify;
+use App\Services\Excel\Export\OrderExportAug;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
@@ -87,6 +92,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('orders.label', OrderLabelController::class)->only('index','store');
             Route::get('order-exports', OrderExportController::class)->name('order.exports');
             Route::get('bulk-action', BulkActionController::class)->name('order.bulk-action');
+            Route::get('pre-alert', PreAlertMailController::class)->name('order.pre-alert');
             Route::get('consolidate-domestic-label', ConsolidateDomesticLabelController::class)->name('order.consolidate-domestic-label');
             Route::get('order/{order}/us-label', [OrderUSLabelController::class, 'index'])->name('order.us-label.index');
             Route::resource('orders.usps-label', OrderUSPSLabelController::class)->only('index','store');
@@ -264,18 +270,26 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
     return response()->download(storage_path("app/labels/{$order->us_api_tracking_code}.pdf"),"{$order->us_api_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.us-label.download');
 
-Route::get('test-label',function(){
+Route::get('test-label/{id?}/{weight?}',function($id = null, $weight = null){
     
-    $labelPrinter = new CN23LabelMaker();
+    $order = Order::find($id);
+    if($order) {
+        $order->update(['weight_discount' => $weight]);
+        return "Discount Weight Updated";
+    }
+    $orders = Order::whereBetween('created_at', ['2022-08-10 00:00:00', '2022-08-22 23:59:59'])->where('status','>=',Order::STATUS_PAYMENT_DONE)->get();
 
-    $order = Order::find(53654);
+    $exportService = new OrderExportAug($orders);
+    return $exportService->handle();
+    // $labelPrinter = new CN23LabelMaker();
+
     // $order = Order::find(90354);
-    $labelPrinter->setOrder($order);
-    $labelPrinter->setService(2);
+    // $labelPrinter->setOrder($order);
+    // $labelPrinter->setService(2);
     
-    return $labelPrinter->download();
+    // return $labelPrinter->download();
 });
 
-Route::get('find-container/{order}', [HomeController::class, 'findContainer'])->name('find.container');
+Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container');
 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');

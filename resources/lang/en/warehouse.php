@@ -22,6 +22,7 @@ return [
         'Sender' => 'Sender',
         'Packages Inside Container' => 'Packages Inside Container',
         'Customer Reference' => 'Customer Reference',
+        'Destination Country' => 'Destination Country',
         'Download Manifest' => 'Download Manifest (US Customs)',
         'validations' => [
             'Container Type' => 'Container Type Required',

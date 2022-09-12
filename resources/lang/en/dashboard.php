@@ -7,8 +7,8 @@ return [
     'Today Orders' =>'Today Orders',
     'Total Month Order'=>'Total :month Order',
     'Completed Orders'=>'Completed Orders',
-    'Current Year' =>'Current Year Total Orders',
-    'Total Orders'=>'Total Orders',
+    'Current Year' =>'Current Year Orders',
+    'Total Orders'=>'Orders',
     'Start Date'=>'Start Date',
     'End Date'=>'End Date'
     

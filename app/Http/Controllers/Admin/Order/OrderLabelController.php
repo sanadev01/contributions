@@ -15,7 +15,7 @@ use App\Repositories\CorrieosBrazilLabelRepository;
 use App\Repositories\FedExLabelRepository;
 use App\Repositories\POSTNLLabelRepository;
 use App\Repositories\ColombiaLabelRepository;
-
+use App\Repositories\GePSLabelRepository;
 /**
  * Use for Sinerlog integration
  */
@@ -31,8 +31,9 @@ class OrderLabelController extends Controller
     protected $fedExLabelRepository;
     protected $postNLLabelRepository;
     protected $colombiaLabelRepository;
+    protected $gepsLabelRepository;
 
-    public function __construct(CorrieosChileLabelRepository $corrieosChileLabelRepository, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, FedExLabelRepository $fedExLabelRepository, POSTNLLabelRepository $postNLLabelRepository, ColombiaLabelRepository $colombiaLabelRepository)
+    public function __construct(CorrieosChileLabelRepository $corrieosChileLabelRepository, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, FedExLabelRepository $fedExLabelRepository, ColombiaLabelRepository $colombiaLabelRepository, GePSLabelRepository $gepsLabelRepository, POSTNLLabelRepository $postNLLabelRepository)
     {
         $this->corrieosChileLabelRepository = $corrieosChileLabelRepository;
         $this->corrieosBrazilLabelRepository = $corrieosBrazilLabelRepository;
@@ -41,6 +42,7 @@ class OrderLabelController extends Controller
         $this->fedExLabelRepository = $fedExLabelRepository;
         $this->postNLLabelRepository = $postNLLabelRepository;
         $this->colombiaLabelRepository = $colombiaLabelRepository;
+        $this->gepsLabelRepository = $gepsLabelRepository;
     }
 
     public function index(Request $request, Order $order)
@@ -148,19 +150,19 @@ class OrderLabelController extends Controller
             }
         }
 
+        if($order->shippingService->isGePSService()){
+
+            $this->gepsLabelRepository->get($order);
+
+            $error = $this->gepsLabelRepository->getError();
+            return $this->renderLabel($request, $order, $error);
+        }
+        
         if($order->shippingService->isPostNLService()){
 
             $this->postNLLabelRepository->get($order);
 
             $error = $this->postNLLabelRepository->getError();
-            return $this->renderLabel($request, $order, $error);
-        }
-
-
-        if ($order->recipient->country_id == Order::COLOMBIA && $order->shippingService->isColombiaService()) {
-            $this->colombiaLabelRepository->handle($order);
-
-            $error = $this->colombiaLabelRepository->getError();
             return $this->renderLabel($request, $order, $error);
         }
 

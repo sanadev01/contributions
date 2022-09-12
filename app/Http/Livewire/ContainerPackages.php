@@ -155,6 +155,10 @@ class ContainerPackages extends Component
             return true;
         }
 
+        if($this->containerService == 'GePS' && $order->shippingService->isGePSService()){
+            return true;
+        }
+
         if($this->containerService == 'Anjun-Container' && $order->shippingService->isAnjunService()){
             return true;
         }
@@ -251,6 +255,7 @@ class ContainerPackages extends Component
             'UPS_GROUND' => ShippingService::UPS_GROUND,
             'FEDEX_GROUND' => ShippingService::FEDEX_GROUND,
             'PostNL' => ShippingService::PostNL,
+            'GePS' => ShippingService::GePS,
         ];
 
         return;
