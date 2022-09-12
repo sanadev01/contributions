@@ -155,6 +155,13 @@ class OrderLabelController extends Controller
             return $this->renderLabel($request, $order, $error);
         }
 
+        if ($order->recipient->country_id == Order::COLOMBIA && $order->shippingService->isColombiaService()) {
+            $this->colombiaLabelRepository->handle($order);
+
+            $error = $this->colombiaLabelRepository->getError();
+            return $this->renderLabel($request, $order, $error);
+        }
+
         if ( $request->update_label === 'true' ){
 
             if($order->recipient->country_id == Order::CHILE)
