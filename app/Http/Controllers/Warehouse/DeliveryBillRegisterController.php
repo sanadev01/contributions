@@ -60,7 +60,9 @@ class DeliveryBillRegisterController extends Controller
 
             $result = $response['data']->data->details;
             $cn38 = $result[0]->manifest_codes[0];
+            $url = $result[0]->url;
             $deliveryBill->update([
+                'request_id' => $url,
                 'cnd38_code' => $cn38
             ]);
 
