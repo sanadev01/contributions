@@ -33,7 +33,7 @@
                             <div class="form-group">
                                 <div class="controls">
                                     <label>@lang('shipping-rates.Shipping Service') <span class="text-danger">*</span></label>
-                                    <select name="shipping_service_id" required class="form-control">
+                                    <select name="shipping_service_id" required class="form-control" id="shipping_service">
                                         @isset($shipping_services)
                                             @foreach ($shipping_services as $service)
                                                 <option value="{{ $service->id }}">{{ $service->name }}</option>
@@ -47,7 +47,7 @@
 
                     </div>
 
-                    <div class="row justify-content-center">
+                    <div class="row justify-content-center" id="country_div">
 
                         <div class="col-md-6">
                             <div class="form-group">
@@ -87,7 +87,7 @@
                         </div>
 
                     </div>
-                    <div class="row justify-content-center">
+                    <div class="row justify-content-center mt-3">
                         <div class="col-md-10">
                             <div class="alert alert-warning">
                                 <ol>
@@ -138,4 +138,14 @@
 @endsection
 @section('js')
 <script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
+<script>
+    $("#shipping_service").change(function(){
+        let selected = $('#shipping_service').val();
+        if(selected == "26") {
+            $('#country_div').hide();   
+        } else {
+            $('#country_div').show(); 
+        }
+    });
+</script>
 @endsection
