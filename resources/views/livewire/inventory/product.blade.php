@@ -28,8 +28,8 @@
                 </div>
             </form>
         </div>
-        <div class="table-wrapper position-relative">
-            <table class="table mb-0 table-responsive table-bordered table-hover" id="order-table">
+        <div class="table-responsive order-table">
+            <table class="table mb-0 table-bordered" id="tblOrders">
                 <thead>
                     <tr>
                         <th id="optionChkbx">
