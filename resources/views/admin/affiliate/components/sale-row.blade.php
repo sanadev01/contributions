@@ -1,10 +1,10 @@
-
 <tr>
     @admin
         <td>
             <div class="vs-checkbox-con vs-checkbox-primary" title="@lang('orders.Bulk Print')">
-                <input type="checkbox" name="sales[]" class="bulk-sales" value="{{$sale->id}}">
-                <span class="vs-checkbox vs-checkbox-lg">
+                <input type="checkbox" name="sales[]"onchange="handleChangeSalesCommission(this)" class="bulk-sales"
+                    value="{{ $sale->id }}">
+                <span class="vs-checkbox vs-checkbox-sm">
                     <span class="vs-checkbox--check">
                         <i class="vs-icon feather icon-check"></i>
                     </span>
@@ -24,19 +24,23 @@
     <td>
         {{ optional($sale->order->user)->name }}
     </td>
-    <td>
-        <a href="#" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$sale->order) }}" title="@lang('sales-commission.Show Order Details')">
+    {{-- <td>
+        <a href="#" data-toggle="modal" data-target="#hd-modal"
+            data-url="{{ route('admin.modals.order.invoice', $sale->order) }}" title="@lang('sales-commission.Show Order Details')">
             @lang('sales-commission.view-order')
         </a>
-        
-    </td>
+
+    </td> --}}
     <td>
+        <a href="#" data-toggle="modal" data-target="#hd-modal"
+        data-url="{{ route('admin.modals.order.invoice', $sale->order) }}" title="@lang('sales-commission.Show Order Details')">
         {{ $sale->order->warehouse_number }}
+    </a>
     </td>
-    <td>
+    {{-- <td>
         {{ $sale->order->corrios_tracking_code }}
-    </td>
-    <td>
+    </td> --}}
+    {{-- <td>
         {{ $sale->order->customer_reference }}
     </td>
     <td>
@@ -44,21 +48,21 @@
     </td>
     <td>
         {{ $sale->order->weight . $sale->order->measurement_unit }}
-    </td>
-    
+    </td> --}}
+
     <td>
         {{ $sale->value }}
-        
+
     </td>
     <td>
         {{ $sale->type }}
-        
+
     </td>
     <td>
-        {{ $sale->commission? number_format($sale->commission, 2): 0 }}
+        {{ $sale->commission ? number_format($sale->commission, 2) : 0 }}
     </td>
     <td>
-        @if( $sale->is_paid )
+        @if ($sale->is_paid)
             <i class="feather icon-check text-success"></i>
         @else
             <i class="feather icon-x text-danger"></i>
@@ -73,12 +77,14 @@
         <td class="d-flex">
             <div class="btn-group">
                 <div class="dropdown">
-                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false" style="width: 100px;">
                         @lang('parcel.Action')
                     </button>
                     <div class="dropdown-menu dropdown-menu-right dropright">
                         @can('delete', $sale)
-                            <form method="post" action="{{ route('admin.affiliate.sales-commission.destroy',$sale) }}" class="d-inline-block w-100" onsubmit="return confirmDelete()">
+                            <form method="post" action="{{ route('admin.affiliate.sales-commission.destroy', $sale) }}"
+                                class="d-inline-block w-100" onsubmit="return confirmDelete()">
                                 @csrf
                                 @method('DELETE')
                                 <button class="dropdown-item w-100 text-danger" title="@lang('parcel.Delete Parcel')">
@@ -90,5 +96,5 @@
                 </div>
             </div>
         </td>
-    @endadmin 
+    @endadmin
 </tr>

@@ -1,5 +1,5 @@
 <div>
-    <table class="table mb-0">
+    <table class="table table-bordered mb-0">
         <thead>
             <tr>
                 <th>Tracking Code</th>
@@ -63,10 +63,15 @@
             @if($editMode == true)
             <tr>
                 <td colspan="8">
-                    <input type="text" wire:model.debounce.500ms="barcode" class="w-100 text-center" style="height:50px;font-size:30px;">
+                    <input id="barcode" type="text" wire:model.debounce.500ms="barcode" class="w-100 text-center" style="height:50px;font-size:30px;" autocomplete="off">
                 </td>
             </tr>
             @endif
         </tbody>
     </table>
 </div>
+<script>
+    window.addEventListener('focus-barcode', event => {
+     $("#barcode").focus();
+ })
+ </script>

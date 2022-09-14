@@ -20,35 +20,34 @@
     @endif
     <form action="{{ route('admin.orders.recipient.store',$order) }}" class="wizard" method="post" enctype="multipart/form-data">
         @csrf
-        @if($order->sender_country_id == 46)
-        <div class="controls d-flex mb-1">
-            <div>
-                <div class="vs-checkbox-con vs-checkbox-primary" title="Insurance">
-                    <input type="radio" name="service" value="postal_service" id="postal_service"  required @if( (optional($order->recipient)->commune_id == null && $order->recipient != null) || old('service') == 'postal_service') checked @endif>
-                    <span class="vs-checkbox vs-checkbox-lg">
-                        <span class="vs-checkbox--check">
-                            <i class="vs-icon feather icon-check"></i>
+        @if($order->sender_country_id == $countryConstants['Chile'])
+            <div class="controls d-flex mb-1">
+                <div>
+                    <div class="vs-checkbox-con vs-checkbox-primary" title="Insurance">
+                        <input type="radio" name="service" value="postal_service" id="postal_service"  required @if( (optional($order->recipient)->commune_id == null && $order->recipient != null) || old('service') == 'postal_service') checked @endif>
+                        <span class="vs-checkbox vs-checkbox-lg">
+                            <span class="vs-checkbox--check">
+                                <i class="vs-icon feather icon-check"></i>
+                            </span>
                         </span>
-                    </span>
-                    <span class="h3 mx-2 text-primary my-0 py-0">Postal Service</span>
+                        <span class="h3 mx-2 text-primary my-0 py-0">Postal Service</span>
+                    </div>
+                </div>
+                <div class="ml-3">
+                    <div class="vs-checkbox-con vs-checkbox-primary" title="Insurance">
+                        <input type="radio" name="service" value="courier_express" id="courier_express" required @if( optional($order->recipient)->commune_id != null || old('service') == 'courier_express') checked @endif>
+                        <span class="vs-checkbox vs-checkbox-lg">
+                            <span class="vs-checkbox--check">
+                                <i class="vs-icon feather icon-check"></i>
+                            </span>
+                        </span>
+                        <span class="h3 mx-2 text-primary my-0 py-0">Courier Express</span>
+                    </div>
                 </div>
             </div>
-            <div class="ml-3">
-                <div class="vs-checkbox-con vs-checkbox-primary" title="Insurance">
-                    <input type="radio" name="service" value="courier_express" id="courier_express" required @if( optional($order->recipient)->commune_id != null || old('service') == 'courier_express') checked @endif>
-                    <span class="vs-checkbox vs-checkbox-lg">
-                        <span class="vs-checkbox--check">
-                            <i class="vs-icon feather icon-check"></i>
-                        </span>
-                    </span>
-                    <span class="h3 mx-2 text-primary my-0 py-0">Courier Express</span>
-                </div>
-            </div>
-        </div>
-        @elseif($order->sender_country_id != 46)
-        <input type="hidden" name="service" value="postal_service" id="postal_service">
+        @else
+            <input type="hidden" name="service" value="postal_service" id="postal_service">
         @endif
-        
         <div>
             <div class="row mt-1">
                 <div class="form-group col-12 col-sm-6 col-md-6">
@@ -64,7 +63,6 @@
                     </div>
                 </div>
             </div>
-
             <hr>
             <div class="row mt-1">
                 <div class="form-group col-12 col-sm-6 col-md-4">
@@ -87,7 +85,6 @@
                         <div class="help-block"></div>
                     </div>
                 </div>
-
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
                         <label>@lang('address.Last Name') <span class="text-danger">*</span></label>
@@ -95,7 +92,6 @@
                         <div class="help-block"></div>
                     </div>
                 </div>
-
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
                         <label>@lang('address.Email') <span class="text-danger">*</span></label>
@@ -113,7 +109,7 @@
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
                         <label id="label_address">@lang('address.Address') <span class="text-danger">*</span></label>
-                        <label id="label_chile_address" style="display: none;">@lang('address.Chile Address')<span class="text-danger">*</span></label>
+                        <label id="label_chile_address" class="d-none">@lang('address.Chile Address')<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="address" name="address" value="{{old('address',optional($order->recipient)->address)}}" required placeholder="@lang('address.Address')"/>
                         <div class="help-block"></div>
                     </div>
@@ -140,7 +136,7 @@
                     </div>
                 </div>
                 <div class="form-group col-12 col-sm-6 col-md-4">
-                    <div class="controls" id="div_state">
+                    <div class="controls" id="div_hd_state">
                         <label>@lang('address.State') <span class="text-danger">*</span></label>
                         <select name="state_id" id="state" class="form-control selectpicker show-tick" data-live-search="true">
                             <option value="">Select @lang('address.State')</option>
@@ -151,20 +147,14 @@
                         <div class="help-block"></div>
                     </div>
                     {{-- Chile Regions --}}
-                    <div class="controls" id="div_region" style="display: none">
+                    <div class="controls d-none" id="div_regions">
                         <label>Regions <span class="text-danger">*</span></label>
                         <select name="region" id="region" class="form-control selectpicker show-tick" data-live-search="true" data-value="{{ old('region', optional($order->recipient)->region) }}">
                             <option value="">Select Region</option>
                         </select>
-                        <div class="help-block"></div>
+                        <div class="help-block d-none" id="regions_response"></div>
                     </div>
                 </div>
-                {{-- <div class="form-group col-12 offset-4">
-                    <div class="controls">
-                        <div class="help-block" id="regions_response">
-                        </div>
-                    </div>
-                </div> --}}
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls" id="div_city">
                         <label>@lang('address.City') <span class="text-danger">*</span></label>
@@ -172,16 +162,12 @@
                         <div class="help-block"></div>
                     </div>
                     {{-- Chile Communes --}}
-                    <div class="controls" id="div_communes" style="display: none">
+                    <div class="controls d-none" id="div_communes">
                         <label>Communes <span class="text-danger">*</span></label>
                         <select name="city" id="commune" class="form-control selectpicker show-tick" data-live-search="true" data-value="{{ old('city', optional($order->recipient)->city) }}" data-commune="{{ old('commune_id', optional($order->recipient)->commune_id) }}">
                             <option value="">Select Commune</option>
                         </select>
-                        <div class="help-block"></div>
-                    </div>
-                    <div class="controls">
-                        <div class="help-block" id="communes_response" style="display: none">
-                        </div>
+                        <div class="help-block d-none" id="communes_response"></div>
                     </div>
                 </div>
                 <div class="form-group col-12 col-sm-6 col-md-4" id="div_street_number">
@@ -191,30 +177,27 @@
                         <div class="help-block"></div>
                     </div>
                 </div>
-                <div class="form-group col-12 col-sm-6 col-md-4">
+                <div class="form-group col-12 col-sm-6 col-md-4" id="div_zipcode">
                     <div class="controls">
                         <label>@lang('address.Zip Code') <span class="text-danger">*</span></label>
                         <input type="text" name="zipcode"  id="zipcode" value="{{ cleanString(old('zipcode',optional($order->recipient)->zipcode)) }}" required class="form-control" placeholder="Zip Code"/>
                         <div class="help-block"></div>
                     </div>
                 </div>
-
                 <div class="form-group col-12 col-sm-6 col-md-4" id="cpf">
                     <div class="controls">
-                            <label id="cnpj_label_id" style="{{ optional($order->recipient)->account_type != 'individual' ? 'display:block' : 'display:none' }}" >@lang('address.CNPJ') <span class="text-danger">* (Brazil Only)</span> </label>
-                            <label id="cpf_label_id" style="{{ optional($order->recipient)->account_type == 'individual' ? 'display:block' : 'display:none' }}" >@lang('address.CPF') <span class="text-danger">* (Brazil Only)</span> </label>
+                        <label id="cnpj_label_id" style="{{ optional($order->recipient)->account_type != 'individual' ? 'display:block' : 'display:none' }}" >@lang('address.CNPJ') <span class="text-danger">* (Brazil Only)</span> </label>
+                        <label id="cpf_label_id" style="{{ optional($order->recipient)->account_type == 'individual' ? 'display:block' : 'display:none' }}" >@lang('address.CPF') <span class="text-danger">* (Brazil Only)</span> </label>
                         <input type="text" name="tax_id" id="tax_id" value="{{old('tax_id',optional($order->recipient)->tax_id)}}" class="form-control" placeholder="CNPJ"/>
                         <div class="help-block"></div>
                     </div>
                 </div>
-                
                 <div class="form-group col-12 offset-4">
                     <div class="controls">
                         <div class="help-block" id="zipcode_response">
                         </div>
                     </div>
                 </div>
-
                 <div class="col-12 my-3 p-4 ">
                     <div class="row justify-content-end">
                         <fieldset class="col-md-4 text-right">
@@ -225,15 +208,13 @@
                                         <i class="vs-icon feather icon-check"></i>
                                     </span>
                                 </span>
-                                <span class="h3 mx-2 text-primary my-0 py-0">@lang('address.save Address')</span>
+                                <span class="h4 mx-2 text-primary my-0 py-0">@lang('address.save Address')</span>
                             </div>
                         </fieldset>
                     </div>
                 </div>
             </div>
-            
         </div>
-        
         <div class="actions clearfix">
             <ul role="menu" aria-label="Pagination">
                 <li class="disabled" aria-disabled="true">
@@ -250,7 +231,6 @@
 
 @section('js')
 <script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
-@include('layouts.states-ajax')
 
 @include('admin.orders.recipient.script')
 
