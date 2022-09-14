@@ -44,6 +44,11 @@
                     <span class="menu-title">@lang('menu.Warehouse.Sinerlog Containers')</span>
                 </a>
             </li>
+            <li class="{{ $isActive(['warehouse.mile-express-containers.index','warehouse.mile-express-containers.create','warehouse.mile-express-containers.edit']) }}">
+                <a href="{{ route('warehouse.mile-express-containers.index') }}">
+                    <i class="feather icon-circle"></i>
+                    <span class="menu-title">@lang('menu.Warehouse.MileExpress Containers')</span>
+                </a>
             <li class="{{ $isActive(['warehouse.chile_containers.index','warehouse.chile_containers.create','warehouse.chile_containers.edit','warehouse.chile_container.packages.index']) }}">
                 <a href="{{ route('warehouse.chile_containers.index') }}">
                     <i class="feather icon-circle"></i>

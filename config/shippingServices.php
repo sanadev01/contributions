@@ -20,6 +20,7 @@ return [
             33198 => 'SL Small Parcels',
             33164 => 'AJ Packet Standard',
             33172 => 'AJ Packet Express',
+            33173 => 'Mile Express',
             44162 => 'Colombia Urbano',
             44163 => 'Colombia Nacional',
             44164 => 'Colombia Trayetos',

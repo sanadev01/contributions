@@ -5,21 +5,22 @@ namespace App\Http\Controllers\Admin\Order;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Models\ShippingService;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Repositories\LabelRepository;
 use Illuminate\Support\Facades\Storage;
 use App\Repositories\UPSLabelRepository;
 use App\Repositories\USPSLabelRepository;
-use App\Repositories\CorrieosChileLabelRepository;
-use App\Repositories\CorrieosBrazilLabelRepository;
 use App\Repositories\FedExLabelRepository;
 use App\Repositories\ColombiaLabelRepository;
 use App\Repositories\GePSLabelRepository;
+use App\Repositories\MileExpressLabelRepository;
+use App\Repositories\CorrieosChileLabelRepository;
+use App\Repositories\CorrieosBrazilLabelRepository;
 /**
  * Use for Sinerlog integration
  */
 use App\Repositories\SinerlogLabelRepository;
-use Illuminate\Support\Facades\Log;
 
 class OrderLabelController extends Controller
 {
@@ -28,20 +29,26 @@ class OrderLabelController extends Controller
     protected $uspsLabelRepository;
     protected $upsLabelRepository;
     protected $fedExLabelRepository;
+    protected $mileExpressLabelRepository;
     protected $colombiaLabelRepository;
     protected $gepsLabelRepository;
 
-    public function __construct(CorrieosChileLabelRepository $corrieosChileLabelRepository, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, FedExLabelRepository $fedExLabelRepository, ColombiaLabelRepository $colombiaLabelRepository, GePSLabelRepository $gepsLabelRepository)
-    {
+    public function __construct(CorrieosChileLabelRepository $corrieosChileLabelRepository, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, 
+                                USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, 
+                                FedExLabelRepository $fedExLabelRepository, MileExpressLabelRepository $mileExpressLabelRepository,
+                                ColombiaLabelRepository $colombiaLabelRepository, GePSLabelRepository $gepsLabelRepository){
+        
         $this->corrieosChileLabelRepository = $corrieosChileLabelRepository;
         $this->corrieosBrazilLabelRepository = $corrieosBrazilLabelRepository;
         $this->uspsLabelRepository = $uspsLabelRepository;
         $this->upsLabelRepository = $upsLabelRepository;
         $this->fedExLabelRepository = $fedExLabelRepository;
+        $this->mileExpressLabelRepository = $mileExpressLabelRepository;
         $this->colombiaLabelRepository = $colombiaLabelRepository;
         $this->gepsLabelRepository = $gepsLabelRepository;
+    
     }
-
+    
     public function index(Request $request, Order $order)
     {
         $this->authorize('canPrintLable',$order);
@@ -147,6 +154,13 @@ class OrderLabelController extends Controller
             }
         }
 
+        if ($order->shippingService->service_sub_class == ShippingService::Mile_Express) {
+            $this->mileExpressLabelRepository->handle($order);
+
+            $error = $this->mileExpressLabelRepository->getError();
+            return $this->renderLabel($request, $order, $error);
+        }
+        
         if($order->shippingService->isGePSService()){
 
             $this->gepsLabelRepository->get($order);
@@ -200,6 +214,13 @@ class OrderLabelController extends Controller
                 $this->colombiaLabelRepository->updateLabel();
     
                 $error = $this->colombiaLabelRepository->getError();
+                return $this->renderLabel($request, $order, $error);
+            }
+
+            if ($order->shippingService->service_sub_class == ShippingService::Mile_Express) {
+                $this->mileExpressLabelRepository->updateLabel($order);
+    
+                $error = $this->mileExpressLabelRepository->getError();
                 return $this->renderLabel($request, $order, $error);
             }
 

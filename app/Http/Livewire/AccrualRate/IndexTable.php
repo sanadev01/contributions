@@ -58,6 +58,10 @@ class IndexTable extends Component
             'name' => 'Colombia Trayetos',
             'value' => Package::SERVICE_CLASS_COLOMBIA_TRAYETOS,
         ];
+        $this->services[10] = [
+            'name' => 'Mile Express',
+            'value' => Package::SERVICE_CLASS_MILE_EXPRESS,
+        ];
         
         return $this->services;
     }
