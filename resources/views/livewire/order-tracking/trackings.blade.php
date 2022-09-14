@@ -108,7 +108,7 @@
                                                                     @elseif($tracking['order']->recipient->country_id == \App\Models\Order::CHILE)
                                                                         <img class="icon offset-1" src="{{ asset('images/tracking/chile-flag.png') }}">
                                                                     @elseif($tracking['order']->recipient->country_id == \App\Models\Order::NETHERLANDS)
-                                                                        <img class="icon offset-1" src="{{ asset('images/tracking/postnl-logo.png') }}">
+                                                                        <img class="icon offset-1" src="{{ asset('images/tracking/PostNL.png') }}">
                                                                     @else
                                                                         <img class="icon offset-1" src="{{ asset('images/tracking/ups-logo.png') }}">
                                                                     @endif
@@ -327,7 +327,7 @@
                                                             @elseif($tracking['service'] == 'PostNL')
                                                                 <li class="@if( $this->togglePostNLStatus($tracking) >= 90) active @endif step0">
                                                                     <div class="icon-content">
-                                                                        <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/postnl-logo.png') }}">
+                                                                        <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/PostNL.png') }}">
                                                                         <div class="d-flex flex-column" mt-4>
                                                                             <p class="font-weight-bold">Received by<br>PostNL </p>
                                                                         </div>
