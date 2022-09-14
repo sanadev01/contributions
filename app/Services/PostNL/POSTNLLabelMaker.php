@@ -1,5 +1,5 @@
 <?php
-namespace App\Services\POSTNL;
+namespace App\Services\PostNL;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;

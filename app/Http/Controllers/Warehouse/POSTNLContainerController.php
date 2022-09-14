@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Warehouse;
 use Illuminate\Http\Request;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
-use App\Services\POSTNL\ExportExcelPOSTNLManifestService;
+use App\Services\PostNL\ExportExcelPOSTNLManifestService;
 use App\Repositories\Warehouse\POSTNLContainerRepository;
 use App\Http\Requests\Warehouse\PostnlContainer\CreateContainerRequest;
 use App\Http\Requests\Warehouse\PostnlContainer\UpdateContainerRequest;

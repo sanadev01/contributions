@@ -563,7 +563,7 @@ class OrderRepository
                     return $shippingService->service_sub_class != ShippingService::GePS;
                 });
             }
-            if (!setting('postnl_service', null, User::ROLE_ADMIN) && !setting('postnl_service', null, auth()->user()->id)) {
+            if (!setting('postnl_service', null, User::ROLE_ADMIN) && !setting('c', null, auth()->user()->id)) {
                 $this->shippingServiceError = 'PostNL is not enabled for this user';
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
                     return $shippingService->service_sub_class != ShippingService::PostNL;
