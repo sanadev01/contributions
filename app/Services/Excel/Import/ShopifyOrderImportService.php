@@ -84,7 +84,7 @@ class ShopifyOrderImportService extends AbstractImportService
                 // if($this->errors == null){
                 \Log::info('sender number shopify'.$this->getValue("M{$row}"));
                 DB::beginTransaction();
-                $shippingService = ShippingService::first();
+                $shippingService = ShippingService::where('service_sub_class', $this->correosShippingServices())->first();
                 
                 $orderError = null;
                 if(!empty($this->errors)){
@@ -358,5 +358,13 @@ class ShopifyOrderImportService extends AbstractImportService
             }
             $this->errors;
         }
+    }
+
+    private function correosShippingServices()
+    {
+        if(setting('anjun_api', null, \App\Models\User::ROLE_ADMIN)){
+            return ShippingService::AJ_Packet_Standard;
+        }
+        return ShippingService::Packet_Standard;
     }
 }
