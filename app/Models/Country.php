@@ -14,7 +14,7 @@ class Country extends Model
     protected static $logAttributes = ['*'];
     protected static $logOnlyDirty = true;
     protected static $submitEmptyLogs = false;
-    
+
     protected $fillable = [
         'name', 'code'
     ];
@@ -22,6 +22,7 @@ class Country extends Model
     const Chile = 46;
     const Brazil = 30;
     const US = 250;
+    const NETHERLANDS = 160;
     const COLOMBIA = 50;
 
     public function states()

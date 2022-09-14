@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Warehouse\DeliveryBill;
 use Illuminate\Support\Facades\Storage;
 use App\Services\GePS\Client as GePSClient;
+use App\Services\PostNL\Client as NLClient;
 use App\Services\Correios\Models\PackageError;
 use App\Services\Correios\Services\Brazil\Client;
 use App\Repositories\Warehouse\DeliveryBillRepository;
@@ -67,7 +68,24 @@ class DeliveryBillRegisterController extends Controller
             ]);
             Storage::put("labels/{$cn38}.pdf", base64_decode($manifest_pdf));
 
-        }else {
+        }elseif($deliveryBill->containers[0]->services_subclass_code == 'PostNL') {
+            $client = new NLClient();
+            $response = $client->registerDeliveryBillPostNL($deliveryBill);
+
+            if ($response['success'] == false) {
+                session()->flash('alert-danger', $response['message']);
+                return back();
+            }
+
+            $result = $response['data']->data->details;
+            $cn38 = $result[0]->manifest_codes[0];
+            $url = $result[0]->url;
+            $deliveryBill->update([
+                'request_id' => $url,
+                'cnd38_code' => $cn38
+            ]);
+
+        } else {
             $client = new Client();
             $response = $client->registerDeliveryBill($deliveryBill);
 

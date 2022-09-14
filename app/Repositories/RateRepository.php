@@ -10,6 +10,7 @@ use App\Models\ShippingService;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Excel\ImportCharges\ImportRates;
 use App\Services\Excel\ImportCharges\ImportCourierExpressRates;
+use App\Services\Excel\ImportCharges\ImportPostNLRates;
 
 class RateRepository
 {
@@ -31,6 +32,9 @@ class RateRepository
                 if ($shippingService && $shippingService->service_sub_class == ShippingService::Courier_Express) {
                     $importCourierExpressService = new ImportCourierExpressRates($file, $shippingService, $request);
                     $importCourierExpressService->handle();
+                }elseif ($shippingService && $shippingService->service_sub_class == ShippingService::PostNL) {
+                    $importPostNLRates = new ImportPostNLRates($file, $shippingService, $request);
+                    $importPostNLRates->handle();
                 }else
                 {
                     $importService = new ImportRates($file, $shippingService, $request->country_id);
@@ -57,6 +61,15 @@ class RateRepository
         $rates = Rate::where([
             ['shipping_service_id', $shipping_service->id],
             ['region_id', '!=', null]
+        ])->paginate(15);
+        
+        return $rates;
+    }
+
+    public function getPostNLCountryRates($shipping_service)
+    {
+        $rates = Rate::where([
+            ['shipping_service_id', $shipping_service->id],
         ])->paginate(15);
         
         return $rates;

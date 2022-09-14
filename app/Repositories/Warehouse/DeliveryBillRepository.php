@@ -12,13 +12,13 @@ use App\Models\Warehouse\Container;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Warehouse\DeliveryBill;
 use App\Repositories\AbstractRepository;
+use Illuminate\Support\Facades\DB;
 
 class DeliveryBillRepository extends AbstractRepository
 {
     public function get(Request $request)
     {
         $query = DeliveryBill::query();
-        
         if($request->startDate){
             $startDate = $request->startDate. ' 00:00:00';
             $query->where('created_at','>=', $startDate);
@@ -66,7 +66,7 @@ class DeliveryBillRepository extends AbstractRepository
             ]);
 
             $deliveryBill->containers()->sync($request->get('container',[]));
-            
+
             foreach($deliveryBill->containers()->get() as $containers){
                 $containers->orders()->update([
                     'status' =>  Order::STATUS_SHIPPED,
@@ -74,7 +74,7 @@ class DeliveryBillRepository extends AbstractRepository
                 ]);
 
                 foreach($containers->orders as $order)
-                { 
+                {
                     $this->addOrderTracking($order->id);
                 }
             }
@@ -105,7 +105,7 @@ class DeliveryBillRepository extends AbstractRepository
             }
 
             $deliveryBill->containers()->sync($request->get('container',[]));
-            
+
             foreach($deliveryBill->containers()->get() as $containers){
                 $containers->orders()->update([
                     'status' =>  Order::STATUS_SHIPPED,

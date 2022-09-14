@@ -43,6 +43,10 @@ use App\Http\Controllers\Warehouse\GePSContainerPackageController;
 use App\Http\Controllers\Warehouse\GePSUnitRegisterController;
 use App\Http\Controllers\Warehouse\GePSCN35DownloadController;
 use App\Http\Controllers\Warehouse\GePSManifestDownloadController;
+use App\Http\Controllers\Warehouse\POSTNLContainerController;
+use App\Http\Controllers\Warehouse\POSTNLContainerPackageController;
+use App\Http\Controllers\Warehouse\POSTNLUnitRegisterController;
+use App\Http\Controllers\Warehouse\POSTNLCN35DownloadController;
 use App\Http\Controllers\Warehouse\ColombiaContainerManifestController;
 
 
@@ -53,7 +57,7 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::resource('search_package', SearchPackageController::class)->only('index', 'show');
     Route::resource('scan', ScanPackageController::class)->only('index');
     Route::resource('scan-label', ScanLabelController::class)->only('index', 'store', 'create');
-    
+
     Route::resource('containers', ContainerController::class);
     Route::get('awb/', AwbController::class)->name('container.awb');
     Route::resource('containers.packages', ContainerPackageController::class)->only('index','destroy', 'create');
@@ -68,6 +72,7 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('delivery_bill/{delivery_bill}/status/refresh', DeliveryBillStatusUpdateController::class)->name('delivery_bill.status.refresh');
     Route::get('delivery_bill/{delivery_bill}/download', DeliveryBillDownloadController::class)->name('delivery_bill.download');
     Route::get('delivery_bill/{delivery_bill}/manifest', ManifestDownloadController::class)->name('delivery_bill.manifest');
+
     Route::post('combine-delivery-bill/manifest/download', CombineManifestDownloadController::class)->name('combine_delivery_bill.manifest.download');
     
     Route::resource('audit-report', AuditReportController::class)->only(['show']);
@@ -102,6 +107,12 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::resource('mile-express-containers', MileExpressContainerController::class);
     Route::get('mile-express-container/{container}/packages', MileExpressContainerPackageController::class)->name('mile-express-container.packages');
     Route::get('mile-express-container/{container}/register', MileExpressUnitRegisterController::class)->name('mile-express-container.register');
+    // Routes for POSTNL Container
+    Route::resource('postnl_containers', POSTNLContainerController::class);
+    Route::resource('postnl_container.packages', POSTNLContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('postnl_container/{container}/register', POSTNLUnitRegisterController::class)->name('postnl_container.register');
+    Route::get('postnl_container/{container}/download', POSTNLCN35DownloadController::class)->name('postnl_container.download');
+    Route::get('postnl_container/{container}/download_excel_manifest', [POSTNLContainerController::class, 'download_exceltManifest'])->name('download.postnl_manifest_excel');
     // Routes for colombia Container
     Route::resource('colombia-containers', ColombiaContainerController::class);
     Route::get('colombia-container/{container}/packages', ColombiaContainerPackageController::class)->name('colombia-container.packages');
@@ -140,7 +151,7 @@ Route::get('test', function () {
     // echo $client->createPackage($order);
 
     // $order = Order::find(53654);
-    
+
     // $labelPrinter = new CN23LabelMaker();
     // $labelPrinter->setOrder($order);
     // $labelPrinter->setPacketType(Package::SERVICE_CLASS_STANDARD);

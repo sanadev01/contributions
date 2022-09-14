@@ -64,6 +64,7 @@ class Order extends Model implements Package
     const BRAZIL = 30;
     const CHILE = 46;
     const US = 250;
+    const NETHERLANDS = 160;
     const COLOMBIA = 50;
 
     public $user_profit = 0;
@@ -366,6 +367,10 @@ class Order extends Model implements Package
                 
                 return 'Colombia Service';
 
+            }elseif(optional($this->shippingService)->service_sub_class == ShippingService::PostNL){
+
+                return 'PostNL';
+
             }
 
             return 'Correios Brazil';
@@ -382,7 +387,8 @@ class Order extends Model implements Package
                 optional($this->shippingService)->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
                 optional($this->shippingService)->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL ||
                 optional($this->shippingService)->service_sub_class == ShippingService::UPS_GROUND ||
-                optional($this->shippingService)->service_sub_class == ShippingService::FEDEX_GROUND) {
+                optional($this->shippingService)->service_sub_class == ShippingService::FEDEX_GROUND ||
+                optional($this->shippingService)->service_sub_class == ShippingService::PostNL) {
 
                 return $this->user_declared_freight;
             }
@@ -467,7 +473,7 @@ class Order extends Model implements Package
         $pefumeExtra = $shippingService->contains_perfume_charges * ( $this->items()->perfumes()->count() );
 
         // $dangrousGoodsCost = (isset($this->user->perfume) && $this->user->perfume == 1 ? 0 : $pefumeExtra) + (isset($this->user->battery) && $this->user->battery == 1 ? 0 : $battriesExtra);
-        
+
         $dangrousGoodsCost = (setting('perfume', null, $this->user->id) ? 0 : $pefumeExtra) + (setting('battery', null, $this->user->id) ? 0 : $battriesExtra);
         $consolidation = $this->isConsolidated() ?  setting('CONSOLIDATION_CHARGES',0,null,true) : 0;
 
@@ -514,9 +520,9 @@ class Order extends Model implements Package
         }elseif ($shippingService->service_sub_class == ShippingService::FEDEX_GROUND) {
 
             $profit_percentage = (setting('fedex_profit', null, $this->user->id) != null &&  setting('fedex_profit', null, $this->user->id) != 0) ?  setting('fedex_profit', null, $this->user->id) : setting('fedex_profit', null, User::ROLE_ADMIN);
-        
+
         }else{
-            
+
             $profit_percentage = (setting('usps_profit', null, $this->user->id) != null &&  setting('usps_profit', null, $this->user->id) != 0) ?  setting('usps_profit', null, $this->user->id) : setting('usps_profit', null, User::ROLE_ADMIN);
         }
 

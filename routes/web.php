@@ -135,6 +135,8 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('profit-packages-upload', ProfitPackageUploadController::class)->only(['create', 'store','edit','update']);
             Route::post('/show-profit-package-rates', [\App\Http\Controllers\Admin\Rates\UserRateController::class, 'showRates'])->name('show-profit-rates');
             Route::resource('usps-accrual-rates', USPSAccrualRateController::class)->only(['index']);
+            Route::get('shipping-country-rates/{shipping_service}', [\App\Http\Controllers\Admin\Rates\RateController::class, 'postNLCountryRates'])->name('country-rates');
+            Route::get('view-shipping-country-rates/{shipping_rate}', [\App\Http\Controllers\Admin\Rates\RateController::class, 'showPostNLCountryRates'])->name('view-shipping-country-rates');
         });
 
         Route::namespace('Connect')->group(function(){

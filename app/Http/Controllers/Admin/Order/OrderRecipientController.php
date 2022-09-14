@@ -25,6 +25,7 @@ class OrderRecipientController extends Controller
             'Chile' => Country::Chile,
             'Colombia' => Country::COLOMBIA,
             'US' => Country::US,
+            'Netherlands' => Country::NETHERLANDS
         ];
 
         return view('admin.orders.recipient.index',compact('order', 'countryConstants'));

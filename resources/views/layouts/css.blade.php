@@ -688,7 +688,7 @@
     .min-vh-100 {
         min-height: 100vh !important
     }
-
+    
     /* Extra small devices (phones, 600px and down) */
     @media only screen and (max-width: 600px) {
         #main-menu-navigation {

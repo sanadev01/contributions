@@ -48,6 +48,7 @@
         @else
             <input type="hidden" name="service" value="postal_service" id="postal_service">
         @endif
+
         <div>
             <div class="row mt-1">
                 <div class="form-group col-12 col-sm-6 col-md-6">
@@ -114,10 +115,10 @@
                         <div class="help-block"></div>
                     </div>
                 </div>
-                <div class="form-group col-12 col-sm-6 col-md-4">
+                <div class="form-group col-12 col-sm-6 col-md-4" id="address2">
                     <div class="controls">
                         <label>@lang('address.Address2')</label>
-                        <input type="text" class="form-control"  placeholder="@lang('address.Address2')" value="{{old('address2',optional($order->recipient)->address2)}}"  name="address2">
+                        <input type="text" class="form-control"  placeholder="@lang('address.Address2')" value="{{old('address2',optional($order->recipient)->address2)}}"  name="address2" id="address2">
                         <div class="help-block"></div>
                     </div>
                 </div>
@@ -192,6 +193,7 @@
                         <div class="help-block"></div>
                     </div>
                 </div>
+
                 <div class="form-group col-12 offset-4">
                     <div class="controls">
                         <div class="help-block" id="zipcode_response">
@@ -215,6 +217,7 @@
                 </div>
             </div>
         </div>
+
         <div class="actions clearfix">
             <ul role="menu" aria-label="Pagination">
                 <li class="disabled" aria-disabled="true">

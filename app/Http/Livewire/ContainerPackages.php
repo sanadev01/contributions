@@ -258,7 +258,7 @@ class ContainerPackages extends Component
             'Courier_Express' => ShippingService::Courier_Express,
             'UPS_GROUND' => ShippingService::UPS_GROUND,
             'FEDEX_GROUND' => ShippingService::FEDEX_GROUND,
-            //'PostNL' => ShippingService::PostNL,
+            'PostNL' => ShippingService::PostNL,
             'GePS' => ShippingService::GePS,
         ];
 

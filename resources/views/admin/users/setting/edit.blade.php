@@ -302,6 +302,7 @@
                                         </div>    
                                     </div>
                                 </div>
+                                @if(setting('geps_service', null, \App\Models\User::ROLE_ADMIN))
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">GePS<span class="text-danger"></span></label>
                                     <div class="col-md-6">
@@ -317,6 +318,24 @@
                                         </div>
                                     </div>
                                 </div>
+                                @endif
+                                @if(setting('postnl_service', null, \App\Models\User::ROLE_ADMIN))
+                                    <div class="controls row mb-1 align-items-center">
+                                        <label class="col-md-3 text-md-right">PostNL Service<span class="text-danger"></span></label>
+                                        <div class="col-md-6">
+                                            <div class="input-group">
+                                                <div class="vs-checkbox-con vs-checkbox-primary" title="PostNL">
+                                                    <input type="checkbox" name="postnl_service" id="postnl_service" @if(setting('postnl_service', null, $user->id)) checked @endif>
+                                                    <span class="vs-checkbox vs-checkbox-lg">
+                                                        <span class="vs-checkbox--check">
+                                                            <i class="vs-icon feather icon-check"></i>
+                                                        </span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
                                 {{-- <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">SinerLog<span class="text-danger"></span></label>
                                     <div class="col-md-6">

@@ -29,6 +29,7 @@ class ShippingService extends Model
     const Packet_Standard = 33162;
     const Packet_Express = 33170;
     const Packet_Mini = 33197;
+    const PostNL = 87765;
     const AJ_Packet_Standard = 33164;
     const AJ_Packet_Express = 33172;
     const Mile_Express = 33173;
@@ -164,6 +165,15 @@ class ShippingService extends Model
         return false;
     }
 
+    public function isPostNLService()
+    {
+        if (collect($this->postNLShippingServices())->contains($this->service_sub_class)) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function isCorreiosChileService()
     {
         if (collect($this->correiosChileShippingServices())->contains($this->service_sub_class)) {
@@ -238,12 +248,19 @@ class ShippingService extends Model
         ];
     }
 
+    private function postNLShippingServices()
+    {
+        return [
+            self::PostNL,
+        ];
+    }
+
     private function uspsShippingServices()
     {
         return [
-            self::USPS_PRIORITY, 
-            self::USPS_FIRSTCLASS, 
-            self::USPS_PRIORITY_INTERNATIONAL, 
+            self::USPS_PRIORITY,
+            self::USPS_FIRSTCLASS,
+            self::USPS_PRIORITY_INTERNATIONAL,
             self::USPS_FIRSTCLASS_INTERNATIONAL,
         ];
     }
@@ -251,7 +268,7 @@ class ShippingService extends Model
     private function correiosChileShippingServices()
     {
         return [
-            self::SRP, 
+            self::SRP,
             self::SRM,
         ];
     }

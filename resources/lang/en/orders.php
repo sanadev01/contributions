@@ -82,6 +82,7 @@ return [
         'Email' => 'Email',
         'Phone' => 'Phone',
         'Tax Id' => 'Tax Id',
+        'Company' => 'Company',
         'Address' => 'Address',
         'City' => 'City',
         'Next' => 'Next',

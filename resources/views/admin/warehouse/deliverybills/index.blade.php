@@ -99,7 +99,9 @@
                                             @endif
                                         </td>
                                         <td>
+                                            @if(!$deliveryBill->isPostNL())
                                             {{ $deliveryBill->request_id }}
+                                            @endif
                                         </td>
                                         <td>{{ $deliveryBill->cnd38_code }}</td>
                                         <td>
@@ -127,6 +129,8 @@
                                                         @endif
                                                         @if($deliveryBill->isGePS())
                                                             <a href="{{ route('warehouse.geps.manifest.download',$deliveryBill) }}" target="_blank" class="dropdown-item w-100">
+                                                        @elseif($deliveryBill->isPostNL())
+                                                            <a href="{{ $deliveryBill->request_id }}" target="_blank" class="dropdown-item w-100">
                                                         @else
                                                             <a href="{{ route('warehouse.delivery_bill.manifest', $deliveryBill) }}"
                                                             class="dropdown-item w-100">

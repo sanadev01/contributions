@@ -514,7 +514,6 @@ class OrderRepository
         if ($shippingServices->isNotEmpty()) {
            $shippingServices = $this->filterShippingServices($shippingServices, $order);
         }
-
         return $shippingServices;
     }
 
@@ -530,7 +529,8 @@ class OrderRepository
             || $shippingServices->contains('service_sub_class', ShippingService::USPS_PRIORITY_INTERNATIONAL)
             || $shippingServices->contains('service_sub_class', ShippingService::USPS_FIRSTCLASS_INTERNATIONAL)
             || $shippingServices->contains('service_sub_class', ShippingService::UPS_GROUND)
-            || $shippingServices->contains('service_sub_class', ShippingService::GePS))
+            || $shippingServices->contains('service_sub_class', ShippingService::GePS)
+            || $shippingServices->contains('service_sub_class', ShippingService::PostNL))
         {
             if(!setting('usps', null, User::ROLE_ADMIN))
             {
@@ -561,6 +561,12 @@ class OrderRepository
                 $this->shippingServiceError = 'GePS is not enabled for this user';
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
                     return $shippingService->service_sub_class != ShippingService::GePS;
+                });
+            }
+            if (!setting('postnl_service', null, User::ROLE_ADMIN) && !setting('postnl_service', null, auth()->user()->id)) {
+                $this->shippingServiceError = 'PostNL is not enabled for this user';
+                $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                    return $shippingService->service_sub_class != ShippingService::PostNL;
                 });
             }
 
@@ -601,7 +607,7 @@ class OrderRepository
                             && $shippingService->service_sub_class != ShippingService::AJ_Packet_Express;
                     });
             }
-            
+
             if($shippingServices->isEmpty()){
                 $this->shippingServiceError = 'Please check your parcel dimensions';
             }

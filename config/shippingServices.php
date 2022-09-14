@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 return [
     'correios' => [
@@ -26,6 +26,7 @@ return [
             44164 => 'Colombia Trayetos',
             100 => 'Brazil Redispatch',
             537 => 'Global eParcel',
+            87765 => 'PostNL',
         ]
     ]
 ];

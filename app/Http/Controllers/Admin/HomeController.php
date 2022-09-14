@@ -21,7 +21,7 @@ class HomeController extends Controller
     public function __invoke(DashboardRepository $dashboard)
     {
         $orders = $dashboard->getDashboardStats();
-        return view('home',compact('orders'));   
+        return view('home',compact('orders'));
     }
     
     public function findContainer(Container $container)

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Repositories\UPSLabelRepository;
 use App\Repositories\USPSLabelRepository;
 use App\Repositories\FedExLabelRepository;
+use App\Repositories\POSTNLLabelRepository;
 use App\Repositories\ColombiaLabelRepository;
 use App\Repositories\GePSLabelRepository;
 use App\Repositories\MileExpressLabelRepository;
@@ -30,13 +31,14 @@ class OrderLabelController extends Controller
     protected $upsLabelRepository;
     protected $fedExLabelRepository;
     protected $mileExpressLabelRepository;
+    protected $postNLLabelRepository;
     protected $colombiaLabelRepository;
     protected $gepsLabelRepository;
 
     public function __construct(CorrieosChileLabelRepository $corrieosChileLabelRepository, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, 
                                 USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, 
                                 FedExLabelRepository $fedExLabelRepository, MileExpressLabelRepository $mileExpressLabelRepository,
-                                ColombiaLabelRepository $colombiaLabelRepository, GePSLabelRepository $gepsLabelRepository){
+                                ColombiaLabelRepository $colombiaLabelRepository, GePSLabelRepository $gepsLabelRepository, POSTNLLabelRepository $postNLLabelRepository){
         
         $this->corrieosChileLabelRepository = $corrieosChileLabelRepository;
         $this->corrieosBrazilLabelRepository = $corrieosBrazilLabelRepository;
@@ -44,6 +46,7 @@ class OrderLabelController extends Controller
         $this->upsLabelRepository = $upsLabelRepository;
         $this->fedExLabelRepository = $fedExLabelRepository;
         $this->mileExpressLabelRepository = $mileExpressLabelRepository;
+        $this->postNLLabelRepository = $postNLLabelRepository;
         $this->colombiaLabelRepository = $colombiaLabelRepository;
         $this->gepsLabelRepository = $gepsLabelRepository;
     
@@ -168,6 +171,14 @@ class OrderLabelController extends Controller
             $error = $this->gepsLabelRepository->getError();
             return $this->renderLabel($request, $order, $error);
         }
+        
+        if($order->shippingService->isPostNLService()){
+
+            $this->postNLLabelRepository->get($order);
+
+            $error = $this->postNLLabelRepository->getError();
+            return $this->renderLabel($request, $order, $error);
+        }
 
         if ($order->recipient->country_id == Order::COLOMBIA && $order->shippingService->isColombiaService()) {
             $this->colombiaLabelRepository->handle($order);
@@ -212,7 +223,7 @@ class OrderLabelController extends Controller
 
             if ($order->recipient->country_id == Order::COLOMBIA && $order->shippingService->isColombiaService()) {
                 $this->colombiaLabelRepository->updateLabel();
-    
+
                 $error = $this->colombiaLabelRepository->getError();
                 return $this->renderLabel($request, $order, $error);
             }
