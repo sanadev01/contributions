@@ -25,7 +25,7 @@ class ColombiaLabelRepository
 
     public function updateLabel()
     {
-        $this->error = 'Sorry!, Colombia Label can not be updated';
+        $this->error = 'Sorry!, This Label can not be updated';
     }
 
     public function getError()

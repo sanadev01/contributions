@@ -1,15 +1,12 @@
 <?php
 
-use App\Models\Order;
 use Illuminate\Support\Facades\Route;
-use App\Services\Correios\Models\Package;
 use App\Http\Controllers\Warehouse\AwbController;
 use App\Http\Controllers\Warehouse\ContainerController;
 use App\Http\Controllers\Warehouse\ScanLabelController;
 use App\Http\Controllers\Warehouse\UnitCancelContoller;
 use App\Http\Controllers\Warehouse\AuditReportController;
 use App\Http\Controllers\Warehouse\ScanPackageController;
-use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Warehouse\CN23DownloadController;
 use App\Http\Controllers\Warehouse\CN35DownloadController;
 use App\Http\Controllers\Warehouse\DeliveryBillController;
@@ -27,6 +24,7 @@ use App\Http\Controllers\Warehouse\SinerlogContainerController;
 use App\Http\Controllers\Warehouse\ColombiaUnitRegisterController;
 use App\Http\Controllers\Warehouse\DeliveryBillDownloadController;
 use App\Http\Controllers\Warehouse\DeliveryBillRegisterController;
+use App\Http\Controllers\Warehouse\MileExpressContainerController;
 use App\Http\Controllers\Warehouse\SinerlogCN35DownloadController;
 use App\Http\Controllers\Warehouse\SinerlogUnitRegisterController;
 use App\Http\Controllers\Warehouse\USPSContainerPackageController;
@@ -34,10 +32,12 @@ use App\Http\Controllers\Warehouse\USPSManifestDownloadController;
 use App\Http\Controllers\Warehouse\ChileContainerPackageController;
 use App\Http\Controllers\Warehouse\ChileManifestDownloadController;
 use App\Http\Controllers\Warehouse\CombineManifestDownloadController;
-use App\Http\Controllers\Warehouse\ColombiaContainerPackageController;
+use App\Http\Controllers\Warehouse\MileExpressUnitRegisterController;
 use App\Http\Controllers\Warehouse\DeliveryBillStatusUpdateController;
 use App\Http\Controllers\Warehouse\SinerlogContainerPackageController;
 use App\Http\Controllers\Warehouse\SinerlogManifestDownloadController;
+use App\Http\Controllers\Warehouse\MileExpressContainerPackageController;
+use App\Http\Controllers\Warehouse\ColombiaContainerPackageController;
 use App\Http\Controllers\Warehouse\GePSContainerController;
 use App\Http\Controllers\Warehouse\GePSContainerPackageController;
 use App\Http\Controllers\Warehouse\GePSUnitRegisterController;
@@ -103,6 +103,10 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('sinerlog_container/{container}/download', SinerlogCN35DownloadController::class)->name('sinerlog_container.download');
     Route::get('sinerlog_container/{container}/manifest', SinerlogManifestDownloadController::class)->name('sinerlog_container.manifest');
 
+    // Routes for mile express container
+    Route::resource('mile-express-containers', MileExpressContainerController::class);
+    Route::get('mile-express-container/{container}/packages', MileExpressContainerPackageController::class)->name('mile-express-container.packages');
+    Route::get('mile-express-container/{container}/register', MileExpressUnitRegisterController::class)->name('mile-express-container.register');
     // Routes for POSTNL Container
     Route::resource('postnl_containers', POSTNLContainerController::class);
     Route::resource('postnl_container.packages', POSTNLContainerPackageController::class)->only('index','destroy', 'create');

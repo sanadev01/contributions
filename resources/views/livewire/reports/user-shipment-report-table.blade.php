@@ -82,7 +82,8 @@
         </form>
 
     </div>
-    <table class="table table-bordered mb-0 row-border" id="example">
+    <div class="table-responsive">
+    <table class="table table-bordered table-striped mb-0 row-border" id="example">
         <thead>
             <tr>
                 <th>
@@ -182,6 +183,8 @@
             @endforeach
         </tbody>
     </table>
+    </div>
+    
     <div class="d-flex justify-content-end pr-0">
         {{ $users->links() }}
     </div>

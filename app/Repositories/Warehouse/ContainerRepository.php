@@ -3,10 +3,11 @@
 namespace App\Repositories\Warehouse;
 
 use Illuminate\Http\Request;
+use App\Facades\MileExpressFacade;
 use App\Models\Warehouse\Container;
 use Illuminate\Support\Facades\Auth;
-use GuzzleHttp\Client as GuzzleClient;
 use App\Repositories\AbstractRepository;
+use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\ClientException;
 use App\Services\Correios\Models\PackageError;
 
@@ -62,6 +63,10 @@ class ContainerRepository extends AbstractRepository{
             $query->where('unit_code', 'LIKE', '%' . $request->unitCode . '%');
         }
         
+        if ($request->has('typeMileExpress')) {
+            return $query->whereIn('services_subclass_code', ['ML-EX'])->latest()->paginate(50);
+        }
+        
         if ($request->has('typeColombia')) {
             return $query->whereIn('services_subclass_code', ['CO-NX'])->latest()->paginate(50);
         }
@@ -79,7 +84,18 @@ class ContainerRepository extends AbstractRepository{
                                                     ->orWhere('services_subclass_code', Container::CONTAINER_ANJUN_IX)
                                                     ->latest()->first();
 
-                $anjunDispatchNumber = ($latestAnujnContainer) ? $latestAnujnContainer->dispatch_number + 1 : 900000;
+                $anjunDispatchNumber = ($latestAnujnContainer->dispatch_number >= 950000) ? $latestAnujnContainer->dispatch_number + 1 : 950000;
+            }
+
+            if ($request->services_subclass_code == Container::CONTAINER_MILE_EXPRESS) {
+                $response = MileExpressFacade::createContainer($request);
+
+                if ($response->success == false) {
+                    $this->error = $response->error;
+                    return false;
+                }
+
+                $mileExpressContinerData = $response->data['data'];
             }
 
             $container =  Container::create([
@@ -91,7 +107,8 @@ class ContainerRepository extends AbstractRepository{
                 'postal_category_code' => 'A',
                 'destination_operator_name' => $request->destination_operator_name,
                 'unit_type' => $request->unit_type,
-                'services_subclass_code' => $request->services_subclass_code
+                'services_subclass_code' => $request->services_subclass_code,
+                'unit_response_list' => ($request->services_subclass_code == Container::CONTAINER_MILE_EXPRESS) ? json_encode($mileExpressContinerData) : null,
             ]);
 
             $container->update([
@@ -139,6 +156,41 @@ class ContainerRepository extends AbstractRepository{
         }
     }
 
+    public function addOrderToContainer($container, $orderId)
+    {
+        try {
+            $container->orders()->attach($orderId);
+            return true;
+        } catch (\Exception $ex) {
+            $this->error = $ex->getMessage();
+            return false;
+        }
+    }
+
+    public function removeOrderFromContainer($container, $id)
+    {
+        try {
+            $container->orders()->detach($id);
+            return true;
+        } catch (\Exception $ex) {
+            $this->error = $ex->getMessage();
+            return false;
+        }
+    }
+
+    public function getAirWayBillIdsForMileExpress($containerOrders)
+    {
+        $airWayBillIds = [];
+        
+        foreach ($containerOrders as $order) {
+            $orderApiResponse = json_decode($order->api_response);
+            
+            array_push($airWayBillIds, $orderApiResponse->data->volumes[0]->air_waybill_id);
+        }
+
+        return $airWayBillIds;
+    }
+    
     public function updateawb($request)
     {
         if(json_decode($request->data)){
@@ -173,26 +225,6 @@ class ContainerRepository extends AbstractRepository{
             }
         }
     }
-    public function addOrderToContainer($container, $orderId)
-    {
-        try {
-            $container->orders()->attach($orderId);
-            return true;
-        } catch (\Exception $ex) {
-            $this->error = $ex->getMessage();
-            return false;
-        }
-    }
 
-    public function removeOrderFromContainer($container, $id)
-    {
-        try {
-            $container->orders()->detach($id);
-            return true;
-        } catch (\Exception $ex) {
-            $this->error = $ex->getMessage();
-            return false;
-        }
-    }
 
 }

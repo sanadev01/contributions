@@ -32,6 +32,7 @@ class ShippingService extends Model
     const PostNL = 87765;
     const AJ_Packet_Standard = 33164;
     const AJ_Packet_Express = 33172;
+    const Mile_Express = 33173;
     const COLOMBIA_URBANO = 44162;
     const COLOMBIA_NACIONAL = 44163;
     const COLOMBIA_TRAYETOS = 44164;
@@ -140,6 +141,15 @@ class ShippingService extends Model
     public function isAnjunService()
     {
         if (collect($this->anjunShippingServices())->contains($this->service_sub_class)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isMileExpressService()
+    {
+        if ($this->service_sub_class == self::Mile_Express) {
             return true;
         }
 

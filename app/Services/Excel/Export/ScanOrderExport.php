@@ -50,19 +50,20 @@ class ScanOrderExport extends AbstractExportService
             $this->setCellValue('C'.$row, $order->user->pobox_number);
             $this->setCellValue('D'.$row, $order->merchant);
             $this->setCellValue('E'.$row, $order->length . ' x ' . $order->length . ' x ' . $order->height );
-            $this->setCellValue('F'.$row, $order->getWeight('kg'));
-            $this->setCellValue('G'.$row, $order->id);
-            $this->setCellValue('H'.$row, $order->tracking_id);
-            $this->setCellValue('I'.$row, $order->recipient->first_name);
-            $this->setCellValue('J'.$row, $order->order_date->format('m-d-Y'));
-            $this->setCellValue('K'.$row, $order->arrived_date);
-            $this->setCellValue('L'.$row, optional(optional($order->driverTracking)->user)->name);
-            $this->setCellValue('M'.$row, optional(optional($order->driverTracking)->created_at)->format('m-d-Y'));
+            $this->setCellValue('F'.$row, $this->chargeWeight($order));
+            $this->setCellValue('G'.$row, number_format($order->getWeight('kg'),2));
+            $this->setCellValue('H'.$row, $order->id);
+            $this->setCellValue('I'.$row, $order->tracking_id);
+            $this->setCellValue('J'.$row, $order->recipient->first_name);
+            $this->setCellValue('K'.$row, $order->order_date->format('m-d-Y'));
+            $this->setCellValue('L'.$row, $order->arrived_date);
+            $this->setCellValue('M'.$row, optional(optional($order->driverTracking)->user)->name);
+            $this->setCellValue('N'.$row, optional(optional($order->driverTracking)->created_at)->format('m-d-Y'));
             if($order->status < 80 ){
-                $this->setCellValue('N'.$row, 'Scanned in the warehouse');
+                $this->setCellValue('O'.$row, 'Scanned in the warehouse');
             }
             if($order->status >= 80 ){
-                $this->setCellValue('N'.$row, 'Shipped');
+                $this->setCellValue('O'.$row, 'Shipped');
             }
             $this->count++ ;
             $row++;
@@ -126,31 +127,34 @@ class ScanOrderExport extends AbstractExportService
         $this->setCellValue('F7', 'Weight Kg');
 
         $this->setColumnWidth('G', 20);
-        $this->setCellValue('G7', 'Reference#');
+        $this->setCellValue('G7', 'Metric Weight(kg)');
         
         $this->setColumnWidth('H', 20);
-        $this->setCellValue('H7', 'Carrier Tracking');
-
+        $this->setCellValue('H7', 'Reference#');
+        
         $this->setColumnWidth('I', 20);
-        $this->setCellValue('I7', 'Recpient');
+        $this->setCellValue('I7', 'Carrier Tracking');
 
         $this->setColumnWidth('J', 20);
-        $this->setCellValue('J7', 'Order Date');
-        
-        $this->setColumnWidth('K', 20);
-        $this->setCellValue('K7', 'Arrival Date');
+        $this->setCellValue('J7', 'Recpient');
 
+        $this->setColumnWidth('K', 20);
+        $this->setCellValue('K7', 'Order Date');
+        
         $this->setColumnWidth('L', 20);
-        $this->setCellValue('L7', 'Driver');
+        $this->setCellValue('L7', 'Arrival Date');
 
         $this->setColumnWidth('M', 20);
-        $this->setCellValue('M7', 'Pickup Date');
-        
-        $this->setColumnWidth('N', 20);
-        $this->setCellValue('N7', 'Status');
+        $this->setCellValue('M7', 'Driver');
 
-        $this->setBackgroundColor('A7:N7', '2b5cab');
-        $this->setColor('A7:N7', 'FFFFFF');
+        $this->setColumnWidth('N', 20);
+        $this->setCellValue('N7', 'Pickup Date');
+        
+        $this->setColumnWidth('O', 20);
+        $this->setCellValue('O7', 'Status');
+
+        $this->setBackgroundColor('A7:O7', '2b5cab');
+        $this->setColor('A7:O7', 'FFFFFF');
         $this->currentRow++;
 
         return true;
@@ -165,5 +169,19 @@ class ScanOrderExport extends AbstractExportService
         }
 
         return number_format((float)$totalWeight, 2, '.', '');
+    }
+    public function chargeWeight($order)
+    {
+        $chargeWeight = $order->getOriginalWeight('kg');
+        if($order->getWeight('kg') > $order->getOriginalWeight('kg') && $order->weight_discount){
+            $discountWeight = $order->weight_discount;
+            if($order->measurement_unit == 'lbs/in'){
+                $discountWeight = $order->weight_discount/2.205;
+            }
+            $consideredWeight = $order->getWeight('kg') - $order->getOriginalWeight('kg');
+            $chargeWeight = ($consideredWeight - $discountWeight) + $order->getOriginalWeight('kg');
+        }
+        
+        return round($chargeWeight,2);
     }
 }

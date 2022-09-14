@@ -65,7 +65,7 @@ class XmlOrderImportService
                 $this->validationRow($items, false);
             
                 DB::beginTransaction();
-                $shippingService = ShippingService::first();
+                $shippingService = ShippingService::where('service_sub_class', $this->correosShippingServices())->first();
                 
                 $orderError = null;
                 if(!empty($this->errors)){
@@ -359,5 +359,13 @@ class XmlOrderImportService
         $fiename = md5(microtime()).'.'.$file->getClientOriginalExtension();
         $file->storeAs("xml/", $fiename);
         return $fiename;
+    }
+
+    private function correosShippingServices()
+    {
+        if(setting('anjun_api', null, \App\Models\User::ROLE_ADMIN)){
+            return ShippingService::AJ_Packet_Standard;
+        }
+        return ShippingService::Packet_Standard;
     }
 }
