@@ -21,6 +21,11 @@ return [
             33164 => 'AJ Packet Standard',
             33172 => 'AJ Packet Express',
             33173 => 'Mile Express',
+            44162 => 'Colombia Urbano',
+            44163 => 'Colombia Nacional',
+            44164 => 'Colombia Trayetos',
+            100 => 'Brazil Redispatch',
+            537 => 'Global eParcel',
         ]
     ]
 ];

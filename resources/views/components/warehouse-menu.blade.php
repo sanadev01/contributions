@@ -1,7 +1,7 @@
 @can('do_warehouse_operations')
 <li class="nav-item has-sub sidebar-group">
     <a href="#">
-        <img src="{{ asset('images/icon/warehouse.svg') }}" alt="warehouse">
+        <svg xmlns="http://www.w3.org/2000/svg" height="15px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-archive"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>
         <span class="menu-title">@lang('menu.Warehouse.menu')</span>
     </a>
     <ul class="menu-content">
@@ -49,14 +49,26 @@
                     <i class="feather icon-circle"></i>
                     <span class="menu-title">@lang('menu.Warehouse.MileExpress Containers')</span>
                 </a>
+            <li class="{{ $isActive(['warehouse.chile_containers.index','warehouse.chile_containers.create','warehouse.chile_containers.edit','warehouse.chile_container.packages.index']) }}">
+                <a href="{{ route('warehouse.chile_containers.index') }}">
+                    <i class="feather icon-circle"></i>
+                    <span class="menu-title">@lang('menu.Warehouse.Chile Containers')</span>
+                </a>
+            </li>
+            <li class="{{ $isActive(['warehouse.colombia-containers.index','warehouse.colombia-containers.create','warehouse.colombia-containers.edit','warehouse.colombia-container.packages']) }}">
+                <a href="{{ route('warehouse.colombia-containers.index') }}">
+                    <i class="feather icon-circle"></i>
+                    <span class="menu-title">@lang('menu.Warehouse.Colombia Containers')</span>
+                </a>
+            </li>
+            <li class="{{ $isActive(['warehouse.geps_containers.index','warehouse.geps_containers.create','warehouse.geps_containers.edit','warehouse.geps_container.packages.index']) }}">
+                <a href="{{ route('warehouse.geps_containers.index') }}">
+                    <i class="feather icon-circle"></i>
+                    <span class="menu-title">@lang('menu.Warehouse.GePS Containers')</span>
+                </a>
             </li>
         @endadmin
-        <li class="{{ $isActive(['warehouse.chile_containers.index','warehouse.chile_containers.create','warehouse.chile_containers.edit','warehouse.chile-container.packages']) }}">
-            <a href="{{ route('warehouse.chile_containers.index') }}">
-                <i class="feather icon-circle"></i>
-                <span class="menu-title">@lang('menu.Warehouse.Chile Containers')</span>
-            </a>
-        </li>
+        
     </ul>
 </li>
 @endcan

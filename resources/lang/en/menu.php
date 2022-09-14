@@ -43,6 +43,7 @@ return [
         'Orders Report' => 'Orders Report',
         'Commission Report' => 'Commission Report',
         'Audit Report' => 'Audit Report',
+        'Anjun Report' => 'Anjun Report',
     ],
     'Warehouse' => [
         'menu' => 'Warehouse',
@@ -52,6 +53,8 @@ return [
         'USPS Containers' => 'USPS Containers',
         'Sinerlog Containers' => 'Sinerlog Containers',
         'MileExpress Containers' => 'MileExpress Containers',
+        'Colombia Containers' => 'Colombia Containers',
+        'GePS Containers' => 'GePS Containers',
     ],
     'Affiliate' => [
         'menu' => 'Affiliate',

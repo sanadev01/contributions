@@ -35,6 +35,16 @@
                         <td>{{ $order->corrios_tracking_code }}</td>
                     </tr>
                     @endforeach
+                    <tr>
+                        <th scope="row"></th>
+                        <td></td>
+                        <td>Total Weight</td>
+                        <td>
+                            {{ $totalWeight['totalWeightInKg']}} Kg /
+                            <span>{{ $totalWeight['totalWeightInLbs'] }} Lbs</span>
+                        </td>
+                        <td></td>
+                    </tr>
                 </tbody>
             </table>
             @if ($consolidationErrors)

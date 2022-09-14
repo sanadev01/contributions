@@ -96,6 +96,13 @@
             width: 79.5mm;
             height: 18mm;
         }
+        .tracking_code span{
+            position: absolute;
+            display: block;
+            left: 96%;
+            top: 6mm;
+            font-size: 25px
+        }
 
         .barcode-label{
             position: absolute;
@@ -154,11 +161,11 @@
         .serivce-zipcode .left-block{
             width: 6cm;
             display: inline-block;
-            font-family: Arial;
-            font-size: 8pt;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 7pt;
         }
         .return-address{
-            color: rgb(124, 124, 124);
+            /* color: rgb(124, 124, 124); */
         }
         .right-block{
             display: inline-block;
@@ -294,7 +301,8 @@
         }
         .bottom-block{
             position: absolute;
-            top: 20.5mm;
+            top: 11mm;
+            left: 48mm;
             font-size: 8pt !important;
         }
         .box-g{
@@ -336,6 +344,26 @@
             font-size: 16px !important;
             margin-left:20px;
         }
+        .return-box{
+            margin-bottom: 2px !important;
+            border-style: solid;
+            border-width: 1px;
+            border-radius: 1mm;
+            white-space:pre;
+            width:4px !important;
+            height:4px !important;
+        }
+        .site-text{
+            position: absolute;
+            top: 15px !important;
+        }
+        .return-box-text{
+            position: absolute;
+            top: 0.6mm;
+            /* left: 0.1mm; */
+            /* font-size: 16px !important; */
+            margin-left: -2.3px !important;
+        }
     </style>
 </head>
 <body>
@@ -360,6 +388,7 @@
     </div>
     <div class="tracking_code">
         <img src="data:image/png;base64,{{ base64_encode($barcodeNew->getBarcode($order->corrios_tracking_code, $barcodeNew::TYPE_CODE_128, 1,94, [0,0,0]))}}" alt="barcode"   />
+        <span class="cn-label">CN</span>
     </div>
     <p class="barcode-label">{{$order->corrios_tracking_code}}</p>
     <div class="empty-lines">
@@ -388,10 +417,10 @@
     <div class="serivce-zipcode">
         <div class="left-block">
             <div class="return-address">
-                <strong>DEVOLUCÃO:</strong>
-                <p>
-                    {!! $returnAddress !!}
-                </p>
+                <span class="return-box"> <i class="return-box-text">X</i> </span> &nbsp; Retorno a origem  <span class="return-box">   </span> Tratar como abandono<br>
+                <span class="site-text">Dúvidas e reclamações: homedeliverybr.com</span><br><br>
+                <strong>DEVOLUCÃO:</strong> <br>
+                {!! $returnAddress !!}
             </div>
             @if($order->getOriginalWeight('kg') > 3)
                 <div class="bottom-block">
@@ -406,9 +435,10 @@
                     <div class="box-text">P</div>
                 </div>
             @endif
+            <br>
         </div>
         <div class="right-block">
-            <h2>Remetente:</h2>
+            <h2>Remetente: @if($hasAnjunLabel) <span style="margin-left: 8px; border:solid 1px; padding-right:2px">A</span> @endif </h2>
             {{ $order->sender_first_name }} {{ $order->sender_last_name }} <br>
             {{ $order->sender_email }} <br>
             <strong>Order#:</strong>{{ $order->warehouse_number }} <br>

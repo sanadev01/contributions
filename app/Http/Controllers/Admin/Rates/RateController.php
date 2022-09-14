@@ -38,7 +38,7 @@ class RateController extends Controller
     {   
         $this->authorizeResource(Rate::class);
         if ( $repository->store($request) ){
-            return  redirect()->route('admin.rates.shipping-rates.index');
+            return redirect()->route('admin.rates.shipping-rates.index');
         }
 
         

@@ -24,6 +24,11 @@ class MileExpressLabelRepository
         return true;
     }
 
+    public function updateLabel()
+    {
+        $this->error = 'Sorry!, Colombia Label can not be updated';
+    }
+
     public function getError()
     {
         return $this->error;

@@ -87,25 +87,25 @@
         </div>
         <div class="col-12 col-sm-6 col-md-4">
             <div class="controls h2 mt-2">
-                <label> 
-                    <span class="text-danger">*</span> 
-                    @lang('parcel.The Rate will be applied on')  
+                <label>
+                    <span class="text-danger">*</span>
+                    @lang('parcel.The Rate will be applied on')
                     <strong class="text-danger h2">
-                        {{ $volumeWeight }} 
-                        <span class="ml-1"> 
-                            {{ $currentWeightUnit }} 
-                        </span> 
+                        {{ number_format($volumeWeight, 2) }}
+                        <span class="ml-1">
+                            {{ $currentWeightUnit }}
+                        </span>
                     </strong>
                     @if($actualVolumeWeight)
-                    <span>
-                        @lang('parcel.Vol Weight')
-                        <strong class="text-danger h2">
-                            {{ $actualVolumeWeight }} 
-                            <span class="ml-1"> 
-                                {{ $currentWeightUnit }} 
-                            </span> 
-                        </strong>
-                    </span>
+                        <span>
+                            @lang('parcel.Vol Weight')
+                            <strong class="text-danger h2">
+                                {{ number_format($actualVolumeWeight, 2) }}
+                                <span class="ml-1">
+                                    {{ $currentWeightUnit }}
+                                </span>
+                            </strong>
+                        </span>
                     @endif
                 </label>
             </div>

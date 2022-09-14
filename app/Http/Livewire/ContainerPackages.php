@@ -25,7 +25,7 @@ class ContainerPackages extends Component
     public $containerService;
     public $shippingServiceCodes;
     public $santiagoRegionCode;
-    
+
     public function mount($container = null, $ordersCollection = null, $editMode = null)
     {
         $this->container = $container;
@@ -75,9 +75,9 @@ class ContainerPackages extends Component
     private function saveOrder()
     {
         $order = Order::where('corrios_tracking_code', $this->barcode)->first();
-        
+
         if ($order) {
-            
+
             if ($order->containers->isNotEmpty()) {
                 $this->error = 'Order is already present in Container';
                 $this->barcode = '';
@@ -139,7 +139,7 @@ class ContainerPackages extends Component
     {
         $weight = 0;
         foreach ($this->orders as $order) {
-            $weight += $order->weight; 
+            $weight += $order->weight;
         }
 
         return $this->totalweight = $weight;
@@ -147,6 +147,18 @@ class ContainerPackages extends Component
 
     private function validateOrderService($order)
     {
+        if($this->containerService == 'Colombia-Container' && $order->shippingService->isColombiaService()){
+            return true;
+        }
+
+        if($this->containerService == 'PostNL' && $order->shippingService->isPostNLService()){
+            return true;
+        }
+
+        if($this->containerService == 'GePS' && $order->shippingService->isGePSService()){
+            return true;
+        }
+
         if($this->containerService == 'Anjun-Container' && $order->shippingService->isAnjunService()){
             return true;
         }
@@ -168,12 +180,12 @@ class ContainerPackages extends Component
             if($this->service == 'FirstClass' && $order->shippingService->service_sub_class != $this->shippingServiceCodes['USPS_FIRSTCLASS']) {
                 return false;
             }
-            
+
             return true;
         }
 
         if($this->containerService == 'Chile-Container' && $order->shippingService->isCorreiosChileService()){
-            
+
             if ($this->service == 'SRP' &&  $order->shippingService->service_sub_class != $this->shippingServiceCodes['SRP']) {
                 return false;
             }
@@ -246,6 +258,8 @@ class ContainerPackages extends Component
             'Courier_Express' => ShippingService::Courier_Express,
             'UPS_GROUND' => ShippingService::UPS_GROUND,
             'FEDEX_GROUND' => ShippingService::FEDEX_GROUND,
+            //'PostNL' => ShippingService::PostNL,
+            'GePS' => ShippingService::GePS,
         ];
 
         return;

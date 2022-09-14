@@ -5,6 +5,7 @@ namespace App\Services\Excel\Import;
 use App\Models\Order;
 use App\Models\State;
 use App\Models\Country;
+use App\Models\Product;
 use App\Models\ImportOrder;
 use App\Models\ImportedOrder;
 use App\Models\ShippingService;
@@ -84,8 +85,7 @@ class OrderImportService extends AbstractImportService
                 // if($this->errors == null){
 
                 DB::beginTransaction();
-                $shippingService = ShippingService::first();
-
+                $shippingService = ShippingService::where('service_sub_class', $this->correosShippingServices())->first();
                 $orderError = null;
                 if(!empty($this->errors)){
                     $orderError = $this->errors;
@@ -154,9 +154,9 @@ class OrderImportService extends AbstractImportService
     public function addItem($order,$row)
     {
         $this->validationRow($row, true);
-
+        $quantity = preg_replace("/[^0-9.]/", "", $this->getValue("W{$row}"));
         $item =[
-            "quantity" => preg_replace("/[^0-9.]/", "", $this->getValue("W{$row}")),
+            "quantity" => $quantity,
             "value" => preg_replace("/[^0-9.]/", "", $this->getValue("X{$row}")),
             "description" => $this->getValue("Y{$row}"),
             "sh_code" => preg_replace("/[^0-9.]/", "", $this->getValue("Z{$row}")),
@@ -172,12 +172,19 @@ class OrderImportService extends AbstractImportService
         if(!empty($this->errors)){
             $orderError = $this->errors;
         }
+        if($this->getValue("AC{$row}")){
+            $product = Product::where('user_id', $order->user_id)->where('sku', $this->getValue("AC{$row}"))->where('order', $this->getValue("AD{$row}"))->first();
 
+            if($product && $product->quantity >= $quantity){
+                $product->update([
+                    'quantity' => $product->quantity - $quantity
+                ]);
+            }
+        }
         $order->update([
             'items' => $items,
             'error' => $orderError,
         ]);
-
         return $order;
     }
 
@@ -352,5 +359,13 @@ class OrderImportService extends AbstractImportService
         }
 
         $this->errors = collect($validator->errors()->messages())->flatten()->toArray();
+    }
+
+    private function correosShippingServices()
+    {
+        if(setting('anjun_api', null, \App\Models\User::ROLE_ADMIN)){
+            return ShippingService::AJ_Packet_Standard;
+        }
+        return ShippingService::Packet_Standard;
     }
 }

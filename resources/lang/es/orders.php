@@ -15,11 +15,13 @@ return [
     'Bulk Print' => 'Imprimir a granel',
     'Download Orders' => 'Descargar pedidos',
     'type' => 'Tipo',
-    'payment-status' => 'Estado de pago',
+    'payment-status' => 'pago',
     'payment-method' => 'Método de pago',
     'Delete' => 'borrar',
     'Remove' => 'eliminar orden',
     'Trashed Orders' => 'Pedidos en la papelera',
+    'Amount Customers Paid' => 'Cantidad Pagada Por Las Clientas',
+    'Correios Anjun' => 'Correios (Anjun)',
     'recipient' => [
         'slect-from-list' => 'Seleccionar dirección de la lista',
         'Previous' => 'Previo', 
@@ -58,7 +60,7 @@ return [
             'Contains Perfume' => 'Contiene perfume / aerosol / esmalte de uñas',
             'Contains Flammable Liquid' => 'Contiene líquido inflamable',
         ],
-        'declaration' => '<h3 class="text-danger">Descargo de responsabilidad</h3> <br> <p class="h3 text-danger">Al hacer clic en guardar pedido, acepta que ha leído y confirma que toda la información de esta declaración ha sido completada por mí y es correcta y soy 100% responsable de la información contenida en este documento.</p>'
+        'declaration' => '<h3 class="text-danger">Descargo de responsabilidad</h3> <br> <p class="h4 text-danger">Al hacer clic en guardar pedido, acepta que ha leído y confirma que toda la información de esta declaración ha sido completada por mí y es correcta y soy 100% responsable de la información contenida en este documento.</p>'
     ],
     'services' => [
         'handling-services' => 'Servicios adicionales',

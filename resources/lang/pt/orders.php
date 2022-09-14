@@ -15,10 +15,11 @@ return [
     'Bulk Print' => 'Etiquetas em lote',
     'Download Orders' => 'Baixar pedidos',
     'type' => 'Tipo',
-    'payment-status' => 'Status do pagamento',
+    'payment-status' => 'pagamento',
     'payment-method' => 'Método de pagamento',
     'Trashed Orders' => 'Pedidos Excluídos',
-    
+    'Amount Customers Paid' => 'Valor Pago Pelos Clientes',
+    'Correios Anjun' => 'Correios (Anjun)',
     'recipient' => [
         'slect-from-list' => 'Selecione o endereço da lista',
         'Previous' => 'Anterior', 
@@ -57,7 +58,7 @@ return [
             'Contains Perfume' => 'Contém perfume/aerosol/nail polish',
             'Contains Flammable Liquid' => 'Contém líquido inflamável',
         ],
-        'declaration' => '<h3 class="text-danger">Aviso Legal</h3> <br> <p class="h3 text-danger"> Ao clicar em salvar pedido, você concorda que li e confirmo que todas as informações nesta declaração foram preenchidas por mim e estão corretas e sou 100% responsável pelas informações que aqui constam.</p>',
+        'declaration' => '<h3 class="text-danger">Aviso Legal</h3> <br> <p class="h4 text-danger"> Ao clicar em salvar pedido, você concorda que li e confirmo que todas as informações nesta declaração foram preenchidas por mim e estão corretas e sou 100% responsável pelas informações que aqui constam.</p>',
         'Warning Message' => 'Não inclua outros bens na mesma caixa contendo livros, jornais e revistas ou impostos serão aplicados. Esses produtos devem ser os únicos itens com a caixa para obter a isenção de impostos (ou seja, livros, jornais e revistas).'
     ],
     'services' => [

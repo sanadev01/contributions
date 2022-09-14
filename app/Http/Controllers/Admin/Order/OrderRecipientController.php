@@ -23,6 +23,7 @@ class OrderRecipientController extends Controller
         $countryConstants = [
             'Brazil' => Country::Brazil,
             'Chile' => Country::Chile,
+            'Colombia' => Country::COLOMBIA,
             'US' => Country::US,
         ];
 

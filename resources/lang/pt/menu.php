@@ -50,7 +50,8 @@ return [
         'Delivery Bill' => 'Fatura de entrega',
         'Chile Containers' => 'Chile Recipientes',
         'USPS Containers' => 'USPS Recipientes',
-        'MileExpress Containers' => 'MileExpress Containers'
+        'MileExpress Containers' => 'MileExpress Containers',
+        'Colombia Containers' => 'Colombia Recipientes'
     ],
     'Affiliate' => [
         'menu' => 'Relatórios',
