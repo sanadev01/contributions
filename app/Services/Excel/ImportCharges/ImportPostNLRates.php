@@ -158,15 +158,18 @@ class ImportPostNLRates extends AbstractImportService
         
                 if ( !$checkrates ){
                     $newRates= new Rate();
-                }
-        
-                $newRates->shipping_service_id = $this->shippingService->id;
-                $newRates->country_id = $countryId;
-                $newRates->data = $rates;
-                $newRates->save();
+                    $newRates->shipping_service_id = $this->shippingService->id;
+                    $newRates->country_id = $countryId;
+                    $newRates->data = $rates;
+                    $newRates->save();
+                } else {
+                    Rate::where('id', $checkrates->id)
+                    ->update([
+                        'data' => $rates
+                     ]);
+                }                
             }
         }
-
         return true;
     }
 
