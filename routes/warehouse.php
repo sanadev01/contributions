@@ -109,9 +109,9 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('mile-express-container/{container}/register', MileExpressUnitRegisterController::class)->name('mile-express-container.register');
     // Routes for POSTNL Container
     Route::resource('postnl_containers', PostNLContainerController::class);
-    Route::resource('postnl_container.packages', POSTNLContainerPackageController::class)->only('index','destroy', 'create');
-    Route::get('postnl_container/{container}/register', POSTNLUnitRegisterController::class)->name('postnl_container.register');
-    Route::get('postnl_container/{container}/download', POSTNLCN35DownloadController::class)->name('postnl_container.download');
+    Route::resource('postnl_container.packages', PostNLContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('postnl_container/{container}/register', PostNLUnitRegisterController::class)->name('postnl_container.register');
+    Route::get('postnl_container/{container}/download', PostNLCN35DownloadController::class)->name('postnl_container.download');
     Route::get('postnl_container/{container}/download_excel_manifest', [PostNLContainerController::class, 'download_exceltManifest'])->name('download.postnl_manifest_excel');
     // Routes for colombia Container
     Route::resource('colombia-containers', ColombiaContainerController::class);
