@@ -96,10 +96,10 @@
     <td>
         
         <div class="dropdown">
-            <button title="status" type="button"
+            <button id="status-btn" title="status" type="button"
                 @if (\Request::route()->getName() == 'admin.trash-orders.index' ||
                     \Request::route()->getName() == 'admin.reports.order.index') disabled @endif
-                class="btn col-12 justify-content-center d-flex{{ !auth()->user()->isAdmin()? 'btn disabled': '' }} {{ $order->getStatusClass() }}"
+                class="btn d-flex justify-content-center{{ !auth()->user()->isAdmin()? 'btn disabled': '' }} {{ $order->getStatusClass() }}"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 {{ $order->getStatus() }} <i class="fa fa-caret-down ml-1 mr-0"></i>
             </button>
