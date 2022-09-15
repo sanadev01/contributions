@@ -1,10 +1,10 @@
 <?php
-namespace App\Services\PostNL;
+namespace App\Services\POSTNL;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
 
-class PostNLLabelMaker
+class POSTNLLabelMaker
 {
 
     public function getContainerCN35($unit_response_list)
