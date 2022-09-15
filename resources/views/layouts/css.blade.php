@@ -1018,8 +1018,5 @@
     .dropdown .dropdown-menu::before {
         left: 5.9rem;
     }
-    .status-btn {
-        justify-content: center;
-    }
 </style>
 @yield('custom-css')
