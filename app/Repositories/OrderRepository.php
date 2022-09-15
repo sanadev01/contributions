@@ -14,7 +14,7 @@ use App\Services\USPS\USPSShippingService;
 use App\Services\FedEx\FedExShippingService;
 use App\Services\Calculators\WeightCalculator;
 use App\Services\GePS\GePSShippingService;
-use App\Services\GePS\PostNLShippingService;
+use App\Services\PostNL\PostNLShippingService;
 use App\Models\User;
 use App\Services\Colombia\ColombiaPostalCodes;
 

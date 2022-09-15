@@ -148,7 +148,7 @@ class Client{
                 'state' => "FL",
                 'country' => "United States",
                 'country_code' => "US",
-                'email' => ($order->sender_email) ? $order->sender_email : '',
+                'email' => "homedelivery@homedeliverybr.com",
                 'phone' => ($order->sender_phone) ? $order->sender_phone : '',
             ],
             'addressee_details' => [
