@@ -10,7 +10,7 @@ use App\Services\Excel\Export\AbstractCsvExportService;
 
 
 
-class ExportExcelPOSTNLManifestService extends AbstractCsvExportService
+class ExportExcelPostNLManifestService extends AbstractCsvExportService
 {
     private $container;
     private $csvData = [];
