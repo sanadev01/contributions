@@ -8,7 +8,7 @@ use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
 use App\Services\PostNL\Client;
 
-class PostNLUnitRegisterController extends Controller
+class POSTNLUnitRegisterController extends Controller
 {
     /**
      * Handle the incoming request.
