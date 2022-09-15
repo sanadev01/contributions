@@ -1016,7 +1016,10 @@
         background: white !important;
     }
     .dropdown .dropdown-menu::before {
-        left: 5.9rem;
+        left: 8.5rem;
+    }
+    .dropdown-menu.overlap-menu {
+        right: 37px;
     }
 </style>
 @yield('custom-css')

@@ -103,10 +103,10 @@
                                 <option class="bg-success" value="{{ App\Models\Order::STATUS_INVENTORY_FULFILLED }}" {{ $order->status == App\Models\Order::STATUS_INVENTORY_FULFILLED ? 'selected': '' }}>Fulfilled</option>
                             </select>
                         </td>
-                        <td>
-                            <button data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.inventory.order.products',$order) }}" class="btn btn-primary">
-                                <i class="feather icon-list"></i> @lang('orders.actions.view-products')
-                            </button>
+                        <td width="100px">
+                            <a data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.inventory.order.products',$order) }}">
+                                <i class="fa fa-eye text-success"></i>
+                            </a>
                         </td>
                     </tr>
                     @empty
