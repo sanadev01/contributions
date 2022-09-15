@@ -1015,8 +1015,5 @@
     .bg-white {
         background: white !important;
     }
-    .dropdown .dropdown-menu::before {
-        left: 5.9rem;
-    }
 </style>
 @yield('custom-css')

@@ -225,10 +225,18 @@ class RatesCalculator
                 // self::$errors .= "Service not available for this Country <br>";
                 return false;
             }
+
+            /**
+             * important fix
+             * this postnl_service check should be done at OrderRepository::getShippingServices() method
+             * for refference see line number 515 on OrderRepository class 
+             * and filter service accordingly please
+             */
+
             //dd(!auth()->user()->isAdmin());
-            if(empty(setting('postnl_service', null, \App\Models\User::ROLE_ADMIN)) && empty(setting('postnl_service', null, auth()->user()->id))) {
-                return false;
-            }
+            // if(empty(setting('postnl_service', null, \App\Models\User::ROLE_ADMIN)) && empty(setting('postnl_service', null, auth()->user()->id))) {
+            //     return false;
+            // }
 
             $profitSetting = $this->order->user->profitSettings->where('service_id',$this->shippingService->id)->first();
             if(!$profitSetting && !auth()->user()->isAdmin()){

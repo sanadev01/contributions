@@ -99,7 +99,7 @@
             <button title="status" type="button"
                 @if (\Request::route()->getName() == 'admin.trash-orders.index' ||
                     \Request::route()->getName() == 'admin.reports.order.index') disabled @endif
-                class="btn d-flex{{ !auth()->user()->isAdmin()? 'btn disabled': '' }} {{ $order->getStatusClass() }}"
+                class="btn col-12 d-flex{{ !auth()->user()->isAdmin()? 'btn disabled': '' }} {{ $order->getStatusClass() }}"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 {{ $order->getStatus() }} <i class="fa fa-caret-down ml-1 mr-0"></i>
             </button>

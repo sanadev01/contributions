@@ -6,7 +6,7 @@ use App\Models\Warehouse\Container;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class POSTNLContainerRepository {
+class PostNLContainerRepository {
 
     protected $error;
 
@@ -26,7 +26,6 @@ class POSTNLContainerRepository {
 
     public function store($request)
     {
-        //dd($request);
         try {
             $container =  Container::create([
                 'user_id' => Auth::id(),
