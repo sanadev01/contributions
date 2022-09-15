@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Repositories\UPSLabelRepository;
 use App\Repositories\USPSLabelRepository;
 use App\Repositories\FedExLabelRepository;
-use App\Repositories\PostNLLabelRepository;
+use App\Repositories\POSTNLLabelRepository;
 use App\Repositories\ColombiaLabelRepository;
 use App\Repositories\GePSLabelRepository;
 use App\Repositories\MileExpressLabelRepository;
@@ -38,7 +38,7 @@ class OrderLabelController extends Controller
     public function __construct(CorrieosChileLabelRepository $corrieosChileLabelRepository, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, 
                                 USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, 
                                 FedExLabelRepository $fedExLabelRepository, MileExpressLabelRepository $mileExpressLabelRepository,
-                                ColombiaLabelRepository $colombiaLabelRepository, GePSLabelRepository $gepsLabelRepository, PostNLLabelRepository $postNLLabelRepository){
+                                ColombiaLabelRepository $colombiaLabelRepository, GePSLabelRepository $gepsLabelRepository, POSTNLLabelRepository $postNLLabelRepository){
         
         $this->corrieosChileLabelRepository = $corrieosChileLabelRepository;
         $this->corrieosBrazilLabelRepository = $corrieosBrazilLabelRepository;

@@ -11,7 +11,7 @@ use App\Services\PostNL\Client;
 use App\Services\PostNL\CN23LabelMaker;
 
 
-class PostNLLabelRepository
+class POSTNLLabelRepository
 {
     protected $error;
 
