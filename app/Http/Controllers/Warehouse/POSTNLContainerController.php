@@ -5,19 +5,19 @@ namespace App\Http\Controllers\Warehouse;
 use Illuminate\Http\Request;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
-use App\Services\PostNL\ExportExcelPostNLManifestService;
-use App\Repositories\Warehouse\PostNLContainerRepository;
+use App\Services\POSTNL\ExportExcelPOSTNLManifestService;
+use App\Repositories\Warehouse\POSTNLContainerRepository;
 use App\Http\Requests\Warehouse\PostnlContainer\CreateContainerRequest;
 use App\Http\Requests\Warehouse\PostnlContainer\UpdateContainerRequest;
 
-class PostNLContainerController extends Controller
+class POSTNLContainerController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(PostNLContainerRepository $postnl_containerRepository)
+    public function index(POSTNLContainerRepository $postnl_containerRepository)
     {
         $containers = $postnl_containerRepository->get();
 
@@ -40,7 +40,7 @@ class PostNLContainerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateContainerRequest $createContainerRequest, PostNLContainerRepository $postnl_containerRepository)
+    public function store(CreateContainerRequest $createContainerRequest, POSTNLContainerRepository $postnl_containerRepository)
     {
         if ( $container = $postnl_containerRepository->store($createContainerRequest) ){
             session()->flash('alert-success', 'PostNL Container Creation Successfull. Please Scan Packages');
@@ -85,7 +85,7 @@ class PostNLContainerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateContainerRequest $updateContainerRequest, PostNLContainerRepository $postnl_containerRepository)
+    public function update(UpdateContainerRequest $updateContainerRequest, POSTNLContainerRepository $postnl_containerRepository)
     {
         //dd($updateContainerRequest);
         $container = Container::find($updateContainerRequest->id);
@@ -108,7 +108,7 @@ class PostNLContainerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($container, PostNLContainerRepository $postnl_containerRepository)
+    public function destroy($container, POSTNLContainerRepository $postnl_containerRepository)
     {
         $container = Container::find($container);
         if ( $container->respone != 0 ){
@@ -125,7 +125,7 @@ class PostNLContainerController extends Controller
 
     public function download_exceltManifest(Container $container)
     {
-        $exportPostNLManifestService = new ExportExcelPostNLManifestService($container);
+        $exportPostNLManifestService = new ExportExcelPOSTNLManifestService($container);
         return $exportPostNLManifestService->handle();
     }
 }
