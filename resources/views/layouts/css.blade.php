@@ -152,7 +152,7 @@
     }
 
     #status-btn {
-        width: 100px;
+        width: 125px;
     }
 
     #printBtnDiv {
@@ -1014,6 +1014,9 @@
     }
     .bg-white {
         background: white !important;
+    }
+    .dropdown .dropdown-menu::before {
+        left: 5.9rem;
     }
 </style>
 @yield('custom-css')
