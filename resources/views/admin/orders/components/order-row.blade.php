@@ -93,7 +93,7 @@
         <span class="col-1">${{ number_format($order->gross_total, 2) }}</span>
     </td>
 
-    <td>
+    <td width="100px">
         
         <div class="dropdown">
             <button id="status-btn" title="status" type="button"
