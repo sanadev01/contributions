@@ -43,10 +43,10 @@ use App\Http\Controllers\Warehouse\GePSContainerPackageController;
 use App\Http\Controllers\Warehouse\GePSUnitRegisterController;
 use App\Http\Controllers\Warehouse\GePSCN35DownloadController;
 use App\Http\Controllers\Warehouse\GePSManifestDownloadController;
-use App\Http\Controllers\Warehouse\POSTNLContainerController;
-use App\Http\Controllers\Warehouse\POSTNLContainerPackageController;
-use App\Http\Controllers\Warehouse\POSTNLUnitRegisterController;
-use App\Http\Controllers\Warehouse\POSTNLCN35DownloadController;
+use App\Http\Controllers\Warehouse\PostNLContainerController;
+use App\Http\Controllers\Warehouse\PostNLContainerPackageController;
+use App\Http\Controllers\Warehouse\PostNLUnitRegisterController;
+use App\Http\Controllers\Warehouse\PostNLCN35DownloadController;
 use App\Http\Controllers\Warehouse\ColombiaContainerManifestController;
 
 
@@ -108,11 +108,11 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('mile-express-container/{container}/packages', MileExpressContainerPackageController::class)->name('mile-express-container.packages');
     Route::get('mile-express-container/{container}/register', MileExpressUnitRegisterController::class)->name('mile-express-container.register');
     // Routes for POSTNL Container
-    Route::resource('postnl_containers', POSTNLContainerController::class);
+    Route::resource('postnl_containers', PostNLContainerController::class);
     Route::resource('postnl_container.packages', POSTNLContainerPackageController::class)->only('index','destroy', 'create');
     Route::get('postnl_container/{container}/register', POSTNLUnitRegisterController::class)->name('postnl_container.register');
     Route::get('postnl_container/{container}/download', POSTNLCN35DownloadController::class)->name('postnl_container.download');
-    Route::get('postnl_container/{container}/download_excel_manifest', [POSTNLContainerController::class, 'download_exceltManifest'])->name('download.postnl_manifest_excel');
+    Route::get('postnl_container/{container}/download_excel_manifest', [PostNLContainerController::class, 'download_exceltManifest'])->name('download.postnl_manifest_excel');
     // Routes for colombia Container
     Route::resource('colombia-containers', ColombiaContainerController::class);
     Route::get('colombia-container/{container}/packages', ColombiaContainerPackageController::class)->name('colombia-container.packages');
