@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Services\Excel\Export\ContainerOrderExport;
 use App\Repositories\Warehouse\PostNLContainerPackageRepository;
 
-class POSTNLContainerPackageController extends Controller
+class PostNLContainerPackageController extends Controller
 {
     /**
      * Display a listing of the resource.

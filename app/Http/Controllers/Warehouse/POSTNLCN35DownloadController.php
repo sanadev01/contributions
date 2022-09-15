@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Warehouse;
 use Illuminate\Http\Request;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
-use App\Services\POSTNL\POSTNLLabelMaker;
+use App\Services\PostNL\PostNLLabelMaker;
 
-class POSTNLCN35DownloadController extends Controller
+class PostNLCN35DownloadController extends Controller
 {
     /**
      * Handle the incoming request.
@@ -17,7 +17,7 @@ class POSTNLCN35DownloadController extends Controller
      */
     public function __invoke(Container $container)
     {
-        $labelPrinter = new POSTNLLabelMaker();
+        $labelPrinter = new PostNLLabelMaker();
         return $labelPrinter->getContainerCN35($container->unit_response_list);
 
     }

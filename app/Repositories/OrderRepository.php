@@ -14,6 +14,7 @@ use App\Services\USPS\USPSShippingService;
 use App\Services\FedEx\FedExShippingService;
 use App\Services\Calculators\WeightCalculator;
 use App\Services\GePS\GePSShippingService;
+use App\Services\PostNL\PostNLShippingService;
 use App\Models\User;
 use App\Services\Colombia\ColombiaPostalCodes;
 
@@ -502,6 +503,21 @@ class OrderRepository
                 foreach ($gepsShippingService as $shippingService)
                 {
                     if ($gepsShippingService->isAvailableForInternational($shippingService)) {
+                        $shippingServices->push($shippingService);
+                    }
+                }
+            }
+
+            // PostNL Service
+
+            if (optional($order->recipient)->country_id != Order::US && setting('postnl_service', null, User::ROLE_ADMIN) && setting('postnl_service', null, auth()->user()->id))
+            {
+
+                $postnlShippingService = new PostNLShippingService($order);
+
+                foreach ($postnlShippingService as $shippingService)
+                {
+                    if ($postnlShippingService->isAvailableForInternational($shippingService)) {
                         $shippingServices->push($shippingService);
                     }
                 }
