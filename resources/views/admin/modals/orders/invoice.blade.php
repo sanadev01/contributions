@@ -19,7 +19,7 @@
                     @if($order->getPaymentInvoice())
                         <p>{{ $order->getPaymentInvoice()->updated_at->format('d M Y') }}</p>
                     @else
-                        <p>{{ now()->format('d M Y') }}</p>
+                        <p>{{ optional($order->order_date)->format('m/d/Y') }}</p>
                     @endif
 
                 </div>
