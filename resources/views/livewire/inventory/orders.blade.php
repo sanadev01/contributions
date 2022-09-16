@@ -104,7 +104,7 @@
                             </select>
                         </td>
                         <td width="100px">
-                            <a data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.inventory.order.products',$order) }}">
+                            <a data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.inventory.order.products',$order) }}" class="d-flex justify-content-center">
                                 <i class="fa fa-eye text-success"></i>
                             </a>
                         </td>
