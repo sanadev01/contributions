@@ -160,7 +160,7 @@
                                     {{ number_format($commission->commission, 2) }} USD
                                 </td>
                                 <td class="h4">
-                                    <a href="{{ route('admin.reports.commission.show', $commission->referrer) }}">
+                                    <a  class="d-flex justify-content-center" href="{{ route('admin.reports.commission.show', $commission->referrer) }}">
                                         <i class="fa fa-eye text-success"></i>
                                     </a>
                                 </td>
