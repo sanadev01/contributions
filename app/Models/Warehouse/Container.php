@@ -25,7 +25,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     const CONTAINER_ANJUN_NX = 'AJ-NX';
     const CONTAINER_ANJUN_IX = 'AJ-IX';
     const CONTAINER_MILE_EXPRESS = 'ML-EX';
-    const CONTAINER_COLOMBIA_NX = 'CO-NX';
+    const CONTAINER_COLOMBIA = 'CO-NX';
 
     public function user()
     {
@@ -81,12 +81,8 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'SRM service';
         }elseif($this->services_subclass_code == 'SRP'){
             return 'SRP service';
-        }elseif($this->services_subclass_code == 'CO-UR'){
-            return 'Colombia Urbano';
-        }elseif($this->services_subclass_code == 'CO-NA'){
-            return 'Colombia Nacional';
-        }elseif($this->services_subclass_code == 'CO-TR'){
-            return 'Colombia Trayetos';
+        }elseif($this->services_subclass_code == 'CO-NX'){
+            return 'Colombia Service';
         }elseif($this->services_subclass_code == 'PostNL'){
             return 'PostNL';
         }elseif($this->services_subclass_code == '537'){
@@ -124,7 +120,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 8;
         }elseif($this->services_subclass_code == 'AJ-IX'){
             return 9;
-        }elseif($this->services_subclass_code == 'CO-UR'){
+        }elseif($this->services_subclass_code == 'CO-NX'){
             return 10;
         }elseif($this->services_subclass_code == 'Priority International'){
             return 11;

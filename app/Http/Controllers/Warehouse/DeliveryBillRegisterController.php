@@ -39,14 +39,11 @@ class DeliveryBillRegisterController extends Controller
                 return back();
             }
 
-        }elseif($deliveryBill->containers->first()->services_subclass_code == Container::CONTAINER_COLOMBIA_NX) {
+        }elseif($deliveryBill->containers->first()->services_subclass_code == Container::CONTAINER_COLOMBIA) {
             
-            $response = random_int(100000, 999999).'-'.random_int(1000, 9999).'-'.random_int(100000, 999999);
-            $cnd38Code = $deliveryBill->id.random_int(1000, 9999);
-
             $deliveryBill->update([
-                'cnd38_code' => $cnd38Code,
-                'request_id' => $response
+                'cnd38_code' => $deliveryBill->setRandomCN38Code(),
+                'request_id' => $deliveryBill->setRandomRequestId()
             ]);
 
         }elseif($deliveryBill->containers[0]->services_subclass_code == '537')  {

@@ -74,10 +74,10 @@ class ContainerPackages extends Component
 
     private function saveOrder()
     {
+        $this->error = '';
         $order = Order::where('corrios_tracking_code', $this->barcode)->first();
 
         if ($order) {
-
             if ($order->containers->isNotEmpty()) {
                 $this->error = 'Order is already present in Container';
                 $this->barcode = '';

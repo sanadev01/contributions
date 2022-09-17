@@ -59,4 +59,23 @@ class DeliveryBill extends Model
         }
     }
 
+    /**
+     * generate random cnd38_code 
+     * for colombia deliveryBill 
+     * @return string
+     */
+    public function setRandomCN38Code()
+    {
+        return $this->id.random_int(1000, 9999);
+    }
+
+    /**
+     * generate random string for 
+     * colombia request_id
+     * @return string
+     */
+    public function setRandomRequestId()
+    {
+        return random_int(100000, 999999).'-'.random_int(1000, 9999).'-'.random_int(100000, 999999);
+    }
 }
