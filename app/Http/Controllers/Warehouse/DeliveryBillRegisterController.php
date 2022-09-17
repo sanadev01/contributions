@@ -27,11 +27,9 @@ class DeliveryBillRegisterController extends Controller
             return back();
         }
 
-        $firstContainer = $deliveryBill->containers()->first();
-
-        if ($firstContainer->services_subclass_code == Container::CONTAINER_MILE_EXPRESS) {
+        if ($deliveryBill->hasMileExpressService()) {
             
-            $deliveryBillRepository->processMileExpressBill($deliveryBill, $firstContainer);
+            $deliveryBillRepository->processMileExpressBill($deliveryBill, $deliveryBill->container());
             $error = $deliveryBillRepository->getError();
 
             if ($error) {
@@ -39,7 +37,12 @@ class DeliveryBillRegisterController extends Controller
                 return back();
             }
 
-        }elseif($deliveryBill->containers->first()->services_subclass_code == Container::CONTAINER_COLOMBIA) {
+            $deliveryBill->update([
+                'cnd38_code' => $deliveryBill->setRandomCN38Code(),
+                'request_id' => $deliveryBill->setRandomRequestId()
+            ]);
+
+        }elseif($deliveryBill->hasColombiaService()) {
             
             $deliveryBill->update([
                 'cnd38_code' => $deliveryBill->setRandomCN38Code(),

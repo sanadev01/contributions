@@ -93,6 +93,10 @@
                                             @if ($deliveryBill->Containers->count() > 0 && optional(optional($deliveryBill->Containers->first())->orders)->count() > 0)
                                                 @if( optional($deliveryBill->Containers->first()->orders->first())->shippingService && $deliveryBill->Containers->first()->orders->first()->shippingService->isAnjunService())
                                                     <span class="badge badge-success">A</span>
+                                                @elseif($deliveryBill->hasMileExpressService())
+                                                    <span class="badge badge-primary">M</span>
+                                                @elseif($deliveryBill->hasColombiaService())
+                                                    <span class="badge badge-success">C</span>
                                                 @else
                                                     <span class="badge badge-primary">H</span>
                                                 @endif

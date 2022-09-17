@@ -58,6 +58,10 @@ class CN35LabelMaker implements HasLableExport
             $this->colombiaContainer = true;
         }
 
+        if ( $this->service == 15 ){
+            $this->packetType = 'Mile Express';
+        }
+
         return $this;
     }
 
