@@ -55,9 +55,7 @@
                                 <div class="col-md-6">
                                     <select class="form-control" name="services_subclass_code" disabled>
                                         <option value="">@lang('warehouse.containers.Distribution Service Class')</option>
-                                        <option value="CO-UR" {{ old('services_subclass_code',$container->services_subclass_code) == 'CO-UR' ? 'selected': '' }}>Colombia Urbano</option>
-                                        <option value="CO-NA" {{ old('services_subclass_code',$container->services_subclass_code) == 'CO-NA' ? 'selected': '' }}>Colombia Nacional</option>
-                                        <option value="CO-TR" {{ old('services_subclass_code',$container->services_subclass_code) == 'CO-TR' ? 'selected': '' }}>Colombia Trayetos</option>
+                                        <option value="CO-NX" {{ old('services_subclass_code',$container->services_subclass_code) == 'CO-NX' ? 'selected': '' }}>Colombia Service</option>
                                     </select>
                                     @error('services_subclass_code')
                                         <div class="help-block text-danger"> {{ $message }} </div>
