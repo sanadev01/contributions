@@ -22,7 +22,7 @@ class RegionController extends Controller
             $query = Region::query();
 
             if ($countryId == Country::COLOMBIA) {
-                $query->where('country_id', $countryId)->take(10);
+                $query->where('country_id', $countryId)->take(1104);
             }else {
                 $query->where('country_id', $countryId);
             }
