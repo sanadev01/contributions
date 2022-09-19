@@ -650,7 +650,6 @@
             type: 'GET',
             url: "{{route('api.hd-regions', ['countryId' => 50])}}",
             success: function (response){
-                $('#loading').fadeOut();
                 $('#region').empty();
 
                 $.each(response.data, function(index, region){
@@ -662,6 +661,8 @@
                     $('#region').val(oldRegion);
                     $('#region').selectpicker('refresh');
                 }
+
+                $('#loading').fadeOut();
             },
             error: function(e) {
                 $('#loading').fadeOut();

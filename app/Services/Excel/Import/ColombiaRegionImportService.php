@@ -11,7 +11,7 @@ class ColombiaRegionImportService extends AbstractImportService
     public function __construct()
     {
         parent::__construct(
-            storage_path('colombia_regions.xlsx')
+            storage_path('colombia_updated_regions.xlsx')
         );
     }
 
@@ -24,41 +24,25 @@ class ColombiaRegionImportService extends AbstractImportService
     {
         $regions = collect();
 
-        foreach (range(2, 9388) as $row)
+        foreach (range(2, 1104) as $row)
         {
             $regions->push([
                 'country_id' => Country::COLOMBIA,
                 'state_id' => null,
-                'name' => strtoupper(trim($this->workSheet->getCell('B'.$row)->getValue())),
-                'code' => $this->workSheet->getCell('C'.$row)->getValue(),
+                'name' => $this->getRegionTitle($row),
+                'code' => (int)$this->workSheet->getCell('B'.$row)->getValue(),
             ]);
         }
 
         foreach ($regions->chunk(100) as $regionsChunk) {
             Region::insert($regionsChunk->toArray());
         }
+    }
 
-        $colombiaRgions = [
-            [
-                'country_id' => Country::COLOMBIA,
-                'state_id' => null,
-                'name' => 'URBANO',
-                'code' => '479800051',
-            ],
-            [
-                'country_id' => Country::COLOMBIA,
-                'state_id' => null,
-                'name' => 'NACIONAL',
-                'code' => '479800052',
-            ],
-            [
-                'country_id' => Country::COLOMBIA,
-                'state_id' => null,
-                'name' => 'TRAYETOS',
-                'code' => '479800053',
-            ]
-        ];
+    private function getRegionTitle($row)
+    {
+        $title = strtoupper(trim($this->workSheet->getCell('A'.$row)->getValue()));
 
-        Region::insert($colombiaRgions);
+        return str_replace('_', ' ', $title);
     }
 }
