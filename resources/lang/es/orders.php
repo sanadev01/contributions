@@ -1,6 +1,6 @@
 <?php
 
-return [ 
+return [
     'name' => 'Nombre',
     'action' => 'Acción',
     'orders' => 'Pedidos',
@@ -15,7 +15,7 @@ return [
     'Bulk Print' => 'Imprimir a granel',
     'Download Orders' => 'Descargar pedidos',
     'type' => 'Tipo',
-    'payment-status' => 'Estado de pago',
+    'payment-status' => 'pago',
     'payment-method' => 'Método de pago',
     'Delete' => 'borrar',
     'Remove' => 'eliminar orden',
@@ -24,16 +24,16 @@ return [
     'Correios Anjun' => 'Correios (Anjun)',
     'recipient' => [
         'slect-from-list' => 'Seleccionar dirección de la lista',
-        'Previous' => 'Previo', 
-        'Next' => 'Próximo', 
+        'Previous' => 'Previo',
+        'Next' => 'Próximo',
     ],
     'order-details' => [
-        'Sender' => 'Remitente', 
-        'Recipient' => 'Destinatario', 
-        'Additional services' => 'Servicios adicionales', 
-        'Shipping & Items' => 'Transporte & Artículos', 
-        'Invoice' => 'Factura', 
-        'Orders' => 'Pedidos', 
+        'Sender' => 'Remitente',
+        'Recipient' => 'Destinatario',
+        'Additional services' => 'Servicios adicionales',
+        'Shipping & Items' => 'Transporte & Artículos',
+        'Invoice' => 'Factura',
+        'Orders' => 'Pedidos',
         'Step 1' => 'Paso 1',
         'Customer Reference' => 'Referencia de cliente',
         'WHR' => 'WHR',
@@ -60,7 +60,7 @@ return [
             'Contains Perfume' => 'Contiene perfume / aerosol / esmalte de uñas',
             'Contains Flammable Liquid' => 'Contiene líquido inflamable',
         ],
-        'declaration' => '<h3 class="text-danger">Descargo de responsabilidad</h3> <br> <p class="h3 text-danger">Al hacer clic en guardar pedido, acepta que ha leído y confirma que toda la información de esta declaración ha sido completada por mí y es correcta y soy 100% responsable de la información contenida en este documento.</p>'
+        'declaration' => '<h3 class="text-danger">Descargo de responsabilidad</h3> <br> <p class="h4 text-danger">Al hacer clic en guardar pedido, acepta que ha leído y confirma que toda la información de esta declaración ha sido completada por mí y es correcta y soy 100% responsable de la información contenida en este documento.</p>'
     ],
     'services' => [
         'handling-services' => 'Servicios adicionales',
@@ -74,11 +74,12 @@ return [
         'Email' => 'Email',
         'Phone' => 'Teléfono',
         'Tax Id' => 'Identificación fiscal o identificación personal (opcional)',
+        'Company' => 'Empresa',
         'Address' => 'Dirección en EE. UU.',
         'City' => 'Ciudad',
-        'Next' => 'Próximo', 
+        'Next' => 'Próximo',
         'Step 1' => 'Paso 1',
-        'Select Country' => 'Seleccione el país al que desea enviar sus paquetes', 
+        'Select Country' => 'Seleccione el país al que desea enviar sus paquetes',
     ],
     'import-excel' =>[
         'Import Orders via Excel Sheet' => 'Importar pedidos a través de una hoja de Excel',
@@ -187,7 +188,7 @@ return [
         'destination-address' => 'Dirección de destino',
         'select-address' => 'Seleccionar dirección',
         'create-address' => 'crear-destinatario',
-        
+
         'note' => 'Para crear un envío consolidado, arrastre más de 1 envío disponible a la lista de pedidos.',
         'save' => 'Ahorrar',
         'alert-success-consolidate' => 'Se recibe su solicitud de pedido consolidado. Tardará 24 horas en procesar su solicitud. se le notificará',
