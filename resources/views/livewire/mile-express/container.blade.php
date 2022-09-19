@@ -154,6 +154,11 @@
                                                                 </button>
                                                             </form>
                                                         @endif
+                                                        @if ($container->isRegistered())
+                                                            <a href="{{ route('warehouse.container.download', $container) }}" class="dropdown-item w-100">
+                                                                <i class="feather icon-box"></i> Get CN35
+                                                            </a>
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </div>
