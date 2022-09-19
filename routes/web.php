@@ -266,17 +266,38 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
     return response()->download(storage_path("app/labels/{$order->us_api_tracking_code}.pdf"),"{$order->us_api_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.us-label.download');
 
-Route::get('test-label/{id?}/{weight?}',function($id = null, $weight = null){
+Route::get('test-label',function( $trackingIds = null){
+        $iDs = ["NA395819895BR", "NA331011205BR", "NA331011196BR", "NA331011182BR", "NA331011165BR", "NA395819860BR",
+         "NA331011179BR", "NA395819873BR", "NA395819900BR", "NA395819913BR", "NA395819887BR", "NA395819856BR",
+          "NA395819927BR", "NA331011219BR", "NA395819944BR", "NA395819935BR", "NA395819992BR", "NA395819958BR",
+           "NA395820001BR", "NA395819989BR", "NA331011222BR", "NA331011240BR", "NA331011236BR", "NA395819975BR",
+            "NA331011253BR", "NA395819961BR", "NA331011275BR", "NA395820046BR", "NA395820015BR", "NA331011267BR",
+             "NA331011298BR", "NA331011307BR", "NA395820050BR", "NA331011338BR", "NA331011315BR", "NA395820029BR",
+              "NA331011284BR", "NA395820063BR", "NA395820032BR", "NA395820085BR", "NA331011355BR", "NA395820077BR",
+               "NA331011324BR", "NA331011341BR", "NA331011369BR", "NA395820094BR"];
+        $trackings = explode(',', implode(',', $iDs));
+        foreach($trackings as $track_id) {
+            $order = Order::where('corrios_tracking_code', $track_id)->first();
+            if($order && $order->shipping_service_id == "1") {
+                Order::where('id', $order->id)
+                ->update([
+                    'shipping_service_id' => '16',
+                    'shipping_service_name' => 'Packet Standard (A)',
+                    ]);
+            }
+        }
+        return "Shipping Service Updated";
+        
+        
+    // $order = Order::find($id);
+    // if($order) {
+    //     $order->update(['weight_discount' => $weight]);
+    //     return "Discount Weight Updated";
+    // }
+    // $orders = Order::whereBetween('created_at', ['2022-08-10 00:00:00', '2022-08-22 23:59:59'])->where('status','>=',Order::STATUS_PAYMENT_DONE)->get();
 
-    $order = Order::find($id);
-    if($order) {
-        $order->update(['weight_discount' => $weight]);
-        return "Discount Weight Updated";
-    }
-    $orders = Order::whereBetween('created_at', ['2022-08-10 00:00:00', '2022-08-22 23:59:59'])->where('status','>=',Order::STATUS_PAYMENT_DONE)->get();
-
-    $exportService = new OrderExportAug($orders);
-    return $exportService->handle();
+    // $exportService = new OrderExportAug($orders);
+    // return $exportService->handle();
     // $labelPrinter = new CN23LabelMaker();
 
     // $order = Order::find(90354);
