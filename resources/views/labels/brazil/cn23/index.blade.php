@@ -388,7 +388,7 @@
     </div>
     <div class="tracking_code">
         <img src="data:image/png;base64,{{ base64_encode($barcodeNew->getBarcode($order->corrios_tracking_code, $barcodeNew::TYPE_CODE_128, 1,94, [0,0,0]))}}" alt="barcode"   />
-        <span class="cn-label">CN</span>
+        <span class="cn-label">US</span>
     </div>
     <p class="barcode-label">{{$order->corrios_tracking_code}}</p>
     <div class="empty-lines">
