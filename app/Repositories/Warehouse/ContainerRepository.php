@@ -41,7 +41,7 @@ class ContainerRepository extends AbstractRepository{
                                                     ->orWhere('services_subclass_code', Container::CONTAINER_ANJUN_IX)
                                                     ->latest()->first();
 
-                $anjunDispatchNumber = ($latestAnujnContainer->dispatch_number > 1200000) ? $latestAnujnContainer->dispatch_number + 1 : 1200000;
+                $anjunDispatchNumber = ($latestAnujnContainer->dispatch_number > 970000) ? $latestAnujnContainer->dispatch_number + 1 : 970000;
             }
 
             $container =  Container::create([
