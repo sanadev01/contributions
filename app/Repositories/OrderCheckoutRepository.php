@@ -53,30 +53,14 @@ class OrderCheckoutRepository
             try {
                 
                 foreach($this->invoice->orders as $order){
-                    $pre_balance = Deposit::getCurrentBalance($order->user);
-                    $getOrder = Order::find($order->id);
                     if ( !$order->isPaid() &&  getBalance() >= $order->gross_total ){
                         $rem_balance = Deposit::getCurrentBalance($order->user) - $order->gross_total;
                         chargeAmount($order->gross_total,$order);
                     }
-                    if($order->status == Order::STATUS_PREALERT_TRANSIT) {
-                        $pre_status = "STATUS_PREALERT_TRANSIT";
-                    }elseif($order->status == Order::STATUS_PREALERT_READY){
-                        $pre_status = "STATUS_PREALERT_READY";
-                    }elseif($order->status == Order::STATUS_ORDER){
-                        $pre_status = "STATUS_ORDER";
-                    }elseif($order->status == Order::STATUS_NEEDS_PROCESSING){
-                        $pre_status = "STATUS_NEEDS_PROCESSING";
-                    }elseif($order->status == Order::STATUS_PAYMENT_PENDING){
-                        $pre_status = "STATUS_PAYMENT_PENDING";
-                    }else {
-                        $pre_status = '';
-                    }
-                    $amount = $order->gross_total;
-                    $new_status = 'STATUS_PAYMENT_DONE';
-                    $created = Carbon::now();
+                    
+                    $status = 'STATUS_PAYMENT_DONE';
                     try {
-                        \Mail::send(new NotifyTransaction($user, $getOrder, $pre_status, $pre_balance, $amount, $rem_balance, $new_status, $created));
+                        \Mail::send(new NotifyTransaction($deposit, $status, $user));
                     } catch (\Exception $ex) {
                         \Log::info('Notify Transaction email send error: '.$ex->getMessage());
                     }
@@ -121,7 +105,7 @@ class OrderCheckoutRepository
         event(new OrderPaid($this->invoice->orders, true));
 
         session()->flash('alert-success', __('orders.payment.alert-success'));
-        return redirect()->route('admin.payment-invoices.index');
+        return view('admin.payment-invoices.index');
     }
 
     private function payUpdatedInvoice()
@@ -286,7 +270,6 @@ class OrderCheckoutRepository
     private function stripePayment()
     {
         $stripeSecret = setting('STRIPE_SECRET', null, null, true);
-        
         $amountToPay = ($this->invoice->differnceAmount()) ? $this->invoice->differnceAmount() : $this->invoice->total_amount;
 
         Stripe::setApiKey($stripeSecret);
@@ -297,9 +280,10 @@ class OrderCheckoutRepository
                 'source' => $this->request->stripe_token,
                 'description' => auth()->user()->pobox_number.' '.'paid to HomeDelivery against payment invoice# '.$this->Invoice->uuid,
             ]);
-            
+                        
             $this->chargeID = $charge->id;
             return true;
+
 
         } catch (\Exception $ex) {
             $this->error = $ex->getMessage();

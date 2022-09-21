@@ -20,17 +20,19 @@ class OrderStatusController extends Controller
         $user = $request->user;
         
         if($order->status == Order::STATUS_PREALERT_TRANSIT) {
-            $pre_status = "STATUS_PREALERT_TRANSIT";
+            $preStatus = "STATUS_PREALERT_TRANSIT";
         }elseif($order->status == Order::STATUS_PREALERT_READY){
-            $pre_status = "STATUS_PREALERT_READY";
+            $preStatus = "STATUS_PREALERT_READY";
         }elseif($order->status == Order::STATUS_ORDER){
-            $pre_status = "STATUS_ORDER";
+            $preStatus = "STATUS_ORDER";
         }elseif($order->status == Order::STATUS_NEEDS_PROCESSING){
-            $pre_status = "STATUS_NEEDS_PROCESSING";
+            $preStatus = "STATUS_NEEDS_PROCESSING";
         }elseif($order->status == Order::STATUS_PAYMENT_PENDING){
-            $pre_status = "STATUS_PAYMENT_PENDING";
+            $preStatus = "STATUS_PAYMENT_PENDING";
+        }elseif($order->status == Order::STATUS_PAYMENT_DONE){
+            $preStatus = "STATUS_PAYMENT_DONE";
         }else {
-            $pre_status = '';
+            $preStatus = '';
         }
 
         if($order->status == Order::STATUS_REFUND){
@@ -58,6 +60,12 @@ class OrderStatusController extends Controller
                 if ( $order ){
                     $order->deposits()->sync($deposit->id);
                 }
+
+                try {
+                    \Mail::send(new NotifyTransaction($deposit, $preStatus, $user));
+                } catch (\Exception $ex) {
+                    \Log::info('Notify Transaction email send error: '.$ex->getMessage());
+                }
                 
                 $order->update([
                     'status'  => $request->status,
@@ -70,9 +78,7 @@ class OrderStatusController extends Controller
            
             if($request->status == Order::STATUS_PAYMENT_DONE && !$order->is_paid){
                 \Log::info('status: ' . 'STATUS_PAYMENT_DONE');
-                $pre_balance = Deposit::getCurrentBalance($order->user);
                 if(Deposit::getCurrentBalance($order->user) >= $order->gross_total){
-                    $rem_balance = Deposit::getCurrentBalance($order->user) - $order->gross_total;
                     $deposit = Deposit::create([
                         'uuid' => PaymentInvoice::generateUUID('DP-'),
                         'amount' => $order->gross_total,
@@ -82,15 +88,13 @@ class OrderStatusController extends Controller
                         'balance' => Deposit::getCurrentBalance($order->user) - $order->gross_total,
                         'is_credit' => false,
                     ]);
-                    $amount = $order->gross_total;
-                    $new_status = 'STATUS_PAYMENT_DONE';
-                    $created = Carbon::now();
+                    
                     if ( $order ){
                         $order->deposits()->sync($deposit->id);
                     }
 
                     try {
-                        \Mail::send(new NotifyTransaction($user, $order, $pre_status, $pre_balance, $amount, $rem_balance, $new_status, $created));
+                        \Mail::send(new NotifyTransaction($deposit, $preStatus, $user));
                     } catch (\Exception $ex) {
                         \Log::info('Notify Transaction email send error: '.$ex->getMessage());
                     }

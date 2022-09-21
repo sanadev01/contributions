@@ -6,6 +6,7 @@ namespace App\Repositories;
 
 use Stripe\Charge;
 use Stripe\Stripe;
+use Carbon\Carbon;
 use Stripe\Customer;
 use App\Models\Order;
 use App\Models\State;
@@ -19,6 +20,7 @@ use App\Models\PaymentInvoice;
 use App\Models\BillingInformation;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Mail\Admin\NotifyTransaction;
 use Illuminate\Database\Eloquent\Model;
 use App\Services\PaymentServices\AuthorizeNetService;
 
@@ -169,8 +171,9 @@ class DepositRepository
                     return false;
                 }
             }
-
-            Deposit::create([
+            $preStatus = '';
+            $user = Auth::user()->name;
+            $deposit = Deposit::create([
                 'uuid' => $transactionID,
                 'transaction_id' => ($request->payment_gateway == 'stripe' || $request->payment_gateway == 'stripe_ach') ? $this->chargeID : $response->data->getTransId(),
                 'amount' => $request->amount,
@@ -181,6 +184,12 @@ class DepositRepository
             ]);
 
             DB::commit();
+
+            try {
+                \Mail::send(new NotifyTransaction($deposit, $preStatus, $user));
+            } catch (\Exception $ex) {
+                \Log::info('Notify Transaction email send error: '.$ex->getMessage());
+            }
 
             return true;
 
@@ -323,6 +332,15 @@ class DepositRepository
                     'path' => $document->filename
                 ]);
             }
+        }
+        
+        $preStatus = '';
+        $user = Auth::user()->name;
+
+        try {
+            \Mail::send(new NotifyTransaction($deposit, $preStatus, $user));
+        } catch (\Exception $ex) {
+            \Log::info('Notify Transaction email send error: '.$ex->getMessage());
         }
     }
 
