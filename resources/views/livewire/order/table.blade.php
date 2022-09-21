@@ -197,7 +197,6 @@
                 }).catch(function(data){
                     toastr.error(response.message)
                 })
-                console.log({{auth()->user()->name}});
             })
 
             // @this.on('edit-order',function(){
