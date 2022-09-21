@@ -32,8 +32,13 @@ class NotifyTransaction extends Mailable
         $this->preStatus = $preStatus;
         $this->user = $user;
         
+        \Log::info('depositUser');
+        \Log::info($deposit->firstOrder);
         $orderUser = User::find($this->deposit->user_id);
-        $order = Order::find($this->deposit->user_id);
+        $order = Order::find($this->deposit->order_id);
+        $order->refresh();
+        \Log::info('orderUser');
+        \Log::info($order);
         if($order->status == Order::STATUS_PREALERT_TRANSIT) {
             $newStatus = "STATUS_PREALERT_TRANSIT";
         }elseif($order->status == Order::STATUS_PREALERT_READY){
@@ -44,11 +49,14 @@ class NotifyTransaction extends Mailable
             $newStatus = "STATUS_NEEDS_PROCESSING";
         }elseif($order->status == Order::STATUS_PAYMENT_PENDING){
             $newStatus = "STATUS_PAYMENT_PENDING";
-        }else {
-            $newStatus = '';
+        }elseif($order->status == Order::STATUS_PAYMENT_DONE) {
+            $newStatus = "STATUS_PAYMENT_DONE";
+        }else{
+            $newStatus = 'STATUS_REFUND';
         }
         $this->order = $order;
         $this->orderUser = $orderUser;
+        $this->newStatus = $newStatus;
 
         
     }
@@ -60,7 +68,7 @@ class NotifyTransaction extends Mailable
      */
     public function build()
     {
-        if(!$order){
+        if(!$this->order){
             $subject = "Account Recharged";
         } else {
             $subject = "Transaction Notification";        }

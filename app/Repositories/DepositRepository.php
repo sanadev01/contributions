@@ -333,12 +333,10 @@ class DepositRepository
                 ]);
             }
         }
-        
-        $preStatus = '';
         $user = Auth::user()->name;
 
         try {
-            \Mail::send(new NotifyTransaction($deposit, $preStatus, $user));
+            \Mail::send(new NotifyTransaction($deposit, null, $user));
         } catch (\Exception $ex) {
             \Log::info('Notify Transaction email send error: '.$ex->getMessage());
         }

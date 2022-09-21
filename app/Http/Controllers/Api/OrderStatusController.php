@@ -31,15 +31,13 @@ class OrderStatusController extends Controller
             $preStatus = "STATUS_PAYMENT_PENDING";
         }elseif($order->status == Order::STATUS_PAYMENT_DONE){
             $preStatus = "STATUS_PAYMENT_DONE";
-        }else {
-            $preStatus = '';
         }
 
         if($order->status == Order::STATUS_REFUND){
             return apiResponse(false,"You can't change status anymore");
         }
         
-        \Log::info('Login user id: ' . Auth::id());
+        \Log::info('Login user id: ' . $user);
         \Log::info('order user id: ' . $order->user_id);
         \Log::info('order id: ' . $order->id);
         \Log::info('order status: ' . $order->status);
