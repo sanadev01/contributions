@@ -31,6 +31,12 @@ class OrderStatusController extends Controller
             $preStatus = "STATUS_PAYMENT_PENDING";
         }elseif($order->status == Order::STATUS_PAYMENT_DONE){
             $preStatus = "STATUS_PAYMENT_DONE";
+        }elseif($order->status == Order::STATUS_CANCEL) {
+            $newStatus = "STATUS_CANCEL";
+        }elseif($order->status == Order::STATUS_REJECTED) {
+            $newStatus = "STATUS_REJECTED";
+        }elseif($order->status == Order::STATUS_RELEASE) {
+            $newStatus = "STATUS_RELEASE";
         }
 
         if($order->status == Order::STATUS_REFUND){
@@ -58,19 +64,18 @@ class OrderStatusController extends Controller
                 if ( $order ){
                     $order->deposits()->sync($deposit->id);
                 }
-
-                try {
-                    \Mail::send(new NotifyTransaction($deposit, $preStatus, $user));
-                } catch (\Exception $ex) {
-                    \Log::info('Notify Transaction email send error: '.$ex->getMessage());
-                }
                 
                 $order->update([
                     'status'  => $request->status,
                     'is_paid' => false
                 ]);
 
-                                
+                try {
+                    \Mail::send(new NotifyTransaction($deposit, $preStatus, $user));
+                } catch (\Exception $ex) {
+                    \Log::info('Notify Transaction email send error: '.$ex->getMessage());
+                }
+                                               
                 return apiResponse(true,"Updated");
             }
            
@@ -91,12 +96,6 @@ class OrderStatusController extends Controller
                         $order->deposits()->sync($deposit->id);
                     }
 
-                    try {
-                        \Mail::send(new NotifyTransaction($deposit, $preStatus, $user));
-                    } catch (\Exception $ex) {
-                        \Log::info('Notify Transaction email send error: '.$ex->getMessage());
-                    }
-
                 }else{
                     return apiResponse(false,"Not Enough Balance. Please Add Balance to ".$order->user->name.' '. $order->user->pobox_number ." account.");
                 }
@@ -115,6 +114,13 @@ class OrderStatusController extends Controller
                 'status' => $request->status,
                 'is_paid' => $request->status >= Order::STATUS_PAYMENT_DONE ? true: false
             ]);
+
+            try {
+                \Mail::send(new NotifyTransaction($deposit, $preStatus, $user));
+            } catch (\Exception $ex) {
+                \Log::info('Notify Transaction email send error: '.$ex->getMessage());
+            }
+
 
             return apiResponse(true,"Updated");
         }

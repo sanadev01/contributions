@@ -171,7 +171,6 @@ class DepositRepository
                     return false;
                 }
             }
-            $preStatus = '';
             $user = Auth::user()->name;
             $deposit = Deposit::create([
                 'uuid' => $transactionID,
@@ -186,7 +185,7 @@ class DepositRepository
             DB::commit();
 
             try {
-                \Mail::send(new NotifyTransaction($deposit, $preStatus, $user));
+                \Mail::send(new NotifyTransaction($deposit, null, $user));
             } catch (\Exception $ex) {
                 \Log::info('Notify Transaction email send error: '.$ex->getMessage());
             }
