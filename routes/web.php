@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Recipient;
 use App\Models\ProfitPackage;
 use App\Models\ShippingService;
+use App\Models\Warehouse\Container;
 use Illuminate\Support\Facades\Artisan;
 use App\Services\Converters\UnitsConverter;
 use App\Services\StoreIntegrations\Shopify;
@@ -15,6 +16,7 @@ use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
+use App\Models\Warehouse\DeliveryBill;
 
 /*
 |--------------------------------------------------------------------------
