@@ -10,8 +10,8 @@ The <strong>{{ $user }}</strong> has created a transaction on <strong>Date:</str
 <strong>Order Status (Previous): </strong> {{ $preStatus }}<br>
 <strong>Order Status (Current): </strong> {{ $newStatus }}<br>
 @endif
-<strong>Previous Balance:</strong> {{ $deposit->balance - $deposit->amount }} USD<br>
-<strong>@if(!empty($preStatus))Transaction @else Recharge @endif Amount:</strong> {{ $deposit->amount }} USD<br>
+<strong>Previous Balance:</strong> @if($deposit->is_credit == '0') {{ $deposit->balance + $deposit->amount }} @else {{ $deposit->balance - $deposit->amount }} @endif USD<br>
+<strong>@if(!empty($preStatus))Transaction @else Charge @endif Amount:</strong> {{ $deposit->amount }} USD<br>
 <strong>Remaining Balance:</strong> {{ $deposit->balance }} USD<br>
 @component('mail::button', ['url' => route('login') ])
 Dashboard

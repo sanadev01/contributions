@@ -184,11 +184,8 @@ class DepositRepository
 
             DB::commit();
 
-            try {
-                \Mail::send(new NotifyTransaction($deposit, null, $user));
-            } catch (\Exception $ex) {
-                \Log::info('Notify Transaction email send error: '.$ex->getMessage());
-            }
+            //SendMailNotification
+            $this->sendTransactionMail($deposit, $user);
 
             return true;
 
@@ -334,16 +331,21 @@ class DepositRepository
         }
         $user = Auth::user()->name;
 
-        try {
-            \Mail::send(new NotifyTransaction($deposit, null, $user));
-        } catch (\Exception $ex) {
-            \Log::info('Notify Transaction email send error: '.$ex->getMessage());
-        }
+        //SendMailNotification
+        $this->sendTransactionMail($deposit, $user);
     }
 
     public function getError()
     {
         return $this->error;
+    }
+
+    private function sendTransactionMail($deposit, $user){
+        try {
+            \Mail::send(new NotifyTransaction($deposit, null, $user));
+        } catch (\Exception $ex) {
+            \Log::info('Notify Transaction email send error: '.$ex->getMessage());
+        }
     }
     
 }

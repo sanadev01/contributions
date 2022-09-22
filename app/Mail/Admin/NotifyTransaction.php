@@ -71,9 +71,10 @@ class NotifyTransaction extends Mailable
     public function build()
     {
         if(!$this->order){
-            $subject = "Account Recharged";
+            $subject = "Transaction Update";
         } else {
-            $subject = "Transaction Notification";        }
+            $subject = "Transaction Notification";        
+        }
         return $this->markdown('email.admin.notify-transaction')
         ->to(
             config('hd.email.admin_email'),
