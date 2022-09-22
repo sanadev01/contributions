@@ -70,11 +70,8 @@ class OrderStatusController extends Controller
                     'is_paid' => false
                 ]);
 
-                try {
-                    \Mail::send(new NotifyTransaction($deposit, $preStatus, $user));
-                } catch (\Exception $ex) {
-                    \Log::info('Notify Transaction email send error: '.$ex->getMessage());
-                }
+                //SendMailNotification
+                $this->sendTransactionMail($deposit, $preStatus, $user);
                                                
                 return apiResponse(true,"Updated");
             }
@@ -115,17 +112,21 @@ class OrderStatusController extends Controller
                 'is_paid' => $request->status >= Order::STATUS_PAYMENT_DONE ? true: false
             ]);
 
-            try {
-                \Mail::send(new NotifyTransaction($deposit, $preStatus, $user));
-            } catch (\Exception $ex) {
-                \Log::info('Notify Transaction email send error: '.$ex->getMessage());
-            }
-
+            //SendMailNotification
+            $this->sendTransactionMail($deposit, $preStatus, $user);
 
             return apiResponse(true,"Updated");
         }
 
         return apiResponse(false,"Error while update");
 
+    }
+
+    private function sendTransactionMail($deposit, $preStatus, $user){
+        try {
+            \Mail::send(new NotifyTransaction($deposit, $preStatus, $user));
+        } catch (\Exception $ex) {
+            \Log::info('Notify Transaction email send error: '.$ex->getMessage());
+        }
     }
 }
