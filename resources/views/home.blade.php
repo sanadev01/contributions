@@ -69,7 +69,27 @@
                                 <strong> {{ auth()->user()->name . ' ' . auth()->user()->last_name }} <br>
                                     {!! auth()->user()->pobox_number !!} </strong>
                                 <br>
-                                {!! auth()->user()->getPoboxAddress() ?? '' !!} <br>
+                                {{-- {!! auth()->user()->getPoboxAddress() ?? '' !!} <br> --}}
+                                <table>
+                                    <thead>
+                                        <tr>
+                                        <th  class="pl-0 pr-3">Parcels via UPS/FedEx sent to</th>
+                                        <th>Parcels via USPS sent to</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="pl-0 pr-3">{!! auth()->user()->getPoboxAddress() ?? '' !!}</td>
+                                            <td>
+                                                11973 SW 150th PL<br>
+                                                Miami FL 33196<br>
+                                                United States <br>
+                                                <span class="text-white">Ph#: +13058885191</span>
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
                             </p>
                         </div>
                     </div>
