@@ -268,24 +268,15 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
     return response()->download(storage_path("app/labels/{$order->us_api_tracking_code}.pdf"),"{$order->us_api_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.us-label.download');
 
-Route::get('test-label/{id}/e/{conId}',function($id = null,$conId = null){
+Route::get('test-label',function(){
+
+    $labelPrinter = new CN23LabelMaker();
+
+    $order = Order::find(90354);
+    $labelPrinter->setOrder($order);
+    $labelPrinter->setService(2);
     
-    // $bill = DeliveryBill::find($id)->update([
-    //     'request_id' => null
-    // ]);
-    // $bill = Container::find($conId)->update([
-    //     'unit_code' => null
-    // ]);
-
-    \DB::table('container_delivery_bill')->where('container_id', $conId)->where('delivery_bill_id',$id)->delete();
-
-    // $labelPrinter = new CN23LabelMaker();
-
-    // $order = Order::find(90354);
-    // $labelPrinter->setOrder($order);
-    // $labelPrinter->setService(2);
-    
-    // return $labelPrinter->download();
+    return $labelPrinter->download();
 });
 
 Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container');
