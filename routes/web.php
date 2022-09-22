@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
+use App\Models\Warehouse\DeliveryBill;
 
 /*
 |--------------------------------------------------------------------------
@@ -267,16 +268,11 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
     return response()->download(storage_path("app/labels/{$order->us_api_tracking_code}.pdf"),"{$order->us_api_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.us-label.download');
 
-Route::get('test-label/{contID}/e/{patchNo}',function($contID = null, $patchNo = null){
-    $container = Container::find($contID);
-    // dd($container);
-    if($container) {
-        Container::where('id', $container->id)
-        ->update([
-            'dispatch_number' => $patchNo,
-            ]);
-        return "Dispatch Number Updated";
-    }
+Route::get('test-label/{id}',function($id = null){
+    
+    $bill = DeliveryBill::find($id)->update([
+        'request_id' => null
+    ]);
 
     // $labelPrinter = new CN23LabelMaker();
 
