@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use App\Models\Order;
 
 class MileExpressService
 {
@@ -211,7 +212,7 @@ class MileExpressService
                 ]
             ],
             'shipper' => [
-                'name' => 'Herco inc',
+                'name' => $this->setOrderSenderName($order),
                 'addresses' => [
                     [
                         'number' => 100,
@@ -283,6 +284,19 @@ class MileExpressService
         }
 
         return $description;
+    }
+
+    /**
+     * @param Order $order
+     * @return string
+     */
+    private function setOrderSenderName($order)
+    {
+        if ($order->sender_first_name) {
+            return $order->sender_first_name.' '.$order->sender_last_name;
+        }
+        
+        return 'Herco inc';
     }
 
     private function makeRequestBodyForContainer($request)
