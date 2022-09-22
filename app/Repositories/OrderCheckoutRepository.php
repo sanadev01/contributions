@@ -4,10 +4,12 @@ namespace App\Repositories;
 
 use Stripe\Charge;
 use Stripe\Stripe;
+use Carbon\Carbon;
 use Stripe\Customer;
 use App\Models\Order;
 use App\Models\State;
 use App\Models\Country;
+use App\Models\Deposit;
 use App\Events\OrderPaid;
 use App\Mail\User\PaymentPaid;
 use App\Models\PaymentInvoice;
@@ -16,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\Admin\NotifyTransaction;
 use App\Services\PaymentServices\AuthorizeNetService;
 
 class OrderCheckoutRepository
@@ -46,24 +49,50 @@ class OrderCheckoutRepository
             }
             
             DB::beginTransaction();
-
+            $user = Auth::user()->name;
             try {
                 
                 foreach($this->invoice->orders as $order){
+
+                    if($order->status == Order::STATUS_PREALERT_TRANSIT) {
+                        $preStatus = "STATUS_PREALERT_TRANSIT";
+                    }elseif($order->status == Order::STATUS_PREALERT_READY){
+                        $preStatus = "STATUS_PREALERT_READY";
+                    }elseif($order->status == Order::STATUS_ORDER){
+                        $preStatus = "STATUS_ORDER";
+                    }elseif($order->status == Order::STATUS_NEEDS_PROCESSING){
+                        $preStatus = "STATUS_NEEDS_PROCESSING";
+                    }elseif($order->status == Order::STATUS_PAYMENT_PENDING){
+                        $preStatus = "STATUS_PAYMENT_PENDING";
+                    }elseif($order->status == Order::STATUS_PAYMENT_DONE){
+                        $preStatus = "STATUS_PAYMENT_DONE";
+                    }elseif($order->status == Order::STATUS_CANCEL) {
+                        $newStatus = "STATUS_CANCEL";
+                    }elseif($order->status == Order::STATUS_REJECTED) {
+                        $newStatus = "STATUS_REJECTED";
+                    }elseif($order->status == Order::STATUS_RELEASE) {
+                        $newStatus = "STATUS_RELEASE";
+                    }
+
                     if ( !$order->isPaid() &&  getBalance() >= $order->gross_total ){
-                        chargeAmount($order->gross_total,$order);
+                        $deposit = chargeAmount($order->gross_total,$order);
                     }
                 }
-    
+                
                 $this->invoice->update([
                     'is_paid' => true
                 ]);
-    
+                
                 $this->invoice->orders()->update([
                     'is_paid' => true,
                     'status' => Order::STATUS_PAYMENT_DONE
                 ]);
-
+                
+                try {
+                    \Mail::send(new NotifyTransaction($deposit, $preStatus, $user));
+                } catch (\Exception $ex) {
+                    \Log::info('Notify Transaction email send error: '.$ex->getMessage());
+                }
                 DB::commit();
             } catch (\Exception $ex) {
                 DB::rollBack();
@@ -93,7 +122,7 @@ class OrderCheckoutRepository
         event(new OrderPaid($this->invoice->orders, true));
 
         session()->flash('alert-success', __('orders.payment.alert-success'));
-        return redirect()->route('admin.payment-invoices.index');
+        return view('admin.payment-invoices.index');
     }
 
     private function payUpdatedInvoice()
@@ -258,7 +287,6 @@ class OrderCheckoutRepository
     private function stripePayment()
     {
         $stripeSecret = setting('STRIPE_SECRET', null, null, true);
-        
         $amountToPay = ($this->invoice->differnceAmount()) ? $this->invoice->differnceAmount() : $this->invoice->total_amount;
 
         Stripe::setApiKey($stripeSecret);
@@ -269,9 +297,10 @@ class OrderCheckoutRepository
                 'source' => $this->request->stripe_token,
                 'description' => auth()->user()->pobox_number.' '.'paid to HomeDelivery against payment invoice# '.$this->Invoice->uuid,
             ]);
-            
+                        
             $this->chargeID = $charge->id;
             return true;
+
 
         } catch (\Exception $ex) {
             $this->error = $ex->getMessage();

@@ -185,7 +185,8 @@
             @this.on('updated-status',function(orderId,status){
                 $.post('{{route("api.order.status.update")}}',{
                     order_id: orderId,
-                    status : status
+                    status : status,
+                    user: '{{auth()->user()->name}}'
                 })
                 .then(function(response){
                     if ( response.success ){

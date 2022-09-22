@@ -92,7 +92,7 @@ function getBalance()
 
 function chargeAmount($amount,$order=null,$description=null)
 {
-    Deposit::chargeAmount($amount,$order,$description);
+    return Deposit::chargeAmount($amount,$order,$description);
 }
 
 function setUSCosts($api_cost, $profit_cost)
