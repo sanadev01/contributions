@@ -171,6 +171,25 @@
 
 @push('lvjs-stack')
     <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            
+            @this.on('updated-status',function(orderId,status){
+                $.post('{{route("api.order.status.update")}}',{
+                    order_id: orderId,
+                    status : status,
+                    user: '{{auth()->user()->name}}'
+                })
+                .then(function(response){
+                    if ( response.success ){
+                        @this.call('render')
+                    }else{
+                        toastr.error(response.message)
+                    }
+                }).catch(function(data){
+                    toastr.error(response.message)
+                })
+            })
+        });
         function toggleDateSearch() {
             const div = document.getElementById('dateSearch');
             if (div.style.display != 'block') {
@@ -189,23 +208,5 @@
                 div.style.display = 'none';
             }
         }
-        window.addEventListener('DOMContentLoaded', () => {
-
-            @this.on('updated-status', function(orderId, status) {
-                $.post('{{ route('api.order.status.update') }}', {
-                        order_id: orderId,
-                        status: status
-                    })
-                    .then(function(response) {
-                        if (response.success) {
-                            @this.call('render')
-                        } else {
-                            toastr.error(response.message)
-                        }
-                    }).catch(function(data) {
-                        toastr.error(response.message)
-                    })
-            })
-        });
     </script>
 @endpush
