@@ -3,6 +3,7 @@
 use App\Models\Region;
 use Illuminate\Database\Seeder;
 use App\Services\Excel\Import\RegionImportService;
+use App\Services\Excel\Import\ColombiaRegionImportService;
 
 class RegionSeeder extends Seeder
 {
@@ -16,5 +17,8 @@ class RegionSeeder extends Seeder
         Region::truncate();
         $regionImportService = new RegionImportService();
         $regionImportService->handle();
+
+        $colombiaRegionImportService = new ColombiaRegionImportService();
+        $colombiaRegionImportService->handle();
     }
 }

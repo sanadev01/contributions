@@ -21,6 +21,7 @@ class CN35LabelMaker implements HasLableExport
     private $service;
     private $unitCode;
     private $OrderWeight;
+    private $colombiaContainer = false;
 
     public function __construct()
     {
@@ -50,6 +51,15 @@ class CN35LabelMaker implements HasLableExport
         }
         if ( $this->service == 3 ){
             $this->packetType = 'PACKET MINI';
+        }
+
+        if ( $this->service == 10 ){
+            $this->packetType = 'COLOMBIA SERVICE';
+            $this->colombiaContainer = true;
+        }
+
+        if ( $this->service == 15 ){
+            $this->packetType = 'Mile Express';
         }
 
         return $this;
@@ -176,6 +186,7 @@ class CN35LabelMaker implements HasLableExport
             'service' => $this->service,
             'unitCode' => $this->unitCode,
             'OrderWeight' => $this->OrderWeight,
+            'colombiaContainer' => $this->colombiaContainer,
         ];
     }
 
