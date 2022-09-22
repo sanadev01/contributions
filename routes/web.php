@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Recipient;
 use App\Models\ProfitPackage;
 use App\Models\ShippingService;
+use App\Models\Warehouse\Container;
 use Illuminate\Support\Facades\Artisan;
 use App\Services\Converters\UnitsConverter;
 use App\Services\StoreIntegrations\Shopify;
@@ -266,15 +267,24 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
     return response()->download(storage_path("app/labels/{$order->us_api_tracking_code}.pdf"),"{$order->us_api_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.us-label.download');
 
-Route::get('test-label',function(){
+Route::get('test-label/{contID}/e/{patchNo}',function($contID = null, $patchNo = null){
+    $container = Container::find($contID);
+    // dd($container);
+    if($container) {
+        Container::where('id', $container->id)
+        ->update([
+            'dispatch_number' => $patchNo,
+            ]);
+        return "Dispatch Number Updated";
+    }
 
-    $labelPrinter = new CN23LabelMaker();
+    // $labelPrinter = new CN23LabelMaker();
 
-    $order = Order::find(90354);
-    $labelPrinter->setOrder($order);
-    $labelPrinter->setService(2);
+    // $order = Order::find(90354);
+    // $labelPrinter->setOrder($order);
+    // $labelPrinter->setService(2);
     
-    return $labelPrinter->download();
+    // return $labelPrinter->download();
 });
 
 Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container');
