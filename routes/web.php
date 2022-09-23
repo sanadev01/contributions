@@ -4,6 +4,7 @@ use App\Models\Tax;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\PoBox;
 use App\Models\Recipient;
 use App\Models\ProfitPackage;
 use App\Models\ShippingService;
@@ -274,13 +275,16 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 
 Route::get('test-label',function(){
 
-    $labelPrinter = new CN23LabelMaker();
+    PoBox::insert(['address' => '2200 NW, 129th Ave – Suite # 100', 'city' => 'Miami', 'zipcode' => '33182', 'state_id' => '4622', 
+    'country_id' => '250', 'phone' => '+13058885191']);
+    return "Record Inserted";
+    // $labelPrinter = new CN23LabelMaker();
 
-    $order = Order::find(90354);
-    $labelPrinter->setOrder($order);
-    $labelPrinter->setService(2);
+    // $order = Order::find(90354);
+    // $labelPrinter->setOrder($order);
+    // $labelPrinter->setService(2);
     
-    return $labelPrinter->download();
+    // return $labelPrinter->download();
 });
 
 Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container');
