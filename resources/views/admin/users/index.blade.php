@@ -58,7 +58,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="table-responsive-md mt-1">
+                    <div class="table-responsive mt-1">
                         <table class="table table-bordered mb-0">
                             <thead>
                                 <tr>
