@@ -270,8 +270,8 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 
 Route::get('test-label',function(){
 
-    Container::find(2663)->update([
-        'dispatch_number' => 970007
+    Container::find(2661)->update([
+        'dispatch_number' => 970006
     ]);
     $labelPrinter = new CN23LabelMaker();
 
