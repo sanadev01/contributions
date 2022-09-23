@@ -164,7 +164,8 @@ class Client{
                 ],
                 'consigneeaddress' => [
                     'name' => $order->recipient->getFullName(),
-                    'addr1' => $order->recipient->address,
+                    'attention' => $order->warehouse_number,
+                    'addr1' => $order->recipient->address.'-'.$order->recipient->street_no,
                     'state' => $order->recipient->state->code,
                     'city' => $order->recipient->city,
                     'country' => $order->recipient->country->code,
