@@ -122,6 +122,12 @@ class CN35LabelMaker implements HasLableExport
                 return $this;
             }
         }
+        if($this->packetType == 'Mile Express'){
+            $this->officeAddress = 'Mile Express <br/>
+                                    Rua Lagoa Dourada 371 <br/>
+                                    Cocaia I Guarulhos-SP <br/>';
+            return $this;
+        }
         $this->officeAddress = 'Empresa Brasileira de Correios e Telégrafos <br/>
                                 Centro Internacional de Curitiba –SE/PR <br/>
                                 Rua Salgado Filho, 476 Jardim Amélia <br/>
