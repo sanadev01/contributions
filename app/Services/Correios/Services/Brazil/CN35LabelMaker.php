@@ -125,7 +125,9 @@ class CN35LabelMaker implements HasLableExport
         if($this->packetType == 'Mile Express'){
             $this->officeAddress = 'Mile Express <br/>
                                     Rua Lagoa Dourada 371 <br/>
-                                    Cocaia I Guarulhos-SP <br/>';
+                                    Cocaia I Guarulhos-SP <br/>
+                                    &nbsp;<br/>
+                                    &nbsp;<br/>';
             return $this;
         }
         $this->officeAddress = 'Empresa Brasileira de Correios e Telégrafos <br/>
