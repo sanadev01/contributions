@@ -163,8 +163,7 @@ class Client{
                     'email' => ($order->sender_email) ? $order->sender_email : '',
                 ],
                 'consigneeaddress' => [
-                    'name' => $order->recipient->getFullName(),
-                    'attention' => $order->warehouse_number,
+                    'name' => $order->recipient->getFullName().' '.$order->warehouse_number,
                     'addr1' => $order->recipient->address.'-'.$order->recipient->street_no,
                     'state' => $order->recipient->state->code,
                     'city' => $order->recipient->city,
