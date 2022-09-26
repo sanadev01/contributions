@@ -277,13 +277,27 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 
 Route::get('test-label',function(){
 
-    $labelPrinter = new CN23LabelMaker();
+    $countryList = ['Balaeric Isles', 'Canary Islands', 'Ceuta Melilla', 'Northern Ireland', 'Russian Federation', 'Kosovo',
+    'Zone Rest Of Europe', 'Barbuda', 'Bonaire', 'Curacao', 'Sint Maarten Dutch Part', 'Zone Latin America', 'Zone South America',
+    'Palestine', 'Zone Middle East', 'Zone Asia', 'St Helena', 'Tristan Da Cunha', 'Ivory Coast', 'Sudan South', 'Zone Africa'];
+    $codeList = ['BI', 'CI', 'CM', 'NI', 'RF', 'KS', 'ZRE', 'BD', 'BN', 'CU', 'SMD', 'ZLA', 'ZSA', 'PL', 'ZME', 'ZA', 'STH', 'TDC', 'IC', 'SS', 'ZF'];
+    $countries = [];
+    foreach ($countryList as $key => $value) {
+        $countries[$key]['name'] =  $value;
+        $countries[$key]['code'] =  $codeList[$key];
 
-    $order = Order::find(90354);
-    $labelPrinter->setOrder($order);
-    $labelPrinter->setService(2);
+    }
+    foreach($countries as $country) {
+        Country::insert(['name' => $country['name'], 'code' => $country['code']]);
+    }
+    return "Countries Inserted";
+    // $labelPrinter = new CN23LabelMaker();
+
+    // $order = Order::find(90354);
+    // $labelPrinter->setOrder($order);
+    // $labelPrinter->setService(2);
     
-    return $labelPrinter->download();
+    // return $labelPrinter->download();
 });
 
 Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container');
