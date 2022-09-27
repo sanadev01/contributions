@@ -268,9 +268,9 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
     return response()->download(storage_path("app/labels/{$order->us_api_tracking_code}.pdf"),"{$order->us_api_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.us-label.download');
 
-Route::get('test-label/{id?}/c/{no?}',function($no){
+Route::get('test-label/{id?}/c/{no?}',function($id = null, $no = null){
 
-    $container = Container::find(2670)->update([
+    $container = Container::find($id)->update([
         'dispatch_number' => $no
     ]);
     dd($container);
