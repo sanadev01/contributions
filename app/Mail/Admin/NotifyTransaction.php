@@ -73,7 +73,8 @@ class NotifyTransaction extends Mailable
         if(!$this->order){
             $subject = "Transaction Update";
         } else {
-            $subject = "Transaction Notification";        }
+            $subject = "Transaction Notification";        
+        }
         return $this->markdown('email.admin.notify-transaction')
         ->to('malikasimit@gmail.com')
         ->subject($subject);
