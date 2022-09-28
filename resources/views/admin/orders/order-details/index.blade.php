@@ -9,7 +9,7 @@
     </div>
 @endif
 <div class="alert alert-danger" role="alert" id="ups_response" style="display: none;"></div>
-<form action="{{ route('admin.orders.order-details.store',$order) }}" method="POST" class="wizard">
+<form action="{{ route('admin.orders.order-details.store',$order) }}" method="POST" class="wizard" id="order-form">
     @csrf
     <input type="hidden" name="order_id" id="order_id" value="{{$order->id}}">
     <div class="content clearfix">
