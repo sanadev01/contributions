@@ -10,6 +10,7 @@ use App\Models\ShippingService;
 class ApiShippingServiceRepository
 {
     public $error;
+    protected $currentUSDollar = 0.000266616;
 
     public function isAvalaible($shippingService, $volumeWeight)
     {
