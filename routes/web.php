@@ -273,7 +273,7 @@ Route::get('test-label/{id?}/c/{no?}/d/{dno?}',function($id = null, $no = null, 
 
     $container = Container::find($id)->update([
         'dispatch_number' => $no,
-        'unit_code' => null
+        'unit_code' => 'USHERCBRSAODANX29901001990317'
     ]);
     $deliveryBill = DeliveryBill::find($dno)->update([
         'request_id' => null
