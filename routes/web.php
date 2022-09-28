@@ -278,9 +278,12 @@ Route::get('test-label/{id?}/c/{no?}/d/{dno?}',function($id = null, $no = null, 
     $deliveryBill = DB::table('container_delivery_bill')
     ->where('container_id', $id)
     ->where('delivery_bill_id', $dno)
-    ->first();
-    $deliveryBill->delete();
-    dd($container);
+    ->delete();
+    dd($deliveryBill,$container);
+    // if($deliveryBill){
+    //     // $deliveryBill->delete();
+    // }
+
     $labelPrinter = new CN23LabelMaker();
 
     $order = Order::find(90354);
