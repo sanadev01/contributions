@@ -188,8 +188,5 @@
     .red{
         color:#ff5a5a
     }
-    .li-font{
-        font-size: 16px;
-    }
 </style>
 @yield('custom-css')

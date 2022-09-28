@@ -109,7 +109,7 @@
             <div class="modal-body">
                 <h4>@lang('orders.order-details.Parcel Rate')</h4>
                 <ul>
-                    <li class="li-font">@lang('orders.order-details.Charge-msg1') <span class="badge badge-light" id="uspsVal"></span> @lang('orders.order-details.Charge-msg2')</li>
+                    <li><h4>@lang('orders.order-details.Charge-msg1') <span class="badge badge-light" id="uspsVal"></span> @lang('orders.order-details.Charge-msg2')</h4></li>
                 </ul>
             </div>
             <div class="modal-footer">
