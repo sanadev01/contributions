@@ -32,6 +32,7 @@ class ShippingService extends Model
     const AJ_Packet_Standard = 33164;
     const AJ_Packet_Express = 33172;
     const Brazil_Redispatch = 100;
+    const GePS = 537;
 
     protected $guarded = [];
 
@@ -132,6 +133,15 @@ class ShippingService extends Model
         return false;
     }
 
+    public function isGePSService()
+    {
+        if (collect($this->gepsShippingServices())->contains($this->service_sub_class)) {
+            return true;
+        }
+
+        return false;
+    }
+
     private function anjunShippingServices()
     {
         return [
@@ -176,6 +186,13 @@ class ShippingService extends Model
         return [
             self::USPS_PRIORITY_INTERNATIONAL, 
             self::USPS_FIRSTCLASS_INTERNATIONAL,
+        ];
+    }
+
+    private function gepsShippingServices()
+    {
+        return [
+            self::GePS,
         ];
     }
 }

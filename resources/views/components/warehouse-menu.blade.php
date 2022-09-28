@@ -44,6 +44,12 @@
                     <span class="menu-title">@lang('menu.Warehouse.Sinerlog Containers')</span>
                 </a>
             </li>
+            <li class="{{ $isActive(['warehouse.geps_containers.index','warehouse.geps_containers.create','warehouse.geps_containers.edit','warehouse.geps_container.packages.index']) }}">
+                <a href="{{ route('warehouse.geps_containers.index') }}">
+                    <i class="feather icon-circle"></i>
+                    <span class="menu-title">@lang('menu.Warehouse.GePS Containers')</span>
+                </a>
+            </li>
         @endadmin
         <li class="{{ $isActive(['warehouse.chile_containers.index','warehouse.chile_containers.create','warehouse.chile_containers.edit','warehouse.chile_container.packages.index']) }}">
             <a href="{{ route('warehouse.chile_containers.index') }}">
