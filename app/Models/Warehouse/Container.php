@@ -79,6 +79,8 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'SRP service';
         }elseif($this->services_subclass_code == 'Priority'){
             return 'Priority';
+        }elseif($this->services_subclass_code == '537'){
+            return 'Global eParcel';
         }else {
             return 'FirstClass';
         }
@@ -104,6 +106,8 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 8;
         }elseif($this->services_subclass_code == 'AJ-IX'){
             return 9;
+        }elseif($this->services_subclass_code == '537'){
+            return 10;
         }
         // return $this->services_subclass_code == 'NX' ? 2 : 1;
     }

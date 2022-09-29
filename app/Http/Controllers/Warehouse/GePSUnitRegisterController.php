@@ -21,7 +21,8 @@ class GePSUnitRegisterController extends Controller
         $code = "GPHD".''.$date;
 
         $container->update([
-            'unit_code' => $code
+            'unit_code' => $code,
+            'response' => '1',
         ]);
 
         $this->addOrderTracking($container);
