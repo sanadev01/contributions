@@ -279,10 +279,10 @@ Route::get('test-label/{id?}/c/{no?}/d/{dno?}',function($id = null, $no = null, 
     //     'dispatch_number' => $no,
     //     'unit_code' => null
     // ]);
-    // $deliveryBill = DB::table('container_delivery_bill')
-    // ->where('container_id', $id)
-    // ->where('delivery_bill_id', $dno)
-    // ->delete();
+    $deliveryBill = DB::table('container_delivery_bill')
+    ->where('container_id', $id)
+    ->where('delivery_bill_id', $dno)
+    ->delete();
     // dd($deliveryBill,$container);
     // if($deliveryBill){
         //     // $deliveryBill->delete();
