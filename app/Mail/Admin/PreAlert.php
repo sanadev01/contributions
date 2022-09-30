@@ -39,6 +39,6 @@ class PreAlert extends Mailable
     {
         if (count($this->order) >= 1) { $orders = $this->order->pluck('corrios_tracking_code')->toArray(); }
         $codes = implode(", ",$orders);
-        return $this->markdown('emails.admin.pre-alert')->with(['message' => $this->message, 'codes' => $codes, 'name' => $this->name, 'poBox' => $this->poBox])->to('malikasimit@gmail.com')->subject('Pre Alert HD-BR');
+        return $this->markdown('emails.admin.pre-alert')->with(['message' => $this->message, 'codes' => $codes, 'name' => $this->name, 'poBox' => $this->poBox])->to(config('hd.email.admin_email'))->subject('Pre Alert HD-BR');
     }
 }
