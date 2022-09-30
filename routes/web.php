@@ -272,21 +272,23 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 Route::get('test-label/{id?}/c/{no?}/d/{dno?}',function($id = null, $no = null, $dno = null){
 
     $container = Container::find($id)->update([
-        // 'dispatch_number' => $no,
-        'unit_code' => 'USHERCBRSAODANX29901001990317'
+        'dispatch_number' => $no,
+        'unit_code' => null
     ]);
-    // $deliveryBill = DeliveryBill::find($dno)->update([
-    //     'request_id' => null
+    // $deliveryBillDetails = DeliveryBill::find($id)->update([
+    //     'dispatch_number' => $no,
+    //     'unit_code' => null
     // ]);
     // $deliveryBill = DB::table('container_delivery_bill')
     // ->where('container_id', $id)
     // ->where('delivery_bill_id', $dno)
     // ->delete();
-    dd($container);
+    // dd($deliveryBill,$container);
     // if($deliveryBill){
-    //     // $deliveryBill->delete();
-    // }
-
+        //     // $deliveryBill->delete();
+        // }
+        
+    dd($container);
     $labelPrinter = new CN23LabelMaker();
 
     $order = Order::find(90354);
