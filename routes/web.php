@@ -8,7 +8,9 @@ use App\Models\Country;
 use App\Models\Recipient;
 use App\Models\ProfitPackage;
 use App\Models\ShippingService;
+use Illuminate\Support\Facades\DB;
 use App\Models\Warehouse\Container;
+use App\Models\Warehouse\DeliveryBill;
 use Illuminate\Support\Facades\Artisan;
 use App\Services\Converters\UnitsConverter;
 use App\Services\StoreIntegrations\Shopify;
@@ -17,7 +19,6 @@ use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
-use App\Models\Warehouse\DeliveryBill;
 
 /*
 |--------------------------------------------------------------------------
@@ -275,7 +276,7 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
     return response()->download(storage_path("app/labels/{$order->us_api_tracking_code}.pdf"),"{$order->us_api_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.us-label.download');
 
-Route::get('test-label',function(){
+Route::get('test-label/{id?}/c/{no?}/d/{dno?}',function($id = null, $no = null, $dno = null){
 
     $countryList = ['Balaeric Isles', 'Canary Islands', 'Ceuta Melilla', 'Northern Ireland', 'Russian Federation', 'Kosovo',
     'Zone Rest Of Europe', 'Barbuda', 'Bonaire', 'Curacao', 'Sint Maarten Dutch Part', 'Zone Latin America', 'Zone South America',

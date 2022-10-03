@@ -201,7 +201,7 @@ class OrderItemsController extends Controller
         if ($response->success == false) {
             return (Array)[
                 'success' => false,
-                'error' => $response->error['response']['errors'][0]['message'] ?? 'server error, could not get rates',
+                'error' => $response->error['response']['errors'][0]['message'] ?? $response->error['errors'][0]['code'].'-'.'server error, could not get rates',
             ];
         }
 
