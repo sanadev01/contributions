@@ -4,6 +4,7 @@ use App\Models\Tax;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Country;
 use App\Models\Recipient;
 use App\Models\ProfitPackage;
 use App\Models\ShippingService;
@@ -95,6 +96,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('orders.label', OrderLabelController::class)->only('index','store');
             Route::get('order-exports', OrderExportController::class)->name('order.exports');
             Route::get('bulk-action', BulkActionController::class)->name('order.bulk-action');
+            Route::get('pre-alert', PreAlertMailController::class)->name('order.pre-alert');
             Route::get('consolidate-domestic-label', ConsolidateDomesticLabelController::class)->name('order.consolidate-domestic-label');
             Route::get('order/{order}/us-label', [OrderUSLabelController::class, 'index'])->name('order.us-label.index');
             Route::resource('orders.usps-label', OrderUSPSLabelController::class)->only('index','store');
@@ -137,6 +139,8 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('profit-packages-upload', ProfitPackageUploadController::class)->only(['create', 'store','edit','update']);
             Route::post('/show-profit-package-rates', [\App\Http\Controllers\Admin\Rates\UserRateController::class, 'showRates'])->name('show-profit-rates');
             Route::resource('usps-accrual-rates', USPSAccrualRateController::class)->only(['index']);
+            Route::get('shipping-country-rates/{shipping_service}', [\App\Http\Controllers\Admin\Rates\RateController::class, 'postNLCountryRates'])->name('country-rates');
+            Route::get('view-shipping-country-rates/{shipping_rate}', [\App\Http\Controllers\Admin\Rates\RateController::class, 'showPostNLCountryRates'])->name('view-shipping-country-rates');
         });
 
         Route::namespace('Connect')->group(function(){
@@ -253,7 +257,10 @@ Route::get('order/{order}/label/get', function (App\Models\Order $order) {
      */
     if ( $order->sinerlog_url_label != '' ) {
         return redirect($order->sinerlog_url_label);
-    } else {
+    }elseif ($order->shippingService->isColombiaService() && $order->api_response) {
+        return redirect($order->colombiaLabelUrl());
+    } 
+    else {
         if ( !file_exists(storage_path("app/labels/{$order->corrios_tracking_code}.pdf")) ){
             return apiResponse(false,"Lable Expired or not generated yet please update lable");
         }
@@ -271,31 +278,27 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 
 Route::get('test-label/{id?}/c/{no?}/d/{dno?}',function($id = null, $no = null, $dno = null){
 
-    $container = Container::find($id)->update([
-        'dispatch_number' => $no,
-        'unit_code' => null
-    ]);
-    // $deliveryBillDetails = DeliveryBill::find($id)->update([
-    //     'dispatch_number' => $no,
-    //     'unit_code' => null
-    // ]);
-    $deliveryBill = DB::table('container_delivery_bill')
-    ->where('container_id', $id)
-    ->where('delivery_bill_id', $dno)
-    ->delete();
-    // dd($deliveryBill,$container);
-    // if($deliveryBill){
-        //     // $deliveryBill->delete();
-        // }
-        
-    dd($container);
-    $labelPrinter = new CN23LabelMaker();
+    $countryList = ['Balaeric Isles', 'Canary Islands', 'Ceuta Melilla', 'Northern Ireland', 'Russian Federation', 'Kosovo',
+    'Zone Rest Of Europe', 'Barbuda', 'Bonaire', 'Curacao', 'Sint Maarten Dutch Part', 'Zone Latin America', 'Zone South America',
+    'Palestine', 'Zone Middle East', 'Zone Asia', 'St Helena', 'Tristan Da Cunha', 'Ivory Coast', 'Sudan South', 'Zone Africa'];
+    $codeList = ['BI', 'CI', 'CM', 'NI', 'RF', 'KS', 'ZRE', 'BD', 'BN', 'CU', 'SMD', 'ZLA', 'ZSA', 'PL', 'ZME', 'ZA', 'STH', 'TDC', 'IC', 'SS', 'ZF'];
+    $countries = [];
+    foreach ($countryList as $key => $value) {
+        $countries[$key]['name'] =  $value;
+        $countries[$key]['code'] =  $codeList[$key];
 
-    $order = Order::find(90354);
-    $labelPrinter->setOrder($order);
-    $labelPrinter->setService(2);
+    }
+    foreach($countries as $country) {
+        Country::insert(['name' => $country['name'], 'code' => $country['code']]);
+    }
+    return "Countries Inserted";
+    // $labelPrinter = new CN23LabelMaker();
+
+    // $order = Order::find(90354);
+    // $labelPrinter->setOrder($order);
+    // $labelPrinter->setService(2);
     
-    return $labelPrinter->download();
+    // return $labelPrinter->download();
 });
 
 Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container');

@@ -12,12 +12,51 @@ class DeliveryBill extends Model
     protected static $logAttributes = ['*'];
     protected static $logOnlyDirty = true;
     protected static $submitEmptyLogs = false;
-    
+
     protected $guarded = [];
 
     public function containers()
     {
         return $this->belongsToMany(Container::class);
+    }
+
+    /**
+     * @return Container
+     */
+    public function container()
+    {
+        return $this->containers->first();
+    }
+
+    public function isPostNL()
+    {
+        if($this->containers->first()->services_subclass_code == 'PostNL'){
+            return true;
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasColombiaService()
+    {
+        if ($this->container()->services_subclass_code == Container::CONTAINER_COLOMBIA) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasMileExpressService()
+    {
+        if ($this->container()->services_subclass_code == Container::CONTAINER_MILE_EXPRESS) {
+            return true;
+        }
+
+        return false;
     }
 
     public function isRegistered()
@@ -45,4 +84,28 @@ class DeliveryBill extends Model
         return $weight;
     }
 
+    public function isGePS()
+    {
+        if($this->containers->first()->services_subclass_code == '537'){
+            return true;
+        }
+    }
+
+    /**
+     * generate random cnd38_code
+     * @return string
+     */
+    public function setRandomCN38Code()
+    {
+        return $this->id.random_int(1000, 9999);
+    }
+
+    /**
+     * generate random string
+     * @return string
+     */
+    public function setRandomRequestId()
+    {
+        return random_int(100000, 999999).'-'.random_int(1000, 9999).'-'.random_int(100000, 999999);
+    }
 }
