@@ -97,16 +97,16 @@
                     $("[name='state_id']").prop('required',true);
                 }
 
-                if (country != Colombia) {
+                if (country == Colombia) {
                     return getStatesFromDB();
                 }
 
-                if (country == Colombia) {
-                    console.log('colombia');
-                    inactiveUSFields();
-                    activeColombiaFields();
-                    return getColombiaRegionsFromDB(oldRegion);
-                }
+                // if (country == Colombia) {
+                //     console.log('colombia');
+                //     inactiveUSFields();
+                //     activeColombiaFields();
+                //     return getColombiaRegionsFromDB(oldRegion);
+                // }
             }
 
         })
