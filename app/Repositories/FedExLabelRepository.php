@@ -87,7 +87,7 @@ class FedExLabelRepository
             return true;
         }
 
-        $this->fedExError = $response->error['errors'][0]['message'] ?? 'Unknown error';
+        $this->fedExError = $response->error['errors'][0]['code'].'-'.$response->error['errors'][0]['message'] ?? 'Unknown error';
     }
 
     public function getSecondaryLabel($order)
@@ -119,7 +119,7 @@ class FedExLabelRepository
             return true;
         }
 
-        $this->fedExError = $response->error['errors'][0]['message'] ?? 'Unknown error';
+        $this->fedExError = $response->error['errors'][0]['code'].'-'.$response->error['errors'][0]['message'] ?? 'Unknown error';
         return false;
     }
 

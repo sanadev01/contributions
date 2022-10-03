@@ -114,7 +114,7 @@
                     <div class="controls">
                         <label id="label_address">@lang('address.Address') <span class="text-danger">*</span></label>
                         <label id="label_chile_address" style="display: none;">@lang('address.Chile Address')<span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="address" name="address" value="{{old('address',optional($order->recipient)->address)}}" required placeholder="@lang('address.Address')"/>
+                        <input type="text" class="form-control" id="address" name="address" value="{{old('address',optional($order->recipient)->address)}}" maxlength="38" required placeholder="@lang('address.Address')"/>
                         <div class="help-block"></div>
                     </div>
                 </div>
