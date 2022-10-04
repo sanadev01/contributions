@@ -6,6 +6,7 @@ use App\Models\Rate;
 use Illuminate\Http\UploadedFile;
 use App\Services\Excel\AbstractImportService;
 use App\Models\Country;
+use App\Models\ShippingService;
 
 class ImportRates extends AbstractImportService
 {
@@ -32,8 +33,10 @@ class ImportRates extends AbstractImportService
     public function readRatesFromFile()
     {
         $rates = [];
-        if($this->countryId == Country::Chile){
+        if($this->shippingService->service_sub_class == ShippingService::Courier_Express){
             $limit = 75;
+        }elseif($this->shippingService->service_sub_class == ShippingService::GePS){
+            $limit = 27;
         }else{
             $limit = 70;
         }
