@@ -174,7 +174,7 @@ class FedExService
                 'value' => $this->accountNumber,
             ],
             'requestedShipment' => [
-                'shipper' => ($typeRecipient == true) ? $this->setCustomerAddress(null, $request) : $this->setHercoAddress(),
+                'shipper' => ($typeRecipient == true) ? $this->setHercoAddress() : $this->setCustomerAddress(null, $request),
                 'recipient' => ($typeRecipient == true) ? $this->setCustomerAddress($order) : $this->setHercoAddress(),
                 'serviceType' => 'FEDEX_GROUND',
                 'pickupType' => ($typeRecipient) ? 'DROPOFF_AT_FEDEX_LOCATION' : (($request->pickupShipment == true) ? 'CONTACT_FEDEX_TO_SCHEDULE' : 'DROPOFF_AT_FEDEX_LOCATION'),
