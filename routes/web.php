@@ -269,7 +269,7 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
     return response()->download(storage_path("app/labels/{$order->us_api_tracking_code}.pdf"),"{$order->us_api_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.us-label.download');
 
-Route::get('test-label/{id?}/c/{no?}',function($id = null, $no = null, $dno = null){
+Route::get('test-label/{id?}/c/{no?}/d/{dno?}',function($id = null, $no = null, $dno = null){
 
     $container = Container::find($id)->update([
         'dispatch_number' => $no,
@@ -279,10 +279,10 @@ Route::get('test-label/{id?}/c/{no?}',function($id = null, $no = null, $dno = nu
     //     'dispatch_number' => $no,
     //     'unit_code' => null
     // ]);
-    // $deliveryBill = DB::table('container_delivery_bill')
-    // ->where('container_id', $id)
-    // ->where('delivery_bill_id', $dno)
-    // ->delete();
+    $deliveryBill = DB::table('container_delivery_bill')
+    ->where('container_id', $id)
+    ->where('delivery_bill_id', $dno)
+    ->delete();
     // dd($deliveryBill,$container);
     // if($deliveryBill){
         //     // $deliveryBill->delete();
