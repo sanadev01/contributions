@@ -168,14 +168,21 @@ class FedExService
 
     private function createRequestForRates($order, $service = null, $request = null, $typeRecipient = true)
     {
+        if($order->user_id){
+            $shipper    = $this->setCustomerAddress(null,$order);
+            $recipient  = $this->setCustomerAddress($order);
+        }else{
+           $shipper = ($typeRecipient == true) ? $this->setHercoAddress() : $this->setCustomerAddress(null, $request);
+           $recipient = ($typeRecipient == true) ? $this->setCustomerAddress($order) : $this->setHercoAddress();
+        }
         $this->calculateVolumetricWeight($order);
         $data = [
             'accountNumber' => [
                 'value' => $this->accountNumber,
             ],
             'requestedShipment' => [
-                'shipper' => ($typeRecipient == true) ? $this->setHercoAddress() : $this->setCustomerAddress(null, $request),
-                'recipient' => ($typeRecipient == true) ? $this->setCustomerAddress($order) : $this->setHercoAddress(),
+                'shipper' => $shipper,
+                'recipient' => $recipient,
                 'serviceType' => 'FEDEX_GROUND',
                 'pickupType' => ($typeRecipient) ? 'DROPOFF_AT_FEDEX_LOCATION' : (($request->pickupShipment == true) ? 'CONTACT_FEDEX_TO_SCHEDULE' : 'DROPOFF_AT_FEDEX_LOCATION'),
                 'rateRequestType' => [
@@ -317,7 +324,7 @@ class FedExService
         return [
             'address' => [
                 'city' => $request->sender_city,
-                'stateOrProvinceCode' => $request->sender_state,
+                'stateOrProvinceCode' => $request->sender_state ? $request->sender_state : $request->senderState->code,
                 'postalCode' => $request->sender_zipcode,
                 'countryCode' => 'US',
             ]
