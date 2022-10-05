@@ -229,16 +229,16 @@ class FedExService
             'requestedShipment' => [
                 'shipper' => [
                     'contact' => [
-                        'personName' => 'Marcio Freitas',
-                        'phoneNumber' => '+13058885191',
+                        'personName' => $order->sender_first_name . ' '. $order->sender_last_name,
+                        'phoneNumber' => $order->sender_phone ? $order->sender_phone : '+13058885191',
                         'companyName' => 'HERCO SUITE#100'
                     ],
                     'address' => [
-                        'streetLines' => ['2200 NW 129TH AVE'],
-                        'city' => 'Miami',
-                        'stateOrProvinceCode' => 'FL',
-                        'postalCode' => 33182,
+                        'city' => $order->sender_city,
+                        'stateOrProvinceCode' => $order->senderState->code,
+                        'postalCode' => $order->sender_zipcode,
                         'countryCode' => 'US',
+                        'streetLines' => [$order->sender_address],
                     ],
                 ],
                 'recipients' => [
