@@ -242,7 +242,12 @@
                                     @if (number_format($order->user_declared_freight,2) == 0.01)
                                         0.00 USD
                                     @else
-                                        {{ number_format($order->user_declared_freight,2) }} USD
+                                        @if($order->sender_city)
+                                            {{ number_format($order->gross_total,2) }}
+                                        @else
+                                            {{ number_format($order->shipping_value,2) }}
+                                        @endif
+                                        USD
                                     @endif
                                 </td>
                                 <td></td>
@@ -261,7 +266,14 @@
 
                                 <tr>
                                     <th>@lang('orders.invoice.Shipping')</th>
-                                    <td>{{ number_format($order->shipping_value,2) }} USD</td>
+                                    <td>
+                                        @if($order->sender_city)
+                                            {{ number_format($order->gross_total,2) }}
+                                        @else
+                                            {{ number_format($order->shipping_value,2) }}
+                                        @endif
+                                        USD
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th>@lang('orders.invoice.Additional Services')</th>
