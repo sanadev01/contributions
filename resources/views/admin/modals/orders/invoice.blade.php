@@ -194,7 +194,6 @@
                 </div>
             </div>
         </div>
-
         <div id="invoice-items-details" class="pt-1 invoice-items-table border-success border-2">
             <div class="row">
                 <div class="table-responsive-md col-12">
@@ -242,12 +241,7 @@
                                     @if (number_format($order->user_declared_freight,2) == 0.01)
                                         0.00 USD
                                     @else
-                                        @if($order->sender_city)
-                                            {{ number_format($order->gross_total,2) }}
-                                        @else
-                                            {{ number_format($order->shipping_value,2) }}
-                                        @endif
-                                        USD
+                                        {{ number_format($order->user_declared_freight,2) }} USD
                                     @endif
                                 </td>
                                 <td></td>
