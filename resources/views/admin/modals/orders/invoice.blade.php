@@ -154,7 +154,14 @@
                         <tbody>
                             <tr>
                                 <td>{{ $order->shipping_service_name }}</td>
-                                <td>{{ number_format($order->shipping_value,2) }} USD</td>
+                                <td>
+                                    @if($order->sender_city)
+                                        {{ number_format($order->gross_total,2) }}
+                                    @else
+                                        {{ number_format($order->shipping_value,2) }}
+                                    @endif
+                                    USD
+                                </td>
                             </tr>
                         </tbody>
                     </table>
