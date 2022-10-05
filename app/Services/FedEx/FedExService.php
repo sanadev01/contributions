@@ -333,23 +333,18 @@ class FedExService
 
     private function fedExApiCall($url, $data)
     {
-        \Log::info('==url==');
-        \Log::info($url);
-        \Log::info('==data==');
-        \Log::info($data);
-        die();
-        // try {
+        try {
             
-        //     $response = Http::withHeaders($this->setHeaders())->acceptJson()->post($url, $data);
-        //     return $this->setResponse($response);
+            $response = Http::withHeaders($this->setHeaders())->acceptJson()->post($url, $data);
+            return $this->setResponse($response);
             
-        // } catch (\Exception $ex) {
-        //    Log::info('FedEx Error ' . $ex->getMessage());
-        //     return (object) [
-        //         'success' => false,
-        //         'error' => $ex->getMessage(),
-        //     ];
-        // }
+        } catch (\Exception $ex) {
+           Log::info('FedEx Error ' . $ex->getMessage());
+            return (object) [
+                'success' => false,
+                'error' => $ex->getMessage(),
+            ];
+        }
     }
     
     private function setHeaders()
