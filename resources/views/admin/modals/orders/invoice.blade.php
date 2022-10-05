@@ -13,7 +13,7 @@
             <div class="col-sm-6 col-12 text-right">
                 <h1>@lang('orders.invoice.Invoice')</h1>
                 <div class="invoice-details mt-2">
-                    <h6>@lang('orders.invoice.INVOICE NO.')</h6>
+                    <h6>@lang('orders.invoice.INVOICE NO')</h6>
                     <p>{{ $order->warehouse_number }}</p>
                     <h6 class="mt-2">@lang('orders.invoice.INVOICE DATE')</h6>
                     @if($order->getPaymentInvoice())
@@ -53,7 +53,14 @@
                 <h5>@lang('orders.invoice.Sender')</h5>
                 <div class="company-info my-2">
                     {{ $order->sender_first_name }} {{ $order->sender_last_name }} <br>
-                    2200 NW, 129th Ave – Suite # 100<br> Miami, FL, 33182<br>United States<br>Ph#: +13058885191
+                    @if($order->sender_city)
+                        {{ optional($order)->sender_address }}<br> 
+                        {{ optional($order)->sender_city }}, {{ optional($order)->sender_state }}, {{ optional($order)->sender_zipcode }}<br>
+                        {{ optional($order)->sender_country}}<br>
+                        Ph#: {{ optional($order)->sender_phone }}
+                    @else
+                        2200 NW, 129th Ave - Suite # 100<br> Miami, FL, 33182<br>United States<br>Ph#: +13058885191
+                    @endif
                 </div>
                 <div class="recipient-contact pb-2">
                     <p>
