@@ -194,7 +194,6 @@
                 </div>
             </div>
         </div>
-
         <div id="invoice-items-details" class="pt-1 invoice-items-table border-success border-2">
             <div class="row">
                 <div class="table-responsive-md col-12">
