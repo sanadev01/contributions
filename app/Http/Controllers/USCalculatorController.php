@@ -20,8 +20,8 @@ class USCalculatorController extends Controller
         });
 
         $userId = (auth()->check()) ? auth()->user()->id : null;
-        
-        return view('uscalculator.calculator', compact('states', 'userId'));
+        $cc = 'US';
+        return view('uscalculator.calculator', compact('states', 'userId', 'cc'));
     }
 
     public function store(USCalculatorRequest $request, USCalculatorRepository $usCalculatorRepository)
