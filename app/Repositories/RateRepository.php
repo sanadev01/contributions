@@ -35,7 +35,7 @@ class RateRepository
                     $importCourierExpressService->handle();
                 }else
                 {
-                    $importService = new ImportRates($file, $request->shipping_service_id, $request->country_id);
+                    $importService = new ImportRates($file, $shippingService, $request->country_id);
                     $importService->handle();
                 }
                 
