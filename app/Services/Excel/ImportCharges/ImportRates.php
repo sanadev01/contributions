@@ -10,26 +10,26 @@ use App\Models\ShippingService;
 
 class ImportRates extends AbstractImportService
 {
-    protected $shippingSrviceId;
+    protected $shippingService;
     protected $countryId;
 
-    public function __construct(UploadedFile $file, $shippingSrviceId, $countryId)
+    public function __construct(UploadedFile $file, $shippingService, $countryId)
     {
-        $this->shippingSrviceId = $shippingSrviceId;
+        $this->shippingService = $shippingService;
         $this->countryId = $countryId;
-
+        
         $filename = $this->importFile($file);
-
+        
         parent::__construct(
             $this->getStoragePath($filename)
         );
     }
-
+    
     public function handle()
     {
         return $this->readRatesFromFile();
     }
-
+    
     public function readRatesFromFile()
     {
         $rates = [];
@@ -47,30 +47,18 @@ class ImportRates extends AbstractImportService
             ];
         }
 
-        // $row = 16;
-
-        // $data = [
-        //     'rates' => $rates,
-        //     'additional_kg' => $this->workSheet->getCell('C'.$row)->getValue(),
-        //     'minimum_size' => $this->workSheet->getCell('C'.(++$row))->getValue(),
-        //     'max_combine_dim' => $this->workSheet->getCell('C'.(++$row))->getValue(),
-        //     'max_single_dim' => $this->workSheet->getCell('C'.(++$row))->getValue(),
-        //     'max_weight' => $this->workSheet->getCell('C'.(++$row))->getValue(),
-        //     'max_value' => $this->workSheet->getCell('C'.(++$row))->getValue(),
-        // ];
-
         return $this->storeRatesToDb($rates);
     }
 
     private function storeRatesToDb(array $data)
     {
-        $rates = Rate::where('shipping_service_id',$this->shippingSrviceId)->first();
+        $rates = Rate::where('shipping_service_id',$this->shippingService->id)->first();
         
         if ( !$rates ){
             $rates= new Rate();
         }
 
-        $rates->shipping_service_id = $this->shippingSrviceId;
+        $rates->shipping_service_id = $this->shippingService->id;
         $rates->country_id = $this->countryId;
         $rates->data = $data;
         $rates->save();
