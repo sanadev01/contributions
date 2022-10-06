@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Services\UPS\UPSShippingService;
 use App\Services\USPS\USPSShippingService;
 use App\Services\FedEx\FedExShippingService;
+use App\Services\GePS\GePSShippingService;
 use App\Services\Calculators\WeightCalculator;
 use App\Models\User;
 
@@ -107,6 +108,11 @@ class OrderRepository
                     ShippingService::SRP,
                     ShippingService::SRM,
                     ShippingService::Courier_Express
+                ];
+            }
+            if($request->carrier == 'GePS'){
+                $service = [
+                    ShippingService::GePS,
                 ];
             }
             $query->whereHas('shippingService', function ($query) use($service) {
@@ -251,6 +257,17 @@ class OrderRepository
 
         $order->doCalculations();
         return true;
+    }
+
+    public function GePSService($shippingServiceId)
+    {
+        $shippingService =  ShippingService::find($shippingServiceId);
+
+        if ($shippingService->isGePSService()) {
+            return true;
+        }
+
+        return false;
     }
 
     public function domesticService($shippingServiceId)
@@ -445,6 +462,19 @@ class OrderRepository
                     }
                 }
             }
+            // GePS Service
+            if (optional($order->recipient)->country_id != Order::US && setting('geps_service', null, User::ROLE_ADMIN) && setting('geps_service', null, auth()->user()->id))
+            {
+
+                $gepsShippingService = new GePSShippingService($order);
+
+                foreach ($gepsShippingService as $shippingService)
+                {
+                    if ($gepsShippingService->isAvailableForInternational($shippingService)) {
+                        $shippingServices->push($shippingService);
+                    }
+                }
+            }
 
             if ($shippingServices->isEmpty() && $this->shippingServiceError == null) {
                 $this->shippingServiceError = ($order->recipient->commune_id != null) ? 'Shipping Service not Available for the Region you have selected' : 'Shipping Service not Available for the Country you have selected';
@@ -469,7 +499,8 @@ class OrderRepository
             || $shippingServices->contains('service_sub_class', ShippingService::USPS_FIRSTCLASS)
             || $shippingServices->contains('service_sub_class', ShippingService::USPS_PRIORITY_INTERNATIONAL)
             || $shippingServices->contains('service_sub_class', ShippingService::USPS_FIRSTCLASS_INTERNATIONAL)
-            || $shippingServices->contains('service_sub_class', ShippingService::UPS_GROUND))
+            || $shippingServices->contains('service_sub_class', ShippingService::UPS_GROUND)
+            || $shippingServices->contains('service_sub_class', ShippingService::GePS))
         {
             if(!setting('usps', null, User::ROLE_ADMIN))
             {
@@ -493,6 +524,13 @@ class OrderRepository
                 $this->shippingServiceError = 'FEDEX is not enabled for this user';
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
                     return $shippingService->service_sub_class != ShippingService::FEDEX_GROUND;
+                });
+            }
+
+            if (!setting('geps_service', null, User::ROLE_ADMIN) && !setting('geps_service', null, auth()->user()->id)) {
+                $this->shippingServiceError = 'GePS is not enabled for this user';
+                $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                    return $shippingService->service_sub_class != ShippingService::GePS;
                 });
             }
             

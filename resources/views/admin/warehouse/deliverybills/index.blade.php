@@ -81,7 +81,7 @@
                                         <td>
                                             {{ $deliveryBill->name }}
                                             @if ($deliveryBill->Containers->count() > 0)
-                                                @if($deliveryBill->Containers->first()->orders->first()->shippingService->isAnjunService())
+                                                @if(optional($deliveryBill->Containers->first()->orders->first())->shippingService && $deliveryBill->Containers->first()->orders->first()->shippingService->isAnjunService())
                                                 <span class="badge badge-success">A</span>
                                                 @else
                                                 <span class="badge badge-primary">H</span>
@@ -110,9 +110,13 @@
                                                                 <i class="fa fa-cloud-download"></i> GET CN38
                                                             </a>
                                                         @endif
-                                                        <a href="{{ route('warehouse.delivery_bill.manifest',$deliveryBill) }}" class="dropdown-item w-100">
+                                                        @if($deliveryBill->isGePS())
+                                                            <a href="{{ route('warehouse.geps.manifest.download',$deliveryBill) }}" target="_blank" class="dropdown-item w-100">
+                                                        @else
+                                                            <a href="{{ route('warehouse.delivery_bill.manifest', $deliveryBill) }}"
+                                                            class="dropdown-item w-100">
+                                                        @endif
                                                             <i class="fa fa-cloud-download"></i> Download Manifest
-                                                        </a>
                                                         
                                                         <a href="{{ route('warehouse.delivery_bill.manifest',[$deliveryBill, 'service'=> true]) }}" class="dropdown-item w-100">
                                                             <i class="fa fa-cloud-download"></i> Download Manifest By Service

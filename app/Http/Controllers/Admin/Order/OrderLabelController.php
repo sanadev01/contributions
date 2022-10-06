@@ -13,6 +13,7 @@ use App\Repositories\USPSLabelRepository;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
 use App\Repositories\FedExLabelRepository;
+use App\Repositories\GePSLabelRepository;
 
 /**
  * Use for Sinerlog integration
@@ -27,14 +28,16 @@ class OrderLabelController extends Controller
     protected $uspsLabelRepository;
     protected $upsLabelRepository;
     protected $fedExLabelRepository;
+    protected $gepsLabelRepository;
 
-    public function __construct(CorrieosChileLabelRepository $corrieosChileLabelRepository, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, FedExLabelRepository $fedExLabelRepository)
+    public function __construct(CorrieosChileLabelRepository $corrieosChileLabelRepository, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, FedExLabelRepository $fedExLabelRepository, GePSLabelRepository $gepsLabelRepository)
     {
         $this->corrieosChileLabelRepository = $corrieosChileLabelRepository;
         $this->corrieosBrazilLabelRepository = $corrieosBrazilLabelRepository;
         $this->uspsLabelRepository = $uspsLabelRepository;
         $this->upsLabelRepository = $upsLabelRepository;
         $this->fedExLabelRepository = $fedExLabelRepository;
+        $this->gepsLabelRepository = $gepsLabelRepository;
     }
     
     public function index(Request $request, Order $order)
@@ -140,6 +143,14 @@ class OrderLabelController extends Controller
                 $error = $this->uspsLabelRepository->getUSPSErrors();
                 return $this->renderLabel($request, $order, $error);
             }
+        }
+
+        if($order->shippingService->isGePSService()){
+
+            $this->gepsLabelRepository->get($order);
+
+            $error = $this->gepsLabelRepository->getError();
+            return $this->renderLabel($request, $order, $error);
         }
         
         if ( $request->update_label === 'true' ){
