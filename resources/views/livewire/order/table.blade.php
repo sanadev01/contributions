@@ -42,6 +42,13 @@
                 <label>End Date</label>
                 <input type="date" name="end_date" class="from-control col-2">
 
+                <label>Type</label>
+                <select class="from-control col-2" name="type">
+                    <option value="">All</option>
+                    <option value="int">International</option>
+                    <option value="domestic">Domestic</option>
+                </select>
+
                 <button class="btn btn-success" title="@lang('orders.import-excel.Download')">
                     @lang('orders.Download Orders') <i class="fa fa-arrow-down"></i>
                 </button>
