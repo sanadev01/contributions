@@ -371,21 +371,12 @@ class OrderRepository
     {
         $orders = Order::where('status','>=',Order::STATUS_ORDER)
         ->has('user');
+
         if (Auth::user()->isUser()) {
             $orders->where('user_id', Auth::id());
         }
-       if ($request->type == 'int') {
-            $orders->whereHas('shippingService', function($query) {
-                return $query->whereNotIn('service_sub_class', [ShippingService::USPS_PRIORITY,ShippingService::USPS_FIRSTCLASS,ShippingService::UPS_GROUND, ShippingService::FEDEX_GROUND]);
-            });
-        }
-        if ($request->type == 'domestic') {
-            $orders->whereHas('shippingService', function($query) {
-                return $query->whereIn('service_sub_class', [ShippingService::USPS_PRIORITY,ShippingService::USPS_FIRSTCLASS,ShippingService::UPS_GROUND, ShippingService::FEDEX_GROUND]);
-            });
-        }
 
-        if ($request->type == 'int_dom') {
+        if ($request->type == 'domestic') {
             $orders->whereHas('shippingService', function($query) {
                 return $query->whereIn('service_sub_class', [ShippingService::USPS_PRIORITY,ShippingService::USPS_FIRSTCLASS,ShippingService::UPS_GROUND, ShippingService::FEDEX_GROUND]);
             })->orWhereNotNull('us_api_tracking_code');
