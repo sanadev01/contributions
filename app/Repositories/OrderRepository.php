@@ -371,16 +371,24 @@ class OrderRepository
     {
         $orders = Order::where('status','>=',Order::STATUS_ORDER)
         ->has('user');
+
         if (Auth::user()->isUser()) {
             $orders->where('user_id', Auth::id());
         }
+
+        if ($request->type == 'domestic') {
+            $orders->whereHas('shippingService', function($query) {
+                return $query->whereIn('service_sub_class', [ShippingService::USPS_PRIORITY,ShippingService::USPS_FIRSTCLASS,ShippingService::UPS_GROUND, ShippingService::FEDEX_GROUND]);
+            })->orWhereNotNull('us_api_tracking_code');
+        }
+
         $startDate  = $request->start_date.' 00:00:00';
         $endDate    = $request->end_date.' 23:59:59';
         if ( $request->start_date ){
-            $orders->where('order_date','>=',$startDate);
+            $orders->where('order_date' , '>=',$startDate);
         }
         if ( $request->end_date ){
-            $orders->where('order_date','<=',$endDate);
+            $orders->where('order_date' , '<=',$endDate);
         }
         
         return $orders->orderBy('id')->get();

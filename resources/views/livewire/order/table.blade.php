@@ -33,14 +33,20 @@
                 <option value="300">300</option>
             </select>
         </div>
-        <div class="col-11 text-right">
-            <form action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
+        <div class="row col-11  d-flex justify-content-end pr-0">
+            <form class="row col-8  d-flex justify-content-end " action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
                 @csrf
                 <label>Start Date</label>
-                <input type="date" name="start_date" class="from-control col-2">
+                <input type="date" name="start_date" class="form-control col-2">
 
                 <label>End Date</label>
-                <input type="date" name="end_date" class="from-control col-2">
+                <input type="date" name="end_date" class="form-control col-2">
+
+                <label>Type</label>
+                <select class="form-control col-2 mr-2" name="type">
+                    <option value="">All</option>
+                    <option value="domestic">Domestic</option>
+                </select>
 
                 <button class="btn btn-success" title="@lang('orders.import-excel.Download')">
                     @lang('orders.Download Orders') <i class="fa fa-arrow-down"></i>
