@@ -80,7 +80,9 @@ class OrderExport extends AbstractExportService
             $this->setCellValue('P'.$row, $order->weight_discount);
 
             $this->setCellValue('Q'.$row, $order->discountCost());
-            
+            $this->setCellValue('R'.$row, $order->carrierService());
+            $this->setCellValue('S'.$row, optional($order->us_secondary_label_cost)['api_cost']);
+            $this->setCellValue('T'.$row, optional($order->us_secondary_label_cost)['profit_cost']);
             
             $row++;
         }
@@ -96,7 +98,7 @@ class OrderExport extends AbstractExportService
         $this->setCellValue('P'.$row, "=SUM(P1:P{$row})");
         $this->setCellValue('Q'.$row, "=SUM(Q1:Q{$row})");
         $this->mergeCells("A{$row}:F{$row}");
-        $this->setBackgroundColor("A{$row}:Q{$row}", 'adfb84');
+        $this->setBackgroundColor("A{$row}:T{$row}", 'adfb84');
         $this->setAlignment('A'.$row, Alignment::VERTICAL_CENTER);
         $this->setCellValue('A'.$row, 'Total Order: '.$this->orders->count());
 
@@ -156,8 +158,17 @@ class OrderExport extends AbstractExportService
         $this->setColumnWidth('Q', 20);
         $this->setCellValue('Q1', 'Discount Amount');
 
-        $this->setBackgroundColor('A1:Q1', '2b5cab');
-        $this->setColor('A1:Q1', 'FFFFFF');
+        $this->setColumnWidth('R', 20);
+        $this->setCellValue('R1', 'Carrier Service');
+
+        $this->setColumnWidth('S', 20);
+        $this->setCellValue('S1', 'Carrier Cost');
+
+        $this->setColumnWidth('T', 20);
+        $this->setCellValue('T1', 'HD Cost');
+
+        $this->setBackgroundColor('A1:T1', '2b5cab');
+        $this->setColor('A1:T1', 'FFFFFF');
 
         $this->currentRow++;
     }
