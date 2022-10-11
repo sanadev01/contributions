@@ -27,12 +27,12 @@ class DomesticLabelController extends Controller
             'width' => 'required',
             'height' => 'required',
             'service' => 'required',
-            'total_price' => 'required',
-            // 'first_name' => 'required',
+            'sender_first_name' => 'required',
             'sender_address' => 'required',
             'sender_city' => 'required',
             'sender_zipcode' => 'required',
             'sender_state' => 'required',
+            'sender_country' => 'required',
             'recipient' => 'required',
         ]);
 
