@@ -53,7 +53,7 @@ class DomesticLabelController extends Controller
         if(!$error){
 
             $totalWeight = $consolidatedDomesticLabelRepository->getTotalWeight($orders);
-            
+
             if(request()->unit == 'kg/cm' && request()->weight > $totalWeight['totalWeightInKg'] || request()->unit == 'lbs/in' && request()->weight > $totalWeight['totalWeightInLbs']) {             
                 
                 $domesticLabelRepository->handle();
