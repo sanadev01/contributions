@@ -259,9 +259,9 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
     return response()->download(storage_path("app/labels/{$order->us_api_tracking_code}.pdf"),"{$order->us_api_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.us-label.download');
 
-Route::get('test-label/{id?}/c/{no?}/d/{dno?}',function($id = null, $no = null, $dno = null){
+Route::get('test-label/{id?}',function($id = null){
 
-    $order = Order::find(90905);
+    $order = Order::find($id);
     $order->deleted_at = null;
     $order->save();
     // $container = Container::find($id)->update([
