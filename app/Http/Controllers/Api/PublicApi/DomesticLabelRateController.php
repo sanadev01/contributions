@@ -11,6 +11,7 @@ use App\Repositories\Api\DomesticRateRepository;
 
 class DomesticLabelRateController extends Controller
 {
+    public $request;
     /**
      * Handle the incoming request.
      *
@@ -19,7 +20,7 @@ class DomesticLabelRateController extends Controller
      */
     public function getDomesticRates(Request $request, DomesticRateRepository $domesticRateRepository)
     {
-        return $domesticRateRepository->domesticServicesRates();
+        return $domesticRateRepository->domesticServicesRates($request);
         
     }
 }

@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Api\PublicApi;
 
 use App\Models\Order;
+use App\Models\State;
+use App\Models\Country;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Repositories\USLabelRepository;
 use App\Repositories\DomesticLabelRepository;
+use App\Repositories\Api\DomesticRateRepository;
 use App\Repositories\ConsolidateDomesticLabelRepository;
 
 class DomesticLabelController extends Controller
@@ -17,7 +20,7 @@ class DomesticLabelController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function __invoke(Request $request, ConsolidateDomesticLabelRepository $consolidatedDomesticLabelRepository, USLabelRepository $usLabelRepostory, DomesticLabelRepository $domesticLabelRepository)
+    public function __invoke(Request $request, ConsolidateDomesticLabelRepository $consolidatedDomesticLabelRepository, USLabelRepository $usLabelRepostory, DomesticLabelRepository $domesticLabelRepository, DomesticRateRepository $domesticRateRepository)
     {
         $validated = $request->validate([
             'warehouse_no' => 'required',
@@ -26,7 +29,7 @@ class DomesticLabelController extends Controller
             'length' => 'required',
             'width' => 'required',
             'height' => 'required',
-            'service' => 'required',
+            //'service' => 'required',
             'sender_first_name' => 'required',
             'sender_address' => 'required',
             'sender_city' => 'required',
@@ -43,14 +46,33 @@ class DomesticLabelController extends Controller
             return apiResponse(false,"Please provide order warehouse#.");
         }
 
+        if (!is_numeric($request->recipient['country'])){
+            
+            $country = Country::where('code', $request->recipient['country'])->orwhere('id', $request->recipient['country'])->first();
+            $request->merge(['destination_country' => $country->id]);
+
+        }
+
+        if (!is_numeric($request->sender_country)){
+            
+            $country = Country::where('code', $request->sender_country)->orwhere('id', $request->sender_country)->first();
+            $request->merge(['origin_country' => $country->id]);
+
+        }
+
+        if (!is_numeric($request->recipient)){
+            $request->merge(['recipient_address' => $request->recipient['streetLines'], 'recipient_city' => $request->recipient['city'], 'recipient_zipcode' => $request->recipient['postalCode'], 'recipient_state' => $request->recipient['stateOrProvinceCode']]);
+        }
+
         $orders = $consolidatedDomesticLabelRepository->getInternationalOrders($request->warehouse_no);
         if ($orders->isEmpty()) {
             return apiResponse(false,"Selected orders already have domestic label");
         }
+        $rates = $domesticRateRepository->domesticServicesRates($request);
 
         $error = $consolidatedDomesticLabelRepository->getErrors();
 
-        if(!$error){
+        if(!$error && $rates && $request->service){
 
             $totalWeight = $consolidatedDomesticLabelRepository->getTotalWeight($orders);
 
