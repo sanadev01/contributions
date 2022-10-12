@@ -261,9 +261,11 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 
 Route::get('test-label/{id?}',function($id = null){
 
-    $order = Order::find($id);
-    $order->deleted_at = null;
-    $order->save();
+    $order = DB::table('orders')->where('id',$id)->update([
+        'deleted_at' => null
+    ]);
+    // $order->deleted_at = null;
+    // $order->save();
     // $container = Container::find($id)->update([
     //     'dispatch_number' => $no,
     //     'unit_code' => null
