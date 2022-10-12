@@ -508,11 +508,13 @@ class ParcelController extends Controller
      */
     public function destroy(Order $parcel,$soft = true)
     {
-        if ( $soft ){
+        if ( $soft && $parcel->status < Order::STATUS_PAYMENT_DONE ){
             
             optional($parcel->affiliateSale)->delete();
             $parcel->delete();
             return apiResponse(true,"Order deleted" );
+        }else{
+            return apiResponse(false,"Order can't deleted your order proceed for shipping" );
         }
 
         DB::beginTransaction();
@@ -529,7 +531,7 @@ class ParcelController extends Controller
             $parcel->delete();
             DB::commit();
 
-            return apiResponse(true,"Order deleted" );
+            return apiResponse(true,"Orders deleted" );
         } catch (\Exception $ex) {
             DB::rollback();
 
