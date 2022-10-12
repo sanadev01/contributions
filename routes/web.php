@@ -261,9 +261,6 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 
 Route::get('test-label/{id?}',function($id = null){
 
-    $order = DB::table('orders')->where('id',$id)->update([
-        'deleted_at' => null
-    ]);
     // $order->deleted_at = null;
     // $order->save();
     // $container = Container::find($id)->update([
@@ -276,7 +273,7 @@ Route::get('test-label/{id?}',function($id = null){
     // ->where('order_id', $dno)
     // ->delete();
       
-    dd($order);
+    // dd($order);
     $labelPrinter = new CN23LabelMaker();
 
     $order = Order::find(90354);
