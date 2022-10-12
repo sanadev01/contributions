@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Services\Excel\Export;
-use Illuminate\Support\Collection;
 use App\Models\Order;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
 class OrderExport extends AbstractExportService
@@ -40,7 +41,7 @@ class OrderExport extends AbstractExportService
             $this->setCellValue('D'.$row, $order->merchant);
             $this->setCellValue('E'.$row, $order->tracking_id);
             $this->setCellValue('F'.$row, $order->customer_reference);
-            $this->setCellValue('G'.$row, $this->getOrderTrackingCodes($order));
+            $this->setCellValue('G'.$row, (string)$this->getOrderTrackingCodes($order));
             $this->setCellValue('H'.$row, $order->gross_total);
             $this->setCellValue('I'.$row, $this->checkValue(number_format($order->dangrous_goods,2)));
             $this->setCellValue('J'.$row, $this->chargeWeight($order));
@@ -80,9 +81,12 @@ class OrderExport extends AbstractExportService
             $this->setCellValue('P'.$row, $order->weight_discount);
 
             $this->setCellValue('Q'.$row, $order->discountCost());
-            $this->setCellValue('R'.$row, $order->carrierService());
-            $this->setCellValue('S'.$row, optional($order->us_secondary_label_cost)['api_cost']);
-            $this->setCellValue('T'.$row, optional($order->us_secondary_label_cost)['profit_cost']);
+            $this->setCellValue('R'.$row, $order->carrierService().', '.$order->secondCarrierAervice());
+            $this->setCellValue('S'.$row, optional($order->us_secondary_label_cost)['profit_cost']);
+            if(Auth::user()->isAdmin()){
+                $this->setCellValue('T'.$row, optional($order->us_secondary_label_cost)['api_cost']);
+            }
+
             
             $row++;
         }
@@ -97,6 +101,8 @@ class OrderExport extends AbstractExportService
         $this->setCellValue('M'.$row, "=SUM(M1:M{$row})");
         $this->setCellValue('P'.$row, "=SUM(P1:P{$row})");
         $this->setCellValue('Q'.$row, "=SUM(Q1:Q{$row})");
+
+        
         $this->mergeCells("A{$row}:F{$row}");
         $this->setBackgroundColor("A{$row}:T{$row}", 'adfb84');
         $this->setAlignment('A'.$row, Alignment::VERTICAL_CENTER);
@@ -128,7 +134,7 @@ class OrderExport extends AbstractExportService
         $this->setCellValue('G1', '	Tracking Code');
 
         $this->setColumnWidth('H', 20);
-        $this->setCellValue('H1', 'Amount');
+        $this->setCellValue('H1', 'HD Amount');
 
         $this->setColumnWidth('I', 25);
         $this->setCellValue('I1', 'Battery/Perfume/Flameable');
@@ -162,10 +168,12 @@ class OrderExport extends AbstractExportService
         $this->setCellValue('R1', 'Carrier Service');
 
         $this->setColumnWidth('S', 20);
-        $this->setCellValue('S1', 'Carrier Cost');
+        $this->setCellValue('S1', '2nd HD Cost');
 
-        $this->setColumnWidth('T', 20);
-        $this->setCellValue('T1', 'HD Cost');
+        if(Auth::user()->isAdmin()){
+            $this->setColumnWidth('T', 20);
+            $this->setCellValue('T1', '2nd Carrier Cost');
+        }
 
         $this->setBackgroundColor('A1:T1', '2b5cab');
         $this->setColor('A1:T1', 'FFFFFF');
@@ -204,7 +212,7 @@ class OrderExport extends AbstractExportService
 
     private function getOrderTrackingCodes($order)
     {
-        $trackingCodes = ($order->hasSecondLabel() ? $order->corrios_tracking_code.','.$order->us_api_tracking_code : $order->corrios_tracking_code);
+        $trackingCodes = ($order->hasSecondLabel() ? $order->corrios_tracking_code.','.$order->us_api_tracking_code : $order->corrios_tracking_code." ");
         return (string)$trackingCodes;
     }
 }
