@@ -29,8 +29,8 @@ class DomesticLabelController extends Controller
             'length' => 'required',
             'width' => 'required',
             'height' => 'required',
-            //'service' => 'required',
-            'sender_first_name' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
             'sender_address' => 'required',
             'sender_city' => 'required',
             'sender_zipcode' => 'required',
@@ -39,25 +39,18 @@ class DomesticLabelController extends Controller
             'recipient' => 'required',
         ]);
 
-        // $trackIds = json_decode(json_encode($validated['tracking_code']), true);
-        // $orderIds = Order::whereIn('corrios_tracking_code', $trackIds)->pluck('id');
-
         if (!$request->warehouse_no) {
             return apiResponse(false,"Please provide order warehouse#.");
         }
 
         if (!is_numeric($request->recipient['country'])){
-            
             $country = Country::where('code', $request->recipient['country'])->orwhere('id', $request->recipient['country'])->first();
             $request->merge(['destination_country' => $country->id]);
-
         }
 
         if (!is_numeric($request->sender_country)){
-            
             $country = Country::where('code', $request->sender_country)->orwhere('id', $request->sender_country)->first();
             $request->merge(['origin_country' => $country->id]);
-
         }
 
         if (!is_numeric($request->recipient)){
@@ -72,17 +65,18 @@ class DomesticLabelController extends Controller
 
         $error = $consolidatedDomesticLabelRepository->getErrors();
 
-        if(!$error && $rates && $request->service){
+        if(!$error && $rates && $request->service && $request->total_price){
 
             $totalWeight = $consolidatedDomesticLabelRepository->getTotalWeight($orders);
 
             if(request()->unit == 'kg/cm' && request()->weight > $totalWeight['totalWeightInKg'] || request()->unit == 'lbs/in' && request()->weight > $totalWeight['totalWeightInLbs']) {             
-                
+                request()->merge(['user' => $orders->first()->user, 'orders' => $orders]);
                 $domesticLabelRepository->handle();
-                $shippingServices = $domesticLabelRepository->getShippingServices($order);
-                $label = $domesticLabelRepository->getDomesticLabel($order);
+                $tempOrder = $orders->first();
+                request()->merge(['order' => $tempOrder, 'consolidated_order' => true]);
+                $label = $domesticLabelRepository->getDomesticLabel(request()->order);
+
                 return apiResponse(true,"Label Successfully Printed",[
-                    'weight' => $totalWeight,
                     'label' => $label
                 ]);
             
