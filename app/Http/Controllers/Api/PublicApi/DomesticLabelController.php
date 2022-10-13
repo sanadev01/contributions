@@ -44,12 +44,14 @@ class DomesticLabelController extends Controller
             'sender_zipcode' => 'required',
             'sender_state' => 'required',
             'sender_country' => 'required',
-            'recipient' => 'required',
+            'recipient.first_name' => 'required',
+            'recipient.streetLines' => 'required',
+            'recipient.city' => 'required',
+            'recipient.postalCode' => 'required',
+            'recipient.stateOrProvinceCode' => 'required',
+            'recipient.receipeint_phone' => 'required',
+            'recipient.country' => 'required',
         ]);
-
-        if (!$request->warehouse_no) {
-            return apiResponse(false,"Please provide order warehouse#.");
-        }
 
         if (!is_numeric($request->recipient['country'])){
             $country = Country::where('code', $request->recipient['country'])->orwhere('id', $request->recipient['country'])->first();
@@ -61,9 +63,7 @@ class DomesticLabelController extends Controller
             $request->merge(['origin_country' => $country->id]);
         }
 
-        if (!is_numeric($request->recipient)){
-            $request->merge(['recipient_address' => $request->recipient['streetLines'], 'recipient_city' => $request->recipient['city'], 'recipient_zipcode' => $request->recipient['postalCode'], 'recipient_state' => $request->recipient['stateOrProvinceCode']]);
-        }
+        $request->merge(['recipient_address' => $request->recipient['streetLines'], 'recipient_city' => $request->recipient['city'], 'recipient_zipcode' => $request->recipient['postalCode'], 'recipient_state' => $request->recipient['stateOrProvinceCode'], 'consolidated_order' => true]);
 
         $orders = $consolidatedDomesticLabelRepository->getInternationalOrders($request->warehouse_no);
         if ($orders->isEmpty()) {
@@ -71,7 +71,9 @@ class DomesticLabelController extends Controller
         }
 
         //GET RATES FROM DOMESTIC SERVICES
-        $rates = $domesticRateRepository->domesticServicesRates($request);
+        $shippingService = ShippingService::where('service_sub_class', $request->service)->get();
+        $rates = $domesticLabelRepository->getRatesForDomesticServices($shippingService);
+        dd($rates);
         $this->rates = $rates->getData();
         $error = $consolidatedDomesticLabelRepository->getErrors();
 
@@ -88,7 +90,7 @@ class DomesticLabelController extends Controller
                 request()->merge(['user' => $orders->first()->user, 'orders' => $orders]);
                 $domesticLabelRepository->handle();
                 $tempOrder = $orders->first();
-                request()->merge(['order' => $tempOrder, 'consolidated_order' => true]);
+                request()->merge(['order' => $tempOrder]);
                 $label = $domesticLabelRepository->getDomesticLabel(request()->order);
 
                 return apiResponse(true,"Label Successfully Printed",[
@@ -130,24 +132,20 @@ class DomesticLabelController extends Controller
             $this->fedExProfit = setting('fedex_profit', null, User::ROLE_ADMIN);
         }
 
-        //CHECK SERVICE AND ADD PROFIT
-        foreach ($this->rates->data->rates as $serviceRate) {
+        $sericeRate = $this->rates->data->rates;
+        if($service == ShippingService::UPS_GROUND && setting('ups', null, User::ROLE_ADMIN) && setting('ups', null, auth()->user()->id)) { 
+            $profit = $serviceRate->rate * ($this->upsProfit / 100);
+            $price = round($serviceRate->rate + $profit, 2);
+        }
+        if($service == ShippingService::FEDEX_GROUND && setting('fedex', null, User::ROLE_ADMIN) && setting('fedex', null, auth()->user()->id)) { 
+            $profit = $serviceRate->rate * ($this->fedExProfit / 100);
+            $price = round($serviceRate->rate + $profit, 2);
+        }
+        if($service == ShippingService::USPS_PRIORITY || $service == ShippingService::USPS_FIRSTCLASS && setting('usps', null, User::ROLE_ADMIN) && setting('usps', null, auth()->user()->id)) { 
+            $profit = $serviceRate->rate * ($this->uspsProfit / 100);
+            $price = round($serviceRate->rate + $profit, 2);
+        }
+        request()->merge(['total_price' => $price]); 
 
-            if($service == ShippingService::UPS_GROUND && setting('ups', null, User::ROLE_ADMIN) && setting('ups', null, auth()->user()->id)) { 
-                $profit = $serviceRate->rate * ($this->upsProfit / 100);
-                $price = round($serviceRate->rate + $profit, 2);
-                request()->merge(['total_price' => $price]); 
-            }
-            if($service == ShippingService::FEDEX_GROUND && setting('fedex', null, User::ROLE_ADMIN) && setting('fedex', null, auth()->user()->id)) { 
-                $profit = $serviceRate->rate * ($this->fedExProfit / 100);
-                $price = round($serviceRate->rate + $profit, 2);
-                request()->merge(['total_price' => $price]); 
-            }
-            if($service == ShippingService::USPS_PRIORITY || $service == ShippingService::USPS_FIRSTCLASS && setting('usps', null, User::ROLE_ADMIN) && setting('usps', null, auth()->user()->id)) { 
-                $profit = $serviceRate->rate * ($this->uspsProfit / 100);
-                $price = round($serviceRate->rate + $profit, 2);
-                request()->merge(['total_price' => $price]); 
-            }
-        } 
     }
 }
