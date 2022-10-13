@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Api\PublicApi;
 
+use App\Models\User;
 use App\Models\Order;
 use App\Models\State;
 use App\Models\Country;
 use Illuminate\Http\Request;
+use App\Models\ShippingService;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Repositories\USLabelRepository;
 use App\Repositories\DomesticLabelRepository;
 use App\Repositories\Api\DomesticRateRepository;
@@ -14,12 +17,17 @@ use App\Repositories\ConsolidateDomesticLabelRepository;
 
 class DomesticLabelController extends Controller
 {
+    public $uspsProfit;
+    public $upsProfit;
+    public $fedExProfit;
+    public $rates;
     /**
      * Handle the incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    
     public function __invoke(Request $request, ConsolidateDomesticLabelRepository $consolidatedDomesticLabelRepository, USLabelRepository $usLabelRepostory, DomesticLabelRepository $domesticLabelRepository, DomesticRateRepository $domesticRateRepository)
     {
         $validated = $request->validate([
@@ -61,12 +69,19 @@ class DomesticLabelController extends Controller
         if ($orders->isEmpty()) {
             return apiResponse(false,"Selected orders already have domestic label");
         }
-        $rates = $domesticRateRepository->domesticServicesRates($request);
 
+        //GET RATES FROM DOMESTIC SERVICES
+        $rates = $domesticRateRepository->domesticServicesRates($request);
+        $this->rates = $rates->getData();
         $error = $consolidatedDomesticLabelRepository->getErrors();
 
-        if(!$error && $rates && $request->service && $request->total_price){
+        if(!$error && $this->rates ){
 
+            //SET LABLE PRICE AS PER PROFIT SETTING
+            $this->setUserProft(request()->service);
+            dd(request());
+            
+            //GET TOTAL WEIGHT OF ORDERS
             $totalWeight = $consolidatedDomesticLabelRepository->getTotalWeight($orders);
 
             if(request()->unit == 'kg/cm' && request()->weight > $totalWeight['totalWeightInKg'] || request()->unit == 'lbs/in' && request()->weight > $totalWeight['totalWeightInLbs']) {             
@@ -88,5 +103,51 @@ class DomesticLabelController extends Controller
 
         }
         return apiResponse(false, $error);
+    }
+
+    private function setUserProft($service)
+    {
+        //CHECK IF USER HAS PROFIT SETTING
+        if (Auth::check()) {
+            $this->uspsProfit = setting('usps_profit', null, auth()->user()->id);
+            $this->upsProfit = setting('ups_profit', null, auth()->user()->id);
+            $this->fedExProfit = setting('fedex_profit', null, auth()->user()->id);
+        }
+        
+        //APPLY ADMIN SIDE PROFIT SETTING
+        if($this->uspsProfit == null || $this->uspsProfit == 0)
+        {
+            $this->uspsProfit = setting('usps_profit', null, User::ROLE_ADMIN);
+        }
+
+        if($this->upsProfit == null || $this->upsProfit == 0)
+        {
+            $this->upsProfit = setting('ups_profit', null, User::ROLE_ADMIN);
+        }
+
+        if($this->fedExProfit == null || $this->fedExProfit == 0)
+        {
+            $this->fedExProfit = setting('fedex_profit', null, User::ROLE_ADMIN);
+        }
+
+        //CHECK SERVICE AND ADD PROFIT
+        foreach ($this->rates->data->rates as $serviceRate) {
+
+            if($service == ShippingService::UPS_GROUND && setting('ups', null, User::ROLE_ADMIN) && setting('ups', null, auth()->user()->id)) { 
+                $profit = $serviceRate->rate * ($this->upsProfit / 100);
+                $price = round($serviceRate->rate + $profit, 2);
+                request()->merge(['total_price' => $price]); 
+            }
+            if($service == ShippingService::FEDEX_GROUND && setting('fedex', null, User::ROLE_ADMIN) && setting('fedex', null, auth()->user()->id)) { 
+                $profit = $serviceRate->rate * ($this->fedExProfit / 100);
+                $price = round($serviceRate->rate + $profit, 2);
+                request()->merge(['total_price' => $price]); 
+            }
+            if($service == ShippingService::USPS_PRIORITY || $service == ShippingService::USPS_FIRSTCLASS && setting('usps', null, User::ROLE_ADMIN) && setting('usps', null, auth()->user()->id)) { 
+                $profit = $serviceRate->rate * ($this->uspsProfit / 100);
+                $price = round($serviceRate->rate + $profit, 2);
+                request()->merge(['total_price' => $price]); 
+            }
+        } 
     }
 }
