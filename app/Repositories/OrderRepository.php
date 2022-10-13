@@ -14,7 +14,6 @@ use App\Services\USPS\USPSShippingService;
 use App\Services\FedEx\FedExShippingService;
 use App\Services\GePS\GePSShippingService;
 use App\Services\Calculators\WeightCalculator;
-use App\Services\GePS\GePSShippingService;
 use App\Models\User;
 use App\Services\Colombia\ColombiaPostalCodes;
 
@@ -537,7 +536,6 @@ class OrderRepository
             || $shippingServices->contains('service_sub_class', ShippingService::USPS_PRIORITY_INTERNATIONAL)
             || $shippingServices->contains('service_sub_class', ShippingService::USPS_FIRSTCLASS_INTERNATIONAL)
             || $shippingServices->contains('service_sub_class', ShippingService::UPS_GROUND)
-            || $shippingServices->contains('service_sub_class', ShippingService::GePS))
             || $shippingServices->contains('service_sub_class', ShippingService::GePS)
             || $shippingServices->contains('service_sub_class', ShippingService::PostNL))
         {
