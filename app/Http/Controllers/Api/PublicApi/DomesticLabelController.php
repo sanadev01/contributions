@@ -101,7 +101,6 @@ class DomesticLabelController extends Controller
                 ]);
             
             }
-            
             return apiResponse(false,"The weight provided is invalid.",[
                 'error' => "Given weight must be greater than the order weight.",
             ]);
@@ -118,23 +117,16 @@ class DomesticLabelController extends Controller
             $this->upsProfit = setting('ups_profit', null, auth()->user()->id);
             $this->fedExProfit = setting('fedex_profit', null, auth()->user()->id);
         }
-        
         //APPLY ADMIN SIDE PROFIT SETTING
         if($this->uspsProfit == null || $this->uspsProfit == 0)
-        {
-            $this->uspsProfit = setting('usps_profit', null, User::ROLE_ADMIN);
-        }
+        { $this->uspsProfit = setting('usps_profit', null, User::ROLE_ADMIN); }
 
         if($this->upsProfit == null || $this->upsProfit == 0)
-        {
-            $this->upsProfit = setting('ups_profit', null, User::ROLE_ADMIN);
-        }
+        { $this->upsProfit = setting('ups_profit', null, User::ROLE_ADMIN); }
 
         if($this->fedExProfit == null || $this->fedExProfit == 0)
-        {
-            $this->fedExProfit = setting('fedex_profit', null, User::ROLE_ADMIN);
-        }
-
+        { $this->fedExProfit = setting('fedex_profit', null, User::ROLE_ADMIN); }
+        //CALCULATE TOTAL PRICE FOR LABEL
         if($service == ShippingService::UPS_GROUND && setting('ups', null, User::ROLE_ADMIN) && setting('ups', null, auth()->user()->id)) { 
             $profit = $this->serviceRate[0]->rate * ($this->upsProfit / 100);
         }
@@ -146,6 +138,5 @@ class DomesticLabelController extends Controller
         }
         $price = round($this->serviceRate[0]->rate + $profit, 2);
         request()->merge(['total_price' => $price]); 
-
     }
 }
