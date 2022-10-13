@@ -11,9 +11,6 @@ use App\Services\GePS\Client as GePSClient;
 use App\Services\PostNL\Client as NLClient;
 use App\Services\Correios\Models\PackageError;
 use App\Services\Correios\Services\Brazil\Client;
-use Illuminate\Support\Facades\Storage;
-use App\Services\GePS\Client as GePSClient;
-use Illuminate\Http\Request;
 use App\Repositories\Warehouse\DeliveryBillRepository;
 
 class DeliveryBillRegisterController extends Controller
