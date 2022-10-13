@@ -55,7 +55,6 @@ class DomesticRateRepository
             return apiResponse(true,"Domestic Services Rates",[
                 'rates' => $rates
             ]);
-
         }
         return apiResponse(false, $error);
     }
