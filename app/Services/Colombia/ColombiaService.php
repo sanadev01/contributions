@@ -177,7 +177,7 @@ class ColombiaService
                     'strAditionalShipping' => '',
                     'strIdentification' => $order->warehouse_number,
                     'strObservation' => '',
-                    'strReference' => ($order->customer_reference) ? $order->customer_reference.' '.$order->warehouse_number : $order->warehouse_number,
+                    'strReference' => ($order->customer_reference) ? $order->customer_reference.' '.$order->user->pobox_number : $order->user->pobox_number,
                 ]
             ],
             'boolMasterGuide' => false,
