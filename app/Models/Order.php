@@ -796,7 +796,6 @@ class Order extends Model implements Package
         return ($serviceCode == ShippingService::AJ_Packet_Express) ? ShippingService::Packet_Express : ShippingService::Packet_Standard;
     }
 
-<<<<<<< HEAD
     public function secondCarrierAervice()
     {
         if ( $this->us_api_service == ShippingService::USPS_PRIORITY ||
@@ -815,7 +814,7 @@ class Order extends Model implements Package
             
             return 'FEDEX';
         }
-=======
+    }
     public function colombiaLabelUrl()
     {
         if (!$this->api_response) {
@@ -823,6 +822,5 @@ class Order extends Model implements Package
         }
 
         return json_decode($this->api_response)->strUrlGuide;
->>>>>>> 48ee28a574b1a82fd7bd6837816c1db096acbf58
     }
 }

@@ -133,31 +133,16 @@
                                                         @endif
                                                         @if($deliveryBill->isGePS())
                                                             <a href="{{ route('warehouse.geps.manifest.download',$deliveryBill) }}" target="_blank" class="dropdown-item w-100">
-<<<<<<< HEAD
-=======
                                                         @elseif($deliveryBill->isPostNL())
                                                             <a href="{{ $deliveryBill->request_id }}" target="_blank" class="dropdown-item w-100">
->>>>>>> 48ee28a574b1a82fd7bd6837816c1db096acbf58
                                                         @else
                                                             <a href="{{ route('warehouse.delivery_bill.manifest', $deliveryBill) }}"
                                                             class="dropdown-item w-100">
                                                         @endif
                                                             <i class="fa fa-cloud-download"></i> Download Manifest
-<<<<<<< HEAD
                                                         
                                                         <a href="{{ route('warehouse.delivery_bill.manifest',[$deliveryBill, 'service'=> true]) }}" class="dropdown-item w-100">
                                                             <i class="fa fa-cloud-download"></i> Download Manifest By Service
-=======
-                                                        </a>
-                                                        <!-- <a href="{{ route('warehouse.delivery_bill.manifest',$deliveryBill) }}" class="dropdown-item w-100">
-                                                            <i class="fa fa-cloud-download"></i> Download Manifest
-                                                        </a> -->
-
-                                                        <a href="{{ route('warehouse.delivery_bill.manifest', [$deliveryBill, 'service' => true]) }}"
-                                                            class="dropdown-item w-100">
-                                                            <i class="fa fa-cloud-download"></i> Download Manifest By
-                                                            Service
->>>>>>> 48ee28a574b1a82fd7bd6837816c1db096acbf58
                                                         </a>
 
                                                         <a href="{{ route('warehouse.audit-report.show', $deliveryBill) }}"

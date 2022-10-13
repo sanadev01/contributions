@@ -106,10 +106,6 @@ class OrderItemsController extends Controller
                 return back()->withInput();
             }
         }
-<<<<<<< HEAD
-=======
-
->>>>>>> 48ee28a574b1a82fd7bd6837816c1db096acbf58
         /**
          * Sinerlog modification
          * Get total of items declared to check if them more than US$ 50 when Sinerlog Small Parcels was selected
