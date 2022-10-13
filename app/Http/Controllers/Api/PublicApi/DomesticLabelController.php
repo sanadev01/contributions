@@ -124,16 +124,16 @@ class DomesticLabelController extends Controller
         //CALCULATE TOTAL PRICE FOR LABEL
         
         if($service == ShippingService::USPS_PRIORITY || $service == ShippingService::USPS_FIRSTCLASS && setting('usps', null, User::ROLE_ADMIN) && setting('usps', null, auth()->user()->id)) { 
-            $profit = $this->serviceRate[0]->rate * ($this->uspsProfit / 100);
-            $price = round($this->serviceRate[0]->rate + $profit, 2);
+            $profit = optional($this->serviceRate[0])->rate * ($this->uspsProfit / 100);
+            $price = round(optional($this->serviceRate[0])->rate + $profit, 2);
         }
         if($service == ShippingService::UPS_GROUND && setting('ups', null, User::ROLE_ADMIN) && setting('ups', null, auth()->user()->id)) { 
-            $profit = $this->serviceRate[1]->rate * ($this->upsProfit / 100);
-            $price = round($this->serviceRate[1]->rate + $profit, 2);
+            $profit = optional($this->serviceRate[1])->rate * ($this->upsProfit / 100);
+            $price = round(optional($this->serviceRate[1])->rate + $profit, 2);
         }
         if($service == ShippingService::FEDEX_GROUND && setting('fedex', null, User::ROLE_ADMIN) && setting('fedex', null, auth()->user()->id)) { 
-            $profit = $this->serviceRate[2]->rate * ($this->fedExProfit / 100);
-            $price = round($this->serviceRate[2]->rate + $profit, 2);
+            $profit = optional($this->serviceRate[2])->rate * ($this->fedExProfit / 100);
+            $price = round(optional($this->serviceRate[2])->rate + $profit, 2);
         }
         request()->merge(['total_price' => $price]); 
     }
