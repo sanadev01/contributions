@@ -94,7 +94,12 @@
 
     <div class="col-12 col-sm-12 col-md-12">
         <div class="controls h2 mt-2">
-            <label> <span class="text-danger">*</span> @lang('parcel.The Rate will be applied on')  <strong class="text-danger h2">{{ $volumeWeight }} <span class="mx-1"> {{ $currentWeightUnit }} </span>  <span> ({{ $volumeWeightOther }} {{ $unitOther }}) </span> </strong></label>
+            <label> <span class="text-danger">*</span> @lang('parcel.The Rate will be applied on')  
+                <strong class="text-danger h2">{{ $volumeWeight }} 
+                    <span class="mx-1"> {{ $currentWeightUnit }} </span>
+                    <span> ({{ $volumeWeightOther }} {{ $unitOther }}) </span>
+                </strong>
+            </label>
         </div>
     </div>
 

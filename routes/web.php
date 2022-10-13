@@ -1,19 +1,9 @@
 <?php
 
-use App\Models\Tax;
-use App\Models\User;
 use App\Models\Order;
-use App\Models\Product;
-use App\Models\Recipient;
-use App\Models\ProfitPackage;
-use App\Models\ShippingService;
 use Illuminate\Support\Facades\DB;
 use App\Models\Warehouse\Container;
-use App\Models\Warehouse\DeliveryBill;
-use Illuminate\Support\Facades\Artisan;
-use App\Services\Converters\UnitsConverter;
 use App\Services\StoreIntegrations\Shopify;
-use App\Services\Excel\Export\OrderExportAug;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
@@ -269,26 +259,21 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
     return response()->download(storage_path("app/labels/{$order->us_api_tracking_code}.pdf"),"{$order->us_api_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.us-label.download');
 
-Route::get('test-label/{id?}/c/{no?}/d/{dno?}',function($id = null, $no = null, $dno = null){
+Route::get('test-label/{id?}',function($id = null){
 
-    $container = Container::find($id)->update([
-        'dispatch_number' => $no,
-        'unit_code' => null
-    ]);
-    // $deliveryBillDetails = DeliveryBill::find($id)->update([
+    // $order->deleted_at = null;
+    // $order->save();
+    // $container = Container::find($id)->update([
     //     'dispatch_number' => $no,
     //     'unit_code' => null
     // ]);
-    $deliveryBill = DB::table('container_delivery_bill')
-    ->where('container_id', $id)
-    ->where('delivery_bill_id', $dno)
-    ->delete();
-    // dd($deliveryBill,$container);
-    // if($deliveryBill){
-        //     // $deliveryBill->delete();
-        // }
-        
-    dd($container);
+    
+    // $containerOrder = DB::table('container_order')
+    // ->where('container_id', $id)
+    // ->where('order_id', $dno)
+    // ->delete();
+      
+    // dd($order);
     $labelPrinter = new CN23LabelMaker();
 
     $order = Order::find(90354);

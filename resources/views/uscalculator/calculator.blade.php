@@ -222,7 +222,7 @@
                                 <div class="row d-none" id="calculator-items">
                                     <livewire:calculator.items>
                                 </div>
-                                <livewire:calculator.calculation>
+                                <livewire:calculator.calculation :cc='$cc'>
 
                                 <div class="row">
                                     <div class="col-md-12 d-flex justify-content-center">
