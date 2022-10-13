@@ -22,6 +22,7 @@ class Calculation extends Component
     public $height;
     public $heightOther;
     public $unit;
+    public $cc;
     public $unitOther;
     public $volumeWeight;
     public $volumeWeightOther;
@@ -31,13 +32,14 @@ class Calculation extends Component
     public $discountPercentage;
     public $totalDiscountedWeight;
 
-    public function mount(Order $order = null)
+    public function mount($cc = null, Order $order = null)
     {
+        $this->cc = $cc;
         $this->order = optional($order)->toArray();
         $this->fillData();
         $this->checkUser();
 
-        if ($this->userId) {
+        if ($this->userId && $this->cc != 'US') {
             $this->setVolumetricDiscount();
         }
         

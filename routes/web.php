@@ -1,7 +1,5 @@
 <?php
 
-use App\Models\Tax;
-use App\Models\User;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Country;
@@ -10,11 +8,7 @@ use App\Models\ProfitPackage;
 use App\Models\ShippingService;
 use Illuminate\Support\Facades\DB;
 use App\Models\Warehouse\Container;
-use App\Models\Warehouse\DeliveryBill;
-use Illuminate\Support\Facades\Artisan;
-use App\Services\Converters\UnitsConverter;
 use App\Services\StoreIntegrations\Shopify;
-use App\Services\Excel\Export\OrderExportAug;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;

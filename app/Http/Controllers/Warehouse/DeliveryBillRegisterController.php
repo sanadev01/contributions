@@ -11,6 +11,9 @@ use App\Services\GePS\Client as GePSClient;
 use App\Services\PostNL\Client as NLClient;
 use App\Services\Correios\Models\PackageError;
 use App\Services\Correios\Services\Brazil\Client;
+use Illuminate\Support\Facades\Storage;
+use App\Services\GePS\Client as GePSClient;
+use Illuminate\Http\Request;
 use App\Repositories\Warehouse\DeliveryBillRepository;
 
 class DeliveryBillRegisterController extends Controller
@@ -23,10 +26,28 @@ class DeliveryBillRegisterController extends Controller
         }
 
         if ($deliveryBill->isRegistered()) {
-            session()->flash('alert-danger','this delivery bill has already been registered');
+            session()->flash('alert-danger','This delivery bill has already been registered');
             return back();
         }
+        if($deliveryBill->containers[0]->services_subclass_code == '537')  {
+            
+            $client = new GePSClient();
+            $response = $client->registerDeliveryBillGePS($deliveryBill);
 
+            if ($response['success'] == false) {
+                session()->flash('alert-danger', $response['message']);
+                return back();
+            }
+            $result = $response['data']->manifestresponse;
+            $cn38 = $result->manifestnbr;
+            $manifest_pdf = $result->manifestpdf;
+            $request_id = $response['data']->perfmilli;
+            $deliveryBill->update([
+                'request_id' => $request_id,
+                'cnd38_code' => $cn38
+            ]);
+            Storage::put("labels/{$cn38}.pdf", base64_decode($manifest_pdf));
+        }
         if ($deliveryBill->hasMileExpressService()) {
             
             $deliveryBillRepository->processMileExpressBill($deliveryBill, $deliveryBill->container());

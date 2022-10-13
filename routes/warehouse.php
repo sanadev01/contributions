@@ -125,7 +125,6 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('geps_container/{container}/register', GePSUnitRegisterController::class)->name('geps_container.register');
     Route::get('geps_container/{container}/download', GePSCN35DownloadController::class)->name('geps_container.download');
     Route::get('geps/{delivery_bill}/manifest', GePSManifestDownloadController::class)->name('geps.manifest.download');
-
 });
 
 

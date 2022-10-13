@@ -140,15 +140,9 @@
                                                             class="dropdown-item w-100">
                                                         @endif
                                                             <i class="fa fa-cloud-download"></i> Download Manifest
-                                                        </a>
-                                                        <!-- <a href="{{ route('warehouse.delivery_bill.manifest',$deliveryBill) }}" class="dropdown-item w-100">
-                                                            <i class="fa fa-cloud-download"></i> Download Manifest
-                                                        </a> -->
-
-                                                        <a href="{{ route('warehouse.delivery_bill.manifest', [$deliveryBill, 'service' => true]) }}"
-                                                            class="dropdown-item w-100">
-                                                            <i class="fa fa-cloud-download"></i> Download Manifest By
-                                                            Service
+                                                        
+                                                        <a href="{{ route('warehouse.delivery_bill.manifest',[$deliveryBill, 'service'=> true]) }}" class="dropdown-item w-100">
+                                                            <i class="fa fa-cloud-download"></i> Download Manifest By Service
                                                         </a>
 
                                                         <a href="{{ route('warehouse.audit-report.show', $deliveryBill) }}"

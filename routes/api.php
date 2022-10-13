@@ -65,6 +65,8 @@ Route::prefix('v1')->group(function(){
             Route::resource('products', 'ProductController')->only('index', 'show', 'store');
             Route::get('api/token', AmazonApiTokenController::class);
             Route::get('profile', ProfileController::class);
+            Route::post('domestic/label',DomesticLabelController::class);
+            Route::post('domestic/rates',[App\Http\Controllers\Api\PublicApi\DomesticLabelRateController::class, 'getDomesticRates']);
         });
     
         Route::get('countries', CountryController::class);

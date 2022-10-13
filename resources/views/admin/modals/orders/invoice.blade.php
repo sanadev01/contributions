@@ -114,7 +114,7 @@
                                 <td>
                                     Weight: {{ round($order->getOriginalWeight('kg'),2) }} Kg ( {{ round($order->getOriginalWeight('lbs'),2) }} lbs ) <br>
                                     Vol. Weight: {{ round($order->getWeight('kg'),2) }} Kg ( {{ round($order->getWeight('lbs'),2) }} lbs ) <br>
-                                    @if ($appliedVolumeWeight)
+                                    @if ($appliedVolumeWeight && !$order->sender_city)
                                         Applied Weight:
                                         @if($order->measurement_unit == 'kg/cm')
                                             {{ round($appliedVolumeWeight,2) }} Kg ( {{ round($appliedVolumeWeight * 2.205, 2) }} lbs )

@@ -82,7 +82,6 @@ class OrderItemsController extends Controller
                 'user_declared_freight.gt' => __('validation.gt', ['attribute' => 'shipping service rate not availaible for this service']),
             ]);
         }
-
         if($this->orderRepository->GePSService($request->shipping_service_id)){
             if($order->measurement_unit == "lbs/in" && $order->weight > 4.40) {
                 session()->flash('alert-danger', 'Parcel Weight cannot be more than 4.40 LBS. Please Update Your Parcel');
@@ -107,7 +106,6 @@ class OrderItemsController extends Controller
                 return back()->withInput();
             }
         }
-
         /**
          * Sinerlog modification
          * Get total of items declared to check if them more than US$ 50 when Sinerlog Small Parcels was selected

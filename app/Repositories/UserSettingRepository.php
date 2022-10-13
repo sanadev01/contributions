@@ -29,6 +29,7 @@ class UserSettingRepository {
             'ups' => setting('ups', null, $user->id)? 'Active': 'Inactive',
             'sinerlog' => setting('sinerlog', null, $user->id)? 'Active': 'Inactive',
             'fedex' => setting('fedex', null, $user->id)? 'Active': 'Inactive',
+            'geps_service' => setting('geps_service', null, $user->id)? 'Active': 'Inactive',
             'tax' => setting('tax', null, $user->id)? 'Active': 'Inactive',
             'volumetric_discount'=> setting('volumetric_discount', null,$user->id)? 'Active': 'Inactive',
             'usps_profit'=> setting('usps_profit', null, $user->id) ? setting('usps_profit', null, $user->id): 0,
@@ -55,6 +56,7 @@ class UserSettingRepository {
         $request->has('stripe') ? saveSetting('stripe', true, $user->id) : saveSetting('stripe', false, $user->id);
         $request->has('sinerlog') ? saveSetting('sinerlog', true, $user->id) : saveSetting('sinerlog', false, $user->id);
         $request->has('fedex') ? saveSetting('fedex', true, $user->id) : saveSetting('fedex', false, $user->id);
+        $request->has('geps_service') ? saveSetting('geps_service', true, $user->id) : saveSetting('geps_service', false, $user->id);
         $request->has('tax') ? saveSetting('tax', true, $user->id) : saveSetting('tax', false, $user->id);
         $request->has('colombia_service') ? saveSetting('colombia_service', true, $user->id) : saveSetting('colombia_service', false, $user->id);
         $request->has('geps_service') ? saveSetting('geps_service', true, $user->id) : saveSetting('geps_service', false, $user->id);

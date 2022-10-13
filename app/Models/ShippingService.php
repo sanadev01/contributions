@@ -147,6 +147,14 @@ class ShippingService extends Model
         return false;
     }
 
+    public function isGePSService()
+    {
+        if (collect($this->gepsShippingServices())->contains($this->service_sub_class)) {
+            return true;
+        }
+
+        return false;
+    }
     public function isMileExpressService()
     {
         if ($this->service_sub_class == self::Mile_Express) {

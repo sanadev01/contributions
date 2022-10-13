@@ -796,6 +796,25 @@ class Order extends Model implements Package
         return ($serviceCode == ShippingService::AJ_Packet_Express) ? ShippingService::Packet_Express : ShippingService::Packet_Standard;
     }
 
+    public function secondCarrierAervice()
+    {
+        if ( $this->us_api_service == ShippingService::USPS_PRIORITY ||
+            $this->us_api_service == ShippingService::USPS_FIRSTCLASS ||
+            $this->us_api_service == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
+            $this->us_api_service == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL )
+        {
+
+            return 'USPS';
+
+        }elseif( $this->us_api_service == ShippingService::UPS_GROUND ){
+
+            return 'UPS';
+
+        }elseif( $this->us_api_service == ShippingService::FEDEX_GROUND ){
+            
+            return 'FEDEX';
+        }
+    }
     public function colombiaLabelUrl()
     {
         if (!$this->api_response) {

@@ -89,8 +89,6 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'GePS';
         }elseif($this->services_subclass_code == 'Priority'){
             return 'Priority';
-        }elseif($this->services_subclass_code == 'PostNL'){
-            return 'PostNL';
         }elseif($this->services_subclass_code == 'Priority International'){
             return 'Priority International';
         }elseif($this->services_subclass_code == 'FirstClass International'){
