@@ -90,8 +90,9 @@ class DomesticLabelController extends Controller
                 request()->merge(['order' => $tempOrder]);
                 $label = $domesticLabelRepository->getDomesticLabel(request()->order);
 
-                return apiResponse(true,"Label Successfully Printed",[
-                    'label' => $label
+                return apiResponse(true,"Label Generated Successfully.",[
+                    'url' => route('order.us-label.download',$tempOrder),
+                    'tracking_code' => $tempOrder->us_api_tracking_code
                 ]);
             
             }
