@@ -46,6 +46,13 @@
                                     <div class="form-group col-sm-6 col-md-3">
                                         <button type="submit" class="btn btn-primary mt-5">Find</button>
                                     </div>
+                                    <div class="form-group col-sm-6 col-md-3 mt-4">
+                                        <a class='btn' href='javascript:;'>
+                                            <button class="btn btn-success btn-md" type="button">Upload Files <i class="fa fa-upload"></i></button>
+                                            <input type="file" multiple name="attachment[]" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' size="40"  onchange='$("#upload-file-info").html($(this).val());'>
+
+                                        </a>
+                                    </div>
                                 </div>
                             </form></br>
                             <form class="form" action="{{ route('admin.tax.store') }}" method="POST" enctype="multipart/form-data">
@@ -57,12 +64,18 @@
                                             </div>
                                             <div class="col-md-2">
                                                 <label><b>@lang('taxservice.User Name')</b></label>
-                                            </div><div class="col-md-2">
+                                            </div>
+                                            <div class="col-md-2">
                                                 <label><b>@lang('taxservice.Tracking Code')</b></label>
-                                            </div><div class="col-md-3">
-                                                <label><b>@lang('taxservice.Tax Payment 1')</b></label>
-                                            </div><div class="col-md-3">
-                                                <label><b>@lang('taxservice.Tax Payment 2')</b></label>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label><b>@lang('taxservice.Tax Customer')</b></label>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label><b>@lang('taxservice.Tax Herco')</b></label>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label><b>@lang('taxservice.Profit')</b></label>
                                             </div>
                                         </div>
                                         @foreach($orders as $order)
@@ -78,11 +91,14 @@
                                                 <div class="col-md-2">
                                                     <input type="text" class="form-control" name="tracking_code[]" value="{{ $order->corrios_tracking_code }}" readonly required>
                                                 </div>
-                                                <div class="col-md-3">
-                                                    <input type="text" class="form-control" name="tax_1[]" value="" required>
+                                                <div class="col-md-2">
+                                                    <input type="text" class="form-control" id="tax1" name="tax_1[]" value="" required>
                                                 </div>
-                                                <div class="col-md-3">
-                                                    <input type="text" class="form-control" name="tax_2[]" value="" required>
+                                                <div class="col-md-2">
+                                                    <input type="text" class="form-control" id="tax2" name="tax_2[]" value="" required>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="text" class="form-control" id="profit" name="profit[]" value=""  readonly required>
                                                 </div>
                                             </div>
                                         @endforeach
@@ -102,3 +118,13 @@
         </div>
     </section>
 @endsection
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        $('body').on('keyup','#tax2',function(){
+            let tax1 = $('#tax1').val();
+            let tax2 = $('#tax2').val();
+            let profit = parseFloat(tax1) - parseFloat(tax2);
+            $('#profit').val( isNaN(profit) ? 0 : (profit).toFixed(2) );
+        });
+    })
+</script>
