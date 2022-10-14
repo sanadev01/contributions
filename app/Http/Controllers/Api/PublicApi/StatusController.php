@@ -15,7 +15,7 @@ class StatusController extends Controller
         if($order) {  
             return apiResponse(true,['status' => $order->status]);
         }else {
-            return apiResponse(false,['error' => "YOur Parcel Cannot be Tracked at this moment. Please contact Customer service"]);
+            return apiResponse(false,['error' => "Your Parcel Cannot be Tracked at this moment. Please contact Customer service"]);
         }
     }
 
