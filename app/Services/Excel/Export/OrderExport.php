@@ -43,48 +43,51 @@ class OrderExport extends AbstractExportService
             $this->setCellValue('F'.$row, $order->customer_reference);
             $this->setCellValue('G'.$row, (string)$this->getOrderTrackingCodes($order));
             $this->setCellValue('H'.$row, $order->gross_total);
-            $this->setCellValue('I'.$row, $this->checkValue(number_format($order->dangrous_goods,2)));
-            $this->setCellValue('J'.$row, $this->chargeWeight($order));
-            $this->setCellValue('K'.$row, $order->getWeight('kg'));
-            $this->setCellValue('L'.$row, round(($this->chargeWeight($order)*2.205),2));
-            $this->setCellValue('M'.$row, $order->getWeight('lbs'));
-            $this->setCellValue('N'.$row, $order->length. ' X '. $order->width.' X '.$order->height);
+            $this->setCellValue('I'.$row, optional($order->us_secondary_label_cost)['profit_cost']);
+            $this->setCellValue('J'.$row, $this->checkValue(number_format($order->dangrous_goods,2)));
+            $this->setCellValue('K'.$row, $this->chargeWeight($order));
+            $this->setCellValue('L'.$row, $order->getWeight('kg'));
+            $this->setCellValue('M'.$row, round(($this->chargeWeight($order)*2.205),2));
+            $this->setCellValue('N'.$row, $order->getWeight('lbs'));
+            $this->setCellValue('O'.$row, $order->length. ' X '. $order->width.' X '.$order->height);
 
             if($order->status == Order::STATUS_ORDER){
-                $this->setCellValue('O'.$row, 'ORDER');
+                $this->setCellValue('P'.$row, 'ORDER');
             }
             if($order->status == Order::STATUS_NEEDS_PROCESSING){
-                $this->setCellValue('O'.$row, 'PROCESSING');
+                $this->setCellValue('P'.$row, 'PROCESSING');
             }
             if($order->status == Order::STATUS_CANCEL){
-                $this->setCellValue('O'.$row, 'CANCEL');
+                $this->setCellValue('P'.$row, 'CANCEL');
             }
             if($order->status == Order::STATUS_REJECTED){
-                $this->setCellValue('O'.$row, 'REJECTED');
+                $this->setCellValue('P'.$row, 'REJECTED');
             }
             if($order->status == Order::STATUS_RELEASE){
-                $this->setCellValue('O'.$row, 'RELEASED');
+                $this->setCellValue('P'.$row, 'RELEASED');
             }
             if($order->status == Order::STATUS_REFUND){
-                $this->setCellValue('O'.$row, 'REFUND');
+                $this->setCellValue('P'.$row, 'REFUND');
             }
             if($order->status == Order::STATUS_PAYMENT_PENDING){
-                $this->setCellValue('O'.$row, 'PAYMENT PENDING');
+                $this->setCellValue('P'.$row, 'PAYMENT PENDING');
             }
             if($order->status == Order::STATUS_PAYMENT_DONE){
-                $this->setCellValue('O'.$row, 'PAYMENT DONE');
+                $this->setCellValue('P'.$row, 'PAYMENT DONE');
             }
             if($order->status == Order::STATUS_SHIPPED){
-                $this->setCellValue('O'.$row, 'SHIPPED');
+                $this->setCellValue('P'.$row, 'SHIPPED');
             }
 
-            $this->setCellValue('P'.$row, $order->weight_discount);
+            $this->setCellValue('Q'.$row, $order->weight_discount);
+            $this->setCellValue('R'.$row, $order->discountCost());
+            
+            $this->setCellValue('S'.$row, $this->getcarrier($order)['intl']);
+            $this->setCellValue('T'.$row, $this->getcarrier($order)['domestic']);
 
-            $this->setCellValue('Q'.$row, $order->discountCost());
-            $this->setCellValue('R'.$row, $order->carrierService().', '.$order->secondCarrierAervice());
-            $this->setCellValue('S'.$row, optional($order->us_secondary_label_cost)['profit_cost']);
             if(Auth::user()->isAdmin()){
-                $this->setCellValue('T'.$row, optional($order->us_secondary_label_cost)['api_cost']);
+                $this->setCellValue('U'.$row, $order->carrierCost());
+                $this->setCellValue('V'.$row, optional($order->us_secondary_label_cost)['api_cost']);
             }
 
             
@@ -99,12 +102,12 @@ class OrderExport extends AbstractExportService
         $this->setCellValue('K'.$row, "=SUM(K1:K{$row})");
         $this->setCellValue('L'.$row, "=SUM(L1:L{$row})");
         $this->setCellValue('M'.$row, "=SUM(M1:M{$row})");
-        $this->setCellValue('P'.$row, "=SUM(P1:P{$row})");
         $this->setCellValue('Q'.$row, "=SUM(Q1:Q{$row})");
+        $this->setCellValue('R'.$row, "=SUM(R1:R{$row})");
 
         
         $this->mergeCells("A{$row}:F{$row}");
-        $this->setBackgroundColor("A{$row}:T{$row}", 'adfb84');
+        $this->setBackgroundColor("A{$row}:V{$row}", 'adfb84');
         $this->setAlignment('A'.$row, Alignment::VERTICAL_CENTER);
         $this->setCellValue('A'.$row, 'Total Order: '.$this->orders->count());
 
@@ -133,49 +136,55 @@ class OrderExport extends AbstractExportService
         $this->setColumnWidth('G', 23);
         $this->setCellValue('G1', '	Tracking Code');
 
-        $this->setColumnWidth('H', 20);
-        $this->setCellValue('H1', 'HD Amount');
+        $this->setColumnWidth('H', 25);
+        $this->setCellValue('H1', 'Customer Paid 1st Label');
 
         $this->setColumnWidth('I', 25);
-        $this->setCellValue('I1', 'Battery/Perfume/Flameable');
-
-        $this->setColumnWidth('J', 20);
-        $this->setCellValue('J1', 'Weight(Kg)');
+        $this->setCellValue('I1', 'Customer Paid 2nd Label');
         
+        $this->setColumnWidth('J', 25);
+        $this->setCellValue('J1', 'Battery/Perfume/Flameable');
+
         $this->setColumnWidth('K', 20);
-        $this->setCellValue('K1', 'Metric Weight(kg)');
-
-        $this->setColumnWidth('L', 20);
-        $this->setCellValue('L1', 'Weight(Lbs)');
+        $this->setCellValue('K1', 'Weight(Kg)');
         
-        $this->setColumnWidth('M', 20);
-        $this->setCellValue('M1', 'Metric Weight(Lbs)');
+        $this->setColumnWidth('L', 20);
+        $this->setCellValue('L1', 'Metric Weight(kg)');
 
+        $this->setColumnWidth('M', 20);
+        $this->setCellValue('M1', 'Weight(Lbs)');
+        
         $this->setColumnWidth('N', 20);
-        $this->sheet->getStyle('N')->getAlignment()->setHorizontal('center');
-        $this->setCellValue('N1', 'Dimesnsions');
+        $this->setCellValue('N1', 'Metric Weight(Lbs)');
 
         $this->setColumnWidth('O', 20);
-        $this->setCellValue('O1', 'Status');
+        $this->sheet->getStyle('O')->getAlignment()->setHorizontal('center');
+        $this->setCellValue('O1', 'Dimesnsions');
 
         $this->setColumnWidth('P', 20);
-        $this->setCellValue('P1', 'Discount Weight');
+        $this->setCellValue('P1', 'Status');
 
         $this->setColumnWidth('Q', 20);
-        $this->setCellValue('Q1', 'Discount Amount');
+        $this->setCellValue('Q1', 'Discount Weight');
 
         $this->setColumnWidth('R', 20);
-        $this->setCellValue('R1', 'Carrier Service');
+        $this->setCellValue('R1', 'Discount Amount');
 
         $this->setColumnWidth('S', 20);
-        $this->setCellValue('S1', '2nd HD Cost');
+        $this->setCellValue('S1', 'Intl Carrier Service');
+        
+        $this->setColumnWidth('T', 20);
+        $this->setCellValue('T1', 'Domestic Carrier Service');
 
         if(Auth::user()->isAdmin()){
-            $this->setColumnWidth('T', 20);
-            $this->setCellValue('T1', '2nd Carrier Cost');
+            $this->setColumnWidth('U', 20);
+            $this->setCellValue('U1', '1st Label Cost');
+
+            $this->setColumnWidth('V', 20);
+            $this->setCellValue('V1', '2nd Label Cost');
         }
 
-        $this->setBackgroundColor('A1:T1', '2b5cab');
+        $this->setBackgroundColor('A1:V1', '2b5cab');
         $this->setColor('A1:T1', 'FFFFFF');
 
         $this->currentRow++;
@@ -214,5 +223,24 @@ class OrderExport extends AbstractExportService
     {
         $trackingCodes = ($order->hasSecondLabel() ? $order->corrios_tracking_code.','.$order->us_api_tracking_code : $order->corrios_tracking_code." ");
         return (string)$trackingCodes;
+    }
+    
+    private function getcarrier($order)
+    {
+        if(in_array($order->carrierService(), ['USPS','UPS','FEDEX']) ){
+            return [
+                'intl' => null,
+                'domestic' => $order->carrierService()
+            ];
+        }
+        
+        if(in_array($order->carrierService(), ['Correios Chile', 'GePS', 'Correios Brazil']) ){
+            return [
+                'intl' => $order->carrierService(),
+                'domestic' => $order->secondCarrierAervice()
+            ];
+        }
+        
+        
     }
 }
