@@ -65,6 +65,7 @@ Route::prefix('v1')->group(function(){
             Route::resource('products', 'ProductController')->only('index', 'show', 'store');
             Route::get('api/token', AmazonApiTokenController::class);
             Route::get('profile', ProfileController::class);
+            Route::get('status/{order}', StatusController::class);
             Route::post('us/label',DomesticLabelController::class);
             Route::post('us/calculator',[App\Http\Controllers\Api\PublicApi\DomesticLabelRateController::class, 'getDomesticRates']);
         });
