@@ -18,8 +18,6 @@ use App\Repositories\GePSLabelRepository;
 use App\Repositories\MileExpressLabelRepository;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
-use App\Repositories\FedExLabelRepository;
-use App\Repositories\GePSLabelRepository;
 
 /**
  * Use for Sinerlog integration
