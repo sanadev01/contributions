@@ -10,7 +10,7 @@ use App\Models\Warehouse\DeliveryBill;
 use GuzzleHttp\Client as GuzzleClient;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Correios\Contracts\Package;
-use App\Services\Correios\Contracts\Container;
+//use App\Services\Correios\Contracts\Container;
 use App\Services\Correios\Models\PackageError;
 use App\Services\Correios\Contracts\PacketItem;
 use App\Services\Correios\Contracts\CN23Response;
@@ -85,7 +85,7 @@ class Client{
             $kg = UnitsConverter::poundToKg($order->getWeight('lbs'));
             $weight = UnitsConverter::kgToGrams($kg);
         }
-        
+
         $packet = new \App\Services\Correios\Models\Package();
 
         $packet->customerControlCode = $order->id;
@@ -131,7 +131,7 @@ class Client{
         \Log::info(
             $packet
         );
-        
+
         try {
             $response = $this->client->post('/packet/v1/packages',[
                'headers' => [
@@ -261,7 +261,7 @@ class Client{
                 'country' => ($order->user->country != null) ? $order->user->country->code : 'US',
                 'city' => 'Miami',
             ]);
-        }    
+        }
 
         return true;
     }
