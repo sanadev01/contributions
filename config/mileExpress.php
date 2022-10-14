@@ -5,13 +5,15 @@ return[
         'baseUrl' => '',
     ],
     'testing' => [
-        'baseUrl' => 'https://dev.mileexpress.com.br',
+        'baseUrl' => 'https://api.mileexpress.com.br/',
     ],
     'credentials' => [
-        'clientId' => 3,
-        'clientSecret' => 'ydwLy3QzUbA90Yp5vTI3CuvTbSH3rvwlZDLKMYDa',
+        'grant_type' => 'password',
+        'clientId' => 4932,
+        'clientSecret' => 'zDy4aT6tmqYBgsg8WbU4GgZ8cwNwpM7g4F5BsmMP',
         'userName' => 'hercoinc@mileexpress.com.br',
         'password' => 'D29GdSPg3neSH8h',
+        'scope' => '*'
     ],
     'tokenUrl' => '/oauth/token',
     'houseUrl' => '/v1/airwaybills/house',
