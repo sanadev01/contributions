@@ -46,12 +46,13 @@
                                     <div class="form-group col-sm-6 col-md-3">
                                         <button type="submit" class="btn btn-primary mt-5">Find</button>
                                     </div>
-                                    <div class="form-group col-sm-6 col-md-3 mt-4">
-                                        <a class='btn' href='javascript:;'>
-                                            <button class="btn btn-success btn-md" type="button">Upload Files <i class="fa fa-upload"></i></button>
+                                    <div class="form-group col-sm-6 col-md-3 mt-4 text-right pr-0">
+                                        <a class="btn pr-0" href='javascript:void(0)'>
+                                            <button class="btn btn-success btn-md" type="button">Upload Receipt <i class="fa fa-upload"></i></button>
                                             <input type="file" multiple name="attachment[]" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' size="40"  onchange='$("#upload-file-info").html($(this).val());'>
-
                                         </a>
+                                        <br>
+                                        <span class='label label-info' id="upload-file-info"></span>
                                     </div>
                                 </div>
                             </form></br>

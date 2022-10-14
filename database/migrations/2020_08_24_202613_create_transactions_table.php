@@ -17,6 +17,7 @@ class CreateTransactionsTable extends Migration
             $table->id();
             $table->bigInteger('invoice_id');
             $table->string('transaction_id')->nullable();
+            $table->string('tax_id')->nullable();
             $table->double('amount');
             $table->timestamps();
         });
