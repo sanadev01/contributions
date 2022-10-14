@@ -5,7 +5,7 @@ return[
         'baseUrl' => '',
     ],
     'testing' => [
-        'baseUrl' => 'https://api.mileexpress.com.br/',
+        'baseUrl' => 'https://api.mileexpress.com.br',
     ],
     'credentials' => [
         'grant_type' => 'password',
