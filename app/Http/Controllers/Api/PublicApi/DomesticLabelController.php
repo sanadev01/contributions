@@ -80,7 +80,6 @@ class DomesticLabelController extends Controller
         if(!$error && $this->serviceRate ){
             //SET LABLE PRICE AS PER PROFIT SETTING
             $this->setUserProft(request()->service);
-            
             //GET TOTAL WEIGHT OF ORDERS
             $totalWeight = $consolidatedDomesticLabelRepository->getTotalWeight($orders);
 
@@ -122,7 +121,7 @@ class DomesticLabelController extends Controller
         if($this->fedExProfit == null || $this->fedExProfit == 0)
         { $this->fedExProfit = setting('fedex_profit', null, User::ROLE_ADMIN); }
         //CALCULATE TOTAL PRICE FOR LABEL
-        
+        $price = 0;
         if($service == ShippingService::USPS_PRIORITY || $service == ShippingService::USPS_FIRSTCLASS && setting('usps', null, User::ROLE_ADMIN) && setting('usps', null, auth()->user()->id)) { 
             $profit = optional(optional($this->serviceRate)[0])->rate * ($this->uspsProfit / 100);
             $price = round(optional(optional($this->serviceRate)[0])->rate + $profit, 2);
@@ -135,6 +134,8 @@ class DomesticLabelController extends Controller
             $profit = optional(optional($this->serviceRate)[2])->rate * ($this->fedExProfit / 100);
             $price = round(optional(optional($this->serviceRate)[2])->rate + $profit, 2);
         }
-        request()->merge(['total_price' => $price]); 
+        if($price > 0){
+            request()->merge(['total_price' => $price]); 
+        }
     }
 }
