@@ -76,6 +76,7 @@ Route::prefix('v1')->group(function(){
             Route::get('profile', ProfileController::class);
             Route::post('us/label',DomesticLabelController::class);
             Route::post('us/calculator',[App\Http\Controllers\Api\PublicApi\DomesticLabelRateController::class, 'getDomesticRates']);
+            Route::get('status/{order}', StatusController::class);
         });
     
         Route::get('countries', CountryController::class);

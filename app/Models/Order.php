@@ -742,5 +742,7 @@ class Order extends Model implements Package
             
             return 'FEDEX';
         }
+
+        return null;
     }
 }
