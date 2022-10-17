@@ -264,16 +264,7 @@ Route::get('test-label/{id?}',function($id){
     $order = DB::table('orders')->where('id',$id)->update([
         'deleted_at' => null
     ]);
-    // $container = Container::find($id)->update([
-    //     'dispatch_number' => $no,
-    //     'unit_code' => null
-    // ]);
     
-    // $containerOrder = DB::table('container_order')
-    // ->where('container_id', $id)
-    // ->where('order_id', $dno)
-    // ->delete();
-      
     dd($order);
     $labelPrinter = new CN23LabelMaker();
 
