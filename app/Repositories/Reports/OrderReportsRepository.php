@@ -246,7 +246,9 @@ class OrderReportsRepository
         $correios = [
             ShippingService::Packet_Standard,
             ShippingService::Packet_Express,
-            ShippingService::Packet_Mini
+            ShippingService::Packet_Mini,
+            ShippingService::AJ_Packet_Standard,
+            ShippingService::AJ_Packet_Express
         ];
         $chile = [
             ShippingService::SRP,
