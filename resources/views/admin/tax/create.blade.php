@@ -82,7 +82,7 @@
                                             </div>
                                         </div>
                                         @foreach($orders as $order)
-                                            <div class="row m-1 mb-3">
+                                            <div class="row m-1 mb-3 orders">
                                                 <div class="col-md-2">
                                                     <input type="hidden" class="form-control" name="user_id" value="{{ $order->user_id }}">
                                                     <input type="hidden" class="form-control" name="order_id[]" value="{{ $order->id }}">
@@ -95,13 +95,13 @@
                                                     <input type="text" class="form-control" name="tracking_code[]" value="{{ $order->corrios_tracking_code }}" readonly required>
                                                 </div>
                                                 <div class="col-md-2">
-                                                    <input type="text" class="form-control" id="tax1" name="tax_1[]" value="" required>
+                                                    <input type="number" class="form-control tax1" name="tax_1[]" value="" required>
                                                 </div>
                                                 <div class="col-md-2">
-                                                    <input type="text" class="form-control" id="tax2" name="tax_2[]" value="" required>
+                                                    <input type="number" class="form-control tax2" name="tax_2[]" value="" required>
                                                 </div>
                                                 <div class="col-md-2">
-                                                    <input type="text" class="form-control" id="profit" name="profit[]" value=""  readonly required>
+                                                    <input type="text" class="form-control profit" name="profit[]" value=""  readonly required>
                                                 </div>
                                             </div>
                                         @endforeach
@@ -123,23 +123,13 @@
 @endsection
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        $('body').on('change','.items input.quantity,.items input.value',function(){
-            let quantity = $(this).closest('.items').find('.quantity').val();
-            let unitValue = $(this).closest('.items').find('.value').val();
-            let total = parseFloat(quantity) * parseFloat(unitValue);
-            $(this).closest('.items').find('.total').val(
-                isNaN(total) ? 0 : (total).toFixed(2)
-            );
-        
-        
-        });
-    })
-    document.addEventListener('DOMContentLoaded', function () {
-        $('body').on('keyup','#tax2',function(){
-            let tax1 = $('#tax1').val();
-            let tax2 = $('#tax2').val();
+        $('body').on('change','.orders input.tax1, input.tax2',function(){
+            let tax1 = $(this).closest('.orders').find('.tax1').val();
+            let tax2 = $(this).closest('.orders').find('.tax2').val();
             let profit = parseFloat(tax1) - parseFloat(tax2);
-            $('#profit').val( isNaN(profit) ? 0 : (profit).toFixed(2) );
+            $(this).closest('.orders').find('.profit').val(
+                isNaN(profit) ? 0 : (profit).toFixed(2)
+            );
         });
     })
 </script>
