@@ -35,6 +35,7 @@ return [
     'Tax Customer' => 'Tax Customer (Selling)',
     'Tax Herco' => 'Tax Herco (Buying)',
     'Profit' => 'Profit',
+    'Receipt' => 'Receipt',
     'Save' => 'Save',
     'Back to List' => 'Back to List',
     'Add Tax' => 'Add Tax',

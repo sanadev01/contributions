@@ -19,9 +19,9 @@ class Tax extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function transaction()
+    public function deposit()
     {
-        return $this->belongsToMany(Transaction::class);
+        return $this->belongsTo(Deposit::class, 'deposit_id', 'id');
     }
 
 }

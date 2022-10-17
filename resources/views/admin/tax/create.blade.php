@@ -46,19 +46,21 @@
                                     <div class="form-group col-sm-6 col-md-3">
                                         <button type="submit" class="btn btn-primary mt-5">Find</button>
                                     </div>
-                                    <div class="form-group col-sm-6 col-md-3 mt-4 text-right pr-0">
-                                        <a class="btn pr-0" href='javascript:void(0)'>
-                                            <button class="btn btn-success btn-md" type="button">Upload Receipt <i class="fa fa-upload"></i></button>
-                                            <input type="file" multiple name="attachment[]" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' size="40"  onchange='$("#upload-file-info").html($(this).val());'>
-                                        </a>
-                                        <br>
-                                        <span class='label label-info' id="upload-file-info"></span>
-                                    </div>
                                 </div>
                             </form></br>
                             <form class="form" action="{{ route('admin.tax.store') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                     @if($orders)
+                                        <div class="row m-1 mb-2">
+                                            <div class="form-group offset-9 col-md-3 col-sm-6 mt-1 text-right">
+                                                <a class="btn pr-0" href='javascript:void(0)'>
+                                                    <button class="btn btn-success btn-md" type="button">Upload Receipt <i class="fa fa-upload"></i></button>
+                                                    <input type="file" name="attachment[]" multiple style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' size="40"  onchange='$("#upload-file-info").html($(this).val());'>
+                                                </a>
+                                                <br>
+                                                <span class='label label-info' id="upload-file-info"></span>
+                                            </div>
+                                        </div>
                                         <div class="row m-1 mb-2">
                                             <div class="col-md-2">
                                                 <label><b>@lang('taxservice.Order ID')</b></label>
@@ -120,6 +122,18 @@
     </section>
 @endsection
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        $('body').on('change','.items input.quantity,.items input.value',function(){
+            let quantity = $(this).closest('.items').find('.quantity').val();
+            let unitValue = $(this).closest('.items').find('.value').val();
+            let total = parseFloat(quantity) * parseFloat(unitValue);
+            $(this).closest('.items').find('.total').val(
+                isNaN(total) ? 0 : (total).toFixed(2)
+            );
+        
+        
+        });
+    })
     document.addEventListener('DOMContentLoaded', function () {
         $('body').on('keyup','#tax2',function(){
             let tax1 = $('#tax1').val();

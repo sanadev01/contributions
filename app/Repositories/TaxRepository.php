@@ -29,7 +29,7 @@ class TaxRepository
             });
         }
         $query->latest();
-            return $query->paginate(50);
+        return $query->paginate(50);
         return $query->get();
     }
 
@@ -44,6 +44,7 @@ class TaxRepository
 
     public function store(Request $request)
     {
+        dd($request->all());
         $amount = 0;
         $trackingNos = [];
         try{
@@ -87,6 +88,7 @@ class TaxRepository
                             ]);
                         }
                     }
+                    $taxes = Tax::whereIn('order_id', $request->order_id)->update(['deposit_id' => $deposit->id]);
                     return true;
                 }
                 return false;
