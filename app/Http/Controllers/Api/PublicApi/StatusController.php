@@ -13,10 +13,10 @@ class StatusController extends Controller
     public function __invoke(Order $order)
     {        
         if($order) {  
-            return apiResponse(true,['status' => $order->status]);
-        }else {
-            return apiResponse(false,['error' => "Your Parcel Cannot be Tracked at this moment. Please contact Customer service"]);
-        }
+            return apiResponse(true, "Your Parcel Status is", $order->status);
+        } 
+        return apiResponse(false,['error' => "Your Parcel doesn't exists."]);
+
     }
 
 }
