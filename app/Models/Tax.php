@@ -19,4 +19,14 @@ class Tax extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function deposit()
+    {
+        return $this->belongsTo(Deposit::class);
+    }
+
+    // public function depositAttchs()
+    // {
+    //     return $this->belongsToMany(Document::class);
+    // }
+
 }

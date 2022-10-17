@@ -24,31 +24,21 @@
                                     <input type="search" class="form-control" name="search"
                                         value="{{ old('search', request('search')) }}" placeholder="@lang('taxservice.Search By Name, Warehouse No. or Tracking Code')">
                                 </div>
-                                <div class="col-md-4">
-                                    <button class="btn btn-primary btn-md">
-                                        <i class="feather icon-search"></i></button>
-                                    </button>
-                                    <button class="btn btn-primary ml-1 waves-effect waves-light"
-                                        onclick="window.location.reload();">
-                                        <i class="fa fa-undo" data-bs-toggle="tooltip" title=""
-                                            data-bs-original-title="fa fa-undo" aria-label="fa fa-undo"
-                                            aria-hidden="true"></i></button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <table class="table mb-0 table-bordered table-responsive-sm">
-                        <thead>
-                            <tr>
-                                <th>@lang('taxservice.User Name')</th>
-                                <th>@lang('taxservice.Warehouse No.')</th>
-                                <th>@lang('taxservice.Tracking Code')</th>
-                                <th>@lang('taxservice.Tax Payment 1')</th>
-                                <th>@lang('taxservice.Tax Payment 2')</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($taxlist as $tax)
+                            </form>
+                        </div>
+                        <table class="table mb-0 table-responsive-md">
+                            <thead>
+                                <tr>
+                                    <th>@lang('taxservice.User Name')</th>
+                                    <th>@lang('taxservice.Warehouse No.')</th>
+                                    <th>@lang('taxservice.Tracking Code')</th>
+                                    <th>@lang('taxservice.Tax Customer')</th>
+                                    <th>@lang('taxservice.Tax Herco')</th>
+                                    <th>@lang('taxservice.Receipt')</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($taxlist as $tax)
                                 <tr>
                                     <td>{{ $tax->user->name }}</td>
                                     <td>
@@ -63,6 +53,16 @@
                                     <td>{{ $tax->order->corrios_tracking_code }}</td>
                                     <td>{{ $tax->tax_1 }}</td>
                                     <td>{{ $tax->tax_2 }}</td>
+                                    <td>
+                                        @if($tax->depositAttchs)
+                                        @foreach ($tax->depositAttchs as $attachedFile )
+                                            <a target="_blank" href="{{ $attachedFile->getPath() }}">Download</a><br>
+                                            {{-- <a target="_blank" href="{{route('admin.download_attachment', [$tax->attachment])}}">Download</a> --}}
+                                        @endforeach
+                                        @else
+                                            Not Found
+                                        @endif
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
