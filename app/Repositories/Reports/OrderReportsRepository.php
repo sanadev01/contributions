@@ -27,6 +27,14 @@ class OrderReportsRepository
         } elseif ( $request->email)
         {
             $query->where('email','LIKE',"%{$request->email}%");
+
+        } else if( $request->search )
+        {
+        
+            $query->where('name','LIKE',"%{$request->search}%")
+            ->orWhere('last_name','LIKE',"%{$request->search}%")
+            ->orWhere('pobox_number','LIKE',"%{$request->search}%")
+            ->orWhere('email','LIKE',"%{$request->search}%");
         }
 
         $query->withCount(['orders as order_count'=> function($query) use ($request){
@@ -52,6 +60,8 @@ class OrderReportsRepository
                 $endDate = $request->end_date.' 23:59:59';
                 $query->where('order_date','<=', $endDate);
             }
+
+            
 
             $query->select(DB::raw('sum(CASE WHEN measurement_unit = "kg/cm" THEN ROUND(weight,2) ELSE ROUND((weight/2.205),2) END) as weight'));
 
@@ -132,6 +142,42 @@ class OrderReportsRepository
         return [
             [
                 'min_weight' => '0.00',
+                'max_weight' => '0.100'
+            ],
+            [
+                'min_weight' => '0.101',
+                'max_weight' => '0.200'
+            ],
+            [
+                'min_weight' => '0.201',
+                'max_weight' => '0.300'
+            ],
+            [
+                'min_weight' => '0.301',
+                'max_weight' => '0.400'
+            ],
+            [
+                'min_weight' => '0.401',
+                'max_weight' => '0.500'
+            ],
+            [
+                'min_weight' => '0.501',
+                'max_weight' => '0.600'
+            ],
+            [
+                'min_weight' => '0.601',
+                'max_weight' => '0.700'
+            ],
+            [
+                'min_weight' => '0.701',
+                'max_weight' => '1.800'
+            ],
+            [
+                'min_weight' => '0.801',
+                'max_weight' => '0.900'
+            ],
+            [
+                'min_weight' => '0.901',
                 'max_weight' => '1.00'
             ],
             [
