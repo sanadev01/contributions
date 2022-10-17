@@ -57,22 +57,13 @@ class ShipmentReport extends AbstractExportService
             $this->setCellValue('R'.$row, $report[11]['orders']);
             $this->setCellValue('S'.$row, $report[12]['orders']);
             $this->setCellValue('T'.$row, $report[13]['orders']);
-            $this->setCellValue('U'.$row, $report[14]['orders']);
-            $this->setCellValue('V'.$row, $report[15]['orders']);
-            $this->setCellValue('W'.$row, $report[16]['orders']);
-            $this->setCellValue('X'.$row, $report[17]['orders']);
-            $this->setCellValue('Y'.$row, $report[18]['orders']);
-            $this->setCellValue('Z'.$row, $report[19]['orders']);
-            $this->setCellValue('AA'.$row, $report[20]['orders']);
-            $this->setCellValue('AB'.$row, $report[21]['orders']);
-            $this->setCellValue('AC'.$row, $report[22]['orders']);
-            $this->setCellValue('AD'.$row, $reportByService->brazil_order_count);
-            $this->setCellValue('AE'.$row, $reportByService->chile_order_count);
-            $this->setCellValue('AF'.$row, $reportByService->ups_order_count);
-            $this->setCellValue('AG'.$row, $reportByService->usps_order_count);
-            $this->setCellValue('AH'.$row, $reportByService->fedex_order_count);
-            $this->setCellValue('AI'.$row, $reportByService->other_order_count);
-            $this->setBackgroundColor("AD{$row}:AI{$row}", 'd1d1d1');
+            $this->setCellValue('U'.$row, $reportByService->brazil_order_count);
+            $this->setCellValue('V'.$row, $reportByService->chile_order_count);
+            $this->setCellValue('W'.$row, $reportByService->ups_order_count);
+            $this->setCellValue('X'.$row, $reportByService->usps_order_count);
+            $this->setCellValue('Y'.$row, $reportByService->fedex_order_count);
+            $this->setCellValue('Z'.$row, $reportByService->other_order_count);
+            $this->setBackgroundColor("U{$row}:Z{$row}", 'd1d1d1');
             $row++;
         }
         $this->setCellValue('D'.$row, "=SUM(D1:D{$row})");
@@ -98,16 +89,7 @@ class ShipmentReport extends AbstractExportService
         $this->setCellValue('X'.$row, "=SUM(X1:X{$row})");
         $this->setCellValue('Y'.$row, "=SUM(Y1:Y{$row})");
         $this->setCellValue('Z'.$row, "=SUM(Z1:Z{$row})");
-        $this->setCellValue('AA'.$row, "=SUM(AA1:AA{$row})");
-        $this->setCellValue('AB'.$row, "=SUM(AB1:AB{$row})");
-        $this->setCellValue('AC'.$row, "=SUM(AC1:AC{$row})");
-        $this->setCellValue('AD'.$row, "=SUM(AD1:AD{$row})");
-        $this->setCellValue('AE'.$row, "=SUM(AE1:AE{$row})");
-        $this->setCellValue('AF'.$row, "=SUM(AF1:AF{$row})");
-        $this->setCellValue('AG'.$row, "=SUM(AG1:AG{$row})");
-        $this->setCellValue('AH'.$row, "=SUM(AH1:AH{$row})");
-        $this->setCellValue('AI'.$row, "=SUM(AI1:AI{$row})");
-        $this->setBackgroundColor("A{$row}:AI{$row}", 'adfb84');
+        $this->setBackgroundColor("A{$row}:Z{$row}", 'adfb84');
         $this->currentRow = $row;
     }
 
@@ -138,88 +120,61 @@ class ShipmentReport extends AbstractExportService
         $this->setCellValue('H1', '0.101 - 0.200 Kg');
 
         $this->setColumnWidth('I', 20);
-        $this->setCellValue('I1', '0.201 - 0.300 Kg');
+        $this->setCellValue('I1', '2.01 - 3.00 Kg');
 
         $this->setColumnWidth('J', 20);
-        $this->setCellValue('J1', '0.301 - 0.400 Kg');
+        $this->setCellValue('J1', '3.01 - 4.00 Kg');
 
         $this->setColumnWidth('K', 20);
-        $this->setCellValue('K1', '0.401 - 0.500 Kg');
+        $this->setCellValue('K1', '4.01 - 5.00 Kg');
 
         $this->setColumnWidth('L', 20);
-        $this->setCellValue('L1', '0.501 - 0.600 Kg');
+        $this->setCellValue('L1', '5.01 - 6.00 Kg');
 
         $this->setColumnWidth('M', 20);
-        $this->setCellValue('M1', '0.601 - 0.700 Kg');
+        $this->setCellValue('M1', '6.01 - 7.00 Kg');
 
         $this->setColumnWidth('N', 20);
-        $this->setCellValue('N1', '0.701 - 0.800 Kg');
+        $this->setCellValue('N1', '7.01 - 8.00 Kg');
 
         $this->setColumnWidth('O', 20);
-        $this->setCellValue('O1', '0.801 - 0.900 Kg');
+        $this->setCellValue('O1', '8.01 - 9.00 Kg');
 
         $this->setColumnWidth('P', 20);
-        $this->setCellValue('P1', '0.901 - 1.00 Kg');
+        $this->setCellValue('P1', '9.01 - 10.00 Kg');
 
         $this->setColumnWidth('Q', 20);
-        $this->setCellValue('Q1', '1.01 - 2.00 Kg');
+        $this->setCellValue('Q1', '10.01 - 15.00 Kg');
 
         $this->setColumnWidth('R', 20);
-        $this->setCellValue('R1', '2.01 - 3.00 Kg');
+        $this->setCellValue('R1', '15.01 - 20.00 Kg');
 
         $this->setColumnWidth('S', 20);
-        $this->setCellValue('S1', '3.01 - 4.00 Kg');
+        $this->setCellValue('S1', '20.01 - 25.00 Kg');
 
         $this->setColumnWidth('T', 20);
-        $this->setCellValue('T1', '4.01 - 5.00 Kg');
+        $this->setCellValue('T1', '25.01 - 30.00 Kg');
 
         $this->setColumnWidth('U', 20);
-        $this->setCellValue('U1', '5.01 - 6.00 Kg');
-
+        $this->setCellValue('U1', 'Correios Brazil');
+        
         $this->setColumnWidth('V', 20);
-        $this->setCellValue('V1', '6.01 - 7.00 Kg');
-
+        $this->setCellValue('V1', 'Correios Chile');
+        
         $this->setColumnWidth('W', 20);
-        $this->setCellValue('W1', '7.01 - 8.00 Kg');
-
+        $this->setCellValue('W1', 'UPS');
+        
         $this->setColumnWidth('X', 20);
-        $this->setCellValue('X1', '8.01 - 9.00 Kg');
-
+        $this->setCellValue('X1', 'Usps');
+        
         $this->setColumnWidth('Y', 20);
-        $this->setCellValue('Y1', '9.01 - 10.00 Kg');
-
+        $this->setCellValue('Y1', 'Fedex');
+        
         $this->setColumnWidth('Z', 20);
-        $this->setCellValue('Z1', '10.01 - 15.00 Kg');
-
-        $this->setColumnWidth('AA', 20);
-        $this->setCellValue('AA1','15.01 - 20.00 Kg');
-
-        $this->setColumnWidth('AB', 20);
-        $this->setCellValue('AB1', '20.01 - 25.00 Kg');
-
-        $this->setColumnWidth('AC', 20);
-        $this->setCellValue('AC1', '25.01 - 30.00 Kg');
-
-        $this->setColumnWidth('AD', 20);
-        $this->setCellValue('AD1', 'Correios Brazil');
+        $this->setCellValue('Z1', 'Old Services');
         
-        $this->setColumnWidth('AE', 20);
-        $this->setCellValue('AE1', 'Correios Chile');
-        
-        $this->setColumnWidth('AF', 20);
-        $this->setCellValue('AF1', 'UPS');
-        
-        $this->setColumnWidth('AG', 20);
-        $this->setCellValue('AG1', 'Usps');
-        
-        $this->setColumnWidth('AH', 20);
-        $this->setCellValue('AH1', 'Fedex');
-        
-        $this->setColumnWidth('AI', 20);
-        $this->setCellValue('AI1', 'Old Services');
-        
-        $this->setBackgroundColor('A1:AI1', '2b5cab');
-        $this->setColor('A1:AI1', 'FFFFFF');
+        $this->setBackgroundColor('A1:Z1', '2b5cab');
+        $this->setColor('A1:Z1', 'FFFFFF');
 
         $this->currentRow++;
     }
