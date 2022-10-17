@@ -55,7 +55,16 @@
                                     <td>{{ $tax->order->corrios_tracking_code }}</td>
                                     <td>{{ $tax->tax_1 }}</td>
                                     <td>{{ $tax->tax_2 }}</td>
-                                    <td>{{ $tax->attachment }}</td>
+                                    <td>
+                                        @if($tax->depositAttchs)
+                                        @foreach ($tax->depositAttchs as $attachedFile )
+                                            <a target="_blank" href="{{ $attachedFile->getPath() }}">Download</a><br>
+                                            {{-- <a target="_blank" href="{{route('admin.download_attachment', [$tax->attachment])}}">Download</a> --}}
+                                        @endforeach
+                                        @else
+                                            Not Found
+                                        @endif
+                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>

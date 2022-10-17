@@ -21,7 +21,12 @@ class Tax extends Model
 
     public function deposit()
     {
-        return $this->belongsTo(Deposit::class, 'deposit_id', 'id');
+        return $this->belongsTo(Deposit::class);
     }
+
+    // public function depositAttchs()
+    // {
+    //     return $this->belongsToMany(Document::class);
+    // }
 
 }
