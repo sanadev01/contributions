@@ -97,10 +97,10 @@
                                                     <input type="text" class="form-control" name="tracking_code[]" value="{{ $order->corrios_tracking_code }}" readonly required>
                                                 </div>
                                                 <div class="col-md-2">
-                                                    <input type="number" class="form-control tax1" name="tax_1[]" value="" required>
+                                                    <input type="number" class="form-control tax1" name="tax_1[]" value="" step="0.01" required>
                                                 </div>
                                                 <div class="col-md-2">
-                                                    <input type="number" class="form-control tax2" name="tax_2[]" value="" required>
+                                                    <input type="number" class="form-control tax2" name="tax_2[]" value="" step="0.01" required>
                                                 </div>
                                                 <div class="col-md-2">
                                                     <input type="text" class="form-control profit" name="profit[]" value=""  readonly required>

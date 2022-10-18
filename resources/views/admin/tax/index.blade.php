@@ -15,7 +15,7 @@
                         </a>
                     @endcan
                 </div></br>
-                <div class="table-responsive-md mt-1 mr-4 ml-4">
+                <div class="table-responsive-md mt-1 mr-4 ml-4 mb-5">
                     <div class="filters p-2" id="singleSearch"
                         @if (old('search', request('search'))) style="display: block" @endif>
                         <form action="" method="GET">

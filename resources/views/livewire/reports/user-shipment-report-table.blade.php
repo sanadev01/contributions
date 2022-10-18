@@ -1,49 +1,48 @@
 <div>
 
-    <div class="row my-3" id="dateSearch">
-        <div class="col-md-2">
-            <label for="">Start Date</label>
-            <input type="date" class="form-control" wire:model='start_date'>
-        </div>
-        <div class="col-md-2">
-            <label for="">End Date</label>
-            <input type="date" class="form-control" wire:model='end_date'>
-        </div>
-        <div class="col-md-1 pt-4">
-            <a href="{{ $downloadLink }}" class="btn btn-success" {{ !$downloadLink ? 'disabled' : '' }}
-                target="_blank">
-                <i class="fa fa-arrow-down"></i>
-            </a>
-        </div>
-        <div class="col-6">
-            <form class="col-12" action="{{ route('admin.reports.user-shipments.index') }}" method="GET"
-                target="_blank">
-                <div class="row">
-                    <div class="col-md-12 row mb-2 ">
-                        <div class="col-lg-2 pl-0 col-md-3 col-sm-3 col-xs-3">
-                            <label for="">Year</label>
-                            <select class="form-control" name="year" id="DefaultSelect">
-                                <option value="">Select Year </option>
-                                @foreach ($years as $year)
-                                    <option value="{{ $year }}"
-                                        @if ($year == $year) selected @endif>
-                                        {{ $year }} </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-lg-3 col-md-3 col-sm-2 col-xs-2 mt-25">
-                            <button type="submit" class="btn btn-primary mr-2">Download Yearly</button>
-
+    <div class="row my-3" id="dateSearch"
+        @if(!empty($start_date) || !empty($end_date)) style="display:block !important" @endif>
+        <div class="row col-12">
+            <div class="col-md-2">
+                <label for="">Start Date</label>
+                <input type="date" class="form-control" wire:model='start_date'>
+            </div>
+            <div class="col-md-2">
+                <label for="">End Date</label>
+                <input type="date" class="form-control" wire:model='end_date'>
+            </div>
+            <div class="col-md-1 pt-4">
+                <a href="{{ $downloadLink }}" class="btn btn-success" {{ !$downloadLink ? 'disabled' : '' }}
+                    target="_blank">
+                    <i class="fa fa-arrow-down"></i>
+                </a>
+            </div>
+            <div class="col-md-6">
+                <form class="col-12" action="{{ route('admin.reports.user-shipments.index') }}" method="GET"
+                    target="_blank">
+                    <div class="row">
+                        <div class="col-md-12 row mb-2 ">
+                            <div class="col-lg-2 pl-0 col-md-3 col-sm-3 col-xs-3">
+                                <label for="">Year</label>
+                                <select class="form-control" name="year" id="DefaultSelect">
+                                    <option value="">Select Year </option>
+                                    @foreach ($years as $year)
+                                        <option value="{{ $year }}"
+                                            @if ($year == $year) selected @endif>
+                                            {{ $year }} </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-2 col-xs-2 mt-25">
+                                <button type="submit" class="btn btn-primary btn-block mr-2">Download Yearly</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
-
-
-
     </div>
-    <div class="row col-12 my-3" id="downloadsDiv">
+    <!-- <div class="row col-12 my-3" id="downloadsDiv">
         <form class="col-12" action="{{ route('admin.reports.user-shipments.index') }}" method="GET" target="_blank">
             <div class="row">
                 <div class="col-md-12 row mb-2 ">
@@ -64,7 +63,7 @@
                 </div>
             </div>
         </form>
-    </div>
+    </div> -->
     <div class="mb-2 row col-md-12 pl-3 mb-1 {{ !$search ? 'hide' : '' }}" id="logSearch">
         <form class="col-12 d-flex pl-0" wire:submit.prevent="render">
             <div class="col-6 pl-0">
