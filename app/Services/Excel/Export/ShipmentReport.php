@@ -71,8 +71,9 @@ class ShipmentReport extends AbstractExportService
             $this->setCellValue('AF'.$row, $reportByService->ups_order_count);
             $this->setCellValue('AG'.$row, $reportByService->usps_order_count);
             $this->setCellValue('AH'.$row, $reportByService->fedex_order_count);
-            $this->setCellValue('AI'.$row, $reportByService->other_order_count);
-            $this->setBackgroundColor("AD{$row}:AI{$row}", 'd1d1d1');
+            $this->setCellValue('AI'.$row, $reportByService->gps_order_count);
+            $this->setCellValue('AJ'.$row, $reportByService->other_order_count);
+            $this->setBackgroundColor("AD{$row}:AJ{$row}", 'd1d1d1');
             $row++;
         }
         $this->setCellValue('D'.$row, "=SUM(D1:D{$row})");
@@ -107,7 +108,8 @@ class ShipmentReport extends AbstractExportService
         $this->setCellValue('AG'.$row, "=SUM(AG1:AG{$row})");
         $this->setCellValue('AH'.$row, "=SUM(AH1:AH{$row})");
         $this->setCellValue('AI'.$row, "=SUM(AI1:AI{$row})");
-        $this->setBackgroundColor("A{$row}:AI{$row}", 'adfb84');
+        $this->setCellValue('AJ'.$row, "=SUM(AJ1:AJ{$row})");
+        $this->setBackgroundColor("A{$row}:AJ{$row}", 'adfb84');
         $this->currentRow = $row;
     }
 
@@ -216,10 +218,13 @@ class ShipmentReport extends AbstractExportService
         $this->setCellValue('AH1', 'Fedex');
         
         $this->setColumnWidth('AI', 20);
-        $this->setCellValue('AI1', 'Old Services');
+        $this->setCellValue('AI1', 'GePS');
         
-        $this->setBackgroundColor('A1:AI1', '2b5cab');
-        $this->setColor('A1:AI1', 'FFFFFF');
+        $this->setColumnWidth('AJ', 20);
+        $this->setCellValue('AJ1', 'Old Services');
+        
+        $this->setBackgroundColor('A1:AJ1', '2b5cab');
+        $this->setColor('A1:AJ1', 'FFFFFF');
 
         $this->currentRow++;
     }
