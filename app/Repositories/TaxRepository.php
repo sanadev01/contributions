@@ -6,12 +6,15 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\Tax;
 use App\Models\Deposit;
+use App\Models\Document;
 use App\Models\PaymentInvoice;
 use App\Models\User;
 use Exception;
 
 class TaxRepository
 {
+
+    protected $fileName;
 
     public function get(Request $request, $paginated = true)
     {
@@ -26,7 +29,7 @@ class TaxRepository
             });
         }
         $query->latest();
-            return $query->paginate(50);
+        return $query->paginate(50);
         return $query->get();
     }
 
@@ -63,15 +66,28 @@ class TaxRepository
                 $codes = json_encode($trackingNos);
                 if(!empty($codes) && $balance >= $amount) {
 
-                    Deposit::create([
+                    $deposit = Deposit::create([
                         'uuid' => PaymentInvoice::generateUUID('DP-'),
                         'amount' => $amount,
                         'user_id' => $request->user_id,
                         'balance' => $balance - $amount,
                         'is_credit' => false,
+                        'attachment' => $this->fileName,
                         'last_four_digits' => 'Pay Tax',
                         'description' => 'Pay Tax'.' '.$codes,
                     ]);
+                    if ($request->hasFile('attachment')) {
+                        foreach ($request->file('attachment') as $attach) {
+                            $document = Document::saveDocument($attach);
+                            $deposit->depositAttchs()->create([
+                                'name' => $document->getClientOriginalName(),
+                                'size' => $document->getSize(),
+                                'type' => $document->getMimeType(),
+                                'path' => $document->filename
+                            ]);
+                        }
+                    }
+                    $taxes = Tax::whereIn('order_id', $request->order_id)->update(['deposit_id' => $deposit->id]);
                     return true;
                 }
                 return false;

@@ -103,6 +103,45 @@ class AffiliateSaleRepository
             });
         }
 
+        if ( $request->search ){
+            $query->where(function($query) use($request){
+                return $query->where('commission', 'LIKE', "%{$request->search}%");
+            })
+            ->orWhere(function($query) use($request){
+                return $query->where('type',"$request->search");
+            })
+            ->orWhere(function($query) use($request){
+                return $query->where('value',"{$request->search}");
+            })
+            ->orWhereHas('order',function($query) use($request){
+                return $query->where('weight', 'LIKE', "%{$request->search}%");
+            })
+            ->orWhereHas('order',function($query) use($request){
+                return $query->where('tracking_id', 'LIKE', "%{$request->search}%");
+            })
+            ->orWhereHas('order',function($query) use($request){
+                return $query->where('customer_reference', 'LIKE', "%{$request->search}%");
+            })
+            ->orWhereHas('order',function($query) use($request){
+                return $query->where('corrios_tracking_code', 'LIKE', "%{$request->search}%");
+            })
+            ->orWhereHas('order',function($query) use($request){
+                return $query->where('warehouse_number', 'LIKE', "%{$request->search}%");
+            })
+            ->orWhere(function($query) use($request){
+                return $query->where('order_id', 'LIKE', "%{$request->search}%");
+            })
+            ->orWhereHas('order',function($query) use($request) {
+                return $query->whereHas('user',function($query) use($request) {
+                   return $query->where('name', 'LIKE', "%{$request->search}%");
+               });
+           })
+           ->orWhereHas('user',function($query) use($request) {
+            return $query->where('name', 'LIKE', "%{$request->search}%");
+        });
+
+        }
+
         $sales = $query->orderBy('id','desc');
 
         return $paginate ? $sales->paginate($pageSize) : $sales->get();
