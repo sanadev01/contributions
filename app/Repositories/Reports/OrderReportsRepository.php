@@ -132,6 +132,42 @@ class OrderReportsRepository
         return [
             [
                 'min_weight' => '0.00',
+                'max_weight' => '0.100'
+            ],
+            [
+                'min_weight' => '0.101',
+                'max_weight' => '0.200'
+            ],
+            [
+                'min_weight' => '0.201',
+                'max_weight' => '0.300'
+            ],
+            [
+                'min_weight' => '0.301',
+                'max_weight' => '0.400'
+            ],
+            [
+                'min_weight' => '0.401',
+                'max_weight' => '0.500'
+            ],
+            [
+                'min_weight' => '0.501',
+                'max_weight' => '0.600'
+            ],
+            [
+                'min_weight' => '0.601',
+                'max_weight' => '0.700'
+            ],
+            [
+                'min_weight' => '0.701',
+                'max_weight' => '1.800'
+            ],
+            [
+                'min_weight' => '0.801',
+                'max_weight' => '0.900'
+            ],
+            [
+                'min_weight' => '0.901',
                 'max_weight' => '1.00'
             ],
             [
@@ -210,7 +246,9 @@ class OrderReportsRepository
         $correios = [
             ShippingService::Packet_Standard,
             ShippingService::Packet_Express,
-            ShippingService::Packet_Mini
+            ShippingService::Packet_Mini,
+            ShippingService::AJ_Packet_Standard,
+            ShippingService::AJ_Packet_Express
         ];
         $chile = [
             ShippingService::SRP,
