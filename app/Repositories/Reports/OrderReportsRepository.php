@@ -267,7 +267,11 @@ class OrderReportsRepository
             ShippingService::USPS_PRIORITY_INTERNATIONAL,
             ShippingService::USPS_FIRSTCLASS_INTERNATIONAL
         ];
-        $allServices = array_merge($correios, $chile, $ups, $fedex, $usps);
+        $gps = [
+            ShippingService::GePS
+        ];
+        
+        $allServices = array_merge($correios, $chile, $ups, $fedex, $usps, $gps);
         $query = User::query();
         $query->where('id', $user->id);
         
@@ -314,6 +318,15 @@ class OrderReportsRepository
 
             $query->whereHas('shippingService', function ($query) use ($fedex){
                 $query->whereIn('service_sub_class',$fedex);
+            });
+
+        },'orders as gps_order_count' => function($query)  use ($gps,$request){
+
+            $query->where('status','>',Order::STATUS_PAYMENT_PENDING);
+            $query = $this->requestFilterDate($query,$request);
+
+            $query->whereHas('shippingService', function ($query) use ($gps){
+                $query->whereIn('service_sub_class',$gps);
             });
 
         },'orders as other_order_count' => function($query)  use ($allServices,$request){
