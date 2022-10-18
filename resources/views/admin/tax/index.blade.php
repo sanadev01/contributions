@@ -24,21 +24,33 @@
                                     <input type="search" class="form-control" name="search"
                                         value="{{ old('search', request('search')) }}" placeholder="@lang('taxservice.Search By Name, Warehouse No. or Tracking Code')">
                                 </div>
-                            </form>
-                        </div>
-                        <table class="table mb-0 table-responsive-md">
-                            <thead>
-                                <tr>
-                                    <th>@lang('taxservice.User Name')</th>
-                                    <th>@lang('taxservice.Warehouse No.')</th>
-                                    <th>@lang('taxservice.Tracking Code')</th>
-                                    <th>@lang('taxservice.Tax Customer')</th>
-                                    <th>@lang('taxservice.Tax Herco')</th>
-                                    <th>@lang('taxservice.Receipt')</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($taxlist as $tax)
+                                <div class="col-md-4">
+                                    <button class="btn btn-primary btn-md">
+                                        <i class="feather icon-search"></i></button>
+                                    </button>
+                                    <button class="btn btn-primary ml-1 waves-effect waves-light"
+                                        onclick="window.location.reload();">
+                                        <i class="fa fa-undo" data-bs-toggle="tooltip" title=""
+                                            data-bs-original-title="fa fa-undo" aria-label="fa fa-undo"
+                                            aria-hidden="true"></i></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <table class="table mb-0 table-bordered table-responsive-sm">
+                        <thead>
+                            <tr>
+                                <th>@lang('taxservice.User Name')</th>
+                                <th>@lang('taxservice.Warehouse No.')</th>
+                                <th>@lang('taxservice.Tracking Code')</th>
+                                <th>@lang('taxservice.Tax Customer')</th>
+                                <th>@lang('taxservice.Tax Herco')</th>
+                                <th>@lang('taxservice.Receipt')</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($taxlist as $tax)
                                 <tr>
                                     <td>{{ $tax->user->name }}</td>
                                     <td>
