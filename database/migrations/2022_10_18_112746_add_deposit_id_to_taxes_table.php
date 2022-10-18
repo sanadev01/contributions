@@ -14,7 +14,7 @@ class AddDepositIdToTaxesTable extends Migration
     public function up()
     {
         Schema::table('taxes', function (Blueprint $table) {
-            $table->bigInteger('deposit_id')->nullable();
+            $table->bigInteger('deposit_id')->after('order_id')->nullable();
         });
     }
 
