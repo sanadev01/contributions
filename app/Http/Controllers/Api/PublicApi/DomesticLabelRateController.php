@@ -18,7 +18,7 @@ class DomesticLabelRateController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function getDomesticRates(Request $request, DomesticRateRepository $domesticRateRepository)
+    public function __invoke(Request $request, DomesticRateRepository $domesticRateRepository)
     {
         return $domesticRateRepository->domesticServicesRates($request);
         

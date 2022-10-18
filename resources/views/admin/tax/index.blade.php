@@ -36,8 +36,9 @@
                                     <th>@lang('taxservice.User Name')</th>
                                     <th>@lang('taxservice.Warehouse No.')</th>
                                     <th>@lang('taxservice.Tracking Code')</th>
-                                    <th>@lang('taxservice.Tax Payment 1')</th>
-                                    <th>@lang('taxservice.Tax Payment 2')</th>
+                                    <th>@lang('taxservice.Tax Customer')</th>
+                                    <th>@lang('taxservice.Tax Herco')</th>
+                                    <th>@lang('taxservice.Receipt')</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -54,6 +55,15 @@
                                     <td>{{ $tax->order->corrios_tracking_code }}</td>
                                     <td>{{ $tax->tax_1 }}</td>
                                     <td>{{ $tax->tax_2 }}</td>
+                                    <td>
+                                        @if(optional($tax->deposit)->depositAttchs)
+                                            @foreach ($tax->deposit->depositAttchs as $attachedFile )
+                                                <a target="_blank" href="{{ $attachedFile->getPath() }}">Download</a><br>
+                                            @endforeach
+                                        @else
+                                            Not Found
+                                        @endif
+                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>
