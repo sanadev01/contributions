@@ -32,7 +32,9 @@
                                         onclick="window.location.reload();">
                                         <i class="fa fa-undo" data-bs-toggle="tooltip" title=""
                                             data-bs-original-title="fa fa-undo" aria-label="fa fa-undo"
-                                            aria-hidden="true"></i></button>
+                                            aria-hidden="true">
+                                        </i>
+                                    </button>
                                 </div>
                             </div>
                         </form>
