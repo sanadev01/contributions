@@ -16,7 +16,7 @@ class TaxRepository
 
     protected $fileName;
 
-    public function get(Request $request, $paginated = true)
+    public function get(Request $request, $paginate = true, $pageSize = 3 )
     {
         $query = Tax::has('user');
         if ( $request->search ){
@@ -28,9 +28,18 @@ class TaxRepository
                 ->orWhere('corrios_tracking_code', 'LIKE', "%{$request->search}%");
             });
         }
-        $query->latest();
-        return $query->paginate(50);
-        return $query->get();
+        $startDate  = $request->start_date.' 00:00:00';
+        $endDate    = $request->end_date.' 23:59:59';
+        if ( $request->start_date ){
+            $query->where('created_at' , '>=',$startDate);
+        }
+        if ( $request->end_date ){
+            $query->where('created_at' , '<=',$endDate);
+        }
+
+        $taxes = $query->orderBy('id','desc');
+
+        return $paginate ? $taxes->paginate($pageSize) : $taxes->get();
     }
 
     public function getOrders(Request $request)
