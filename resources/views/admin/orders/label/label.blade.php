@@ -39,17 +39,5 @@
     </div>
 @endif
 <script>
-    // $(document).ready(function(){
-
-    //     let url = $('#colombia_label').val();
-        
-    //     if (url != undefined) {
-    //         var win = window.open(url, '_blank');
-    //         if (win) {
-    //             win.focus();
-    //         }else {
-    //             alert('Please allow popups for this website');
-    //         }
-    //     }
-    // });
+    
 </script>
