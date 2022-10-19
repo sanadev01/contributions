@@ -86,8 +86,9 @@ class MileExpressLabelRepository
 
         if ($labelResponse->success == true) {
             Storage::disk('local')->put("labels/{$this->order->corrios_tracking_code}.pdf", $labelResponse->data);
+            return true;
         }
 
-        return;
+        return $this->error = $labelResponse->error;
     }
 }

@@ -162,6 +162,7 @@ class OrderLabelController extends Controller
             $this->mileExpressLabelRepository->handle($order);
 
             $error = $this->mileExpressLabelRepository->getError();
+
             return $this->renderLabel($request, $order, $error);
         }
         
