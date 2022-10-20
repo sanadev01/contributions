@@ -7,11 +7,11 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">
-                            @lang('taxservice.Manage Tax Services')
+                            @lang('tax.Manage Tax Services')
                         </h4>
                         @can('create', App\Models\HandlingService::class)
                         <a href="{{ route('admin.tax.create') }}" class="btn btn-primary">
-                            @lang('taxservice.Pay Tax')
+                            @lang('tax.Pay Tax')
                         </a>
                         @endcan
                     </div></br>
@@ -22,7 +22,7 @@
                                     <form action="" method="GET">
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <input type="search" class="form-control" name="search" value="{{ old('search',request('search')) }}" placeholder="@lang('taxservice.Search By Name, Warehouse No. or Tracking Code')">
+                                                <input type="search" class="form-control" name="search" value="{{ old('search',request('search')) }}" placeholder="@lang('tax.Search By Name, Warehouse No. or Tracking Code')">
                                             </div>
                                             <div class="col-md-4">
                                                 <button class="btn btn-primary">
@@ -35,13 +35,13 @@
                                 <div class="col-md-6">
                                     <form action="{{ route('admin.reports.tax-report') }}" method="GET">
                                         <div class="row col-md-12">
-                                            <div class="col-md-2">
+                                            <div class="col-md-2 text-right">
                                                 <label>Start Date</label>
                                             </div>
                                             <div class="col-md-3">
                                                 <input type="date" class="form-control" name="start_date" >
                                             </div>
-                                            <div class="col-md-2">
+                                            <div class="col-md-2 text-right">
                                                 <label>End Date</label>
                                             </div>
                                             <div class="col-md-3">
@@ -60,12 +60,13 @@
                         <table class="table mb-0 table-responsive-md">
                             <thead>
                                 <tr>
-                                    <th>@lang('taxservice.User Name')</th>
-                                    <th>@lang('taxservice.Warehouse No.')</th>
-                                    <th>@lang('taxservice.Tracking Code')</th>
-                                    <th>@lang('taxservice.Tax Customer')</th>
-                                    <th>@lang('taxservice.Tax Herco')</th>
-                                    <th>@lang('taxservice.Receipt')</th>
+                                    <th>@lang('tax.User Name')</th>
+                                    <th>@lang('tax.Warehouse No.')</th>
+                                    <th>@lang('tax.Tracking Code')</th>
+                                    <th>@lang('tax.Tax payment') (R$)</th>
+                                    <th>@lang('tax.Tax Customer')</th>
+                                    <th>@lang('tax.Tax Herco')</th>
+                                    <th>@lang('tax.Receipt')</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -80,6 +81,7 @@
                                         </span>
                                     </td>
                                     <td>{{ $tax->order->corrios_tracking_code }}</td>
+                                    <td>{{ $tax->tax_payment }}</td>
                                     <td>{{ $tax->tax_1 }}</td>
                                     <td>{{ $tax->tax_2 }}</td>
                                     <td>

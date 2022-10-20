@@ -29,16 +29,16 @@
             @if(!is_null($orders))
                 <div class="row m-1 mb-2">
                     <div class="col-md-2">
-                        <label><b>@lang('taxservice.Order ID')</b></label>
+                        <label><b>@lang('tax.Order ID')</b></label>
                     </div>
                     <div class="col-md-2">
-                        <label><b>@lang('taxservice.User Name')</b></label>
+                        <label><b>@lang('tax.User Name')</b></label>
                     </div><div class="col-md-2">
-                        <label><b>@lang('taxservice.Tracking Code')</b></label>
+                        <label><b>@lang('tax.Tracking Code')</b></label>
                     </div><div class="col-md-3">
-                        <label><b>@lang('taxservice.Tax Payment 1')</b></label>
+                        <label><b>@lang('tax.Tax Payment 1')</b></label>
                     </div><div class="col-md-3">
-                        <label><b>@lang('taxservice.Tax Payment 2')</b></label>
+                        <label><b>@lang('tax.Tax Payment 2')</b></label>
                     </div>
                 </div>
                 @foreach($orders as $order)
@@ -65,7 +65,7 @@
         <div class="row mt-4 mb-4">
             <div class="col-12 d-flex text-center flex-sm-row flex-column justify-content-end mt-1">
                 <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-4 waves-effect waves-light">
-                    @lang('taxservice.Pay')
+                    @lang('tax.Pay')
                 </button>
             </div>
         </div>
