@@ -37,10 +37,11 @@ class ExportTax extends AbstractExportService
             $this->setCellValue('A'.$row, $user->pobox_number);
             $this->setCellValue('B'.$row, $order->warehouse_number);
             $this->setCellValue('C'.$row, $order->corrios_tracking_code);
-            $this->setCellValue('D'.$row, $tax->tax_1);
-            $this->setCellValue('E'.$row, $tax->tax_2);
-            $this->setCellValue('F'.$row, round($tax->tax_1 - $tax->tax_2,2));
-            $this->setCellValue('G'.$row, $tax->created_at);
+            $this->setCellValue('D'.$row, $tax->tax_payment);
+            $this->setCellValue('E'.$row, $tax->tax_1);
+            $this->setCellValue('F'.$row, $tax->tax_2);
+            $this->setCellValue('G'.$row, round($tax->tax_1 - $tax->tax_2,2));
+            $this->setCellValue('H'.$row, $tax->created_at);
             $row++;
         }
 
@@ -49,8 +50,9 @@ class ExportTax extends AbstractExportService
         $this->setCellValue('D'.$row, "=SUM(D1:D{$row})");
         $this->setCellValue('E'.$row, "=SUM(E1:E{$row})");
         $this->setCellValue('F'.$row, "=SUM(F1:F{$row})");
+        $this->setCellValue('G'.$row, "=SUM(G1:G{$row})");
         
-        $this->setBackgroundColor("A{$row}:G{$row}", 'adfb84');
+        $this->setBackgroundColor("A{$row}:H{$row}", 'adfb84');
     }
 
     private function setExcelHeaderRow()
@@ -65,19 +67,22 @@ class ExportTax extends AbstractExportService
         $this->setCellValue('C1', 'Tracking Code');
 
         $this->setColumnWidth('D', 20);
-        $this->setCellValue('D1', 'Selling cost');
+        $this->setCellValue('D1', 'Tax Payment');
 
         $this->setColumnWidth('E', 20);
-        $this->setCellValue('E1', 'Buying Cost');
+        $this->setCellValue('E1', 'Selling cost');
 
         $this->setColumnWidth('F', 20);
-        $this->setCellValue('F1', 'profit');
+        $this->setCellValue('F1', 'Buying Cost');
 
         $this->setColumnWidth('G', 20);
-        $this->setCellValue('G1', 'Date');
+        $this->setCellValue('G1', 'profit');
 
-        $this->setBackgroundColor('A1:G1', '2b5cab');
-        $this->setColor('A1:G1', 'FFFFFF');
+        $this->setColumnWidth('H', 20);
+        $this->setCellValue('H1', 'Date');
+
+        $this->setBackgroundColor('A1:H1', '2b5cab');
+        $this->setColor('A1:H1', 'FFFFFF');
 
         $this->currentRow++;
     }

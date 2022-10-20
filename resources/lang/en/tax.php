@@ -41,6 +41,7 @@ return [
     'Add Tax' => 'Add Tax',
     'Pay Tax' => 'Pay Tax',
     'Pay' => 'Pay',
+    'Tax payment' => 'Tax payment',
     'Warehouse No.' => 'Warehouse No.',
     'Search By Name, Warehouse No. or Tracking Code' => 'Search By Name, Warehouse No. or Tracking Code',
 
