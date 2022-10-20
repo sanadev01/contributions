@@ -17,18 +17,45 @@
                     </div></br>
                     <div class="table-responsive-md mt-1 mr-4 ml-4">
                         <div class="filters p-2">
-                            <form action="" method="GET">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <input type="search" class="form-control" name="search" value="{{ old('search',request('search')) }}" placeholder="@lang('taxservice.Search By Name, Warehouse No. or Tracking Code')">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <button class="btn btn-primary btn-lg">
-                                            @lang('user.Search')
-                                        </button>
-                                    </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <form action="" method="GET">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <input type="search" class="form-control" name="search" value="{{ old('search',request('search')) }}" placeholder="@lang('taxservice.Search By Name, Warehouse No. or Tracking Code')">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <button class="btn btn-primary">
+                                                    @lang('user.Search')
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
-                            </form>
+                                <div class="col-md-6">
+                                    <form action="{{ route('admin.reports.tax-report') }}" method="GET">
+                                        <div class="row col-md-12">
+                                            <div class="col-md-2">
+                                                <label>Start Date</label>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="date" class="form-control" name="start_date" >
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label>End Date</label>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="date" class="form-control" name="end_date" >
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button class="btn btn-primary">
+                                                    Download
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                         <table class="table mb-0 table-responsive-md">
                             <thead>
