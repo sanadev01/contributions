@@ -37,7 +37,7 @@ class ExportTax extends AbstractExportService
             $this->setCellValue('A'.$row, $user->pobox_number);
             $this->setCellValue('B'.$row, $order->warehouse_number);
             $this->setCellValue('C'.$row, $order->corrios_tracking_code);
-            $this->setCellValue('D'.$row, $tax->payment);
+            $this->setCellValue('D'.$row, $tax->tax_payment);
             $this->setCellValue('E'.$row, $tax->tax_1);
             $this->setCellValue('F'.$row, $tax->tax_2);
             $this->setCellValue('G'.$row, round($tax->tax_1 - $tax->tax_2,2));
