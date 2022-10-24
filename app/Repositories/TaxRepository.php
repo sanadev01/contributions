@@ -70,7 +70,7 @@ class TaxRepository
                             'tax_1' => $request->tax_1[$key],
                             'tax_2' => $request->tax_2[$key],
                         ]);
-                        $amount += $request->tax_2[$key];
+                        $amount += $request->tax_1[$key];
                         $trackingNos[] = array('Code' => $request->tracking_code[$key], );
                     }
                 }
