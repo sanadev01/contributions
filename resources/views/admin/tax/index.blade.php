@@ -67,6 +67,7 @@
                                     <th>@lang('tax.Tax Customer')</th>
                                     <th>@lang('tax.Tax Herco')</th>
                                     <th>@lang('tax.Receipt')</th>
+                                    <th>@lang('tax.Action')</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -92,6 +93,11 @@
                                         @else
                                             Not Found
                                         @endif
+                                    </td>
+                                    <td class="d-flex">
+                                        <a href="#" class="btn btn-primary mr-2" title="Edit">
+                                            <i class="feather icon-edit"></i>
+                                        </a>
                                     </td>
                                 </tr>
                                 @endforeach
