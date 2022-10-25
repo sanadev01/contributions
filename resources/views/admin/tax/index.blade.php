@@ -63,7 +63,7 @@
                                     <th>@lang('tax.User Name')</th>
                                     <th>@lang('tax.Warehouse No.')</th>
                                     <th>@lang('tax.Tracking Code')</th>
-                                    <th>@lang('tax.Tax payment')</th>
+                                    <th>@lang('tax.Tax Payment')</th>
                                     <th>@lang('tax.Tax Customer')</th>
                                     <th>@lang('tax.Tax Herco')</th>
                                     <th>@lang('tax.Receipt')</th>
