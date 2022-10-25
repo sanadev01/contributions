@@ -5,9 +5,9 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="mb-0">@lang('taxservice.Add Tax')</h4>
+                        <h4 class="mb-0">@lang('tax.Add Tax')</h4>
                         <a href="{{ route('admin.tax.index') }}" class="btn btn-primary">
-                            @lang('taxservice.Back to List')
+                            @lang('tax.Back to List')
                         </a>
                     </div>
                     <div class="card-content">
@@ -64,28 +64,31 @@
                                             </div>
                                         </div>
                                         <div class="row m-1 mb-2">
-                                            <div class="col-md-2">
-                                                <label><b>@lang('taxservice.Warehouse No.')</b></label>
+                                            <div class="col-md-1">
+                                                <label><b>@lang('tax.Warehouse No.')</b></label>
                                             </div>
                                             <div class="col-md-2">
-                                                <label><b>@lang('taxservice.User Name')</b></label>
+                                                <label><b>@lang('tax.User Name')</b></label>
                                             </div>
                                             <div class="col-md-2">
-                                                <label><b>@lang('taxservice.Tracking Code')</b></label>
+                                                <label><b>@lang('tax.Tracking Code')</b></label>
                                             </div>
                                             <div class="col-md-2">
-                                                <label><b>@lang('taxservice.Tax Customer')</b></label>
+                                                <label><b>@lang('tax.Tax payment')</b></label>
                                             </div>
                                             <div class="col-md-2">
-                                                <label><b>@lang('taxservice.Tax Herco')</b></label>
+                                                <label><b>@lang('tax.Tax Customer')</b></label>
                                             </div>
                                             <div class="col-md-2">
-                                                <label><b>@lang('taxservice.Profit')</b></label>
+                                                <label><b>@lang('tax.Tax Herco')</b></label>
+                                            </div>
+                                            <div class="col-md-1">
+                                                <label><b>@lang('tax.Profit')</b></label>
                                             </div>
                                         </div>
                                         @foreach($orders as $order)
                                             <div class="row m-1 mb-3 orders">
-                                                <div class="col-md-2">
+                                                <div class="col-md-1">
                                                     <input type="hidden" class="form-control" name="user_id" value="{{ $order->user_id }}">
                                                     <input type="hidden" class="form-control" name="order_id[]" value="{{ $order->id }}">
                                                     <input type="text" class="form-control"  value="{{ $order->warehouse_number }}" readonly required>
@@ -97,12 +100,15 @@
                                                     <input type="text" class="form-control" name="tracking_code[]" value="{{ $order->corrios_tracking_code }}" readonly required>
                                                 </div>
                                                 <div class="col-md-2">
+                                                    <input type="number" class="form-control" name="tax_payment[]" value="" step="0.01" required>
+                                                </div>
+                                                <div class="col-md-2">
                                                     <input type="number" class="form-control tax1" name="tax_1[]" value="" step="0.01" required>
                                                 </div>
                                                 <div class="col-md-2">
                                                     <input type="number" class="form-control tax2" name="tax_2[]" value="" step="0.01" required>
                                                 </div>
-                                                <div class="col-md-2">
+                                                <div class="col-md-1">
                                                     <input type="text" class="form-control profit" name="profit[]" value=""  readonly required>
                                                 </div>
                                             </div>
@@ -110,7 +116,7 @@
                                         <div class="row mt-4 mb-4">
                                             <div class="col-12 d-flex text-center flex-sm-row flex-column justify-content-end mt-1">
                                                 <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-4 waves-effect waves-light">
-                                                    @lang('taxservice.Pay')
+                                                    @lang('tax.Pay')
                                                 </button>
                                             </div>
                                         </div>

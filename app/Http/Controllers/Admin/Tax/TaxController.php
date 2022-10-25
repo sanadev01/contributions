@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Tax;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Repositories\TaxRepository;
+use App\Models\Tax;
 
 
 class TaxController extends Controller
@@ -67,9 +68,9 @@ class TaxController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Tax $tax)
     {
-        //
+        return view('admin.tax.edit',compact('tax'));
     }
 
     /**
@@ -79,9 +80,14 @@ class TaxController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Tax $tax, TaxRepository $repository)
     {
-        //
+        if ( $repository->update($request, $tax) ){
+            session()->flash('alert-success','Tax Transaction Updated');
+            return redirect()->route('admin.tax.index');
+        }
+
+        return back();
     }
 
     /**

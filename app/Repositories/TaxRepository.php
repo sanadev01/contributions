@@ -16,9 +16,10 @@ class TaxRepository
 
     protected $fileName;
 
-    public function get(Request $request, $paginated = true)
+    public function get(Request $request, $paginate = true, $pageSize = 50 )
     {
         $query = Tax::has('user');
+
         if ( $request->search ){
             $query->whereHas('user',function($query) use($request) {
                 return $query->where('name', 'LIKE', "%{$request->search}%");
@@ -28,9 +29,19 @@ class TaxRepository
                 ->orWhere('corrios_tracking_code', 'LIKE', "%{$request->search}%");
             });
         }
-        $query->latest();
-        return $query->paginate(50);
-        return $query->get();
+        
+        $startDate  = $request->start_date.' 00:00:00';
+        $endDate    = $request->end_date.' 23:59:59';
+        if ( $request->start_date ){
+            $query->where('created_at' , '>=',$startDate);
+        }
+        if ( $request->end_date ){
+            $query->where('created_at' , '<=',$endDate);
+        }
+
+        $taxes = $query->orderBy('id','desc');
+
+        return $paginate ? $taxes->paginate($pageSize) : $taxes->get();
     }
 
     public function getOrders(Request $request)
@@ -55,10 +66,11 @@ class TaxRepository
                         Tax::create([
                             'user_id' => $request->user_id,
                             'order_id' => $orderId,
+                            'tax_payment' => $request->tax_payment[$key],
                             'tax_1' => $request->tax_1[$key],
                             'tax_2' => $request->tax_2[$key],
                         ]);
-                        $amount += $request->tax_2[$key];
+                        $amount += $request->tax_1[$key];
                         $trackingNos[] = array('Code' => $request->tracking_code[$key], );
                     }
                 }
@@ -98,9 +110,27 @@ class TaxRepository
         }
     }
 
-    public function update(Request $request)
-    {
-        //
+    public function update(Request $request,Tax $tax)
+    {   
+        try{
+            $diffAmount = $request->tax_1 - $tax->tax_1;
+            if($request->tax_1 > $tax->tax_1 || $request->tax_1 < $tax->tax_1) {
+                $deposit = Deposit::find($request->deposit_id);
+                $deposit->decrement('balance', $diffAmount);
+                $deposit->increment('amount', $diffAmount);
+            }
+            $tax->update([
+                'tax_payment' => $request->tax_payment,
+                'tax_1' => $request->tax_1,
+                'tax_2' => $request->tax_2,
+            ]);
+
+            return true;
+
+        }catch(Exception $exception){
+            session()->flash('alert-danger','Error while update on Tax Transaction');
+            return null;
+        }
     }
 
 
