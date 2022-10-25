@@ -332,8 +332,6 @@ class OrderReportsRepository
             });
         },'orders as gps_order_count' => function($query)  use ($gps,$request){
 
-        },'orders as gps_order_count' => function($query)  use ($gps,$request){
-
             $query->where('status','>',Order::STATUS_PAYMENT_PENDING);
             $query = $this->requestFilterDate($query,$request);
 
