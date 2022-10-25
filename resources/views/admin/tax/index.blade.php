@@ -6,7 +6,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-end">
-                    @section('title', __('taxservice.Manage Tax Services'))
+                    @section('title', __('tax.Manage Tax Services'))
                     @can('create', App\Models\HandlingService::class)
                         <button type="btn" onclick="toggleOrderPageSearch()" id="orderSearch"
                             class="btn btn-primary waves-effect waves-light mr-1"><i class="feather icon-search"></i></button>
@@ -42,13 +42,14 @@
                     <table class="table mb-0 table-bordered table-responsive-sm">
                         <thead>
                             <tr>
-                                <th>@lang('taxservice.User Name')</th>
-                                <th>@lang('taxservice.Warehouse No.')</th>
-                                <th>@lang('taxservice.Tracking Code')</th>
-                                <th>@lang('taxservice.Tax Customer')</th>
-                                <th>@lang('taxservice.Tax Herco')</th>
-                                <th>@lang('taxservice.Receipt')</th>
-
+                                <th>@lang('tax.User Name')</th>
+                                <th>@lang('tax.Warehouse No.')</th>
+                                <th>@lang('tax.Tracking Code')</th>
+                                <th>@lang('tax.Tax Payment')</th>
+                                <th>@lang('tax.Tax Customer')</th>
+                                <th>@lang('tax.Tax Herco')</th>
+                                <th>@lang('tax.Receipt')</th>
+                                <th>@lang('tax.Action')</th>
                             </tr>
                         </thead>
                         <tbody>

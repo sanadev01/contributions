@@ -64,13 +64,8 @@
                                             </div>
                                         </div>
                                         <div class="row m-1 mb-2">
-<<<<<<< HEAD
                                             <div class="col-md-1">
-                                                <label><b>@lang('tax.Order ID')</b></label>
-=======
-                                            <div class="col-md-2">
-                                                <label><b>@lang('taxservice.Warehouse No.')</b></label>
->>>>>>> 5d76f4232446842d0b1ab3d6d23d3a7fd8bf99ad
+                                                <label><b>@lang('tax.Warehouse No.')</b></label>
                                             </div>
                                             <div class="col-md-2">
                                                 <label><b>@lang('tax.User Name')</b></label>
@@ -103,6 +98,9 @@
                                                 </div>
                                                 <div class="col-md-2">
                                                     <input type="text" class="form-control" name="tracking_code[]" value="{{ $order->corrios_tracking_code }}" readonly required>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="number" class="form-control" name="tax_payment[]" value="" step="0.01" required>
                                                 </div>
                                                 <div class="col-md-2">
                                                     <input type="number" class="form-control tax1" name="tax_1[]" value="" step="0.01" required>
