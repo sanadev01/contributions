@@ -110,9 +110,26 @@ class TaxRepository
         }
     }
 
-    public function update(Request $request)
-    {
-        //
+    public function update(Request $request,Tax $tax)
+    {   
+        try{
+            $diffAmount = $request->tax_1 - $tax->tax_1;
+            if($request->tax_1 > $tax->tax_1 || $request->tax_1 < $tax->tax_1) {
+                Deposit::find($request->deposit_id)->increment('balance', $diffAmount);
+                Deposit::find($request->deposit_id)->increment('amount', $diffAmount);
+            }
+            $tax->update([
+                'tax_payment' => $request->tax_payment,
+                'tax_1' => $request->tax_1,
+                'tax_2' => $request->tax_2,
+            ]);
+
+            return true;
+
+        }catch(Exception $exception){
+            session()->flash('alert-danger','Error while update on Tax Transaction');
+            return null;
+        }
     }
 
 

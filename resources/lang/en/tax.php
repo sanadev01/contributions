@@ -44,6 +44,9 @@ return [
     'Tax payment' => 'Tax payment R$',
     'Warehouse No.' => 'Warehouse No.',
     'Search By Name, Warehouse No. or Tracking Code' => 'Search By Name, Warehouse No. or Tracking Code',
+    'Update' => 'Update',
+    'Reset' => 'Reset',
+
 
 
 
