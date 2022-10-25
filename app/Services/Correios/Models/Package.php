@@ -52,6 +52,7 @@ class Package implements \App\Services\Correios\Contracts\Package
     public $currency = "USD";
     public $freightPaidValue = 0;
     public $insurancePaidValue = 0;
+    public $nonNationalizationInstruction = "RETURNTOORIGIN";
 
     public $items = [];
 
