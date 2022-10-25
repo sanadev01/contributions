@@ -12,10 +12,10 @@
                     </div>
                     <div class="card-content">
                         <div class="card-body">
-                            @if( $errors->count() )
+                            @if ($errors->count())
                                 <div class="alert alert-danger">
                                     <ul>
-                                        @foreach($errors->all() as $error)
+                                        @foreach ($errors->all() as $error)
                                             <li>
                                                 {{ $error }}
                                             </li>
@@ -30,14 +30,15 @@
                                             <label>@lang('parcel.User POBOX Number') <span class="text-danger">*</span></label>
                                             <livewire:components.search-user />
                                             @error('pobox_number')
-                                            <div class="help-block text-danger"> {{ $message }} </div>
+                                                <div class="help-block text-danger"> {{ $message }} </div>
                                             @enderror
                                         </div>
                                     </div>
                                     <div class="form-group col-sm-6 col-md-3">
                                         <div class="controls">
                                             <label>Tracking No.<span class="text-danger">*</span></label>
-                                            <textarea type="text" placeholder="Please Enter Tracking Codes" rows="2" class="form-control" name="trackingNumbers"></textarea>
+                                            <textarea type="text" placeholder="Please Enter Tracking Codes" rows="2" class="form-control"
+                                                name="trackingNumbers"></textarea>
                                             @error('trackingNumbers')
                                                 <div class="help-block text-danger"> {{ $message }} </div>
                                             @enderror
@@ -48,7 +49,8 @@
                                     </div>
                                 </div>
                             </form></br>
-                            <form class="form" action="{{ route('admin.tax.store') }}" method="POST" enctype="multipart/form-data">
+                            <form class="form" action="{{ route('admin.tax.store') }}" method="POST"
+                                enctype="multipart/form-data">
                                 @csrf
                                     @if($orders)
                                         <div class="row m-1 mb-2">
@@ -62,8 +64,13 @@
                                             </div>
                                         </div>
                                         <div class="row m-1 mb-2">
+<<<<<<< HEAD
                                             <div class="col-md-1">
                                                 <label><b>@lang('tax.Order ID')</b></label>
+=======
+                                            <div class="col-md-2">
+                                                <label><b>@lang('taxservice.Warehouse No.')</b></label>
+>>>>>>> 5d76f4232446842d0b1ab3d6d23d3a7fd8bf99ad
                                             </div>
                                             <div class="col-md-2">
                                                 <label><b>@lang('tax.User Name')</b></label>
@@ -98,9 +105,6 @@
                                                     <input type="text" class="form-control" name="tracking_code[]" value="{{ $order->corrios_tracking_code }}" readonly required>
                                                 </div>
                                                 <div class="col-md-2">
-                                                    <input type="number" class="form-control" name="tax_payment[]" value="" step="0.01" required>
-                                                </div>
-                                                <div class="col-md-2">
                                                     <input type="number" class="form-control tax1" name="tax_1[]" value="" step="0.01" required>
                                                 </div>
                                                 <div class="col-md-2">
@@ -118,7 +122,8 @@
                                                 </button>
                                             </div>
                                         </div>
-                                    @endif
+                                    </div>
+                                @endif
                             </form>
                         </div>
                     </div>
