@@ -115,8 +115,9 @@ class TaxRepository
         try{
             $diffAmount = $request->tax_1 - $tax->tax_1;
             if($request->tax_1 > $tax->tax_1 || $request->tax_1 < $tax->tax_1) {
-                Deposit::find($request->deposit_id)->increment('balance', $diffAmount);
-                Deposit::find($request->deposit_id)->increment('amount', $diffAmount);
+                $deposit = Deposit::find($request->deposit_id);
+                $deposit->increment('balance', $diffAmount);
+                $deposit->increment('amount', $diffAmount);
             }
             $tax->update([
                 'tax_payment' => $request->tax_payment,
