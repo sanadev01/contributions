@@ -330,6 +330,18 @@
                         </a>
                     </li>
                 @endcan
+                @admin
+                    <li class="nav-item {{ $isActive(['admin.tax.index']) }}">
+                        <a href="{{ route('admin.tax.index') }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                class="feather feather-activity">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                            </svg>
+                            <span class="menu-title">Tax Payment</span>
+                        </a>
+                    </li>
+                @endadmin
                 <li class="sub-category"> <span class="text-white"
                         style="padding-left:16px; padding-top:15px; padding-bottom:8px">UTILITIES</span> </li>
                 @if (auth()->user()->isAdmin())
@@ -628,18 +640,6 @@
                         </a>
                     </li>
                 @endcan
-                @admin
-                    <li class="nav-item {{ $isActive(['admin.tax.index']) }}">
-                        <a href="{{ route('admin.tax.index') }}">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                class="feather feather-activity">
-                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-                            </svg>
-                            <span class="menu-title">Tax Payment</span>
-                        </a>
-                    </li>
-                @endadmin
                 <x-shared-menu></x-shared-menu>
                 <li class="sub-category"> <span class="text-white">HELP</span> </li>
                 <li class="nav-item">

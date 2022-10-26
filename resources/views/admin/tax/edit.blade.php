@@ -27,7 +27,14 @@
                                 <input type="hidden"  name="deposit_id" value="{{ $tax->deposit_id }}">
                                 <input type="hidden"  name="user_id" value="{{ $tax->user_id }}">
                                 <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">@lang('tax.Tax payment') (R$)<span class="text-danger">*</span></label>
+                                    <label class="col-md-3 text-md-right">@lang('tax.Tracking Code')<span class="text-danger">*</span></label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" name="track_id" value="{{ old('tracking_code', $tax->order->corrios_tracking_code) }}" placeholder="Tracking Code" readonly>
+                                        <div class="help-block"></div>
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">@lang('tax.Tax Payment')<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
                                         <input type="text" class="form-control" name="tax_payment" value="{{ old('tax_payment', $tax->tax_payment) }}" placeholder="Enter Tax Payment">
                                         <div class="help-block"></div>
@@ -36,14 +43,21 @@
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('tax.Tax Customer')<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control" name="tax_1" value="{{ old('tax_payment', $tax->tax_1) }}" placeholder="Enter Seller Tax">
+                                        <input type="text" class="form-control" name="tax_1" value="{{ old('tax_payment', $tax->tax_1) }}" placeholder="Enter Seller Tax" required>
                                         <div class="help-block"></div>
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('tax.Tax Herco')<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control" name="tax_2" value="{{ old('tax_payment', $tax->tax_2) }}" placeholder="Enter Tax By Herco">
+                                        <input type="text" class="form-control" name="tax_2" value="{{ old('tax_payment', $tax->tax_2) }}" placeholder="Enter Tax By Herco" required>
+                                        <div class="help-block"></div>
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">@lang('tax.Upload Receipt')<span class="text-danger">*</span></label>
+                                    <div class="col-md-6">
+                                        <input type="file" class="form-control" name="attachment[]">
                                         <div class="help-block"></div>
                                     </div>
                                 </div>

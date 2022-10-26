@@ -41,11 +41,12 @@ return [
     'Add Tax' => 'Add Tax',
     'Pay Tax' => 'Pay Tax',
     'Pay' => 'Pay',
-    'Tax Payment' => 'Tax Payment R$',
+    'Tax Payment' => 'Tax Payment (R$)',
     'Warehouse No.' => 'Warehouse No.',
     'Search By Name, Warehouse No. or Tracking Code' => 'Search By Name, Warehouse No. or Tracking Code',
     'Update' => 'Update',
     'Reset' => 'Reset',
+    'Upload Receipt' => 'Upload Receipt',
 
 
 

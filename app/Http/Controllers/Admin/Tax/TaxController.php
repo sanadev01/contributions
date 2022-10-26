@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Admin\Tax;
 
-use App\Http\Controllers\Controller;
+use App\Models\Tax;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Repositories\TaxRepository;
-use App\Models\Tax;
+use App\Http\Controllers\Controller;
 
 
 class TaxController extends Controller
@@ -17,8 +18,8 @@ class TaxController extends Controller
      */
     public function index(TaxRepository $repository, Request $request)
     {
-        $taxlist = $repository->get($request);
-        return view('admin.tax.index', compact('taxlist'));
+        $taxes = $repository->get($request);
+        return view('admin.tax.index', compact('taxes'));
     }
 
     /**

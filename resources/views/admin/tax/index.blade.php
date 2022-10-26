@@ -37,23 +37,22 @@
                                     </button>
                                 </div>
                             </div>
-                        </form>
-                    </div>
-                    <table class="table mb-0 table-bordered table-responsive-sm">
-                        <thead>
-                            <tr>
-                                <th>@lang('tax.User Name')</th>
-                                <th>@lang('tax.Warehouse No.')</th>
-                                <th>@lang('tax.Tracking Code')</th>
-                                <th>@lang('tax.Tax Payment')</th>
-                                <th>@lang('tax.Tax Customer')</th>
-                                <th>@lang('tax.Tax Herco')</th>
-                                <th>@lang('tax.Receipt')</th>
-                                <th>@lang('tax.Action')</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($taxlist as $tax)
+                        </div>
+                        <table class="table mb-0 table-bordered table-responsive-sm">
+                            <thead>
+                                <tr>
+                                    <th>@lang('tax.User Name')</th>
+                                    <th>@lang('tax.Warehouse No.')</th>
+                                    <th>@lang('tax.Tracking Code')</th>
+                                    <th>@lang('tax.Tax Payment')</th>
+                                    <th>@lang('tax.Tax Customer')</th>
+                                    <th>@lang('tax.Tax Herco')</th>
+                                    <th>@lang('tax.Receipt')</th>
+                                    <th>@lang('tax.Action')</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($taxes as $tax)
                                 <tr>
                                     <td>{{ $tax->user->name }}</td>
                                     <td>
@@ -89,7 +88,7 @@
                     </table>
                 </div>
                 <div class="card-footer d-flex justify-content-end">
-                    {{ $taxlist->links('pagination::bootstrap-4') }}
+                    {{ $taxes->links('pagination::bootstrap-4') }}
                 </div>
             </div>
 
