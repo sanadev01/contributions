@@ -63,14 +63,15 @@
                                     <th>@lang('tax.User Name')</th>
                                     <th>@lang('tax.Warehouse No.')</th>
                                     <th>@lang('tax.Tracking Code')</th>
-                                    <th>@lang('tax.Tax payment') (R$)</th>
+                                    <th>@lang('tax.Tax Payment')</th>
                                     <th>@lang('tax.Tax Customer')</th>
                                     <th>@lang('tax.Tax Herco')</th>
                                     <th>@lang('tax.Receipt')</th>
+                                    <th>@lang('tax.Action')</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($taxlist as $tax)
+                                @foreach($taxes as $tax)
                                 <tr>
                                     <td>{{ $tax->user->name }}</td>
                                     <td>
@@ -93,13 +94,18 @@
                                             Not Found
                                         @endif
                                     </td>
+                                    <td class="d-flex">
+                                        <a href="{{ route('admin.tax.edit',$tax->id) }}" class="btn btn-primary mr-2" title="Edit">
+                                            <i class="feather icon-edit"></i>
+                                        </a>
+                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
                     <div class="card-footer d-flex justify-content-end">
-                        {{ $taxlist->links('pagination::bootstrap-4') }}
+                        {{ $taxes->links('pagination::bootstrap-4') }}
                     </div>
                 </div>
 

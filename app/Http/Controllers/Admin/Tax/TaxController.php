@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Admin\Tax;
 
-use App\Http\Controllers\Controller;
+use App\Models\Tax;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Repositories\TaxRepository;
+use App\Http\Controllers\Controller;
 
 
 class TaxController extends Controller
@@ -16,8 +18,8 @@ class TaxController extends Controller
      */
     public function index(TaxRepository $repository, Request $request)
     {
-        $taxlist = $repository->get($request);
-        return view('admin.tax.index', compact('taxlist'));
+        $taxes = $repository->get($request);
+        return view('admin.tax.index', compact('taxes'));
     }
 
     /**
@@ -67,9 +69,9 @@ class TaxController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Tax $tax)
     {
-        //
+        return view('admin.tax.edit',compact('tax'));
     }
 
     /**
@@ -79,9 +81,14 @@ class TaxController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Tax $tax, TaxRepository $repository)
     {
-        //
+        if ( $repository->update($request, $tax) ){
+            session()->flash('alert-success','Tax Transaction Updated');
+            return redirect()->route('admin.tax.index');
+        }
+
+        return back();
     }
 
     /**

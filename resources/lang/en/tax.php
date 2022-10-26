@@ -32,8 +32,8 @@ return [
     'Tracking' => 'Tracking',
     'Code' => 'Code',
     'Weight' => 'Weight',
-    'Tax Customer' => 'Tax Customer (Selling)',
-    'Tax Herco' => 'Tax Herco (Buying)',
+    'Tax Customer' => 'Tax Customer (Selling) R$',
+    'Tax Herco' => 'Tax Herco (Buying) R$',
     'Profit' => 'Profit',
     'Receipt' => 'Receipt',
     'Save' => 'Save',
@@ -41,9 +41,13 @@ return [
     'Add Tax' => 'Add Tax',
     'Pay Tax' => 'Pay Tax',
     'Pay' => 'Pay',
-    'Tax payment' => 'Tax payment',
+    'Tax Payment' => 'Tax Payment (R$)',
     'Warehouse No.' => 'Warehouse No.',
     'Search By Name, Warehouse No. or Tracking Code' => 'Search By Name, Warehouse No. or Tracking Code',
+    'Update' => 'Update',
+    'Reset' => 'Reset',
+    'Upload Receipt' => 'Upload Receipt',
+
 
 
 

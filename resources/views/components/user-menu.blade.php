@@ -423,6 +423,14 @@
                     </a>
                 </li>
             @endcan
+            @admin
+            <li class="nav-item {{ $isActive(['admin.tax.index']) }}">
+                <a href="{{ route('admin.tax.index') }}">
+                    <i class="icon_adjst feather icon-activity" style="color: #3db64c;"></i>
+                    <span class="menu-title">Tax Payment</span>
+                </a>
+            </li>
+            @endadmin
 
             @can('viewAny', Spatie\Activitylog\Models\Activity::class)
             <li class="nav-item {{ $isActive(['admin.activity.log.index']) }}">
@@ -450,14 +458,6 @@
             </li>
 
             {{-- @can('viewAny', Spatie\Activitylog\Models\Activity::class) --}}
-            @admin
-            <li class="nav-item {{ $isActive(['admin.tax.index']) }}">
-                <a href="{{ route('admin.tax.index') }}">
-                    <i class="icon_adjst feather icon-activity" style="color: #3db64c;"></i>
-                    <span class="menu-title">Tax Payment</span>
-                </a>
-            </li>
-            @endadmin
             {{-- @endcan --}}
             <x-shared-menu></x-shared-menu>
             @endif

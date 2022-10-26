@@ -2,14 +2,16 @@
 
 namespace App\Repositories;
 
-use Illuminate\Http\Request;
-use App\Models\Order;
+use Exception;
 use App\Models\Tax;
+use App\Models\User;
+use App\Models\Order;
 use App\Models\Deposit;
 use App\Models\Document;
+use Illuminate\Http\Request;
 use App\Models\PaymentInvoice;
-use App\Models\User;
-use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class TaxRepository
 {
@@ -70,7 +72,7 @@ class TaxRepository
                             'tax_1' => $request->tax_1[$key],
                             'tax_2' => $request->tax_2[$key],
                         ]);
-                        $amount += $request->tax_2[$key];
+                        $amount += $request->tax_1[$key];
                         $trackingNos[] = array('Code' => $request->tracking_code[$key], );
                     }
                 }
@@ -110,9 +112,43 @@ class TaxRepository
         }
     }
 
-    public function update(Request $request)
-    {
-        //
+    public function update(Request $request,Tax $tax)
+    {   
+        try{
+            $deposit = Deposit::find($request->deposit_id);
+            $diffAmount = $request->tax_1 - $tax->tax_1;
+            if($request->tax_1 > $tax->tax_1 || $request->tax_1 < $tax->tax_1) {
+                $deposit->decrement('balance', $diffAmount);
+                $deposit->increment('amount', $diffAmount);               
+            }
+            //FILE UPLOAD
+            if ($request->hasFile('attachment')) {
+                foreach ($deposit->depositAttchs as $attachedFile ) {
+                    Storage::delete($attachedFile->getStoragePath());
+                }
+                $deposit->depositAttchs()->delete();
+                foreach ($request->file('attachment') as $attach) {
+                    $document = Document::saveDocument($attach);
+                    $deposit->depositAttchs()->create([
+                        'name' => $document->getClientOriginalName(),
+                        'size' => $document->getSize(),
+                        'type' => $document->getMimeType(),
+                        'path' => $document->filename
+                    ]);
+                }
+            }
+            $tax->update([
+                'tax_payment' => $request->tax_payment,
+                'tax_1' => $request->tax_1,
+                'tax_2' => $request->tax_2,
+            ]);
+
+            return true;
+
+        }catch(Exception $exception){
+            session()->flash('alert-danger','Error while update on Tax Transaction');
+            return null;
+        }
     }
 
 

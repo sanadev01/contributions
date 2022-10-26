@@ -72,7 +72,7 @@
                                                 <label><b>@lang('tax.Tracking Code')</b></label>
                                             </div>
                                             <div class="col-md-2">
-                                                <label><b>@lang('tax.Tax payment')</b></label>
+                                                <label><b>@lang('tax.Tax Payment')</b></label>
                                             </div>
                                             <div class="col-md-2">
                                                 <label><b>@lang('tax.Tax Customer')</b></label>
