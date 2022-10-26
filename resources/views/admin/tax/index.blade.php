@@ -52,7 +52,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($taxlist as $tax)
+                                @foreach($taxes as $tax)
                                 <tr>
                                     <td>{{ $tax->user->name }}</td>
                                     <td>
@@ -88,7 +88,7 @@
                     </table>
                 </div>
                 <div class="card-footer d-flex justify-content-end">
-                    {{ $taxlist->links('pagination::bootstrap-4') }}
+                    {{ $taxes->links('pagination::bootstrap-4') }}
                 </div>
             </div>
 

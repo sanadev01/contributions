@@ -125,8 +125,8 @@ class TaxRepository
             if ($request->hasFile('attachment')) {
                 foreach ($deposit->depositAttchs as $attachedFile ) {
                     Storage::delete($attachedFile->getStoragePath());
-                    DB::table('deposit_document')->where('deposit_id',$request->deposit_id)->delete();
                 }
+                $deposit->depositAttchs()->delete();
                 foreach ($request->file('attachment') as $attach) {
                     $document = Document::saveDocument($attach);
                     $deposit->depositAttchs()->create([

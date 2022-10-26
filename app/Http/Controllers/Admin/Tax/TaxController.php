@@ -18,8 +18,8 @@ class TaxController extends Controller
      */
     public function index(TaxRepository $repository, Request $request)
     {
-        $taxlist = $repository->get($request);
-        return view('admin.tax.index', compact('taxlist'));
+        $taxes = $repository->get($request);
+        return view('admin.tax.index', compact('taxes'));
     }
 
     /**
@@ -71,8 +71,7 @@ class TaxController extends Controller
      */
     public function edit(Tax $tax)
     {
-        $trackId = Order::where('id', $tax->order_id)->value('corrios_tracking_code');
-        return view('admin.tax.edit',compact('tax', 'trackId'));
+        return view('admin.tax.edit',compact('tax'));
     }
 
     /**
