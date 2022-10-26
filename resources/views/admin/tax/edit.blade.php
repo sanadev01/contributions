@@ -29,7 +29,7 @@
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('tax.Tracking Code')<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control" name="track_id" value="{{ old('tracking_code', $trackId) }}" placeholder="Tracking Code" readonly>
+                                        <input type="text" class="form-control" name="track_id" value="{{ old('tracking_code', $tax->order->corrios_tracking_code) }}" placeholder="Tracking Code" readonly>
                                         <div class="help-block"></div>
                                     </div>
                                 </div>
