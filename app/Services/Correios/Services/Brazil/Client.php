@@ -113,7 +113,7 @@ class Client{
         $packet->packagingLength = $length > 16 ? $length : 16 ;
 
         $packet->freightPaidValue = $order->user_declared_freight;
-        $packet->nonNationalizationInstruction = "RETURNTOORIGIN";;
+        $packet->nonNationalizationInstruction = "RETURNTOORIGIN";
 
         $items = [];
 
