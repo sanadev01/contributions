@@ -2,14 +2,16 @@
 
 namespace App\Repositories;
 
-use Illuminate\Http\Request;
-use App\Models\Order;
+use Exception;
 use App\Models\Tax;
+use App\Models\User;
+use App\Models\Order;
 use App\Models\Deposit;
 use App\Models\Document;
+use Illuminate\Http\Request;
 use App\Models\PaymentInvoice;
-use App\Models\User;
-use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class TaxRepository
 {
@@ -113,11 +115,27 @@ class TaxRepository
     public function update(Request $request,Tax $tax)
     {   
         try{
+            $deposit = Deposit::find($request->deposit_id);
             $diffAmount = $request->tax_1 - $tax->tax_1;
             if($request->tax_1 > $tax->tax_1 || $request->tax_1 < $tax->tax_1) {
-                $deposit = Deposit::find($request->deposit_id);
                 $deposit->decrement('balance', $diffAmount);
-                $deposit->increment('amount', $diffAmount);
+                $deposit->increment('amount', $diffAmount);               
+            }
+            //FILE UPLOAD
+            if ($request->hasFile('attachment')) {
+                foreach ($deposit->depositAttchs as $attachedFile ) {
+                    Storage::delete($attachedFile->getStoragePath());
+                    DB::table('deposit_document')->where('deposit_id',$request->deposit_id)->delete();
+                }
+                foreach ($request->file('attachment') as $attach) {
+                    $document = Document::saveDocument($attach);
+                    $deposit->depositAttchs()->create([
+                        'name' => $document->getClientOriginalName(),
+                        'size' => $document->getSize(),
+                        'type' => $document->getMimeType(),
+                        'path' => $document->filename
+                    ]);
+                }
             }
             $tax->update([
                 'tax_payment' => $request->tax_payment,

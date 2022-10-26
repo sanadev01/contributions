@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Admin\Tax;
 
-use App\Http\Controllers\Controller;
+use App\Models\Tax;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Repositories\TaxRepository;
-use App\Models\Tax;
+use App\Http\Controllers\Controller;
 
 
 class TaxController extends Controller
@@ -70,7 +71,8 @@ class TaxController extends Controller
      */
     public function edit(Tax $tax)
     {
-        return view('admin.tax.edit',compact('tax'));
+        $trackId = Order::where('id', $tax->order_id)->value('corrios_tracking_code');
+        return view('admin.tax.edit',compact('tax', 'trackId'));
     }
 
     /**
