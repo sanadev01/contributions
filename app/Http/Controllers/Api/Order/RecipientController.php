@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Api\Order;
 
-use App\Facades\USPSFacade;
 use App\Models\Order;
+use App\Models\Region;
 use App\Models\Address;
+use App\Facades\USPSFacade;
 use Illuminate\Http\Request;
 use FlyingLuscas\Correios\Client;
 use App\Http\Controllers\Controller;
@@ -81,6 +82,12 @@ class RecipientController extends Controller
             return apiResponse(false,'zip code not found / CEP não encontrado');
         }
         return apiResponse(true,'Zipcode success',$response);
+    }
+
+    public function colombiaZipcode(Request $request)
+    {
+        $zipcode = Region::query()->where("country_id",$request->country_id)->where('name', 'LIKE', "%{$request->name}%") ->value('code');
+        return response()->json($zipcode);
     }
 
     public function validate_USAddress(Request $request)

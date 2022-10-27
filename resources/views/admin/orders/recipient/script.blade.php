@@ -279,6 +279,18 @@
                 }
             }
         });
+
+        $('#codept').on('change', function(){
+            let country = $('#country').val();
+
+            if (country == Colombia) {
+
+                if ( $(this).val() == undefined || $(this).val() == '' ) return;
+                $('#loading').fadeIn();
+
+                addColombiaZipcode($(this).val());
+            }
+        });
     });
 
     function activeChileFields(selectedService) {
@@ -295,6 +307,9 @@
         $('#label_chile_address').removeClass('d-none');
 
         $('#label_address').addClass('d-none');
+
+        $('#div_co_city').addClass('d-none');
+        $('#div_co_dept').addClass('d-none');
 
         $('#state').prop('disabled', true);
         $('#city').attr('disabled', true);
@@ -338,6 +353,9 @@
         $('#div_city').removeClass('d-none');
         $('#label_address').removeClass('d-none');
 
+        $('#div_co_city').addClass('d-none');
+        $('#div_co_dept').addClass('d-none');
+
         $('#div_regions').addClass('d-none');
         $('#div_communes').addClass('d-none');
         $('#label_chile_address').addClass('d-none');
@@ -365,7 +383,10 @@
 
         $('#div_regions').addClass('d-none');
         $('#div_communes').addClass('d-none');
-        $('#label_chile_address').addClass('d-none');
+        $('#label_chile_address').addClass('d-');
+
+        $('#div_co_city').addClass('d-none');
+        $('#div_co_dept').addClass('d-none');
 
         $('#state').prop('disabled', false);
         $('#city').attr('disabled', false);
@@ -383,6 +404,9 @@
         $('#div_zipcode').addClass('d-block');
         $('#zipcode').prop('disabled', false);
 
+        $('#div_co_city').addClass('d-block');
+        $('#div_co_dept').addClass('d-block');
+
 
         $('#div_regions').removeClass('d-none');
         $('#state').prop('disabled', true);
@@ -393,11 +417,14 @@
 
     function inactiveColombiaFields() {
         $('#cpf').removeClass('d-none');
-        $('#div_hd_state').removeClass('d-none');
-        $('#div_city').removeClass('d-none');
+        $('#div_hd_state').addClass('d-none');
+        $('#div_city').addClass('d-none');
         $('#div_street_number').removeClass('d-none');
         $('#div_zipcode').removeClass('d-none');
         $('#zipcode').prop('disabled', false);
+
+        $('#div_co_city').removeClass('d-none');
+        $('#div_co_dept').removeClass('d-none');
 
 
         $('#div_regions').addClass('d-none');
@@ -423,6 +450,23 @@
         }).catch(function(error){
             $('#loading').fadeOut();
         })
+    }
+
+    function addColombiaZipcode(zipcode) {
+        $.ajax({
+            type: 'POST',
+            url: "{{route('api.orders.recipient.colombiaZipcode')}}",
+            data: {country_id:  $('#country').val(), name:  $('#codept').val()},
+            success: function (data){
+                if(data){
+                    $('#zipcode').val(data)
+                }
+                $('#loading').fadeOut();
+            },
+            error: function(e) {
+                    console.log(e);
+            }
+        });
     }
 
     function validateCorreiosChileAddress(commune, address) {
@@ -490,15 +534,29 @@
             url: "{{route('admin.ajax.state')}}",
             data: {country_id:  $('#country').val()},
             success: function (data){
-                $("#state").html("<option value=''>No Data</option>")
-                $.each(data,function(index,state){
-                        $("#state").append('<option value="'+state.id+'">'+state.code+'</option>');
-                });
-                    $("#state").selectpicker('refresh');
-                if(old_state != undefined || old_state != '')
-                {
-                        $('#state').val(old_state);
-                        $('#state').selectpicker('val', old_state);
+                if(data.cities){
+                    $("#cocity").html("<option value=''>No Data</option>");
+                    $("#codept").html("<option value=''>No Data</option>");
+                    $.each(data.cities,function(index,city){
+                        $('#cocity').append('<option value="'+city+'">'+city+'</option>');
+                    });
+                    $("#cocity").selectpicker('refresh');
+                    $.each(data.depts,function(index,dept){
+                        $("#codept").append('<option value="'+dept+'">'+dept+'</option>');
+                    });
+                    $("#codept").selectpicker('refresh');
+                }else {
+
+                    $("#state").html("<option value=''>No Data</option>")
+                    $.each(data,function(index,state){
+                            $("#state").append('<option value="'+state.id+'">'+state.code+'</option>');
+                    });
+                        $("#state").selectpicker('refresh');
+                    if(old_state != undefined || old_state != '')
+                    {
+                            $('#state').val(old_state);
+                            $('#state').selectpicker('val', old_state);
+                    }
                 }
             },
             error: function(e) {
