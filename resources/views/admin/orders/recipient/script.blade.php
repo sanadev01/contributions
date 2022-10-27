@@ -98,7 +98,8 @@
                 }
 
                 if (country == Colombia) {
-                    return getStatesFromDB();
+                    activeColombiaFields();
+                    return getColombiaRegionsFromDB();
                 }
 
                 // if (country == Colombia) {
@@ -165,15 +166,15 @@
                     $("[name='state_id']").prop('required',true);
                 }
 
-                return getStatesFromDB();
-                if (country != Colombia) {
-                    return getStatesFromDB();
-                }
-
                 if (country == Colombia) {
                     activeColombiaFields();
                     return getColombiaRegionsFromDB();
                 }
+
+                return getStatesFromDB();
+                
+
+                
             }
 
             if (country == Chile && serviceType == PostalService) {
@@ -280,7 +281,7 @@
             }
         });
 
-        $('#codept').on('change', function(){
+        $('#region').on('change', function(){
             let country = $('#country').val();
 
             if (country == Colombia) {
@@ -404,10 +405,6 @@
         $('#div_zipcode').addClass('d-block');
         $('#zipcode').prop('disabled', false);
 
-        $('#div_co_city').addClass('d-block');
-        $('#div_co_dept').addClass('d-block');
-
-
         $('#div_regions').removeClass('d-none');
         $('#state').prop('disabled', true);
         $('#city').attr('disabled', true);
@@ -417,15 +414,11 @@
 
     function inactiveColombiaFields() {
         $('#cpf').removeClass('d-none');
-        $('#div_hd_state').addClass('d-none');
-        $('#div_city').addClass('d-none');
+        $('#div_hd_state').removeClass('d-none');
+        $('#div_city').removeClass('d-none');
         $('#div_street_number').removeClass('d-none');
         $('#div_zipcode').removeClass('d-none');
         $('#zipcode').prop('disabled', false);
-
-        $('#div_co_city').removeClass('d-none');
-        $('#div_co_dept').removeClass('d-none');
-
 
         $('#div_regions').addClass('d-none');
         $('#state').prop('disabled', false);
@@ -456,9 +449,10 @@
         $.ajax({
             type: 'POST',
             url: "{{route('api.orders.recipient.colombiaZipcode')}}",
-            data: {country_id:  $('#country').val(), name:  $('#codept').val()},
+            data: {country_id:  $('#country').val(), region:  $('#region').val()},
             success: function (data){
                 if(data){
+                    console.log(data);
                     $('#zipcode').val(data)
                 }
                 $('#loading').fadeOut();
