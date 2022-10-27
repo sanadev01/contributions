@@ -43,14 +43,28 @@
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('tax.Tax Customer')<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control" name="tax_1" value="{{ old('tax_payment', $tax->tax_1) }}" placeholder="Enter Seller Tax" required>
+                                        <input type="text" class="form-control" name="tax_1" value="{{ old('tax_1', $tax->tax_1) }}" placeholder="Enter Seller Tax" required>
+                                        <div class="help-block"></div>
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">@lang('tax.Tax Customer')<span class="text-danger">*</span></label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" name="tax_1_br" value="{{ old('tax_1_br', $tax->tax_1_br) }}" placeholder="Enter Seller Tax" required>
                                         <div class="help-block"></div>
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('tax.Tax Herco')<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control" name="tax_2" value="{{ old('tax_payment', $tax->tax_2) }}" placeholder="Enter Tax By Herco" required>
+                                        <input type="text" class="form-control" name="tax_2" value="{{ old('tax_2', $tax->tax_2) }}" placeholder="Enter Tax By Herco" required>
+                                        <div class="help-block"></div>
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">@lang('tax.Tax Herco')<span class="text-danger">*</span></label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" name="tax_2_br" value="{{ old('tax_2_br', $tax->tax_2_br) }}" placeholder="Enter Tax By Herco" required>
                                         <div class="help-block"></div>
                                     </div>
                                 </div>
