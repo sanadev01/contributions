@@ -20,19 +20,17 @@
 <div class="card min-vh-100">
     <div class="card-header">
         <div class="col-8 btnsDiv" style="display: flex;">
-            <div id="printBtnDiv" style="display: block">
-                <button title="Print Labels" id="print" type="btn"
-                    class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i
-                        class="feather icon-printer"></i></button>
-                <button title="Print Domestic Labels" id="domesticPrint"  type="btn"
-                    class="btn btn-primary mr-1 mb-1 waves-effect waves-light">
+            <div id="printBtnDiv" style="display: block;">
+                <button title="Print Labels" id="print" type="btn" disabled class="btn btn-primary mr-1 mb-1 btn-disabled">
+                    <i class="feather icon-printer"></i>
+                </button>
+                <button title="Print Domestic Labels" id="domesticPrint" type="btn" disabled class="btn btn-primary mr-1 mb-1 btn-disabled">
                     <i class="feather icon-tag"></i>
                 </button>
-                <button title="Send Email Pre Alret" id="sendMail" type="btn"
-                    class="btn btn-primary mr-1 mb-1 waves-effect waves-light">
+                <button title="Send Email Pre Alret" id="sendMail" type="btn" disabled class="btn btn-primary mr-1 mb-1 btn-disabled">
                     <i class="feather icon-mail"></i>
                 </button>
-                <button title="Delete multiple Orders" id="trash" type="btn" class="btn btn-primary mr-1 mb-1 waves-effect waves-light">
+                <button title="Delete multiple Orders" id="trash" type="btn" disabled class="btn btn-primary mr-1 mb-1 btn-disabled">
                     <i class="feather icon-trash"></i>
                 </button>
             </div>
@@ -40,10 +38,10 @@
 
         <div class="row filter pr-3">
             <button type="btn" onclick="toggleDateSearch()" id="customSwitch8"
-                class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-filter"></i>
+                class="btn btn-primary mr-1 mb-1"><i class="feather icon-filter"></i>
             </button>
             <button type="btn" onclick="toggleOrdersPageSearch()" id="ordersSearch"
-                class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-search"></i>
+                class="btn btn-primary mr-1 mb-1"><i class="feather icon-search"></i>
             </button>
         </div>
     </div>
@@ -109,9 +107,11 @@
             console.log($(this).val());
         });
         console.log(JSON.stringify(orderIds));
-        $('#bulk_actions_form #command').val('print-label');
-        $('#bulk_actions_form #data').val(JSON.stringify(orderIds));
-        $('#bulk_actions_form').submit();
+        if(!jQuery.isEmptyObject(orderIds)){
+            $('#bulk_actions_form #command').val('print-label');
+            $('#bulk_actions_form #data').val(JSON.stringify(orderIds));
+            $('#bulk_actions_form').submit();
+        }
     })
     $('body').on('click', '#domesticPrint', function() {
         var orderIds = [];
@@ -149,11 +149,11 @@
 
         if ($('#checkAll').is(':checked')) {
             $('.bulk-orders').prop('checked', true)
-            document.getElementById("printBtnDiv").style.display = 'block';
+            $(".btn-disabled").removeAttr('disabled');
         } else {
             $('.bulk-orders').prop('checked', false)
             console.log($(".bulk-orders:checked").length);
-            document.getElementById("printBtnDiv").style.display = 'none';
+            $(".btn-disabled").prop("disabled", true);
         }
 
     })
