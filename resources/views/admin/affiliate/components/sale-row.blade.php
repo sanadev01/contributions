@@ -2,7 +2,7 @@
     @admin
         <td>
             <div class="vs-checkbox-con vs-checkbox-primary" title="@lang('orders.Bulk Print')">
-                <input type="checkbox" name="sales[]"onchange="handleChangeSalesCommission(this)" class="bulk-sales"
+                <input type="checkbox" name="sales[]"onchange="handleChange(this)" class="bulk-sales"
                     value="{{ $sale->id }}">
                 <span class="vs-checkbox vs-checkbox-sm">
                     <span class="vs-checkbox--check">
@@ -24,31 +24,12 @@
     <td>
         {{ optional($sale->order->user)->name }}
     </td>
-    {{-- <td>
-        <a href="#" data-toggle="modal" data-target="#hd-modal"
-            data-url="{{ route('admin.modals.order.invoice', $sale->order) }}" title="@lang('sales-commission.Show Order Details')">
-            @lang('sales-commission.view-order')
-        </a>
-
-    </td> --}}
     <td>
         <a href="#" data-toggle="modal" data-target="#hd-modal"
         data-url="{{ route('admin.modals.order.invoice', $sale->order) }}" title="@lang('sales-commission.Show Order Details')">
         {{ $sale->order->warehouse_number }}
     </a>
     </td>
-    {{-- <td>
-        {{ $sale->order->corrios_tracking_code }}
-    </td> --}}
-    {{-- <td>
-        {{ $sale->order->customer_reference }}
-    </td>
-    <td>
-        {{ $sale->order->tracking_id }}
-    </td>
-    <td>
-        {{ $sale->order->weight . $sale->order->measurement_unit }}
-    </td> --}}
 
     <td>
         {{ $sale->value }}
@@ -68,11 +49,7 @@
             <i class="feather icon-x text-danger"></i>
         @endif
     </td>
-    {{-- <td>
-        <span class="btn-success">
-                {{ $sale->detail }}
-        </span>
-    </td> --}}
+
     @admin
         <td class="d-flex">
             <div class="btn-group">
