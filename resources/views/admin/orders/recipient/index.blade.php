@@ -136,7 +136,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group col-12 col-sm-6 col-md-4">
+                <div class="form-group col-12 col-sm-6 col-md-4" id="state_div">
                     <div class="controls" id="div_hd_state">
                         <label>@lang('address.State') <span class="text-danger">*</span></label>
                         <select name="state_id" id="state" class="form-control selectpicker show-tick" data-live-search="true">
@@ -156,10 +156,10 @@
                         <div class="help-block d-none" id="regions_response"></div>
                     </div>
                 </div>
-                <div class="form-group col-12 col-sm-6 col-md-4">
+                <div class="form-group col-12 col-sm-6 col-md-4" id="city_div">
                     <div class="controls" id="div_city">
                         <label>@lang('address.City') <span class="text-danger">*</span></label>
-                        <input type="text" id="city" name="city" value="{{old('city',optional($order->recipient)->city)}}" class="form-control" required placeholder="City"/>
+                        <input type="text" id="city" name="city" value="{{old('city',optional($order->recipient)->city)}}" class="form-control" required  placeholder="City"/>
                         <div class="help-block"></div>
                     </div>
                     {{-- Chile Communes --}}
@@ -169,6 +169,24 @@
                             <option value="">Select Commune</option>
                         </select>
                         <div class="help-block d-none" id="communes_response"></div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-md-4 d-none" id="div_co_city">
+                    <div class="controls">
+                        <label>@lang('address.City') <span class="text-danger">*</span></label>
+                        <select name="cocity" id="cocity" class="form-control selectpicker show-tick" data-live-search="true" data-value="{{ old('cocity', optional($order->recipient)->city) }}">
+                            <option value="">Select @lang('address.City')</option>
+                        </select>
+                        <div class="help-block"></div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-md-4 d-none" id="div_co_dept">
+                    <div class="controls">
+                        <label>Departamento <span class="text-danger">*</span></label>
+                        <select name="codept" id="codept" class="form-control selectpicker show-tick" data-live-search="true" data-value="{{ old('codept', optional($order->recipient)->city) }}">
+                            <option value="">Select Departamento</option>
+                        </select>
+                        <div class="help-block"></div>
                     </div>
                 </div>
                 

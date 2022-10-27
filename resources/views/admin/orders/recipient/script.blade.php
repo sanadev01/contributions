@@ -99,7 +99,8 @@
 
                 if (country == Colombia) {
                     activeColombiaFields();
-                    return getColombiaRegionsFromDB();
+                    return getStatesFromDB();
+                    //return getColombiaRegionsFromDB();
                 }
 
                 // if (country == Colombia) {
@@ -168,7 +169,8 @@
 
                 if (country == Colombia) {
                     activeColombiaFields();
-                    return getColombiaRegionsFromDB();
+                    return getStatesFromDB();
+                    //return getColombiaRegionsFromDB();
                 }
 
                 return getStatesFromDB();
@@ -281,7 +283,7 @@
             }
         });
 
-        $('#region').on('change', function(){
+        $('#cocity').on('change', function(){
             let country = $('#country').val();
 
             if (country == Colombia) {
@@ -399,13 +401,16 @@
 
     function activeColombiaFields() {
         $('#cpf').addClass('d-none');
-        $('#div_hd_state').addClass('d-none');
-        $('#div_city').addClass('d-none');
+        $('#state_div').addClass('d-none');
+        $('#city_div').addClass('d-none');
         $('#div_street_number').addClass('d-none');
         $('#div_zipcode').addClass('d-block');
         $('#zipcode').prop('disabled', false);
 
-        $('#div_regions').removeClass('d-none');
+        $('#div_co_city').removeClass('d-none');
+        $('#div_co_dept').removeClass('d-none');
+
+        //$('#div_regions').removeClass('d-none');
         $('#state').prop('disabled', true);
         $('#city').attr('disabled', true);
 
@@ -414,11 +419,14 @@
 
     function inactiveColombiaFields() {
         $('#cpf').removeClass('d-none');
-        $('#div_hd_state').removeClass('d-none');
-        $('#div_city').removeClass('d-none');
+        $('#state_div').removeClass('d-none');
+        $('#city_div').removeClass('d-none');
         $('#div_street_number').removeClass('d-none');
         $('#div_zipcode').removeClass('d-none');
         $('#zipcode').prop('disabled', false);
+
+        $('#div_co_city').addClass('d-none');
+        $('#div_co_dept').addClass('d-none');
 
         $('#div_regions').addClass('d-none');
         $('#state').prop('disabled', false);
@@ -449,7 +457,7 @@
         $.ajax({
             type: 'POST',
             url: "{{route('api.orders.recipient.colombiaZipcode')}}",
-            data: {country_id:  $('#country').val(), region:  $('#region').val()},
+            data: {country_id:  $('#country').val(), city:  $('#cocity').val()},
             success: function (data){
                 if(data){
                     console.log(data);
