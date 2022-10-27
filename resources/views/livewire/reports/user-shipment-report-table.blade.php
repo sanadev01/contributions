@@ -2,7 +2,7 @@
 
     <div class="row my-3" id="dateSearch"
         @if(!empty($start_date) || !empty($end_date)) style="display:block !important" @endif>
-        <div class="row col-12">
+        <div class="row col-12 pr-0">
             <div class="col-md-2">
                 <label for="">Start Date</label>
                 <input type="date" class="form-control" wire:model='start_date'>
@@ -11,18 +11,27 @@
                 <label for="">End Date</label>
                 <input type="date" class="form-control" wire:model='end_date'>
             </div>
-            <div class="col-md-1 pt-4">
+            <div class="col-md-1 pt-4 mt-1">
                 <a href="{{ $downloadLink }}" class="btn btn-success" {{ !$downloadLink ? 'disabled' : '' }}
                     target="_blank">
                     <i class="fa fa-arrow-down"></i>
                 </a>
             </div>
-            <div class="col-md-6">
-                <form class="col-12" action="{{ route('admin.reports.user-shipments.index') }}" method="GET"
+            <div class="col-md-7 pr-0">
+                <form action="{{ route('admin.reports.user-shipments.index') }}" method="GET"
                     target="_blank">
                     <div class="row">
-                        <div class="col-md-12 row mb-2 ">
-                            <div class="col-lg-2 pl-0 col-md-3 col-sm-3 col-xs-3">
+                        <div class="col-md-12 pr-0 d-flex justify-content-end row mb-2 ">
+                            <div class="col-md-3">
+                                <div class="controls">
+                                    <label>@lang('parcel.User POBOX Number') <span class="text-danger">*</span></label>
+                                    <livewire:components.search-user />
+                                    @error('pobox_number')
+                                    <div class="help-block text-danger"> {{ $message }} </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-3">
                                 <label for="">Year</label>
                                 <select class="form-control" name="year" id="DefaultSelect">
                                     <option value="">Select Year </option>
@@ -33,7 +42,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-lg-3 col-md-3 col-sm-2 col-xs-2 mt-25">
+                            <div class="mt-25">
                                 <button type="submit" class="btn btn-primary btn-block mr-2">Download Yearly</button>
                             </div>
                         </div>

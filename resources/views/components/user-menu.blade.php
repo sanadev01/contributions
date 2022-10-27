@@ -101,25 +101,26 @@
                                         class="menu-title">All Orders</span></a>
 
                             </li>
+                            @admin
+                                <li class=" @if (collect(request()->segments())->last() == 'wholesale') active @endif ">
+                                    <a href="{{ route('admin.orders.show', 'wholesale') }}"><i
+                                            class="feather icon-circle"></i><span class="menu-title">Wholesales</span></a>
 
-                            <li class=" @if (collect(request()->segments())->last() == 'wholesale') active @endif ">
-                                <a href="{{ route('admin.orders.show', 'wholesale') }}"><i
-                                        class="feather icon-circle"></i><span class="menu-title">Wholesales</span></a>
+                                </li>
+                                <li class="@if (collect(request()->segments())->last() == 'retailer') active @endif ">
+                                    <a href="{{ route('admin.orders.show', 'retailer') }}"><i
+                                            class="feather icon-circle"></i><span class="menu-title">Retail</span></a>
 
-                            </li>
-                            <li class="@if (collect(request()->segments())->last() == 'retailer') active @endif ">
-                                <a href="{{ route('admin.orders.show', 'retailer') }}"><i
-                                        class="feather icon-circle"></i><span class="menu-title">Retail</span></a>
-
-                            </li>
-                            <li class="@if (collect(request()->segments())->last() == 'domestic') active @endif ">
-                                <a href="{{ route('admin.orders.show', 'domestic') }}"><i
-                                        class="feather icon-circle"></i><span class="menu-title">Domestic</span></a>
-                            </li>
-                            <li class="@if (collect(request()->segments())->last() == 'pickups') active @endif ">
-                                <a href="{{ route('admin.orders.show', 'pickups') }}"><i
-                                        class="feather icon-circle"></i><span class="menu-title">Pickups</span></a>
-                            </li>
+                                </li>
+                                <li class="@if (collect(request()->segments())->last() == 'domestic') active @endif ">
+                                    <a href="{{ route('admin.orders.show', 'domestic') }}"><i
+                                            class="feather icon-circle"></i><span class="menu-title">Domestic</span></a>
+                                </li>
+                                <li class="@if (collect(request()->segments())->last() == 'pickups') active @endif ">
+                                    <a href="{{ route('admin.orders.show', 'pickups') }}"><i
+                                            class="feather icon-circle"></i><span class="menu-title">Pickups</span></a>
+                                </li>
+                            @endadmin
                             <li class="nav-item {{ $isActive(['admin.trash-orders.index']) }}">
                                 <a href="{{ route('admin.trash-orders.index') }}">
                                     <i class="feather icon-circle"></i>

@@ -20,21 +20,21 @@
 <div class="card min-vh-100">
     <div class="card-header">
         <div class="col-8 btnsDiv" style="display: flex;">
-            <div id="printBtnDiv">
+            <div id="printBtnDiv" style="display: block">
                 <button title="Print Labels" id="print" type="btn"
                     class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i
                         class="feather icon-printer"></i></button>
-                <button title="Print Domestic Labels" id="deomesticPrint" type="btn"
+                <button title="Print Domestic Labels" id="domesticPrint"  type="btn"
                     class="btn btn-primary mr-1 mb-1 waves-effect waves-light">
                     <i class="feather icon-tag"></i>
                 </button>
-                <button title="Send Email" id="sendMail" type="btn"
+                <button title="Send Email Pre Alret" id="sendMail" type="btn"
                     class="btn btn-primary mr-1 mb-1 waves-effect waves-light">
                     <i class="feather icon-mail"></i>
                 </button>
-                <button title="Delete" id="trash" type="btn"
-                    class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i
-                        class="feather icon-trash"></i></button>
+                <button title="Delete multiple Orders" id="trash" type="btn" class="btn btn-primary mr-1 mb-1 waves-effect waves-light">
+                    <i class="feather icon-trash"></i>
+                </button>
             </div>
         </div>
 

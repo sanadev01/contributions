@@ -27,16 +27,23 @@
             </div>
             <div class="row col-12 pr-0 m-0 pl-0" id="datefilters">
                 <div class=" col-6 text-left">
-                    <div class="row col-12 pl-1" id="dateSearch">
-                        <form action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
+                    <div class="row" id="dateSearch">
+                        <form action="{{ route('admin.order.exports') }}" method="GET" target="_blank" class="row col-12">
                             @csrf
-                            <div class="form-group mb-2 col-4" style="float:left;margin-right:20px;">
+                            <div class="col-4">
                                 <label>Start Date</label>
                                 <input type="date" name="start_date" class="form-control">
                             </div>
-                            <div class="form-group mx-sm-3 mb-2 col-4" style="float:left;margin-right:20px;">
+                            <div class="col-4">
                                 <label>End Date</label>
                                 <input type="date" name="end_date" class="form-control">
+                            </div>
+                            <div class="col-2">
+                                <label>Type</label>
+                                <select class="form-control" name="type">
+                                    <option value="">All</option>
+                                    <option value="domestic">Domestic</option>
+                                </select>
                             </div>
                             <button class="btn btn-success searchDateBtn" title="@lang('orders.import-excel.Download')">
                                 <i class="fa fa-arrow-down"></i>

@@ -11,15 +11,16 @@
     <div class="card-header">
         <div class="col-8 btnsDiv" style="display: flex;">
             <div id="printBtnDiv">
-                <button title="Print Labels" id="print" type="btn"
-                    class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i
-                        class="feather icon-printer"></i></button>
-
-                <button title="Print Domestic Labels" id="deomesticPrint" type="btn"
-                    class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-tag"></i></button>
+                <button title="Print Labels" id="print" type="btn" class="btn btn-primary mr-1 mb-1 waves-effect waves-light">
+                    <i class="feather icon-printer"></i>
+                </button>
+                <button title="Print Domestic Labels" id="domesticPrint" type="btn" class="btn btn-primary mr-1 mb-1 waves-effect waves-light">
+                    <i class="feather icon-tag"></i>
+                </button>
                 <button title="Delete" id="trash" type="btn"
-                    class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i
-                        class="feather icon-trash"></i></button>
+                    class="btn btn-primary mr-1 mb-1 waves-effect waves-light">
+                    <i class="feather icon-trash"></i>
+                </button>
             </div>
         </div>
 
