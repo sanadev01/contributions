@@ -98,10 +98,10 @@
 
     function handleChange(checkbox) {
         if (checkbox.checked == true) {
-            document.getElementById("printBtnDiv").style.display = 'block';
+            $(".btn-disabled").removeAttr('disabled');
         } else {
             if ($(".bulk-orders:checked").length == 0) {
-                document.getElementById("printBtnDiv").style.display = 'none';
+                $(".btn-disabled").prop("disabled", true);
             }
         }
     }

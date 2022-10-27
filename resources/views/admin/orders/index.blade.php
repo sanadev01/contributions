@@ -21,16 +21,16 @@
     <div class="card-header">
         <div class="col-8 btnsDiv" style="display: flex;">
             <div id="printBtnDiv" style="display: block;">
-                <button title="Print Labels" id="print" type="btn" class="btn btn-primary mr-1 mb-1">
+                <button title="Print Labels" id="print" type="btn" disabled class="btn btn-primary mr-1 mb-1 btn-disabled">
                     <i class="feather icon-printer"></i>
                 </button>
-                <button title="Print Domestic Labels" id="domesticPrint" type="btn" class="btn btn-primary mr-1 mb-1">
+                <button title="Print Domestic Labels" id="domesticPrint" type="btn" disabled class="btn btn-primary mr-1 mb-1 btn-disabled">
                     <i class="feather icon-tag"></i>
                 </button>
-                <button title="Send Email Pre Alret" id="sendMail" type="btn" class="btn btn-primary mr-1 mb-1">
+                <button title="Send Email Pre Alret" id="sendMail" type="btn" disabled class="btn btn-primary mr-1 mb-1 btn-disabled">
                     <i class="feather icon-mail"></i>
                 </button>
-                <button title="Delete multiple Orders" id="trash" type="btn" class="btn btn-primary mr-1 mb-1">
+                <button title="Delete multiple Orders" id="trash" type="btn" disabled class="btn btn-primary mr-1 mb-1 btn-disabled">
                     <i class="feather icon-trash"></i>
                 </button>
             </div>
@@ -149,11 +149,11 @@
 
         if ($('#checkAll').is(':checked')) {
             $('.bulk-orders').prop('checked', true)
-            document.getElementById("printBtnDiv").style.display = 'block';
+            $(".btn-disabled").removeAttr('disabled');
         } else {
             $('.bulk-orders').prop('checked', false)
             console.log($(".bulk-orders:checked").length);
-            document.getElementById("printBtnDiv").style.display = 'none';
+            $(".btn-disabled").prop("disabled", true);
         }
 
     })
