@@ -12,7 +12,7 @@
                         <div class="card-body">
                             <div class="row mb-2 no-print">
                                 <div class="col-12 text-right">
-                                    <form action="{{ route('warehouse.unitinfo.store') }}" method="POST" target="_blank">
+                                    <form action="{{ route('warehouse.unitinfo.create') }}" method="GET">
                                         @csrf
                                         <div class="row mb-3">
                                             <div class="offset-3 col-md-4">
@@ -58,6 +58,7 @@
                                         </div>
                                         <div class="row mb-3">
                                             <div class="offset-3 col-md-4">
+                                                <a href="{{ route('warehouse.unitinfo.create') }}" class="btn btn-secondary btn-md">Clear</a>
                                                 <button type="submit" class="btn btn-primary btn-md">Submit</button>
                                             </div>
                                         </div>
@@ -66,11 +67,13 @@
                             </div>
                             @if(!empty($unitInfo))
                                 @if($type='units_arrival')
-                                    @include('admin.warehouse.correiosInfo.unitsArrival')
+                                    @include('admin.warehouse.unitInfo.unitsArrival')
                                 @elseif($type='units_return')
-                                    @include('admin.warehouse.correiosInfo.unitsReturn')
+                                    @include('admin.warehouse.unitInfo.unitsReturn')
                                 @elseif($type='confirm_departure')
-                                    @include('admin.warehouse.correiosInfo.confirmDepartureUnits')
+                                    @include('admin.warehouse.unitInfo.confirmDepartureUnits')
+                                @elseif($type='departure_info')
+                                    @include('admin.warehouse.unitInfo.confirmDepartureUnits')
                                 @endif
                             @endif
                        </div>

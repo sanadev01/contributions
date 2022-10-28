@@ -53,7 +53,7 @@
             <li class="#">
                 <a href="{{ route('warehouse.unitinfo.create') }}">
                     <i class="feather icon-circle"></i>
-                    <span class="menu-title">Correios Info</span>
+                    <span class="menu-title">Unit Info</span>
                 </a>
             </li>
         @endadmin
