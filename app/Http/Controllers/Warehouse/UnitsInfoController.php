@@ -24,9 +24,14 @@ class UnitsInfoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request, UnitInfoRepository $repository)
     {
-        return view('admin.warehouse.correiosInfo.create');
+        $type = $request->type;
+        $unitInfo = [];
+        if($type){
+            $unitInfo = $repository->getUnitInfo($request);
+        }
+        return view('admin.warehouse.unitInfo.create', compact('unitInfo', 'type'));
     }
 
     /**
@@ -35,13 +40,9 @@ class UnitsInfoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, UnitInfoRepository $repository)
+    public function store(Request $request)
     {
-        $type = $request->type;
-        $unitInfo = $repository->getUnitInfo($request);
-        //dd($unitInfo);
-        return view('admin.warehouse.correiosInfo.create', compact('unitInfo', 'type'));
-
+        //
     }
 
     /**
