@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Warehouse;
 use Illuminate\Http\Request;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
+use App\Repositories\Warehouse\UnitInfoRepository;
 
 class UnitsInfoController extends Controller
 {
@@ -34,9 +35,10 @@ class UnitsInfoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store()
+    public function store(Request $request, UnitInfoRepository $repository)
     {
-        //
+        // dd($request);
+        $repository->getUnitInfo($request);
     }
 
     /**
@@ -56,7 +58,7 @@ class UnitsInfoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit()
+    public function edit($id)
     {
         //
     }
@@ -68,7 +70,7 @@ class UnitsInfoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update()
+    public function update(Request $request)
     {
         //
     }

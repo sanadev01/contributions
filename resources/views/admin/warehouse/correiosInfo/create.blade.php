@@ -25,7 +25,7 @@
                             </div>
                             <div class="row mb-2 no-print">
                                 <div class="col-12 text-right">
-                                    <form action="#" method="GET" target="_blank">
+                                    <form action="{{ route('warehouse.correiosinfo.store') }}" method="POST" target="_blank">
                                         @csrf
                                         <div class="row mb-3">
                                             <div class="offset-3 col-md-4">

@@ -282,5 +282,23 @@ class Client{
             return new PackageError($exception->getMessage());
         }
     }
+    
+    public function unitInfo($url)
+    {
+        // try {
+            $response = $this->client->get($url,[
+                'headers' => [
+                    'Authorization' => "Bearer {$this->getAnjunToken()}"
+                ]
+            ]);
+            
+            dd(json_decode($response->getBody()->getContents()));
+        // }catch (\GuzzleHttp\Exception\ClientException $e) {
+        //     return new PackageError($e->getResponse()->getBody()->getContents());
+        // }
+        // catch (\Exception $exception){
+        //     return new PackageError($exception->getMessage());
+        // }
+    }
 
 }
