@@ -230,7 +230,7 @@ class Client{
         try {
             $response = $this->client->get("/packet/v1/cn38request?requestId={$deliveryBill->request_id}",[
                 'headers' => [
-                    'Authorization' => "Bearer {$this->getToken()}"
+                    'Authorization' => ($container->hasAnjunService()) ? "Bearer {$this->getAnjunToken()}" : "Bearer {$this->getToken()}"
                 ]
             ]);
 
