@@ -285,20 +285,20 @@ class Client{
     
     public function unitInfo($url)
     {
-        try {
+        // try {
             $response = $this->client->get($url,[
                 'headers' => [
-                    'Authorization' => ($container->hasAnjunService()) ? "Bearer {$this->getAnjunToken()}" : "Bearer {$this->getToken()}"
+                    'Authorization' => "Bearer {$this->getAnjunToken()}"
                 ]
             ]);
             
-            return $response;
-        }catch (\GuzzleHttp\Exception\ClientException $e) {
-            return new PackageError($e->getResponse()->getBody()->getContents());
-        }
-        catch (\Exception $exception){
-            return new PackageError($exception->getMessage());
-        }
+            dd(json_decode($response->getBody()->getContents()));
+        // }catch (\GuzzleHttp\Exception\ClientException $e) {
+        //     return new PackageError($e->getResponse()->getBody()->getContents());
+        // }
+        // catch (\Exception $exception){
+        //     return new PackageError($exception->getMessage());
+        // }
     }
 
 }
