@@ -39,7 +39,7 @@ class UnitsInfoController extends Controller
     {
         $type = $request->type;
         $unitInfo = $repository->getUnitInfo($request);
-        dd($unitInfo);
+        //dd($unitInfo);
         return view('admin.warehouse.correiosInfo.create', compact('unitInfo', 'type'));
 
     }

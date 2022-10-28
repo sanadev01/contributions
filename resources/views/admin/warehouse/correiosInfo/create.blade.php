@@ -26,7 +26,7 @@
                                                         <option value="units_arrival">Units Arrival Confirmation</option>
                                                         <option value="units_return">Available Units for Return</option>
                                                         <option value="departure_info">Return Departure Information</option>
-                                                        <option value="departure_units">Confirmed Departure Units</option>
+                                                        <option value="confirm_departure">Confirmed Departure Units</option>
                                                     </select>
                                                     </div>
                                                 </div>
@@ -67,6 +67,10 @@
                             @if(!empty($unitInfo))
                                 @if($type='units_arrival')
                                     @include('admin.warehouse.correiosInfo.unitsArrival')
+                                @elseif($type='units_return')
+                                    @include('admin.warehouse.correiosInfo.unitsReturn')
+                                @elseif($type='confirm_departure')
+                                    @include('admin.warehouse.correiosInfo.confirmDepartureUnits')
                                 @endif
                             @endif
                        </div>
