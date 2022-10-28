@@ -11,21 +11,8 @@
                     <div class="card-content">
                         <div class="card-body">
                             <div class="row mb-2 no-print">
-                                <!-- <div class="col-1">
-                                    <select class="form-control" wire:model="pageSize">
-                                        <option value="1">1</option>
-                                        <option value="5">5</option>
-                                        <option value="10">10</option>
-                                        <option value="20">20</option>
-                                        <option value="50">50</option>
-                                        <option value="100">100</option>
-                                        <option value="300">300</option>
-                                    </select>
-                                </div> -->
-                            </div>
-                            <div class="row mb-2 no-print">
                                 <div class="col-12 text-right">
-                                    <form action="{{ route('warehouse.correiosinfo.store') }}" method="POST" target="_blank">
+                                    <form action="{{ route('warehouse.unitinfo.store') }}" method="POST" target="_blank">
                                         @csrf
                                         <div class="row mb-3">
                                             <div class="offset-3 col-md-4">
@@ -69,7 +56,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
                                         <div class="row mb-3">
                                             <div class="offset-3 col-md-4">
                                                 <button type="submit" class="btn btn-primary btn-md">Submit</button>
@@ -78,7 +64,12 @@
                                     </form>
                                 </div>
                             </div>
-                        </div>
+                            @if(!empty($unitInfo))
+                                @if($type='units_arrival')
+                                    @include('admin.warehouse.correiosInfo.unitsArrival')
+                                @endif
+                            @endif
+                       </div>
                     </div>
                 </div>
             </div>

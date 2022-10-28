@@ -25,14 +25,18 @@ class Client{
 
     protected $client;
 
-    private $baseUri = 'https://api.correios.com.br';
+    private $baseUri = 'https://apihom.correios.com.br';
     private $username = 'hercofreight';
     private $password = '150495ca';
     private $numero = '0075745313';
 
-    private $anjun_username = 'anjun2020';
-    private $anjun_password = 'anjun';
-    private $anjun_numero = '0077053850';
+    // private $anjun_username = 'anjun2020';
+    // private $anjun_password = 'anjun';
+    // private $anjun_numero = '0077053850';
+
+    private $anjun_username = 'testeint';
+    private $anjun_password = 'NppSSY:4d:%x_b$)GQ7j-^}I5JF3MDY7i|2]yoz9';
+    private $anjun_numero = '0073423777';
 
     public function __construct()
     {
@@ -285,20 +289,19 @@ class Client{
     
     public function unitInfo($url)
     {
-        // try {
+        try {
             $response = $this->client->get($url,[
                 'headers' => [
                     'Authorization' => "Bearer {$this->getAnjunToken()}"
                 ]
             ]);
-            
-            dd(json_decode($response->getBody()->getContents()));
-        // }catch (\GuzzleHttp\Exception\ClientException $e) {
-        //     return new PackageError($e->getResponse()->getBody()->getContents());
-        // }
-        // catch (\Exception $exception){
-        //     return new PackageError($exception->getMessage());
-        // }
+            return json_decode($response->getBody()->getContents());
+        }catch (\GuzzleHttp\Exception\ClientException $e) {
+            return new PackageError($e->getResponse()->getBody()->getContents());
+        }
+        catch (\Exception $exception){
+            return new PackageError($exception->getMessage());
+        }
     }
 
 }

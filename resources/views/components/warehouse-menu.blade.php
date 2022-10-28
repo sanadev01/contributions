@@ -51,7 +51,7 @@
                 </a>
             </li>
             <li class="#">
-                <a href="{{ route('warehouse.correiosinfo.create') }}">
+                <a href="{{ route('warehouse.unitinfo.create') }}">
                     <i class="feather icon-circle"></i>
                     <span class="menu-title">Correios Info</span>
                 </a>

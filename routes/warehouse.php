@@ -99,7 +99,7 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('geps/{delivery_bill}/manifest', GePSManifestDownloadController::class)->name('geps.manifest.download');
 
     // Routes for Correios Unit Info
-    Route::resource('correiosinfo', UnitsInfoController::class);
+    Route::resource('unitinfo', UnitsInfoController::class);
 });
 
 

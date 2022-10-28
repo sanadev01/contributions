@@ -27,7 +27,7 @@ class UnitInfoRepository
 
         $client = new Client();
         $response = $client->unitInfo($url);
-        dd(json_decode($response));
+        return $response;
         if ( $response instanceof PackageError){
             session()->flash('alert-danger',$response->getErrors());
             return back();
