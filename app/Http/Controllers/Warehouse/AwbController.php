@@ -6,26 +6,16 @@ use Illuminate\Http\Request;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use App\Repositories\Warehouse\ContainerRepository;
 
 class AwbController extends Controller
 {
-    public function __invoke(Request $request)
+    public function __invoke(Request $request, ContainerRepository $containerRepository)
     {
         $request->validate([
             'awb' => 'required',
         ]);
-
-        if(json_decode($request->data)){
-            foreach(json_decode($request->data) as $containerId){
-                $container       = Container::find($containerId);
-                $container->awb  = $request->awb;
-                $container->save();
-            }
-            session()->flash('alert-success','AWB number assigned');
-            return redirect()->back();
-        }
-        session()->flash('alert-danger','Please select Containers');
-        return redirect()->back();
-
+        $response = $containerRepository->updateawb($request);
+        return back()->withInput();
     }
 }
