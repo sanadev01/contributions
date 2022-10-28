@@ -371,6 +371,42 @@
 
             @include('components.warehouse-menu')
 
+            <li class="nav-item has-sub sidebar-group">
+                <a href="#">
+                    <img src="{{ asset('images/icon/warehouse.svg') }}" alt="warehouse">
+                    <span class="menu-title">Correios Info</span>
+                </a>
+                <ul class="menu-content">
+                    @admin
+                        <li class="{{ $isActive(['warehouse.scan.index']) }}">
+                            <a href="#">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title">Unit Arrival</span>
+                            </a>
+                        </li>
+                        <li class="{{ $isActive(['warehouse.search_package.index','warehouse.search_package.show']) }}">
+                            <a href="#">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title">Units Return</span>
+                            </a>
+                        </li>
+                        <li class="{{ $isActive(['warehouse.containers.index','warehouse.containers.create','warehouse.containers.edit','warehouse.containers.packages.index']) }}">
+                            <a href="#">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title">Return Departure Information</span>
+                            </a>
+                        </li>
+
+                        <li class="#">
+                            <a href="{{ route('warehouse.delivery_bill.index') }}">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title">Confirmed Departures</span>
+                            </a>
+                        </li>
+                    @endadmin
+                </ul>
+            </li>
+
             @can('viewAny', App\Models\User::class)
             <li class="nav-item {{ $isActive(['admin.users.index']) }}">
                 <a href="{{ route('admin.users.index') }}">
