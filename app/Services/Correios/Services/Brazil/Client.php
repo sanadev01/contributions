@@ -10,7 +10,7 @@ use App\Models\Warehouse\DeliveryBill;
 use GuzzleHttp\Client as GuzzleClient;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Correios\Contracts\Package;
-//use App\Services\Correios\Contracts\Container;
+use App\Services\Correios\Contracts\Container;
 use App\Services\Correios\Models\PackageError;
 use App\Services\Correios\Contracts\PacketItem;
 use App\Services\Correios\Contracts\CN23Response;
