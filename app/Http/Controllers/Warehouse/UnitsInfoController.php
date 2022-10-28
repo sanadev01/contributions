@@ -34,9 +34,9 @@ class UnitsInfoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store()
+    public function store(Request $request, UnitInfoRepository $repository)
     {
-        //
+        $repository->getUnitInfo($request);
     }
 
     /**
@@ -56,7 +56,7 @@ class UnitsInfoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit()
+    public function edit($id)
     {
         //
     }
@@ -68,7 +68,7 @@ class UnitsInfoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update()
+    public function update(Request $request)
     {
         //
     }
