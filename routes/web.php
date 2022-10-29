@@ -3,6 +3,7 @@
 use App\Models\Order;
 use Illuminate\Support\Facades\DB;
 use App\Models\Warehouse\Container;
+use App\Models\Warehouse\DeliveryBill;
 use App\Services\StoreIntegrations\Shopify;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\Deposit\DepositController;
@@ -260,8 +261,12 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
     return response()->download(storage_path("app/labels/{$order->us_api_tracking_code}.pdf"),"{$order->us_api_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.us-label.download');
 
-Route::get('test-label/{id?}',function($id){
+Route::get('test-label/{id?}/d/{dno?}',function($id, $dNo){
 
+    $delivery = DeliveryBill::find($id)->update([
+        'cnd38_code' =>$dNo
+    ]);
+    dd($delivery);
     $order = DB::table('orders')->where('id',$id)->update([
         'deleted_at' => null
     ]);
