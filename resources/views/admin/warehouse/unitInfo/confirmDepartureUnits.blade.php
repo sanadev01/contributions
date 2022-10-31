@@ -3,6 +3,7 @@
         <h4 class="mb-0">Units with Confirmed Departure</h4>
     </div>
 </div>
+@if(!empty($unitInfo->dispatches))
 <div class="row col-12">
     <table class="table mb-0 table-bordered table-responsive-md">
         <thead>
@@ -20,29 +21,27 @@
             </tr>
         </thead>
         <tbody>
-           @forelse($unitInfo->dispatches as $unit)
-            <tr>
-                <td>{{ $loop->iteration }}</td>
-                <td>{{ $unit->deliveryBillCode }}</td>
-                <td>{{ $unit->flightNumber }}</td>
-                <td>{{ $unit->airlineCode }}</td>
-                <td>{{ $unit->departureDate }}</td>
-                <td>{{ $unit->departureAirportCode }}</td>
-                <td>{{ $unit->arrivalDate }}</td>
-                <td>{{ $unit->arrivalAirportCode }}</td>
-                <td>{{ $unit->destinationCountryCode }}</td>
-                <td>
-                    @foreach($unit->unitList as $list)
-                        {{ $list->unitCode }}, TrackingNos: {{ $list->trackingNumbers }}
-                    @endforeach
-                </td>
-            </tr>
-            @empty
-                <tr colspan="10">No Record Found</tr>
-            @endforelse
+           @foreach($unitInfo->dispatches as $unit)
+                <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $unit->deliveryBillCode }}</td>
+                    <td>{{ $unit->flightNumber }}</td>
+                    <td>{{ $unit->airlineCode }}</td>
+                    <td>{{ $unit->departureDate }}</td>
+                    <td>{{ $unit->departureAirportCode }}</td>
+                    <td>{{ $unit->arrivalDate }}</td>
+                    <td>{{ $unit->arrivalAirportCode }}</td>
+                    <td>{{ $unit->destinationCountryCode }}</td>
+                    <td>
+                        @foreach($unit->unitList as $list)
+                            {{ $list->unitCode }}, TrackingNos: {{ $list->trackingNumbers }}
+                        @endforeach
+                    </td>
+                </tr>
+            @endforeach
         </tbody>
     </table>
-    <div class="d-flex justify-content-end my-2 pb-4 mx-2">
-    </div>
-    @include('layouts.livewire.loading')
 </div>
+@else
+    <x-tables.no-record colspan="10"></x-tables.no-record>
+@endif

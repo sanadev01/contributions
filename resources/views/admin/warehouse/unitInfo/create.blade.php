@@ -163,14 +163,14 @@
                                     </form>
                                 </div>
                             </div>
-                            @if(!empty($unitInfo))
-                                @if($type='units_arrival')
+                            @if($unitInfo)
+                                @if($type=='units_arrival')
                                     @include('admin.warehouse.unitInfo.unitsArrival')
-                                @elseif($type='units_return')
+                                @elseif($type=='units_return')
                                     @include('admin.warehouse.unitInfo.unitsReturn')
-                                @elseif($type='confirm_departure')
+                                @elseif($type=='confirm_departure')
                                     @include('admin.warehouse.unitInfo.confirmDepartureUnits')
-                                @elseif($type='departure_info')
+                                @elseif($type=='departure_info')
                                     @include('admin.warehouse.unitInfo.confirmDepartureUnits')
                                 @endif
                             @endif
