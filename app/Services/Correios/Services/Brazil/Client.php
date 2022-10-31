@@ -291,7 +291,7 @@ class Client{
     {
         try {
             $token = ['Authorization' => "Bearer {$this->getAnjunToken()}"];
-            //this is test mode
+            //this is test
             if($type) {
                 $response = $this->client->put($url,[
                     'headers' => $token,
