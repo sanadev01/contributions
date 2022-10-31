@@ -28,7 +28,6 @@ class UnitInfoRepository
 
         $client = new Client();
         $response = $client->unitInfo($url, $request);
-
         if ( $response instanceof PackageError){
             session()->flash('alert-danger',$response->getErrors());
             return back();

@@ -39,7 +39,7 @@
                                                         <label id="start_date">Start Date</label>
                                                     </div>
                                                     <div class="col-md-8">
-                                                        <input type="date" name="start_date" class="form-control">
+                                                        <input type="date" name="start_date" class="form-control" value="{{old('start_date')}}">
                                                         @error('start_date')
                                                             <div class="help-block text-danger"> {{ $message }} </div>
                                                         @enderror
@@ -54,7 +54,7 @@
                                                         <label id="end_date">End Date</label>
                                                     </div>
                                                     <div class="col-md-8">
-                                                        <input type="date" name="end_date" class="form-control">
+                                                        <input type="date" name="end_date" class="form-control" value="{{old('end_date')}}">
                                                         @error('end_date')
                                                             <div class="help-block text-danger"> {{ $message }} </div>
                                                         @enderror
@@ -70,7 +70,7 @@
                                                             <label>Flight Number</label>
                                                         </div>
                                                         <div class="col-md-8">
-                                                            <input type="text" name="flightNo" class="form-control">
+                                                            <input type="text" name="flightNo" class="form-control" value="{{old('flightNo')}}">
                                                             @error('flightNo')
                                                                 <div class="help-block text-danger"> {{ $message }} </div>
                                                             @enderror
@@ -85,7 +85,7 @@
                                                             <label>Airline Code</label>
                                                         </div>
                                                         <div class="col-md-8">
-                                                            <input type="text" name="airlineCode" class="form-control">
+                                                            <input type="text" name="airlineCode" class="form-control" value="{{old('airlineCode')}}">
                                                             @error('airlineCode')
                                                                 <div class="help-block text-danger"> {{ $message }} </div>
                                                             @enderror
@@ -100,7 +100,7 @@
                                                             <label>Departure Airport Code</label>
                                                         </div>
                                                         <div class="col-md-8">
-                                                            <input type="text" name="deprAirportCode" class="form-control">
+                                                            <input type="text" name="deprAirportCode" class="form-control" value="{{old('deprAirportCode')}}">
                                                             @error('deprAirportCode')
                                                                 <div class="help-block text-danger"> {{ $message }} </div>
                                                             @enderror
@@ -115,7 +115,7 @@
                                                             <label>Arrival Airport Code</label>
                                                         </div>
                                                         <div class="col-md-8">
-                                                            <input type="text" name="arrvAirportCode" class="form-control">
+                                                            <input type="text" name="arrvAirportCode" class="form-control" value="{{old('arrvAirportCode')}}">
                                                             @error('arrvAirportCode')
                                                                 <div class="help-block text-danger"> {{ $message }} </div>
                                                             @enderror
@@ -130,7 +130,7 @@
                                                             <label>Destination Country Code</label>
                                                         </div>
                                                         <div class="col-md-8">
-                                                            <input type="text" name="destCountryCode" class="form-control">
+                                                            <input type="text" name="destCountryCode" class="form-control" value="{{old('destCountryCode')}}">
                                                             @error('destCountryCode')
                                                                 <div class="help-block text-danger"> {{ $message }} </div>
                                                             @enderror
@@ -145,7 +145,7 @@
                                                             <label>Unit Codes</label>
                                                         </div>
                                                         <div class="col-md-8">
-                                                            <textarea type="textarea" name="unitCode" class="form-control" rows="3"></textarea>
+                                                            <textarea type="textarea" name="unitCode" class="form-control" rows="3" value="{{old('unitCode')}}"></textarea>
                                                             @error('unitCode')
                                                                 <div class="help-block text-danger"> {{ $message }} </div>
                                                             @enderror
