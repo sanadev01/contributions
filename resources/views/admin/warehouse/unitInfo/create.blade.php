@@ -18,6 +18,22 @@
                                             <div class="offset-3 col-md-4">
                                                 <div class="row">
                                                     <div class="col-md-4">
+                                                        <label>Select API</label>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                    <select class="form-control" name="api" id="api" required >
+                                                        <option value="">@lang('address.Type')</option>
+                                                        <option value="correios" {{ old('api') == 'correios' ? 'selected' : '' }}>Correios</option>
+                                                        <option value="anjun" {{ old('api') == 'anjun' ? 'selected' : '' }}>Anjun</option>
+                                                    </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="offset-3 col-md-4">
+                                                <div class="row">
+                                                    <div class="col-md-4">
                                                         <label>Select Type</label>
                                                     </div>
                                                     <div class="col-md-8">

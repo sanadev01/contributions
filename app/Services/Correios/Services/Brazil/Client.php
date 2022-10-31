@@ -290,7 +290,8 @@ class Client{
     public function unitInfo($url, $request)
     {
         try {
-            $token = ['Authorization' => "Bearer {$this->getAnjunToken()}"];
+
+            $token = ['Authorization' => ($request->api == 'anjun') ? "Bearer {$this->getAnjunToken()}" : "Bearer {$this->getToken()}"];
             if($request->type == 'departure_info') {
                 $response = $this->client->put($url,[
                     'headers' => $token,
