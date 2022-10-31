@@ -36,6 +36,7 @@ class UnitRequest extends FormRequest
             $rules['arrvAirportCode'] = 'required';
             $rules['destCountryCode'] = 'required';
         }
+        return $rules;
     }
 
 }
