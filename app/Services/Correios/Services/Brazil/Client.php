@@ -300,9 +300,9 @@ class Client{
                         ],
                         "flightNumber" => $request->flightNo,
                         "airlineCode" => $request->airlineCode,
-                        "departureDate" => $request->start_date.'T21:05:00Z',
+                        "departureDate" => $request->start_date.'T00:00:00Z',
                         "departureAirportCode" => $request->deprAirportCode,
-                        "arrivalDate" => $request->end_date.'T22:05:00Z',
+                        "arrivalDate" => $request->end_date.'T23:59:00Z',
                         "arrivalAirportCode" => $request->arrvAirportCode,
                         "destinationCountryCode" => $request->destCountryCode,
                     ]
