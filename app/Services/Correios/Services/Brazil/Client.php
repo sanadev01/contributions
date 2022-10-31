@@ -302,7 +302,7 @@ class Client{
                         "airlineCode" => $request->airlineCode,
                         "departureDate" => $request->start_date.'T00:00:00Z',
                         "departureAirportCode" => $request->deprAirportCode,
-                        "arrivalDate" => $request->end_date.'T23:59:00Z',
+                        "arrivalDate" => $request->end_date.'T23:59:59Z',
                         "arrivalAirportCode" => $request->arrvAirportCode,
                         "destinationCountryCode" => $request->destCountryCode,
                     ]
