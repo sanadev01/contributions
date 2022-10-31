@@ -23,7 +23,7 @@ class UnitInfoRepository
             $url        = "packet/v1/returning-units/confirmed-departure?initialDepartureDate=$startDate&finalDepartureDate=$endDate&page=0";
         }
         if($request->type == 'departure_info'){
-            $url        = "/packet/v1/returning-units/confirmed-departure?initialDepartureDate=$startDate&finalDepartureDate=$endDate&page=0";
+            $url        = "/packet/v1/returning-units";
         }
 
         $client = new Client();
