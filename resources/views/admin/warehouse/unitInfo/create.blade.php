@@ -36,7 +36,7 @@
                                             <div class="offset-3 col-md-4">
                                                 <div class="row">
                                                     <div class="col-md-4 mt-2">
-                                                        <label>Start Date</label>
+                                                        <label id="start_date">Start Date</label>
                                                     </div>
                                                     <div class="col-md-8">
                                                         <input type="date" name="start_date" class="form-control">
@@ -48,10 +48,84 @@
                                             <div class="offset-3 col-md-4">
                                                 <div class="row">
                                                     <div class="col-md-4">
-                                                        <label>End Date</label>
+                                                        <label id="end_date">End Date</label>
                                                     </div>
                                                     <div class="col-md-8">
                                                         <input type="date" name="end_date" class="form-control">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="d-none" id="div_inputs">
+                                            <div class="row mb-3">
+                                                <div class="offset-3 col-md-4">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label>Flight Number</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="flightNo" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="offset-3 col-md-4">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label>Airline Code</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="airlineCode" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="offset-3 col-md-4">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label>Departure Airport Code</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="deprAirportCode" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="offset-3 col-md-4">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label>Arrival Airport Code</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="arrvAirportCode" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="offset-3 col-md-4">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label>Destination Country Code</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="destCountryCode" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="offset-3 col-md-4">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label>Unit Codes</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <textarea type="textarea" name="unitCode" class="form-control" rows="3"></textarea>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -86,16 +160,22 @@
 </section>
 
 @endsection
-<script>
-    $(document).ready(function(){
-        $('#type').on('change', function(){
-            let type = $(this).val();
-            if(val == 'departure_info'){
-                
-            }
+@section('js')
+    <script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
+    <script>
+        $(document).ready(function(){
+            $('#type').on('change', function(){
+                let type = $(this).val();
+                if(type == 'departure_info'){
+                    $("#start_date").text("Departure Date");
+                    $("#end_date").text("Arrival Date");
+                    $('#div_inputs').removeClass('d-none');
+                }else {
+                    $("#start_date").text("Start Date");
+                    $("#end_date").text("End Date");
+                    $('#div_inputs').addClass('d-none');
+                }
+            })
         })
-    })
-</script>
-@section('modal')
-<x-modal />
+    </script>
 @endsection

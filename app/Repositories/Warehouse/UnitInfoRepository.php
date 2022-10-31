@@ -11,24 +11,26 @@ class UnitInfoRepository
 
     public function getUnitInfo($request)
     {
+        $type= false;
         $startDate  = $request->start_date.'T00:00:00-03:00';
         $endDate    = $request->end_date.'T23:59:59-03:00';
         if($request->type == 'units_arrival'){
-            $url        = "/packet/v1/units/arrival?initialDate=$startDate&finalDate=$endDate&page=0";
+            $url = "/packet/v1/units/arrival?initialDate=$startDate&finalDate=$endDate&page=0";
         }
         if($request->type == 'units_return'){
-            $url        = "packet/v1/returning-units/available";
+            $url = "packet/v1/returning-units/available";
         }
         if($request->type == 'confirm_departure'){
-            $url        = "packet/v1/returning-units/confirmed-departure?initialDepartureDate=$startDate&finalDepartureDate=$endDate&page=0";
+            $url = "packet/v1/returning-units/confirmed-departure?initialDepartureDate=$startDate&finalDepartureDate=$endDate&page=0";
         }
         if($request->type == 'departure_info'){
-            $url        = "/packet/v1/returning-units";
+            $url = "/packet/v1/returning-units";
+            $type = true;
         }
 
         $client = new Client();
-        $response = $client->unitInfo($url);
-        
+        $response = $client->unitInfo($url, $type, $request);
+        dd($response);
         if ( $response instanceof PackageError){
             session()->flash('alert-danger',$response->getErrors());
             return back();
