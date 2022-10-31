@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Warehouse\Unit\UnitRequest;
 use App\Repositories\Warehouse\UnitInfoRepository;
 
 class UnitsInfoController extends Controller
@@ -33,10 +32,16 @@ class UnitsInfoController extends Controller
         $rules = [
             'type'      => 'required',
         ];
-        
-        if($request->type != 'units_return'){
-            $rules['start_date']= 'required|date';
-            $rules['end_date']= 'required|date|after:start_date';
+
+        if($request->start_date){
+            $date = Carbon::createFromFormat('Y-m-d', $request->start_date);
+            $daysToAdd = 8;
+            $date = $date->addDays($daysToAdd);
+            
+            if($request->type != 'units_return'){
+                $rules['start_date']= 'required|date';
+                $rules['end_date']= 'required|date|after:start_date|before:'.$date->format('Y-m-d');
+            }
         }
 
         if($request->type == 'departure_info'){
@@ -47,13 +52,12 @@ class UnitsInfoController extends Controller
             $rules['arrvAirportCode'] = 'required';
             $rules['destCountryCode'] = 'required';
         }
-        $dateVali = $this->validate($request,$rules);
+        
         
         if($type){
+            $this->validate($request,$rules);
             $unitInfo = $repository->getUnitInfo($request);
         }
-        \Log::info('dateVali');
-        \Log::info($dateVali);
         return view('admin.warehouse.unitInfo.create', compact('unitInfo', 'type'));
     }
 
