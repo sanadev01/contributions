@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Warehouse;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
@@ -29,24 +30,30 @@ class UnitsInfoController extends Controller
     {
         $type = $request->type;
         $unitInfo = [];
+        $rules = [
+            'type'      => 'required',
+        ];
+        
+        if($request->type != 'units_return'){
+            $rules['start_date']= 'required|date';
+            $rules['end_date']= 'required|date|after:start_date';
+        }
+
+        if($request->type == 'departure_info'){
+            $rules['unitCode']        = 'required';
+            $rules['flightNo']        = 'required';
+            $rules['airlineCode']     = 'required';
+            $rules['deprAirportCode'] = 'required';
+            $rules['arrvAirportCode'] = 'required';
+            $rules['destCountryCode'] = 'required';
+        }
+        $dateVali = $this->validate($request,$rules);
+        
         if($type){
-            $rules = [
-                'type'      => 'required',
-                'start_date'=> 'required',
-                'end_date'  => 'required',
-            ];
-            if($request->type == 'departure_info'){
-                $rules['unitCode']        = 'required';
-                $rules['flightNo']        = 'required';
-                $rules['airlineCode']     = 'required';
-                $rules['deprAirportCode'] = 'required';
-                $rules['arrvAirportCode'] = 'required';
-                $rules['destCountryCode'] = 'required';
-            }
-            $this->validate($request,$rules);
-           
             $unitInfo = $repository->getUnitInfo($request);
         }
+        \Log::info('dateVali');
+        \Log::info($dateVali);
         return view('admin.warehouse.unitInfo.create', compact('unitInfo', 'type'));
     }
 
