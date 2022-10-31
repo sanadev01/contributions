@@ -26,7 +26,7 @@
                                                         <option value="units_arrival">Units Arrival Confirmation</option>
                                                         <option value="units_return">Available Units for Return</option>
                                                         <option value="confirm_departure">Confirmed Departure Units</option>
-                                                        <option value="departure_info">Return Departure Information</option>
+                                                        <option value="departure_info" {{ old('type') == 'departure_info' ? 'selected' : '' }}>Return Departure Information</option>
                                                     </select>
                                                     </div>
                                                 </div>
@@ -40,6 +40,9 @@
                                                     </div>
                                                     <div class="col-md-8">
                                                         <input type="date" name="start_date" class="form-control">
+                                                        @error('start_date')
+                                                            <div class="help-block text-danger"> {{ $message }} </div>
+                                                        @enderror
                                                     </div>
                                                 </div>
                                             </div>
@@ -52,11 +55,14 @@
                                                     </div>
                                                     <div class="col-md-8">
                                                         <input type="date" name="end_date" class="form-control">
+                                                        @error('end_date')
+                                                            <div class="help-block text-danger"> {{ $message }} </div>
+                                                        @enderror
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="d-none" id="div_inputs">
+                                        <div class="d-none" id="div_inputs" @if( old('type') == 'departure_info' ) style="display: block;" @endif >
                                             <div class="row mb-3">
                                                 <div class="offset-3 col-md-4">
                                                     <div class="row">
@@ -65,6 +71,9 @@
                                                         </div>
                                                         <div class="col-md-8">
                                                             <input type="text" name="flightNo" class="form-control">
+                                                            @error('flightNo')
+                                                                <div class="help-block text-danger"> {{ $message }} </div>
+                                                            @enderror
                                                         </div>
                                                     </div>
                                                 </div>
@@ -77,6 +86,9 @@
                                                         </div>
                                                         <div class="col-md-8">
                                                             <input type="text" name="airlineCode" class="form-control">
+                                                            @error('airlineCode')
+                                                                <div class="help-block text-danger"> {{ $message }} </div>
+                                                            @enderror
                                                         </div>
                                                     </div>
                                                 </div>
@@ -89,6 +101,9 @@
                                                         </div>
                                                         <div class="col-md-8">
                                                             <input type="text" name="deprAirportCode" class="form-control">
+                                                            @error('deprAirportCode')
+                                                                <div class="help-block text-danger"> {{ $message }} </div>
+                                                            @enderror
                                                         </div>
                                                     </div>
                                                 </div>
@@ -101,6 +116,9 @@
                                                         </div>
                                                         <div class="col-md-8">
                                                             <input type="text" name="arrvAirportCode" class="form-control">
+                                                            @error('arrvAirportCode')
+                                                                <div class="help-block text-danger"> {{ $message }} </div>
+                                                            @enderror
                                                         </div>
                                                     </div>
                                                 </div>
@@ -113,6 +131,9 @@
                                                         </div>
                                                         <div class="col-md-8">
                                                             <input type="text" name="destCountryCode" class="form-control">
+                                                            @error('destCountryCode')
+                                                                <div class="help-block text-danger"> {{ $message }} </div>
+                                                            @enderror
                                                         </div>
                                                     </div>
                                                 </div>
@@ -125,6 +146,9 @@
                                                         </div>
                                                         <div class="col-md-8">
                                                             <textarea type="textarea" name="unitCode" class="form-control" rows="3"></textarea>
+                                                            @error('unitCode')
+                                                                <div class="help-block text-danger"> {{ $message }} </div>
+                                                            @enderror
                                                         </div>
                                                     </div>
                                                 </div>
@@ -166,6 +190,8 @@
         $(document).ready(function(){
             $('#type').on('change', function(){
                 let type = $(this).val();
+                // var test = $('#type option:selected').val();
+                // alert(test);
                 if(type == 'departure_info'){
                     $("#start_date").text("Departure Date");
                     $("#end_date").text("Arrival Date");
@@ -176,6 +202,12 @@
                     $('#div_inputs').addClass('d-none');
                 }
             })
+            // if($('#type option:selected').val == 'departure_info'){
+            //     alert('here');
+            //     $("#start_date").text("Departure Date");
+            //     $("#end_date").text("Arrival Date");
+            //     $('#div_inputs').removeClass('d-none');
+            // }
         })
     </script>
 @endsection

@@ -28,7 +28,7 @@
                 <td>{{ date('d-m-Y', strtotime($unit->creationDate)) }}</td>
             </tr>
             @empty
-                <x-tables.no-record colspan="7"></x-tables.no-record>
+                <tr colspan="7">No Record Found</tr>
             @endforelse
         </tbody>
     </table>

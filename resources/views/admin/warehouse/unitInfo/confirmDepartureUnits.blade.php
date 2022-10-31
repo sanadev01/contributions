@@ -38,7 +38,7 @@
                 </td>
             </tr>
             @empty
-                <x-tables.no-record colspan="10"></x-tables.no-record>
+                <tr colspan="10">No Record Found</tr>
             @endforelse
         </tbody>
     </table>

@@ -291,24 +291,20 @@ class Client{
     {
         try {
             $token = ['Authorization' => "Bearer {$this->getAnjunToken()}"];
-
             if($request->type == 'departure_info') {
                 $response = $this->client->put($url,[
                     'headers' => $token,
                     'json' => [
                         "unitCodeList" => [
-                            [
-                                $request->unitCode
-                            ],
+                            $request->unitCode
+                        ],
                         "flightNumber" => $request->flightNo,
                         "airlineCode" => $request->airlineCode,
-                        "departureDate" => $request->start_date.'T00:00:00Z',
+                        "departureDate" => $request->start_date.'T21:05:00Z',
                         "departureAirportCode" => $request->deprAirportCode,
-                        "arrivalDate" => $request->end_date.'T23:59:59Z',
+                        "arrivalDate" => $request->end_date.'T22:05:00Z',
                         "arrivalAirportCode" => $request->arrvAirportCode,
                         "destinationCountryCode" => $request->destCountryCode,
-                        "destinationCountryCode" => $request->destCountryCode,
-                       ]
                     ]
                 ]);
             }else {
