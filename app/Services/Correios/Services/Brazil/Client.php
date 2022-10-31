@@ -290,7 +290,8 @@ class Client{
     public function unitInfo($url, $request)
     {
         try {
-            $token = ['Authorization' => "Bearer {$this->getAnjunToken()}"];
+
+            $token = ['Authorization' => ($request->api == 'anjun') ? "Bearer {$this->getAnjunToken()}" : "Bearer {$this->getToken()}"];
             if($request->type == 'departure_info') {
                 $response = $this->client->put($url,[
                     'headers' => $token,
@@ -300,9 +301,9 @@ class Client{
                         ],
                         "flightNumber" => $request->flightNo,
                         "airlineCode" => $request->airlineCode,
-                        "departureDate" => $request->start_date.'T21:05:00Z',
+                        "departureDate" => $request->start_date.'T00:00:00Z',
                         "departureAirportCode" => $request->deprAirportCode,
-                        "arrivalDate" => $request->end_date.'T22:05:00Z',
+                        "arrivalDate" => $request->end_date.'T23:59:59Z',
                         "arrivalAirportCode" => $request->arrvAirportCode,
                         "destinationCountryCode" => $request->destCountryCode,
                     ]
