@@ -289,11 +289,10 @@ class Client{
     
     public function unitInfo($url)
     {
-        $token= 'eyJhbGciOiJSUzUxMiJ9.eyJhbWJpZW50ZSI6IkhPTU9MT0dBQ0FPIiwiaWQiOiJ0ZXN0ZWludCIsInBmbCI6IlBKIiwicGpJbnRlcm5hY2lvbmFsIjo0MjM3NDg0MCwiYXBpIjpbODAsMzYsNTcsNTY0XSwiY2FydGFvLXBvc3RhZ2VtIjp7Im51bWVybyI6IjAwNzM0MjM3NzciLCJjb250cmF0byI6Ijk5OTIxNTc5NzAiLCJkciI6MzYsImFwaSI6WzgwLDU3LDgzXX0sImlwIjoiMTAuMC4yMDQuMTAsMTAuMC4yMDQuMTAiLCJpYXQiOjE2NjY5NjkwMjcsImlzcyI6InRva2VuLXNlcnZpY2UiLCJleHAiOjE2NjcwNTU0MjcsImp0aSI6Ijk1ODQwMzljLWIwN2EtNGIzNC05YmQwLTViYmMzMzQyMmQ1MCJ9.jlOTwLTPs8X3ZVlVOp9UIuutWZjbU07_fzZBhSQDc01jk4el1CYNK2X8N6qHsvnR-BCcjs0YdMMp-PNKy54qehLcMrlNcNqDlhIR-IYHQXCw7_1fnNlQHuVdnKy-LelSKbY6L0mRYyWsuMQvEzAS17zmcX8yXgdraxv5BMoWH5Z2R4JVEKq-WVuIBcHfSLve3Z_NVzrq4Yv78nW-JnLUcrWUq9DHipMCux5j5s4h_UwvGn-czSpZqBGquG5fjAePGdC37yUxKBjD091UJe9IxVRPXyq8T7nNc1OucrDjbOx4qvIRIbAp9qDrSHWlP1qBR1ifUyIYxFs_3eIwNDk1vw';
         try {
-            $response = $this->client->get($url,[
+            $response = $this->client->put($url,[
                 'headers' => [
-                    'Authorization' => "Bearer $token"
+                    'Authorization' => "Bearer {$this->getAnjunToken()}"
                 ]
             ]);
             return json_decode($response->getBody()->getContents());
