@@ -287,14 +287,35 @@ class Client{
         }
     }
     
-    public function unitInfo($url)
+    public function unitInfo($url, $type, $request)
     {
         try {
-            $response = $this->client->put($url,[
-                'headers' => [
-                    'Authorization' => "Bearer {$this->getAnjunToken()}"
-                ]
-            ]);
+            $token = ['Authorization' => "Bearer {$this->getAnjunToken()}"];
+            //dd($request->all());
+            if($type) {
+                $response = $this->client->put($url,[
+                    'headers' => $token,
+                    'json' => [
+                        "unitCodeList" => [
+                            [
+                                $request->unitCode
+                            ],
+                        "flightNumber" => $request->flightNo,
+                        "airlineCode" => $request->airlineCode,
+                        "departureDate" => $request->start_date.'T00:00:00Z',
+                        "departureAirportCode" => $request->deprAirportCode,
+                        "arrivalDate" => $request->end_date.'T23:59:59Z',
+                        "arrivalAirportCode" => $request->arrvAirportCode,
+                        "destinationCountryCode" => $request->destCountryCode,
+                        "destinationCountryCode" => $request->destCountryCode,
+                       ]
+                    ]
+                ]);
+            }else {
+                $response = $this->client->get($url,[
+                    'headers' => $token
+                ]);
+            }
             return json_decode($response->getBody()->getContents());
         }catch (\GuzzleHttp\Exception\ClientException $e) {
             return new PackageError($e->getResponse()->getBody()->getContents());
