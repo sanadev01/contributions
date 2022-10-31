@@ -25,7 +25,7 @@ class Client{
 
     protected $client;
 
-    private $baseUri = 'https://apihom.correios.com.br';
+    private $baseUri = 'https://api.correios.com.br';
     private $username = 'hercofreight';
     private $password = '150495ca';
     private $numero = '0075745313';
@@ -288,10 +288,16 @@ class Client{
     {
         try {
 
-            $token = ['Authorization' => ($request->api == 'anjun') ? "Bearer {$this->getAnjunToken()}" : "Bearer {$this->getToken()}"];
+            $token = $this->getToken();
+            if($request->api == 'anjun'){
+                $token = $this->getAnjunToken();
+            }
+
             if($request->type == 'departure_info') {
                 $response = $this->client->put($url,[
-                    'headers' => $token,
+                    'headers' => [
+                        'Authorization' => "Bearer {$token}"
+                    ],
                     'json' => [
                         "unitCodeList" => [
                             $request->unitCode
@@ -307,9 +313,12 @@ class Client{
                 ]);
             }else {
                 $response = $this->client->get($url,[
-                    'headers' => $token
+                    'headers' =>  [
+                        'Authorization' => "Bearer {$token}"
+                    ],
                 ]);
             }
+            
             return json_decode($response->getBody()->getContents());
         }catch (\GuzzleHttp\Exception\ClientException $e) {
             return new PackageError($e->getResponse()->getBody()->getContents());
