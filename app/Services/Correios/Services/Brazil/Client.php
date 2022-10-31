@@ -30,13 +30,9 @@ class Client{
     private $password = '150495ca';
     private $numero = '0075745313';
 
-    // private $anjun_username = 'anjun2020';
-    // private $anjun_password = 'anjun';
-    // private $anjun_numero = '0077053850';
-
-    private $anjun_username = 'testeint';
-    private $anjun_password = 'NppSSY:4d:%x_b$)GQ7j-^}I5JF3MDY7i|2]yoz9';
-    private $anjun_numero = '0073423777';
+    private $anjun_username = 'anjun2020';
+    private $anjun_password = 'anjun';
+    private $anjun_numero = '0077053850';
 
     public function __construct()
     {
