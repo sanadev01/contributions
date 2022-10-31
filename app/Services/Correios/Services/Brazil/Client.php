@@ -85,7 +85,7 @@ class Client{
             $kg = UnitsConverter::poundToKg($order->getWeight('lbs'));
             $weight = UnitsConverter::kgToGrams($kg);
         }
-        
+
         $packet = new \App\Services\Correios\Models\Package();
 
         $packet->customerControlCode = $order->id;
@@ -113,6 +113,7 @@ class Client{
         $packet->packagingLength = $length > 16 ? $length : 16 ;
 
         $packet->freightPaidValue = $order->user_declared_freight;
+        $packet->nonNationalizationInstruction = "RETURNTOORIGIN";;
 
         $items = [];
 
@@ -131,7 +132,7 @@ class Client{
         \Log::info(
             $packet
         );
-        
+
         try {
             $response = $this->client->post('/packet/v1/packages',[
                'headers' => [
@@ -230,7 +231,7 @@ class Client{
         try {
             $response = $this->client->get("/packet/v1/cn38request?requestId={$deliveryBill->request_id}",[
                 'headers' => [
-                    'Authorization' => "Bearer {$this->getToken()}"
+                    'Authorization' => ($container->hasAnjunService()) ? "Bearer {$this->getAnjunToken()}" : "Bearer {$this->getToken()}"
                 ]
             ]);
 
@@ -261,7 +262,7 @@ class Client{
                 'country' => ($order->user->country != null) ? $order->user->country->code : 'US',
                 'city' => 'Miami',
             ]);
-        }    
+        }
 
         return true;
     }
