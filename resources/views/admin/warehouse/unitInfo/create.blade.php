@@ -187,7 +187,7 @@
                                 @elseif($type=='confirm_departure')
                                     @include('admin.warehouse.unitInfo.confirmDepartureUnits')
                                 @elseif($type=='departure_info')
-                                    @include('admin.warehouse.unitInfo.confirmDepartureUnits')
+                                    <!-- @include('admin.warehouse.unitInfo.confirmDepartureUnits') -->
                                 @endif
                             @endif
                        </div>
