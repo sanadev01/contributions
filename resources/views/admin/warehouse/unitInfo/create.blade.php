@@ -197,6 +197,7 @@
                 }else if(type == 'units_return'){
                     $("#s_date").addClass("d-none");
                     $("#e_date").addClass("d-none");
+                    $('#div_inputs').addClass('d-none');
                 }else {
                     $("#start_date").text("Start Date");
                     $("#end_date").text("End Date");
@@ -205,12 +206,7 @@
                     $("#e_date").removeClass("d-none");
                 }
             })
-            if($('#type option:selected').val == 'departure_info'){
-                alert('here');
-                $("#start_date").text("Departure Date");
-                $("#end_date").text("Arrival Date");
-                $('#div_inputs').removeClass('d-none');
-            }
+            $("#type").trigger('change');
         })
     </script>
 @endsection
