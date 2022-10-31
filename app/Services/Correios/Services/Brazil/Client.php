@@ -25,7 +25,7 @@ class Client{
 
     protected $client;
 
-    private $baseUri = 'https://api.correios.com.br';
+    private $baseUri = 'https://apihom.correios.com.br';
     private $username = 'hercofreight';
     private $password = '150495ca';
     private $numero = '0075745313';
@@ -276,6 +276,41 @@ class Client{
                 ]
             ]);
             return $response;
+        }catch (\GuzzleHttp\Exception\ClientException $e) {
+            return new PackageError($e->getResponse()->getBody()->getContents());
+        }
+        catch (\Exception $exception){
+            return new PackageError($exception->getMessage());
+        }
+    }
+    
+    public function unitInfo($url, $request)
+    {
+        try {
+
+            $token = ['Authorization' => ($request->api == 'anjun') ? "Bearer {$this->getAnjunToken()}" : "Bearer {$this->getToken()}"];
+            if($request->type == 'departure_info') {
+                $response = $this->client->put($url,[
+                    'headers' => $token,
+                    'json' => [
+                        "unitCodeList" => [
+                            $request->unitCode
+                        ],
+                        "flightNumber" => $request->flightNo,
+                        "airlineCode" => $request->airlineCode,
+                        "departureDate" => $request->start_date.'T00:00:00Z',
+                        "departureAirportCode" => $request->deprAirportCode,
+                        "arrivalDate" => $request->end_date.'T23:59:59Z',
+                        "arrivalAirportCode" => $request->arrvAirportCode,
+                        "destinationCountryCode" => $request->destCountryCode,
+                    ]
+                ]);
+            }else {
+                $response = $this->client->get($url,[
+                    'headers' => $token
+                ]);
+            }
+            return json_decode($response->getBody()->getContents());
         }catch (\GuzzleHttp\Exception\ClientException $e) {
             return new PackageError($e->getResponse()->getBody()->getContents());
         }

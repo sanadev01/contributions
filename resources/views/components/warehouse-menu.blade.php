@@ -72,6 +72,12 @@
                     <span class="menu-title">@lang('menu.Warehouse.GePS Containers')</span>
                 </a>
             </li>
+            <li class="#">
+                <a href="{{ route('warehouse.unitinfo.create') }}">
+                    <i class="feather icon-circle"></i>
+                    <span class="menu-title">Unit Info</span>
+                </a>
+            </li>
         @endadmin
         
     </ul>

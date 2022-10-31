@@ -43,6 +43,7 @@ use App\Http\Controllers\Warehouse\GePSContainerPackageController;
 use App\Http\Controllers\Warehouse\GePSUnitRegisterController;
 use App\Http\Controllers\Warehouse\GePSCN35DownloadController;
 use App\Http\Controllers\Warehouse\GePSManifestDownloadController;
+use App\Http\Controllers\Warehouse\UnitsInfoController;
 use App\Http\Controllers\Warehouse\POSTNLContainerController;
 use App\Http\Controllers\Warehouse\POSTNLContainerPackageController;
 use App\Http\Controllers\Warehouse\POSTNLUnitRegisterController;
@@ -125,6 +126,9 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('geps_container/{container}/register', GePSUnitRegisterController::class)->name('geps_container.register');
     Route::get('geps_container/{container}/download', GePSCN35DownloadController::class)->name('geps_container.download');
     Route::get('geps/{delivery_bill}/manifest', GePSManifestDownloadController::class)->name('geps.manifest.download');
+
+    // Routes for Correios Unit Info
+    Route::resource('unitinfo', UnitsInfoController::class);
 });
 
 
