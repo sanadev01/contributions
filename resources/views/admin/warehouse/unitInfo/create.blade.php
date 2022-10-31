@@ -25,8 +25,8 @@
                                                         <option value="">@lang('address.Type')</option>
                                                         <option value="units_arrival">Units Arrival Confirmation</option>
                                                         <option value="units_return">Available Units for Return</option>
-                                                        <option value="departure_info">Return Departure Information</option>
                                                         <option value="confirm_departure">Confirmed Departure Units</option>
+                                                        <option value="departure_info">Return Departure Information</option>
                                                     </select>
                                                     </div>
                                                 </div>

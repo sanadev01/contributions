@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Warehouse;
 use Illuminate\Http\Request;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Warehouse\Unit\UnitRequest;
 use App\Repositories\Warehouse\UnitInfoRepository;
 
 class UnitsInfoController extends Controller
@@ -24,11 +25,26 @@ class UnitsInfoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(UnitRequest $request, UnitInfoRepository $repository)
+    public function create(Request $request, UnitInfoRepository $repository)
     {
         $type = $request->type;
         $unitInfo = [];
         if($type){
+            $rules = [
+                'type'      => 'required',
+                'start_date'=> 'required',
+                'end_date'  => 'required',
+            ];
+            if($request->type == 'departure_info'){
+                $rules['unitCode']        = 'required';
+                $rules['flightNo']        = 'required';
+                $rules['airlineCode']     = 'required';
+                $rules['deprAirportCode'] = 'required';
+                $rules['arrvAirportCode'] = 'required';
+                $rules['destCountryCode'] = 'required';
+            }
+            $this->validate($request,$rules);
+           
             $unitInfo = $repository->getUnitInfo($request);
         }
         return view('admin.warehouse.unitInfo.create', compact('unitInfo', 'type'));
