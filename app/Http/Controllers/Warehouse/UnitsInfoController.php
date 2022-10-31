@@ -24,7 +24,7 @@ class UnitsInfoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request, UnitInfoRepository $repository)
+    public function create(UnitRequest $request, UnitInfoRepository $repository)
     {
         $type = $request->type;
         $unitInfo = [];
