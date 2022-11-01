@@ -14,7 +14,7 @@ class AlterAddPaymentToTaxesTable extends Migration
     public function up()
     {
         Schema::table('taxes', function (Blueprint $table) {
-            $table->double('tax_payment')->change();
+            $table->decimal('tax_payment')->change();
         });
     }
 
