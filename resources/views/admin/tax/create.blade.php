@@ -102,11 +102,17 @@
                                                 <div class="col-md-2">
                                                     <input type="number" class="form-control" name="tax_payment[]" value="" step="0.01" required>
                                                 </div>
-                                                <div class="col-md-2">
+                                                <div class="col-md-1">
                                                     <input type="number" class="form-control tax1" name="tax_1[]" value="" step="0.01" required>
                                                 </div>
-                                                <div class="col-md-2">
+                                                <div class="col-md-1">
+                                                    <input type="number" class="form-control tax1" name="tax_1_br[]" value="" step="0.01" required>
+                                                </div>
+                                                <div class="col-md-1">
                                                     <input type="number" class="form-control tax2" name="tax_2[]" value="" step="0.01" required>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <input type="number" class="form-control tax2" name="tax_2_br[]" value="" step="0.01" required>
                                                 </div>
                                                 <div class="col-md-1">
                                                     <input type="text" class="form-control profit" name="profit[]" value=""  readonly required>
