@@ -50,6 +50,12 @@
                     <span class="menu-title">@lang('menu.Warehouse.GePS Containers')</span>
                 </a>
             </li>
+            <li class="#">
+                <a href="{{ route('warehouse.unitinfo.create') }}">
+                    <i class="feather icon-circle"></i>
+                    <span class="menu-title">Unit Info</span>
+                </a>
+            </li>
         @endadmin
         <li class="{{ $isActive(['warehouse.chile_containers.index','warehouse.chile_containers.create','warehouse.chile_containers.edit','warehouse.chile_container.packages.index']) }}">
             <a href="{{ route('warehouse.chile_containers.index') }}">
