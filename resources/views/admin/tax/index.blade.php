@@ -64,8 +64,10 @@
                                     <th>@lang('tax.Warehouse No.')</th>
                                     <th>@lang('tax.Tracking Code')</th>
                                     <th>@lang('tax.Tax Payment')</th>
-                                    <th>@lang('tax.Tax Customer')</th>
-                                    <th>@lang('tax.Tax Herco')</th>
+                                    <th>@lang('tax.Tax Customer') USD</th>
+                                    <th>@lang('tax.Tax Customer') BR</th>
+                                    <th>@lang('tax.Tax Herco') USD</th>
+                                    <th>@lang('tax.Tax Herco') BR</th>
                                     <th>@lang('tax.Receipt')</th>
                                     <th>@lang('tax.Action')</th>
                                 </tr>
@@ -84,7 +86,9 @@
                                     <td>{{ $tax->order->corrios_tracking_code }}</td>
                                     <td>{{ $tax->tax_payment }}</td>
                                     <td>{{ $tax->tax_1 }}</td>
+                                    <td>{{ $tax->tax_1_br }}</td>
                                     <td>{{ $tax->tax_2 }}</td>
+                                    <td>{{ $tax->tax_2_br }}</td>
                                     <td>
                                         @if(optional($tax->deposit)->depositAttchs)
                                             @foreach ($tax->deposit->depositAttchs as $attachedFile )

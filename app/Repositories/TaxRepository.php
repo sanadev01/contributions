@@ -70,7 +70,9 @@ class TaxRepository
                             'order_id' => $orderId,
                             'tax_payment' => $request->tax_payment[$key],
                             'tax_1' => $request->tax_1[$key],
+                            'tax_1_br' => $request->tax_1_br[$key],
                             'tax_2' => $request->tax_2[$key],
+                            'tax_2_br' => $request->tax_2_br[$key],
                         ]);
                         $amount += $request->tax_1[$key];
                         $trackingNos[] = array('Code' => $request->tracking_code[$key], );
@@ -140,7 +142,9 @@ class TaxRepository
             $tax->update([
                 'tax_payment' => $request->tax_payment,
                 'tax_1' => $request->tax_1,
+                'tax_1_br' => $request->tax_1_br,
                 'tax_2' => $request->tax_2,
+                'tax_2_br' => $request->tax_2_br,
             ]);
 
             return true;
@@ -150,7 +154,6 @@ class TaxRepository
             return null;
         }
     }
-
 
     public function delete()
     {
