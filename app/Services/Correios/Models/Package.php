@@ -20,6 +20,8 @@ class Package implements \App\Services\Correios\Contracts\Package
     const SERVICE_CLASS_COLOMBIA_URBANO = 44162;
     const SERVICE_CLASS_COLOMBIA_NACIONAL = 44163;
     const SERVICE_CLASS_COLOMBIA_TRAYETOS = 44164;
+    const SERVICE_CLASS_PostNL = 87765;
+    const SERVICE_CLASS_GePS = 537;
 
     public $customerControlCode = "";
     public $senderName = "HERCO";
