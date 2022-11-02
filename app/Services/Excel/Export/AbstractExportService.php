@@ -62,10 +62,10 @@ abstract class AbstractExportService
         return $this;
     }
 
-    protected function setCellFormat($cellRange)
+    protected function setCellFormat($cellRange, $value)
     {
         $this->sheet->getStyle($cellRange)
-                ->getNumberFormat()->setFormatCode('#');
+                ->getNumberFormat()->setFormatCode($value);
 
         return $this;
     }
