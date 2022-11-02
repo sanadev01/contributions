@@ -59,6 +59,7 @@ class ExportManfestByServices extends AbstractCsvExportService
             'UPS',
             'USPS',
             'Fedex',
+            'GePs',
             'Carrier Tracking'
         ];
     }
@@ -102,6 +103,7 @@ class ExportManfestByServices extends AbstractCsvExportService
                 $package->carrierService() == 'USPS'? 'USPS': '',
                 $package->carrierService() == 'UPS'? 'UPS': '',
                 $package->carrierService() == 'FEDEX'? 'FEDEX': '',
+                $package->carrierService() == 'GePS'? 'GePS': '',
                 $package->tracking_id
             ];
 
