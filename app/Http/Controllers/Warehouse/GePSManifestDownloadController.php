@@ -27,11 +27,9 @@ class GePSManifestDownloadController extends Controller
             }
             $result = $response['data']->manifestresponse;
             $manifest_pdf = base64_decode($result->manifestpdf);
-            $path = public_path("{$deliveryBill->cnd38_code}.pdf");
-            //store file temporarily
-            file_put_contents($path, $manifest_pdf);
-            //download file and delete it
-            return response()->download($path)->deleteFileAfterSend(true);
+            $path = storage_path("{$deliveryBill->cnd38_code}.pdf");
+            file_put_contents($path, $manifest_pdf); //store file temporarily
+            return response()->download($path)->deleteFileAfterSend(true); //download file and delete it
 
         }        
     }
