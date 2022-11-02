@@ -62,6 +62,11 @@ class IndexTable extends Component
             'name' => 'Mile Express',
             'value' => Package::SERVICE_CLASS_MILE_EXPRESS,
         ];
+        $this->services[11] = [
+            'name' => 'GePS',
+            'value' => Package::SERVICE_CLASS_GePS,
+        ];
+        
         
         return $this->services;
     }
