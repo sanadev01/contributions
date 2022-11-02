@@ -11,6 +11,7 @@ use App\Models\OrderTracking;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\LabelRepository;
 use Illuminate\Support\Facades\Storage;
+use DateTime;
 
 class ScanLabel extends Component
 {
@@ -159,8 +160,9 @@ class ScanLabel extends Component
                     $this->addOrderTracking($this->order);
 
                     if(!$this->order->arrived_date){
+                        $date = (new DateTime('America/New_York'))->format('Y-m-d h:i:s');
                         $this->order->update([
-                            'arrived_date' => date('Y-m-d H:i:s'), 
+                            'arrived_date' => $date
                         ]);
                     }
                 }
