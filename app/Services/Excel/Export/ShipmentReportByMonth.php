@@ -58,6 +58,7 @@ class ShipmentReportByMonth extends AbstractExportService
             $this->setCellValue('R'.$row, $report[13]['orders']);
             $row++;
         }
+        
         $this->setCellValue('B'.$row, "=SUM(B2:B{$row})");
         $this->setCellValue('C'.$row, "=SUM(C2:C{$row})");
         $this->setCellValue('D'.$row, "=SUM(D2:D{$row})");
@@ -76,6 +77,37 @@ class ShipmentReportByMonth extends AbstractExportService
         $this->setCellValue('Q'.$row, "=SUM(Q2:Q{$row})");
         $this->setCellValue('R'.$row, "=SUM(R2:R{$row})");
         $this->setBackgroundColor("A{$row}:R{$row}", 'adfb84');
+        $newRow = $row;
+        $newRowPlus = $newRow + 1;
+        $this->setCellFormat('E'.$newRowPlus, \PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_PERCENTAGE_00);
+        $this->setCellFormat('F'.$newRowPlus, \PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_PERCENTAGE_00);
+        $this->setCellFormat('G'.$newRowPlus, \PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_PERCENTAGE_00);
+        $this->setCellFormat('H'.$newRowPlus, \PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_PERCENTAGE_00);
+        $this->setCellFormat('I'.$newRowPlus, \PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_PERCENTAGE_00);
+        $this->setCellFormat('J'.$newRowPlus, \PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_PERCENTAGE_00);
+        $this->setCellFormat('K'.$newRowPlus, \PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_PERCENTAGE_00);
+        $this->setCellFormat('L'.$newRowPlus, \PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_PERCENTAGE_00);
+        $this->setCellFormat('M'.$newRowPlus, \PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_PERCENTAGE_00);
+        $this->setCellFormat('N'.$newRowPlus, \PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_PERCENTAGE_00);
+        $this->setCellFormat('O'.$newRowPlus, \PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_PERCENTAGE_00);
+        $this->setCellFormat('p'.$newRowPlus, \PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_PERCENTAGE_00);
+        $this->setCellFormat('Q'.$newRowPlus, \PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_PERCENTAGE_00);
+        $this->setCellFormat('R'.$newRowPlus, \PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_PERCENTAGE_00);
+        $this->setCellValue('E'.$newRowPlus, "=(E{$row}/B$row)");
+        $this->setCellValue('F'.$newRowPlus, "=(F{$row}/B$row)");
+        $this->setCellValue('G'.$newRowPlus, "=(G{$row}/B$row)");
+        $this->setCellValue('H'.$newRowPlus, "=(H{$row}/B$row)");
+        $this->setCellValue('I'.$newRowPlus, "=(I{$row}/B$row)");
+        $this->setCellValue('J'.$newRowPlus, "=(J{$row}/B$row)");
+        $this->setCellValue('K'.$newRowPlus, "=(K{$row}/B$row)");
+        $this->setCellValue('L'.$newRowPlus, "=(L{$row}/B$row)");
+        $this->setCellValue('M'.$newRowPlus, "=(M{$row}/B$row)");
+        $this->setCellValue('N'.$newRowPlus, "=(N{$row}/B$row)");
+        $this->setCellValue('O'.$newRowPlus, "=(O{$row}/B$row)");
+        $this->setCellValue('p'.$newRowPlus, "=(P{$row}/B$row)");
+        $this->setCellValue('Q'.$newRowPlus, "=(Q{$row}/B$row)");
+        $this->setCellValue('R'.$newRowPlus, "=(R{$row}/B$row)");
+        $this->setBackgroundColor("A{$newRowPlus}:R{$newRowPlus}", '3490dc');
         $this->currentRow = $row;
     }
 
