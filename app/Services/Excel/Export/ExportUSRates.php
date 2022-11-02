@@ -38,15 +38,15 @@ class ExportUSRates extends AbstractExportService
         $row = $this->currentRow;
 
         foreach ($this->rates as $rate) {
-            $this->setCellFormat('A'.$row);
+            $this->setCellFormat('A'.$row, '#');
             $this->setAlignment('A'.$row, 'left');
             $this->setCellValue('A'.$row, $rate['name']);
 
-            $this->setCellFormat('B'.$row);
+            $this->setCellFormat('B'.$row, '#');
             $this->setAlignment('B'.$row, 'left');
             $this->setCellValue('B'.$row, $this->setWeight());
 
-            $this->setCellFormat('C'.$row);
+            $this->setCellFormat('C'.$row, '#');
             $this->setAlignment('C'.$row, 'right');
             $this->setCellValue('C'.$row, $rate['rate'].' USD');
 
