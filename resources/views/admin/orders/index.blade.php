@@ -27,7 +27,7 @@
                 <button title="Print Domestic Labels" id="domesticPrint" type="btn" disabled class="btn btn-primary mr-1 mb-1 btn-disabled">
                     <i class="feather icon-tag"></i>
                 </button>
-                <button title="Send Email Pre Alret" id="sendMail" type="btn" disabled class="btn btn-primary mr-1 mb-1 btn-disabled">
+                <button title="Send Email Pre Alert" id="sendMail" type="btn" disabled class="btn btn-primary mr-1 mb-1 btn-disabled">
                     <i class="feather icon-mail"></i>
                 </button>
                 <button title="Delete multiple Orders" id="trash" type="btn" disabled class="btn btn-primary mr-1 mb-1 btn-disabled">
@@ -78,6 +78,7 @@
         <div class="modal-content">
             <div class="modal-header modal-head">
                 <h5 class="modal-title text-white"><b>Pre Alert Mail</b></h5>
+                <button type="button" class="close mt-0 mr-0" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
             </div>
             <form action="{{ route('admin.order.pre-alert') }}" method="GET" id="mail_form">
                 <input type="hidden" name="command" id="command" value="">
