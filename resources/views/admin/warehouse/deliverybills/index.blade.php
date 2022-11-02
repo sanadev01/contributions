@@ -95,7 +95,7 @@
                                                     <span class="badge badge-success">A</span>
                                                 @elseif($deliveryBill->hasMileExpressService())
                                                     <span class="badge badge-primary">M</span>
-                                                @elseif($deliveryBill->isGePSService())
+                                                @elseif($deliveryBill->isGePS())
                                                     <span class="badge badge-secondary">G</span>
                                                 @elseif($deliveryBill->hasColombiaService())
                                                     <span class="badge badge-success">C</span>
