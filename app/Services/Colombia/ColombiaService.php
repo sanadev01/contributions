@@ -222,6 +222,7 @@ class ColombiaService
         return [
             'intAditional' => 0,
             'intCodeCity' => $regionCode,
+            // 'intCodeCity' => null,//$data['zipcode'],
             'intTypeActor' => ($typeRecipient) ? 3 : 2,
             'intTypeDocument' => 1,
             'strAddress' => ($data) ? $data['address'] : (($typeRecipient ? 'Colombia Receiver' : 'Colombia Sender')),

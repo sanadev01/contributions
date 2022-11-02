@@ -63,6 +63,7 @@ class CreateRequest extends FormRequest
             $rules['city'] = 'nullable';
             $rules['commune_id'] = 'nullable';
             $rules['zipcode'] = 'nullable';
+            $rules['region'] = 'nullable';
             $rules['phone'] = 'min:9|max:15';
         }
 
