@@ -46,7 +46,10 @@ class IndexTable extends Component
             'name' => 'Anjun Express',
             'value' => Package::SERVICE_CLASS_AJ_EXPRESS,
         ];
-        
+        $this->services[7] = [
+            'name' => 'GePS',
+            'value' => Package::SERVICE_CLASS_GePS,
+        ];
         return $this->services;
     }
 }
