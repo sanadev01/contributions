@@ -155,7 +155,6 @@ class TaxRepository
         }
     }
 
-
     public function delete()
     {
         //
