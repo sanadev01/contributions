@@ -83,6 +83,8 @@
                                             @if ($deliveryBill->Containers->count() > 0)
                                                 @if(optional($deliveryBill->Containers->first()->orders->first())->shippingService && $deliveryBill->Containers->first()->orders->first()->shippingService->isAnjunService())
                                                 <span class="badge badge-success">A</span>
+                                                @elseif(optional($deliveryBill->Containers->first()->orders->first())->shippingService && $deliveryBill->Containers->first()->orders->first()->shippingService->isGePSService())
+                                                <span class="badge badge-secondary">G</span>
                                                 @else
                                                 <span class="badge badge-primary">H</span>
                                                 @endif
