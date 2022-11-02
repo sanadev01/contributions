@@ -21,12 +21,12 @@ class Trackings extends Component
 
     public function trackOrder()
     {
+
         if ( $this->trackingNumber != null && $this->trackingNumber != '' &&  strlen($this->trackingNumber) >= 12 )
         {
             $order_tracking_repository = new OrderTrackingRepository($this->trackingNumber);
             $this->apiResponse = $order_tracking_repository->handle();
         }
-
     }
 
     public function download()
@@ -35,7 +35,7 @@ class Trackings extends Component
             $exportTracking = new ExportTracking($this->apiResponse);
             return $exportTracking->handle();
         }
-    }    
+    }
 
     public function toggleBrazilStatus($tracking, $hdTrackings)
     {
@@ -70,7 +70,7 @@ class Trackings extends Component
             $lastTrackingDate = $lastTracking->created_at;
 
             $difference = Carbon::parse($todayDate)->diffInDays(Carbon::parse($lastTrackingDate));
-            
+
             if ($difference > 2) {
                 return 140;
             }
@@ -95,7 +95,6 @@ class Trackings extends Component
 
     }
 
-
     public function toggleUpsStatus($tracking)
     {
         if ($tracking['status']['type'] == 'I' && $tracking['status']['code'] == 'OR') {
@@ -113,6 +112,30 @@ class Trackings extends Component
         if ($tracking['status']['type'] == 'D' && $tracking['status']['code'] == 'KB') {
             return 120;
         }
+    }
+
+    public function togglePostNLStatus($tracking)
+    {
+        if ($tracking['api_trackings']['status'] == '1233' || $tracking['api_trackings']['status'] == '3') {
+            return 90;
+        }
+
+        if ($tracking['api_trackings']['status'] == '38') {
+            return 100;
+        }
+
+        if ($tracking['api_trackings']['status'] == '1239' || $tracking['api_trackings']['status'] == '1240') {
+            return 110;
+        }
+
+        if ($tracking['api_trackings']['status'] == '74') {
+            return 120;
+        }
+
+        if ($tracking['api_trackings']['status'] == '37') {
+            return 130;
+        }
+
     }
 
 
