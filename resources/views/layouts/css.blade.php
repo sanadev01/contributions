@@ -173,6 +173,11 @@
         margin-top: auto;
     }
 
+    .modal-head {
+        background-color: #fa857d !important;
+        color: white;
+    }
+
     .main-menu.menu-light .navigation#main-menu-navigation li a .icon_adjst {
         margin-right:3px;
     }
