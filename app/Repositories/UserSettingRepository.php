@@ -43,7 +43,7 @@ class UserSettingRepository {
         ];
 
         try {
-            \Mail::send(new SettingUpdate($user, $request, $userData));
+            \Mail::send(new SettingUpdate($user, $request, $userData, false));
         } catch (\Exception $ex) {
             \Log::info('Setting Update email send error: '.$ex->getMessage());
         }

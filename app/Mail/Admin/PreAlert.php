@@ -16,6 +16,7 @@ class PreAlert extends Mailable
     public $message;
     public $name;
     public $poBox;
+    public $codes;
 
     /**
      * Create a new message instance.
@@ -28,6 +29,7 @@ class PreAlert extends Mailable
         $this->message = $message;
         $this->name = $name;
         $this->poBox = $poBox;
+        $this->codes = null;
     }
 
     /**
@@ -38,7 +40,7 @@ class PreAlert extends Mailable
     public function build()
     {
         if (count($this->order) >= 1) { $orders = $this->order->pluck('corrios_tracking_code')->toArray(); }
-        $codes = implode(", ",$orders);
-        return $this->markdown('emails.admin.pre-alert')->with(['message' => $this->message, 'codes' => $codes, 'name' => $this->name, 'poBox' => $this->poBox])->to(config('hd.email.admin_email'))->subject('Pre Alert HD-BR');
+        $this->codes = implode(", ",$orders);
+        return $this->markdown('emails.admin.pre-alert')->to(config('hd.email.admin_email'))->subject('Pre Alert HD-BR');
     }
 }

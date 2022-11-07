@@ -93,6 +93,27 @@
         </div>
     </div>
 </div>
+<!--SEND MAIL MODAL-->
+<div class="modal fade" id="mailModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header modal-head">
+                <h5 class="modal-title text-white"><b>Pre Alert Mail</b></h5>
+                <button type="button" class="close mt-0 mr-0" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+            </div>
+            <form action="{{ route('admin.order.pre-alert') }}" method="GET" id="mail_form">
+                <input type="hidden" name="command" id="command" value="">
+                <input type="hidden" name="data" id="data" value="">
+                <div class="modal-body">
+                    <textarea class="form-control no-resize" name="message" rows="5"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger">Pre-Alert</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('modal')
