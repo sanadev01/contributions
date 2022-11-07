@@ -27,8 +27,8 @@ Which has following Diffrence <br>
 @else
 | TYPE  | {{ $userData['TYPE'] }} | {{$request->TYPE}}			|
 | VALUE | {{ $userData['VALUE'] }} | {{$request->VALUE}}			|
-| AUTHORIZE_ID  | {{ $userData['AUTHORIZE_ID'] }} | {{$request->AUTHORIZE_ID}}  |
-| AUTHORIZE_KEY | {{ $userData['AUTHORIZE_KEY'] }} | {{$request->AUTHORIZE_KEY}}			|
+| AUTHORIZE_ID  | {{ substr($userData['AUTHORIZE_ID'],0,3) }} **** {{ substr($userData['AUTHORIZE_ID'],-3) }}| {{substr($request->AUTHORIZE_ID,0,3)}} **** {{substr($request->AUTHORIZE_ID,-3)}}  |
+| AUTHORIZE_KEY | {{ substr($userData['AUTHORIZE_KEY'],0,3) }} **** {{  substr($userData['AUTHORIZE_KEY'],-3) }}| {{substr($request->AUTHORIZE_KEY,0,3)}} **** {{substr($request->AUTHORIZE_KEY,-3)}}			|
 @endif
 | USPS			| {{ $userData['usps'] }} | {{$request->usps  ? 'Active':'Inactive'}}			|     
 | UPS			| {{ $userData['ups'] }} | {{$request->ups  ? 'Active':'Inactive'}}			|
