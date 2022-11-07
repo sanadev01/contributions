@@ -60,8 +60,8 @@ class OrderObserver
                             'webhook' => [
                                 'topic' => 'orders/status',
                                 'status' => "Your Parcel Status is".''. Order::STATUS_ORDER,
-                                // 'address' => route('admin.webhooks.orderstatus.parcel.status',['callbackUser'=> base64_encode(Auth::id()),'connectId'=> base64_encode($connect->id)]),
-                                'address' => 'https://3fe3231b56e7.ngrok.io/webhooks/parcelstatus/webhook/parcel/status?callbackUser='.base64_encode(Auth::id()),
+                                'address' => route('admin.webhooks.orderstatus.parcel.status',['callbackUser'=> base64_encode(Auth::id())]),
+                                //'address' => 'https://3fe3231b56e7.ngrok.io/webhooks/parcelstatus/webhook/parcel/status?callbackUser='.base64_encode(Auth::id()),
                                 'format' => 'json',
                             ]
                         ]
