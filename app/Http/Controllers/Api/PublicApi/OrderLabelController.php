@@ -44,6 +44,8 @@ class OrderLabelController extends Controller
                     ]);
                     chargeAmount($order->gross_total,$order);
                 }
+
+                event (new OrderStatusUpdated($order));
                 
                 return apiResponse(true,"Lable Generated successfully.",[
                     'url' => route('order.label.download',$order),
@@ -71,6 +73,8 @@ class OrderLabelController extends Controller
                     chargeAmount($order->gross_total,$order);
                 }
                 
+                event (new OrderStatusUpdated($order));
+
                 return apiResponse(true,"Lable Generated successfully.",[
                     'url' => route('order.label.download',$order),
                     'tracking_code' => $order->corrios_tracking_code
@@ -113,6 +117,8 @@ class OrderLabelController extends Controller
                     ]);
                     chargeAmount($order->gross_total,$order);
                 }
+
+                event (new OrderStatusUpdated($order));
                 
                 return apiResponse(true,"Lable Generated successfully.",[
                     'url' => route('order.label.download',$order),
@@ -150,6 +156,7 @@ class OrderLabelController extends Controller
                 chargeAmount($order->gross_total,$order);
                 $orders->push($order);
                 event(new OrderPaid($orders, true));
+                event (new OrderStatusUpdated($order));
             }
             
         }

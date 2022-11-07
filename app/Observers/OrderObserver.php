@@ -37,42 +37,11 @@ class OrderObserver
         if ( $order->total <=0 ){
             return;
         }
-
+        
         if ( $order->shipping_value <=0 ){
             return;
         }
-
-        $status = $order->update([ 'status' => Order::STATUS_ORDER ]);
-        $changes = array_diff($status->getOriginal(), $status->getAttributes());
-            if(array_key_exists('status',$changes)){
-
-                $client = new Client([
-                    'base_uri' => "URI",
-                    'headers' => [
-                        'Authorization: Basic' => "Token Here",
-                    ]
-                ]);
-        
-                try {
-
-                    $webhookResponse = $client->post('clientAdress',[
-                        'json' => [
-                            'webhook' => [
-                                'topic' => 'orders/status',
-                                'status' => "Your Parcel Status is".''. Order::STATUS_ORDER,
-                                'address' => route('admin.webhooks.orderstatus.parcel.status',['callbackUser'=> base64_encode(Auth::id())]),
-                                //'address' => 'https://3fe3231b56e7.ngrok.io/webhooks/parcelstatus/webhook/parcel/status?callbackUser='.base64_encode(Auth::id()),
-                                'format' => 'json',
-                            ]
-                        ]
-                    ]);
-        
-                } catch (\Exception $th) {
-                    abort(400,'Bad Request'.$th->getMessage());
-                }
-        
-                return json_decode($webhookResponse->getBody()->getContents());
-            }
+        $order->update([ 'status' => Order::STATUS_ORDER ]);
 
     }
 
