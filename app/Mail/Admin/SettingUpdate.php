@@ -15,16 +15,20 @@ class SettingUpdate extends Mailable
     public $user;
     public $request;
     public $userData;
+    public $isAdmin;
+    public $subject;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(User $user, Request $request, $userData)
+    public function __construct(User $user, Request $request, $userData, $isAdmin)
     {
         $this->user = $user;
         $this->request = $request;
         $this->userData = $userData;
+        $this->isAdmin = $isAdmin;
+        $this->subject = $this->isAdmin ? 'Admin Setting Update' : 'User Setting Update';
     }
 
     /**
@@ -39,6 +43,6 @@ class SettingUpdate extends Mailable
             config('hd.email.admin_email'),
             config('hd.email.admin_name')
         )->cc('mnaveedsaim@gmail.com')
-            ->subject('Setting Update');
+            ->subject($this->subject);
     }
 }
