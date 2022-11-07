@@ -440,15 +440,16 @@
                 </a>
             </li>
             @endcan
-
-            @can('viewAny', App\Models\Setting::class)
-            <li class="nav-item {{ $isActive(['admin.settings.index']) }}">
-                <a href="{{ route('admin.settings.index') }}">
-                    <img src="{{ asset('images/icon/setting.svg') }}" alt="settings">
-                    <span class="menu-title">@lang('menu.Settings')</span>
-                </a>
-            </li>
-            @endcan
+            @admin
+                @can('viewAny', App\Models\Setting::class)
+                    <li class="nav-item {{ $isActive(['admin.settings.index']) }}">
+                        <a href="{{ route('admin.settings.index') }}">
+                            <img src="{{ asset('images/icon/setting.svg') }}" alt="settings">
+                            <span class="menu-title">@lang('menu.Settings')</span>
+                        </a>
+                    </li>
+                @endcan
+            @endadmin
 
             <li class="nav-item {{ $isActive(['admin.trash-orders.index']) }}">
                 <a href="{{ route('admin.trash-orders.index') }}">

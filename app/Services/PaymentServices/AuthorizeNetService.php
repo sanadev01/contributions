@@ -29,8 +29,8 @@ class AuthorizeNetService
         $AuthorizeID = setting('AUTHORIZE_ID', null, null, true);
         $AuthorizeKey = setting('AUTHORIZE_KEY', null, null, true);
 
-        \Log::info('Authorize ID: ' . $AuthorizeID);
-        \Log::info('Authorize Key: ' . $AuthorizeKey);
+        // \Log::info('Authorize ID: ' . $AuthorizeID);
+        // \Log::info('Authorize Key: ' . $AuthorizeKey);
         
         if (! $AuthorizeID || ! $AuthorizeKey) {
             throw new Exception('Athorize Error');
