@@ -56,6 +56,15 @@ class ShipmentReportByMonth extends AbstractExportService
             $this->setCellValue('P'.$row, $report[11]['orders']);
             $this->setCellValue('Q'.$row, $report[12]['orders']);
             $this->setCellValue('R'.$row, $report[13]['orders']);
+            $this->setCellValue('S'.$row, $report[14]['orders']);
+            $this->setCellValue('T'.$row, $report[15]['orders']);
+            $this->setCellValue('U'.$row, $report[16]['orders']);
+            $this->setCellValue('V'.$row, $report[17]['orders']);
+            $this->setCellValue('W'.$row, $report[18]['orders']);
+            $this->setCellValue('X'.$row, $report[19]['orders']);
+            $this->setCellValue('Y'.$row, $report[20]['orders']);
+            $this->setCellValue('Z'.$row, $report[21]['orders']);
+            $this->setCellValue('AA'.$row, $report[22]['orders']);
             $row++;
         }
         
@@ -76,38 +85,67 @@ class ShipmentReportByMonth extends AbstractExportService
         $this->setCellValue('p'.$row, "=SUM(P2:P{$row})");
         $this->setCellValue('Q'.$row, "=SUM(Q2:Q{$row})");
         $this->setCellValue('R'.$row, "=SUM(R2:R{$row})");
-        $this->setBackgroundColor("A{$row}:R{$row}", 'adfb84');
+        $this->setCellValue('S'.$row, "=SUM(S2:S{$row})");
+        $this->setCellValue('T'.$row, "=SUM(T2:T{$row})");
+        $this->setCellValue('U'.$row, "=SUM(U2:U{$row})");
+        $this->setCellValue('V'.$row, "=SUM(V2:V{$row})");
+        $this->setCellValue('W'.$row, "=SUM(W2:W{$row})");
+        $this->setCellValue('X'.$row, "=SUM(X2:X{$row})");
+        $this->setCellValue('Y'.$row, "=SUM(Y2:Y{$row})");
+        $this->setCellValue('Z'.$row, "=SUM(Z2:Z{$row})");
+        $this->setCellValue('AA'.$row, "=SUM(AA2:AA{$row})");
+        $this->setBackgroundColor("A{$row}:AA{$row}", 'adfb84');
         $newRow = $row;
         $newRowPlus = $newRow + 1;
-        $this->setCellFormat('E'.$newRowPlus, \PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_PERCENTAGE_00);
-        $this->setCellFormat('F'.$newRowPlus, \PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_PERCENTAGE_00);
-        $this->setCellFormat('G'.$newRowPlus, \PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_PERCENTAGE_00);
-        $this->setCellFormat('H'.$newRowPlus, \PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_PERCENTAGE_00);
-        $this->setCellFormat('I'.$newRowPlus, \PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_PERCENTAGE_00);
-        $this->setCellFormat('J'.$newRowPlus, \PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_PERCENTAGE_00);
-        $this->setCellFormat('K'.$newRowPlus, \PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_PERCENTAGE_00);
-        $this->setCellFormat('L'.$newRowPlus, \PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_PERCENTAGE_00);
-        $this->setCellFormat('M'.$newRowPlus, \PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_PERCENTAGE_00);
-        $this->setCellFormat('N'.$newRowPlus, \PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_PERCENTAGE_00);
-        $this->setCellFormat('O'.$newRowPlus, \PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_PERCENTAGE_00);
-        $this->setCellFormat('p'.$newRowPlus, \PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_PERCENTAGE_00);
-        $this->setCellFormat('Q'.$newRowPlus, \PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_PERCENTAGE_00);
-        $this->setCellFormat('R'.$newRowPlus, \PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_PERCENTAGE_00);
+
+        $this->setCellFormat('E'.$newRowPlus, '0.00%;[Red]-0.00%');
+        $this->setCellFormat('F'.$newRowPlus, '0.00%;[Red]-0.00%');
+        $this->setCellFormat('G'.$newRowPlus, '0.00%;[Red]-0.00%');
+        $this->setCellFormat('H'.$newRowPlus, '0.00%;[Red]-0.00%');
+        $this->setCellFormat('I'.$newRowPlus, '0.00%;[Red]-0.00%');
+        $this->setCellFormat('J'.$newRowPlus, '0.00%;[Red]-0.00%');
+        $this->setCellFormat('K'.$newRowPlus, '0.00%;[Red]-0.00%');
+        $this->setCellFormat('L'.$newRowPlus, '0.00%;[Red]-0.00%');
+        $this->setCellFormat('M'.$newRowPlus, '0.00%;[Red]-0.00%');
+        $this->setCellFormat('N'.$newRowPlus, '0.00%;[Red]-0.00%');
+        $this->setCellFormat('O'.$newRowPlus, '0.00%;[Red]-0.00%');
+        $this->setCellFormat('p'.$newRowPlus, '0.00%;[Red]-0.00%');
+        $this->setCellFormat('Q'.$newRowPlus, '0.00%;[Red]-0.00%');
+        $this->setCellFormat('R'.$newRowPlus, '0.00%;[Red]-0.00%');
+        $this->setCellFormat('S'.$newRowPlus, '0.00%;[Red]-0.00%');
+        $this->setCellFormat('T'.$newRowPlus, '0.00%;[Red]-0.00%');
+        $this->setCellFormat('U'.$newRowPlus, '0.00%;[Red]-0.00%');
+        $this->setCellFormat('V'.$newRowPlus, '0.00%;[Red]-0.00%');
+        $this->setCellFormat('W'.$newRowPlus, '0.00%;[Red]-0.00%');
+        $this->setCellFormat('X'.$newRowPlus, '0.00%;[Red]-0.00%');
+        $this->setCellFormat('Y'.$newRowPlus, '0.00%;[Red]-0.00%');
+        $this->setCellFormat('Z'.$newRowPlus, '0.00%;[Red]-0.00%');
+        $this->setCellFormat('AA'.$newRowPlus, '0.00%;[Red]-0.00%');
+
         $this->setCellValue('E'.$newRowPlus, "=(E{$row}/B$row)");
-        $this->setCellValue('F'.$newRowPlus, "=(F{$row}/B$row)");
-        $this->setCellValue('G'.$newRowPlus, "=(G{$row}/B$row)");
-        $this->setCellValue('H'.$newRowPlus, "=(H{$row}/B$row)");
-        $this->setCellValue('I'.$newRowPlus, "=(I{$row}/B$row)");
-        $this->setCellValue('J'.$newRowPlus, "=(J{$row}/B$row)");
-        $this->setCellValue('K'.$newRowPlus, "=(K{$row}/B$row)");
-        $this->setCellValue('L'.$newRowPlus, "=(L{$row}/B$row)");
-        $this->setCellValue('M'.$newRowPlus, "=(M{$row}/B$row)");
-        $this->setCellValue('N'.$newRowPlus, "=(N{$row}/B$row)");
-        $this->setCellValue('O'.$newRowPlus, "=(O{$row}/B$row)");
-        $this->setCellValue('p'.$newRowPlus, "=(P{$row}/B$row)");
-        $this->setCellValue('Q'.$newRowPlus, "=(Q{$row}/B$row)");
-        $this->setCellValue('R'.$newRowPlus, "=(R{$row}/B$row)");
-        $this->setBackgroundColor("A{$newRowPlus}:R{$newRowPlus}", '3490dc');
+         $this->setCellValue('F'.$newRowPlus, "=(F{$row}/B$row)");
+         $this->setCellValue('G'.$newRowPlus, "=(G{$row}/B$row)");
+         $this->setCellValue('H'.$newRowPlus, "=(H{$row}/B$row)");
+         $this->setCellValue('I'.$newRowPlus, "=(I{$row}/B$row)");
+         $this->setCellValue('J'.$newRowPlus, "=(J{$row}/B$row)");
+         $this->setCellValue('K'.$newRowPlus, "=(K{$row}/B$row)");
+         $this->setCellValue('L'.$newRowPlus, "=(L{$row}/B$row)");
+         $this->setCellValue('M'.$newRowPlus, "=(M{$row}/B$row)");
+         $this->setCellValue('N'.$newRowPlus, "=(N{$row}/B$row)");
+         $this->setCellValue('O'.$newRowPlus, "=(O{$row}/B$row)");
+         $this->setCellValue('p'.$newRowPlus, "=(P{$row}/B$row)");
+         $this->setCellValue('Q'.$newRowPlus, "=(Q{$row}/B$row)");
+         $this->setCellValue('R'.$newRowPlus, "=(R{$row}/B$row)");
+         $this->setCellValue('S'.$newRowPlus, "=(S{$row}/B$row)");
+         $this->setCellValue('T'.$newRowPlus, "=(T{$row}/B$row)");
+         $this->setCellValue('U'.$newRowPlus, "=(U{$row}/B$row)");
+         $this->setCellValue('V'.$newRowPlus, "=(V{$row}/B$row)");
+         $this->setCellValue('W'.$newRowPlus, "=(W{$row}/B$row)");
+         $this->setCellValue('X'.$newRowPlus, "=(X{$row}/B$row)");
+         $this->setCellValue('Y'.$newRowPlus, "=(Y{$row}/B$row)");
+         $this->setCellValue('Z'.$newRowPlus, "=(Z{$row}/B$row)");
+         $this->setCellValue('AA'.$newRowPlus, "=(AA{$row}/B$row)"); 
+        $this->setBackgroundColor("A{$newRowPlus}:AA{$newRowPlus}", '3490dc');
         $this->currentRow = $row;
     }
 
@@ -126,49 +164,76 @@ class ShipmentReportByMonth extends AbstractExportService
         $this->setCellValue('D1', 'Spent USD');
 
         $this->setColumnWidth('E', 20);
-        $this->setCellValue('E1', '0.00 - 1.00 Kg');
-
+        $this->setCellValue('E1', '0.00 - 0.100 Kg');
+        
         $this->setColumnWidth('F', 20);
-        $this->setCellValue('F1', '1.01 - 2.00 Kg');
+        $this->setCellValue('F1', '0.101 - 0.200 Kg');
 
         $this->setColumnWidth('G', 20);
-        $this->setCellValue('G1', '2.01 - 3.00 Kg');
+        $this->setCellValue('G1', '0.201 - 0.300 Kg');
 
         $this->setColumnWidth('H', 20);
-        $this->setCellValue('H1', '3.01 - 4.00 Kg');
+        $this->setCellValue('H1', '0.301 - 0.400 Kg');
 
         $this->setColumnWidth('I', 20);
-        $this->setCellValue('I1', '4.01 - 5.00 Kg');
+        $this->setCellValue('I1', '0.401 - 0.500 Kg');
 
         $this->setColumnWidth('J', 20);
-        $this->setCellValue('J1', '5.01 - 6.00 Kg');
+        $this->setCellValue('J1', '0.501 - 0.600 Kg');
 
         $this->setColumnWidth('K', 20);
-        $this->setCellValue('K1', '6.01 - 7.00 Kg');
+        $this->setCellValue('K1', '0.601 - 0.700 Kg');
 
         $this->setColumnWidth('L', 20);
-        $this->setCellValue('L1', '7.01 - 8.00 Kg');
+        $this->setCellValue('L1', '0.701 - 0.800 Kg');
 
         $this->setColumnWidth('M', 20);
-        $this->setCellValue('M1', '8.01 - 9.00 Kg');
+        $this->setCellValue('M1', '0.801 - 0.900 Kg');
 
         $this->setColumnWidth('N', 20);
-        $this->setCellValue('N1', '9.01 - 10.00 Kg');
+        $this->setCellValue('N1', '0.901 - 1.00 Kg');
 
         $this->setColumnWidth('O', 20);
-        $this->setCellValue('O1', '10.01 - 15.00 Kg');
+        $this->setCellValue('O1', '1.01 - 2.00 Kg');
 
         $this->setColumnWidth('P', 20);
-        $this->setCellValue('P1', '15.01 - 20.00 Kg');
+        $this->setCellValue('P1', '2.01 - 3.00 Kg');
 
         $this->setColumnWidth('Q', 20);
-        $this->setCellValue('Q1', '20.01 - 25.00 Kg');
+        $this->setCellValue('Q1', '3.01 - 4.00 Kg');
 
         $this->setColumnWidth('R', 20);
-        $this->setCellValue('R1', '25.01 - 30.00 Kg');
+        $this->setCellValue('R1', '4.01 - 5.00 Kg');
 
-        $this->setBackgroundColor('A1:R1', '2b5cab');
-        $this->setColor('A1:R1', 'FFFFFF');
+        $this->setColumnWidth('S', 20);
+        $this->setCellValue('S1', '5.01 - 6.00 Kg');
+
+        $this->setColumnWidth('T', 20);
+        $this->setCellValue('T1', '6.01 - 7.00 Kg');
+
+        $this->setColumnWidth('U', 20);
+        $this->setCellValue('U1', '7.01 - 8.00 Kg');
+
+        $this->setColumnWidth('V', 20);
+        $this->setCellValue('V1', '8.01 - 9.00 Kg');
+
+        $this->setColumnWidth('W', 20);
+        $this->setCellValue('W1', '9.01 - 10.00 Kg');
+
+        $this->setColumnWidth('X', 20);
+        $this->setCellValue('X1', '10.01 - 15.00 Kg');
+        
+        $this->setColumnWidth('Y', 20);
+        $this->setCellValue('Y1', '15.01 - 20.00 Kg');
+        
+        $this->setColumnWidth('Z', 20);
+        $this->setCellValue('Z1', '20.01 - 25.00 Kg');
+
+        $this->setColumnWidth('AA', 20);
+        $this->setCellValue('AA1','25.01 - 30.00 Kg');
+
+        $this->setBackgroundColor('A1:AA1', '2b5cab');
+        $this->setColor('A1:AA1', 'FFFFFF');
 
         $this->currentRow++;
     }
