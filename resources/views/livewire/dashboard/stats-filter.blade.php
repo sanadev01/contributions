@@ -133,7 +133,7 @@
                             <div class="row" id="secondCard">
                                 <div class="row col-lg-12 smallCharts">
                                     <div class="mt-2">
-                                        <h6 class="">@lang('dashboard.Month Orders', ['month' => $orders['monthName']])</h6>
+                                        <h6 class="">@lang('dashboard.Month Orders', ['month' => substr($orders['monthName'],0,3)])</h6>
                                         <h2 class="mb-0 number-font figures">{{ $orders['currentmonthTotal'] }}</h2>
                                     </div>
                                     <div class="ms-auto ml-2">
