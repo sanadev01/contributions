@@ -15,7 +15,7 @@ class DashboardRepository
     public function getDashboardStats($startDate=NULL, $endDate=NULL)
     {
         $carbon       = Carbon::now();
-        $monthName    = $carbon->format('F');
+        $monthName    = $carbon->format('M');
         $currentYear  = $carbon->year;
         $currentmonth = $carbon->month;
         $today        = $carbon->format('Y-m-d');
