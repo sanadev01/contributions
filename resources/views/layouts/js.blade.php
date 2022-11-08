@@ -107,15 +107,15 @@
     }
 
 
-    function handleChangeSalesCommission(checkbox) {
-        if (checkbox.checked == true) {
-            document.getElementById("printBtnDiv").style.display = 'block';
-        } else {
-            if ($(".bulk-sales:checked").length == 0) {
-                document.getElementById("printBtnDiv").style.display = 'none';
-            }
-        }
-    }
+    // function handleChangeSalesCommission(checkbox) {
+    //     if (checkbox.checked == true) {
+    //         document.getElementById("printBtnDiv").style.display = 'block';
+    //     } else {
+    //         if ($(".bulk-sales:checked").length == 0) {
+    //             document.getElementById("printBtnDiv").style.display = 'none';
+    //         }
+    //     }
+    // }
 
     function handleChangeContainer(checkbox) {
         if (checkbox.checked == true) {
@@ -126,19 +126,7 @@
             }
         }
     }
-    // var table = $('#example').DataTable({
-    //     searching: false,
-    //     paging: false,
-    //     columnDefs: [{
-    //             targets: [0, 1, 2, 3],
-    //             visible: true
-    //         },
-    //         {
-    //             targets: '_all',
-    //             visible: false
-    //         },
-    //     ]
-    // });
+    
     $(document).ready(function() {
         $('#tblOrders').find('thead tr:eq(1)').hide();
 
