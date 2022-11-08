@@ -170,7 +170,7 @@ class OrderReportsRepository
             ],
             [
                 'min_weight' => '0.701',
-                'max_weight' => '1.800'
+                'max_weight' => '0.800'
             ],
             [
                 'min_weight' => '0.801',
