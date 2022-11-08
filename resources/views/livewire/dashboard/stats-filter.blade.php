@@ -133,7 +133,7 @@
                             <div class="row" id="secondCard">
                                 <div class="row col-lg-12 smallCharts">
                                     <div class="mt-2">
-                                        <h6 class="small">@lang('dashboard.Total Month Order', ['month' => $orders['monthName']])</h6>
+                                        <h6 class="">@lang('dashboard.Month Orders', ['month' => $orders['monthName']])</h6>
                                         <h2 class="mb-0 number-font figures">{{ $orders['currentmonthTotal'] }}</h2>
                                     </div>
                                     <div class="ms-auto ml-2">
@@ -173,7 +173,7 @@
                             <div class="row" id="thirdCard">
                                 <div class="row col-lg-12 smallCharts">
                                     <div class="mt-2">
-                                        <h6 class="small">@lang('dashboard.Current Year')</h6>
+                                        <h6 class="">@lang('dashboard.Current Year',['year'=> date("Y")])</h6>
                                         <h2 class="mb-0 number-font figures">{{ $orders['currentYearTotal'] }}</h2>
                                     </div>
                                     <div class="ms-auto ml-2">
