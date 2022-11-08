@@ -10,13 +10,13 @@
                             <div class="col-6 pl-0 pr-0 mr-0">
                             @section('title', __('warehouse.chileContainers.Containers'))
                             <div id="col-6">
-                                <div class="col-12 pl-0" id="printBtnDiv">
-                                    <button title="Print Labels" id="assignAWB" type="btn"
-                                        class="btn btn-primary mr-1 ml-1 mb-1 waves-effect waves-light"><i
-                                            class="fas fa-file-invoice" aria-hidden="true"></i></button>
-                                    <a href="" id="download-combine-manifest"
-                                        class="pull-right mb-1 btn btn-success">
-                                        @lang('warehouse.containers.Download Manifest')</a>
+                                <div class="col-12 pl-0" id="printBtnDiv" style="display: flex">
+                                    <button title="Print Labels" disabled id="assignAWB" type="btn" class="btn btn-primary mr-1 ml-1 mb-1 btn-disabled">
+                                        <i class="fas fa-file-invoice" aria-hidden="true"></i>
+                                    </button>
+                                    <a href="" disabled id="download-combine-manifest" class="pull-right mb-1 btn btn-success btn-disabled">
+                                        @lang('warehouse.containers.Download Manifest')
+                                    </a>
 
                                 </div>
                             </div>
@@ -71,7 +71,7 @@
                                     <tr>
                                         <td>
                                             <div class="vs-checkbox-con vs-checkbox-primary" title="@lang('orders.Bulk Print')">
-                                                <input type="checkbox" onchange="handleChangeContainer(this)"
+                                                <input type="checkbox" onchange="handleChange(this)"
                                                     name="containers[]" class="bulk-container"
                                                     value="{{ $container->id }}"
                                                     data-container_awb=@if ($container->awb != null) true @else false @endif>
@@ -238,10 +238,10 @@
 
         if ($('#checkAll').is(':checked')) {
             $('.bulk-container').prop('checked', true)
-            document.getElementById("printBtnDiv").style.display = 'flex';
+            $(".btn-disabled").removeAttr('disabled');
         } else {
             $('.bulk-container').prop('checked', false)
-            document.getElementById("printBtnDiv").style.display = 'none';
+            $(".btn-disabled").prop("disabled", true);
         }
 
     })

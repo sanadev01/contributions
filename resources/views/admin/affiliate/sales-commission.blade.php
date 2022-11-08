@@ -67,10 +67,12 @@
 
         if ($('#checkAll').is(':checked')) {
             $('.bulk-sales').prop('checked', true)
-            document.getElementById("printBtnDiv").style.display = 'block';
+            $(".btn-disabled").removeAttr('disabled');
+            // document.getElementById("printBtnDiv").style.display = 'block';
         } else {
             $('.bulk-sales').prop('checked', false)
-            document.getElementById("printBtnDiv").style.display = 'none';
+            $(".btn-disabled").prop("disabled", true);
+            // document.getElementById("printBtnDiv").style.display = 'none';
         }
 
     })
