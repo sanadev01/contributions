@@ -44,7 +44,10 @@ class AccrualRate extends Model
         if ( $this->service == Package::SERVICE_CLASS_AJ_EXPRESS ){
             return "Anjun Express";
         }
-
+        
+        if ( $this->service == Package::SERVICE_CLASS_GePS ){
+            return "Geps";
+        }
         return '';
     }
 
