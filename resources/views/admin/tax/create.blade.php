@@ -179,24 +179,26 @@
         </div>
     </section>
 @endsection
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        $('body').on('change','.orders input.buyingUsd, input.sellingUsd, input.convert',function(){
-            let buyingUsd = $(this).closest('.orders').find('.buyingUsd').val();
-            let sellingUsd = $(this).closest('.orders').find('.sellingUsd').val();
-            let convert = $(this).closest('.orders').find('.convert').val();
-            let profit = parseFloat(buyingUsd) - parseFloat(sellingUsd);
-            let exchangeBrBuying = parseFloat(buyingUsd) * parseFloat(convert);
-            let exchangeBrSelling = parseFloat(sellingUsd) * parseFloat(convert);
-            $(this).closest('.orders').find('.profit').val(
-                isNaN(profit) ? 0 : (profit).toFixed(2)
-            );
-            $(this).closest('.orders').find('.exchangeBrSelling').val(
-                isNaN(exchangeBrSelling) ? 0 : (exchangeBrSelling).toFixed(2)
-            );
-            $(this).closest('.orders').find('.exchangeBrBuying').val(
-                isNaN(exchangeBrBuying) ? 0 : (exchangeBrBuying).toFixed(2)
-            );
-        });
-    })
-</script>
+@section('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            $('body').on('change','.orders input.buyingUsd, input.sellingUsd, input.convert',function(){
+                let buyingUsd = $(this).closest('.orders').find('.buyingUsd').val();
+                let sellingUsd = $(this).closest('.orders').find('.sellingUsd').val();
+                let convert = $(this).closest('.orders').find('.convert').val();
+                let profit = parseFloat(buyingUsd) - parseFloat(sellingUsd);
+                let exchangeBrBuying = parseFloat(buyingUsd) * parseFloat(convert);
+                let exchangeBrSelling = parseFloat(sellingUsd) * parseFloat(convert);
+                $(this).closest('.orders').find('.profit').val(
+                    isNaN(profit) ? 0 : (profit).toFixed(2)
+                );
+                $(this).closest('.orders').find('.exchangeBrSelling').val(
+                    isNaN(exchangeBrSelling) ? 0 : (exchangeBrSelling).toFixed(2)
+                );
+                $(this).closest('.orders').find('.exchangeBrBuying').val(
+                    isNaN(exchangeBrBuying) ? 0 : (exchangeBrBuying).toFixed(2)
+                );
+            });
+        })
+    </script>
+@endsection

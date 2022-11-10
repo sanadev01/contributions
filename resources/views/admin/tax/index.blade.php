@@ -71,6 +71,7 @@
                                     <th>@lang('tax.Tax Customer') USD</th>
                                     <th>@lang('tax.Tax Herco') BR</th>
                                     <th>@lang('tax.Tax Customer') BR</th>
+                                    <th>@lang('Profit USD')</th>
                                     <th>@lang('tax.Receipt')</th>
                                     <th>@lang('tax.Action')</th>
                                 </tr>
@@ -95,6 +96,7 @@
                                     <td>{{ $tax->selling_usd }}</td>
                                     <td>{{ $tax->buying_br }}</td>
                                     <td>{{ $tax->selling_br }}</td>
+                                    <td>{{ ($tax->buying_usd - $tax->selling_usd) }}</td>
                                     <td>
                                         @if(optional($tax->deposit)->depositAttchs)
                                             @foreach ($tax->deposit->depositAttchs as $attachedFile )
