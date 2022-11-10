@@ -12,10 +12,10 @@
                     </div>
                     <div class="card-content">
                         <div class="card-body">
-                            @if( $errors->count() )
+                            @if ($errors->count())
                                 <div class="alert alert-danger">
                                     <ul>
-                                        @foreach($errors->all() as $error)
+                                        @foreach ($errors->all() as $error)
                                             <li>
                                                 {{ $error }}
                                             </li>
@@ -30,7 +30,7 @@
                                             <label>@lang('parcel.User POBOX Number') <span class="text-danger">*</span></label>
                                             <livewire:components.search-user />
                                             @error('pobox_number')
-                                            <div class="help-block text-danger"> {{ $message }} </div>
+                                                <div class="help-block text-danger"> {{ $message }} </div>
                                             @enderror
                                         </div>
                                     </div>
@@ -48,7 +48,8 @@
                                     </div>
                                 </div>
                             </form></br>
-                            <form class="form" action="{{ route('admin.tax.store') }}" method="POST" enctype="multipart/form-data">
+                            <form class="form" action="{{ route('admin.tax.store') }}" method="POST"
+                                enctype="multipart/form-data">
                                 @csrf
                                     @if($orders)
                                         {{-- <div class="row m-1 mb-2">
@@ -63,7 +64,7 @@
                                         </div> --}}
                                         <div class="row m-1 mb-2">
                                             <div class="col-md-1">
-                                                <label><b>@lang('tax.Order ID')</b></label>
+                                                <label><b>@lang('tax.Warehouse No.')</b></label>
                                             </div>
                                             <div class="col-md-1">
                                                 <label><b>@lang('tax.User Name')</b></label>
@@ -168,7 +169,8 @@
                                                 </button>
                                             </div>
                                         </div>
-                                    @endif
+                                    </div>
+                                @endif
                             </form>
                         </div>
                     </div>
