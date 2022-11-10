@@ -98,44 +98,67 @@
                                         </div>
                                         @foreach($orders as $order)
                                             <div class="row m-1 mb-3 orders">
-                                                <div class="col-md-1">
-                                                    <input type="hidden" class="form-control" name="user_id" value="{{ $order->user_id }}">
-                                                    <input type="hidden" class="form-control" name="order_id[]" value="{{ $order->id }}">
-                                                    <input type="text" class="form-control"  value="{{ $order->warehouse_number }}" readonly required>
-                                                </div>
-                                                <div class="col-md-1">
-                                                    <input type="text" class="form-control" name="user_name[{{ $order->id }}]" value="{{ $order->user->name }}" required>
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="text" class="form-control" name="tracking_code[{{ $order->id }}]" value="{{ $order->corrios_tracking_code }}" readonly required>
-                                                </div>
-                                                <div class="col-md-1">
-                                                    <input type="number" class="form-control" name="tax_payment[{{ $order->id }}]" value="" step="0.01" required>
-                                                </div>
-                                                <div class="col-md-1">
-                                                    <input type="number" class="form-control convert" name="convert_rate[{{ $order->id }}]" value="" step="0.01" required>
-                                                </div>
-                                                <div class="col-md-1">
-                                                    <input type="number" class="form-control buyingUsd" name="buying_usd[{{ $order->id }}]" value="" step="0.01" required>
-                                                </div>
-                                                <div class="col-md-1">
-                                                    <input type="number" class="form-control sellingUsd" name="selling_usd[{{ $order->id }}]" value="" step="0.01" required>
-                                                </div>
-                                                <div class="col-md-1">
-                                                    <input type="number" class="form-control exchangeBrBuying" name="buying_br[{{ $order->id }}]" value="" step="0.01" required>
-                                                </div>
-                                                <div class="col-md-1">
-                                                    <input type="number" class="form-control exchangeBrSelling" name="selling_br[{{ $order->id }}]" value="" step="0.01" required>
-                                                </div>
-                                                <div class="col-md-1">
-                                                    <input type="text" class="form-control profit" name="profit[{{ $order->id }}]" value=""  readonly required>
-                                                </div>
-                                                <div class="col-md-1">
-                                                    <a class="btn pr-0" href='javascript:void(0)'>
-                                                        <button class="btn btn-success btn-md" type="button"><i class="fa fa-upload"></i></button>
-                                                        <input type="file" name="attachment" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' size="40"  onchange='$("#upload-file-info").html($(this).val());'>
-                                                    </a>
-                                                </div>
+                                                @if ($order->tax)
+                                                    <div class="col-md-1">
+                                                        <p class="text-danger">
+                                                            {{ $order->warehouse_number }}
+                                                        </p>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <p class="text-danger">
+                                                            {{ $order->user->name }}
+                                                        </p>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <p class="text-danger">
+                                                            {{ $order->corrios_tracking_code }}
+                                                        </p>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <p class="text-danger h3">
+                                                            Order Tax has Already been Paid
+                                                        </p>
+                                                    </div>
+                                                @else
+                                                    <div class="col-md-1">
+                                                        <input type="hidden" class="form-control" name="user_id" value="{{ $order->user_id }}">
+                                                        <input type="hidden" class="form-control" name="order_id[]" value="{{ $order->id }}">
+                                                        <input type="text" class="form-control"  value="{{ $order->warehouse_number }}" readonly required>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <input type="text" class="form-control" name="user_name[{{ $order->id }}]" value="{{ $order->user->name }}" required>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <input type="text" class="form-control" name="tracking_code[{{ $order->id }}]" value="{{ $order->corrios_tracking_code }}" readonly required>
+                                                    </div>                                                
+                                                    <div class="col-md-1">
+                                                        <input type="number" class="form-control" name="tax_payment[{{ $order->id }}]" value="" step="0.01" required>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <input type="number" class="form-control convert" name="convert_rate[{{ $order->id }}]" value="" step="0.01" required>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <input type="number" class="form-control buyingUsd" name="buying_usd[{{ $order->id }}]" value="" step="0.01" required>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <input type="number" class="form-control sellingUsd" name="selling_usd[{{ $order->id }}]" value="" step="0.01" required>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <input type="number" class="form-control exchangeBrBuying" name="buying_br[{{ $order->id }}]" value="" step="0.01" required>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <input type="number" class="form-control exchangeBrSelling" name="selling_br[{{ $order->id }}]" value="" step="0.01" required>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <input type="text" class="form-control profit" name="profit[{{ $order->id }}]" value=""  readonly required>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <a class="btn pr-0" href='javascript:void(0)'>
+                                                            <button class="btn btn-success btn-md" type="button"><i class="fa fa-upload"></i></button>
+                                                            <input type="file" name="attachment" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' size="40"  onchange='$("#upload-file-info").html($(this).val());'>
+                                                        </a>
+                                                    </div>
+                                                @endif
                                             </div>
                                         @endforeach
                                         <div class="row mt-4 mb-4">
