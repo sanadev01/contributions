@@ -188,7 +188,7 @@ class Client{
             ]);
 
             $data = json_decode($response->getBody()->getContents());
-            \Log::info($data);
+            \Log::info([$data]);
             if(isset($data->err)) {
                 return new PackageError($data->err);
             }
