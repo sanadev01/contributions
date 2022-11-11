@@ -178,9 +178,9 @@ class Client{
                 'item' => $this->setItemsDetails($order)
             ],
         ];
-        \Log::info(
-            $packet
-        );
+        \Log::info($packet);
+        \Log::info('keys Geps');
+        \Log::info($this->getKeys());
         try {
             $response = $this->client->post('https://globaleparcel.com/api.aspx',[
                 'headers' => $this->getKeys(),
@@ -188,6 +188,7 @@ class Client{
             ]);
 
             $data = json_decode($response->getBody()->getContents());
+            \Log::info($data);
             if(isset($data->err)) {
                 return new PackageError($data->err);
             }
