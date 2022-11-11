@@ -87,8 +87,8 @@ class TaxController extends Controller
             session()->flash('alert-success','Tax Transaction Updated');
             return redirect()->route('admin.tax.index');
         }
-
-        return back();
+        session()->flash('alert-danger', 'Error While Update Tax! Check Your Account Balance');
+        return back()->withInput();
     }
 
     /**
