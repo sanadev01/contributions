@@ -36,42 +36,42 @@
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('tax.Tax Payment')<span class="text-danger">*</span></label>
                                     <div class="col-md-4">
-                                        <input type="number" step="0.01" class="form-control" name="tax_payment" value="{{ old('tax_payment', $tax->tax_payment) }}" placeholder="Enter Tax Payment">
+                                        <input type="number"  min="1"  step="0.01" class="form-control" name="tax_payment" value="{{ old('tax_payment', $tax->tax_payment) }}" placeholder="Enter Tax Payment">
                                         <div class="help-block"></div>
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">@lang('Exchange Rste')<span class="text-danger">*</span></label>
+                                    <label class="col-md-3 text-md-right">@lang('tax.Exchange Rate')<span class="text-danger">*</span></label>
                                     <div class="col-md-4">
-                                        <input type="number" step="0.01" class="form-control convert" name="convert_rate" value="{{ old('convert_rate', $tax->convert_rate) }}" placeholder="Enter Tax Payment">
+                                        <input type="number"  min="1" step="0.01" class="form-control convert" name="convert_rate" value="{{ old('convert_rate', $tax->convert_rate) }}" placeholder="Enter Tax Payment">
                                         <div class="help-block"></div>
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">Buying Rates USD<span class="text-danger">*</span></label>
                                     <div class="col-md-4">
-                                        <input type="number" step="0.01" class="form-control buyingUsd" name="buying_usd" value="{{ old('buying_usd', $tax->buying_usd) }}" placeholder="Enter Seller Tax" required>
+                                        <input type="number" min="1" step="0.01" class="form-control buyingUsd" name="buying_usd" value="{{ old('buying_usd', $tax->buying_usd) }}" placeholder="Enter Seller Tax" required>
                                         <div class="help-block"></div>
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">Selling Rates USD<span class="text-danger">*</span></label>
                                     <div class="col-md-4">
-                                        <input type="number" step="0.01" class="form-control sellingUsd" name="selling_usd" value="{{ old('selling_usd', $tax->selling_usd) }}" placeholder="Enter Seller Tax" required>
+                                        <input type="number" min="1" step="0.01" class="form-control sellingUsd" name="selling_usd" value="{{ old('selling_usd', $tax->selling_usd) }}" placeholder="Enter Seller Tax" required>
                                         <div class="help-block"></div>
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('tax.Tax Herco')<span class="text-danger">*</span></label>
                                     <div class="col-md-4">
-                                        <input type="number" step="0.01" class="form-control exchangeBrBuying" name="buying_br" value="{{ old('buying_br', $tax->buying_br) }}" placeholder="Enter Tax By Herco" required>
+                                        <input type="number" min="1" step="0.01" class="form-control exchangeBrBuying" name="buying_br" value="{{ old('buying_br', $tax->buying_br) }}" placeholder="Enter Tax By Herco" required>
                                         <div class="help-block"></div>
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('tax.Tax Customer')<span class="text-danger">*</span></label>
                                     <div class="col-md-4">
-                                        <input type="number" step="0.01" class="form-control exchangeBrSelling" name="selling_br" value="{{ old('selling_br', $tax->selling_br) }}" placeholder="Enter Tax By Herco" required>
+                                        <input type="number" min="1" step="0.01" class="form-control exchangeBrSelling" name="selling_br" value="{{ old('selling_br', $tax->selling_br) }}" placeholder="Enter Tax By Herco" required>
                                         <div class="help-block"></div>
                                     </div>
                                 </div>

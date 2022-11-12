@@ -41,12 +41,16 @@ return [
     'Add Tax' => 'Add Tax',
     'Pay Tax' => 'Pay Tax',
     'Pay' => 'Pay',
-    'Tax Payment' => 'Toatal Tax Payment (R$)',
+    'Tax Payment' => 'Total Tax Payment (R$)',
     'Warehouse No.' => 'Warehouse No.',
     'Search By Name, Warehouse No. or Tracking Code' => 'Search By Name, Warehouse No. or Tracking Code',
     'Update' => 'Update',
     'Reset' => 'Reset',
     'Upload Receipt' => 'Upload Receipt',
+    'Exchange Rate' => 'Exchange Rate',
+    'Order Tax has Already been Paid'=>'Order Tax has Already been Paid',
+    'Fund deposit successfully.'     => 'Fund deposit successfully.',
+    'Low Balance.' => 'Low Balance.',
 
 
 

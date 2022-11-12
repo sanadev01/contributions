@@ -44,5 +44,9 @@ return [
     'Tax payment' => 'Tax payment',
     'Warehouse No.' => 'Warehouse No.',
     'Search By Name, Warehouse No. or Tracking Code' => 'Search By Name, Warehouse No. or Tracking Code',
+    'Exchange Rate' => 'Exchange Rate',
+    'Order Tax has Already been Paid'=>'Order Tax has Already been Paid',
+    'Fund deposit successfully.'     => 'Fund deposit successfully.',
+    'Low Balance.' => 'Low Balance.',
 
 ];

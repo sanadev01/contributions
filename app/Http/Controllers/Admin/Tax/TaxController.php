@@ -43,13 +43,8 @@ class TaxController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(TaxRepository $repository, Request $request)
-    {
-        if ($repository->store($request) ){
-            session()->flash('alert-success', 'Tax has been added successfully');
-            return  redirect()->route('admin.tax.index');
-        }
-        session()->flash('alert-danger', 'Please recharge your account first!');
-        return back()->withInput();
+    { 
+        return $repository->store($request);
     }
 
     /**
