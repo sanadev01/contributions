@@ -52,62 +52,60 @@ class TaxRepository
             'user_id' => 'required',
         ]);
         $trackingNumber = explode(',', preg_replace('/\s+/', '', $request->trackingNumbers));
-        return Order::where('user_id',$request->user_id)->whereDoesntHave('tax')->whereIn('corrios_tracking_code', $trackingNumber)->get();
+        // return Order::where('user_id',$request->user_id)->whereDoesntHave('tax')->whereIn('corrios_tracking_code', $trackingNumber)->get();
+        return Order::where('user_id',$request->user_id)->whereIn('corrios_tracking_code', $trackingNumber)->get();
     }
 
     public function store(Request $request)
     {
         $amount = 0;
-        $trackingNos = [];
         try{
-            $user = User::find($request->user_id);
-            if($user) {
-                foreach($request->order_id as $key=> $orderId) {
-                    $order = Order::find($orderId);
-                    if($order) {
-                        Tax::create([
-                            'user_id' => $request->user_id,
-                            'order_id' => $orderId,
-                            'tax_payment' => $request->tax_payment[$key],
-                            'tax_1' => $request->tax_1[$key],
-                            'tax_1_br' => $request->tax_1_br[$key],
-                            'tax_2' => $request->tax_2[$key],
-                            'tax_2_br' => $request->tax_2_br[$key],
-                        ]);
-                        $amount += $request->tax_1[$key];
-                        $trackingNos[] = array('Code' => $request->tracking_code[$key], );
-                    }
-                }
+            foreach($request->order_id as $key=> $orderId) {
+                
+                $order = Order::find($orderId);
+                $user = $order->user;
                 $balance = Deposit::getCurrentBalance($user);
-                $codes = json_encode($trackingNos);
-                if(!empty($codes) && $balance >= $amount) {
+                $amount = $request->buying_usd[$order->id];
+
+                if($order && $balance >= $amount) {
+                    Tax::create([
+                        'user_id' => $order->user_id,
+                        'order_id' => $order->id,
+                        'tax_payment' => $request->tax_payment[$order->id],
+                        'convert_rate' => $request->convert_rate[$order->id],
+                        'buying_usd' => $amount,
+                        'selling_usd' => $request->buying_br[$order->id],
+                        'buying_br' => $request->selling_usd[$order->id],
+                        'selling_br' => $request->selling_br[$order->id],
+                    ]);
 
                     $deposit = Deposit::create([
                         'uuid' => PaymentInvoice::generateUUID('DP-'),
                         'amount' => $amount,
-                        'user_id' => $request->user_id,
+                        'user_id' => $order->user_id,
+                        'order_id' => $order->id,
                         'balance' => $balance - $amount,
                         'is_credit' => false,
                         'attachment' => $this->fileName,
                         'last_four_digits' => 'Pay Tax',
-                        'description' => 'Pay Tax'.' '.$codes,
+                        'description' => 'Pay Tax',
                     ]);
-                    if ($request->hasFile('attachment')) {
-                        foreach ($request->file('attachment') as $attach) {
-                            $document = Document::saveDocument($attach);
-                            $deposit->depositAttchs()->create([
-                                'name' => $document->getClientOriginalName(),
-                                'size' => $document->getSize(),
-                                'type' => $document->getMimeType(),
-                                'path' => $document->filename
-                            ]);
-                        }
+
+                    $attach = optional($request->file('attachment'))[$order->id];
+                    if ($attach) {
+                        $document = Document::saveDocument($attach);
+                        $deposit->depositAttchs()->create([
+                            'name' => $document->getClientOriginalName(),
+                            'size' => $document->getSize(),
+                            'type' => $document->getMimeType(),
+                            'path' => $document->filename
+                        ]);
                     }
-                    $taxes = Tax::whereIn('order_id', $request->order_id)->update(['deposit_id' => $deposit->id]);
-                    return true;
+                    $taxes = Tax::where('order_id',$order->id)->update(['deposit_id' => $deposit->id]);
                 }
-                return false;
             }
+            return true;
+              
         }catch(Exception $exception){
             session()->flash('alert-danger','Error while Adding Tax'. $exception->getMessage());
             return null;
@@ -117,40 +115,46 @@ class TaxRepository
     public function update(Request $request,Tax $tax)
     {   
         try{
-            $deposit = Deposit::find($request->deposit_id);
-            $diffAmount = $request->tax_1 - $tax->tax_1;
-            if($request->tax_1 > $tax->tax_1 || $request->tax_1 < $tax->tax_1) {
-                $deposit->decrement('balance', $diffAmount);
-                $deposit->increment('amount', $diffAmount);               
-            }
-            //FILE UPLOAD
-            if ($request->hasFile('attachment')) {
-                foreach ($deposit->depositAttchs as $attachedFile ) {
-                    Storage::delete($attachedFile->getStoragePath());
-                }
-                $deposit->depositAttchs()->delete();
-                foreach ($request->file('attachment') as $attach) {
-                    $document = Document::saveDocument($attach);
-                    $deposit->depositAttchs()->create([
-                        'name' => $document->getClientOriginalName(),
-                        'size' => $document->getSize(),
-                        'type' => $document->getMimeType(),
-                        'path' => $document->filename
-                    ]);
-                }
-            }
-            $tax->update([
-                'tax_payment' => $request->tax_payment,
-                'tax_1' => $request->tax_1,
-                'tax_1_br' => $request->tax_1_br,
-                'tax_2' => $request->tax_2,
-                'tax_2_br' => $request->tax_2_br,
-            ]);
+            $deposit = $tax->deposit;
+            $balance = Deposit::getCurrentBalance($tax->user);            
+            $diffAmount = $request->buying_usd - $tax->buying_usd;
 
-            return true;
+            if($balance >= $diffAmount ) {
+                if($request->buying_usd > $tax->buying_usd || $request->buying_usd < $tax->buying_usd ) {
+                    $deposit->decrement('balance', $diffAmount);
+                    $deposit->increment('amount', $diffAmount);               
+                }
+                //FILE UPLOAD
+                if ($request->hasFile('attachment')) {
+                    foreach ($deposit->depositAttchs as $attachedFile ) {
+                        Storage::delete($attachedFile->getStoragePath());
+                    }
+                    $deposit->depositAttchs()->delete();
+                    $attach = $request->file('attachment');
+                    if($attach){
+                        $document = Document::saveDocument($attach);
+                        $deposit->depositAttchs()->create([
+                            'name' => $document->getClientOriginalName(),
+                            'size' => $document->getSize(),
+                            'type' => $document->getMimeType(),
+                            'path' => $document->filename
+                        ]);
+                    }
+                }
+                $tax->update([
+                    'tax_payment' => $request->tax_payment,
+                    'convert_rate' => $request->convert_rate,
+                    'buying_usd' => $request->buying_usd,
+                    'selling_usd' => $request->selling_usd,
+                    'buying_br' => $request->buying_br,
+                    'selling_br' => $request->selling_br,
+                ]);
 
+                return true;
+            }
+            return false;
         }catch(Exception $exception){
-            session()->flash('alert-danger','Error while update on Tax Transaction');
+            session()->flash('alert-danger','Error'.$exception->getMessage());
             return null;
         }
     }

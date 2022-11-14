@@ -11,6 +11,7 @@ class Container extends Component
     public $packetType='';
     public $dispatchNumber='';
     public $sealNo='';
+    public $search='';
     public $unitCode='';
     public function render(ContainerRepository $containerRepository)
     {
@@ -29,6 +30,7 @@ class Container extends Component
             'dispatchNumber' => $this->dispatchNumber,
             'sealNo' => $this->sealNo,
             'packetType' => $this->packetType,
+            'search' => $this->search,
             'unitCode' => $this->unitCode
         ]);
     }
