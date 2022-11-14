@@ -72,6 +72,30 @@
                     <div class="row justify-content-center">
                         <div class="col-md-6">
                             <div class="form-group">
+                                <label>@lang('shipping-rates.Shipping Service') <span class="text-danger">*</span></label>
+                                <select name="service_id" id="service" required class="form-control">
+                                    <option value="" selected>Select Service</option>
+                                    <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_STANDARD}}">Standard</option>
+                                    <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_EXPRESS}}">Express</option>
+                                    {{-- <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_MINI}}">Mini</option> --}}
+                                    <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_SRP}}">SRP</option>
+                                    <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_SRM}}">SRM</option>
+                                    <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_AJ_Standard}}">AJ Standard</option>
+                                    <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_AJ_EXPRESS}}">AJ Express</option>
+                                    <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_GePS}}">GePS</option>
+                                </select>
+                                @error('service_id')
+                                    <div class="text-danger">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="form-group">
                                 <label for="projectinput1">@lang('orders.import-excel.Select Excel File to Upload')</label>
                                 <input type="file" class="form-control" name="excel_file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel, text/xml" required>
                                 @error('excel_file')
