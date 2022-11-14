@@ -68,6 +68,7 @@ Route::prefix('v1')->group(function(){
         Route::middleware(['auth:api','checkPermission'])->group(function (){
             Route::get('balance', BalanceController::class);
             Route::resource('parcels', 'ParcelController')->only('store','show','destroy','update');
+            Route::put('parcel/items/{parcel}',[App\Http\Controllers\Api\PublicApi\ParcelController::class, 'updateItems']);
             Route::get('parcel/{order}/cn23',OrderLabelController::class);
             Route::get('order/tracking/{search}', OrderTrackingController::class);
             Route::get('services-rates', GetRateController::class);
