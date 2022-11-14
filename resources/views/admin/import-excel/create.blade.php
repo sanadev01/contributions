@@ -72,7 +72,7 @@
                     </div>
                 </div>
 
-                {{-- <div class="row justify-content-center">
+                <div class="row justify-content-center">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>@lang('shipping-rates.Shipping Service') <span class="text-danger">*</span></label>
@@ -110,7 +110,8 @@
                                 @enderror
                             </div>
                         </div>
-                    </div> --}}
+                    </div>
+                {{-- 
                 <div class="row justify-content-center">
                     <div class="col-md-6">
                         <div class="controls mt-3">
@@ -134,7 +135,7 @@
 
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 <div class="row justify-content-center">
                     <div class="col-md-10">
                         <div class="alert" style="background: #ffcaca !important;">
