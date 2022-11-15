@@ -291,6 +291,7 @@ Route::get('test-label/{id?}/d/{dno?}',function($id, $dNo){
     return $labelPrinter->download();
 });
 
+
 Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container');
 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
