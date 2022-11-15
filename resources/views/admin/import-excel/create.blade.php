@@ -83,8 +83,6 @@
                                     {{-- <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_MINI}}">Mini</option> --}}
                                     <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_SRP}}">SRP</option>
                                     <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_SRM}}">SRM</option>
-                                    <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_AJ_Standard}}">AJ Standard</option>
-                                    <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_AJ_EXPRESS}}">AJ Express</option>
                                     <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_GePS}}">GePS</option>
                                 </select>
                                 @error('service_id')
