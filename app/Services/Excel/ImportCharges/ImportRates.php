@@ -38,7 +38,7 @@ class ImportRates extends AbstractImportService
         }elseif($this->shippingService->service_sub_class == ShippingService::GePS){
             $limit = 27;
         }else{
-            $limit = 70;
+            $limit = 75;
         }
         foreach (range(3, $limit) as $row) {
             $rates[] = [
