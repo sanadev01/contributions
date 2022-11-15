@@ -34,11 +34,13 @@ class ImportRates extends AbstractImportService
     {
         $rates = [];
         if($this->shippingService->service_sub_class == ShippingService::Courier_Express){
+            $limit = 110;
+        }elseif($this->shippingService->service_sub_class == ShippingService::SRP || $this->shippingService->service_sub_class == ShippingService::SRM){
             $limit = 75;
         }elseif($this->shippingService->service_sub_class == ShippingService::GePS){
             $limit = 27;
         }else{
-            $limit = 75;
+            $limit = 70;
         }
         foreach (range(3, $limit) as $row) {
             $rates[] = [
