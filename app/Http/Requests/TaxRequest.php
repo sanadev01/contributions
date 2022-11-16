@@ -24,7 +24,7 @@ class TaxRequest extends FormRequest
     public function rules()
     {
         return [
-            'order_id' => 'required|array' 
+            'order_id' => 'required' 
         ];
     }
     public function messages()
