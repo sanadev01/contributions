@@ -41,12 +41,21 @@ return [
     'Add Tax' => 'Add Tax',
     'Pay Tax' => 'Pay Tax',
     'Pay' => 'Pay',
-    'Tax Payment' => 'Toatal Tax Payment (R$)',
+    'Tax Payment' => 'Total Tax Payment (R$)',
     'Warehouse No.' => 'Warehouse No.',
     'Search By Name, Warehouse No. or Tracking Code' => 'Search By Name, Warehouse No. or Tracking Code',
     'Update' => 'Update',
     'Reset' => 'Reset',
     'Upload Receipt' => 'Upload Receipt',
+    'Exchange Rate' => 'Exchange Rate',
+    'Order Paid'=> 'Order Tax has Already been Paid',
+    'Balance deposit'     => 'Balance deposit successfully.',
+    'Low Balance.' => 'Low Balance.',
+    'Herco Buying Rate' => 'Herco (Buying) Rate (R$)',
+    'Herco Selling Rate' => 'Herco (Selling) Rate (R$)',
+    'Herco Buying USD' => 'Herco (Buying) (USD)',
+    'Herco Selling USD' => 'Herco (Selling) (USD)',
+
 
 
 

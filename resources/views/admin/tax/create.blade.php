@@ -28,7 +28,7 @@
                                     <div class="form-group col-sm-6 col-md-3">
                                         <div class="controls">
                                             <label>@lang('parcel.User POBOX Number') <span class="text-danger">*</span></label>
-                                            <livewire:components.search-user />
+                                            <livewire:components.search-user selectedId="{{request('user_id')}}" />
                                             @error('pobox_number')
                                                 <div class="help-block text-danger"> {{ $message }} </div>
                                             @enderror
@@ -37,7 +37,9 @@
                                     <div class="form-group col-sm-6 col-md-3">
                                         <div class="controls">
                                             <label>Tracking No.<span class="text-danger">*</span></label>
-                                            <textarea type="text" placeholder="Please Enter Tracking Codes" rows="2" class="form-control" name="trackingNumbers">{{ old('trackingNumbers') }}</textarea>
+                                            <textarea type="text" placeholder="Please Enter Tracking Codes" rows="2" 
+                                            class="form-control"
+                                                name="trackingNumbers">{{ old('trackingNumbers',request('trackingNumbers')) }}</textarea>
                                             @error('trackingNumbers')
                                                 <div class="help-block text-danger"> {{ $message }} </div>
                                             @enderror
@@ -51,152 +53,260 @@
                             <form class="form" action="{{ route('admin.tax.store') }}" method="POST"
                                 enctype="multipart/form-data">
                                 @csrf
-                                    @if($orders)
-                                        {{-- <div class="row m-1 mb-2">
-                                            <div class="form-group offset-9 col-md-3 col-sm-6 mt-1 text-right">
-                                                <a class="btn pr-0" href='javascript:void(0)'>
-                                                    <button class="btn btn-success btn-md" type="button">Upload Receipt <i class="fa fa-upload"></i></button>
-                                                    <input type="file" name="attachment[]" multiple style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' size="40"  onchange='$("#upload-file-info").html($(this).val());'>
-                                                </a>
-                                                <br>
-                                                <span class='label label-info' id="upload-file-info"></span>
-                                            </div>
-                                        </div> --}}
-                                        <div class="row m-1 mb-2">
-                                            <div class="col-md-1">
-                                                <label><b>@lang('tax.Warehouse No.')</b></label>
-                                            </div>
-                                            <div class="col-md-1">
-                                                <label><b>@lang('tax.User Name')</b></label>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <label><b>@lang('tax.Tracking Code')</b></label>
-                                            </div>
-                                            <div class="col-md-1">
-                                                <label><b>@lang('tax.Tax Payment')</b></label>
-                                            </div>
-                                            <div class="col-md-1">
-                                                <label><b>@lang('Exchange Rste')</b></label>
-                                            </div>
-                                            <div class="col-md-1">
-                                                <label><b>Buying Rates USD</b></label>
-                                            </div>
-                                            <div class="col-md-1">
-                                                <label><b>Selling Rates USD</b></label>
-                                            </div>
-                                            <div class="col-md-1">
-                                                <label><b>@lang('tax.Tax Herco')</b></label>
-                                            </div>
-                                            <div class="col-md-1">
-                                                <label><b>@lang('tax.Tax Customer')</b></label>
-                                            </div>
-                                            <div class="col-md-1">
-                                                <label><b>@lang('tax.Profit') USD</b></label>
-                                            </div>
-                                            <div class="col-md-1">
-                                                <label><b>@lang('Attachment')</b></label>
-                                            </div>
+                                @if ($orders)
+                                  
+                                    <div class="row m-1 mb-2">
+                                        <div class="col-md-1">
+                                            <label><b>@lang('tax.Warehouse No.')</b></label>
                                         </div>
-                                        @foreach($orders as $order)
-                                            <div class="row m-1 mb-3 orders">
-                                                @if ($order->tax)
-                                                    <div class="col-md-1">
-                                                        <p class="text-danger">
-                                                            {{ $order->warehouse_number }}
-                                                        </p>
-                                                    </div>
-                                                    <div class="col-md-1">
-                                                        <p class="text-danger">
-                                                            {{ $order->user->name }}
-                                                        </p>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <p class="text-danger">
-                                                            {{ $order->corrios_tracking_code }}
-                                                        </p>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <p class="text-danger h3">
-                                                            Order Tax has Already been Paid
-                                                        </p>
-                                                    </div>
-                                                @else
-                                                    <div class="col-md-1">
-                                                        <input type="hidden" class="form-control" name="user_id" value="{{ $order->user_id }}">
-                                                        <input type="hidden" class="form-control" name="order_id[]" value="{{ $order->id }}">
-                                                        <input type="text" class="form-control"  value="{{ $order->warehouse_number }}" readonly required>
-                                                    </div>
-                                                    <div class="col-md-1">
-                                                        <input type="text" class="form-control" name="user_name[{{ $order->id }}]" value="{{ $order->user->name }}" required>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <input type="text" class="form-control" name="tracking_code[{{ $order->id }}]" value="{{ $order->corrios_tracking_code }}" readonly required>
-                                                    </div>                                                
-                                                    <div class="col-md-1">
-                                                        <input type="number" class="form-control" name="tax_payment[{{ $order->id }}]" value="" step="0.01" required>
-                                                    </div>
-                                                    <div class="col-md-1">
-                                                        <input type="number" class="form-control convert" name="convert_rate[{{ $order->id }}]" value="" step="0.01" required>
-                                                    </div>
-                                                    <div class="col-md-1">
-                                                        <input type="number" class="form-control buyingUsd" name="buying_usd[{{ $order->id }}]" value="" step="0.01" required>
-                                                    </div>
-                                                    <div class="col-md-1">
-                                                        <input type="number" class="form-control sellingUsd" name="selling_usd[{{ $order->id }}]" value="" step="0.01" required>
-                                                    </div>
-                                                    <div class="col-md-1">
-                                                        <input type="number" class="form-control exchangeBrBuying" name="buying_br[{{ $order->id }}]" value="" step="0.01" required>
-                                                    </div>
-                                                    <div class="col-md-1">
-                                                        <input type="number" class="form-control exchangeBrSelling" name="selling_br[{{ $order->id }}]" value="" step="0.01" required>
-                                                    </div>
-                                                    <div class="col-md-1">
-                                                        <input type="text" class="form-control profit" name="profit[{{ $order->id }}]" value=""  readonly required>
-                                                    </div>
-                                                    <div class="col-md-1">
-                                                        <a class="btn pr-0" href='javascript:void(0)'>
-                                                            <button class="btn btn-success btn-md" type="button"><i class="fa fa-upload"></i></button>
-                                                            <input type="file" name="attachment" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' size="40"  onchange='$("#upload-file-info").html($(this).val());'>
-                                                        </a>
-                                                    </div>
-                                                @endif
-                                            </div>
-                                        @endforeach
-                                        <div class="row mt-4 mb-4">
-                                            <div class="col-12 d-flex text-center flex-sm-row flex-column justify-content-end mt-1">
-                                                <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-4 waves-effect waves-light">
-                                                    @lang('tax.Pay')
-                                                </button>
-                                            </div>
+                                        <div class="col-md-1">
+                                            <label><b>@lang('tax.User Name')</b></label>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label><b>@lang('tax.Tracking Code')</b></label>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <label><b>@lang('tax.Tax Payment')</b></label>
+                                        </div>
+                                        {{-- <div class="col-md-1">
+                                            <label><b>@lang('tax.Exchange Rate')</b></label>
+                                        </div> --}}
+                                        <div class="col-md-1">
+                                            <label><b> Herco (Buying) (R$)</b></label>
+                                          </div>
+                                          <div class="col-md-1">
+                                              <label><b> Herco (Selling)  (R$)</b></label>
+                                          </div>
+
+                                          
+                                        <div class="col-md-1">
+                                            <label><b> Herco (Buying) (R$)</b></label>
+                                          </div>
+                                          <div class="col-md-1">
+                                              <label><b> Herco (Selling)  (R$)</b></label>
+                                          </div> 
+                                        <div class="col-md-1">
+                                            <label><b>@lang('tax.Profit') USD</b></label>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <label><b>@lang('Attachment')</b></label>
                                         </div>
                                     </div>
-                                @endif
-                            </form>
+                                    @foreach ($orders as $order)
+                                        @if ($order->tax)
+                                            <div class="row m-1 mt-3 orders">
+                                                <div class="col-md-1">
+                                                    <p class="text-danger">
+                                                        {{ $order->warehouse_number }}
+                                                    </p>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <p class="text-danger">
+                                                        {{ $order->user->name }}
+                                                    </p>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <p class="text-danger">
+                                                        {{ $order->corrios_tracking_code }}
+                                                    </p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <p class="text-danger h4">
+                                                        @lang('tax.Order Paid')
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            @error('deposit' . $order->id)
+                                                <div
+                                                    class="row  mb-3 text-success ">
+                                                    @lang('tax.Balance deposit')
+                                                </div>
+                                           @enderror
+                                        @else
+                                            <div  class="row m-1 mt-3 orders">
+                                                <div class="col-md-1">
+                                                    <input type="hidden" class="form-control" name="user_id"
+                                                        value="{{ $order->user_id }}">
+                                                    <input type="hidden" class="form-control" name="order_id[]"
+                                                        value="{{ $order->id }}">
+                                                    <input type="text" class="form-control
+                                                            @error('balance' . $order->id) text-danger @enderror
+                                                            @error('deposit' . $order->id) text-success @enderror"
+                                                        value="{{ $order->warehouse_number }}" readonly required>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <input type="text"
+                                                        class="form-control
+                                                        @error('balance' . $order->id) danger @enderror
+                                                        @error('deposit' . $order->id) success @enderror
+                                                        name="user_name[{{ $order->id }}]"
+                                                        value="{{ $order->user->name }}" required>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="text"
+                                                        class="form-control  
+                                                         @error('balance' . $order->id) danger @enderror
+                                                         @error('deposit' . $order->id) success @enderror
+                                                         
+                                                         "
+                                                        name="tracking_code[{{ $order->id }}]"
+                                                        value="{{ $order->corrios_tracking_code }}" readonly required>
+                                                </div>
+                                               <div class="col-md-1">
+                                                    <input type="number"
+                                                        class="form-control  taxPayment
+                                                        @error('balance' . $order->id) danger @enderror
+                                                        @error('deposit' . $order->id) success @enderror
+                                                        "
+                                                        min="1" 
+                                                        name="tax_payment[{{ $order->id }}]"
+                                                        value="{{ old('tax_payment.' . $order->id) }}" step="0.01"
+                                                        required>
+                                              </div> 
+
+                                                {{-- <div class="col-md-1">
+                                                    <input type="number"
+                                                        class="form-control convert 
+                                                        @error('balance' . $order->id) danger @enderror
+                                                        @error('deposit' . $order->id) success @enderror
+                                                        "
+                                                        min="1"
+                                                        name="convert_rate[{{ $order->id }}]"
+                                                        value="{{ old('convert_rate.' . $order->id) }}" step="0.01"
+                                                        required>
+                                                </div> --}}
+
+                                                <div class="col-md-1">
+                                                    <input type="number"
+                                                        class="form-control buyingBRRate
+                                                        @error('balance' . $order->id) danger @enderror
+                                                        @error('deposit' . $order->id) success @enderror
+                                                        "
+                                                        min="1"
+                                                        name="buying_br[{{ $order->id }}]"
+                                                        value="{{ old('buying_br.' . $order->id) }}" step="0.01"
+                                                        required>
+                                                </div>
+
+                                                <div class="col-md-1">
+                                                    <input type="number"
+                                                        class="form-control sellingBRRate
+                                                        @error('balance' . $order->id) danger @enderror
+                                                        @error('deposit' . $order->id) success @enderror
+                                                        "
+                                                        min="1"
+                                                        name="selling_br[{{ $order->id }}]"
+                                                        value="{{ old('selling_br.' . $order->id) }}" step="0.01"
+                                                        required>
+                                                </div>
+
+                                                <div class="col-md-1">
+                                                    <input  
+                                                        class="form-control buyingUSD
+                                                        @error('balance' . $order->id) danger @enderror
+                                                        @error('deposit' . $order->id) success @enderror
+                                                        " 
+                                                        name="buying_usd[{{ $order->id }}]"
+                                                        value="{{ old('buying_usd.' . $order->id) }}" step="0.01"
+                                                        readonly
+                                                        required>
+                                                </div>
+
+                                                <div class="col-md-1">
+                                                    <input 
+                                                        class="form-control sellingUSD  
+                                                        @error('balance' . $order->id) danger @enderror
+                                                        @error('deposit' . $order->id) success @enderror
+                                                        "
+                                                        name="selling_usd[{{ $order->id }}]"
+                                                        value="{{ old('selling_usd.' . $order->id) }}" step="0.01"
+                                                        readonly
+                                                        required>
+                                                </div>
+
+                                                <div class="col-md-1">
+                                                    <input type="text"
+                                                        class="form-control profit  
+                                                        @error('balance' . $order->id) danger @enderror
+                                                        @error('deposit' . $order->id) success @enderror
+                                                        "
+                                                        name="profit[{{ $order->id }}]"
+                                                        value="{{ old('profit.' . $order->id) }}" readonly required>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <a class="btn pr-0" href='javascript:void(0)'>
+                                                        <button class="btn btn-success btn-md" type="button"><i
+                                                                class="fa fa-upload"></i></button>
+                                                        <input multiple type="file" name="attachment[{{ $order->id }}][]"
+                                                        style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;'
+                                                          size="40"
+                                                            onchange='$("#upload-file-info-{{ $order->id }}").html($(this).value());'>
+                                                    </a>
+                                                
+                                                </div>
+                                                @error('balance' . $order->id)
+                                                    <div
+                                                        class="row ml-3 m-1 mb-3 text-danger">
+                                                        @lang('tax.Low Balance.')
+                                                    </div>
+                                                @enderror
+      
+
+
+                                            </div>
+                                          <div class="row m-1 mt-3 orders"> 
+                                           
+                                            <div class="col-md-12">
+                                                 <span class='float-right mr-5  label label-info' id="upload-file-info-{{ $order->id }}"></span>
+                                            </div>
+                                           
+                                          </div>
+                                             
+                                        @endif
+                                    @endforeach
+                                    <div class="row mt-4 mb-4">
+                                        <div
+                                            class="col-12 d-flex text-center flex-sm-row flex-column justify-content-end mt-1">
+                                            <button type="submit"
+                                                class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-4 waves-effect waves-light">
+                                                @lang('tax.Pay')
+                                            </button>
+                                        </div>
+                                    </div>
                         </div>
+                        @endif
+                        </form>
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     </section>
 @endsection
 @section('js')
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            $('body').on('change','.orders input.buyingUsd, input.sellingUsd, input.convert',function(){
-                let buyingUsd = $(this).closest('.orders').find('.buyingUsd').val();
-                let sellingUsd = $(this).closest('.orders').find('.sellingUsd').val();
-                let convert = $(this).closest('.orders').find('.convert').val();
-                let profit = parseFloat(buyingUsd) - parseFloat(sellingUsd);
-                let exchangeBrBuying = parseFloat(buyingUsd) * parseFloat(convert);
-                let exchangeBrSelling = parseFloat(sellingUsd) * parseFloat(convert);
+        document.addEventListener('DOMContentLoaded', function() {
+            $('body').on('change', '.orders input.buyingBRRate, input.sellingBRRate', function() {
+
+                let buyingBRRate = $(this).closest('.orders').find('.buyingBRRate').val();
+                let sellingBRRate = $(this).closest('.orders').find('.sellingBRRate').val(); 
+                let taxPayment = $(this).closest('.orders').find('.taxPayment').val(); 
+                console.log('buyingBRRate')
+                console.log(buyingBRRate)
+                let buyingUSD = parseFloat(taxPayment) / parseFloat(buyingBRRate); 
+                let sellingUSD = parseFloat(taxPayment) / parseFloat(sellingBRRate);
+                console.log('buyingUSD')
+                console.log(buyingUSD)
+                let profit = parseFloat(sellingUSD) - parseFloat(buyingUSD);
+
                 $(this).closest('.orders').find('.profit').val(
                     isNaN(profit) ? 0 : (profit).toFixed(2)
                 );
-                $(this).closest('.orders').find('.exchangeBrSelling').val(
-                    isNaN(exchangeBrSelling) ? 0 : (exchangeBrSelling).toFixed(2)
+                $(this).closest('.orders').find('.sellingUSD').val(
+                    isNaN(sellingUSD) ? 0 : (sellingUSD).toFixed(2)
                 );
-                $(this).closest('.orders').find('.exchangeBrBuying').val(
-                    isNaN(exchangeBrBuying) ? 0 : (exchangeBrBuying).toFixed(2)
+                $(this).closest('.orders').find('.buyingUSD').val(
+                    isNaN(buyingUSD) ? 0 : (buyingUSD).toFixed(2) 
                 );
             });
         })
