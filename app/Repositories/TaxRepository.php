@@ -53,7 +53,7 @@ class TaxRepository
             'user_id' => 'required',
         ]);
         $trackingNumber = explode(',', preg_replace('/\s+/', '', $request->trackingNumbers));
-        // return Order::where('user_id',$request->user_id)->whereDoesntHave('tax')->whereIn('corrios_tracking_code', $trackingNumber)->get();
+       
         return Order::where('user_id',$request->user_id)->whereIn('corrios_tracking_code', $trackingNumber)->get();
     }
 
