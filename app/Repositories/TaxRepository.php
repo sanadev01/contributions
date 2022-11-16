@@ -58,9 +58,7 @@ class TaxRepository
     }
 
     public function store(TaxRequest $request)
-    { 
-       
-        
+    {
         $insufficientBalanceMessages=[];
         $depositedMessages=[];
         $amount = 0; 
@@ -91,15 +89,15 @@ class TaxRepository
                             ]);
                             //deposite balance.
                             $deposit = Deposit::create([
-                                'uuid'             => PaymentInvoice::generateUUID('DP-'),
-                                'amount'           => $amount,
-                                'user_id'          =>    $order->user_id,
-                                'order_id'         =>    $order->id,
-                                'balance'          =>    $balance - $amount,
-                                'is_credit'        =>    false,
-                                'attachment'       =>    $this->fileName,
-                                'last_four_digits' =>    'Pay Tax',
-                                'description'      =>    'Pay Tax',
+                                'uuid' => PaymentInvoice::generateUUID('DP-'),
+                                'amount' => $amount,
+                                'user_id' => $order->user_id,
+                                'order_id' => $order->id,
+                                'balance' => $balance - $amount,
+                                'is_credit' => false,
+                                'attachment' => $this->fileName,
+                                'last_four_digits' => 'Pay Tax',
+                                'description' => 'Pay Tax',
                             ]); 
                             //upload file
                             $attach = optional($request->file('attachment'))[$order->id]; 
@@ -125,12 +123,10 @@ class TaxRepository
                         DB::rollBack(); 
                         return [ 'error' => $e->getMessage()]; 
                     } 
-                     DB::commit();  
-                           
-                    
+                     DB::commit();
             }  
             if(count($insufficientBalanceMessages)>0)
-                return back()->withInput()->withErrors($depositedMessages+$insufficientBalanceMessages); 
+                return $depositedMessages+$insufficientBalanceMessages; 
             else{
                     return true; 
             }
