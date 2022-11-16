@@ -68,7 +68,8 @@ class TaxRepository
                         $order      =   Order::find($orderId); 
                         $user       =   $order->user;
                         $balance    =   Deposit::getCurrentBalance($user);
-                        $amount     =   $request->buying_usd[$order->id];
+                        $amount = $request->selling_usd[$order->id];
+
                         if ($balance >= $amount) 
                         {
                             if($order->tax){
@@ -77,14 +78,15 @@ class TaxRepository
                             }
                             //save tax information.
                             Tax::create([
-                                'user_id'          =>    $order->user_id,
-                                'order_id'         =>    $order->id,
-                                'tax_payment'      =>    $request->tax_payment[$order->id],
-                                'convert_rate'     =>    $request->convert_rate[$order->id],
-                                'buying_usd'       =>    $amount,
-                                'selling_usd'      =>    $request->buying_br[$order->id],
-                                'buying_br'        =>    $request->selling_usd[$order->id],
-                                'selling_br'       =>    $request->selling_br[$order->id],
+                                'user_id' => $order->user_id,
+                                'order_id' => $order->id,
+                                'tax_payment' => $request->tax_payment[$order->id], 
+
+                                'buying_br' => $request->buying_br[$order->id],
+                                'selling_br' => $request->selling_br[$order->id],
+
+                                'selling_usd' => $amount,
+                                'buying_usd' => $request->buying_usd[$order->id],
                             ]);
                             //deposite balance.
                             $deposit = Deposit::create([
@@ -137,57 +139,56 @@ class TaxRepository
            
     }
 
-    public function update(Request $request, Tax $tax)
-    {
+    public function update(Request $request,Tax $tax)
+    {   
+        try{
+            $deposit = $tax->deposit;
+            $balance = Deposit::getCurrentBalance($tax->user);            
+            $diffAmount = $request->buying_usd - $tax->buying_usd;
 
-        DB::beginTransaction();
-
-        try {
-                
-            $deposit        =   $tax->deposit;
-            $balance        =   Deposit::getCurrentBalance($tax->user);
-            $diffAmount     =   $request->buying_usd - $tax->buying_usd;
-
-            if ($balance >= $diffAmount) { 
-                if ($request->buying_usd > $tax->buying_usd || $request->buying_usd < $tax->buying_usd) {
+            if($balance >= $diffAmount ) {
+                if($request->buying_usd > $tax->buying_usd || $request->buying_usd < $tax->buying_usd ) {
                     $deposit->decrement('balance', $diffAmount);
-                    $deposit->increment('amount', $diffAmount);
+                    $deposit->increment('amount', $diffAmount);               
                 }
                 //FILE UPLOAD
                 if ($request->hasFile('attachment')) {
-                    foreach ($deposit->depositAttchs as $attachedFile) {
+                    foreach ($deposit->depositAttchs as $attachedFile ) {
                         Storage::delete($attachedFile->getStoragePath());
                     }
                     $deposit->depositAttchs()->delete();
                     $attach = $request->file('attachment');
-                    if ($attach) {
+                    if($attach){
                         $document = Document::saveDocument($attach);
                         $deposit->depositAttchs()->create([
-                            'name'  =>  $document->getClientOriginalName(),
-                            'size'  =>  $document->getSize(),
-                            'type'  =>  $document->getMimeType(),
-                            'path'  =>  $document->filename
+                            'name' => $document->getClientOriginalName(),
+                            'size' => $document->getSize(),
+                            'type' => $document->getMimeType(),
+                            'path' => $document->filename
                         ]);
                     }
                 }
                 $tax->update([
-                    'tax_payment'   =>  $request->tax_payment,
-                    'convert_rate'  =>  $request->convert_rate,
-                    'buying_usd'    =>  $request->buying_usd,
-                    'selling_usd'   =>  $request->selling_usd,
-                    'buying_br'     =>  $request->buying_br,
-                    'selling_br'    =>  $request->selling_br,
+                    'tax_payment' => $request->tax_payment,
+                    'convert_rate' => $request->convert_rate,
+                    'buying_usd' => $request->buying_usd,
+                    'selling_usd' => $request->selling_usd,
+                    'buying_br' => $request->buying_br,
+                    'selling_br' => $request->selling_br,
                 ]);
-                DB::commit();
+
                 return true;
-            } 
-            DB::rollback();
-            return false; 
-        } catch (Exception $exception) {
-            DB::rollback();
-            session()->flash('alert-danger', 'Error' . $exception->getMessage());
+            }
+            return false;
+        }catch(Exception $exception){
+            session()->flash('alert-danger','Error'.$exception->getMessage());
             return null;
         }
     }
- 
+
+    public function delete()
+    {
+        //
+    }
+
 }

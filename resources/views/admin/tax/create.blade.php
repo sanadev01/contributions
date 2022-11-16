@@ -28,7 +28,7 @@
                                     <div class="form-group col-sm-6 col-md-3">
                                         <div class="controls">
                                             <label>@lang('parcel.User POBOX Number') <span class="text-danger">*</span></label>
-                                            <livewire:components.search-user />
+                                            <livewire:components.search-user selectedId="{{request('user_id')}}" />
                                             @error('pobox_number')
                                                 <div class="help-block text-danger"> {{ $message }} </div>
                                             @enderror
@@ -37,8 +37,9 @@
                                     <div class="form-group col-sm-6 col-md-3">
                                         <div class="controls">
                                             <label>Tracking No.<span class="text-danger">*</span></label>
-                                            <textarea type="text" placeholder="Please Enter Tracking Codes" rows="2" class="form-control"
-                                                name="trackingNumbers">{{ old('trackingNumbers') }}</textarea>
+                                            <textarea type="text" placeholder="Please Enter Tracking Codes" rows="2" 
+                                            class="form-control"
+                                                name="trackingNumbers">{{ old('trackingNumbers',request('trackingNumbers')) }}</textarea>
                                             @error('trackingNumbers')
                                                 <div class="help-block text-danger"> {{ $message }} </div>
                                             @enderror
@@ -76,21 +77,23 @@
                                         <div class="col-md-1">
                                             <label><b>@lang('tax.Tax Payment')</b></label>
                                         </div>
-                                        <div class="col-md-1">
+                                        {{-- <div class="col-md-1">
                                             <label><b>@lang('tax.Exchange Rate')</b></label>
-                                        </div>
+                                        </div> --}}
                                         <div class="col-md-1">
-                                            <label><b>Buying Rates USD</b></label>
-                                        </div>
+                                            <label><b> Herco (Buying) (R$)</b></label>
+                                          </div>
+                                          <div class="col-md-1">
+                                              <label><b> Herco (Selling)  (R$)</b></label>
+                                          </div>
+
+                                          
                                         <div class="col-md-1">
-                                            <label><b>Selling Rates USD</b></label>
-                                        </div>
-                                        <div class="col-md-1">
-                                            <label><b>@lang('tax.Tax Herco')</b></label>
-                                        </div>
-                                        <div class="col-md-1">
-                                            <label><b>@lang('tax.Tax Customer')</b></label>
-                                        </div>
+                                            <label><b> Herco (Buying) (R$)</b></label>
+                                          </div>
+                                          <div class="col-md-1">
+                                              <label><b> Herco (Selling)  (R$)</b></label>
+                                          </div> 
                                         <div class="col-md-1">
                                             <label><b>@lang('tax.Profit') USD</b></label>
                                         </div>
@@ -159,9 +162,9 @@
                                                         name="tracking_code[{{ $order->id }}]"
                                                         value="{{ $order->corrios_tracking_code }}" readonly required>
                                                 </div>
-                                                <div class="col-md-1">
+                                               <div class="col-md-1">
                                                     <input type="number"
-                                                        class="form-control  
+                                                        class="form-control  taxPayment
                                                         @error('balance' . $order->id) danger @enderror
                                                         @error('deposit' . $order->id) success @enderror
                                                         "
@@ -169,9 +172,9 @@
                                                         name="tax_payment[{{ $order->id }}]"
                                                         value="{{ old('tax_payment.' . $order->id) }}" step="0.01"
                                                         required>
-                                                </div>
+                                                </div> 
 
-                                                <div class="col-md-1">
+                                                {{-- <div class="col-md-1">
                                                     <input type="number"
                                                         class="form-control convert 
                                                         @error('balance' . $order->id) danger @enderror
@@ -181,35 +184,11 @@
                                                         name="convert_rate[{{ $order->id }}]"
                                                         value="{{ old('convert_rate.' . $order->id) }}" step="0.01"
                                                         required>
-                                                </div>
+                                                </div> --}}
 
                                                 <div class="col-md-1">
                                                     <input type="number"
-                                                        class="form-control buyingUsd 
-                                                        @error('balance' . $order->id) danger @enderror
-                                                        @error('deposit' . $order->id) success @enderror
-                                                        "
-                                                        min="1"
-                                                        name="buying_usd[{{ $order->id }}]"
-                                                        value="{{ old('buying_usd.' . $order->id) }}" step="0.01"
-                                                        required>
-                                                </div>
-
-                                                <div class="col-md-1">
-                                                    <input type="number"
-                                                        class="form-control sellingUsd 
-                                                        @error('balance' . $order->id) danger @enderror
-                                                        @error('deposit' . $order->id) success @enderror
-                                                        "
-                                                        min="1"
-                                                        name="selling_usd[{{ $order->id }}]"
-                                                        value="{{ old('selling_usd.' . $order->id) }}" step="0.01"
-                                                        required>
-                                                </div>
-
-                                                <div class="col-md-1">
-                                                    <input type="number"
-                                                        class="form-control exchangeBrBuying 
+                                                        class="form-control buyingBRRate
                                                         @error('balance' . $order->id) danger @enderror
                                                         @error('deposit' . $order->id) success @enderror
                                                         "
@@ -221,7 +200,7 @@
 
                                                 <div class="col-md-1">
                                                     <input type="number"
-                                                        class="form-control exchangeBrSelling  
+                                                        class="form-control sellingBRRate
                                                         @error('balance' . $order->id) danger @enderror
                                                         @error('deposit' . $order->id) success @enderror
                                                         "
@@ -232,11 +211,35 @@
                                                 </div>
 
                                                 <div class="col-md-1">
+                                                    <input  
+                                                        class="form-control buyingUSD
+                                                        @error('balance' . $order->id) danger @enderror
+                                                        @error('deposit' . $order->id) success @enderror
+                                                        " 
+                                                        name="buying_usd[{{ $order->id }}]"
+                                                        value="{{ old('buying_usd.' . $order->id) }}" step="0.01"
+                                                        readonly
+                                                        required>
+                                                </div>
+
+                                                <div class="col-md-1">
+                                                    <input 
+                                                        class="form-control sellingUSD  
+                                                        @error('balance' . $order->id) danger @enderror
+                                                        @error('deposit' . $order->id) success @enderror
+                                                        "
+                                                        name="selling_usd[{{ $order->id }}]"
+                                                        value="{{ old('selling_usd.' . $order->id) }}" step="0.01"
+                                                        readonly
+                                                        required>
+                                                </div>
+
+                                                <div class="col-md-1">
                                                     <input type="text"
                                                         class="form-control profit  
                                                         @error('balance' . $order->id) danger @enderror
                                                         @error('deposit' . $order->id) success @enderror
-                                                        " 
+                                                        "
                                                         name="profit[{{ $order->id }}]"
                                                         value="{{ old('profit.' . $order->id) }}" readonly required>
                                                 </div>
@@ -284,21 +287,27 @@
 @section('js')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            $('body').on('change', '.orders input.buyingUsd, input.sellingUsd, input.convert', function() {
-                let buyingUsd = $(this).closest('.orders').find('.buyingUsd').val();
-                let sellingUsd = $(this).closest('.orders').find('.sellingUsd').val();
-                let convert = $(this).closest('.orders').find('.convert').val();
-                let profit = parseFloat(buyingUsd) - parseFloat(sellingUsd);
-                let exchangeBrBuying = parseFloat(buyingUsd) * parseFloat(convert);
-                let exchangeBrSelling = parseFloat(sellingUsd) * parseFloat(convert);
+            $('body').on('change', '.orders input.buyingBRRate, input.sellingBRRate, input.convert', function() {
+
+                let buyingBRRate = $(this).closest('.orders').find('.buyingBRRate').val();
+                let sellingBRRate = $(this).closest('.orders').find('.sellingBRRate').val(); 
+                let taxPayment = $(this).closest('.orders').find('.taxPayment').val(); 
+                console.log('buyingBRRate')
+                console.log(buyingBRRate)
+                let buyingUSD = parseFloat(taxPayment) / parseFloat(buyingBRRate); 
+                let sellingUSD = parseFloat(taxPayment) / parseFloat(sellingBRRate);
+                console.log('buyingUSD')
+                console.log(buyingUSD)
+                let profit = parseFloat(sellingUSD) - parseFloat(buyingUSD);
+
                 $(this).closest('.orders').find('.profit').val(
                     isNaN(profit) ? 0 : (profit).toFixed(2)
                 );
-                $(this).closest('.orders').find('.exchangeBrSelling').val(
-                    isNaN(exchangeBrSelling) ? 0 : (exchangeBrSelling).toFixed(2)
+                $(this).closest('.orders').find('.sellingUSD').val(
+                    isNaN(sellingUSD) ? 0 : (sellingUSD).toFixed(2)
                 );
-                $(this).closest('.orders').find('.exchangeBrBuying').val(
-                    isNaN(exchangeBrBuying) ? 0 : (exchangeBrBuying).toFixed(2)
+                $(this).closest('.orders').find('.buyingUSD').val(
+                    isNaN(buyingUSD) ? 0 : (buyingUSD).toFixed(2) 
                 );
             });
         })

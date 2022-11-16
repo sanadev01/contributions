@@ -65,8 +65,7 @@
                                     <th>@lang('tax.User Name')</th>
                                     <th>@lang('tax.Warehouse No.')</th>
                                     <th>@lang('tax.Tracking Code')</th>
-                                    <th>@lang('tax.Tax Payment')</th>
-                                    <th>@lang('Convert Rate')</th>
+                                    <th>@lang('tax.Tax Payment')</th> 
                                     <th>@lang('tax.Tax Herco') USD</th>
                                     <th>@lang('tax.Tax Customer') USD</th>
                                     <th>@lang('tax.Tax Herco') BR</th>
@@ -90,8 +89,7 @@
                                         </span>
                                     </td>
                                     <td>{{ $tax->order->corrios_tracking_code }}</td>
-                                    <td>{{ $tax->tax_payment }}</td>
-                                    <td>{{ $tax->convert_rate }}</td>
+                                    <td>{{ $tax->tax_payment }}</td> 
                                     <td>{{ $tax->buying_usd }}</td>
                                     <td>{{ $tax->selling_usd }}</td>
                                     <td>{{ $tax->buying_br }}</td>
