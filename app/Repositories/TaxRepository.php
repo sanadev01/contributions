@@ -99,16 +99,18 @@ class TaxRepository
                                 'last_four_digits' => 'Pay Tax',
                                 'description' => 'Pay Tax',
                             ]); 
-                            //upload file
-                            $attach = optional($request->file('attachment'))[$order->id]; 
-                            if ($attach) {
-                                $document = Document::saveDocument($attach);
-                                $deposit->depositAttchs()->create([
-                                    'name' => $document->getClientOriginalName(),
-                                    'size' => $document->getSize(),
-                                    'type' => $document->getMimeType(),
-                                    'path' => $document->filename
-                                ]);
+                            //upload files 
+                            $attachs = optional($request->file('attachment'))[$order->id]; 
+                            if ($attachs) {
+                                foreach($request->attachment[$order->id] as $attach){
+                                    $document = Document::saveDocument($attach);
+                                    $deposit->depositAttchs()->create([
+                                        'name' => $document->getClientOriginalName(),
+                                        'size' => $document->getSize(),
+                                        'type' => $document->getMimeType(),
+                                        'path' => $document->filename
+                                    ]);
+                                }
                             }
                             // associate deposite with tax.  
                             Tax::where('order_id',$order->id)->update(['deposit_id' => $deposit->id]);
@@ -117,7 +119,7 @@ class TaxRepository
                         }else
                         {
                             $insufficientBalanceMessages['balance'.$orderId] = $order->warehouse_number." :Low Balance";
-                        } 
+                        }
                     }
                     catch(Exception $e){
                         DB::rollBack(); 

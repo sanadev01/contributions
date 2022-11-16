@@ -76,8 +76,10 @@
                                 @admin
                                     <td>{{ optional($deposit->user)->name }}</td>
                                 @endadmin
-                                <td>
-                                    @if ($deposit->hasOrder() && $deposit->firstOrder()->hasSecondLabel())
+                                <td>  
+                                    @if ($deposit->is_tax) 
+                                    
+                                    @elseif ($deposit->hasOrder() && $deposit->firstOrder()->hasSecondLabel())
                                         <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal"
                                             data-url="{{ route('admin.modals.order.invoice', $deposit->orders()->first()) }}"
                                             class="w-100" title="Show Order Details">

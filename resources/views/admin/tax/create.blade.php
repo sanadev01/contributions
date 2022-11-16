@@ -237,7 +237,7 @@
                                                     <a class="btn pr-0" href='javascript:void(0)'>
                                                         <button class="btn btn-success btn-md" type="button"><i
                                                                 class="fa fa-upload"></i></button>
-                                                        <input type="file" name="attachment[{{ $order->id }}]"
+                                                        <input multiple type="file" name="attachment[{{ $order->id }}][]"
                                                         style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;'
                                                           size="40"
                                                             onchange='$("#upload-file-info-{{ $order->id }}").html($(this).value());'>

@@ -98,7 +98,9 @@
                                     <td>
                                         @if(optional($tax->deposit)->depositAttchs)
                                             @foreach ($tax->deposit->depositAttchs as $attachedFile )
+                                            <div class="{{$loop->first? '':'mt-2'}}"> 
                                                 <a target="_blank" href="{{ $attachedFile->getPath() }}">Download</a><br>
+                                            </div>
                                             @endforeach
                                         @else
                                             Not Found
