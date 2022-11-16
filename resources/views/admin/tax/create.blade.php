@@ -54,16 +54,7 @@
                                 enctype="multipart/form-data">
                                 @csrf
                                 @if ($orders)
-                                    {{-- <div class="row m-1 mb-2">
-                                            <div class="form-group offset-9 col-md-3 col-sm-6 mt-1 text-right">
-                                                <a class="btn pr-0" href='javascript:void(0)'>
-                                                    <button class="btn btn-success btn-md" type="button">Upload Receipt <i class="fa fa-upload"></i></button>
-                                                    <input type="file" name="attachment[]" multiple style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' size="40"  onchange='$("#upload-file-info").html($(this).val());'>
-                                                </a>
-                                                <br>
-                                                <span class='label label-info' id="upload-file-info"></span>
-                                            </div>
-                                        </div> --}}
+                                  
                                     <div class="row m-1 mb-2">
                                         <div class="col-md-1">
                                             <label><b>@lang('tax.Warehouse No.')</b></label>
@@ -128,12 +119,11 @@
                                             @error('deposit' . $order->id)
                                                 <div
                                                     class="row  mb-3 text-success ">
-                                                    @lang('tax.Fund deposit successfully.')
+                                                    @lang('tax.Balance deposit')
                                                 </div>
                                            @enderror
                                         @else
-                                            <div
-                                                class="row m-1 mt-3 orders">
+                                            <div  class="row m-1 mt-3 orders">
                                                 <div class="col-md-1">
                                                     <input type="hidden" class="form-control" name="user_id"
                                                         value="{{ $order->user_id }}">
@@ -172,7 +162,7 @@
                                                         name="tax_payment[{{ $order->id }}]"
                                                         value="{{ old('tax_payment.' . $order->id) }}" step="0.01"
                                                         required>
-                                                </div> 
+                                              </div> 
 
                                                 {{-- <div class="col-md-1">
                                                     <input type="number"
@@ -248,10 +238,11 @@
                                                         <button class="btn btn-success btn-md" type="button"><i
                                                                 class="fa fa-upload"></i></button>
                                                         <input type="file" name="attachment[{{ $order->id }}]"
-                                                            style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;'
-                                                            size="40"
-                                                            onchange='$("#upload-file-info").html($(this).val());'>
+                                                        style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;'
+                                                          size="40"
+                                                            onchange='$("#upload-file-info-{{ $order->id }}").html($(this).value());'>
                                                     </a>
+                                                
                                                 </div>
                                                 @error('balance' . $order->id)
                                                     <div
@@ -263,6 +254,14 @@
 
 
                                             </div>
+                                          <div class="row m-1 mt-3 orders"> 
+                                           
+                                            <div class="col-md-12">
+                                                 <span class='float-right mr-5  label label-info' id="upload-file-info-{{ $order->id }}"></span>
+                                            </div>
+                                           
+                                          </div>
+                                             
                                         @endif
                                     @endforeach
                                     <div class="row mt-4 mb-4">
@@ -287,7 +286,7 @@
 @section('js')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            $('body').on('change', '.orders input.buyingBRRate, input.sellingBRRate, input.convert', function() {
+            $('body').on('change', '.orders input.buyingBRRate, input.sellingBRRate', function() {
 
                 let buyingBRRate = $(this).closest('.orders').find('.buyingBRRate').val();
                 let sellingBRRate = $(this).closest('.orders').find('.sellingBRRate').val(); 

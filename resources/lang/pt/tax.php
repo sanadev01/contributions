@@ -45,8 +45,11 @@ return [
     'Warehouse No.' => 'Warehouse No.',
     'Search By Name, Warehouse No. or Tracking Code' => 'Search By Name, Warehouse No. or Tracking Code',
     'Exchange Rate' => 'Exchange Rate',
-    'Order Tax has Already been Paid'=>'Order Tax has Already been Paid',
-    'Fund deposit successfully.'     => 'Fund deposit successfully.',
-    'Low Balance.' => 'Low Balance.',
-
+    'Order Paid'=>'Order Tax has Already been Paid',
+    'Balance deposit'     => 'Balance deposit successfully.',
+    'Low Balance.' => 'Low Balance.',    
+    'Herco Buying Rate' => 'Herco (Buying) Rate (R$)',
+    'Herco Selling Rate' => 'Herco (Selling) Rate (R$)',
+    'Herco Buying USD' => 'Herco (Buying) (USD)',
+    'Herco Selling USD' => 'Herco (Selling) (USD)',
 ];

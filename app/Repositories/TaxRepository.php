@@ -81,10 +81,8 @@ class TaxRepository
                                 'user_id' => $order->user_id,
                                 'order_id' => $order->id,
                                 'tax_payment' => $request->tax_payment[$order->id], 
-
                                 'buying_br' => $request->buying_br[$order->id],
-                                'selling_br' => $request->selling_br[$order->id],
-
+                                'selling_br' => $request->selling_br[$order->id], 
                                 'selling_usd' => $amount,
                                 'buying_usd' => $request->buying_usd[$order->id],
                             ]);
@@ -113,12 +111,11 @@ class TaxRepository
                             }
                             // associate deposite with tax.  
                             Tax::where('order_id',$order->id)->update(['deposit_id' => $deposit->id]);
-                            $depositedMessages['deposit'.$orderId] = $order->warehouse_number." : Fund deposited.";
+                            $depositedMessages['deposit'.$orderId] = $order->warehouse_number." : Balance deposited.";
                           
                         }else
                         {
-                            $insufficientBalanceMessages['balance'.$orderId] = $order->warehouse_number." :Low fund";
-                     
+                            $insufficientBalanceMessages['balance'.$orderId] = $order->warehouse_number." :Low Balance";
                         } 
                     }
                     catch(Exception $e){
