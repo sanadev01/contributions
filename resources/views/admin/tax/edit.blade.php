@@ -78,7 +78,7 @@
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('tax.Upload Receipt')<span class="text-danger">*</span></label>
                                     <div class="col-md-4">
-                                        <input type="file" class="form-control" name="attachment">
+                                        <input type="file" class="form-control" name="attachment[]" multiple>
                                         <div class="help-block"></div>
                                     </div>
                                 </div>
@@ -102,7 +102,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () { 
             
-            $('body').on('change','input.sellingBRRate ,  input.buyingBRRate ',function(){ 
+            $('body').on('change','input.taxPayment ,input.sellingBRRate ,  input.buyingBRRate ',function(){ 
                 let sellingBRRate = $('input.sellingBRRate').val();
                 let  buyingBRRate = $('input.buyingBRRate').val(); 
  
