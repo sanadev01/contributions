@@ -132,7 +132,13 @@ class Client{
         \Log::info(
             $packet
         );
-        
+        \Log::info('token');
+        \Log::info('isAnjunService');
+        \Log::info($this->getAnjunToken());
+
+        \Log::info('token');
+        \Log::info('isCorrieosService');
+        \Log::info($this->getToken());
         try {
             $response = $this->client->post('/packet/v1/packages',[
                'headers' => [
