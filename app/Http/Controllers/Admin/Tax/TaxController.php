@@ -7,7 +7,7 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Repositories\TaxRepository;
 use App\Http\Controllers\Controller;
-
+use App\Http\Requests\TaxRequest;
 
 class TaxController extends Controller
 {
@@ -30,7 +30,7 @@ class TaxController extends Controller
     public function create(TaxRepository $repository, Request $request)
     {
         $orders = null;
-        if($request->trackingNumbers) {
+        if ($request->trackingNumbers) {
             $orders = $repository->getOrders($request);
         }
         return view('admin.tax.create', compact('orders'));
@@ -42,14 +42,16 @@ class TaxController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(TaxRepository $repository, Request $request)
+    public function store(TaxRepository $repository, TaxRequest $request)
     {
-        if ($repository->store($request) ){
+        $response = $repository->store($request);
+        if ($response == true) {
             session()->flash('alert-success', 'Tax has been added successfully');
-            return  redirect()->route('admin.tax.index');
-        }
-        session()->flash('alert-danger', 'Please recharge your account first!');
-        return back()->withInput();
+            return redirect()->route('admin.tax.index');
+        } else {
+
+            return back()->withInput()->withErrors($response);
+        };
     }
 
     /**
@@ -71,7 +73,7 @@ class TaxController extends Controller
      */
     public function edit(Tax $tax)
     {
-        return view('admin.tax.edit',compact('tax'));
+        return view('admin.tax.edit', compact('tax'));
     }
 
     /**
@@ -83,8 +85,8 @@ class TaxController extends Controller
      */
     public function update(Request $request, Tax $tax, TaxRepository $repository)
     {
-        if ( $repository->update($request, $tax) ){
-            session()->flash('alert-success','Tax Transaction Updated');
+        if ($repository->update($request, $tax)) {
+            session()->flash('alert-success', 'Tax Transaction Updated');
             return redirect()->route('admin.tax.index');
         }
         session()->flash('alert-danger', 'Error While Update Tax! Check Your Account Balance');
