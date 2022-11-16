@@ -31,7 +31,6 @@ class TaxRequest extends FormRequest
     {
         return [
             'order_id.required'=> 'No order Found!',
-            'order_id.array'=> 'order must be an array!', 
         ];
     }    
 }
