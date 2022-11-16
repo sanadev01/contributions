@@ -64,73 +64,72 @@ class TaxRepository
         $amount = 0; 
             foreach ($request->order_id as $orderId) { 
 
-                    DB::beginTransaction();
-                    try{
-                        $order = Order::find($orderId); 
-                        $user = $order->user;
-                        $balance = Deposit::getCurrentBalance($user);
-                        $amount = $request->selling_usd[$order->id];
+                DB::beginTransaction();
+                try{
+                    $order = Order::find($orderId); 
+                    $user = $order->user;
+                    $balance = Deposit::getCurrentBalance($user);
+                    $amount = $request->selling_usd[$order->id];
 
-                        if ($balance >= $amount) 
-                        {
-                            if($order->tax){
-                                 DB::rollBack();  
-                                 return  $depositedMessages+$insufficientBalanceMessages;
-                            }
-                            //save tax information.
-                            Tax::create([
-                                'user_id' => $order->user_id,
-                                'order_id' => $order->id,
-                                'tax_payment' => $request->tax_payment[$order->id], 
-                                'buying_br' => $request->buying_br[$order->id],
-                                'selling_br' => $request->selling_br[$order->id], 
-                                'selling_usd' => $amount,
-                                'buying_usd' => $request->buying_usd[$order->id],
-                            ]);
-                            //deposite balance.
-                            $deposit = Deposit::create([
-                                'uuid' => PaymentInvoice::generateUUID('DP-'),
-                                'amount' => $amount,
-                                'user_id' => $order->user_id,
-                                'order_id' => $order->id,
-                                'balance' => $balance - $amount,
-                                'is_credit' => false,
-                                'attachment' => $this->fileName,
-                                'last_four_digits' => 'Pay Tax',
-                                'description' => 'Pay Tax',
-                            ]); 
-                            //upload files 
-                            $attachs = optional($request->file('attachment'))[$order->id]; 
-                            if ($attachs) {
-                                foreach($request->attachment[$order->id] as $attach){
-                                    $document = Document::saveDocument($attach);
-                                    $deposit->depositAttchs()->create([
-                                        'name' => $document->getClientOriginalName(),
-                                        'size' => $document->getSize(),
-                                        'type' => $document->getMimeType(),
-                                        'path' => $document->filename
-                                    ]);
-                                }
-                            }
-                            // associate deposite with tax.  
-                            Tax::where('order_id',$order->id)->update(['deposit_id' => $deposit->id]);
-                            $depositedMessages['deposit'.$orderId] = $order->warehouse_number." : Balance deposited.";
-                          
-                        }else
-                        {
-                            $insufficientBalanceMessages['balance'.$orderId] = $order->warehouse_number." :Low Balance";
+                    if ($balance >= $amount){
+
+                        if($order->tax){
+                                DB::rollBack();  
+                                return  $depositedMessages+$insufficientBalanceMessages;
                         }
+                        //save tax information.
+                        Tax::create([
+                            'user_id' => $order->user_id,
+                            'order_id' => $order->id,
+                            'tax_payment' => $request->tax_payment[$order->id], 
+                            'buying_br' => $request->buying_br[$order->id],
+                            'selling_br' => $request->selling_br[$order->id], 
+                            'selling_usd' => $amount,
+                            'buying_usd' => $request->buying_usd[$order->id],
+                        ]);
+                        //deposite balance.
+                        $deposit = Deposit::create([
+                            'uuid' => PaymentInvoice::generateUUID('DP-'),
+                            'amount' => $amount,
+                            'user_id' => $order->user_id,
+                            'order_id' => $order->id,
+                            'balance' => $balance - $amount,
+                            'is_credit' => false,
+                            'attachment' => $this->fileName,
+                            'last_four_digits' => 'Pay Tax',
+                            'description' => 'Pay Tax',
+                        ]); 
+                        //upload files 
+                        $attachs = optional($request->file('attachment'))[$order->id]; 
+                        if ($attachs) {
+                            foreach($request->attachment[$order->id] as $attach){
+                                $document = Document::saveDocument($attach);
+                                $deposit->depositAttchs()->create([
+                                    'name' => $document->getClientOriginalName(),
+                                    'size' => $document->getSize(),
+                                    'type' => $document->getMimeType(),
+                                    'path' => $document->filename
+                                ]);
+                            }
+                        }
+                        // associate deposite with tax.  
+                        Tax::where('order_id',$order->id)->update(['deposit_id' => $deposit->id]);
+                        $depositedMessages['deposit'.$orderId] = $order->warehouse_number." : Balance deposited.";
+                        
+                        DB::commit();
+                    }else{
+                        $insufficientBalanceMessages['balance'.$orderId] = $order->warehouse_number." :Low Balance";
                     }
-                    catch(Exception $e){
-                        DB::rollBack(); 
-                        return [ 'error' => $e->getMessage()]; 
-                    } 
-                     DB::commit();
+                }
+                catch(Exception $e){
+                    DB::rollBack(); 
+                    return [ 'error' => $e->getMessage()]; 
+                } 
             }  
-            if(count($insufficientBalanceMessages)>0)
+            if( count($insufficientBalanceMessages) > 0 )
                 return $depositedMessages+$insufficientBalanceMessages; 
             else{
-                    return true; 
+                return true; 
             }
            
     }
