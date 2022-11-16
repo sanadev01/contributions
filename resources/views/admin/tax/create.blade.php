@@ -112,7 +112,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <p class="text-danger h4">
-                                                        @lang('tax.Order Tax has Already been Paid')
+                                                        @lang('tax.Order Paid')
                                                     </p>
                                                 </div>
                                             </div>

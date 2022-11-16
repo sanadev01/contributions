@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Http\Requests\TaxRequest;
 use Exception;
 use App\Models\Tax;
 use App\Models\User;
@@ -56,8 +57,10 @@ class TaxRepository
         return Order::where('user_id',$request->user_id)->whereIn('corrios_tracking_code', $trackingNumber)->get();
     }
 
-    public function store(Request $request)
+    public function store(TaxRequest $request)
     { 
+       
+        
         $insufficientBalanceMessages=[];
         $depositedMessages=[];
         $amount = 0; 
@@ -65,16 +68,16 @@ class TaxRepository
 
                     DB::beginTransaction();
                     try{
-                        $order      =   Order::find($orderId); 
-                        $user       =   $order->user;
-                        $balance    =   Deposit::getCurrentBalance($user);
+                        $order = Order::find($orderId); 
+                        $user = $order->user;
+                        $balance = Deposit::getCurrentBalance($user);
                         $amount = $request->selling_usd[$order->id];
 
                         if ($balance >= $amount) 
                         {
                             if($order->tax){
                                  DB::rollBack();  
-                                 return back()->withInput()->withErrors($depositedMessages+$insufficientBalanceMessages);
+                                 return  $depositedMessages+$insufficientBalanceMessages;
                             }
                             //save tax information.
                             Tax::create([
@@ -88,8 +91,8 @@ class TaxRepository
                             ]);
                             //deposite balance.
                             $deposit = Deposit::create([
-                                'uuid'             =>    PaymentInvoice::generateUUID('DP-'),
-                                'amount'           =>    $amount,
+                                'uuid'             => PaymentInvoice::generateUUID('DP-'),
+                                'amount'           => $amount,
                                 'user_id'          =>    $order->user_id,
                                 'order_id'         =>    $order->id,
                                 'balance'          =>    $balance - $amount,
@@ -103,10 +106,10 @@ class TaxRepository
                             if ($attach) {
                                 $document = Document::saveDocument($attach);
                                 $deposit->depositAttchs()->create([
-                                    'name'         =>    $document->getClientOriginalName(),
-                                    'size'         =>    $document->getSize(),
-                                    'type'         =>    $document->getMimeType(),
-                                    'path'         =>    $document->filename
+                                    'name' => $document->getClientOriginalName(),
+                                    'size' => $document->getSize(),
+                                    'type' => $document->getMimeType(),
+                                    'path' => $document->filename
                                 ]);
                             }
                             // associate deposite with tax.  
@@ -120,18 +123,16 @@ class TaxRepository
                     }
                     catch(Exception $e){
                         DB::rollBack(); 
-                        return back()->withInput()->withErrors([ 'error' => $e->getMessage()]); 
+                        return [ 'error' => $e->getMessage()]; 
                     } 
                      DB::commit();  
                            
                     
-            }    
+            }  
             if(count($insufficientBalanceMessages)>0)
                 return back()->withInput()->withErrors($depositedMessages+$insufficientBalanceMessages); 
             else{
-                    session()->flash('alert-success', 'Tax has been added successfully'); 
-                    return redirect()->route('admin.tax.index');
-                            
+                    return true; 
             }
            
     }
