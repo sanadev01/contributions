@@ -45,11 +45,11 @@ class TaxController extends Controller
     public function store(TaxRepository $repository, TaxRequest $request)
     {
         $response = $repository->store($request);
-        if ($response == true) {
+        if (is_bool($response) && $response) {
             session()->flash('alert-success', 'Tax has been added successfully');
             return redirect()->route('admin.tax.index');
-        } else {
-
+        }
+        else {
             return back()->withInput()->withErrors($response);
         };
     }

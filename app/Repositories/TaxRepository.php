@@ -68,9 +68,9 @@ class TaxRepository
                         $user = $order->user;
                         $balance = Deposit::getCurrentBalance($user);
 
-                        $sellingUSD =  number_format($request->tax_payment[$order->id]/$request->selling_br[$order->id],2);
-                        $buyingUSD  =  number_format($request->tax_payment[$order->id]/$request->buying_br[$order->id],2);
-                        
+                        $sellingUSD =   round($request->tax_payment[$order->id]/$request->selling_br[$order->id],2);
+                        $buyingUSD  =  round($request->tax_payment[$order->id]/$request->buying_br[$order->id],2);
+                         
                         if ($balance >= $sellingUSD) 
                         {
                             if($order->tax){
@@ -119,7 +119,7 @@ class TaxRepository
                         }else
                         {
                             $insufficientBalanceMessages['balance'.$orderId] = $order->warehouse_number." :Low Balance";
-                        }
+                       }
                     }
                     catch(Exception $e){
                         DB::rollBack(); 
@@ -140,10 +140,10 @@ class TaxRepository
         try{
             $deposit = $tax->deposit;
             $balance = Deposit::getCurrentBalance($tax->user);
-            $sellingUSD =  number_format($request->tax_payment/$request->selling_br,2);
+            $sellingUSD =  round($request->tax_payment/$request->selling_br,2);
             $diffAmount = $sellingUSD - $tax->selling_usd;
             
-            $buyingUSD  =  number_format($request->tax_payment/$request->buying_br,2);
+            $buyingUSD  =  round($request->tax_payment/$request->buying_br,2);
              
             if($balance >= $diffAmount ) {
                 if($sellingUSD > $tax->selling_usd || $sellingUSD < $tax->selling_usd ) {

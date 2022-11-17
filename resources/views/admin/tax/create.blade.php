@@ -181,8 +181,7 @@
                                                         class="form-control buyingBRRate
                                                         @error('balance' . $order->id) danger @enderror
                                                         @error('deposit' . $order->id) success @enderror
-                                                        "
-                                                        min="1"
+                                                        " 
                                                         name="buying_br[{{ $order->id }}]"
                                                         value="{{ old('buying_br.' . $order->id) }}" step="0.01"
                                                         required>
@@ -193,8 +192,7 @@
                                                         class="form-control sellingBRRate
                                                         @error('balance' . $order->id) danger @enderror
                                                         @error('deposit' . $order->id) success @enderror
-                                                        "
-                                                        min="1"
+                                                        " 
                                                         name="selling_br[{{ $order->id }}]"
                                                         value="{{ old('selling_br.' . $order->id) }}" step="0.01"
                                                         required>
@@ -242,21 +240,18 @@
                                                           size="40"
                                                             onchange='$("#upload-file-info-{{ $order->id }}").html($(this).value());'>
                                                     </a>
-                                                
                                                 </div>
-                                                @error('balance' . $order->id)
+                                            </div>
+                                          <div class="row m-1 mt-3 orders"> 
+                                           <div class="col-md-6">
+                                                    @error('balance' . $order->id)
                                                     <div
                                                         class="row ml-3 m-1 mb-3 text-danger">
                                                         @lang('tax.Low Balance.')
                                                     </div>
                                                 @enderror
-      
-
-
-                                            </div>
-                                          <div class="row m-1 mt-3 orders"> 
-                                           
-                                            <div class="col-md-12">
+                                           </div>
+                                            <div class="col-md-6">
                                                  <span class='float-right mr-5  label label-info' id="upload-file-info-{{ $order->id }}"></span>
                                             </div>
                                            
