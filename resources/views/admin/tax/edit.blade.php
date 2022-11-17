@@ -43,14 +43,14 @@
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('tax.Herco Buying Rate')<span class="text-danger">*</span></label>
                                     <div class="col-md-4">
-                                        <input type="number" min="0"  step="0.01" class="form-control buyingBRRate @error('buying_br') danger @enderror" name="buying_br" value="{{ old('buying_br', $tax->buying_br) }}" placeholder="@lang('tax.Herco Buying Rate')" required>
+                                        <input type="number" min="0"  step="0.01" class="form-control buyingBRRate" name="buying_br" value="{{ old('buying_br', $tax->buying_br) }}" placeholder="@lang('tax.Herco Buying Rate')" required>
                                         <div class="help-block"></div>
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('tax.Herco Selling Rate')<span class="text-danger">*</span></label>
                                     <div class="col-md-4">
-                                        <input type="number" min="0" step="0.01" class="form-control sellingBRRate @error('selling_br') danger @enderror" name="selling_br" value="{{ old('selling_br', $tax->selling_br) }}" placeholder="@lang('tax.Herco Selling Rate')" required>
+                                        <input type="number" min="0" step="0.01" class="form-control sellingBRRate" name="selling_br" value="{{ old('selling_br', $tax->selling_br) }}" placeholder="@lang('tax.Herco Selling Rate')" required>
                                         <div class="help-block"></div>
                                     </div>
                                 </div>

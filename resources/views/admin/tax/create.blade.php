@@ -67,10 +67,7 @@
                                         </div>
                                         <div class="col-md-1">
                                             <label><b>@lang('tax.Tax Payment')</b></label>
-                                        </div>
-                                        {{-- <div class="col-md-1">
-                                            <label><b>@lang('tax.Exchange Rate')</b></label>
-                                        </div> --}}
+                                        </div> 
                                         <div class="col-md-1">
                                             <label><b> Herco (Buying) (R$)</b></label>
                                           </div>
@@ -129,100 +126,52 @@
                                                         value="{{ $order->user_id }}">
                                                     <input type="hidden" class="form-control" name="order_id[]"
                                                         value="{{ $order->id }}">
-                                                    <input type="text" class="form-control
-                                                            @error('balance' . $order->id) text-danger @enderror
-                                                            @error('deposit' . $order->id) text-success @enderror"
+                                                    <input type="text" class="form-control"
                                                         value="{{ $order->warehouse_number }}" readonly required>
                                                 </div>
                                                 <div class="col-md-1">
                                                     <input type="text"
                                                         class="form-control
-                                                        @error('balance' . $order->id) danger @enderror
-                                                        @error('deposit' . $order->id) success @enderror
                                                         name="user_name[{{ $order->id }}]"
                                                         value="{{ $order->user->name }}" required>
                                                 </div>
                                                 <div class="col-md-2">
                                                     <input type="text"
-                                                        class="form-control  
-                                                         @error('balance' . $order->id) danger @enderror
-                                                         @error('deposit' . $order->id) success @enderror
-                                                         
-                                                         "
+                                                        class="form-control"
                                                         name="tracking_code[{{ $order->id }}]"
                                                         value="{{ $order->corrios_tracking_code }}" readonly required>
                                                 </div>
                                                <div class="col-md-1">
-                                                    <input type="number"
-                                                        class="form-control  taxPayment
-                                                        @error('balance' . $order->id) danger @enderror
-                                                        @error('deposit' . $order->id) success @enderror
-                                                        "
-                                                        min="1" 
-                                                        name="tax_payment[{{ $order->id }}]"
-                                                        value="{{ old('tax_payment.' . $order->id) }}" step="0.01"
-                                                        required>
+                                                    <input type="number" class="form-control  taxPayment"  min="1"  name="tax_payment[{{ $order->id }}]"
+                                                        value="{{ old('tax_payment.' . $order->id) }}" step="0.01"  required>
                                               </div> 
 
 
                                                 <div class="col-md-1">
-                                                    <input type="number"
-                                                        class="form-control buyingBRRate
-                                                        @error('balance' . $order->id) danger @enderror
-                                                        @error('buying_br.' . $order->id) danger @enderror
-                                                        @error('deposit' . $order->id) success @enderror
-                                                        " 
-                                                        min="0"
-                                                        name="buying_br[{{ $order->id }}]"
-                                                        value="{{ old('buying_br.' . $order->id) }}" step="0.01"
-                                                        required>
+                                                    <input type="number"  class="form-control buyingBRRate"  min="0"  name="buying_br[{{ $order->id }}]"
+                                                     value="{{ old('buying_br.' . $order->id) }}" step="0.01" required>
                                                 </div>
 
                                                 <div class="col-md-1">
                                                     <input type="number"
-                                                        class="form-control sellingBRRate
-                                                        @error('balance' . $order->id) danger @enderror
-                                                        @error('selling_br.' . $order->id) danger @enderror
-                                                        @error('deposit' . $order->id) success @enderror
-                                                        " 
-                                                        min="0"
-                                                        name="selling_br[{{ $order->id }}]"
-                                                        value="{{ old('selling_br.' . $order->id) }}" step="0.01"
-                                                        required>
+                                                        class="form-control sellingBRRate" min="0" name="selling_br[{{ $order->id }}]"
+                                                        value="{{ old('selling_br.' . $order->id) }}" step="0.01"  required>
                                                          
                                                 </div>
 
                                                 <div class="col-md-1">
                                                     <input  
-                                                        class="form-control buyingUSD
-                                                        @error('balance' . $order->id) danger @enderror
-                                                        @error('deposit' . $order->id) success @enderror
-                                                        " 
-                                                        name="buying_usd[{{ $order->id }}]"
-                                                        value="{{ old('buying_usd.' . $order->id) }}" step="0.01"
-                                                        readonly
-                                                        required>
+                                                        class="form-control buyingUSD"   name="buying_usd[{{ $order->id }}]"
+                                                         value="{{ old('buying_usd.' . $order->id) }}" step="0.01" readonly required>
                                                 </div>
 
                                                 <div class="col-md-1">
-                                                    <input 
-                                                        class="form-control sellingUSD  
-                                                        @error('balance' . $order->id) danger @enderror
-                                                        @error('deposit' . $order->id) success @enderror
-                                                        "
-                                                        name="selling_usd[{{ $order->id }}]"
-                                                        value="{{ old('selling_usd.' . $order->id) }}" step="0.01"
-                                                        readonly
-                                                        required>
+                                                    <input class="form-control sellingUSD" name="selling_usd[{{ $order->id }}]" 
+                                                        value="{{ old('selling_usd.' . $order->id) }}" step="0.01"  readonly required>
                                                 </div>
 
                                                 <div class="col-md-1">
-                                                    <input type="text"
-                                                        class="form-control profit  
-                                                        @error('balance' . $order->id) danger @enderror
-                                                        @error('deposit' . $order->id) success @enderror
-                                                        "
-                                                        name="profit[{{ $order->id }}]"
+                                                    <input type="text" class="form-control profit" name="profit[{{ $order->id }}]"
                                                         value="{{ old('profit.' . $order->id) }}" readonly required>
                                                 </div>
                                                 <div class="col-md-1">
@@ -236,19 +185,10 @@
                                                     </a>
                                                 </div>
                                             </div>
-                                          <div class="row m-1 mt-3 orders"> 
-                                           <div class="col-md-6">
-                                                    @error('balance' . $order->id)
-                                                    <div
-                                                        class="row ml-3 m-1 mb-3 text-danger">
-                                                        @lang('tax.Low Balance.')
-                                                    </div>
-                                                @enderror
-                                           </div>
+                                          <div class="row m-1 mt-3 orders">  
                                             <div class="col-md-6">
                                                  <span class='float-right mr-5  label label-info' id="upload-file-info-{{ $order->id }}"></span>
-                                            </div>
-                                           
+                                            </div> 
                                           </div>
                                              
                                         @endif
@@ -292,10 +232,10 @@
                     isNaN(profit) ? 0 : (profit).toFixed(2)
                 );
                 $(this).closest('.orders').find('.sellingUSD').val(
-                    isNaN(sellingUSD) ? 0 : (sellingUSD).toFixed(2)
+                    isNaN(sellingUSD)|| !isFinite(sellingUSD) ? 0 : (sellingUSD).toFixed(2)
                 );
                 $(this).closest('.orders').find('.buyingUSD').val(
-                    isNaN(buyingUSD) ? 0 : (buyingUSD).toFixed(2) 
+                    isNaN(buyingUSD) || !isFinite(buyingUSD)? 0 : (buyingUSD).toFixed(2) 
                 );
             });
         })
