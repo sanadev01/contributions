@@ -36,8 +36,7 @@ class TaxRequest extends FormRequest
         return [
             'order_id.required'=> 'No order Found!',
             'selling_br.required'=> 'selling rate is required!',
-            'buying_br.required'=> 'buying rate is required!', 
-
+            'buying_br.required'=> 'buying rate is required!',
             'selling_br.*.required'=> 'selling rate is required!',
             'buying_br.*.required'=> 'buying rate is required!',
             'selling_br.*.gt'=> 'selling  rate must be greater than 0.',

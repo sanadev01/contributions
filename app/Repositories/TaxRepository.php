@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Http\Requests\TaxRequest;
+use App\Http\Requests\TaxUpdateRequest;
 use Exception;
 use App\Models\Tax;
 use App\Models\User;
@@ -135,8 +136,8 @@ class TaxRepository
            
     }
 
-    public function update(Request $request,Tax $tax)
-    {   
+    public function update(TaxUpdateRequest $request,Tax $tax)
+    {
         try{
             $deposit = $tax->deposit;
             $balance = Deposit::getCurrentBalance($tax->user);
