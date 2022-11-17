@@ -117,10 +117,10 @@
                     isNaN(profit) ? 0 : (profit).toFixed(2)
                 );
                 $(this).closest('.orders').find('.sellingUSD').val(
-                    isNaN(sellingUSD) ? 0 : (sellingUSD).toFixed(2)
+                    isNaN(sellingUSD)|| !isFinite(sellingUSD) ? 0 : (sellingUSD).toFixed(2)
                 );
                 $(this).closest('.orders').find('.buyingUSD').val(
-                    isNaN(buyingUSD) ? 0 : (buyingUSD).toFixed(2) 
+                    isNaN(buyingUSD) || !isFinite(buyingUSD)? 0 : (buyingUSD).toFixed(2) 
                 );
 
             });
