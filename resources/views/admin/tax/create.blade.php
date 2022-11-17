@@ -92,7 +92,7 @@
                                             <label><b>@lang('Attachment')</b></label>
                                         </div>
                                     </div>
-                                    @foreach ($orders as $order)
+                                    @foreach ($orders as $key=>$order)
                                         @if ($order->tax)
                                             <div class="row m-1 mt-3 orders">
                                                 <div class="col-md-1">
@@ -164,24 +164,15 @@
                                                         required>
                                               </div> 
 
-                                                {{-- <div class="col-md-1">
-                                                    <input type="number"
-                                                        class="form-control convert 
-                                                        @error('balance' . $order->id) danger @enderror
-                                                        @error('deposit' . $order->id) success @enderror
-                                                        "
-                                                        min="1"
-                                                        name="convert_rate[{{ $order->id }}]"
-                                                        value="{{ old('convert_rate.' . $order->id) }}" step="0.01"
-                                                        required>
-                                                </div> --}}
 
                                                 <div class="col-md-1">
                                                     <input type="number"
                                                         class="form-control buyingBRRate
                                                         @error('balance' . $order->id) danger @enderror
+                                                        @error('buying_br.' . $order->id) danger @enderror
                                                         @error('deposit' . $order->id) success @enderror
                                                         " 
+                                                        min="0"
                                                         name="buying_br[{{ $order->id }}]"
                                                         value="{{ old('buying_br.' . $order->id) }}" step="0.01"
                                                         required>
@@ -191,11 +182,14 @@
                                                     <input type="number"
                                                         class="form-control sellingBRRate
                                                         @error('balance' . $order->id) danger @enderror
+                                                        @error('selling_br.' . $order->id) danger @enderror
                                                         @error('deposit' . $order->id) success @enderror
                                                         " 
+                                                        min="0"
                                                         name="selling_br[{{ $order->id }}]"
                                                         value="{{ old('selling_br.' . $order->id) }}" step="0.01"
                                                         required>
+                                                         
                                                 </div>
 
                                                 <div class="col-md-1">

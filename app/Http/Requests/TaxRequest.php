@@ -24,13 +24,24 @@ class TaxRequest extends FormRequest
     public function rules()
     {
         return [
-            'order_id' => 'required' 
+            'order_id' => 'required',
+            'selling_br' => 'required|array', 
+            'buying_br' => 'required|array', 
+            'selling_br.*' => 'required|numeric|gt:0', 
+            'buying_br.*' => 'required|numeric|gt:0',
         ];
     }
     public function messages()
     {
         return [
             'order_id.required'=> 'No order Found!',
+            'selling_br.required'=> 'selling rate is required!',
+            'buying_br.required'=> 'buying rate is required!', 
+
+            'selling_br.*.required'=> 'selling rate is required!',
+            'buying_br.*.required'=> 'buying rate is required!',
+            'selling_br.*.gt'=> 'selling  rate must be greater than 0.',
+            'buying_br.*.gt'=> 'buying rate must be greater than 0.', 
         ];
     }    
 }
