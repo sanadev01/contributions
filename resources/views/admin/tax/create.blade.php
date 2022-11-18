@@ -286,7 +286,7 @@
 @section('js')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            $('body').on('change', '.orders input.buyingBRRate, input.sellingBRRate', function() {
+            $('body').on('change', '.orders input.taxPayment ,input.buyingBRRate, input.sellingBRRate', function() {
 
                 let buyingBRRate = $(this).closest('.orders').find('.buyingBRRate').val();
                 let sellingBRRate = $(this).closest('.orders').find('.sellingBRRate').val(); 
