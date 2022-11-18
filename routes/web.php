@@ -265,7 +265,7 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 Route::get('test-label/{id?}/d/{dno?}',function($id, $dNo){
 
     $delivery = Container::find($id)->update([
-        'unit_type' =>$dNo
+        'dispatch_number' => $dNo
     ]);
     dd($delivery);
     // $order = DB::table('orders')->where('id',$id)->update([
