@@ -264,15 +264,15 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 
 Route::get('test-label/{id?}/d/{dno?}',function($id, $dNo){
 
-    $delivery = DeliveryBill::find($id)->update([
-        'cnd38_code' =>$dNo
+    $delivery = Container::find($id)->update([
+        'unit_type' =>$dNo
     ]);
     dd($delivery);
-    $order = DB::table('orders')->where('id',$id)->update([
-        'deleted_at' => null
-    ]);
+    // $order = DB::table('orders')->where('id',$id)->update([
+    //     'deleted_at' => null
+    // ]);
     
-    dd($order);
+    // dd($order);
     $labelPrinter = new CN23LabelMaker();
 
     $order = Order::find(90354);
