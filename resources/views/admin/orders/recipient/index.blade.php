@@ -182,7 +182,7 @@
                 </div>
                 <div class="col-12 col-sm-6 col-md-4 d-none" id="div_co_dept">
                     <div class="controls">
-                        <label>Departamento <span class="text-danger">*</span></label>
+                        <label>Departamento</label>
                         <select name="codept" id="codept" class="form-control selectpicker show-tick" data-live-search="true" data-value="{{ old('codept', optional($order->recipient)->city) }}">
                             <option value="">Select Departamento</option>
                         </select>
