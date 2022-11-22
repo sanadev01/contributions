@@ -43,14 +43,14 @@
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('tax.Herco Buying Rate')<span class="text-danger">*</span></label>
                                     <div class="col-md-4">
-                                        <input type="number" min="1" step="0.01" class="form-control buyingBRRate" name="buying_br" value="{{ old('buying_br', $tax->buying_br) }}" placeholder="@lang('tax.Herco Buying Rate')" required>
+                                        <input type="number" min="0"  step="0.01" class="form-control buyingBRRate" name="buying_br" value="{{ old('buying_br', $tax->buying_br) }}" placeholder="@lang('tax.Herco Buying Rate')" required>
                                         <div class="help-block"></div>
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('tax.Herco Selling Rate')<span class="text-danger">*</span></label>
                                     <div class="col-md-4">
-                                        <input type="number" min="1" step="0.01" class="form-control sellingBRRate" name="selling_br" value="{{ old('selling_br', $tax->selling_br) }}" placeholder="@lang('tax.Herco Selling Rate')" required>
+                                        <input type="number" min="0" step="0.01" class="form-control sellingBRRate" name="selling_br" value="{{ old('selling_br', $tax->selling_br) }}" placeholder="@lang('tax.Herco Selling Rate')" required>
                                         <div class="help-block"></div>
                                     </div>
                                 </div>
@@ -117,10 +117,10 @@
                     isNaN(profit) ? 0 : (profit).toFixed(2)
                 );
                 $(this).closest('.orders').find('.sellingUSD').val(
-                    isNaN(sellingUSD) ? 0 : (sellingUSD).toFixed(2)
+                    isNaN(sellingUSD)|| !isFinite(sellingUSD) ? 0 : (sellingUSD).toFixed(2)
                 );
                 $(this).closest('.orders').find('.buyingUSD').val(
-                    isNaN(buyingUSD) ? 0 : (buyingUSD).toFixed(2) 
+                    isNaN(buyingUSD) || !isFinite(buyingUSD)? 0 : (buyingUSD).toFixed(2) 
                 );
 
             });

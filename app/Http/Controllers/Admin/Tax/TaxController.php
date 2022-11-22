@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Repositories\TaxRepository;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TaxRequest;
+use App\Http\Requests\TaxUpdateRequest;
 
 class TaxController extends Controller
 {
@@ -45,11 +46,11 @@ class TaxController extends Controller
     public function store(TaxRepository $repository, TaxRequest $request)
     {
         $response = $repository->store($request);
-        if ($response == true) {
+        if (is_bool($response) && $response) {
             session()->flash('alert-success', 'Tax has been added successfully');
             return redirect()->route('admin.tax.index');
-        } else {
-
+        }
+        else {
             return back()->withInput()->withErrors($response);
         };
     }
@@ -83,7 +84,7 @@ class TaxController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Tax $tax, TaxRepository $repository)
+    public function update(TaxUpdateRequest $request, Tax $tax, TaxRepository $repository)
     {
         if ($repository->update($request, $tax)) {
             session()->flash('alert-success', 'Tax Transaction Updated');
