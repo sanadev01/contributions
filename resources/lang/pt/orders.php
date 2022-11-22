@@ -1,6 +1,11 @@
 <?php
 
 return [
+    'Click on' => 'Clique em',
+    'Checkbox' => 'Caixa de seleção',
+    'to use these features'=>'para usar esses recursos',
+    'Enter message' => 'Digite a mensagem',
+    'Enter domestic TN'=>'Insira o número de rastreamento doméstico neste campo',
     'name' => 'Nome',
     'action' => 'Açao',
     'orders' => 'Pedidos',

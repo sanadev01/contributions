@@ -1,6 +1,11 @@
 <?php
 
 return [
+    'Click on' => 'Haga clic enn',
+    'Checkbox' => 'Caja',
+    'to use these features'=>'para usar estas funciones',
+    'Enter message' => 'Introducir mensaje',
+    'Enter domestic TN'=>'Ingrese el número de seguimiento nacional en este campo',    
     'name' => 'Nombre',
     'action' => 'Acción',
     'orders' => 'Pedidos',

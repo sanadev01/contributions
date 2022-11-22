@@ -1,6 +1,11 @@
 <?php
 
 return [
+    'Click on' => 'Click on',
+    'Checkbox' => 'Checkbox',
+    'to use these features'=>'to use these features',
+    'Enter message' => 'Enter message',
+    'Enter domestic TN'=>'Please enter domestic tracking number in this field',
     'name' => 'Name',
     'action' => 'Action',
     'orders' => 'Orders',
