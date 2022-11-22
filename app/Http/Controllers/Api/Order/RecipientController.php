@@ -9,6 +9,7 @@ use App\Facades\USPSFacade;
 use Illuminate\Http\Request;
 use FlyingLuscas\Correios\Client;
 use App\Http\Controllers\Controller;
+use App\Services\Colombia\ColombiaPostalCodes;
 
 class RecipientController extends Controller
 {
@@ -87,7 +88,10 @@ class RecipientController extends Controller
     public function colombiaZipcode(Request $request)
     {
         $zipcode = Region::query()->where("country_id",$request->country_id)->where('name', 'LIKE', "%{$request->city}%")->value('code');
-        return response()->json($zipcode);
+        $colombiaPostalCodeService = new ColombiaPostalCodes();
+        $dept = $colombiaPostalCodeService->getDepartment($request->city);
+        $data = ['zipCode' => $zipcode, 'department' => $dept];
+        return response()->json($data);
     }
 
     public function validate_USAddress(Request $request)

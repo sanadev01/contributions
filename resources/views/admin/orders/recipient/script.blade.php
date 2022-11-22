@@ -460,9 +460,14 @@
             data: {country_id:  $('#country').val(), city:  $('#cocity').val()},
             success: function (data){
                 if(data){
-                    console.log(data);
-                    $('#zipcode').val(data)
-                }
+                    $('#zipcode').val(data.zipCode);
+                    $.each(data.department,function(index, value){
+                        $("#codept").find('option').remove().end()
+                        $("#codept").html("<option value=''>No Data</option>");
+                        $("#codept").append('<option value="'+value+'">'+value+'</option>');
+                    });
+                }                
+                $("#codept").selectpicker('refresh');
                 $('#loading').fadeOut();
             },
             error: function(e) {
@@ -543,10 +548,6 @@
                         $('#cocity').append('<option value="'+city+'">'+city+'</option>');
                     });
                     $("#cocity").selectpicker('refresh');
-                    $.each(data.depts,function(index,dept){
-                        $("#codept").append('<option value="'+dept+'">'+dept+'</option>');
-                    });
-                    $("#codept").selectpicker('refresh');
                 }else {
 
                     $("#state").html("<option value=''>No Data</option>")
