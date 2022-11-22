@@ -454,6 +454,7 @@
     }
 
     function addColombiaZipcode(zipcode) {
+        const old_dept = $('#codept').val();
         $.ajax({
             type: 'POST',
             url: "{{route('api.orders.recipient.colombiaZipcode')}}",
@@ -465,9 +466,15 @@
                         $("#codept").find('option').remove().end()
                         $("#codept").html("<option value=''>No Data</option>");
                         $("#codept").append('<option value="'+value+'">'+value+'</option>');
+                        $("#codept").selectpicker('refresh');
                     });
+                    if(old_dept != undefined || old_dept != '')
+                    {
+                            $('#codept').val(old_dept);
+                            $('#codept').selectpicker('val', old_dept);
+                    }
+                    
                 }                
-                $("#codept").selectpicker('refresh');
                 $('#loading').fadeOut();
             },
             error: function(e) {
@@ -531,6 +538,7 @@
     function getStatesFromDB()
     {
         const old_state = $('#state').val();
+        const old_city = $('#cocity').val();
         $.ajaxSetup({
                 headers: {
                      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -548,6 +556,11 @@
                         $('#cocity').append('<option value="'+city+'">'+city+'</option>');
                     });
                     $("#cocity").selectpicker('refresh');
+                    if(old_city != undefined || old_city != '')
+                    {
+                            $('#cocity').val(old_city);
+                            $('#cocity').selectpicker('val', old_city);
+                    }
                 }else {
 
                     $("#state").html("<option value=''>No Data</option>")
