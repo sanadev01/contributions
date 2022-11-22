@@ -1,6 +1,8 @@
 <?php
 
-return [ 
+return [
+    'Enter message' => 'Introducir mensaje',
+    'Enter domestic TN'=>'Ingrese el número de seguimiento nacional en este campo', 
     'name' => 'Nombre',
     'action' => 'Acción',
     'orders' => 'Pedidos',
