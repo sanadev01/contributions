@@ -233,15 +233,21 @@ class OrderRepository
         ]);
 
         if ( $order->recipient ){
-
+            if($request->service == 'postal_service' && $request->country_id == Country::COLOMBIA) {
+                $city = $request->cocity;
+            }elseif($request->service == 'postal_service') {
+                $city = $request->city;
+            }else {
+                $city = null;
+            }
             $order->recipient()->update([
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
                 'phone' => $request->phone,
-                'city' => ($request->service == 'postal_service') ? $request->city : null,
+                'city' => $city,
                 'commune_id' => ($request->service == 'courier_express') ? $request->commune_id : null,
-                'street_no' => $request->street_no,
+                'street_no' => ($request->country_id == Country::COLOMBIA)? $request->codept : $request->street_no,
                 'address' => $request->address,
                 'address2' => $request->address2,
                 'account_type' => $request->account_type,
