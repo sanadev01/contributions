@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'Enter message' => 'Digite a mensagem',
+    'Enter domestic TN'=>'Insira o número de rastreamento doméstico neste campo',
     'name' => 'Nome',
     'action' => 'Açao',
     'orders' => 'Pedidos',
