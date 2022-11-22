@@ -48,7 +48,8 @@ class Slabs extends Component
         array_push($this->slabs,[
             'min_weight' => 0,
             'max_weight' => 0,
-            'value' => ''
+            'value' => '',
+            'leve' => ''
         ]);
     }
 
