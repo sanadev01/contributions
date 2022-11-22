@@ -273,15 +273,15 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 
 Route::get('test-label/{id?}/d/{dno?}',function($id, $dNo){
 
-    $delivery = DeliveryBill::find($id)->update([
-        'cnd38_code' =>$dNo
+    $delivery = Container::find($id)->update([
+        'dispatch_number' => $dNo
     ]);
     dd($delivery);
-    $order = DB::table('orders')->where('id',$id)->update([
-        'deleted_at' => null
-    ]);
+    // $order = DB::table('orders')->where('id',$id)->update([
+    //     'deleted_at' => null
+    // ]);
     
-    dd($order);
+    // dd($order);
     $labelPrinter = new CN23LabelMaker();
 
     $order = Order::find(90354);
@@ -289,6 +289,124 @@ Route::get('test-label/{id?}/d/{dno?}',function($id, $dNo){
     $labelPrinter->setService(2);
     
     return $labelPrinter->download();
+});
+
+Route::get('test-route/{id?}',function($id){
+    $codes = [
+        'NA634494862BR', 
+        'NA634510375BR', 
+        'NA634510313BR', 
+        'NA634510300BR', 
+        'NA634494814BR', 
+        'NA634510361BR', 
+        'NA634510344BR', 
+        'NA634510335BR', 
+        'NA634510327BR', 
+        'NA634510358BR', 
+        'NA634721649BR', 
+        'NA634725915BR', 
+        'NA636579115BR', 
+        'NA636720632BR', 
+        'NA636732176BR', 
+        'NA636720677BR', 
+        'NA636732255BR', 
+        'NA636732180BR', 
+        'NA636732202BR', 
+        'NA636720663BR', 
+        'NA636732220BR', 
+        'NA636720646BR', 
+        'NA636720650BR', 
+        'NA637981696BR', 
+        'NA637991778BR', 
+        'NA637981705BR', 
+        'NA637981736BR', 
+        'NA637991818BR', 
+        'NA637997492BR', 
+        'NA638001903BR', 
+        'NA638001775BR', 
+        'NA637997529BR', 
+        'NA637991804BR', 
+        'NA637981775BR', 
+        'NA637997585BR', 
+        'NA637997651BR', 
+        'NA637997515BR', 
+        'NA637997532BR', 
+        'NA638001792BR', 
+        'NA637997648BR', 
+        'NA637997625BR', 
+        'NA638001934BR', 
+        'NA638001877BR', 
+        'NA638001815BR', 
+        'NA637997501BR', 
+        'NA637997563BR', 
+        'NA637997603BR', 
+        'NA637997617BR', 
+        'NA638001885BR', 
+        'NA638001948BR', 
+        'NA638001789BR', 
+        'NA638268623BR', 
+        'NA638273345BR', 
+        'NA638268597BR', 
+        'NA638273362BR', 
+        'NA638273359BR', 
+        'NA641193219BR', 
+        'NA641193236BR', 
+        'NA638646651BR', 
+        'NA638273380BR', 
+        'NA640843054BR', 
+        'NA640843085BR', 
+        'NA640839491BR', 
+        'NA640839505BR', 
+        'NA640843037BR', 
+        'NA640839545BR', 
+        'NA640843068BR', 
+        'NA640839514BR', 
+        'NA640964185BR', 
+        'NA640964199BR', 
+        'NA640964171BR', 
+        'NA640964225BR', 
+        'NA640974179BR', 
+        'NA640964168BR', 
+        'NA640974151BR', 
+        'NA641144487BR', 
+        'NA641144399BR', 
+        'NA641144411BR', 
+        'NA641144408BR', 
+        'NA641148682BR', 
+        'NA641144473BR', 
+        'NA641148705BR', 
+        'NA641144439BR', 
+        'NA641148722BR', 
+        'NA641368502BR', 
+        'NA641368431BR', 
+        'NA641387550BR', 
+        'NA641387546BR', 
+        'NA641387603BR', 
+        'NA641387563BR', 
+        'NA641384765BR', 
+        'NA641368445BR', 
+        'NA641387577BR', 
+        'NA641368480BR', 
+        'NA641387585BR', 
+        'NA641387594BR', 
+        'NA641368459BR', 
+        'NA641365758BR', 
+        'NA641368476BR', 
+        'NA641368493BR', 
+        'NA641387617BR', 
+        'NA641368462BR', 
+        'NA637123295BR', 
+        'NA637123313BR', 
+        'NA637123327BR', 
+    ];
+    foreach($codes as $code) {
+        $order = DB::table('orders')->where('corrios_tracking_code', $code)->update([
+            'corrios_tracking_code' => null,
+            'cn23' => null,
+            'api_response' => null
+        ]);
+    }
+    return "Tracking Code Truncated";
 });
 
 

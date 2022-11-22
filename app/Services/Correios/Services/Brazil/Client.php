@@ -134,6 +134,13 @@ class Client{
         );
 
         try {
+            \Log::info('token');
+            \Log::info('isAnjunService');
+            \Log::info($this->getAnjunToken());
+
+            \Log::info('token');
+            \Log::info('isCorrieosService');
+            \Log::info($this->getToken());
             $response = $this->client->post('/packet/v1/packages',[
                'headers' => [
                 'Authorization' => ($order->shippingService->isAnjunService()) ? "Bearer {$this->getAnjunToken()}" :"Bearer {$this->getToken()}"
@@ -173,6 +180,13 @@ class Client{
     public function createContainer(Container $container)
     {
         try {
+            \Log::info('token');
+            \Log::info('isAnjunService');
+            \Log::info($this->getAnjunToken());
+
+            \Log::info('token');
+            \Log::info('isCorrieosService');
+            \Log::info($this->getToken());
             $response = $this->client->post('/packet/v1/units',[
                 'headers' => [
                     'Authorization' => ($container->hasAnjunService()) ? "Bearer {$this->getAnjunToken()}" : "Bearer {$this->getToken()}"
