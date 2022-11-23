@@ -109,7 +109,7 @@ class OrderExport extends AbstractExportService
 
         
         $this->mergeCells("A{$row}:F{$row}");
-        $this->setBackgroundColor("A{$row}:V{$row}", 'adfb84');
+        $this->setBackgroundColor("A{$row}:W{$row}", 'adfb84');
         $this->setAlignment('A'.$row, Alignment::VERTICAL_CENTER);
         $this->setCellValue('A'.$row, 'Total Order: '.$this->orders->count());
 
@@ -189,7 +189,7 @@ class OrderExport extends AbstractExportService
             $this->setCellValue('W1', 'Marketplace');
         }
 
-        $this->setBackgroundColor('A1:V1', '2b5cab');
+        $this->setBackgroundColor('A1:W1', '2b5cab');
         $this->setColor('A1:V1', 'FFFFFF');
 
         $this->currentRow++;
