@@ -10,7 +10,7 @@ use App\Repositories\OrderRepository;
 class OrderExportController extends Controller
 {
     public function __invoke(Request $request, OrderRepository $orderRepository)
-    {
+    { 
         $orders = $orderRepository->getOdersForExport($request);
         
         $exportService = new OrderExport($orders);
