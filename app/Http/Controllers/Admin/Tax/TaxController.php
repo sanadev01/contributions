@@ -31,7 +31,7 @@ class TaxController extends Controller
     public function create(TaxRepository $repository, Request $request)
     {
         $orders = null;
-        if($request->trackingNumbers) {
+        if ($request->trackingNumbers) {
             $orders = $repository->getOrders($request);
         }
         return view('admin.tax.create', compact('orders'));
@@ -43,7 +43,7 @@ class TaxController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(TaxRepository $repository, TaxRequest $request)
+    public function store(TaxRepository $repository, TaxTaxRequest $request)
     {
         $response = $repository->store($request);
         if (is_bool($response) && $response) {
@@ -74,7 +74,7 @@ class TaxController extends Controller
      */
     public function edit(Tax $tax)
     {
-        return view('admin.tax.edit',compact('tax'));
+        return view('admin.tax.edit', compact('tax'));
     }
 
     /**
@@ -84,14 +84,14 @@ class TaxController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(TaxUpdateRequest $request, Tax $tax, TaxRepository $repository)
+    public function update(TaxUpdateTaxUpdateRequest $request, Tax $tax, TaxRepository $repository)
     {
         if ($repository->update($request, $tax)) {
             session()->flash('alert-success', 'Tax Transaction Updated');
             return redirect()->route('admin.tax.index');
         }
-        session()->flash('alert-danger', 'Error While Update Tax! Check Your Account Balance');
-        return back()->withInput();
+        session()->flash('alert-danger', 'Error While Update Tax! Check Your Account Balance');        session()->flash('alert-danger', 'Error While Update Tax! Check Your Account Balance');
+        return back()->withInput()->withInput();
     }
 
 

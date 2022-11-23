@@ -38,8 +38,8 @@
           wheelPropagation: false
         });
       },
-
       update: function () {
+        // console.log(this.obj);
         if (this.obj) {
           // Scroll to currently active menu on page load if data-scroll-to-active is true
           if ($('.main-menu').data('scroll-to-active') === true) {
