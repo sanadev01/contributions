@@ -190,7 +190,7 @@ class OrderExport extends AbstractExportService
         }
 
         $this->setBackgroundColor('A1:W1', '2b5cab');
-        $this->setColor('A1:V1', 'FFFFFF');
+        $this->setColor('A1:W1', 'FFFFFF');
 
         $this->currentRow++;
     }
