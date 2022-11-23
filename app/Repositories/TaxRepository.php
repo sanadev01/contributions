@@ -1,9 +1,8 @@
 <?php
 
 namespace App\Repositories;
-
-use App\Http\Requests\TaxRequest;
-use App\Http\Requests\TaxUpdateRequest;
+use App\Http\Requests\Tax\TaxRequest;
+use App\Http\Requests\Tax\TaxUpdateRequest;
 use Exception;
 use App\Models\Tax;
 use App\Models\User;
@@ -58,7 +57,7 @@ class TaxRepository
         return Order::where('user_id',$request->user_id)->whereIn('corrios_tracking_code', $trackingNumber)->get();
     }
 
-    public function store(TaxRequest $request)
+    public function store(TaxTaxRequest $request)
     {
         $insufficientBalanceMessages=[];
         $depositedMessages=[]; 
