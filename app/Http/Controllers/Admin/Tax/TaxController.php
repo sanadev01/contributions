@@ -43,7 +43,7 @@ class TaxController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(TaxRepository $repository, TaxTaxRequest $request)
+    public function store(TaxRepository $repository, TaxRequest $request)
     {
         $response = $repository->store($request);
         if (is_bool($response) && $response) {
@@ -84,7 +84,7 @@ class TaxController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(TaxUpdateTaxUpdateRequest $request, Tax $tax, TaxRepository $repository)
+    public function update(TaxUpdateRequest $request, Tax $tax, TaxRepository $repository)
     {
         if ($repository->update($request, $tax)) {
             session()->flash('alert-success', 'Tax Transaction Updated');

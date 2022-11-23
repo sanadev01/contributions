@@ -57,7 +57,7 @@ class TaxRepository
         return Order::where('user_id',$request->user_id)->whereIn('corrios_tracking_code', $trackingNumber)->get();
     }
 
-    public function store(TaxTaxRequest $request)
+    public function store(TaxRequest $request)
     {
         $insufficientBalanceMessages=[];
         $depositedMessages=[]; 
