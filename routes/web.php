@@ -283,21 +283,6 @@ Route::get('test-label/{id?}/d/{dno?}',function($id, $dNo){
     return $labelPrinter->download();
 });
 
-Route::get('test-route/{id?}',function($id){
-    // try {
-        $deliveryBill= DeliveryBill::find($id);
-        $deliveryBill->containers()->sync([]);
-        $deliveryBill->delete();
-
-        // return true;
-
-    // }catch (\Exception $exception){
-    //     $this->error = $exception->getMessage();
-    //     return null;
-    // }
-});
-
-
 Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container');
 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');

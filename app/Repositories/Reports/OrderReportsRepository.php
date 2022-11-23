@@ -79,11 +79,11 @@ class OrderReportsRepository
     public function getOrderReport()
     {
         $orders = Order::where('status','>',Order::STATUS_PAYMENT_PENDING)
-        ->has('user')->get();
+        ->has('user');
         if (Auth::user()->isUser()) {
-            $orders->where('user_id', Auth::id())->get();
+            $orders->where('user_id', Auth::id());
         }
-        return $orders;
+        return $orders->get();
     }
    
     public function getShipmentReportOfUsersByWeight($id, $month=null, Request $request)
