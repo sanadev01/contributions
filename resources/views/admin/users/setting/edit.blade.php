@@ -425,6 +425,41 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">Marketplace<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="marketplace_checked">
+                                                <input type="checkbox" name="marketplace_checked" id="marketplace" @if(setting('marketplace_checked', null, $user->id)) checked @endif>
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            <span class="offset-2 mr-2 mt-2">Marketplace :</span>
+                                            <input type="text" name="marketplace" class="form-control col-5" id="marketplace" value="{{ setting('marketplace', null, $user->id) }}">
+                                        </div>    
+                                    </div>
+                                </div>
+
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">Pay Tax Service<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="pay_tax_service">
+                                                <input type="checkbox" name="pay_tax_service" id="pay_tax_service" @if(setting('pay_tax_service', null, $user->id)) checked @endif>
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                         </div>    
+                                    </div>
+                                </div>
+                                
                                 <div class="row mt-1">
                                     <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
                                         <div>
