@@ -32,11 +32,13 @@ class ProfitPackageRateExport extends AbstractExportService
         $row = $this->currentRow;
 
         foreach ($this->rates as $rate) {
-            
+
             $this->setCellValue('A'.$row, $rate['weight'] . ' g');
 
-            if(Auth::user()->isUser()){
+            if(Auth::user()->isUser() && isset(optional($rate)['shipping'][0])){
                 $this->setCellValue('B'.$row, round($rate['shipping'][0]*($rate['profit']/100)+$rate['shipping'][0],2) );
+            }else{
+                $this->setCellValue('B'.$row, optional($rate)['leve'] );
             }
             if(Auth::user()->isAdmin()){
                 $this->setCellValue('B'.$row, $rate['shipping'][0] );
