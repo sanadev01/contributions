@@ -38,7 +38,7 @@ class ImportRates extends AbstractImportService
         }elseif($this->shippingService->service_sub_class == ShippingService::SRP){
             $limit = 75;
         }elseif($this->shippingService->service_sub_class == ShippingService::SRM){
-            $limit = 8;
+            $limit = 7;
         }elseif($this->shippingService->service_sub_class == ShippingService::GePS){
             $limit = 27;
         }else{

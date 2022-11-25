@@ -14,6 +14,7 @@ class ShCodeController extends Controller
             $shCode = ShCode::query()
                         ->where('code',"LIKE","%{$search}%")
                         ->orWhere('description','LIKE',"%{$search}%")
+                        ->orderBy('description','ASC')
                         ->get(['code','description']);
             if(!$shCode->isEmpty()){
                 return $shCode;
