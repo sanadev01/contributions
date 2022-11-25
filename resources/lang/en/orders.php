@@ -17,7 +17,7 @@ return [
     'status' => 'STATUS',
     'edit' => 'Edit',
     'Edit Order' => 'Edit Order',
-    'Bulk Print' => 'Print Bulk',
+    'Bulk Print' => 'More Option',
     'Download Orders' => 'Download Orders',
     'type' => 'Type',
     'payment-status' => 'PAYMENT',

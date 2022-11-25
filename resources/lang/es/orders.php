@@ -17,7 +17,7 @@ return [
     'status' => 'Estado',
     'edit' => 'Editar',
     'Edit Order' => 'Editar orden',
-    'Bulk Print' => 'Imprimir a granel',
+    'Bulk Print' => 'Mas Opciones',
     'Download Orders' => 'Descargar pedidos',
     'type' => 'Tipo',
     'payment-status' => 'pago',
