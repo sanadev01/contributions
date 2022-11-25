@@ -63,11 +63,12 @@
                                     <th>@lang('tax.User Name')</th>
                                     <th>@lang('tax.Warehouse No.')</th>
                                     <th>@lang('tax.Tracking Code')</th>
-                                    <th>@lang('tax.Tax Payment')</th>
-                                    <th>@lang('tax.Tax Customer') USD</th>
-                                    <th>@lang('tax.Tax Customer') BR</th>
-                                    <th>@lang('tax.Tax Herco') USD</th>
-                                    <th>@lang('tax.Tax Herco') BR</th>
+                                    <th>@lang('tax.Tax Payment')</th> 
+                                    <th>@lang('tax.Herco Buying Rate') </th>
+                                    <th>@lang('tax.Herco Selling Rate') </th>
+                                    <th>@lang('tax.Herco Buying USD') </th>
+                                    <th>@lang('tax.Herco Selling USD')</th>
+                                    <th>@lang('Profit USD')</th>
                                     <th>@lang('tax.Receipt')</th>
                                     <th>@lang('tax.Action')</th>
                                 </tr>
