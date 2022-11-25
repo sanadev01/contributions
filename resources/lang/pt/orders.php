@@ -12,7 +12,7 @@ return [
     'status' => 'Status',
     'edit' => 'Editar',
     'Edit Order' => 'Editar Pedido',
-    'Bulk Print' => 'Etiquetas em lote',
+    'Bulk Print' => 'Mais Opções',
     'Download Orders' => 'Baixar pedidos',
     'type' => 'Tipo',
     'payment-status' => 'Status do pagamento',
