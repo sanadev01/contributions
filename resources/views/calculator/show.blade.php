@@ -19,28 +19,30 @@
                         <div class="card-body">
                             <div class="text-center">
                                 @foreach ($shippingServices as $shippingService) 
-                                    <div class="card-body"><div class="row justify-content-center mb-2 full-height align-items-center"><div class="col-10"><div class="row justify-content-center"><div class="pb-1 pt-1 border-bottom-light col-md-5 bg-primary text-white">
-                                        Service Name
-                                    </div> <div class="border col-5 py-1">
-                                        {{$shippingService->name}}
-                                    </div></div> <div class="row justify-content-center"><div class="pb-1 pt-1 border-bottom-light col-md-5 bg-primary text-white">
-                                        Weight
-                                    </div> <div class="border col-5 py-1">
-                                        @if($order->measurement_unit == 'kg/cm')
-                                            {{$chargableWeight}} Kg ( {{$weightInOtherUnit}} lbs)
-                                        @else
-                                            {{$chargableWeight}} lbs ( {{$weightInOtherUnit}} kg)
-                                        @endif
-                                    </div></div> <div class="row justify-content-center"><div class="pb-1 pt-1 border-bottom-light col-md-5 bg-primary text-white">
-                                        Cost
-                                    </div> <div class="border col-5 py-1 text-danger h2">
-                                        
-                                        {{$shippingService->getRateFor($order,true,true)}} USD
-                                       
-                                        <br>
-                                       
-                                    </div></div></div></div></div>
-                                    <hr>
+                               @if(!setting('anjun_api', null, $adminId) && $shippingService->name!='Packet Standard (A)' && $shippingService->name!='Packet Express (A)' || setting('anjun_api', null, $adminId) &&  $shippingService->name!='Packet Express' && $shippingService->name!='Packet Express')
+                                <div class="card-body"><div class="row justify-content-center mb-2 full-height align-items-center"><div class="col-10"><div class="row justify-content-center"><div class="pb-1 pt-1 border-bottom-light col-md-5 bg-primary text-white">
+                                    Service Name
+                                </div> <div class="border col-5 py-1">
+                                    {{$shippingService->name}}
+                                </div></div> <div class="row justify-content-center"><div class="pb-1 pt-1 border-bottom-light col-md-5 bg-primary text-white">
+                                    Weight
+                                </div> <div class="border col-5 py-1">
+                                    @if($order->measurement_unit == 'kg/cm')
+                                        {{$chargableWeight}} Kg ( {{$weightInOtherUnit}} lbs)
+                                    @else
+                                        {{$chargableWeight}} lbs ( {{$weightInOtherUnit}} kg)
+                                    @endif
+                                </div></div> <div class="row justify-content-center"><div class="pb-1 pt-1 border-bottom-light col-md-5 bg-primary text-white">
+                                    Cost
+                                </div> <div class="border col-5 py-1 text-danger h2">
+                                    
+                                    {{$shippingService->getRateFor($order,true,true)}} USD
+                                   
+                                    <br>
+                                   
+                                </div></div></div></div></div>
+                                <hr>
+                                    @endif
                                 @endforeach
                             </div>
                             <br>
