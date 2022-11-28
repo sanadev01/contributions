@@ -1,8 +1,6 @@
 <?php 
 
-namespace App\Repositories\Calculator;
-
-use Illuminate\Database\Eloquent\Model;
+namespace App\Repositories\Calculator; 
 use App\Services\Calculators\WeightCalculator;
 use App\Models\Recipient;
 use App\Models\Order;
@@ -97,14 +95,11 @@ class CalculatorRepository {
 
     public function getShippingService()
     {
-        if(auth()->user()->id == 1 ){
-            $adminId =  User::ROLE_ADMIN;; 
-        } 
         $shippingServices = collect();
         foreach (ShippingService::query()->active()->get() as $shippingService) {
             if ( $shippingService->isAvailableFor($this->order) ){
-                if(!setting('anjun_api', null, $adminId) && $shippingService->name!='Packet Standard (A)' && $shippingService->name!='Packet Express (A)' 
-                  ||setting('anjun_api', null, $adminId) &&  $shippingService->name!='Packet Express' && $shippingService->name!='Packet Express')
+                if(!setting('anjun_api', null, User::ROLE_ADMIN) && $shippingService->service_sub_class  !=  ShippingService::AJ_Packet_Standard && $shippingService->service_sub_class  != ShippingService::AJ_Packet_Express
+                  ||setting('anjun_api', null, User::ROLE_ADMIN) &&  $shippingService->service_sub_class !=  ShippingService::Packet_Standard    && $shippingService->service_sub_class  != ShippingService::Packet_Express)
                     $shippingServices->push($shippingService);
             }else{
                 session()->flash('alert-danger',"Shipping Service not Available Error:{$shippingService->getCalculator($this->order)->getErrors()}");
