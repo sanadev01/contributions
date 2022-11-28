@@ -98,13 +98,15 @@ class CalculatorRepository {
         $anjunSelected = setting('anjun_api', null, User::ROLE_ADMIN); 
         $shippingServices = collect();
         foreach (ShippingService::query()->active()->get() as $shippingService) {
-            if ( $shippingService->isAvailableFor($this->order) ){   
+            if ($shippingService->isAvailableFor($this->order)){
 
-                        if(!$anjunSelected  && $shippingService->service_sub_class  !=  ShippingService::AJ_Packet_Standard && $shippingService->service_sub_class  != ShippingService::AJ_Packet_Express)
+                $service = $shippingService->service_sub_class;
+
+                        if(!$anjunSelected  && $service !=  ShippingService::AJ_Packet_Standard && $service != ShippingService::AJ_Packet_Express)
                         {
                             $shippingServices->push($shippingService);
                         } 
-                        if($anjunSelected &&  $shippingService->service_sub_class !=  ShippingService::Packet_Standard    && $shippingService->service_sub_class  != ShippingService::Packet_Express)
+                        else if($anjunSelected &&  $service !=  ShippingService::Packet_Standard    && $service != ShippingService::Packet_Express)
                         {
                                 $shippingServices->push($shippingService);
                         }
