@@ -99,17 +99,13 @@ class CalculatorRepository {
         $shippingServices = collect();
         foreach (ShippingService::query()->active()->get() as $shippingService) {
             if ($shippingService->isAvailableFor($this->order)){
-
                 $service = $shippingService->service_sub_class;
-
-                        if(!$anjunSelected  && $service !=  ShippingService::AJ_Packet_Standard && $service != ShippingService::AJ_Packet_Express)
-                        {
-                            $shippingServices->push($shippingService);
-                        } 
-                        else if($anjunSelected &&  $service !=  ShippingService::Packet_Standard    && $service != ShippingService::Packet_Express)
-                        {
-                                $shippingServices->push($shippingService);
-                        }
+                if(!$anjunSelected  && $service !=  ShippingService::AJ_Packet_Standard && $service != ShippingService::AJ_Packet_Express){
+                    $shippingServices->push($shippingService);
+                } 
+                if($anjunSelected &&  $service !=  ShippingService::Packet_Standard    && $service != ShippingService::Packet_Express){
+                    $shippingServices->push($shippingService);
+                }
             }else{
                 session()->flash('alert-danger',"Shipping Service not Available Error:{$shippingService->getCalculator($this->order)->getErrors()}");
             }
