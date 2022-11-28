@@ -54,8 +54,7 @@ class OrderStatusChanged implements ShouldQueue
         \Log::info($orderId);
         \Log::info(getParcelStatus($statusCode));
         //$url = Setting::where('id', $orders['orders']['user_id'])->value('url');
-        $url = 'http://localhost/webhook?65165=lkjkl';
-
+        $url = 'http://localhost/webhook?orderId=64165';
         $client = new Client([]);
         try {
 
