@@ -284,9 +284,8 @@ Route::get('test-label/{id?}/d/{dno?}',function($id, $dNo){
 });
 
 Route::get('detach-order/{id?}/d/{trackno?}',function($id, $trackno){
-
     $orderId = Order::where('corrios_tracking_code', $trackno)->value('id');
-    $detachOrder = DB::table('container_order')->where('order_id', $orderId)->where('container_id', $id)->delete();
+    $detachOrder = DB::table('container_order')->where('order_id', $orderId)->where('container_id', $id)->limit(1)->delete();
     return "Order Detach Successful";
 });
 
