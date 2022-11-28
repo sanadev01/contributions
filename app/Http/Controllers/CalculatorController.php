@@ -19,7 +19,6 @@ class CalculatorController extends Controller
         $weightInOtherUnit = $calculatorRepository->getWeightInOtherUnit($request);
 
         return view('calculator.show', compact('order', 'shippingServices', 'weightInOtherUnit', 'chargableWeight'));
-
     }
 
 }
