@@ -271,9 +271,7 @@ Route::get('test-label/{id?}/d/{dno?}/db/{db?}',function($id, $dNo,$db){
     // $order = DB::table('orders')->where('id',$id)->update([
     //     'deleted_at' => null
     // ]);
-    $deliveryBill = DeliveryBill::find($db);
-    $deliveryBill->containers()->sync([]);
-    $deliveryBill->delete();
+    $detachOrder = DB::table('container_delivery_bill')->where('delivery_bill_id', $db)->where('container_id', $id)->limit(1)->delete();
     dd($delivery);
     
     // dd($order);
