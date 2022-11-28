@@ -45,10 +45,14 @@ class OrderStatusChanged implements ShouldQueue
         }else {
             $statusCode = $orders['orders'][0]['status'];
         }
-
-        $orderId = collect($orders)->pluck('warehouse_number')->toArray();
-        $status = "Your Parcel Status Code is ".''. $statusCode;
-        $message = "Your Parcel Status is ".''. getParcelStatus($statusCode);
+        if(isset($orders['orders']['id'])){
+            $orderId = $orders['orders']['id'];
+        }else {
+            $orderId = $orders['orders'][0]['id'];
+        }
+        \Log::info($statusCode);
+        \Log::info($orderId);
+        \Log::info(getParcelStatus($statusCode));
         //$url = Setting::where('id', $orders['orders']['user_id'])->value('url');
         $url = 'http://localhost/webhook?65165=lkjkl';
 
@@ -59,8 +63,8 @@ class OrderStatusChanged implements ShouldQueue
                 'json' => [
                     'data' => [
                         'warehouse_number' => $orderId,
-                        'status' => $status,
-                        'message' => $message,
+                        'status' => "Your Parcel Status Code is ".''. $statusCode,
+                        'message' => "Your Parcel Status is ".''. getParcelStatus($statusCode),
                         'format' => 'json',
                     ]
                 ]
@@ -69,7 +73,6 @@ class OrderStatusChanged implements ShouldQueue
         } catch (\Exception $th) {
             abort(400,'Bad Request'.$th->getMessage());
         }
-
         return json_decode($response->getBody()->getContents());
     }
 }
