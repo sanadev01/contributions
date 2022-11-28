@@ -20,27 +20,27 @@
                             <div class="text-center">
                                 @foreach ($shippingServices as $shippingService) 
                                     <div class="card-body"><div class="row justify-content-center mb-2 full-height align-items-center"><div class="col-10"><div class="row justify-content-center"><div class="pb-1 pt-1 border-bottom-light col-md-5 bg-primary text-white">
-                                            Service Name
-                                        </div> <div class="border col-5 py-1">
-                                            {{$shippingService->name}}
-                                        </div></div> <div class="row justify-content-center"><div class="pb-1 pt-1 border-bottom-light col-md-5 bg-primary text-white">
-                                            Weight
-                                        </div> <div class="border col-5 py-1">
-                                            @if($order->measurement_unit == 'kg/cm')
-                                                {{$chargableWeight}} Kg ( {{$weightInOtherUnit}} lbs)
-                                            @else
-                                                {{$chargableWeight}} lbs ( {{$weightInOtherUnit}} kg)
-                                            @endif
-                                        </div></div> <div class="row justify-content-center"><div class="pb-1 pt-1 border-bottom-light col-md-5 bg-primary text-white">
-                                            Cost
-                                        </div> <div class="border col-5 py-1 text-danger h2">
-                                            
-                                            {{$shippingService->getRateFor($order,true,true)}} USD
+                                        Service Name
+                                    </div> <div class="border col-5 py-1">
+                                        {{$shippingService->name}}
+                                    </div></div> <div class="row justify-content-center"><div class="pb-1 pt-1 border-bottom-light col-md-5 bg-primary text-white">
+                                        Weight
+                                    </div> <div class="border col-5 py-1">
+                                        @if($order->measurement_unit == 'kg/cm')
+                                            {{$chargableWeight}} Kg ( {{$weightInOtherUnit}} lbs)
+                                        @else
+                                            {{$chargableWeight}} lbs ( {{$weightInOtherUnit}} kg)
+                                        @endif
+                                    </div></div> <div class="row justify-content-center"><div class="pb-1 pt-1 border-bottom-light col-md-5 bg-primary text-white">
+                                        Cost
+                                    </div> <div class="border col-5 py-1 text-danger h2">
                                         
-                                            <br>
-                                        
-                                        </div></div></div></div></div>
-                                        <hr>
+                                        {{$shippingService->getRateFor($order,true,true)}} USD
+                                       
+                                        <br>
+                                       
+                                    </div></div></div></div></div>
+                                    <hr>
                                 @endforeach
                             </div>
                             <br>
