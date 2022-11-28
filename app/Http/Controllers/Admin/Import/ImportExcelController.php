@@ -47,7 +47,8 @@ class ImportExcelController extends Controller
         $this->validate($request,[
             'excel_name' => 'nullable',
             'format' => 'required',
-            'excel_file' => 'required|file'
+            'excel_file' => 'required|file',
+            'service_id' => 'required'
         ]);
 
         $response = $repository->store($request);

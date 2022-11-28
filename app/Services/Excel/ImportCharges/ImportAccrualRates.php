@@ -39,8 +39,14 @@ class ImportAccrualRates extends AbstractImportService
         if($this->country_id == Country::Chile)
         {
             $limit = 75;
+            if($this->service == ShippingService::SRM){
+                $limit = 7;
+            }
         }else{
             $limit = 70;
+            if($this->service == ShippingService::GePS){
+                $limit = 27;
+            }
         }
 
         foreach (range(3, $limit) as $row) {

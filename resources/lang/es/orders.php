@@ -1,6 +1,8 @@
 <?php
 
-return [ 
+return [
+    'Enter message' => 'Introducir mensaje',
+    'Enter domestic TN'=>'Ingrese el número de seguimiento nacional en este campo', 
     'name' => 'Nombre',
     'action' => 'Acción',
     'orders' => 'Pedidos',
@@ -12,7 +14,7 @@ return [
     'status' => 'Estado',
     'edit' => 'Editar',
     'Edit Order' => 'Editar orden',
-    'Bulk Print' => 'Imprimir a granel',
+    'Bulk Print' => 'Mas Opciones',
     'Download Orders' => 'Descargar pedidos',
     'type' => 'Tipo',
     'payment-status' => 'Estado de pago',

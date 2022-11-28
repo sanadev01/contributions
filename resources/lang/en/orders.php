@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'Enter message' => 'Enter message',
+    'Enter domestic TN'=>'Please enter domestic tracking number in this field',
     'name' => 'Name',
     'action' => 'Action',
     'orders' => 'Orders',
@@ -12,7 +14,7 @@ return [
     'status' => 'Status',
     'edit' => 'Edit',
     'Edit Order' => 'Edit Order',
-    'Bulk Print' => 'Print Bulk',
+    'Bulk Print' => 'More Option',
     'Download Orders' => 'Download Orders',
     'type' => 'Type',
     'payment-status' => 'Payment Status',

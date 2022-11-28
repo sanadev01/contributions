@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Setting;
+use Illuminate\Http\Request;
+use App\Mail\Admin\SettingUpdate;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
 
@@ -22,8 +24,11 @@ class SettingController extends Controller
      */
     public function index(Request $request)
     {
-        $adminId = $this->adminId;
-        return view('admin.settings.edit', compact('adminId'));
+        if(auth()->user()->id == 1 ){
+            $adminId = $this->adminId;
+            return view('admin.settings.edit', compact('adminId'));
+        }
+        abort(403, 'Unauthorized action.');
     } 
 
     /**
@@ -31,6 +36,25 @@ class SettingController extends Controller
      */
     public function store(Request $request)
     {
+        $user = Auth::user();
+        $userData = [
+            'TYPE' => setting('TYPE'),
+            'VALUE' => setting('VALUE'),
+            'usps' => setting('usps', null, $this->adminId)? 'Active': 'Inactive',
+            'ups' => setting('ups', null, $this->adminId)? 'Active': 'Inactive',
+            'fedex' => setting('fedex', null, $this->adminId)? 'Active': 'Inactive',
+            'usps_profit'=> setting('usps_profit', null, $this->adminId) ? setting('usps_profit', null, $this->adminId): 0,
+            'ups_profit'=> setting('ups_profit', null, $this->adminId) ?setting('ups_profit', null, $this->adminId) : 0,
+            'fedex_profit'=> setting('fedex_profit', null, $this->adminId)? setting('fedex_profit', null, $this->adminId): 0,
+            'AUTHORIZE_ID'=> setting('AUTHORIZE_ID'),
+            'AUTHORIZE_KEY'=> setting('AUTHORIZE_KEY'),
+            'correios_setting'=> setting('anjun_api', null, $this->adminId) ? 'Anjun API' : 'Correios API',
+        ];
+        try {
+            \Mail::send(new SettingUpdate($user, $request, $userData, true));
+        } catch (\Exception $ex) {
+            \Log::info('Setting Update email send error: '.$ex->getMessage());
+        }
         Setting::saveByKey('AUTHORIZE_ID', $request->AUTHORIZE_ID,null,true);
         Setting::saveByKey('AUTHORIZE_KEY', $request->AUTHORIZE_KEY,null,true);
         // Setting::saveByKey('STRIPE_KEY', $request->STRIPE_KEY,null,true);

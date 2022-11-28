@@ -7,7 +7,8 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Repositories\TaxRepository;
 use App\Http\Controllers\Controller;
-
+use App\Http\Requests\Tax\TaxRequest;
+use App\Http\Requests\Tax\TaxUpdateRequest;
 
 class TaxController extends Controller
 {
@@ -42,14 +43,16 @@ class TaxController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(TaxRepository $repository, Request $request)
+    public function store(TaxRepository $repository, TaxRequest $request)
     {
-        if ($repository->store($request) ){
+        $response = $repository->store($request);
+        if (is_bool($response) && $response) {
             session()->flash('alert-success', 'Tax has been added successfully');
-            return  redirect()->route('admin.tax.index');
+            return redirect()->route('admin.tax.index');
         }
-        session()->flash('alert-danger', 'Please recharge your account first!');
-        return back()->withInput();
+        else {
+            return back()->withInput()->withErrors($response);
+        };
     }
 
     /**
@@ -81,15 +84,16 @@ class TaxController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Tax $tax, TaxRepository $repository)
+    public function update(TaxUpdateRequest $request, Tax $tax, TaxRepository $repository)
     {
-        if ( $repository->update($request, $tax) ){
-            session()->flash('alert-success','Tax Transaction Updated');
+        if ($repository->update($request, $tax)) {
+            session()->flash('alert-success', 'Tax Transaction Updated');
             return redirect()->route('admin.tax.index');
         }
-
-        return back();
+        session()->flash('alert-danger', 'Error While Update Tax! Check Your Account Balance');
+        return back()->withInput();
     }
+
 
     /**
      * Remove the specified resource from storage.

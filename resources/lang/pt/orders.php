@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'Enter message' => 'Digite a mensagem',
+    'Enter domestic TN'=>'Insira o número de rastreamento doméstico neste campo',
     'name' => 'Nome',
     'action' => 'Açao',
     'orders' => 'Pedidos',
@@ -12,7 +14,7 @@ return [
     'status' => 'Status',
     'edit' => 'Editar',
     'Edit Order' => 'Editar Pedido',
-    'Bulk Print' => 'Etiquetas em lote',
+    'Bulk Print' => 'Mais Opções',
     'Download Orders' => 'Baixar pedidos',
     'type' => 'Tipo',
     'payment-status' => 'Status do pagamento',

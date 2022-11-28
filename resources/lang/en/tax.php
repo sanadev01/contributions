@@ -47,6 +47,15 @@ return [
     'Update' => 'Update',
     'Reset' => 'Reset',
     'Upload Receipt' => 'Upload Receipt',
+    'Exchange Rate' => 'Exchange Rate',
+    'Order Paid'=> 'Order Tax has Already been Paid',
+    'Balance deposit'     => 'Balance deposit successfully.',
+    'Low Balance.' => 'Low Balance.',
+    'Herco Buying Rate' => 'Herco (Buying) Rate (R$)',
+    'Herco Selling Rate' => 'Herco (Selling) Rate (R$)',
+    'Herco Buying USD' => 'Herco (Buying) (USD)',
+    'Herco Selling USD' => 'Herco (Selling) (USD)',
+
 
 
 

@@ -11,7 +11,7 @@ class ShcodeRepository
 {
     public function get()
     {   
-        $shCode = ShCode::all();
+        $shCode = ShCode::orderBy('description','ASC')->get();
         return $shCode;
 
     }

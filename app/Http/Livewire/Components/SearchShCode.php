@@ -31,7 +31,7 @@ class SearchShCode extends Component
     public function render()
     {
         return view('livewire.components.search-sh-code',[
-            'codes' => ShCode::all()
+            'codes' => ShCode::orderBy('description','ASC')->get()
         ]);
     }
 

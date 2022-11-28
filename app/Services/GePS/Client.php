@@ -5,15 +5,16 @@ namespace App\Services\GePS;
 use Carbon\Carbon;
 use App\Models\Order;
 use App\Models\OrderTracking;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Auth;
+use App\Models\ShippingService;
 use App\Models\Warehouse\Container;
-use App\Services\Correios\Models\PackageError;
-use App\Services\Calculators\WeightCalculator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use GuzzleHttp\Client as GuzzleClient;
+use Illuminate\Support\Facades\Cache;
 use App\Models\Warehouse\DeliveryBill;
+use GuzzleHttp\Client as GuzzleClient;
 use App\Services\Converters\UnitsConverter;
+use App\Services\Calculators\WeightCalculator;
+use App\Services\Correios\Models\PackageError;
 
 class Client{
 
@@ -105,7 +106,7 @@ class Client{
     {   
         //GET CONTAINER FOR PARCEL
 
-        $container = Container::where('services_subclass_code','537')
+        $container = Container::where('services_subclass_code', ShippingService::GePS)
             ->where('destination_operator_name', $order->recipient->country->code)->whereNull('unit_code')->first();
 
         if(!$container) {
@@ -118,7 +119,7 @@ class Client{
                 'postal_category_code' => 'A',
                 'destination_operator_name' => $order->recipient->country->code,
                 'unit_type' => 1,
-                'services_subclass_code' => '537'
+                'services_subclass_code' => ShippingService::GePS
             ]);
 
             $container->update([
@@ -167,7 +168,8 @@ class Client{
                 ],
                 'consigneeaddress' => [
                     'name' => $order->recipient->getFullName().' '.$order->warehouse_number,
-                    'addr1' => $order->recipient->address.'-'.$order->recipient->street_no,
+                    'addr1' => $order->recipient->address,
+                    'addr2' => optional($order->recipient)->address2.'-'.$order->recipient->street_no,
                     'state' => $order->recipient->state->code,
                     'city' => $order->recipient->city,
                     'country' => $order->recipient->country->code,
@@ -181,6 +183,7 @@ class Client{
         \Log::info(
             $packet
         );
+        Cache::flush();
         try {
             $response = $this->client->post('https://globaleparcel.com/api.aspx',[
                 'headers' => $this->getKeys(),
