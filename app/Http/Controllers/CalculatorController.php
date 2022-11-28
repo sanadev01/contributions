@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Calculator\CalculatorRequest;
-use App\Models\User;
 use App\Repositories\Calculator\CalculatorRepository;
 class CalculatorController extends Controller
 {
@@ -18,7 +17,8 @@ class CalculatorController extends Controller
         $shippingServices =  $calculatorRepository->getShippingService();
         $chargableWeight = $calculatorRepository->getChargableWeight();
         $weightInOtherUnit = $calculatorRepository->getWeightInOtherUnit($request);
-        return view('calculator.show', compact('order', 'shippingServices', 'weightInOtherUnit', 'chargableWeight')); 
+
+        return view('calculator.show', compact('order', 'shippingServices', 'weightInOtherUnit', 'chargableWeight'));
     }
 
 }
