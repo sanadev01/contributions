@@ -109,11 +109,13 @@ class ColombiaService
             
             $response = Http::withBasicAuth($this->userName, $this->password)
                                 ->post($url, $data);
+            \Log::info('response');
+            \Log::info(json_decode($response));
             
             if ($response->status() == 200) {
                 $responseJson = collect($response->json())->first();
-                
-                if ($responseJson['intCodeError'] == 0) {
+
+                if ($responseJson['intCodeError'] == 0  && $responseJson['strUrlGuide'] != null) {
                     return (Array)[
                         'success' => true,
                         'data' => $responseJson,
@@ -221,8 +223,8 @@ class ColombiaService
 
         return [
             'intAditional' => 0,
-            //'intCodeCity' => $regionCode,
-            'intCodeCity' => ($data) ? $data['zipcode'] : null,
+            'intCodeCity' => $regionCode,
+            // 'intCodeCity' => null,//$data['zipcode'],
             'intTypeActor' => ($typeRecipient) ? 3 : 2,
             'intTypeDocument' => 1,
             'strAddress' => ($data) ? $data['address'] : (($typeRecipient ? 'Colombia Receiver' : 'Colombia Sender')),
