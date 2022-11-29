@@ -15,7 +15,7 @@ return [
     'transactions' => 'Transactions',
     'addresses' => 'Addresses',
     'calculator' => 'Correios Calculator',
-    'uscalculator' => 'US Calculator',
+    'uscalculator' => 'WorldWide Calculator',
     'uspscalculator' => 'USPS Calculator',
     'upscalculator' => 'UPS Calculator',
     'connect' => 'Connect',
@@ -51,8 +51,11 @@ return [
         'Delivery Bill' => 'Delivery Bill',
         'Chile Containers' => 'Chile Containers',
         'USPS Containers' => 'USPS Containers',
+        'Sinerlog Containers' => 'Sinerlog Containers',
+        'MileExpress Containers' => 'MileExpress Containers',
+        'PostNL Containers' => 'PostNL Containers',
+        'Colombia Containers' => 'Colombia Containers',
         'GePS Containers' => 'GePS Containers',
-        'Sinerlog Containers' => 'Sinerlog Containers'
     ],
     'Affiliate' => [
         'menu' => 'Affiliate',

@@ -182,6 +182,8 @@ return [
         App\Providers\UPSServiceProvider::class,
         App\Providers\FedExServiceProvider::class,
         App\Providers\ChileServiceProvider::class,
+        App\Providers\MileExpressServiceProvider::class,
+        App\Providers\ColombiaServiceProvider::class,
 
     ],
 

@@ -15,7 +15,7 @@ return [
     'transactions' => 'Transações',
     'addresses' => 'Endereços',
     'calculator' => 'Correios Calculadora',
-    'uscalculator' => 'US Calculadora',
+    'uscalculator' => 'calculadora mundial',
     'uspscalculator' => 'USPS Calculadora',
     'upscalculator' => 'UPS Calculadora',
     'connect' => 'Conectar',
@@ -51,6 +51,9 @@ return [
         'Chile Containers' => 'Chile Recipientes',
         'USPS Containers' => 'USPS Recipientes',
         'GePS Containers' => 'GePS Recipientes',
+        'MileExpress Containers' => 'MileExpress Containers',
+        'PostNL Containers' => 'PostNL Recipientes',
+        'Colombia Containers' => 'Colombia Recipientes'
     ],
     'Affiliate' => [
         'menu' => 'Relatórios',

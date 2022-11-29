@@ -115,7 +115,6 @@ class OrderStatusController extends Controller
             //SendMailNotification
             $this->sendTransactionMail($deposit, $preStatus, $user);
 
-
             return apiResponse(true,"Updated");
         }
 
