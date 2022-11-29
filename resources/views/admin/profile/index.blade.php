@@ -238,6 +238,19 @@
                                     <div class="help-block"></div>
                                 </div>
                             </div>
+                            <div class="controls row mb-1 align-items-center">
+                                <label class="col-md-3 text-md-right"> Webhook URL<span class="text-danger"></span></label>
+                                <div class="col-md-6">               
+                                    <div class="input-group-prepend">
+                                            <select name="order_webhook_url_method" class="form-control col-md-2"> 
+                                                <option @if(  old('order_webhook_url_method',setting('order_webhook_url_method', null, Auth::id())) =="POST" ) selected @endif value="POST">POST</option>
+                                                <option @if(  old('order_webhook_url_method',setting('order_webhook_url_method', null, Auth::id())) =="GET" ) selected @endif value="GET">GET</option>
+                                            </select>                
+                                            <input type="url" class="form-control" name="order_webhook_url" value="{{ old('order_webhook_url',setting('order_webhook_url', null, Auth::id())) }}"  placeholder="Order Webhook URL"/>
+                                            <div class="help-block"></div>
+                                      </div>
+                                  </div>
+                             </div>
                             <div class="row mt-1">
                                 <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
                                     <button type="submit"
