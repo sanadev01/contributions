@@ -29,7 +29,7 @@
                     <div class="card p-2">
                         <div class="card-header pb-0">
                             <h2 class="mb-2 text-center w-100">
-                                US Calculator
+                                WorldWide Calculator
                             </h2>
                         </div>
                         <form action="{{route('us-calculator.store')}}" method="POST">

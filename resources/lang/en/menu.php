@@ -15,7 +15,7 @@ return [
     'transactions' => 'Transactions',
     'addresses' => 'Addresses',
     'calculator' => 'Correios Calculator',
-    'uscalculator' => 'US Calculator',
+    'uscalculator' => 'WorldWide Calculator',
     'uspscalculator' => 'USPS Calculator',
     'upscalculator' => 'UPS Calculator',
     'connect' => 'Connect',
