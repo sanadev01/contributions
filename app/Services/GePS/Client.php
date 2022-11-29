@@ -64,7 +64,7 @@ class Client{
                 $itemToPush = [
                     'description' => $item->description,
                     'qty' => (int)$item->quantity,
-                    'value' => $item->value * (int)$item->quantity,
+                    'value' => number_format($item->value * (int)$item->quantity , 2),
                     'hscode' => "$item->sh_code",
                     'currency' => "USD",
                     'origin' => $order->senderCountry->code,
