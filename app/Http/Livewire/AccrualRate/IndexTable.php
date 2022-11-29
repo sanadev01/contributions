@@ -47,9 +47,27 @@ class IndexTable extends Component
             'value' => Package::SERVICE_CLASS_AJ_EXPRESS,
         ];
         $this->services[7] = [
+            'name' => 'Colombia Urbano',
+            'value' => Package::SERVICE_CLASS_COLOMBIA_URBANO,
+        ];
+        $this->services[8] = [
+            'name' => 'Colombia Nacional',
+            'value' => Package::SERVICE_CLASS_COLOMBIA_NACIONAL,
+        ];
+        $this->services[9] = [
+            'name' => 'Colombia Trayetos',
+            'value' => Package::SERVICE_CLASS_COLOMBIA_TRAYETOS,
+        ];
+        $this->services[10] = [
+            'name' => 'Mile Express',
+            'value' => Package::SERVICE_CLASS_MILE_EXPRESS,
+        ];
+        $this->services[11] = [
             'name' => 'GePS',
             'value' => Package::SERVICE_CLASS_GePS,
         ];
+        
+        
         return $this->services;
     }
 }
