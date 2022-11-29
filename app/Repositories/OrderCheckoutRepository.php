@@ -1,18 +1,15 @@
 <?php
 
-namespace App\Repositories;
-
-use Carbon\Carbon;
+namespace App\Repositories; 
 use Stripe\Charge;
 use Stripe\Stripe;
 use Stripe\Customer;
 use App\Models\Order;
 use App\Models\State;
 use App\Models\Country;
-use App\Models\Deposit;
+use GuzzleHttp\Client;
 use App\Events\OrderPaid;
-use App\Mail\User\PaymentPaid;
-use App\Models\PaymentInvoice;
+use App\Mail\User\PaymentPaid; 
 use App\Events\OrderStatusUpdated;
 use App\Models\BillingInformation;
 use Illuminate\Support\Facades\DB;
@@ -21,6 +18,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Admin\NotifyTransaction;
 use App\Services\PaymentServices\AuthorizeNetService;
+use Exception;
 
 class OrderCheckoutRepository
 {
@@ -396,4 +394,32 @@ class OrderCheckoutRepository
             return $this->error = $ex->getMessage();
         }
     }
+    public function orderStatusWebhook(Order $order)
+    {
+        $user = $order->user;
+        $statusCode = $order->status; 
+        $method = setting('order_webhook_url_method', null, $user->id); 
+        $url = setting('order_webhook_url', null, $user->id); 
+        $client = new Client();
+        try { 
+            if($url)
+            $response = $client->request($method?$method:"GET",$url,[
+                'json' => [
+                        "warehouseNumber" => $order->id,
+                        "statusCode" => "Your Parcel Status Code is ".''. $statusCode,
+                        "message" => "Your Parcel Status is ".''. getParcelStatus($statusCode),
+                        "format" => 'json'
+                ]
+            ]);
+            else{
+                Log::info('No url set for user ' . $user->email);
+                return null;
+            }
+
+        } catch (Exception $th) {
+            abort(400,'Bad Request'.$th->getMessage());
+        }
+        return json_decode($response->getBody()->getContents());
+    }
+
 }

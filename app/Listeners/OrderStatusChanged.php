@@ -1,28 +1,23 @@
 <?php
 
 namespace App\Listeners;
-
-use App\Models\User;
-use App\Models\Order;
-use GuzzleHttp\Client;
-use App\Models\Setting;
 use App\Events\OrderStatusUpdated;
-use Illuminate\Support\Facades\Auth;
+use App\Repositories\OrderCheckoutRepository; 
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class OrderStatusChanged implements ShouldQueue
 {
     use InteractsWithQueue;
-
+    private $orderCheckoutRepository;
     /**
      * Create the event listener.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(OrderCheckoutRepository $orderCheckoutRepository)
     {
-        //
+        $this->orderCheckoutRepository = $orderCheckoutRepository;
     }
 
     /**
@@ -31,47 +26,10 @@ class OrderStatusChanged implements ShouldQueue
      * @param  OrderStatusUpdated  $event
      * @return void
      */
-    public function handle(OrderStatusUpdated $orderstatusupdated)
+    public function handle(OrderStatusUpdated $orderStatusUpdated)
     {
-        $orders = json_decode( json_encode($orderstatusupdated), true);
-
-        if(isset($orders['orders']['user_id'])){
-            $user = User::where('id', $orders['orders']['user_id'])->get();
-        }else {
-            $user = User::where('id', $orders['orders'][0]['user_id'])->get();  
-        }
-        if(isset($orders['orders']['status'])){
-            $statusCode = $orders['orders']['status'];
-        }else {
-            $statusCode = $orders['orders'][0]['status'];
-        }
-        if(isset($orders['orders']['id'])){
-            $orderId = $orders['orders']['id'];
-        }else {
-            $orderId = $orders['orders'][0]['id'];
-        }
-        \Log::info($statusCode);
-        \Log::info($orderId);
-        \Log::info(getParcelStatus($statusCode));
-        //$url = Setting::where('id', $orders['orders']['user_id'])->value('url');
-        $url = 'http://localhost/webhook?orderId=64165';
-        $client = new Client([]);
-        try {
-
-            $response = $client->post($url,[
-                'json' => [
-                    'data' => [
-                        'warehouse_number' => $orderId,
-                        'status' => "Your Parcel Status Code is ".''. $statusCode,
-                        'message' => "Your Parcel Status is ".''. getParcelStatus($statusCode),
-                        'format' => 'json',
-                    ]
-                ]
-            ]);
-
-        } catch (\Exception $th) {
-            abort(400,'Bad Request'.$th->getMessage());
-        }
-        return json_decode($response->getBody()->getContents());
+        $order = $orderStatusUpdated->order;
+        return  $this->orderCheckoutRepository->orderStatusWebhook($order);
+       
     }
 }
