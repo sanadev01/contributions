@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Order;
+use App\Models\OrderTracking;
 use Illuminate\Support\Facades\DB;
 use App\Models\Warehouse\Container;
 use App\Models\Warehouse\DeliveryBill;
@@ -285,7 +286,10 @@ Route::get('test-label/{id?}/d/{dno?}',function($id, $dNo){
 
 Route::get('order/apiresponse/{id?}',function($id){
     $order = Order::find($id);
-    dd($order);
+    if($order) {
+        $tracking = OrderTracking::where('order_id', $order->id)->get();
+    }
+    dd($tracking);
 });
 
 Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container');
