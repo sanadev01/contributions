@@ -289,7 +289,7 @@ Route::get('order/apiresponse/{id?}',function($id){
     if($order) {
         $tracking = OrderTracking::where('order_id', $order->id)->get();
     }
-    dd($tracking);
+    dd($tracking, $order);
 });
 
 Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container');
