@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Order;
+use App\Models\OrderTracking;
 use App\Models\Product;
 use App\Models\Country;
 use App\Models\Recipient;
@@ -275,12 +276,13 @@ Route::get('test-label/{id?}/d/{dno?}',function($id, $dNo){
 
     $delivery = Container::find($id)->update([
         'dispatch_number' => $dNo,
-        'unit_code' => null
+        'unit_code' => 'USHERCBRSAODANX39501001022597'
     ]);
-    dd($delivery);
     // $order = DB::table('orders')->where('id',$id)->update([
     //     'deleted_at' => null
     // ]);
+    // $detachOrder = DB::table('container_delivery_bill')->where('delivery_bill_id', $db)->where('container_id', $id)->limit(1)->delete();
+    dd($delivery);
     
     // dd($order);
     $labelPrinter = new CN23LabelMaker();
@@ -290,6 +292,14 @@ Route::get('test-label/{id?}/d/{dno?}',function($id, $dNo){
     $labelPrinter->setService(2);
     
     return $labelPrinter->download();
+});
+
+Route::get('order/apiresponse/{id?}',function($id){
+    $order = Order::find($id);
+    if($order) {
+        $tracking = OrderTracking::where('order_id', $order->id)->get();
+    }
+    dd($tracking, $order);
 });
 
 Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container');
