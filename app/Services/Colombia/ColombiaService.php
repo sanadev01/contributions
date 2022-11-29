@@ -4,6 +4,7 @@ namespace App\Services\Colombia;
 
 use Exception;
 use App\Models\Region;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Http;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Calculators\WeightCalculator;
@@ -102,13 +103,27 @@ class ColombiaService
             ];
         }
     }
+    private function getKeys()
+    {
+        $token = 'aGVyY28uYXBwOkNvbG9tYmlhMjAyMSo=';
+        $headers = [
+            'Authorization: Basic' => $token,
+            'Content-Type' => "application/json",
 
+        ];
+        return $headers;
+    }
     private function colombiaApiCall($url, $data)
     {
+        //dd($data);
         try {
-            
-            $response = Http::withBasicAuth($this->userName, $this->password)
-                                ->post($url, $data);
+            $client = new Client();
+            $response = $client->post($url,[
+                "headers" => $this->getKeys(),
+                "request" => $data
+            ]);
+            // $response = Http::withBasicAuth($this->userName, $this->password)
+            //                     ->post($url, $data);
             \Log::info('response');
             \Log::info(json_decode($response));
             
@@ -161,10 +176,10 @@ class ColombiaService
             'intTypeRequest' => ($forRates) ? 1 : 2,
             'lstShippingTraceBe' => [
                 [
-                    'boolLading' => false,
+                    
                     'placeReceiverBe' => $this->setPlace($order->recipient->toArray()),
+                    'boolLading' => false,
                     'customerReceiverBe' => $this->setCustomer($order->recipient->toArray()),
-                    'placeSenderBe' => $this->setPlace(null, false),
                     'customerSenderBe' => $this->setCustomer(null, false),
                     'decCollectValue' => 0,
                     'decLading' => 0,
@@ -176,6 +191,7 @@ class ColombiaService
                     'intLength' => ($order->measurement_unit != 'kg/cm') ? round(UnitsConverter::inToCm($order->length)) : round($order->length),
                     'intWidth' => ($order->measurement_unit != 'kg/cm') ? round(UnitsConverter::inToCm($order->width)) : round($order->width),
                     'intWeight' => ($order->measurement_unit != 'kg/cm') ? round(UnitsConverter::kgToGrams(UnitsConverter::poundToKg($this->chargableWeight))) : round(UnitsConverter::kgToGrams($this->chargableWeight)),
+                    'placeSenderBe' => $this->setPlace(null, false),
                     'strAditionalShipping' => '',
                     'strIdentification' => $order->warehouse_number,
                     'strObservation' => '',
