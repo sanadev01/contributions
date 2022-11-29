@@ -42,6 +42,6 @@ class EventServiceProvider extends ServiceProvider
     public function boot()
     {
         parent::boot();
-        // Order::observe(OrderObserver::class);
+        Order::observe(OrderObserver::class);
     }
 }

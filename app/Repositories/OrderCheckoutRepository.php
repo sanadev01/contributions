@@ -85,10 +85,7 @@ class OrderCheckoutRepository
                 $this->invoice->orders()->update([
                     'is_paid' => true,
                     'status' => Order::STATUS_PAYMENT_DONE
-                ]);
-                
-                event (new OrderStatusUpdated($order));
-
+                ]); 
                 try {
                     \Mail::send(new NotifyTransaction($deposit, $preStatus, $user));
                 } catch (\Exception $ex) {
@@ -121,9 +118,6 @@ class OrderCheckoutRepository
         }
 
         event(new OrderPaid($this->invoice->orders, true));
-
-        event (new OrderStatusUpdated($this->invoice->orders));
-
         session()->flash('alert-success', __('orders.payment.alert-success'));
         return view('admin.payment-invoices.index');
     }
@@ -154,11 +148,7 @@ class OrderCheckoutRepository
                     $this->invoice->orders()->update([
                         'is_paid' => true,
                         'status' => Order::STATUS_PAYMENT_DONE
-                    ]);
-
-                    event (new OrderStatusUpdated($order));
-
-
+                    ]); 
                 } catch (\Exception $ex) {
                     session()->flash('alert-danger',$ex->getMessage());
                     return back();
@@ -184,8 +174,7 @@ class OrderCheckoutRepository
         }
 
 
-        event(new OrderPaid($this->invoice->orders, true));
-        event (new OrderStatusUpdated($this->invoice->orders));
+        event(new OrderPaid($this->invoice->orders, true)); 
         session()->flash('alert-success', __('orders.payment.alert-success'));
         return redirect()->route('admin.payment-invoices.index');
     }
@@ -271,10 +260,7 @@ class OrderCheckoutRepository
                 $this->invoice->orders()->update([
                     'is_paid' => true,
                     'status' => Order::STATUS_PAYMENT_DONE
-                ]);
-                
-                event (new OrderStatusUpdated($this->invoice->orders));
-
+                ]);  
                 try {
                     Mail::send(new PaymentPaid($this->invoice));
                 } catch (\Exception $ex) {

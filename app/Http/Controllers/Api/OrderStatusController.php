@@ -70,8 +70,7 @@ class OrderStatusController extends Controller
                     'status'  => $request->status,
                     'is_paid' => false
                 ]);
-
-                event (new OrderStatusUpdated($order));
+ 
 
                 //SendMailNotification
                 $this->sendTransactionMail($deposit, $preStatus, $user);
@@ -105,17 +104,14 @@ class OrderStatusController extends Controller
                 $order->update([
                     'status' => $request->status,
                 ]);
-
-                event (new OrderStatusUpdated($order));
+ 
                 return apiResponse(true,"Updated");
             }
             
             $order->update([
                 'status' => $request->status,
                 'is_paid' => $request->status >= Order::STATUS_PAYMENT_DONE ? true: false
-            ]);
-
-            event (new OrderStatusUpdated($order));
+            ]); 
             //SendMailNotification
             $this->sendTransactionMail($deposit, $preStatus, $user);
 
