@@ -86,10 +86,10 @@
                                     </td>
                                     <td>{{ $tax->order->corrios_tracking_code }}</td>
                                     <td>{{ $tax->tax_payment }}</td>
-                                    <td>{{ $tax->tax_1 }}</td>
-                                    <td>{{ $tax->tax_1_br }}</td>
-                                    <td>{{ $tax->tax_2 }}</td>
-                                    <td>{{ $tax->tax_2_br }}</td>
+                                    <td>{{ $tax->buying_br }}</td>
+                                    <td>{{ $tax->selling_br }}</td>
+                                    <td>{{ $tax->buying_usd }}</td>
+                                    <td>{{ $tax->selling_usd }}</td>
                                     <td>
                                         @if(optional($tax->deposit)->depositAttchs)
                                             @foreach ($tax->deposit->depositAttchs as $attachedFile )
