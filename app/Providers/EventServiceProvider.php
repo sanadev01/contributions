@@ -5,7 +5,9 @@ namespace App\Providers;
 use App\Models\AffiliateSale;
 use App\Models\Order;
 use App\Events\OrderPaid;
+use App\Events\OrderStatusUpdated;
 use App\Listeners\CalculateCommission;
+use App\Listeners\OrderStatusChanged;
 use App\Observers\AffiliateSaleObserver;
 use App\Observers\OrderObserver;
 use Illuminate\Auth\Events\Registered;
@@ -27,6 +29,9 @@ class EventServiceProvider extends ServiceProvider
         OrderPaid::class =>[
             CalculateCommission::class, 
         ],
+        OrderStatusUpdated::class =>[
+            OrderStatusChanged::class, 
+        ],
     ];
 
     /**
@@ -37,6 +42,6 @@ class EventServiceProvider extends ServiceProvider
     public function boot()
     {
         parent::boot();
-        // Order::observe(OrderObserver::class);
+        Order::observe(OrderObserver::class);
     }
 }

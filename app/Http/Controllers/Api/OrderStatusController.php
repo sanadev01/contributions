@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Api;
 
+use Carbon\Carbon;
 use App\Models\Order;
 use App\Models\Deposit;
 use Illuminate\Http\Request;
 use App\Models\PaymentInvoice;
-use App\Mail\Admin\NotifyTransaction;
+use App\Events\OrderStatusUpdated;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
+use App\Mail\Admin\NotifyTransaction;
 
 
 class OrderStatusController extends Controller
@@ -69,6 +70,7 @@ class OrderStatusController extends Controller
                     'status'  => $request->status,
                     'is_paid' => false
                 ]);
+ 
 
                 //SendMailNotification
                 $this->sendTransactionMail($deposit, $preStatus, $user);
@@ -102,19 +104,16 @@ class OrderStatusController extends Controller
                 $order->update([
                     'status' => $request->status,
                 ]);
-
-                
+ 
                 return apiResponse(true,"Updated");
             }
             
             $order->update([
                 'status' => $request->status,
                 'is_paid' => $request->status >= Order::STATUS_PAYMENT_DONE ? true: false
-            ]);
-
+            ]); 
             //SendMailNotification
             $this->sendTransactionMail($deposit, $preStatus, $user);
-
 
             return apiResponse(true,"Updated");
         }
