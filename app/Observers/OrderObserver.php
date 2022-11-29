@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Events\OrderStatusUpdated;
 use App\Models\Order;
+use Illuminate\Support\Facades\Log;
 
 class OrderObserver
 {
@@ -56,7 +57,8 @@ class OrderObserver
      */
     public function deleted(Order $order)
     {
-        //
+        Log::info('deleted order');
+        event (new OrderStatusUpdated($order));
     }
 
     /**
