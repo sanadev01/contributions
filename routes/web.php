@@ -266,12 +266,12 @@ Route::get('test-label/{id?}/d/{dno?}/db/{db?}',function($id, $dNo,$db){
 
     $delivery = Container::find($id)->update([
         'dispatch_number' => $dNo,
-        'unit_code' => null
+        'unit_code' => 'USHERCBRSAODANX39501001022597'
     ]);
     // $order = DB::table('orders')->where('id',$id)->update([
     //     'deleted_at' => null
     // ]);
-    $detachOrder = DB::table('container_delivery_bill')->where('delivery_bill_id', $db)->where('container_id', $id)->limit(1)->delete();
+    // $detachOrder = DB::table('container_delivery_bill')->where('delivery_bill_id', $db)->where('container_id', $id)->limit(1)->delete();
     dd($delivery);
     
     // dd($order);
