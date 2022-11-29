@@ -389,9 +389,6 @@ class OrderCheckoutRepository
         $client = new Client();
         try { 
             if($url){
-                $json= [
-
-                ];
                 if($order->trashed()){
                     $json = [
                             "warehouseNumber" => $order->id,
@@ -399,7 +396,7 @@ class OrderCheckoutRepository
                             "format"          => 'json'
                     ];
                 }else{
-                    $json = $json+ [
+                    $json = [
                         "warehouseNumber" => $order->id,
                         "statusCode"      => "Your Parcel Status Code is ".''. $statusCode,
                         "message"         => "Your Parcel Status is ".getParcelStatus($statusCode),

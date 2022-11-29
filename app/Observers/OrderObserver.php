@@ -56,8 +56,7 @@ class OrderObserver
      * @return void
      */
     public function deleted(Order $order)
-    {
-        Log::info('deleted order');
+    { 
         event (new OrderStatusUpdated($order));
     }
 
