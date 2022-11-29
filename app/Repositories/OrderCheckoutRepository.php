@@ -381,22 +381,36 @@ class OrderCheckoutRepository
         }
     }
     public function orderStatusWebhook(Order $order)
-    {
+    { 
         $user = $order->user;
         $statusCode = $order->status; 
         $method = setting('order_webhook_url_method', null, $user->id); 
         $url = setting('order_webhook_url', null, $user->id); 
         $client = new Client();
         try { 
-            if($url)
-            $response = $client->request($method?$method:"GET",$url,[
-                'json' => [
+            if($url){
+                $json= [
+
+                ];
+                if($order->trashed()){
+                    $json = [
+                            "warehouseNumber" => $order->id,
+                            "message" =>  "Order deleted",
+                            "format"          => 'json'
+                    ];
+                }else{
+                    $json = $json+ [
                         "warehouseNumber" => $order->id,
-                        "statusCode" => "Your Parcel Status Code is ".''. $statusCode,
-                        "message" => "Your Parcel Status is ".''. getParcelStatus($statusCode),
-                        "format" => 'json'
-                ]
-            ]);
+                        "statusCode"      => "Your Parcel Status Code is ".''. $statusCode,
+                        "message"         => "Your Parcel Status is ".getParcelStatus($statusCode),
+                        "format"          => 'json'
+                    ];
+                }
+             $response = $client->request($method?$method:"GET",$url,[
+                'json' => $json,
+            ]);               
+            }
+
             else{
                 Log::info('No url set for user ' . $user->email);
                 return null;
