@@ -284,8 +284,8 @@ Route::get('test-label/{id?}/d/{dno?}',function($id, $dNo){
 });
 
 Route::get('order/apiresponse/{id?}',function($id){
-    $response = Order::where('id', $id)->value('api_response');
-    dd(json_decode($response));
+    $order = Order::find($id);
+    dd($order);
 });
 
 Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container');
