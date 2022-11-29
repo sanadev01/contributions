@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\PublicApi;
 
 use App\Models\Order;
 use App\Events\OrderPaid;
+use App\Events\OrderStatusUpdated;
 use Illuminate\Http\Request;
 // use App\Repositories\LabelRepository;
 use App\Models\ShippingService;
