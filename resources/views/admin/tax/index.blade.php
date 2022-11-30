@@ -78,7 +78,7 @@
                                 <tr>
                                     <td>{{ $tax->user->name }}</td>
                                     <td>
-                                        <span>
+                                        <span> 
                                             <a href="#" title="Click to see Shipment" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.parcel.shipment-info',$tax->order_id) }}">
                                                 WRH#: {{ $tax->order->warehouse_number }}
                                             </a>
@@ -90,6 +90,7 @@
                                     <td>{{ $tax->selling_br }}</td>
                                     <td>{{ $tax->buying_usd }}</td>
                                     <td>{{ $tax->selling_usd }}</td>
+                                    <td>{{ ( $tax->selling_usd - $tax->buying_usd ) }}</td>
                                     <td>
                                         @if(optional($tax->deposit)->depositAttchs)
                                             @foreach ($tax->deposit->depositAttchs as $attachedFile )
