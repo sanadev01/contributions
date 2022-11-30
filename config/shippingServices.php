@@ -22,6 +22,7 @@ return [
             33172 => 'AJ Packet Express',
             100 => 'Brazil Redispatch',
             537 => 'Global eParcel Prime',
+            540 => 'GePS E-Format Tracked',
         ]
     ]
 ];
