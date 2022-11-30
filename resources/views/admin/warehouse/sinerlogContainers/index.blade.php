@@ -6,22 +6,35 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="mb-0">
-                            @lang('warehouse.sinerlogContainers.Containers')
-                        </h4>
-                        <a href="{{ route('warehouse.sinerlog_containers.create') }}" class="pull-right btn btn-primary"> @lang('warehouse.containers.Create Container') </a>
+                    @section('title', __('warehouse.sinerlogContainers.Containers'))
+                    <div id="col-6">
+                        <div class="col-12 pl-0" id="printBtnDiv">
+                            <button title="Print Labels" id="assignAWB" type="btn"
+                                class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i
+                                    class="fas fa-file-invoice" aria-hidden="true"></i></button>
+                        </div>
                     </div>
-                    <div class="card-content card-body" style="min-height: 100vh;">
-                        <div class="mt-1">
-                            <table class="table mb-0">
-                                <thead>
+                    <div class="col-6 d-flex justify-content-end pr-0">
+                        <a href="{{ route('warehouse.sinerlog_containers.create') }}"
+                            class="pull-right btn btn-primary">
+                            @lang('warehouse.containers.Create Container') </a>
+                    </div>
+                </div>
+                <div class="card-content card-body" style="min-height: 100vh;">
+                    <div class="mt-1">
+                        <table class="table mb-0 table-bordered">
+                            <thead>
                                 <tr>
-                                    <th style="min-width: 100px;">
-                                        <select name="" id="bulk-actions" class="form-control">
-                                            <option value="clear">Clear All</option>
-                                            <option value="checkAll">Select All</option>
-                                            <option value="assign-awb">Assign AWB</option>
-                                        </select>
+                                    <th id="optionChkbx">
+                                        <div class="vs-checkbox-con vs-checkbox-primary" title="Select All">
+                                            <input type="checkbox" id="checkAll" name="orders[]" class="check-all"
+                                                value="">
+                                            <span class="vs-checkbox vs-checkbox-sm">
+                                                <span class="vs-checkbox--check">
+                                                    <i class="vs-icon feather icon-check"></i>
+                                                </span>
+                                            </span>
+                                        </div>
                                     </th>
                                     <th>@lang('warehouse.containers.Dispatch Number')</th>
                                     <th>@lang('warehouse.containers.Seal No')</th>
@@ -48,14 +61,16 @@
                                     </th>
                                     <th>@lang('warehouse.actions.Action')</th>
                                 </tr>
-                                </thead>
-                                <tbody>
-                                @foreach($containers as $container)
+                            </thead>
+                            <tbody>
+                                @foreach ($containers as $container)
                                     <tr>
                                         <td>
                                             <div class="vs-checkbox-con vs-checkbox-primary" title="@lang('orders.Bulk Print')">
-                                                <input type="checkbox" name="containers[]" class="bulk-container" value="{{$container->id}}">
-                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                <input type="checkbox" name="containers[]"
+                                                    onchange="handleChangeContainer(this)" class="bulk-container"
+                                                    value="{{ $container->id }}">
+                                                <span class="vs-checkbox vs-checkbox-sm">
                                                     <span class="vs-checkbox--check">
                                                         <i class="vs-icon feather icon-check"></i>
                                                     </span>
@@ -69,7 +84,7 @@
                                             {{ $container->getWeight() }} KG
                                         </td>
                                         <td>
-                                            {{  $container->getPiecesCount() }}
+                                            {{ $container->getPiecesCount() }}
                                         </td>
                                         <td>
                                             {{ $container->origin_country }}
@@ -87,24 +102,24 @@
                                             {{ $container->getUnitCode() }}
                                         </td>
                                         <td>
-                                            @if ( !$container->awb)
+                                            @if (!$container->awb)
                                                 <span class="text-danger font-italic">Awb Number Required</span>
                                             @endif
                                             {{ $container->awb }}
                                         </td>
                                         <td>
-                                            @if(!$container->isRegistered())
+                                            @if (!$container->isRegistered())
                                                 <div class="btn btn-info">
                                                     New
                                                 </div>
                                             @endif
-                                            @if($container->isRegistered() && !$container->isShipped())
+                                            @if ($container->isRegistered() && !$container->isShipped())
                                                 <div class="btn btn-primary">
                                                     Registered
                                                 </div>
                                             @endif
 
-                                            @if($container->isShipped())
+                                            @if ($container->isShipped())
                                                 <div class="btn btn-success">
                                                     Shipped
                                                 </div>
@@ -113,42 +128,55 @@
                                         <td class="d-flex">
                                             <div class="btn-group">
                                                 <div class="dropdown">
-                                                    <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-success dropdown-toggle waves-effect waves-light">
+                                                    <button type="button" data-toggle="dropdown" aria-haspopup="true"
+                                                        aria-expanded="false"
+                                                        class="btn btn-success btn-sm dropdown-toggle waves-effect waves-light"
+                                                        style="width:100px;">
                                                         @lang('user.Action')
                                                     </button>
                                                     <div class="dropdown-menu dropdown-menu-right dropright">
-                                                        <a href="{{ route('warehouse.sinerlog_container.packages.index',$container) }}" class="dropdown-item w-100">
+                                                        <a href="{{ route('warehouse.sinerlog_container.packages.index', $container) }}"
+                                                            class="dropdown-item w-100">
                                                             <i class="feather icon-box"></i> @lang('warehouse.actions.Packages')
                                                         </a>
-                                                        @if( !$container->isRegistered() && !$container->isShipped() )
-                                                            <a href="{{ route('warehouse.sinerlog_containers.edit',$container) }}" class="dropdown-item w-100">
+                                                        @if (!$container->isRegistered() && !$container->isShipped())
+                                                            <a href="{{ route('warehouse.sinerlog_containers.edit', $container) }}"
+                                                                class="dropdown-item w-100">
                                                                 <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
                                                             </a>
-                                                            
-                                                            <a href="{{ route('warehouse.sinerlog_container.register',$container) }}" class="dropdown-item w-100" id="register_unit">
+
+                                                            <a href="{{ route('warehouse.sinerlog_container.register', $container) }}"
+                                                                class="dropdown-item w-100" id="register_unit">
                                                                 <i class="feather icon-box"></i> Register Unit
                                                             </a>
-                                                            
-                                                            <form action="{{ route('warehouse.sinerlog_containers.destroy',$container) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
+
+                                                            <form
+                                                                action="{{ route('warehouse.sinerlog_containers.destroy', $container) }}"
+                                                                class="d-flex" method="post"
+                                                                onsubmit="return confirmDelete()">
                                                                 @csrf
                                                                 @method('DELETE')
                                                                 <button class="dropdown-item w-100 text-danger">
-                                                                    <i class="feather icon-trash-2"></i> @lang('warehouse.actions.Delete')
+                                                                    <i class="feather icon-trash-2"></i>
+                                                                    @lang('warehouse.actions.Delete')
                                                                 </button>
                                                             </form>
                                                         @endif
-                                                        @if ( $container->isRegistered() )
+                                                        @if ($container->isRegistered())
                                                             @if (is_null($container->unit_response_list))
-                                                                <a href="{{ route('warehouse.sinerlog_container.download',$container) }}" class="dropdown-item w-100">
+                                                                <a href="{{ route('warehouse.sinerlog_container.download', $container) }}"
+                                                                    class="dropdown-item w-100">
                                                                     <i class="feather icon-box"></i> Get CN35
                                                                 </a>
                                                             @else
-                                                                <a href="{{ $container->unit_response_list }}" target="_blank" class="dropdown-item w-100">
+                                                                <a href="{{ $container->unit_response_list }}"
+                                                                    target="_blank" class="dropdown-item w-100">
                                                                     <i class="feather icon-box"></i> Print CN35
                                                                 </a>
                                                             @endif
 
-                                                            <a href="{{ route('warehouse.sinerlog_container.manifest', $container) }}" class="dropdown-item w-100">
+                                                            <a href="{{ route('warehouse.sinerlog_container.manifest', $container) }}"
+                                                                class="dropdown-item w-100">
                                                                 <i class="fa fa-cloud-download"></i> Download Manifest
                                                             </a>
                                                         @endif
@@ -158,29 +186,29 @@
                                         </td>
                                     </tr>
                                 @endforeach
-                                </tbody>
-                            </table>
-                            <div class="d-flex justify-content-end py-2 px-3">
-                                {{ $containers->links() }}
-                            </div>
+                            </tbody>
+                        </table>
+                        <div class="d-flex justify-content-end py-2 px-3">
+                            {{ $containers->links() }}
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="modal fade" id="confirm" role="dialog">
-                <div class="modal-dialog modal-lg">
-                  <div class="modal-content">
+        </div>
+        <div class="modal fade" id="confirm" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
                     <div class="modal-header">
                         <div class="col-8">
                             <h4>
-                               Are you Sure!
+                                Are you Sure!
                             </h4>
                         </div>
                     </div>
                     <form action="{{ route('warehouse.container.awb') }}" method="GET" id="bulk_sale_form">
                         <div class="modal-body" style="font-size: 15px;">
                             <p>
-                                Are you Sure want to Assign AWB number to Selected Containers  {{-- <span class="result"></span> --}}
+                                Are you Sure want to Assign AWB number to Selected Containers {{-- <span class="result"></span> --}}
                             </p>
                             <input type="text" name="awb" required class="form-control" value="">
                             <input type="hidden" name="command" id="command" value="">
@@ -188,43 +216,50 @@
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary" id="save"> Yes Add</button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal"> @lang('consolidation.Cancel')</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                @lang('consolidation.Cancel')</button>
                         </div>
                     </form>
-                  </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 @endsection
 @section('js')
 <script>
-    $(document).ready(function(){
-        $('#upload_manifest').click(function(){
-                $('#loading').fadeIn();
-            }); 
+    $(document).ready(function() {
+        $('#upload_manifest').click(function() {
+            $('#loading').fadeIn();
         });
+    });
 </script>
 
-    <script>
-        $('body').on('change','#bulk-actions',function(){
-            if ( $(this).val() == 'clear' ){
-                $('.bulk-container').prop('checked',false)
-            }else if ( $(this).val() == 'checkAll' ){
-                $('.bulk-container').prop('checked',true)
-            }else if ( $(this).val() == 'assign-awb' ){
-                var containerIds = [];
-                $.each($(".bulk-container:checked"), function(){
-                    containerIds.push($(this).val());
-                    
-                    // $(".result").append('HD-' + this.value + ',');
-                });
-                
-                $('#bulk_sale_form #command').val('assign-awb');
-                $('#bulk_sale_form #data').val(JSON.stringify(containerIds));
-                $('#confirm').modal('show');
-                // $('#bulk_sale_form').submit();
-            }
-        })
-    </script>
+<script>
+    $('body').on('change', '#checkAll', function() {
+
+        if ($('#checkAll').is(':checked')) {
+            $('.bulk-container').prop('checked', true)
+            document.getElementById("printBtnDiv").style.display = 'block';
+        } else {
+            $('.bulk-container').prop('checked', false)
+            document.getElementById("printBtnDiv").style.display = 'none';
+        }
+
+    })
+    $('body').on('click', '#assignAWB', function() {
+
+        var containerIds = [];
+        $.each($(".bulk-container:checked"), function() {
+            containerIds.push($(this).val());
+
+            // $(".result").append('HD-' + this.value + ',');
+        });
+
+        $('#bulk_sale_form #command').val('assign-awb');
+        $('#bulk_sale_form #data').val(JSON.stringify(containerIds));
+        $('#confirm').modal('show');
+        // $('#bulk_sale_form').submit();
+    })
+</script>
 @endsection

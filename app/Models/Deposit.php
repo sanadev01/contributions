@@ -45,6 +45,16 @@ class Deposit extends Model
         return $this->orders()->first();
     }
 
+    public function tax()
+    {
+        return $this->hasOne(Tax::class);
+    }
+    
+    public function getIsTaxAttribute()
+    {
+        return $this->tax!=null;
+    }
+
     public function hasOrder()
     {
         return $this->orders()->count();

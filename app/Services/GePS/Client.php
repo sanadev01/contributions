@@ -60,6 +60,10 @@ class Client{
 
         if (count($order->items) >= 1) {
             foreach ($order->items as $key => $item) {
+                if(!optional($order->senderCountry)->code) {
+                    session()->flash('alert-danger','The Recipient Country State Code Cannot be Empty!');
+                    return \back()->withInput();
+                }
                 $itemToPush = [];
                 $itemToPush = [
                     'description' => $item->description,
@@ -196,6 +200,7 @@ class Client{
             ]);
 
             $data = json_decode($response->getBody()->getContents());
+            \Log::info([$data]);
             if(isset($data->err)) {
                 return new PackageError($data->err);
             }
