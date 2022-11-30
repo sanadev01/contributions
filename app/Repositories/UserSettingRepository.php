@@ -60,7 +60,6 @@ class UserSettingRepository {
         $request->has('sinerlog') ? saveSetting('sinerlog', true, $user->id) : saveSetting('sinerlog', false, $user->id);
         $request->has('fedex') ? saveSetting('fedex', true, $user->id) : saveSetting('fedex', false, $user->id);
         $request->has('geps_service') ? saveSetting('geps_service', true, $user->id) : saveSetting('geps_service', false, $user->id);
-        $request->has('geps_eformat') ? saveSetting('geps_eformat', true, $user->id) : saveSetting('geps_eformat', false, $user->id);
         $request->has('tax') ? saveSetting('tax', true, $user->id) : saveSetting('tax', false, $user->id);
         $request->has('colombia_service') ? saveSetting('colombia_service', true, $user->id) : saveSetting('colombia_service', false, $user->id);
         $request->has('geps_service') ? saveSetting('geps_service', true, $user->id) : saveSetting('geps_service', false, $user->id);
