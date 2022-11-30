@@ -103,30 +103,12 @@ class ColombiaService
             ];
         }
     }
-    private function getKeys()
-    {
-        $token = 'aGVyY28uYXBwOkNvbG9tYmlhMjAyMSo=';
-        $headers = [
-            'Authorization: Basic' => $token,
-            'Content-Type' => "application/json",
-
-        ];
-        return $headers;
-    }
+    
     private function colombiaApiCall($url, $data)
     {
-        //dd($data);
         try {
-            $client = new Client();
-            $response = $client->post($url,[
-                "headers" => $this->getKeys(),
-                "request" => $data
-            ]);
-            // $response = Http::withBasicAuth($this->userName, $this->password)
-            //                     ->post($url, $data);
-            \Log::info('response');
-            \Log::info(json_decode($response));
-            
+            $response = Http::withBasicAuth($this->userName, $this->password)
+                                ->post($url, $data);            
             if ($response->status() == 200) {
                 $responseJson = collect($response->json())->first();
 
