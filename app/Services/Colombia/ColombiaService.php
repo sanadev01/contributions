@@ -4,6 +4,7 @@ namespace App\Services\Colombia;
 
 use Exception;
 use App\Models\Region;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Http;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Calculators\WeightCalculator;
@@ -102,18 +103,16 @@ class ColombiaService
             ];
         }
     }
-
+    
     private function colombiaApiCall($url, $data)
     {
         try {
-            
             $response = Http::withBasicAuth($this->userName, $this->password)
-                                ->post($url, $data);
-            
+                                ->post($url, $data);            
             if ($response->status() == 200) {
                 $responseJson = collect($response->json())->first();
-                
-                if ($responseJson['intCodeError'] == 0) {
+
+                if ($responseJson['intCodeError'] == 0  && $responseJson['strUrlGuide'] != null) {
                     return (Array)[
                         'success' => true,
                         'data' => $responseJson,
@@ -159,10 +158,10 @@ class ColombiaService
             'intTypeRequest' => ($forRates) ? 1 : 2,
             'lstShippingTraceBe' => [
                 [
-                    'boolLading' => false,
+                    
                     'placeReceiverBe' => $this->setPlace($order->recipient->toArray()),
+                    'boolLading' => false,
                     'customerReceiverBe' => $this->setCustomer($order->recipient->toArray()),
-                    'placeSenderBe' => $this->setPlace(null, false),
                     'customerSenderBe' => $this->setCustomer(null, false),
                     'decCollectValue' => 0,
                     'decLading' => 0,
@@ -174,6 +173,7 @@ class ColombiaService
                     'intLength' => ($order->measurement_unit != 'kg/cm') ? round(UnitsConverter::inToCm($order->length)) : round($order->length),
                     'intWidth' => ($order->measurement_unit != 'kg/cm') ? round(UnitsConverter::inToCm($order->width)) : round($order->width),
                     'intWeight' => ($order->measurement_unit != 'kg/cm') ? round(UnitsConverter::kgToGrams(UnitsConverter::poundToKg($this->chargableWeight))) : round(UnitsConverter::kgToGrams($this->chargableWeight)),
+                    'placeSenderBe' => $this->setPlace(null, false),
                     'strAditionalShipping' => '',
                     'strIdentification' => $order->warehouse_number,
                     'strObservation' => '',
@@ -221,8 +221,8 @@ class ColombiaService
 
         return [
             'intAditional' => 0,
-            //'intCodeCity' => $regionCode,
-            'intCodeCity' => ($data) ? $data['zipcode'] : null,
+            'intCodeCity' => $regionCode,
+            // 'intCodeCity' => null,//$data['zipcode'],
             'intTypeActor' => ($typeRecipient) ? 3 : 2,
             'intTypeDocument' => 1,
             'strAddress' => ($data) ? $data['address'] : (($typeRecipient ? 'Colombia Receiver' : 'Colombia Sender')),
