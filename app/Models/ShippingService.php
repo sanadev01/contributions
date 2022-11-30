@@ -38,6 +38,7 @@ class ShippingService extends Model
     const COLOMBIA_TRAYETOS = 44164;
     const Brazil_Redispatch = 100;
     const GePS = 537;
+    const GePS_EFormat = 540;
 
     protected $guarded = [];
 
@@ -129,6 +130,13 @@ class ShippingService extends Model
         return false;
     }
 
+    public function isGePSeFormatService()
+    {
+        if (collect($this->gepsShippingServices())->contains($this->service_sub_class)) {
+            return true;
+        }
+        return false;
+    }
     public function isCorreiosService()
     {
         if (collect($this->correiosShippingServices())->contains($this->service_sub_class)) {
@@ -277,6 +285,7 @@ class ShippingService extends Model
     {
         return [
             self::GePS,
+            self::GePS_EFormat,
         ];
     }
 }
