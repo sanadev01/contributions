@@ -376,7 +376,7 @@
     .h3 {
         color: white !important;
     }
-    .black-color {
+    .text-black {
         color: black !important;
     }
 
