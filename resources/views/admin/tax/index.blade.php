@@ -94,6 +94,7 @@
                                     <td>{{ $tax->selling_br }}</td>
                                     <td>{{ $tax->buying_usd }}</td>
                                     <td>{{ $tax->selling_usd }}</td>
+                                    <td>{{ ( $tax->selling_usd - $tax->buying_usd ) }}</td>
                                     <td>
                                         @if(optional($tax->deposit)->depositAttchs)
                                             @foreach ($tax->deposit->depositAttchs as $attachedFile )

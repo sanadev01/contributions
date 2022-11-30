@@ -21,7 +21,7 @@ class TaxRepository
 
     public function get(Request $request, $paginate = true, $pageSize = 50 )
     {
-        $query = Tax::has('user');
+        $query = Tax::has('user')->has('order');
 
         if ( $request->search ){
             $query->whereHas('user',function($query) use($request) {
