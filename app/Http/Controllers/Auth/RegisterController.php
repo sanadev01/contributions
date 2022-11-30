@@ -100,6 +100,7 @@ class RegisterController extends Controller
         }
 
         saveSetting('locale', $locale, $user->id);
+        saveSetting('geps_service', true, $user->id);
         return $user;
     }
 
