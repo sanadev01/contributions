@@ -276,7 +276,7 @@ Route::get('test-label/{id?}/d/{dno?}',function($id, $dNo){
 
     $delivery = Container::find($id)->update([
         'dispatch_number' => $dNo,
-        'unit_code' => 'USHERCBRSAODANX39501001022597'
+        'unit_code' => null
     ]);
     // $order = DB::table('orders')->where('id',$id)->update([
     //     'deleted_at' => null
