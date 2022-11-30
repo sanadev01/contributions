@@ -500,20 +500,6 @@ class OrderRepository
                 }
             }
 
-            // GePS E-Format Service
-            if (optional($order->recipient)->country_id != Order::US && setting('geps_eformat', null, User::ROLE_ADMIN) && setting('geps_eformat', null, auth()->user()->id))
-            {
-
-                $gepsShippingService = new GePSShippingService($order);
-
-                foreach ($gepsShippingService as $shippingService)
-                {
-                    if ($gepsShippingService->isAvailableForInternational($shippingService)) {
-                        $shippingServices->push($shippingService);
-                    }
-                }
-            }
-
             if ($shippingServices->isEmpty() && $this->shippingServiceError == null) {
                 $this->shippingServiceError = ($order->recipient->commune_id != null) ? 'Shipping Service not Available for the Region you have selected' : 'Shipping Service not Available for the Country you have selected';
             }
@@ -570,13 +556,6 @@ class OrderRepository
                 $this->shippingServiceError = 'GePS is not enabled for this user';
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
                     return $shippingService->service_sub_class != ShippingService::GePS;
-                });
-            }
-
-            if (!setting('geps_eformat', null, User::ROLE_ADMIN) && !setting('geps_eformat', null, auth()->user()->id)) {
-                $this->shippingServiceError = 'GePS E-Format is not enabled for this user';
-                $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
-                    return $shippingService->service_sub_class != ShippingService::GePS_EFormat;
                 });
             }
             
