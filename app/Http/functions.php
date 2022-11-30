@@ -102,3 +102,30 @@ function setUSCosts($api_cost, $profit_cost)
         'profit_cost' => $profit_cost
     ];
 }
+
+function getParcelStatus($status)
+{
+    if($status == Order::STATUS_PREALERT_TRANSIT) {
+        $message = "STATUS_PREALERT_TRANSIT";
+    }elseif($status == Order::STATUS_PREALERT_READY){
+        $message = "STATUS_PREALERT_READY";
+    }elseif($status == Order::STATUS_ORDER){
+        $message = "STATUS_ORDER";
+    }elseif($status == Order::STATUS_NEEDS_PROCESSING){
+        $message = "STATUS_NEEDS_PROCESSING";
+    }elseif($status == Order::STATUS_PAYMENT_PENDING){
+        $message = "STATUS_PAYMENT_PENDING";
+    }elseif($status == Order::STATUS_PAYMENT_DONE){
+        $message = "STATUS_PAYMENT_DONE";
+    }elseif($status == Order::STATUS_CANCEL) {
+        $message = "STATUS_CANCEL";
+    }elseif($status == Order::STATUS_REJECTED) {
+        $message = "STATUS_REJECTED";
+    }elseif($status == Order::STATUS_RELEASE) {
+        $message = "STATUS_RELEASE";
+    }elseif($status == Order::STATUS_REFUND) {
+        $message = "STATUS_REFUND";
+    }  
+
+    return $message;
+}
