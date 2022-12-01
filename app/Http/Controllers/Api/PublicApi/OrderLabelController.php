@@ -15,10 +15,11 @@ use App\Repositories\FedExLabelRepository;
 use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
+use App\Repositories\GePSLabelRepository;
 
 class OrderLabelController extends Controller
 {
-    public function __invoke(Request $request, Order $order, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, CorrieosChileLabelRepository $corrieosChileLabelRepository, USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, FedExLabelRepository $fedexLabelRepository)
+    public function __invoke(Request $request, Order $order, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, CorrieosChileLabelRepository $corrieosChileLabelRepository, USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, FedExLabelRepository $fedexLabelRepository,GePSLabelRepository $gepsLabelRepository)
     {
         $orders = new Collection;
         $this->authorize('canPrintLableViaApi',$order);
@@ -126,9 +127,18 @@ class OrderLabelController extends Controller
         // For Correos Brazil
         if ($order->recipient->country_id == Order::BRAZIL) {
            
-            if ( $request->update_label === 'true' ){
+            if($order->shippingService->isGePSService()){
+
+                $gepsLabelRepository->get($order);
+                $error = $gepsLabelRepository->getError();
+                if($error){
+                   return apiResponse(false, $error);
+                }
+            }
+            else if ( $request->update_label === 'true' ){
                 $labelData = $corrieosBrazilLabelRepository->update($order);
-            }else{
+            }
+            else{
                 $labelData = $corrieosBrazilLabelRepository->get($order);
             }
 
