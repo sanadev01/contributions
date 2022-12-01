@@ -293,6 +293,20 @@ Route::get('order/apiresponse/{id?}',function($id){
     dd($tracking, $order);
 });
 
+Route::get('truncate-response/{id?}',function($id){
+    $codes = [
+        'NA726671311BR'
+    ];
+    foreach($codes as $code) {
+        $order = DB::table('orders')->where('corrios_tracking_code', $code)->update([
+            'corrios_tracking_code' => null,
+            'cn23' => null,
+            'api_response' => null
+        ]);
+    }
+    return "Tracking Code Truncated";
+});
+
 Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container');
 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
