@@ -15,10 +15,11 @@ use App\Repositories\FedExLabelRepository;
 use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
+use App\Repositories\GePSLabelRepository;
 
 class OrderLabelController extends Controller
 {
-    public function __invoke(Request $request, Order $order, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, CorrieosChileLabelRepository $corrieosChileLabelRepository, USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, FedExLabelRepository $fedexLabelRepository)
+    public function __invoke(Request $request, Order $order, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, CorrieosChileLabelRepository $corrieosChileLabelRepository, USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, FedExLabelRepository $fedexLabelRepository,GePSLabelRepository $gepsLabelRepository)
     {
         $orders = new Collection;
         $this->authorize('canPrintLableViaApi',$order);
@@ -123,23 +124,34 @@ class OrderLabelController extends Controller
             return apiResponse(false, $error);
         }
 
-        // For Correos Brazil
+        // For Correios and Global eParcel Brazil
         if ($order->recipient->country_id == Order::BRAZIL) {
            
-            if ( $request->update_label === 'true' ){
-                $labelData = $corrieosBrazilLabelRepository->update($order);
+            if($order->shippingService->isGePSService()){
+
+                $gepsLabelRepository->get($order);
+                $error = $gepsLabelRepository->getError();
+                if($error){
+                   return apiResponse(false, $error);
+                }
             }else{
-                $labelData = $corrieosBrazilLabelRepository->get($order);
-            }
 
-            $order->refresh();
+                if ( $request->update_label === 'true' ){
+                    $labelData = $corrieosBrazilLabelRepository->update($order);
+                }
+                else{
+                    $labelData = $corrieosBrazilLabelRepository->get($order);
+                }
 
-            if ( $labelData ){
-                Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
-            }
+                $order->refresh();
 
-            if ( $corrieosBrazilLabelRepository->getError() ){
-                return apiResponse(false,$corrieosBrazilLabelRepository->getError());
+                if ( $labelData ){
+                    Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
+                }
+
+                if ( $corrieosBrazilLabelRepository->getError() ){
+                    return apiResponse(false,$corrieosBrazilLabelRepository->getError());
+                }
             }
 
             if ( !$order->isPaid() &&  getBalance() >= $order->gross_total ){
