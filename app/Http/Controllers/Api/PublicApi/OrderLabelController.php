@@ -117,24 +117,24 @@ class OrderLabelController extends Controller
                 if($error){
                    return apiResponse(false, $error);
                 }
-            }
-            else if ( $request->update_label === 'true' ){
-                $labelData = $corrieosBrazilLabelRepository->update($order);
-            }
-            else{
-                $labelData = $corrieosBrazilLabelRepository->get($order);
-            }
+            }else{
 
-            $order->refresh();
+                if ( $request->update_label === 'true' ){
+                    $labelData = $corrieosBrazilLabelRepository->update($order);
+                }else{
+                    $labelData = $corrieosBrazilLabelRepository->get($order);
+                }
 
-            if ( $labelData ){
-                Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
+                $order->refresh();
+
+                if ( $labelData ){
+                    Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
+                }
+
+                if ( $corrieosBrazilLabelRepository->getError() ){
+                    return apiResponse(false,$corrieosBrazilLabelRepository->getError());
+                }
             }
-
-            if ( $corrieosBrazilLabelRepository->getError() ){
-                return apiResponse(false,$corrieosBrazilLabelRepository->getError());
-            }
-
             return $this->processOrderPayment($order);    
         }
 
