@@ -295,8 +295,7 @@ Route::get('order/apiresponse/{id?}',function($id){
 
 Route::get('truncate-response/{id?}',function($id){
     $codes = [
-        'LX114491449JE',
-        'LX114491466JE'
+        'NA734682639BR'
     ];
     foreach($codes as $code) {
         $order = DB::table('orders')->where('corrios_tracking_code', $code)->update([
