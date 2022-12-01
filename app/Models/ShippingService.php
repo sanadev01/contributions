@@ -33,6 +33,7 @@ class ShippingService extends Model
     const AJ_Packet_Express = 33172;
     const Brazil_Redispatch = 100;
     const GePS = 537;
+    const GePS_EFormat = 540;
 
     protected $guarded = [];
 
@@ -142,6 +143,15 @@ class ShippingService extends Model
         return false;
     }
 
+    public function isGePSeFormatService()
+    {
+        if (collect($this->gepsShippingServices())->contains($this->service_sub_class)) {
+            return true;
+        }
+
+        return false;
+    }
+
     private function anjunShippingServices()
     {
         return [
@@ -193,6 +203,7 @@ class ShippingService extends Model
     {
         return [
             self::GePS,
+            self::GePS_EFormat,
         ];
     }
 }

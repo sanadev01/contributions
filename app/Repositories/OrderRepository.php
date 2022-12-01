@@ -115,6 +115,11 @@ class OrderRepository
                     ShippingService::GePS,
                 ];
             }
+            if($request->carrier == 'GePS_EFormat'){
+                $service = [
+                    ShippingService::GePS_EFormat,
+                ];
+            }
             $query->whereHas('shippingService', function ($query) use($service) {
                 return $query->whereIn('service_sub_class', $service);
             });
@@ -264,6 +269,17 @@ class OrderRepository
         $shippingService =  ShippingService::find($shippingServiceId);
 
         if ($shippingService->isGePSService()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function GePSeFormatService($shippingServiceId)
+    {
+        $shippingService =  ShippingService::find($shippingServiceId);
+
+        if ($shippingService->isGePSeFormatService()) {
             return true;
         }
 
@@ -508,7 +524,8 @@ class OrderRepository
             || $shippingServices->contains('service_sub_class', ShippingService::USPS_PRIORITY_INTERNATIONAL)
             || $shippingServices->contains('service_sub_class', ShippingService::USPS_FIRSTCLASS_INTERNATIONAL)
             || $shippingServices->contains('service_sub_class', ShippingService::UPS_GROUND)
-            || $shippingServices->contains('service_sub_class', ShippingService::GePS))
+            || $shippingServices->contains('service_sub_class', ShippingService::GePS)
+            || $shippingServices->contains('service_sub_class', ShippingService::GePS_EFormat))
         {
             if(!setting('usps', null, User::ROLE_ADMIN))
             {
