@@ -146,10 +146,15 @@ class Client{
         }else {
             $uom = "KG";
         }
+        if($order->shippingService->service_sub_class == ShippingService::GePS) {
+            $serviceCode = "KP";
+        }elseif($order->shippingService->service_sub_class == ShippingService::GePS_EFormat) {
+            $serviceCode = "IM";
+        }
         $packet =
         [
             'shipment' => [
-                    'servicecode' => "KP",
+                    'servicecode' => $serviceCode,
                     'reference' => ($order->customer_reference) ? $order->customer_reference : '',
                     'custtracknbr' => $order->tracking_id,
                     'uom' => $uom,
@@ -195,6 +200,7 @@ class Client{
             ]);
 
             $data = json_decode($response->getBody()->getContents());
+            \Log::info([$data]);
             if(isset($data->err)) {
                 return new PackageError($data->err);
             }
