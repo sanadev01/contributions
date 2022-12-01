@@ -107,7 +107,7 @@ class OrderLabelController extends Controller
             return apiResponse(false, $error);
         }
 
-        // For Correos Brazil
+        // For Correios and Global eParcel Brazil
         if ($order->recipient->country_id == Order::BRAZIL) {
            
             if($order->shippingService->isGePSService()){
