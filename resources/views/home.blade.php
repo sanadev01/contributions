@@ -84,7 +84,7 @@
                                                 8305 NW 116<sup>th</sup> Avenue<br>
                                                 Doral , FL 33178<br>
                                                 United States <br>
-                                                <span class="text-white">Ph#: +13058885191</span>
+                                                <span>Ph#: +13058885191</span>
                                             </td>
                                         </tr>
 
