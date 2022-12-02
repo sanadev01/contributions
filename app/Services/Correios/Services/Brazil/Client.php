@@ -5,6 +5,7 @@ namespace App\Services\Correios\Services\Brazil;
 use Carbon\Carbon;
 use App\Models\Order;
 use App\Models\OrderTracking;
+use App\Models\ShippingService;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Warehouse\DeliveryBill;
 use GuzzleHttp\Client as GuzzleClient;
@@ -79,13 +80,17 @@ class Client{
 
     public function createPackage(Package $order)
     {
+        $serviceSubClassCode = $order->getDistributionModality();
+        if($order->getDistributionModality() == ShippingService::Packet_Standard){
+            $serviceSubClassCode = 33227;
+        }
         if($order->isWeightInKg()) {
             $weight = UnitsConverter::kgToGrams($order->getWeight('kg'));
         }else{
             $kg = UnitsConverter::poundToKg($order->getWeight('lbs'));
             $weight = UnitsConverter::kgToGrams($kg);
         }
-        
+        \Log::info('serviceSubClassCode: '. $serviceSubClassCode);
         $packet = new \App\Services\Correios\Models\Package();
 
         $packet->customerControlCode = $order->id;
@@ -100,7 +105,7 @@ class Client{
         $packet->recipientState = $order->recipient->state->code;
 //    $packet->recipientPhoneNumber = $order->recipient->phone;
         $packet->recipientEmail = $order->recipient->email;
-        $packet->distributionModality = $order->getDistributionModality();
+        $packet->distributionModality = $serviceSubClassCode;
         $packet->taxPaymentMethod = $order->getService() == 1 ? 'DDP' : 'DDU';
         $packet->totalWeight =  ceil($weight);
 
