@@ -166,7 +166,8 @@ class Client{
                 ]);
 
                 \Log::info('Response');
-                \Log::info($data);
+                \Log::info($trackingNumber);
+                \Log::info([$data]);
                 // store order status in order tracking
                 return $this->addOrderTracking($order);
             }
