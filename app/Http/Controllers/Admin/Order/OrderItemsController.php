@@ -207,8 +207,8 @@ class OrderItemsController extends Controller
         $previousAmount = $prevOrder->gross_total;
         $currentAmount = $request->user_declared_freight;
         $invoice = $order->getPaymentInvoice();
-        if($invoice && $previousAmount > $currentAmount) {
-            dd("less");
+        if($order->isPaid() && $previousAmount > $currentAmount) {
+
             $amount = $previousAmount - $currentAmount;
             $deposit = Deposit::create([
                 'uuid' => PaymentInvoice::generateUUID('DP-'),
@@ -222,17 +222,11 @@ class OrderItemsController extends Controller
             $invoice->update(['total_amount' => $currentAmount, 'paid_amount' => $currentAmount]);
             return true;
 
-        } elseif($invoice && $currentAmount > $previousAmount) {
-            dd("greater");
+        } elseif($order->isPaid() && $currentAmount > $previousAmount) {
+            
             OrderTracking::where('order_id', $order->id)
             ->update(['status_code' => Order::STATUS_PAYMENT_PENDING]);
             $invoice->update(['total_amount' => $currentAmount, 'paid_amount' => $previousAmount]);
-            return true;
-
-        } elseif($invoice && $invoice->paid_amount == $currentAmount) {
-            dd("equal");
-            OrderTracking::where('order_id', $order->id)
-            ->update(['status_code' => Order::STATUS_PAYMENT_DONE]);
             return true;
 
         } else {
