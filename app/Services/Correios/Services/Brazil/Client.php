@@ -151,7 +151,7 @@ class Client{
                     ]
                 ]
             ]);
-            dd(json_decode($response->getBody()->getContents()));
+            // dd(json_decode($response->getBody()->getContents()));
             $data = json_decode($response->getBody()->getContents());
             $trackingNumber = $data->packageResponseList[0]->trackingNumber;
 
