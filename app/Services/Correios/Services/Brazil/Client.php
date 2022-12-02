@@ -165,11 +165,11 @@ class Client{
                     ],
                 ]);
 
+                \Log::info('Response');
+                \Log::info($data);
                 // store order status in order tracking
                 return $this->addOrderTracking($order);
             }
-            \Log::info('Response');
-            \Log::info($data);
             return null;
         }catch (\GuzzleHttp\Exception\ClientException $e) {
             return new PackageError($e->getResponse()->getBody()->getContents());
