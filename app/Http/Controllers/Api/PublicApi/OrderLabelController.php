@@ -135,7 +135,6 @@ class OrderLabelController extends Controller
                    return apiResponse(false, $error);
                 }
             }else{
-                return apiResponse(false,'Error! Something Went Wrong on Correios Services');
 
                 if ( $request->update_label === 'true' ){
                     $labelData = $corrieosBrazilLabelRepository->update($order);
