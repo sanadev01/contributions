@@ -139,13 +139,7 @@ class Client{
         );
         
         try {
-            \Log::info('token');
-            \Log::info('isAnjunService');
-            \Log::info($this->getAnjunToken());
-
-            \Log::info('token');
-            \Log::info('isCorrieosService');
-            \Log::info($this->getToken());
+            
             $response = $this->client->post('/packet/v1/packages',[
                'headers' => [
                 'Authorization' => ($order->shippingService->isAnjunService()) ? "Bearer {$this->getAnjunToken()}" :"Bearer {$this->getToken()}"
@@ -156,7 +150,7 @@ class Client{
                     ]
                 ]
             ]);
-            // dd(json_decode($response->getBody()->getContents()));
+            
             $data = json_decode($response->getBody()->getContents());
             $trackingNumber = $data->packageResponseList[0]->trackingNumber;
 
@@ -171,7 +165,6 @@ class Client{
                 ]);
 
                 \Log::info('Response');
-                \Log::info($trackingNumber);
                 \Log::info([$data]);
                 // store order status in order tracking
                 return $this->addOrderTracking($order);
@@ -188,13 +181,7 @@ class Client{
     public function createContainer(Container $container)
     {
         try {
-            \Log::info('token');
-            \Log::info('isAnjunService');
-            \Log::info($this->getAnjunToken());
-
-            \Log::info('token');
-            \Log::info('isCorrieosService');
-            \Log::info($this->getToken());
+            
             $response = $this->client->post('/packet/v1/units',[
                 'headers' => [
                     'Authorization' => ($container->hasAnjunService()) ? "Bearer {$this->getAnjunToken()}" : "Bearer {$this->getToken()}"
