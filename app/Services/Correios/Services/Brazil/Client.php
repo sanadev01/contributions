@@ -151,7 +151,7 @@ class Client{
                     ]
                 ]
             ]);
-
+            dd(json_decode($response->getBody()->getContents()));
             $data = json_decode($response->getBody()->getContents());
             $trackingNumber = $data->packageResponseList[0]->trackingNumber;
 
@@ -168,6 +168,8 @@ class Client{
                 // store order status in order tracking
                 return $this->addOrderTracking($order);
             }
+            \Log::info('Response');
+            \Log::info($data);
             return null;
         }catch (\GuzzleHttp\Exception\ClientException $e) {
             return new PackageError($e->getResponse()->getBody()->getContents());
