@@ -74,7 +74,7 @@
                                     <thead>
                                         <tr>
                                         <th  class="pl-0 pr-3">Parcels via UPS/FedEx sent to</th>
-                                        <th>Parcels via UPS | FedX | USPS sent to</th>
+                                        <th>Parcels via UPS | FedEx | USPS sent to</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -84,7 +84,7 @@
                                                 8305 NW 116<sup>th</sup> Avenue<br>
                                                 Doral , FL 33178<br>
                                                 United States <br>
-                                                <span class="text-white">Ph#: +13058885191</span>
+                                                <span>Ph#: +13058885191</span>
                                             </td>
                                         </tr>
 
