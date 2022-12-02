@@ -20,7 +20,7 @@ use App\Repositories\GePSLabelRepository;
 class OrderLabelController extends Controller
 {
     public function __invoke(Request $request, Order $order, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, CorrieosChileLabelRepository $corrieosChileLabelRepository, USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, FedExLabelRepository $fedexLabelRepository,GePSLabelRepository $gepsLabelRepository)
-    {
+    {   
         $orders = new Collection;
         $this->authorize('canPrintLableViaApi',$order);
         
