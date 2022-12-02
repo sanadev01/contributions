@@ -74,15 +74,15 @@
                                     <thead>
                                         <tr>
                                         <th  class="pl-0 pr-3">Parcels via UPS/FedEx sent to</th>
-                                        <th>Parcels via USPS sent to</th>
+                                        <th>Parcels via UPS | FedX | USPS sent to</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
                                             <td class="pl-0 pr-3">{!! auth()->user()->getPoboxAddress() ?? '' !!}</td>
                                             <td>
-                                                11973 SW 150th PL<br>
-                                                Miami FL 33196<br>
+                                                8305 NW 116<sup>th<sup> Avenue<br>
+                                                Doral , FL 33178<br>
                                                 United States <br>
                                                 <span class="text-white">Ph#: +13058885191</span>
                                             </td>
