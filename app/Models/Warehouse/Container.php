@@ -4,6 +4,7 @@ namespace App\Models\Warehouse;
 
 use App\Models\User;
 use App\Models\Order;
+use App\Models\ShippingService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -80,7 +81,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         }elseif($this->services_subclass_code == 'Priority'){
             return 'Priority';
         }elseif($this->services_subclass_code == '537'){
-            return 'Global eParcel';
+            return 'Global eParcel Prime';
         }else {
             return 'FirstClass';
         }
@@ -174,5 +175,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     public function hasOrders()
     {
         return $this->orders->isNotEmpty();
+    }
+
+    public function hasGePSService()
+    {
+        return $this->services_subclass_code == ShippingService::GePS || $this->services_subclass_code == ShippingService::GePS_EFormat;
     }
 }
