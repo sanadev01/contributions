@@ -23,13 +23,6 @@ class OrderLabelController extends Controller
     public function __invoke(Request $request, Order $order, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, CorrieosChileLabelRepository $corrieosChileLabelRepository, USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, FedExLabelRepository $fedexLabelRepository,GePSLabelRepository $gepsLabelRepository)
     {   
         $orders = new Collection;
-        if($order->user_id != Auth::id()) 
-        {
-            return response()->json(
-                ['success'=> false,
-                 'message' => 'Order not found!'
-                ],422);
-        }
         $this->authorize('canPrintLableViaApi',$order);
 
        if ( !$order->isPaid() &&  getBalance() < $order->gross_total){
