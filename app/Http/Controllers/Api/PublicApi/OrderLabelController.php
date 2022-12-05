@@ -17,7 +17,6 @@ use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
 use App\Repositories\GePSLabelRepository;
 use App\Repositories\ColombiaLabelRepository;
-use Illuminate\Support\Facades\Auth;
 
 class OrderLabelController extends Controller
 {
