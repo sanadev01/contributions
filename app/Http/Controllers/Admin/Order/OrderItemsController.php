@@ -221,8 +221,7 @@ class OrderItemsController extends Controller
         $previousAmount = $prevOrder->gross_total;
         $currentAmount = $request->user_declared_freight;
         $invoice = $order->getPaymentInvoice();
-        if($order->isPaid() && $previousAmount > $currentAmount) {
-
+        if($order->status == Order::STATUS_PAYMENT_DONE && $previousAmount > $currentAmount) {
             $amount = $previousAmount - $currentAmount;
             $deposit = Deposit::create([
                 'uuid' => PaymentInvoice::generateUUID('DP-'),
@@ -233,14 +232,36 @@ class OrderItemsController extends Controller
                 'is_credit' => true,
                 'description' => "Change of Shipping Service",
             ]);
-            $invoice->update(['total_amount' => $currentAmount, 'paid_amount' => $currentAmount]);
+            OrderTracking::where('order_id', $order->id)
+            ->update(['status_code' => Order::STATUS_PAYMENT_DONE]);
+            if($invoice) {
+                $invoice->update(['total_amount' => $currentAmount, 'paid_amount' => $currentAmount]);
+            }
             return true;
 
-        } elseif($order->isPaid() && $currentAmount > $previousAmount) {
-            
+        } elseif($order->status == Order::STATUS_PAYMENT_DONE && $currentAmount > $previousAmount) {
+            if($invoice) {
+                $invoice->update(['total_amount' => $currentAmount, 'paid_amount' => $previousAmount]);
+            }else {
+                    PaymentInvoice::create([
+                    'uuid' => PaymentInvoice::generateUUID(),
+                    'paid_by' => Auth::id(),
+                    'order_count' => '1',
+                    'total_amount' => $currentAmount,
+                    'paid_amount' => $previousAmount,
+                    'type' => auth()->user()->can('canCreatePostPaidInvoices', PaymentInvoice::class) ? PaymentInvoice::TYPE_POSTPAID : PaymentInvoice::TYPE_PREPAID
+                ]);
+            }
             OrderTracking::where('order_id', $order->id)
             ->update(['status_code' => Order::STATUS_PAYMENT_PENDING]);
-            $invoice->update(['total_amount' => $currentAmount, 'paid_amount' => $previousAmount]);
+            return true;
+
+        } elseif($order->status == Order::STATUS_PAYMENT_DONE && $currentAmount == $previousAmount) {
+            OrderTracking::where('order_id', $order->id)
+            ->update(['status_code' => Order::STATUS_PAYMENT_DONE]);
+            if($invoice){
+                $invoice->update(['total_amount' => $currentAmount, 'paid_amount' => $currentAmount]);
+            }
             return true;
 
         } else {
