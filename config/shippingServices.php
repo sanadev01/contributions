@@ -26,7 +26,7 @@ return [
             44164 => 'Colombia Trayetos',
             100 => 'Brazil Redispatch',
             537 => 'Global eParcel Prime',
-            540 => 'GePS E-Format Tracked',
+            540 => 'Global eParcel Untracked Packet',
             87765 => 'PostNL',
         ]
     ]

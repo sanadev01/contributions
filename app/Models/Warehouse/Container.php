@@ -4,6 +4,7 @@ namespace App\Models\Warehouse;
 
 use App\Models\User;
 use App\Models\Order;
+use App\Models\ShippingService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -202,6 +203,11 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         return $this->orders->isNotEmpty();
     }
 
+    public function hasGePSService()
+    {
+        return $this->services_subclass_code == ShippingService::GePS || $this->services_subclass_code == ShippingService::GePS_EFormat;
+    }
+    
     public function getContainerService()
     {
         if ($this->services_subclass_code == 'NX' || $this->services_subclass_code == 'IX' || $this->services_subclass_code == 'XP') {
