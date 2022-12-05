@@ -247,7 +247,22 @@ Route::get('media/get/{document}', function (App\Models\Document $document) {
 })->name('media.get');
 
 Route::get('order/{id}/label/get', function ($id) {
-$order = Order::find(decrypt($id));
+    try{
+        $id = decrypt($id);
+    }catch(Exception $e){ }
+    
+    $order = Order::find($id); 
+    if(!$order)
+    $order = Order::find($id);
+    if (!$order)
+        return response()->json(
+            [
+                'success' => false,
+                'message' => 'label not found',
+            ],
+            422
+        );
+  
     /**
      * Sinerlog modification
      */
