@@ -20,7 +20,6 @@
     RewriteRule ^ index.php [L]
 </IfModule>
 
-
 php_value max_execution_time 1500
 php_value max_input_time 1500
 php_value max_input_vars 2000
