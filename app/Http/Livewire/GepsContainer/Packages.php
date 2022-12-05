@@ -98,12 +98,7 @@ class Packages extends Component
     public function removeOrder($id, $key)
     {
         $geps_ContainerPackageController = new GePSContainerPackageController;
-
         $geps_ContainerPackageController->destroy($this->container, $id);
-        unset($this->orders[$key]);
-        
-        $this->removeOrderTracking($id);
-        $this->error = '';
     }
 
     public function totalPackages()
@@ -134,17 +129,6 @@ class Packages extends Component
         ]);
 
         return true;
-    }
-
-    public function removeOrderTracking($id)
-    {
-
-        $order_tracking = OrderTracking::where('order_id', $id)->latest()->first();
-
-        $order_tracking->delete();
-
-        return true;
-
     }
 }
 
