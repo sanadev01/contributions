@@ -131,6 +131,8 @@
                             <option value="UPS">UPS</option>
                             <option value="FEDEX">FEDEX</option>
                             <option value="Chile">Correios Chile</option>
+                            <option value="GePS Prime">GePS Prime</option>
+                            <option value="GePS Untracked">GePS Untracked</option>
                         </select>
                     </th>
                     @admin<th></th>@endadmin
