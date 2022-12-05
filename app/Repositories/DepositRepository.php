@@ -347,5 +347,41 @@ class DepositRepository
             \Log::info('Notify Transaction email send error: '.$ex->getMessage());
         }
     }
+
+    public function getLiability(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='DESC')
+    {
+        $query = Deposit::query();
+
+        if ( !Auth::user()->isAdmin() ){
+            $query->where('user_id',Auth::id());
+        }
+
+        if ( $request->user ){
+            $query->whereHas('user',function($query) use($request) {
+                return $query->where('pobox_number',"%{$request->user}%")
+                            ->orWhere('name','LIKE',"%{$request->user}%")
+                            ->orWhere('last_name','LIKE',"%{$request->user}%")
+                            ->orWhere('email','LIKE',"%{$request->user}%")
+                            ->orWhere('id', $request->user);
+            });
+        }
+
+        if ( $request->filled('dateFrom') ){
+            $query->where('created_at','>=',$request->dateFrom. ' 00:00:00');
+        }
+
+        if ( $request->filled('dateTo') ){
+            $query->where('created_at','<=',$request->dateTo. ' 23:59:59');
+        }
+
+        if ( $request->filled('balance') ){
+            $query->where('balance','LIKE',"%{$request->balance}%");
+        }
+        $query->orderBy($orderBy,'DESC');
+        $query->groupBy('user_id');
+        $query->latest();
+
+        return $paginate ? $query->paginate($pageSize) : $query->get(); 
+    }
     
 }
