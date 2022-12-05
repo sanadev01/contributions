@@ -46,7 +46,11 @@ class AccrualRate extends Model
         }
         
         if ( $this->service == Package::SERVICE_CLASS_GePS ){
-            return "Geps";
+            return "Global eParcel Prime";
+        }
+
+        if ( $this->service == Package::SERVICE_CLASS_GePS_EFormat ){
+            return "Global eParcel Untracked Packet";
         }
         return '';
     }
