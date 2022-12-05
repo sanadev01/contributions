@@ -240,8 +240,8 @@ Route::get('media/get/{document}', function (App\Models\Document $document) {
     return Storage::response($document->getStoragePath(), $document->name);
 })->name('media.get');
 
-Route::get('order/{order}/label/get', function (App\Models\Order $order) {
-
+Route::get('order/{id}/label/get', function ($id) {
+$order = Order::find(decrypt($id));
     /**
      * Sinerlog modification
      */

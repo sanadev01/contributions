@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
 use App\Repositories\GePSLabelRepository;
+use Illuminate\Support\Facades\Crypt;
 
 class OrderLabelController extends Controller
 {
@@ -47,7 +48,7 @@ class OrderLabelController extends Controller
                 }
                 
                 return apiResponse(true,"Lable Generated successfully.",[
-                    'url' => route('order.label.download',$order),
+                    'url' => route('order.label.download',  encrypt($order->id)),
                     'tracking_code' => $order->corrios_tracking_code
                 ]);
             }
@@ -73,7 +74,7 @@ class OrderLabelController extends Controller
                 }
                 
                 return apiResponse(true,"Lable Generated successfully.",[
-                    'url' => route('order.label.download',$order),
+                    'url' => route('order.label.download',  encrypt($order->id)),
                     'tracking_code' => $order->corrios_tracking_code
                 ]);
             }
@@ -116,7 +117,7 @@ class OrderLabelController extends Controller
                 }
                 
                 return apiResponse(true,"Lable Generated successfully.",[
-                    'url' => route('order.label.download',$order),
+                    'url' => route('order.label.download',  encrypt($order->id)),
                     'tracking_code' => $order->corrios_tracking_code
                 ]);
             }
@@ -166,9 +167,10 @@ class OrderLabelController extends Controller
             
         }
         return apiResponse(true,"Lable Generated successfully.",[
-            'url' => route('order.label.download',$order),
+            'url' => route('order.label.download',  encrypt($order->id)),
             'tracking_code' => $order->corrios_tracking_code
         ]);
 
     }
+ 
 }
