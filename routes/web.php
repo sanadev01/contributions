@@ -250,15 +250,13 @@ Route::get('order/{id}/label/get', function ($id) {
     try{
         $id = decrypt($id);
     }catch(Exception $e){ }
-    
-    $order = Order::find($id); 
-    if(!$order)
-    $order = Order::find($id);
-    if (!$order)
+      
+    $order = Order::find($id);  
+    if(!$order|!is_int($id))
         return response()->json(
             [
                 'success' => false,
-                'message' => 'label not found',
+                'message' => 'Label not found',
             ],
             422
         );
