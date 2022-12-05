@@ -16,7 +16,6 @@ use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
 use App\Repositories\GePSLabelRepository;
-use Illuminate\Support\Facades\Auth;
 
 class OrderLabelController extends Controller
 {
