@@ -9,6 +9,8 @@ use App\Models\ShippingService;
 use App\Facades\USPSTrackingFacade;
 use App\Facades\CorreiosChileTrackingFacade;
 use App\Facades\CorreiosBrazilTrackingFacade;
+use App\Services\PostNL\PostNLTrackingService;
+
 
 
 class OrderTrackingRepository
@@ -16,7 +18,8 @@ class OrderTrackingRepository
 
     private $trackingNumber;
     private $brazilTrackingCodes = [];
-   
+    private $postNLTrackingCodes = [];
+
     public function __construct($trackingNumber)
     {
         $this->trackingNumber = $trackingNumber;
@@ -29,18 +32,15 @@ class OrderTrackingRepository
 
     public function searchOrder()
     {
-
         $trackingNumbers = explode(',', preg_replace('/\s+/', '', $this->trackingNumber));
-        
         $orders = Order::whereIn('corrios_tracking_code', $trackingNumbers)->get();
+
         $getTrackings = collect();
         if($orders){
             foreach($orders as $order){
-                
                 $apiResponse = [];
                 if($order->trackings->isNotEmpty()){
                     if($order->trackings->last()->status_code == Order::STATUS_SHIPPED){
-
                         if($order->recipient->country_id == Order::CHILE ){
                             $response = CorreiosChileTrackingFacade::trackOrder($order->corrios_tracking_code);
                             if($response->status == true && ($response->data != null || $response->data != []) ){
@@ -52,10 +52,10 @@ class OrderTrackingRepository
                                     'api_trackings' => collect($this->reverseTrackings($response->data))->last(),
                                     'order' => $order
                                 ];
-                            } 
+                            }
                         }elseif($order->recipient->country_id == Order::US ){
                             if($order->shippingService->service_sub_class == ShippingService::UPS_GROUND){
-    
+
                                 $response = UPSFacade::trackOrder($order->corrios_tracking_code);
                                 if($response->success == true && !isset($response->data['trackResponse']['shipment'][0]['warnings']))
                                 {
@@ -67,10 +67,10 @@ class OrderTrackingRepository
                                         'api_trackings' => collect($this->reverseTrackings($response->data['trackResponse']['shipment'][0]['package'][0]['activity']))->last(),
                                         'order' => $order
                                     ];
-    
+
                                 }
                             }
-    
+
                             $response = USPSTrackingFacade::trackOrder($order->corrios_tracking_code);
                             if($response->status == true){
                                 $apiResponse = [
@@ -83,9 +83,7 @@ class OrderTrackingRepository
                                 ];
                             }
                         }elseif($order->recipient->country_id == Order::BRAZIL ){
-
                             array_push($this->brazilTrackingCodes, $order->corrios_tracking_code);
-
                             $apiResponse = [
                                 'success' => true,
                                 'status' => 200,
@@ -93,6 +91,16 @@ class OrderTrackingRepository
                                 'trackings' => $order->trackings,
                                 'order' => $order
                             ];
+                        }elseif($order->shippingService->service_sub_class == ShippingService::PostNL) {
+                            array_push($this->postNLTrackingCodes, $order->corrios_tracking_code);
+
+                                $apiResponse = [
+                                    'success' => true,
+                                    'status' => 200,
+                                    'service' => 'PostNL',
+                                    'trackings' => $order->trackings,
+                                    'order' => $order
+                                ];
                         }else{
                             $apiResponse = [
                                 'success' => false,
@@ -102,8 +110,9 @@ class OrderTrackingRepository
                                 'order' => null
                             ];
                         }
-                        $getTrackings->push($apiResponse);
+
                     }else{
+
                         $apiResponse = [
                             'success' => true,
                             'status' => 200,
@@ -111,11 +120,12 @@ class OrderTrackingRepository
                             'trackings' => $order->trackings,
                             'order' => $order
                         ];
-                        $getTrackings->push($apiResponse);
                     }
+                    $getTrackings->push($apiResponse);
                 }
             }
-        }else{
+        }
+        else{
             $apiResponse = [
                 'success' => false,
                 'status' => 404,
@@ -153,7 +163,27 @@ class OrderTrackingRepository
                             $item['service'] = 'Correios_Brazil';
                         }
                     }
-                    
+
+                    return $item;
+                });
+            }
+        }
+        if (count($this->postNLTrackingCodes) > 0) {
+            $postNLTrackingService = new PostNLTrackingService();
+            $response = $postNLTrackingService->trackOrder($this->postNLTrackingCodes);
+            if ($response->status !== false) {
+                $getTrackings = $getTrackings->map(function($item, $key) use ($response){
+                    if (count($this->postNLTrackingCodes) >= 1) {
+                        foreach ($response->data->data->items as $data) {
+                            if($response->status == false){
+                                return $item;
+                            }
+                            if($item['order']->corrios_tracking_code == $data->item){
+                                $item['api_trackings'] = collect($data->events[0]);
+                                $item['service'] = 'PostNL';
+                            }
+                        }
+                    }
                     return $item;
                 });
             }
