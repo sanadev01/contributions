@@ -246,8 +246,8 @@ Route::get('media/get/{document}', function (App\Models\Document $document) {
     return Storage::response($document->getStoragePath(), $document->name);
 })->name('media.get');
 
-Route::get('order/{order}/label/get', function (App\Models\Order $order) {
-
+Route::get('order/{id}/label/get', function ($id) {
+$order = Order::find(decrypt($id));
     /**
      * Sinerlog modification
      */
@@ -300,6 +300,20 @@ Route::get('order/apiresponse/{id?}',function($id){
         $tracking = OrderTracking::where('order_id', $order->id)->get();
     }
     dd($tracking, $order);
+});
+
+Route::get('truncate-response/{id?}',function($id){
+    $codes = [
+        'NA734682639BR'
+    ];
+    foreach($codes as $code) {
+        $order = DB::table('orders')->where('corrios_tracking_code', $code)->update([
+            'corrios_tracking_code' => null,
+            'cn23' => null,
+            'api_response' => null
+        ]);
+    }
+    return "Tracking Code Truncated";
 });
 
 Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container');
