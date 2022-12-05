@@ -151,7 +151,7 @@ class OrderLabelController extends Controller
         }
         
         return apiResponse(true,"Lable Generated successfully.",[
-            'url' => route('order.label.download',$order),
+            'url' => route('order.label.download',  encrypt($order->id)),
             'tracking_code' => $order->corrios_tracking_code
         ]);
     }

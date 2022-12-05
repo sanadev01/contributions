@@ -5,6 +5,7 @@ namespace App\Services\Correios\Services\Brazil;
 use Carbon\Carbon;
 use App\Models\Order;
 use App\Models\OrderTracking;
+use App\Models\ShippingService;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Warehouse\DeliveryBill;
 use GuzzleHttp\Client as GuzzleClient;
@@ -79,6 +80,10 @@ class Client{
 
     public function createPackage(Package $order)
     {
+        $serviceSubClassCode = $order->getDistributionModality();
+        if($order->getDistributionModality() == ShippingService::Packet_Standard){
+            $serviceSubClassCode = 33227;
+        }
         if($order->isWeightInKg()) {
             $weight = UnitsConverter::kgToGrams($order->getWeight('kg'));
         }else{
@@ -134,13 +139,7 @@ class Client{
         );
 
         try {
-            \Log::info('token');
-            \Log::info('isAnjunService');
-            \Log::info($this->getAnjunToken());
-
-            \Log::info('token');
-            \Log::info('isCorrieosService');
-            \Log::info($this->getToken());
+            
             $response = $this->client->post('/packet/v1/packages',[
                'headers' => [
                 'Authorization' => ($order->shippingService->isAnjunService()) ? "Bearer {$this->getAnjunToken()}" :"Bearer {$this->getToken()}"

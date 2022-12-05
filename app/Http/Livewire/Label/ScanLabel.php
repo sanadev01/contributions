@@ -190,7 +190,7 @@ class ScanLabel extends Component
         if ( $labelData ){
             Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
         }
-        return redirect()->route('order.label.download',[$order,'time'=>md5(microtime())]);
+        return redirect()->route('order.label.download',[ encrypt($order->id) ,'time'=>md5(microtime())]);
       
     }
     
