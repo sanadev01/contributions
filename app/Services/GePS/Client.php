@@ -194,6 +194,7 @@ class Client{
         );
         Cache::flush();
         try {
+            usleep( 250000 ); //Sleep for quarter of a second. Value is in microseconds.
             $response = $this->client->post('https://globaleparcel.com/api.aspx',[
                 'headers' => $this->getKeys(),
                 'json' => $packet
