@@ -50,35 +50,7 @@ class OrderExport extends AbstractExportService
             $this->setCellValue('M'.$row, round(($this->chargeWeight($order)*2.205),2));
             $this->setCellValue('N'.$row, $order->getWeight('lbs'));
             $this->setCellValue('O'.$row, $order->length. ' X '. $order->width.' X '.$order->height);
-
-            if($order->status == Order::STATUS_ORDER){
-                $this->setCellValue('P'.$row, 'ORDER');
-            }
-            if($order->status == Order::STATUS_NEEDS_PROCESSING){
-                $this->setCellValue('P'.$row, 'PROCESSING');
-            }
-            if($order->status == Order::STATUS_CANCEL){
-                $this->setCellValue('P'.$row, 'CANCEL');
-            }
-            if($order->status == Order::STATUS_REJECTED){
-                $this->setCellValue('P'.$row, 'REJECTED');
-            }
-            if($order->status == Order::STATUS_RELEASE){
-                $this->setCellValue('P'.$row, 'RELEASED');
-            }
-            if($order->status == Order::STATUS_REFUND){
-                $this->setCellValue('P'.$row, 'REFUND');
-            }
-            if($order->status == Order::STATUS_PAYMENT_PENDING){
-                $this->setCellValue('P'.$row, 'PAYMENT PENDING');
-            }
-            if($order->status == Order::STATUS_PAYMENT_DONE){
-                $this->setCellValue('P'.$row, 'PAYMENT DONE');
-            }
-            if($order->status == Order::STATUS_SHIPPED){
-                $this->setCellValue('P'.$row, 'SHIPPED');
-            }
-
+            $this->setCellValue('P'.$row, $order->status_name); 
             $this->setCellValue('Q'.$row, $order->weight_discount);
             $this->setCellValue('R'.$row, $order->discountCost());
             
