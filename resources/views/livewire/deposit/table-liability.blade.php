@@ -71,9 +71,7 @@
             <tr>
                 <td>{{ optional($deposit->user)->name }}</td>
                 <td>{{ optional($deposit->user)->pobox_number }}</td>
-                <td>
-                    {{ getBalance($deposit->user->id) }}
-                </td>
+                <td>{{ getBalance($deposit->user->id) }}</td>
             </tr>
             @endforeach
         </tbody>
