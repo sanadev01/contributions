@@ -33,11 +33,11 @@ class OrderStatusController extends Controller
         }elseif($order->status == Order::STATUS_PAYMENT_DONE){
             $preStatus = "STATUS_PAYMENT_DONE";
         }elseif($order->status == Order::STATUS_CANCEL) {
-            $newStatus = "STATUS_CANCEL";
+            $preStatus = "STATUS_CANCEL";
         }elseif($order->status == Order::STATUS_REJECTED) {
-            $newStatus = "STATUS_REJECTED";
+            $preStatus = "STATUS_REJECTED";
         }elseif($order->status == Order::STATUS_RELEASE) {
-            $newStatus = "STATUS_RELEASE";
+            $preStatus = "STATUS_RELEASE";
         }
 
         if($order->status == Order::STATUS_REFUND){

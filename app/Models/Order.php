@@ -357,7 +357,12 @@ class Order extends Model implements Package
 
             }elseif(optional($this->shippingService)->service_sub_class == ShippingService::GePS){
 
-                return 'GePS';
+                return 'GePS Prime';
+
+            }
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::GePS_EFormat){
+
+                return 'GePS Untracked';
 
             }elseif(in_array(optional($this->shippingService)->service_sub_class, [
                 ShippingService::COLOMBIA_URBANO,

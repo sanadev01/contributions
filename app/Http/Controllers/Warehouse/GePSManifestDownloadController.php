@@ -2,22 +2,29 @@
 
 namespace App\Http\Controllers\Warehouse;
 
+use PDF;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use App\Services\GePS\Client;
+use App\Models\ShippingService;
 use App\Http\Controllers\Controller;
 use App\Models\Warehouse\DeliveryBill;
-use App\Services\GePS\Client;
-use Carbon\Carbon;
-use PDF;
-use Illuminate\Http\Request;
 
 class GePSManifestDownloadController extends Controller
 {
     public function __invoke(DeliveryBill $deliveryBill)
     {
         if ($deliveryBill->containers->isEmpty()) {
-            return redirect()->back()->with('error', 'please add a container to this delivery bill');
-        } 
+            session()->flash('alert-danger',  'please add a container to this delivery bill');
+            return back()->withInput();
+        }
+        
+        if(!$deliveryBill->request_id) {
+            session()->flash('alert-danger','Delivery not registered yet. Please register delivery bill first to download manifest');
+            return back()->withInput();
+        }
 
-        if($deliveryBill->containers[0]->services_subclass_code == '537') {
+        if($deliveryBill->containers[0]->services_subclass_code == ShippingService::GePS) {
             $client = new Client();
             $response = $client->downloadGePSManifest($deliveryBill);
 
