@@ -752,4 +752,28 @@ class Order extends Model implements Package
 
         return null;
     }
+    
+    public function getStatusNameAttribute()
+    {
+        if($this->status == Order::STATUS_PREALERT_TRANSIT) {
+            return  "STATUS_PREALERT_TRANSIT";
+        }elseif($this->status == Order::STATUS_PREALERT_READY){
+            return  "STATUS_PREALERT_READY";
+        }elseif($this->status == Order::STATUS_ORDER){
+            return  "STATUS_ORDER";
+        }elseif($this->status == Order::STATUS_NEEDS_PROCESSING){
+            return  "STATUS_NEEDS_PROCESSING";
+        }elseif($this->status == Order::STATUS_PAYMENT_PENDING){
+            return  "STATUS_PAYMENT_PENDING";
+        }elseif($this->status == Order::STATUS_PAYMENT_DONE){
+            return  "STATUS_PAYMENT_DONE";
+        }elseif($this->status == Order::STATUS_CANCEL) {
+            return "STATUS_CANCEL";
+        }elseif($this->status == Order::STATUS_REJECTED) {
+            return "STATUS_REJECTED";
+        }elseif($this->status == Order::STATUS_RELEASE) {
+            return "STATUS_RELEASE";
+        }
+    }
+
 }
