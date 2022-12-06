@@ -199,6 +199,8 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('scan', PrintLabelController::class)->only('create','show','store','update');
         });
 
+        Route::resource('liability', Deposit\LiabilityController::class)->only('create','store','index');
+        
         Route::resource('deposit', Deposit\DepositController::class)->only('create','store','index');
         Route::get('download-deposit-attachment/{attachment?}', [DepositController::class,'downloadAttachment'])->name('download_attachment');
         Route::get('view-deposit-description/{deposit?}', [DepositController::class,'showDescription'])->name('deposit.description');
