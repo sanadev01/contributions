@@ -239,7 +239,7 @@ class OrderExport extends AbstractExportService
             ];
         }
         
-        if(in_array($order->carrierService(), ['Correios Chile', 'GePS', 'Correios Brazil']) ){
+        if(in_array($order->carrierService(), ['Correios Chile', 'GePS Prime', 'Correios Brazil', 'GePS Untracked']) ){
             return [
                 'intl' => $order->carrierService(),
                 'domestic' => $order->secondCarrierAervice()
