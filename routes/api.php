@@ -71,7 +71,7 @@ Route::prefix('v1')->group(function(){
             Route::post('us/label',DomesticLabelController::class);
             Route::get('us/calculator',DomesticLabelRateController::class);
             Route::get('status/{order}', StatusController::class);
-            Route::get('refund/{order}', CancelOrderController::class);
+        Route::get('cancel/{order}', CancelOrderController::class);
         });
     
         Route::get('countries', CountryController::class);
