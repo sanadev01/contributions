@@ -102,3 +102,8 @@ function setUSCosts($api_cost, $profit_cost)
         'profit_cost' => $profit_cost
     ];
 }
+
+function getTotalBalance()
+{
+    return Deposit::getLiabilityBalance();
+}

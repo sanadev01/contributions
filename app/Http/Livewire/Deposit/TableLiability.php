@@ -30,8 +30,8 @@ class TableLiability extends Component
 
     public function mount()
     {
-        $this->dateFrom = Carbon::now()->startOfMonth()->format('Y-m-d');
-        $this->dateTo = Carbon::now()->format('Y-m-d');
+        $this->dateFrom = '';
+        $this->dateTo = '';
     }
 
     public function render()

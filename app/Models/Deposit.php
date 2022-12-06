@@ -81,4 +81,14 @@ class Deposit extends Model
     {
         return Order::find($orderId);
     }
+
+    public static function getLiabilityBalance($user=null)
+    {
+        $totalBalance= self::query()->sum('balance');
+        if ( !$totalBalance ){
+            return 0;
+        }
+
+        return $totalBalance;
+    }
 }
