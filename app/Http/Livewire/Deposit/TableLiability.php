@@ -99,6 +99,7 @@ class TableLiability extends Component
          return $sum;
          
     }
+    
     public function searchByBalance($query)
     { 
     }
