@@ -53,7 +53,6 @@ class OrderExport extends AbstractExportService
             $this->setCellValue('P'.$row, $order->status_name); 
             $this->setCellValue('Q'.$row, $order->weight_discount);
             $this->setCellValue('R'.$row, $order->discountCost());
-            
             $this->setCellValue('S'.$row, $this->getcarrier($order)['intl']);
             $this->setCellValue('T'.$row, $this->getcarrier($order)['domestic']);
 
@@ -63,7 +62,18 @@ class OrderExport extends AbstractExportService
                 $this->setCellValue('V'.$row, optional($order->us_secondary_label_cost)['api_cost']);
                 $this->setCellValue('W'.$row,setting('marketplace_checked', null, $user->id)?  setting('marketplace', null, $user->id):'');
             }
-
+            $this->setCellValue('X'.$row, optional($order->recipient)->first_name);
+            $this->setCellValue('Y'.$row, optional($order->recipient)->last_name);
+            $this->setCellValue('Z'.$row, optional($order->recipient)->phone);
+            $this->setCellValue('AA'.$row, optional($order->recipient)->email);
+            $this->setCellValue('AB'.$row, optional($order->recipient)->address);
+            $this->setCellValue('AC'.$row, optional($order->recipient)->address);
+            $this->setCellValue('AD'.$row, optional($order->recipient)->street_no);
+            $this->setCellValue('AE'.$row, optional(optional($order->recipient)->country)->code);
+            $this->setCellValue('AF'.$row, optional(optional($order->recipient)->state)->code);
+            $this->setCellValue('AG'.$row, optional($order->recipient)->city);
+            $this->setCellValue('AH'.$row, optional($order->recipient)->zipcode);
+            $this->setCellValue('AI'.$row, optional($order->recipient)->tax_id);
             
             $row++;
         }
@@ -159,6 +169,44 @@ class OrderExport extends AbstractExportService
 
             $this->setColumnWidth('W', 20);
             $this->setCellValue('W1', 'Marketplace');
+
+            $this->setColumnWidth('X', 20);
+            $this->setCellValue('X1', 'Recipeint First Name');
+
+            $this->setColumnWidth('Y', 20);
+            $this->setCellValue('Y1', 'Recipeint Last Name');
+
+            $this->setColumnWidth('Z', 20);
+            $this->setCellValue('Z1', 'Recipeint Phone#');
+
+            $this->setColumnWidth('AA', 20);
+            $this->setCellValue('AA1', 'Recipeint Email');
+
+            $this->setColumnWidth('AB', 20);
+            $this->setCellValue('AB1', 'Recipeint Address 1');
+
+            $this->setColumnWidth('AC', 20);
+            $this->setCellValue('AC1', 'Recipeint Address 2');
+
+            $this->setColumnWidth('AD', 20);
+            $this->setCellValue('AD1', 'Recipeint House#');
+
+            $this->setColumnWidth('AE', 20);
+            $this->setCellValue('AE1', 'Recipeint Country');
+
+            $this->setColumnWidth('AF', 20);
+            $this->setCellValue('AF1', 'Recipeint State');
+            
+            $this->setColumnWidth('AG', 20);
+            $this->setCellValue('AG1', 'Recipeint City');
+
+            $this->setColumnWidth('AH', 20);
+            $this->setCellValue('AH1', 'Recipeint Zipcode');
+
+            $this->setColumnWidth('AI', 20);
+            $this->setCellValue('AI1', 'Recipeint CPF#');
+
+
         }
 
         $this->setBackgroundColor('A1:W1', '2b5cab');
@@ -211,7 +259,7 @@ class OrderExport extends AbstractExportService
             ];
         }
         
-        if(in_array($order->carrierService(), ['Correios Chile', 'GePS', 'Correios Brazil']) ){
+        if(in_array($order->carrierService(), ['Correios Chile', 'GePS Prime', 'Correios Brazil', 'GePS Untracked']) ){
             return [
                 'intl' => $order->carrierService(),
                 'domestic' => $order->secondCarrierAervice()

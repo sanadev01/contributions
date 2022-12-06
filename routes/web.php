@@ -240,21 +240,7 @@ Route::get('media/get/{document}', function (App\Models\Document $document) {
     return Storage::response($document->getStoragePath(), $document->name);
 })->name('media.get');
 
-Route::get('order/{order}/label/get', function (App\Models\Order $order) {
-
-    /**
-     * Sinerlog modification
-     */
-    if ( $order->sinerlog_url_label != '' ) {
-        return redirect($order->sinerlog_url_label);
-    } else {
-        if ( !file_exists(storage_path("app/labels/{$order->corrios_tracking_code}.pdf")) ){
-            return apiResponse(false,"Lable Expired or not generated yet please update lable");
-        }
-    }
-
-    return response()->download(storage_path("app/labels/{$order->corrios_tracking_code}.pdf"),"{$order->corrios_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
-})->name('order.label.download');
+Route::get('order/{id}/label/get',\Admin\Label\GetLabelController::class)->name('order.label.download');
 
 Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
     if ( !file_exists(storage_path("app/labels/{$order->us_api_tracking_code}.pdf")) ){

@@ -127,7 +127,7 @@ class PrintLabelController extends Controller
             }
         }
 
-        return redirect()->route('order.label.download',[$order,'time'=>md5(microtime())]);
+        return redirect()->route('order.label.download',[encrypt($order->id),'time'=>md5(microtime())]);
     }
 
     /**
