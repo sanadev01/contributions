@@ -15,7 +15,7 @@ class DashboardRepository
     public function getDashboardStats($startDate=NULL, $endDate=NULL)
     {
         $carbon       = Carbon::now();
-        $monthName    = $carbon->format('F');
+        $monthName    = $carbon->format('M');
         $currentYear  = $carbon->year;
         $currentmonth = $carbon->month;
         $today        = $carbon->format('Y-m-d');
@@ -49,6 +49,23 @@ class DashboardRepository
         $currentDayConfirm   = $CurentDay->where('status', '>=' ,$paymentDone)->count();
         $totalOrder          = $totalOrderQuery->count();
         $totalCompleteOrders = $totalOrderQuery->where('status', '>=' ,$paymentDone)->count();
+        $lastFiveOrders      = Order::where('status', Order::STATUS_ORDER)->latest()->take(10)->get();
+
+        //TOTAL ORDERS
+        $total_orders = Order::selectRaw("count(id) as count, Month(created_at) as month ")->groupBy('month')->get()->toArray();
+        $yearOrders = [];
+            foreach ($total_orders as $key => $value) {
+                array_push($yearOrders, $value['count']);
+            }
+        $totalMonthOrders = implode (", ", $yearOrders);
+        
+        //TOTAL AMOUNT
+        $total_amount = Order::selectRaw("round(sum(total),0) as total, Month(created_at) as month ")->groupBy('month')->get()->toArray();
+        $yearAmount = [];
+            foreach ($total_amount as $key => $value) {
+                array_push($yearAmount, $value['total']);
+            }
+        $totalMonthAmount = implode (", ", $yearAmount);
 
         return  $order[] = [
             'totalOrders'         => $totalOrder,
@@ -59,7 +76,10 @@ class DashboardRepository
             'currentDayConfirm'   => $currentDayConfirm,
             'currentYearTotal'    => $currentYearTotal,
             'currentYearConfirm'  => $currentYearConfirm,
-            'monthName'           => $monthName
+            'monthName'           => $monthName,
+            'lastFive'            => $lastFiveOrders,
+            'allMonthsOrders'     => $totalMonthOrders,
+            'totalMonthAmount'    => $totalMonthAmount
         ];
     }
 
