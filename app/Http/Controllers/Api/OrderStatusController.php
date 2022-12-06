@@ -8,8 +8,6 @@ use Illuminate\Http\Request;
 use App\Models\PaymentInvoice;
 use App\Mail\Admin\NotifyTransaction;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use App\Mail\Admin\NotifyTransaction;
 use DB;
 use Exception;
 
