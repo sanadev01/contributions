@@ -47,9 +47,31 @@ class IndexTable extends Component
             'value' => Package::SERVICE_CLASS_AJ_EXPRESS,
         ];
         $this->services[7] = [
-            'name' => 'GePS',
+            'name' => 'Global eParcel Prime',
             'value' => Package::SERVICE_CLASS_GePS,
         ];
+        $this->services[8] = [
+            'name' => 'Global eParcel Untracked Packet',
+            'value' => Package::SERVICE_CLASS_GePS_EFormat,
+        ];
+        $this->services[9] = [
+            'name' => 'Colombia Urbano',
+            'value' => Package::SERVICE_CLASS_COLOMBIA_URBANO,
+        ];
+        $this->services[10] = [
+            'name' => 'Colombia Nacional',
+            'value' => Package::SERVICE_CLASS_COLOMBIA_NACIONAL,
+        ];
+        $this->services[11] = [
+            'name' => 'Colombia Trayetos',
+            'value' => Package::SERVICE_CLASS_COLOMBIA_TRAYETOS,
+        ];
+        $this->services[12] = [
+            'name' => 'Mile Express',
+            'value' => Package::SERVICE_CLASS_MILE_EXPRESS,
+        ];
+        
+        
         return $this->services;
     }
 }

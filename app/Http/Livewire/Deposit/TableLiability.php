@@ -2,10 +2,11 @@
 
 namespace App\Http\Livewire\Deposit;
 
-use App\Repositories\DepositRepository;
 use Carbon\Carbon;
+use App\Models\Deposit;
 use Livewire\Component;
 use Livewire\WithPagination;
+use App\Repositories\DepositRepository;
 
 class TableLiability extends Component
 {
@@ -38,6 +39,7 @@ class TableLiability extends Component
     {
         return view('livewire.deposit.table-liability',[
             'deposits' => $this->getLiability(),
+            'totalBalance' => $this->getTotalBalance(),
             'downloadLink' => route('admin.deposit.index',http_build_query(
                 $this->getRequestData()->all()
             )).'&dl=1'
@@ -84,5 +86,11 @@ class TableLiability extends Component
     public function updating()
     {
         $this->resetPage();
+    }
+
+    public function getTotalBalance($user)
+    {
+        $deposit = new Deposit();
+        return $deposit->getCurrentBalance($user);
     }
 }

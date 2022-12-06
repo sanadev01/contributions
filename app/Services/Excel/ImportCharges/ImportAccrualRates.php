@@ -44,6 +44,9 @@ class ImportAccrualRates extends AbstractImportService
             }
         }else{
             $limit = 70;
+            if($this->service == ShippingService::GePS_EFormat){
+                $limit = 41;
+            }
             if($this->service == ShippingService::GePS){
                 $limit = 27;
             }
@@ -53,7 +56,7 @@ class ImportAccrualRates extends AbstractImportService
 
             $weight = round($this->getValueOrDefault('A'.$row),2);
             
-            if(($this->country_id == Country::Brazil && $weight <= 30000) || ($this->country_id == Country::Chile && $weight <= 50000))
+            if(($this->country_id == Country::Brazil && $weight <= 30000) || ($this->country_id == Country::Chile && $weight <= 50000) || ($this->country_id == Country::COLOMBIA && $weight <= 30000))
             {
                 $rates[] = [
                     'service' => $this->service,

@@ -19,7 +19,7 @@
             </select>
         </div>
         @if (auth()->user()->isAdmin())
-        <div class="offset-3 col-md-3">
+        <div class="offset-4 col-md-2">
             <label>Select User</label>
             <livewire:components.search-user />
         </div>
@@ -51,7 +51,6 @@
             <th>User</th>
             <th>WHR#</th>
             <th>Balance</th>
-            <th>Date</th>
         </tr>
         <tr>
             <th>
@@ -73,10 +72,7 @@
                 <td>{{ optional($deposit->user)->name }}</td>
                 <td>{{ optional($deposit->user)->pobox_number }}</td>
                 <td>
-                    {{ $deposit->balance }}
-                </td>
-                <td>
-                    {{ $deposit->created_at }}
+                    {{ getBalance($deposit->user->id) }}
                 </td>
             </tr>
             @endforeach

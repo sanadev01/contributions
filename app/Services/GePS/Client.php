@@ -177,8 +177,8 @@ class Client{
                 ],
                 'consigneeaddress' => [
                     'name' => $order->recipient->getFullName().' '.$order->warehouse_number,
-                    'addr1' => $order->recipient->address,
-                    'addr2' => optional($order->recipient)->address2.'-'.$order->recipient->street_no,
+                    'addr1' => $order->recipient->address.' '.$order->recipient->street_no,
+                    'addr2' => optional($order->recipient)->address2,
                     'state' => $order->recipient->state->code,
                     'city' => $order->recipient->city,
                     'country' => $order->recipient->country->code,
@@ -194,12 +194,14 @@ class Client{
         );
         Cache::flush();
         try {
+            usleep( 250000 ); //Sleep for quarter of a second. Value is in microseconds.
             $response = $this->client->post('https://globaleparcel.com/api.aspx',[
                 'headers' => $this->getKeys(),
                 'json' => $packet
             ]);
 
             $data = json_decode($response->getBody()->getContents());
+            \Log::info([$data]);
             if(isset($data->err)) {
                 return new PackageError($data->err);
             }
