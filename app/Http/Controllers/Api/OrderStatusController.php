@@ -47,13 +47,13 @@ class OrderStatusController extends Controller
                     'is_paid' => false
                 ]);                
                  $this->sendTransactionMail($deposit, $preStatus, $user);
-              
+                DB::commit();
                 }
                 catch(Exception $e){
                     DB::rollBack(); 
                     return apiResponse(false,$e->getMessage()); 
                 }
-                 DB::commit();
+   
                            
                 return apiResponse(true,"Updated");
             }
@@ -70,10 +70,9 @@ class OrderStatusController extends Controller
                         'is_credit' => false,
                     ]);
                     
-                    if ( $order ){
+                    if ( $order){
                         $order->deposits()->sync($deposit->id);
                     }
-
                 }else{
                     return apiResponse(false,"Not Enough Balance. Please Add Balance to ".$order->user->name.' '. $order->user->pobox_number ." account.");
                 }

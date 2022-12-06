@@ -9,15 +9,19 @@ use App\Models\Order;
 use App\Models\PaymentInvoice;
 use Exception;
 use DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class CancelOrderController extends Controller
 {
     public function __invoke(Order $order)
-    {  
+    {
         $message = 'No action to performed';
         $user = $order->user;
+        if(Auth::id() != $user->id){
+            return apiResponse(false,'No order found');
+        }
         $preStatus = $order->status_name;  
         
         if ( $order ){
@@ -55,14 +59,12 @@ class CancelOrderController extends Controller
                             } catch (Exception $ex) { 
                                 Log::info('Notify Transaction email send error: '.$ex->getMessage());
                             }
-
+                DB::commit();
                 }catch(Exception $e){
                     DB::rollBack(); 
                     return apiResponse(false,$e->getMessage()); 
                 }
-                DB::commit();
                 $message = "Order Refund & Cancelled";
-                                                
             }else{
                 $order->update([
                     'status' => Order::STATUS_CANCEL,
@@ -70,8 +72,7 @@ class CancelOrderController extends Controller
                 ]);  
                 $message = "Order Cancelled";
             }
-            
-                return apiResponse(true,$message); 
+            return apiResponse(true,$message); 
         }
         return apiResponse(false,"Order not found!");
 
