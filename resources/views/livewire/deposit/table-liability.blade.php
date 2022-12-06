@@ -58,7 +58,7 @@
             </th>
            
             <th>
-                <input type="search" wire:model.debounce.500ms="warehouseNumber" class="form-control">
+                <input type="search" wire:model.debounce.500ms="poboxNumber" class="form-control">
             </th>
            
             <th>

@@ -22,7 +22,7 @@ class TableLiability extends Component
     public $sortBy = 'id';
     public $sortAsc = false;
     public $balance;
-    public $userId;
+    public $userId; 
     
     protected $listeners = [
         'user:updated' => 'updateUser',
@@ -36,7 +36,7 @@ class TableLiability extends Component
     }
 
     public function render()
-    {
+    {                     
         $deposits = $this->getLiability();
         return view('livewire.deposit.table-liability',[
             'deposits' => $deposits,
@@ -58,6 +58,7 @@ class TableLiability extends Component
 
     public function getLiability()
     {
+
         return (new DepositRepository)->getLiability($this->getRequestData(),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc');
     }
 
@@ -97,5 +98,8 @@ class TableLiability extends Component
          }
          return $sum;
          
+    }
+    public function searchByBalance($query)
+    { 
     }
 }
