@@ -34,29 +34,8 @@ class NotifyTransaction extends Mailable
         $order = Order::find($this->deposit->order_id);
         if($order) {
             $order->refresh();
-            if($order->status == Order::STATUS_PREALERT_TRANSIT) {
-                $newStatus = "STATUS_PREALERT_TRANSIT";
-            }elseif($order->status == Order::STATUS_PREALERT_READY){
-                $newStatus = "STATUS_PREALERT_READY";
-            }elseif($order->status == Order::STATUS_ORDER){
-                $newStatus = "STATUS_ORDER";
-            }elseif($order->status == Order::STATUS_NEEDS_PROCESSING){
-                $newStatus = "STATUS_NEEDS_PROCESSING";
-            }elseif($order->status == Order::STATUS_PAYMENT_PENDING){
-                $newStatus = "STATUS_PAYMENT_PENDING";
-            }elseif($order->status == Order::STATUS_PAYMENT_DONE) {
-                $newStatus = "STATUS_PAYMENT_DONE";
-            }elseif($order->status == Order::STATUS_CANCEL) {
-                $newStatus = "STATUS_CANCEL";
-            }elseif($order->status == Order::STATUS_REJECTED) {
-                $newStatus = "STATUS_REJECTED";
-            }elseif($order->status == Order::STATUS_RELEASE) {
-                $newStatus = "STATUS_RELEASE";
-            }else{
-                $newStatus = 'STATUS_REFUND';
-            }
             $this->order = $order;
-            $this->newStatus = $newStatus;
+            $this->newStatus = $order->status_name;
         }
         
 
