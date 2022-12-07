@@ -85,7 +85,6 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('orders.order-details', OrderItemsController::class)->only('index','store');
             Route::resource('orders.order-invoice', OrderInvoiceController::class)->only('index','store');
             Route::resource('orders.label', OrderLabelController::class)->only('index','store');
-            Route::get('order/{order}/cancel-label', [\App\Http\Controllers\Admin\Order\OrderLabelController::class, 'cancelLabel'])->name('order.label.cancel');
             Route::get('order-exports', OrderExportController::class)->name('order.exports');
             Route::get('bulk-action', BulkActionController::class)->name('order.bulk-action');
             Route::get('pre-alert', PreAlertMailController::class)->name('order.pre-alert');
