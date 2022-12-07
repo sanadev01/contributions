@@ -281,7 +281,35 @@ Route::get('order/apiresponse/{id?}',function($id){
 
 Route::get('truncate-response/{id?}',function($id){
     $codes = [
-        'NA734682639BR'
+        'NA704953205BR',
+        'NA726620116BR',
+        'NA726485141BR',
+        'NA726523905BR',
+        'NA726703907BR',
+        'NA704966115BR',
+        'NA726294337BR',
+        'NA726610808BR',
+        'NA726486399BR',
+        'NA726541965BR',
+        'NA726354804BR',
+        'NA726546089BR',
+        'NA726308583BR',
+        'NA726449555BR',
+        'NA726328954BR',
+        'NA722623678BR',
+        'NA726435278BR',
+        'NA726518499BR',
+        'NA726606026BR',
+        'NA726475436BR',
+        'NA726436579BR',
+        'NA702041934BR',
+        'NA726313075BR',
+        'NA726411532BR',
+        'NA726498370BR',
+        'NA726533350BR',
+        'NA726500285BR',
+        'NA726657650BR',
+        'LX114492909JE',
     ];
     foreach($codes as $code) {
         $order = DB::table('orders')->where('corrios_tracking_code', $code)->update([
@@ -290,7 +318,7 @@ Route::get('truncate-response/{id?}',function($id){
             'api_response' => null
         ]);
     }
-    return "Tracking Code Truncated";
+    return "API Response and Tracking Codes Truncated";
 });
 
 Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container');
