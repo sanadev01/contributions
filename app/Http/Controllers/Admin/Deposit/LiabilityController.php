@@ -14,7 +14,7 @@ class LiabilityController extends Controller
      */
     public function index()
     {
-        return view('admin.liability.index');
+        return view('admin.Liability.index');
     }
 
     /**
