@@ -314,6 +314,14 @@
                         </a>
                     </li>
                 @endcan
+                @admin
+                    <li class="nav-item {{ $isActive(['admin.liability.index','admin.liability.edit','admin.liability.create']) }}">
+                        <a href="{{ route('admin.liability.index') }}">
+                            <img src="{{ asset('images/icon/liability.svg') }}" alt="HD Liability">
+                            <span class="menu-title">@lang('HD Liability')</span>
+                        </a>
+                    </li>
+                @endadmin
                 @can('viewAny', App\Models\BillingInformation::class)
                     <li
                         class="nav-item {{ $isActive(['admin.billing-information.index', 'admin.billing-information.edit', 'admin.billing-information.create']) }}">
