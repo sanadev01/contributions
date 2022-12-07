@@ -62,7 +62,8 @@ class CancelOrderController extends Controller
                 DB::commit();
                 }catch(Exception $e){
                     DB::rollBack(); 
-                    return apiResponse(false,$e->getMessage()); 
+                    return response()->json(['message'=>$ex->getMessage(),'line'=>$ex->getLine()],422); 
+ 
                 }
                 $message = "Order Refund & Cancelled";
             }else{
