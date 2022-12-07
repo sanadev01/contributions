@@ -310,5 +310,36 @@ class Client{
         }
     }
 
+    public function cancelShipment($trackCode)
+    {
+        $cancelRequest = [
+            'cancelshipment' => [
+                'tracknbr' => $trackCode
+            ],
+        ];
+        try {
+            $response = $this->client->post('https://globaleparcel.com/api.aspx',[
+                'headers' => $this->getKeys(),
+                'json' => $cancelRequest,
+                ]);
+            $data = json_decode($response->getBody()->getContents());
+            if (isset($data->err)) {
+                return [
+                    'success' => false,
+                    'message' => $data->err ?? 'Something Went Wrong! Please Try Again..',
+                    'data' => null
+                ];
+            }
+            return [
+                'success' => true,
+                'data' => $data
+            ];
+        }catch (\GuzzleHttp\Exception\ClientException $e) {
+            return new PackageError($e->getResponse()->getBody()->getContents());
+        }
+        catch (\Exception $exception){
+            return new PackageError($exception->getMessage());
+        }
+    }
 
 }
