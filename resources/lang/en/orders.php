@@ -202,6 +202,7 @@ return [
         'cancel-ups-pickup' => 'Cancel Pickup',
         'print-fedex-label' => 'Print Fedex Label',
         'view-products' => 'View Products',
+        'cancel' => 'Cancel Label',
     ],
     'create' => [
         'shipment-and-destination' => 'Shipment & Destination',

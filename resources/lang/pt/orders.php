@@ -193,6 +193,7 @@ return [
         'cancel-ups-pickup' => 'Cancelar Pickup',
         'print-fedex-label' => 'Imprimir Etiqueta Fedex',
         'view-products' => 'Ver produtos',
+        'cancel' => 'Cancelar etiqueta',
     ],
     'create' => [
         'shipment-and-destination' => 'Criação do envio',
