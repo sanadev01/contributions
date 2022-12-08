@@ -291,6 +291,23 @@ Route::get('truncate-response/{id?}',function($id){
     return "API Response and Tracking Codes Truncated";
 });
 
+Route::get('container-update/{id?}/d/{dno?}/unit/{unit?}',function($id, $dNo, $unit){
+
+    $container = Container::find($id)->update([
+        'dispatch_number' => $dNo,
+        'unit_code' => $unit
+    ]);
+    return "Container Updated Successfully";
+});
+
+Route::get('dbill-update/{id?}/cn38/{cNo?}',function($id, $cNo){
+
+    $delivery = DeliveryBill::find($id)->update([
+        'cnd38_code' => $cNo
+    ]);
+    return "Delivery Bill CN38 Updated";
+});
+
 Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container');
 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
