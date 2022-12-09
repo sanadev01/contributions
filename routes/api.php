@@ -78,6 +78,7 @@ Route::prefix('v1')->group(function(){
             Route::post('us/label',DomesticLabelController::class);
             Route::get('us/calculator',DomesticLabelRateController::class);
             Route::get('status/{order}', StatusController::class);
+            //Cancel Lable Route for GePS
             Route::get('cancel-label/{order}', [App\Http\Controllers\Api\PublicApi\OrderLabelController::class, 'cancelGePSLabel']);
         });
     
@@ -86,7 +87,6 @@ Route::prefix('v1')->group(function(){
         Route::get('shipping-services/{country_code?}', ServicesController::class);
         Route::get('shcodes/{search?}', ShCodeController::class);
 
-        //Cancel Lable Route for GePS
     });
 
 
