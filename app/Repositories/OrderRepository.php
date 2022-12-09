@@ -341,7 +341,7 @@ class OrderRepository
                 'user_declared_freight' => $request->user_declared_freight,
                 'comission' => 0,
                 'insurance_value' => 0,
-                'status' => $order->isPaid() ? ($order->status < Order::STATUS_ORDER ? Order::STATUS_ORDER : $order->status) : Order::STATUS_ORDER
+                'status' => $order->status < Order::STATUS_ORDER ?  Order::STATUS_ORDER : $order->status
             ]);
             
             $order->doCalculations();

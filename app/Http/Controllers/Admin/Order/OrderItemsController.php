@@ -8,21 +8,21 @@ use App\Facades\UPSFacade;
 use App\Facades\USPSFacade;
 use App\Facades\FedExFacade;
 use Illuminate\Http\Request;
-use App\Models\OrderTracking;
-use App\Models\PaymentInvoice;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use App\Repositories\OrderRepository;
+use App\Http\Controllers\Admin\Order\GrossTotalChangeRepository;
 use App\Http\Requests\Orders\OrderDetails\CreateRequest;
 
 class OrderItemsController extends Controller
 {
     protected $orderRepository;
+    protected $grossTotalChangeRepository;
 
-    public function __construct(OrderRepository $orderRepository)
+    public function __construct(OrderRepository $orderRepository,GrossTotalChangeRepository $grossTotalChangeRepository)
     {
         $this->orderRepository = $orderRepository;
+        $this->grossTotalChangeRepository = $grossTotalChangeRepository;
     }
     /**
      * Display a listing of the resource.
@@ -56,15 +56,13 @@ class OrderItemsController extends Controller
      */
     public function store(CreateRequest $request,Order $order)
     {
-        if($this->compareShipmentAmount($request, $order)){
 
-            $this->authorize('editItems',$order);
-
-            if ( !$order->recipient ){
+        return DB::transaction(function () use ($request, $order) {
+            $this->authorize('editItems', $order);
+            if (!$order->recipient) {
                 abort(404);
             }
-
-            if($this->orderRepository->domesticService($request->shipping_service_id)){
+            if ($this->orderRepository->domesticService($request->shipping_service_id)) {
                 $request->validate([
                     'user_declared_freight' => 'bail|required|gt:0',
                 ], [
@@ -72,26 +70,26 @@ class OrderItemsController extends Controller
                     'user_declared_freight.gt' => __('validation.gt', ['attribute' => 'shipping service rate not availaible for this service']),
                 ]);
             }
-            if($this->orderRepository->GePSService($request->shipping_service_id)){
-                if($order->measurement_unit == "lbs/in" && $order->weight > 4.40) {
+            if ($this->orderRepository->GePSService($request->shipping_service_id)) {
+                if ($order->measurement_unit == "lbs/in" && $order->weight > 4.40) {
                     session()->flash('alert-danger', 'Parcel Weight cannot be more than 4.40 LBS. Please Update Your Parcel');
                     return back()->withInput();
                 }
-                if($order->measurement_unit == "kg/cm" && $order->weight > 2) {
+                if ($order->measurement_unit == "kg/cm" && $order->weight > 2) {
                     session()->flash('alert-danger', 'Parcel Weight cannot be more than 2 KG. Please Update Your Parcel');
                     return back()->withInput();
                 }
-                if($order->length+$order->width+$order->height > 90) {
+                if ($order->length + $order->width + $order->height > 90) {
                     session()->flash('alert-danger', 'Maximun Pacakge Size: The sum of the length, width and height cannot not be greater than 90 cm (l + w + h <= 90). Please Update Your Parcel');
                     return back()->withInput();
                 }
                 $value = 0;
                 if (count($request->items) >= 1) {
                     foreach ($request->items as $key => $item) {
-                        $value += ($item['value'])*($item['quantity']);
+                        $value += ($item['value']) * ($item['quantity']);
                     }
                 }
-                if($value > 400) {
+                if ($value > 400) {
                     session()->flash('alert-danger', 'Total Parcel Value cannot be more than $400');
                     return back()->withInput();
                 }
@@ -101,83 +99,79 @@ class OrderItemsController extends Controller
              * Get total of items declared to check if them more than US$ 50 when Sinerlog Small Parcels was selected
              */
             $shipping_service_data = \DB::table('shipping_services')
-                ->select('max_sum_of_all_products','api','service_api_alias')
-                ->find($request->shipping_service_id)
-            ;
+                ->select('max_sum_of_all_products', 'api', 'service_api_alias')
+                ->find($request->shipping_service_id);
             if ($shipping_service_data->api == 'sinerlog' && $shipping_service_data->service_api_alias == 'XP') {
-                
+
                 $sum_of_all_products = 0;
-                foreach ($request->get('items',[]) as $item) {
+                foreach ($request->get('items', []) as $item) {
                     $sum_of_all_products = $sum_of_all_products + (optional($item)['value'] * optional($item)['quantity']);
                 }
 
                 if ($sum_of_all_products > $shipping_service_data->max_sum_of_all_products) {
-                    session()->flash('alert-danger','The total amount of items declared must be lower or equal US$ 50.00 for selected shipping serivce.');
+                    session()->flash('alert-danger', 'The total amount of items declared must be lower or equal US$ 50.00 for selected shipping serivce.');
                     return \back()->withInput();
                 }
-
-            }    
-            
-            if ( $this->orderRepository->updateShippingAndItems($request,$order) ){
-                session()->flash('alert-success','orders.Order Placed');
-                if ($order->user->hasRole('wholesale') && $order->user->insurance == true) 
-                {
-                    return redirect()->route('admin.orders.order-invoice.index',$order);# code...
-                }
-                return \redirect()->route('admin.orders.services.index',$order);
             }
-            return \back()->withInput();
-        }
-        
+
+            $this->grossTotalChangeRepository->changesOnPaid($request, $order);
+
+            if ($this->orderRepository->updateShippingAndItems($request, $order)) {
+                $this->grossTotalChangeRepository->changesOnPending($order);
+                session()->flash('alert-success', 'orders.Order Placed');
+                if ($order->user->hasRole('wholesale') && $order->user->insurance == true) {
+                    return redirect()->route('admin.orders.order-invoice.index', $order); # code...
+                }
+                return redirect()->route('admin.orders.services.index', $order);
+            }
+        });
+        return back()->withInput();
     }
 
     public function uspsRates(Request $request)
     {
         $items = collect();
-        if(!is_null($request->descp) && !is_null($request->qty) && !is_null($request->value)){
+        if (!is_null($request->descp) && !is_null($request->qty) && !is_null($request->value)) {
             foreach ($request->descp as $key => $descp) {
                 $items = $items->push((object)[
-                    'description' => $descp, 
-                    'quantity' => $request->qty[$key], 
+                    'description' => $descp,
+                    'quantity' => $request->qty[$key],
                     'value' => $request->value[$key]
                 ]);
             }
             $order = Order::find($request->order_id);
             $order->items = $items;
-        }else{
+        } else {
             $order = Order::find($request->order_id);
         }
         $response = USPSFacade::getRecipientRates($order, $request->service);
 
-        if($response->success == true)
-        {
-            return (Array)[
+        if ($response->success == true) {
+            return (array)[
                 'success' => true,
                 'total_amount' => $response->data['total_amount'],
-            ]; 
+            ];
         }
 
-        return (Array)[
+        return (array)[
             'success' => false,
             'message' => 'server error, could not get rates',
-        ]; 
-
+        ];
     }
 
     public function ups_rates(Request $request)
     {
         $order = Order::find($request->order_id);
         $response = UPSFacade::getRecipientRates($order, $request->service);
-        
-        if($response->success == false)
-        {
-            return (Array)[
+
+        if ($response->success == false) {
+            return (array)[
                 'success' => false,
                 'error' => $response->error['response']['errors'][0]['message'] ?? 'server error, could not get rates',
             ];
         }
 
-        return (Array)[
+        return (array)[
             'success' => true,
             'total_amount' => number_format($response->data['RateResponse']['RatedShipment']['TotalCharges']['MonetaryValue'], 2),
         ];
@@ -189,49 +183,17 @@ class OrderItemsController extends Controller
         $response = FedExFacade::getRecipientRates($order, $request->service);
 
         if ($response->success == false) {
-            return (Array)[
+            return (array)[
                 'success' => false,
-                'error' => $response->error['response']['errors'][0]['message'] ?? $response->error['errors'][0]['code'].'-'.'server error, could not get rates',
+                'error' => $response->error['response']['errors'][0]['message'] ?? $response->error['errors'][0]['code'] . '-' . 'server error, could not get rates',
             ];
         }
 
-        return (Array)[
+        return (array)[
             'success' => true,
             'total_amount' => number_format($response->data['output']['rateReplyDetails'][0]['ratedShipmentDetails'][0]['totalNetFedExCharge'], 2),
         ];
     }
 
-    public function compareShipmentAmount(Request $request, Order $order)
-    {
-        $prevOrder= Order::find($order->id);
-        $previousAmount = $prevOrder->gross_total;
-        $currentAmount = $request->user_declared_freight;
-        $invoice = $order->getPaymentInvoice();
-        if($order->isPaid() && $previousAmount > $currentAmount){
 
-            $amount = $previousAmount - $currentAmount;
-            $deposit = Deposit::create([
-                'uuid' => PaymentInvoice::generateUUID('DP-'),
-                'amount' => $amount,
-                'user_id' => Auth::id(),
-                'order_id' => $order->id,
-                'balance' => Deposit::getCurrentBalance() + $amount,
-                'is_credit' => true,
-                'description' => "Change of Shipping Service",
-            ]);
-            $invoice->update(['total_amount' => $currentAmount, 'paid_amount' => $currentAmount]);
-            return true;
-
-        } elseif($order->isPaid() && $currentAmount > $previousAmount){
-
-            OrderTracking::where('order_id', $order->id)
-            ->update(['status_code' => Order::STATUS_PAYMENT_PENDING]);
-            $invoice->update(['total_amount' => $currentAmount, 'paid_amount' => $previousAmount]);
-            return true;
-
-        } else {
-            return true;
-        }
-        
-    }
 }
