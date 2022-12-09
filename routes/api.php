@@ -72,6 +72,8 @@ Route::prefix('v1')->group(function(){
             Route::get('us/calculator',DomesticLabelRateController::class);
             Route::get('status/{order}', StatusController::class);
             Route::get('cancel/{order}', CancelOrderController::class);
+            //Cancel Label Route for GePS
+            Route::get('cancel-label/{order}', [App\Http\Controllers\Api\PublicApi\OrderLabelController::class, 'cancelGePSLabel']);
         });
     
         Route::get('countries', CountryController::class);
