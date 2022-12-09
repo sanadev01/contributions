@@ -6,16 +6,17 @@ use App\Models\Order;
 use App\Events\OrderPaid;
 use Illuminate\Http\Request;
 // use App\Repositories\LabelRepository;
+use App\Services\GePS\Client;
 use App\Models\ShippingService;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use App\Repositories\UPSLabelRepository;
+use App\Repositories\GePSLabelRepository;
 use App\Repositories\USPSLabelRepository;
 use App\Repositories\FedExLabelRepository;
 use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
-use App\Repositories\GePSLabelRepository;
 
 class OrderLabelController extends Controller
 {
@@ -171,5 +172,24 @@ class OrderLabelController extends Controller
         ]);
 
     }
+
+    public function cancelGePSLabel(Order $order)
+    {
+        $gepsClient = new Client();   
+        $response = $gepsClient->cancelShipment($order->corrios_tracking_code);
+        if (!$response['success']) {
+            return apiResponse(false, $response['message']);
+        }
+        if($response['success']) {
+            $order->update([
+                'corrios_tracking_code' => null,
+                'cn23' => null,
+                'api_response' => null
+            ]);
+            return apiResponse(true,"Label Cancellation is Successful.",[
+                'cancelled_tracking_code' => $response['data']->cancelshipmentresponse->tracknbr
+            ]);
+        }
+    } 
  
 }

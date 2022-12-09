@@ -84,6 +84,9 @@ Route::prefix('v1')->group(function(){
         Route::get('country/{country}/states', StateController::class);
         Route::get('shipping-services/{country_code?}', ServicesController::class);
         Route::get('shcodes/{search?}', ShCodeController::class);
+
+        //Cancel Lable Route for GePS
+        Route::get('cancel-label/{order}', [App\Http\Controllers\Api\PublicApi\OrderLabelController::class, 'cancelGePSLabel']);
     });
 
 
