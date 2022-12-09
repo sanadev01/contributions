@@ -57,21 +57,18 @@ class Client{
     {
         $items = [];
         $singleItemWeight = UnitsConverter::kgToGrams($this->calulateItemWeight($order));
-
+        
         if (count($order->items) >= 1) {
             foreach ($order->items as $key => $item) {
-                if(!optional($order->senderCountry)->code) {
-                    session()->flash('alert-danger','The Recipient Country State Code Cannot be Empty!');
-                    return \back()->withInput();
-                }
                 $itemToPush = [];
+                $originCountryCode = optional($order->senderCountry)->code;
                 $itemToPush = [
                     'description' => $item->description,
                     'qty' => (int)$item->quantity,
                     'value' => number_format($item->value * (int)$item->quantity , 2),
                     'hscode' => "$item->sh_code",
                     'currency' => "USD",
-                    'origin' => $order->senderCountry->code,
+                    'origin' => $originCountryCode ? $originCountryCode: 'US',
                     'exportreason' => 'Sale of Goods',
                     'exporttype' => 'Permanent',
                 ];
@@ -201,6 +198,7 @@ class Client{
             ]);
 
             $data = json_decode($response->getBody()->getContents());
+            \Log::info([$data]);
             if(isset($data->err)) {
                 return new PackageError($data->err);
             }
