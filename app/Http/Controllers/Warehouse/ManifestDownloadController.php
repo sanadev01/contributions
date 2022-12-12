@@ -12,7 +12,6 @@ class ManifestDownloadController extends Controller
 {
     public function __invoke(DeliveryBill $deliveryBill,Request $request)
     {
-        dd($request);
         $exportService =  $request->service ? new ExportManfestByServices($deliveryBill) : new ExportManfestService($deliveryBill);
         return $exportService->handle();
     }
