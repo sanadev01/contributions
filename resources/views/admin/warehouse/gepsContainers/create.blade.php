@@ -54,7 +54,7 @@
                                     <div class="col-md-6">
                                         <select class="form-control" name="services_subclass_code">
                                             <option value="">@lang('warehouse.containers.Distribution Service Class')</option>
-                                            <option value="537" {{ old('services_subclass_code') == '537' ? 'selected': '' }}>Global eParcel</option>
+                                            <option value="537" {{ old('services_subclass_code') == App\Models\ShippingService::GePS ? 'selected': '' }}>Global eParcel</option>
                                         </select>
                                         @error('services_subclass_code')
                                             <div class="help-block text-danger"> {{ $message }} </div>
