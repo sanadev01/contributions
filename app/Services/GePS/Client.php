@@ -107,29 +107,29 @@ class Client{
     {   
         //GET CONTAINER FOR PARCEL
 
-        $container = Container::where('services_subclass_code', ShippingService::GePS)
-            ->where('destination_operator_name', $order->recipient->country->code)->whereNull('unit_code')->first();
+        // $container = Container::where('services_subclass_code', ShippingService::GePS)
+        //     ->where('destination_operator_name', $order->recipient->country->code)->whereNull('unit_code')->first();
 
-        if(!$container) {
-            $container =  Container::create([
-                'user_id' => Auth::id(),
-                'seal_no' => '',
-                'dispatch_number' => 0,
-                'origin_country' => 'US',
-                'origin_operator_name' => 'HERC',
-                'postal_category_code' => 'A',
-                'destination_operator_name' => $order->recipient->country->code,
-                'unit_type' => 1,
-                'services_subclass_code' => ShippingService::GePS
-            ]);
+        // if(!$container) {
+        //     $container =  Container::create([
+        //         'user_id' => Auth::id(),
+        //         'seal_no' => '',
+        //         'dispatch_number' => 0,
+        //         'origin_country' => 'US',
+        //         'origin_operator_name' => 'HERC',
+        //         'postal_category_code' => 'A',
+        //         'destination_operator_name' => $order->recipient->country->code,
+        //         'unit_type' => 1,
+        //         'services_subclass_code' => ShippingService::GePS
+        //     ]);
 
-            $container->update([
-                'dispatch_number' => $container->id
-            ]);
+        //     $container->update([
+        //         'dispatch_number' => $container->id
+        //     ]);
 
-            return $container;
+        //     return $container;
 
-        }
+        // }
 
         
         if($order->isWeightInKg()) {
@@ -160,7 +160,7 @@ class Client{
                     'width' => $order->width,
                     'height' => $order->height,
                     'inco' => "DDU",
-                    'manifestnbr' => "HD".'-'.$container->destination_operator_name.''.$container->dispatch_number,
+                    // 'manifestnbr' => "HD".'-'.$container->destination_operator_name.''.$container->dispatch_number,
                     'contentcategory' => "NP",
                 'shipperaddress' => [
                     'name' => $order->getSenderFullName(),
@@ -216,7 +216,7 @@ class Client{
                     ],
                 ]);
                 // add orders to container
-                $container->orders()->attach($order->id);
+                // $container->orders()->attach($order->id);
                 // store order status in order tracking
                 return $this->addOrderTracking($order);
             }

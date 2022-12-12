@@ -340,5 +340,29 @@ class Client{
             return new PackageError($exception->getMessage());
         }
     }
+    
+    public function getModality($trackingNumber)
+    {
+        try {
+
+            $token = $this->getAnjunToken();
+
+            $url = "https://api.correios.com.br/packet/v1/packages?trackingNumber=$trackingNumber";
+            $response = $this->client->get($url,[
+                'headers' =>  [
+                    'Authorization' => "Bearer {$token}"
+                ],
+            ]);
+            
+            $modality = json_decode($response->getBody()->getContents());
+            
+            return optional(optional($modality->packageList)[0])->distributionModality;
+        }catch (\GuzzleHttp\Exception\ClientException $e) {
+            return new PackageError($e->getResponse()->getBody()->getContents());
+        }
+        catch (\Exception $exception){
+            return new PackageError($exception->getMessage());
+        }
+    }
 
 }

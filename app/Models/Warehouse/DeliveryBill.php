@@ -108,4 +108,13 @@ class DeliveryBill extends Model
     {
         return random_int(100000, 999999).'-'.random_int(1000, 9999).'-'.random_int(100000, 999999);
     }
+
+    public function hasGePSService()
+    {
+        if ($this->container()->services_subclass_code == Container::CONTAINER_COLOMBIA) {
+            return true;
+        }
+
+        return false;
+    }
 }

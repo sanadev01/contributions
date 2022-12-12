@@ -133,9 +133,7 @@
                                                                 <i class="fa fa-cloud-download"></i> GET CN38
                                                             </a>
                                                         @endif
-                                                        @if($deliveryBill->isGePS())
-                                                            <a href="{{ route('warehouse.geps.manifest.download',$deliveryBill) }}" target="_blank" class="dropdown-item w-100">
-                                                        @elseif($deliveryBill->isPostNL())
+                                                        @if($deliveryBill->isPostNL())
                                                             <a href="{{ $deliveryBill->request_id }}" target="_blank" class="dropdown-item w-100">
                                                         @else
                                                             <a href="{{ route('warehouse.delivery_bill.manifest', $deliveryBill) }}"
