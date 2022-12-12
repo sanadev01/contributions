@@ -72,7 +72,14 @@
                 <td colspan="3" rowspan="2" style="width:17cm; ">
                     OPERADOR DE ORIGEM <br>
                     <small><i>(Office of Origin)</i></small> <br>
-                    <img src="{{ $logo }}" style="width: 3cm; height:0.8cm;display:block;position:relative;" alt="">
+                    @if(strpos($originLogo, ".png") !== false || strpos($originLogo, ".jpg") !== false || strpos($originLogo, "/") !== false)
+                    <img src="{{ $originLogo }}" style="width: 3cm; height:0.8cm;display:block;position:relative;" alt="">
+                    @else 
+
+                    <div class="column1" style="text-align: center;font-size:15px;font-weight:bold;" >
+                                {!! $originLogo !!}
+                    </div>
+                    @endif
                 </td>
                 <td colspan="2" style="width: 3cm;">
                     Nº FATURA DE ENTREGA <br>

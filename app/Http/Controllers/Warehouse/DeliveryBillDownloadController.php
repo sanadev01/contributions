@@ -12,11 +12,13 @@ class DeliveryBillDownloadController extends Controller
 {
     public function __invoke(DeliveryBill $deliveryBill)
     {
+        
         if ($deliveryBill->containers->isEmpty()) {
             return redirect()->back()->with('error', 'please add a container to this delivery bill');
         }
 
-        $contractNo = ($deliveryBill->containers->first()->hasAnjunService()) ? '9912501700' : '9912501576';
+        $hasAnjunService = $deliveryBill->containers->first()->hasAnjunService();
+        $contractNo = $hasAnjunService ? '9912501700' : '9912501576';
         
             $labelPrinter = new CN38LabelMaker();
             $labelPrinter->setDeliveryBillNo($deliveryBill->cnd38_code)
@@ -31,6 +33,11 @@ class DeliveryBillDownloadController extends Controller
                             $deliveryBill->containers
                         )
                         ->setDeliveryBill($deliveryBill);
+        if($hasAnjunService){
+            $labelPrinter = $labelPrinter->setLogo(public_path('images/anjunlog.png'));
+            $labelPrinter = $labelPrinter->setOriginLogo("ANJUNLOG");
+        }
+      
             return $labelPrinter->download();
     }
 }

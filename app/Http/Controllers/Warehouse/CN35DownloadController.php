@@ -26,8 +26,10 @@ class CN35DownloadController extends Controller
                      ->setDestinationAirport($container->getDestinationAriport())
                      ->setWeight($container->getWeight())
                      ->setItemsCount($container->getPiecesCount())
-                     ->setUnitCode($container->getUnitCode());
-
+                     ->setUnitCode($container->getUnitCode()); 
+      if($container->hasAnjunService()){
+        $cn23Maker->setCompanyName('ANJUNLOG');
+      }
         return $cn23Maker->download();
     }
 }
