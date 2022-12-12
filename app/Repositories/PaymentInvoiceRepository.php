@@ -43,6 +43,14 @@ class PaymentInvoiceRepository
             $query->where('last_four_digits','LIKE',"%{$request->last_four_digits}%");
         }
 
+        if ( $request->search ){
+            $query->where('last_four_digits','LIKE',"%{$request->search}%")
+            ->orWhere('uuid','LIKE',"%{$request->search}%")
+            ->orWhereHas('user',function($query) use($request) {
+                return $query->Where('name','LIKE',"%{$request->search}%");
+            });
+        }
+
         $query->orderBy($orderBy,$orderType);
 
         return $paginate ? $query->paginate($pageSize) : $query->get();
