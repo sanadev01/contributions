@@ -5,6 +5,7 @@ namespace App\Repositories\Warehouse;
 use App\Models\Warehouse\Container;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\ShippingService;
 
 class GePSContainerRepository {
 
@@ -19,7 +20,7 @@ class GePSContainerRepository {
         }
 
         return $query->where(function($query) {
-            $query->where('services_subclass_code','537');
+            $query->where('services_subclass_code', ShippingService::GePS);
         })->latest()->paginate();
 
     }
@@ -34,7 +35,7 @@ class GePSContainerRepository {
                 'seal_no' => $request->seal_no,
                 'origin_operator_name' => 'HERC',
                 'postal_category_code' => 'A',
-                'destination_operator_name' => $request->destination_country,
+                'destination_operator_name' => $request->destination_operator_name,
                 'unit_type' => $request->unit_type,
                 'services_subclass_code' => $request->services_subclass_code
             ]);
