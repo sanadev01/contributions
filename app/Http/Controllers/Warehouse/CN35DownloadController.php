@@ -27,9 +27,9 @@ class CN35DownloadController extends Controller
                      ->setWeight($container->getWeight())
                      ->setItemsCount($container->getPiecesCount())
                      ->setUnitCode($container->getUnitCode()); 
-      if($container->hasAnjunService()){
-        $cn23Maker->setCompanyName('ANJUNLOG');
-      }
+        if($container->hasAnjunService()){
+          $cn23Maker->setCompanyName('ANJUNLOG');
+        }
         return $cn23Maker->download();
     }
 }
