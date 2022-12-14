@@ -21,7 +21,7 @@ class LiabilityController extends Controller
             $liabilityReport = new ExportLiabilityReport($liability);
             return $liabilityReport->handle();
         }
-        return view('admin.liability.index');
+        return view('admin.Liability.index');
     }
 
     /**
