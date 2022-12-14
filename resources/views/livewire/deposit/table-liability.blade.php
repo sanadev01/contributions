@@ -4,7 +4,7 @@
             <strong>Statement From: </strong> {{ $dateFrom }} - {{ $dateTo }} <br>
             {{-- <strong>Total Deposit:</strong> {{ 0 }} <br>
             <strong>Total Debit: </strong>  {{ 0 }} <br> --}}
-            <strong>Balance: <span style="font-size: 16px;">{{ getTotalBalance() }} USD </span></strong>
+            <strong>Balance: <span style="font-size: 16px;">{{  $totalBalance }} USD </span></strong>
         </div>
     </div>
     <div class="row justify-content-end mb-4">
@@ -19,7 +19,7 @@
             </select>
         </div>
         @if (auth()->user()->isAdmin())
-        <div class="offset-3 col-md-3">
+        <div class="offset-4 col-md-2">
             <label>Select User</label>
             <livewire:components.search-user />
         </div>
@@ -51,7 +51,6 @@
             <th>User</th>
             <th>WHR#</th>
             <th>Balance</th>
-            <th>Date</th>
         </tr>
         <tr>
             <th>
@@ -59,7 +58,7 @@
             </th>
            
             <th>
-                <input type="search" wire:model.debounce.500ms="warehouseNumber" class="form-control">
+                <input type="search" wire:model.debounce.500ms="poboxNumber" class="form-control">
             </th>
            
             <th>
@@ -72,12 +71,7 @@
             <tr>
                 <td>{{ optional($deposit->user)->name }}</td>
                 <td>{{ optional($deposit->user)->pobox_number }}</td>
-                <td>
-                    {{ $deposit->balance }}
-                </td>
-                <td>
-                    {{ $deposit->created_at }}
-                </td>
+                <td>{{ getBalance($deposit->user) }}</td>
             </tr>
             @endforeach
         </tbody>

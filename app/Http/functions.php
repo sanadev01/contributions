@@ -85,9 +85,9 @@ function generateRandomString($length = 30)
     return substr(str_replace(array('/', '+', '='), '', base64_encode($bytes)), 0, $length);
 }
 
-function getBalance()
+function getBalance($user = null)
 {
-    return Deposit::getCurrentBalance();
+    return Deposit::getCurrentBalance($user);
 }
 
 function chargeAmount($amount,$order=null,$description=null)

@@ -365,6 +365,15 @@ class DepositRepository
                             ->orWhere('id', $request->user);
             });
         }
+        if ( $request->poboxNumber ){
+            $query->whereHas('user',function($query) use($request) {
+                return $query->where('pobox_number',"%{$request->poboxNumber}%")
+                            ->orWhere('name','LIKE',"%{$request->poboxNumber}%")
+                            ->orWhere('last_name','LIKE',"%{$request->poboxNumber}%")
+                            ->orWhere('email','LIKE',"%{$request->poboxNumber}%")
+                            ->orWhere('id', $request->poboxNumber);
+            });
+        }
 
         if ( $request->filled('dateFrom') ){
             $query->where('created_at','>=',$request->dateFrom. ' 00:00:00');
@@ -377,8 +386,8 @@ class DepositRepository
         if ( $request->filled('balance') ){
             $query->where('balance','LIKE',"%{$request->balance}%");
         }
-        $query->orderBy($orderBy,'DESC');
         $query->groupBy('user_id');
+        $query->orderBy($orderBy,'DESC');
         $query->latest();
 
         return $paginate ? $query->paginate($pageSize) : $query->get(); 
