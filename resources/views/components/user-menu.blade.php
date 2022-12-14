@@ -422,6 +422,14 @@
                         <span class="menu-title">@lang('menu.Balance')</span>
                     </a>
                 </li>
+                @admin
+                    <li class="nav-item {{ $isActive(['admin.liability.index','admin.liability.edit','admin.liability.create']) }}">
+                        <a href="{{ route('admin.liability.index') }}">
+                            <img src="{{ asset('images/icon/liability.svg') }}" alt="HD Liability">
+                            <span class="menu-title">@lang('HD Liability')</span>
+                        </a>
+                    </li>
+                @endadmin
             @endcan
             @admin
             <li class="nav-item {{ $isActive(['admin.tax.index']) }}">
