@@ -131,6 +131,7 @@
                             <option value="UPS">UPS</option>
                             <option value="FEDEX">FEDEX</option>
                             <option value="Chile">Correios Chile</option>
+                            <option value="Global eParcel">Global eParcel</option>
                         </select>
                     </th>
                     @admin<th></th>@endadmin

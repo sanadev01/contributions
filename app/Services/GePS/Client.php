@@ -57,21 +57,18 @@ class Client{
     {
         $items = [];
         $singleItemWeight = UnitsConverter::kgToGrams($this->calulateItemWeight($order));
-
+        
         if (count($order->items) >= 1) {
             foreach ($order->items as $key => $item) {
-                if(!optional($order->senderCountry)->code) {
-                    session()->flash('alert-danger','The Recipient Country State Code Cannot be Empty!');
-                    return \back()->withInput();
-                }
                 $itemToPush = [];
+                $originCountryCode = optional($order->senderCountry)->code;
                 $itemToPush = [
                     'description' => $item->description,
                     'qty' => (int)$item->quantity,
                     'value' => number_format($item->value * (int)$item->quantity , 2),
                     'hscode' => "$item->sh_code",
                     'currency' => "USD",
-                    'origin' => $order->senderCountry->code,
+                    'origin' => $originCountryCode ? $originCountryCode: 'US',
                     'exportreason' => 'Sale of Goods',
                     'exporttype' => 'Permanent',
                 ];
@@ -110,29 +107,29 @@ class Client{
     {   
         //GET CONTAINER FOR PARCEL
 
-        $container = Container::where('services_subclass_code', ShippingService::GePS)
-            ->where('destination_operator_name', $order->recipient->country->code)->whereNull('unit_code')->first();
+        // $container = Container::where('services_subclass_code', ShippingService::GePS)
+        //     ->where('destination_operator_name', $order->recipient->country->code)->whereNull('unit_code')->first();
 
-        if(!$container) {
-            $container =  Container::create([
-                'user_id' => Auth::id(),
-                'seal_no' => '',
-                'dispatch_number' => 0,
-                'origin_country' => 'US',
-                'origin_operator_name' => 'HERC',
-                'postal_category_code' => 'A',
-                'destination_operator_name' => $order->recipient->country->code,
-                'unit_type' => 1,
-                'services_subclass_code' => ShippingService::GePS
-            ]);
+        // if(!$container) {
+        //     $container =  Container::create([
+        //         'user_id' => Auth::id(),
+        //         'seal_no' => '',
+        //         'dispatch_number' => 0,
+        //         'origin_country' => 'US',
+        //         'origin_operator_name' => 'HERC',
+        //         'postal_category_code' => 'A',
+        //         'destination_operator_name' => $order->recipient->country->code,
+        //         'unit_type' => 1,
+        //         'services_subclass_code' => ShippingService::GePS
+        //     ]);
 
-            $container->update([
-                'dispatch_number' => $container->id
-            ]);
+        //     $container->update([
+        //         'dispatch_number' => $container->id
+        //     ]);
 
-            return $container;
+        //     return $container;
 
-        }
+        // }
 
         
         if($order->isWeightInKg()) {
@@ -163,7 +160,7 @@ class Client{
                     'width' => $order->width,
                     'height' => $order->height,
                     'inco' => "DDU",
-                    'manifestnbr' => "HD".'-'.$container->destination_operator_name.''.$container->dispatch_number,
+                    // 'manifestnbr' => "HD".'-'.$container->destination_operator_name.''.$container->dispatch_number,
                     'contentcategory' => "NP",
                 'shipperaddress' => [
                     'name' => $order->getSenderFullName(),
@@ -177,8 +174,9 @@ class Client{
                 ],
                 'consigneeaddress' => [
                     'name' => $order->recipient->getFullName().' '.$order->warehouse_number,
-                    'addr1' => $order->recipient->address,
-                    'addr2' => optional($order->recipient)->address2.'-'.$order->recipient->street_no,
+                    'attention' => $order->customer_reference,
+                    'addr1' => $order->recipient->address.' '.$order->recipient->street_no,
+                    'addr2' => optional($order->recipient)->address2,
                     'state' => $order->recipient->state->code,
                     'city' => $order->recipient->city,
                     'country' => $order->recipient->country->code,
@@ -194,6 +192,7 @@ class Client{
         );
         Cache::flush();
         try {
+            usleep( 250000 ); //Sleep for quarter of a second. Value is in microseconds
             $response = $this->client->post('https://globaleparcel.com/api.aspx',[
                 'headers' => $this->getKeys(),
                 'json' => $packet
@@ -216,7 +215,7 @@ class Client{
                     ],
                 ]);
                 // add orders to container
-                $container->orders()->attach($order->id);
+                // $container->orders()->attach($order->id);
                 // store order status in order tracking
                 return $this->addOrderTracking($order);
             }
@@ -309,5 +308,36 @@ class Client{
         }
     }
 
+    public function cancelShipment($trackCode)
+    {
+        $cancelRequest = [
+            'cancelshipment' => [
+                'tracknbr' => $trackCode
+            ],
+        ];
+        try {
+            $response = $this->client->post('https://globaleparcel.com/api.aspx',[
+                'headers' => $this->getKeys(),
+                'json' => $cancelRequest,
+                ]);
+            $data = json_decode($response->getBody()->getContents());
+            if (isset($data->err)) {
+                return [
+                    'success' => false,
+                    'message' => $data->err ?? 'Something Went Wrong! Please Try Again..',
+                    'data' => null
+                ];
+            }
+            return [
+                'success' => true,
+                'data' => $data
+            ];
+        }catch (\GuzzleHttp\Exception\ClientException $e) {
+            return new PackageError($e->getResponse()->getBody()->getContents());
+        }
+        catch (\Exception $exception){
+            return new PackageError($exception->getMessage());
+        }
+    }
 
 }

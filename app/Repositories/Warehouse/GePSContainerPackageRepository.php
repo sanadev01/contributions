@@ -2,6 +2,8 @@
 
 namespace App\Repositories\Warehouse;
 
+use App\Models\OrderTracking;
+
 
 class GePSContainerPackageRepository {
 
@@ -15,6 +17,10 @@ class GePSContainerPackageRepository {
 
     public function removeOrderFromContainer($container, $id)
     {
+        $order_tracking = OrderTracking::where('order_id', $id)->latest()->first();
+        if($order_tracking) {
+            $order_tracking->delete();
+        }
         return $container->orders()->detach($id);
     }
 }

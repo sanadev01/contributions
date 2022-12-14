@@ -155,6 +155,11 @@
                         <a href="{{ route('admin.orders.label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
                             <i class="feather icon-printer"></i>@lang('orders.actions.label')
                         </a>
+                        @if($order->carrierService() == "Global eParcel" && !$order->isRefund() && !$order->isShipped())
+                            <a href="{{ route('admin.order.label.cancel',$order) }}" class="dropdown-item" title="@lang('orders.actions.cancel')">
+                                <i class="feather icon-x-square"></i>@lang('orders.actions.cancel')
+                            </a>
+                        @endif
                         @if( $order->corrios_tracking_code && $order->recipient->country_id != \App\Models\Order::US && !$order->hasSecondLabel())
                             <a href="{{ route('admin.order.us-label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
                                 <i class="feather icon-printer"></i>@lang('orders.actions.buy-us-label')
