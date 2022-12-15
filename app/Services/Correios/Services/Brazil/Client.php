@@ -80,7 +80,6 @@ class Client{
 
     public function createPackage(Package $order)
     {
-        return new PackageError('correios went wrong please wait');
         $serviceSubClassCode = $order->getDistributionModality();
         if($order->getDistributionModality() == ShippingService::Packet_Standard){
             $serviceSubClassCode = 33227;
