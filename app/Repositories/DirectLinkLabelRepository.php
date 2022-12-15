@@ -4,19 +4,18 @@
 namespace App\Repositories;
 
 use App\Models\Order;
-use App\Services\Converters\UnitsConverter;
 use Illuminate\Support\Facades\Storage;
 use App\Services\Correios\Models\PackageError;
-use App\Services\GePS\Client;
+use App\Services\DirectLink\Client;
 
 
-class GePSLabelRepository
+class DirectLinkLabelRepository
 {
     protected $error;
 
     public function get(Order $order)
     { 
-        if ( $order->getCN23() ){
+        if ($order->getCN23() ){
             return true;
         }
 

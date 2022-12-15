@@ -26,6 +26,7 @@ class ShippingService extends Model
     const Courier_Express = 33;
     const UPS_GROUND = 03;
     const FEDEX_GROUND = 04;
+    const DIRECT_LINK = 34000;
     const Packet_Standard = 33162;
     const Packet_Express = 33170;
     const Packet_Mini = 33197;
@@ -141,6 +142,10 @@ class ShippingService extends Model
         }
 
         return false;
+    }
+    public function isDirectLinkService()
+    {
+        return $this->service_sub_class = self::DIRECT_LINK;
     }
 
     public function isGePSeFormatService()

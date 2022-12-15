@@ -23,7 +23,7 @@ class ShippingServiceController extends Controller
      */
     public function index(ShippingServiceRepository $repository)
     {
-        $shippingservices = $repository->get();
+        $shippingservices = $repository->get(); 
         return view('admin.shippingservices.index', compact('shippingservices'));
     }
 

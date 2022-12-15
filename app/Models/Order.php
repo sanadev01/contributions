@@ -331,6 +331,11 @@ class Order extends Model implements Package
         return $this->hasSecondLabel() ? $this->us_api_service : null;
     }
 
+    public function getCarrierAttribute()
+    {
+        return $this->carrierService();
+    }
+
     public function carrierService()
     {
         if ($this->shippingService()) {
@@ -356,6 +361,11 @@ class Order extends Model implements Package
             }elseif(optional($this->shippingService)->service_sub_class == ShippingService::GePS || optional($this->shippingService)->service_sub_class == ShippingService::GePS_EFormat){
 
                 return 'Global eParcel';
+
+            }
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::DIRECT_LINK){
+
+                return 'Direct Link';
 
             }
             return 'Correios Brazil';

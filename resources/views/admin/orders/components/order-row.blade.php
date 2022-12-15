@@ -62,7 +62,7 @@
         {{ ucfirst($order->customer_reference) }}
     </td>
     <td>
-        {{ $order->carrierService() }}
+        {{ $order->carrier }}
     </td>
     @admin
     <td>
