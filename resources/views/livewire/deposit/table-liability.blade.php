@@ -4,7 +4,7 @@
             <strong>Statement From: </strong> {{ $dateFrom }} - {{ $dateTo }} <br>
             {{-- <strong>Total Deposit:</strong> {{ 0 }} <br>
             <strong>Total Debit: </strong>  {{ 0 }} <br> --}}
-            <strong>Balance: <span style="font-size: 16px;">{{  $totalBalance }} USD </span></strong>
+            <strong>Balance: <span style="font-size: 16px;">{{  number_format($totalBalance, 2) }} USD </span></strong>
         </div>
     </div>
     <div class="row justify-content-end mb-4">
@@ -71,7 +71,7 @@
             <tr>
                 <td>{{ optional($deposit->user)->name }}</td>
                 <td>{{ optional($deposit->user)->pobox_number }}</td>
-                <td>{{ getBalance($deposit->user->id) }}</td>
+                <td>{{ getBalance($deposit->user) }}</td>
             </tr>
             @endforeach
         </tbody>
