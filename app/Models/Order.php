@@ -363,7 +363,7 @@ class Order extends Model implements Package
                 return 'Global eParcel';
 
             }
-            elseif(optional($this->shippingService)->service_sub_class == ShippingService::DIRECT_LINK){
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::Direct_Link){
 
                 return 'Direct Link';
 

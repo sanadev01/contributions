@@ -48,6 +48,7 @@ class DirectLinkLabelRepository
     protected function generateLabel(Order $order)
     {
         $client = new Client();
+        //dd($order);
         $data = $client->createPackage($order);
         if ( $data instanceof PackageError){
             $this->error = $data->getErrors();

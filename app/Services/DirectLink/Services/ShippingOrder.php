@@ -1,90 +1,102 @@
 <?php
 namespace App\Services\DirectLink\Services;
+
+use App\Services\Converters\UnitsConverter;
  
+class ShippingOrder { 
 
-class ShippingOrder{ 
+   protected $chargableWeight;
 
-  public function getRequestBody(){
-    return [ 
-            "referenceNo"=>"TEST2021112201",
-            "referenceNo1"=>"2021112201",
-            "trackingNo"=>"",
-            "serviceCode"=>"UBI.CN2CA.Purolator.WMT",
-            "incoterm"=>"",
-            "description"=>"smartwristband",
-            "nativeDescription"=>"智能手环",
-            "weight"=>0.02,
-            "weightUnit"=>"KG",
-            "length"=>50,
-            "width"=>40,
-            "height"=>30,
-            "volume"=>0.06,
-            "dimensionUnit"=>"CM",
-            "invoiceValue"=>1,
-            "invoiceCurrency"=>"EUR",
-            "pickupType"=>"",
-            "authorityToLeave"=>"",
-            "lockerService"=>"",
-            "batteryType"=>"Lithium Ion Polymer",
-            "batteryPacking"=>"Inside Equipment",
-            "dangerousGoods"=>"false",
-            "serviceOption"=>"",
-            "instruction"=>"",
-            "facility"=>"",
-            "platform"=>"",
-            "recipientName"=>"RohitPatel",
-            "recipientCompany"=>"RohitPatel",
-            "phone"=>"0433813492",
-            "email"=>"prohit9@yahoo.com",
-            "addressLine1"=>"71 Clayhill Drive ",
-            "addressLine2"=>"",
-            "addressLine3"=>"",
-            "city"=>"Yate, Bristol",
-            "state"=>"Yate, Bristol",
-            "postcode"=>"BS37 7DA",
-            "country"=>"GB",
-            "shipperName"=>"",
-            "shipperPhone"=>"",
-            "shipperAddressLine1"=>"",
-            "shipperAddressLine2"=>"",
-            "shipperAddressLine3"=>"",
-            "shipperCity"=>"",
-            "shipperState"=>"",
-            "shipperPostcode"=>"",
-            "shipperCountry"=>"",
-            "returnOption"=>"",
-            "returnName"=>"",
-            "returnAddressLine1"=>"",
-            "returnAddressLine2"=>"",
-            "returnAddressLine3"=>"",
-            "returnCity"=>"",
-            "returnState"=>"",
-            "returnPostcode"=>"",
-            "returnCountry"=>"",
-            "abnnumber"=>"",
-            "gstexemptioncode"=>"",
-            "orderItems"=>[
-               [
-                  "itemNo"=>"283856695918",
-                  "sku"=>"S8559024940",
-                  "description"=>"smartwristband",
-                  "nativeDescription"=>"智能手环",
-                  "hsCode"=>"",
-                  "originCountry"=>"CN",
-                  "itemCount"=>"1",
-                  "unitValue"=>1,
-                  "warehouseNo"=>"",
-                  "productURL"=>"",
-                  "weight"=>"0.020"
-               ]
+   public function getRequestBody($order) {
+
+      if($order->measurement_unit == "lbs/in") {
+         $uom = "LB";
+      } else {
+         $uom = "KG";
+      }
+     
+     $packet = 
+         [ 
+            [
+               //Parcel Information
+               'referenceNo' => ($order->customer_reference) ? $order->customer_reference : '',
+               'trackingNo' => "",
+               'serviceCode' =>"",
+               'incoterm' => "DDU",
+               'weight'=> $order->weight,
+               'weightUnit' => $uom,
+               'length' => $order->length,
+               'width' => $order->width,
+               'height' => $order->height,
+               'invoiceValue' => $this->getParcelValue($order),
+               'invoiceCurrency' => "USD",
+               'facility'=> "EWR",
+               //Recipient Information
+               'recipientName' => $order->recipient->getFullName().' '.$order->warehouse_number,
+               'phone' => ($order->recipient->phone) ? $order->recipient->phone: '',
+               'email' => ($order->recipient->email) ? $order->recipient->email: '',
+               'addressLine1' => $order->recipient->address.' '.$order->recipient->street_no,
+               'addressLine2' => optional($order->recipient)->address2,
+               'city' => $order->recipient->city,
+               'state' => $order->recipient->state->code,
+               'postcode' => cleanString($order->recipient->zipcode),
+               'country' => $order->recipient->country->code,
+               //Shipper Information
+               'shipperName' => $order->getSenderFullName(),
+               'shipperPhone' => ($order->sender_phone) ? $order->sender_phone : '',
+               'shipperAddressLine1' => "2200 NW 129TH AVE",
+               'shipperCity' => "Miami",
+               'shipperState' => "FL",
+               'shipperPostcode' => "33182",
+               'shipperCountry' => "US",
+               //Parcel Items Information
+               'orderItems' => $this->setItemsDetails($order)
             ],
-            "extendData"=>[
-               "agentID"=>"TEST",
-               "vendorid"=>"GB123456789",
-               "platformorderno"=>"123456",
-               "injectPort"=>"YUL"
-            ] 
-            ];
+         ];
+      return $packet;
+   }
 
-}
+   private function setItemsDetails($order)
+   {
+        $items = [];
+        $singleItemWeight = UnitsConverter::kgToGrams($this->calulateItemWeight($order));
+        
+        if (count($order->items) >= 1) {
+            foreach ($order->items as $key => $item) {
+                $itemToPush = [];
+                $originCountryCode = optional($order->senderCountry)->code;
+                $itemToPush = [
+                    'description' => $item->description,
+                    'hsCode' => $item->sh_code,
+                    'originCountry' => $originCountryCode ? $originCountryCode: 'US',
+                    'itemCount' => (int)$item->quantity,
+                    'unitValue' => number_format($item->value * (int)$item->quantity , 2),
+                    'warehouseNo' => ($order->warehouse_number) ? $order->warehouse_number : '',
+                ];
+               array_push($items, $itemToPush);
+            }
+        }
+
+        return $items;
+   }
+
+   private function calulateItemWeight($order)
+   {
+        $orderTotalWeight = ($this->chargableWeight != null) ? (float)$this->chargableWeight : (float)$order->weight;
+        $itemWeight = 0;
+        if (count($order->items) > 1) {
+            $itemWeight = $orderTotalWeight / count($order->items);
+            return $itemWeight;
+        }
+        return $orderTotalWeight;
+   }
+
+   private function getParcelValue($order)
+   {
+      $value = 0;
+      foreach ($order->items as $key => $item) {
+         $value = number_format($item->value * (int)$item->quantity , 2);
+      }
+      return $value;
+   }
 }
