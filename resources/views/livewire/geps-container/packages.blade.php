@@ -63,7 +63,7 @@
             @if($editMode == true)
             <tr>
                 <td colspan="8">
-                    <input type="text" wire:model.debounce.500ms="barcode" class="w-100 text-center" style="height:50px;font-size:30px;">
+                    <input type="text" wire:model.debounce.500ms="barcode" class="w-100 text-center" style="height:50px;font-size:30px;" id="scan">
                 </td>
             </tr>
             @endif
