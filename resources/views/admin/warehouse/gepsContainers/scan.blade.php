@@ -74,17 +74,10 @@
         $("#gepsUpload").click(function(){
             $("#uploadModal").modal('show');
         });
+        $("#scan").focus();
+    });
+    window.addEventListener('scan-focus', event => {
+        $("#scan").focus();
     });
 </script>
 @endsection
-@push('js')
-    <script src="{{ asset('js/pages/scanner.js') }}"></script>
-    <script>
-        $(document).ready(function() {
-            $("#scan").focus();
-        });
-        window.addEventListener('scan-focus', event => {
-            $("#scan").focus();
-        });
-    </script>
-@endpush
