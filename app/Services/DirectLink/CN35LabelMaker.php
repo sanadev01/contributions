@@ -1,6 +1,6 @@
 <?php 
 
-namespace App\Services\GePS;
+namespace App\Services\DirectLink;
 
 use App\Services\Correios\Contracts\HasLableExport;
 

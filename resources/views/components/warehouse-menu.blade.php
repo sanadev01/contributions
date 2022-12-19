@@ -50,6 +50,12 @@
                     <span class="menu-title">@lang('menu.Warehouse.GePS Containers')</span>
                 </a>
             </li>
+            <li class="{{ $isActive(['warehouse.directlink_containers.index','warehouse.directlink_containers.create','warehouse.directlink_containers.edit','warehouse.directlink_container.packages.index']) }}">
+                <a href="{{ route('warehouse.directlink_containers.index') }}">
+                    <i class="feather icon-circle"></i>
+                    <span class="menu-title">@lang('menu.Warehouse.Direct Link Containers')</span>
+                </a>
+            </li>
             <li class="#">
                 <a href="{{ route('warehouse.unitinfo.create') }}">
                     <i class="feather icon-circle"></i>

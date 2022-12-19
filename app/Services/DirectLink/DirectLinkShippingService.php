@@ -1,11 +1,11 @@
 <?php
-namespace App\Services\GePS;
+namespace App\Services\DirectLink;
 
 use App\Models\Order;
 use App\Models\ShippingService;
 
 
-class GePSShippingService
+class DirectLinkShippingService
 {
     private $order;
     private $weight;
@@ -27,7 +27,7 @@ class GePSShippingService
 
     public function isAvailableFor($shippingService)
     {
-        if(($shippingService->service_sub_class == ShippingService::GePS || $shippingService->service_sub_class == ShippingService::GePS_EFormat) && $this->weight <= $shippingService->max_weight_allowed)
+        if(($shippingService->service_sub_class == ShippingService::Direc_tLink) && $this->weight <= $shippingService->max_weight_allowed)
         {
             return true;
         }
@@ -35,7 +35,7 @@ class GePSShippingService
 
     public function isAvailableForInternational($shippingService)
     {
-        if(($shippingService->service_sub_class == ShippingService::GePS || $shippingService->service_sub_class == ShippingService::GePS_EFormat) && $this->weight <= $shippingService->max_weight_allowed)
+        if(($shippingService->service_sub_class == ShippingService::Direc_tLink) && $this->weight <= $shippingService->max_weight_allowed)
         {
             return true;
         }

@@ -30,6 +30,8 @@ class ShippingOrder {
                'height' => $order->height,
                'invoiceValue' => $this->getParcelValue($order),
                'invoiceCurrency' => "USD",
+               'batteryType' => "",
+               'batteryPacking' => "",
                'facility'=> "EWR",
                //Recipient Information
                'recipientName' => $order->recipient->getFullName().' '.$order->warehouse_number,

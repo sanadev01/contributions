@@ -16,20 +16,17 @@ class DirectLinkLabelRepository
     public function get(Order $order)
     { 
         if ($order->getCN23() ){
-            return true;
+            return $this->printLabel($order);
         }
-
         return $this->update($order);
     }
 
     public function update(Order $order)
     {
         $cn23 = $this->generateLabel($order);
-
-        if ( $cn23 ){
+        if ($cn23){
             $this->printLabel($order);
         }
-
         return null;
     }
 
@@ -37,9 +34,9 @@ class DirectLinkLabelRepository
     {
         if($order->api_response)
         {
-            $geps_response = json_decode($order->api_response);
-            $base64_pdf = $geps_response->shipmentresponse->label;
-            Storage::put("labels/{$order->corrios_tracking_code}.pdf", base64_decode($base64_pdf));
+            $response = json_decode($order->api_response);
+            $base64Pdf = $response->data[0]->labelContent;
+            Storage::put("labels/{$order->corrios_tracking_code}.pdf", base64_decode($base64Pdf));
 
             return true;
         }
@@ -48,13 +45,11 @@ class DirectLinkLabelRepository
     protected function generateLabel(Order $order)
     {
         $client = new Client();
-        //dd($order);
         $data = $client->createPackage($order);
         if ( $data instanceof PackageError){
             $this->error = $data->getErrors();
             return null;
         }
-
         return $data;
     }
 
