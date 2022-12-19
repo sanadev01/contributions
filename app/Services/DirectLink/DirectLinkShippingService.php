@@ -27,7 +27,7 @@ class DirectLinkShippingService
 
     public function isAvailableFor($shippingService)
     {
-        if(($shippingService->service_sub_class == ShippingService::Direc_tLink) && $this->weight <= $shippingService->max_weight_allowed)
+        if(($shippingService->service_sub_class == ShippingService::Direct_Link) && $this->weight <= $shippingService->max_weight_allowed)
         {
             return true;
         }
@@ -35,7 +35,7 @@ class DirectLinkShippingService
 
     public function isAvailableForInternational($shippingService)
     {
-        if(($shippingService->service_sub_class == ShippingService::Direc_tLink) && $this->weight <= $shippingService->max_weight_allowed)
+        if(($shippingService->service_sub_class == ShippingService::Direct_Link) && $this->weight <= $shippingService->max_weight_allowed)
         {
             return true;
         }

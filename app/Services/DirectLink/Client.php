@@ -71,76 +71,44 @@ class Client{
 
     public function createPackage($order)
     {   
-        $shippingRequest = (new ShippingOrder())->getRequestBody($order); 
+        $shippingRequest = (new ShippingOrder())->getRequestBody($order);
         try {
             $curl = curl_init();
             curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://qa.etowertech.com/services/shipper/orders',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS =>json_encode($shippingRequest),
-            CURLOPT_HTTPHEADER => array(
-                'Host: qa.etowertech.com',
-                'Authorization: WallTech testa0wXdbpML6JGQ7NRP3O:vfxTydw2K3U5CZ6WgQdGwzpKH7Y=',
-                'X-WallTech-Date: Mon, 19 Dec 2022 12:17:54 GMT',
-                'Accept: application/json',
-                'Content-Type: application/json'
-            ),
+                CURLOPT_URL => 'http://qa.etowertech.com/services/shipper/orderLabels',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => json_encode($shippingRequest),
+                CURLOPT_HTTPHEADER => array(
+                    'Host: qa.etowertech.com',
+                    'Authorization: WallTech testa0wXdbpML6JGQ7NRP3O:S5wsMlzUa666qI584TvS-53OTqo=',
+                    'X-WallTech-Date: Mon, 19 Dec 2022 18:29:12 GMT',
+                    'Accept: application/json',
+                    'Content-Type: application/json'
+                ),
             ));
             $response = curl_exec($curl);
             curl_close($curl);
             $data = json_decode($response);
-            
             if($data->status == "Success") {
                 $trackingNumber = $data->data[0]->trackingNo;
                 if ($trackingNumber){
-                    $labelRequest = ['orderIds' => [$trackingNumber], 'labelType' => 1, 'packingList' => false, 'merged' => false, 'labelFormat' => "PDF"]; 
-                    $curl = curl_init();
-                    curl_setopt_array($curl, array(
-                    CURLOPT_URL => 'http://qa.etowertech.com/services/shipper/labels',
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => '',
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 0,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => 'POST',
-                    CURLOPT_POSTFIELDS =>json_encode($labelRequest),
-                    CURLOPT_HTTPHEADER => array(
-                        'Host: qa.etowertech.com',
-                        'Authorization: WallTech testa0wXdbpML6JGQ7NRP3O:UKedLbzF1Rz-gsxszWA2xIIpwrc=',
-                        'X-WallTech-Date: Mon, 19 Dec 2022 12:17:01 GMT',
-                        'Accept: application/json',
-                        'Content-Type: application/json'
-                    ),
-                    ));
-                    $labelResponse = curl_exec($curl);
-                    curl_close($curl);
-                    $labelData = json_decode($labelResponse);
-                    
-                    if($labelData->status == "Success") {
-                        if ($labelData->data[0]->labelContent){
-                            $order->update([
-                                'corrios_tracking_code' => $trackingNumber,
-                                'api_response' => json_encode($labelData),
-                                'cn23' => [
-                                    "tracking_code" => $trackingNumber,
-                                    "stamp_url" => route('warehouse.cn23.download',$order->id),
-                                    'leve' => false
-                                ],
-                            ]);
-                            // store order status in order tracking
-                            return $this->addOrderTracking($order);
-                        }
-                    }
-                    if($labelData->status == "Failure") {
-                        return new PackageError("Error while printing label. Code: ".$data->errors[0]->code.' Description: '.$data->errors[0]->message);
-                    }
+                    $order->update([
+                        'corrios_tracking_code' => $trackingNumber,
+                        'api_response' => json_encode($data),
+                        'cn23' => [
+                            "tracking_code" => $trackingNumber,
+                            "stamp_url" => route('warehouse.cn23.download',$order->id),
+                            'leve' => false
+                        ],
+                    ]);
+                    // store order status in order tracking
+                    return $this->addOrderTracking($order);
                 }
             }
             if($data->status == "Failure") {
@@ -167,104 +135,6 @@ class Client{
         }
 
         return true;
-    }
-
-    public function registerDeliveryBillGePS(DeliveryBill $deliveryBill)
-    {
-        $manifest = [
-            'manifest' => [
-                'manifestnbr' => "HD".'-'.$deliveryBill->containers[0]->destination_operator_name.''.$deliveryBill->containers[0]->id,
-            ],
-        ];
-        try {
-            $response = $this->client->post('https://globaleparcel.com/api.aspx',[
-                'headers' => $this->getKeys(),
-                'json' => $manifest,
-                ]);
-            $data = json_decode($response->getBody()->getContents());
-            if (isset($data->err)) {
-                return [
-                    'success' => false,
-                    'message' => $data->err ?? 'Something Went Wrong! Please Try Again..',
-                    'data' => null
-                ];
-            }
-
-            return [
-                'success' => true,
-                'data' => $data
-            ];
-        }catch (\GuzzleHttp\Exception\ClientException $e) {
-            return new PackageError($e->getResponse()->getBody()->getContents());
-        }
-        catch (\Exception $exception){
-            return new PackageError($exception->getMessage());
-        }
-    }
-
-    public function downloadGePSManifest(DeliveryBill $deliveryBill)
-    {
-        $manifest = [
-            'manifest' => [
-                'manifestnbr' => "HD".'-'.$deliveryBill->containers[0]->destination_operator_name.''.$deliveryBill->containers[0]->id,
-            ],
-        ];
-        try {
-            $response = $this->client->post('https://globaleparcel.com/api.aspx',[
-                'headers' => $this->getKeys(),
-                'json' => $manifest,
-                ]);
-            $data = json_decode($response->getBody()->getContents());
-            if (isset($data->err)) {
-                return [
-                    'success' => false,
-                    'message' => $data->err ?? 'Something Went Wrong! Please Try Again..',
-                    'data' => null
-                ];
-            }
-
-            return [
-                'success' => true,
-                'data' => $data
-            ];
-        }catch (\GuzzleHttp\Exception\ClientException $e) {
-            return new PackageError($e->getResponse()->getBody()->getContents());
-        }
-        catch (\Exception $exception){
-            return new PackageError($exception->getMessage());
-        }
-    }
-
-    public function cancelShipment($trackCode)
-    {
-        $cancelRequest = [
-            'cancelshipment' => [
-                'tracknbr' => $trackCode
-            ],
-        ];
-        try {
-            $response = $this->client->post('https://globaleparcel.com/api.aspx',[
-                'headers' => $this->getKeys(),
-                'json' => $cancelRequest,
-                ]);
-            $data = json_decode($response->getBody()->getContents());
-            if (isset($data->err)) {
-                return [
-                    'success' => false,
-                    'message' => $data->err ?? 'Something Went Wrong! Please Try Again..',
-                    'data' => null
-                ];
-            }
-            return [
-                'success' => true,
-                'data' => $data
-            ];
-        }catch (\GuzzleHttp\Exception\ClientException $e) {
-            return new PackageError($e->getResponse()->getBody()->getContents());
-        }
-        catch (\Exception $exception){
-            return new PackageError($exception->getMessage());
-        }
     }
 
 }

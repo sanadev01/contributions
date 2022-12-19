@@ -33,8 +33,6 @@ class DirectLinkCN35DownloadController extends Controller
                      ->setWeight($container->getWeight())
                      ->setItemsCount($container->getPiecesCount())
                      ->setUnitCode($container->getUnitCode());
-
         return $cn35Maker->download();
-        
     }
 }

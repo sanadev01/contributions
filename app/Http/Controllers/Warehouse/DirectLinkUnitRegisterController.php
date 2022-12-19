@@ -18,7 +18,7 @@ class DirectLinkUnitRegisterController extends Controller
         }
 
         $date = date('YmdHis', strtotime(Carbon::now()));
-        $code = "GPHD".''.$date;
+        $code = "DLHD".''.$date;
 
         $container->update([
             'unit_code' => $code,

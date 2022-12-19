@@ -38,7 +38,7 @@ class CN35LabelMaker implements HasLableExport
         return $this;
     }
 
-    public function setService(int $service)
+    public function setService($service)
     {
         $this->service = $service;
 

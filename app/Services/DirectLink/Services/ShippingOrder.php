@@ -17,42 +17,46 @@ class ShippingOrder {
      
      $packet = 
          [ 
-            [
-               //Parcel Information
-               'referenceNo' => ($order->customer_reference) ? $order->customer_reference : '',
-               'trackingNo' => "",
-               'serviceCode' =>"",
-               'incoterm' => "DDU",
-               'weight'=> $order->weight,
-               'weightUnit' => $uom,
-               'length' => $order->length,
-               'width' => $order->width,
-               'height' => $order->height,
-               'invoiceValue' => $this->getParcelValue($order),
-               'invoiceCurrency' => "USD",
-               'batteryType' => "",
-               'batteryPacking' => "",
-               'facility'=> "EWR",
-               //Recipient Information
-               'recipientName' => $order->recipient->getFullName().' '.$order->warehouse_number,
-               'phone' => ($order->recipient->phone) ? $order->recipient->phone: '',
-               'email' => ($order->recipient->email) ? $order->recipient->email: '',
-               'addressLine1' => $order->recipient->address.' '.$order->recipient->street_no,
-               'addressLine2' => optional($order->recipient)->address2,
-               'city' => $order->recipient->city,
-               'state' => $order->recipient->state->code,
-               'postcode' => cleanString($order->recipient->zipcode),
-               'country' => $order->recipient->country->code,
-               //Shipper Information
-               'shipperName' => $order->getSenderFullName(),
-               'shipperPhone' => ($order->sender_phone) ? $order->sender_phone : '',
-               'shipperAddressLine1' => "2200 NW 129TH AVE",
-               'shipperCity' => "Miami",
-               'shipperState' => "FL",
-               'shipperPostcode' => "33182",
-               'shipperCountry' => "US",
-               //Parcel Items Information
-               'orderItems' => $this->setItemsDetails($order)
+            'labelFormat' => "PDF",
+            'labelType' => 1,
+            'orders' => [
+               [
+                  //Parcel Information
+                  'referenceNo' => ($order->customer_reference) ? $order->customer_reference : '',
+                  'trackingNo' => "",
+                  'serviceCode' =>"",
+                  'incoterm' => "DDU",
+                  'weight'=> $order->weight,
+                  'weightUnit' => $uom,
+                  'length' => $order->length,
+                  'width' => $order->width,
+                  'height' => $order->height,
+                  'invoiceValue' => $this->getParcelValue($order),
+                  'invoiceCurrency' => "USD",
+                  'batteryType' => "",
+                  'batteryPacking' => "",
+                  'facility'=> "EWR",
+                  //Recipient Information
+                  'recipientName' => $order->recipient->getFullName().' '.$order->warehouse_number,
+                  'phone' => ($order->recipient->phone) ? $order->recipient->phone: '',
+                  'email' => ($order->recipient->email) ? $order->recipient->email: '',
+                  'addressLine1' => $order->recipient->address.' '.$order->recipient->street_no,
+                  'addressLine2' => optional($order->recipient)->address2,
+                  'city' => $order->recipient->city,
+                  'state' => $order->recipient->state->code,
+                  'postcode' => cleanString($order->recipient->zipcode),
+                  'country' => $order->recipient->country->code,
+                  //Shipper Information
+                  'shipperName' => $order->getSenderFullName(),
+                  'shipperPhone' => ($order->sender_phone) ? $order->sender_phone : '',
+                  'shipperAddressLine1' => "2200 NW 129TH AVE",
+                  'shipperCity' => "Miami",
+                  'shipperState' => "FL",
+                  'shipperPostcode' => "33182",
+                  'shipperCountry' => "US",
+                  //Parcel Items Information
+                  'orderItems' => $this->setItemsDetails($order)
+               ],
             ],
          ];
       return $packet;
