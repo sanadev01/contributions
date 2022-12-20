@@ -42,8 +42,8 @@ class Client{
     {
         return [
             'Host'=> $this->host,
-            'X-WallTech-Date' => 'Tue, 20 Dec 2022 14:45:35 GMT',
-            'Authorization' => 'WallTech testa0wXdbpML6JGQ7NRP3O:7Ocs7C1U70CKJdjGcDt85fNtQQk=',
+            'X-WallTech-Date' => 'Tue, 20 Dec 2022 19:21:56 GMT',
+            'Authorization' => 'WallTech testa0wXdbpML6JGQ7NRP3O:tQ3_LcMlDhGBBxCVynLyMworNw4=',
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
         ]; 
@@ -96,6 +96,31 @@ class Client{
         }
 
         return true;
+    }
+
+    public function deleteOrder($orderId)
+    {
+        try {
+
+            $response = Http::withHeaders($this->getHeader())->delete("http://qa.etowertech.com/services/shipper/order/{$orderId}");
+            $data = json_decode($response);
+            if ($data->status == "Failure") {
+                return [
+                    'success' => false,
+                    'message' => "Error while shipment cancellation. Code: ".$data->errors[0]->code.' Description: '.$data->errors[0]->message,
+                    'data' => null
+                ];
+            }
+            return [
+                'success' => true,
+                'data' => $data
+            ];
+        }catch (\GuzzleHttp\Exception\ClientException $e) {
+            return new PackageError($e->getResponse()->getBody()->getContents());
+        }
+        catch (\Exception $exception){
+            return new PackageError($exception->getMessage());
+        }
     }
 
 }
