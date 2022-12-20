@@ -183,6 +183,7 @@ return [
         'buy-usps-label' => 'Comprar Etiqueta USPS',
         'print-usps-label' => 'Imprimir Etiqueta USPS',
         'view-products' => 'Ver productos',
+        'cancel' => 'Cancelar etiqueta',
     ],
     'create' => [
         'shipment-and-destination' => 'Envío & Destino',

@@ -7,6 +7,7 @@ use App\Models\Warehouse\Container;
 use App\Models\Warehouse\DeliveryBill;
 use App\Services\StoreIntegrations\Shopify;
 use App\Http\Controllers\Admin\HomeController;
+use App\Services\Correios\Services\Brazil\Client;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
@@ -94,6 +95,8 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('orders.ups-label', OrderUPSLabelController::class)->only('index','store');
             Route::get('order-ups-label-cancel-pickup/{id?}', [\App\Http\Controllers\Admin\Order\OrderUPSLabelController::class, 'cancelUPSPickup'])->name('order.ups-label.cancel.pickup');
         });
+        //Cancel Lable Route for GePS
+        Route::get('order/{order}/cancel-label', [\App\Http\Controllers\Admin\Order\OrderLabelController::class, 'cancelLabel'])->name('order.label.cancel');
 
         Route::namespace('Consolidation')->prefix('consolidation')->as('consolidation.')->group(function(){
             Route::resource('parcels',SelectPackagesController::class)->only('index','store','edit','update');
@@ -193,6 +196,8 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('scan', PrintLabelController::class)->only('create','show','store','update');
         });
 
+        Route::resource('liability', Deposit\LiabilityController::class)->only('create','store','index');
+        
         Route::resource('deposit', Deposit\DepositController::class)->only('create','store','index');
         Route::get('download-deposit-attachment/{attachment?}', [DepositController::class,'downloadAttachment'])->name('download_attachment');
         Route::get('view-deposit-description/{deposit?}', [DepositController::class,'showDescription'])->name('deposit.description');
@@ -280,37 +285,7 @@ Route::get('order/apiresponse/{id?}',function($id){
 });
 
 Route::get('truncate-response/{id?}',function($id){
-    $codes = [
-        'NA704953205BR',
-        'NA726620116BR',
-        'NA726485141BR',
-        'NA726523905BR',
-        'NA726703907BR',
-        'NA704966115BR',
-        'NA726294337BR',
-        'NA726610808BR',
-        'NA726486399BR',
-        'NA726541965BR',
-        'NA726354804BR',
-        'NA726546089BR',
-        'NA726308583BR',
-        'NA726449555BR',
-        'NA726328954BR',
-        'NA722623678BR',
-        'NA726435278BR',
-        'NA726518499BR',
-        'NA726606026BR',
-        'NA726475436BR',
-        'NA726436579BR',
-        'NA702041934BR',
-        'NA726313075BR',
-        'NA726411532BR',
-        'NA726498370BR',
-        'NA726533350BR',
-        'NA726500285BR',
-        'NA726657650BR',
-        'LX114492909JE',
-    ];
+    $codes = [];
     foreach($codes as $code) {
         $order = DB::table('orders')->where('corrios_tracking_code', $code)->update([
             'corrios_tracking_code' => null,
@@ -319,6 +294,23 @@ Route::get('truncate-response/{id?}',function($id){
         ]);
     }
     return "API Response and Tracking Codes Truncated";
+});
+
+Route::get('container-update/{id?}/d/{dno?}/unit/{unit?}',function($id, $dNo, $unit){
+
+    $container = Container::find($id)->update([
+        'dispatch_number' => $dNo,
+        'unit_code' => $unit
+    ]);
+    return "Container Updated Successfully";
+});
+
+Route::get('dbill-update/{id?}/cn38/{cNo?}',function($id, $cNo){
+
+    $delivery = DeliveryBill::find($id)->update([
+        'cnd38_code' => $cNo
+    ]);
+    return "Delivery Bill CN38 Updated";
 });
 
 Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container');

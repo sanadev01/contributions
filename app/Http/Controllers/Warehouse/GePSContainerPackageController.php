@@ -101,4 +101,11 @@ class GePSContainerPackageController extends Controller
             \Log::info($ex);
         }
     }
+
+    public function uploadBulkTracking(Request $request, $id)
+    {
+        $geps_containerPackageRepository = new GePSContainerPackageRepository();
+
+        return $geps_containerPackageRepository->addTrackings($request, $id);
+    }
 }

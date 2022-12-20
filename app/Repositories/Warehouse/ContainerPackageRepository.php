@@ -8,6 +8,7 @@ use App\Models\OrderTracking;
 use App\Models\Warehouse\Container;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\AbstractRepository;
+use App\Services\Correios\Services\Brazil\Client;
 use App\Http\Resources\Warehouse\Container\PackageResource;
 
 class ContainerPackageRepository extends AbstractRepository{
@@ -31,10 +32,28 @@ class ContainerPackageRepository extends AbstractRepository{
             return null;
         }
     }
-
+    
     public function addOrderToContainer(Container $container,string $barcode)
     {
         $subString = (strtolower(substr($barcode,0,2)) == 'na') ? 'nx' : strtolower(substr($barcode,0,2));
+        
+        $containerOrder = $container->orders->first();
+        if($containerOrder){
+            $client = new Client();
+            $newResponse = $client->getModality($barcode);
+            $oldResponse = $client->getModality($containerOrder->corrios_tracking_code);
+            if($newResponse != $oldResponse){
+                return [
+                    'order' => [
+                        'corrios_tracking_code' => $barcode,
+                        'error' => 'Order Service is changed. Please Check Packet Service',
+                        'code' => 404
+                    ],
+                ];
+            }
+        }
+
+        
 
         if(strtolower($container->getSubClassCode())  != $subString){
             return [
@@ -45,7 +64,6 @@ class ContainerPackageRepository extends AbstractRepository{
                 ],
             ];
         }
-        $containerOrder = $container->orders->first();
         $order          = Order::where('corrios_tracking_code',strtoupper($barcode))->first();
 
         if (!$order) {

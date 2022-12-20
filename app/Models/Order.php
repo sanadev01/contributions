@@ -353,14 +353,9 @@ class Order extends Model implements Package
 
                 return 'Correios Chile';
 
-            }elseif(optional($this->shippingService)->service_sub_class == ShippingService::GePS){
+            }elseif(optional($this->shippingService)->service_sub_class == ShippingService::GePS || optional($this->shippingService)->service_sub_class == ShippingService::GePS_EFormat){
 
-                return 'GePS Prime';
-
-            }
-            elseif(optional($this->shippingService)->service_sub_class == ShippingService::GePS_EFormat){
-
-                return 'GePS Untracked';
+                return 'Global eParcel';
 
             }
             return 'Correios Brazil';

@@ -4,22 +4,23 @@ namespace App\Http\Controllers\Admin\Order;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use App\Services\GePS\Client;
 use App\Models\ShippingService;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Repositories\LabelRepository;
 use Illuminate\Support\Facades\Storage;
 use App\Repositories\UPSLabelRepository;
-use App\Repositories\USPSLabelRepository;
-use App\Repositories\CorrieosChileLabelRepository;
-use App\Repositories\CorrieosBrazilLabelRepository;
-use App\Repositories\FedExLabelRepository;
 use App\Repositories\GePSLabelRepository;
+use App\Repositories\USPSLabelRepository;
+use App\Repositories\FedExLabelRepository;
 
 /**
  * Use for Sinerlog integration
  */
 use App\Repositories\SinerlogLabelRepository;
-use Illuminate\Support\Facades\Log;
+use App\Repositories\CorrieosChileLabelRepository;
+use App\Repositories\CorrieosBrazilLabelRepository;
 
 class OrderLabelController extends Controller
 {
@@ -243,5 +244,24 @@ class OrderLabelController extends Controller
         $buttonsOnly = $request->has('buttons_only');
 
         return view('admin.orders.label.label',compact('order','error', 'renderLabel' ,'buttonsOnly'));
-    }    
+    }
+    
+    public function cancelLabel(Order $order)
+    {
+        $gepsClient = new Client();   
+        $response = $gepsClient->cancelShipment($order->corrios_tracking_code);
+        if (!$response['success']) {
+            session()->flash('alert-danger', $response['message']);
+            return back();
+        }
+        if($response['success']) {
+            $order->update([
+                'corrios_tracking_code' => null,
+                'cn23' => null,
+                'api_response' => null
+            ]);
+            session()->flash('alert-success','Shipment '.$response['data']->cancelshipmentresponse->tracknbr.' cancellation is successful. You can print new lable now.');
+            return back();
+        }
+    } 
 }
