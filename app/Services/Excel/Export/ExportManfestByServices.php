@@ -60,7 +60,8 @@ class ExportManfestByServices extends AbstractCsvExportService
             'USPS',
             'Fedex',
             'GePs',
-            'Carrier Tracking'
+            'Carrier Tracking',
+            'Marketplace'
         ];
     }
 
@@ -104,7 +105,8 @@ class ExportManfestByServices extends AbstractCsvExportService
                 $package->carrierService() == 'UPS'? 'UPS': '',
                 $package->carrierService() == 'FEDEX'? 'FEDEX': '',
                 $package->carrierService() == 'GePS'? 'GePS': '',
-                $package->tracking_id
+                $package->tracking_id,
+                setting('marketplace_checked', null, $package->user->id)?  setting('marketplace', null, $package->user->id):''
             ];
 
             $i=0;
@@ -149,6 +151,7 @@ class ExportManfestByServices extends AbstractCsvExportService
             $this->totalPaidToCorreios,
             $this->totalAnjunCommission,
             $this->totalCommission,
+            '',
             '',
             '',
             ''
