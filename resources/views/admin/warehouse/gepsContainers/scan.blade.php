@@ -18,6 +18,7 @@
                     <div class="card-content card-body">
                         <div class="mt-1">
                             <livewire:geps-container.packages :container="$container" :editMode="$editMode" :ordersCollection="$ordersCollection">
+                            <!-- <livewire:container-packages :container="$container" :editMode="$editMode" :ordersCollection="$ordersCollection"> -->
                         </div>
                     </div>
                 </div>

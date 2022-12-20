@@ -82,19 +82,16 @@ class OrderStatusController extends Controller
                 $order->update([
                     'status' => $request->status,
                 ]);
-
-                
+ 
                 return apiResponse(true,"Updated");
             }
             
             $order->update([
                 'status' => $request->status,
                 'is_paid' => $request->status >= Order::STATUS_PAYMENT_DONE ? true: false
-            ]);
-
+            ]); 
             //SendMailNotification
             $this->sendTransactionMail($deposit, $preStatus, $user);
-
 
             return apiResponse(true,"Updated");
         }
