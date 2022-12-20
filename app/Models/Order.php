@@ -384,7 +384,8 @@ class Order extends Model implements Package
                 optional($this->shippingService)->service_sub_class == ShippingService::UPS_GROUND ||
                 optional($this->shippingService)->service_sub_class == ShippingService::FEDEX_GROUND ||
                 optional($this->shippingService)->service_sub_class == ShippingService::GePS ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GePS_EFormat) {
+                optional($this->shippingService)->service_sub_class == ShippingService::GePS_EFormat ||
+                optional($this->shippingService)->service_sub_class == ShippingService::Direct_Link) {
 
                 return $this->user_declared_freight;
             }

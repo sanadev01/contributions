@@ -52,6 +52,10 @@ class AccrualRate extends Model
         if ( $this->service == Package::SERVICE_CLASS_GePS_EFormat ){
             return "Global eParcel Untracked Packet";
         }
+
+        if ( $this->service == Package::SERVICE_CLASS_Direct_Link ){
+            return "Direct Link";
+        }
         return '';
     }
 

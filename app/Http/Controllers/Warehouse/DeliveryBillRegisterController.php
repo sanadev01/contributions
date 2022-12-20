@@ -45,7 +45,14 @@ class DeliveryBillRegisterController extends Controller
                 'cnd38_code' => $cn38
             ]);
             // Storage::put("labels/{$cn38}.pdf", base64_decode($manifest_pdf));
-        }else {
+        } elseif($deliveryBill->isDirectLink())  {
+            $date = date('ymd i', strtotime(Carbon::now()));
+            $deliveryBill->update([
+                'cnd38_code' => $date,
+                'request_id' => $deliveryBill->setRandomRequestId()
+            ]);
+
+        } else {
 
             $client = new Client();
             $response = $client->registerDeliveryBill($deliveryBill);

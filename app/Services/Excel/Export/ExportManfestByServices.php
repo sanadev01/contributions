@@ -60,6 +60,7 @@ class ExportManfestByServices extends AbstractCsvExportService
             'USPS',
             'Fedex',
             'GePs',
+            'Direct Link',
             'Carrier Tracking'
         ];
     }
@@ -104,6 +105,7 @@ class ExportManfestByServices extends AbstractCsvExportService
                 $package->carrierService() == 'UPS'? 'UPS': '',
                 $package->carrierService() == 'FEDEX'? 'FEDEX': '',
                 $package->carrierService() == 'GePS'? 'GePS': '',
+                $package->carrierService() == 'Direct Link'? 'Direct Link': '',
                 $package->tracking_id
             ];
 
@@ -161,7 +163,6 @@ class ExportManfestByServices extends AbstractCsvExportService
         $commission = false;
         $service  = $order->shippingService->service_sub_class;
         $rateSlab = AccrualRate::getRateSlabFor($order->getOriginalWeight('kg'),$service);
-
         if ( !$rateSlab ){
             return [
                 'airport'=> 0,

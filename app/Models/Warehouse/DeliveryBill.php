@@ -2,6 +2,7 @@
 
 namespace App\Models\Warehouse;
 
+use App\Models\ShippingService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -45,9 +46,34 @@ class DeliveryBill extends Model
         return $weight;
     }
 
+    /**
+     * generate random cnd38_code
+     * @return string
+     */
+    public function setRandomCN38Code()
+    {
+        return $this->id.random_int(1000, 9999);
+    }
+
+    /**
+     * generate random string
+     * @return string
+     */
+    public function setRandomRequestId()
+    {
+        return str_random(8).'-'.str_random(4).'-'.str_random(4).'-'.str_random(4).'-'.str_random(12);
+    }
+
     public function isGePS()
     {
-        if($this->containers->first()->services_subclass_code == '537'){
+        if($this->containers->first()->services_subclass_code == ShippingService::GePS){
+            return true;
+        }
+    }
+
+    public function isDirectLink()
+    {
+        if($this->containers->first()->services_subclass_code == ShippingService::Direct_Link){
             return true;
         }
     }
