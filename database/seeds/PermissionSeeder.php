@@ -448,6 +448,11 @@ class PermissionSeeder extends Seeder
                 'group' => 'Reports',
                 'description' => 'User can see Anjun Reports'
             ],
+            [
+                'slug' => 'print-corrieos-label',
+                'group' => 'Order',
+                'description' => 'User can print corrieous label'
+            ],
         ];
     }
 }

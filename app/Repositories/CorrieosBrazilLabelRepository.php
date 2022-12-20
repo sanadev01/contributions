@@ -9,6 +9,7 @@ use App\Services\Converters\UnitsConverter;
 use App\Services\Correios\Models\PackageError;
 use App\Services\Correios\Services\Brazil\Client;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
+use Illuminate\Support\Facades\Gate;
 
 class CorrieosBrazilLabelRepository
 {
@@ -45,7 +46,12 @@ class CorrieosBrazilLabelRepository
     }
 
     protected function generateLabel(Order $order)
-    {
+    { 
+        $response = Gate::inspect('canPrintCorrieosLabel',Order::class);
+        if (!$response->allowed()){ 
+          $this->error = 'Something went wrong in Correios API Please wait...';
+          return null;
+        }
         $client = new Client();
         $data = $client->createPackage($order);
         if ( $data instanceof PackageError){
