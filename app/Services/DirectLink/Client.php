@@ -19,81 +19,42 @@ use App\Services\DirectLink\Services\ShippingOrder;
 class Client{
 
     //direct link parameters
-    protected $base_url;
-    protected $orderUrl;
-    protected $labelUrl; 
-    protected $host; 
-    protected $token;
-    protected $date_time;
+    protected $host;
+    protected $orderLabelUrl;
     //direct link parameters end
-
     protected $client;
-    
-    protected $chargableWeight;
 
     public function __construct()
     {
         if(app()->isProduction()){
-            $this->base_url = config('direct_link.production.base_url');
-            $this->orderUrl = config('direct_link.production.orderUrl');
-            $this->labelUrl = config('direct_link.production.labelUrl');
-            $this->token = config('direct_link.production.token');
             $this->host = config('direct_link.production.host');
-            $this->date_time = config('direct_link.production.date_time');
+            $this->orderLabelUrl = config('direct_link.production.orderLabelUrl');
         }else{ 
-            
-            $this->base_url = config('direct_link.test.base_url');
-            $this->orderUrl = config('direct_link.test.orderUrl');
-            $this->labelUrl = config('direct_link.test.labelUrl');
-            $this->token = config('direct_link.test.token');
             $this->host = config('direct_link.test.host');
-            $this->date_time = config('direct_link.test.date_time');
+            $this->orderLabelUrl = config('direct_link.test.orderLabelUrl');
         }
 
-        $this->client = new GuzzleClient(['base_uri' => $this->base_url]);
+        $this->client = new GuzzleClient();
 
     }
 
     private function getHeader()
     {
         return [
-            'Host' => "qa.etowertech.com",
-            'X-WallTech-Date '=> "Fri, 16 Dec 2022 18:38:45 GMT",
-            'Authorization' => "WallTech testa0wXdbpML6JGQ7NRP3O:yWUH6sTKY3tDqfRMhnNZIWIVY6c=",
-            'Content-Type' => "application/json",
-            'Accept' => "application/json",
+            'Host'=> $this->host,
+            'X-WallTech-Date' => 'Tue, 20 Dec 2022 14:45:35 GMT',
+            'Authorization' => 'WallTech testa0wXdbpML6JGQ7NRP3O:7Ocs7C1U70CKJdjGcDt85fNtQQk=',
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
         ]; 
-    }
-
-    public function returnCurl($headers, $url, $resquestBody) {
-
     }
 
     public function createPackage($order)
     {   
         $shippingRequest = (new ShippingOrder())->getRequestBody($order);
         try {
-            $curl = curl_init();
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => 'http://qa.etowertech.com/services/shipper/orderLabels',
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => 'POST',
-                CURLOPT_POSTFIELDS => json_encode($shippingRequest),
-                CURLOPT_HTTPHEADER => array(
-                    'Host: qa.etowertech.com',
-                    'Authorization: WallTech testa0wXdbpML6JGQ7NRP3O:S5wsMlzUa666qI584TvS-53OTqo=',
-                    'X-WallTech-Date: Mon, 19 Dec 2022 18:29:12 GMT',
-                    'Accept: application/json',
-                    'Content-Type: application/json'
-                ),
-            ));
-            $response = curl_exec($curl);
-            curl_close($curl);
+
+            $response = Http::withHeaders($this->getHeader())->post('http://qa.etowertech.com/services/shipper/orderLabels', $shippingRequest);
             $data = json_decode($response);
             if($data->status == "Success") {
                 $trackingNumber = $data->data[0]->trackingNo;

@@ -2,6 +2,7 @@
 
 namespace App\Models\Warehouse;
 
+use Carbon\Carbon;
 use App\Models\ShippingService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
@@ -50,9 +51,9 @@ class DeliveryBill extends Model
      * generate random cnd38_code
      * @return string
      */
-    public function setRandomCN38Code()
+    public function setCN38Code()
     {
-        return $this->id.random_int(1000, 9999);
+        return $date = date('idmy', strtotime(Carbon::now()));
     }
 
     /**
