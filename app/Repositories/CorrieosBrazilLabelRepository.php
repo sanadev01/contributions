@@ -5,11 +5,11 @@ namespace App\Repositories;
 
 
 use App\Models\Order;
+use Illuminate\Support\Facades\Auth;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Correios\Models\PackageError;
 use App\Services\Correios\Services\Brazil\Client;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
-use Illuminate\Support\Facades\Gate;
 
 class CorrieosBrazilLabelRepository
 {
@@ -47,8 +47,7 @@ class CorrieosBrazilLabelRepository
 
     protected function generateLabel(Order $order)
     { 
-        $response = Gate::inspect('canPrintCorrieosLabel',Order::class);
-        if (!$response->allowed()){ 
+        if (Auth::user()->cannot('canPrintCorrieosLabel',Order::class)){ 
           $this->error = 'Something went wrong in Correios API Please wait...';
           return null;
         }
