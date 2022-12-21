@@ -16,31 +16,31 @@
             @foreach ($orders as $key => $order)
             <tr id="{{ $key }}">
                 <td>
-                    {{ $order->corrios_tracking_code }}
+                    {{ $order['corrios_tracking_code'] }}
                 </td>
                 <td>
-                    {{ $order->warehouse_number }}
+                    {{ $order['warehouse_number'] }}
                 </td>
                 <td>
-                    {{ $order->weight }} Kg
+                    {{ $order['weight'] }} Kg
                 </td>
                 <td>
-                    {{ $order->weight_lbs }} Lbs 
+                    {{ $order['weight_lbs'] }} Lbs 
                         <hr>
-                    {{ $order->weight_kg }} Kg
+                    {{ $order['weight_kg'] }} Kg
                 </td>
                 <td>
-                    {{ $order->pobox }}
+                    {{ $order['pobox'] }}
                 </td>
                 <td>
-                    {{ $order->sender_name }}
+                    {{ $order['sender_name'] }}
                 </td>
                 <td>
-                    {{ $order->customer_reference }}
+                    {{ $order['customer_reference'] }}
                 </td>
                 <td>
                     @if ($editMode == true)
-                        <button wire:click="removeOrder({{ $order->id }}, '{{$key}}')" class="btn btn-danger">
+                        <button wire:click="removeOrder({{ $order['id'] }}, '{{$key}}')" class="btn btn-danger">
                             Remove
                         </button>
                     @endif
@@ -51,7 +51,7 @@
                 <td colspan="8">
                     @if($error)
                     <div class="alert alert-danger" role="alert">
-                        {{$error}}
+                        {{ $error }}
                     </div>
                     @endif
                 </td>

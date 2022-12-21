@@ -23,12 +23,13 @@ class Packages extends Component
     public $containerDestination;
     public $orderRegion;
 
-    public function mount($container = null, $ordersCollection = null, $editMode = null)
+    public function mount($container = null, $orders = null, $editMode = null)
     {
         $this->container = $container;
         $this->error = '';
         $this->emit('scanFocus');
-        $this->orders = json_decode($ordersCollection);
+        $orders = collect($this->container->getOrdersCollections())->toArray();
+        $this->orders = $orders;
         $this->editMode = $editMode;
         $this->service = $container->getServiceSubClass();
         $this->containerDestination = $container->destination_operator_name == 'MIA' ? 'Miami' : '';
@@ -37,19 +38,19 @@ class Packages extends Component
     public function render()
     {
         //$this->getPackages($this->container->id);
-        $this->totalPackages();
-        $this->totalWeight();
+        $this->totalPackages($this->orders);
+        $this->totalWeight($this->orders);
 
         return view('livewire.geps-container.packages');
     }
 
-    public function getPackages($id)
-    {
-        $container = Container::find($id);
-        $ordersCollection = json_encode($container->getOrdersCollections());
-        return $this->orders = json_decode($ordersCollection);
+    // public function getPackages($id)
+    // {
+    //     $container = Container::find($id);
+    //     $ordersCollection = json_encode($container->getOrdersCollections());
+    //     return $this->orders = json_decode($ordersCollection);
         
-    }
+    // }
 
     public function updatedbarcode($barcode)
     {
@@ -102,11 +103,11 @@ class Packages extends Component
         return  $this->num_of_Packages = count($this->orders);
     }
       
-    public function totalWeight()
+    public function totalWeight($orders)
     {
         $weight = 0;
-        foreach ($this->orders as $order) {
-            $weight += $order->weight; 
+        foreach ($orders as $order) {
+            $weight += $order['weight']; 
         }
 
         return $this->totalweight = $weight;
