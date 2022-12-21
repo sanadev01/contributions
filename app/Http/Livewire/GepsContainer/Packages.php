@@ -7,6 +7,7 @@ use App\Models\Order;
 use Livewire\Component;
 use App\Models\OrderTracking;
 use App\Models\Warehouse\Container;
+use App\Repositories\Warehouse\GePSContainerPackageRepository;
 use App\Http\Controllers\Warehouse\GePSContainerPackageController;
 
 class Packages extends Component
@@ -16,16 +17,18 @@ class Packages extends Component
     public $editMode;
     public $barcode;
     public $service;
-    public $error;
+    public $error = '';
     public $num_of_Packages = 0;
     public $totalweight;
     public $containerDestination;
     public $orderRegion;
 
-    public function mount($container = null, $ordersCollection = null, $editMode = null)
+    public function mount($container = null, $orders = null, $editMode = null)
     {
         $this->container = $container;
-        $this->orders = json_decode($ordersCollection);
+        $this->error = '';
+        $this->emit('scanFocus');        
+        $this->orders = $this->container->orders;
         $this->editMode = $editMode;
         $this->service = $container->getServiceSubClass();
         $this->containerDestination = $container->destination_operator_name == 'MIA' ? 'Miami' : '';
@@ -33,88 +36,78 @@ class Packages extends Component
 
     public function render()
     {
-        $this->getPackages($this->container->id);
-        $this->totalPackages();
-        $this->totalWeight();
-
-        return view('livewire.geps-container.packages');
+        return view('livewire.geps-container.packages',[
+            'orders' => $this->getPackages($this->container->id),
+            'totalweight' => $this->totalWeight(),
+            'num_of_Packages' => $this->totalPackages()
+        ]);
     }
 
     public function getPackages($id)
     {
         $container = Container::find($id);
-        $ordersCollection = json_encode($container->getOrdersCollections());
-        return $this->orders = json_decode($ordersCollection);
-        
+        $this->container = $container;
+        return $this->orders = $container->orders;        
     }
 
     public function updatedbarcode($barcode)
     {
         if ( $barcode != null || $barcode != '' ||  strlen($barcode) > 4 ){
             $this->saveOrder();
+            $this->dispatchBrowserEvent('scan-focus');
         }
 
     }
 
     public function saveOrder()
     {
-        $geps_ContainerPackageController = new GePSContainerPackageController;
+        $this->getPackages($this->container->id);
         $order = Order::where('corrios_tracking_code', $this->barcode)->first();
-            if (!$order) {
-                return [
-                    'order' => [
-                        'corrios_tracking_code' => $this->barcode,
-                        'error' => 'Order Not Found.',
-                        'code' => 404
-                    ],
-                ];
-            }
-            
-            if(!$order->containers->isEmpty()) {
-    
-                $this->error = 'Order is already present in Container'; 
-                return $this->barcode = '';
-                
-            }
+        if (!$order) {
+            return $this->error = "Order Not Found $this->barcode";
+        }
 
-            if ($order->status < Order::STATUS_PAYMENT_DONE) {
-                return  $this->error = 'Please check the Order Status, either the order has been canceled, refunded or not yet paid';
-            }
-            if ($this->container->hasGePSService() && !$order->shippingService->isGePSService()) {
-                return  $this->error = 'Order does not belong to this container. Please Check Packet Service';
-            }
-    
-            if (!$this->container->hasGePSService() && $order->shippingService->isGePSService()) {
-                return  $this->error = 'Order does not belong to this container. Please Check Packet Service';
-            }
+        if($this->container->orders->where('corrios_tracking_code',$order->corrios_tracking_code)->first()) {
+            return $this->error = "Order is already present in Container $this->barcode";
+        }
+        if(!$order->containers->isEmpty()) {
+            return $this->error = "Order is already present in another Container $this->barcode";
+        }
 
-            $order = $geps_ContainerPackageController->store($this->container, $order);
+        if ($order->status != Order::STATUS_PAYMENT_DONE) {
+            return  $this->error = 'Please check the Order Status, either the order has been canceled, refunded or not yet paid';
+        }
 
-            $this->addOrderTracking($order);
-            $this->error = '';
-            return $this->barcode = ''; 
+        if ($this->container->hasGePSService() && !$order->shippingService->isGePSService()) {
+            return  $this->error = 'Order does not belong to this container. Please Check Packet Service';
+        }
+
+        if (!$this->container->hasGePSService() && $order->shippingService->isGePSService()) {
+            return  $this->error = 'Order does not belong to this container. Please Check Packet Service';
+        }
+
+        $gepsContainerPackageRepository = new GePSContainerPackageRepository;
+        $order = $gepsContainerPackageRepository->addOrderToContainer($this->container, $order);
+
+        $this->addOrderTracking($order);
+        $this->error = '';
+        return $this->barcode = ''; 
     }
 
-    public function removeOrder($id, $key)
+    public function removeOrder($id)
     {
-        $geps_ContainerPackageController = new GePSContainerPackageController;
-        $geps_ContainerPackageController->destroy($this->container, $id);
+        $gepsContainerPackageRepository = new GePSContainerPackageRepository;
+        $gepsContainerPackageRepository->removeOrderFromContainer($this->container, $id);
     }
 
     public function totalPackages()
     {
-        
         return  $this->num_of_Packages = count($this->orders);
     }
       
     public function totalWeight()
     {
-        $weight = 0;
-        foreach ($this->orders as $order) {
-            $weight += $order->weight; 
-        }
-
-        return $this->totalweight = $weight;
+        return $this->totalweight = $this->orders->sum('weight');
     }
 
     public function addOrderTracking($order)

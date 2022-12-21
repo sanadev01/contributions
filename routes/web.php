@@ -2,6 +2,11 @@
 
 use App\Models\Order;
 use App\Models\OrderTracking;
+use App\Models\Product;
+use App\Models\Country;
+use App\Models\Recipient;
+use App\Models\ProfitPackage;
+use App\Models\ShippingService;
 use Illuminate\Support\Facades\DB;
 use App\Models\Warehouse\Container;
 use App\Models\Warehouse\DeliveryBill;
@@ -22,7 +27,6 @@ use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 Route::get('/', function (Shopify $shopifyClient) {
     $shop = "https://".request()->shop;
     if (request()->has('shop') ) {
@@ -133,6 +137,8 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('profit-packages-upload', ProfitPackageUploadController::class)->only(['create', 'store','edit','update']);
             Route::post('/show-profit-package-rates', [\App\Http\Controllers\Admin\Rates\UserRateController::class, 'showRates'])->name('show-profit-rates');
             Route::resource('usps-accrual-rates', USPSAccrualRateController::class)->only(['index']);
+            Route::get('shipping-country-rates/{shipping_service}', [\App\Http\Controllers\Admin\Rates\RateController::class, 'postNLCountryRates'])->name('country-rates');
+            Route::get('view-shipping-country-rates/{shipping_rate}', [\App\Http\Controllers\Admin\Rates\RateController::class, 'showPostNLCountryRates'])->name('view-shipping-country-rates');
         });
 
         Route::namespace('Connect')->group(function(){
@@ -196,6 +202,8 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('scan', PrintLabelController::class)->only('create','show','store','update');
         });
 
+        Route::resource('liability', Deposit\LiabilityController::class)->only('create','store','index');
+        
         Route::resource('deposit', Deposit\DepositController::class)->only('create','store','index');
         Route::get('download-deposit-attachment/{attachment?}', [DepositController::class,'downloadAttachment'])->name('download_attachment');
         Route::get('view-deposit-description/{deposit?}', [DepositController::class,'showDescription'])->name('deposit.description');

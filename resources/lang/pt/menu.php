@@ -52,6 +52,9 @@ return [
         'USPS Containers' => 'USPS Recipientes',
         'GePS Containers' => 'GePS Recipientes',
         'Direct Link Containers' => 'Direct Link Recipientes',
+        'MileExpress Containers' => 'MileExpress Containers',
+        'PostNL Containers' => 'PostNL Recipientes',
+        'Colombia Containers' => 'Colombia Recipientes'
     ],
     'Affiliate' => [
         'menu' => 'Relatórios',
