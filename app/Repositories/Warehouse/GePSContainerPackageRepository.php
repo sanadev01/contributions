@@ -12,8 +12,9 @@ class GePSContainerPackageRepository {
 
     public function addOrderToContainer($container, $order)
     {
-        $container->orders()->attach($order->id);
-
+        if(!$container->orders()->where('order_id', $order->id)->first()) {
+            $container->orders()->attach($order->id);
+        }
         return $order;
     }
 

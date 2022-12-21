@@ -72,14 +72,14 @@ class Packages extends Component
                 ];
             }
             
-            if(!$order->containers->isEmpty()) {
-    
-                $this->error = 'Order is already present in Container'; 
-                return $this->barcode = '';
-                
+            foreach($this->orders as $o) {
+                if($o['corrios_tracking_code'] == $order->corrios_tracking_code) {
+                    $this->error = "Order is already present in Container ".''.$this->barcode; 
+                    return $this->barcode = '';
+                }
             }
-
-            if ($order->status < Order::STATUS_PAYMENT_DONE) {
+            
+            if ($order['status'] < Order::STATUS_PAYMENT_DONE) {
                 return  $this->error = 'Please check the Order Status, either the order has been canceled, refunded or not yet paid';
             }
             if ($this->container->hasGePSService() && !$order->shippingService->isGePSService()) {
@@ -99,6 +99,11 @@ class Packages extends Component
 
     public function removeOrder($id, $key)
     {
+        foreach($this->orders as $index => $o) {
+        if($o['id'] == $id) {
+            unset($this->orders[$index]); 
+        }
+    }
         $geps_ContainerPackageController = new GePSContainerPackageController;
         $geps_ContainerPackageController->destroy($this->container, $id);
     }
