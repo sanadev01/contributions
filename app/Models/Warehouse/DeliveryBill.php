@@ -2,6 +2,8 @@
 
 namespace App\Models\Warehouse;
 
+use Carbon\Carbon;
+use App\Models\ShippingService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -84,9 +86,34 @@ class DeliveryBill extends Model
         return $weight;
     }
 
+    /**
+     * generate random cnd38_code
+     * @return string
+     */
+    public function setCN38Code()
+    {
+        return $date = date('idmy', strtotime(Carbon::now()));
+    }
+
+    /**
+     * generate random string
+     * @return string
+     */
+    public function setRandomRequestId()
+    {
+        return str_random(8).'-'.str_random(4).'-'.str_random(4).'-'.str_random(4).'-'.str_random(12);
+    }
+
     public function isGePS()
     {
-        if($this->containers->first()->services_subclass_code == '537'){
+        if($this->containers->first()->services_subclass_code == ShippingService::GePS){
+            return true;
+        }
+    }
+
+    public function isSwedenPost()
+    {
+        if($this->containers->first()->services_subclass_code == ShippingService::Prime5){
             return true;
         }
     }
@@ -98,15 +125,6 @@ class DeliveryBill extends Model
     public function setRandomCN38Code()
     {
         return $this->id.random_int(1000, 9999);
-    }
-
-    /**
-     * generate random string
-     * @return string
-     */
-    public function setRandomRequestId()
-    {
-        return random_int(100000, 999999).'-'.random_int(1000, 9999).'-'.random_int(100000, 999999);
     }
 
     public function hasGePSService()

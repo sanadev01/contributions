@@ -184,7 +184,11 @@ class Client{
                     'phone' => ($order->recipient->phone) ? $order->recipient->phone: '',
                     'taxid' => ($order->recipient->tax_id) ? $order->recipient->tax_id: '',
                 ],
-                'item' => $this->setItemsDetails($order)
+                'item' => $this->setItemsDetails($order),
+                'shippingoptions' => [
+                    'hazmat' => 1,
+                    'handlinginstructions' => "Land in the backyard, by the pool!"
+                ],
             ],
         ];
         \Log::info(

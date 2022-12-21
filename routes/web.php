@@ -99,7 +99,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('orders.ups-label', OrderUPSLabelController::class)->only('index','store');
             Route::get('order-ups-label-cancel-pickup/{id?}', [\App\Http\Controllers\Admin\Order\OrderUPSLabelController::class, 'cancelUPSPickup'])->name('order.ups-label.cancel.pickup');
         });
-        //Cancel Lable Route for GePS
+        //Cancel Lable Route for GePS & Sweden Post
         Route::get('order/{order}/cancel-label', [\App\Http\Controllers\Admin\Order\OrderLabelController::class, 'cancelLabel'])->name('order.label.cancel');
 
         Route::namespace('Consolidation')->prefix('consolidation')->as('consolidation.')->group(function(){

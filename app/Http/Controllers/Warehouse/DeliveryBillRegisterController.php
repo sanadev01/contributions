@@ -28,26 +28,20 @@ class DeliveryBillRegisterController extends Controller
             session()->flash('alert-danger','This delivery bill has already been registered');
             return back();
         }
-        if($deliveryBill->containers[0]->services_subclass_code == ShippingService::GePS)  {            
-            // $client = new GePSClient();
-            // $response = $client->registerDeliveryBillGePS($deliveryBill);
+        if($deliveryBill->isGePS())  {            
             
-            // if ($response['success'] == false) {
-                //     session()->flash('alert-danger', $response['message']);
-                //     return back();
-                // }
-                // $result = $response['data']->manifestresponse;
-                // $cn38 = $result->manifestnbr;
-                // $manifest_pdf = $result->manifestpdf;
-                // $request_id = $response['data']->perfmilli;
-            $date = date('ymd', strtotime(Carbon::now()));
-            $cn38 = $deliveryBill->containers[0]->dispatch_number.''.$code = $deliveryBill->containers[0]->seal_no.''.$date;
-            $request_id = str_random(32);
             $deliveryBill->update([
-                'request_id' => $request_id,
-                'cnd38_code' => $cn38
+                'cnd38_code' => $deliveryBill->setCN38Code(),
+                'request_id' => $deliveryBill->setRandomRequestId()
             ]);
-            // Storage::put("labels/{$cn38}.pdf", base64_decode($manifest_pdf));
+            
+        } elseif($deliveryBill->isSwedenPost())  {
+
+            $deliveryBill->update([
+                'cnd38_code' => $deliveryBill->setCN38Code(),
+                'request_id' => $deliveryBill->setRandomRequestId()
+            ]);
+
         }
         elseif ($deliveryBill->hasMileExpressService()) {
             

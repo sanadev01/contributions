@@ -4,33 +4,29 @@
 namespace App\Repositories;
 
 use App\Models\Order;
-use App\Services\Converters\UnitsConverter;
 use Illuminate\Support\Facades\Storage;
 use App\Services\Correios\Models\PackageError;
-use App\Services\GePS\Client;
+use App\Services\SwedenPost\Client;
 
 
-class GePSLabelRepository
+class SwedenPostLabelRepository
 {
     protected $error;
 
     public function get(Order $order)
     { 
-        if ( $order->getCN23() ){
-            return true;
+        if ($order->getCN23() ){
+            return $this->printLabel($order);
         }
-
         return $this->update($order);
     }
 
     public function update(Order $order)
     {
         $cn23 = $this->generateLabel($order);
-
-        if ( $cn23 ){
+        if ($cn23){
             $this->printLabel($order);
         }
-
         return null;
     }
 
@@ -38,9 +34,9 @@ class GePSLabelRepository
     {
         if($order->api_response)
         {
-            $geps_response = json_decode($order->api_response);
-            $base64_pdf = $geps_response->shipmentresponse->label;
-            Storage::put("labels/{$order->corrios_tracking_code}.pdf", base64_decode($base64_pdf));
+            $response = json_decode($order->api_response);
+            $base64Pdf = $response->data[0]->labelContent;
+            Storage::put("labels/{$order->corrios_tracking_code}.pdf", base64_decode($base64Pdf));
 
             return true;
         }
@@ -54,7 +50,6 @@ class GePSLabelRepository
             $this->error = $data->getErrors();
             return null;
         }
-
         return $data;
     }
 

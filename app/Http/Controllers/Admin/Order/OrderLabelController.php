@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Order;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Services\GePS\Client;
+use App\Services\SwedenPost\Client as SPClient;
 use App\Models\ShippingService;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
@@ -16,6 +17,7 @@ use App\Repositories\USPSLabelRepository;
 use App\Repositories\FedExLabelRepository;
 use App\Repositories\POSTNLLabelRepository;
 use App\Repositories\ColombiaLabelRepository;
+use App\Repositories\SwedenPostLabelRepository;
 use App\Repositories\MileExpressLabelRepository;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
@@ -36,11 +38,12 @@ class OrderLabelController extends Controller
     protected $postNLLabelRepository;
     protected $colombiaLabelRepository;
     protected $gepsLabelRepository;
+    protected $swedenpostLabelRepository;
 
     public function __construct(CorrieosChileLabelRepository $corrieosChileLabelRepository, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, 
                                 USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, 
                                 FedExLabelRepository $fedExLabelRepository, MileExpressLabelRepository $mileExpressLabelRepository,
-                                ColombiaLabelRepository $colombiaLabelRepository, GePSLabelRepository $gepsLabelRepository, POSTNLLabelRepository $postNLLabelRepository){
+                                ColombiaLabelRepository $colombiaLabelRepository, GePSLabelRepository $gepsLabelRepository, POSTNLLabelRepository $postNLLabelRepository, SwedenPostLabelRepository $swedenpostLabelRepository){
         
         $this->corrieosChileLabelRepository = $corrieosChileLabelRepository;
         $this->corrieosBrazilLabelRepository = $corrieosBrazilLabelRepository;
@@ -51,7 +54,7 @@ class OrderLabelController extends Controller
         $this->postNLLabelRepository = $postNLLabelRepository;
         $this->colombiaLabelRepository = $colombiaLabelRepository;
         $this->gepsLabelRepository = $gepsLabelRepository;
-    
+        $this->swedenpostLabelRepository = $swedenpostLabelRepository;
     }
     
     public function index(Request $request, Order $order)
@@ -69,9 +72,7 @@ class OrderLabelController extends Controller
             $buttonsOnly = $request->has('buttons_only');
             return view('admin.orders.label.label',compact('order','error','buttonsOnly'));
         }
-        // if($order->shippingService->api == ShippingService::API_CORREIOS){
-            // return $this->handleCorreiosLabels($request,$order);
-        // }
+        
         $labelSinerlogRep = new SinerlogLabelRepository();
 
         /**
@@ -89,21 +90,6 @@ class OrderLabelController extends Controller
             return $this->handleCorreiosLabels($request,$order);
         }
 
-        $labelData = null;
-        $error = null;
-
-        if ( $request->update_label === 'true' ){
-            $labelData = $labelRepository->update($order);
-        }else{
-            $labelData = $labelRepository->get($order);
-        }
-
-        $order->refresh();
-
-        if ( $labelData ){
-            Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
-        }
-
         $error = $labelRepository->getError();
         $buttonsOnly = $request->has('buttons_only');
         return view('admin.orders.label.label',compact('order','error','buttonsOnly'));
@@ -112,7 +98,6 @@ class OrderLabelController extends Controller
     public function handleCorreiosLabels(Request $request, Order $order)
     {
         $error = null;
-
         if($order->recipient->country_id == Order::CHILE && $request->update_label === 'false')
         {
             $this->corrieosChileLabelRepository->handle($order, $request);
@@ -172,6 +157,14 @@ class OrderLabelController extends Controller
             $this->gepsLabelRepository->get($order);
 
             $error = $this->gepsLabelRepository->getError();
+            return $this->renderLabel($request, $order, $error);
+        }
+
+        if($order->shippingService->isSwedenPostService()){
+         
+            $this->swedenpostLabelRepository->get($order);
+            
+            $error = $this->swedenpostLabelRepository->getError();
             return $this->renderLabel($request, $order, $error);
         }
         
@@ -244,7 +237,6 @@ class OrderLabelController extends Controller
         }
 
         $order->refresh();
-
         $error = $this->corrieosBrazilLabelRepository->getError();
 
         return $this->renderLabel($request, $order, $error);
@@ -298,20 +290,51 @@ class OrderLabelController extends Controller
     
     public function cancelLabel(Order $order)
     {
-        $gepsClient = new Client();   
-        $response = $gepsClient->cancelShipment($order->corrios_tracking_code);
-        if (!$response['success']) {
-            session()->flash('alert-danger', $response['message']);
-            return back();
+        if($order->carrierService() == "Global eParcel") {
+            $gepsClient = new Client();   
+            $response = $gepsClient->cancelShipment($order->corrios_tracking_code);
+            if (!$response['success']) {
+                session()->flash('alert-danger', $response['message']);
+                return back();
+            }
+            if($response['success']) {
+                $order->update([
+                    'corrios_tracking_code' => null,
+                    'cn23' => null,
+                    'api_response' => null
+                ]);
+                session()->flash('alert-success','Shipment '.$response['data']->cancelshipmentresponse->tracknbr.' cancellation is successful. You can print new lable now.');
+                return back();
+            }
         }
-        if($response['success']) {
-            $order->update([
-                'corrios_tracking_code' => null,
-                'cn23' => null,
-                'api_response' => null
-            ]);
-            session()->flash('alert-success','Shipment '.$response['data']->cancelshipmentresponse->tracknbr.' cancellation is successful. You can print new lable now.');
-            return back();
+        if($order->carrierService() == "Prime5") {
+            $apiOrderId = null;
+            $apiResponse = json_decode($order->api_response);
+            if($apiResponse) {
+                $apiOrderId = $apiResponse->data[0]->orderId;
+            }
+            if(!is_null($apiOrderId)) {
+                $swedenpostClient = new SPClient();   
+                $response = $swedenpostClient->deleteOrder($apiOrderId);
+                dd($response);
+                if (!$response['success']) {
+                    session()->flash('alert-danger', $response['message']);
+                    return back();
+                }
+                if($response['success']) {
+                    $order->update([
+                        'corrios_tracking_code' => null,
+                        'cn23' => null,
+                        'api_response' => null
+                    ]);
+                    session()->flash('alert-success','Shipment '.$response->data[0]->referenceNo.' cancellation is successful. You can print new lable now.');
+                    return back();
+                }
+            } else {
+                session()->flash('alert-danger','Order not found');
+                return back();
+            }
+            
         }
     } 
 }
