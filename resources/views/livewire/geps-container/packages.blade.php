@@ -14,33 +14,34 @@
         </thead>
         <tbody>
             @foreach ($orders as $key => $order)
+            
             <tr id="{{ $key }}">
                 <td>
-                    {{ $order['corrios_tracking_code'] }}
+                    {{ $order->corrios_tracking_code }}
                 </td>
                 <td>
-                    {{ $order['warehouse_number'] }}
+                    {{ $order->warehouse_number }}
                 </td>
                 <td>
-                    {{ $order['weight'] }} Kg
+                    {{ $order->getOriginalWeight('kg') }} Kg
                 </td>
                 <td>
-                    {{ $order['weight_lbs'] }} Lbs 
+                    {{ $order->getWeight('lbs') }} Lbs 
                         <hr>
-                    {{ $order['weight_kg'] }} Kg
+                    {{ $order->getWeight('kg') }} Kg
                 </td>
                 <td>
-                    {{ $order['pobox'] }}
+                    {{ optional($order->user)->pobox_number.' / '. optional($order->user)->getFullName() }}
                 </td>
                 <td>
-                    {{ $order['sender_name'] }}
+                    {{ $order->getSenderFullName() }}
                 </td>
                 <td>
-                    {{ $order['customer_reference'] }}
+                    {{ $order->customer_reference }}
                 </td>
                 <td>
                     @if ($editMode == true)
-                        <button wire:click="removeOrder({{ $order['id'] }}, '{{$key}}')" class="btn btn-danger">
+                        <button wire:click="removeOrder({{ $order->id }})" class="btn btn-danger">
                             Remove
                         </button>
                     @endif

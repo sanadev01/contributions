@@ -27,9 +27,8 @@ class Packages extends Component
     {
         $this->container = $container;
         $this->error = '';
-        $this->emit('scanFocus');
-        $orders = collect($this->container->getOrdersCollections())->toArray();
-        $this->orders = $orders;
+        $this->emit('scanFocus');        
+        $this->orders = $this->container->orders;
         $this->editMode = $editMode;
         $this->service = $container->getServiceSubClass();
         $this->containerDestination = $container->destination_operator_name == 'MIA' ? 'Miami' : '';
@@ -37,20 +36,19 @@ class Packages extends Component
 
     public function render()
     {
-        //$this->getPackages($this->container->id);
-        $this->totalPackages($this->orders);
-        $this->totalWeight($this->orders);
-
-        return view('livewire.geps-container.packages');
+        return view('livewire.geps-container.packages',[
+            'orders' => $this->getPackages($this->container->id),
+            'totalweight' => $this->totalWeight(),
+            'num_of_Packages' => $this->totalPackages()
+        ]);
     }
 
-    // public function getPackages($id)
-    // {
-    //     $container = Container::find($id);
-    //     $ordersCollection = json_encode($container->getOrdersCollections());
-    //     return $this->orders = json_decode($ordersCollection);
-        
-    // }
+    public function getPackages($id)
+    {
+        $container = Container::find($id);
+        $this->container = $container;
+        return $this->orders = $container->orders;        
+    }
 
     public function updatedbarcode($barcode)
     {
@@ -63,36 +61,40 @@ class Packages extends Component
 
     public function saveOrder()
     {
+        $this->getPackages($this->container->id);
         $order = Order::where('corrios_tracking_code', $this->barcode)->first();
-            if (!$order) {
-                return $this->error = "Order Not Found $this->barcode";
-            }
+        if (!$order) {
+            return $this->error = "Order Not Found $this->barcode";
+        }
 
-            if(!$order->containers->isEmpty()) {
-                return $this->error = "Order is already present in Container $this->barcode";
-            }
-            
-            if ($order['status'] < Order::STATUS_PAYMENT_DONE) {
-                return  $this->error = 'Please check the Order Status, either the order has been canceled, refunded or not yet paid';
-            }
+        if($this->container->orders->where('corrios_tracking_code',$order->corrios_tracking_code)->first()) {
+            return $this->error = "Order is already present in Container $this->barcode";
+        }
+        if(!$order->containers->isEmpty()) {
+            return $this->error = "Order is already present in another Container $this->barcode";
+        }
 
-            if ($this->container->hasGePSService() && !$order->shippingService->isGePSService()) {
-                return  $this->error = 'Order does not belong to this container. Please Check Packet Service';
-            }
-    
-            if (!$this->container->hasGePSService() && $order->shippingService->isGePSService()) {
-                return  $this->error = 'Order does not belong to this container. Please Check Packet Service';
-            }
+        if ($order->status != Order::STATUS_PAYMENT_DONE) {
+            return  $this->error = 'Please check the Order Status, either the order has been canceled, refunded or not yet paid';
+        }
 
-            $gepsContainerPackageRepository = new GePSContainerPackageRepository;
-            $order = $gepsContainerPackageRepository->addOrderToContainer($this->container, $order);
+        if ($this->container->hasGePSService() && !$order->shippingService->isGePSService()) {
+            return  $this->error = 'Order does not belong to this container. Please Check Packet Service';
+        }
 
-            $this->addOrderTracking($order);
-            $this->error = '';
-            return $this->barcode = ''; 
+        if (!$this->container->hasGePSService() && $order->shippingService->isGePSService()) {
+            return  $this->error = 'Order does not belong to this container. Please Check Packet Service';
+        }
+
+        $gepsContainerPackageRepository = new GePSContainerPackageRepository;
+        $order = $gepsContainerPackageRepository->addOrderToContainer($this->container, $order);
+
+        $this->addOrderTracking($order);
+        $this->error = '';
+        return $this->barcode = ''; 
     }
 
-    public function removeOrder($id, $key)
+    public function removeOrder($id)
     {
         $gepsContainerPackageRepository = new GePSContainerPackageRepository;
         $gepsContainerPackageRepository->removeOrderFromContainer($this->container, $id);
@@ -103,14 +105,9 @@ class Packages extends Component
         return  $this->num_of_Packages = count($this->orders);
     }
       
-    public function totalWeight($orders)
+    public function totalWeight()
     {
-        $weight = 0;
-        foreach ($orders as $order) {
-            $weight += $order['weight']; 
-        }
-
-        return $this->totalweight = $weight;
+        return $this->totalweight = $this->orders->sum('weight');
     }
 
     public function addOrderTracking($order)
