@@ -47,7 +47,6 @@
                 </td>
             </tr>
             @endforeach
-            @if (session()->has('message'))
             <tr>
                 <td colspan="8">
                     @if($error)
@@ -57,7 +56,6 @@
                     @endif
                 </td>
             </tr>
-            @endif
             <tr>
                 <td colspan="8" class="h2 text-right px-5">
                     <span class="text-danger font-weight-bold">Weight :</span> {{$totalweight}}

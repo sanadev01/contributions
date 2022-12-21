@@ -36,7 +36,7 @@ class Packages extends Component
 
     public function render()
     {
-        $this->getPackages($this->container->id);
+        //$this->getPackages($this->container->id);
         $this->totalPackages();
         $this->totalWeight();
 
@@ -62,30 +62,19 @@ class Packages extends Component
 
     public function saveOrder()
     {
-        $geps_ContainerPackageController = new GePSContainerPackageController;
         $order = Order::where('corrios_tracking_code', $this->barcode)->first();
-        //dd($order, $order->containers);
             if (!$order) {
-                return [
-                    'order' => [
-                        'corrios_tracking_code' => $this->barcode,
-                        'error' => 'Order Not Found.',
-                        'code' => 404
-                    ],
-                ];
+                return $this->error = "Order Not Found $this->barcode";
             }
+
             if(!$order->containers->isEmpty()) {
-                
-                session()->flash('message', "Order is already present in Container $this->barcode");
-                //$this->error = "Order is already present in Container $this->barcode"; 
-                return $this->barcode = '';
+                return $this->error = "Order is already present in Container $this->barcode";
             }
-            
-            
             
             if ($order['status'] < Order::STATUS_PAYMENT_DONE) {
                 return  $this->error = 'Please check the Order Status, either the order has been canceled, refunded or not yet paid';
             }
+
             if ($this->container->hasGePSService() && !$order->shippingService->isGePSService()) {
                 return  $this->error = 'Order does not belong to this container. Please Check Packet Service';
             }
@@ -94,7 +83,8 @@ class Packages extends Component
                 return  $this->error = 'Order does not belong to this container. Please Check Packet Service';
             }
 
-            $order = $geps_ContainerPackageController->store($this->container, $order);
+            $gepsContainerPackageRepository = new GePSContainerPackageRepository;
+            $order = $gepsContainerPackageRepository->addOrderToContainer($this->container, $order);
 
             $this->addOrderTracking($order);
             $this->error = '';
@@ -103,13 +93,12 @@ class Packages extends Component
 
     public function removeOrder($id, $key)
     {
-        $geps_ContainerPackageController = new GePSContainerPackageRepository;
-        $geps_ContainerPackageController->removeOrderFromContainer($this->container, $id);
+        $gepsContainerPackageRepository = new GePSContainerPackageRepository;
+        $gepsContainerPackageRepository->removeOrderFromContainer($this->container, $id);
     }
 
     public function totalPackages()
     {
-        
         return  $this->num_of_Packages = count($this->orders);
     }
       
