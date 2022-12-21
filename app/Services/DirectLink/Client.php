@@ -19,42 +19,50 @@ use App\Services\DirectLink\Services\ShippingOrder;
 class Client{
 
     //direct link parameters
+    protected $secret;
+    protected $token;
     protected $host;
-    protected $orderLabelUrl;
+    protected $baseUrl;
     //direct link parameters end
     protected $client;
 
     public function __construct()
     {
         if(app()->isProduction()){
+            $this->secret = config('direct_link.production.secret');
+            $this->token = config('direct_link.production.token');
             $this->host = config('direct_link.production.host');
-            $this->orderLabelUrl = config('direct_link.production.orderLabelUrl');
+            $this->baseUrl = config('direct_link.production.baseUrl');
         }else{ 
+            $this->secret = config('direct_link.test.secret');
+            $this->token = config('direct_link.test.token');
             $this->host = config('direct_link.test.host');
-            $this->orderLabelUrl = config('direct_link.test.orderLabelUrl');
+            $this->baseUrl = config('direct_link.test.baseUrl');
         }
 
         $this->client = new GuzzleClient();
 
     }
 
-    private function getHeader()
+    private function getHeaders($type, $path)
     {
-        return [
-            'Host'=> $this->host,
-            'X-WallTech-Date' => 'Tue, 20 Dec 2022 19:21:56 GMT',
-            'Authorization' => 'WallTech testa0wXdbpML6JGQ7NRP3O:tQ3_LcMlDhGBBxCVynLyMworNw4=',
+        $walltech_date=date(DATE_RFC7231,time());
+        $auth = $type."\n".$walltech_date."\n".$this->baseUrl.$path;
+        $hash=base64_encode(hash_hmac('sha1', $auth, $this->secret, true));
+        return [ 
+            'Authorization' => 'WallTech '.$this->token.':'.$hash,
+            'X-WallTech-Date' => $walltech_date,
             'Content-Type' => 'application/json',
-            'Accept' => 'application/json',
-        ]; 
+            'Accept' => 'application/json'
+        ];
     }
 
     public function createPackage($order)
     {   
         $shippingRequest = (new ShippingOrder())->getRequestBody($order);
         try {
-
-            $response = Http::withHeaders($this->getHeader())->post('http://qa.etowertech.com/services/shipper/orderLabels', $shippingRequest);
+            $path = 'services/shipper/orderLabels';
+            $response = Http::withHeaders($this->getHeaders('POST', $path))->post($this->baseUrl.$path, $shippingRequest);
             $data = json_decode($response);
             if($data->status == "Success") {
                 $trackingNumber = $data->data[0]->trackingNo;
@@ -101,8 +109,8 @@ class Client{
     public function deleteOrder($orderId)
     {
         try {
-
-            $response = Http::withHeaders($this->getHeader())->delete("http://qa.etowertech.com/services/shipper/order/{$orderId}");
+            $path = "http://qa.etowertech.com/services/shipper/order/{$orderId}";
+            $response = Http::withHeaders($this->getHeaders("DELETE", $path))->delete($this->baseUrl.$path);
             $data = json_decode($response);
             if ($data->status == "Failure") {
                 return [
@@ -115,10 +123,7 @@ class Client{
                 'success' => true,
                 'data' => $data
             ];
-        }catch (\GuzzleHttp\Exception\ClientException $e) {
-            return new PackageError($e->getResponse()->getBody()->getContents());
-        }
-        catch (\Exception $exception){
+        }catch (\Exception $exception){
             return new PackageError($exception->getMessage());
         }
     }

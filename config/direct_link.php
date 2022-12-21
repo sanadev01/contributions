@@ -1,11 +1,15 @@
 <?php
 return [
     'test' => [
+        'secret' => 'I7MIjTQBMZNXToMTA2PkOw',
+        'token' => 'testa0wXdbpML6JGQ7NRP3O',
         'host' => 'qa.etowertech.com',
-        'orderLabelUrl' => 'http://qa.etowertech.com/services/shipper/orderLabels',
+        'baseUrl' => 'http://qa.etowertech.com/',
     ],
     'production' => [
+        'secret' => '',
+        'token' => '',
         'host' => 'cn.etowertech.com',
-        'orderLabelUrl' => 'https://cn.etowertech.com/services/shipper/orderLabels',
+        'baseUrl' => 'https://cn.etowertech.com/',
     ]
 ];

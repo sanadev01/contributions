@@ -76,7 +76,7 @@ class ShippingOrder {
                     'hsCode' => $item->sh_code,
                     'originCountry' => $originCountryCode ? $originCountryCode: 'US',
                     'itemCount' => (int)$item->quantity,
-                    'unitValue' => number_format($item->value * (int)$item->quantity , 2),
+                    'unitValue' => number_format($item->value),
                     'warehouseNo' => ($order->warehouse_number) ? $order->warehouse_number : '',
                 ];
                array_push($items, $itemToPush);

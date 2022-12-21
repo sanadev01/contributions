@@ -279,6 +279,7 @@ class OrderLabelController extends Controller
             if(!is_null($apiOrderId)) {
                 $directLinkClient = new DLClient();   
                 $response = $directLinkClient->deleteOrder($apiOrderId);
+                dd($response);
                 if (!$response['success']) {
                     session()->flash('alert-danger', $response['message']);
                     return back();
