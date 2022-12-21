@@ -7,6 +7,7 @@ use App\Models\Order;
 use Livewire\Component;
 use App\Models\OrderTracking;
 use App\Models\Warehouse\Container;
+use App\Repositories\Warehouse\GePSContainerPackageRepository;
 use App\Http\Controllers\Warehouse\GePSContainerPackageController;
 
 class Packages extends Component
@@ -16,7 +17,7 @@ class Packages extends Component
     public $editMode;
     public $barcode;
     public $service;
-    public $error;
+    public $error = '';
     public $num_of_Packages = 0;
     public $totalweight;
     public $containerDestination;
@@ -25,6 +26,7 @@ class Packages extends Component
     public function mount($container = null, $ordersCollection = null, $editMode = null)
     {
         $this->container = $container;
+        $this->error = '';
         $this->emit('scanFocus');
         $this->orders = json_decode($ordersCollection);
         $this->editMode = $editMode;
@@ -62,6 +64,7 @@ class Packages extends Component
     {
         $geps_ContainerPackageController = new GePSContainerPackageController;
         $order = Order::where('corrios_tracking_code', $this->barcode)->first();
+        //dd($order, $order->containers);
             if (!$order) {
                 return [
                     'order' => [
@@ -71,13 +74,14 @@ class Packages extends Component
                     ],
                 ];
             }
-            
-            foreach($this->orders as $o) {
-                if($o['corrios_tracking_code'] == $order->corrios_tracking_code) {
-                    $this->error = "Order is already present in Container ".''.$this->barcode; 
-                    return $this->barcode = '';
-                }
+            if(!$order->containers->isEmpty()) {
+                
+                session()->flash('message', "Order is already present in Container $this->barcode");
+                //$this->error = "Order is already present in Container $this->barcode"; 
+                return $this->barcode = '';
             }
+            
+            
             
             if ($order['status'] < Order::STATUS_PAYMENT_DONE) {
                 return  $this->error = 'Please check the Order Status, either the order has been canceled, refunded or not yet paid';
@@ -99,13 +103,8 @@ class Packages extends Component
 
     public function removeOrder($id, $key)
     {
-        foreach($this->orders as $index => $o) {
-        if($o['id'] == $id) {
-            unset($this->orders[$index]); 
-        }
-    }
-        $geps_ContainerPackageController = new GePSContainerPackageController;
-        $geps_ContainerPackageController->destroy($this->container, $id);
+        $geps_ContainerPackageController = new GePSContainerPackageRepository;
+        $geps_ContainerPackageController->removeOrderFromContainer($this->container, $id);
     }
 
     public function totalPackages()
