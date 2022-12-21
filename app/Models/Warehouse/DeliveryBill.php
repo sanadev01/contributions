@@ -113,7 +113,7 @@ class DeliveryBill extends Model
 
     public function isDirectLink()
     {
-        if($this->containers->first()->services_subclass_code == ShippingService::Direct_Link){
+        if($this->containers->first()->services_subclass_code == ShippingService::Prime5){
             return true;
         }
     }

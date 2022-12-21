@@ -72,9 +72,7 @@ class OrderLabelController extends Controller
             $buttonsOnly = $request->has('buttons_only');
             return view('admin.orders.label.label',compact('order','error','buttonsOnly'));
         }
-        // if($order->shippingService->api == ShippingService::API_CORREIOS){
-            // return $this->handleCorreiosLabels($request,$order);
-        // }
+        
         $labelSinerlogRep = new SinerlogLabelRepository();
 
         /**
@@ -91,21 +89,6 @@ class OrderLabelController extends Controller
         else {
             return $this->handleCorreiosLabels($request,$order);
         }
-
-        // $labelData = null;
-        // $error = null;
-
-        // if ( $request->update_label === 'true' ){
-        //     $labelData = $labelRepository->update($order);
-        // }else{
-        //     $labelData = $labelRepository->get($order);
-        // }
-
-        // $order->refresh();
-
-        // if ( $labelData ){
-        //     Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
-        // }
 
         $error = $labelRepository->getError();
         $buttonsOnly = $request->has('buttons_only');

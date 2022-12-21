@@ -29,15 +29,15 @@ class Client{
     public function __construct()
     {
         if(app()->isProduction()){
-            $this->secret = config('direct_link.production.secret');
-            $this->token = config('direct_link.production.token');
-            $this->host = config('direct_link.production.host');
-            $this->baseUrl = config('direct_link.production.baseUrl');
+            $this->secret = config('prime5.production.secret');
+            $this->token = config('prime5.production.token');
+            $this->host = config('prime5.production.host');
+            $this->baseUrl = config('prime5.production.baseUrl');
         }else{ 
-            $this->secret = config('direct_link.test.secret');
-            $this->token = config('direct_link.test.token');
-            $this->host = config('direct_link.test.host');
-            $this->baseUrl = config('direct_link.test.baseUrl');
+            $this->secret = config('prime5.test.secret');
+            $this->token = config('prime5.test.token');
+            $this->host = config('prime5.test.host');
+            $this->baseUrl = config('prime5.test.baseUrl');
         }
 
         $this->client = new GuzzleClient();

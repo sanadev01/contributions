@@ -119,7 +119,7 @@ class OrderRepository
             }
             if($request->carrier == 'Direct Link'){
                 $service = [
-                    ShippingService::DIRECT_LINK, 
+                    ShippingService::Prime5, 
                 ];
             }
             $query->whereHas('shippingService', function ($query) use($service) {

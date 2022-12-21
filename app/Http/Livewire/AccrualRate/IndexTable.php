@@ -56,7 +56,7 @@ class IndexTable extends Component
         ];
         $this->services[9] = [
             'name' => 'Direct Link',
-            'value' => Package::SERVICE_CLASS_Direct_Link,
+            'value' => Package::SERVICE_CLASS_Prime5,
         ];
         $this->services[10] = [
             'name' => 'Colombia Urbano',

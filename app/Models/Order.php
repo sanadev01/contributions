@@ -377,7 +377,7 @@ class Order extends Model implements Package
                 return 'PostNL';
 
             }
-            elseif(optional($this->shippingService)->service_sub_class == ShippingService::Direct_Link){
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::Prime5){
 
                 return 'Direct Link';
 
@@ -400,7 +400,7 @@ class Order extends Model implements Package
                 optional($this->shippingService)->service_sub_class == ShippingService::FEDEX_GROUND ||
                 optional($this->shippingService)->service_sub_class == ShippingService::GePS ||
                 optional($this->shippingService)->service_sub_class == ShippingService::GePS_EFormat ||
-                optional($this->shippingService)->service_sub_class == ShippingService::Direct_Link ||
+                optional($this->shippingService)->service_sub_class == ShippingService::Prime5 ||
                 optional($this->shippingService)->service_sub_class == ShippingService::PostNL) {
 
                 return $this->user_declared_freight;

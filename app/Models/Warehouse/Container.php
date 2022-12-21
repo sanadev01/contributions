@@ -217,7 +217,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     public function hasDirectLinkService()
     {
-        return $this->services_subclass_code == ShippingService::Direct_Link;
+        return $this->services_subclass_code == ShippingService::Prime5;
     }
     
     public function getContainerService()
