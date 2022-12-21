@@ -1,11 +1,11 @@
 <?php
-namespace App\Services\DirectLink;
+namespace App\Services\SwedenPost;
 
 use App\Models\Order;
 use App\Models\ShippingService;
 
 
-class DirectLinkShippingService
+class SwedenPostShippingService
 {
     private $order;
     private $weight;

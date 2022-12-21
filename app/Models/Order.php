@@ -379,7 +379,7 @@ class Order extends Model implements Package
             }
             elseif(optional($this->shippingService)->service_sub_class == ShippingService::Prime5){
 
-                return 'Direct Link';
+                return 'Prime5';
 
             }
 

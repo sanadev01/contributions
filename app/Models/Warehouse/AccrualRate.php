@@ -54,7 +54,7 @@ class AccrualRate extends Model
         }
 
         if ( $this->service == Package::SERVICE_CLASS_Prime5 ){
-            return "Direct Link";
+            return "Prime5";
         }
         return '';
     }

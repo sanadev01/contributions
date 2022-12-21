@@ -56,7 +56,7 @@ return [
         'PostNL Containers' => 'PostNL Containers',
         'Colombia Containers' => 'Colombia Containers',
         'GePS Containers' => 'GePS Containers',
-        'Direct Link Containers' => 'Direct Link Containers',
+        'SwedenPost Containers' => 'SwedenPost Containers',
         'Sinerlog Containers' => 'Sinerlog Containers',
     ],
     'Affiliate' => [

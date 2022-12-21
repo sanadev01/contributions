@@ -9,7 +9,7 @@
                         <h4 class="mb-0">
                             @lang('warehouse.containers.Containers')
                         </h4>
-                        <a href="{{ route('warehouse.directlink_containers.create') }}" class="pull-right btn btn-primary"> @lang('warehouse.containers.Create Container') </a>
+                        <a href="{{ route('warehouse.swedenpost_containers.create') }}" class="pull-right btn btn-primary"> @lang('warehouse.containers.Create Container') </a>
                     </div>
                     <div class="card-content card-body" style="min-height: 100vh;">
                         <div class="mt-1">
@@ -103,19 +103,19 @@
                                                         @lang('user.Action')
                                                     </button>
                                                     <div class="dropdown-menu dropdown-menu-right dropright">
-                                                        <a href="{{ route('warehouse.directlink_container.packages.index',$container) }}" class="dropdown-item w-100">
+                                                        <a href="{{ route('warehouse.swedenpost_container.packages.index',$container) }}" class="dropdown-item w-100">
                                                             <i class="feather icon-box"></i> @lang('warehouse.actions.Packages')
                                                         </a>
                                                         @if( !$container->isRegistered() )
-                                                            <a href="{{ route('warehouse.directlink_containers.edit',$container) }}" class="dropdown-item w-100">
+                                                            <a href="{{ route('warehouse.swedenpost_containers.edit',$container) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
                                                             </a>
                                                             @if( !$container->isRegistered() && $container->hasOrders())
-                                                                <a href="{{ route('warehouse.directlink_container.register',$container) }}" class="dropdown-item w-100">
+                                                                <a href="{{ route('warehouse.swedenpost_container.register',$container) }}" class="dropdown-item w-100">
                                                                     <i class="feather icon-box"></i> Register Unit
                                                                 </a>
                                                             @endif
-                                                            <form action="{{ route('warehouse.directlink_containers.destroy',$container) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
+                                                            <form action="{{ route('warehouse.swedenpost_containers.destroy',$container) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
                                                                 @csrf
                                                                 @method('DELETE')
                                                                 <button class="dropdown-item w-100 text-danger">
@@ -124,7 +124,7 @@
                                                             </form>
                                                         @endif
                                                         @if( $container->isRegistered() )
-                                                            <a href="{{ route('warehouse.directlink_container.download',$container) }}" class="dropdown-item w-100">
+                                                            <a href="{{ route('warehouse.swedenpost_container.download',$container) }}" class="dropdown-item w-100">
                                                                 <i class="feather icon-box"></i> Get CN35
                                                             </a>
                                                         @endif

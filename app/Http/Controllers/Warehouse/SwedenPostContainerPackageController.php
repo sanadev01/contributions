@@ -6,9 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
 use App\Services\Excel\Export\ContainerOrderExport;
-use App\Repositories\Warehouse\DirectLinkContainerPackageRepository;
+use App\Repositories\Warehouse\SwedenPostContainerPackageRepository;
 
-class DirectLinkContainerPackageController extends Controller
+class SwedenPostContainerPackageController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -21,7 +21,7 @@ class DirectLinkContainerPackageController extends Controller
         $ordersCollection = json_encode($container->getOrdersCollections());
         $editMode = ($container->response == 0) ? true : false;
 
-        return view('admin.warehouse.directlinkContainers.scan',compact('container', 'ordersCollection', 'editMode'));
+        return view('admin.warehouse.swedenpostContainers.scan',compact('container', 'ordersCollection', 'editMode'));
                 
     }
 
@@ -46,9 +46,9 @@ class DirectLinkContainerPackageController extends Controller
      */
     public function store($container, $order)
     {
-        $directlink_containerPackageRepository = new DirectLinkContainerPackageRepository();
+        $swedenpost_containerPackageRepository = new SwedenPostContainerPackageRepository();
 
-        return $directlink_containerPackageRepository->addOrderToContainer($container,$order);
+        return $swedenpost_containerPackageRepository->addOrderToContainer($container,$order);
     }
 
     /**
@@ -93,10 +93,10 @@ class DirectLinkContainerPackageController extends Controller
      */
     public function destroy($container, $id)
     {
-        $directlink_containerPackageRepository = new DirectLinkContainerPackageRepository();
+        $swedenpost_containerPackageRepository = new SwedenPostContainerPackageRepository();
         try {
             //code...
-            return $directlink_containerPackageRepository->removeOrderFromContainer($container,$id);
+            return $swedenpost_containerPackageRepository->removeOrderFromContainer($container,$id);
         } catch (\Exception $ex) {
             \Log::info($ex);
         }

@@ -6,10 +6,10 @@ namespace App\Repositories;
 use App\Models\Order;
 use Illuminate\Support\Facades\Storage;
 use App\Services\Correios\Models\PackageError;
-use App\Services\DirectLink\Client;
+use App\Services\SwedenPost\Client;
 
 
-class DirectLinkLabelRepository
+class SwedenPostLabelRepository
 {
     protected $error;
 

@@ -1,6 +1,6 @@
 <?php 
 
-namespace App\Services\DirectLink;
+namespace App\Services\SwedenPost;
 
 use App\Services\Correios\Contracts\HasLableExport;
 

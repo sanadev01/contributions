@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Livewire\DirectlinkContainer;
+namespace App\Http\Livewire\SwedenPostContainer;
 
 use App\Models\Order;
 use Livewire\Component;
 use App\Models\OrderTracking;
 use App\Models\Warehouse\Container;
-use App\Http\Controllers\Warehouse\DirectLinkContainerPackageController;
+use App\Http\Controllers\Warehouse\SwedenPostContainerPackageController;
 
 class Packages extends Component
 {
@@ -37,7 +37,7 @@ class Packages extends Component
         $this->totalPackages();
         $this->totalWeight();
 
-        return view('livewire.directlink-container.packages');
+        return view('livewire.swedenpost-container.packages');
     }
 
     public function getPackages($id)
@@ -59,7 +59,7 @@ class Packages extends Component
 
     public function saveOrder()
     {
-        $directlink_ContainerPackageController = new DirectLinkContainerPackageController;
+        $swedenpost_ContainerPackageController = new SwedenPostContainerPackageController;
         $order = Order::where('corrios_tracking_code', $this->barcode)->first();
             if (!$order) {
                 return [
@@ -89,7 +89,7 @@ class Packages extends Component
                 return  $this->error = 'Order does not belong to this container. Please Check Packet Service';
             }
 
-            $order = $directlink_ContainerPackageController->store($this->container, $order);
+            $order = $swedenpost_ContainerPackageController->store($this->container, $order);
 
             $this->addOrderTracking($order);
             $this->error = '';
@@ -98,8 +98,8 @@ class Packages extends Component
 
     public function removeOrder($id, $key)
     {
-        $directlink_ContainerPackageController = new DirectLinkContainerPackageController;
-        $directlink_ContainerPackageController->destroy($this->container, $id);
+        $swedenpost_ContainerPackageController = new SwedenPostContainerPackageController;
+        $swedenpost_ContainerPackageController->destroy($this->container, $id);
     }
 
     public function totalPackages()

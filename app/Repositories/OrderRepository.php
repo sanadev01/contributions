@@ -117,7 +117,7 @@ class OrderRepository
                     ShippingService::GePS_EFormat,
                 ];
             }
-            if($request->carrier == 'Direct Link'){
+            if($request->carrier == 'Prime5'){
                 $service = [
                     ShippingService::Prime5, 
                 ];

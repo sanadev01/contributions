@@ -130,7 +130,7 @@ class ShippingService extends Model
 
         return false;
     }
-    public function isDirectLinkService()
+    public function isSwedenPostService()
     {
         return $this->service_sub_class = self::Prime5;
     }

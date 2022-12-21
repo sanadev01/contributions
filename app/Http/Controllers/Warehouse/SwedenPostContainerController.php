@@ -5,22 +5,22 @@ namespace App\Http\Controllers\Warehouse;
 use Illuminate\Http\Request;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
-use App\Repositories\Warehouse\DirectLinkContainerRepository;
-use App\Http\Requests\Warehouse\DirectLinkContainer\CreateContainerRequest;
-use App\Http\Requests\Warehouse\DirectLinkContainer\UpdateContainerRequest;
+use App\Repositories\Warehouse\SwedenPostContainerRepository;
+use App\Http\Requests\Warehouse\SwedenPostContainer\CreateContainerRequest;
+use App\Http\Requests\Warehouse\SwedenPostContainer\UpdateContainerRequest;
 
-class DirectLinkContainerController extends Controller
+class SwedenPostContainerController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(DirectLinkContainerRepository $directlink_containerRepository)
+    public function index(SwedenPostContainerRepository $swedenpost_containerRepository)
     {
-        $containers = $directlink_containerRepository->get();
+        $containers = $swedenpost_containerRepository->get();
         
-        return view('admin.warehouse.directlinkContainers.index', compact('containers'));
+        return view('admin.warehouse.swedenpostContainers.index', compact('containers'));
     }
 
     /**
@@ -30,7 +30,7 @@ class DirectLinkContainerController extends Controller
      */
     public function create()
     {
-        return view('admin.warehouse.directlinkContainers.create');
+        return view('admin.warehouse.swedenpostContainers.create');
     }
 
     /**
@@ -39,13 +39,13 @@ class DirectLinkContainerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateContainerRequest $createContainerRequest, DirectLinkContainerRepository $directlink_containerRepository)
+    public function store(CreateContainerRequest $createContainerRequest, SwedenPostContainerRepository $swedenpost_containerRepository)
     {
-        if ( $container = $directlink_containerRepository->store($createContainerRequest) ){
+        if ( $container = $swedenpost_containerRepository->store($createContainerRequest) ){
             session()->flash('alert-success', 'Container Saved Please Scann Packages');
-            return redirect()->route('warehouse.directlink_containers.index');
+            return redirect()->route('warehouse.swedenpost_containers.index');
         }
-        session()->flash('alert-danger', $directlink_containerRepository->getError());
+        session()->flash('alert-danger', $swedenpost_containerRepository->getError());
         return back()->withInput();
     }
 
@@ -73,7 +73,7 @@ class DirectLinkContainerController extends Controller
             abort(405);
         }
         
-        return view('admin.warehouse.directlinkContainers.edit',compact('container'));
+        return view('admin.warehouse.swedenpostContainers.edit',compact('container'));
     }
 
     /**
@@ -83,7 +83,7 @@ class DirectLinkContainerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateContainerRequest $updateContainerRequest, DirectLinkContainerRepository $directlink_containerRepository)
+    public function update(UpdateContainerRequest $updateContainerRequest, SwedenPostContainerRepository $swedenpost_containerRepository)
     {
         $container = Container::find($updateContainerRequest->id);
 
@@ -91,11 +91,11 @@ class DirectLinkContainerController extends Controller
             abort(405);
         }
         
-        if ( $container = $directlink_containerRepository->update($container, $updateContainerRequest) ){
+        if ( $container = $swedenpost_containerRepository->update($container, $updateContainerRequest) ){
             session()->flash('alert-success', 'Container Saved Please Scann Packages');
-            return redirect()->route('warehouse.directlink_containers.index');
+            return redirect()->route('warehouse.swedenpost_containers.index');
         }
-        session()->flash('alert-danger', $directlink_containerRepository->getError());
+        session()->flash('alert-danger', $swedenpost_containerRepository->getError());
         return back()->withInput();
     }
 
@@ -105,18 +105,18 @@ class DirectLinkContainerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($container, DirectLinkContainerRepository $directlink_containerRepository)
+    public function destroy($container, SwedenPostContainerRepository $swedenpost_containerRepository)
     {
         $container = Container::find($container);
         if ( $container->respone != 0 ){
             abort(403,'Cannot Delete Container registered on Correios Chile.');
         }
-        if ( $container = $directlink_containerRepository->delete($container) ){
+        if ( $container = $swedenpost_containerRepository->delete($container) ){
             session()->flash('alert-success', 'Container Deleted');
-            return redirect()->route('warehouse.directlink_containers.index');
+            return redirect()->route('warehouse.swedenpost_containers.index');
         }
 
-        session()->flash('alert-danger', $directlink_containerRepository->getError());
+        session()->flash('alert-danger', $swedenpost_containerRepository->getError());
         return back()->withInput();        
     }
 

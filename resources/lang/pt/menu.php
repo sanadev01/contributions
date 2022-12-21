@@ -51,7 +51,7 @@ return [
         'Chile Containers' => 'Chile Recipientes',
         'USPS Containers' => 'USPS Recipientes',
         'GePS Containers' => 'GePS Recipientes',
-        'Direct Link Containers' => 'Direct Link Recipientes',
+        'SwedenPost Containers' => 'SwedenPost Recipientes',
         'MileExpress Containers' => 'MileExpress Containers',
         'PostNL Containers' => 'PostNL Recipientes',
         'Colombia Containers' => 'Colombia Recipientes'

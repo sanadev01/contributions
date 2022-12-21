@@ -35,7 +35,7 @@ class DeliveryBillRegisterController extends Controller
                 'request_id' => $deliveryBill->setRandomRequestId()
             ]);
             
-        } elseif($deliveryBill->isDirectLink())  {
+        } elseif($deliveryBill->isSwedenPost())  {
 
             $deliveryBill->update([
                 'cnd38_code' => $deliveryBill->setCN38Code(),

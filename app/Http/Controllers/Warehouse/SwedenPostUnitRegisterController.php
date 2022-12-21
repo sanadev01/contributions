@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\OrderTracking;
 use Carbon\Carbon;
 
-class DirectLinkUnitRegisterController extends Controller
+class SwedenPostUnitRegisterController extends Controller
 {
     public function __invoke(Container $container)
     {

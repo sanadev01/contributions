@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\DirectLink;
+namespace App\Services\SwedenPost;
 
 use Carbon\Carbon;
 use App\Models\Order;
@@ -14,16 +14,16 @@ use GuzzleHttp\Client as GuzzleClient;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Calculators\WeightCalculator;
 use App\Services\Correios\Models\PackageError;
-use App\Services\DirectLink\Services\ShippingOrder;
+use App\Services\SwedenPost\Services\ShippingOrder;
 
 class Client{
 
-    //direct link parameters
+    //Sweden Post Parameters
     protected $secret;
     protected $token;
     protected $host;
     protected $baseUrl;
-    //direct link parameters end
+    //Sweden Post Parameters End
     protected $client;
 
     public function __construct()

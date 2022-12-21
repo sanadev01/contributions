@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Warehouse\DirectLinkContainer;
+namespace App\Http\Requests\Warehouse\SwedenPostContainer;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateContainerRequest extends FormRequest
+class CreateContainerRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +25,9 @@ class UpdateContainerRequest extends FormRequest
     {
         return [
             'unit_type' => 'required|integer|in:1,2',
-            'seal_no' => 'required|unique:containers,seal_no,',
+            'services_subclass_code' => 'required',
+            'destination_operator_name' => 'required',
+            'seal_no' => 'required|unique:containers,seal_no',
         ];
     }
 

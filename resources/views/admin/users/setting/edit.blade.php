@@ -321,10 +321,10 @@
                                 @endif
                                 @if(setting('sweden_post', null, \App\Models\User::ROLE_ADMIN))
                                 <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">Direct Link<span class="text-danger"></span></label>
+                                    <label class="col-md-3 text-md-right">Prime5<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <div class="input-group">
-                                            <div class="vs-checkbox-con vs-checkbox-primary" title="Direct Link">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="Sweden Post">
                                                 <input type="checkbox" name="sweden_post" id="sweden_post" @if(setting('sweden_post', null, $user->id)) checked @endif>
                                                 <span class="vs-checkbox vs-checkbox-lg">
                                                     <span class="vs-checkbox--check">

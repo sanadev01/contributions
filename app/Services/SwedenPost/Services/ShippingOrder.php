@@ -1,5 +1,5 @@
 <?php
-namespace App\Services\DirectLink\Services;
+namespace App\Services\SwedenPost\Services;
 
 use App\Services\Converters\UnitsConverter;
  

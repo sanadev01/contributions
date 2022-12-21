@@ -111,7 +111,7 @@ class DeliveryBill extends Model
         }
     }
 
-    public function isDirectLink()
+    public function isSwedenPost()
     {
         if($this->containers->first()->services_subclass_code == ShippingService::Prime5){
             return true;

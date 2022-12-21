@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin\Order;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Services\GePS\Client;
-use App\Services\DirectLink\Client as DLClient;
+use App\Services\SwedenPost\Client as SPClient;
 use App\Models\ShippingService;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
@@ -17,7 +17,7 @@ use App\Repositories\USPSLabelRepository;
 use App\Repositories\FedExLabelRepository;
 use App\Repositories\POSTNLLabelRepository;
 use App\Repositories\ColombiaLabelRepository;
-use App\Repositories\DirectLinkLabelRepository;
+use App\Repositories\SwedenPostLabelRepository;
 use App\Repositories\MileExpressLabelRepository;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
@@ -38,12 +38,12 @@ class OrderLabelController extends Controller
     protected $postNLLabelRepository;
     protected $colombiaLabelRepository;
     protected $gepsLabelRepository;
-    protected $directLinkLabelRepository;
+    protected $swedenpostLabelRepository;
 
     public function __construct(CorrieosChileLabelRepository $corrieosChileLabelRepository, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, 
                                 USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, 
                                 FedExLabelRepository $fedExLabelRepository, MileExpressLabelRepository $mileExpressLabelRepository,
-                                ColombiaLabelRepository $colombiaLabelRepository, GePSLabelRepository $gepsLabelRepository, POSTNLLabelRepository $postNLLabelRepository, DirectLinkLLabelRepository $directLinkLabelRepository){
+                                ColombiaLabelRepository $colombiaLabelRepository, GePSLabelRepository $gepsLabelRepository, POSTNLLabelRepository $postNLLabelRepository, SwedenPostLabelRepository $swedenpostLabelRepository){
         
         $this->corrieosChileLabelRepository = $corrieosChileLabelRepository;
         $this->corrieosBrazilLabelRepository = $corrieosBrazilLabelRepository;
@@ -54,7 +54,7 @@ class OrderLabelController extends Controller
         $this->postNLLabelRepository = $postNLLabelRepository;
         $this->colombiaLabelRepository = $colombiaLabelRepository;
         $this->gepsLabelRepository = $gepsLabelRepository;
-        $this->directLinkLabelRepository = $directLinkLabelRepository;
+        $this->swedenpostLabelRepository = $swedenpostLabelRepository;
     }
     
     public function index(Request $request, Order $order)
@@ -160,11 +160,11 @@ class OrderLabelController extends Controller
             return $this->renderLabel($request, $order, $error);
         }
 
-        if($order->shippingService->isDirectLinkService()){
+        if($order->shippingService->isSwedenPostService()){
          
-            $this->directLinkLabelRepository->get($order);
+            $this->swedenpostLabelRepository->get($order);
             
-            $error = $this->directLinkLabelRepository->getError();
+            $error = $this->swedenpostLabelRepository->getError();
             return $this->renderLabel($request, $order, $error);
         }
         
@@ -307,15 +307,15 @@ class OrderLabelController extends Controller
                 return back();
             }
         }
-        if($order->carrierService() == "Direct Link") {
+        if($order->carrierService() == "Prime5") {
             $apiOrderId = null;
             $apiResponse = json_decode($order->api_response);
             if($apiResponse) {
                 $apiOrderId = $apiResponse->data[0]->orderId;
             }
             if(!is_null($apiOrderId)) {
-                $directLinkClient = new DLClient();   
-                $response = $directLinkClient->deleteOrder($apiOrderId);
+                $swedenpostClient = new SPClient();   
+                $response = $swedenpostClient->deleteOrder($apiOrderId);
                 dd($response);
                 if (!$response['success']) {
                     session()->flash('alert-danger', $response['message']);

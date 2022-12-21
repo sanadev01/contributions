@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\DirectLink;
+namespace App\Http\Resources\SwedenPost;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 

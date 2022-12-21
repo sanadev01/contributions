@@ -5,7 +5,7 @@ namespace App\Repositories\Warehouse;
 use App\Models\OrderTracking;
 
 
-class DirectLinkContainerPackageRepository {
+class SwedenPostContainerPackageRepository {
 
 
     public function addOrderToContainer($container, $order)
