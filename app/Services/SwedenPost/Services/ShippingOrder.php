@@ -8,13 +8,12 @@ class ShippingOrder {
    protected $chargableWeight;
 
    public function getRequestBody($order) {
-
-      if($order->measurement_unit == "lbs/in") {
-         $uom = "LB";
-      } else {
-         $uom = "KG";
+      
+      if($order->measurement_unit == "lbs/in") { $uom = "LB"; } else { $uom = "KG"; }
+      if($order->items()->batteries()->count() || $order->items()->perfumes()->count()) {
+         $batteryType = "Lithium Ion Polymer";
+         $batteryPacking = "Inside Equipment";
       }
-     
      $packet = 
          [ 
             'labelFormat' => "PDF",
@@ -33,8 +32,8 @@ class ShippingOrder {
                   'height' => $order->height,
                   'invoiceValue' => $this->getParcelValue($order),
                   'invoiceCurrency' => "USD",
-                  'batteryType' => "",
-                  'batteryPacking' => "",
+                  'batteryType' => $batteryType,
+                  'batteryPacking' => $batteryPacking,
                   'facility'=> "EWR",
                   //Recipient Information
                   'recipientName' => $order->recipient->getFullName().' '.$order->warehouse_number,
@@ -104,5 +103,16 @@ class ShippingOrder {
          $value = number_format($item->value * (int)$item->quantity , 2);
       }
       return $value;
+   }
+
+   private function containsBatteryPerfume($order)
+   {
+      foreach ($order->items as $key => $item) {
+
+         if($item->contains_battery || $item->contains_perfume) {
+            return true;
+         }
+      }
+      return false;
    }
 }

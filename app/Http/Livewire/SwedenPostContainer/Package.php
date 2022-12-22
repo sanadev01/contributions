@@ -8,7 +8,7 @@ use App\Models\OrderTracking;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Warehouse\SwedenPostContainerPackageController;
 
-class Packages extends Component
+class Package extends Component
 {
     public $container;
     public $orders = [];
@@ -37,7 +37,7 @@ class Packages extends Component
         $this->totalPackages();
         $this->totalWeight();
 
-        return view('livewire.swedenpost-container.packages');
+        return view('livewire.sweden-post-container.package');
     }
 
     public function getPackages($id)
@@ -73,7 +73,7 @@ class Packages extends Component
             
             if(!$order->containers->isEmpty()) {
     
-                $this->error = 'Order is already present in Container'; 
+                $this->error = "Order is already present in Container $this->barcode"; 
                 return $this->barcode = '';
                 
             }
