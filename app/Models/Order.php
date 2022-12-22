@@ -331,6 +331,11 @@ class Order extends Model implements Package
         return $this->hasSecondLabel() ? $this->us_api_service : null;
     }
 
+    public function getCarrierAttribute()
+    {
+        return $this->carrierService();
+    }
+
     public function carrierService()
     {
         if ($this->shippingService()) {
@@ -358,6 +363,11 @@ class Order extends Model implements Package
                 return 'Global eParcel';
 
             }
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::Prime5){
+
+                return 'Prime5';
+
+            }
             return 'Correios Brazil';
         }
 
@@ -374,7 +384,8 @@ class Order extends Model implements Package
                 optional($this->shippingService)->service_sub_class == ShippingService::UPS_GROUND ||
                 optional($this->shippingService)->service_sub_class == ShippingService::FEDEX_GROUND ||
                 optional($this->shippingService)->service_sub_class == ShippingService::GePS ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GePS_EFormat) {
+                optional($this->shippingService)->service_sub_class == ShippingService::GePS_EFormat ||
+                optional($this->shippingService)->service_sub_class == ShippingService::Prime5) {
 
                 return $this->user_declared_freight;
             }

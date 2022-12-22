@@ -116,6 +116,11 @@ class OrderRepository
                     ShippingService::GePS_EFormat,
                 ];
             }
+            if($request->carrier == 'Prime5'){
+                $service = [
+                    ShippingService::Prime5, 
+                ];
+            }
             $query->whereHas('shippingService', function ($query) use($service) {
                 return $query->whereIn('service_sub_class', $service);
             });

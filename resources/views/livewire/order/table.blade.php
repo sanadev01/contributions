@@ -132,6 +132,7 @@
                             <option value="FEDEX">FEDEX</option>
                             <option value="Chile">Correios Chile</option>
                             <option value="Global eParcel">Global eParcel</option>
+                            <option value="Prime5">Prime5</option>
                         </select>
                     </th>
                     @admin<th></th>@endadmin

@@ -82,6 +82,8 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'Priority';
         }elseif($this->services_subclass_code == '537'){
             return 'Global eParcel Prime';
+        }elseif($this->services_subclass_code == '773'){
+            return 'Prime5';
         }else {
             return 'FirstClass';
         }
@@ -109,6 +111,9 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 9;
         }elseif($this->services_subclass_code == '537'){
             return 10;
+        }
+        elseif($this->services_subclass_code == '773'){
+            return 11;
         }
         // return $this->services_subclass_code == 'NX' ? 2 : 1;
     }
@@ -180,5 +185,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     public function hasGePSService()
     {
         return $this->services_subclass_code == ShippingService::GePS || $this->services_subclass_code == ShippingService::GePS_EFormat;
+    }
+
+    public function hasSwedenPostService()
+    {
+        return $this->services_subclass_code == ShippingService::Prime5;
     }
 }

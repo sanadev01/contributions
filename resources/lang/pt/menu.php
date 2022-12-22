@@ -51,6 +51,7 @@ return [
         'Chile Containers' => 'Chile Recipientes',
         'USPS Containers' => 'USPS Recipientes',
         'GePS Containers' => 'GePS Recipientes',
+        'Prime5 Containers' => 'Prime5 Recipientes',
     ],
     'Affiliate' => [
         'menu' => 'Relatórios',

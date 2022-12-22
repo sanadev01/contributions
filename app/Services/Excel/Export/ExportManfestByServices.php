@@ -60,6 +60,7 @@ class ExportManfestByServices extends AbstractCsvExportService
             'USPS',
             'Fedex',
             'GePs',
+            'Prime5',
             'Carrier Tracking',
             'Marketplace'
         ];
@@ -105,6 +106,7 @@ class ExportManfestByServices extends AbstractCsvExportService
                 $package->carrierService() == 'UPS'? 'UPS': '',
                 $package->carrierService() == 'FEDEX'? 'FEDEX': '',
                 $package->carrierService() == 'GePS'? 'GePS': '',
+                $package->carrierService() == 'Prime5'? 'Prime5': '',
                 $package->tracking_id,
                 setting('marketplace_checked', null, $package->user->id)?  setting('marketplace', null, $package->user->id):''
             ];
@@ -164,7 +166,6 @@ class ExportManfestByServices extends AbstractCsvExportService
         $commission = false;
         $service  = $order->shippingService->service_sub_class;
         $rateSlab = AccrualRate::getRateSlabFor($order->getOriginalWeight('kg'),$service);
-
         if ( !$rateSlab ){
             return [
                 'airport'=> 0,
