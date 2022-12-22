@@ -73,7 +73,7 @@ class Package extends Component
             
             if(!$order->containers->isEmpty()) {
     
-                $this->error = 'Order is already present in Container'; 
+                $this->error = "Order is already present in Container $this->barcode"; 
                 return $this->barcode = '';
                 
             }
