@@ -25,6 +25,7 @@ class Packages extends Component
     public function mount($container = null, $ordersCollection = null, $editMode = null)
     {
         $this->container = $container;
+        $this->emit('scanFocus');
         $this->orders = json_decode($ordersCollection);
         $this->editMode = $editMode;
         $this->service = $container->getServiceSubClass();
@@ -52,6 +53,7 @@ class Packages extends Component
     {
         if ( $barcode != null || $barcode != '' ||  strlen($barcode) > 4 ){
             $this->saveOrder();
+            $this->dispatchBrowserEvent('scan-focus');
         }
 
     }

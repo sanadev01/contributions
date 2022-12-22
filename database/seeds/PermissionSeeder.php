@@ -448,6 +448,11 @@ class PermissionSeeder extends Seeder
                 'group' => 'Reports',
                 'description' => 'User can see Anjun Reports'
             ],
+            [
+                'slug' => 'stopPrint-corrieos-label',
+                'group' => 'Order',
+                'description' => 'Put correios server down'
+            ],
         ];
     }
 }
