@@ -47,8 +47,12 @@ class IndexTable extends Component
             'value' => Package::SERVICE_CLASS_AJ_EXPRESS,
         ];
         $this->services[7] = [
-            'name' => 'GePS',
+            'name' => 'Global eParcel Prime',
             'value' => Package::SERVICE_CLASS_GePS,
+        ];
+        $this->services[8] = [
+            'name' => 'Global eParcel Untracked Packet',
+            'value' => Package::SERVICE_CLASS_GePS_EFormat,
         ];
         return $this->services;
     }

@@ -7,6 +7,7 @@ use App\Models\Warehouse\Container;
 use App\Models\Warehouse\DeliveryBill;
 use App\Services\StoreIntegrations\Shopify;
 use App\Http\Controllers\Admin\HomeController;
+use App\Services\Correios\Services\Brazil\Client;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
@@ -94,6 +95,8 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('orders.ups-label', OrderUPSLabelController::class)->only('index','store');
             Route::get('order-ups-label-cancel-pickup/{id?}', [\App\Http\Controllers\Admin\Order\OrderUPSLabelController::class, 'cancelUPSPickup'])->name('order.ups-label.cancel.pickup');
         });
+        //Cancel Lable Route for GePS
+        Route::get('order/{order}/cancel-label', [\App\Http\Controllers\Admin\Order\OrderLabelController::class, 'cancelLabel'])->name('order.label.cancel');
 
         Route::namespace('Consolidation')->prefix('consolidation')->as('consolidation.')->group(function(){
             Route::resource('parcels',SelectPackagesController::class)->only('index','store','edit','update');
@@ -193,6 +196,8 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('scan', PrintLabelController::class)->only('create','show','store','update');
         });
 
+        Route::resource('liability', Deposit\LiabilityController::class)->only('create','store','index');
+        
         Route::resource('deposit', Deposit\DepositController::class)->only('create','store','index');
         Route::get('download-deposit-attachment/{attachment?}', [DepositController::class,'downloadAttachment'])->name('download_attachment');
         Route::get('view-deposit-description/{deposit?}', [DepositController::class,'showDescription'])->name('deposit.description');
@@ -240,21 +245,7 @@ Route::get('media/get/{document}', function (App\Models\Document $document) {
     return Storage::response($document->getStoragePath(), $document->name);
 })->name('media.get');
 
-Route::get('order/{order}/label/get', function (App\Models\Order $order) {
-
-    /**
-     * Sinerlog modification
-     */
-    if ( $order->sinerlog_url_label != '' ) {
-        return redirect($order->sinerlog_url_label);
-    } else {
-        if ( !file_exists(storage_path("app/labels/{$order->corrios_tracking_code}.pdf")) ){
-            return apiResponse(false,"Lable Expired or not generated yet please update lable");
-        }
-    }
-
-    return response()->download(storage_path("app/labels/{$order->corrios_tracking_code}.pdf"),"{$order->corrios_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
-})->name('order.label.download');
+Route::get('order/{id}/label/get',\Admin\Label\GetLabelController::class)->name('order.label.download');
 
 Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
     if ( !file_exists(storage_path("app/labels/{$order->us_api_tracking_code}.pdf")) ){
@@ -293,6 +284,34 @@ Route::get('order/apiresponse/{id?}',function($id){
     dd($tracking, $order);
 });
 
+Route::get('truncate-response/{id?}',function($id){
+    $codes = [];
+    foreach($codes as $code) {
+        $order = DB::table('orders')->where('corrios_tracking_code', $code)->update([
+            'corrios_tracking_code' => null,
+            'cn23' => null,
+            'api_response' => null
+        ]);
+    }
+    return "API Response and Tracking Codes Truncated";
+});
+
+Route::get('container-update/{id?}/d/{dno?}/unit/{unit?}',function($id, $dNo, $unit){
+
+    $container = Container::find($id)->update([
+        'dispatch_number' => $dNo,
+        'unit_code' => $unit
+    ]);
+    return "Container Updated Successfully";
+});
+
+Route::get('dbill-update/{id?}/cn38/{cNo?}',function($id, $cNo){
+
+    $delivery = DeliveryBill::find($id)->update([
+        'cnd38_code' => $cNo
+    ]);
+    return "Delivery Bill CN38 Updated";
+});
 
 Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container');
 

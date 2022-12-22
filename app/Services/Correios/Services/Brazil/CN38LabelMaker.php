@@ -33,6 +33,7 @@ class CN38LabelMaker implements HasLableExport{
     public function __construct()
     {
         $this->logo = public_path('images/hd-1cm.png');
+        $this->originLogo = public_path('images/hd-1cm.png');
         $this->deliveryBillNo = '';
         $this->officeOfOrigin = public_path('images/hd-1cm.png');
         $this->contractNo = '9912501576';
@@ -58,6 +59,13 @@ class CN38LabelMaker implements HasLableExport{
     public function setLogo($logo)
     {
         $this->logo = $logo;
+
+        return $this;
+    }
+
+    public function setOriginLogo($originLogo)
+    {
+        $this->originLogo = $originLogo;
 
         return $this;
     }
@@ -254,6 +262,7 @@ class CN38LabelMaker implements HasLableExport{
     {
         return [
             'logo' => $this->logo,
+            'originLogo' => $this->originLogo,
             'deliveryBill' => $this->deliveryBill,
             'deliveryBillNo' => $this->deliveryBillNo,
             'officeOfOrigin' => $this->officeOfOrigin,

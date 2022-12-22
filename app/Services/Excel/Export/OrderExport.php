@@ -86,7 +86,6 @@ class OrderExport extends AbstractExportService
             $this->setCellValue('T'.$row, $this->getcarrier($order)['domestic']);
 
             if(Auth::user()->isAdmin()){
-                
                 $this->setCellValue('U'.$row, $order->carrierCost());
                 $this->setCellValue('V'.$row, optional($order->us_secondary_label_cost)['api_cost']);
                 $this->setCellValue('W'.$row,setting('marketplace_checked', null, $user->id)?  setting('marketplace', null, $user->id):'');
@@ -187,6 +186,7 @@ class OrderExport extends AbstractExportService
 
             $this->setColumnWidth('W', 20);
             $this->setCellValue('W1', 'Marketplace');
+
         }
 
         $this->setBackgroundColor('A1:W1', '2b5cab');
@@ -237,9 +237,7 @@ class OrderExport extends AbstractExportService
                 'intl' => null,
                 'domestic' => $order->carrierService()
             ];
-        }
-        
-        if(in_array($order->carrierService(), ['Correios Chile', 'GePS', 'Correios Brazil']) ){
+        }else{
             return [
                 'intl' => $order->carrierService(),
                 'domestic' => $order->secondCarrierAervice()

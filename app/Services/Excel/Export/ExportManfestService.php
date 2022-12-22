@@ -54,7 +54,8 @@ class ExportManfestService extends AbstractCsvExportService
             'Commission Paid to',
             'Bag',
             'POBOX / NAME',
-            'Carrier Tracking'
+            'Carrier Tracking',
+            'Marketplace'
         ];
     }
 
@@ -91,7 +92,8 @@ class ExportManfestService extends AbstractCsvExportService
                 optional(optional($package->affiliateSale)->user)->pobox_number  .' '.optional(optional($package->affiliateSale)->user)->name,
                 $container->dispatch_number,
                 optional($package->user)->pobox_number.' / '.optional($package->user)->getFullName(),
-                $package->tracking_id
+                $package->tracking_id,
+                setting('marketplace_checked', null, $package->user->id)?  setting('marketplace', null, $package->user->id):''
             ];
 
             $i=0;
@@ -136,6 +138,7 @@ class ExportManfestService extends AbstractCsvExportService
             $this->totalPaidToCorreios,
             $this->totalAnjunCommission,
             $this->totalCommission,
+            '',
             '',
             '',
             ''

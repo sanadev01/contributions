@@ -110,13 +110,9 @@ class OrderRepository
                     ShippingService::Courier_Express
                 ];
             }
-            if($request->carrier == 'GePS'){
+            if($request->carrier == 'Global eParcel'){
                 $service = [
                     ShippingService::GePS,
-                ];
-            }
-            if($request->carrier == 'GePS_EFormat'){
-                $service = [
                     ShippingService::GePS_EFormat,
                 ];
             }
