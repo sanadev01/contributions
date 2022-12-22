@@ -8,7 +8,9 @@ class ShippingOrder {
    protected $chargableWeight;
 
    public function getRequestBody($order) {
-      
+
+      $batteryType = ""; 
+      $batteryPacking = "";
       if($order->measurement_unit == "lbs/in") { $uom = "LB"; } else { $uom = "KG"; }
       if($order->items()->batteries()->count() || $order->items()->perfumes()->count()) {
          $batteryType = "Lithium Ion Polymer";
