@@ -6,12 +6,12 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">@lang('warehouse.containers.Edit Container')</h4>
-                        <a href="{{ route('warehouse.directlink_containers.index') }}" class="pull-right btn btn-primary">@lang('warehouse.containers.List Containers')</a>
+                        <a href="{{ route('warehouse.swedenpost_containers.index') }}" class="pull-right btn btn-primary">@lang('warehouse.containers.List Containers')</a>
                     </div>
                     <hr>
                     <div class="card-content">
                         <div class="card-body">
-                            <form action="{{ route('warehouse.directlink_containers.update',$container) }}" method="post" enctype="multipart/form-data">
+                            <form action="{{ route('warehouse.swedenpost_containers.update',$container) }}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
                                 <input hidden type="text" name="id" value="{{$container->id}}">
@@ -56,7 +56,7 @@
                                     <div class="col-md-6">
                                         <select class="form-control" name="services_subclass_code" disabled>
                                             <option value="">@lang('warehouse.containers.Distribution Service Class')</option>
-                                            <option value="KP" {{ old('services_subclass_code',$container->services_subclass_code) == 'KP' ? 'selected': '' }}>Global eParcel</option>
+                                            <option value="537" {{ old('services_subclass_code',$container->services_subclass_code) == App\Models\ShippingService::Prime5 ? 'selected': '' }}>Prime5</option>
                                         </select>
                                         @error('services_subclass_code')
                                             <div class="help-block text-danger"> {{ $message }} </div>

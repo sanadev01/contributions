@@ -55,8 +55,8 @@ class IndexTable extends Component
             'value' => Package::SERVICE_CLASS_GePS_EFormat,
         ];
         $this->services[9] = [
-            'name' => 'Direct Link',
-            'value' => Package::SERVICE_CLASS_Direct_Link,
+            'name' => 'Prime5',
+            'value' => Package::SERVICE_CLASS_Prime5,
         ];
         return $this->services;
     }

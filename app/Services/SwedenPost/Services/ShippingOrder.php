@@ -1,5 +1,5 @@
 <?php
-namespace App\Services\DirectLink\Services;
+namespace App\Services\SwedenPost\Services;
 
 use App\Services\Converters\UnitsConverter;
  
@@ -9,10 +9,12 @@ class ShippingOrder {
 
    public function getRequestBody($order) {
 
-      if($order->measurement_unit == "lbs/in") {
-         $uom = "LB";
-      } else {
-         $uom = "KG";
+      $batteryType = ""; 
+      $batteryPacking = "";
+      if($order->measurement_unit == "lbs/in") { $uom = "LB"; } else { $uom = "KG"; }
+      if($order->items()->batteries()->count() || $order->items()->perfumes()->count()) {
+         $batteryType = "Lithium Ion Polymer";
+         $batteryPacking = "Inside Equipment";
       }
      
      $packet = 
@@ -33,8 +35,8 @@ class ShippingOrder {
                   'height' => $order->height,
                   'invoiceValue' => $this->getParcelValue($order),
                   'invoiceCurrency' => "USD",
-                  'batteryType' => "",
-                  'batteryPacking' => "",
+                  'batteryType' => $batteryType,
+                  'batteryPacking' => $batteryPacking,
                   'facility'=> "EWR",
                   //Recipient Information
                   'recipientName' => $order->recipient->getFullName().' '.$order->warehouse_number,

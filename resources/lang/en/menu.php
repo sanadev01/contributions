@@ -52,7 +52,7 @@ return [
         'Chile Containers' => 'Chile Containers',
         'USPS Containers' => 'USPS Containers',
         'GePS Containers' => 'GePS Containers',
-        'Direct Link Containers' => 'Direct Link Containers',
+        'Prime5 Containers' => 'Prime5 Containers',
         'Sinerlog Containers' => 'Sinerlog Containers',
     ],
     'Affiliate' => [

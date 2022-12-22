@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Warehouse;
 use Illuminate\Http\Request;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
-use App\Services\DirectLink\CN35LabelMaker;
+use App\Services\SwedenPost\CN35LabelMaker;
 use Carbon\Carbon;
 
-class DirectLinkCN35DownloadController extends Controller
+class SwedenPostCN35DownloadController extends Controller
 {
     /**
      * Handle the incoming request.

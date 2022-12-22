@@ -39,11 +39,11 @@ use App\Http\Controllers\Warehouse\GePSUnitRegisterController;
 use App\Http\Controllers\Warehouse\GePSCN35DownloadController;
 use App\Http\Controllers\Warehouse\GePSManifestDownloadController;
 use App\Http\Controllers\Warehouse\UnitsInfoController;
-use App\Http\Controllers\Warehouse\DirectLinkContainerController;
-use App\Http\Controllers\Warehouse\DirectLinkContainerPackageController;
-use App\Http\Controllers\Warehouse\DirectLinkUnitRegisterController;
-use App\Http\Controllers\Warehouse\DirectLinkCN35DownloadController;
-use App\Http\Controllers\Warehouse\DirectLinkManifestDownloadController;
+use App\Http\Controllers\Warehouse\SwedenPostContainerController;
+use App\Http\Controllers\Warehouse\SwedenPostContainerPackageController;
+use App\Http\Controllers\Warehouse\SwedenPostUnitRegisterController;
+use App\Http\Controllers\Warehouse\SwedenPostCN35DownloadController;
+use App\Http\Controllers\Warehouse\SwedenPostManifestDownloadController;
 
 
 Route::middleware(['auth'])->as('warehouse.')->group(function () {
@@ -106,12 +106,12 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     // Routes for Correios Unit Info
     Route::resource('unitinfo', UnitsInfoController::class);
 
-    // Routes for Direct Link Container
-    Route::resource('directlink_containers', DirectLinkContainerController::class);
-    Route::resource('directlink_container.packages', DirectLinkContainerPackageController::class)->only('index','destroy', 'create');
-    Route::get('directlink_container/{container}/register', DirectLinkUnitRegisterController::class)->name('directlink_container.register');
-    Route::get('directlink_container/{container}/download', DirectLinkCN35DownloadController::class)->name('directlink_container.download');
-    Route::get('directlink/{delivery_bill}/manifest', DirectLinkManifestDownloadController::class)->name('directlink.manifest.download');
+    // Routes for Prime5 Container
+    Route::resource('swedenpost_containers', SwedenPostContainerController::class);
+    Route::resource('swedenpost_container.packages', SwedenPostContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('swedenpost_container/{container}/register', SwedenPostUnitRegisterController::class)->name('swedenpost_container.register');
+    Route::get('swedenpost_container/{container}/download', SwedenPostCN35DownloadController::class)->name('swedenpost_container.download');
+    Route::get('swedenpost/{delivery_bill}/manifest', SwedenPostManifestDownloadController::class)->name('swedenpost.manifest.download');
 });
 
 

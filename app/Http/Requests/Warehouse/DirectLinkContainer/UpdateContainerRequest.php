@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Warehouse\DirectLinkContainer;
+namespace App\Http\Requests\Warehouse\SwedenPostContainer;
 
 use Illuminate\Foundation\Http\FormRequest;
 

@@ -6,11 +6,11 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">@lang('warehouse.containers.Create Container')</h4>
-                        <a href="{{ route('warehouse.directlink_containers.index') }}" class="pull-right btn btn-primary">@lang('warehouse.containers.List Containers')</a>
+                        <a href="{{ route('warehouse.swedenpost_containers.index') }}" class="pull-right btn btn-primary">@lang('warehouse.containers.List Containers')</a>
                     </div>
                     <div class="card-content">
                         <div class="card-body">
-                            <form action="{{ route('warehouse.directlink_containers.store') }}" method="post" enctype="multipart/form-data">
+                            <form action="{{ route('warehouse.swedenpost_containers.store') }}" method="post" enctype="multipart/form-data">
                                 @csrf
 
                                 <div class="controls row mb-1 align-items-center my-2">
@@ -54,7 +54,7 @@
                                     <div class="col-md-6">
                                         <select class="form-control" name="services_subclass_code">
                                             <option value="">@lang('warehouse.containers.Distribution Service Class')</option>
-                                            <option value="773" {{ old('services_subclass_code') == App\Models\ShippingService::Direct_Link ? 'selected': '' }}>Direct Link - Sweden Post</option>
+                                            <option value="773" {{ old('services_subclass_code') == App\Models\ShippingService::Prime5 ? 'selected': '' }}>Prime5</option>
                                         </select>
                                         @error('services_subclass_code')
                                             <div class="help-block text-danger"> {{ $message }} </div>

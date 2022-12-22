@@ -10,7 +10,7 @@ use App\Models\ShippingService;
 use App\Http\Controllers\Controller;
 use App\Models\Warehouse\DeliveryBill;
 
-class DirectLinkManifestDownloadController extends Controller
+class SwedenPostManifestDownloadController extends Controller
 {
     public function __invoke(DeliveryBill $deliveryBill)
     {

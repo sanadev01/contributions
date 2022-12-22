@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ShippingService;
 
-class DirectLinkContainerRepository {
+class SwedenPostContainerRepository {
 
     protected $error;
 
@@ -20,7 +20,7 @@ class DirectLinkContainerRepository {
         }
 
         return $query->where(function($query) {
-            $query->where('services_subclass_code', ShippingService::Direct_Link);
+            $query->where('services_subclass_code', ShippingService::Prime5);
         })->latest()->paginate();
 
     }

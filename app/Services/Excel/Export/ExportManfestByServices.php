@@ -60,7 +60,7 @@ class ExportManfestByServices extends AbstractCsvExportService
             'USPS',
             'Fedex',
             'GePs',
-            'Direct Link',
+            'Prime5',
             'Carrier Tracking'
         ];
     }
@@ -105,7 +105,7 @@ class ExportManfestByServices extends AbstractCsvExportService
                 $package->carrierService() == 'UPS'? 'UPS': '',
                 $package->carrierService() == 'FEDEX'? 'FEDEX': '',
                 $package->carrierService() == 'GePS'? 'GePS': '',
-                $package->carrierService() == 'Direct Link'? 'Direct Link': '',
+                $package->carrierService() == 'Prime5'? 'Prime5': '',
                 $package->tracking_id
             ];
 

@@ -50,10 +50,10 @@
                     <span class="menu-title">@lang('menu.Warehouse.GePS Containers')</span>
                 </a>
             </li>
-            <li class="{{ $isActive(['warehouse.directlink_containers.index','warehouse.directlink_containers.create','warehouse.directlink_containers.edit','warehouse.directlink_container.packages.index']) }}">
-                <a href="{{ route('warehouse.directlink_containers.index') }}">
+            <li class="{{ $isActive(['warehouse.swedenpost_containers.index','warehouse.swedenpost_containers.create','warehouse.swedenpost_containers.edit','warehouse.swedenpost_container.packages.index']) }}">
+                <a href="{{ route('warehouse.swedenpost_containers.index') }}">
                     <i class="feather icon-circle"></i>
-                    <span class="menu-title">@lang('menu.Warehouse.Direct Link Containers')</span>
+                    <span class="menu-title">@lang('menu.Warehouse.Prime5 Containers')</span>
                 </a>
             </li>
             <li class="#">

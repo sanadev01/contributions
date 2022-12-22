@@ -85,7 +85,7 @@
                                                     <span class="badge badge-success">A</span>
                                                 @elseif($deliveryBill->isGePS())
                                                     <span class="badge badge-secondary">G</span>
-                                                @elseif($deliveryBill->isDirectLink())
+                                                @elseif($deliveryBill->isSwedenPost())
                                                     <span class="badge badge-info text-white">D</span>
                                                 @else
                                                     <span class="badge badge-primary">H</span>

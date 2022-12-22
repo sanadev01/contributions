@@ -116,9 +116,9 @@ class OrderRepository
                     ShippingService::GePS_EFormat,
                 ];
             }
-            if($request->carrier == 'Direct Link'){
+            if($request->carrier == 'Prime5'){
                 $service = [
-                    ShippingService::DIRECT_LINK, 
+                    ShippingService::Prime5, 
                 ];
             }
             $query->whereHas('shippingService', function ($query) use($service) {
