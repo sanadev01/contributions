@@ -13,7 +13,8 @@ use App\Http\Controllers\Warehouse\GePSContainerPackageController;
 class Packages extends Component
 {
     public $container;
-    public $orders = [];
+    public $idContainer;
+    public $orders;
     public $editMode;
     public $barcode;
     public $service;
@@ -21,23 +22,24 @@ class Packages extends Component
     public $num_of_Packages = 0;
     public $totalweight;
     public $containerDestination;
-    public $orderRegion;
+    // public $orderRegion;
 
-    public function mount($container = null, $orders = null, $editMode = null)
+    public function mount($id = null, $editMode = null)
     {
-        $this->container = $container;
+        $this->container = Container::find($id);
+        $this->idContainer = $id;
         $this->error = '';
-        $this->emit('scanFocus');        
-        $this->orders = $this->container->orders;
+        // $this->emit('scanFocus');        
+        // $this->orders = $this->container->orders;
         $this->editMode = $editMode;
-        $this->service = $container->getServiceSubClass();
-        $this->containerDestination = $container->destination_operator_name == 'MIA' ? 'Miami' : '';
+        $this->service = $this->container->getServiceSubClass();
+        $this->containerDestination = $this->container->destination_operator_name == 'MIA' ? 'Miami' : '';
     }
 
     public function render()
     {
         return view('livewire.geps-container.packages',[
-            'orders' => $this->getPackages($this->container->id),
+            'orders' => $this->getPackages($this->idContainer),
             'totalweight' => $this->totalWeight(),
             'num_of_Packages' => $this->totalPackages()
         ]);
@@ -52,52 +54,79 @@ class Packages extends Component
 
     public function updatedbarcode($barcode)
     {
+        $error = null;
         if ( $barcode != null || $barcode != '' ||  strlen($barcode) > 4 ){
-            $this->saveOrder();
-            $this->dispatchBrowserEvent('scan-focus');
+            
+            $gepsContainerPackageRepository = new GePSContainerPackageRepository;
+            $order = $gepsContainerPackageRepository->addOrderToContainer($this->idContainer, $barcode);
+            // $this->addOrderTracking($order);
+            
         }
 
     }
 
-    public function saveOrder()
-    {
-        $this->getPackages($this->container->id);
-        $order = Order::where('corrios_tracking_code', $this->barcode)->first();
-        if (!$order) {
-            return $this->error = "Order Not Found $this->barcode";
-        }
+    // public function saveOrder()
+    // {
+    //     if ( $barcode != null || $barcode != '' ||  strlen($barcode) > 4 ){
+    //         $this->error = '';
+    //         $order = Order::where('corrios_tracking_code', $this->barcode)->first();
+    //         if($order->containers->isEmpty()) {
+    //             $this->saveOrder();
+    //         }else{
+    //             $this->barcode = '';
+    //             return $this->error = "Order is already present in Container $this->barcode";
+    //         }
 
-        if($this->container->orders->where('corrios_tracking_code',$order->corrios_tracking_code)->first()) {
-            return $this->error = "Order is already present in Container $this->barcode";
-        }
-        if(!$order->containers->isEmpty()) {
-            return $this->error = "Order is already present in another Container $this->barcode";
-        }
+    //         // $this->dispatchBrowserEvent('scan-focus');
+    //     }
+    //     $this->error = '';
+    //     // $this->getPackages($this->idContainer);
+    //     $container = Container::find($this->idContainer);
 
-        if ($order->status != Order::STATUS_PAYMENT_DONE) {
-            return  $this->error = 'Please check the Order Status, either the order has been canceled, refunded or not yet paid';
-        }
+    //     $order = Order::where('corrios_tracking_code', $this->barcode)->first();
+        
+    //     if (!$order) {
+    //         $this->barcode = ''; 
+    //         return $this->error = "Order Not Found $this->barcode";
+    //     }
+    //     $containerOrder = $container->orders->where('corrios_tracking_code',$this->barcode)->first();
+        
+    //     if(!$order->containers->isEmpty()) {
+    //         $this->barcode = ''; 
+    //         return $this->error = "Order is already present in another Container $this->barcode";
+    //     }
 
-        if ($this->container->hasGePSService() && !$order->shippingService->isGePSService()) {
-            return  $this->error = 'Order does not belong to this container. Please Check Packet Service';
-        }
+    //     if ($order->status != Order::STATUS_PAYMENT_DONE) {
+    //         $this->barcode = ''; 
+    //         return $this->error = 'Please check the Order Status, either the order has been canceled, refunded or not yet paid';
+    //     }
 
-        if (!$this->container->hasGePSService() && $order->shippingService->isGePSService()) {
-            return  $this->error = 'Order does not belong to this container. Please Check Packet Service';
-        }
+    //     if ($container->hasGePSService() && !$order->shippingService->isGePSService()) {
+    //         $this->barcode = ''; 
+    //         return $this->error = 'Order does not belong to this container. Please Check Packet Service';
+    //     }
 
-        $gepsContainerPackageRepository = new GePSContainerPackageRepository;
-        $order = $gepsContainerPackageRepository->addOrderToContainer($this->container, $order);
+    //     if (!$container->hasGePSService() && $order->shippingService->isGePSService()) {
+    //         $this->barcode = ''; 
+    //         return $this->error = 'Order does not belong to this container. Please Check Packet Service';
+    //     }
 
-        $this->addOrderTracking($order);
-        $this->error = '';
-        return $this->barcode = ''; 
-    }
+    //     if(!$this->error || $this->error = ''){
+    //         $gepsContainerPackageRepository = new GePSContainerPackageRepository;
+    //         $order = $gepsContainerPackageRepository->addOrderToContainer($container, $order);
+    //         $this->addOrderTracking($order);
+    //     }
+
+    //     $this->error = '';
+    //     return $this->barcode = ''; 
+    // }
 
     public function removeOrder($id)
     {
         $gepsContainerPackageRepository = new GePSContainerPackageRepository;
-        $gepsContainerPackageRepository->removeOrderFromContainer($this->container, $id);
+        $response = $gepsContainerPackageRepository->removeOrderFromContainer($this->container, $id);
+        $this->container->refresh();
+        $this->error = '';
     }
 
     public function totalPackages()
