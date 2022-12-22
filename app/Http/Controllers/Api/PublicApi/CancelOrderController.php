@@ -55,7 +55,7 @@ class CancelOrderController extends Controller
                     }
                             try {          
                                 //SendMailNotification
-                                Mail::send(new NotifyTransaction($deposit, $preStatus, $user));
+                                Mail::send(new NotifyTransaction($deposit, $preStatus, Auth::user()->name));
                             } catch (Exception $ex) { 
                                 Log::info('Notify Transaction email send error: '.$ex->getMessage());
                             }
