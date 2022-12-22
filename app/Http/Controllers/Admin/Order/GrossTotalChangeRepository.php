@@ -41,15 +41,8 @@ class GrossTotalChangeRepository {
                     ]);
                 } else {
                     //create new invoice if not exist.
-                    $invoice = PaymentInvoice::create([
-                        'uuid' => PaymentInvoice::generateUUID(),
-                        'paid_by' => $order->user->id,
-                        'order_count' => '1',
-                        'total_amount' => $currentAmount,
-                        'is_paid'     => 0,
-                        'paid_amount' => $paidAmount,
-                        'type' => auth()->user()->can('canCreatePostPaidInvoices', PaymentInvoice::class) ? PaymentInvoice::TYPE_POSTPAID : PaymentInvoice::TYPE_PREPAID
-                    ]);
+                    $invoice=  $this->createInvoice($order,$currentAmount,$paidAmount);
+  
                 } 
 
                 if ($invoice->total_amount > $invoice->paid_amount) { 
@@ -67,12 +60,16 @@ class GrossTotalChangeRepository {
     //this function will sync ( order and invoice ) if order status is STATUS_PAYMENT_PENDING.
     public function changesOnPending(Order $order)
     {
-        $invoice = $order->getPaymentInvoice(); 
+        $invoice = $order->getPaymentInvoice();  
         if ($order->status == Order::STATUS_PAYMENT_PENDING) {
             if ($invoice) {
                 $invoice->update([
                     'total_amount' => $invoice->orders()->sum('gross_total'),
                 ]);
+            }
+            else{
+                // return dd($order->deposits);
+                $invoice = $this->createInvoice($order,$order->total_gross,0);
             }
 
 
@@ -146,6 +143,18 @@ class GrossTotalChangeRepository {
             'balance' => Deposit::getCurrentBalance($order->user) + $difference,
             'is_credit' => true,
             'description' => "Change of Order Amount",
+        ]);
+    }
+    public function createInvoice($order,$totalAmount,$paidAmount)
+    {
+        return PaymentInvoice::create([
+            'uuid' => PaymentInvoice::generateUUID(),
+            'paid_by' => $order->user->id,
+            'order_count' => '1',
+            'total_amount' => $totalAmount,
+            'is_paid'     => 0,
+            'paid_amount' => $paidAmount,
+            'type' => auth()->user()->can('canCreatePostPaidInvoices', PaymentInvoice::class) ? PaymentInvoice::TYPE_POSTPAID : PaymentInvoice::TYPE_PREPAID
         ]);
     }
 }
