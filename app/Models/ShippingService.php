@@ -132,7 +132,10 @@ class ShippingService extends Model
     }
     public function isSwedenPostService()
     {
-        return $this->service_sub_class = self::Prime5;
+        if($this->service_sub_class == self::Prime5){
+            return true;
+        }
+        return false;
     }
 
     public function isGePSeFormatService()
