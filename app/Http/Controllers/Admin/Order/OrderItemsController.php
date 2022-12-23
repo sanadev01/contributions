@@ -118,6 +118,7 @@ class OrderItemsController extends Controller
 
             if ($this->orderRepository->updateShippingAndItems($request, $order)) {
                 $this->grossTotalChangeRepository->changesOnPending($order);
+                return dd($order->getPaymentInvoice());
                 session()->flash('alert-success', 'orders.Order Placed');
                 if ($order->user->hasRole('wholesale') && $order->user->insurance == true) {
                     return redirect()->route('admin.orders.order-invoice.index', $order); # code...

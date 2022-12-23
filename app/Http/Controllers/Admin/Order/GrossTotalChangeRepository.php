@@ -22,7 +22,6 @@ class GrossTotalChangeRepository {
                 //so
                 //deposit/refund the difference to user account.
                 //remove refunded money from invoice.
-
                 $difference = $paidAmount - $currentAmount;
                 $this->changeOfOrderDeposit($order, $difference);
                 if ($invoice) {
@@ -61,6 +60,7 @@ class GrossTotalChangeRepository {
     public function changesOnPending(Order $order)
     {
         $invoice = $order->getPaymentInvoice();  
+        
         if ($order->status == Order::STATUS_PAYMENT_PENDING) {
             if ($invoice) {
                 $invoice->update([
@@ -70,18 +70,15 @@ class GrossTotalChangeRepository {
             else{
                 $debit = $order->deposits()->where('is_credit',0)->sum('amount');
                 $credit = $order->deposits()->where('is_credit',1)->sum('amount');
+                $paidWithoutInvoice = $debit-$credit;
+                $invoice = $this->createInvoice($order,$order->gross_total,$paidWithoutInvoice);
                 
-                dump('pending  condition');
-                dump($debit);
-                return dd($credit);
-                $invoice = $this->createInvoice($order,$order->gross_total,0);
             }
- 
-            if($invoice)
-            if ($invoice->total_amount > $invoice->paid_amount) {
+  
+            if ($invoice->total_amount > $invoice->paid_amount) {  
                 // set order and invoice unpaid
                 $this->setInvoiceUnpaid($invoice);
-                $this->setOrderPending($order);
+                $this->setOrderPending($order); 
 
             } elseif ($invoice->total_amount < $invoice->paid_amount) {
                 // set invoice and order paid. and deposite extra amount.
@@ -96,9 +93,9 @@ class GrossTotalChangeRepository {
                     'is_paid' => 1,
                 ]);
                 //set order paid
-                $this->setOrderDone($order);
+                $this->setOrderDone($order); 
 
-            } else {
+            } else { 
                 // if invoice->total_amount equal to $invoice->paid_amount
                 //sent the order and invoice paid.
                 $this->setInvoicePaid($invoice);
