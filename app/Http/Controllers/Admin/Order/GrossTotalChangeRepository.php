@@ -68,11 +68,16 @@ class GrossTotalChangeRepository {
                 ]);
             }
             else{
-                // return dd($order->deposits);
-                $invoice = $this->createInvoice($order,$order->total_gross,0);
+                $debit = $order->deposits()->where('is_credit',0)->sum('amount');
+                $credit = $order->deposits()->where('is_credit',1)->sum('amount');
+                
+                dump('pending  condition');
+                dump($debit);
+                return dd($credit);
+                $invoice = $this->createInvoice($order,$order->gross_total,0);
             }
-
-
+ 
+            if($invoice)
             if ($invoice->total_amount > $invoice->paid_amount) {
                 // set order and invoice unpaid
                 $this->setInvoiceUnpaid($invoice);
@@ -99,6 +104,7 @@ class GrossTotalChangeRepository {
                 $this->setInvoicePaid($invoice);
                 $this->setOrderDone($order);
             }
+
         }
     }
 
