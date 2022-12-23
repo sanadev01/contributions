@@ -156,13 +156,13 @@ class OrderLabelController extends Controller
             return $this->renderLabel($request, $order, $error);
         }
 
-        // if($order->shippingService->isSwedenPostService()){
+        if($order->shippingService->isSwedenPostService()){
          
-        //     $this->swedenpostLabelRepository->get($order);
+            $this->swedenpostLabelRepository->get($order);
             
-        //     $error = $this->swedenpostLabelRepository->getError();
-        //     return $this->renderLabel($request, $order, $error);
-        // }
+            $error = $this->swedenpostLabelRepository->getError();
+            return $this->renderLabel($request, $order, $error);
+        }
         
         if ( $request->update_label === 'true' ){
             
