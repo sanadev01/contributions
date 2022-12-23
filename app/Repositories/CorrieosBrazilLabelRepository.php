@@ -47,7 +47,7 @@ class CorrieosBrazilLabelRepository
 
     protected function generateLabel(Order $order)
     { 
-        if (Auth::user()->can('stopPrintCorrieosLabel',Order::class)){ 
+        if (Auth::user()->can('stopPrintCorrieosLabel',Order::class) && !Auth::user()->isAdmin()){ 
           $this->error = 'Something went wrong in Correios API Please wait...';
           return null;
         }
