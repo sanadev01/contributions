@@ -13,97 +13,155 @@ class GrossTotalChangeRepository {
     public function changesOnPaid(Request $request, Order $order)
     {
         $invoice = $order->getPaymentInvoice();
-        if ($order->isPaid()) {
-            //refund amount 
+            $grossTotal = $order->gross_total;
+            $paidAmount = 0;
+            if($invoice){
+             $invoicePaidAmount = $invoice->orders()->sum('gross_total');
+
+            }
+            else{
+
+            }
             $paidAmount = $order->gross_total;
-            $currentAmount = $request->user_declared_freight;
-            if ($paidAmount > $currentAmount) {
+            $totalAmount = $request->user_declared_freight;
+
+            $pendingAmount = $totalAmount - $paidAmount;
+            
+        dump($request->all());
+        dump($order);
+        dump('paidAmount',$paidAmount);
+        dump('totalAmount',$totalAmount);
+        dump('pendingAmount',$pendingAmount);
+        dump('isPaid',$order->isPaid());
+        dump('STATUS_PAYMENT_PENDING', $order->status == Order::STATUS_PAYMENT_PENDING);  
+        dd('pending branch');
+      
+        if ($order->isPaid() || $order->status == Order::STATUS_PAYMENT_PENDING) {
+            //refund amount 
+
+            if ($pendingAmount<0) {
                 // the order amount descresed.
                 //so
                 //deposit/refund the difference to user account.
                 //remove refunded money from invoice.
-                $difference = $paidAmount - $currentAmount;
-                $this->changeOfOrderDeposit($order, $difference);
-                if ($invoice) {
-                    $invoice->update([
-                        'total_amount' => $invoice->orders()->sum('gross_total'),
-                        'paid_amount' => $invoice->paid_amount - $difference
+                if($order->isPaid())
+                $this->changeOfOrderDeposit($order, -$pendingAmount);
+
+                if ($invoice){
+                    $invoice = $invoice->update([
+                        'total_amount' => $invoice->total_amount - $pendingAmount,
+                        'paid_amount' => $invoice->paid_amount + $pendingAmount
                     ]);
                 }
-            } elseif ($currentAmount > $paidAmount) {
+
+            } elseif ($pendingAmount > 0) {
                // the amount increased.
-               //update invoice.for futher payment. 
+               //update invoice.for futher payment.  
 
                 if ($invoice) {
                     $invoice->update([
-                        'total_amount' => $invoice->orders()->sum('gross_total'),
+                        'total_amount' => $invoice->total_amount + $pendingAmount,
                     ]);
                 } else {
-                    //create new invoice if not exist.
-                    $invoice=  $this->createInvoice($order,$currentAmount,$paidAmount);
-  
-                } 
 
+                    //create new invoice if not exist. 
+                    $invoice=  $this->createInvoice($order,$totalAmount,$paidAmount); 
+                }      
+                
                 if ($invoice->total_amount > $invoice->paid_amount) { 
-                 //if need to pay.
-                //then set order and invoice status unpaid.
-                $this->setInvoiceUnpaid($invoice); 
-                $this->setOrderPending($order);
+                    //if need to pay.
+                    //then set order and invoice status unpaid.
+                    $this->setInvoiceUnpaid($invoice); 
+                    $this->setOrderPending($order);
+                }
+                else{
+                    
+                    $this->setInvoicePaid($invoice); 
+                    $this->setOrderDone($order);
+                }  
             }
-            }
+
+            // return dd($invoice);
 
 
         }
+        // else{
+        //     $this->changesOnPending($order,$request);
+        // }
     }
 
     //this function will sync ( order and invoice ) if order status is STATUS_PAYMENT_PENDING.
-    public function changesOnPending(Order $order)
-    {
-        $invoice = $order->getPaymentInvoice();  
-        
-        if ($order->status == Order::STATUS_PAYMENT_PENDING) {
-            if ($invoice) {
-                $invoice->update([
-                    'total_amount' => $invoice->orders()->sum('gross_total'),
-                ]);
-            }
-            else{
-                $debit = $order->deposits()->where('is_credit',0)->sum('amount');
-                $credit = $order->deposits()->where('is_credit',1)->sum('amount');
-                $paidWithoutInvoice = $debit-$credit;
-                $invoice = $this->createInvoice($order,$order->gross_total,$paidWithoutInvoice);
+    // public function changesOnPending(Order $order,$request)
+    // {
+    //     $invoice = $order->getPaymentInvoice();  
+
+    //     if ($order->status == Order::STATUS_PAYMENT_PENDING) {
+
+    //     $paidAmount = $order->gross_total;
+    //     $currentAmount = $request->user_declared_freight;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //         if ($invoice) {
+    //             $invoice->update([
+    //                 'total_amount' => $order->orders()->sum('gross_total'),
+    //             ]);
+    //         }
+    //         else{
+    //             $debit = $order->deposits()->where('is_credit',0)->sum('amount');
+    //             $credit = $order->deposits()->where('is_credit',1)->sum('amount');
+    //             $paidWithoutInvoice = $debit-$credit;
+    //             $invoice = $this->createInvoice($order,$order->gross_total,$paidWithoutInvoice);
                 
-            }
+    //         }
   
-            if ($invoice->total_amount > $invoice->paid_amount) {  
-                // set order and invoice unpaid
-                $this->setInvoiceUnpaid($invoice);
-                $this->setOrderPending($order); 
+    //         if ($invoice->total_amount > $invoice->paid_amount) {  
+    //             // set order and invoice unpaid
+    //             $this->setInvoiceUnpaid($invoice);
+    //             $this->setOrderPending($order); 
 
-            } elseif ($invoice->total_amount < $invoice->paid_amount) {
-                // set invoice and order paid. and deposite extra amount.
+    //         } elseif ($invoice->total_amount < $invoice->paid_amount) {
+    //             // set invoice and order paid. and deposite extra amount.
                 
-                $difference = $invoice->paid_amount - $invoice->total_amount;
+    //             $difference = $invoice->paid_amount - $invoice->total_amount;
 
-                //deposite extra amount to order user.
-                $this->changeOfOrderDeposit($order, $difference);
-                //remove the deposite amount. from invoice
-                $invoice->update([
-                    'paid_amount' => $invoice->paid_amount - $difference,
-                    'is_paid' => 1,
-                ]);
-                //set order paid
-                $this->setOrderDone($order); 
+    //             //deposite extra amount to order user.
+    //             $this->changeOfOrderDeposit($order, $difference);
+    //             //remove the deposite amount. from invoice
+    //             $invoice->update([
+    //                 'paid_amount' => $invoice->paid_amount - $difference,
+    //                 'is_paid' => 1,
+    //             ]);
 
-            } else { 
-                // if invoice->total_amount equal to $invoice->paid_amount
-                //sent the order and invoice paid.
-                $this->setInvoicePaid($invoice);
-                $this->setOrderDone($order);
-            }
+    //             //set order paid
+    //             $this->setOrderDone($order); 
 
-        }
-    }
+    //         } else { 
+    //             // if invoice->total_amount equal to $invoice->paid_amount
+    //             //sent the order and invoice paid.
+    //             $this->setInvoicePaid($invoice);
+    //             $this->setOrderDone($order);
+    //         }
+
+    //     }
+    // }
 
     public function setInvoicePaid($invoice)
     {
@@ -149,8 +207,8 @@ class GrossTotalChangeRepository {
         ]);
     }
     public function createInvoice($order,$totalAmount,$paidAmount)
-    {
-        return PaymentInvoice::create([
+    { 
+        $invoice =  PaymentInvoice::create([
             'uuid' => PaymentInvoice::generateUUID(),
             'paid_by' => $order->user->id,
             'order_count' => '1',
@@ -159,5 +217,8 @@ class GrossTotalChangeRepository {
             'paid_amount' => $paidAmount,
             'type' => auth()->user()->can('canCreatePostPaidInvoices', PaymentInvoice::class) ? PaymentInvoice::TYPE_POSTPAID : PaymentInvoice::TYPE_PREPAID
         ]);
+        
+        $invoice->orders()->sync($order->id); 
+        return $invoice;
     }
 }

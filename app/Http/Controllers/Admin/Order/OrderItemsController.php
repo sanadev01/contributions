@@ -115,10 +115,12 @@ class OrderItemsController extends Controller
             }
 
             $this->grossTotalChangeRepository->changesOnPaid($request, $order);
+            // dump($order);
 
             if ($this->orderRepository->updateShippingAndItems($request, $order)) {
-                $this->grossTotalChangeRepository->changesOnPending($order);
-                return dd($order->getPaymentInvoice());
+                // dump($order);
+                // return dd(33);
+                // $this->grossTotalChangeRepository->changesOnPending($order); 
                 session()->flash('alert-success', 'orders.Order Placed');
                 if ($order->user->hasRole('wholesale') && $order->user->insurance == true) {
                     return redirect()->route('admin.orders.order-invoice.index', $order); # code...
