@@ -83,7 +83,7 @@ class ExportManfestByServices extends AbstractCsvExportService
             
             $this->csvData[$this->row] = [
                 $package->corrios_tracking_code,
-                $package->order_date->format('m/d/Y'),
+                $this->date,
                 $package->getSenderFullName(),
                 ($package->recipient)->getRecipientInfo(),
                 ($package->recipient)->getAddress(),
