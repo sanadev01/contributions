@@ -7,9 +7,11 @@ return [
         'baseUrl' => 'http://qa.etowertech.com/',
     ],
     'production' => [
-        'secret' => '',
-        'token' => '',
-        'host' => 'cn.etowertech.com',
-        'baseUrl' => 'https://cn.etowertech.com/',
+        'secret' => 'I7MIjTQBMZNXToMTA2PkOw',
+        'token' => 'testa0wXdbpML6JGQ7NRP3O',
+        'host' => 'qa.etowertech.com',
+        'baseUrl' => 'http://qa.etowertech.com/',
+        // 'host' => 'cn.etowertech.com',
+        // 'baseUrl' => 'https://cn.etowertech.com/',
     ]
 ];
