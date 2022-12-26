@@ -76,8 +76,8 @@
         });
         $("#scan").focus();
     });
-    // window.addEventListener('scan-focus', event => {
-    //     $("#scan").focus();
-    // });
+    window.addEventListener('scan-focus', event => {
+        $("#scan").focus();
+    });
 </script>
 @endsection

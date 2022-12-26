@@ -11,11 +11,9 @@ use App\Services\Excel\Import\TrackingsImportService;
 class GePSContainerPackageRepository {
 
 
-    public function addOrderToContainer($id, $barcode)
+    public function addOrderToContainer($container, $order)
     {
         $error = null;
-        $order = Order::where('corrios_tracking_code', $barcode)->first();
-        $container = Container::find($id);
 
         if(!$order->containers->isEmpty()) {
             $error = "Order is already present in Container";
@@ -30,11 +28,18 @@ class GePSContainerPackageRepository {
         if (!$container->hasGePSService() && $order->shippingService->isGePSService()) {
             $error = 'Order does not belong to this container. Please Check Packet Service';
         }
-        if(!$container->orders()->where('order_id', $order->id)->first() && $error == null) {
+        if(!$container->orders()->where('order_id', $order->id)->first() && $error == null && $order->containers->isEmpty()) {
             $container->orders()->attach($order->id);
+            $this->addOrderTracking($order);
+            return  [
+                'success' => true,
+                'message' => 'Order Scan Successfully!'
+            ];
         }
-        \Log::info($error);
-        return $order;
+        return [
+            'success' => false,
+            'message' => $error
+        ];
     }
 
     public function removeOrderFromContainer(Container $container, $id)
@@ -75,5 +80,19 @@ class GePSContainerPackageRepository {
             session()->flash('alert-danger','Error while Upload: '.$exception->getMessage());
             return null;
         }
+    }
+
+    public function addOrderTracking($order)
+    {
+        OrderTracking::create([
+            'order_id' => $order->id,
+            'status_code' => Order::STATUS_INSIDE_CONTAINER,
+            'type' => 'HD',
+            'description' => 'Parcel inside Homedelivery Container',
+            'country' => 'US',
+            'city' => 'Miami'
+        ]);
+
+        return true;
     }
 }

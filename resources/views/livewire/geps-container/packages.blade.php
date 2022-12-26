@@ -66,10 +66,14 @@
             @if($editMode == true)
             <tr>
                 <td colspan="8">
-                    <input type="text" wire:model.debounce.500ms="barcode" class="w-100 text-center" style="height:50px;font-size:30px;" id="scan">
+                    <form wire:submit.prevent="submit">
+                        <input type="text" wire:model.defer="tracking" class="w-100 text-center" style="height:50px;font-size:30px;" id="scan">
+                        @error('tracking') <span class="error offset-5 h4 text-danger">{{ $message }}</span> @enderror
+                    </form>
                 </td>
             </tr>
             @endif
         </tbody>
     </table>
+    @include('layouts.livewire.loading')
 </div>
