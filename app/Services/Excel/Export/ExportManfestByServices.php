@@ -81,7 +81,7 @@ class ExportManfestByServices extends AbstractCsvExportService
             
             $this->csvData[$this->row] = [
                 $package->corrios_tracking_code,
-                Carbon::now()->format('m/d/Y'),
+                $package->order_date->format('m/d/Y'),
                 $package->getSenderFullName(),
                 ($package->recipient)->getRecipientInfo(),
                 ($package->recipient)->getAddress(),
