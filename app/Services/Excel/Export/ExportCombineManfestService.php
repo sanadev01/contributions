@@ -20,6 +20,7 @@ class ExportCombineManfestService extends AbstractCsvExportService
     private $totalWeight = 0;
     private $totalCommission = 0;
     private $totalAnjunCommission = 0;
+    private $date;
 
     public function __construct($deliveryBills)
     {
@@ -61,6 +62,7 @@ class ExportCombineManfestService extends AbstractCsvExportService
     protected function prepareData(): array
     {
         foreach ($this->deliveryBills as $deliveryBill) {
+            $this->date = $deliveryBill->created_at->format('m/d/Y');
             foreach ($deliveryBill->containers as $container) {
                 $this->prePareDataForContainer($container);
             }
