@@ -20,10 +20,12 @@ class ExportManfestService extends AbstractCsvExportService
     private $totalWeight = 0;
     private $totalCommission = 0;
     private $totalAnjunCommission = 0;
+    private $date;
 
     public function __construct(DeliveryBill $deliveryBill)
     {
         $this->deliveryBill = $deliveryBill;
+        $this->date = $deliveryBill->created_at->format('m/d/Y');
     }
 
     public function handle()
@@ -73,7 +75,7 @@ class ExportManfestService extends AbstractCsvExportService
         foreach ($container->orders as $package) {
             $this->csvData[$this->row] = [
                 $package->corrios_tracking_code,
-                Carbon::now()->format('m/d/Y'),
+                $this->date,
                 $package->getSenderFullName(),
                 ($package->recipient)->getRecipientInfo(),
                 ($package->recipient)->getAddress(),
