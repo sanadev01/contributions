@@ -2,11 +2,10 @@
 
 namespace App\Http\Livewire\GepsContainer;
 
-
-use Carbon\Carbon;
 use App\Models\Order;
 use Livewire\Component;
 use App\Models\OrderTracking;
+use Illuminate\Support\Facades\DB;
 use App\Models\Warehouse\Container;
 use App\Repositories\Warehouse\GePSContainerPackageRepository;
 use App\Http\Controllers\Warehouse\GePSContainerPackageController;
@@ -21,7 +20,6 @@ class Packages extends Component
     public $service;
     public $error = null;
     public $num_of_Packages = 0;
-    public $totalweight;
     public $containerDestination;
     protected $rules = [
         'tracking' => 'required',
@@ -87,7 +85,8 @@ class Packages extends Component
       
     public function totalWeight()
     {
-        return $this->totalweight = $this->orders->sum('weight');
+        $orders = $this->container->orders();
+        return $orders->selectRaw('sum(CASE WHEN measurement_unit = "kg/cm" THEN ROUND(weight,2) ELSE ROUND((weight/2.205),2) END) as weight')->first()->weight;
     }
 
     
