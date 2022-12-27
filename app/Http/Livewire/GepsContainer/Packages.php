@@ -5,7 +5,6 @@ namespace App\Http\Livewire\GepsContainer;
 use App\Models\Order;
 use Livewire\Component;
 use App\Models\OrderTracking;
-use Illuminate\Support\Facades\DB;
 use App\Models\Warehouse\Container;
 use App\Repositories\Warehouse\GePSContainerPackageRepository;
 use App\Http\Controllers\Warehouse\GePSContainerPackageController;
