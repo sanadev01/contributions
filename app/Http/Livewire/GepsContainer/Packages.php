@@ -19,11 +19,10 @@ class Packages extends Component
     public $editMode;
     public $tracking;
     public $service;
-    public $error = '';
+    public $error = null;
     public $num_of_Packages = 0;
     public $totalweight;
     public $containerDestination;
-    // public $orderRegion;
     protected $rules = [
         'tracking' => 'required',
     ];
@@ -31,7 +30,7 @@ class Packages extends Component
     {
         $this->container = Container::find($id);
         $this->idContainer = $id;
-        $this->error = '';
+        $this->error = null;
         $this->emit('scanFocus');
         $this->editMode = $editMode;
         $this->service = $this->container->getServiceSubClass();
@@ -40,6 +39,7 @@ class Packages extends Component
 
     public function render()
     {
+        $this->tracking = null;
         return view('livewire.geps-container.packages',[
             'orders' => $this->getPackages($this->idContainer),
             'totalweight' => $this->totalWeight(),
@@ -63,13 +63,11 @@ class Packages extends Component
             $gepsContainerPackageRepository = new GePSContainerPackageRepository;
             $response = $gepsContainerPackageRepository->addOrderToContainer($container, $order);
             if(!$response['success']){
-                $this->tracking = null;
-                $this->error = $response['message'];
+                 return $this->error = $response['message'];
             }
             $this->error = null;
             return;
         }
-        $this->tracking = null;
         $this->error = "Order Not found please check tracking code: $this->tracking";
         $this->dispatchBrowserEvent('scan-focus');
 
@@ -79,7 +77,7 @@ class Packages extends Component
     {
         $gepsContainerPackageRepository = new GePSContainerPackageRepository;
         $response = $gepsContainerPackageRepository->removeOrderFromContainer($this->container, $id);
-        $this->error = '';
+        $this->error = null;
     }
 
     public function totalPackages()
