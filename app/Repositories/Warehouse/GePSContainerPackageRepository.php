@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Warehouse;
 
+use App\Models\Order;
 use App\Models\OrderTracking;
 use App\Models\Warehouse\Container;
 use App\Services\Excel\Import\TrackingsImportService;
@@ -12,19 +13,49 @@ class GePSContainerPackageRepository {
 
     public function addOrderToContainer($container, $order)
     {
-        if(!$container->orders()->where('order_id', $order->id)->first()) {
-            $container->orders()->attach($order->id);
+        $error = null;
+
+        if(!$order->containers->isEmpty()) {
+            $error = "Order is already present in Container";
         }
-        return $order;
+        if ($order->status != Order::STATUS_PAYMENT_DONE) {
+            $error = 'Please check the Order Status, either the order has been canceled, refunded or not yet paid';
+        }
+        if ($container->hasGePSService() && !$order->shippingService->isGePSService()) {
+            $error = 'Order does not belong to this container. Please Check Packet Service';
+        }
+
+        if (!$container->hasGePSService() && $order->shippingService->isGePSService()) {
+            $error = 'Order does not belong to this container. Please Check Packet Service';
+        }
+        if(!$container->orders()->where('order_id', $order->id)->first() && $error == null && $order->containers->isEmpty()) {
+            $container->orders()->attach($order->id);
+            $this->addOrderTracking($order);
+            return  [
+                'success' => true,
+                'message' => 'Order Scan Successfully!'
+            ];
+        }
+        return [
+            'success' => false,
+            'message' => $error
+        ];
     }
 
-    public function removeOrderFromContainer($container, $id)
+    public function removeOrderFromContainer(Container $container, $id)
     {
         $order_tracking = OrderTracking::where('order_id', $id)->latest()->first();
         if($order_tracking) {
             $order_tracking->delete();
         }
-        return $container->orders()->detach($id);
+        try {
+            $container->orders()->detach($id);
+            return true;
+        } catch (\Exception $ex) {
+            $this->error = $ex->getMessage();
+            return false;
+        }
+        // dd($container); 
     }
 
     public function addTrackings($request, $id)
@@ -49,5 +80,19 @@ class GePSContainerPackageRepository {
             session()->flash('alert-danger','Error while Upload: '.$exception->getMessage());
             return null;
         }
+    }
+
+    public function addOrderTracking($order)
+    {
+        OrderTracking::create([
+            'order_id' => $order->id,
+            'status_code' => Order::STATUS_INSIDE_CONTAINER,
+            'type' => 'HD',
+            'description' => 'Parcel inside Homedelivery Container',
+            'country' => 'US',
+            'city' => 'Miami'
+        ]);
+
+        return true;
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\GepsContainer;
 
 
+use Carbon\Carbon;
 use App\Models\Order;
 use Livewire\Component;
 use App\Models\OrderTracking;
@@ -13,31 +14,34 @@ use App\Http\Controllers\Warehouse\GePSContainerPackageController;
 class Packages extends Component
 {
     public $container;
-    public $orders = [];
+    public $idContainer;
+    public $orders;
     public $editMode;
-    public $barcode;
+    public $tracking;
     public $service;
-    public $error = '';
+    public $error = null;
     public $num_of_Packages = 0;
     public $totalweight;
     public $containerDestination;
-    public $orderRegion;
-
-    public function mount($container = null, $orders = null, $editMode = null)
+    protected $rules = [
+        'tracking' => 'required',
+    ];
+    public function mount($id = null, $editMode = null)
     {
-        $this->container = $container;
-        $this->error = '';
-        $this->emit('scanFocus');        
-        $this->orders = $this->container->orders;
+        $this->container = Container::find($id);
+        $this->idContainer = $id;
+        $this->error = null;
+        $this->emit('scanFocus');
         $this->editMode = $editMode;
-        $this->service = $container->getServiceSubClass();
-        $this->containerDestination = $container->destination_operator_name == 'MIA' ? 'Miami' : '';
+        $this->service = $this->container->getServiceSubClass();
+        $this->containerDestination = $this->container->destination_operator_name == 'MIA' ? 'Miami' : '';
     }
 
     public function render()
     {
+        $this->tracking = null;
         return view('livewire.geps-container.packages',[
-            'orders' => $this->getPackages($this->container->id),
+            'orders' => $this->getPackages($this->idContainer),
             'totalweight' => $this->totalWeight(),
             'num_of_Packages' => $this->totalPackages()
         ]);
@@ -46,58 +50,34 @@ class Packages extends Component
     public function getPackages($id)
     {
         $container = Container::find($id);
-        $this->container = $container;
         return $this->orders = $container->orders;        
     }
 
-    public function updatedbarcode($barcode)
+    public function submit()
     {
-        if ( $barcode != null || $barcode != '' ||  strlen($barcode) > 4 ){
-            $this->saveOrder();
-            $this->dispatchBrowserEvent('scan-focus');
+        $this->validate();
+        $error = null;
+        $order = Order::where('corrios_tracking_code', $this->tracking)->first();
+        if ($order){
+            $container = Container::find($this->idContainer);
+            $gepsContainerPackageRepository = new GePSContainerPackageRepository;
+            $response = $gepsContainerPackageRepository->addOrderToContainer($container, $order);
+            if(!$response['success']){
+                 return $this->error = $response['message'];
+            }
+            $this->error = null;
+            return;
         }
+        $this->error = "Order Not found please check tracking code: $this->tracking";
+        $this->dispatchBrowserEvent('scan-focus');
 
-    }
-
-    public function saveOrder()
-    {
-        $this->getPackages($this->container->id);
-        $order = Order::where('corrios_tracking_code', $this->barcode)->first();
-        if (!$order) {
-            return $this->error = "Order Not Found $this->barcode";
-        }
-
-        if($this->container->orders->where('corrios_tracking_code',$order->corrios_tracking_code)->first()) {
-            return $this->error = "Order is already present in Container $this->barcode";
-        }
-        if(!$order->containers->isEmpty()) {
-            return $this->error = "Order is already present in another Container $this->barcode";
-        }
-
-        if ($order->status != Order::STATUS_PAYMENT_DONE) {
-            return  $this->error = 'Please check the Order Status, either the order has been canceled, refunded or not yet paid';
-        }
-
-        if ($this->container->hasGePSService() && !$order->shippingService->isGePSService()) {
-            return  $this->error = 'Order does not belong to this container. Please Check Packet Service';
-        }
-
-        if (!$this->container->hasGePSService() && $order->shippingService->isGePSService()) {
-            return  $this->error = 'Order does not belong to this container. Please Check Packet Service';
-        }
-
-        $gepsContainerPackageRepository = new GePSContainerPackageRepository;
-        $order = $gepsContainerPackageRepository->addOrderToContainer($this->container, $order);
-
-        $this->addOrderTracking($order);
-        $this->error = '';
-        return $this->barcode = ''; 
     }
 
     public function removeOrder($id)
     {
         $gepsContainerPackageRepository = new GePSContainerPackageRepository;
-        $gepsContainerPackageRepository->removeOrderFromContainer($this->container, $id);
+        $response = $gepsContainerPackageRepository->removeOrderFromContainer($this->container, $id);
+        $this->error = null;
     }
 
     public function totalPackages()
@@ -110,18 +90,6 @@ class Packages extends Component
         return $this->totalweight = $this->orders->sum('weight');
     }
 
-    public function addOrderTracking($order)
-    {
-        OrderTracking::create([
-            'order_id' => $order->id,
-            'status_code' => Order::STATUS_INSIDE_CONTAINER,
-            'type' => 'HD',
-            'description' => 'Parcel inside Homedelivery Container',
-            'country' => 'US',
-            'city' => 'Miami'
-        ]);
-
-        return true;
-    }
+    
 }
 
