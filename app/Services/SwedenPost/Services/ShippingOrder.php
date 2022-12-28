@@ -26,7 +26,7 @@ class ShippingOrder {
                   //Parcel Information
                   'referenceNo' => ($order->customer_reference) ? $order->customer_reference : '',
                   'trackingNo' => "",
-                  'serviceCode' =>"",
+                  'serviceCode' =>"DIRECT.LINK.US.L3",
                   'incoterm' => "DDU",
                   'weight'=> $order->weight,
                   'weightUnit' => $uom,
