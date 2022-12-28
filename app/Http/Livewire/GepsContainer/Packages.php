@@ -16,10 +16,8 @@ class Packages extends Component
     public $orders;
     public $editMode;
     public $tracking;
-    public $service;
     public $error = null;
     public $num_of_Packages = 0;
-    public $containerDestination;
     protected $rules = [
         'tracking' => 'required',
     ];
@@ -30,12 +28,11 @@ class Packages extends Component
         $this->error = null;
         $this->emit('scanFocus');
         $this->editMode = $editMode;
-        $this->service = $this->container->getServiceSubClass();
-        $this->containerDestination = $this->container->destination_operator_name == 'MIA' ? 'Miami' : '';
     }
 
     public function render()
     {
+        $this->dispatchBrowserEvent('scan-focus');
         $this->tracking = null;
         return view('livewire.geps-container.packages',[
             'orders' => $this->getPackages($this->idContainer),
@@ -53,7 +50,6 @@ class Packages extends Component
     public function submit()
     {
         $this->validate();
-        $error = null;
         $order = Order::where('corrios_tracking_code', $this->tracking)->first();
         if ($order){
             $container = Container::find($this->idContainer);
@@ -66,8 +62,6 @@ class Packages extends Component
             return;
         }
         $this->error = "Order Not found please check tracking code: $this->tracking";
-        $this->dispatchBrowserEvent('scan-focus');
-
     }
 
     public function removeOrder($id)
@@ -87,7 +81,6 @@ class Packages extends Component
         $orders = $this->container->orders();
         return $orders->selectRaw('sum(CASE WHEN measurement_unit = "kg/cm" THEN ROUND(weight,2) ELSE ROUND((weight/2.205),2) END) as weight')->first()->weight;
     }
-
     
 }
 
