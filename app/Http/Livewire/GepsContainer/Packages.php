@@ -2,135 +2,92 @@
 
 namespace App\Http\Livewire\GepsContainer;
 
-
 use App\Models\Order;
 use Livewire\Component;
 use App\Models\OrderTracking;
 use App\Models\Warehouse\Container;
+use App\Repositories\Warehouse\GePSContainerPackageRepository;
 use App\Http\Controllers\Warehouse\GePSContainerPackageController;
 
 class Packages extends Component
 {
     public $container;
-    public $orders = [];
+    public $idContainer;
+    public $orders;
     public $editMode;
-    public $barcode;
+    public $tracking;
     public $service;
-    public $error;
+    public $error = null;
     public $num_of_Packages = 0;
-    public $totalweight;
     public $containerDestination;
-    public $orderRegion;
-
-    public function mount($container = null, $ordersCollection = null, $editMode = null)
+    protected $rules = [
+        'tracking' => 'required',
+    ];
+    public function mount($id = null, $editMode = null)
     {
-        $this->container = $container;
+        $this->container = Container::find($id);
+        $this->idContainer = $id;
+        $this->error = null;
         $this->emit('scanFocus');
-        $this->orders = json_decode($ordersCollection);
         $this->editMode = $editMode;
-        $this->service = $container->getServiceSubClass();
-        $this->containerDestination = $container->destination_operator_name == 'MIA' ? 'Miami' : '';
+        $this->service = $this->container->getServiceSubClass();
+        $this->containerDestination = $this->container->destination_operator_name == 'MIA' ? 'Miami' : '';
     }
 
     public function render()
     {
-        $this->getPackages($this->container->id);
-        $this->totalPackages();
-        $this->totalWeight();
-
-        return view('livewire.geps-container.packages');
+        $this->tracking = null;
+        return view('livewire.geps-container.packages',[
+            'orders' => $this->getPackages($this->idContainer),
+            'totalweight' => $this->totalWeight(),
+            'num_of_Packages' => $this->totalPackages()
+        ]);
     }
 
     public function getPackages($id)
     {
         $container = Container::find($id);
-        $ordersCollection = json_encode($container->getOrdersCollections());
-        return $this->orders = json_decode($ordersCollection);
-        
+        return $this->orders = $container->orders;        
     }
 
-    public function updatedbarcode($barcode)
+    public function submit()
     {
-        if ( $barcode != null || $barcode != '' ||  strlen($barcode) > 4 ){
-            $this->saveOrder();
-            $this->dispatchBrowserEvent('scan-focus');
+        $this->validate();
+        $error = null;
+        $order = Order::where('corrios_tracking_code', $this->tracking)->first();
+        if ($order){
+            $container = Container::find($this->idContainer);
+            $gepsContainerPackageRepository = new GePSContainerPackageRepository;
+            $response = $gepsContainerPackageRepository->addOrderToContainer($container, $order);
+            if(!$response['success']){
+                 return $this->error = $response['message'];
+            }
+            $this->error = null;
+            return;
         }
+        $this->error = "Order Not found please check tracking code: $this->tracking";
+        $this->dispatchBrowserEvent('scan-focus');
 
     }
 
-    public function saveOrder()
+    public function removeOrder($id)
     {
-        $geps_ContainerPackageController = new GePSContainerPackageController;
-        $order = Order::where('corrios_tracking_code', $this->barcode)->first();
-            if (!$order) {
-                return [
-                    'order' => [
-                        'corrios_tracking_code' => $this->barcode,
-                        'error' => 'Order Not Found.',
-                        'code' => 404
-                    ],
-                ];
-            }
-            
-            if(!$order->containers->isEmpty()) {
-    
-                $this->error = 'Order is already present in Container'; 
-                return $this->barcode = '';
-                
-            }
-
-            if ($order->status < Order::STATUS_PAYMENT_DONE) {
-                return  $this->error = 'Please check the Order Status, either the order has been canceled, refunded or not yet paid';
-            }
-            if ($this->container->hasGePSService() && !$order->shippingService->isGePSService()) {
-                return  $this->error = 'Order does not belong to this container. Please Check Packet Service';
-            }
-    
-            if (!$this->container->hasGePSService() && $order->shippingService->isGePSService()) {
-                return  $this->error = 'Order does not belong to this container. Please Check Packet Service';
-            }
-
-            $order = $geps_ContainerPackageController->store($this->container, $order);
-
-            $this->addOrderTracking($order);
-            $this->error = '';
-            return $this->barcode = ''; 
-    }
-
-    public function removeOrder($id, $key)
-    {
-        $geps_ContainerPackageController = new GePSContainerPackageController;
-        $geps_ContainerPackageController->destroy($this->container, $id);
+        $gepsContainerPackageRepository = new GePSContainerPackageRepository;
+        $response = $gepsContainerPackageRepository->removeOrderFromContainer($this->container, $id);
+        $this->error = null;
     }
 
     public function totalPackages()
     {
-        
         return  $this->num_of_Packages = count($this->orders);
     }
       
     public function totalWeight()
     {
-        $weight = 0;
-        foreach ($this->orders as $order) {
-            $weight += $order->weight; 
-        }
-
-        return $this->totalweight = $weight;
+        $orders = $this->container->orders();
+        return $orders->selectRaw('sum(CASE WHEN measurement_unit = "kg/cm" THEN ROUND(weight,2) ELSE ROUND((weight/2.205),2) END) as weight')->first()->weight;
     }
 
-    public function addOrderTracking($order)
-    {
-        OrderTracking::create([
-            'order_id' => $order->id,
-            'status_code' => Order::STATUS_INSIDE_CONTAINER,
-            'type' => 'HD',
-            'description' => 'Parcel inside Homedelivery Container',
-            'country' => 'US',
-            'city' => 'Miami'
-        ]);
-
-        return true;
-    }
+    
 }
 
