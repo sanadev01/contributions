@@ -19,19 +19,17 @@ class GePSContainerPackageRepository {
             $error = "Order is already present in Container";
         }
         if ($order->status != Order::STATUS_PAYMENT_DONE) {
-            $error = 'Please check the Order Status, either the order has been canceled, refunded or not yet paid';
+            $error = 'Please check the Order Status, whether the order has been shipped, canceled, refunded, or not yet paid';
         }
-        if ($container->hasGePSService() && !$order->shippingService->isGePSService()) {
-            $error = 'Order does not belong to this container. Please Check Packet Service';
-        }
+        if ( (!$container->hasGePSService() && $order->shippingService->isGePSService()) 
+            || ($container->hasGePSService() && !$order->shippingService->isGePSService())){
 
-        if (!$container->hasGePSService() && $order->shippingService->isGePSService()) {
             $error = 'Order does not belong to this container. Please Check Packet Service';
         }
         if(!$container->orders()->where('order_id', $order->id)->first() && $error == null && $order->containers->isEmpty()) {
             $container->orders()->attach($order->id);
             $this->addOrderTracking($order);
-            return  [
+            return [
                 'success' => true,
                 'message' => 'Order Scan Successfully!'
             ];
@@ -55,7 +53,6 @@ class GePSContainerPackageRepository {
             $this->error = $ex->getMessage();
             return false;
         }
-        // dd($container); 
     }
 
     public function addTrackings($request, $id)
