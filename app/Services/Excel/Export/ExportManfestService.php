@@ -20,10 +20,12 @@ class ExportManfestService extends AbstractCsvExportService
     private $totalWeight = 0;
     private $totalCommission = 0;
     private $totalAnjunCommission = 0;
+    private $date;
 
     public function __construct(DeliveryBill $deliveryBill)
     {
         $this->deliveryBill = $deliveryBill;
+        $this->date = $deliveryBill->created_at->format('m/d/Y');
     }
 
     public function handle()
@@ -54,7 +56,8 @@ class ExportManfestService extends AbstractCsvExportService
             'Commission Paid to',
             'Bag',
             'POBOX / NAME',
-            'Carrier Tracking'
+            'Carrier Tracking',
+            'Marketplace'
         ];
     }
 
@@ -72,7 +75,7 @@ class ExportManfestService extends AbstractCsvExportService
         foreach ($container->orders as $package) {
             $this->csvData[$this->row] = [
                 $package->corrios_tracking_code,
-                Carbon::now()->format('m/d/Y'),
+                $this->date,
                 $package->getSenderFullName(),
                 ($package->recipient)->getRecipientInfo(),
                 ($package->recipient)->getAddress(),
@@ -91,7 +94,8 @@ class ExportManfestService extends AbstractCsvExportService
                 optional(optional($package->affiliateSale)->user)->pobox_number  .' '.optional(optional($package->affiliateSale)->user)->name,
                 $container->dispatch_number,
                 optional($package->user)->pobox_number.' / '.optional($package->user)->getFullName(),
-                $package->tracking_id
+                $package->tracking_id,
+                setting('marketplace_checked', null, $package->user->id)?  setting('marketplace', null, $package->user->id):''
             ];
 
             $i=0;
@@ -136,6 +140,7 @@ class ExportManfestService extends AbstractCsvExportService
             $this->totalPaidToCorreios,
             $this->totalAnjunCommission,
             $this->totalCommission,
+            '',
             '',
             '',
             ''

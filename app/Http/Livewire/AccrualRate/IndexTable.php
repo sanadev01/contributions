@@ -55,18 +55,22 @@ class IndexTable extends Component
             'value' => Package::SERVICE_CLASS_GePS_EFormat,
         ];
         $this->services[9] = [
+            'name' => 'Prime5',
+            'value' => Package::SERVICE_CLASS_Prime5,
+        ];
+        $this->services[10] = [
             'name' => 'Colombia Urbano',
             'value' => Package::SERVICE_CLASS_COLOMBIA_URBANO,
         ];
-        $this->services[10] = [
+        $this->services[11] = [
             'name' => 'Colombia Nacional',
             'value' => Package::SERVICE_CLASS_COLOMBIA_NACIONAL,
         ];
-        $this->services[11] = [
+        $this->services[12] = [
             'name' => 'Colombia Trayetos',
             'value' => Package::SERVICE_CLASS_COLOMBIA_TRAYETOS,
         ];
-        $this->services[12] = [
+        $this->services[13] = [
             'name' => 'Mile Express',
             'value' => Package::SERVICE_CLASS_MILE_EXPRESS,
         ];

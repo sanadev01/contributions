@@ -18,10 +18,9 @@ class GePSContainerPackageController extends Controller
     public function index($id)
     {
         $container = Container::find($id);
-        $ordersCollection = json_encode($container->getOrdersCollections());
         $editMode = ($container->response == 0) ? true : false;
 
-        return view('admin.warehouse.gepsContainers.scan',compact('container', 'ordersCollection', 'editMode'));
+        return view('admin.warehouse.gepsContainers.scan',compact('container', 'editMode'));
                 
     }
 
@@ -100,5 +99,12 @@ class GePSContainerPackageController extends Controller
         } catch (\Exception $ex) {
             \Log::info($ex);
         }
+    }
+
+    public function uploadBulkTracking(Request $request, $id)
+    {
+        $geps_containerPackageRepository = new GePSContainerPackageRepository();
+
+        return $geps_containerPackageRepository->addTrackings($request, $id);
     }
 }

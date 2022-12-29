@@ -41,7 +41,7 @@ class TableLiability extends Component
         return view('livewire.deposit.table-liability',[
             'deposits' => $deposits,
             'totalBalance' => $this->getLiabilityBalance($deposits),
-            'downloadLink' => route('admin.deposit.index',http_build_query(
+            'downloadLink' => route('admin.liability.index',http_build_query(
                 $this->getRequestData()->all()
             )).'&dl=1'
         ]);
@@ -94,7 +94,7 @@ class TableLiability extends Component
     {
          $sum = 0;
          foreach($deposits as $dep){
-            $sum += getBalance($dep->user->id);
+            $sum += getBalance($dep->user);
          }
          return $sum;
          

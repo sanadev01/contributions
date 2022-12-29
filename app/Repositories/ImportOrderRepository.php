@@ -196,8 +196,8 @@ class ImportOrderRepository
             "user_declared_freight" => $importedOrder->user_declared_freight?$importedOrder->user_declared_freight:"0.01",
 
         ]);
-
-
+        $orderRepository = new OrderRepository();
+        $orderRepository->setVolumetricDiscount($order);
         $order->recipient()->create([
             "first_name" =>optional($importedOrder->recipient)['first_name'],
             "last_name" => optional($importedOrder->recipient)['last_name'],

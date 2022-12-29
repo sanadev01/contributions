@@ -201,4 +201,9 @@ class OrderPolicy
 
     }
 
+    public function stopPrintCorrieosLabel(User $user)
+    { 
+        return $user->hasPermission('stopPrint-corrieos-label');
+    }
+
 }

@@ -44,7 +44,7 @@ class ImportAccrualRates extends AbstractImportService
             }
         }else{
             $limit = 70;
-            if($this->service == ShippingService::GePS_EFormat){
+            if($this->service == ShippingService::GePS_EFormat || $this->service == ShippingService::Prime5){
                 $limit = 41;
             }
             if($this->service == ShippingService::GePS){

@@ -44,6 +44,11 @@ use App\Http\Controllers\Warehouse\GePSUnitRegisterController;
 use App\Http\Controllers\Warehouse\GePSCN35DownloadController;
 use App\Http\Controllers\Warehouse\GePSManifestDownloadController;
 use App\Http\Controllers\Warehouse\UnitsInfoController;
+use App\Http\Controllers\Warehouse\SwedenPostContainerController;
+use App\Http\Controllers\Warehouse\SwedenPostContainerPackageController;
+use App\Http\Controllers\Warehouse\SwedenPostUnitRegisterController;
+use App\Http\Controllers\Warehouse\SwedenPostCN35DownloadController;
+use App\Http\Controllers\Warehouse\SwedenPostManifestDownloadController;
 use App\Http\Controllers\Warehouse\POSTNLContainerController;
 use App\Http\Controllers\Warehouse\POSTNLContainerPackageController;
 use App\Http\Controllers\Warehouse\POSTNLUnitRegisterController;
@@ -126,9 +131,17 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('geps_container/{container}/register', GePSUnitRegisterController::class)->name('geps_container.register');
     Route::get('geps_container/{container}/download', GePSCN35DownloadController::class)->name('geps_container.download');
     Route::get('geps/{delivery_bill}/manifest', GePSManifestDownloadController::class)->name('geps.manifest.download');
+    Route::post('geps_container/{container}/upload-trackings', [\App\Http\Controllers\Warehouse\GePSContainerPackageController::class, 'uploadBulkTracking'])->name('upload-bulk-trackings');
 
     // Routes for Correios Unit Info
     Route::resource('unitinfo', UnitsInfoController::class);
+
+    // Routes for Sweden Post Container
+    Route::resource('swedenpost_containers', SwedenPostContainerController::class);
+    Route::resource('swedenpost_container.packages', SwedenPostContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('swedenpost_container/{container}/register', SwedenPostUnitRegisterController::class)->name('swedenpost_container.register');
+    Route::get('swedenpost_container/{container}/download', SwedenPostCN35DownloadController::class)->name('swedenpost_container.download');
+    Route::get('swedenpost/{delivery_bill}/manifest', SwedenPostManifestDownloadController::class)->name('swedenpost.manifest.download');
 });
 
 

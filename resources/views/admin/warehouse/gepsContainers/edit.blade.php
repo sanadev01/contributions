@@ -39,15 +39,14 @@
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center my-2">
-                                    <label class="col-md-3 text-md-right">@lang('warehouse.containers.Destination Country')<span class="text-danger">*</span></label>
+                                    <label class="col-md-3 text-md-right">@lang('warehouse.containers.Sorting')<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <select class="form-control" name="destination_country">
-                                            <option value="">@lang('warehouse.containers.Destination Country')</option>
-                                            @foreach (countries() as $country)
-                                                <option value="{{ $country->code }}" {{ ( $container->destination_operator_name == $country->code) ? 'selected' : '' }}>{{ $country->name }}</option>
-                                            @endforeach
+                                        <select class="form-control" name="destination_operator_name">
+                                            <option value="">@lang('warehouse.containers.Sorting')</option>
+                                            <option value="SAOD" {{ old('destination_operator_name', $container->destination_operator_name) == 'SAOD' ? 'selected' : '' }}>GRU</option>
+                                            <option value="CRBA" {{ old('destination_operator_name', $container->destination_operator_name) == 'CRBA' ? 'selected' : '' }}>CWB</option>
                                         </select>
-                                        @error('destination_country')
+                                        @error('destination_operator_name')
                                             <div class="help-block text-danger"> {{ $message }} </div>
                                         @enderror
                                     </div>

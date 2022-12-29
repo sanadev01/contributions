@@ -15,7 +15,7 @@ class GePSLabelRepository
     protected $error;
 
     public function get(Order $order)
-    {
+    { 
         if ( $order->getCN23() ){
             return true;
         }

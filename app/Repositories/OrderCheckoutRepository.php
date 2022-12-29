@@ -393,8 +393,9 @@ class OrderCheckoutRepository
                 return null;
             }
 
-        } catch (Exception $th) {
-            abort(400,'Bad Request'.$th->getMessage());
+        } catch (Exception $th) { 
+             return json_decode('Bad Request '.$th->getMessage());
+             
         }
         return json_decode($response->getBody()->getContents());
     }

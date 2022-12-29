@@ -5,6 +5,7 @@ namespace App\Repositories;
 
 
 use App\Models\Order;
+use Illuminate\Support\Facades\Auth;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Correios\Models\PackageError;
 use App\Services\Correios\Services\Brazil\Client;
@@ -45,7 +46,11 @@ class CorrieosBrazilLabelRepository
     }
 
     protected function generateLabel(Order $order)
-    {
+    { 
+        if (Auth::user()->can('stopPrintCorrieosLabel',Order::class) && !Auth::user()->isAdmin()){ 
+          $this->error = 'Something went wrong in Correios API Please wait...';
+          return null;
+        }
         $client = new Client();
         $data = $client->createPackage($order);
         if ( $data instanceof PackageError){

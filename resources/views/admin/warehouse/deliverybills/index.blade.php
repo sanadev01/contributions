@@ -97,6 +97,8 @@
                                                     <span class="badge badge-primary">M</span>
                                                 @elseif($deliveryBill->isGePS())
                                                     <span class="badge badge-secondary">G</span>
+                                                @elseif($deliveryBill->isSwedenPost())
+                                                    <span class="badge badge-info text-white">D</span>
                                                 @elseif($deliveryBill->hasColombiaService())
                                                     <span class="badge badge-success">C</span>
                                                 @else
