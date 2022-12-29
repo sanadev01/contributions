@@ -28,5 +28,6 @@ return [
     'Pobox Information' => 'Informação Pobox',
     'Pobox Address' => 'Endereço Pobox',
     'Updated' => 'Perfil atualizado com sucesso',
+    'payment permission' => 'I authorize the automatic charge to my credit card on file when the balance is less than $200.00',
 ];
 
