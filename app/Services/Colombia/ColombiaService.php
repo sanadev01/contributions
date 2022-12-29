@@ -112,7 +112,7 @@ class ColombiaService
                                 ->post($url, $data);            
             if ($response->status() == 200) {
                 $responseJson = collect($response->json())->first();
-                dd($responseJson);
+                //dd($responseJson);
                 if ($responseJson['intCodeError'] == 0  && $responseJson['strUrlGuide'] != null) {
                     return (Array)[
                         'success' => true,
@@ -159,7 +159,6 @@ class ColombiaService
             'intTypeRequest' => ($forRates) ? 1 : 2,
             'lstShippingTraceBe' => [
                 [
-                    
                     'placeReceiverBe' => $this->setPlace($order->recipient->toArray()),
                     'boolLading' => false,
                     'customerReceiverBe' => $this->setCustomer($order->recipient->toArray()),
