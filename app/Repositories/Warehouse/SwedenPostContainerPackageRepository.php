@@ -11,7 +11,6 @@ class SwedenPostContainerPackageRepository {
     public function addOrderToContainer($container, $order)
     {
         $container->orders()->attach($order->id);
-
         return $order;
     }
 
