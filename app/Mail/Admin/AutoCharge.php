@@ -36,7 +36,7 @@ class AutoCharge extends Mailable
         ->to(
             config('hd.email.admin_email'),
             config('hd.email.admin_name'),
-        )->cc('mnaveedsaim@gmail.com')
+        )->cc('ecommerce@homedeliverybr.com')
         ->subject('Auto Charge Notification');
         
     }
