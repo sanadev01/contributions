@@ -26,10 +26,6 @@ class SwedenPostCN35DownloadController extends Controller
             session()->flash('alert-danger', $response->message);
             return back();
         }
-
     }
-
-  
-    
 
 }

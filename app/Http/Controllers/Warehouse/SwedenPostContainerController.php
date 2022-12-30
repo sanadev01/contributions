@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
 use App\Repositories\Warehouse\SwedenPostContainerRepository;
-use App\Http\Requests\Warehouse\Container\CreateContainerRequest;
-// use App\Http\Requests\Warehouse\SwedenPost\Container\UpdateContainerRequest;
+use App\Http\Requests\Warehouse\SwedenPostContainer\CreateContainerRequest;
+use App\Http\Requests\Warehouse\SwedenPostContainer\UpdateContainerRequest;
 
 class SwedenPostContainerController extends Controller
 {
@@ -82,7 +82,7 @@ class SwedenPostContainerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $updateContainerRequest, SwedenPostContainerRepository $swedenpostContainerRepository)
+    public function update(UpdateContainerRequest $updateContainerRequest, SwedenPostContainerRepository $swedenpostContainerRepository)
     {
         $container = Container::find($updateContainerRequest->id);
 
