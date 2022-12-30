@@ -10,6 +10,6 @@ return [
         'secret' => 'I7MIjTQBMZNXToMTA2PkOw',
         'token' => 'testa0wXdbpML6JGQ7NRP3O',
         'host' => 'us.etowertech.com',
-        'baseUrl' => 'http://us.etowertech.com/',
+        'baseUrl' => 'https://us.etowertech.com/',
     ]
 ];
