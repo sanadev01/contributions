@@ -15,14 +15,11 @@ class SwedenPostContainerPackageController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($id)
+    public function index(Container $swedenpost_container)
     {
-        $container = Container::find($id);
-        $ordersCollection = json_encode($container->getOrdersCollections());
+        $container = $swedenpost_container;
         $editMode = ($container->response == 0) ? true : false;
-
-        return view('admin.warehouse.swedenpostContainers.scan',compact('container', 'ordersCollection', 'editMode'));
-                
+        return view('admin.warehouse.swedenpostContainers.scan',compact('container', 'editMode'));
     }
 
     /**
@@ -30,9 +27,9 @@ class SwedenPostContainerPackageController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($id)
+    public function create(Container $swedenpost_container)
     {
-        $container = Container::find($id);
+        $container = $swedenpost_container;
         $orders = $container->orders;
         $exportService = new ContainerOrderExport($orders);
         return $exportService->handle();
@@ -47,7 +44,6 @@ class SwedenPostContainerPackageController extends Controller
     public function store($container, $order)
     {
         $swedenpost_containerPackageRepository = new SwedenPostContainerPackageRepository();
-
         return $swedenpost_containerPackageRepository->addOrderToContainer($container,$order);
     }
 
@@ -95,10 +91,9 @@ class SwedenPostContainerPackageController extends Controller
     {
         $swedenpost_containerPackageRepository = new SwedenPostContainerPackageRepository();
         try {
-            //code...
             return $swedenpost_containerPackageRepository->removeOrderFromContainer($container,$id);
         } catch (\Exception $ex) {
-            \Log::info($ex);
+            return $ex->getMessage();
         }
     }
 }
