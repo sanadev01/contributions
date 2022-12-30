@@ -79,12 +79,12 @@
                                             {{ $container->awb }}
                                         </td>
                                         <td>
-                                            @if(!$container->isRegistered())
+                                            @if(!$container->unit_response_list)
                                                 <div class="btn btn-info">
                                                     New
                                                 </div>
                                             @endif
-                                            @if($container->isRegistered() && !$container->isShipped())
+                                            @if($container->unit_response_list && !$container->isShipped())
                                                 <div class="btn btn-primary">
                                                     Registered
                                                 </div>
@@ -106,11 +106,14 @@
                                                         <a href="{{ route('warehouse.swedenpost_container.packages.index',$container) }}" class="dropdown-item w-100">
                                                             <i class="feather icon-box"></i> @lang('warehouse.actions.Packages')
                                                         </a>
-                                                        @if( !$container->isRegistered() )
+                                                        {{-- <a href="{{ route('warehouse.swedenpost_container.register',$container) }}" class="dropdown-item w-100">
+                                                            <i class="feather icon-box"></i> Register Unit
+                                                        </a> --}}
+                                                        @if( !$container->unit_response_list )
                                                             <a href="{{ route('warehouse.swedenpost_containers.edit',$container) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
                                                             </a>
-                                                            @if( !$container->isRegistered() && $container->hasOrders())
+                                                            @if( !$container->unit_response_list && $container->hasOrders())
                                                                 <a href="{{ route('warehouse.swedenpost_container.register',$container) }}" class="dropdown-item w-100">
                                                                     <i class="feather icon-box"></i> Register Unit
                                                                 </a>
@@ -123,7 +126,7 @@
                                                                 </button>
                                                             </form>
                                                         @endif
-                                                        @if( $container->isRegistered() )
+                                                        @if( $container->unit_response_list )
                                                             <a href="{{ route('warehouse.swedenpost_container.download',$container) }}" class="dropdown-item w-100">
                                                                 <i class="feather icon-box"></i> Get CN35
                                                             </a>
