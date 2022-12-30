@@ -12,7 +12,7 @@
                 <th>Action</th>
             </tr>
         </thead>
-        <tbody>            
+        <tbody>
             @foreach ($orders as $key => $order)
             <tr id="{{ $key }}">
                 <td>
@@ -25,7 +25,7 @@
                     {{ $order->weight }} Kg
                 </td>
                 <td>
-                    {{ $order->weight_lbs }} Lbs 
+                    {{ $order->weight_lbs }} Lbs
                         <hr>
                     {{ $order->weight_kg }} Kg
                 </td>
@@ -65,7 +65,7 @@
             @if($editMode == true)
             <tr>
                 <td colspan="8">
-                    <input type="text" wire:model.debounce.500ms="barcode" class="w-100 text-center" style="height:50px;font-size:30px;" id="scan">
+                    <input type="text" wire:model.debounce.500ms="barcode" class="w-100 text-center" style="height:50px;font-size:30px;">
                 </td>
             </tr>
             @endif

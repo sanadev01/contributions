@@ -12,13 +12,17 @@
                 <th>Action</th>
             </tr>
         </thead>
+<<<<<<<< HEAD:resources/views/livewire/sweden-post-container/package.blade.php
+        <tbody>            
+========
         <tbody>
             @if($error)
             <div class="alert alert-danger" role="alert">
                 {{$error}}
             </div>
             @endif
-            
+
+>>>>>>>> 141471dd5e72d4508ee86501437d675edecce8b3:resources/views/livewire/postnl-container/packages.blade.php
             @foreach ($orders as $key => $order)
             <tr id="{{ $key }}">
                 <td>
@@ -31,7 +35,7 @@
                     {{ $order->weight }} Kg
                 </td>
                 <td>
-                    {{ $order->weight_lbs }} Lbs 
+                    {{ $order->weight_lbs }} Lbs
                         <hr>
                     {{ $order->weight_kg }} Kg
                 </td>
@@ -53,7 +57,19 @@
                 </td>
             </tr>
             @endforeach
-            
+<<<<<<<< HEAD:resources/views/livewire/sweden-post-container/package.blade.php
+            <tr>
+                <td colspan="8">
+                    @if($error)
+                    <div class="alert alert-danger" role="alert">
+                        {{$error}}
+                    </div>
+                    @endif
+                </td>
+            </tr>
+========
+
+>>>>>>>> 141471dd5e72d4508ee86501437d675edecce8b3:resources/views/livewire/postnl-container/packages.blade.php
             <tr>
                 <td colspan="8" class="h2 text-right px-5">
                     <span class="text-danger font-weight-bold">Weight :</span> {{$totalweight}}

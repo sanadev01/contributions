@@ -16,7 +16,6 @@ class ShippingOrder {
          $batteryType = "Lithium Ion Polymer";
          $batteryPacking = "Inside Equipment";
       }
-     
      $packet = 
          [ 
             'labelFormat' => "PDF",
@@ -106,5 +105,16 @@ class ShippingOrder {
          $value = number_format($item->value * (int)$item->quantity , 2);
       }
       return $value;
+   }
+
+   private function containsBatteryPerfume($order)
+   {
+      foreach ($order->items as $key => $item) {
+
+         if($item->contains_battery || $item->contains_perfume) {
+            return true;
+         }
+      }
+      return false;
    }
 }

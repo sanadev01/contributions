@@ -1,9 +1,9 @@
-<?php 
+<?php
 
 namespace App\Repositories\Warehouse;
 
 
-class ChileContainerPackageRepository {
+class PostNLContainerPackageRepository {
 
 
     public function addOrderToContainer($container, $order)
