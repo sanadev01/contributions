@@ -18,10 +18,9 @@ class SwedenPostContainerPackageController extends Controller
     public function index($id)
     {
         $container = Container::find($id);
-        $ordersCollection = json_encode($container->getOrdersCollections());
         $editMode = ($container->response == 0) ? true : false;
 
-        return view('admin.warehouse.swedenpostContainers.scan',compact('container', 'ordersCollection', 'editMode'));
+        return view('admin.warehouse.swedenpostContainers.scan',compact('container', 'editMode'));
                 
     }
 

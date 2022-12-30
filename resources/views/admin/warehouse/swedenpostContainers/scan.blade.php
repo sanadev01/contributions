@@ -16,7 +16,7 @@
                     </div>
                     <div class="card-content card-body">
                         <div class="mt-1">
-                            <livewire:sweden-post-container.package  :container="$container" :edit-mode="$editMode" :orders-collection="$ordersCollection"/> 
+                            <livewire:sweden-post-container.package  :id="$container->id" :edit-mode="$editMode"/> 
 
                             {{-- <livewire:swedenpost-container.packages :container="$container" :edit-mode="$editMode" :ordersCollection="$ordersCollection"> --}}
                         </div>
