@@ -7,6 +7,8 @@ use Livewire\Component;
 use App\Models\OrderTracking;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Warehouse\SwedenPostContainerPackageController;
+use App\Services\SwedenPost\Services\Container\DirectLinkReceptacle;
+use Illuminate\Support\Facades\DB;
 
 class Package extends Component
 {
@@ -59,6 +61,9 @@ class Package extends Component
 
     public function saveOrder()
     {
+        $this->error = '';
+        DB::beginTransaction();
+
         $swedenpost_ContainerPackageController = new SwedenPostContainerPackageController;
         $order = Order::where('corrios_tracking_code', $this->barcode)->first();
             if (!$order) {
@@ -88,18 +93,40 @@ class Package extends Component
             if (!$this->container->hasGePSService() && $order->shippingService->isGePSService()) {
                 return  $this->error = 'Order does not belong to this container. Please Check Packet Service';
             }
+            $response =  (new DirectLinkReceptacle($this->container))->scanItem($this->barcode);
+            $data = $response->getData(); 
+            if ($data->isSuccess) {
+                    $order = $swedenpost_ContainerPackageController->store($this->container, $order); 
+                    $this->addOrderTracking($order); 
+                    DB::commit();
+                    $this->error = $data->message;
+                    return $this->barcode = ''; 
+                 
+            } else {
+                DB::rollback();
+                return  $this->error = $data->message;
+                return null;
+            }
 
-            $order = $swedenpost_ContainerPackageController->store($this->container, $order);
-
-            $this->addOrderTracking($order);
-            $this->error = '';
-            return $this->barcode = ''; 
     }
 
-    public function removeOrder($id, $key)
-    {
-        $swedenpost_ContainerPackageController = new SwedenPostContainerPackageController;
-        $swedenpost_ContainerPackageController->destroy($this->container, $id);
+    public function removeOrder(Order $order, $key)
+    { 
+        $this->error = ''; 
+        $response =  (new DirectLinkReceptacle($this->container))->removeItem($order->corrios_tracking_code);
+        $data = $response->getData();
+        //  return dd($data);
+        if ($data->isSuccess) { 
+               $this->error =  $data->message; 
+                $swedenpost_ContainerPackageController = new SwedenPostContainerPackageController;
+                $swedenpost_ContainerPackageController->destroy($this->container, $order->id); 
+                DB::commit(); 
+             
+        } else {
+            DB::rollback();
+            return  $this->error = $data->message;  
+        }
+        
     }
 
     public function totalPackages()

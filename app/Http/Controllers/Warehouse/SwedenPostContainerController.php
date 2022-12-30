@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
 use App\Repositories\Warehouse\SwedenPostContainerRepository;
-use App\Http\Requests\Warehouse\SwedenPostContainer\CreateContainerRequest;
-use App\Http\Requests\Warehouse\SwedenPostContainer\UpdateContainerRequest;
+use App\Http\Requests\Warehouse\Container\CreateContainerRequest;
+// use App\Http\Requests\Warehouse\SwedenPost\Container\UpdateContainerRequest;
 
 class SwedenPostContainerController extends Controller
 {
