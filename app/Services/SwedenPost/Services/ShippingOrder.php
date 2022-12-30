@@ -69,16 +69,20 @@ class ShippingOrder {
         $singleItemWeight = UnitsConverter::kgToGrams($this->calulateItemWeight($order));
         
         if (count($order->items) >= 1) {
+            $loop = 0;
             foreach ($order->items as $key => $item) {
+                $loop++;
                 $itemToPush = [];
                 $originCountryCode = optional($order->senderCountry)->code;
                 $itemToPush = [
-                    'description' => $item->description,
                     'hsCode' => $item->sh_code,
                     'originCountry' => $originCountryCode ? $originCountryCode: 'US',
-                    'itemCount' => (int)$item->quantity,
+                    'description' => $item->description,
+                    'weight' => round($this->calulateItemWeight($order), 2) - 0.05,
+                    'itemNo' => str_pad($loop,4,"0",STR_PAD_LEFT),
+                    'sku' => $item->sh_code.'-'.$order->id,
                     'unitValue' => number_format($item->value),
-                    'warehouseNo' => ($order->warehouse_number) ? $order->warehouse_number : '',
+                    'itemCount' => (int)$item->quantity,
                 ];
                array_push($items, $itemToPush);
             }
@@ -102,7 +106,7 @@ class ShippingOrder {
    {
       $value = 0;
       foreach ($order->items as $key => $item) {
-         $value = number_format($item->value * (int)$item->quantity , 2);
+         $value = $value + (float) number_format($item->value, 2);
       }
       return $value;
    }
