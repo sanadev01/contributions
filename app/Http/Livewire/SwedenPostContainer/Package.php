@@ -53,7 +53,7 @@ class Package extends Component
 
     public function submit()
     {
-        $this->validate();
+        $this->validate(); 
         $order = Order::where('corrios_tracking_code', $this->tracking)->first();
         if ($order) {
             $container = Container::find($this->idContainer);
@@ -72,7 +72,7 @@ class Package extends Component
     }
 
     public function removeOrder(Order $order)
-    {
+    { 
         $swedenpost_containerPackageRepository = new SwedenPostContainerPackageRepository();
         return $swedenpost_containerPackageRepository->removeOrderFromPackageContainer($this->container, $order->id);
     }

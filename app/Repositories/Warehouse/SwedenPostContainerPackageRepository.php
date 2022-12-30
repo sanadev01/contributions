@@ -31,7 +31,7 @@ class SwedenPostContainerPackageRepository
         }
         if (!$container->orders()->where('order_id', $order->id)->first() && $error == null && $order->containers->isEmpty()) {
 
-            $response =  (new DirectLinkReceptacle($this->container))->scanItem($this->barcode);
+            $response =  (new DirectLinkReceptacle($container))->scanItem($order->corrios_tracking_code);
             $data = $response->getData();
             if ($data->isSuccess) {
                 $container->orders()->attach($order->id);
@@ -55,17 +55,20 @@ class SwedenPostContainerPackageRepository
 
     public function removeOrderFromPackageContainer(Container $container, $id)
     {
-        DB::baginTransaction();
-        $order_tracking = OrderTracking::where('order_id', $id)->latest()->first();
-        if ($order_tracking) {
-            $order_tracking->delete();
-        }
+        DB::beginTransaction(); 
+
 
         try {
             $order = Order::find($id);
-            $response =  (new DirectLinkReceptacle($this->container))->removeItem($order->corrios_tracking_code);
+
+            $response =  (new DirectLinkReceptacle($container))->removeItem($order->corrios_tracking_code);
+           
             $data = $response->getData();
-            if ($data->isSuccess) {
+            if ($data->isSuccess) { 
+                    $order_tracking = OrderTracking::where('order_id', $id)->latest()->first();
+                    if ($order_tracking) {
+                        $order_tracking->delete();
+                    }
                 $container->orders()->detach($id);
                  DB::commit();
                 return true;
@@ -73,8 +76,8 @@ class SwedenPostContainerPackageRepository
                 DB::rollback();
                 return false;
             }
-        } catch (\Exception $ex) {
-            $this->error = $ex->getMessage();
+        } catch (\Exception $ex) { 
+            dd($ex);
             return false;
         }
     }
