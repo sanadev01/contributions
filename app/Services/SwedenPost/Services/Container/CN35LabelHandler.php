@@ -32,7 +32,7 @@ class CN35LabelHandler
 
     public static function getLabelPath($container, $base64)
     {
-        $path = storage_path() . '/' . 'app' . '/labels/' . $container->unit_response . '' . '.pdf';
+        $path = storage_path() . '/' . 'app' . '/labels//' . $container->unit_response . '' . '.pdf';
 
         if (!file_exists($path)) {
             Storage::put("labels/{$container->unit_response}.pdf", base64_decode($base64));
