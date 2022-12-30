@@ -263,6 +263,28 @@
                                             </span>
                                         </div>
                                     </div>
+                                    <div class="controls row mb-1 align-items-center">
+                                        <div class="offset-3">
+                                            <div class="input-group ml-3">
+                                                <div class="vs-checkbox-con vs-checkbox-primary" title="Auto charge">
+                                                    <input type="checkbox" name="auto_charge" id="auto_charge" @if(setting('auto_charge', null, auth()->user()->id)) checked @endif>
+                                                    <span class="vs-checkbox vs-checkbox-lg">
+                                                        <span class="vs-checkbox--check">
+                                                            <i class="vs-icon feather icon-check"></i>
+                                                        </span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <label class="col-md-6 font-medium-1 font-weight-bold" for="auto_charge">@lang('profile.payment permission')<span class="text-danger"></span></label>
+                                    </div>
+                                <div class="row mt-1">
+                                    <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
+                                        <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">
+                                            @lang('profile.Save')
+                                        </button>
+                                        <button type="reset" class="btn btn-outline-warning waves-effect waves-light">@lang('profile.Reset')</button>
+                                    </div>
                                 </div>
                                 <label class="col-md-6 font-medium-1 font-weight-bold" for="auto_charge">@lang('profile.payment permission')<span class="text-danger"></span></label>
                             </div>
