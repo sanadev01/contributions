@@ -7,17 +7,14 @@ use Illuminate\Support\Facades\Http;
 
 class DirectLinkReceptacle
 {
-
-    //Sweden Post Parameters
     protected $userName;
     protected $password;
     protected $baseUrl;
-    //Sweden Post Parameters End 
     protected $container;
     protected $http;
+
     public function __construct(Container $container)
     {
-
         if (app()->isProduction()) {
             $this->userName = config('prime5.production.container.userName');
             $this->password = config('prime5.production.container.password');
@@ -83,7 +80,6 @@ class DirectLinkReceptacle
         ];
         $response = $this->http->post($url, $body);
         $data= json_decode($response);
-
  
         if ($response->successful() && $data->status == 0) {
             return $this->responseSuccessful('', $data->message);
@@ -104,7 +100,6 @@ class DirectLinkReceptacle
         $data= json_decode($response);
         if ($response->successful() && $data->status == 0) {
             return $this->responseSuccessful( $data->pdfReceptacleLable,  $data->message); 
-
         } else {
             return $this->responseUnprocessable( $data->message);
         }
@@ -118,10 +113,7 @@ class DirectLinkReceptacle
         ];
 
         $response = $this->http->post($url, $body);
-        //dummy true response
         $data= json_decode($response);
-
-
 
         if ($response->successful() && $data->status == 0) {
             return $this->responseSuccessful($data->pdfReceptacleLable,$data->message);

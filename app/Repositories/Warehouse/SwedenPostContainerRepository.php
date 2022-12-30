@@ -16,14 +16,9 @@ class SwedenPostContainerRepository
     public function get()
     {
         $query = Container::query();
-
-        if (!Auth::user()->isAdmin()) {
-            $query->where('user_id', Auth::id());
-        }
-
         return $query->where(function ($query) {
             $query->where('services_subclass_code', ShippingService::Prime5);
-        })->latest()->paginate();
+        })->latest()->paginate(50);
     }
 
     public function store($request)

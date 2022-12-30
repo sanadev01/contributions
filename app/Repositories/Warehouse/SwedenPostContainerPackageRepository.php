@@ -11,8 +11,6 @@ use Illuminate\Support\Facades\DB;
 
 class SwedenPostContainerPackageRepository
 {
-
-
     public function addOrderToPackageContainer($container, $order)
     {
         $error = null;
@@ -56,8 +54,6 @@ class SwedenPostContainerPackageRepository
     public function removeOrderFromPackageContainer(Container $container, $id)
     {
         DB::beginTransaction(); 
-
-
         try {
             $order = Order::find($id);
 
@@ -65,44 +61,21 @@ class SwedenPostContainerPackageRepository
            
             $data = $response->getData();
             if ($data->isSuccess) { 
-                    $order_tracking = OrderTracking::where('order_id', $id)->latest()->first();
-                    if ($order_tracking) {
-                        $order_tracking->delete();
-                    }
+                $order_tracking = OrderTracking::where('order_id', $id)->latest()->first();
+
+                if ($order_tracking) {
+                    $order_tracking->delete();
+                }
                 $container->orders()->detach($id);
-                 DB::commit();
+
+                DB::commit();
                 return true;
             } else {
                 DB::rollback();
                 return false;
             }
-        } catch (\Exception $ex) { 
-            dd($ex);
+        } catch (\Exception $ex) {
             return false;
-        }
-    }
-
-    public function addTrackings($request, $id)
-    {
-        $container = Container::find($id);
-        try {
-            $file = $request->file('csv_file');
-            try {
-                $importTrackingService = new TrackingsImportService($file, $container);
-                $importTrackingService->handle();
-                if ($container) {
-                    session()->flash('alert-success', 'Trackings has been Uploaded Successfully');
-                    return back();
-                }
-                return true;
-            } catch (\Exception $exception) {
-                throw $exception;
-                session()->flash('alert-danger', 'Error While Uploading Trackings');
-                return back();
-            }
-        } catch (\Exception $exception) {
-            session()->flash('alert-danger', 'Error while Upload: ' . $exception->getMessage());
-            return null;
         }
     }
 
@@ -118,21 +91,5 @@ class SwedenPostContainerPackageRepository
         ]);
 
         return true;
-    }
-
-
-    public function removeOrderFromContainer($container, $id)
-    {
-        $order_tracking = OrderTracking::where('order_id', $id)->latest()->first();
-        if ($order_tracking) {
-            $order_tracking->delete();
-        }
-        return $container->orders()->detach($id);
-    }
-
-    public function addOrderToContainer($container, $order)
-    {
-        $container->orders()->attach($order->id);
-        return $order;
     }
 }
