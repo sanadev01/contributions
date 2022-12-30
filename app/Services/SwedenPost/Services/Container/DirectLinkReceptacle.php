@@ -33,11 +33,10 @@ class DirectLinkReceptacle
 
     public function create()
     {
-        return dd(333);
         $url = $this->baseURL . 'bagscan?op=createReceptacle';
         $body = [
             "dlOfficeCode" => "600",
-            "eventId" => 18,
+            "eventId" => "18",
             "contentCode" => "006",
             "countryCode" => "BR",
             "receptacleType" => "01",
