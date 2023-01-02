@@ -77,7 +77,7 @@ class ShippingOrder {
                     'originCountry' => $originCountryCode ? $originCountryCode: 'US',
                     'description' => $item->description,
                   //   'weight' => round($this->calulateItemWeight($order), 2) - 0.05,
-                    'itemNo' => str_pad(++$key,4,"0",STR_PAD_LEFT),
+                    'itemNo' => "000".++$key,
                   //   'sku' => $item->sh_code.'-'.$order->id,
                     'unitValue' => number_format($item->value),
                     'itemCount' => (int)$item->quantity,
