@@ -12,9 +12,8 @@ class ShippingOrder {
       $batteryType = ""; 
       $batteryPacking = "";
       if($order->measurement_unit == "lbs/in") { $uom = "LB"; } else { $uom = "KG"; }
-      if($order->items()->batteries()->count() || $order->items()->perfumes()->count()) {
-         $batteryType = "Lithium Ion Polymer";
-         $batteryPacking = "Inside Equipment";
+      if($order->hasBattery()) {
+         $batteryType = "Lithium Ion Polymer"; $batteryPacking = "Inside Equipment";
       }
      
      $packet = 
@@ -33,7 +32,7 @@ class ShippingOrder {
                   'length' => $order->length,
                   'width' => $order->width,
                   'height' => $order->height,
-                  'invoiceValue' => $this->getParcelValue($order),
+                  'invoiceValue' => $order->getOrderValue(),
                   'invoiceCurrency' => "USD",
                   'batteryType' => $batteryType,
                   'batteryPacking' => $batteryPacking,
@@ -74,12 +73,14 @@ class ShippingOrder {
                 $itemToPush = [];
                 $originCountryCode = optional($order->senderCountry)->code;
                 $itemToPush = [
-                    'description' => $item->description,
                     'hsCode' => $item->sh_code,
                     'originCountry' => $originCountryCode ? $originCountryCode: 'US',
-                    'itemCount' => (int)$item->quantity,
+                    'description' => $item->description,
+                  //   'weight' => round($this->calulateItemWeight($order), 2) - 0.05,
+                    'itemNo' => "000".++$key,
+                  //   'sku' => $item->sh_code.'-'.$order->id,
                     'unitValue' => number_format($item->value),
-                    'warehouseNo' => ($order->warehouse_number) ? $order->warehouse_number : '',
+                    'itemCount' => (int)$item->quantity,
                 ];
                array_push($items, $itemToPush);
             }
@@ -97,14 +98,5 @@ class ShippingOrder {
             return $itemWeight;
         }
         return $orderTotalWeight;
-   }
-
-   private function getParcelValue($order)
-   {
-      $value = 0;
-      foreach ($order->items as $key => $item) {
-         $value = number_format($item->value * (int)$item->quantity , 2);
-      }
-      return $value;
    }
 }
