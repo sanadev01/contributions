@@ -155,7 +155,7 @@
                         <a href="{{ route('admin.orders.label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
                             <i class="feather icon-printer"></i>@lang('orders.actions.label')
                         </a>
-                        @if($order->carrierService() == "Global eParcel" || $order->carrierService() == "Prime5" && !$order->isRefund() && !$order->isShipped())
+                        @if($order->carrierService() == "Global eParcel" && !$order->isRefund() && !$order->isShipped())
                             <a href="{{ route('admin.order.label.cancel',$order) }}" class="dropdown-item" title="@lang('orders.actions.cancel')">
                                 <i class="feather icon-x-square"></i>@lang('orders.actions.cancel')
                             </a>
