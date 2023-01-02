@@ -69,9 +69,7 @@ class ShippingOrder {
         $singleItemWeight = UnitsConverter::kgToGrams($this->calulateItemWeight($order));
         
         if (count($order->items) >= 1) {
-            $loop = 0;
             foreach ($order->items as $key => $item) {
-                $loop++;
                 $itemToPush = [];
                 $originCountryCode = optional($order->senderCountry)->code;
                 $itemToPush = [
@@ -79,7 +77,7 @@ class ShippingOrder {
                     'originCountry' => $originCountryCode ? $originCountryCode: 'US',
                     'description' => $item->description,
                   //   'weight' => round($this->calulateItemWeight($order), 2) - 0.05,
-                    'itemNo' => str_pad($loop,4,"0",STR_PAD_LEFT),
+                    'itemNo' => str_pad(++$key,4,"0",STR_PAD_LEFT),
                   //   'sku' => $item->sh_code.'-'.$order->id,
                     'unitValue' => number_format($item->value),
                     'itemCount' => (int)$item->quantity,
