@@ -12,9 +12,8 @@ class ShippingOrder {
       $batteryType = ""; 
       $batteryPacking = "";
       if($order->measurement_unit == "lbs/in") { $uom = "LB"; } else { $uom = "KG"; }
-      if($order->items()->batteries()->count() || $order->items()->perfumes()->count()) {
-         $batteryType = "Lithium Ion Polymer";
-         $batteryPacking = "Inside Equipment";
+      if($order->hasBattery() || $order->hasPerfume()) {
+         $batteryType = "Lithium Ion Polymer"; $batteryPacking = "Inside Equipment";
       }
      
      $packet = 
