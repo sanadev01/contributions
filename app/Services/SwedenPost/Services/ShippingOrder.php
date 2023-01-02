@@ -12,10 +12,10 @@ class ShippingOrder {
       $batteryType = ""; 
       $batteryPacking = "";
       if($order->measurement_unit == "lbs/in") { $uom = "LB"; } else { $uom = "KG"; }
-      if($order->items()->batteries()->count() || $order->items()->perfumes()->count()) {
-         $batteryType = "Lithium Ion Polymer";
-         $batteryPacking = "Inside Equipment";
+      if($order->hasBattery()) {
+         $batteryType = "Lithium Ion Polymer"; $batteryPacking = "Inside Equipment";
       }
+     
      $packet = 
          [ 
             'labelFormat' => "PDF",
@@ -32,7 +32,7 @@ class ShippingOrder {
                   'length' => $order->length,
                   'width' => $order->width,
                   'height' => $order->height,
-                  'invoiceValue' => $this->getParcelValue($order),
+                  'invoiceValue' => $order->getOrderValue(),
                   'invoiceCurrency' => "USD",
                   'batteryType' => $batteryType,
                   'batteryPacking' => $batteryPacking,
@@ -69,18 +69,16 @@ class ShippingOrder {
         $singleItemWeight = UnitsConverter::kgToGrams($this->calulateItemWeight($order));
         
         if (count($order->items) >= 1) {
-            $loop = 0;
             foreach ($order->items as $key => $item) {
-                $loop++;
                 $itemToPush = [];
                 $originCountryCode = optional($order->senderCountry)->code;
                 $itemToPush = [
                     'hsCode' => $item->sh_code,
                     'originCountry' => $originCountryCode ? $originCountryCode: 'US',
                     'description' => $item->description,
-                    'weight' => round($this->calulateItemWeight($order), 2) - 0.05,
-                    'itemNo' => str_pad($loop,4,"0",STR_PAD_LEFT),
-                    'sku' => $item->sh_code.'-'.$order->id,
+                  //   'weight' => round($this->calulateItemWeight($order), 2) - 0.05,
+                    'itemNo' => "000".++$key,
+                  //   'sku' => $item->sh_code.'-'.$order->id,
                     'unitValue' => number_format($item->value),
                     'itemCount' => (int)$item->quantity,
                 ];
@@ -100,25 +98,5 @@ class ShippingOrder {
             return $itemWeight;
         }
         return $orderTotalWeight;
-   }
-
-   private function getParcelValue($order)
-   {
-      $value = 0;
-      foreach ($order->items as $key => $item) {
-         $value = $value + (float) number_format($item->value, 2);
-      }
-      return $value;
-   }
-
-   private function containsBatteryPerfume($order)
-   {
-      foreach ($order->items as $key => $item) {
-
-         if($item->contains_battery || $item->contains_perfume) {
-            return true;
-         }
-      }
-      return false;
    }
 }
