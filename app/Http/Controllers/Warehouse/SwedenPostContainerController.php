@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Warehouse;
 
-use Illuminate\Http\Request;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
 use App\Repositories\Warehouse\SwedenPostContainerRepository;
@@ -16,9 +15,9 @@ class SwedenPostContainerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(SwedenPostContainerRepository $swedenpost_containerRepository)
+    public function index(SwedenPostContainerRepository $swedenpostContainerRepository)
     {
-        $containers = $swedenpost_containerRepository->get();
+        $containers = $swedenpostContainerRepository->get();
         
         return view('admin.warehouse.swedenpostContainers.index', compact('containers'));
     }
@@ -39,13 +38,13 @@ class SwedenPostContainerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateContainerRequest $createContainerRequest, SwedenPostContainerRepository $swedenpost_containerRepository)
+    public function store(CreateContainerRequest $createContainerRequest, SwedenPostContainerRepository $swedenpostContainerRepository)
     {
-        if ( $container = $swedenpost_containerRepository->store($createContainerRequest) ){
+        if ( $container = $swedenpostContainerRepository->store($createContainerRequest) ){
             session()->flash('alert-success', 'Container Saved Please Scann Packages');
             return redirect()->route('warehouse.swedenpost_containers.index');
         }
-        session()->flash('alert-danger', $swedenpost_containerRepository->getError());
+        session()->flash('alert-danger', $swedenpostContainerRepository->getError());
         return back()->withInput();
     }
 
@@ -72,7 +71,6 @@ class SwedenPostContainerController extends Controller
         if ( $container->response != 0 ){
             abort(405);
         }
-        
         return view('admin.warehouse.swedenpostContainers.edit',compact('container'));
     }
 
@@ -83,19 +81,18 @@ class SwedenPostContainerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateContainerRequest $updateContainerRequest, SwedenPostContainerRepository $swedenpost_containerRepository)
+    public function update(UpdateContainerRequest $updateContainerRequest, SwedenPostContainerRepository $swedenpostContainerRepository)
     {
         $container = Container::find($updateContainerRequest->id);
 
         if ( $container->response != 0 ){
             abort(405);
         }
-        
-        if ( $container = $swedenpost_containerRepository->update($container, $updateContainerRequest) ){
+        if ( $container = $swedenpostContainerRepository->update($container, $updateContainerRequest) ){
             session()->flash('alert-success', 'Container Saved Please Scann Packages');
             return redirect()->route('warehouse.swedenpost_containers.index');
         }
-        session()->flash('alert-danger', $swedenpost_containerRepository->getError());
+        session()->flash('alert-danger', $swedenpostContainerRepository->getError());
         return back()->withInput();
     }
 
@@ -105,18 +102,18 @@ class SwedenPostContainerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($container, SwedenPostContainerRepository $swedenpost_containerRepository)
+    public function destroy($container, SwedenPostContainerRepository $swedenpostContainerRepository)
     {
         $container = Container::find($container);
         if ( $container->respone != 0 ){
             abort(403,'Cannot Delete Container registered on Correios Chile.');
         }
-        if ( $container = $swedenpost_containerRepository->delete($container) ){
+        if ( $container = $swedenpostContainerRepository->delete($container) ){
             session()->flash('alert-success', 'Container Deleted');
             return redirect()->route('warehouse.swedenpost_containers.index');
         }
 
-        session()->flash('alert-danger', $swedenpost_containerRepository->getError());
+        session()->flash('alert-danger', $swedenpostContainerRepository->getError());
         return back()->withInput();        
     }
 
