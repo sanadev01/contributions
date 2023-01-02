@@ -33,7 +33,7 @@ class ShippingOrder {
                   'length' => $order->length,
                   'width' => $order->width,
                   'height' => $order->height,
-                  'invoiceValue' => $this->getParcelValue($order),
+                  'invoiceValue' => $order->getOrderValue(),
                   'invoiceCurrency' => "USD",
                   'batteryType' => $batteryType,
                   'batteryPacking' => $batteryPacking,
@@ -79,9 +79,9 @@ class ShippingOrder {
                     'hsCode' => $item->sh_code,
                     'originCountry' => $originCountryCode ? $originCountryCode: 'US',
                     'description' => $item->description,
-                    'weight' => round($this->calulateItemWeight($order), 2) - 0.05,
+                  //   'weight' => round($this->calulateItemWeight($order), 2) - 0.05,
                     'itemNo' => str_pad($loop,4,"0",STR_PAD_LEFT),
-                    'sku' => $item->sh_code.'-'.$order->id,
+                  //   'sku' => $item->sh_code.'-'.$order->id,
                     'unitValue' => number_format($item->value),
                     'itemCount' => (int)$item->quantity,
                 ];
@@ -101,14 +101,5 @@ class ShippingOrder {
             return $itemWeight;
         }
         return $orderTotalWeight;
-   }
-
-   private function getParcelValue($order)
-   {
-      $value = 0;
-      foreach ($order->items as $key => $item) {
-         $value = $value + (float) number_format($item->value, 2);
-      }
-      return $value;
    }
 }
