@@ -87,10 +87,10 @@ class RecipientController extends Controller
 
     public function colombiaZipcode(Request $request)
     {
-        $zipcode = Region::query()->where("country_id",$request->country_id)->where('name', 'LIKE', "%{$request->city}%")->value('code');
+        //$zipcode = Region::query()->where("country_id",$request->country_id)->where('name', 'LIKE', "%{$request->city}%")->value('code');
         $colombiaPostalCodeService = new ColombiaPostalCodes();
-        $dept = $colombiaPostalCodeService->getDepartment($request->city);
-        $data = ['zipCode' => $zipcode, 'department' => $dept];
+        $zipCode = $colombiaPostalCodeService->getZipCodes($request->city);
+        $data = ['zipCode' => $zipCode];
         return response()->json($data);
     }
 

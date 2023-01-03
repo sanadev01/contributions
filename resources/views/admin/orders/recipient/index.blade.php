@@ -183,7 +183,7 @@
                         <div class="help-block"></div>
                     </div>
                 </div>
-                <div class="col-12 col-sm-6 col-md-4 d-none" id="div_co_dept">
+                <!-- <div class="col-12 col-sm-6 col-md-4 d-none" id="div_co_dept">
                     <div class="controls">
                         <label>Departamento</label>
                         <select name="codept" id="codept" class="form-control selectpicker show-tick" data-live-search="true" data-value="{{ old('street_no', optional($order->recipient)->street_no) }}">
@@ -194,7 +194,7 @@
                         </select>
                         <div class="help-block"></div>
                     </div>
-                </div>
+                </div> -->
                 
                 <div class="form-group col-12 col-sm-6 col-md-4" id="div_street_number">
                     <div class="controls">

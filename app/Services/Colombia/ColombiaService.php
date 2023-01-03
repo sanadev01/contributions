@@ -106,12 +106,13 @@ class ColombiaService
     
     private function colombiaApiCall($url, $data)
     {
+        //dd($data);
         try {
             $response = Http::withBasicAuth($this->userName, $this->password)
                                 ->post($url, $data);            
             if ($response->status() == 200) {
                 $responseJson = collect($response->json())->first();
-
+                //dd($responseJson);
                 if ($responseJson['intCodeError'] == 0  && $responseJson['strUrlGuide'] != null) {
                     return (Array)[
                         'success' => true,
@@ -158,7 +159,6 @@ class ColombiaService
             'intTypeRequest' => ($forRates) ? 1 : 2,
             'lstShippingTraceBe' => [
                 [
-                    
                     'placeReceiverBe' => $this->setPlace($order->recipient->toArray()),
                     'boolLading' => false,
                     'customerReceiverBe' => $this->setCustomer($order->recipient->toArray()),
@@ -197,7 +197,11 @@ class ColombiaService
     private function setPlace($data = null, $typeRecipient = true)
     {
         $regionId = ($data) ? $data['region'] : null;
-        $regionCode = ($regionId) ? Region::find($regionId)->code : Region::COLOMBIA_SENDER_CODE;
+        if(!empty($data)) {
+            $regionCode = $data['zipcode'];
+        } else {
+            $regionCode = ($regionId) ? Region::find($regionId)->code : Region::COLOMBIA_SENDER_CODE;
+        }
         
         return [
             'intAditional' => 0,
@@ -217,12 +221,15 @@ class ColombiaService
     private function setCustomer($data = null, $typeRecipient = true)
     {
         $regionId = ($data) ? $data['region'] : null;
-        $regionCode = ($regionId) ? Region::find($regionId)->code : Region::COLOMBIA_SENDER_CODE;
-
+        if(!empty($data)) {
+            $regionCode = $data['zipcode'];
+        }else {
+            $regionCode = ($regionId) ? Region::find($regionId)->code : Region::COLOMBIA_SENDER_CODE;
+        }
+        
         return [
             'intAditional' => 0,
             'intCodeCity' => $regionCode,
-            // 'intCodeCity' => null,//$data['zipcode'],
             'intTypeActor' => ($typeRecipient) ? 3 : 2,
             'intTypeDocument' => 1,
             'strAddress' => ($data) ? $data['address'] : (($typeRecipient ? 'Colombia Receiver' : 'Colombia Sender')),
