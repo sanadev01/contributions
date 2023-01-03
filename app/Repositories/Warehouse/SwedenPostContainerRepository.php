@@ -3,31 +3,29 @@
 namespace App\Repositories\Warehouse;
 
 use App\Models\Warehouse\Container;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ShippingService;
+use App\Services\SwedenPost\Services\Container\DirectLinkReceptacle;
+use Illuminate\Support\Facades\DB;
 
-class SwedenPostContainerRepository {
+class SwedenPostContainerRepository
+{
 
     protected $error;
 
     public function get()
     {
         $query = Container::query();
-
-        if ( !Auth::user()->isAdmin() ){
-            $query->where('user_id',Auth::id());
-        }
-
-        return $query->where(function($query) {
+        return $query->where(function ($query) {
             $query->where('services_subclass_code', ShippingService::Prime5);
-        })->latest()->paginate();
-
+        })->latest()->paginate(50);
     }
 
     public function store($request)
     {
-        try {
+
+        DB::beginTransaction();
+        try { 
             $container =  Container::create([
                 'user_id' => Auth::id(),
                 'dispatch_number' => 0,
@@ -39,14 +37,22 @@ class SwedenPostContainerRepository {
                 'unit_type' => $request->unit_type,
                 'services_subclass_code' => $request->services_subclass_code
             ]);
-
-            $container->update([
-                'dispatch_number' => $container->id
-            ]);
-
-            return $container;
-
+            $response =  (new DirectLinkReceptacle($container))->create();
+            $data = $response->getData();
+            if ($data->isSuccess) {
+                $container->update([
+                    'unit_code' => $data->output,
+                    'dispatch_number' => $container->id
+                ]);
+                DB::commit();
+                return $container;
+            } else {
+                DB::rollback();
+                $this->error = $data->message;
+                return null;
+            }
         } catch (\Exception $ex) {
+            DB::rollback();
             $this->error = $ex->getMessage();
             return null;
         }
@@ -59,7 +65,6 @@ class SwedenPostContainerRepository {
                 'seal_no' => $request->seal_no,
                 'unit_type' => $request->unit_type
             ]);
-
         } catch (\Exception $ex) {
             $this->error = $ex->getMessage();
             return null;
@@ -69,7 +74,7 @@ class SwedenPostContainerRepository {
     public function delete(Container $container, bool $force = false)
     {
         try {
-            if ( $force ){
+            if ($force) {
                 $container->forceDelete();
             }
 
@@ -79,7 +84,9 @@ class SwedenPostContainerRepository {
 
             return true;
         } catch (\Exception $ex) {
+
             $this->error = $ex->getMessage();
+
             return null;
         }
     }

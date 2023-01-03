@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Api\PublicApi;
 
-use App\Http\Controllers\Controller;
-use App\Mail\Admin\NotifyTransaction;
-use App\Models\Deposit;
-use App\Models\Order;
-use App\Models\PaymentInvoice;
-use Exception;
 use DB;
-use Illuminate\Support\Facades\Auth;
+use Exception;
+use App\Models\Order;
+use App\Models\Deposit;
+use App\Models\PaymentInvoice;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\Admin\NotifyTransaction;
 
 class CancelOrderController extends Controller
 {
@@ -55,7 +55,7 @@ class CancelOrderController extends Controller
                     }
                             try {          
                                 //SendMailNotification
-                                Mail::send(new NotifyTransaction($deposit, $preStatus, $user));
+                                Mail::send(new NotifyTransaction($deposit, $preStatus, Auth::user()->name));
                             } catch (Exception $ex) { 
                                 Log::info('Notify Transaction email send error: '.$ex->getMessage());
                             }

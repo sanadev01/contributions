@@ -12,7 +12,7 @@
                 <th>Action</th>
             </tr>
         </thead>
-        <tbody>            
+        <tbody>
             @foreach ($orders as $key => $order)
             <tr id="{{ $key }}">
                 <td>
@@ -22,25 +22,25 @@
                     {{ $order->warehouse_number }}
                 </td>
                 <td>
-                    {{ $order->weight }} Kg
+                    {{ $order->getOriginalWeight('kg') }} Kg
                 </td>
                 <td>
-                    {{ $order->weight_lbs }} Lbs 
+                    {{ $order->getWeight('lbs') }} Lbs 
                         <hr>
-                    {{ $order->weight_kg }} Kg
+                    {{ $order->getWeight('kg') }} Kg
                 </td>
                 <td>
-                    {{ $order->pobox }}
+                    {{ optional($order->user)->pobox_number.' / '. optional($order->user)->getFullName() }}
                 </td>
                 <td>
-                    {{ $order->sender_name }}
+                    {{ $order->getSenderFullName() }}
                 </td>
                 <td>
                     {{ $order->customer_reference }}
                 </td>
                 <td>
                     @if ($editMode == true)
-                        <button wire:click="removeOrder({{ $order->id }}, '{{$key}}')" class="btn btn-danger">
+                        <button wire:click="removeOrder({{ $order->id }})" class="btn btn-danger">
                             Remove
                         </button>
                     @endif
@@ -65,10 +65,15 @@
             @if($editMode == true)
             <tr>
                 <td colspan="8">
-                    <input type="text" wire:model.debounce.500ms="barcode" class="w-100 text-center" style="height:50px;font-size:30px;" id="scan">
+                    <form wire:submit.prevent="submit">
+                        <input type="text" wire:model.defer="tracking" class="w-100 text-center" style="height:50px;font-size:30px;" id="scan">
+                        @error('tracking') <span class="error offset-5 h4 text-danger">{{ $message }}</span> @enderror
+                    </form>
                 </td>
             </tr>
             @endif
         </tbody>
     </table>
+    @include('layouts.livewire.loading')
+
 </div>

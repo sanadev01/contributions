@@ -56,7 +56,7 @@
                                     <div class="col-md-6">
                                         <select class="form-control" name="services_subclass_code" disabled>
                                             <option value="">@lang('warehouse.containers.Distribution Service Class')</option>
-                                            <option value="KP" {{ old('services_subclass_code',$container->services_subclass_code) == 'KP' ? 'selected': '' }}>Global eParcel</option>
+                                            <option value="537" {{ old('services_subclass_code',$container->services_subclass_code) == App\Models\ShippingService::Prime5 ? 'selected': '' }}>Prime5</option>
                                         </select>
                                         @error('services_subclass_code')
                                             <div class="help-block text-danger"> {{ $message }} </div>
