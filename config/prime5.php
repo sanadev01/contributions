@@ -19,7 +19,7 @@ return [
         'container'=>[
             'userName' => 'HFFBagscanAPI',
             'password' => '13182a58e385abf1b02395288284902403ae89ccbf6fe0197388b99c83d083e4',
-            'baseURL'  => 'https://api.directlink.com/bagscan?op=validateCredentials'
+            'baseURL'  => 'https://api.directlink.com/'
         ],
     ]
 ];
