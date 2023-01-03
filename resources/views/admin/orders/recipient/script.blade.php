@@ -460,7 +460,6 @@
             url: "{{route('api.orders.recipient.colombiaZipcode')}}",
             data: {country_id:  $('#country').val(), city:  $('#cocity').val()},
             success: function (data){
-                alert(data.zipCode);
                 if(data){
                     $('#zipcode').val(data.zipCode);
                     $.each(data.department,function(index, value){
