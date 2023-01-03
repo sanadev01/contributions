@@ -136,7 +136,7 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     // Routes for Correios Unit Info
     Route::resource('unitinfo', UnitsInfoController::class);
 
-    // Routes for Sweden Post Container
+    // Routes for Prime5 Container
     Route::resource('swedenpost_containers', SwedenPostContainerController::class);
     Route::resource('swedenpost_container.packages', SwedenPostContainerPackageController::class)->only('index','destroy', 'create');
     Route::get('swedenpost_container/{container}/register', SwedenPostUnitRegisterController::class)->name('swedenpost_container.register');

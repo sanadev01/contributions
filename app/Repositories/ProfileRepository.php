@@ -54,6 +54,7 @@ class ProfileRepository
 
                 // dd($image);
             }
+            $request->has('auto_charge') ? saveSetting('auto_charge', true, $user->id) : saveSetting('auto_charge', false, $user->id);
             return true;
 
         }catch(Exception $exception){

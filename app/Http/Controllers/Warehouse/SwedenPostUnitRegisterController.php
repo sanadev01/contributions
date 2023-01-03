@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Warehouse\Container;
 use Illuminate\Http\Request;
 use App\Models\OrderTracking;
+use App\Services\SwedenPost\Services\Container\DirectLinkReceptacle;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class SwedenPostUnitRegisterController extends Controller
 {
@@ -17,17 +19,23 @@ class SwedenPostUnitRegisterController extends Controller
             return back();
         }
 
-        $date = date('YmdHis', strtotime(Carbon::now()));
-        $code = "SPHD".''.$date;
+        $response =  (new DirectLinkReceptacle($container))->close();
+        $data = $response->getData();
 
-        $container->update([
-            'unit_code' => $code,
-            'response' => '1',
-        ]);
-
-        $this->addOrderTracking($container);
-        session()->flash('alert-success','Package Registration success. You can print Label now');
-        return back();
+        if ($data->isSuccess){
+            $container->update([
+                'unit_response_list' => json_encode(['cn35'=>$data->output]),
+                'response' => '1',
+            ]); 
+    
+            $this->addOrderTracking($container);
+            session()->flash('alert-success', $data->message);
+            return back();
+              
+        } else {
+            session()->flash('alert-danger',$data->message);
+            return back();
+        } 
     }
 
     public function addOrderTracking($container)

@@ -5,11 +5,12 @@ namespace App\Mail\Admin;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\Deposit;
+use Illuminate\Http\Request;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use App\Mail\Admin\AutoCharge;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Http\Request;
 
 class NotifyTransaction extends Mailable
 {
@@ -38,7 +39,14 @@ class NotifyTransaction extends Mailable
             $this->newStatus = $order->status_name;
         }
         
-
+        if(setting('auto_charge', null, $order->user_id) && getBalance($order->user) < 200 ){
+            $charge = 200 - getBalance($order->user);
+            try {
+                \Mail::send(new AutoCharge(round($charge, 2), $order->user));
+            } catch (\Exception $ex) {
+                \Log::info('Notify Transaction email send error: '.$ex->getMessage());
+            }
+        }
         
     }
 

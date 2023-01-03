@@ -225,7 +225,7 @@
                                     <label class="col-md-3 text-md-right">Prime5<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <div class="input-group">
-                                            <div class="vs-checkbox-con vs-checkbox-primary" title="Sweden Post">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="Sweden Post - Prime5">
                                                 <input type="checkbox" name="sweden_post" id="sweden_post" @if(setting('sweden_post', null, \App\Models\User::ROLE_ADMIN)) checked @endif>
                                                 <span class="vs-checkbox vs-checkbox-lg">
                                                     <span class="vs-checkbox--check">

@@ -28,28 +28,28 @@ class OrderStatusController extends Controller
             if($request->status == Order::STATUS_REFUND && $order->isPaid()){
                 DB::beginTransaction();
                 try{
-                 $deposit = Deposit::create([
-                    'uuid' => PaymentInvoice::generateUUID('DP-'),
-                    'amount' => $order->gross_total,
-                    'user_id' => $order->user_id,
-                    'order_id' => $order->id,
-                    'last_four_digits' => 'credit from cancelation, refund '.$order->warehouse_number,
-                    'balance' => Deposit::getCurrentBalance($order->user) + $order->gross_total,
-                    'is_credit' => true,
-                ]);
-        
-                if ($order){
-                    $order->deposits()->sync($deposit->id);
-                }
-                
-                $order->update([
-                    'status'  => $request->status,
-                    'is_paid' => false
-                ]);                
-                 $this->sendTransactionMail($deposit, $preStatus, $user);
-                DB::commit();
-                }
-                catch(Exception $e){
+                    $deposit = Deposit::create([
+                        'uuid' => PaymentInvoice::generateUUID('DP-'),
+                        'amount' => $order->gross_total,
+                        'user_id' => $order->user_id,
+                        'order_id' => $order->id,
+                        'last_four_digits' => 'credit from cancelation, refund '.$order->warehouse_number,
+                        'balance' => Deposit::getCurrentBalance($order->user) + $order->gross_total,
+                        'is_credit' => true,
+                    ]);
+            
+                    if ($order){
+                        $order->deposits()->sync($deposit->id);
+                    }
+                    
+                    $order->update([
+                        'status'  => $request->status,
+                        'is_paid' => false
+                    ]);                
+                    $this->sendTransactionMail($deposit, $preStatus, $user);
+                    DB::commit();
+
+                }catch(Exception $e){
                     DB::rollBack(); 
                     return apiResponse(false,$e->getMessage()); 
                 }

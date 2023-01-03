@@ -28,5 +28,6 @@ return [
     'Pobox Information' => 'Pobox Information',
     'Pobox Address' => 'Pobox Address',
     'Updated' => 'Profile Updated Successfully',
+    'payment permission' => 'I authorize auto charge on my Credit Card on file when balance is under $ 200.00',
 ];
  

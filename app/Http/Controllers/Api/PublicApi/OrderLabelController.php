@@ -126,7 +126,8 @@ class OrderLabelController extends Controller
                 if($error){
                    return apiResponse(false, $error);
                 }
-            }else{
+            }
+            if($order->shippingService->isAnjunService() ||  $order->shippingService->isCorreiosService()){
 
                 if ( $request->update_label === 'true' ){
                     $labelData = $corrieosBrazilLabelRepository->update($order);

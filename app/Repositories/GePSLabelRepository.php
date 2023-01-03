@@ -17,6 +17,7 @@ class GePSLabelRepository
     public function get(Order $order)
     { 
         if ( $order->getCN23() ){
+            $this->printLabel($order);
             return true;
         }
 
