@@ -405,7 +405,7 @@
         $('#city_div').addClass('d-none');
         $('#div_street_number').addClass('d-none');
         $('#div_zipcode').addClass('d-block');
-        $('#zipcode').prop('disabled', true);
+        $('#zipcode').prop('disabled', false);
 
         $('#div_co_city').removeClass('d-none');
         $('#div_co_dept').removeClass('d-none');
