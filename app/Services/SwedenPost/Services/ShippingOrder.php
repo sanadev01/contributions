@@ -23,7 +23,7 @@ class ShippingOrder {
             'orders' => [
                [
                   //Parcel Information
-                  'referenceNo' => ($order->customer_reference) ? $order->customer_reference : '',
+                  'referenceNo' => ($order->customer_reference) ? $order->customer_reference.' '."($order->warehouse_number)" : '',
                   'trackingNo' => "",
                   'serviceCode' =>"DIRECT.LINK.US.L3",
                   'incoterm' => "DDU",
@@ -38,7 +38,7 @@ class ShippingOrder {
                   'batteryPacking' => $batteryPacking,
                   'facility'=> "EWR",
                   //Recipient Information
-                  'recipientName' => $order->recipient->getFullName().' '.$order->warehouse_number,
+                  'recipientName' => $order->recipient->getFullName(),
                   'phone' => ($order->recipient->phone) ? $order->recipient->phone: '',
                   'email' => ($order->recipient->email) ? $order->recipient->email: '',
                   'addressLine1' => $order->recipient->address.' '.$order->recipient->street_no,
