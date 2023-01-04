@@ -53,12 +53,13 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::resource('search_package', SearchPackageController::class)->only('index', 'show');
     Route::resource('scan', ScanPackageController::class)->only('index');
     Route::resource('scan-label', ScanLabelController::class)->only('index', 'store', 'create');
-    
+
     Route::resource('containers', ContainerController::class);
     Route::get('awb/', AwbController::class)->name('container.awb');
     Route::resource('containers.packages', ContainerPackageController::class)->only('index','destroy', 'create');
     Route::post('containers/{container}/packages/{barcode}', [ContainerPackageController::class,'store'])->name('containers.packages.store');
 
+    Route::get('anjun/container/{container}/register', UnitRegisterController::class)->name('anjun.container.register');
     Route::get('container/{container}/register', UnitRegisterController::class)->name('container.register');
     Route::get('container/{container}/cancel', UnitCancelContoller::class)->name('container.cancel');
     Route::get('container/{container}/download', CN35DownloadController::class)->name('container.download');

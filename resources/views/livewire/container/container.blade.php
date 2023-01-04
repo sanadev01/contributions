@@ -148,7 +148,7 @@
                                                                 <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
                                                             </a>
                                                             @if( !$container->isRegistered() && $container->hasOrders())
-                                                                <a href="{{ route('warehouse.container.register',$container) }}" class="dropdown-item w-100">
+                                                                <a href="{{  $container->hasAnjunService()?route('warehouse.anjun.container.register',$container):route('warehouse.container.register',$container) }}" class="dropdown-item w-100">
                                                                     <i class="feather icon-box"></i> Register Unit
                                                                 </a>
                                                             @endif
@@ -165,10 +165,10 @@
                                                                 </button>
                                                             </form>
                                                         @endif
-                                                        @if( $container->isRegistered() )
-                                                            <a href="{{ route('warehouse.container.download',$container) }}" class="dropdown-item w-100">
-                                                                <i class="feather icon-box"></i> Get CN35
-                                                            </a>
+                                                        @if( $container->isRegistered() ) 
+                                                        <a href="{{route('warehouse.container.download',$container)?:route('warehouse.container.download',$container) }}" class="dropdown-item w-100">
+                                                            <i class="feather icon-box"></i> Get CN35
+                                                        </a>
                                                         @endif
                                                     </div>
                                                 </div>

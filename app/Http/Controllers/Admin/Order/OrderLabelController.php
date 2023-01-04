@@ -10,7 +10,7 @@ use App\Models\ShippingService;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Repositories\LabelRepository;
-use Illuminate\Support\Facades\Storage;
+use App\Repositories\AnjunLabelRepository;
 use App\Repositories\UPSLabelRepository;
 use App\Repositories\GePSLabelRepository;
 use App\Repositories\USPSLabelRepository;
@@ -33,8 +33,9 @@ class OrderLabelController extends Controller
     protected $fedExLabelRepository;
     protected $gepsLabelRepository;
     protected $swedenpostLabelRepository;
+    protected $anjunLabelRepository; 
 
-    public function __construct(CorrieosChileLabelRepository $corrieosChileLabelRepository, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, FedExLabelRepository $fedExLabelRepository, GePSLabelRepository $gepsLabelRepository,SwedenPostLabelRepository $swedenpostLabelRepository)
+    public function __construct(CorrieosChileLabelRepository $corrieosChileLabelRepository, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, FedExLabelRepository $fedExLabelRepository, GePSLabelRepository $gepsLabelRepository,SwedenPostLabelRepository $swedenpostLabelRepository,AnjunLabelRepository $anjunLabelRepository)
     {
         $this->corrieosChileLabelRepository = $corrieosChileLabelRepository;
         $this->corrieosBrazilLabelRepository = $corrieosBrazilLabelRepository;
@@ -43,6 +44,7 @@ class OrderLabelController extends Controller
         $this->fedExLabelRepository = $fedExLabelRepository;
         $this->gepsLabelRepository = $gepsLabelRepository;
         $this->swedenpostLabelRepository = $swedenpostLabelRepository;
+        $this->anjunLabelRepository = $anjunLabelRepository;
     }
     
     public function index(Request $request, Order $order)
@@ -60,48 +62,20 @@ class OrderLabelController extends Controller
             $buttonsOnly = $request->has('buttons_only');
             return view('admin.orders.label.label',compact('order','error','buttonsOnly'));
         }
-        // if($order->shippingService->api == ShippingService::API_CORREIOS){
-            // return $this->handleCorreiosLabels($request,$order);
-        // }
-            // $labelSinerlogRep = new SinerlogLabelRepository(); 
-        /**
-         * Sinerlog modification
-         * Checks if shipping service ia a Sinerlog service
-         */
-        if(
-            $order->recipient->country_id == Order::BRAZIL 
-            && 
-            $order->shippingService->api == 'sinerlog'
-        ){
+
+        if($order->recipient->country_id == Order::BRAZIL && $order->shippingService->api == 'sinerlog'){
             return $this->handleSinerlogLabels($request,$order);
         }
         else {
             return $this->handleCorreiosLabels($request,$order);
         }         
-
-        // $labelData = null;
-        // $error = null;
-
-        // if ( $request->update_label === 'true' ){
-        //     $labelData = $labelRepository->update($order);
-        // }else{
-        //     $labelData = $labelRepository->get($order);
-        // }
-
-        // $order->refresh();
-
-        // if ( $labelData ){
-        //     Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
-        // }
-
-        // $error = $labelRepository->getError();
-        // $buttonsOnly = $request->has('buttons_only');
-        // return view('admin.orders.label.label',compact('order','error','buttonsOnly'));
+ 
     }   
 
     public function handleCorreiosLabels(Request $request, Order $order)
     {
-        $error = null;
+        $error = null; 
+
         if($order->recipient->country_id == Order::CHILE && $request->update_label === 'false')
         {
             $this->corrieosChileLabelRepository->handle($order, $request);
@@ -162,6 +136,15 @@ class OrderLabelController extends Controller
             
             $error = $this->swedenpostLabelRepository->getError();
             return $this->renderLabel($request, $order, $error);
+        }
+        if($order->shippingService->isAnjunService()){ 
+            $response = $this->anjunLabelRepository->get($order);  
+            $order->refresh(); 
+            $data = $response->getData();
+            if(!$data->success){ 
+                 $error = $data->message; 
+            }
+            return $this->renderLabel($request, $order, $error); 
         }
         
         if ( $request->update_label === 'true' ){

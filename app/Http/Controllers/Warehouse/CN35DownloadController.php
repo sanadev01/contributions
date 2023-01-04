@@ -13,22 +13,26 @@ class CN35DownloadController extends Controller
     public function __invoke(Container $container)
     {
         $order = $container->orders->first();
-        if($order){
+        if ($order) {
             $orderWeight = $order->getOriginalWeight('kg');
         }
         $cn23Maker = new CN35LabelMaker();
         $cn23Maker->setDispatchNumber($container->dispatch_number)
-                     ->setService($container->getServiceCode())
-                     ->setDispatchDate(Carbon::now()->format('Y-m-d'))
-                     ->setSerialNumber(1)
-                     ->setOriginAirport('MIA')
-                     ->setType($orderWeight)
-                     ->setDestinationAirport($container->getDestinationAriport())
-                     ->setWeight($container->getWeight())
-                     ->setItemsCount($container->getPiecesCount())
-                     ->setUnitCode($container->getUnitCode()); 
-        if($container->hasAnjunService()){
-          $cn23Maker->setCompanyName('ANJUNLOG');
+                  ->setService($container->getServiceCode())
+                  ->setDispatchDate(Carbon::now()->format('Y-m-d'))
+                  ->setSerialNumber(1)
+                  ->setOriginAirport('MIA')
+                  ->setType($orderWeight)
+                  ->setDestinationAirport($container->getDestinationAriport())
+                  ->setWeight($container->getWeight())
+                  ->setItemsCount($container->getPiecesCount())
+                  ->setUnitCode($container->getUnitCode());
+        if ($container->hasAnjunService()) {
+            $response = json_decode($container->unit_response_list);
+            $cn23Maker->setDispatchNumber($response->id)
+                      ->setDestinationAirport($response->cdes)
+                      ->setOriginAirport($response->cfrom)
+                      ->setCompanyName('ANJUNLOG');
         }
         return $cn23Maker->download();
     }
