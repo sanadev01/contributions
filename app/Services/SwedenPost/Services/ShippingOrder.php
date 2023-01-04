@@ -57,7 +57,7 @@ class ShippingOrder {
                   'shipperCountry' => "US",
                   //Parcel Return Information
                   "returnOption" =>"",
-                  "returnName" =>"Marcio Freitas",
+                  "returnName" => $order->getSenderFullName(),
                   "returnAddressLine1" =>"2200 NW 129TH AVE",
                   "returnAddressLine2" =>"",
                   "returnAddressLine3" =>"",
