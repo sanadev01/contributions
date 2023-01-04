@@ -105,6 +105,7 @@ class Client{
 
     public function createPackage($order)
     {   
+        return 'Something Went wrong on Global eParcel you need to wait...';
         //GET CONTAINER FOR PARCEL
 
         // $container = Container::where('services_subclass_code', ShippingService::GePS)
