@@ -55,6 +55,16 @@ class ShippingOrder {
                   'shipperState' => "FL",
                   'shipperPostcode' => "33182",
                   'shipperCountry' => "US",
+                  //Parcel Return Information
+                  "returnOption" =>"",
+                  "returnName" =>"Marcio Freitas",
+                  "returnAddressLine1" =>"2200 NW 129TH AVE",
+                  "returnAddressLine2" =>"",
+                  "returnAddressLine3" =>"",
+                  "returnCity" =>"Miami",
+                  "returnState" =>"FL",
+                  "returnPostcode" =>"33182",
+                  "returnCountry" =>"US",
                   //Parcel Items Information
                   'orderItems' => $this->setItemsDetails($order)
                ],
