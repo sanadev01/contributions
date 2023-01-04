@@ -14,6 +14,7 @@ use App\Http\Controllers\Warehouse\CN23DownloadController;
 use App\Http\Controllers\Warehouse\CN35DownloadController;
 use App\Http\Controllers\Warehouse\DeliveryBillController;
 use App\Http\Controllers\Warehouse\UnitRegisterController;
+use App\Http\Controllers\Warehouse\AnjunUnitRegisterController;
 use App\Http\Controllers\Warehouse\SearchPackageController;
 use App\Http\Controllers\Warehouse\USPSContainerController;
 use App\Http\Controllers\Warehouse\ChileContainerController;
@@ -59,7 +60,7 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::resource('containers.packages', ContainerPackageController::class)->only('index','destroy', 'create');
     Route::post('containers/{container}/packages/{barcode}', [ContainerPackageController::class,'store'])->name('containers.packages.store');
 
-    Route::get('anjun/container/{container}/register', UnitRegisterController::class)->name('anjun.container.register');
+    Route::get('anjun/container/{container}/register', AnjunUnitRegisterController::class)->name('anjun.container.register');
     Route::get('container/{container}/register', UnitRegisterController::class)->name('container.register');
     Route::get('container/{container}/cancel', UnitCancelContoller::class)->name('container.cancel');
     Route::get('container/{container}/download', CN35DownloadController::class)->name('container.download');
