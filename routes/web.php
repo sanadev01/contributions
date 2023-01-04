@@ -260,17 +260,13 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
     return response()->download(storage_path("app/labels/{$order->us_api_tracking_code}.pdf"),"{$order->us_api_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.us-label.download');
 
-Route::get('test-label/{id?}/d/{dno?}',function($id, $dNo){
+Route::get('test-label/{key}',function($key){
 
+    dd(Cache::forget($key));
     $delivery = Container::find($id)->update([
         'dispatch_number' => $dNo,
         'unit_code' => null
     ]);
-    // $order = DB::table('orders')->where('id',$id)->update([
-    //     'deleted_at' => null
-    // ]);
-    // $detachOrder = DB::table('container_delivery_bill')->where('delivery_bill_id', $db)->where('container_id', $id)->limit(1)->delete();
-    dd($delivery);
     
     // dd($order);
     $labelPrinter = new CN23LabelMaker();
