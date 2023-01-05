@@ -8,7 +8,6 @@ class ShippingOrder {
    protected $chargableWeight;
 
    public function getRequestBody($order) {
-
       $batteryType = ""; 
       $batteryPacking = "";
       if($order->measurement_unit == "lbs/in") { $uom = "LB"; } else { $uom = "KG"; }
@@ -57,7 +56,7 @@ class ShippingOrder {
                   'shipperCountry' => "US",
                   //Parcel Return Information
                   "returnOption" =>"",
-                  "returnName" => $order->getSenderFullName(),
+                  "returnName" => $this->getNameWithEmail($order),
                   "returnAddressLine1" =>"2200 NW 129TH AVE",
                   "returnAddressLine2" =>"",
                   "returnAddressLine3" =>"",
@@ -108,5 +107,21 @@ class ShippingOrder {
             return $itemWeight;
         }
         return $orderTotalWeight;
+   }
+
+   private function getNameWithEmail($order)
+   {
+      $returnName = '';
+      $name = $order->getSenderFullName();
+      $email = $order->sender_email;
+      $strinCount = strlen($name) + strlen($email);
+      if($strinCount <= 49) {
+         $returnName = $name.' '.$email;
+      } 
+      if($strinCount > 49){
+         $difference = $strinCount - 49;
+         $returnName = substr($name, 0, -$difference).' '.$email;
+      }
+      return $returnName;
    }
 }
