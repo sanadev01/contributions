@@ -88,7 +88,7 @@ class ShippingOrder {
                   //   'weight' => round($this->calulateItemWeight($order), 2) - 0.05,
                     'itemNo' => "000".++$key,
                   //   'sku' => $item->sh_code.'-'.$order->id,
-                    'unitValue' => number_format($item->value),
+                    'unitValue' => $item->value,
                     'itemCount' => (int)$item->quantity,
                 ];
                array_push($items, $itemToPush);
