@@ -137,7 +137,7 @@ class OrderLabelController extends Controller
             $error = $this->swedenpostLabelRepository->getError();
             return $this->renderLabel($request, $order, $error);
         }
-        if($order->shippingService->isAnjunService()){ 
+        if($order->shippingService->isAnjunService()){
             $response = $this->anjunLabelRepository->get($order);  
             $order->refresh(); 
             $data = $response->getData();
