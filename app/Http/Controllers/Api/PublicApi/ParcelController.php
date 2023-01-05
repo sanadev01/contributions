@@ -50,6 +50,10 @@ class ParcelController extends Controller
             return apiResponse(false,'Shipping service not found.');
         }
 
+        if (!$shippingService->active) {
+            return apiResponse(false,'Selected shipping service is currently not available.');
+        }
+
         if (!setting('anjun_api', null, \App\Models\User::ROLE_ADMIN) && $shippingService->isAnjunService()) {
             return apiResponse(false,$shippingService->name.' is currently not available.');
         }
