@@ -74,7 +74,7 @@ class ScanLabel extends Component
         $order = Order::where('corrios_tracking_code', $trackingCode)->first();
         $this->order = $order;
 
-        if(!$order->isPaid() && !$order->is_paid){
+        if(!$order->isPaid() && !$order->is_paid){ 
             $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order Payment is pending']);
             return $this->tracking = '';
         }
