@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Warehouse;
+namespace App\Http\Controllers\Warehouse\Anjun;
 
 use App\Http\Controllers\Controller;
 use App\Models\Warehouse\Container;
