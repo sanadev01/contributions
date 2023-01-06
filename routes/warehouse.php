@@ -57,6 +57,7 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::resource('scan-label', ScanLabelController::class)->only('index', 'store', 'create');
 
     Route::resource('containers', ContainerController::class);
+
     Route::get('awb/', AwbController::class)->name('container.awb');
     Route::resource('containers.packages', ContainerPackageController::class)->only('index','destroy', 'create');
     Route::post('containers/{container}/packages/{barcode}', [ContainerPackageController::class,'store'])->name('containers.packages.store');

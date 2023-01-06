@@ -368,6 +368,11 @@ class Order extends Model implements Package
                 return 'Prime5';
 
             }
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::AJ_Standard_CN){
+
+                return 'Anjun China';
+
+            }
             return 'Correios Brazil';
         }
 

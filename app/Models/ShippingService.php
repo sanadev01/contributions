@@ -29,6 +29,7 @@ class ShippingService extends Model
     const Packet_Standard = 33162;
     const Packet_Express = 33170;
     const Packet_Mini = 33197;
+    const AJ_Standard_CN = 34162;
     const AJ_Packet_Standard = 33164;
     const AJ_Packet_Express = 33172;
     const Brazil_Redispatch = 100;
@@ -133,6 +134,10 @@ class ShippingService extends Model
         }
 
         return false;
+    }
+    public function isAnjunChinaService()
+    {
+        return self::AJ_Standard_CN == $this->service_sub_class;
     }
 
     public function isGePSService()
