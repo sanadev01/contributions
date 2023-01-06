@@ -56,7 +56,7 @@ class Packages extends Component
             $gepsContainerPackageRepository = new GePSContainerPackageRepository;
             $response = $gepsContainerPackageRepository->addOrderToContainer($container, $order);
             if(!$response['success']){
-                 return $this->error = $response['message'];
+                return $this->error = $response['message'];
             }
             $this->error = null;
             return;

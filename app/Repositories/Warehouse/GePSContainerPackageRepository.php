@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\OrderTracking;
 use App\Services\GePS\Client;
 use App\Models\Warehouse\Container;
+use Illuminate\Support\Facades\Session;
 use App\Services\Excel\Import\TrackingsImportService;
 
 
@@ -33,8 +34,10 @@ class GePSContainerPackageRepository {
             $gepsClient = new Client();   
             $response = $gepsClient->confirmShipment($order->corrios_tracking_code);
             if (!$response['success']) {
+                Session::flash('alert-class', 'alert-info');
                 $message = "Order Added in the Container Successfully, But ".$response['message'];
             }else{
+                Session::flash('alert-class', 'alert-success');
                 $message = 'Order Added in the Container Successfully';
             }
             return [
@@ -42,6 +45,7 @@ class GePSContainerPackageRepository {
                 'message' => $message
             ];
         }
+        Session::flash('alert-class', 'alert-danger');
         return [
             'success' => false,
             'message' => $error,
