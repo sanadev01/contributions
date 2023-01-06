@@ -10,9 +10,15 @@ class ShippingOrder {
    public function getRequestBody($order) {
       $batteryType = ""; 
       $batteryPacking = "";
+      $referenceNo = "";
       if($order->measurement_unit == "lbs/in") { $uom = "LB"; } else { $uom = "KG"; }
       if($order->hasBattery()) {
          $batteryType = "Lithium Ion Polymer"; $batteryPacking = "Inside Equipment";
+      }
+      if($order->customer_reference) {
+         $referenceNo = $order->customer_reference;
+      } else {
+         $referenceNo = $order->tracking_id;
       }
      
      $packet = 
@@ -22,7 +28,7 @@ class ShippingOrder {
             'orders' => [
                [
                   //Parcel Information
-                  'referenceNo' => ($order->customer_reference) ? $order->customer_reference.' '."($order->warehouse_number)" : '',
+                  'referenceNo' => $referenceNo.' '."($order->warehouse_number)",
                   'trackingNo' => "",
                   'serviceCode' =>"DIRECT.LINK.US.L3",
                   'incoterm' => "DDU",
@@ -56,7 +62,7 @@ class ShippingOrder {
                   'shipperCountry' => "US",
                   //Parcel Return Information
                   "returnOption" =>"",
-                  "returnName" => $this->getNameWithEmail($order),
+                  "returnName" => $order->getSenderFullName(),
                   "returnAddressLine1" =>"2200 NW 129TH AVE",
                   "returnAddressLine2" =>"",
                   "returnAddressLine3" =>"",
@@ -109,19 +115,19 @@ class ShippingOrder {
         return $orderTotalWeight;
    }
 
-   private function getNameWithEmail($order)
-   {
-      $returnName = '';
-      $name = $order->getSenderFullName();
-      $email = $order->sender_email;
-      $strinCount = strlen($name) + strlen($email);
-      if($strinCount <= 49) {
-         $returnName = $name.' '.$email;
-      } 
-      if($strinCount > 49){
-         $difference = $strinCount - 49;
-         $returnName = substr($name, 0, -$difference).' '.$email;
-      }
-      return $returnName;
-   }
+   // private function getNameWithEmail($order)
+   // {
+   //    $returnName = '';
+   //    $name = $order->getSenderFullName();
+   //    $email = $order->sender_email;
+   //    $strinCount = strlen($name) + strlen($email);
+   //    if($strinCount <= 49) {
+   //       $returnName = $name.' '.$email;
+   //    } 
+   //    if($strinCount > 49){
+   //       $difference = $strinCount - 49;
+   //       $returnName = substr($name, 0, -$difference).' '.$email;
+   //    }
+   //    return $returnName;
+   // }
 }
