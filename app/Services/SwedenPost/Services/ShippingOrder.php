@@ -8,6 +8,7 @@ class ShippingOrder {
    protected $chargableWeight;
 
    public function getRequestBody($order) {
+      
       $batteryType = ""; 
       $batteryPacking = "";
       $referenceNo = "";
