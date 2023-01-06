@@ -62,7 +62,7 @@ class ShippingOrder {
                   'shipperCountry' => "US",
                   //Parcel Return Information
                   "returnOption" =>"",
-                  "returnName" => $this->getNameWithEmail($order),
+                  "returnName" => $order->getSenderFullName(),
                   "returnAddressLine1" =>"2200 NW 129TH AVE",
                   "returnAddressLine2" =>"",
                   "returnAddressLine3" =>"",
@@ -115,19 +115,19 @@ class ShippingOrder {
         return $orderTotalWeight;
    }
 
-   private function getNameWithEmail($order)
-   {
-      $returnName = '';
-      $name = $order->getSenderFullName();
-      $email = $order->sender_email;
-      $strinCount = strlen($name) + strlen($email);
-      if($strinCount <= 49) {
-         $returnName = $name.' '.$email;
-      } 
-      if($strinCount > 49){
-         $difference = $strinCount - 49;
-         $returnName = substr($name, 0, -$difference).' '.$email;
-      }
-      return $returnName;
-   }
+   // private function getNameWithEmail($order)
+   // {
+   //    $returnName = '';
+   //    $name = $order->getSenderFullName();
+   //    $email = $order->sender_email;
+   //    $strinCount = strlen($name) + strlen($email);
+   //    if($strinCount <= 49) {
+   //       $returnName = $name.' '.$email;
+   //    } 
+   //    if($strinCount > 49){
+   //       $difference = $strinCount - 49;
+   //       $returnName = substr($name, 0, -$difference).' '.$email;
+   //    }
+   //    return $returnName;
+   // }
 }
