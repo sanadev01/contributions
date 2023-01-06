@@ -12,13 +12,7 @@
                 <th>Action</th>
             </tr>
         </thead>
-        <tbody>
-            @if($error)
-            <div class="alert alert-danger" role="alert">
-                {{$error}}
-            </div>
-            @endif
-            
+        <tbody>            
             @foreach ($orders as $key => $order)
             <tr id="{{ $key }}">
                 <td>
@@ -31,7 +25,7 @@
                     {{ $order->weight }} Kg
                 </td>
                 <td>
-                    {{ $order->weight_lbs }} Lbs 
+                    {{ $order->weight_lbs }} Lbs
                         <hr>
                     {{ $order->weight_kg }} Kg
                 </td>
@@ -53,7 +47,15 @@
                 </td>
             </tr>
             @endforeach
-            
+            <tr>
+                <td colspan="8">
+                    @if($error)
+                    <div class="alert alert-danger" role="alert">
+                        {{$error}}
+                    </div>
+                    @endif
+                </td>
+            </tr>
             <tr>
                 <td colspan="8" class="h2 text-right px-5">
                     <span class="text-danger font-weight-bold">Weight :</span> {{$totalweight}}

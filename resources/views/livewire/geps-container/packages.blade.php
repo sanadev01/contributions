@@ -51,7 +51,7 @@
             <tr>
                 <td colspan="8">
                     @if($error)
-                    <div class="alert alert-danger" role="alert">
+                    <div class="alert {{ Session::get('alert-class', 'alert-danger') }}" role="alert">
                         {{ $error }}
                     </div>
                     @endif

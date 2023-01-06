@@ -203,6 +203,7 @@ class Client{
             ]);
 
             $data = json_decode($response->getBody()->getContents());
+            \Log::info([$data]);
             if(isset($data->err)) {
                 return new PackageError($data->err);
             }
@@ -360,7 +361,7 @@ class Client{
             if (isset($data->err)) {
                 return [
                     'success' => false,
-                    'message' => $data->err ?? 'Something Went Wrong! Please Try Again..',
+                    'message' => $data->error->context ?? 'Something Went Wrong! Please Try Again..',
                     'data' => null
                 ];
             }

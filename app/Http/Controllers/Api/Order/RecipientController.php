@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers\Api\Order;
 
-use App\Facades\CorreosChileFacade;
-use App\Facades\USPSFacade;
-use Exception;
 use App\Models\Order;
 use App\Models\Region;
 use App\Models\Address;
-use App\Models\Commune;
+use App\Facades\USPSFacade;
 use Illuminate\Http\Request;
 use FlyingLuscas\Correios\Client;
 use App\Http\Controllers\Controller;
+use App\Services\Colombia\ColombiaPostalCodes;
 
 class RecipientController extends Controller
 {
@@ -87,52 +85,17 @@ class RecipientController extends Controller
         return apiResponse(true,'Zipcode success',$response);
     }
 
-    public function chileRegions()
+    public function colombiaZipcode(Request $request)
     {
-        return CorreosChileFacade::getAllRegions();
-        
-    }
-
-    public function chileCommunes(Request $request)
-    {
-        return CorreosChileFacade::getchileCommunes($request);
-    }
-
-    public function normalizeAddress(Request $request)
-    {
-       return CorreosChileFacade::validateAddress($request);
+        //$zipcode = Region::query()->where("country_id",$request->country_id)->where('name', 'LIKE', "%{$request->city}%")->value('code');
+        $colombiaPostalCodeService = new ColombiaPostalCodes();
+        $zipCode = $colombiaPostalCodeService->getZipCodes($request->city);
+        $data = ['zipCode' => $zipCode];
+        return response()->json($data);
     }
 
     public function validate_USAddress(Request $request)
     {
         return USPSFacade::validateAddress($request);
-    }
-
-    // get chile regions from db
-    public function hdChileRegions()
-    {
-        try {
-            $regions = Region::select('id','name')->where('country_id', 46)->get();
-
-            return apiResponse(true,'Regions Fetched',$regions);
-
-        } catch (Exception $e) {
-            
-            return apiResponse(false,'could not Load Regions plaease reload',$e->getMessage());
-        }
-    }
-
-    // get chile communes from db
-    public function hdChileCommunes(Request $request)
-    {
-        try {
-            $communes = Commune::select('id','name')->where('region_id', $request->region_id)->get();
-            
-            return apiResponse(true,'Communes Fetched',$communes);
-
-        } catch (Exception $e) {
-            
-            return apiResponse(false,'could not Load Communes, please select region',$e->getMessage());
-        }
     }
 }
