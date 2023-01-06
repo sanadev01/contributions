@@ -35,8 +35,8 @@ class UpdateRequest extends FormRequest
             "parcel.service_id" => "required|exists:shipping_services,id",
             "parcel.merchant" => "required",
             "parcel.carrier" => "required",
-            "parcel.tracking_id" => "required",
-            "parcel.customer_reference" => "required",
+            "parcel.tracking_id" => "required|max:22",
+            "parcel.customer_reference" => "required|max:22",
             "parcel.measurement_unit" => "required|in:kg/cm,lbs/in",
             
             "parcel.length" => "required|numeric|gt:0",
@@ -69,7 +69,7 @@ class UpdateRequest extends FormRequest
                 "required",
                 new NcmValidator()
             ],
-            "products.*.description" => "required",
+            "products.*.description" => "required|max:40",
             "products.*.quantity" => "required|min:1",
             "products.*.value" => "required|gt:0",
             "products.*.is_battery" => "required|in:0,1",
