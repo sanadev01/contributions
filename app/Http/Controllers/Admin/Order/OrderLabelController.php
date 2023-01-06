@@ -9,8 +9,8 @@ use App\Services\SwedenPost\Client as SPClient;
 use App\Models\ShippingService;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Repositories\LabelRepository;
 use App\Repositories\AnjunLabelRepository;
+use App\Repositories\LabelRepository;
 use App\Repositories\UPSLabelRepository;
 use App\Repositories\GePSLabelRepository;
 use App\Repositories\USPSLabelRepository;
@@ -33,9 +33,8 @@ class OrderLabelController extends Controller
     protected $fedExLabelRepository;
     protected $gepsLabelRepository;
     protected $swedenpostLabelRepository;
-    protected $anjunLabelRepository; 
 
-    public function __construct(CorrieosChileLabelRepository $corrieosChileLabelRepository, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, FedExLabelRepository $fedExLabelRepository, GePSLabelRepository $gepsLabelRepository,SwedenPostLabelRepository $swedenpostLabelRepository,AnjunLabelRepository $anjunLabelRepository)
+    public function __construct(CorrieosChileLabelRepository $corrieosChileLabelRepository, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, FedExLabelRepository $fedExLabelRepository, GePSLabelRepository $gepsLabelRepository,SwedenPostLabelRepository $swedenpostLabelRepository)
     {
         $this->corrieosChileLabelRepository = $corrieosChileLabelRepository;
         $this->corrieosBrazilLabelRepository = $corrieosBrazilLabelRepository;
@@ -44,7 +43,6 @@ class OrderLabelController extends Controller
         $this->fedExLabelRepository = $fedExLabelRepository;
         $this->gepsLabelRepository = $gepsLabelRepository;
         $this->swedenpostLabelRepository = $swedenpostLabelRepository;
-        $this->anjunLabelRepository = $anjunLabelRepository;
     }
     
     public function index(Request $request, Order $order)
@@ -138,13 +136,8 @@ class OrderLabelController extends Controller
             return $this->renderLabel($request, $order, $error);
         }
         if($order->shippingService->isAnjunChinaService()){ 
-            $response = $this->anjunLabelRepository->get($order);  
-            $order->refresh(); 
-            $data = $response->getData();
-            if(!$data->success){ 
-                 $error = $data->message; 
-            }
-            return $this->renderLabel($request, $order, $error); 
+
+             return (new AnjunLabelRepository($request,$order))->execute(); 
         }
         
         if ( $request->update_label === 'true' ){

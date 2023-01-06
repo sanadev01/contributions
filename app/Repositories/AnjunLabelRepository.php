@@ -7,9 +7,34 @@ namespace App\Repositories;
 use App\Models\Order;
 use App\Services\Anjun\AnjunClient;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
+use App\Traits\PrintOrderLabel;
+use Illuminate\Http\Request;
+
 
 class AnjunLabelRepository
 {
+use PrintOrderLabel;
+
+    public $order;
+    public $error;
+    public $request;
+    public function __construct(Request $request,Order $order)
+    {
+        $this->order = $order;
+        $this->error = null;
+        $this->request = $request;
+    }
+
+    public function execute()
+    {
+        $response = $this->get($this->order);  
+        $this->order->refresh(); 
+        $data = $response->getData();
+        if(!$data->success){ 
+             $this->error = $data->message; 
+        }
+        return $this->renderLabel($this->request, $this->order, $this->error); 
+    }
 
     public function get(Order $order)
     {
