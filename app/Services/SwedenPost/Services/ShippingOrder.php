@@ -10,9 +10,15 @@ class ShippingOrder {
    public function getRequestBody($order) {
       $batteryType = ""; 
       $batteryPacking = "";
+      $referenceNo = "";
       if($order->measurement_unit == "lbs/in") { $uom = "LB"; } else { $uom = "KG"; }
       if($order->hasBattery()) {
          $batteryType = "Lithium Ion Polymer"; $batteryPacking = "Inside Equipment";
+      }
+      if($order->customer_reference) {
+         $referenceNo = $order->customer_reference;
+      } else {
+         $referenceNo = $order->tracking_id;
       }
      
      $packet = 
@@ -22,7 +28,7 @@ class ShippingOrder {
             'orders' => [
                [
                   //Parcel Information
-                  'referenceNo' => ($order->customer_reference) ? $order->customer_reference.' '."($order->warehouse_number)" : '',
+                  'referenceNo' => $referenceNo.' '."($order->warehouse_number)",
                   'trackingNo' => "",
                   'serviceCode' =>"DIRECT.LINK.US.L3",
                   'incoterm' => "DDU",
@@ -88,7 +94,7 @@ class ShippingOrder {
                   //   'weight' => round($this->calulateItemWeight($order), 2) - 0.05,
                     'itemNo' => "000".++$key,
                   //   'sku' => $item->sh_code.'-'.$order->id,
-                    'unitValue' => number_format($item->value),
+                    'unitValue' => $item->value,
                     'itemCount' => (int)$item->quantity,
                 ];
                array_push($items, $itemToPush);
