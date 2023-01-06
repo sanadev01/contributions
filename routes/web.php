@@ -281,9 +281,9 @@ Route::get('order/apiresponse/{id?}',function($id){
 });
 
 Route::get('truncate-response/{id?}',function($id){
-    $codes = [];
-    foreach($codes as $code) {
-        $order = DB::table('orders')->where('corrios_tracking_code', $code)->update([
+
+    if($id) {
+        $order = DB::table('orders')->where('id', $id)->update([
             'corrios_tracking_code' => null,
             'cn23' => null,
             'api_response' => null
