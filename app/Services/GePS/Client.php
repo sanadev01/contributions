@@ -360,7 +360,7 @@ class Client{
             if (isset($data->err)) {
                 return [
                     'success' => false,
-                    'message' => $data->err ?? 'Something Went Wrong! Please Try Again..',
+                    'message' => $data->error->context ?? 'Something Went Wrong! Please Try Again..',
                     'data' => null
                 ];
             }
