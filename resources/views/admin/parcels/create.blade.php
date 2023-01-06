@@ -64,7 +64,7 @@
                                     <div class="controls">
                                         <label>@lang('parcel.Tracking Inside') <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" name="tracking_id"
-                                            value="{{ old('tracking_id') }}" placeholder="" maxlength="20">
+                                            value="{{ old('tracking_id') }}" placeholder="" maxlength="22">
                                         @error('tracking_id')
                                             <div class="help-block text-danger">{{ $message }}</div>
                                         @enderror
@@ -78,7 +78,7 @@
                                             <label>@lang('parcel.External Customer Reference')<span class="text-danger"></span></label>
                                             <input type="text" class="form-control"
                                                 value="{{ old('customer_reference') }}" placeholder=""
-                                                name="customer_reference" maxlength ="20">
+                                                name="customer_reference" maxlength ="22">
                                             @error('customer_reference')
                                                 <div class="help-block text-danger">{{ $message }}</div>
                                             @enderror
