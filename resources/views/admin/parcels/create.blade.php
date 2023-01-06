@@ -59,7 +59,7 @@
                                     <div class="form-group col-12 col-sm-6 col-md-4">
                                         <div class="controls">
                                             <label>@lang('parcel.Tracking Inside') <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" name="tracking_id" value="{{ old('tracking_id') }}" placeholder="">
+                                            <input type="text" class="form-control" name="tracking_id" value="{{ old('tracking_id') }}" placeholder="" maxlength ="20">
                                             @error('tracking_id')
                                                 <div class="help-block text-danger">{{ $message }}</div>
                                             @enderror
@@ -71,7 +71,7 @@
                                     <div class="form-group col-12 col-sm-6 col-md-4">
                                         <div class="controls">
                                             <label>@lang('parcel.External Customer Reference')<span class="text-danger"></span></label>
-                                            <input type="text" class="form-control" value="{{ old('customer_reference') }}" placeholder=""  name="customer_reference">
+                                            <input type="text" class="form-control" value="{{ old('customer_reference') }}" placeholder=""  name="customer_reference" maxlength ="20" >
                                             @error('customer_reference')
                                                 <div class="help-block text-danger">{{ $message }}</div>
                                             @enderror
