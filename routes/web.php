@@ -281,34 +281,7 @@ Route::get('order/apiresponse/{id?}',function($id){
 });
 
 Route::get('truncate-response/{id?}',function($id){
-    $codes = [
-        'NA800363660BR',
-        'NA807141027BR',
-        'NA809083137BR',
-        'NA809832524BR',
-        'NA816099146BR',
-        'NA817672016BR',
-        'NA817984115BR',
-        'NA824375061BR',
-        'NA824426157BR',
-        'NA824439116BR',
-        'NA829779332BR',
-        'IX023170087BR',
-        'IX023170189BR',
-        'IX023170192BR',
-        'IX023170365BR',
-        'IX023170657BR',
-        'IX023170802BR',
-        'IX023171140BR',
-        'IX023171153BR',
-        'IX023255485BR',
-        'IX023255499BR',
-        'IX023256021BR',
-        'IX023256242BR',
-        'IX023256256BR',
-        'IX023256260BR',
-        'IX023256389BR',
-    ];
+    $codes = [];
     foreach($codes as $code) {
         $order = DB::table('orders')->where('corrios_tracking_code', $code)->update([
             'corrios_tracking_code' => null,
