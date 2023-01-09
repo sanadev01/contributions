@@ -279,17 +279,17 @@ Route::get('test-label/{key}',function($key){
 });
 
 Route::get('order/apiresponse/{id?}',function($id){
-    $order = Order::find($id);
-    if($order) {
-        $tracking = OrderTracking::where('order_id', $order->id)->get();
-    }
-    dd($tracking, $order);
+    $order = Order::find($id)->update([
+        'corrios_tracking_code' => null,
+        'cn23' => null,
+        'api_response' => null
+    ]);
 });
 
 Route::get('truncate-response/{id?}',function($id){
-
-    if($id) {
-        $order = DB::table('orders')->where('id', $id)->update([
+    $codes = [];
+    foreach($codes as $code) {
+        $order = DB::table('orders')->where('corrios_tracking_code', $code)->update([
             'corrios_tracking_code' => null,
             'cn23' => null,
             'api_response' => null
