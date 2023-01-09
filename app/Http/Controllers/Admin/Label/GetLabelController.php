@@ -10,7 +10,7 @@ class GetLabelController extends Controller
 {
     public function __invoke($id)
     {
-  
+        dd(decrypt($id));
         try{
         $order = Order::find(decrypt($id));
         
