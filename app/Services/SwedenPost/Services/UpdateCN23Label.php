@@ -3,7 +3,7 @@ namespace App\Services\SwedenPost\Services;
 
 use App\Models\Order;
 use App\Services\SwedenPost\Services\PDFRotate;
-class UpdateLabelCN23
+class UpdateCN23Label
 {
     private $order;
     private $pdf_file;
