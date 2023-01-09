@@ -24,7 +24,7 @@ class ShippingOrder {
             'orders' => [
                [
                   //Parcel Information
-                  'referenceNo' => ($refNo ? $refNo : $order->tracking_id).'-'.$order->id,
+                  'referenceNo' => ($refNo ? $refNo : $order->tracking_id).' HD-'.$order->id,
                   'trackingNo' => "",
                   'serviceCode' =>"DIRECT.LINK.US.L3",
                   'incoterm' => "DDU",
@@ -111,19 +111,4 @@ class ShippingOrder {
         return $orderTotalWeight;
    }
 
-   // private function getNameWithEmail($order)
-   // {
-   //    $returnName = '';
-   //    $name = $order->getSenderFullName();
-   //    $email = $order->sender_email;
-   //    $strinCount = strlen($name) + strlen($email);
-   //    if($strinCount <= 49) {
-   //       $returnName = $name.' '.$email;
-   //    } 
-   //    if($strinCount > 49){
-   //       $difference = $strinCount - 49;
-   //       $returnName = substr($name, 0, -$difference).' '.$email;
-   //    }
-   //    return $returnName;
-   // }
 }
