@@ -4,7 +4,7 @@ namespace App\Services\SwedenPost\Services;
 
 use setasign\Fpdi\Fpdi;
 
-class PDF_Rotate extends Fpdi
+class PDFRotate extends Fpdi
 {
         var $angle = 0;
 

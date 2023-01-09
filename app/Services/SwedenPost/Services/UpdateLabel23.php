@@ -1,16 +1,18 @@
 <?php
 namespace App\Services\SwedenPost\Services;
-use App\Services\SwedenPost\Services\PDF_Rotate;
-class EditLabel23
+
+use App\Models\Order;
+use App\Services\SwedenPost\Services\PDFRotate;
+class UpdateLabel23
 {
     private $order;
     private $pdf_file;
     private $pdfi;
-    public function __construct($order)
+    public function __construct(Order $order)
     {
         $this->order = $order;
         $this->pdf_file = storage_path("app/labels/{$this->order->corrios_tracking_code}.pdf");
-        $this->pdfi = new PDF_Rotate('P', 'mm', array(152, 104));
+        $this->pdfi = new PDFRotate('P', 'mm', array(152, 104));
     }
     public function run()
     {
