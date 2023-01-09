@@ -47,6 +47,7 @@ class ColombiaLabelRepository
             $this->order->update([
                 'api_response' => json_encode($response['data']),
                 'corrios_tracking_code' => $response['data']['strBarcode'],
+                'sinerlog_url_label' => $response['data']['strUrlGuide'],
             ]);
             
             $this->addOrderTracking();
