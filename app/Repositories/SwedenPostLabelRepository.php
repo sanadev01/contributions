@@ -6,7 +6,7 @@ namespace App\Repositories;
 use App\Models\Order;
 use Illuminate\Support\Facades\Storage;
 use App\Services\Correios\Models\PackageError;
-use App\Services\SwedenPost\Services\UpdateLabel23;
+use App\Services\SwedenPost\Services\UpdateCN23Label;
 use App\Services\SwedenPost\Client;
 class SwedenPostLabelRepository
 {
@@ -36,7 +36,7 @@ class SwedenPostLabelRepository
             $response = json_decode($order->api_response);
             $base64Pdf = $response->data[0]->labelContent;
             Storage::put("labels/{$order->corrios_tracking_code}.pdf", base64_decode($base64Pdf));
-           return (new UpdateLabel23($order))->run(); 
+           return (new UpdateCN23Label($order))->run(); 
         }
     }
 
