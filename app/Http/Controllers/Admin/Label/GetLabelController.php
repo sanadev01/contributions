@@ -24,12 +24,12 @@ class GetLabelController extends Controller
         return response()->download(storage_path("app/labels/{$order->corrios_tracking_code}.pdf"),"{$order->corrios_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
    
         }catch(Exception $e){
-                return response()->json(
-                    [
-                        'success' => false,
-                        'message' => $e->getMessage(),
-                    ],
-                422);
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => $e->getMessage(),
+                ],
+            422);
         }
  }
 }

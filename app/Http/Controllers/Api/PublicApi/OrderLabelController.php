@@ -145,7 +145,11 @@ class OrderLabelController extends Controller
                     return apiResponse(false,$corrieosBrazilLabelRepository->getError());
                 }
             }
-            return $this->processOrderPayment($order);    
+            if($order->corrios_tracking_code){
+                return $this->processOrderPayment($order);    
+            }else{
+                return apiResponse(false,'Something Went wrong please Contact Homedelivery support');
+            }
         }
 
     }
