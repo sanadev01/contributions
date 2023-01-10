@@ -6,7 +6,6 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Services\GePS\Client;
 use App\Services\SwedenPost\Client as SPClient;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Repositories\LabelRepository;
 use App\Repositories\HandleCorreiosLabelsRepository;

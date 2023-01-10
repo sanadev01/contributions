@@ -1,14 +1,19 @@
 <?php
 
 namespace App\Repositories;
+
+use App\Models\Order;
 use App\Repositories\SinerlogLabelRepository;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
+
 class SinerlogHandleRepository
 {
     public $order;
     public $request;
     public $error;
 
-    public function __construct(Request $request, Order $order)
+    public function __construct(Request $request,Order $order)
     {
         $this->order = $order;
         $this->request = $request;
