@@ -44,13 +44,13 @@ class UpdateCN23Label
         $this->pdfi->RotatedText(50, 147, 'SHIPPING:', 90);
 
         $this->pdfi->SetFont("Arial", "B", 5);
-        $this->pdfi->RotatedText(50, 105, number_format($this->order->shipping_value,2,'.',','), 90);
+        $this->pdfi->RotatedText(50, 105, number_format($this->order->user_declared_freight,2,'.',','), 90);
 
         
         $this->pdfi->SetFillColor(255,255,255);
         $this->pdfi->Rect(65, 99, 7,9, "F");
         $this->pdfi->SetFont("Arial", "B", 5);
-        $this->pdfi->RotatedText(68, 107, number_format($this->order->shipping_value+$this->order->order_value, 2, '.', ','), 90);
+        $this->pdfi->RotatedText(68, 107, number_format($this->order->user_declared_freight+$this->order->order_value, 2, '.', ','), 90);
  
 
         $this->pdfi->Output($this->pdf_file, 'F');
