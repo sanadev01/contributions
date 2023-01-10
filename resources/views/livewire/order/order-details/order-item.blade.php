@@ -12,7 +12,7 @@
         <div class="form-group col-12 col-sm-6 col-md-6">
             <div class="controls">
                 <label>@lang('orders.order-details.order-item.Description') <span class="text-danger"></span></label>
-                <input type="text" class="form-control descp" required name="items[{{$keyId}}][description]" value="{{ optional($item)['description'] }}">
+                <input type="text" class="form-control descp" required name="items[{{$keyId}}][description]" value="{{ optional($item)['description'] }}" maxlength = "40">
                 @error("items.{$keyId}.description")
                     <div class="help-block text-danger">{{ $message }}</div>
                 @enderror
