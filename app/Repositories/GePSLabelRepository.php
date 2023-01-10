@@ -8,7 +8,8 @@ use App\Services\Converters\UnitsConverter;
 use Illuminate\Support\Facades\Storage;
 use App\Services\Correios\Models\PackageError;
 use App\Services\GePS\Client;
-
+use App\Services\GePS\Services\UpdateCN23Label;
+use Illuminate\Support\Facades\Auth;
 
 class GePSLabelRepository
 {
@@ -41,8 +42,9 @@ class GePSLabelRepository
         {
             $geps_response = json_decode($order->api_response);
             $base64_pdf = $geps_response->shipmentresponse->label;
-            Storage::put("labels/{$order->corrios_tracking_code}.pdf", base64_decode($base64_pdf));
-
+            Storage::put("labels/{$order->corrios_tracking_code}.pdf", base64_decode($base64_pdf)); 
+            if(Auth::user()->id==1357)
+              return (new UpdateCN23Label($order))->run(); 
             return true;
         }
     }

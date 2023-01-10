@@ -1,8 +1,9 @@
 <?php
-namespace App\Services\SwedenPost\Services;
+namespace App\Services\GePS\Services;
 
 use App\Models\Order;
 use App\Services\Common\PDFI\PDFRotate;
+
 class UpdateCN23Label
 {
     private $order;
@@ -30,28 +31,11 @@ class UpdateCN23Label
         #######JERSEY
         $this->pdfi->SetFont("Arial", "", 7);
         $this->pdfi->SetFillColor(255, 255, 255);
-        $this->pdfi->Rect(13.2, 64.3, 7, 30, "F");
-        $this->pdfi->SetFont("Arial", "B", 5);
-        $this->pdfi->RotatedText(15, 93.5, 'Sender:', 90);
-        $this->pdfi->SetFont("Arial", "B", 5);
-        $this->pdfi->RotatedText(17, 93.5, $this->order->getSenderFullName(), 90);
-        $this->pdfi->SetFont("Arial", "", 5);
-        $this->pdfi->RotatedText(18.8, 93.5, $this->order->sender_email, 90);
-
-        #######bill
-        $this->pdfi->SetFont("Arial", "", 7);
-        $this->pdfi->SetFont("Arial", "B", 5);
-        $this->pdfi->RotatedText(50, 147, 'SHIPPING:', 90);
-
-        $this->pdfi->SetFont("Arial", "B", 5);
-        $this->pdfi->RotatedText(50, 105, number_format($this->order->shipping_value,2,'.',','), 90);
-
-        
-        $this->pdfi->SetFillColor(255,255,255);
-        $this->pdfi->Rect(65, 99, 7,9, "F");
-        $this->pdfi->SetFont("Arial", "B", 5);
-        $this->pdfi->RotatedText(68, 107, number_format($this->order->shipping_value+$this->order->order_value, 2, '.', ','), 90);
- 
+        $this->pdfi->Rect(16, 40, 9, 30, "F");
+        $this->pdfi->SetFont("Arial", "B", 6);  
+        $this->pdfi->RotatedText(21, 66.7, $this->order->getSenderFullName(), 90);
+        $this->pdfi->SetFont("Arial", "B", 6);
+        $this->pdfi->RotatedText(23.3, 66.7, $this->order->sender_email, 90);  
 
         $this->pdfi->Output($this->pdf_file, 'F');
         return true;
