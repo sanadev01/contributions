@@ -56,6 +56,12 @@
                     <span class="menu-title">@lang('menu.Warehouse.Prime5 Containers')</span>
                 </a>
             </li>
+            <li class="{{ $isActive(['warehouse.colombia-containers.index','warehouse.colombia-containers.create','warehouse.colombia-containers.edit','warehouse.colombia-container.packages']) }}">
+                <a href="{{ route('warehouse.colombia-containers.index') }}">
+                    <i class="feather icon-circle"></i>
+                    <span class="menu-title">@lang('menu.Warehouse.Colombia Containers')</span>
+                </a>
+            </li>
             <li class="#">
                 <a href="{{ route('warehouse.unitinfo.create') }}">
                     <i class="feather icon-circle"></i>

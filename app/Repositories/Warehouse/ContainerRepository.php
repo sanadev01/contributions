@@ -27,6 +27,9 @@ class ContainerRepository extends AbstractRepository{
         }
         if($request->filled('unitCode')){
             $query->where('unit_code', 'LIKE', '%' . $request->unitCode . '%');
+        }
+        if ($request->has('typeColombia')) {
+            return $query->whereIn('services_subclass_code', ['CO-NX'])->latest()->paginate(50);
         } 
         return $query->whereIn('services_subclass_code', ['NX','IX', 'XP','AJ-NX','AJ-IX'])->latest()->paginate(50);
     }

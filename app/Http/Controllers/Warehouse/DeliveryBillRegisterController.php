@@ -39,6 +39,13 @@ class DeliveryBillRegisterController extends Controller
                 'request_id' => $deliveryBill->setRandomRequestId()
             ]);
 
+        } elseif($deliveryBill->hasColombiaService()) {
+            
+            $deliveryBill->update([
+                'cnd38_code' => $deliveryBill->setCN38Code(),
+                'request_id' => $deliveryBill->setRandomRequestId()
+            ]);
+
         } else {
 
             $client = new Client();

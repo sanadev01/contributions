@@ -52,6 +52,7 @@ return [
         'USPS Containers' => 'USPS Recipientes',
         'GePS Containers' => 'GePS Recipientes',
         'Prime5 Containers' => 'Prime5 Recipientes',
+        'Colombia Containers' => 'Colombia Recipientes'
     ],
     'Affiliate' => [
         'menu' => 'Relatórios',

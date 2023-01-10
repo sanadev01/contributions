@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers\Api\Order;
 
-use App\Facades\CorreosChileFacade;
-use App\Facades\USPSFacade;
 use Exception;
 use App\Models\Order;
 use App\Models\Region;
 use App\Models\Address;
 use App\Models\Commune;
+use App\Facades\USPSFacade;
 use Illuminate\Http\Request;
 use FlyingLuscas\Correios\Client;
+use App\Facades\CorreosChileFacade;
 use App\Http\Controllers\Controller;
+use App\Services\Colombia\ColombiaPostalCodes;
 
 class RecipientController extends Controller
 {
@@ -134,5 +135,14 @@ class RecipientController extends Controller
             
             return apiResponse(false,'could not Load Communes, please select region',$e->getMessage());
         }
+    }
+
+    public function colombiaZipcode(Request $request)
+    {
+        //$zipcode = Region::query()->where("country_id",$request->country_id)->where('name', 'LIKE', "%{$request->city}%")->value('code');
+        $colombiaPostalCodeService = new ColombiaPostalCodes();
+        $zipCode = $colombiaPostalCodeService->getZipCodes($request->city);
+        $data = ['zipCode' => $zipCode];
+        return response()->json($data);
     }
 }

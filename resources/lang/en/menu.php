@@ -53,6 +53,7 @@ return [
         'USPS Containers' => 'USPS Containers',
         'GePS Containers' => 'GePS Containers',
         'Prime5 Containers' => 'Prime5 Containers',
+        'Colombia Containers' => 'Colombia Containers',
         'Sinerlog Containers' => 'Sinerlog Containers',
     ],
     'Affiliate' => [

@@ -18,10 +18,10 @@ use App\Repositories\SwedenPostLabelRepository;
 use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
-
+use App\Repositories\ColombiaLabelLabelRepository;
 class OrderLabelController extends Controller
 {
-    public function __invoke(Request $request, Order $order, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, CorrieosChileLabelRepository $corrieosChileLabelRepository, USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, FedExLabelRepository $fedexLabelRepository,GePSLabelRepository $gepsLabelRepository, SwedenPostLabelRepository $SwedenPostLabelRepository)
+    public function __invoke(Request $request, Order $order, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, CorrieosChileLabelRepository $corrieosChileLabelRepository, USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, FedExLabelRepository $fedexLabelRepository,GePSLabelRepository $gepsLabelRepository, SwedenPostLabelRepository $SwedenPostLabelRepository, ColombiaLabelRepository $ColombiaLabelRepository)
     {   
         $orders = new Collection;
         $this->authorize('canPrintLableViaApi',$order);
@@ -121,6 +121,19 @@ class OrderLabelController extends Controller
                     'url' => route('order.label.download',  encrypt($order->id)),
                     'tracking_code' => $order->corrios_tracking_code
                 ]);
+            }
+
+            return apiResponse(false, $error);
+        }
+
+        if($order->recipient->country_id == Order::COLOMBIA && $order->shippingService->isColombiaService()){
+            
+            $colombiaLabelRepository->handle($order);
+            $error = $colombiaLabelRepository->getError();
+
+            if(!$error)
+            {
+                return $this->processOrderPayment($order);
             }
 
             return apiResponse(false, $error);

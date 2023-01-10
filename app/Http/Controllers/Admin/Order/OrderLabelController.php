@@ -23,6 +23,7 @@ use App\Repositories\SinerlogLabelRepository;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
 use App\Repositories\SwedenPostLabelRepository;
+use App\Repositories\ColombiaLabelRepository;
 
 class OrderLabelController extends Controller
 {
@@ -33,8 +34,9 @@ class OrderLabelController extends Controller
     protected $fedExLabelRepository;
     protected $gepsLabelRepository;
     protected $swedenpostLabelRepository;
+    protected $colombiaLabelRepository;
 
-    public function __construct(CorrieosChileLabelRepository $corrieosChileLabelRepository, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, FedExLabelRepository $fedExLabelRepository, GePSLabelRepository $gepsLabelRepository,SwedenPostLabelRepository $swedenpostLabelRepository)
+    public function __construct(CorrieosChileLabelRepository $corrieosChileLabelRepository, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, FedExLabelRepository $fedExLabelRepository, GePSLabelRepository $gepsLabelRepository,SwedenPostLabelRepository $swedenpostLabelRepository, ColombiaLabelRepository $colombiaLabelRepository)
     {
         $this->corrieosChileLabelRepository = $corrieosChileLabelRepository;
         $this->corrieosBrazilLabelRepository = $corrieosBrazilLabelRepository;
@@ -42,7 +44,7 @@ class OrderLabelController extends Controller
         $this->upsLabelRepository = $upsLabelRepository;
         $this->fedExLabelRepository = $fedExLabelRepository;
         $this->gepsLabelRepository = $gepsLabelRepository;
-        $this->swedenpostLabelRepository = $swedenpostLabelRepository;
+        $this->colombiaLabelRepository = $colombiaLabelRepository;
     }
     
     public function index(Request $request, Order $order)
@@ -161,6 +163,13 @@ class OrderLabelController extends Controller
             $this->swedenpostLabelRepository->get($order);
             
             $error = $this->swedenpostLabelRepository->getError();
+            return $this->renderLabel($request, $order, $error);
+        }
+
+        if ($order->recipient->country_id == Order::COLOMBIA && $order->shippingService->isColombiaService()) {
+            $this->colombiaLabelRepository->handle($order);
+
+            $error = $this->colombiaLabelRepository->getError();
             return $this->renderLabel($request, $order, $error);
         }
         

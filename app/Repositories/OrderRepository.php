@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\User;
 use App\Models\Order;
 use App\Models\Country;
 use App\Facades\USPSFacade;
@@ -10,11 +11,11 @@ use App\Models\ShippingService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Services\UPS\UPSShippingService;
+use App\Services\GePS\GePSShippingService;
 use App\Services\USPS\USPSShippingService;
 use App\Services\FedEx\FedExShippingService;
-use App\Services\GePS\GePSShippingService;
 use App\Services\Calculators\WeightCalculator;
-use App\Models\User;
+use App\Services\Colombia\ColombiaPostalCodes;
 
 class OrderRepository
 {
@@ -211,15 +212,18 @@ class OrderRepository
         ]);
         
         if ( $order->recipient ){
-
+            if($request->service == 'postal_service' && $request->country_id == Country::COLOMBIA) {
+                $city = $request->cocity;
+            }
+            $city = $request->city;
             $order->recipient()->update([
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
                 'phone' => $request->phone,
-                'city' => ($request->service == 'postal_service') ? $request->city : null,
+                'city' => $city,
                 'commune_id' => ($request->service == 'courier_express') ? $request->commune_id : null,
-                'street_no' => $request->street_no,
+                'street_no' => ($request->country_id == Country::COLOMBIA)? $request->codept : $request->street_no,
                 'address' => $request->address,
                 'address2' => $request->address2,
                 'account_type' => $request->account_type,
@@ -602,6 +606,27 @@ class OrderRepository
                 $this->shippingServiceError = 'Please check your parcel dimensions';
             }
         }
+
+        if($shippingServices->contains('service_sub_class', ShippingService::COLOMBIA_URBANO)
+            || $shippingServices->contains('service_sub_class', ShippingService::COLOMBIA_NACIONAL)
+            || $shippingServices->contains('service_sub_class', ShippingService::COLOMBIA_TRAYETOS)) {
+
+            $colombiaPostalCodeService = new ColombiaPostalCodes();
+            $service = $colombiaPostalCodeService->getServiceByPostalCode($order->recipient->zipcode);
+
+            if($service) {
+                $shippingServices = $shippingServices->filter(function ($shippingService, $key) use($service) {
+                    return $shippingService->service_sub_class == $service;
+                });
+            } else {
+                $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                    return $shippingService->service_sub_class != ShippingService::COLOMBIA_URBANO
+                        && $shippingService->service_sub_class != ShippingService::COLOMBIA_NACIONAL
+                        && $shippingService->service_sub_class != ShippingService::COLOMBIA_TRAYETOS;
+                });
+            }
+
+        } 
 
         return $shippingServices;
     }

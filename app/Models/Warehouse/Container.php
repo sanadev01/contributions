@@ -25,6 +25,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     const CONTAINER_ANJUN_NX = 'AJ-NX';
     const CONTAINER_ANJUN_IX = 'AJ-IX';
+    const CONTAINER_COLOMBIA = 'CO-NX';
 
     public function user()
     {
@@ -78,6 +79,8 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'SRM service';
         }elseif($this->services_subclass_code == 'SRP'){
             return 'SRP service';
+        }elseif($this->services_subclass_code == 'CO-NX'){
+            return 'Colombia Service';
         }elseif($this->services_subclass_code == 'Priority'){
             return 'Priority';
         }elseif($this->services_subclass_code == '537'){
@@ -114,6 +117,9 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         }
         elseif($this->services_subclass_code == '773'){
             return 11;
+        }
+        elseif($this->services_subclass_code == 'CO-NX'){
+            return 12;
         }
         // return $this->services_subclass_code == 'NX' ? 2 : 1;
     }
@@ -191,4 +197,11 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     {
         return $this->services_subclass_code == ShippingService::Prime5;
     }
+
+    public function hasColombiaService()
+    {
+        return $this->services_subclass_code == ShippingService::COLOMBIA_URBANO || $this->services_subclass_code == ShippingService::COLOMBIA_NACIONAL || $this->services_subclass_code == ShippingService::COLOMBIA_TRAYETOS;
+    }
+
+    
 }

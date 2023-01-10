@@ -64,6 +64,7 @@ class Order extends Model implements Package
     const BRAZIL = 30;
     const CHILE = 46;
     const US = 250;
+    const COLOMBIA = 50;
 
     public $user_profit = 0;
 

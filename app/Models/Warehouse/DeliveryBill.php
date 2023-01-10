@@ -79,4 +79,16 @@ class DeliveryBill extends Model
         }
     }
 
+    /**
+     * @return bool
+     */
+    public function hasColombiaService()
+    {
+        if ($this->container()->services_subclass_code == Container::CONTAINER_COLOMBIA) {
+            return true;
+        }
+
+        return false;
+    }
+
 }
