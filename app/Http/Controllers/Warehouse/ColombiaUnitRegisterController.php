@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Warehouse;
 
-use App\Facades\ColombiaShippingFacade;
-use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use App\Models\Warehouse\Container;
+use App\Http\Controllers\Controller;
+use App\Facades\ColombiaShippingFacade;
+use App\Services\Colombia\ColombiaService;
 
 class ColombiaUnitRegisterController extends Controller
 {
@@ -17,8 +19,8 @@ class ColombiaUnitRegisterController extends Controller
     public function __invoke(Container $container)
     {
         if (count($container->orders) > 0){
-
-            $response = ColombiaShippingFacade::registerContainer($container);
+            
+            $response = (new ColombiaService())->registerContainer($container);
 
             if ($response['success'] == false) {
                 session()->flash('alert-danger', $response['message'] ?? 'error occured while registering container');
@@ -26,9 +28,11 @@ class ColombiaUnitRegisterController extends Controller
             }
 
             if ($response['success'] == true) {
-
+                $date = date('YmdHis', strtotime(Carbon::now()));
+                $code = "COHD".''.$date;
                 $container->update([
-                    'unit_code' => $response['data']['cargaPruebasEntregaRS']['identificadorTransaccion'],
+                    'unit_response_list' => $response['data']['cargaPruebasEntregaRS']['identificadorTransaccion'],
+                    'unit_code' => $code,
                     'response' => true,
                 ]);
 

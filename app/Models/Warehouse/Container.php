@@ -200,7 +200,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     public function hasColombiaService()
     {
-        return $this->services_subclass_code == ShippingService::COLOMBIA_URBANO || $this->services_subclass_code == ShippingService::COLOMBIA_NACIONAL || $this->services_subclass_code == ShippingService::COLOMBIA_TRAYETOS;
+        return $this->services_subclass_code == 'CO-NX';
     }
 
     

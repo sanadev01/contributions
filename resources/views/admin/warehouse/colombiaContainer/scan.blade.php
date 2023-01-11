@@ -11,12 +11,12 @@
                         </h4>
                         <div>
                             <a href="{{ route('warehouse.colombia-containers.index') }}" class="btn btn-primary"> @lang('warehouse.containers.List Containers') </a>
-                            <a href="{{ route('warehouse.colombia-container.manifest',$container) }}" class="btn btn-success"> <i class="fa fa-arrow-down"></i> Download </a>
+                            <a href="{{ route('warehouse.colombia-containers.manifest',$container) }}" class="btn btn-success"> <i class="fa fa-arrow-down"></i> Download </a>
                         </div>
                     </div>
                     <div class="card-content card-body">
                         <div class="mt-1">
-                            <livewire:container-packages :container="$container" :ordersCollection="$ordersCollection" :editMode="$editMode">
+                            <livewire:colombia-container.packages :id="$container->id" :editMode="$editMode">
                         </div>
                     </div>
                 </div>

@@ -367,7 +367,10 @@ class Order extends Model implements Package
             elseif(optional($this->shippingService)->service_sub_class == ShippingService::Prime5){
 
                 return 'Prime5';
+            }
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::COLOMBIA_NACIONAL || optional($this->shippingService)->service_sub_class == ShippingService::COLOMBIA_TRAYETOS || optional($this->shippingService)->service_sub_class == ShippingService::COLOMBIA_URBANO){
 
+                return 'Colombia Service';
             }
             return 'Correios Brazil';
         }

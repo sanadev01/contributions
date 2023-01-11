@@ -84,7 +84,7 @@ class DeliveryBill extends Model
      */
     public function hasColombiaService()
     {
-        if ($this->container()->services_subclass_code == Container::CONTAINER_COLOMBIA) {
+        if ($this->containers->first()->services_subclass_code == 'CO-NX') {
             return true;
         }
 

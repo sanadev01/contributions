@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Warehouse;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
 use App\Repositories\Warehouse\ContainerRepository;
-use App\Http\Requests\Warehouse\Container\CreateContainerRequest;
-use App\Http\Requests\Warehouse\Container\UpdateContainerRequest;
+use App\Repositories\Warehouse\ColombiaContainerRepository;
+use App\Http\Requests\Warehouse\ColombiaContainer\CreateContainerRequest;
+use App\Http\Requests\Warehouse\ColombiaContainer\UpdateContainerRequest;
 
 class ColombiaContainerController extends Controller
 {
@@ -15,13 +16,15 @@ class ColombiaContainerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(ColombiaContainerRepository $colombiaContainerRepository)
     {
         if (!auth()->user()->isAdmin()) {
             abort(403);
         }
 
-        return view('admin.warehouse.colombiaContainer.index');
+        $containers = $colombiaContainerRepository->get();
+
+        return view('admin.warehouse.colombiaContainer.index', compact('containers'));
     }
 
     /**
