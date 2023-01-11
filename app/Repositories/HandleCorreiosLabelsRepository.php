@@ -32,11 +32,6 @@ class HandleCorreiosLabelsRepository{
     }
     public function handle()
     {
-    return $this->handleCorreiosLabels();
-    }
-
-    public function handleCorreiosLabels()
-    {
         $corrieosBrazilLabelRepository = new CorrieosBrazilLabelRepository();;
         $error = null;
         if($this->order->recipient->country_id == Order::CHILE && $this->request->update_label === 'false')
@@ -162,4 +157,5 @@ class HandleCorreiosLabelsRepository{
 
         return view('admin.orders.label.label',compact('order','error' ,'buttonsOnly'));
     }
+
 }

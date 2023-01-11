@@ -7,19 +7,11 @@ use Illuminate\Http\Request;
 use App\Services\GePS\Client;
 use App\Services\SwedenPost\Client as SPClient;
 use App\Http\Controllers\Controller;
-use App\Repositories\LabelRepository;
 use App\Repositories\HandleCorreiosLabelsRepository;
 use App\Repositories\SinerlogHandleRepository;
 
 class OrderLabelController extends Controller
 {
-    protected $corrieosChileLabelRepository;
-    protected $corrieosBrazilLabelRepository;
-    protected $uspsLabelRepository;
-    protected $upsLabelRepository;
-    protected $fedExLabelRepository;
-    protected $gepsLabelRepository;
-    protected $swedenpostLabelRepository;
  
     public function index(Request $request, Order $order)
     {
@@ -28,7 +20,7 @@ class OrderLabelController extends Controller
     }
 
 
-    public function store(Request $request, Order $order, LabelRepository $labelRepository)
+    public function store(Request $request, Order $order)
     {
         $this->authorize('canPrintLable',$order);
 
