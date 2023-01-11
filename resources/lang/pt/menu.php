@@ -51,7 +51,7 @@ return [
         'Correios' => 'Correios',
         'Chile' => 'Chile',
         'USPS' => 'USPS',
-        'Sinerlog' => 'Sinerlog',
+        // 'Sinerlog' => 'Sinerlog',
         'MileExpress' => 'MileExpress',
         'PostNL' => 'PostNL',
         'Colombia' => 'Colombia',

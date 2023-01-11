@@ -51,12 +51,12 @@
                             <span class="menu-title">@lang('menu.Warehouse.USPS')</span>
                         </a>
                     </li>
-                    <li class="{{ $isActive(['warehouse.sinerlog_containers.index','warehouse.sinerlog_containers.create','warehouse.sinerlog_containers.edit','warehouse.sinerlog_container.packages.index']) }}">
+                    <!-- <li class="{{ $isActive(['warehouse.sinerlog_containers.index','warehouse.sinerlog_containers.create','warehouse.sinerlog_containers.edit','warehouse.sinerlog_container.packages.index']) }}">
                         <a href="{{ route('warehouse.sinerlog_containers.index') }}">
                             <i class="feather icon-circle"></i>
                             <span class="menu-title">@lang('menu.Warehouse.Sinerlog')</span>
                         </a>
-                    </li>
+                    </li> -->
                     <li class="{{ $isActive(['warehouse.mile-express-containers.index','warehouse.mile-express-containers.create','warehouse.mile-express-containers.edit']) }}">
                         <a href="{{ route('warehouse.mile-express-containers.index') }}">
                             <i class="feather icon-circle"></i>
