@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\SwedenPost\Services;
+namespace App\Services\Common\PDFI;
 
 use setasign\Fpdi\Fpdi;
 
