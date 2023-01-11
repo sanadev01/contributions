@@ -105,6 +105,10 @@ class UpdateRequest extends FormRequest
             $rules['recipient.phone'] = 'required|string|max:12';
         }
 
+        if ($shippingService && $shippingService->isColombiaService()) {
+            $rules['recipient.region'] = 'required|exists:regions,id';
+        }
+
         return $rules;
     }
 
