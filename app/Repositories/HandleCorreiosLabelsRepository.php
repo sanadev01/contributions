@@ -37,14 +37,18 @@ class HandleCorreiosLabelsRepository
     {
 
         $error = null;
+
         if ($this->order->shippingService->isGePSService()) {
+
             $gepsLabelRepository = new GePSLabelRepository();
             $gepsLabelRepository->get($this->order);
+
             $error = $gepsLabelRepository->getError();
             return $this->renderLabel($this->request, $this->order, $error);
         }
 
         if ($this->order->shippingService->isSwedenPostService()) {
+
             $swedenpostLabelRepository = new SwedenpostLabelRepository();
             $swedenpostLabelRepository->get($this->order);
             $error = $swedenpostLabelRepository->getError();
@@ -61,10 +65,32 @@ class HandleCorreiosLabelsRepository
         }
 
         if ($this->order->recipient->country_id == Order::US) {
-            return $this->handleUSLabelUpdate();
+            if ($this->order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $this->order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS) {
+                $uspsLabelRepository = new USPSLabelRepository();
+                $uspsLabelRepository->update($this->order);
+
+                $error = $uspsLabelRepository->getUSPSErrors();
+                return $this->renderLabel($this->request, $this->order, $error);
+            }
+
+            if ($this->order->shippingService->service_sub_class == ShippingService::FEDEX_GROUND) {
+                $fedExLabelRepository =  new FedExLabelRepository();
+                $fedExLabelRepository->update($this->order);
+
+                $error = $fedExLabelRepository->getFedExErrors();
+                return $this->renderLabel($this->request, $this->order, $error);
+            }
+            $upsLabelRepository = new UPSLabelRepository();
+            $upsLabelRepository->update($this->order);
+            $error = $upsLabelRepository->getUPSErrors();
+
+            return $this->renderLabel($this->request, $this->order, $error);
         }
         $corrieosBrazilLabelRepository = new CorrieosBrazilLabelRepository();
+
         $corrieosBrazilLabelRepository->update($this->order);
+
+
         $this->order->refresh();
         $error = $corrieosBrazilLabelRepository->getError();
 
@@ -143,10 +169,11 @@ class HandleCorreiosLabelsRepository
         return $this->renderLabel($this->request, $this->order, $error);
     }
 
+
     public function handle()
     {
         if ($this->request->update_label === 'false')
-            return $this->getLabel(); 
+            return $this->getLabel();
         else
             return $this->updateLabel();
     }
