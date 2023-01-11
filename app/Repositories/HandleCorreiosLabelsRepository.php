@@ -29,17 +29,18 @@ class HandleCorreiosLabelsRepository
     }
     
     //getLabel or updateLabel
+    // public function handle()
+    // {
+    //     // if ($this->request->update_label === 'false')
+    //         return $this->getLabel();
+    //     // else
+    //     //     return $this->updateLabel();
+    // }
+
     public function handle()
     {
-        if ($this->request->update_label === 'false')
-            return $this->getLabel();
-        else
-            return $this->updateLabel();
-    }
-
-    public function getLabel()
-    {
         if ($this->order->recipient->country_id == Order::CHILE) {
+
             return $this->corrieosChileLabel();
         }
 
@@ -68,36 +69,37 @@ class HandleCorreiosLabelsRepository
         }
 
         if ($this->order->shippingService->isSwedenPostService()) {
+
             return $this->swedenPostLabel();
         }
         return $this->corriesBrazilLabel();
     }
 
-    public function updateLabel()
-    {
-        if ($this->order->shippingService->isGePSService()) {
-            return $this->gepsLabel();
-        }
+    // public function updateLabel()
+    // {
+    //     if ($this->order->shippingService->isGePSService()) {
+    //         return $this->gepsLabel();
+    //     }
 
-        if ($this->order->shippingService->isSwedenPostService()) {
-            return $this->swedenPostLabel();
-        }
+    //     if ($this->order->shippingService->isSwedenPostService()) {
+    //         return $this->swedenPostLabel();
+    //     }
 
-        if ($this->order->recipient->country_id == Order::CHILE) {
-            return $this->corrieosChileLabel();
-        }
+    //     if ($this->order->recipient->country_id == Order::CHILE) {
+    //         return $this->corrieosChileLabel();
+    //     }
 
-        if ($this->order->recipient->country_id == Order::US) {
-            if ($this->order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $this->order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS) {
-                return $this->uspsLabel();
-            }
-            if ($this->order->shippingService->service_sub_class == ShippingService::FEDEX_GROUND) {
-                return $this->fedExLabel();
-            }
-            return $this->upsLabel();
-        }
-        return $this->corriesBrazilLabel();
-    }
+    //     if ($this->order->recipient->country_id == Order::US) {
+    //         if ($this->order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $this->order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS) {
+    //             return $this->uspsLabel();
+    //         }
+    //         if ($this->order->shippingService->service_sub_class == ShippingService::FEDEX_GROUND) {
+    //             return $this->fedExLabel();
+    //         }
+    //         return $this->upsLabel();
+    //     }
+    //     return $this->corriesBrazilLabel();
+    // }
 
     public function gepsLabel()
     {
@@ -114,7 +116,7 @@ class HandleCorreiosLabelsRepository
     }
 
     public function corrieosChileLabel()
-    {
+    { 
         $corrieosChileLabelRepository = new CorrieosChileLabelRepository(); 
         $corrieosChileLabelRepository->run($this->order,$this->update); 
         return $this->renderLabel($this->request, $this->order, $corrieosChileLabelRepository->getChileErrors());

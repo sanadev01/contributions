@@ -36,14 +36,7 @@ class OrderLabelController extends Controller
         else {
             return (new HandleCorreiosLabelsRepository($request,$order))->handle(); // 
         }         
-    }   
-
-
-
-
-
-
-    
+    }    
     public function cancelLabel(Order $order)
     {
         if($order->carrierService() == "Global eParcel") {
