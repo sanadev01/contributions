@@ -57,7 +57,6 @@ return [
         'Colombia' => 'Colombia',
         'GePS' => 'GePS',
         'Prime5' => 'Prime5',
-        'Sinerlog' => 'Sinerlog',
     ],
     'Affiliate' => [
         'menu' => 'Relatórios',
