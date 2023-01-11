@@ -54,7 +54,7 @@ return [
         'USPS' => 'USPS',
         'GePS' => 'GePS',
         'Prime5' => 'Prime5',
-        'Sinerlog' => 'Sinerlog',
+        // 'Sinerlog' => 'Sinerlog',
     ],
     'Affiliate' => [
         'menu' => 'Affiliate',
