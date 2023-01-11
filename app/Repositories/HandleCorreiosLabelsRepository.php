@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Repositories;
 
 use App\Models\Order;
@@ -12,12 +13,14 @@ use App\Repositories\FedExLabelRepository;
 /**
  * Use for Sinerlog integration
  */
+
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
 use App\Repositories\SwedenPostLabelRepository;
 use App\Models\ShippingService;
 
-class HandleCorreiosLabelsRepository{
+class HandleCorreiosLabelsRepository
+{
 
 
     public $order;
@@ -30,12 +33,49 @@ class HandleCorreiosLabelsRepository{
         $this->request = $request;
         $this->error = null;
     }
-    public function handle()
+    public function updateLabel()
     {
-        $corrieosBrazilLabelRepository = new CorrieosBrazilLabelRepository();;
+
         $error = null;
-        if($this->order->recipient->country_id == Order::CHILE && $this->request->update_label === 'false')
-        {
+        if ($this->order->shippingService->isGePSService()) {
+            $gepsLabelRepository = new GePSLabelRepository();
+            $gepsLabelRepository->get($this->order);
+            $error = $gepsLabelRepository->getError();
+            return $this->renderLabel($this->request, $this->order, $error);
+        }
+
+        if ($this->order->shippingService->isSwedenPostService()) {
+            $swedenpostLabelRepository = new SwedenpostLabelRepository();
+            $swedenpostLabelRepository->get($this->order);
+            $error = $swedenpostLabelRepository->getError();
+            return $this->renderLabel($this->request, $this->order, $error);
+        }
+
+
+        if ($this->order->recipient->country_id == Order::CHILE) {
+            $corrieosChileLabelRepository = new CorrieosChileLabelRepository();
+            $corrieosChileLabelRepository->update($this->order, $this->request);
+
+            $error = $corrieosChileLabelRepository->getChileErrors();
+            return $this->renderLabel($this->request, $this->order, $error);
+        }
+
+        if ($this->order->recipient->country_id == Order::US) {
+            return $this->handleUSLabelUpdate();
+        }
+        $corrieosBrazilLabelRepository = new CorrieosBrazilLabelRepository();
+        $corrieosBrazilLabelRepository->update($this->order);
+        $this->order->refresh();
+        $error = $corrieosBrazilLabelRepository->getError();
+
+        return $this->renderLabel($this->request, $this->order, $error);
+    }
+
+    public function getLabel()
+    {
+
+        $error = null;
+        if ($this->order->recipient->country_id == Order::CHILE) {
             $corrieosChileLabelRepository = new CorrieosChileLabelRepository();
 
             $corrieosChileLabelRepository->handle($this->order, $this->request);
@@ -43,18 +83,15 @@ class HandleCorreiosLabelsRepository{
             return $this->renderLabel($this->request, $this->order, $error);
         }
 
-        if($this->order->recipient->country_id == Order::US && $this->request->update_label === 'false')
-        {
-            if($this->order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $this->order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS)
-            {
+        if ($this->order->recipient->country_id == Order::US) {
+            if ($this->order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $this->order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS) {
                 $uspsLabelRepository = new USPSLabelRepository();
-                $uspsLabelRepository->handle($this->order); 
+                $uspsLabelRepository->handle($this->order);
                 $error = $uspsLabelRepository->getUSPSErrors();
                 return $this->renderLabel($this->request, $this->order, $error);
             }
 
-            if($this->order->shippingService->service_sub_class == ShippingService::FEDEX_GROUND)
-            {
+            if ($this->order->shippingService->service_sub_class == ShippingService::FEDEX_GROUND) {
                 $fedExLabelRepository = new FedExLabelRepository();
                 $fedExLabelRepository->handle($this->order);
 
@@ -62,21 +99,17 @@ class HandleCorreiosLabelsRepository{
                 return $this->renderLabel($this->request, $this->order, $error);
             }
 
-            if($this->order->shippingService->service_sub_class == ShippingService::UPS_GROUND)
-            {
+            if ($this->order->shippingService->service_sub_class == ShippingService::UPS_GROUND) {
                 $upsLabelRepository = new UPSLabelRepository();
                 $upsLabelRepository->handle($this->order);
                 $error = $upsLabelRepository->getUPSErrors();
                 return $this->renderLabel($this->request, $this->order, $error);
             }
-            
         }
 
-        if ($this->order->recipient->country_id != Order::US && $this->request->update_label === 'false')
-        {
-            if($this->order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL || $this->order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL)
-            {
-                
+        if ($this->order->recipient->country_id != Order::US) {
+            if ($this->order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL || $this->order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
+
                 $uspsLabelRepository = new USPSLabelRepository();
                 $uspsLabelRepository->handle($this->order);
                 $error = $uspsLabelRepository->getUSPSErrors();
@@ -84,7 +117,7 @@ class HandleCorreiosLabelsRepository{
             }
         }
 
-        if($this->order->shippingService->isGePSService()){
+        if ($this->order->shippingService->isGePSService()) {
 
             $gepsLabelRepository = new GePSLabelRepository();
             $gepsLabelRepository->get($this->order);
@@ -93,69 +126,65 @@ class HandleCorreiosLabelsRepository{
             return $this->renderLabel($this->request, $this->order, $error);
         }
 
-        if($this->order->shippingService->isSwedenPostService()){
+        if ($this->order->shippingService->isSwedenPostService()) {
 
             $swedenpostLabelRepository = new SwedenpostLabelRepository();
             $swedenpostLabelRepository->get($this->order);
             $error = $swedenpostLabelRepository->getError();
             return $this->renderLabel($this->request, $this->order, $error);
         }
-        
-        if ( $this->request->update_label === 'true' ){
-            
-            if($this->order->recipient->country_id == Order::CHILE)
-            {
-                $corrieosChileLabelRepository = new CorrieosChileLabelRepository();
-                $corrieosChileLabelRepository->update($this->order, $this->request);
 
-                $error = $corrieosChileLabelRepository->getChileErrors();
-                return $this->renderLabel($this->request, $this->order, $error);
-            }
-            
-            if($this->order->recipient->country_id == Order::US)
-            {
-                if($this->order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $this->order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS)
-                {
-                    $uspsLabelRepository = new USPSLabelRepository();
-                    $uspsLabelRepository->update($this->order);
-
-                    $error = $uspsLabelRepository->getUSPSErrors();
-                    return $this->renderLabel($this->request, $this->order, $error);
-                }
-
-                if($this->order->shippingService->service_sub_class == ShippingService::FEDEX_GROUND)
-                {
-                    $fedExLabelRepository =  new FedExLabelRepository();
-                    $fedExLabelRepository->update($this->order);
-
-                    $error = $fedExLabelRepository->getFedExErrors();
-                    return $this->renderLabel($this->request, $this->order, $error);
-                }
-                $upsLabelRepository = new UPSLabelRepository();
-                $upsLabelRepository->update($this->order);
-                $error = $upsLabelRepository->getUPSErrors();
-
-                return $this->renderLabel($this->request, $this->order, $error);
-            }
-
-            $corrieosBrazilLabelRepository->update($this->order);
-        } else{
-            $corrieosBrazilLabelRepository->get($this->order);
-        }
+        $corrieosBrazilLabelRepository = new CorrieosBrazilLabelRepository();
+        $corrieosBrazilLabelRepository->get($this->order);
 
         $this->order->refresh();
         $error = $corrieosBrazilLabelRepository->getError();
-        
+
         return $this->renderLabel($this->request, $this->order, $error);
     }
-    
-      
+
+    public function handle()
+    {
+        if ($this->request->update_label === 'false')
+            return $this->getLabel(); 
+        else
+            return $this->updateLabel();
+    }
+
+
     public function renderLabel($request, $order, $error)
     {
 
         $buttonsOnly = $this->request->has('buttons_only');
 
-        return view('admin.orders.label.label',compact('order','error' ,'buttonsOnly'));
+        return view('admin.orders.label.label', compact('order', 'error', 'buttonsOnly'));
     }
 
+    public function handleUSLabelUpdate()
+    {
+        if ($this->order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $this->order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS) {
+            $uspsLabelRepository = new USPSLabelRepository();
+            $uspsLabelRepository->update($this->order);
+
+            $error = $uspsLabelRepository->getUSPSErrors();
+            return $this->renderLabel($this->request, $this->order, $error);
+        }
+
+        if ($this->order->shippingService->service_sub_class == ShippingService::FEDEX_GROUND) {
+            $fedExLabelRepository =  new FedExLabelRepository();
+            $fedExLabelRepository->update($this->order);
+
+            $error = $fedExLabelRepository->getFedExErrors();
+            return $this->renderLabel($this->request, $this->order, $error);
+        }
+        $upsLabelRepository = new UPSLabelRepository();
+        $upsLabelRepository->update($this->order);
+        $error = $upsLabelRepository->getUPSErrors();
+
+        return $this->renderLabel($this->request, $this->order, $error);
+    }
+
+    public function handleUSLabel()
+    {
+    }
 }
