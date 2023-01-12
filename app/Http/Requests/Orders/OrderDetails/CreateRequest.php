@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Orders\OrderDetails;
 
 use App\Rules\NcmValidator;
+use App\Models\ShippingService;
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateRequest extends FormRequest
@@ -22,10 +24,9 @@ class CreateRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(Request $request)
     {
-        
-        return [
+         $rules = [
             'customer_reference' => ($this->order->recipient->country_id == \App\Models\Order::CHILE) ? 'required' : 'nullable',
             'shipping_service_id' => 'required|exists:shipping_services,id',
             'items' => 'required|array|min:1',
@@ -40,12 +41,22 @@ class CreateRequest extends FormRequest
             'items.*.value' => 'required|gt:0', 
             'items.*.dangrous_item' => 'required', 
         ];
+
+        $shippingService = ShippingService::find($request->shipping_service_id ?? null);
+        if($shippingService && $shippingService->isSwedenPostService()) {
+            $rules['items.*.description'] = 'required|max:48';
+        }
+        
+        return $rules;
+        
     }
 
     public function messages()
     {
         return [
-            'items.*.sh_code.*' => __('validation.ncm.invalid')
+            'items.*.sh_code.*' => __('validation.ncm.invalid'),
+            'items.*.description.*' => __('The Items description may not be greater than 48 characters.'),
+
         ];
     }
 
