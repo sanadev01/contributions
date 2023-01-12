@@ -4,7 +4,6 @@ namespace App\Http\Requests\Orders\OrderDetails;
 
 use App\Rules\NcmValidator;
 use App\Models\ShippingService;
-use Illuminate\Http\Request;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateRequest extends FormRequest
@@ -24,7 +23,7 @@ class CreateRequest extends FormRequest
      *
      * @return array
      */
-    public function rules(Request $request)
+    public function rules()
     {
          $rules = [
             'customer_reference' => ($this->order->recipient->country_id == \App\Models\Order::CHILE) ? 'required' : 'nullable',
@@ -42,7 +41,7 @@ class CreateRequest extends FormRequest
             'items.*.dangrous_item' => 'required', 
         ];
 
-        $shippingService = ShippingService::find($request->shipping_service_id ?? null);
+        $shippingService = ShippingService::find($this->shipping_service_id ?? null);
         if($shippingService && $shippingService->isSwedenPostService()) {
             $rules['items.*.description'] = 'required|max:48';
         }
