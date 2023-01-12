@@ -61,38 +61,46 @@ class Client{
     {   
         $shippingRequest = (new ShippingOrder())->getRequestBody($order);
         try {
-            $path = 'services/shipper/orderLabels';
-            $shipmentClose = 'services/shipper/closeShipments';
-            $response = Http::withHeaders($this->getHeaders('POST', $path))->post($this->baseUrl.$path, $shippingRequest);
-            $data = json_decode($response);
-            if($data->status == "Success") {
-                $trackingNumber = $data->data[0]->trackingNo;
-                if ($trackingNumber){
-                    $closeShipment = Http::withHeaders($this->getHeaders('POST', $shipmentClose))->post($this->baseUrl.$shipmentClose, ['shipmentIds' => [$trackingNumber]]);
-                    $closeShipmentResponse = json_decode($closeShipment);
-                    if($closeShipmentResponse->status == "Success") {
-                        $order->update([
-                            'corrios_tracking_code' => $trackingNumber,
-                            'api_response' => json_encode($data),
-                            'cn23' => [
-                                "tracking_code" => $trackingNumber,
-                                "stamp_url" => route('warehouse.cn23.download',$order->id),
-                                'leve' => false
-                            ],
-                        ]);
-                        // store order status in order tracking
-                        return $this->addOrderTracking($order);
+                $description = array_map(function($item){ 
+                    return strlen($item['description']);
+                }, $order->items->toArray());
+                $maxdescpLength = max($description);
+                if($maxdescpLength <= 55) {
+                    $path = 'services/shipper/orderLabels';
+                    $shipmentClose = 'services/shipper/closeShipments';
+                    $response = Http::withHeaders($this->getHeaders('POST', $path))->post($this->baseUrl.$path, $shippingRequest);
+                    $data = json_decode($response);
+                    if($data->status == "Success") {
+                        $trackingNumber = $data->data[0]->trackingNo;
+                        if ($trackingNumber){
+                            $closeShipment = Http::withHeaders($this->getHeaders('POST', $shipmentClose))->post($this->baseUrl.$shipmentClose, ['shipmentIds' => [$trackingNumber]]);
+                            $closeShipmentResponse = json_decode($closeShipment);
+                            if($closeShipmentResponse->status == "Success") {
+                                $order->update([
+                                    'corrios_tracking_code' => $trackingNumber,
+                                    'api_response' => json_encode($data),
+                                    'cn23' => [
+                                        "tracking_code" => $trackingNumber,
+                                        "stamp_url" => route('warehouse.cn23.download',$order->id),
+                                        'leve' => false
+                                    ],
+                                ]);
+                                // store order status in order tracking
+                                return $this->addOrderTracking($order);
+                            }
+                            if($closeShipmentResponse->status == "Failure") {
+                                return new PackageError("Error while closing Shipment. Code: ".$closeShipmentResponse->errors[0]->code.' Description: '.$closeShipmentResponse->errors[0]->message);
+                            }
+                        }
                     }
-                    if($closeShipmentResponse->status == "Failure") {
-                        return new PackageError("Error while closing Shipment. Code: ".$closeShipmentResponse->errors[0]->code.' Description: '.$closeShipmentResponse->errors[0]->message);
+                    if($data->status == "Failure") {
+                        return new PackageError("Error while creating shipment. Code: ".$data->errors[0]->code.' Description: '.$data->errors[0]->message);
                     }
-                }
-            }
-            if($data->status == "Failure") {
-                return new PackageError("Error while creating shipment. Code: ".$data->errors[0]->code.' Description: '.$data->errors[0]->message);
-            }
-            return null;
-        }catch (\GuzzleHttp\Exception\ClientException $e) {
+                    return null;
+               } else {
+                  return new PackageError("Error while creating shipment. Items description should not exceed 55 characters. Please update the description of your items.");
+               }
+            }catch (\GuzzleHttp\Exception\ClientException $e) {
             return new PackageError($e->getResponse()->getBody()->getContents());
         }
     }
