@@ -81,14 +81,15 @@ class Client{
         if (count($order->items) >= 1) {
             foreach ($order->items as $key => $item) {
                 $itemToPush = [];
+                $originCountryCode = optional($order->senderCountry)->code;
                 $itemToPush = [
                     'goods_description' => $item->description,
                     'quantity' => (int)$item->quantity,
                     'total_weight_grams' => (int)$singleItemWeight / (int)$item->quantity,
-                    'total_goods_value' => $item->value,
+                    'total_goods_value' => number_format($item->value * (int)$item->quantity , 2),
                     'total_goods_value_eur' => '',
                     'tariff' => "$item->sh_code",
-                    'manufacture_country_code' => $order->senderCountry->code,
+                    'manufacture_country_code' => $originCountryCode ? $originCountryCode: 'US',
                 ];
                array_push($items, $itemToPush);
             }
@@ -138,16 +139,17 @@ class Client{
             'declaration_type' => 'SaleOfGoods',
             'dangerous_goods' => false,
             'currency' => "USD",
+            'return' => true,
             //'insurance_value' => '0',
             'sender_details' => [
                 'name' => $order->sender_first_name.' '.$order->sender_last_name,
                 'company' => $order->user->pobox_number,
-                'address' => $order->sender_address,
-                'postal_code' => $order->sender_zipcode,
-                'city' => $order->sender_city,
-                'state' => $order->sender_state,
-                'country' => $order->senderCountry->name,
-                'country_code' => $order->senderCountry->code,
+                'address' => ($order->sender_address)?  $order->sender_address : '2200 NW 129TH AVE',
+                'postal_code' => ($order->sender_zipcode)? $order->sender_zipcode : '33182',
+                'city' => ($order->sender_city)? $order->sender_city : 'Miami',
+                'state' => ($order->sender_state)? $order->sender_state : 'FL',
+                'country' => ($order->senderCountry->name)? $order->senderCountry->name : 'United States',
+                'country_code' => ($order->senderCountry->code)? $order->senderCountry->code : 'US',
                 'email' => ($order->sender_email) ? $order->sender_email : '',
                 'phone' => ($order->sender_phone) ? $order->sender_phone : '',
             ],

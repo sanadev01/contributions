@@ -19,12 +19,13 @@ use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
 use App\Repositories\ColombiaLabelRepository;
+use App\Repositories\POSTNLLabelRepository;
 
 class OrderLabelController extends Controller
 {
     public function __invoke(Request $request, Order $order, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, CorrieosChileLabelRepository $corrieosChileLabelRepository, 
                             USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, FedExLabelRepository $fedexLabelRepository, 
-                            ColombiaLabelRepository $colombiaLabelRepository, GePSLabelRepository $gepsLabelRepository, SwedenPostLabelRepository $swedenpostLabelRepository)
+                            ColombiaLabelRepository $colombiaLabelRepository, GePSLabelRepository $gepsLabelRepository, SwedenPostLabelRepository $swedenpostLabelRepository, POSTNLLabelRepository $postNLLabelRepository)
     {
         $orders = new Collection;
         $this->authorize('canPrintLableViaApi',$order);
@@ -34,6 +35,19 @@ class OrderLabelController extends Controller
         }
 
         $labelData = null;
+
+        if($order->shippingService->isPostNLService()){
+            
+            $postNLLabelRepository->get($order);
+            $error = $postNLLabelRepository->getError();
+
+            if(!$error)
+            {
+                return $this->processOrderPayment($order);
+            }
+
+            return apiResponse(false, $error);
+        }
 
         //For USPS International services
         if ($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
