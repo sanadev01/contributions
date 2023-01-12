@@ -64,8 +64,7 @@ class OrderLabelController extends Controller
             }
             if(!is_null($apiOrderId)) {
                 $swedenpostClient = new SPClient();   
-                $response = $swedenpostClient->deleteOrder($apiOrderId);
-                dd($response);
+                $response = $swedenpostClient->deleteOrder($apiOrderId); 
                 if (!$response['success']) {
                     session()->flash('alert-danger', $response['message']);
                     return back();

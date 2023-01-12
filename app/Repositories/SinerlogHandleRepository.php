@@ -22,19 +22,11 @@ class SinerlogHandleRepository
     
     public function handle()
     {
-        Log::info('Sinerlog label'); 
-        /**
-         * Variable to handle Sinerlog label creation
-         */
-        $labelSinerlogRep = new SinerlogLabelRepository();
-
-        $renderLabel = $labelSinerlogRep->get($this->order);
-
-        $this->order->refresh();
-
-        $this->error = $labelSinerlogRep->getError();
-
-        return $this->renderSinerlogLabel($this->request, $this->order, $this->error, $renderLabel);
+        Log::info('Sinerlog label');  
+        $labelSinerlogRep = new SinerlogLabelRepository(); 
+        $renderLabel = $labelSinerlogRep->get($this->order); 
+        $this->order->refresh(); 
+        return $this->renderSinerlogLabel($this->request, $this->order, $labelSinerlogRep->getError(), $renderLabel);
     }
 
     public function renderSinerlogLabel($request, $order, $error, $renderLabel)
