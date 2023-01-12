@@ -22,6 +22,7 @@ use App\Repositories\FedExLabelRepository;
 use App\Repositories\SinerlogLabelRepository;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
+use App\Repositories\Label23\PostPlusLabelRepository;
 use App\Repositories\SwedenPostLabelRepository;
 
 class OrderLabelController extends Controller
@@ -102,6 +103,11 @@ class OrderLabelController extends Controller
     public function handleCorreiosLabels(Request $request, Order $order)
     {
         $error = null;
+        $postPlusLabelRepository = new PostPlusLabelRepository();
+            $postPlusLabelRepository->run($order, $request); 
+            return $this->renderLabel($request, $order, $postPlusLabelRepository->getErrors());
+       
+
         if($order->recipient->country_id == Order::CHILE && $request->update_label === 'false')
         {
             $this->corrieosChileLabelRepository->handle($order, $request);
