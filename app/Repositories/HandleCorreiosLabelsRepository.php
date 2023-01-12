@@ -29,6 +29,21 @@ class HandleCorreiosLabelsRepository
     }
     public function handle()
     {
+        if ($this->order->recipient->country_id == Order::BRAZIL) {
+
+            if ($this->order->shippingService->isGePSService()) {
+
+                return $this->gepsLabel();
+            }
+
+            if ($this->order->shippingService->isSwedenPostService()) {
+                
+                return $this->swedenPostLabel();
+            }
+            if ($this->order->shippingService->isCorreiosService()) {
+                return $this->corriesBrazilLabel();
+            }
+        }
         if ($this->order->recipient->country_id == Order::CHILE) {
 
             return $this->corrieosChileLabel();
@@ -53,21 +68,12 @@ class HandleCorreiosLabelsRepository
                 return $this->uspsLabel();
             }
         }
-        if ($this->order->shippingService->isGePSService()) {
 
-            return $this->gepsLabel();
-        }
-
-        if ($this->order->shippingService->isSwedenPostService()) {
-
-            return $this->swedenPostLabel();
-        }
-        return $this->corriesBrazilLabel();
     }
 
     public function gepsLabel()
     {
-        $gepsLabelRepository = new GePSLabelRepository(); //////by default consider false
+        $gepsLabelRepository = new GePSLabelRepository(); ///by default consider false
         $gepsLabelRepository->run($this->order,$this->update);
         return $this->renderLabel($this->request, $this->order, $gepsLabelRepository->getError());
     }
