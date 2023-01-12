@@ -168,6 +168,19 @@ class OrderReportTable extends Component
             $orders->where('user_id', Auth::id());
         }
 
+        if($this->search)
+        {
+            $orders->where('tracking_id', 'LIKE', "%{$this->search}%")
+            ->orWhere('warehouse_number', 'LIKE', "%{$this->search}%")
+            ->orWhereHas('user', function ($orders) {
+                return $orders->where('pobox_number', 'LIKE', "%{$this->search}%");
+            })
+            ->orWhereHas('user', function ($orders) {
+                return $orders->where('name', 'LIKE', "%{$this->search}%");
+            })
+            ->orWhere('order_date', 'LIKE', "%{$this->search}%");
+        }
+
         return $orders;
     }
 

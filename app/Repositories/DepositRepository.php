@@ -93,6 +93,16 @@ class DepositRepository
             $query->where('balance','LIKE',"%{$request->balance}%");
         }
 
+        if ( $request->search ){
+            $query->whereHas('user',function($query) use($request) {
+                return $query->where('pobox_number',"%{$request->search}%")
+                            ->orWhere('name','LIKE',"%{$request->search}%")
+                            ->orWhere('last_name','LIKE',"%{$request->search}%")
+                            ->orWhere('email','LIKE',"%{$request->search}%")
+                            ->orWhere('id', $request->search);
+            });
+        }
+
         $query->orderBy($orderBy,$orderType);
         $query->latest('id');
 

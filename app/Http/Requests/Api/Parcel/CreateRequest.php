@@ -123,6 +123,10 @@ class CreateRequest extends FormRequest
             $rules['products.*.description'] = 'required|max:48';
         }
 
+        if ($shippingService && $shippingService->isColombiaService()) {
+            $rules['recipient.region'] = 'required|exists:regions,id';
+        }
+
         return $rules;
     }
 
