@@ -69,7 +69,7 @@ class UpdateRequest extends FormRequest
                 "required",
                 new NcmValidator()
             ],
-            "products.*.description" => "required|max:40",
+            "products.*.description" => "required",
             "products.*.quantity" => "required|min:1",
             "products.*.value" => "required|gt:0",
             "products.*.is_battery" => "required|in:0,1",
@@ -105,8 +105,8 @@ class UpdateRequest extends FormRequest
             $rules['recipient.phone'] = 'required|string|max:12';
         }
 
-        if ($shippingService && $shippingService->isColombiaService()) {
-            $rules['recipient.region'] = 'required|exists:regions,id';
+        if($shippingService && $shippingService->isSwedenPostService()) {
+            $rules['products.*.description'] = 'required|max:48';
         }
 
         return $rules;
