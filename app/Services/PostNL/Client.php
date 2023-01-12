@@ -169,7 +169,6 @@ class Client{
         \Log::info(
             $packet
         );
-        //dd($packet);
         try {
             $response = $this->client->post($this->createLabelUrl,[
                 'headers' => $this->getKeys(),
