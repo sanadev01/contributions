@@ -135,6 +135,7 @@ class Client{
             'product_code' => "MBX",
             'label_type' => "PDF",
             'customer_reference_number' => ($order->customer_reference) ? $order->customer_reference : '',
+            'customer_item_id' => ($order->tracking_id) ? $order->tracking_id : '',
             'gross_weight_grams' => (int)$weight,
             'declaration_type' => 'SaleOfGoods',
             'dangerous_goods' => false,
@@ -155,7 +156,7 @@ class Client{
             ],
             'addressee_details' => [
                 'name' => $order->recipient->getFullName(),
-                'address' => $order->recipient->address,
+                'address' => $order->recipient->address.' '.optional($order->recipient)->address2.' '.optional($order->recipient)->street_no,
                 'postal_code' => cleanString($order->recipient->zipcode),
                 'city' => $order->recipient->city,
                 'state' => $order->recipient->state->code,
@@ -168,6 +169,7 @@ class Client{
         \Log::info(
             $packet
         );
+        //dd($packet);
         try {
             $response = $this->client->post($this->createLabelUrl,[
                 'headers' => $this->getKeys(),
