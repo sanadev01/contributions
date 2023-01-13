@@ -121,6 +121,11 @@ class OrderRepository
                     ShippingService::Prime5, 
                 ];
             }
+            if($request->carrier == 'PostPlus'){
+                $service = [
+                    ShippingService::PostPlus, 
+                ];
+            }
             $query->whereHas('shippingService', function ($query) use($service) {
                 return $query->whereIn('service_sub_class', $service);
             });

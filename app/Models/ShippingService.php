@@ -35,6 +35,7 @@ class ShippingService extends Model
     const GePS = 537;
     const GePS_EFormat = 540;
     const Prime5 = 773;
+    const PostPlus = 7777;
 
     protected $guarded = [];
 
@@ -146,6 +147,14 @@ class ShippingService extends Model
     public function isSwedenPostService()
     {
         if($this->service_sub_class == self::Prime5){
+            return true;
+        }
+        return false;
+    }
+
+    public function isPostPlusService()
+    {
+        if($this->service_sub_class == self::PostPlus){
             return true;
         }
         return false;

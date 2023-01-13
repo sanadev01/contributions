@@ -24,6 +24,7 @@ return [
             537 => 'Global eParcel Prime',
             540 => 'Global eParcel Untracked Packet',
             773 => 'Prime5',
+            7777 => 'PostPlus',
         ]
     ]
 ];

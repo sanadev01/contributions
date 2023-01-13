@@ -368,6 +368,11 @@ class Order extends Model implements Package
                 return 'Prime5';
 
             }
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::PostPlus){
+
+                return 'PostPlus';
+
+            }
             return 'Correios Brazil';
         }
 
@@ -385,7 +390,8 @@ class Order extends Model implements Package
                 optional($this->shippingService)->service_sub_class == ShippingService::FEDEX_GROUND ||
                 optional($this->shippingService)->service_sub_class == ShippingService::GePS ||
                 optional($this->shippingService)->service_sub_class == ShippingService::GePS_EFormat ||
-                optional($this->shippingService)->service_sub_class == ShippingService::Prime5) {
+                optional($this->shippingService)->service_sub_class == ShippingService::Prime5 ||
+                optional($this->shippingService)->service_sub_class == ShippingService::PostPlus ) {
 
                 return $this->user_declared_freight;
             }

@@ -4,12 +4,14 @@ namespace App\Services\PostPlus;
 
 use App\Models\Order;
 use App\Models\OrderTracking;
+use Illuminate\Support\Facades\Http;
 use App\Models\Warehouse\DeliveryBill;
 use GuzzleHttp\Client as GuzzleClient;
+use App\Services\PostPlus\Services\Parcel; 
 use App\Services\Correios\Contracts\Package;
 use App\Services\Correios\Contracts\Container;
 use App\Services\Correios\Models\PackageError;
-use App\Services\PostPlus\Services\Parcel; 
+
 class Client{
 
     protected $client;
@@ -24,23 +26,49 @@ class Client{
         ]);
     } 
 
+    private function getHeaders()
+    {
+        return [ 
+            'x-api-key' => $this->apiKey,
+            'Content-Type' => 'application/json'
+        ];
+    }
     public function createPackage(Package $order)
     {
+        $shippingRequest = (new Parcel())->getRequestBody($order);
         try {
-            $response = $this->client->post('/parcels',[
-                'headers' => [
-                    'x-api-key' => $this->apiKey,
-                    'Content-Type' => 'application/json'
-                ],
-                'json' => (new Parcel($order))->getRequest(),
-            ]);
-return dd($response);
-            $data = json_decode($response->getBody()->getContents());
-            return $data->requestId;
-        }catch (\GuzzleHttp\Exception\ClientException $e) {
-            return new PackageError($e->getResponse()->getBody()->getContents());
-        }
-        catch (\Exception $exception){
+            $response = Http::withHeaders($this->getHeaders())->put('https://api.test.post-plus.io/api/v1/parcels', $shippingRequest);
+            $data = json_decode($response);
+            //dd($data->errorDetails);
+            if($data->status->status == "Created") {
+                $trackingNumber = $data->identifiers->parcelNr;
+                $printId = $data->prints[0]->id;
+                if($trackingNumber && $printId) {
+                    $getLabel = Http::withHeaders($this->getHeaders())->get("https://api.test.post-plus.io/api/v1/parcels/parcel-prints/get-many?ids=$printId&IncludeContents=true");
+                    $getLabelResponse = json_decode($getLabel);
+                    if(!$getLabelResponse->prints[0]->hasErrors) {
+                        $order->update([
+                            'corrios_tracking_code' => $trackingNumber,
+                            'api_response' => json_encode($getLabelResponse),
+                            'cn23' => [
+                                "tracking_code" => $trackingNumber,
+                                "stamp_url" => route('warehouse.cn23.download',$order->id),
+                                'leve' => false
+                            ],
+                        ]);
+                        // store order status in order tracking
+                        return $this->addOrderTracking($order);
+                    }
+                    if($getLabelResponse->prints[0]->hasErrors) {
+                        return new PackageError("Error while print label. Code: ".$getLabelResponse->prints[0]->hasErrors.' Description: '.$getLabelResponse->prints[0]->hasErrors);
+                    }
+                }
+            }
+            if($data->errorDetails) {
+                return new PackageError("Error while creating parcel. Code: ".$data->errorDetails[0]->code.' Description: '.$data->errorDetails[0]->detail);
+            }
+            return null;
+        }catch (\Exception $exception){
             return new PackageError($exception->getMessage());
         }
     }

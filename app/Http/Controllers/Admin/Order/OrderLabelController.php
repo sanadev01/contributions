@@ -22,7 +22,7 @@ use App\Repositories\FedExLabelRepository;
 use App\Repositories\SinerlogLabelRepository;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
-use App\Repositories\Label23\PostPlusLabelRepository;
+use App\Repositories\PostPlusLabelRepository;
 use App\Repositories\SwedenPostLabelRepository;
 
 class OrderLabelController extends Controller
@@ -35,7 +35,7 @@ class OrderLabelController extends Controller
     protected $gepsLabelRepository;
     protected $swedenpostLabelRepository;
 
-    public function __construct(CorrieosChileLabelRepository $corrieosChileLabelRepository, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, FedExLabelRepository $fedExLabelRepository, GePSLabelRepository $gepsLabelRepository,SwedenPostLabelRepository $swedenpostLabelRepository)
+    public function __construct(CorrieosChileLabelRepository $corrieosChileLabelRepository, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, FedExLabelRepository $fedExLabelRepository, GePSLabelRepository $gepsLabelRepository,SwedenPostLabelRepository $swedenpostLabelRepository, PostPlusLabelRepository $postPlusLabelRepository)
     {
         $this->corrieosChileLabelRepository = $corrieosChileLabelRepository;
         $this->corrieosBrazilLabelRepository = $corrieosBrazilLabelRepository;
@@ -44,6 +44,7 @@ class OrderLabelController extends Controller
         $this->fedExLabelRepository = $fedExLabelRepository;
         $this->gepsLabelRepository = $gepsLabelRepository;
         $this->swedenpostLabelRepository = $swedenpostLabelRepository;
+        $this->postPlusLabelRepository = $postPlusLabelRepository;
     }
     
     public function index(Request $request, Order $order)
@@ -69,6 +70,16 @@ class OrderLabelController extends Controller
          * Sinerlog modification
          * Checks if shipping service ia a Sinerlog service
          */
+        //dd($order->shippingService);
+        if($order->shippingService->service_sub_class == ShippingService::PostPlus) {
+            // dd("here");
+         
+            $this->postPlusLabelRepository->get($order);
+            //dd($request);
+            
+            $error = $this->postPlusLabelRepository->getError();
+            return $this->renderLabel($request, $order, $error);
+        }
         if(
             $order->recipient->country_id == Order::BRAZIL 
             && 
@@ -98,14 +109,11 @@ class OrderLabelController extends Controller
         // $error = $labelRepository->getError();
         // $buttonsOnly = $request->has('buttons_only');
         // return view('admin.orders.label.label',compact('order','error','buttonsOnly'));
-    }   
+    }
 
     public function handleCorreiosLabels(Request $request, Order $order)
     {
         $error = null;
-        $postPlusLabelRepository = new PostPlusLabelRepository();
-            $postPlusLabelRepository->run($order, $request); 
-            return $this->renderLabel($request, $order, $postPlusLabelRepository->getErrors());
        
 
         if($order->recipient->country_id == Order::CHILE && $request->update_label === 'false')
@@ -169,6 +177,8 @@ class OrderLabelController extends Controller
             $error = $this->swedenpostLabelRepository->getError();
             return $this->renderLabel($request, $order, $error);
         }
+
+        
         
         if ( $request->update_label === 'true' ){
             
