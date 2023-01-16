@@ -48,11 +48,13 @@ return [
         'menu' => 'Armazém',
         'Containers' => 'Recipientes',
         'Delivery Bill' => 'Fatura de entrega',
-        'Chile Containers' => 'Chile Recipientes',
-        'USPS Containers' => 'USPS Recipientes',
-        'GePS Containers' => 'GePS Recipientes',
-        'Prime5 Containers' => 'Prime5 Recipientes',
-        'Colombia Containers' => 'Colombia Recipientes'
+        'Correios' => 'Correios',
+        'Chile' => 'Chile',
+        'USPS' => 'USPS',
+        'GePS' => 'GePS',
+        'Prime5' => 'Prime5',
+        // 'Sinerlog' => 'Sinerlog',
+        'Colombia' => 'Colombia'
     ],
     'Affiliate' => [
         'menu' => 'Relatórios',

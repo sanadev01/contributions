@@ -78,7 +78,7 @@ class CreateRequest extends FormRequest
                 "required",
                 new NcmValidator()
             ],
-            "products.*.description" => "required|max:40",
+            "products.*.description" => "required",
             "products.*.quantity" => "required|min:1",
             "products.*.value" => "required|gt:0",
             "products.*.is_battery" => "required|in:0,1",
@@ -118,6 +118,9 @@ class CreateRequest extends FormRequest
             $rules['sender.sender_phone'] = 'sometimes|string|max:100';
             $rules['sender.sender_zipcode'] = 'required';
             $rules['recipient.phone'] = 'required|string|max:12';
+        }
+        if($shippingService && $shippingService->isSwedenPostService()) {
+            $rules['products.*.description'] = 'required|max:48';
         }
 
         return $rules;
