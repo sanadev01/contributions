@@ -20,10 +20,12 @@ class ExportManfestByServices extends AbstractCsvExportService
     private $totalWeight = 0;
     private $totalCommission = 0;
     private $totalAnjunCommission = 0;
+    private $date;
 
     public function __construct(DeliveryBill $deliveryBill)
     {
         $this->deliveryBill = $deliveryBill;
+        $this->date = $deliveryBill->created_at->format('m/d/Y');
     }
 
     public function handle()
@@ -60,6 +62,7 @@ class ExportManfestByServices extends AbstractCsvExportService
             'USPS',
             'Fedex',
             'GePs',
+            'Prime5',
             'Carrier Tracking',
             'Marketplace'
         ];
@@ -80,7 +83,7 @@ class ExportManfestByServices extends AbstractCsvExportService
             
             $this->csvData[$this->row] = [
                 $package->corrios_tracking_code,
-                Carbon::now()->format('m/d/Y'),
+                $this->date,
                 $package->getSenderFullName(),
                 ($package->recipient)->getRecipientInfo(),
                 ($package->recipient)->getAddress(),
@@ -105,6 +108,7 @@ class ExportManfestByServices extends AbstractCsvExportService
                 $package->carrierService() == 'UPS'? 'UPS': '',
                 $package->carrierService() == 'FEDEX'? 'FEDEX': '',
                 $package->carrierService() == 'GePS'? 'GePS': '',
+                $package->carrierService() == 'Prime5'? 'Prime5': '',
                 $package->tracking_id,
                 setting('marketplace_checked', null, $package->user->id)?  setting('marketplace', null, $package->user->id):''
             ];
@@ -164,7 +168,6 @@ class ExportManfestByServices extends AbstractCsvExportService
         $commission = false;
         $service  = $order->shippingService->service_sub_class;
         $rateSlab = AccrualRate::getRateSlabFor($order->getOriginalWeight('kg'),$service);
-
         if ( !$rateSlab ){
             return [
                 'airport'=> 0,

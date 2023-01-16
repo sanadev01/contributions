@@ -47,12 +47,14 @@ return [
     ],
     'Warehouse' => [
         'menu' => 'Warehouse',
-        'Containers' => 'Containers',
         'Delivery Bill' => 'Delivery Bill',
-        'Chile Containers' => 'Chile Containers',
-        'USPS Containers' => 'USPS Containers',
-        'GePS Containers' => 'GePS Containers',
-        'Sinerlog Containers' => 'Sinerlog Containers'
+        'Containers' => 'Containers',
+        'Correios' => 'Correios',
+        'Chile' => 'Chile',
+        'USPS' => 'USPS',
+        'GePS' => 'GePS',
+        'Prime5' => 'Prime5',
+        // 'Sinerlog' => 'Sinerlog',
     ],
     'Affiliate' => [
         'menu' => 'Affiliate',

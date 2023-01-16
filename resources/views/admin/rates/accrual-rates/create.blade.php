@@ -57,6 +57,7 @@
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_AJ_EXPRESS}}">AJ Express</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_GePS}}">Global eParcel Prime</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_GePS_EFormat}}">Global eParcel Untracked Packet</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Prime5}}">Prime5</option>
                                         </select>
                                         <div class="help-block"></div>
                                     </div>

@@ -35,8 +35,8 @@ class UpdateRequest extends FormRequest
             "parcel.service_id" => "required|exists:shipping_services,id",
             "parcel.merchant" => "required",
             "parcel.carrier" => "required",
-            "parcel.tracking_id" => "required",
-            "parcel.customer_reference" => "required",
+            "parcel.tracking_id" => "required|max:22",
+            "parcel.customer_reference" => "required|max:22",
             "parcel.measurement_unit" => "required|in:kg/cm,lbs/in",
             
             "parcel.length" => "required|numeric|gt:0",
@@ -103,6 +103,10 @@ class UpdateRequest extends FormRequest
             $rules['sender.sender_phone'] = 'sometimes|string|max:100';
 
             $rules['recipient.phone'] = 'required|string|max:12';
+        }
+
+        if($shippingService && $shippingService->isSwedenPostService()) {
+            $rules['products.*.description'] = 'required|max:48';
         }
 
         return $rules;

@@ -18,10 +18,9 @@ class GePSContainerPackageController extends Controller
     public function index($id)
     {
         $container = Container::find($id);
-        $ordersCollection = json_encode($container->getOrdersCollections());
         $editMode = ($container->response == 0) ? true : false;
 
-        return view('admin.warehouse.gepsContainers.scan',compact('container', 'ordersCollection', 'editMode'));
+        return view('admin.warehouse.gepsContainers.scan',compact('container', 'editMode'));
                 
     }
 
@@ -46,9 +45,9 @@ class GePSContainerPackageController extends Controller
      */
     public function store($container, $order)
     {
-        $geps_containerPackageRepository = new GePSContainerPackageRepository();
+        $gepsContainerPackageRepository = new GePSContainerPackageRepository();
 
-        return $geps_containerPackageRepository->addOrderToContainer($container,$order);
+        return $gepsContainerPackageRepository->addOrderToContainer($container,$order);
     }
 
     /**
@@ -93,10 +92,10 @@ class GePSContainerPackageController extends Controller
      */
     public function destroy($container, $id)
     {
-        $geps_containerPackageRepository = new GePSContainerPackageRepository();
+        $gepsContainerPackageRepository = new GePSContainerPackageRepository();
         try {
             //code...
-            return $geps_containerPackageRepository->removeOrderFromContainer($container,$id);
+            return $gepsContainerPackageRepository->removeOrderFromContainer($container,$id);
         } catch (\Exception $ex) {
             \Log::info($ex);
         }
@@ -104,8 +103,8 @@ class GePSContainerPackageController extends Controller
 
     public function uploadBulkTracking(Request $request, $id)
     {
-        $geps_containerPackageRepository = new GePSContainerPackageRepository();
+        $gepsContainerPackageRepository = new GePSContainerPackageRepository();
 
-        return $geps_containerPackageRepository->addTrackings($request, $id);
+        return $gepsContainerPackageRepository->addTrackings($request, $id);
     }
 }

@@ -23,6 +23,7 @@ return [
             100 => 'Brazil Redispatch',
             537 => 'Global eParcel Prime',
             540 => 'Global eParcel Untracked Packet',
+            773 => 'Prime5',
         ]
     ]
 ];

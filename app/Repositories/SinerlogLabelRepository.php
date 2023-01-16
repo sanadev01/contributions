@@ -16,7 +16,7 @@ class SinerlogLabelRepository
 
     public function get(Order $order)
     {
-        if ( $order->getCN23() ){
+        if ($order->getCN23() ){
             return $this->printLabel($order);
         }
 

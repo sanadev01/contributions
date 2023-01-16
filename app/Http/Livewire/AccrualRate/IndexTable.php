@@ -54,6 +54,10 @@ class IndexTable extends Component
             'name' => 'Global eParcel Untracked Packet',
             'value' => Package::SERVICE_CLASS_GePS_EFormat,
         ];
+        $this->services[9] = [
+            'name' => 'Prime5',
+            'value' => Package::SERVICE_CLASS_Prime5,
+        ];
         return $this->services;
     }
 }

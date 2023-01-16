@@ -34,6 +34,7 @@ class ShippingService extends Model
     const Brazil_Redispatch = 100;
     const GePS = 537;
     const GePS_EFormat = 540;
+    const Prime5 = 773;
 
     protected $guarded = [];
 
@@ -140,6 +141,13 @@ class ShippingService extends Model
             return true;
         }
 
+        return false;
+    }
+    public function isSwedenPostService()
+    {
+        if($this->service_sub_class == self::Prime5){
+            return true;
+        }
         return false;
     }
 

@@ -332,6 +332,11 @@ class Order extends Model implements Package
         return $this->hasSecondLabel() ? $this->us_api_service : null;
     }
 
+    public function getCarrierAttribute()
+    {
+        return $this->carrierService();
+    }
+
     public function carrierService()
     {
         if ($this->shippingService()) {
@@ -359,6 +364,11 @@ class Order extends Model implements Package
                 return 'Global eParcel';
 
             }
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::Prime5){
+
+                return 'Prime5';
+
+            }
             return 'Correios Brazil';
         }
 
@@ -375,7 +385,8 @@ class Order extends Model implements Package
                 optional($this->shippingService)->service_sub_class == ShippingService::UPS_GROUND ||
                 optional($this->shippingService)->service_sub_class == ShippingService::FEDEX_GROUND ||
                 optional($this->shippingService)->service_sub_class == ShippingService::GePS ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GePS_EFormat) {
+                optional($this->shippingService)->service_sub_class == ShippingService::GePS_EFormat ||
+                optional($this->shippingService)->service_sub_class == ShippingService::Prime5) {
 
                 return $this->user_declared_freight;
             }
@@ -748,4 +759,31 @@ class Order extends Model implements Package
 
         return null;
     }
+    
+    public function getStatusNameAttribute()
+    {  
+
+        if($this->status == Order::STATUS_PREALERT_TRANSIT) {
+            return  "TRANSIT";
+        }elseif($this->status == Order::STATUS_PREALERT_READY){
+            return  "READY";
+        }elseif($this->status == Order::STATUS_REFUND){
+            return  "REFUND";
+        }elseif($this->status == Order::STATUS_ORDER){
+            return  "ORDER";
+        }elseif($this->status == Order::STATUS_NEEDS_PROCESSING){
+            return  "PROCESSING";
+        }elseif($this->status == Order::STATUS_PAYMENT_PENDING){
+            return  "PAYMENT PENDING";
+        }elseif($this->status == Order::STATUS_PAYMENT_DONE){
+            return  "PAYMENT DONE";
+        }elseif($this->status == Order::STATUS_CANCEL) {
+            return "CANCEL";
+        }elseif($this->status == Order::STATUS_REJECTED) {
+            return "REJECTED";
+        }elseif($this->status == Order::STATUS_RELEASE) {
+            return "RELEASE";
+        }
+    }
+
 }

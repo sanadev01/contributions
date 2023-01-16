@@ -53,27 +53,7 @@ class OrderCheckoutRepository
             try {
                 
                 foreach($this->invoice->orders as $order){
-
-                    if($order->status == Order::STATUS_PREALERT_TRANSIT) {
-                        $preStatus = "STATUS_PREALERT_TRANSIT";
-                    }elseif($order->status == Order::STATUS_PREALERT_READY){
-                        $preStatus = "STATUS_PREALERT_READY";
-                    }elseif($order->status == Order::STATUS_ORDER){
-                        $preStatus = "STATUS_ORDER";
-                    }elseif($order->status == Order::STATUS_NEEDS_PROCESSING){
-                        $preStatus = "STATUS_NEEDS_PROCESSING";
-                    }elseif($order->status == Order::STATUS_PAYMENT_PENDING){
-                        $preStatus = "STATUS_PAYMENT_PENDING";
-                    }elseif($order->status == Order::STATUS_PAYMENT_DONE){
-                        $preStatus = "STATUS_PAYMENT_DONE";
-                    }elseif($order->status == Order::STATUS_CANCEL) {
-                        $newStatus = "STATUS_CANCEL";
-                    }elseif($order->status == Order::STATUS_REJECTED) {
-                        $newStatus = "STATUS_REJECTED";
-                    }elseif($order->status == Order::STATUS_RELEASE) {
-                        $newStatus = "STATUS_RELEASE";
-                    }
-
+                        $preStatus = $order->status_name;
                     if ( !$order->isPaid() &&  getBalance() >= $order->gross_total ){
                         $deposit = chargeAmount($order->gross_total,$order);
                     }

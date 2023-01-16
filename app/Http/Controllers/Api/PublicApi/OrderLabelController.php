@@ -14,13 +14,14 @@ use App\Repositories\UPSLabelRepository;
 use App\Repositories\GePSLabelRepository;
 use App\Repositories\USPSLabelRepository;
 use App\Repositories\FedExLabelRepository;
+use App\Repositories\SwedenPostLabelRepository;
 use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
 
 class OrderLabelController extends Controller
 {
-    public function __invoke(Request $request, Order $order, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, CorrieosChileLabelRepository $corrieosChileLabelRepository, USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, FedExLabelRepository $fedexLabelRepository,GePSLabelRepository $gepsLabelRepository)
+    public function __invoke(Request $request, Order $order, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, CorrieosChileLabelRepository $corrieosChileLabelRepository, USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, FedExLabelRepository $fedexLabelRepository,GePSLabelRepository $gepsLabelRepository, SwedenPostLabelRepository $SwedenPostLabelRepository)
     {   
         $orders = new Collection;
         $this->authorize('canPrintLableViaApi',$order);
@@ -125,7 +126,7 @@ class OrderLabelController extends Controller
             return apiResponse(false, $error);
         }
 
-        // For Correios and Global eParcel Brazil
+        // For Correios,  Global eParcel Brazil and Sweden Post(Prime5)
         if ($order->recipient->country_id == Order::BRAZIL) {
            
             if($order->shippingService->isGePSService()){
@@ -135,7 +136,16 @@ class OrderLabelController extends Controller
                 if($error){
                    return apiResponse(false, $error);
                 }
-            }else{
+            }
+            if($order->shippingService->isSwedenPostService()){
+
+                $SwedenPostLabelRepository->get($order);
+                $error = $SwedenPostLabelRepository->getError();
+                if($error){
+                   return apiResponse(false, $error);
+                }
+            }
+            if($order->shippingService->isAnjunService() ||  $order->shippingService->isCorreiosService()){
 
                 if ( $request->update_label === 'true' ){
                     $labelData = $corrieosBrazilLabelRepository->update($order);

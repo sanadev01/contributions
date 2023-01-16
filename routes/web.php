@@ -95,7 +95,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('orders.ups-label', OrderUPSLabelController::class)->only('index','store');
             Route::get('order-ups-label-cancel-pickup/{id?}', [\App\Http\Controllers\Admin\Order\OrderUPSLabelController::class, 'cancelUPSPickup'])->name('order.ups-label.cancel.pickup');
         });
-        //Cancel Lable Route for GePS
+        //Cancel Lable Route for GePS & Prime5
         Route::get('order/{order}/cancel-label', [\App\Http\Controllers\Admin\Order\OrderLabelController::class, 'cancelLabel'])->name('order.label.cancel');
 
         Route::namespace('Consolidation')->prefix('consolidation')->as('consolidation.')->group(function(){
@@ -254,17 +254,13 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
     return response()->download(storage_path("app/labels/{$order->us_api_tracking_code}.pdf"),"{$order->us_api_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.us-label.download');
 
-Route::get('test-label/{id?}/d/{dno?}',function($id, $dNo){
+Route::get('test-label/{key}',function($key){
 
+    dd(Cache::forget($key));
     $delivery = Container::find($id)->update([
         'dispatch_number' => $dNo,
         'unit_code' => null
     ]);
-    // $order = DB::table('orders')->where('id',$id)->update([
-    //     'deleted_at' => null
-    // ]);
-    // $detachOrder = DB::table('container_delivery_bill')->where('delivery_bill_id', $db)->where('container_id', $id)->limit(1)->delete();
-    dd($delivery);
     
     // dd($order);
     $labelPrinter = new CN23LabelMaker();
@@ -277,11 +273,11 @@ Route::get('test-label/{id?}/d/{dno?}',function($id, $dNo){
 });
 
 Route::get('order/apiresponse/{id?}',function($id){
-    $order = Order::find($id);
-    if($order) {
-        $tracking = OrderTracking::where('order_id', $order->id)->get();
-    }
-    dd($tracking, $order);
+    $order = Order::find($id)->update([
+        'corrios_tracking_code' => null,
+        'cn23' => null,
+        'api_response' => null
+    ]);
 });
 
 Route::get('truncate-response/{id?}',function($id){

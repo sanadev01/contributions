@@ -116,7 +116,7 @@ class CN23LabelMaker implements HasLableExport
     {
         if ( $this->order->items->count() > 4 ){
             $this->hasSuplimentary = true;
-            $this->sumplementryItems = $this->order->items->chunk(30);
+            $this->sumplementryItems = $this->order->items->skip(4)->chunk(30);
         }
 
         return $this;
