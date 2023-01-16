@@ -112,10 +112,8 @@ class ColombiaService
     
     private function colombiaApiCall($url, $data)
     {
-        //dd($data);
         try {
-            $response = Http::withBasicAuth($this->userName, $this->password)->post($url, $data);
-            //dd($response);            
+            $response = Http::withBasicAuth($this->userName, $this->password)->post($url, $data);           
             if ($response->status() == 200) {
                 $responseJson = collect($response->json())->first();
                 if ($responseJson['intCodeError'] == 0  && $responseJson['strUrlGuide'] != null) {
@@ -164,10 +162,10 @@ class ColombiaService
             'intTypeRequest' => ($forRates) ? 1 : 2,
             'lstShippingTraceBe' => [
                 [
-                    'placeReceiverBe' => $this->setPlace($order->recipient->toArray()),
+                    'placeReceiverBe' => $this->setReceiverPlace($order->recipient->toArray()),
                     'boolLading' => false,
-                    'customerReceiverBe' => $this->setCustomer($order->recipient->toArray()),
-                    'customerSenderBe' => $this->setCustomer(null, false),
+                    'customerReceiverBe' => $this->setReceiver($order->recipient->toArray()),
+                    'customerSenderBe' => $this->setSender($order),
                     'decCollectValue' => 0,
                     'decLading' => 0,
                     'intAditionalShipping' => 0,
@@ -178,7 +176,7 @@ class ColombiaService
                     'intLength' => ($order->measurement_unit != 'kg/cm') ? round(UnitsConverter::inToCm($order->length)) : round($order->length),
                     'intWidth' => ($order->measurement_unit != 'kg/cm') ? round(UnitsConverter::inToCm($order->width)) : round($order->width),
                     'intWeight' => ($order->measurement_unit != 'kg/cm') ? round(UnitsConverter::kgToGrams(UnitsConverter::poundToKg($this->chargableWeight))) : round(UnitsConverter::kgToGrams($this->chargableWeight)),
-                    'placeSenderBe' => $this->setPlace(null, false),
+                    'placeSenderBe' => $this->setSenderPlace($order),
                     'strAditionalShipping' => '',
                     'strIdentification' => $order->warehouse_number,
                     'strObservation' => '',
@@ -199,7 +197,7 @@ class ColombiaService
 
     }
 
-    private function setPlace($data = null, $typeRecipient = true)
+    private function setReceiverPlace($data = null, $typeRecipient = true)
     {
         $regionId = ($data) ? $data['region'] : null;
         if(!empty($data)) {
@@ -214,16 +212,16 @@ class ColombiaService
             'intCodeHeadquarter' => 0,
             'intCodeOperationalCenter' => 0,
             'intTypePlace' => 2,
-            'strAddress' => ($data) ? $data['address'] : (($typeRecipient ? 'Colombia Receiver' : 'Colombia Sender')),
+            'strAddress' => $data['address'],
             'strAditional' => '',
             'strEmail' => ($data) ? $data['email'] : '',
             'strLocker' => '',
             'strNameCountry' => 'CO',
-            'strPhone' => ($data) ? $data['phone'] : '656565665',
+            'strPhone' => ($data) ? $data['phone'] : '+13058885191',
         ];
     }
 
-    private function setCustomer($data = null, $typeRecipient = true)
+    private function setReceiver($data = null, $typeRecipient = true)
     {
         $regionId = ($data) ? $data['region'] : null;
         if(!empty($data)) {
@@ -235,16 +233,52 @@ class ColombiaService
         return [
             'intAditional' => 0,
             'intCodeCity' => $regionCode,
-            'intTypeActor' => ($typeRecipient) ? 3 : 2,
+            'intTypeActor' => 3,
             'intTypeDocument' => 1,
-            'strAddress' => ($data) ? $data['address'] : (($typeRecipient ? 'Colombia Receiver' : 'Colombia Sender')),
+            'strAddress' => $data['address'],
             'strAditional' => '',
             'strCountry' => 'CO',
             'strDocument' => '',
             'strEmail' => ($data) ? $data['email'] : '',
             'strLastNames' => ($data) ? $data['last_name'] : 'Fertias',
             'strNames' => ($data) ? $data['first_name'] : 'Marcio',
-            'strPhone' => ($data) ? $data['phone'] : '656565665',
+            'strPhone' => ($data) ? $data['phone'] : '+13058885191',
+        ];
+    }
+
+    private function setSenderPlace($order)
+    {
+        
+        return [
+            'intAditional' => 0,
+            'intCodeCity' => Region::COLOMBIA_SENDER_CODE,
+            'intCodeHeadquarter' => 0,
+            'intCodeOperationalCenter' => 0,
+            'intTypePlace' => 2,
+            'strAddress' => '2200 NW 129TH AVE, Miami FL, 33182',
+            'strAditional' => '',
+            'strEmail' => ($order->sender_email) ? $order->sender_email : '',
+            'strLocker' => '',
+            'strNameCountry' => 'CO',
+            'strPhone' => ($order->sender_phone) ? $order->sender_phone : '+13058885191',
+        ];
+    }
+
+    private function setSender($order)
+    {        
+        return [
+            'intAditional' => 0,
+            'intCodeCity' => Region::COLOMBIA_SENDER_CODE,
+            'intTypeActor' => 2,
+            'intTypeDocument' => 1,
+            'strAddress' => '2200 NW 129TH AVE, Miami FL, 33182',
+            'strAditional' => '',
+            'strCountry' => 'CO',
+            'strDocument' => '',
+            'strEmail' => ($order->sender_email) ? $order->sender_email : '',
+            'strLastNames' => ($order->sender_last_name) ? $order->sender_last_name : '',
+            'strNames' => ($order->sender_first_name) ? $order->sender_first_name : '',
+            'strPhone' => ($order->sender_phone) ? $order->sender_phone : '+13058885191',
         ];
     }
     
