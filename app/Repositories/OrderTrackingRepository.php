@@ -83,8 +83,9 @@ class OrderTrackingRepository
                                 ];
                             }
                         }elseif($order->recipient->country_id == Order::BRAZIL ){
-
-                            array_push($this->brazilTrackingCodes, $order->corrios_tracking_code);
+                            if($order->carrier == 'Correios Brazil'){
+                                array_push($this->brazilTrackingCodes, $order->corrios_tracking_code);
+                            }
 
                             $apiResponse = [
                                 'success' => true,
