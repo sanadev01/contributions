@@ -55,6 +55,7 @@ class OrderLabelController extends Controller
         $this->colombiaLabelRepository = $colombiaLabelRepository;
         $this->gepsLabelRepository = $gepsLabelRepository;
         $this->colombiaLabelRepository = $colombiaLabelRepository;
+        $this->swedenpostLabelRepository = $swedenpostLabelRepository;
     }
     
     public function index(Request $request, Order $order)
@@ -161,7 +162,7 @@ class OrderLabelController extends Controller
         }
 
         if($order->shippingService->isSwedenPostService()){
-         
+            
             $this->swedenpostLabelRepository->get($order);
             
             $error = $this->swedenpostLabelRepository->getError();
@@ -180,13 +181,6 @@ class OrderLabelController extends Controller
             $this->postNLLabelRepository->get($order);
 
             $error = $this->postNLLabelRepository->getError();
-            return $this->renderLabel($request, $order, $error);
-        }
-
-        if ($order->recipient->country_id == Order::COLOMBIA && $order->shippingService->isColombiaService()) {
-            $this->colombiaLabelRepository->handle($order);
-
-            $error = $this->colombiaLabelRepository->getError();
             return $this->renderLabel($request, $order, $error);
         }
 
