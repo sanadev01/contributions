@@ -88,20 +88,13 @@ class RecipientController extends Controller
         return apiResponse(true,'Zipcode success',$response);
     }
 
-    public function chileRegions()
+    public function colombiaZipcode(Request $request)
     {
-        return CorreosChileFacade::getAllRegions();
-        
-    }
-
-    public function chileCommunes(Request $request)
-    {
-        return CorreosChileFacade::getchileCommunes($request);
-    }
-
-    public function normalizeAddress(Request $request)
-    {
-       return CorreosChileFacade::validateAddress($request);
+        //$zipcode = Region::query()->where("country_id",$request->country_id)->where('name', 'LIKE', "%{$request->city}%")->value('code');
+        $colombiaPostalCodeService = new ColombiaPostalCodes();
+        $zipCode = $colombiaPostalCodeService->getZipCodes($request->city);
+        $data = ['zipCode' => $zipCode];
+        return response()->json($data);
     }
 
     public function validate_USAddress(Request $request)
@@ -135,14 +128,5 @@ class RecipientController extends Controller
             
             return apiResponse(false,'could not Load Communes, please select region',$e->getMessage());
         }
-    }
-
-    public function colombiaZipcode(Request $request)
-    {
-        //$zipcode = Region::query()->where("country_id",$request->country_id)->where('name', 'LIKE', "%{$request->city}%")->value('code');
-        $colombiaPostalCodeService = new ColombiaPostalCodes();
-        $zipCode = $colombiaPostalCodeService->getZipCodes($request->city);
-        $data = ['zipCode' => $zipCode];
-        return response()->json($data);
     }
 }

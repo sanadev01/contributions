@@ -45,6 +45,10 @@ class CreateRequest extends FormRequest
         if($shippingService && $shippingService->isSwedenPostService()) {
             $rules['items.*.description'] = 'required|max:48';
         }
+
+        if($shippingService && $shippingService->isPostNLService()) {
+            $rules['items.*.description'] = 'required|max:45';
+        }
         
         return $rules;
         
@@ -54,7 +58,7 @@ class CreateRequest extends FormRequest
     {
         return [
             'items.*.sh_code.*' => __('validation.ncm.invalid'),
-            'items.*.description.*' => __('The Items description may not be greater than 48 characters.'),
+            // 'items.*.description.*' => __('The Items description may not be greater than 48 characters.'),
 
         ];
     }
