@@ -40,6 +40,7 @@ class ShippingService extends Model
     const GePS = 537;
     const GePS_EFormat = 540;
     const Prime5 = 773;
+    
 
     protected $guarded = [];
 

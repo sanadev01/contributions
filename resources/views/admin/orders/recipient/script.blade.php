@@ -131,6 +131,14 @@
 
                 validateBrazilianZipcode($(this).val());
             }
+
+            if(val == '50'){
+                window.activeColombiaFields();
+                return getStatesFromDB();
+                $('#loading').fadeIn();
+            }else{
+                window.inactiveColombiaFields();
+            }
         });
 
         $('#country').on('change', function(){

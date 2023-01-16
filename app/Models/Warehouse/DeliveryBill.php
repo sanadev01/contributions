@@ -40,18 +40,6 @@ class DeliveryBill extends Model
     /**
      * @return bool
      */
-    public function hasColombiaService()
-    {
-        if ($this->container()->services_subclass_code == Container::CONTAINER_COLOMBIA) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @return bool
-     */
     public function hasMileExpressService()
     {
         if ($this->container()->services_subclass_code == Container::CONTAINER_MILE_EXPRESS) {
@@ -119,17 +107,11 @@ class DeliveryBill extends Model
     }
 
     /**
-     * generate random cnd38_code
-     * @return string
+     * @return bool
      */
-    public function setRandomCN38Code()
+    public function hasColombiaService()
     {
-        return $this->id.random_int(1000, 9999);
-    }
-
-    public function hasGePSService()
-    {
-        if ($this->container()->services_subclass_code == Container::CONTAINER_COLOMBIA) {
+        if ($this->containers->first()->services_subclass_code == 'CO-NX') {
             return true;
         }
 

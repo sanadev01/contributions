@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Api\Order;
 
+use Exception;
 use App\Models\Order;
 use App\Models\Region;
 use App\Models\Address;
+use App\Models\Commune;
 use App\Facades\USPSFacade;
 use Illuminate\Http\Request;
 use FlyingLuscas\Correios\Client;
+use App\Facades\CorreosChileFacade;
 use App\Http\Controllers\Controller;
 use App\Services\Colombia\ColombiaPostalCodes;
 
@@ -97,5 +100,33 @@ class RecipientController extends Controller
     public function validate_USAddress(Request $request)
     {
         return USPSFacade::validateAddress($request);
+    }
+
+    // get chile regions from db
+    public function hdChileRegions()
+    {
+        try {
+            $regions = Region::select('id','name')->where('country_id', 46)->get();
+
+            return apiResponse(true,'Regions Fetched',$regions);
+
+        } catch (Exception $e) {
+            
+            return apiResponse(false,'could not Load Regions plaease reload',$e->getMessage());
+        }
+    }
+
+    // get chile communes from db
+    public function hdChileCommunes(Request $request)
+    {
+        try {
+            $communes = Commune::select('id','name')->where('region_id', $request->region_id)->get();
+            
+            return apiResponse(true,'Communes Fetched',$communes);
+
+        } catch (Exception $e) {
+            
+            return apiResponse(false,'could not Load Communes, please select region',$e->getMessage());
+        }
     }
 }

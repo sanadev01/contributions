@@ -5,7 +5,7 @@ namespace App\Repositories;
 use App\Models\Order;
 use App\Models\OrderTracking;
 use App\Facades\ColombiaShippingFacade;
-
+use App\Services\Colombia\ColombiaService;
 class ColombiaLabelRepository
 {
     protected $error;
@@ -35,7 +35,7 @@ class ColombiaLabelRepository
 
     private function getPrimaryLabel()
     {
-        $response = ColombiaShippingFacade::createShipment($this->order);
+        $response = (new ColombiaService())->createShipment($this->order);
 
         if ($response['success'] == true) {
 

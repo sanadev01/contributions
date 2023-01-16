@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\User;
 use App\Models\Order;
 use App\Models\Country;
 use App\Facades\USPSFacade;
@@ -10,11 +11,10 @@ use App\Models\ShippingService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Services\UPS\UPSShippingService;
+use App\Services\GePS\GePSShippingService;
 use App\Services\USPS\USPSShippingService;
 use App\Services\FedEx\FedExShippingService;
-use App\Services\GePS\GePSShippingService;
 use App\Services\Calculators\WeightCalculator;
-use App\Models\User;
 use App\Services\Colombia\ColombiaPostalCodes;
 
 class OrderRepository
@@ -237,15 +237,12 @@ class OrderRepository
         $request->merge([
             'phone' => "+".cleanString($request->phone)
         ]);
-
+        
         if ( $order->recipient ){
             if($request->service == 'postal_service' && $request->country_id == Country::COLOMBIA) {
                 $city = $request->cocity;
-            }elseif($request->service == 'postal_service') {
-                $city = $request->city;
-            }else {
-                $city = null;
             }
+            $city = $request->city;
             $order->recipient()->update([
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
@@ -659,8 +656,8 @@ class OrderRepository
             } else {
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
                     return $shippingService->service_sub_class != ShippingService::COLOMBIA_URBANO
-                            && $shippingService->service_sub_class != ShippingService::COLOMBIA_NACIONAL
-                            && $shippingService->service_sub_class != ShippingService::COLOMBIA_TRAYETOS;
+                        && $shippingService->service_sub_class != ShippingService::COLOMBIA_NACIONAL
+                        && $shippingService->service_sub_class != ShippingService::COLOMBIA_TRAYETOS;
                 });
             }
 

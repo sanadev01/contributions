@@ -19,9 +19,7 @@ use App\Http\Controllers\Warehouse\ManifestDownloadController;
 use App\Http\Controllers\Warehouse\USPSCN35DownloadController;
 use App\Http\Controllers\Warehouse\USPSUnitRegisterController;
 use App\Http\Controllers\Warehouse\ChileCN35DownloadController;
-use App\Http\Controllers\Warehouse\ColombiaContainerController;
 use App\Http\Controllers\Warehouse\SinerlogContainerController;
-use App\Http\Controllers\Warehouse\ColombiaUnitRegisterController;
 use App\Http\Controllers\Warehouse\DeliveryBillDownloadController;
 use App\Http\Controllers\Warehouse\DeliveryBillRegisterController;
 use App\Http\Controllers\Warehouse\MileExpressContainerController;
@@ -37,7 +35,6 @@ use App\Http\Controllers\Warehouse\DeliveryBillStatusUpdateController;
 use App\Http\Controllers\Warehouse\SinerlogContainerPackageController;
 use App\Http\Controllers\Warehouse\SinerlogManifestDownloadController;
 use App\Http\Controllers\Warehouse\MileExpressContainerPackageController;
-use App\Http\Controllers\Warehouse\ColombiaContainerPackageController;
 use App\Http\Controllers\Warehouse\GePSContainerController;
 use App\Http\Controllers\Warehouse\GePSContainerPackageController;
 use App\Http\Controllers\Warehouse\GePSUnitRegisterController;
@@ -49,11 +46,15 @@ use App\Http\Controllers\Warehouse\SwedenPostContainerPackageController;
 use App\Http\Controllers\Warehouse\SwedenPostUnitRegisterController;
 use App\Http\Controllers\Warehouse\SwedenPostCN35DownloadController;
 use App\Http\Controllers\Warehouse\SwedenPostManifestDownloadController;
+use App\Http\Controllers\Warehouse\ColombiaContainerController;
+use App\Http\Controllers\Warehouse\ColombiaCN35DownloadController;
+use App\Http\Controllers\Warehouse\ColombiaUnitRegisterController;
+use App\Http\Controllers\Warehouse\ColombiaContainerPackageController;
+use App\Http\Controllers\Warehouse\ColombiaContainerManifestController;
 use App\Http\Controllers\Warehouse\POSTNLContainerController;
 use App\Http\Controllers\Warehouse\POSTNLContainerPackageController;
 use App\Http\Controllers\Warehouse\POSTNLUnitRegisterController;
 use App\Http\Controllers\Warehouse\POSTNLCN35DownloadController;
-use App\Http\Controllers\Warehouse\ColombiaContainerManifestController;
 
 
 Route::middleware(['auth'])->as('warehouse.')->group(function () {
@@ -119,11 +120,6 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('postnl_container/{container}/register', POSTNLUnitRegisterController::class)->name('postnl_container.register');
     Route::get('postnl_container/{container}/download', POSTNLCN35DownloadController::class)->name('postnl_container.download');
     Route::get('postnl_container/{container}/download_excel_manifest', [POSTNLContainerController::class, 'download_exceltManifest'])->name('download.postnl_manifest_excel');
-    // Routes for colombia Container
-    Route::resource('colombia-containers', ColombiaContainerController::class);
-    Route::get('colombia-container/{container}/packages', ColombiaContainerPackageController::class)->name('colombia-container.packages');
-    Route::get('colombia-container/{container}/manifest', ColombiaContainerManifestController::class)->name('colombia-container.manifest');
-    Route::get('colombia-container/{container}/register', ColombiaUnitRegisterController::class)->name('colombia-container.register');
 
     // Routes for GePS Container
     Route::resource('geps_containers', GePSContainerController::class);
@@ -142,6 +138,13 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('swedenpost_container/{container}/register', SwedenPostUnitRegisterController::class)->name('swedenpost_container.register');
     Route::get('swedenpost_container/{container}/download', SwedenPostCN35DownloadController::class)->name('swedenpost_container.download');
     Route::get('swedenpost/{delivery_bill}/manifest', SwedenPostManifestDownloadController::class)->name('swedenpost.manifest.download');
+
+    // Routes for Colombia Container
+     Route::resource('colombia-containers', ColombiaContainerController::class);
+     Route::resource('colombia-containers.packages', ColombiaContainerPackageController::class)->only('index','destroy', 'create');
+     Route::get('colombia-containers/{container}/register', ColombiaUnitRegisterController::class)->name('colombia-containers.register');
+     Route::get('colombia-containers/{container}/download', ColombiaCN35DownloadController::class)->name('colombia-containers.download');
+     Route::get('colombia-containers/{container}/manifest', ColombiaContainerManifestController::class)->name('colombia-containers.manifest');
 });
 
 

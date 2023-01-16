@@ -141,6 +141,21 @@
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">Colombia Service<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="ups">
+                                                <input type="checkbox" name="colombia_service" id="colombia_service" @if(setting('colombia_service', null, \App\Models\User::ROLE_ADMIN)) checked @endif>
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">UPS<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <div class="input-group">

@@ -139,6 +139,9 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         elseif($this->services_subclass_code == '773'){
             return 11;
         }
+        elseif($this->services_subclass_code == 'CO-NX'){
+            return 12;
+        }
         // return $this->services_subclass_code == 'NX' ? 2 : 1;
     }
 
@@ -220,6 +223,12 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         return $this->services_subclass_code == ShippingService::Prime5;
     }
 
+    public function hasColombiaService()
+    {
+        return $this->services_subclass_code == 'CO-NX';
+    }
+
+    
     public function getContainerService()
     {
         if ($this->services_subclass_code == 'NX' || $this->services_subclass_code == 'IX' || $this->services_subclass_code == 'XP') {
