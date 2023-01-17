@@ -53,9 +53,9 @@ class ShippingOrder {
                   'shipperPhone' => ($order->sender_phone) ? $order->sender_phone : '+13058885191',
                   'shipperAddressLine1' => ($order->sender_address) ? $order->sender_address : "2200 NW 129TH AVE",
                   'shipperCity' => ($order->sender_city) ? $order->sender_city : "Miami",
-                  'shipperState' => ($order->senderState()->code) ? $order->senderState()->code : "FL",
+                  'shipperState' => (optional($order->senderState())->code) ? optional($order->senderState())->code : "FL",
                   'shipperPostcode' => ($order->sender_zipcode) ? $order->sender_zipcode : "33182",
-                  'shipperCountry' => ($order->senderCountry()->code) ? $order->senderCountry()->code : "US",
+                  'shipperCountry' => (optional($order->senderCountry())->code) ? optional($order->senderCountry())->code : "US",
                   //Parcel Return Information
                   "returnOption" =>"",
                   "returnName" => $order->getSenderFullName(),
