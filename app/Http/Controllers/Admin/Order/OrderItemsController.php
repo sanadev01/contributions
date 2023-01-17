@@ -11,7 +11,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Repositories\OrderRepository;
-use App\Http\Controllers\Admin\Order\GrossTotalChangeRepository;
 use App\Http\Requests\Orders\OrderDetails\CreateRequest;
 
 class OrderItemsController extends Controller
@@ -19,10 +18,9 @@ class OrderItemsController extends Controller
     protected $orderRepository;
     protected $grossTotalChangeRepository;
 
-    public function __construct(OrderRepository $orderRepository,GrossTotalChangeRepository $grossTotalChangeRepository)
+    public function __construct(OrderRepository $orderRepository)
     {
-        $this->orderRepository = $orderRepository;
-        $this->grossTotalChangeRepository = $grossTotalChangeRepository;
+        $this->orderRepository = $orderRepository; 
     }
     /**
      * Display a listing of the resource.
@@ -113,14 +111,8 @@ class OrderItemsController extends Controller
                     return \back()->withInput();
                 }
             }
-
-            $this->grossTotalChangeRepository->changesOnPaid($request, $order);
-            // dump($order);
-
-            if ($this->orderRepository->updateShippingAndItems($request, $order)) {
-                // dump($order);
-                // return dd(33);
-                // $this->grossTotalChangeRepository->changesOnPending($order); 
+ 
+            if ($this->orderRepository->updateShippingAndItems($request, $order)) { 
                 session()->flash('alert-success', 'orders.Order Placed');
                 if ($order->user->hasRole('wholesale') && $order->user->insurance == true) {
                     return redirect()->route('admin.orders.order-invoice.index', $order); # code...

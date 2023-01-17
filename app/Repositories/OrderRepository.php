@@ -15,6 +15,7 @@ use App\Services\FedEx\FedExShippingService;
 use App\Services\GePS\GePSShippingService;
 use App\Services\Calculators\WeightCalculator;
 use App\Models\User;
+use App\Http\Controllers\Admin\Order\GrossTotalChangeRepository;
 
 class OrderRepository
 {
@@ -301,6 +302,7 @@ class OrderRepository
     public function updateShippingAndItems(Request $request, Order $order)
     {
         DB::beginTransaction();
+        $oldOrder = clone $order;
 
         try {
             
@@ -347,30 +349,38 @@ class OrderRepository
             
             $order->doCalculations();
 
-            if ($order->isPaid() && $order->getPaymentInvoice()) 
-            {
-                $orderInvoice = $order->getPaymentInvoice();
+            // if ($order->isPaid() && $order->getPaymentInvoice()) 
+            // {
+            //     $orderInvoice = $order->getPaymentInvoice();
                
-                $orderInvoice->update([
-                    'total_amount' => $orderInvoice->orders()->sum('gross_total'),
-                ]);
+            //     $orderInvoice->update([
+            //         'total_amount' => $orderInvoice->orders()->sum('gross_total'),
+            //     ]);
 
-                if ($orderInvoice->total_amount > $orderInvoice->paid_amount) {
+            //     if ($orderInvoice->total_amount > $orderInvoice->paid_amount) {
                     
-                    $orderInvoice->update([
-                        'is_paid' => 0,
-                    ]);
+            //         $orderInvoice->update([
+            //             'is_paid' => 0,
+            //         ]);
                     
-                    $order->update([
-                        'status' => Order::STATUS_PAYMENT_PENDING,
-                        'is_paid' => 0,
-                    ]);
-                }
+            //         $order->update([
+            //             'status' => Order::STATUS_PAYMENT_PENDING,
+            //             'is_paid' => 0,
+            //         ]);
+            //     }
+            // }
+
+            if((new GrossTotalChangeRepository())->updateInvoice($order,$oldOrder)){ 
+                    DB::commit();
+                    session()->flash('alert-success','orders.Sender Updated');
+                    return true;
             }
-
-            DB::commit();
-            session()->flash('alert-success','orders.Sender Updated');
-            return true;
+            else{
+            DB::rollback();
+            $this->error = 'Unable to update the order.Payment conflict occure';
+             session()->flash('alert-danger','orders.Error While placing Order'." ".$this->error);
+            return false;
+            }
         } catch (\Exception $ex) {
             DB::rollback();
             $this->error = $ex->getMessage();
