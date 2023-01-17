@@ -50,12 +50,12 @@ class ShippingOrder {
                   'country' => $order->recipient->country->code,
                   //Shipper Information
                   'shipperName' => $order->getSenderFullName(),
-                  'shipperPhone' => ($order->sender_phone) ? $order->sender_phone : '',
-                  'shipperAddressLine1' => "2200 NW 129TH AVE",
-                  'shipperCity' => "Miami",
-                  'shipperState' => "FL",
-                  'shipperPostcode' => "33182",
-                  'shipperCountry' => "US",
+                  'shipperPhone' => ($order->sender_phone) ? $order->sender_phone : '+13058885191',
+                  'shipperAddressLine1' => ($order->sender_address) ? $order->sender_address : "2200 NW 129TH AVE",
+                  'shipperCity' => ($order->sender_city) ? $order->sender_city : "Miami",
+                  'shipperState' => ($order->senderState()->code) ? $order->senderState()->code : "FL",
+                  'shipperPostcode' => ($order->sender_zipcode) ? $order->sender_zipcode : "33182",
+                  'shipperCountry' => ($order->senderCountry()->code) ? $order->senderCountry()->code : "US",
                   //Parcel Return Information
                   "returnOption" =>"",
                   "returnName" => $order->getSenderFullName(),
