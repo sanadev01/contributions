@@ -34,7 +34,7 @@ class DirectLinkReceptacle
         $body = [
             "dlOfficeCode" => "600",
             "eventId" => "15",
-            "contentCode" => "002",
+            "contentCode" => "006",
             "countryCode" => "BR",
             "receptacleType" => "01",
             "serviceCode" => "001"
