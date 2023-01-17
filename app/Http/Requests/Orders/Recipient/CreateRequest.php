@@ -52,11 +52,19 @@ class CreateRequest extends FormRequest
         //     $rules['cnpj'] = 'sometimes|cnpj|required_if:country_id,'.Country::where('code', 'BR')->first()->id;
         //     $rules['zipcode'] = ['required', new ZipCodeValidator($this->country_id,$this->state_id)];
         // }
-        if (Country::where('code', 'BR')->first()->id == $this->country_id) {
+        if ($this->country_id == Country::Brazil) {
             $rules['tax_id'] = 'sometimes|cpf_cnpj|required_if:country_id,'.Country::where('code', 'BR')->first()->id;
             // $rules['tax_id'] = 'sometimes|cnpj|required_if:country_id,'.Country::where('code', 'BR')->first()->id;
             $rules['zipcode'] = ['required', new ZipCodeValidator($this->country_id,$this->state_id)];
             $rules['street_no'] = 'sometimes|numeric';
+        }
+
+        if ($this->country_id == Country::COLOMBIA) {
+            $rules['city'] = 'nullable';
+            $rules['commune_id'] = 'nullable';
+            $rules['zipcode'] = 'nullable';
+            $rules['region'] = 'nullable';
+            $rules['phone'] = 'min:9|max:15';
         }
 
         return $rules;
