@@ -15,13 +15,12 @@ class GrossTotalChangeRepository {
  
         $difference = 0;
 
-         $invoice = $newOrder->getPaymentInvoice(); 
+         $invoice = $newOrder->getPaymentInvoice();  
             if($oldOrder->is_paid){
 
                 $oldPaidAmount = $oldOrder->gross_total;
                 $newPaidAmount = $newOrder->gross_total; 
                 $difference = $newPaidAmount - $oldPaidAmount; 
-
 
                 if ($difference<0) {
                     // the order amount descresed.
@@ -39,22 +38,28 @@ class GrossTotalChangeRepository {
     
                 }elseif ($difference > 0) {
                    // the amount increased.
-                   //update invoice.for futher payment.
+                   //update invoice.for futher payment. 
                     if ($invoice) {
                         $invoice->update([
                             'total_amount' => $invoice->total_amount + $difference,
                         ]);
+ 
+
                     } else {
                         //create new invoice if not exist. 
                         $invoice=  $this->createInvoice($newOrder,$difference,0); 
                     }
                    if ($invoice->total_amount > $invoice->paid_amount){
+
                         //if need to pay.
                         //then set order and invoice status unpaid. 
                         $this->setInvoiceUnpaid($invoice); 
                         $this->setOrderPending($newOrder);
+                    //     dump($invoice);
+                    // dd('unpaid');
                     }
-                    else{
+                    else{ 
+                     
                         $this->setInvoicePaid($invoice); 
                         $this->setOrderDone($newOrder);
                     }
@@ -72,23 +77,19 @@ class GrossTotalChangeRepository {
                         $difference = $newPaidAmount - $oldPaidAmount;
                     }
                     else{
-                        $oldPaidAmount =  0;
-                        $newPaidAmount = $newOrder->gross_total;
-                        $difference = $newPaidAmount - $oldPaidAmount;
+                        //unable to change multiple times without invoice.
+                        return false;
+                        // $oldPaidAmount =  0;
+                        // $newPaidAmount = $newOrder->gross_total;
+                        // $difference = $newPaidAmount - $oldPaidAmount;
                     }
-
                     $oldOrderPaidAmount = $oldOrder->gross_total;
                     $newOrderPaidAmount = $newOrder->gross_total;
                     $orderDifference = $newOrderPaidAmount - $oldOrderPaidAmount;
 
 
-                    // dump('difference');
-                    // dump($difference);
-
-                    // dump('order difference');
-                    // dd($orderDifference);
-
                      if($orderDifference==0){
+                        //no change made.
                         return true;
                      }
 
@@ -99,19 +100,49 @@ class GrossTotalChangeRepository {
                         //deposit/refund the difference to user account.
                         //remove refunded money from invoice.
                     
+
                         $this->deposite($newOrder, -$difference);
+
                         if ($invoice){
+
+                            if($invoice->order_count == 1){
+                                
+                                $invoice->update([
+                                    'total_amount' => $newOrder->gross_total,
+                                ]);
+                                }
+                                else
+                                $invoice->update([
+                                    'total_amount' => $invoice->paid_amount + $difference,
+                                ]);
+
+                                
                             $this->setInvoicePaid($invoice);
                             $this->setOrderDone($newOrder);
+                    //         dump($invoice);
+                    // dump('difference');
+                    // dump($difference);
+
+                    // dump('order difference');
+                    // dd($orderDifference);
                         }
         
                     }elseif($difference > 0){
                        //1. The amount increased.
                        //2. Update invoice.for futher payment.
+
+
                         if ($invoice) {
+                            if($invoice->order_count == 1){ 
+                            $invoice->update([
+                                'total_amount' => $newOrder->gross_total,
+                            ]);
+                            }
+                            else
                             $invoice->update([
                                 'total_amount' => $invoice->total_amount + $orderDifference,
                             ]);
+
                         }else{
                             //create new invoice if not exist.
                             $invoice=  $this->createInvoice($newOrder,$difference,0); 
@@ -121,7 +152,7 @@ class GrossTotalChangeRepository {
                             //if need to pay.
                             //then set order and invoice status unpaid. 
                             $this->setInvoiceUnpaid($invoice); 
-                            $this->setOrderPending($newOrder);
+                            $this->setOrderPending($newOrder); 
                         }
                         else{
                             $this->setInvoicePaid($invoice); 
@@ -131,6 +162,16 @@ class GrossTotalChangeRepository {
 
                    else{
                         //back to paid status.without any payment change.
+                        if($invoice->order_count == 1){ 
+                            $invoice->update([
+                                'total_amount' => $newOrder->gross_total,
+                            ]);
+                            }
+                            else
+                            $invoice->update([
+                                'total_amount' => $invoice->total_amount + $orderDifference,
+                            ]);
+
                         $this->setInvoicePaid($invoice); 
                         $this->setOrderDone($newOrder);
                     }
@@ -152,7 +193,7 @@ class GrossTotalChangeRepository {
     {
         $invoice->update([
             'is_paid' => 1,
-            'total_amount' => $invoice->total_amount ,
+            'total_amount' => $invoice->total_amount,
             'paid_amount' => $invoice->total_amount
         ]);
     }
