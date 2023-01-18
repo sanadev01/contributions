@@ -377,7 +377,7 @@ class OrderRepository
             }
             else{
             DB::rollback();
-            $this->error = 'Unable to update the order.Payment conflict occure';
+            $this->error = 'Unable to update the order.';
              session()->flash('alert-danger','orders.Error While placing Order'." ".$this->error);
             return false;
             }

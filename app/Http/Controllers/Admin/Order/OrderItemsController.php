@@ -16,7 +16,6 @@ use App\Http\Requests\Orders\OrderDetails\CreateRequest;
 class OrderItemsController extends Controller
 {
     protected $orderRepository;
-    protected $grossTotalChangeRepository;
 
     public function __construct(OrderRepository $orderRepository)
     {
