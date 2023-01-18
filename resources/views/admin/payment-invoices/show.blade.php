@@ -74,7 +74,7 @@
                                         @endif
                                     </tr>
                                 </thead>
-                                <tbody> 
+                                <tbody>
                                     @foreach ($invoice->orders as $order)
                                         <tr>
                                             <td>{{ $order->recipient->first_name }} {{ $order->recipient->last_name }}</td>

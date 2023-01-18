@@ -152,16 +152,15 @@ class Order extends Model implements Package
 
     public function isPaid()
     {
-        return $this->is_paid;
-        // if ( !$this->getPaymentInvoice() ){
-        //     return $this->is_paid;
-        // }
+        if ( !$this->getPaymentInvoice() ){
+            return $this->is_paid;
+        }
 
-        // if ( !$this->getPaymentInvoice()->isPrePaid() ){
-        //     return true;
-        // }
+        if ( !$this->getPaymentInvoice()->isPrePaid() ){
+            return true;
+        }
 
-        // return $this->getPaymentInvoice()->isPaid();
+        return $this->getPaymentInvoice()->isPaid();
     }
 
     public function isNeedsProcessing()

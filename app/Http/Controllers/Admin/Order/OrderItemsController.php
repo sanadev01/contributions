@@ -54,7 +54,6 @@ class OrderItemsController extends Controller
     public function store(CreateRequest $request,Order $order)
     {
 
-        return DB::transaction(function () use ($request, $order) {
             $this->authorize('editItems', $order);
             if (!$order->recipient) {
                 abort(404);
@@ -118,7 +117,6 @@ class OrderItemsController extends Controller
                 }
                 return redirect()->route('admin.orders.services.index', $order);
             }
-        });
         return back()->withInput();
     }
 
