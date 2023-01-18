@@ -114,6 +114,25 @@ class Trackings extends Component
             return 120;
         }
     }
+    
+    public function togglePrime5Status($tracking)
+    {
+        $lastTrack = last($tracking);
+        if ($lastTrack['Id'] == '16') {
+            return 90;
+        }
 
+        if ($lastTrack['Id'] == '18') {
+            return 100;
+        }
+
+        if ($lastTrack['Id'] == '10') {
+            return 110;
+        }
+
+        if ($lastTrack['Id'] == '9') {
+            return 120;
+        }
+    }
 
 }

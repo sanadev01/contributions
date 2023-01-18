@@ -320,6 +320,31 @@
                                                                 </div>
                                                             </div>
                                                         </li>
+                                                    @elseif( $tracking['service'] == 'Prime5' )
+                                                        <li class="@if( $this->togglePrime5Status($tracking['api_trackings']) >= 90 ) active @endif step0">
+                                                            <div class="icon-content">
+                                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/Direct Link.png') }}">
+                                                                <div class="d-flex flex-column" mt-4>
+                                                                    <p class="font-weight-bold">Received <br>by Direct Link</p>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li class="@if($this->togglePrime5Status($tracking['api_trackings']) >= 100 ) active @endif step0">
+                                                            <div class="icon-content">
+                                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/to-hd.png') }}">
+                                                                <div class="d-flex flex-column" mt-4>
+                                                                    <p class="font-weight-bold">Departed from <br> Direct Link Facility</p>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li class="@if($this->togglePrime5Status($tracking['api_trackings']) >= 120) active @endif step0">
+                                                            <div class="icon-content">
+                                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/left-to-buyer.png') }}">
+                                                                <div class="d-flex flex-column" mt-4>
+                                                                    <p class="font-weight-bold">Parcels delivered</p>
+                                                                </div>
+                                                            </div>
+                                                        </li>
                                                     @endif
                                                 @endif
 
@@ -391,6 +416,22 @@
                                                             {{ $tracking['api_trackings']['status']['description'] }}
                                                         </td>
                                                     </tr>
+                                                @endif
+                                                @if(optional($tracking)['service'] == 'Prime5')
+                                                    @foreach($tracking['api_trackings'] as $track)
+                                                        <tr>
+                                                            <td>
+                                                            20{{ date('y-m-d', strtotime($track['DateTime'])) }} {{ date('H:i:s', strtotime($track['DateTime'])) }}
+                                                            </td>
+                                                            <td>
+                                                                {{ optional($track)['LocationText'] }}
+                                                            </td>
+                                                            <td>
+                                                                {{ $track['Description'] }}
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                    
                                                 @endif
                                             </tbody>
                                         </table>

@@ -9,6 +9,7 @@ use App\Models\ShippingService;
 use App\Facades\USPSTrackingFacade;
 use App\Facades\CorreiosChileTrackingFacade;
 use App\Facades\CorreiosBrazilTrackingFacade;
+use App\Services\SwedenPost\DirectLinkTrackingService;
 
 
 class OrderTrackingRepository
@@ -36,7 +37,7 @@ class OrderTrackingRepository
         $getTrackings = collect();
         if($orders){
             foreach($orders as $order){
-                
+
                 $apiResponse = [];
                 if($order->trackings->isNotEmpty()){
                     if($order->trackings->last()->status_code == Order::STATUS_SHIPPED){
@@ -79,6 +80,18 @@ class OrderTrackingRepository
                                     'service' => 'USPS',
                                     'trackings' => $order->trackings,
                                     'api_trackings' => collect($this->reverseTrackings($response->data))->last(),
+                                    'order' => $order
+                                ];
+                            }
+                        }elseif($order->recipient->country_id == Order::BRAZIL && $order->shippingService->service_sub_class == ShippingService::Prime5){
+                            $response = (new DirectLinkTrackingService)->trackOrder($order->corrios_tracking_code);
+                            if($response->status == true){
+                                $apiResponse = [
+                                    'success' => true,
+                                    'status' => 200,
+                                    'service' => 'Prime5',
+                                    'trackings' => $order->trackings,
+                                    'api_trackings' => collect($this->reverseTrackings($response->data['Item']['Events']))->last(),
                                     'order' => $order
                                 ];
                             }
