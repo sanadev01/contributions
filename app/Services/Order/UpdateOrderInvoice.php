@@ -1,22 +1,19 @@
 <?php
-
-namespace App\Http\Controllers\Admin\Order;
-
+namespace App\Services\Order;
 use App\Models\Deposit;
 use App\Models\Order;
 use App\Models\OrderTracking;
 use App\Models\PaymentInvoice;
-use Illuminate\Http\Request;
-
-class GrossTotalChangeRepository
+class UpdateOrderInvoice
 {
     //this function will sync ( order and invoice ) if order status is STATUS_PAYMENT_DONE.
-    public function updateInvoice(Order $newOrder, Order $oldOrder)
+    public function update(Order $newOrder, Order $oldOrder)
     {
 
         $paidDifference = 0;
 
         $invoice = $newOrder->getPaymentInvoice();
+        //ref.on paid change.
         if ($oldOrder->is_paid) {
 
             $oldPaidAmount = $oldOrder->gross_total;
@@ -46,19 +43,12 @@ class GrossTotalChangeRepository
                 } else {
                     //create new invoice if not exist. 
                     $invoice =  $this->createInvoice($newOrder, $newOrder->gross_total, $oldOrder->gross_total);
-                    // dump($invoice);
-                    // dump('paid',$oldOrder->gross_total);
-                    // dump('total');
-                    // dd($newOrder->gross_total);
                 }
                 if ($invoice->total_amount > $invoice->paid_amount) {
-
                     //if need to pay.
                     //then set order and invoice status unpaid. 
                     $this->setInvoiceUnpaid($invoice);
                     $this->setOrderPending($newOrder);
-                    //     dump($invoice);
-                    // dd('unpaid');
                 } else {
 
                     $this->setInvoicePaid($invoice);
@@ -75,10 +65,8 @@ class GrossTotalChangeRepository
                 $paidDifference = $newPaidAmount - $oldPaidAmount;
             } else {
                 //unable to change multiple times without invoice.
+                // this is for caution. we dont expect this condition.becuse we are aleady creating for order in (ref.on paid change).
                 return false;
-                // $oldPaidAmount =  0;
-                // $newPaidAmount = $newOrder->gross_total;
-                // $paidDifference = $newPaidAmount - $oldPaidAmount;
             }
             $oldOrderPaidAmount = $oldOrder->gross_total;
             $newOrderPaidAmount = $newOrder->gross_total;

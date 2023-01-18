@@ -15,7 +15,7 @@ use App\Services\FedEx\FedExShippingService;
 use App\Services\GePS\GePSShippingService;
 use App\Services\Calculators\WeightCalculator;
 use App\Models\User;
-use App\Http\Controllers\Admin\Order\GrossTotalChangeRepository;
+use App\Services\Order\UpdateOrderInvoice;
 
 class OrderRepository
 {
@@ -370,7 +370,7 @@ class OrderRepository
             //     }
             // }
 
-            if((new GrossTotalChangeRepository())->updateInvoice($order,$oldOrder)){ 
+            if((new UpdateOrderInvoice())->update($order,$oldOrder)){ 
                     DB::commit();
                     session()->flash('alert-success','orders.Sender Updated');
                     return true;
