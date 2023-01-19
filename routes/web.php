@@ -11,6 +11,7 @@ use App\Services\Correios\Services\Brazil\Client;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
+use App\Models\PaymentInvoice;
 
 /*
 |--------------------------------------------------------------------------
@@ -273,10 +274,12 @@ Route::get('test-label/{key}',function($key){
 });
 
 Route::get('order/apiresponse/{id?}',function($id){
-    $order = Order::find($id)->update([
-        'status' => Order::STATUS_ORDER,
+    $invoice= PaymentInvoice::find($id)->update([
         'is_paid' => 0,
     ]);
+    if($invoice){
+        echo 'updated';
+    }
 });
 
 Route::get('truncate-response/{id?}',function($id){
