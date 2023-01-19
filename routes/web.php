@@ -11,7 +11,6 @@ use App\Services\Correios\Services\Brazil\Client;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
-use App\Models\PaymentInvoice;
 
 /*
 |--------------------------------------------------------------------------
@@ -274,10 +273,11 @@ Route::get('test-label/{key}',function($key){
 });
 
 Route::get('order/apiresponse/{id?}',function($id){
-    $invoice= PaymentInvoice::find($id)->update([
-        'is_paid' => 0,
+    $order = Order::find($id)->update([
+        'status' => Order::STATUS_PAYMENT_DONE,
+        'is_paid' => 1,
     ]);
-    if($invoice){
+    if($order){
         echo 'updated';
     }
 });
