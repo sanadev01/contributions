@@ -102,14 +102,14 @@ class ScanLabel extends Component
             $order = Order::where('corrios_tracking_code', $this->tracking)->first();
             $this->order = $order;
 
-            if($order->shippingService->service_sub_class == ShippingService::GePS || $order->shippingService->service_sub_class == ShippingService::GePS_EFormat){
-                $gepsClient = new Client();   
-                $response = $gepsClient->confirmShipment($order->corrios_tracking_code);
-                if (!$response['success']) {
-                    $this->dispatchBrowserEvent('get-error', ['errorMessage' => $response['message']]);
-                    return $this->tracking = '';
-                }
-            }
+            // if($order->shippingService->service_sub_class == ShippingService::GePS || $order->shippingService->service_sub_class == ShippingService::GePS_EFormat){
+            //     $gepsClient = new Client();   
+            //     $response = $gepsClient->confirmShipment($order->corrios_tracking_code);
+            //     if (!$response['success']) {
+            //         $this->dispatchBrowserEvent('get-error', ['errorMessage' => $response['message']]);
+            //         return $this->tracking = '';
+            //     }
+            // }
 
             if($this->order){
                 if($order->trackings->isNotEmpty() && $order->trackings()->latest()->first()->status_code >= Order::STATUS_ARRIVE_AT_WAREHOUSE){
