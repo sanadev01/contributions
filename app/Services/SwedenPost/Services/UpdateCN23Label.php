@@ -51,6 +51,10 @@ class UpdateCN23Label
         if ($this->order->recipient->tax_id) {
             $this->pdfi->SetFont("Arial", "B", 8);
             $this->pdfi->RotatedText(61, 89, 'CPF: ' . $this->order->recipient->tax_id, 90);
+        }  
+        if ($this->order->warehouse_number) {
+            $this->pdfi->SetFont("Arial", "B", 8);
+            $this->pdfi->RotatedText(58, strlen($this->order->warehouse_number)+6, $this->order->warehouse_number, 90);
         }
 
 
