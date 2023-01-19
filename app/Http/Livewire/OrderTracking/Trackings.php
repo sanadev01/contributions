@@ -126,7 +126,7 @@ class Trackings extends Component
             return 100;
         }
 
-        if ($lastTrack['Id'] == '10') {
+        if ($lastTrack['Id'] == '8') {
             return 110;
         }
 

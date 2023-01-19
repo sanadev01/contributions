@@ -325,7 +325,7 @@
                                                             <div class="icon-content">
                                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/Direct Link.png') }}">
                                                                 <div class="d-flex flex-column" mt-4>
-                                                                    <p class="font-weight-bold">Received <br>by Direct Link</p>
+                                                                    <p class="font-weight-bold">Received <br>by Sweden Post</p>
                                                                 </div>
                                                             </div>
                                                         </li>
@@ -333,15 +333,23 @@
                                                             <div class="icon-content">
                                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/to-hd.png') }}">
                                                                 <div class="d-flex flex-column" mt-4>
-                                                                    <p class="font-weight-bold">Departed from <br> Direct Link Facility</p>
+                                                                    <p class="font-weight-bold">Parcel in<br> Transit</p>
                                                                 </div>
                                                             </div>
                                                         </li>
-                                                        <li class="@if($this->togglePrime5Status($tracking['api_trackings']) >= 120) active @endif step0">
+                                                        <li class="@if( $this->togglePrime5Status($tracking['api_trackings']) >= 110) active @endif step0">
                                                             <div class="icon-content">
                                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/left-to-buyer.png') }}">
                                                                 <div class="d-flex flex-column" mt-4>
-                                                                    <p class="font-weight-bold">Parcels delivered</p>
+                                                                    <p class="font-weight-bold">Out for  <br> Delivery</p>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li class="@if( $this->togglePrime5Status($tracking['api_trackings']) >= 130) active @endif step0">
+                                                            <div class="icon-content">
+                                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/delivered.png') }}">
+                                                                <div class="d-flex flex-column" mt-4>
+                                                                    <p class="font-weight-bold">Parcels Delivered </p>
                                                                 </div>
                                                             </div>
                                                         </li>

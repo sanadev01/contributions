@@ -8,36 +8,44 @@ use Illuminate\Support\Facades\Storage;
 
 class DirectLinkTrackingService
 {
+    protected $url;
+    protected $apiKey;
+
+    public function __construct()
+    {
+        if(app()->isProduction()){
+            $this->url = config('prime5.production.trackUrl');
+            $this->apiKey = config('prime5.production.trackApiKey');
+        }else{ 
+            $this->url = config('prime5.test.trackUrl');
+            $this->apiKey = config('prime5.test.trackApiKey');
+        }
+
+    }
 
     public function trackOrder($trackingNumber)
     {
         try {
-            $url = "https://api.directlink.com/responseStatus?itemNumbers=LB891180709SE";
-            $response = Http::withHeaders(['TP-API-KEY' => '8fcbd7946d1d0886f5e6bce32d54b199f14113fe70eed818316c69b22024ada7'])->get($url);
+
+            $response = Http::withHeaders(['TP-API-KEY' => $this->apiKey])->get($this->url."LB891180709SE");
             $xmlResponse = simplexml_load_string($response->getBody(),'SimpleXMLElement',LIBXML_NOCDATA);
             $jsonResponse = json_encode($xmlResponse);
             $data = json_decode($jsonResponse, true);
-            if ($response->successful()) {
+            //dd($data);
+            if ($response->successful() && $data) {
                 return (Object)[
                     'status' => true,
                     'message' => 'Order Found',
                     'data' => $data,
                 ];
-            }elseif($response->clientError())
+            }
+            if(empty($data))
             {
                 return (Object)[
                     'status' => false,
-                    'message' => $data['error'],
+                    'message' => "Client Server Error - Unable to get tracking from APi",
                     'data' => null,
                 ];    
-            }elseif ($response->status() !== 200) 
-            {
-    
-                return (object) [
-                    'status' => false,
-                    'message' => $data['message'],
-                    'data' => null,
-                ];
             }
         }catch (Exception $e) {
             return (object) [
