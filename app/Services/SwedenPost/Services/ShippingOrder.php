@@ -24,7 +24,7 @@ class ShippingOrder {
             'orders' => [
                [
                   //Parcel Information
-                  'referenceNo' => $refNo ? $refNo : $order->tracking_id,
+                  'referenceNo' => ($refNo ? $refNo : $order->tracking_id).' HD-'.$order->id,
                   'trackingNo' => "",
                   'serviceCode' =>"DIRECT.LINK.US.L3",
                   'incoterm' => "DDU",
