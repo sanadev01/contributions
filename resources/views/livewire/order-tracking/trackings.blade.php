@@ -321,11 +321,19 @@
                                                             </div>
                                                         </li>
                                                     @elseif( $tracking['service'] == 'Prime5' )
-                                                        <li class="@if( $this->togglePrime5Status($tracking['api_trackings']) >= 90 ) active @endif step0">
+                                                        <li class="@if( $this->togglePrime5Status($tracking['api_trackings']) >= 80 ) active @endif step0">
                                                             <div class="icon-content">
                                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/Direct Link.png') }}">
                                                                 <div class="d-flex flex-column" mt-4>
                                                                     <p class="font-weight-bold">Received <br>by Sweden Post</p>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li class="@if( $this->togglePrime5Status($tracking['api_trackings']) >= 90) active @endif step0">
+                                                            <div class="icon-content">
+                                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/custom-finished.png') }}">
+                                                                <div class="d-flex flex-column" mt-4>
+                                                                    <p class="font-weight-bold">Customs<br>clearance finalized</p>
                                                                 </div>
                                                             </div>
                                                         </li>
@@ -345,7 +353,7 @@
                                                                 </div>
                                                             </div>
                                                         </li>
-                                                        <li class="@if( $this->togglePrime5Status($tracking['api_trackings']) >= 130) active @endif step0">
+                                                        <li class="@if( $this->togglePrime5Status($tracking['api_trackings']) >= 120) active @endif step0">
                                                             <div class="icon-content">
                                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/delivered.png') }}">
                                                                 <div class="d-flex flex-column" mt-4>
