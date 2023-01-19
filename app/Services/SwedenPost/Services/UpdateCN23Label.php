@@ -54,7 +54,10 @@ class UpdateCN23Label
         }  
         if ($this->order->warehouse_number) {
             $this->pdfi->SetFont("Arial", "B", 8);
-            $this->pdfi->RotatedText(58, strlen($this->order->warehouse_number)+6, $this->order->warehouse_number, 90);
+            $warehouse_number = $this->order->warehouse_number;
+            $warhouse_length =  strlen($warehouse_number);
+            $length = $warhouse_length<9?$warhouse_length*1.65:$warhouse_length*1.85; 
+            $this->pdfi->RotatedText(58, $length , $warehouse_number, 90);
         }
 
 
