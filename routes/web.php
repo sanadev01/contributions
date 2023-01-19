@@ -275,7 +275,7 @@ Route::get('test-label/{key}',function($key){
 Route::get('order/apiresponse/{id?}',function($id){
     $order = Order::find($id)->update([
         'status' => Order::STATUS_ORDER,
-        'is_paid' => null,
+        'is_paid' => 0,
     ]);
 });
 
