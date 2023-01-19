@@ -123,6 +123,10 @@ class CreateRequest extends FormRequest
             $rules['products.*.description'] = 'required|max:48';
         }
 
+        if ($shippingService && $shippingService->isPostNLService()) {
+            $rules['products.*.description'] = 'required|max:45';
+        }
+
         return $rules;
     }
 

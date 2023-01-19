@@ -1,18 +1,16 @@
 <?php
 
-namespace App\Repositories;
-
+namespace App\Repositories; 
 use Stripe\Charge;
 use Stripe\Stripe;
-use Carbon\Carbon;
 use Stripe\Customer;
 use App\Models\Order;
 use App\Models\State;
 use App\Models\Country;
-use App\Models\Deposit;
+use GuzzleHttp\Client;
 use App\Events\OrderPaid;
-use App\Mail\User\PaymentPaid;
-use App\Models\PaymentInvoice;
+use App\Mail\User\PaymentPaid; 
+use App\Events\OrderStatusUpdated;
 use App\Models\BillingInformation;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -20,6 +18,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Admin\NotifyTransaction;
 use App\Services\PaymentServices\AuthorizeNetService;
+use Exception;
 
 class OrderCheckoutRepository
 {
@@ -66,8 +65,7 @@ class OrderCheckoutRepository
                 $this->invoice->orders()->update([
                     'is_paid' => true,
                     'status' => Order::STATUS_PAYMENT_DONE
-                ]);
-                
+                ]); 
                 try {
                     \Mail::send(new NotifyTransaction($deposit, $preStatus, $user));
                 } catch (\Exception $ex) {
@@ -100,7 +98,6 @@ class OrderCheckoutRepository
         }
 
         event(new OrderPaid($this->invoice->orders, true));
-
         session()->flash('alert-success', __('orders.payment.alert-success'));
         return view('admin.payment-invoices.index');
     }
@@ -160,7 +157,7 @@ class OrderCheckoutRepository
         }
 
 
-        event(new OrderPaid($this->invoice->orders, true));
+        event(new OrderPaid($this->invoice->orders, true)); 
         session()->flash('alert-success', __('orders.payment.alert-success'));
         return redirect()->route('admin.payment-invoices.index');
     }
@@ -246,8 +243,7 @@ class OrderCheckoutRepository
                 $this->invoice->orders()->update([
                     'is_paid' => true,
                     'status' => Order::STATUS_PAYMENT_DONE
-                ]);
-                
+                ]);  
                 try {
                     Mail::send(new PaymentPaid($this->invoice));
                 } catch (\Exception $ex) {
@@ -367,4 +363,44 @@ class OrderCheckoutRepository
             return $this->error = $ex->getMessage();
         }
     }
+    public function orderStatusWebhook(Order $order)
+    { 
+        $user = $order->user;
+        $statusCode = $order->status; 
+        $method = setting('order_webhook_url_method', null, $user->id); 
+        $url = setting('order_webhook_url', null, $user->id); 
+        $client = new Client();
+        try { 
+            if($url){
+                if($order->trashed()){
+                    $json = [
+                            "warehouseNumber" => $order->id,
+                            "message" =>  "Order deleted",
+                            "format"          => 'json'
+                    ];
+                }else{
+                    $json = [
+                        "warehouseNumber" => $order->id,
+                        "statusCode"      => "Your Parcel Status Code is ".''. $statusCode,
+                        "message"         => "Your Parcel Status is ".getParcelStatus($statusCode),
+                        "format"          => 'json'
+                    ];
+                }
+             $response = $client->request($method?$method:"GET",$url,[
+                'json' => $json,
+            ]);               
+            }
+
+            else{
+                Log::info('No url set for user ' . $user->email);
+                return null;
+            }
+
+        } catch (Exception $th) { 
+             return json_decode('Bad Request '.$th->getMessage());
+             
+        }
+        return json_decode($response->getBody()->getContents());
+    }
+
 }
