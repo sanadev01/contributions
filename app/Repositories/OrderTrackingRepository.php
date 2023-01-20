@@ -40,7 +40,7 @@ class OrderTrackingRepository
 
                 $apiResponse = [];
                 if ($order->trackings->isNotEmpty()) {
-                    // if($order->trackings->last()->status_code == Order::STATUS_SHIPPED){
+                    if($order->trackings->last()->status_code == Order::STATUS_SHIPPED){
 
                     if ($order->recipient->country_id == Order::CHILE) {
                         $response = CorreiosChileTrackingFacade::trackOrder($order->corrios_tracking_code);
@@ -136,16 +136,16 @@ class OrderTrackingRepository
                         ];
                     }
                     $getTrackings->push($apiResponse);
-                    // }else{
-                    //     $apiResponse = [
-                    //         'success' => true,
-                    //         'status' => 200,
-                    //         'service' => 'HD',
-                    //         'trackings' => $order->trackings,
-                    //         'order' => $order
-                    //     ];
-                    //     $getTrackings->push($apiResponse);
-                    // }
+                    }else{
+                        $apiResponse = [
+                            'success' => true,
+                            'status' => 200,
+                            'service' => 'HD',
+                            'trackings' => $order->trackings,
+                            'order' => $order
+                        ];
+                        $getTrackings->push($apiResponse);
+                    }
                 }
             }
         } else {
