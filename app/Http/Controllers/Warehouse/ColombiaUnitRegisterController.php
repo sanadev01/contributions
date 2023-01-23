@@ -21,7 +21,8 @@ class ColombiaUnitRegisterController extends Controller
         if (count($container->orders) > 0){
             
             $response = (new ColombiaService())->registerContainer($container);
-
+            Log::info('colombia response');
+            Log::info([$response]);
             if ($response['success'] == false) {
                 session()->flash('alert-danger', $response['message'] ?? 'error occured while registering container');
                 return back();
