@@ -7,6 +7,7 @@ use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
 use App\Facades\ColombiaShippingFacade;
 use App\Services\Colombia\ColombiaService;
+use Illuminate\Support\Facades\Log;
 
 class ColombiaUnitRegisterController extends Controller
 {
