@@ -51,6 +51,11 @@ class ExportTracking extends AbstractExportService
                     $trackingDescription = "Item Delivered";
                 }
             }
+            elseif ($data['service'] == 'Prime5') {
+                foreach($data['api_trackings'] as $track) {
+                    $trackingDescription = $track['Description'] ;
+                }
+            }
 
             $user = User::find($data['order']['user_id']);
 
