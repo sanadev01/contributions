@@ -8,6 +8,7 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Http;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Calculators\WeightCalculator;
+use Illuminate\Support\Facades\Log;
 
 class ColombiaService
 {
@@ -79,7 +80,7 @@ class ColombiaService
     private function colombiaApiCallWithToken($url, $data)
     {
         try {
-            
+            Log::info('colombia request',['URL'=>$url,'data'=>$data,'token'=>$this->token]);
             $response = Http::withHeaders([
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
