@@ -47,7 +47,7 @@ class OrderLabelController extends Controller
             }
 
             return apiResponse(false, $error);
-        }
+        } 
 
         //For USPS International services
         if ($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
