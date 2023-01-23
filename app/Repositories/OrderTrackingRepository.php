@@ -17,6 +17,7 @@ class OrderTrackingRepository
 
     private $trackingNumber;
     private $brazilTrackingCodes = [];
+    private $directLinkTrackingCodes = [];
 
     public function __construct($trackingNumber)
     {
@@ -81,39 +82,18 @@ class OrderTrackingRepository
                                 'order' => $order
                             ];
                         }
-                    } elseif ($order->recipient->country_id == Order::BRAZIL && $order->shippingService->service_sub_class == ShippingService::Prime5) {
-
-                        $response = (new DirectLinkTrackingService)->trackOrders($orders);
-                        if ($response->status == true) {
-
-
-                            try {
-                                foreach ($response->data['Item'] as $item) {
-                                    $apiResponse = [
-                                        'success' => true,
-                                        'status' => 200,
-                                        'service' => 'Prime5',
-                                        'trackings' => $order->trackings,
-                                        'api_trackings' => collect($this->reverseTrackings($item['Events']))->last(),
-                                        'order' => Order::where('corrios_tracking_code', $item['ItemNumber'])->first(),
-                                    ];
-                                    $getTrackings->push($apiResponse);
-                                }
-                            } catch (Exception $e) {
-
-                                $apiResponse = [
-                                    'success' => true,
-                                    'status' => 200,
-                                    'service' => 'Prime5',
-                                    'trackings' => $order->trackings,
-                                    'api_trackings' => collect($this->reverseTrackings($response->data['Item']['Events']))->last(),
-                                    'order' => $order
-                                ];
-                                $getTrackings->push($apiResponse);
-                            }
+                    } elseif ($order->shippingService->service_sub_class == ShippingService::Prime5) {
+                        if($order->carrier == 'Prime5'){   
+                            array_push($this->directLinkTrackingCodes, $order->corrios_tracking_code);
                         }
-
-                        break;
+                            $apiResponse = [
+                                'success' => true,
+                                'status' => 200,
+                                'service' => 'Prime5',
+                                'trackings' => $order->trackings,
+                                'order' => $order
+                            ];
+                        
                     } elseif ($order->recipient->country_id == Order::BRAZIL) {
                         if ($order->carrier == 'Correios Brazil') {
                             array_push($this->brazilTrackingCodes, $order->corrios_tracking_code);
@@ -187,6 +167,35 @@ class OrderTrackingRepository
                         }
                     }
 
+                    return $item;
+                });
+            }
+        }
+        if (count($this->directLinkTrackingCodes) > 0) {
+            $directLinkTrackingService = new DirectLinkTrackingService();
+            $response = $directLinkTrackingService->trackOrders($this->directLinkTrackingCodes);
+            if ($response->status == true) {
+                $getTrackings = $getTrackings->map(function($item, $key) use ($response){
+                    if (count($this->directLinkTrackingCodes) > 1) {
+                        foreach ($response->data['Item'] as $key=>$data) {
+                            if($response->status == false){
+                                return $item;
+                            }
+                            if($item['order']->corrios_tracking_code == $data['ItemNumber']){
+                                $item['api_trackings'] = collect($this->reverseTrackings($data['Events']))->last();
+                                $item['service'] = 'Prime5';
+                            }
+                        }
+                    }else{
+                        if($response->status == false){
+                            return $item;
+                        }
+                        if ($response->data['Item']['ItemNumber'] == $item['order']->corrios_tracking_code) {
+
+                            $item['api_trackings'] = collect($this->reverseTrackings($response->data['Item']['Events']))->last();
+                            $item['service'] = 'Prime5';
+                        }
+                    }
                     return $item;
                 });
             }
