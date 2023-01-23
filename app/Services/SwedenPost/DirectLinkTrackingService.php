@@ -23,14 +23,14 @@ class DirectLinkTrackingService
 
     }
 
-    public function trackOrders($orders)
+    public function trackOrders($trackingCodes)
     {
         $trackingNumbers = '';
-        foreach ($orders as $key => $order) {
+        foreach ($trackingCodes as $key => $code) {
             if ($key == 0) {
-                $trackingNumbers = $order->corrios_tracking_code;
+                $trackingNumbers = $code;
             } else {
-                $trackingNumbers .= '%7C' . $order->corrios_tracking_code;
+                $trackingNumbers .= '%7C' . $code;
             }
         }
         try {
