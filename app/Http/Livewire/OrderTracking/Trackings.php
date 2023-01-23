@@ -118,23 +118,24 @@ class Trackings extends Component
     public function togglePrime5Status($tracking)
     {
         $lastTrack = last($tracking);
-        if ($lastTrack['Id'] >= '14') {
+        $status = $lastTrack['Id'];
+        if ($status >= '14') {
             return 80;
         }
 
-        if ($lastTrack['Id'] == '7' || $lastTrack['Id'] == '4') {
+        if ($status == '7' || $status == '4') {
             return 90;
         }
 
-        if ($lastTrack['Id'] == '10') {
+        if ($status == '10') {
             return 100;
         }
 
-        if ($lastTrack['Id'] == '8') {
+        if ($status == '8') {
             return 110;
         }
 
-        if ($lastTrack['Id'] == '9') {
+        if ($status == '9') {
             return 120;
         }
     }
