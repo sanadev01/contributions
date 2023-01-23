@@ -13,14 +13,8 @@ class DirectLinkTrackingService
 
     public function __construct()
     {
-        if (app()->isProduction()) {
-            $this->url = config('prime5.production.trackUrl');
-            $this->apiKey = config('prime5.production.trackApiKey');
-        } else {
-            $this->url = config('prime5.test.trackUrl');
-            $this->apiKey = config('prime5.test.trackApiKey');
-        }
-
+        $this->url = config('prime5.trackUrl');
+        $this->apiKey = config('prime5.trackApiKey');
     }
 
     public function trackOrders($trackingCodes)
