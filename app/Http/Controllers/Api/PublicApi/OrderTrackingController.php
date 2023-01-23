@@ -15,7 +15,6 @@ class OrderTrackingController extends Controller
     {
         $order_tracking_repository = new OrderTrackingRepository($search);
         $responses = $order_tracking_repository->handle();
-        dd($responses);
         foreach($responses as $response){
             if( $response['success'] == true ){
                 if($response['service'] == 'Correios_Chile')
