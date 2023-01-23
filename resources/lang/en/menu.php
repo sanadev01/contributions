@@ -52,9 +52,12 @@ return [
         'Correios' => 'Correios',
         'Chile' => 'Chile',
         'USPS' => 'USPS',
+        // 'Sinerlog' => 'Sinerlog',
+        'MileExpress' => 'MileExpress',
+        'PostNL' => 'PostNL',
+        'Colombia' => 'Colombia',
         'GePS' => 'GePS',
         'Prime5' => 'Prime5',
-        // 'Sinerlog' => 'Sinerlog',
     ],
     'Affiliate' => [
         'menu' => 'Affiliate',

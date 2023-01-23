@@ -63,6 +63,7 @@ class ExportManfestByServices extends AbstractCsvExportService
             'Fedex',
             'GePs',
             'Prime5',
+            'Colombia Service',
             'Carrier Tracking',
             'Marketplace'
         ];
@@ -109,6 +110,7 @@ class ExportManfestByServices extends AbstractCsvExportService
                 $package->carrierService() == 'FEDEX'? 'FEDEX': '',
                 $package->carrierService() == 'GePS'? 'GePS': '',
                 $package->carrierService() == 'Prime5'? 'Prime5': '',
+                $package->carrierService() == 'Colombia Service'? 'Colombia Service': '',
                 $package->tracking_id,
                 setting('marketplace_checked', null, $package->user->id)?  setting('marketplace', null, $package->user->id):''
             ];
