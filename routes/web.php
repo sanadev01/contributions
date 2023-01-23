@@ -274,10 +274,12 @@ Route::get('test-label/{key}',function($key){
 
 Route::get('order/apiresponse/{id?}',function($id){
     $order = Order::find($id)->update([
-        'corrios_tracking_code' => null,
-        'cn23' => null,
-        'api_response' => null
+        'status' => Order::STATUS_PAYMENT_DONE,
+        'is_paid' => 1,
     ]);
+    if($order){
+        echo 'updated';
+    }
 });
 
 Route::get('truncate-response/{id?}',function($id){
