@@ -106,7 +106,7 @@ class UpdateRequest extends FormRequest
         }
 
         if($shippingService && $shippingService->isSwedenPostService()) {
-            $rules['products.*.description'] = 'required|max:48';
+            $rules['products.*.description'] = 'required|max:60';
         }
 
         if ($shippingService && $shippingService->isPostNLService()) {

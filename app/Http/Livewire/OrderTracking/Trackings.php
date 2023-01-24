@@ -118,7 +118,7 @@ class Trackings extends Component
     {
         $lastTrack = last($tracking);
         $status = $lastTrack['Id'];
-        if ($status >= '14') {
+        if ($status == '11' || $status >= '14') {
             return 80;
         }
 
