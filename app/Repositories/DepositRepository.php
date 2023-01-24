@@ -53,15 +53,12 @@ class DepositRepository
         }
 
         if ( $request->filled('warehouseNumber') ){
-            $query->whereHas('orders',function($query) use($request){
-                return $query->where('warehouse_number','LIKE',"%{$request->warehouseNumber}%");
-            });
+            $query->where('order_id','LIKE',"%{$request->warehouseNumber}%");
         }
 
         if ( $request->filled('trackingCode') ){
-            $query->whereHas('orders',function($query) use($request){
-                return $query->where('corrios_tracking_code','LIKE',"%{$request->trackingCode}%");
-            });
+            $order = Order::where('corrios_tracking_code','LIKE',"%{$request->trackingCode}%")->first();
+            $query->where('order_id','LIKE',"%{$order->id}%");             
         }
 
         if ( $request->filled('type') ){
