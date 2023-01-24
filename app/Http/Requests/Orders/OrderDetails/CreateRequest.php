@@ -55,7 +55,6 @@ class CreateRequest extends FormRequest
     {
         return [
             'items.*.sh_code.*' => __('validation.ncm.invalid'),
-
         ];
     }
 

@@ -99,7 +99,7 @@ class OrderTrackingRepository
                                 ];
                             
                         }elseif($order->recipient->country_id == Order::BRAZIL ){
-                            if($order->carrier == 'Correios Brazil'){
+                            if($order->carrier == 'Correios Brazil' || $order->carrier == 'Global eParcel'){
                                 array_push($this->brazilTrackingCodes, $order->corrios_tracking_code);
                             }
 
