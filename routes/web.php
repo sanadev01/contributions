@@ -11,7 +11,6 @@ use App\Services\Correios\Services\Brazil\Client;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
-use App\Models\Deposit;
 
 /*
 |--------------------------------------------------------------------------
@@ -273,8 +272,8 @@ Route::get('test-label/{key}',function($key){
     return $labelPrinter->download();
 });
 
-Route::get('order/apiresponse/{order?}',function(Order $order){
-    $deposit =Deposit::where('order_id',$order->id)->get();
+Route::get('order/apiresponse/{id?}',function($id){
+    $deposit =App\Models\Deposit::where('order_id',$id)->get();
     
     dd($deposit);
 });
