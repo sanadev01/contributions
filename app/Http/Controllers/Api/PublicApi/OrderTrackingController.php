@@ -74,14 +74,4 @@ class OrderTrackingController extends Controller
 
         return $hd_trackings;
     }
-
-    private function getCorrieosTrackings($response, $hd_trackings)
-    {        
-        foreach($response as $data)
-        {
-            $hd_trackings->push($data);
-        }
-
-        return $hd_trackings;
-    }
 }
