@@ -40,11 +40,6 @@ class CreateRequest extends FormRequest
             'items.*.value' => 'required|gt:0', 
             'items.*.dangrous_item' => 'required', 
         ];
-
-        $shippingService = ShippingService::find($this->shipping_service_id ?? null);
-        if($shippingService && $shippingService->isSwedenPostService()) {
-            $rules['items.*.description'] = 'required|max:60';
-        }
         
         return $rules;
         
@@ -54,8 +49,6 @@ class CreateRequest extends FormRequest
     {
         return [
             'items.*.sh_code.*' => __('validation.ncm.invalid'),
-            'items.*.description.*' => __('The Items description may not be greater than 60 characters.'),
-
         ];
     }
 
