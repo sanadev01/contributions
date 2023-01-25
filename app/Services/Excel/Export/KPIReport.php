@@ -32,45 +32,16 @@ class KPIReport extends AbstractExportService
         $this->setExcelHeaderRow();
         $row = $this->currentRow;
         foreach ($this->trackings['return']['objeto'] as $data) {
-            if(isset($data['evento'])) { 
-                $delivered = "No"; $returned = "No"; $taxed = "No"; $diffDates = "0"; 
-                for($t=count($data['evento'])-1;$t>=0;$t--) {
-                    switch($data['evento'][$t]['descricao']) {
-                        case "Objeto entregue ao destinatário": 
-                            $delivered = "Yes";
-                            if($taxed == "") 
-                                $taxed = "No";
-                        break;
-                        case "Devolução autorizada pela Receita Federal":
-                        case "A entrada do objeto no Brasil não foi autorizada pelos órgãos fiscalizadores":
-                            $returned = "Yes";
-                        break;
-                        case "Aguardando pagamento":
-                        case "Pagamento confirmado":
-                            $taxed = "Yes";
-                        break;
-                        case "Fiscalização aduaneira finalizada":
-                            if($taxed == "")
-                                $taxed = "No";
-                        break;
-                    }
-                }
-                $eventsQtd = count($data['evento'])-1; 
-                $dateFirstEvent = DateTime::createFromFormat('d/m/Y', $data['evento'][$eventsQtd]['data']); 
-                $dateLastEvent = DateTime::createFromFormat('d/m/Y', $data['evento'][0]['data']);
-                $interval = $dateFirstEvent->diff($dateLastEvent); 
-                $diffDates = $interval->format('%R%a days');
-            }
             if(optional($data) && isset($data['evento'])) {
                 $this->setCellValue('A'.$row, $data['numero']);
                 $this->setCellValue('B'.$row, $data['categoria']);
                 $this->setCellValue('C'.$row, $data['evento'][count($data['evento'])-1]['data']);
                 $this->setCellValue('D'.$row, $data['evento'][0]['data']);
-                $this->setCellValue('E'.$row, $diffDates);
+                $this->setCellValue('E'.$row, sortTrackingEvents($data)['diffDates']);
                 $this->setCellValue('F'.$row, $data['evento'][0]['descricao']);
-                $this->setCellValue('G'.$row, $taxed);
-                $this->setCellValue('H'.$row, $delivered);
-                $this->setCellValue('I'.$row, $returned);
+                $this->setCellValue('G'.$row, sortTrackingEvents($data)['taxed']);
+                $this->setCellValue('H'.$row, sortTrackingEvents($data)['delivered']);
+                $this->setCellValue('I'.$row, sortTrackingEvents($data)['returned']);
                 $row++;
             }
         }

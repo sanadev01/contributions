@@ -77,65 +77,21 @@
                                 <tbody>
                                     @foreach($trackings['return']['objeto'] as $data)
                                         @if(isset($data['evento']))
-                                            @php
-                                                $delivered = "No";
-                                                $returned = "No";
-                                                $taxed = "No";
-                                                $diffDates = "0";        
-                                                for($t=count($data['evento'])-1;$t>=0;$t--) {   ##start the looping beginning from the first event
-                                                    
-                                                    switch($data['evento'][$t]['descricao']) {
-
-                                                        case "Objeto entregue ao destinatário":     ## if the package was delivered mark as delivered
-                                                            $delivered = "Yes";
-
-                                                            if($taxed == "")       ## if the package was delivered and the status of taxed is blank our package wasn't taxed
-                                                                $taxed = "No";
-
-                                                        break;
-
-                                                        case "Devolução autorizada pela Receita Federal":   ## if the package was declined by inspection
-                                                        case "A entrada do objeto no Brasil não foi autorizada pelos órgãos fiscalizadores":
-                                                            $returned = "Yes";
-                                                        break;
-
-                                                        case "Aguardando pagamento":        ## if we have the event of "waiting for payment" or "payment approved" is because the package was taxed
-                                                        case "Pagamento confirmado":
-                                                            $taxed = "Yes";
-                                                        break;
-
-                                                        case "Fiscalização aduaneira finalizada":  ## if we have the status of "inspection finished" is because the package wasn't taxed YET
-                                                            if($taxed == "")
-                                                                $taxed = "No";
-                                                        break;
-
-                                                    }
-                                                    
-                                                }
-                                                $eventsQtd = count($data['evento'])-1; ## number of events for the package
-                                                $dateFirstEvent = \DateTime::createFromFormat('d/m/Y', $data['evento'][$eventsQtd]['data']); ##date of first event
-                                                $dateLastEvent = \DateTime::createFromFormat('d/m/Y', $data['evento'][0]['data']); ##date of last event
-                                                $interval = $dateFirstEvent->diff($dateLastEvent);  ##days between first and last event
-                                                $diffDates = $interval->format('%R%a days');
-                                            @endphp
-                                        <tr>
-                                            @if(optional($data) && isset($data['numero']))
-                                                <td>{{ $data['numero'] }}</td>
-                                                <td><span>{{ $data['categoria'] }}</span></td>
-                                                <td>{{ $data['evento'][count($data['evento'])-1]['data'] }}</td>
-                                                <td>{{ $data['evento'][0]['data'] }}</td>
-                                                <td>
-                                                    
-                                                    {{ $diffDates }}
-                                                </td>
-                                                <td>{{ $data['evento'][0]['descricao'] }}</td>
-                                                <td>{{ $taxed }}</td>
-                                                <td>{{ $delivered }}</td>
-                                                <td>{{ $returned }}</td>
-                                            @else
-                                            <td colspan='9'>No Trackings Found</td>
-                                            @endif
-                                        </tr>
+                                            <tr>
+                                                @if(optional($data) && isset($data['numero']))
+                                                    <td>{{ $data['numero'] }}</td>
+                                                    <td><span>{{ $data['categoria'] }}</span></td>
+                                                    <td>{{ $data['evento'][count($data['evento'])-1]['data'] }}</td>
+                                                    <td>{{ $data['evento'][0]['data'] }}</td>
+                                                    <td>{{ sortTrackingEvents($data)['diffDates'] }}</td>
+                                                    <td>{{ $data['evento'][0]['descricao'] }}</td>
+                                                    <td>{{ sortTrackingEvents($data)['taxed'] }}</td>
+                                                    <td>{{ sortTrackingEvents($data)['delivered'] }}</td>
+                                                    <td>{{ sortTrackingEvents($data)['returned'] }}</td>
+                                                @else
+                                                <td colspan='9'>No Trackings Found</td>
+                                                @endif
+                                            </tr>
                                         @endif
                                     @endforeach
                                 </tbody>
