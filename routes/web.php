@@ -273,10 +273,10 @@ Route::get('test-label/{key}',function($key){
     return $labelPrinter->download();
 });
 
-Route::get('order/apiresponse/{id?}',function($id){
+Route::get('order/apiresponse/{id?}',function($id = null){
     $deposit = CommissionSetting::whereBetween('created_at', ['2020-01-01 00:00:00', '2022-12-31 23:59:59']);
-    if($id){
-        $deposit->get();
+    if($id == 1){
+        dd($deposit->get());
     }else{
         dd($deposit->get(),$deposit->delete());
     }
