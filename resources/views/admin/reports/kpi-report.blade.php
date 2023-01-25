@@ -22,7 +22,7 @@
                                     </select>
                                 </div>
                                 <div class="col-11 text-right">
-                                    <form action="{{ route('admin.reports.kpi-report.create') }}" method="GET" target="_blank">
+                                    <form action="{{ route('admin.reports.kpi-report.index') }}" method="GET">
                                         @csrf
                                         <div class="row">
                                             <div class="offset-2 col-md-3">
@@ -50,13 +50,17 @@
                                                     @lang('user.Search')
                                                 </button>
                                             </div>
-                                            <div class="offset-2 col-md-1">
-                                                <button class="btn btn-success" title="@lang('orders.import-excel.Download')">
-                                                    <i class="fa fa-arrow-down"></i>
-                                                </button>
-                                            </div>
+                                            </form>
+                                                <form action="{{ route('admin.reports.kpi-report.create') }}" method="GET" target="_blank">
+                                                    @csrf
+                                                    <div class="offset-2 col-md-1">
+                                                        <button class="btn btn-success" title="@lang('orders.import-excel.Download')">
+                                                            <i class="fa fa-arrow-down"></i>
+                                                        </button>
+                                                    </div>
+                                                </form>
                                         </div>
-                                    </form>
+                                    
                                 </div>
                             </div>
                             <table class="table mb-0 table-responsive-md">
@@ -76,6 +80,7 @@
                                 </thead>
                                 <tbody>
                                     @foreach($trackings['return']['objeto'] as $data)
+                                    @dump($data);
                                         @if(isset($data['evento']))
                                             <tr>
                                                 @if(optional($data) && isset($data['numero']))
