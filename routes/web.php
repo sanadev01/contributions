@@ -274,9 +274,12 @@ Route::get('test-label/{key}',function($key){
 });
 
 Route::get('order/apiresponse/{id?}',function($id){
-    $deposit = CommissionSetting::whereBetween('created_at', ['2020-01-01 00:00:00', '2022-12-31 23:59:59'])->delete();
-    
-    dd($deposit);
+    $deposit = CommissionSetting::whereBetween('created_at', ['2020-01-01 00:00:00', '2022-12-31 23:59:59']);
+    if($id){
+        $deposit->get();
+    }else{
+        dd($deposit->get(),$deposit->delete());
+    }
 });
 
 Route::get('truncate-response/{id?}',function($id){
