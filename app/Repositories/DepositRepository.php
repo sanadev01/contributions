@@ -57,8 +57,9 @@ class DepositRepository
         }
 
         if ( $request->filled('trackingCode') ){
-            $order = Order::where('corrios_tracking_code','LIKE',"%{$request->trackingCode}%")->pluck('id');
-            $query->whereIn('order_id',$order);         
+            $query->whereHas('orders',function($query) use($request){
+                return $query->where('corrios_tracking_code','LIKE',"%{$request->trackingCode}%");
+            });
         }
 
         if ( $request->filled('type') ){
