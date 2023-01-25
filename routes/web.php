@@ -2,6 +2,7 @@
 
 use App\Models\Order;
 use App\Models\OrderTracking;
+use App\Models\CommissionSetting;
 use Illuminate\Support\Facades\DB;
 use App\Models\Warehouse\Container;
 use App\Models\Warehouse\DeliveryBill;
@@ -273,7 +274,7 @@ Route::get('test-label/{key}',function($key){
 });
 
 Route::get('order/apiresponse/{id?}',function($id){
-    $deposit =App\Models\Deposit::where('order_id',$id)->get();
+    $deposit = CommissionSetting::whereBetween('created_at', ['2020-01-01 00:00:00', '2022-12-31 23:59:59'])->delete();
     
     dd($deposit);
 });
