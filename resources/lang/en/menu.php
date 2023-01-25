@@ -44,6 +44,7 @@ return [
         'Commission Report' => 'Commission Report',
         'Audit Report' => 'Audit Report',
         'Anjun Report' => 'Anjun Report',
+        'KPI Report' => 'KPI Report',
     ],
     'Warehouse' => [
         'menu' => 'Warehouse',
