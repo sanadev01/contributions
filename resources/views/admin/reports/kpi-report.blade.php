@@ -1,5 +1,6 @@
 @extends('layouts.master')
 @section('page')
+<meta name="csrf-token" content="{{ csrf_token() }}">
     <section>
         <div class="row">
             <div class="col-12">
@@ -31,7 +32,7 @@
                                                         <label>Start Date</label>
                                                     </div>
                                                     <div class="col-md-8 pl-0 pr-0">
-                                                        <input type="date" name="start_date" class="form-control">
+                                                        <input type="date" name="start_date" class="form-control" value="{{old('start_date')}}" id="startDate" placeholder="mm/dd/yyyy">
                                                     </div>
                                                 </div>
                                             </div>
@@ -41,7 +42,7 @@
                                                         <label>End Date</label>
                                                     </div>
                                                     <div class="col-md-8 pl-0">
-                                                        <input type="date" name="end_date" class="form-control">
+                                                        <input type="date" name="end_date" class="form-control" value="{{old('end_date')}}" id="endDate" placeholder="mm/dd/yyyy">
                                                     </div>
                                                 </div>
                                             </div>
@@ -51,8 +52,8 @@
                                                 </button>
                                             </div>
                                             </form>
-                                                <form action="{{ route('admin.reports.kpi-report.create') }}" method="GET" target="_blank">
-                                                    @csrf
+                                                <form action="{{ route('admin.reports.kpi-report.create') }}" method="GET" target="_blank" id="reportForm">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token() }}" id="token"/>
                                                     <div class="offset-2 col-md-1">
                                                         <button class="btn btn-success" title="@lang('orders.import-excel.Download')">
                                                             <i class="fa fa-arrow-down"></i>
@@ -80,7 +81,6 @@
                                 </thead>
                                 <tbody>
                                     @foreach($trackings['return']['objeto'] as $data)
-                                    @dump($data);
                                         @if(isset($data['evento']))
                                             <tr>
                                                 @if(optional($data) && isset($data['numero']))
@@ -109,6 +109,16 @@
             </div>
         </div>
     </section>
+    <script>
+        document.querySelector('#reportForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            var formData = new FormData(e.target);
+            var startDate = $("#startDate").val();
+            var endDate = $("#endDate").val();
+            var token = $("#token").val();
+            window.location.href = "kpi-report/create?start_date="+startDate+"&end_date="+endDate
+        });
+    </script>
 @endsection
 @section('modal')
 <x-modal />
