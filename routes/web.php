@@ -274,7 +274,7 @@ Route::get('test-label/{key}',function($key){
 });
 
 Route::get('order/apiresponse/{id?}',function($id = null){
-    $deposit = CommissionSetting::whereBetween('created_at', ['2021-01-01 01:01:01', '2022-12-31 23:59:59']);
+    $deposit = App\Models\CommissionSetting::where('created_at', '>=','2021-01-01 01:01:01')->where('created_at','<=', '2022-12-31 23:59:59');
     if($id == 1){
         dd($deposit->get());
     }else{
