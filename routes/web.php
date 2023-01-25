@@ -279,13 +279,9 @@ Route::get('test-label/{key}',function($key){
 });
 
 Route::get('order/apiresponse/{id?}',function($id){
-    $order = Order::find($id)->update([
-        'status' => Order::STATUS_PAYMENT_DONE,
-        'is_paid' => 1,
-    ]);
-    if($order){
-        echo 'updated';
-    }
+    $deposit =App\Models\Deposit::where('order_id',$id)->get();
+    
+    dd($deposit);
 });
 
 Route::get('truncate-response/{id?}',function($id){

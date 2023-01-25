@@ -53,9 +53,7 @@ class DepositRepository
         }
 
         if ( $request->filled('warehouseNumber') ){
-            $query->whereHas('orders',function($query) use($request){
-                return $query->where('warehouse_number','LIKE',"%{$request->warehouseNumber}%");
-            });
+            $query->where('order_id','LIKE',"%{$request->warehouseNumber}%");
         }
 
         if ( $request->filled('trackingCode') ){
