@@ -146,7 +146,11 @@ function sortTrackingEvents($data, $report)
     $eventsQtd = count($response)-1;
     $dateFirstEvent = DateTime::createFromFormat('d/m/Y', $report? $response[$eventsQtd]->data : optional(optional($response)[$eventsQtd])['data']);
     $dateLastEvent = DateTime::createFromFormat('d/m/Y', $report? $response[0]->data : optional(optional($response)[0])['data']);
-    $interval = $dateFirstEvent->diff($dateLastEvent);
+    if($dateFirstEvent && $dateLastEvent){
+        $interval = $dateFirstEvent->diff($dateLastEvent);
+    }else {
+        $interval = 0;
+    }
     $diffDates = $interval->format('%R%a days');
 
     return [
