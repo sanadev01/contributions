@@ -276,7 +276,7 @@ Route::get('test-label/{key}',function($key){
 });
 
 Route::get('permission',function($id = null){
-    Artisan::call('db:seed --class=PermissionSeeder');
+    Artisan::call('db:seed --class=PermissionSeeder', ['--force' => true ]);
     return Artisan::output();
 });
 
