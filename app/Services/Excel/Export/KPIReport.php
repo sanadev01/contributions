@@ -32,7 +32,6 @@ class KPIReport extends AbstractExportService
         $this->setExcelHeaderRow();
         $row = $this->currentRow;
         foreach ($this->trackings['return']['objeto'] as $data) {
-
             if(optional($data) && isset($data['evento'])) {
                 $this->setCellValue('A'.$row, $data['numero']);
                 $this->setCellValue('B'.$row, $data['categoria']);
