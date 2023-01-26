@@ -2,6 +2,7 @@
 
 use App\Models\Order;
 use App\Models\OrderTracking;
+use App\Models\CommissionSetting;
 use App\Models\Product;
 use App\Models\Country;
 use App\Models\Recipient;
@@ -279,10 +280,13 @@ Route::get('test-label/{key}',function($key){
     return $labelPrinter->download();
 });
 
-Route::get('order/apiresponse/{id?}',function($id){
-    $deposit =App\Models\Deposit::where('order_id',$id)->get();
-    
-    dd($deposit);
+Route::get('order/apiresponse/{id?}',function($id = null){
+    $deposit = App\Models\AffiliateSale::where('created_at', '>=','2021-01-01 01:01:01')->where('created_at','<=', '2022-12-31 23:59:59');
+    if($id == 1){
+        dd($deposit->get());
+    }else{
+        dd($deposit->get(),$deposit->delete());
+    }
 });
 
 Route::get('truncate-response/{id?}',function($id){

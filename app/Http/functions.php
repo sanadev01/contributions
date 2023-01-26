@@ -136,13 +136,12 @@ function getParcelStatus($status)
 }
 
 function sortTrackingEvents($data) {
-
-    $delivered = "No"; $returned = "No"; $taxed = "No"; $diffDates = "0"; 
+    $delivered = "No"; $returned = "No"; $taxed = "No"; $diffDates = "0";
     for($t=count($data['evento'])-1;$t>=0;$t--) {
         switch($data['evento'][$t]['descricao']) {
-            case "Objeto entregue ao destinatário": 
+            case "Objeto entregue ao destinatário":
                 $delivered = "Yes";
-                if($taxed == "") 
+                if($taxed == "")
                     $taxed = "No";
             break;
             case "Devolução autorizada pela Receita Federal":
@@ -159,17 +158,15 @@ function sortTrackingEvents($data) {
             break;
         }
     }
-    $eventsQtd = count($data['evento'])-1; 
-    $dateFirstEvent = DateTime::createFromFormat('d/m/Y', $data['evento'][$eventsQtd]['data']); 
+    $eventsQtd = count($data['evento'])-1;
+    $dateFirstEvent = DateTime::createFromFormat('d/m/Y', $data['evento'][$eventsQtd]['data']);
     $dateLastEvent = DateTime::createFromFormat('d/m/Y', $data['evento'][0]['data']);
-    $interval = $dateFirstEvent->diff($dateLastEvent); 
+    $interval = $dateFirstEvent->diff($dateLastEvent);
     $diffDates = $interval->format('%R%a days');
-
     return [
         'delivered' => $delivered,
         'returned' => $returned,
         'taxed' => $taxed,
         'diffDates' => $diffDates,
     ];
-
 }
