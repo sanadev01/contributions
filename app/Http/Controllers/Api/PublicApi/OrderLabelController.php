@@ -18,19 +18,36 @@ use App\Repositories\SwedenPostLabelRepository;
 use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
+use App\Repositories\ColombiaLabelRepository;
+use App\Repositories\POSTNLLabelRepository;
 
 class OrderLabelController extends Controller
 {
-    public function __invoke(Request $request, Order $order, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, CorrieosChileLabelRepository $corrieosChileLabelRepository, USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, FedExLabelRepository $fedexLabelRepository,GePSLabelRepository $gepsLabelRepository, SwedenPostLabelRepository $SwedenPostLabelRepository)
-    {   
+    public function __invoke(Request $request, Order $order, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, CorrieosChileLabelRepository $corrieosChileLabelRepository, 
+                            USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, FedExLabelRepository $fedexLabelRepository, 
+                            ColombiaLabelRepository $colombiaLabelRepository, GePSLabelRepository $gepsLabelRepository, SwedenPostLabelRepository $swedenpostLabelRepository, POSTNLLabelRepository $postNLLabelRepository)
+    {
         $orders = new Collection;
         $this->authorize('canPrintLableViaApi',$order);
-
-       if ( !$order->isPaid() &&  getBalance() < $order->gross_total){
+        
+        if ( !$order->isPaid() &&  getBalance() < $order->gross_total){
             return apiResponse(false,"Not Enough Balance. Please Recharge your account.");
         }
 
         $labelData = null;
+
+        if($order->shippingService->isPostNLService()){
+            
+            $postNLLabelRepository->get($order);
+            $error = $postNLLabelRepository->getError();
+
+            if(!$error)
+            {
+                return $this->processOrderPayment($order);
+            }
+
+            return apiResponse(false, $error);
+        } 
 
         //For USPS International services
         if ($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
@@ -40,18 +57,7 @@ class OrderLabelController extends Controller
 
             if(!$error)
             {
-                if ( !$order->isPaid() &&  getBalance() >= $order->gross_total ){
-                    $order->update([
-                        'is_paid' => true,
-                        'status' => Order::STATUS_PAYMENT_DONE
-                    ]);
-                    chargeAmount($order->gross_total,$order);
-                }
-                
-                return apiResponse(true,"Lable Generated successfully.",[
-                    'url' => route('order.label.download',  encrypt($order->id)),
-                    'tracking_code' => $order->corrios_tracking_code
-                ]);
+                return $this->processOrderPayment($order);
             }
 
             return apiResponse(false, $error);
@@ -66,18 +72,7 @@ class OrderLabelController extends Controller
 
             if(!$error)
             {
-                if ( !$order->isPaid() &&  getBalance() >= $order->gross_total ){
-                    $order->update([
-                        'is_paid' => true,
-                        'status' => Order::STATUS_PAYMENT_DONE
-                    ]);
-                    chargeAmount($order->gross_total,$order);
-                }
-                
-                return apiResponse(true,"Lable Generated successfully.",[
-                    'url' => route('order.label.download',  encrypt($order->id)),
-                    'tracking_code' => $order->corrios_tracking_code
-                ]);
+                return $this->processOrderPayment($order);
             }
 
             return apiResponse(false, $error);
@@ -109,18 +104,20 @@ class OrderLabelController extends Controller
            
             if(!$error)
             {
-                if ( !$order->isPaid() &&  getBalance() >= $order->gross_total ){
-                    $order->update([
-                        'is_paid' => true,
-                        'status' => Order::STATUS_PAYMENT_DONE
-                    ]);
-                    chargeAmount($order->gross_total,$order);
-                }
-                
-                return apiResponse(true,"Lable Generated successfully.",[
-                    'url' => route('order.label.download',  encrypt($order->id)),
-                    'tracking_code' => $order->corrios_tracking_code
-                ]);
+                return $this->processOrderPayment($order);
+            }
+
+            return apiResponse(false, $error);
+        }
+
+        if($order->recipient->country_id == Order::COLOMBIA && $order->shippingService->isColombiaService()){
+            
+            $colombiaLabelRepository->handle($order);
+            $error = $colombiaLabelRepository->getError();
+
+            if(!$error)
+            {
+                return $this->processOrderPayment($order);
             }
 
             return apiResponse(false, $error);
@@ -136,11 +133,10 @@ class OrderLabelController extends Controller
                 if($error){
                    return apiResponse(false, $error);
                 }
-            }
-            if($order->shippingService->isSwedenPostService()){
+            }if($order->shippingService->isSwedenPostService()){
 
-                $SwedenPostLabelRepository->get($order);
-                $error = $SwedenPostLabelRepository->getError();
+                $swedenpostLabelRepository->get($order);
+                $error = $swedenpostLabelRepository->getError();
                 if($error){
                    return apiResponse(false, $error);
                 }
@@ -149,8 +145,7 @@ class OrderLabelController extends Controller
 
                 if ( $request->update_label === 'true' ){
                     $labelData = $corrieosBrazilLabelRepository->update($order);
-                }
-                else{
+                }else{
                     $labelData = $corrieosBrazilLabelRepository->get($order);
                 }
 
@@ -164,23 +159,29 @@ class OrderLabelController extends Controller
                     return apiResponse(false,$corrieosBrazilLabelRepository->getError());
                 }
             }
-
-            if ( !$order->isPaid() &&  getBalance() >= $order->gross_total ){
-                $order->update([
-                    'is_paid' => true,
-                    'status' => Order::STATUS_PAYMENT_DONE
-                ]);
-                chargeAmount($order->gross_total,$order);
-                $orders->push($order);
-                event(new OrderPaid($orders, true));
+            if($order->corrios_tracking_code){
+                return $this->processOrderPayment($order);    
+            }else{
+                return apiResponse(false,'Something Went wrong please Contact Homedelivery support');
             }
-            
         }
+
+    }
+
+    private function processOrderPayment($order)
+    {
+        if ( !$order->isPaid() &&  getBalance() >= $order->gross_total ){
+            $order->update([
+                'is_paid' => true,
+                'status' => Order::STATUS_PAYMENT_DONE
+            ]);
+            chargeAmount($order->gross_total,$order);
+        }
+        
         return apiResponse(true,"Lable Generated successfully.",[
             'url' => route('order.label.download',  encrypt($order->id)),
             'tracking_code' => $order->corrios_tracking_code
         ]);
-
     }
 
     public function cancelGePSLabel(Order $order)
