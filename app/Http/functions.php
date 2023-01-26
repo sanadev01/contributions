@@ -122,7 +122,7 @@ function sortTrackingEvents($data, $report)
     }
 
     for($t=count($response)-1;$t>=0;$t--) {
-        switch($report? $response[$t]->descricao: $response[$t]['descricao']) {
+        switch($report? $response[$t]->descricao: optional(optional( $response)[$t])['descricao']) {
             case "Objeto entregue ao destinatário":
                 $delivered = "Yes";
                 if($taxed == "")
