@@ -79,6 +79,8 @@ class HandleCorreiosLabelsRepository
         // if($this->order->shippingService->isPostNLService()){
         //     return $this->postNLLabel();
         // }
+        return $this->corriesBrazilLabel();
+
     }
 
     // public function colombiaLabel()
