@@ -8,6 +8,9 @@
                     <div class="card-header">
                         <h4 class="mb-0">@lang('orders.Key Performance Indicator Report')</h4>
                     </div>
+                    @if(Session::has('error') & empty($trackings))
+                        <alert class="mt-3 alert alert-danger text-center">{{ Session::get('error') }}</alert>
+                    @endif
                     <div class="card-content">
                         <div class="card-body">
                             <div class="row mb-4 no-print ">
@@ -58,7 +61,7 @@
                                                     <input type="hidden" name="order" value="{{ json_encode($trackings['return']['objeto']) }}">
                                                 @endif   
                                                 <div class="col-md-1 justify-content-end">
-                                                    <button class="btn btn-success" title="@lang('orders.import-excel.Download')">
+                                                    <button class="btn btn-success" {{ !empty($trackings)? '' : 'disabled' }} title="@lang('orders.import-excel.Download')">
                                                         <i class="fa fa-arrow-down"></i>
                                                     </button>
                                                 </div>

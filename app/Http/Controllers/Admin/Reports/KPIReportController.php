@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Admin\Reports;
 
-use App\Http\Controllers\Controller;
 use App\Models\Reports;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Session;
 use App\Services\Excel\Export\KPIReport;
 use App\Repositories\Reports\KPIReportsRepository;
-use Illuminate\Http\Request;
 
 class KPIReportController extends Controller
 {
@@ -21,6 +22,9 @@ class KPIReportController extends Controller
         $trackings = [];
         if($request->start_date && $request->end_date) {
             $trackings = $kpiReportsRepository->get($request);
+        }
+        if(empty($trackings)) {
+            Session::flash('error', 'No Trackings Found in the Selected Date Range');
         }
         return view('admin.reports.kpi-report', compact('trackings'));
     }
