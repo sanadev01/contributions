@@ -453,6 +453,11 @@ class PermissionSeeder extends Seeder
                 'group' => 'Order',
                 'description' => 'Put correios server down'
             ],
+            [
+                'slug' => 'kpi-report',
+                'group' => 'Reports',
+                'description' => 'User can see Key Performance Indicator (KPI) Reports'
+            ],
         ];
     }
 }

@@ -2,9 +2,11 @@
 
 use App\Models\Order;
 use App\Models\OrderTracking;
+use App\Models\CommissionSetting;
 use Illuminate\Support\Facades\DB;
 use App\Models\Warehouse\Container;
 use App\Models\Warehouse\DeliveryBill;
+use Illuminate\Support\Facades\Artisan;
 use App\Services\StoreIntegrations\Shopify;
 use App\Http\Controllers\Admin\HomeController;
 use App\Services\Correios\Services\Brazil\Client;
@@ -169,6 +171,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('commission', CommissionReportController::class)->only(['index','show']);
             Route::resource('audit-report', AuditReportController::class)->only(['index','create']);
             Route::resource('anjun', AnjunReportController::class)->only(['index','create']);
+            Route::resource('kpi-report', KPIReportController::class)->only(['index','create']);
             Route::get('tax-report', TaxReportController::class)->name('tax-report');
 
         });
@@ -272,41 +275,9 @@ Route::get('test-label/{key}',function($key){
     return $labelPrinter->download();
 });
 
-Route::get('order/apiresponse/{id?}',function($id){
-    $order = Order::find($id)->update([
-        'corrios_tracking_code' => null,
-        'cn23' => null,
-        'api_response' => null
-    ]);
-});
-
-Route::get('truncate-response/{id?}',function($id){
-    $codes = [];
-    foreach($codes as $code) {
-        $order = DB::table('orders')->where('corrios_tracking_code', $code)->update([
-            'corrios_tracking_code' => null,
-            'cn23' => null,
-            'api_response' => null
-        ]);
-    }
-    return "API Response and Tracking Codes Truncated";
-});
-
-Route::get('container-update/{id?}/d/{dno?}/unit/{unit?}',function($id, $dNo, $unit){
-
-    $container = Container::find($id)->update([
-        'dispatch_number' => $dNo,
-        'unit_code' => $unit
-    ]);
-    return "Container Updated Successfully";
-});
-
-Route::get('dbill-update/{id?}/cn38/{cNo?}',function($id, $cNo){
-
-    $delivery = DeliveryBill::find($id)->update([
-        'cnd38_code' => $cNo
-    ]);
-    return "Delivery Bill CN38 Updated";
+Route::get('permission',function($id = null){
+    Artisan::call('db:seed --class=PermissionSeeder', ['--force' => true ]);
+    return Artisan::output();
 });
 
 Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container');

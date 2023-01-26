@@ -69,7 +69,7 @@ class UpdateRequest extends FormRequest
                 "required",
                 new NcmValidator()
             ],
-            "products.*.description" => "required|max:40",
+            "products.*.description" => "required",
             "products.*.quantity" => "required|min:1",
             "products.*.value" => "required|gt:0",
             "products.*.is_battery" => "required|in:0,1",
