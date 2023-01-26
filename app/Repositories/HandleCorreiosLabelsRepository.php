@@ -4,7 +4,6 @@ namespace App\Repositories;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
-use App\Models\ShippingService;
 use App\Repositories\UPSLabelRepository;
 use App\Repositories\GePSLabelRepository;
 use App\Repositories\USPSLabelRepository;
@@ -43,33 +42,65 @@ class HandleCorreiosLabelsRepository
             if ($this->order->shippingService->isCorreiosService()) {
                 return $this->corriesBrazilLabel();
             }
+            // if ($this->order->shippingService->is_milli_express) {
+            //     return $this->mileExpressLabel();
+            // }
         }
         if ($this->order->recipient->country_id == Order::CHILE) {
 
             return $this->corrieosChileLabel();
         }
 
+        // if ($this->order->recipient->country_id == Order::COLOMBIA && $this->order->shippingService->isColombiaService()) {
+        //     return $this->colombiaLabel();
+        // }
+
+
         if ($this->order->recipient->country_id == Order::US) {
-            if ($this->order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $this->order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS) {
+            if ($this->order->shippingService->is_usps_priority || $this->order->shippingService->is_usps_firstclass) {
                 return $this->uspsLabel();
             }
 
-            if ($this->order->shippingService->service_sub_class == ShippingService::FEDEX_GROUND) {
+            if ($this->order->shippingService->is_fedex_ground) {
                 return $this->fedExLabel();
             }
 
-            if ($this->order->shippingService->service_sub_class == ShippingService::UPS_GROUND) {
+            if ($this->order->shippingService->is_ups_ground) {
                 return $this->upsLabel();
             }
         }
 
         if ($this->order->recipient->country_id != Order::US) {
-            if ($this->order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL || $this->order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
+            if ($this->order->shippingService->is_usps_priority_international || $this->order->shippingService->is_usps_firstclass_international) {
                 return $this->uspsLabel();
             }
         }
 
+        // if($this->order->shippingService->isPostNLService()){
+        //     return $this->postNLLabel();
+        // }
     }
+
+    // public function colombiaLabel()
+    // {
+    //     $colombiaLabelRepository = new ColombiaLabelRepository($this->order);
+    //     $colombiaLabelRepository->run($this->order,$this->update); 
+    //     return $this->renderLabel($this->request, $this->order, $colombiaLabelRepository->getError());
+    // }
+
+    // public function mileExpressLabel()
+    // {
+    //     $mileExpressLabelRepository = new MileExpressLabelRepository();
+    //     $mileExpressLabelRepository->run($this->order,$this->update); 
+    //     return $this->renderLabel($this->request, $this->order, $mileExpressLabelRepository->getError());
+    // }
+
+    // public function postNLLabel()
+    // {
+    //     $postNLLabelRepository = new POSTNLLabelRepository();
+    //     $postNLLabelRepository->run($this->order,$this->update); 
+    //     return $this->renderLabel($this->request, $this->order, $postNLLabelRepository->getError());
+    // }
 
     public function gepsLabel()
     {
