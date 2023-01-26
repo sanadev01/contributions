@@ -28,6 +28,16 @@ class UPSLabelRepository
 
     public $order;
 
+    public function run(Order $order,$update)
+    {
+        if($update){
+            return $this->update($order);
+        }
+        else {
+            return $this->handle($order);
+        }
+    }
+    
     public function handle($order)
     {
         if($order->api_response == null && $order->shippingService->service_sub_class == ShippingService::UPS_GROUND)
@@ -35,6 +45,9 @@ class UPSLabelRepository
             $this->getPrimaryLabel($order);
         }
 
+        if ($order->api_response) {
+            $this->convertLabelToPDF($order);
+        }
         return true;
     }
 
