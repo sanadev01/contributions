@@ -24,16 +24,6 @@ class KPIReportsRepository
 
     public function get(Request $request)
     {
-        return $this->getAPITrackings($request);
-    }
-
-    public function getKPIReport(Request $request)
-    {
-        return $this->getAPITrackings($request);
-    }
-
-    private function getAPITrackings($request) {
-
         $orders = Order::has('user')->where('status', '>=', Order::STATUS_SHIPPED);
         $orders->whereHas('shippingService',function($orders) {
             return $orders->whereIn('service_sub_class', [ShippingService::AJ_Packet_Standard, ShippingService::AJ_Packet_Express, ShippingService::Prime5, ShippingService::GePS]);

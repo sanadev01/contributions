@@ -135,10 +135,15 @@ function getParcelStatus($status)
     return $message;
 }
 
-function sortTrackingEvents($data) {
+function sortTrackingEvents($data, $report) {
     $delivered = "No"; $returned = "No"; $taxed = "No"; $diffDates = "0";
-    for($t=count($data['evento'])-1;$t>=0;$t--) {
-        switch($data['evento'][$t]['descricao']) {
+    if($report){
+        $response = $data->evento;
+    }else {
+        $response = $data['evento'];
+    }
+    for($t=count($response)-1;$t>=0;$t--) {
+        switch($report? $response[$t]->descricao: $response[$t]['descricao']) {
             case "Objeto entregue ao destinatário":
                 $delivered = "Yes";
                 if($taxed == "")
@@ -158,9 +163,9 @@ function sortTrackingEvents($data) {
             break;
         }
     }
-    $eventsQtd = count($data['evento'])-1;
-    $dateFirstEvent = DateTime::createFromFormat('d/m/Y', $data['evento'][$eventsQtd]['data']);
-    $dateLastEvent = DateTime::createFromFormat('d/m/Y', $data['evento'][0]['data']);
+    $eventsQtd = count($response)-1;
+    $dateFirstEvent = DateTime::createFromFormat('d/m/Y', $report? $response[$eventsQtd]->data : $response[$eventsQtd]['data']);
+    $dateLastEvent = DateTime::createFromFormat('d/m/Y', $report? $response[0]->data : $response[0]['data']);
     $interval = $dateFirstEvent->diff($dateLastEvent);
     $diffDates = $interval->format('%R%a days');
     return [
