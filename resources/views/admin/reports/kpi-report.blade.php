@@ -7,7 +7,7 @@
                     <div class="card-header">
                         <h4 class="mb-0">@lang('orders.Key Performance Indicator Report')</h4>
                     </div>
-                    @if(Session::has('error'))
+                    @if(Session::has('error') & empty($trackings))
                         <alert class="mt-3 alert alert-danger text-center">{{ Session::get('error') }}</alert>
                     @endif
                     <div class="card-content">
@@ -54,13 +54,13 @@
                                                 </button>
                                             </div>
                                             </form>
-                                            <form action="{{ route('admin.reports.kpi-report.create') }}" method="GET" id="reportForm">
+                                            <form action="{{ route('admin.reports.kpi-report.create') }}" method="GET">
                                                 @csrf
                                                 @if($trackings)
-                                                    <input type="hidden" name="order" value="{{ json_encode($trackings['return']['objeto']) }}" id="order">
+                                                    <input type="hidden" name="order" value="{{ json_encode($trackings['return']['objeto']) }}">
                                                 @endif   
                                                 <div class="col-md-1 justify-content-end">
-                                                    <button class="btn btn-success" title="@lang('orders.import-excel.Download')">
+                                                    <button class="btn btn-success" {{ !empty($trackings)? '' : 'disabled' }}  title="@lang('orders.import-excel.Download')">
                                                         <i class="fa fa-arrow-down"></i>
                                                     </button>
                                                 </div>
@@ -116,15 +116,6 @@
             </div>
         </div>
     </section>
-    <script>
-        document.querySelector('#reportForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            var tracking = $("#order").val();
-            if(!tracking) {
-                alert('No Trackings Found in the Selected Date Range');
-            }
-        });
-    </script>
 @endsection
 @section('modal')
 <x-modal />
