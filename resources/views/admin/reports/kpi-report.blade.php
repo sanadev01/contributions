@@ -90,13 +90,13 @@
                                         @foreach($trackings['return']['objeto'] as $data)
                                             @if(isset($data['evento']))
                                             <tr>
-                                                @if(optional($data) && isset($data['numero']))
-                                                    <td>{{ $data['numero'] }}</td>
-                                                    <td><span>{{ $data['categoria'] }}</span></td>
-                                                    <td>{{ optional($data['evento'][count($data['evento'])-1])['data'] }}</td>
-                                                    <td>{{ $data['evento'][0]['data'] }}</td>
+                                                @if(optional($data) && isset(optional($data)['numero']))
+                                                    <td>{{ optional($data)['numero'] }}</td>
+                                                    <td><span>{{ optional($data)['categoria'] }}</span></td>
+                                                    <td>{{ optional(optional(optional($data)['evento'])[count($data['evento'])-1])['data'] }}</td>
+                                                    <td>{{ optional(optional(optional($data)['evento'])[0])['data'] }}</td>
                                                     <td>{{ sortTrackingEvents($data, null)['diffDates'] }} </td>
-                                                    <td>{{ $data['evento'][0]['descricao'] }}</td>
+                                                    <td>{{ optional(optional(optional($data)['evento'])[0])['descricao'] }}</td>
                                                     <td>{{ sortTrackingEvents($data, null)['taxed'] }}</td>
                                                     <td>{{ sortTrackingEvents($data, null)['delivered'] }}</td>
                                                     <td>{{ sortTrackingEvents($data, null)['returned'] }}</td>
