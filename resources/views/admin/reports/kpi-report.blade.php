@@ -52,10 +52,10 @@
                                                 </button>
                                             </div>
                                             </form>
-                                            <form action="{{ route('admin.reports.kpi-report.create') }}" method="GET">
+                                            <form action="{{ route('admin.reports.kpi-report.create') }}" method="GET" id="reportForm">
                                                 @csrf
                                                 @if($trackings)
-                                                    <input type="hidden" name="order" value="{{ json_encode($trackings['return']['objeto']) }}">
+                                                    <input type="hidden" name="order" value="{{ json_encode($trackings['return']['objeto']) }}" id="order">
                                                 @endif   
                                                 <div class="col-md-1 justify-content-end">
                                                     <button class="btn btn-success" title="@lang('orders.import-excel.Download')">
@@ -114,6 +114,15 @@
             </div>
         </div>
     </section>
+    <script>
+        document.querySelector('#reportForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            var tracking = $("#order").val();
+            if(!tracking) {
+                alert('No Trackings Found in the Selected Date Range');
+            }
+        });
+    </script>
 @endsection
 @section('modal')
 <x-modal />
