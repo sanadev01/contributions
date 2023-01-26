@@ -29,20 +29,21 @@ class KPIReport extends AbstractExportService
 
     private function prepareExcelSheet()
     {
+        $report = 1;
         $this->setExcelHeaderRow();
         $row = $this->currentRow;
-        foreach ($this->trackings['return']['objeto'] as $data) {
-
-            if(optional($data) && isset($data['evento'])) {
-                $this->setCellValue('A'.$row, $data['numero']);
-                $this->setCellValue('B'.$row, $data['categoria']);
-                $this->setCellValue('C'.$row, $data['evento'][count($data['evento'])-1]['data']);
-                $this->setCellValue('D'.$row, $data['evento'][0]['data']);
-                $this->setCellValue('E'.$row, sortTrackingEvents($data)['diffDates']);
-                $this->setCellValue('F'.$row, $data['evento'][0]['descricao']);
-                $this->setCellValue('G'.$row, sortTrackingEvents($data)['taxed']);
-                $this->setCellValue('H'.$row, sortTrackingEvents($data)['delivered']);
-                $this->setCellValue('I'.$row, sortTrackingEvents($data)['returned']);
+        foreach ($this->trackings as $data) {
+            //dd($data);
+            if(optional($data) && isset($data->evento)) {
+                $this->setCellValue('A'.$row, $data->numero);
+                $this->setCellValue('B'.$row, $data->categoria);
+                $this->setCellValue('C'.$row, $data->evento[count($data->evento)-1]->data);
+                $this->setCellValue('D'.$row, $data->evento[0]->data);
+                $this->setCellValue('E'.$row, sortTrackingEvents($data, $report)['diffDates']);
+                $this->setCellValue('F'.$row, $data->evento[0]->descricao);
+                $this->setCellValue('G'.$row, sortTrackingEvents($data, $report)['taxed']);
+                $this->setCellValue('H'.$row, sortTrackingEvents($data, $report)['delivered']);
+                $this->setCellValue('I'.$row, sortTrackingEvents($data, $report)['returned']);
                 $row++;
             }
         }
