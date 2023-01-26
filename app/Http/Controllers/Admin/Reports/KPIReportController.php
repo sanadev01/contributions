@@ -23,13 +23,13 @@ class KPIReportController extends Controller
         if($request->start_date && $request->end_date) {
             $trackings = $kpiReportsRepository->get($request);
         }
-        if(empty($trackings)) {
-            Session::flash('error', 'No Trackings Found in the Selected Date Range');
+        if($request->start_date || $request->end_date && empty($trackings)) {
+            Session::flash('error', 'No Trackings Found in the Selected Date Range'); 
         }
         return view('admin.reports.kpi-report', compact('trackings'));
     }
 
-    public function create(Request $request, KPIReportsRepository $kpiReportsRepository)
+    public function store(Request $request, KPIReportsRepository $kpiReportsRepository)
     {
         if($request->order){
             $trackings = json_decode($request->order);

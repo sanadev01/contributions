@@ -55,13 +55,13 @@
                                                 </button>
                                             </div>
                                             </form>
-                                            <form action="{{ route('admin.reports.kpi-report.create') }}" method="GET">
+                                            <form action="{{ route('admin.reports.kpi-report.store') }}" method="POST">
                                                 @csrf
                                                 @if($trackings)
                                                     <input type="hidden" name="order" value="{{ json_encode($trackings['return']['objeto']) }}">
                                                 @endif   
                                                 <div class="col-md-1 justify-content-end">
-                                                    <button class="btn btn-success" {{ !empty($trackings)? '' : 'disabled' }} title="@lang('orders.import-excel.Download')">
+                                                    <button class="btn btn-success" {{ !empty($trackings)? '' : 'disabled' }}  title="@lang('orders.import-excel.Download')">
                                                         <i class="fa fa-arrow-down"></i>
                                                     </button>
                                                 </div>
@@ -93,7 +93,7 @@
                                                 @if(optional($data) && isset($data['numero']))
                                                     <td>{{ $data['numero'] }}</td>
                                                     <td><span>{{ $data['categoria'] }}</span></td>
-                                                    <td>{{ $data['evento'][count($data['evento'])-1]['data'] }}</td>
+                                                    <td>{{ optional($data['evento'][count($data['evento'])-1])['data'] }}</td>
                                                     <td>{{ $data['evento'][0]['data'] }}</td>
                                                     <td>{{ sortTrackingEvents($data, null)['diffDates'] }} </td>
                                                     <td>{{ $data['evento'][0]['descricao'] }}</td>
