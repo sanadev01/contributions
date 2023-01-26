@@ -22,7 +22,16 @@ class USPSLabelRepository
     public $order;
 
     public $totalUspsCost = 0;
-
+    public function run(Order $order,$update)
+    {
+        if($update){
+            return $this->update($order);
+        }
+        else {
+            return $this->handle($order);
+        }
+    }
+    
     public function handle($order)
     {
         if(!$order->api_response)
