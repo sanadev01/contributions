@@ -7,6 +7,9 @@
                     <div class="card-header">
                         <h4 class="mb-0">@lang('orders.Key Performance Indicator Report')</h4>
                     </div>
+                    @if(Session::has('error'))
+                        <alert class="mt-3 alert alert-danger text-center">{{ Session::get('error') }}</alert>
+                    @endif
                     <div class="card-content">
                         <div class="card-body">
                             <div class="row mb-4 no-print ">
@@ -51,10 +54,10 @@
                                                 </button>
                                             </div>
                                             </form>
-                                            <form action="{{ route('admin.reports.kpi-report.create') }}" method="GET">
+                                            <form action="{{ route('admin.reports.kpi-report.create') }}" method="GET" id="reportForm">
                                                 @csrf
                                                 @if($trackings)
-                                                    <input type="hidden" name="order" value="{{ json_encode($trackings['return']['objeto']) }}">
+                                                    <input type="hidden" name="order" value="{{ json_encode($trackings['return']['objeto']) }}" id="order">
                                                 @endif   
                                                 <div class="col-md-1 justify-content-end">
                                                     <button class="btn btn-success" title="@lang('orders.import-excel.Download')">
@@ -113,6 +116,15 @@
             </div>
         </div>
     </section>
+    <script>
+        document.querySelector('#reportForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            var tracking = $("#order").val();
+            if(!tracking) {
+                alert('No Trackings Found in the Selected Date Range');
+            }
+        });
+    </script>
 @endsection
 @section('modal')
 <x-modal />
