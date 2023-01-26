@@ -120,6 +120,10 @@ class CreateRequest extends FormRequest
             $rules['recipient.phone'] = 'required|string|max:12';
         }
 
+        if ($shippingService && $shippingService->isPostNLService()) {
+            $rules['products.*.description'] = 'required|max:45';
+        }
+
         return $rules;
     }
 
