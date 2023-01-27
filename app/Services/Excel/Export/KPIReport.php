@@ -36,7 +36,7 @@ class KPIReport extends AbstractExportService
             if(optional($data) && isset($data->evento)) {
                 $this->setCellValue('A'.$row, $data->numero);
                 $this->setCellValue('B'.$row, $data->categoria);
-                $this->setCellValue('C'.$row, $data->evento[count($data->evento)-1]->data);
+                $this->setCellValue('C'.$row, optional(optional($data->evento)[count($data->evento)-1])->data);
                 $this->setCellValue('D'.$row, $data->evento[0]->data);
                 $this->setCellValue('E'.$row, sortTrackingEvents($data, $report)['diffDates']);
                 $this->setCellValue('F'.$row, $data->evento[0]->descricao);
