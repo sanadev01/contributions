@@ -115,14 +115,14 @@ function sortTrackingEvents($data, $report)
     $returned = "No";
     $taxed = "No";
 
-    if($report){
+    if($report && is_array($data->evento) && count($data->evento) > 0){
         $response = $data->evento;
     }else {
         $response = $data['evento'];
     }
 
-    for($t=count($response)-1;$t>=0;$t--) {
-        switch($report? $response[$t]->descricao: optional(optional( $response)[$t])['descricao']) {
+    for($t = count($response)-1; $t >= 0; $t--) {
+        switch($report? optional(optional($data)->evento[$t])->descricao: optional(optional( $response)[$t])['descricao']) {
             case "Objeto entregue ao destinatário":
                 $delivered = "Yes";
                 if($taxed == "")
