@@ -144,21 +144,19 @@ function sortTrackingEvents($data, $report)
     }
 
     $eventsQtd = count($response)-1;
-    if($report){
-        \Log::info('if function');
-        \Log::info($response[$eventsQtd]->data);
-        \Log::info($response[0]->data);
-    }else{
-        \Log::info('else function');
-        \Log::info(optional(optional($response)[$eventsQtd])['data']);
-        \Log::info(optional(optional($response)[0])['data']);
+    $startDate = date('d/m/Y');
+    $endDate = date('d/m/Y');
+    if( !$report && optional(optional($response)[$eventsQtd])['data'] && optional(optional($response)[0])['data']){
+        $startDate  = optional(optional($response)[$eventsQtd])['data'];
+        $endDate    = optional(optional($response)[0])['data'];
+    }
+    if($report && $response[$eventsQtd]->data && $response[0]->data){
+        $startDate  = $response[$eventsQtd]->data;
+        $endDate    = $response[0]->data;
     }
     
-    $firstEvent = Carbon::parse(Carbon::createFromFormat('d/m/Y', $report? $response[$eventsQtd]->data : optional(optional($response)[$eventsQtd])['data'])->format('Y-m-d'));
-    $lastEvent = Carbon::parse(Carbon::createFromFormat('d/m/Y', $report? $response[0]->data : optional(optional($response)[0])['data'])->format('Y-m-d'));
-    \Log::info('Date function');
-    \Log::info($firstEvent);
-    \Log::info($lastEvent);
+    $firstEvent = Carbon::parse(Carbon::createFromFormat('d/m/Y', $startDate)->format('Y-m-d'));
+    $lastEvent = Carbon::parse(Carbon::createFromFormat('d/m/Y', $endDate)->format('Y-m-d'));
 
     if($firstEvent && $lastEvent){
         $interval = $firstEvent->diffInDays($lastEvent).' days';
