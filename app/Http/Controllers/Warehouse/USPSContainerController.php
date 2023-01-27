@@ -17,9 +17,9 @@ class USPSContainerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(USPSContainerRepository $usps_containerRepository)
+    public function index(USPSContainerRepository $uspsContainerRepository)
     {
-        $containers = $usps_containerRepository->get();
+        $containers = $uspsContainerRepository->get();
         
         return view('admin.warehouse.uspsContainers.index', compact('containers'));
     }
@@ -40,13 +40,13 @@ class USPSContainerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateContainerRequest $createContainerRequest, USPSContainerRepository $usps_containerRepository)
+    public function store(CreateContainerRequest $createContainerRequest, USPSContainerRepository $uspsContainerRepository)
     {
-        if ( $container = $usps_containerRepository->store($createContainerRequest) ){
+        if ( $container = $uspsContainerRepository->store($createContainerRequest) ){
             session()->flash('alert-success', 'Container Saved Please Scann Packages');
             return redirect()->route('warehouse.usps_containers.index');
         }
-        session()->flash('alert-danger', $usps_containerRepository->getError());
+        session()->flash('alert-danger', $uspsContainerRepository->getError());
         return back()->withInput();
     }
 
@@ -85,7 +85,7 @@ class USPSContainerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateContainerRequest $updateContainerRequest, USPSContainerRepository $usps_containerRepository)
+    public function update(UpdateContainerRequest $updateContainerRequest, USPSContainerRepository $uspsContainerRepository)
     {
         $container = Container::find($updateContainerRequest->id);
 
@@ -93,11 +93,11 @@ class USPSContainerController extends Controller
             abort(405);
         }
         
-        if ( $container = $usps_containerRepository->update($container, $updateContainerRequest) ){
+        if ( $container = $uspsContainerRepository->update($container, $updateContainerRequest) ){
             session()->flash('alert-success', 'Container Saved Please Scann Packages');
             return redirect()->route('warehouse.usps_containers.index');
         }
-        session()->flash('alert-danger', $usps_containerRepository->getError());
+        session()->flash('alert-danger', $uspsContainerRepository->getError());
         return back()->withInput();
     }
 
@@ -107,18 +107,18 @@ class USPSContainerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($container, USPSContainerRepository $usps_containerRepository)
+    public function destroy($container, USPSContainerRepository $uspsContainerRepository)
     {
         $container = Container::find($container);
         if ( $container->respone != 0 ){
             abort(403,'Cannot Delete Container registered on Correios Chile.');
         }
-        if ( $container = $usps_containerRepository->delete($container) ){
+        if ( $container = $uspsContainerRepository->delete($container) ){
             session()->flash('alert-success', 'Container Deleted');
             return redirect()->route('warehouse.usps_containers.index');
         }
 
-        session()->flash('alert-danger', $usps_containerRepository->getError());
+        session()->flash('alert-danger', $uspsContainerRepository->getError());
         return back()->withInput();        
     }
 

@@ -45,7 +45,7 @@ class UpdateCN23Label
         $this->pdfi->SetFont("Arial", "B", 5);
         $this->pdfi->RotatedText(50, 147, 'SHIPPING:', 90);
 
-        $this->pdfi->SetFont("Arial", "B", 5);
+        $this->pdfi->SetFont("Arial", "B", 5);       
         $userDeclaredFreight = $this->order->user_declared_freight <= 0.01 ? 0 : $this->order->user_declared_freight;
         $this->pdfi->RotatedText(50, 105, number_format($userDeclaredFreight, 2, '.', ','), 90);
 
