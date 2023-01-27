@@ -30,13 +30,19 @@ class KPIReport extends AbstractExportService
     private function prepareExcelSheet()
     {
         $report = 1;
+        $startDate = null;
         $this->setExcelHeaderRow();
         $row = $this->currentRow;
         foreach ($this->trackings as $data) {
             if(optional($data) && isset($data->evento)) {
+                $arrCount = count($data->evento);
+                if( $arrCount > 0){
+                    $startDate = $data->evento[$arrCount-1]->data;
+                }
+
                 $this->setCellValue('A'.$row, $data->numero);
                 $this->setCellValue('B'.$row, $data->categoria);
-                $this->setCellValue('C'.$row, optional(optional(optional($data)->evento)[count($data->evento)-1])->data);
+                $this->setCellValue('C'.$row, $startDate);
                 $this->setCellValue('D'.$row, optional(optional($data->evento)[0])->data);
                 $this->setCellValue('E'.$row, sortTrackingEvents($data, $report)['diffDates']);
                 $this->setCellValue('F'.$row, optional(optional($data->evento)[0])->descricao);
