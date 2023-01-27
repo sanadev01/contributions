@@ -107,3 +107,54 @@ function getTotalBalance()
 {
     return Deposit::getLiabilityBalance();
 }
+
+function sortTrackingEvents($data, $report)
+{
+    $delivered = "No";
+    $returned = "No";
+    $taxed = "No";
+    $diffDates = "0";
+
+    if($report){
+        $response = $data->evento;
+    }else {
+        $response = $data['evento'];
+    }
+
+    for($t=count($response)-1;$t>=0;$t--) {
+        switch($report? $response[$t]->descricao: optional(optional( $response)[$t])['descricao']) {
+            case "Objeto entregue ao destinatário":
+                $delivered = "Yes";
+                if($taxed == "")
+                    $taxed = "No";
+            break;
+            case "Devolução autorizada pela Receita Federal":
+            case "A entrada do objeto no Brasil não foi autorizada pelos órgãos fiscalizadores":
+                $returned = "Yes";
+            break;
+            case "Aguardando pagamento":
+            case "Pagamento confirmado":
+                $taxed = "Yes";
+            break;
+            case "Fiscalização aduaneira finalizada":
+                if($taxed == "")
+                    $taxed = "No";
+            break;
+        }
+    }
+
+    $eventsQtd = count($response)-1;
+    $dateFirstEvent = DateTime::createFromFormat('d/m/Y', $report? $response[$eventsQtd]->data : optional(optional($response)[$eventsQtd])['data']);
+    $dateLastEvent = DateTime::createFromFormat('d/m/Y', $report? $response[0]->data : optional(optional($response)[0])['data']);
+    if( checkdate($dateFirstEvent) &&  checkdate($dateLastEvent)){
+        $interval = $dateFirstEvent->diff($dateLastEvent);
+        $diffDates = $interval->format('%R%a days');
+    }
+
+    return [
+        'delivered' => $delivered,
+        'returned' => $returned,
+        'taxed' => $taxed,
+        'diffDates' => $diffDates,
+    ];
+}
