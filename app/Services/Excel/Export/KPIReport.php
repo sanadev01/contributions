@@ -35,9 +35,8 @@ class KPIReport extends AbstractExportService
         $row = $this->currentRow;
         foreach ($this->trackings as $data) {
             if(optional($data) && isset($data->evento)) {
-                $arrCount = count($data->evento);
-                if( $arrCount > 0){
-                    $startDate = $data->evento[$arrCount-1]->data;
+                if( is_array($data->evento) && count($data->evento) > 0){
+                    $startDate = $data->evento[count($data->evento)-1]->data;
                 }
 
                 $this->setCellValue('A'.$row, $data->numero);
