@@ -23,9 +23,6 @@ class KPIReportController extends Controller
         if($request->start_date && $request->end_date) {
             $trackings = $kpiReportsRepository->get($request);
         }
-        if($request->start_date || $request->end_date && empty($trackings)) {
-            Session::flash('error', 'No Trackings Found in the Selected Date Range'); 
-        }
         return view('admin.reports.kpi-report', compact('trackings'));
     }
 
