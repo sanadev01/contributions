@@ -74,6 +74,7 @@ class ShippingService extends Model
         $rate = round($this->getCalculator($order, $calculateOnVolumeMetricWeight)->getRate($withProfit),2);
         return $rate;
     }
+    
 
     public function getCalculator(Order $order, $calculateOnVolumeMetricWeight = true, $originalRate = false)
     {
@@ -124,6 +125,14 @@ class ShippingService extends Model
     }
 
     public function isGePSService()
+    {
+        if (collect($this->gepsShippingServices())->contains($this->service_sub_class)) {
+            return true;
+        }
+
+        return false;
+    }
+    public function getIsgepsAttribute()
     {
         if (collect($this->gepsShippingServices())->contains($this->service_sub_class)) {
             return true;
@@ -296,5 +305,34 @@ class ShippingService extends Model
             self::GePS,
             self::GePS_EFormat,
         ];
+    }
+    public function getIsMilliExpressAttribute()
+    { 
+        return $this->service_sub_class == ShippingService::Mile_Express;
+    }
+    public function getIsUspsPriorityAttribute()
+    { 
+        return $this->service_sub_class == ShippingService::USPS_PRIORITY;
+    }
+    public function getIsUspsFirstclassAttribute()
+    { 
+        return $this->service_sub_class == ShippingService::USPS_FIRSTCLASS;
+    }
+
+    public function getIsUpsGroundAttribute()
+    {  
+        return $this->service_sub_class == ShippingService::UPS_GROUND;
+    }
+    public function getIsFedexGroundAttribute()
+    { 
+        return $this->service_sub_class == ShippingService::FEDEX_GROUND;
+    }
+    public function getIsUspsPriorityInternationalAttribute()
+    { 
+        return $this->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL;
+    }
+    public function getIsUspsFirstclassInternationalAttribute()
+    { 
+        return $this->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL;
     }
 }

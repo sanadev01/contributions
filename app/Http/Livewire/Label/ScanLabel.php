@@ -119,12 +119,16 @@ class ScanLabel extends Component
                         $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'package already scanned on '.$lastScanned->created_at->format('m/d/Y H:i:s').'']);
                     }
                 }
+                if($this->order->status == Order::STATUS_REFUND){
+                    $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order is Cancelled / Refunded']);
+                    return $this->tracking = '';
+                }
                 if(!$this->order->is_paid){
                     $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order Payment is pending']);
                     return $this->tracking = '';
                 }
                 if($this->order->status == Order::STATUS_CANCEL){
-                    $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order Cancel']);
+                    $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order is Cancelled']);
                     return $this->tracking = '';
                 }
                 
@@ -135,11 +139,6 @@ class ScanLabel extends Component
                 
                 if($this->order->status == Order::STATUS_RELEASE){
                     $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order Release']);
-                    return $this->tracking = '';
-                }
-
-                if($this->order->status == Order::STATUS_REFUND){
-                    $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order Refund']);
                     return $this->tracking = '';
                 }
                 

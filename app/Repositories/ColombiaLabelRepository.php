@@ -10,9 +10,24 @@ class ColombiaLabelRepository
 {
     protected $error;
 
-    public function handle($order)
+    public $order;
+    public function __contruct(Order $order)
     {
         $this->order = $order;
+    }
+    public function run(Order $order,$update)
+    {
+        $this->order = $order; 
+        if($update){
+            return $this->updateLabel();
+        }
+        else {
+            return $this->handle();
+        }
+    }
+    
+    public function handle()
+    { 
 
         if(!$this->order->api_response){
             $this->getPrimaryLabel();

@@ -7,6 +7,7 @@ use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
 use App\Facades\ColombiaShippingFacade;
 use App\Services\Colombia\ColombiaService;
+use Illuminate\Support\Facades\Log;
 
 class ColombiaUnitRegisterController extends Controller
 {
@@ -21,7 +22,7 @@ class ColombiaUnitRegisterController extends Controller
         if (count($container->orders) > 0){
             
             $response = (new ColombiaService())->registerContainer($container);
-
+            Log::info('colombia response',[$response]);
             if ($response['success'] == false) {
                 session()->flash('alert-danger', $response['message'] ?? 'error occured while registering container');
                 return back();
