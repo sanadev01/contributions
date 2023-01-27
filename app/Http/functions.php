@@ -145,14 +145,21 @@ function sortTrackingEvents($data, $report)
 
     $eventsQtd = count($response)-1;
     if($report){
-        var_dump($response[$eventsQtd]->data,'=', $response[0]->data,);
+        \Log::info('if function');
+        \Log::info($response[$eventsQtd]->data);
+        \Log::info($response[0]->data);
     }else{
-        var_dump( optional(optional($response)[$eventsQtd])['data'], '=', optional(optional($response)[0])['data']);
+        \Log::info('else function');
+        \Log::info(optional(optional($response)[$eventsQtd])['data']);
+        \Log::info(optional(optional($response)[0])['data']);
     }
-
+    
     $firstEvent = Carbon::parse(Carbon::createFromFormat('d/m/Y', $report? $response[$eventsQtd]->data : optional(optional($response)[$eventsQtd])['data'])->format('Y-m-d'));
     $lastEvent = Carbon::parse(Carbon::createFromFormat('d/m/Y', $report? $response[0]->data : optional(optional($response)[0])['data'])->format('Y-m-d'));
-    dd($firstEvent, $lastEvent );
+    \Log::info('Date function');
+    \Log::info($firstEvent);
+    \Log::info($lastEvent);
+
     if($firstEvent && $lastEvent){
         $interval = $firstEvent->diffInDays($lastEvent).' days';
     }else {
