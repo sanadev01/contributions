@@ -42,7 +42,7 @@ class OrderCheckoutRepository
     {
         if($this->request->pay){
 
-            if(getBalance() < $this->invoice->total_amount){
+            if(getBalance() < ($this->invoice->total_amount - $this->invoice->paid_amount)){
                 session()->flash('alert-danger','Not Enough Balance. Please Recharge your account.');
                 return back();
             }
@@ -112,7 +112,8 @@ class OrderCheckoutRepository
                 return back();
             }
 
-            DB::transaction(function () {
+            DB::beginTransaction();
+
                 try {
 
                     $order = $this->invoice->orders->firstWhere('is_paid', false);
@@ -128,12 +129,14 @@ class OrderCheckoutRepository
                     $this->invoice->orders()->update([
                         'is_paid' => true,
                         'status' => Order::STATUS_PAYMENT_DONE
-                    ]); 
+                    ]);
+                    DB::commit();
+
                 } catch (\Exception $ex) {
+                DB::rollBack(); 
                     session()->flash('alert-danger',$ex->getMessage());
                     return back();
-                }
-            });
+                } 
         }
 
         if(!$this->request->pay){

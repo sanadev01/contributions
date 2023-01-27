@@ -11,63 +11,52 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">
-                        @section('title', __('invoice.Checkout'))
-                    </h4>
-                    <a href="{{ route('admin.payment-invoices.index') }}" class="btn btn-primary">
-                        @lang('invoice.Back to List')
-                    </a>
-                </div>
-                <div class="card-content">
-                    <form action="{{ route('admin.payment-invoices.invoice.checkout.store', $invoice) }}"
-                        method="POST" class="payment-form"
-                        @if ($paymentGateway == 'STRIPE') data-stripe-payment="true" data-stripe-publishable-key="{{ $stripeKey }}" @else data-stripe-payment="false" @endif>
-                        @csrf
-                        <div class="card-body paddinglr">
-                            <p class="h5 dim">@lang('invoice.Checkout Message Detail')</p>
-                            <hr>
-                            <div class="grid-wrapper w-100">
-
-
-                                <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right" style="font-size: 18px;" for="balance">Pay
-                                        From HD Account (USD: {{ getBalance() }})<span
-                                            class="text-danger"></span></label>
-                                    <div class="col-md-6">
-                                        <div class="vs-checkbox-con vs-checkbox-primary" title="Pay By HD Account">
-                                            <input type="radio" name="pay" onclick="checkPay();" value="1"
-                                                required @if (getBalance() < $invoice->total_amount) disabled @endif
-                                                class="col-md-1" id="balance">
-                                            <span class="vs-checkbox vs-checkbox-lg">
-                                                <span class="vs-checkbox--check">
-                                                    <i class="vs-icon feather icon-check"></i>
+                            @lang('invoice.Checkout')
+                        </h4>
+                        <a href="{{ route('admin.payment-invoices.index') }}" class="btn btn-primary">
+                            @lang('invoice.Back to List')
+                        </a>
+                    </div>
+                    <div class="card-content">
+                        <form action="{{ route('admin.payment-invoices.invoice.checkout.store',$invoice) }}" method="POST" class="payment-form" @if($paymentGateway == 'STRIPE') data-stripe-payment="true" data-stripe-publishable-key="{{ $stripeKey }}" @else data-stripe-payment="false" @endif>
+                            @csrf
+                            <div class="card-body">
+                                <p class="h5 dim">@lang('invoice.Checkout Message Detail')</p>
+                                <hr>
+                                <div class="grid-wrapper w-100">
+                                
+                                
+                                    <div class="controls row mb-1 align-items-center">
+                                        <label class="col-md-3 text-md-right" style="font-size: 18px;" for="balance">Pay From HD Account (USD: {{ $balance }})<span class="text-danger"></span></label>
+                                        <div class="col-md-6">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="Pay By HD Account">
+                                                <input type="radio" name="pay" onclick="checkPay();" value="1" required
+                                                @if ($notEnoughBalance ) disabled  @endif class="col-md-1" id="balance">
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
                                                 </span>
-                                            </span>
-                                            <span class="h3 mx-2 text-danger my-0 py-0">
-                                                @if (getBalance() < $invoice->total_amount)
-                                                    Not Enough Balance in HD account
-                                                @endif
-                                            </span>
+                                                <span class="h3 mx-2 text-danger my-0 py-0">@if ( $notEnoughBalance) Not Enough Balance in HD account @endif</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="controls row mb-1 align-items-center">
+                                        <label class="col-md-3 text-md-right" style="font-size: 18px;" for="card">Pay From Card<span class="text-danger"></span></label>
+                                        <div class="col-md-6">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="Pay By Card">
+                                                <input type="radio" name="pay" onclick="checkPay();" value="0" required class="col-md-1" id="card">
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                                <span class="h3 mx-2 text-primary my-0 py-0"></span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right" style="font-size: 18px;" for="card">Pay
-                                        From Card<span class="text-danger"></span></label>
-                                    <div class="col-md-6">
-                                        <div class="vs-checkbox-con vs-checkbox-primary" title="Pay By Card">
-                                            <input type="radio" name="pay" onclick="checkPay();" value="0"
-                                                required class="col-md-1" id="card">
-                                            <span class="vs-checkbox vs-checkbox-lg">
-                                                <span class="vs-checkbox--check">
-                                                    <i class="vs-icon feather icon-check"></i>
-                                                </span>
-                                            </span>
-                                            <span class="h3 mx-2 text-primary my-0 py-0"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            {{-- <div id="ifBalance" style="display:none">
+                                {{-- <div id="ifBalance" style="display:none">
                                     Your Current Balance is : {{ getBalance() }}
                                 </div> --}}
                             <div id="ifCard" style="display:none">
