@@ -183,7 +183,7 @@ class OrderExport extends AbstractExportService
 
     public function chargeWeight($order)
     {
-        return '';
+        return 1;
         $chargeWeight = $order->getOriginalWeight('kg');
         if($order->getWeight('kg') > $order->getOriginalWeight('kg') && $order->weight_discount){
             $discountWeight = $order->weight_discount;
@@ -206,7 +206,8 @@ class OrderExport extends AbstractExportService
     
     private function getcarrier($order)
     {
-        return '';
+        return ['intl' => null,
+        'domestic' => null];
         if(in_array($order->carrierService(), ['USPS','UPS','FEDEX']) ){
             return [
                 'intl' => null,
