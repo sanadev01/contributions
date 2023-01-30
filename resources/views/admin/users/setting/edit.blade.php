@@ -215,11 +215,11 @@
                                                     </span>
                                                 </span>
                                             </div>
-                                            <span class="offset-2 mr-2 mt-2">Amount :</span>
-                                            <input type="number" name="charge_amount" step="0.01" min=0 class="form-control col-2" id="charge_amount" value="{{ setting('charge_amount', null, $user->id) }}">
+                                            <span class="offset-2 mr-4 mt-2">Amount :</span>
+                                            <input type="number" name="charge_amount" step="0.01" min=0 class="form-control col-12 ml-5 " id="charge_amount" value="{{ setting('charge_amount', null, $user->id) }}">
                                       
-                                            <span class="offset-2 mr-2 mt-2">When Balance less then:</span>
-                                            <input type="number" name="charge_limit" step="0.01" min=0 class="form-control col-2" id="charge_limit" value="{{ setting('charge_limit', null, $user->id)??100 }}">
+                                            <span class="offset-2 mr-4 mt-2">When Balance less then:</span>
+                                            <input type="number" name="charge_limit" step="0.01" min=0 class="form-control col-5" id="charge_limit" value="{{ setting('charge_limit', null, $user->id)??100 }}">
                                         </div>    
                                     </div>
                                 </div>
