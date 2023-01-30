@@ -106,27 +106,6 @@ class HandleCorreiosLabelsRepository
         return $this->renderLabel($this->request, $this->order, $postNLLabelRepository->getError());
     }
 
-    // public function colombiaLabel()
-    // {
-    //     $colombiaLabelRepository = new ColombiaLabelRepository($this->order);
-    //     $colombiaLabelRepository->run($this->order,$this->update); 
-    //     return $this->renderLabel($this->request, $this->order, $colombiaLabelRepository->getError());
-    // }
-
-    // public function mileExpressLabel()
-    // {
-    //     $mileExpressLabelRepository = new MileExpressLabelRepository();
-    //     $mileExpressLabelRepository->run($this->order,$this->update); 
-    //     return $this->renderLabel($this->request, $this->order, $mileExpressLabelRepository->getError());
-    // }
-
-    // public function postNLLabel()
-    // {
-    //     $postNLLabelRepository = new POSTNLLabelRepository();
-    //     $postNLLabelRepository->run($this->order,$this->update); 
-    //     return $this->renderLabel($this->request, $this->order, $postNLLabelRepository->getError());
-    // }
-
     public function gepsLabel()
     {
         $gepsLabelRepository = new GePSLabelRepository(); ///by default consider false
