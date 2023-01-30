@@ -307,4 +307,16 @@ class User extends Authenticatable
             self::GILBERTO_ACCOUNT_ID,
         ];
     }
+    public function getCurrentBalanceAttribute()
+    {
+        $lastTransaction = $this->deposits()->latest()->first();
+        if ( !$lastTransaction ){
+            return 0;
+        }
+        return $lastTransaction->balance;
+    }
+    public function deposits()
+    {
+        return $this->hasMany(Deposit::class);
+    }
 }

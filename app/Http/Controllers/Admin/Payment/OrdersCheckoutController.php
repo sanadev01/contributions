@@ -31,9 +31,8 @@ class OrdersCheckoutController extends Controller
     }
 
     public function store(PaymentInvoice $invoice,Request $request, OrderCheckoutRepository $orderCheckoutRepository)
-    {
+    { 
         $this->authorize('view',$invoice);
-        
         if ( $invoice->isPaid() ){
             abort(404);
         }
