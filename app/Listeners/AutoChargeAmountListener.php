@@ -16,13 +16,11 @@ class AutoChargeAmountListener
 {
     /**
      * Create the event listener.
-     *
      * @return void
      */
     public function __construct()
     { 
     }
-
     /**
      * Handle the event.
      *
@@ -32,20 +30,15 @@ class AutoChargeAmountListener
     public function handle(AutoChargeAmountEvent $event)
     {
         $user =  $event->user; 
-        $autoCharge  = setting('auto_charge', null, $user->id);
-        $authoChargeLimit = setting('auto_charge_limit', null, $user->id);
-        $amount = setting('auto_charge_amount', null, $user->id);
-
+        $charge  = setting('charge', null, $user->id);
+        $chargeLimit = setting('charge_limit', null, $user->id);
+        $amount = setting('charge_amount', null, $user->id);
         $billingInformation = $user->billingInformations()->latest()->first();
-
-        if($autoCharge && $user->current_balance < $authoChargeLimit  && $billingInformation){ 
-             
+        if($charge &&  Deposit::getCurrentBalance() < $chargeLimit  && $billingInformation){ 
             $authorizeNetService = new AuthorizeNetService(); 
             $transactionID = PaymentInvoice::generateUUID('DP-');
             $response = $authorizeNetService->makeCreditCardPaymentWithoutInvoice($billingInformation,$transactionID,$amount,$user);
-       
             if ($response->success){
- 
                     $deposit = Deposit::create([
                         'uuid' => $transactionID,
                         'transaction_id' => $response->data->getTransId(),
@@ -58,7 +51,6 @@ class AutoChargeAmountListener
                 $this->sendTransactionMail($deposit, $user->name);
             }   
         }
-        
     }
 
     private function sendTransactionMail($deposit, $user){
