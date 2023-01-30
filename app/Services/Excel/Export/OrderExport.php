@@ -167,6 +167,7 @@ class OrderExport extends AbstractExportService
 
     private function checkValue($value)
     {
+        return '';
         if($value == 0){
             return '';
         }
@@ -176,11 +177,13 @@ class OrderExport extends AbstractExportService
 
     public function isWeightInKg($measurement_unit)
     {
+        return '';
         return $measurement_unit == 'kg/cm' ? 'kg' : 'lbs';
     }
 
     public function chargeWeight($order)
     {
+        return '';
         $chargeWeight = $order->getOriginalWeight('kg');
         if($order->getWeight('kg') > $order->getOriginalWeight('kg') && $order->weight_discount){
             $discountWeight = $order->weight_discount;
@@ -196,12 +199,14 @@ class OrderExport extends AbstractExportService
 
     private function getOrderTrackingCodes($order)
     {
+        return '';
         $trackingCodes = ($order->hasSecondLabel() ? $order->corrios_tracking_code.','.$order->us_api_tracking_code : $order->corrios_tracking_code." ");
         return (string)$trackingCodes;
     }
     
     private function getcarrier($order)
     {
+        return '';
         if(in_array($order->carrierService(), ['USPS','UPS','FEDEX']) ){
             return [
                 'intl' => null,
