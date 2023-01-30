@@ -26,7 +26,7 @@ class KPIReportsRepository
     {
         $orders = Order::has('user')->where('status', '>=', Order::STATUS_SHIPPED);
         $orders->whereHas('shippingService',function($orders) {
-            return $orders->whereIn('service_sub_class', [ShippingService::AJ_Packet_Standard, ShippingService::AJ_Packet_Express, ShippingService::Prime5, ShippingService::GePS]);
+            return $orders->whereIn('service_sub_class', [ShippingService::Packet_Standard, ShippingService::Packet_Express, ShippingService::AJ_Packet_Standard, ShippingService::AJ_Packet_Express, ShippingService::Prime5, ShippingService::GePS]);
         });
         if (Auth::user()->isUser()) {
             $orders->where('user_id', Auth::id());
