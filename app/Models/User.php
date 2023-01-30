@@ -309,11 +309,7 @@ class User extends Authenticatable
     }
     public function getCurrentBalanceAttribute()
     {
-        $lastTransaction = $this->deposits()->latest()->first();
-        if ( !$lastTransaction ){
-            return 0;
-        }
-        return $lastTransaction->balance;
+        return optional($this->deposits()->latest()->first())->balance??0;
     }
     public function deposits()
     {
