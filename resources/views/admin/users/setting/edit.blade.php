@@ -235,6 +235,26 @@
                             </div>
                             
                                 <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">Auto charge<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="usps">
+                                                <input type="checkbox" name="charge" id="charge" @if(setting('charge', null, $user->id)) checked @endif>
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            <span class="offset-2 mr-2 mt-2">Amount :</span>
+                                            <input type="number" name="charge_amount" step="0.01" min=0 class="form-control col-2" id="charge_amount" value="{{ setting('charge_amount', null, $user->id) }}">
+                                      
+                                            <span class="offset-2 mr-2 mt-2">When Balance less then:</span>
+                                            <input type="number" name="charge_limit" step="0.01" min=0 class="form-control col-2" id="charge_limit" value="{{ setting('charge_limit', null, $user->id)??100 }}">
+                                        </div>    
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">USPS<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <div class="input-group">

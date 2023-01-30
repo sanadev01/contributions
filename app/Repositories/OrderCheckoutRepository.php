@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Repositories; 
+namespace App\Repositories;
+
+use App\Events\AutoChargeAmountEvent;
 use Stripe\Charge;
 use Stripe\Stripe;
 use Stripe\Customer;
@@ -28,6 +30,7 @@ class OrderCheckoutRepository
 
     public function handle($invoice, $request)
     {
+        
         $this->invoice = $invoice;
         $this->request = $request;
 
@@ -47,8 +50,8 @@ class OrderCheckoutRepository
                 return back();
             }
             
-            DB::beginTransaction();
-            $user = Auth::user()->name;
+            DB::beginTransaction(); 
+            $user = Auth::user()->name;    
             try {
                 
                 foreach($this->invoice->orders as $order){
@@ -72,6 +75,7 @@ class OrderCheckoutRepository
                     \Log::info('Notify Transaction email send error: '.$ex->getMessage());
                 }
                 DB::commit();
+                AutoChargeAmountEvent::dispatch($this->invoice->orders()->first()->user);
             } catch (\Exception $ex) {
                 DB::rollBack();
                 session()->flash('alert-danger',$ex->getMessage());
@@ -249,9 +253,9 @@ class OrderCheckoutRepository
                 } catch (\Exception $ex) {
                     Log::info('Payment Paid email send error: '.$ex->getMessage());
                 }
-    
-                DB::commit();
-    
+
+                DB::commit();                
+                AutoChargeAmountEvent::dispatch($this->invoice->orders()->first()->user);
                 return true;
             }
             
