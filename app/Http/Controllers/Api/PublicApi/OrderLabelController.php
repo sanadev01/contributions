@@ -18,10 +18,10 @@ use App\Repositories\SwedenPostLabelRepository;
 use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
-use App\Repositories\ColombiaLabelLabelRepository;
+use App\Repositories\ColombiaLabelRepository;
 class OrderLabelController extends Controller
 {
-    public function __invoke(Request $request, Order $order, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, CorrieosChileLabelRepository $corrieosChileLabelRepository, USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, FedExLabelRepository $fedexLabelRepository,GePSLabelRepository $gepsLabelRepository, SwedenPostLabelRepository $SwedenPostLabelRepository, ColombiaLabelRepository $ColombiaLabelRepository)
+    public function __invoke(Request $request, Order $order, CorrieosBrazilLabelRepository $corrieosBrazilLabelRepository, CorrieosChileLabelRepository $corrieosChileLabelRepository, USPSLabelRepository $uspsLabelRepository, UPSLabelRepository $upsLabelRepository, FedExLabelRepository $fedexLabelRepository,GePSLabelRepository $gepsLabelRepository, SwedenPostLabelRepository $SwedenPostLabelRepository, ColombiaLabelRepository $colombiaLabelRepository)
     {   
         $orders = new Collection;
         $this->authorize('canPrintLableViaApi',$order);
@@ -128,15 +128,14 @@ class OrderLabelController extends Controller
 
         if($order->recipient->country_id == Order::COLOMBIA && $order->shippingService->isColombiaService()){
             
-            $colombiaLabelRepository->handle($order);
+            $colombiaLabelRepository->run($order, null);
             $error = $colombiaLabelRepository->getError();
 
-            if(!$error)
+            if($error)
             {
-                return $this->processOrderPayment($order);
+                return apiResponse(false, $error);
             }
 
-            return apiResponse(false, $error);
         }
 
         // For Correios,  Global eParcel Brazil and Sweden Post(Prime5)

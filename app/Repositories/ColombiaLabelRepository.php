@@ -10,6 +10,11 @@ class ColombiaLabelRepository
 {
     protected $error;
 
+    public function run(Order $order, $upadate) 
+    {
+        return $this->handle($order);
+    }
+    
     public function handle($order)
     {
         $this->order = $order;
