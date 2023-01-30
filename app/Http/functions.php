@@ -114,15 +114,9 @@ function sortTrackingEvents($data, $report)
     $delivered = "No";
     $returned = "No";
     $taxed = "No";
-
-    if($report){
-        $response = $data->evento;
-    }else {
-        $response = $data['evento'];
-    }
-
-    for($t=count($response)-1;$t>=0;$t--) {
-        switch($report? $response[$t]->descricao: optional(optional( $response)[$t])['descricao']) {
+    $response = $data['evento'];
+    for($t = count($response)-1; $t >= 0; $t--) {
+        switch(optional(optional( $response)[$t])['descricao']) {
             case "Objeto entregue ao destinatário":
                 $delivered = "Yes";
                 if($taxed == "")
@@ -146,13 +140,9 @@ function sortTrackingEvents($data, $report)
     $eventsQtd = count($response)-1;
     $startDate = date('d/m/Y');
     $endDate = date('d/m/Y');
-    if( !$report && optional(optional($response)[$eventsQtd])['data'] && optional(optional($response)[0])['data']){
+    if(optional(optional($response)[$eventsQtd])['data'] && optional(optional($response)[0])['data']){
         $startDate  = optional(optional($response)[$eventsQtd])['data'];
         $endDate    = optional(optional($response)[0])['data'];
-    }
-    if($report && $response[$eventsQtd]->data && $response[0]->data){
-        $startDate  = $response[$eventsQtd]->data;
-        $endDate    = $response[0]->data;
     }
     
     $firstEvent = Carbon::parse(Carbon::createFromFormat('d/m/Y', $startDate)->format('Y-m-d'));
