@@ -386,6 +386,8 @@ class OrderRepository
     
     public function getOdersForExport($request)
     {
+        set_time_limit(800);
+        
         $orders = Order::where('status','>=',Order::STATUS_ORDER)
         ->has('user');
 
