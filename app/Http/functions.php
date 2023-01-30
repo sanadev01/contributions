@@ -109,20 +109,41 @@ function getTotalBalance()
     return Deposit::getLiabilityBalance();
 }
 
+function getParcelStatus($status)
+{
+    if($status == Order::STATUS_PREALERT_TRANSIT) {
+        $message = "STATUS_PREALERT_TRANSIT";
+    }elseif($status == Order::STATUS_PREALERT_READY){
+        $message = "STATUS_PREALERT_READY";
+    }elseif($status == Order::STATUS_ORDER){
+        $message = "STATUS_ORDER";
+    }elseif($status == Order::STATUS_NEEDS_PROCESSING){
+        $message = "STATUS_NEEDS_PROCESSING";
+    }elseif($status == Order::STATUS_PAYMENT_PENDING){
+        $message = "STATUS_PAYMENT_PENDING";
+    }elseif($status == Order::STATUS_PAYMENT_DONE){
+        $message = "STATUS_PAYMENT_DONE";
+    }elseif($status == Order::STATUS_CANCEL) {
+        $message = "STATUS_CANCEL";
+    }elseif($status == Order::STATUS_REJECTED) {
+        $message = "STATUS_REJECTED";
+    }elseif($status == Order::STATUS_RELEASE) {
+        $message = "STATUS_RELEASE";
+    }elseif($status == Order::STATUS_REFUND) {
+        $message = "STATUS_REFUND";
+    }  
+
+    return $message;
+}
+
 function sortTrackingEvents($data, $report)
 {
     $delivered = "No";
     $returned = "No";
     $taxed = "No";
-
-    if($report && is_array($data->evento) && count($data->evento) > 0){
-        $response = $data->evento;
-    }else {
-        $response = $data['evento'];
-    }
-
+    $response = $data['evento'];
     for($t = count($response)-1; $t >= 0; $t--) {
-        switch($report? optional(optional($data)->evento[$t])->descricao: optional(optional( $response)[$t])['descricao']) {
+        switch(optional(optional( $response)[$t])['descricao']) {
             case "Objeto entregue ao destinatário":
                 $delivered = "Yes";
                 if($taxed == "")
@@ -146,13 +167,9 @@ function sortTrackingEvents($data, $report)
     $eventsQtd = count($response)-1;
     $startDate = date('d/m/Y');
     $endDate = date('d/m/Y');
-    if( !$report && optional(optional($response)[$eventsQtd])['data'] && optional(optional($response)[0])['data']){
+    if(optional(optional($response)[$eventsQtd])['data'] && optional(optional($response)[0])['data']){
         $startDate  = optional(optional($response)[$eventsQtd])['data'];
         $endDate    = optional(optional($response)[0])['data'];
-    }
-    if($report && $response[$eventsQtd]->data && $response[0]->data){
-        $startDate  = $response[$eventsQtd]->data;
-        $endDate    = $response[0]->data;
     }
     
     $firstEvent = Carbon::parse(Carbon::createFromFormat('d/m/Y', $startDate)->format('Y-m-d'));
