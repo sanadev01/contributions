@@ -214,8 +214,9 @@ class OrderRepository
         if ( $order->recipient ){
             if($request->service == 'postal_service' && $request->country_id == Country::COLOMBIA) {
                 $city = $request->cocity;
+            }else {
+                $city = $request->city;
             }
-            $city = $request->city;
             $order->recipient()->update([
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
