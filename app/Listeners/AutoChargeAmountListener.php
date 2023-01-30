@@ -46,13 +46,13 @@ class AutoChargeAmountListener
                         'user_id' => Auth::id(),
                         'balance' => Deposit::getCurrentBalance() + $amount,
                         'is_credit' => true,
+                        'description' => 'Auto charged balance',
                         'last_four_digits' => substr($billingInformation->card_no,-4)
                     ]); 
                 $this->sendTransactionMail($deposit, $user->name);
             }   
         }
     }
-
     private function sendTransactionMail($deposit, $user){
         try {
             Mail::send(new NotifyTransaction($deposit, null, $user));
