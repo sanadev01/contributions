@@ -119,8 +119,6 @@ class DepositRepository
 
             if ( $request->billingInfo ){
                 $billingInformation = BillingInformation::find($request->billingInfo);
-                dump($request->payment_gateway);
-                return dd($billingInformation);
             }
 
             if ( !$billingInformation ){
