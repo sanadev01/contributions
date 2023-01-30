@@ -15,6 +15,16 @@ class CorrieosChileLabelRepository
 {
     protected $chile_errors;
     
+    public function run(Order $order,$update)
+    {
+        if($update){
+            return $this->update($order);
+        }
+        else {
+            return $this->handle($order);
+        }
+    }
+
     public function handle($order)
     {
         if($order->isPaid() && !$order->api_response)

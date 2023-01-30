@@ -119,9 +119,6 @@ class CreateRequest extends FormRequest
             $rules['sender.sender_zipcode'] = 'required';
             $rules['recipient.phone'] = 'required|string|max:12';
         }
-        if($shippingService && $shippingService->isSwedenPostService()) {
-            $rules['products.*.description'] = 'required|max:48';
-        }
 
         return $rules;
     }

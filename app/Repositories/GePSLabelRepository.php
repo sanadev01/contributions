@@ -15,8 +15,13 @@ class GePSLabelRepository
 {
     protected $error;
 
+    public function run(Order $order,$update)
+    {
+            return $this->get($order);
+    }
+
     public function get(Order $order)
-    { 
+    {
         if ( $order->getCN23() ){
             $this->printLabel($order);
             return true;

@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use App\Services\Excel\Export\ScanOrderExport;
 use App\Repositories\CorrieosBrazilLabelRepository;
+use App\Repositories\HandleCorreiosLabelsRepository;
 
 class PrintLabelController extends Controller
 {
@@ -114,20 +115,9 @@ class PrintLabelController extends Controller
         }
         $labelData = null;
         if($order->is_paid){
-            if ( $request->update_label === 'true' ){
-                $labelData = $labelRepository->update($order);
-            }else{
-                $labelData = $labelRepository->get($order);
-            }
-
-            $order->refresh();
-
-            if ( $labelData ){
-                Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
-            }
+            return redirect()->route('order.label.download',[encrypt($order->id),'time'=>md5(microtime())]);
         }
 
-        return redirect()->route('order.label.download',[encrypt($order->id),'time'=>md5(microtime())]);
     }
 
     /**
