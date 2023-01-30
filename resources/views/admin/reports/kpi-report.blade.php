@@ -55,7 +55,7 @@
                                             <form action="{{ route('admin.reports.kpi-report.store') }}" method="POST">
                                                 @csrf
                                                 @if($trackings)
-                                                    <input type="hidden" name="order" value="{{ json_encode($trackings['return']['objeto']) }}">
+                                                    <input type="hidden" name="order" value="{{ collect($trackings['return']['objeto']) }}">
                                                 @endif   
                                                 <div class="col-md-1 justify-content-end">
                                                     <button class="btn btn-success" {{ !empty($trackings)? '' : 'disabled' }}  title="@lang('orders.import-excel.Download')">
