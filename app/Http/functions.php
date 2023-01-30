@@ -1,9 +1,10 @@
 <?php
 
+use Carbon\Carbon;
 use App\Models\Order;
+use App\Models\State;
 use App\Models\Country;
 use App\Models\Deposit;
-use App\Models\State;
 use App\Models\Setting;
 use App\Models\ShippingService;
 use App\Services\Calculators\AbstractRateCalculator;
@@ -140,16 +141,9 @@ function sortTrackingEvents($data, $report)
     $delivered = "No";
     $returned = "No";
     $taxed = "No";
-    $diffDates = "0";
-
-    if($report){
-        $response = $data->evento;
-    }else {
-        $response = $data['evento'];
-    }
-
-    for($t=count($response)-1;$t>=0;$t--) {
-        switch($report? $response[$t]->descricao: optional(optional( $response)[$t])['descricao']) {
+    $response = $data['evento'];
+    for($t = count($response)-1; $t >= 0; $t--) {
+        switch(optional(optional( $response)[$t])['descricao']) {
             case "Objeto entregue ao destinatário":
                 $delivered = "Yes";
                 if($taxed == "")
@@ -171,19 +165,26 @@ function sortTrackingEvents($data, $report)
     }
 
     $eventsQtd = count($response)-1;
-    $dateFirstEvent = DateTime::createFromFormat('d/m/Y', $report? $response[$eventsQtd]->data : optional(optional($response)[$eventsQtd])['data']);
-    $dateLastEvent = DateTime::createFromFormat('d/m/Y', $report? $response[0]->data : optional(optional($response)[0])['data']);
-    if($dateFirstEvent && $dateLastEvent){
-        $interval = $dateFirstEvent->diff($dateLastEvent);
-    }else {
-        $interval = 0;
+    $startDate = date('d/m/Y');
+    $endDate = date('d/m/Y');
+    if(optional(optional($response)[$eventsQtd])['data'] && optional(optional($response)[0])['data']){
+        $startDate  = optional(optional($response)[$eventsQtd])['data'];
+        $endDate    = optional(optional($response)[0])['data'];
     }
-    $diffDates = $interval->format('%R%a days');
+    
+    $firstEvent = Carbon::parse(Carbon::createFromFormat('d/m/Y', $startDate)->format('Y-m-d'));
+    $lastEvent = Carbon::parse(Carbon::createFromFormat('d/m/Y', $endDate)->format('Y-m-d'));
+
+    if($firstEvent && $lastEvent){
+        $interval = $firstEvent->diffInDays($lastEvent).' days';
+    }else {
+        $interval = "0 days";
+    }
 
     return [
         'delivered' => $delivered,
         'returned' => $returned,
         'taxed' => $taxed,
-        'diffDates' => $diffDates,
+        'diffDates' => $interval,
     ];
 }

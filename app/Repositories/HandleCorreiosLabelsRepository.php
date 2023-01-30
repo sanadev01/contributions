@@ -4,7 +4,6 @@ namespace App\Repositories;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
-use App\Models\ShippingService;
 use App\Repositories\UPSLabelRepository;
 use App\Repositories\GePSLabelRepository;
 use App\Repositories\USPSLabelRepository;

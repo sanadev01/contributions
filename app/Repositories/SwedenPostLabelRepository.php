@@ -14,12 +14,7 @@ class SwedenPostLabelRepository
 
     public function run(Order $order,$update)
     {
-        // if($update){
-        //     return $this->update($order);
-        // }
-        // else {
             return $this->get($order);
-        // }
     }
 
     public function get(Order $order)
