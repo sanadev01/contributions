@@ -306,11 +306,7 @@ class User extends Authenticatable
         return[
             self::GILBERTO_ACCOUNT_ID,
         ];
-    }
-    public function getCurrentBalanceAttribute()
-    {
-        return optional($this->deposits()->latest()->first())->balance??0;
-    }    
+    }   
     public function deposits()
     {
         return $this->hasMany(Deposit::class);
