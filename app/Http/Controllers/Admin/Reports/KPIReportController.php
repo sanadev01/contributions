@@ -30,6 +30,7 @@ class KPIReportController extends Controller
     {
         if($request->order){
             $trackings = json_decode($request->order, true);
+           
             $exportService = new KPIReport($trackings);
             return $exportService->handle();
         }
