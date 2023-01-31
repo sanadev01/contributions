@@ -61,13 +61,13 @@ class KPIReport extends AbstractExportService
                 }
             }
         }
-
-        $this->setCellValue('D'.$row, "Total");
-        $this->setCellValue('E'.$row, $total);
-        $this->setCellValue('G'.$row, ($taxed/$total * 100).'%');
-        $this->setCellValue('H'.$row, ($delivered/$total * 100).'%');
-        $this->setCellValue('I'.$row, ($returned/$total * 100).'%');
-
+            if($total){
+                    $this->setCellValue('D'.$row, "Total");
+                    $this->setCellValue('E'.$row, $total);
+                    $this->setCellValue('G'.$row, ($taxed/$total * 100).'%');
+                    $this->setCellValue('H'.$row, ($delivered/$total * 100).'%');
+                    $this->setCellValue('I'.$row, ($returned/$total * 100).'%');
+            }
 
 
         $this->currentRow = $row;
