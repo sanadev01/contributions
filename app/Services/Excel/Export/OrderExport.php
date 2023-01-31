@@ -23,7 +23,7 @@ class OrderExport extends AbstractExportService
     {
         $this->prepareExcelSheet();
 
-        return $this->download();
+        return $this->downloadExcel();
     }
 
     private function prepareExcelSheet()
