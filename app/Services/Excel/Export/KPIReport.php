@@ -38,15 +38,21 @@ class KPIReport extends AbstractExportService
         foreach ($this->trackings as $data) {
             if(isset($data['evento'])) {
                 if(optional($data) && isset(optional($data)['numero'])) {
-                    $this->setCellValue('A'.$row, optional($data)['numero']);
-                    $this->setCellValue('B'.$row, optional($data)['categoria']);
-                    $this->setCellValue('C'.$row, optional(optional(optional($data)['evento'])[count($data['evento'])-1])['data']);
-                    $this->setCellValue('D'.$row, optional(optional(optional($data)['evento'])[0])['data']);
-                    $this->setCellValue('E'.$row, sortTrackingEvents($data, null)['diffDates']);
-                    $this->setCellValue('F'.$row, optional(optional(optional($data)['evento'])[0])['descricao']);
-                    $this->setCellValue('G'.$row, sortTrackingEvents($data, null)['taxed']);
-                    $this->setCellValue('H'.$row, sortTrackingEvents($data, null)['delivered']);
-                    $this->setCellValue('I'.$row, sortTrackingEvents($data, null)['returned']);
+                     $userName = '';
+                    if(optional($data)['numero']){
+                     $user = Order::where('corrios_tracking_code', $data['numero'])->first()->user;
+                     $userName = $user->getFullName() . $user->pobox_number;
+                    }
+                    $this->setCellValue('A'.$row, $userName);
+                    $this->setCellValue('B'.$row, optional($data)['numero']);
+                    $this->setCellValue('C'.$row, optional($data)['categoria']);
+                    $this->setCellValue('D'.$row, optional(optional(optional($data)['evento'])[count($data['evento'])-1])['data']);
+                    $this->setCellValue('E'.$row, optional(optional(optional($data)['evento'])[0])['data']);
+                    $this->setCellValue('F'.$row, sortTrackingEvents($data, null)['diffDates']);
+                    $this->setCellValue('G'.$row, optional(optional(optional($data)['evento'])[0])['descricao']);
+                    $this->setCellValue('H'.$row, sortTrackingEvents($data, null)['taxed']);
+                    $this->setCellValue('I'.$row, sortTrackingEvents($data, null)['delivered']);
+                    $this->setCellValue('J'.$row, sortTrackingEvents($data, null)['returned']);
                     $row++;
                     if(sortTrackingEvents($data, null)['taxed']=='Yes'){
                         $taxed++;
@@ -62,11 +68,11 @@ class KPIReport extends AbstractExportService
             }
         }
             if($total){
-                    $this->setCellValue('D'.$row, "Total");
-                    $this->setCellValue('E'.$row, $total);
-                    $this->setCellValue('G'.$row, number_format($taxed/$total * 100, 2).'%');
-                    $this->setCellValue('H'.$row, number_format($delivered/$total * 100,2).'%');
-                    $this->setCellValue('I'.$row, number_format($returned/$total * 100,2).'%');
+                    $this->setCellValue('E'.$row, "Total");
+                    $this->setCellValue('G'.$row, $total);
+                    $this->setCellValue('H'.$row, number_format($taxed/$total * 100, 2).'%');
+                    $this->setCellValue('I'.$row, number_format($delivered/$total * 100,2).'%');
+                    $this->setCellValue('J'.$row, number_format($returned/$total * 100,2).'%');
             }
 
 
@@ -77,31 +83,34 @@ class KPIReport extends AbstractExportService
     private function setExcelHeaderRow()
     {
         $this->setColumnWidth('A', 20);
-        $this->setCellValue('A1', 'Tracking');
-
+        $this->setCellValue('A1', 'User Name');
+        
         $this->setColumnWidth('B', 20);
-        $this->setCellValue('B1', 'Type Package');
+        $this->setCellValue('B1', 'Tracking');
 
         $this->setColumnWidth('C', 20);
-        $this->setCellValue('C1', 'First Event');
+        $this->setCellValue('C1', 'Type Package');
 
         $this->setColumnWidth('D', 20);
-        $this->setCellValue('D1', '	Last Event');
+        $this->setCellValue('D1', 'First Event');
 
         $this->setColumnWidth('E', 20);
-        $this->setCellValue('E1', 'Days Between');
+        $this->setCellValue('E1', '	Last Event');
 
         $this->setColumnWidth('F', 20);
-        $this->setCellValue('F1', 'Last Event');
+        $this->setCellValue('F1', 'Days Between');
 
         $this->setColumnWidth('G', 20);
-        $this->setCellValue('G1', 'Taxed');
+        $this->setCellValue('G1', 'Last Event');
 
         $this->setColumnWidth('H', 20);
-        $this->setCellValue('H1', 'Delivered');
+        $this->setCellValue('H1', 'Taxed');
 
         $this->setColumnWidth('I', 20);
-        $this->setCellValue('I1', 'Returned');
+        $this->setCellValue('I1', 'Delivered');
+
+        $this->setColumnWidth('J', 20);
+        $this->setCellValue('J1', 'Returned');
 
         $this->setBackgroundColor('A1:I1', '2b5cab');
         $this->setColor('A1:I1', 'FFFFFF');
