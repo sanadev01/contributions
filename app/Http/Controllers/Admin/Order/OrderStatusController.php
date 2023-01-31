@@ -49,8 +49,13 @@ class OrderStatusController extends Controller
                         'status'  => $request->status,
                         'is_paid' => false
                     ]);
+                    DB::commit();
+                    try{
                     $this->sendTransactionMail($deposit, $preStatus, $user);
-                    return $this->commit();
+                    }
+                    catch (Exception $e) {         
+                    }
+                    return apiResponse(true, "Updated");
                 }
 
                 if ($request->status == Order::STATUS_PAYMENT_DONE && !$order->is_paid) {
