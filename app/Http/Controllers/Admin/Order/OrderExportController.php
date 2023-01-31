@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Admin\Order;
 
 use App\Models\Reports;
-use App\Events\OrderReport;
 use App\Jobs\ExportOrder;
+use App\Events\OrderReport;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Repositories\OrderRepository;
 use App\Services\Excel\Export\OrderExport;
 
@@ -22,8 +23,8 @@ class OrderExportController extends Controller
         
         $report = $report->id;
         $request->merge(['report' => $report]);
-
-        dispatch(new ExportOrder($request));
+        
+        dispatch(new ExportOrder($request, Auth::user()));
         return redirect()->back();
     }
 }
