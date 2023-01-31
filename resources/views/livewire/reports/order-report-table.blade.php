@@ -126,7 +126,7 @@
 
             @this.on('updated-status',function(orderId,status){
                 @this.call('render')
-                $.post('{{url("/order/update/status")}}',{
+                $.post('{{route("admin.order.update.status")}}',{
                     order_id: orderId,
                     status : status
                 })

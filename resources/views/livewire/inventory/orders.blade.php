@@ -257,7 +257,7 @@
                     });
                 }else {
                     @this.call('render')
-                    $.post('{{url("/order/update/status")}}',{
+                    $.post('{{route("admin.order.update.status")}}',{
                         _token: "{{ csrf_token() }}",
                         order_id: order.id,
                         status : status
