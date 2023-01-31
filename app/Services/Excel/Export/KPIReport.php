@@ -112,8 +112,8 @@ class KPIReport extends AbstractExportService
         $this->setColumnWidth('J', 20);
         $this->setCellValue('J1', 'Returned');
 
-        $this->setBackgroundColor('A1:I1', '2b5cab');
-        $this->setColor('A1:I1', 'FFFFFF');
+        $this->setBackgroundColor('A1:J1', '2b5cab');
+        $this->setColor('A1:J1', 'FFFFFF');
 
         $this->currentRow++;
 
