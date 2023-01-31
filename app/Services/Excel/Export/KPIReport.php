@@ -16,7 +16,6 @@ class KPIReport extends AbstractExportService
     public function __construct($trackings)
     {
         $this->trackings = $trackings;
-
         parent::__construct();
     }
 
@@ -28,7 +27,12 @@ class KPIReport extends AbstractExportService
     }
 
     private function prepareExcelSheet()
-    {;
+    {
+        $total = 0;
+        $taxed = 0;
+        $delivered = 0;
+        $returned = 0;
+
         $this->setExcelHeaderRow();
         $row = $this->currentRow;
         foreach ($this->trackings as $data) {
@@ -44,9 +48,27 @@ class KPIReport extends AbstractExportService
                     $this->setCellValue('H'.$row, sortTrackingEvents($data, null)['delivered']);
                     $this->setCellValue('I'.$row, sortTrackingEvents($data, null)['returned']);
                     $row++;
+                    if(sortTrackingEvents($data, null)['taxed']=='Yes'){
+                        $taxed++;
+                    }
+                    if(sortTrackingEvents($data, null)['delivered']=='Yes'){
+                        $delivered++;
+                    }
+                    if(sortTrackingEvents($data, null)['returned']=='Yes'){
+                        $returned++;
+                    }
+                    $total++;
                 }
             }
         }
+
+        $this->setCellValue('E'.$row, "Total");
+        $this->setCellValue('F'.$row, $total);
+        $this->setCellValue('G'.$row, ($taxed/$total * 100).'%');
+        $this->setCellValue('H'.$row, ($delivered/$total * 100).'%');
+        $this->setCellValue('I'.$row, ($returned/$total * 100).'%');
+
+
 
         $this->currentRow = $row;
         $this->setBackgroundColor("A{$row}:I{$row}", 'adfb84');
