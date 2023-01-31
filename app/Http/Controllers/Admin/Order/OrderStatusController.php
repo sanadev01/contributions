@@ -50,11 +50,7 @@ class OrderStatusController extends Controller
                         'is_paid' => false
                     ]);
                     DB::commit();
-                    try{
                     $this->sendTransactionMail($deposit, $preStatus, $user);
-                    }
-                    catch (Exception $e) {         
-                    }
                     return apiResponse(true, "Updated");
                 }
 
