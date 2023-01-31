@@ -14,17 +14,16 @@ class OrderExportController extends Controller
 {
     public function __invoke(Request $request)
     {
-        Reports::create([
+        $report = Reports::create([
             'name' => 'Orders Export',
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
         ]);
-
-        $report = Reports::all()->last()->value('id');
+        
+        $report = $report->id;
         $request->merge(['report' => $report]);
 
         ExportOrder::dispatch($request);
-        // event(new OrderReport($request));
-        
+        return redirect()->back();
     }
 }

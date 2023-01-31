@@ -34,15 +34,14 @@ class ExportOrder implements ShouldQueue
      */
     public function handle(Request $request, OrderRepository $orderRepository)
     {
-        $this->request = $request;
         $orders = $orderRepository->getOdersForExport($request);
         
         $exportService = new OrderExport($orders);
         $url = $exportService->handle();
         if($url) {
             $report = Reports::find($request->report);
-            $report->update(['path'=> $url, 'is_complete' => 1]);
+            $report->update(['path'=> $url, 'is_complete' => true]);
         }
-        // \Log::info([$this->request]);
+        
     }
 }
