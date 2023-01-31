@@ -15,8 +15,9 @@ class OrdersCheckoutController extends Controller
     {
         $this->authorize('view',$invoice);
 
-        if ( $invoice->isPaid() ){
-            abort(404);
+        if( $invoice->isPaid()){
+            session()->flash('alert-danger','Invoice already paid.');
+            return view('admin.payment-invoices.index');
         }
 
         $stripeKey = null;
@@ -26,16 +27,19 @@ class OrdersCheckoutController extends Controller
         {
             $stripeKey = setting('STRIPE_KEY', null, null, true);
         }
+        $balance = getBalance();
+        $notEnoughBalance =  $balance < $invoice->differnceAmount();
         
-        return view('admin.payment-invoices.checkout',compact('invoice', 'paymentGateway', 'stripeKey'));
+        return view('admin.payment-invoices.checkout',compact('invoice', 'paymentGateway', 'stripeKey','notEnoughBalance','balance'));
     }
 
     public function store(PaymentInvoice $invoice,Request $request, OrderCheckoutRepository $orderCheckoutRepository)
     {
         $this->authorize('view',$invoice);
         
-        if ( $invoice->isPaid() ){
-            abort(404);
+        if( $invoice->isPaid()){
+            session()->flash('alert-danger','Invoice already paid.');
+            return view('admin.payment-invoices.index');
         }
 
         $request->merge(['payment_gateway' => 'authorize']);

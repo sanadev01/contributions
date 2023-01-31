@@ -132,14 +132,6 @@ class ShippingService extends Model
 
         return false;
     }
-    public function getIsgepsAttribute()
-    {
-        if (collect($this->gepsShippingServices())->contains($this->service_sub_class)) {
-            return true;
-        }
-
-        return false;
-    }
     public function isSwedenPostService()
     {
         if($this->service_sub_class == self::Prime5){
@@ -334,5 +326,13 @@ class ShippingService extends Model
     public function getIsUspsFirstclassInternationalAttribute()
     { 
         return $this->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL;
+    }
+    public function getIsgepsAttribute()
+    {
+        if (collect($this->gepsShippingServices())->contains($this->service_sub_class)) {
+            return true;
+        }
+
+        return false;
     }
 }

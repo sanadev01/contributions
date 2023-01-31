@@ -52,10 +52,13 @@
                                                 </button>
                                             </div>
                                             </form>
-                                            <form action="{{ route('admin.reports.kpi-report.create') }}" method="GET" target="_blank" id="reportForm">
-                                                <input type="hidden" name="_token" value="{{ csrf_token() }}" id="token"/>
+                                            <form action="{{ route('admin.reports.kpi-report.store') }}" method="POST">
+                                                @csrf
+                                                @if($trackings)
+                                                    <input type="hidden" name="order" value="{{ collect($trackings['return']['objeto']) }}">
+                                                @endif   
                                                 <div class="col-md-1 justify-content-end">
-                                                    <button class="btn btn-success" title="@lang('orders.import-excel.Download')">
+                                                    <button class="btn btn-success" {{ !empty($trackings)? '' : 'disabled' }}  title="@lang('orders.import-excel.Download')">
                                                         <i class="fa fa-arrow-down"></i>
                                                     </button>
                                                 </div>
@@ -80,25 +83,27 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($trackings['return']['objeto'] as $data)
-                                        @if(isset($data['evento']))
-                                        <tr>
-                                            @if(optional($data) && isset($data['numero']))
-                                                <td>{{ $data['numero'] }}</td>
-                                                <td><span>{{ $data['categoria'] }}</span></td>
-                                                <td>{{ $data['evento'][count($data['evento'])-1]['data'] }}</td>
-                                                <td>{{ $data['evento'][0]['data'] }}</td>
-                                                <td>{{ sortTrackingEvents($data)['diffDates'] }} </td>
-                                                <td>{{ $data['evento'][0]['descricao'] }}</td>
-                                                <td>{{ sortTrackingEvents($data)['taxed'] }}</td>
-                                                <td>{{ sortTrackingEvents($data)['delivered'] }}</td>
-                                                <td>{{ sortTrackingEvents($data)['returned'] }}</td>
-                                            @else
-                                            <td colspan='9'>No Trackings Found</td>
+                                    @if($trackings)
+                                        @foreach($trackings['return']['objeto'] as $data)
+                                            @if(isset($data['evento']))
+                                            <tr>
+                                                @if(optional($data) && isset(optional($data)['numero']))
+                                                    <td>{{ optional($data)['numero'] }}</td>
+                                                    <td><span>{{ optional($data)['categoria'] }}</span></td>
+                                                    <td>{{ optional(optional(optional($data)['evento'])[count($data['evento'])-1])['data'] }}</td>
+                                                    <td>{{ optional(optional(optional($data)['evento'])[0])['data'] }}</td>
+                                                    <td>{{ sortTrackingEvents($data, null)['diffDates'] }} </td>
+                                                    <td>{{ optional(optional(optional($data)['evento'])[0])['descricao'] }}</td>
+                                                    <td>{{ sortTrackingEvents($data, null)['taxed'] }}</td>
+                                                    <td>{{ sortTrackingEvents($data, null)['delivered'] }}</td>
+                                                    <td>{{ sortTrackingEvents($data, null)['returned'] }}</td>
+                                                @else
+                                                <td colspan='9'>No Trackings Found</td>
+                                                @endif
+                                            </tr>
                                             @endif
-                                        </tr>
-                                        @endif
-                                    @endforeach
+                                        @endforeach
+                                    @endif
                                 </tbody>
                             </table>
                             
@@ -109,16 +114,6 @@
             </div>
         </div>
     </section>
-    <script>
-        document.querySelector('#reportForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            var formData = new FormData(e.target);
-            var startDate = $("#startDate").val();
-            var endDate = $("#endDate").val();
-            var token = $("#token").val();
-            window.location.href = "kpi-report/create?start_date="+startDate+"&end_date="+endDate
-        });
-    </script>
 @endsection
 @section('modal')
 <x-modal />

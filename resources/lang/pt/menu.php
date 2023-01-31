@@ -59,7 +59,7 @@ return [
         'Prime5' => 'Prime5',
     ],
     'Affiliate' => [
-        'menu' => 'Relatórios',
+        'menu' => 'Afiliados',
         'Dashboard' => 'Painel de controle',
         'Sales Commission' => 'Extrato de Comissoes',
         'Sale Commission' => 'Comissão de vendas',

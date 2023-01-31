@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Repositories; 
+namespace App\Repositories;
+
+use App\Events\AutoChargeAmountEvent;
 use Stripe\Charge;
 use Stripe\Stripe;
 use Stripe\Customer;
@@ -28,6 +30,7 @@ class OrderCheckoutRepository
 
     public function handle($invoice, $request)
     {
+        
         $this->invoice = $invoice;
         $this->request = $request;
 
@@ -42,13 +45,13 @@ class OrderCheckoutRepository
     {
         if($this->request->pay){
 
-            if(getBalance() < $this->invoice->total_amount){
+            if(getBalance() < ($this->invoice->total_amount - $this->invoice->paid_amount)){
                 session()->flash('alert-danger','Not Enough Balance. Please Recharge your account.');
                 return back();
             }
             
-            DB::beginTransaction();
-            $user = Auth::user()->name;
+            DB::beginTransaction(); 
+            $user = Auth::user()->name;    
             try {
                 
                 foreach($this->invoice->orders as $order){
@@ -72,6 +75,7 @@ class OrderCheckoutRepository
                     \Log::info('Notify Transaction email send error: '.$ex->getMessage());
                 }
                 DB::commit();
+                AutoChargeAmountEvent::dispatch($this->invoice->orders()->first()->user);
             } catch (\Exception $ex) {
                 DB::rollBack();
                 session()->flash('alert-danger',$ex->getMessage());
@@ -112,7 +116,8 @@ class OrderCheckoutRepository
                 return back();
             }
 
-            DB::transaction(function () {
+            DB::beginTransaction();
+
                 try {
 
                     $order = $this->invoice->orders->firstWhere('is_paid', false);
@@ -128,12 +133,14 @@ class OrderCheckoutRepository
                     $this->invoice->orders()->update([
                         'is_paid' => true,
                         'status' => Order::STATUS_PAYMENT_DONE
-                    ]); 
+                    ]);
+                    DB::commit();
+
                 } catch (\Exception $ex) {
+                DB::rollBack(); 
                     session()->flash('alert-danger',$ex->getMessage());
                     return back();
-                }
-            });
+                } 
         }
 
         if(!$this->request->pay){
@@ -246,9 +253,9 @@ class OrderCheckoutRepository
                 } catch (\Exception $ex) {
                     Log::info('Payment Paid email send error: '.$ex->getMessage());
                 }
-    
-                DB::commit();
-    
+
+                DB::commit();                
+                AutoChargeAmountEvent::dispatch($this->invoice->orders()->first()->user);
                 return true;
             }
             
