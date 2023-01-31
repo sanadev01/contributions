@@ -2,10 +2,13 @@
 
 namespace App\Jobs;
 
+use App\Models\Reports;
 use Illuminate\Http\Request;
 use Illuminate\Bus\Queueable;
+use App\Repositories\OrderRepository;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
+use App\Services\Excel\Export\OrderExport;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
@@ -29,11 +32,17 @@ class ExportOrder implements ShouldQueue
      *
      * @return void
      */
-    public function handle(Request $request)
+    public function handle(Request $request, OrderRepository $orderRepository)
     {
         $this->request = $request;
-        \Log::info('testing job');
-        dd(222);
+        $orders = $orderRepository->getOdersForExport($request);
+        
+        $exportService = new OrderExport($orders);
+        $url = $exportService->handle();
+        if($url) {
+            $report = Reports::find($request->report);
+            $report->update(['path'=> $url, 'is_complete' => 1]);
+        }
         // \Log::info([$this->request]);
     }
 }
