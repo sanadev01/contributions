@@ -5,14 +5,17 @@ namespace App\Providers;
 use App\Models\AffiliateSale;
 use App\Models\Order;
 use App\Events\OrderPaid;
+use App\Events\OrderStatusUpdated;
 use App\Listeners\CalculateCommission;
+use App\Listeners\OrderStatusChanged;
 use App\Observers\AffiliateSaleObserver;
 use App\Observers\OrderObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
-
+use App\Events\AutoChargeAmountEvent;
+use App\Listeners\AutoChargeAmountListener;
 class EventServiceProvider extends ServiceProvider
 {
     /**
@@ -27,6 +30,12 @@ class EventServiceProvider extends ServiceProvider
         OrderPaid::class =>[
             CalculateCommission::class, 
         ],
+        AutoChargeAmountEvent::class => [
+            AutoChargeAmountListener::class,
+        ],
+        OrderStatusUpdated::class =>[
+            OrderStatusChanged::class, 
+        ],
     ];
 
     /**
@@ -37,6 +46,6 @@ class EventServiceProvider extends ServiceProvider
     public function boot()
     {
         parent::boot();
-        // Order::observe(OrderObserver::class);
+        Order::observe(OrderObserver::class);
     }
 }
