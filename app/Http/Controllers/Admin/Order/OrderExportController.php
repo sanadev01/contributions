@@ -23,7 +23,7 @@ class OrderExportController extends Controller
         $report = $report->id;
         $request->merge(['report' => $report]);
 
-        ExportOrder::dispatch($request);
+        dispatch(new ExportOrder($request));
         return redirect()->back();
     }
 }
