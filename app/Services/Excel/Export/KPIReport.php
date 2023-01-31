@@ -40,12 +40,12 @@ class KPIReport extends AbstractExportService
             if(isset($data['evento'])) {
                 if(optional($data) && isset(optional($data)['numero'])) {
                      $userName = '';
-                     try{
-                     if(optional($data)['numero']){
-                     $user = Order::where('corrios_tracking_code', $data['numero'])->first()->user;
-                     $userName = $user->getFullName() . $user->pobox_number;
-                    }
-                     }catch(Exception $e){}
+                    //  try{
+                    //  if(optional($data)['numero']){
+                    //  $user = Order::where('corrios_tracking_code', $data['numero'])->first()->user;
+                    //  $userName = $user->getFullName() . $user->pobox_number;
+                    // }
+                    //  }catch(Exception $e){}
 
                     $this->setCellValue('A'.$row, $userName);
                     $this->setCellValue('B'.$row, optional($data)['numero']);
