@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Admin\Order;
 
+use App\Models\User;
 use App\Models\Reports;
 use App\Jobs\ExportOrder;
-use App\Events\OrderReport;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -15,6 +15,7 @@ class OrderExportController extends Controller
 {
     public function __invoke(Request $request)
     {
+
         $report = Reports::create([
             'name' => 'Orders Export',
             'start_date' => $request->start_date,
@@ -23,8 +24,11 @@ class OrderExportController extends Controller
         
         $report = $report->id;
         $request->merge(['report' => $report]);
-        
-        dispatch(new ExportOrder($request, Auth::user()));
+
+        // dispatch(new ExportOrder(
+        //     $request, Auth::user()
+        // ))->onQueue('default');
+        ExportOrder::dispatch($request->all(), Auth::user());
         return redirect()->back();
     }
 }

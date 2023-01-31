@@ -2,6 +2,7 @@
 
 namespace App\Services\Excel\Export;
 use App\Models\Order;
+use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
@@ -9,12 +10,16 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 class OrderExport extends AbstractExportService
 {
     private $orders;
+    private $user;
+    private $id;
 
     private $currentRow = 1;
 
-    public function __construct(Collection $orders)
+    public function __construct(Collection $orders, $id)
     {
+        // dd($id);
         $this->orders = $orders;
+        $this->id = $id;
 
         parent::__construct();
     }
@@ -31,7 +36,7 @@ class OrderExport extends AbstractExportService
         $this->setExcelHeaderRow();
 
         $row = $this->currentRow;
-
+        $this->user = User::find($this->id);
         foreach ($this->orders as $order) {
             $user = $order->user;
             
@@ -55,7 +60,7 @@ class OrderExport extends AbstractExportService
             $this->setCellValue('R'.$row, $order->discountCost());
             $this->setCellValue('S'.$row, $this->getcarrier($order)['intl']);
             $this->setCellValue('T'.$row, $this->getcarrier($order)['domestic']);
-            if(Auth::user()->isAdmin()){
+            if($user->isAdmin()){
                 $this->setCellValue('U'.$row, $order->carrierCost());
                 $this->setCellValue('V'.$row, optional($order->us_secondary_label_cost)['api_cost']);
                 $this->setCellValue('W'.$row,setting('marketplace_checked', null, $user->id)?  setting('marketplace', null, $user->id):'');
@@ -147,7 +152,7 @@ class OrderExport extends AbstractExportService
         $this->setColumnWidth('T', 20);
         $this->setCellValue('T1', 'Domestic Carrier Service');
 
-        if(Auth::user()->isAdmin()){
+        // if($this->user->isAdmin()){
             $this->setColumnWidth('U', 20);
             $this->setCellValue('U1', '1st Label Cost');
 
@@ -157,7 +162,7 @@ class OrderExport extends AbstractExportService
             $this->setColumnWidth('W', 20);
             $this->setCellValue('W1', 'Marketplace');
 
-        }
+        // }
 
         $this->setBackgroundColor('A1:W1', '2b5cab');
         $this->setColor('A1:W1', 'FFFFFF');

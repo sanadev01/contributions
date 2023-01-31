@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\User;
 use App\Models\Reports;
 use Illuminate\Http\Request;
 use Illuminate\Bus\Queueable;
@@ -17,14 +18,19 @@ class ExportOrder implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $request;
+    public $user;
+    public $orderRepository;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Request $request)
+    public function __construct($request, $user)
     {
-        //
+        $this->user = $user;
+        $this->request = $request;
+        $this->orderRepository = new OrderRepository();
+
     }
 
     /**
@@ -32,14 +38,17 @@ class ExportOrder implements ShouldQueue
      *
      * @return void
      */
-    public function handle(Request $request, OrderRepository $orderRepository)
+    public function handle()
     {
-        $orders = $orderRepository->getOdersForExport($request);
-        
-        $exportService = new OrderExport($orders);
+        $request = new Request($this->request);
+        $orders = $this->orderRepository->getOdersForExport($request, $this->user);
+        // dd($this->user->id);
+        $id = $this->user->id;
+        $exportService = new OrderExport($orders, $id);
         $url = $exportService->handle();
         if($url) {
-            $report = Reports::find($request->report);
+            $id = Reports::orderBy('id', 'desc')->value('id');
+            $report = Reports::find($id);
             $report->update(['path'=> $url, 'is_complete' => true]);
         }
         
