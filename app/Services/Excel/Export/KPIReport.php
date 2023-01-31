@@ -4,6 +4,7 @@ namespace App\Services\Excel\Export;
 
 use DateTime;
 use App\Models\Order;
+use Exception;
 use Illuminate\Support\Collection;
 
 class KPIReport extends AbstractExportService
@@ -39,10 +40,13 @@ class KPIReport extends AbstractExportService
             if(isset($data['evento'])) {
                 if(optional($data) && isset(optional($data)['numero'])) {
                      $userName = '';
-                    if(optional($data)['numero']){
+                     try{
+                     if(optional($data)['numero']){
                      $user = Order::where('corrios_tracking_code', $data['numero'])->first()->user;
                      $userName = $user->getFullName() . $user->pobox_number;
                     }
+                     }catch(Exception $e){}
+
                     $this->setCellValue('A'.$row, $userName);
                     $this->setCellValue('B'.$row, optional($data)['numero']);
                     $this->setCellValue('C'.$row, optional($data)['categoria']);
