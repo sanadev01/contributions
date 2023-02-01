@@ -21,7 +21,6 @@ use App\Repositories\ApiShippingServiceRepository;
 use Illuminate\Support\Facades\Validator;
 use FlyingLuscas\Correios\Client;
 use Illuminate\Support\Facades\Log;
-use Transliterator;
 
 class ParcelController extends Controller
 {
