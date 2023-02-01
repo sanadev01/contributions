@@ -19,7 +19,7 @@ class OrderExport extends AbstractExportService
     {
         $this->orders = $orders;
         $this->id = $id;
-        $this->user = User::find($this->id);
+        $this->authUser = User::find($this->id);
 
         parent::__construct();
     }
@@ -38,7 +38,7 @@ class OrderExport extends AbstractExportService
         $row = $this->currentRow;
         foreach ($this->orders as $order) {
             $user = $order->user;
-            
+            \Log::info($row);
             $this->setCellValue('A'.$row, $order->order_date);
             $this->setCellValue('B'.$row, $order->warehouse_number);
             $this->setCellValue('C'.$row, $user->name);
@@ -59,7 +59,7 @@ class OrderExport extends AbstractExportService
             $this->setCellValue('R'.$row, $order->discountCost());
             $this->setCellValue('S'.$row, $this->getcarrier($order)['intl']);
             $this->setCellValue('T'.$row, $this->getcarrier($order)['domestic']);
-            if($user->isAdmin()){
+            if($this->authUser->isAdmin()){
                 $this->setCellValue('U'.$row, $order->carrierCost());
                 $this->setCellValue('V'.$row, optional($order->us_secondary_label_cost)['api_cost']);
                 $this->setCellValue('W'.$row,setting('marketplace_checked', null, $user->id)?  setting('marketplace', null, $user->id):'');
@@ -151,7 +151,7 @@ class OrderExport extends AbstractExportService
         $this->setColumnWidth('T', 20);
         $this->setCellValue('T1', 'Domestic Carrier Service');
 
-        if($this->user->isAdmin()){
+        if($this->authUser->isAdmin()){
             $this->setColumnWidth('U', 20);
             $this->setCellValue('U1', '1st Label Cost');
 

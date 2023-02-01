@@ -16,9 +16,10 @@
         <thead>
             <tr>
                 <th>@lang('orders.Report Name')</th>
+                <th>@lang('orders.name')</th>
                 <th>@lang('orders.From Date')</th>
                 <th>@lang('orders.To Date')</th>
-                <th>@lang('orders.Status')</th>
+                <th>@lang('orders.action')</th>
             </tr>
         </thead>
         <tbody>
@@ -26,6 +27,7 @@
                 @foreach($reports as $report)
                     <tr>
                         <td>{{ $report->name }}</td>
+                        <td>{{ $report->user->name .' | '. $report->user->pobox_number }}</td>
                         <td>{{ date('d-M-Y', strtotime($report->start_date)) }}</td>
                         <td>{{ date('d-M-Y', strtotime($report->end_date)) }}</td>
                         <td>
@@ -34,7 +36,7 @@
                             @else
                                 <a href="javascript:void(0)"><button class="btn btn-success btn-sm pr-3" wire:click="download({{ $report->id }})">Download</button></a>
                             @endif
-                            <a href="javascript:void(0)"><button type="" class="btn btn-danger btn-sm" wire:click="delete({{ $report->id }})">Delete</button></a>
+                                <a href="javascript:void(0)"><button type="" class="btn btn-danger btn-sm" wire:click="delete({{ $report->id }})">Delete</button></a>
                         </td>
                     </tr>
                 @endforeach
@@ -46,5 +48,5 @@
     <div class="d-flex justify-content-end my-2 pb-4 mx-2">
         {{ $reports->links() }}
     </div>
-    @include('layouts.livewire.loading')
+    {{-- @include('layouts.livewire.loading') --}}
 </div>
