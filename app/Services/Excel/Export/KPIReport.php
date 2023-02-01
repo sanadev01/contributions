@@ -1,22 +1,15 @@
 <?php
 
 namespace App\Services\Excel\Export;
-
-use DateTime;
-use App\Models\Order;
-use Illuminate\Support\Collection;
-
 class KPIReport extends AbstractExportService
 {
     private $trackings;
-    private $request;
 
     private $currentRow = 1;
 
     public function __construct($trackings)
     {
         $this->trackings = $trackings;
-
         parent::__construct();
     }
 
@@ -29,35 +22,54 @@ class KPIReport extends AbstractExportService
 
     private function prepareExcelSheet()
     {
-        $report = 1;
-        $startDate = null;
+        $total = 0;
+        $taxed = 0;
+        $delivered = 0;
+        $returned = 0;
+
         $this->setExcelHeaderRow();
         $row = $this->currentRow;
         foreach ($this->trackings as $data) {
-            if(optional($data) && isset($data->evento)) {
-                if( is_array($data->evento) && count($data->evento) > 0){
-                    $startDate = $data->evento[count($data->evento)-1]->data;
+            if(isset($data['evento'])) {
+                if(optional($data) && isset(optional($data)['numero'])) {
+                    $this->setCellValue('A'.$row, optional($data)['numero']);
+                    $this->setCellValue('B'.$row, optional($data)['categoria']);
+                    $this->setCellValue('C'.$row, optional(optional(optional($data)['evento'])[count($data['evento'])-1])['data']);
+                    $this->setCellValue('D'.$row, optional(optional(optional($data)['evento'])[0])['data']);
+                    $this->setCellValue('E'.$row, sortTrackingEvents($data, null)['diffDates']);
+                    $this->setCellValue('F'.$row, optional(optional(optional($data)['evento'])[0])['descricao']);
+                    $this->setCellValue('G'.$row, sortTrackingEvents($data, null)['taxed']);
+                    $this->setCellValue('H'.$row, sortTrackingEvents($data, null)['delivered']);
+                    $this->setCellValue('I'.$row, sortTrackingEvents($data, null)['returned']);
+                    $row++;
+                    if(sortTrackingEvents($data, null)['taxed']=='Yes'){
+                        $taxed++;
+                    }
+                    if(sortTrackingEvents($data, null)['delivered']=='Yes'){
+                        $delivered++;
+                    }
+                    if(sortTrackingEvents($data, null)['returned']=='Yes'){
+                        $returned++;
+                    }
+                    $total++;
                 }
-
-                $this->setCellValue('A'.$row, $data->numero);
-                $this->setCellValue('B'.$row, $data->categoria);
-                $this->setCellValue('C'.$row, $startDate);
-                $this->setCellValue('D'.$row, optional(optional($data->evento)[0])->data);
-                $this->setCellValue('E'.$row, sortTrackingEvents($data, $report)['diffDates']);
-                $this->setCellValue('F'.$row, optional(optional($data->evento)[0])->descricao);
-                $this->setCellValue('G'.$row, sortTrackingEvents($data, $report)['taxed']);
-                $this->setCellValue('H'.$row, sortTrackingEvents($data, $report)['delivered']);
-                $this->setCellValue('I'.$row, sortTrackingEvents($data, $report)['returned']);
-                $row++;
             }
         }
+            if($total){
+                    $this->setCellValue('D'.$row, "Total");
+                    $this->setCellValue('E'.$row, $total);
+                    $this->setCellValue('G'.$row, number_format($taxed/$total * 100, 2).'%');
+                    $this->setCellValue('H'.$row, number_format($delivered/$total * 100,2).'%');
+                    $this->setCellValue('I'.$row, number_format($returned/$total * 100,2).'%');
+            }
+
 
         $this->currentRow = $row;
         $this->setBackgroundColor("A{$row}:I{$row}", 'adfb84');
     }
 
     private function setExcelHeaderRow()
-    {
+    {        
         $this->setColumnWidth('A', 20);
         $this->setCellValue('A1', 'Tracking');
 

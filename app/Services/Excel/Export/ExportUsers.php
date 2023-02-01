@@ -40,6 +40,7 @@ class ExportUsers extends AbstractExportService
             $this->setCellValue('E'.$row, $user->come_from);
             $this->setCellValue('F'.$row, optional($user->profitPackage)->name);
             $this->setCellValue('G'.$row, $this->getProfitPackageSettings($user->id));
+            $this->setCellValue('H'.$row, setting('marketplace', null, $user->id));
             $row++;
         }
 
@@ -68,9 +69,12 @@ class ExportUsers extends AbstractExportService
 
         $this->setColumnWidth('G', 25);
         $this->setCellValue('G1', 'User Setting Package');
+        
+        $this->setColumnWidth('H', 25);
+        $this->setCellValue('H1', 'Marketplace');
 
-        $this->setBackgroundColor('A1:G1', '2b5cab');
-        $this->setColor('A1:G1', 'FFFFFF');
+        $this->setBackgroundColor('A1:H1', '2b5cab');
+        $this->setColor('A1:H1', 'FFFFFF');
 
         $this->currentRow++;
     }

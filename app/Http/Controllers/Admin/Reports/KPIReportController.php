@@ -29,7 +29,8 @@ class KPIReportController extends Controller
     public function store(Request $request, KPIReportsRepository $kpiReportsRepository)
     {
         if($request->order){
-            $trackings = json_decode($request->order);
+            $trackings = json_decode($request->order, true);
+           
             $exportService = new KPIReport($trackings);
             return $exportService->handle();
         }
