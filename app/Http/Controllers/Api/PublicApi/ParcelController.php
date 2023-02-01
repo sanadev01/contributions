@@ -18,6 +18,10 @@ use App\Http\Requests\Api\Parcel\CreateRequest;
 use App\Http\Requests\Api\Parcel\UpdateRequest;
 use App\Http\Resources\PublicApi\OrderResource;
 use App\Repositories\ApiShippingServiceRepository;
+use Illuminate\Support\Facades\Validator;
+use FlyingLuscas\Correios\Client;
+use Illuminate\Support\Facades\Log;
+use Transliterator;
 
 class ParcelController extends Controller
 {
@@ -37,8 +41,54 @@ class ParcelController extends Controller
      */
     public function store(CreateRequest $request)
     { 
-        \Log::info('request Data');
-        \Log::info($request);
+        Log::info('request Data');
+        Log::info($request);
+
+
+        if (Country::where('code', 'BR')->first()->id == $request->recipient['country_id']) { 
+
+
+            Validator::validate($request->all(), [
+                'recipient.zipcode' => 'required',
+                'recipient.state_id' => 'required',
+            ]); ;
+ 
+            $state = State::find($request->recipient['state_id']);
+             
+            $correios = new Client;
+            $response = $correios->zipcode()->find($request->recipient['zipcode']);
+            
+            if(optional($response)['error']){ 
+                    return response()->json([
+                                    "message"=>"The given data was invalid.",
+                                    "errors" => [
+                                        'recipient.zipcode' => 'zip code not found / CEP não encontrado',
+                                    ]
+                                ], 422);
+
+            }
+            $errors = [];
+            $transliterator = Transliterator::createFromRules(':: NFD; :: [:Nonspacing Mark:] Remove; :: NFC;', Transliterator::FORWARD);
+            
+            if($transliterator->transliterate($response['uf']) != $state->code){ 
+                array_push($errors ,[ 'recipient.state_id' => 'According to your Zipcode the valid state is '.$response['uf']]);
+            }
+            if($transliterator->transliterate($response['city']) != $request->recipient['city']){ 
+                array_push($errors ,[ 'recipient.city' => 'According to your Zipcode the valid city is '.$response['city']]);
+            }
+            if($transliterator->transliterate($response['street'])!= $request->recipient['address']){ 
+                array_push($errors ,[ 'recipient.address' => 'According to your Zipcode the valid address is '.$response['street']]);
+            } 
+            if(count($errors)){
+                return response()->json([
+                    "message"=>"The given data was invalid.",
+                    "errors" =>    $errors
+                ], 422);
+            }
+        }
+
+
+
         $weight = optional($request->parcel)['weight']??0;
         $length = optional($request->parcel)['length']??0;
         $width = optional($request->parcel)['width']??0;
