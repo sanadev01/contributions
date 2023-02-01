@@ -12,12 +12,32 @@ class ExportOrder extends Component
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
 
+    private $query;
+
     public $pageSize = 50;
+    public $sortAsc = false;
+    public $sortBy = 'id';
+
+    public function mount()
+    {
+        $this->query = $this->getQuery();
+    }
 
     public function render()
     {
-        $reports = Reports::all();
-        return view('livewire.order.export-order', compact('reports'));
+        if (! $this->query) {
+            $this->query = $this->getQuery();
+        }
+
+        return view('livewire.order.export-order', [
+            'reports' => $this->query
+            ->orderBy(
+                $this->sortBy,
+                $this->sortAsc ? 'ASC' : 'DESC'
+            )
+            ->paginate($this->pageSize)
+        ]);
+
     }
 
     public function download(Reports $report)
@@ -33,6 +53,12 @@ class ExportOrder extends Component
             Storage::delete(basename($report->path));
         }
         $report->delete();
+    }
+
+    public function getQuery()
+    {
+        $reports = Reports::query();
+        return $reports;
     }
 
     public function updating()

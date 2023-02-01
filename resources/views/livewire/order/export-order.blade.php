@@ -1,7 +1,4 @@
 <div @if(!$reports->first()->is_complete) wire:poll.30000ms @endif>
-    <div class="card-header">
-        <h4 class="mb-0">Orders Export Report</h4>
-    </div><br>
     <div class="row mb-2 no-print">
         <div class="col-1">
             <select class="form-control" wire:model="pageSize">
@@ -46,6 +43,8 @@
             @endif
         </tbody>
     </table>
-    
+    <div class="d-flex justify-content-end my-2 pb-4 mx-2">
+        {{ $reports->links() }}
+    </div>
     @include('layouts.livewire.loading')
 </div>
