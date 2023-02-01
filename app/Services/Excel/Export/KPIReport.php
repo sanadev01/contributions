@@ -1,22 +1,15 @@
 <?php
 
 namespace App\Services\Excel\Export;
-
-use DateTime;
-use App\Models\Order;
-use Illuminate\Support\Collection;
-
 class KPIReport extends AbstractExportService
 {
     private $trackings;
-    private $request;
 
     private $currentRow = 1;
 
     public function __construct($trackings)
     {
         $this->trackings = $trackings;
-
         parent::__construct();
     }
 
@@ -62,6 +55,14 @@ class KPIReport extends AbstractExportService
                 }
             }
         }
+            if($total){
+                    $this->setCellValue('D'.$row, "Total");
+                    $this->setCellValue('E'.$row, $total);
+                    $this->setCellValue('G'.$row, number_format($taxed/$total * 100, 2).'%');
+                    $this->setCellValue('H'.$row, number_format($delivered/$total * 100,2).'%');
+                    $this->setCellValue('I'.$row, number_format($returned/$total * 100,2).'%');
+            }
+
 
         if($total){
         $this->setCellValue('D'.$row, "Total");
@@ -79,7 +80,7 @@ class KPIReport extends AbstractExportService
     }
 
     private function setExcelHeaderRow()
-    {
+    {        
         $this->setColumnWidth('A', 20);
         $this->setCellValue('A1', 'Tracking');
 
