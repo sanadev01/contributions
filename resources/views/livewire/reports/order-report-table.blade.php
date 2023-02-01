@@ -82,20 +82,24 @@
         }
         window.addEventListener('DOMContentLoaded', () => {
 
-            @this.on('updated-status', function(orderId, status) {
-                $.post('{{ route('api.order.status.update') }}', {
-                        order_id: orderId,
-                        status: status
-                    })
-                    .then(function(response) {
-                        if (response.success) {
-                            @this.call('render')
-                        } else {
-                            toastr.error(response.message)
-                        }
-                    }).catch(function(data) {
+            @this.on('updated-status',function(orderId,status){
+                @this.call('render')
+                $.post('{{route("admin.order.update.status")}}',{
+                    order_id: orderId,
+                    status : status
+                })
+                .then(function(response){
+                    if ( response.success ){
+                        toastr.success(response.message)
+                        @this.call('render')
+                    }else{
                         toastr.error(response.message)
-                    })
+                        @this.call('render')
+                    }
+                }).catch(function(data){
+                    toastr.error(response.message)
+                })
+
             })
         });
     </script>
