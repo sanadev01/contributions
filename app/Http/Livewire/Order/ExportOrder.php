@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Order;
 use App\Models\Reports;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class ExportOrder extends Component

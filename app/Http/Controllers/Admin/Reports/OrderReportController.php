@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Admin\Reports;
 
-use App\Http\Controllers\Controller;
 use App\Models\Reports;
-use App\Repositories\Reports\OrderReportsRepository;
-use App\Services\Excel\Export\OrderExport;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Services\Excel\Export\OrderExport;
+use App\Repositories\Reports\OrderReportsRepository;
 
 class OrderReportController extends Controller
 {
@@ -26,7 +27,7 @@ class OrderReportController extends Controller
         $this->authorize('viewOrderReport',Reports::class);
         $orders =  $orderReportsRepository->getOrderReport();
         
-        $exportService = new OrderExport($orders);
+        $exportService = new OrderExport($orders, Auth::id());
         return $exportService->handle();
     }
 

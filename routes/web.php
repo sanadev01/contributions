@@ -13,7 +13,6 @@ use App\Services\Correios\Services\Brazil\Client;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
-use App\Http\Controllers\Admin\Reports\OrderReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -174,9 +173,9 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('anjun', AnjunReportController::class)->only(['index','create']);
             Route::resource('kpi-report', KPIReportController::class)->only(['index','store']);
             Route::get('tax-report', TaxReportController::class)->name('tax-report');
-            Route::get('export-orders', [OrderReportController::class,'download'])->name('export-orders');
-
+            
         });
+        Route::get('export-orders', [App\Http\Controllers\Admin\Reports\OrderReportController::class,'download'])->name('export-orders');
 
         Route::namespace('Inventory')->as('inventory.')->prefix('inventory')->group(function(){
             Route::resource('product', ProductController::class);
