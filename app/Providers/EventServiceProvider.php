@@ -4,9 +4,7 @@ namespace App\Providers;
 
 use App\Models\Order;
 use App\Events\OrderPaid;
-use App\Events\OrderReport;
 use App\Models\AffiliateSale;
-use App\Listeners\ExportOrder;
 use App\Observers\OrderObserver;
 use Illuminate\Support\Facades\Event;
 use App\Listeners\CalculateCommission;
