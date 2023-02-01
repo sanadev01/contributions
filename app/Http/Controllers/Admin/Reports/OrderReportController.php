@@ -32,8 +32,6 @@ class OrderReportController extends Controller
 
     public function download()
     {
-        $id = Reports::orderBy('id', 'desc')->value('id');
-        $report = Reports::find($id);
-        return view('admin.reports.export-orders', compact('report'));
+        return view('admin.reports.export-orders');
     }
 }

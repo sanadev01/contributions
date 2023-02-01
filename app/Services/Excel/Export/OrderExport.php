@@ -19,6 +19,7 @@ class OrderExport extends AbstractExportService
     {
         $this->orders = $orders;
         $this->id = $id;
+        $this->user = User::find($this->id);
 
         parent::__construct();
     }
@@ -35,7 +36,6 @@ class OrderExport extends AbstractExportService
         $this->setExcelHeaderRow();
 
         $row = $this->currentRow;
-        $this->user = User::find($this->id);
         foreach ($this->orders as $order) {
             $user = $order->user;
             
