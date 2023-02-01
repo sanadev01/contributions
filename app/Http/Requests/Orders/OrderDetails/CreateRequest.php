@@ -40,6 +40,12 @@ class CreateRequest extends FormRequest
             'items.*.value' => 'required|gt:0', 
             'items.*.dangrous_item' => 'required', 
         ];
+
+        $shippingService = ShippingService::find($this->shipping_service_id ?? null);
+
+        if($shippingService && $shippingService->isPostNLService()) {
+            $rules['items.*.description'] = 'required|max:45';
+        }
         
         return $rules;
         
