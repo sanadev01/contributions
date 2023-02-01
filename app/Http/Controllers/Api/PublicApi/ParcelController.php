@@ -77,7 +77,7 @@ class ParcelController extends Controller
             if(strtr($response['uf'],$replaceCharacter) != strtr($state->code,$replaceCharacter)){ 
                 array_push($errors ,[ 'recipient.state_id' => 'According to your Zipcode the valid state is '.$response['uf']]);
             }
-            if(strtr($response['city'],$replaceCharacter) != strtr($request->recipient['address'],$replaceCharacter)){ 
+            if(strtr($response['city'],$replaceCharacter) != strtr($request->recipient['city'],$replaceCharacter)){ 
                 array_push($errors ,[ 'recipient.city' => 'According to your Zipcode the valid city is '.$response['city']]);
             }
             if(strtr($response['street'],$replaceCharacter)!= strtr($request->recipient['address'],$replaceCharacter)){ 
