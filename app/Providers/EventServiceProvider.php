@@ -29,9 +29,6 @@ class EventServiceProvider extends ServiceProvider
         OrderPaid::class =>[
             CalculateCommission::class, 
         ],
-        OrderReport::class =>[
-            ExportOrder::class, 
-        ],
     ];
 
     /**
