@@ -18,6 +18,8 @@ use App\Services\Correios\Services\Brazil\Client;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
+use App\Http\Controllers\Admin\Reports\OrderReportController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -180,6 +182,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('anjun', AnjunReportController::class)->only(['index','create']);
             Route::resource('kpi-report', KPIReportController::class)->only(['index','store']);
             Route::get('tax-report', TaxReportController::class)->name('tax-report');
+            Route::get('export-orders', [OrderReportController::class,'download'])->name('export-orders');
 
         });
 
@@ -287,12 +290,6 @@ Route::get('permission',function($id = null){
     return Artisan::output();
 });
 
-Route::get('status-update/{id?}/status/{code?}',function($id, $code){
-    $order = Order::find($id)->update([
-        'status' => $code
-    ]);
-    return "Status Code Updated";
-});
 
 Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container');
 

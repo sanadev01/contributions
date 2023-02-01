@@ -29,4 +29,9 @@ class OrderReportController extends Controller
         $exportService = new OrderExport($orders);
         return $exportService->handle();
     }
+
+    public function download()
+    {
+        return view('admin.reports.export-orders');
+    }
 }
