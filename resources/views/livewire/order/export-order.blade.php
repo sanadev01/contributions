@@ -32,9 +32,9 @@
                             @if($report->is_complete == '0')
                                 <button class="btn btn-warning btn-sm disabled">Processing..</button>
                             @else
-                                <button class="btn btn-success btn-sm pr-3" wire:click.prevent="download({{ $report->id }})">Download</button>
+                                <a href="javascript:void(0)"><button class="btn btn-success btn-sm pr-3" wire:click="download({{ $report->id }})">Download</button></a>
                             @endif
-                            <button type="" class="btn btn-danger btn-sm" wire:click.prevent="delete({{ $report->id }})">Delete</button>
+                            <a href="javascript:void(0)"><button type="" class="btn btn-danger btn-sm" wire:click="delete({{ $report->id }})">Delete</button></a>
                         </td>
                     </tr>
                 @endforeach
