@@ -25,10 +25,7 @@ class OrderExportController extends Controller
         $report = $report->id;
         $request->merge(['report' => $report]);
 
-        // dispatch(new ExportOrder(
-        //     $request, Auth::user()
-        // ))->onQueue('default');
         ExportOrder::dispatch($request->all(), Auth::user());
-        return redirect()->back();
+        return redirect()->route('admin.reports.export-orders');
     }
 }

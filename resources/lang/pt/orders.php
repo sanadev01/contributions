@@ -32,6 +32,10 @@ return [
     'Taxed' => 'Tributado',
     'Delivered' => 'Entregue',
     'Returned' => 'Retornou',
+    'Report Name' => 'Nome do relatório',
+    'From Date' => 'Da data',
+    'To Date' => 'Até a presente data',
+    'Status' => 'Status',
     'recipient' => [
         'slect-from-list' => 'Selecione o endereço da lista',
         'Previous' => 'Anterior', 

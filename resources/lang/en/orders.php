@@ -40,6 +40,11 @@ return [
     'Taxed' => 'Taxed',
     'Delivered' => 'Delivered',
     'Returned' => 'Returned',
+    'Report Name' => 'Report Name',
+    'From Date' => 'From Date',
+    'To Date' => 'To Date',
+    'Status' => 'Status',
+
 
     'recipient' => [
         'slect-from-list' => 'Select Address From List',

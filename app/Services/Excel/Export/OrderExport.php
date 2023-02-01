@@ -17,7 +17,6 @@ class OrderExport extends AbstractExportService
 
     public function __construct(Collection $orders, $id)
     {
-        // dd($id);
         $this->orders = $orders;
         $this->id = $id;
 
@@ -152,7 +151,7 @@ class OrderExport extends AbstractExportService
         $this->setColumnWidth('T', 20);
         $this->setCellValue('T1', 'Domestic Carrier Service');
 
-        // if($this->user->isAdmin()){
+        if($this->user->isAdmin()){
             $this->setColumnWidth('U', 20);
             $this->setCellValue('U1', '1st Label Cost');
 
@@ -162,7 +161,7 @@ class OrderExport extends AbstractExportService
             $this->setColumnWidth('W', 20);
             $this->setCellValue('W1', 'Marketplace');
 
-        // }
+        }
 
         $this->setBackgroundColor('A1:W1', '2b5cab');
         $this->setColor('A1:W1', 'FFFFFF');

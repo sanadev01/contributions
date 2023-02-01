@@ -30,7 +30,6 @@ class ExportOrder implements ShouldQueue
         $this->user = $user;
         $this->request = $request;
         $this->orderRepository = new OrderRepository();
-
     }
 
     /**
@@ -42,13 +41,12 @@ class ExportOrder implements ShouldQueue
     {
         $request = new Request($this->request);
         $orders = $this->orderRepository->getOdersForExport($request, $this->user);
-        // dd($this->user->id);
+ 
         $id = $this->user->id;
         $exportService = new OrderExport($orders, $id);
         $url = $exportService->handle();
         if($url) {
-            $id = Reports::orderBy('id', 'desc')->value('id');
-            $report = Reports::find($id);
+            $report = Reports::find($request->report);
             $report->update(['path'=> $url, 'is_complete' => true]);
         }
         

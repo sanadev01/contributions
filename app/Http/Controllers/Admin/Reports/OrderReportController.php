@@ -29,4 +29,11 @@ class OrderReportController extends Controller
         $exportService = new OrderExport($orders);
         return $exportService->handle();
     }
+
+    public function download()
+    {
+        $id = Reports::orderBy('id', 'desc')->value('id');
+        $report = Reports::find($id);
+        return view('admin.reports.export-orders', compact('report'));
+    }
 }
