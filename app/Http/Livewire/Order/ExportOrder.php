@@ -57,8 +57,11 @@ class ExportOrder extends Component
 
     public function getQuery()
     {
-        $reports = Reports::query();
-        return $reports;
+        $query = Reports::query();
+        if (Auth::user()->isUser()) {
+            $query->where('user_id', Auth::id());
+        }
+        return $query;
     }
 
     public function updating()
