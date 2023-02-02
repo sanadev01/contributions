@@ -107,7 +107,7 @@
                                     <div class="col-md-4" id="amount_div">
                                         <label>Amount</label>
                                         <input type="number" min="0" step="any" class="form-control"
-                                            value="{{ old('amount') }}" required name="amount"
+                                            value="{{ old('amount') }}"   name="amount"
                                             placeholder="Enter Amount to Deposit">
                                         @error('amount')
                                             <div class="text-danger error_amount">
@@ -130,44 +130,33 @@
                                     @endadmin
                                 </div>
                                 <hr>
-
-                                <div class="row container">
+                                <div class=" d-flex   justify-content-center"> 
+                                <div class="row container text-center">
                                     <div class="col-3">
-                                        <label for="charge">Auto Charge<span class="text-danger"></span></label>
-                                        <div class="vs-checkbox-con vs-checkbox-primary" title="usps">
-                                            <input type="checkbox" name="charge" id="charge"
-                                                @if ( old('charge')?? setting('charge', null, auth()->id())) checked @endif>
-                                            <span class="vs-checkbox vs-checkbox-lg">
-                                                <span class="vs-checkbox--check">
-                                                    <i class="vs-icon feather icon-check"></i>
-                                                </span>
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="col-3">
-                                        <label >Auto charge Amount :</label>
-                                        <input type="number" name="charge_amount" min=0
-                                            class="form-control" id="charge_amount"
-                                            value="{{  old('charge_amount')??setting('charge_amount', null, auth()->id()) }}">
-                                            @error('charge_amount')
+                                        <label>Auto charge Amount :</label>
+                                        <input type="number" name="charge_amount" min=0 class="form-control"
+                                            id="charge_amount"
+                                            value="{{ old('charge_amount') ?? setting('charge_amount', null, auth()->id()) }}">
+                                        @error('charge_amount')
                                             <div class="text-danger">
                                                 {{ $message }}
                                             </div>
-                                           @enderror
+                                        @enderror
 
                                     </div>
                                     <div class="col-3">
-                                        <label >When Balance less then :</label>
+                                        <label>When Balance less then :</label>
                                         <input type="number" name="charge_limit" min=0 class="form-control"
-                                            id="charge_limit" value="{{ old('charge_limit')??setting('charge_limit', null, auth()->id()) }}">
-                                            @error('charge_limit')
+                                            id="charge_limit"
+                                            value="{{ old('charge_limit') ?? setting('charge_limit', null, auth()->id()) }}">
+                                        @error('charge_limit')
                                             <div class="text-danger">
                                                 {{ $message }}
                                             </div>
-                                           @enderror
+                                        @enderror
                                     </div>
                                     <div class="col-3">
-                                        <label > Billing information</label>
+                                        <label> Billing information</label>
                                         <select class="form-control" name="charge_biling_information"
                                             id="charge_biling_information" required placeholder="billing info">
 
@@ -178,13 +167,29 @@
                                             @endforeach
                                         </select>
                                         @error('charge_biling_information')
-                                        <div class="text-danger">
-                                            {{ $message }}
-                                        </div>
-                                       @enderror
+                                            <div class="text-danger">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
                                     </div>
 
+                                    <div class="col-3">
+                                        <label> Auto Charge </label><br>
+                                        <input type="hidden" name="charge" id="charge"
+                                            value="{{ old('charge') ?? setting('charge', null, auth()->id()) }}">
+
+                                        <div class="btn-group btn-toggle" id="btn-toggle">
+                                            <button
+                                                class="btn btn-xs  {{ old('charge') ?? setting('charge', null, auth()->id()) ? 'active btn-primary' : 'btn-default' }}"
+                                                id="active" onclick="event.preventDefault();">Active</button>
+                                            <button
+                                                class="btn btn-xs {{ old('charge') ?? setting('charge', null, auth()->id()) ? 'btn-default' : 'active btn-danger' }} "
+                                                id="inactive" onclick="event.preventDefault();">Inactive</button>
+                                        </div>
+                                    </div>
                                 </div>
+                                </div>
+                                <hr>
                                 <div class="controls row mb-1 ">
                                     <div class="col-sm-12">
                                         <div class="input-group">
@@ -263,7 +268,7 @@
                                     <div class="clearfix mt-4"></div>
                                     <div class="billingInfo-wrapper position-relative border p-4"
                                         style="display: none;cursor: default;">
-                                        <x-authorize-card billingInformationId=""></x-authorize-card>
+                                        <x-authorize-card billingInformationId="" :withRequiredInput="false"></x-authorize-card>
                                         <div class="row mt-4 p-4">
                                             <div class="col-md-12">
                                                 <fieldset>
@@ -357,13 +362,33 @@
                 $('form').attr('novalidate', 'novalidate');
             }
 
-        if (document.getElementById('card').checked) {
-            $("#amount_div").addClass("col-md-4");
-            $('.balanceuser').fadeOut();
-            $('.billingInfo-div').fadeIn();
-            $('form').removeAttr('novalidate');
+            if (document.getElementById('card').checked) {
+                $("#amount_div").addClass("col-md-4");
+                $('.balanceuser').fadeOut();
+                $('.billingInfo-div').fadeIn();
+                $('form').removeAttr('novalidate');
+            }
         }
-    }
-</script>
-{{-- @include('admin.deposit.stripe') --}}
+
+
+        $('#active').click(function() {
+            $('#active').addClass('active btn-primary');
+            $('#active').removeClass('btn-default');
+            $('#inactive').addClass('btn-default');
+            $('#inactive').removeClass('active btn-danger');
+            $('#charge').val(1);
+
+        });
+
+        $('#inactive').click(function() {
+            $('#active').removeClass('active btn-primary');
+            $('#active').addClass('btn-default');
+
+            $('#inactive').removeClass('btn-default');
+            $('#inactive').addClass('active btn-danger');
+            $('#charge').val(0);
+        });
+    </script>
+
+    {{-- @include('admin.deposit.stripe') --}}
 @endsection
