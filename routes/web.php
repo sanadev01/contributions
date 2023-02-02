@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Rate;
 use App\Models\Order;
 use App\Models\OrderTracking;
 use App\Models\CommissionSetting;
@@ -287,6 +288,14 @@ Route::get('test-label/{key}',function($key){
 Route::get('permission',function($id = null){
     Artisan::call('db:seed --class=PermissionSeeder', ['--force' => true ]);
     return Artisan::output();
+});
+
+Route::get('urbano-rates/{id?}',function($id){
+
+    $rates = Rate::find(70)->update([
+        'country_id' => 50,
+    ]);
+    return "Country Updated";
 });
 
 
