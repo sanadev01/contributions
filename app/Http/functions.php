@@ -1,10 +1,9 @@
 <?php
 
-use Carbon\Carbon;
 use App\Models\Order;
-use App\Models\State;
 use App\Models\Country;
 use App\Models\Deposit;
+use App\Models\State;
 use App\Models\Setting;
 use App\Models\ShippingService;
 use App\Services\Calculators\AbstractRateCalculator;
@@ -185,6 +184,6 @@ function sortTrackingEvents($data, $report)
         'delivered' => $delivered,
         'returned' => $returned,
         'taxed' => $taxed,
-        'diffDates' => $interval,
+        'diffDates' => $diffDates,
     ];
 }
