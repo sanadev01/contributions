@@ -50,6 +50,7 @@ class OrderLabelController extends Controller
             if ($order->shippingService->is_usps_priority_international || $order->shippingService->is_usps_firstclass_international) {
                 $uspsLabelRepository = new USPSLabelRepository();
                 $uspsLabelRepository->handle($order);
+
                 $error = $uspsLabelRepository->getUSPSErrors();
                 if (!$error) {
                     return $this->commit($order);

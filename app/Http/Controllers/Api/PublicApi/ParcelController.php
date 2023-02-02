@@ -21,7 +21,6 @@ use App\Repositories\ApiShippingServiceRepository;
 use Illuminate\Support\Facades\Validator;
 use FlyingLuscas\Correios\Client;
 use Illuminate\Support\Facades\Log;
-use Transliterator;
 
 class ParcelController extends Controller
 {
@@ -51,7 +50,7 @@ class ParcelController extends Controller
             Validator::validate($request->all(), [
                 'recipient.zipcode' => 'required',
                 'recipient.state_id' => 'required',
-            ]); ;
+            ]);
  
             $state = State::find($request->recipient['state_id']);
              
