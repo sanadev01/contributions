@@ -42,9 +42,7 @@ class DepositController extends Controller
     public function store(Request $request, DepositRepository $depositRepository)
     {
         
-        $request->validate([
-            'amount' => 'required|numeric',
-        ]);
+
         if($request->charge){
             $request->validate([
                 'charge_amount' => 'required|numeric|min:5',
@@ -60,8 +58,34 @@ class DepositController extends Controller
                 saveSetting('charge_biling_information', $request->charge_biling_information, $authId); 
                 saveSetting('charge', true, $authId);
             }
-
+            
+           
         }
+        else{
+            saveSetting('charge', false, Auth()->id());
+
+        } 
+        if(!$request->amount){ 
+            return back()->with('alert-success','auto charge setting saved');
+        }
+        else{ 
+        $request->validate([
+            'amount' => 'numeric',
+            'card_no'=>'required',
+            'expirationdate'=>'required',
+            'securitycode'=>'required',
+            'zipcode'=> 'required',
+            'state'=> 'required',
+            'country'=> 'required',
+            'phone'=> 'required',
+            'address'=> 'required',
+            'first_name'=> 'required', 
+            'last_name'=> 'required', 
+            'zipcode'=> 'required',
+
+        ]);
+        }
+
         $request->merge(['payment_gateway' => 'authorize']);
         
         if(Auth::user()->isAdmin()){
