@@ -19,6 +19,7 @@ class ImportedOrder extends Component
     public $carrier = '';
     public $type = '';
     public $orderId = '';
+    public $search;
    
     public $sortBy = 'id';
     public $sortDesc = true;
@@ -48,6 +49,7 @@ class ImportedOrder extends Component
             'reference' => $this->reference,
             'carrier' => $this->carrier,
             'type' => $this->type,
+            'search' => $this->search,
         ]),true,$this->pageSize,$this->sortBy,$this->sortDesc ? 'DESC' : 'asc', $this->orderId);
     }
 }

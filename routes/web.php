@@ -3,6 +3,11 @@
 use App\Models\Order;
 use App\Models\OrderTracking;
 use App\Models\CommissionSetting;
+use App\Models\Product;
+use App\Models\Country;
+use App\Models\Recipient;
+use App\Models\ProfitPackage;
+use App\Models\ShippingService;
 use Illuminate\Support\Facades\DB;
 use App\Models\Warehouse\Container;
 use App\Models\Warehouse\DeliveryBill;
@@ -24,7 +29,6 @@ use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 Route::get('/', function (Shopify $shopifyClient) {
     $shop = "https://".request()->shop;
     if (request()->has('shop') ) {
@@ -95,6 +99,8 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::get('order/{order}/us-label', [OrderUSLabelController::class, 'index'])->name('order.us-label.index');
             Route::resource('orders.usps-label', OrderUSPSLabelController::class)->only('index','store');
             Route::resource('orders.ups-label', OrderUPSLabelController::class)->only('index','store');
+            Route::post('order/update/status',OrderStatusController::class)->name('order.update.status');
+
             Route::get('order-ups-label-cancel-pickup/{id?}', [\App\Http\Controllers\Admin\Order\OrderUPSLabelController::class, 'cancelUPSPickup'])->name('order.ups-label.cancel.pickup');
         });
         //Cancel Lable Route for GePS & Prime5
@@ -135,6 +141,8 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('profit-packages-upload', ProfitPackageUploadController::class)->only(['create', 'store','edit','update']);
             Route::post('/show-profit-package-rates', [\App\Http\Controllers\Admin\Rates\UserRateController::class, 'showRates'])->name('show-profit-rates');
             Route::resource('usps-accrual-rates', USPSAccrualRateController::class)->only(['index']);
+            Route::get('shipping-country-rates/{shipping_service}', [\App\Http\Controllers\Admin\Rates\RateController::class, 'postNLCountryRates'])->name('country-rates');
+            Route::get('view-shipping-country-rates/{shipping_rate}', [\App\Http\Controllers\Admin\Rates\RateController::class, 'showPostNLCountryRates'])->name('view-shipping-country-rates');
         });
 
         Route::namespace('Connect')->group(function(){
@@ -281,12 +289,6 @@ Route::get('permission',function($id = null){
     return Artisan::output();
 });
 
-Route::get('status-update/{id?}/status/{code?}',function($id, $code){
-    $order = Order::find($id)->update([
-        'status' => $code
-    ]);
-    return "Status Code Updated";
-});
 
 Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container');
 
