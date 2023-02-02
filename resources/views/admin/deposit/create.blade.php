@@ -158,7 +158,7 @@
                                     <div class="col-3">
                                         <label> Billing information</label>
                                         <select class="form-control" name="charge_biling_information"
-                                            id="charge_biling_information" required placeholder="billing info">
+                                            id="charge_biling_information" placeholder="billing info">
 
                                             @foreach (auth()->user()->billingInformations as $billingInfo)
                                                 <option value="{{ $billingInfo->id }}"
