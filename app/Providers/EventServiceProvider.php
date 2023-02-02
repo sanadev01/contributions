@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use App\Models\Order;
 use App\Events\OrderPaid;
-use App\Events\OrderReport;
 use App\Models\AffiliateSale;
 use App\Listeners\ExportOrder;
 use App\Events\OrderStatusUpdated;
