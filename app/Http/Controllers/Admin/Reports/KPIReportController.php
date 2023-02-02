@@ -21,17 +21,21 @@ class KPIReportController extends Controller
         $this->authorize('viewKPIReport',Reports::class);
         $trackings = [];
         if($request->start_date && $request->end_date) {
-            $trackings = $kpiReportsRepository->get($request);
+            $response = $kpiReportsRepository->get($request);
+            $trackings = $response['trackings'];
+            $trackingCodeUser = $response['trackingCodeUser'];
         }
-        return view('admin.reports.kpi-report', compact('trackings'));
+        return view('admin.reports.kpi-report', compact('trackings','trackingCodeUser'));
     }
 
-    public function store(Request $request, KPIReportsRepository $kpiReportsRepository)
+    public function store(Request $request)
     {
         if($request->order){
             $trackings = json_decode($request->order, true);
+            $trackingCodeUser =json_decode($request->trackingCodeUser, true);
+
            
-            $exportService = new KPIReport($trackings);
+            $exportService = new KPIReport($trackings,$trackingCodeUser);
             return $exportService->handle();
         }
     }
