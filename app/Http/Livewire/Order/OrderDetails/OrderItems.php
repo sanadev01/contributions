@@ -10,6 +10,7 @@ class OrderItems extends Component
     public $orderId; 
     public $items;
     public $order;
+    public $disable;
 
     protected $listeners = [
         'removeItem' => 'removeItem'
@@ -19,8 +20,8 @@ class OrderItems extends Component
     {
         $this->orderId = $orderId;
         $this->order = Order::find($orderId);
-
         $this->items = old('items', $this->order->items->toArray() );
+        $this->disable = count($this->items) > 2 &&( $this->order->shippingService->is_sweden_post || $this->order->shippingService->is_geps);;
 
         if ( count($this->items) <1 ){
             $this->addItem();
@@ -37,6 +38,14 @@ class OrderItems extends Component
     public function addItem()
     {
         array_push($this->items,[]);
+        $this->disable = count($this->items) > 2 &&( $this->order->shippingService->is_sweden_post || $this->order->shippingService->is_geps);
+
+    }
+
+    public function changeService() 
+    {
+        $this->disable = count($this->items) > 2 &&( $this->order->shippingService->is_sweden_post || $this->order->shippingService->is_geps);
+
     }
 
     public function removeItem($index)
