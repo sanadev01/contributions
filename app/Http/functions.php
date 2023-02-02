@@ -7,7 +7,7 @@ use App\Models\State;
 use App\Models\Setting;
 use App\Models\ShippingService;
 use App\Services\Calculators\AbstractRateCalculator;
-
+use Carbon\Carbon;
 function countries()
 {
     $countries =  Country::all();
@@ -135,7 +135,7 @@ function getParcelStatus($status)
     return $message;
 }
 
-function sortTrackingEvents($data, $report)
+function sortTrackingEvents($data)
 {
     $delivered = "No";
     $returned = "No";
@@ -184,6 +184,6 @@ function sortTrackingEvents($data, $report)
         'delivered' => $delivered,
         'returned' => $returned,
         'taxed' => $taxed,
-        'diffDates' => $diffDates,
+        'diffDates' => $interval,
     ];
 }
