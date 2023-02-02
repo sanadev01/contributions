@@ -24,16 +24,17 @@ class KPIReportsRepository
 
     public function get(Request $request)
     {
-        $orders = Order::has('user')->where('status', '>=', Order::STATUS_SHIPPED);
-        $orders->whereHas('shippingService',function($orders) {
-            return $orders->whereIn('service_sub_class', [
-                ShippingService::Packet_Standard, 
-                ShippingService::Packet_Express, 
-                ShippingService::AJ_Packet_Standard, 
-                ShippingService::AJ_Packet_Express, 
-                ShippingService::Prime5, 
-                ShippingService::GePS]);
-        });
+        $orders = Order::with('user')->where('corrios_tracking_code','!=',null)->where('status', '>=', Order::STATUS_SHIPPED)
+        ->whereHas('shippingService',function($orders) {
+                return $orders->whereIn('service_sub_class', [
+                    ShippingService::Packet_Standard, 
+                    ShippingService::Packet_Express, 
+                    ShippingService::AJ_Packet_Standard, 
+                    ShippingService::AJ_Packet_Express, 
+                    ShippingService::Prime5, 
+                    ShippingService::GePS]);
+            });
+
         if (Auth::user()->isUser()) {
             $orders->where('user_id', Auth::id());
         }
@@ -46,9 +47,14 @@ class KPIReportsRepository
             $orders->where('order_date','<=',$endDate);
         }
 
+        $orders = ($orders->with('user')->get()); 
+        $codesUsers =  [];
+        foreach($orders as $order) {
+            $codesUsers[$order->corrios_tracking_code] = $order->user;
+        }
         $codes = $orders->pluck('corrios_tracking_code')->toArray();
         if(empty($codes)) {
-            return $trackings = [];
+         return ['trackings'=>[],'trackingCodeUser'=>[]];
         }
         $client = new SoapClient($this->wsdlUrl, array('trace'=>1));
         $request_param = array(
@@ -67,7 +73,7 @@ class KPIReportsRepository
         if($trackings['return']['qtd'] == "1") {
             $trackings['return']['objeto'] = array($trackings['return']['objeto']); ## if you send only one tracking you need to add an array before the content to follow the pattern
         }  
-        return $trackings;
+        return ['trackings'=>$trackings,'trackingCodeUser'=>$codesUsers];
     }
 
 }

@@ -38,7 +38,6 @@ class OrderExport extends AbstractExportService
         $row = $this->currentRow;
         foreach ($this->orders as $order) {
             $user = $order->user;
-            \Log::info($row);
             $this->setCellValue('A'.$row, $order->order_date);
             $this->setCellValue('B'.$row, $order->warehouse_number);
             $this->setCellValue('C'.$row, $user->name);
