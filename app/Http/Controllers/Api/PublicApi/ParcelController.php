@@ -50,7 +50,7 @@ class ParcelController extends Controller
             Validator::validate($request->all(), [
                 'recipient.zipcode' => 'required',
                 'recipient.state_id' => 'required',
-            ]); ;
+            ]);
  
             $state = State::find($request->recipient['state_id']);
              

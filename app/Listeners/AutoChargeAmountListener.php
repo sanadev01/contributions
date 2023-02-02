@@ -35,7 +35,9 @@ class AutoChargeAmountListener
         $charge  = setting('charge', null, $user->id);
         $chargeLimit = setting('charge_limit', null, $user->id);
         $amount = setting('charge_amount', null, $user->id);
-        $billingInformation = $user->billingInformations()->latest()->first();
+        $billingInformationId = setting('charge_biling_information', null, auth()->id());
+        $billingInformation = $user->billingInformations()->where('id',$billingInformationId)->first();
+
         if($charge && $user->current_balance < $chargeLimit  && $billingInformation){             
             $authorizeNetService = new AuthorizeNetService(); 
             $transactionID = PaymentInvoice::generateUUID('DP-');
