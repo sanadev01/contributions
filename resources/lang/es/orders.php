@@ -34,6 +34,10 @@ return [
     'Taxed' => 'Gravado',
     'Delivered' => 'Entregado',
     'Returned' => 'Devueltorojo',
+    'Report Name' => 'Reportar nombre',
+    'From Date' => 'Partir de la fecha',
+    'To Date' => 'Hasta la fecha',
+    'Status' => 'Estado',
     'recipient' => [
         'slect-from-list' => 'Seleccionar dirección de la lista',
         'Previous' => 'Previo', 

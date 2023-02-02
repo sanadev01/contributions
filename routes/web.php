@@ -173,8 +173,9 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('anjun', AnjunReportController::class)->only(['index','create']);
             Route::resource('kpi-report', KPIReportController::class)->only(['index','store']);
             Route::get('tax-report', TaxReportController::class)->name('tax-report');
-
+            
         });
+        Route::get('export-orders', [App\Http\Controllers\Admin\Reports\OrderReportController::class,'download'])->name('reports.export-orders');
 
         Route::namespace('Inventory')->as('inventory.')->prefix('inventory')->group(function(){
             Route::resource('product', ProductController::class);
