@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Admin\Deposit;
 use App\Models\Deposit;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\BillingInformation;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\DepositRepository;
 use Illuminate\Support\Facades\Response;
@@ -44,6 +45,23 @@ class DepositController extends Controller
         $request->validate([
             'amount' => 'required|numeric',
         ]);
+        if($request->charge){
+            $request->validate([
+                'charge_amount' => 'required|numeric|min:5',
+                'charge_limit' => 'required|numeric|min:1',
+                'charge_biling_information' => 'required|numeric',
+            ]); 
+            //validate billing info
+            $authId = Auth()->id();
+            if(BillingInformation::where('user_id',$authId)->where('id',$request->charge_biling_information)->exists()){
+               
+                saveSetting('charge_amount', $request->charge_amount,  $authId);
+                saveSetting('charge_limit', $request->charge_limit, $authId); 
+                saveSetting('charge_biling_information', $request->charge_biling_information, $authId); 
+                saveSetting('charge', true, $authId);
+            }
+
+        }
         $request->merge(['payment_gateway' => 'authorize']);
         
         if(Auth::user()->isAdmin()){

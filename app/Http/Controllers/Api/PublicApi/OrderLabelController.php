@@ -186,21 +186,20 @@ class OrderLabelController extends Controller
 
     public function cancelGePSLabel(Order $order)
     {
-        $gepsClient = new Client();   
+        $gepsClient = new Client();
         $response = $gepsClient->cancelShipment($order->corrios_tracking_code);
         if (!$response['success']) {
             return apiResponse(false, $response['message']);
         }
-        if($response['success']) {
+        if ($response['success']) {
             $order->update([
                 'corrios_tracking_code' => null,
                 'cn23' => null,
                 'api_response' => null
             ]);
-            return apiResponse(true,"Label Cancellation is Successful.",[
+            return apiResponse(true, "Label Cancellation is Successful.", [
                 'cancelled_tracking_code' => $response['data']->cancelshipmentresponse->tracknbr
             ]);
         }
-    } 
- 
+    }
 }

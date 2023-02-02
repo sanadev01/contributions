@@ -1,22 +1,15 @@
 <?php
 
 namespace App\Services\Excel\Export;
-
-use DateTime;
-use App\Models\Order;
-use Illuminate\Support\Collection;
-
 class KPIReport extends AbstractExportService
 {
     private $trackings;
-    private $request;
 
     private $currentRow = 1;
 
     public function __construct($trackings)
     {
         $this->trackings = $trackings;
-
         parent::__construct();
     }
 
@@ -28,7 +21,12 @@ class KPIReport extends AbstractExportService
     }
 
     private function prepareExcelSheet()
-    {;
+    {
+        $total = 0;
+        $taxed = 0;
+        $delivered = 0;
+        $returned = 0;
+
         $this->setExcelHeaderRow();
         $row = $this->currentRow;
         foreach ($this->trackings as $data) {
@@ -44,16 +42,34 @@ class KPIReport extends AbstractExportService
                     $this->setCellValue('H'.$row, sortTrackingEvents($data, null)['delivered']);
                     $this->setCellValue('I'.$row, sortTrackingEvents($data, null)['returned']);
                     $row++;
+                    if(sortTrackingEvents($data, null)['taxed']=='Yes'){
+                        $taxed++;
+                    }
+                    if(sortTrackingEvents($data, null)['delivered']=='Yes'){
+                        $delivered++;
+                    }
+                    if(sortTrackingEvents($data, null)['returned']=='Yes'){
+                        $returned++;
+                    }
+                    $total++;
                 }
             }
         }
+            if($total){
+                    $this->setCellValue('D'.$row, "Total");
+                    $this->setCellValue('E'.$row, $total);
+                    $this->setCellValue('G'.$row, number_format($taxed/$total * 100, 2).'%');
+                    $this->setCellValue('H'.$row, number_format($delivered/$total * 100,2).'%');
+                    $this->setCellValue('I'.$row, number_format($returned/$total * 100,2).'%');
+            }
+
 
         $this->currentRow = $row;
         $this->setBackgroundColor("A{$row}:I{$row}", 'adfb84');
     }
 
     private function setExcelHeaderRow()
-    {
+    {        
         $this->setColumnWidth('A', 20);
         $this->setCellValue('A1', 'Tracking');
 

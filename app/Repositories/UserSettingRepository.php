@@ -34,9 +34,6 @@ class UserSettingRepository {
             'volumetric_discount'=> setting('volumetric_discount', null,$user->id)? 'Active': 'Inactive',
             'pay_tax_service'=> setting('pay_tax_service', null,$user->id)? 'Active': 'Inactive',
             'marketplace_checked'=> setting('marketplace_checked', null,$user->id)? 'Active': 'Inactive',
-            'charge_limit'=> setting('charge_limit', null, $user->id) ? setting('charge_limit', null, $user->id): 0,
-            'charge_amount'=> setting('charge_amount', null, $user->id) ? setting('charge_amount', null, $user->id): 0,
-            'charge' => setting('charge', null, $user->id)? 'Active': 'Inactive',
             'usps_profit'=> setting('usps_profit', null, $user->id) ? setting('usps_profit', null, $user->id): 0,
             'ups_profit'=> setting('ups_profit', null, $user->id) ?setting('ups_profit', null, $user->id) : 0,
             'discount_percentage'=> setting('discount_percentage', null, $user->id)? setting('discount_percentage', null, $user->id): 0,
@@ -57,7 +54,6 @@ class UserSettingRepository {
         $request->has('battery') ? saveSetting('battery', true, $user->id) : saveSetting('battery', false, $user->id);
         $request->has('perfume') ? saveSetting('perfume', true, $user->id) : saveSetting('perfume', false, $user->id);
         $request->has('insurance') ? saveSetting('insurance', true, $user->id) : saveSetting('insurance', false, $user->id);
-        $request->has('charge') ? saveSetting('charge', true, $user->id) : saveSetting('charge', false, $user->id);
         $request->has('usps') ? saveSetting('usps', true, $user->id) : saveSetting('usps', false, $user->id);
         $request->has('ups') ? saveSetting('ups', true, $user->id) : saveSetting('ups', false, $user->id);
         $request->has('stripe') ? saveSetting('stripe', true, $user->id) : saveSetting('stripe', false, $user->id);
@@ -74,8 +70,6 @@ class UserSettingRepository {
         $request->has('marketplace_checked') ? saveSetting('marketplace_checked', true,$user->id) : saveSetting('marketplace_checked', false, $user->id);
         $request->has('pay_tax_service') ? saveSetting('pay_tax_service', true,$user->id) : saveSetting('pay_tax_service', false, $user->id);
 
-        ($request->charge_amount != null ) ? saveSetting('charge_amount', $request->charge_amount, $user->id) : saveSetting('charge_amount', 0, $user->id);
-        ($request->charge_limit != null ) ? saveSetting('charge_limit', $request->charge_limit, $user->id) : saveSetting('charge_limit', 0, $user->id);
         ($request->usps_profit != null ) ? saveSetting('usps_profit', $request->usps_profit, $user->id) : saveSetting('usps_profit', 0, $user->id);
         ($request->ups_profit != null ) ? saveSetting('ups_profit', $request->ups_profit, $user->id) : saveSetting('ups_profit', 0, $user->id);
         ($request->discount_percentage != null ) ? saveSetting('discount_percentage', $request->discount_percentage, $user->id) : saveSetting('discount_percentage', 0, $user->id);
