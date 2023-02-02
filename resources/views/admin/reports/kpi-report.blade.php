@@ -70,7 +70,7 @@
                             <table class="table mb-0 table-responsive-md">
                                 <thead>
                                     <tr>
-                                        <th>Name</th>
+                                        <th>User</th>
                                         <th>@lang('orders.Tracking')</th>
                                         <th>@lang('orders.Type Package')</th>
                                         <th>@lang('orders.First Event')</th>

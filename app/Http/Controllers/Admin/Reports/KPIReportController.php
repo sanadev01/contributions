@@ -20,6 +20,7 @@ class KPIReportController extends Controller
     {
         $this->authorize('viewKPIReport',Reports::class);
         $trackings = [];
+        $trackingCodeUser = [];
         if($request->start_date && $request->end_date) {
             $response = $kpiReportsRepository->get($request);
             $trackings = $response['trackings'];

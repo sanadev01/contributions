@@ -75,7 +75,7 @@ class KPIReport extends AbstractExportService
     private function setExcelHeaderRow()
     {        
         $this->setColumnWidth('A', 30);
-        $this->setCellValue('A1', 'Name');
+        $this->setCellValue('A1', 'User');
 
         $this->setColumnWidth('B', 20);
         $this->setCellValue('B1', 'Tracking');
