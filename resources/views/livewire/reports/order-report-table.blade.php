@@ -123,21 +123,25 @@
 @push('lvjs-stack')
     <script>
         window.addEventListener('DOMContentLoaded', () => {
-            
+
             @this.on('updated-status',function(orderId,status){
-                $.post('{{route("api.order.status.update")}}',{
+                @this.call('render')
+                $.post('{{route("admin.order.update.status")}}',{
                     order_id: orderId,
                     status : status
                 })
                 .then(function(response){
                     if ( response.success ){
+                        toastr.success(response.message)
                         @this.call('render')
                     }else{
                         toastr.error(response.message)
+                        @this.call('render')
                     }
                 }).catch(function(data){
                     toastr.error(response.message)
                 })
+
             })
         });
     </script>
