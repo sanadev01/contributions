@@ -23,7 +23,7 @@ class OrderItemsController extends Controller
 
     public function __construct(OrderRepository $orderRepository)
     {
-        $this->orderRepository = $orderRepository;
+        $this->orderRepository = $orderRepository; 
     }
     /**
      * Display a listing of the resource.
@@ -72,7 +72,6 @@ class OrderItemsController extends Controller
      */
     public function store(CreateRequest $request,Order $order)
     {
-        $this->authorize('editItems',$order);
 
         if ( !$order->recipient ){
             abort(404);
@@ -110,8 +109,7 @@ class OrderItemsController extends Controller
                 return back()->withInput();
             }
         }
-
-        if($order->shippingService->is_geps || $order->shippingService->is_sweden_post) {
+        if(in_array($order->shipping_service_id, [ShippingService::GePS, ShippingService::GePS_EFormat, ShippingService::Prime5])  ) {
             if(count($request->items) > 2) {
                 session()->flash('alert-danger', 'More than 3 Items are Not Allowed with the Selected Service');
                 return back()->withInput();
@@ -153,30 +151,29 @@ class OrderItemsController extends Controller
     public function uspsRates(Request $request)
     {
         $items = collect();
-        if(!is_null($request->descp) && !is_null($request->qty) && !is_null($request->value)){
+        if (!is_null($request->descp) && !is_null($request->qty) && !is_null($request->value)) {
             foreach ($request->descp as $key => $descp) {
                 $items = $items->push((object)[
-                    'description' => $descp, 
-                    'quantity' => $request->qty[$key], 
+                    'description' => $descp,
+                    'quantity' => $request->qty[$key],
                     'value' => $request->value[$key]
                 ]);
             }
             $order = Order::find($request->order_id);
             $order->items = $items;
-        }else{
+        } else {
             $order = Order::find($request->order_id);
         }
         $response = USPSFacade::getRecipientRates($order, $request->service);
 
-        if($response->success == true)
-        {
-            return (Array)[
+        if ($response->success == true) {
+            return (array)[
                 'success' => true,
                 'total_amount' => $response->data['total_amount'],
             ];
         }
 
-        return (Array)[
+        return (array)[
             'success' => false,
             'message' => 'server error, could not get rates',
         ];
@@ -196,7 +193,7 @@ class OrderItemsController extends Controller
             ];
         }
 
-        return (Array)[
+        return (array)[
             'success' => true,
             'total_amount' => number_format($response->data['RateResponse']['RatedShipment']['TotalCharges']['MonetaryValue'], 2),
         ];
@@ -208,13 +205,13 @@ class OrderItemsController extends Controller
         $response = FedExFacade::getRecipientRates($order, $request->service);
 
         if ($response->success == false) {
-            return (Array)[
+            return (array)[
                 'success' => false,
-                'error' => $response->error['response']['errors'][0]['message'] ?? $response->error['errors'][0]['code'].'-'.'server error, could not get rates',
+                'error' => $response->error['response']['errors'][0]['message'] ?? $response->error['errors'][0]['code'] . '-' . 'server error, could not get rates',
             ];
         }
 
-        return (Array)[
+        return (array)[
             'success' => true,
             'total_amount' => number_format($response->data['output']['rateReplyDetails'][0]['ratedShipmentDetails'][0]['totalNetFedExCharge'], 2),
         ];
