@@ -1,14 +1,13 @@
 <?php
 
-use Carbon\Carbon;
 use App\Models\Order;
-use App\Models\State;
 use App\Models\Country;
 use App\Models\Deposit;
+use App\Models\State;
 use App\Models\Setting;
 use App\Models\ShippingService;
 use App\Services\Calculators\AbstractRateCalculator;
-
+use Carbon\Carbon;
 function countries()
 {
     $countries =  Country::all();
@@ -109,7 +108,34 @@ function getTotalBalance()
     return Deposit::getLiabilityBalance();
 }
 
-function sortTrackingEvents($data, $report)
+function getParcelStatus($status)
+{
+    if($status == Order::STATUS_PREALERT_TRANSIT) {
+        $message = "STATUS_PREALERT_TRANSIT";
+    }elseif($status == Order::STATUS_PREALERT_READY){
+        $message = "STATUS_PREALERT_READY";
+    }elseif($status == Order::STATUS_ORDER){
+        $message = "STATUS_ORDER";
+    }elseif($status == Order::STATUS_NEEDS_PROCESSING){
+        $message = "STATUS_NEEDS_PROCESSING";
+    }elseif($status == Order::STATUS_PAYMENT_PENDING){
+        $message = "STATUS_PAYMENT_PENDING";
+    }elseif($status == Order::STATUS_PAYMENT_DONE){
+        $message = "STATUS_PAYMENT_DONE";
+    }elseif($status == Order::STATUS_CANCEL) {
+        $message = "STATUS_CANCEL";
+    }elseif($status == Order::STATUS_REJECTED) {
+        $message = "STATUS_REJECTED";
+    }elseif($status == Order::STATUS_RELEASE) {
+        $message = "STATUS_RELEASE";
+    }elseif($status == Order::STATUS_REFUND) {
+        $message = "STATUS_REFUND";
+    }  
+
+    return $message;
+}
+
+function sortTrackingEvents($data)
 {
     $delivered = "No";
     $returned = "No";
