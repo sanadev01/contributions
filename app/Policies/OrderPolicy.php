@@ -161,7 +161,7 @@ class OrderPolicy
 
     public function updateOrder(User $user,Order $order)
     {
-        return $user->hasPermission('edit_order') && $order->user_id == $user->id && !$order->isPaid() || in_array($user->id, [996,13]);
+        return $user->hasPermission('edit_order') && $order->user_id == $user->id && !$order->isPaid();
     }
     
     public function copyOrder(User $user,Order $order)
