@@ -78,7 +78,7 @@
                 </div>
             </div>
             <hr>
-            <div class="row col-12" id="itemLimit"><h5 class="content-justify text-danger"><b>@lang('orders.order-details.Item Limit')</b></h5></div>
+            <div class="row col-12" id="itemLimit"><h5 class="content-justify text-info"><b>@lang('orders.order-details.Item Limit')</b></h5></div>
             <livewire:order.order-details.order-items :order-id="$order->id"/>
             <hr>
             <div class="row mt-1">
