@@ -307,4 +307,8 @@ class User extends Authenticatable
             self::GILBERTO_ACCOUNT_ID,
         ];
     }
+    public function deposits()
+    {
+        return $this->hasMany(Deposit::class);
+    }
 }
