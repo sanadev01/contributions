@@ -55,6 +55,7 @@
                                                 @csrf
                                                 @if($trackings)
                                                     <input type="hidden" name="order" value="{{ collect($trackings['return']['objeto']) }}">
+                                                    <input type="hidden" name="trackingCodeUser" value="{{ collect($trackingCodeUser) }}">
                                                 @endif   
                                                 <div class="col-md-1 justify-content-end">
                                                     <button class="btn btn-success" {{ !empty($trackings)? '' : 'disabled' }}  title="@lang('orders.import-excel.Download')">
@@ -69,6 +70,7 @@
                             <table class="table mb-0 table-responsive-md">
                                 <thead>
                                     <tr>
+                                        <th>User</th>
                                         <th>@lang('orders.Tracking')</th>
                                         <th>@lang('orders.Type Package')</th>
                                         <th>@lang('orders.First Event')</th>
@@ -87,8 +89,10 @@
                                             @if(isset($data['evento']))
                                             <tr>
                                                 @if(optional($data) && isset(optional($data)['numero']))
+                                                    <td>{{ optional($trackingCodeUser[optional($data)['numero']])->pobox_name }}</td>
                                                     <td>{{ optional($data)['numero'] }}</td>
                                                     <td><span>{{ optional($data)['categoria'] }}</span></td>
+                                                    <td>{{ optional(optional(optional($data)['evento'])[count($data['evento'])-1])['data'] }}</td>
                                                     <td>{{ optional(optional(optional($data)['evento'])[count($data['evento'])-1])['data'] }}</td>
                                                     <td>{{ optional(optional(optional($data)['evento'])[0])['data'] }}</td>
                                                     <td>{{ sortTrackingEvents($data, null)['diffDates'] }} </td>
