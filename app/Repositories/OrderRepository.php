@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Order;
+use App\Models\User;
 use App\Models\Country;
 use App\Facades\USPSFacade;
 use Illuminate\Http\Request;
