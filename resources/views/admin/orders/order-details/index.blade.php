@@ -135,8 +135,10 @@
         const service = $('#shipping_service_id option:selected').attr('data-service-code');
         if(service == 3442 || service == 3443) {
             $("#rateBtn").show();
+            $("#itemLimit").hide();
         }else if(service == 537 || service == 540 || service == 773) {
             $("#itemLimit").show();
+            $("#rateBtn").hide();
         }else {
             $("#itemLimit").hide();
             $("#rateBtn").hide();
