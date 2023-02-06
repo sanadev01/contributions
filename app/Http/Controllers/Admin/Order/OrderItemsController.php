@@ -90,8 +90,7 @@ class OrderItemsController extends Controller
                 return back()->withInput();
             }
         }
-
-        if(in_array($order->shipping_service_id, [ShippingService::GePS, ShippinService::GePS_EFormat, ShippingService::Prime5])  ) {
+        if(in_array($order->shipping_service_id, [ShippingService::GePS, ShippingService::GePS_EFormat, ShippingService::Prime5])  ) {
             if(count($request->items) > 2) {
                 session()->flash('alert-danger', 'More than 3 Items are Not Allowed with the Selected Service');
                 return back()->withInput();
