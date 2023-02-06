@@ -48,9 +48,9 @@
     <table class="table table-hover-animation mb-0">
         <thead>
         <tr>
-            <th>User</th>
-            <th>WHR#</th>
-            <th>Balance</th>
+            <th><a href="#" wire:click.prevent="sortBy('name')">User</a></th>
+            <th><a href="#" wire:click.prevent="sortBy('pobox_number')">WHR#</a> </th>
+            <th><a href="#" wire:click.prevent="sortBy('balance')">Balance</a></th>
         </tr>
         <tr>
             <th>
@@ -67,11 +67,11 @@
         </tr>
         </thead>
         <tbody>
-            @foreach($deposits as $deposit)
+            @foreach($users as $user)
             <tr>
-                <td>{{ optional($deposit->user)->name }}</td>
-                <td>{{ optional($deposit->user)->pobox_number }}</td>
-                <td>{{ getBalance($deposit->user) }}</td>
+                <td>{{ $user->name }}</td>
+                <td>{{ $user->pobox_number }}</td>
+                <td>{{ getBalance($user) }}</td>
             </tr>
             @endforeach
         </tbody>

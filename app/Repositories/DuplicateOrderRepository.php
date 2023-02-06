@@ -40,7 +40,7 @@ class DuplicateOrderRepository extends Model
         $copy->status = Order::STATUS_ORDER;
         $copy->is_consolidated = false;
         $copy->cn23 = null;
-        $copy->weight_discount = null;
+        // $copy->weight_discount = null;
         $copy->save();
         $copy->warehouse_number = $copy->getTempWhrNumber();
         $copy->save();

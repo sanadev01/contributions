@@ -38,6 +38,11 @@ class ExportTracking extends AbstractExportService
             }elseif ($data['service'] == 'UPS') {
                 $trackingDescription = $data['api_trackings']['status']['description'];
             }
+            elseif ($data['service'] == 'Prime5') {
+                foreach($data['api_trackings'] as $track) {
+                    $trackingDescription = $track['Description'] ;
+                }
+            }
 
             $user = User::find($data['order']['user_id']);
 

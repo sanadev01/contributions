@@ -302,6 +302,14 @@
                         </a>
                     </li>
                     @endcan
+                    @can('viewKPIReport', App\Models\Reports::class)
+                    <li class="{{ $isActive(['admin.reports.kpi-report.index']) }}">
+                        <a href="{{ route('admin.reports.kpi-report.index') }}">
+                            <i class="icon_adjst feather icon-circle"></i>
+                            <span class="menu-title">@lang('menu.Reports.KPI Report')</span>
+                        </a>
+                    </li>
+                    @endcan
                     @admin
                         {{-- <li class="{{ $isActive(['admin.reports.audit-report.index','admin.reports.audit-report.show']) }}">
                             <a href="{{ route('admin.reports.audit-report.index') }}">
