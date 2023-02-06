@@ -3,17 +3,13 @@
 namespace App\Http\Controllers\Admin\Order;
 
 use App\Models\Order;
-use App\Models\Country;
 use App\Models\Deposit;
 use App\Facades\UPSFacade;
 use App\Facades\USPSFacade;
 use App\Facades\FedExFacade;
 use Illuminate\Http\Request;
-use App\Models\OrderTracking;
-use App\Models\PaymentInvoice;
 use App\Models\ShippingService;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use App\Repositories\OrderRepository;
 use App\Http\Requests\Orders\OrderDetails\CreateRequest;
 
@@ -23,7 +19,7 @@ class OrderItemsController extends Controller
 
     public function __construct(OrderRepository $orderRepository)
     {
-        $this->orderRepository = $orderRepository;
+        $this->orderRepository = $orderRepository; 
     }
     /**
      * Display a listing of the resource.
@@ -44,24 +40,8 @@ class OrderItemsController extends Controller
         if ($error) {
             session()->flash($error);
         }
-
-        $countryConstants = [
-            'Brazil' => Country::Brazil,
-            'Chile' => Country::Chile,
-            'Colombia' => Country::COLOMBIA,
-            'US' => Country::US,
-        ];
-
-        $shippingServiceCodes = [
-            'USPS_PRIORITY' => ShippingService::USPS_PRIORITY,
-            'USPS_FIRSTCLASS' => ShippingService::USPS_FIRSTCLASS,
-            'USPS_PRIORITY_INTERNATIONAL' => ShippingService::USPS_PRIORITY_INTERNATIONAL,
-            'USPS_FIRSTCLASS_INTERNATIONAL' => ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,
-            'UPS_GROUND' => ShippingService::UPS_GROUND,
-            'FEDEX_GROUND' => ShippingService::FEDEX_GROUND,
-        ];
         
-        return view('admin.orders.order-details.index',compact('order','shippingServices', 'error', 'countryConstants', 'shippingServiceCodes'));
+        return view('admin.orders.order-details.index',compact('order','shippingServices', 'error','chileCountryId', 'usCountryId'));
     }
 
     /**
@@ -72,7 +52,6 @@ class OrderItemsController extends Controller
      */
     public function store(CreateRequest $request,Order $order)
     {
-        $this->authorize('editItems',$order);
 
         if ( !$order->recipient ){
             abort(404);
@@ -110,8 +89,7 @@ class OrderItemsController extends Controller
                 return back()->withInput();
             }
         }
-
-        if($order->shippingService->is_geps || $order->shippingService->is_sweden_post) {
+        if(in_array($order->shipping_service_id, [ShippingService::GePS, ShippingService::GePS_EFormat, ShippingService::Prime5])  ) {
             if(count($request->items) > 2) {
                 session()->flash('alert-danger', 'More than 3 Items are Not Allowed with the Selected Service');
                 return back()->withInput();
@@ -132,55 +110,51 @@ class OrderItemsController extends Controller
                 $sum_of_all_products = $sum_of_all_products + (optional($item)['value'] * optional($item)['quantity']);
             }
 
-            if ($sum_of_all_products > $shipping_service_data->max_sum_of_all_products) {
-                session()->flash('alert-danger','The total amount of items declared must be lower or equal US$ 50.00 for selected shipping serivce.');
-                return \back()->withInput();
+                if ($sum_of_all_products > $shipping_service_data->max_sum_of_all_products) {
+                    session()->flash('alert-danger', 'The total amount of items declared must be lower or equal US$ 50.00 for selected shipping serivce.');
+                    return \back()->withInput();
+                }
             }
-
-        }
-
-        if ( $this->orderRepository->updateShippingAndItems($request,$order) ){
-            session()->flash('alert-success','orders.Order Placed');
-            if ($order->user->hasRole('wholesale') && $order->user->insurance == true)
-            {
-                return redirect()->route('admin.orders.order-invoice.index',$order);# code...
+ 
+            if ($this->orderRepository->updateShippingAndItems($request, $order)) { 
+                session()->flash('alert-success', 'orders.Order Placed');
+                if ($order->user->hasRole('wholesale') && $order->user->insurance == true) {
+                    return redirect()->route('admin.orders.order-invoice.index', $order); # code...
+                }
+                return redirect()->route('admin.orders.services.index', $order);
             }
-            return \redirect()->route('admin.orders.services.index',$order);
-        }
-        return \back()->withInput();
+        return back()->withInput();
     }
 
     public function uspsRates(Request $request)
     {
         $items = collect();
-        if(!is_null($request->descp) && !is_null($request->qty) && !is_null($request->value)){
+        if (!is_null($request->descp) && !is_null($request->qty) && !is_null($request->value)) {
             foreach ($request->descp as $key => $descp) {
                 $items = $items->push((object)[
-                    'description' => $descp, 
-                    'quantity' => $request->qty[$key], 
+                    'description' => $descp,
+                    'quantity' => $request->qty[$key],
                     'value' => $request->value[$key]
                 ]);
             }
             $order = Order::find($request->order_id);
             $order->items = $items;
-        }else{
+        } else {
             $order = Order::find($request->order_id);
         }
         $response = USPSFacade::getRecipientRates($order, $request->service);
 
-        if($response->success == true)
-        {
-            return (Array)[
+        if ($response->success == true) {
+            return (array)[
                 'success' => true,
                 'total_amount' => $response->data['total_amount'],
             ];
         }
 
-        return (Array)[
+        return (array)[
             'success' => false,
             'message' => 'server error, could not get rates',
         ];
-
     }
 
     public function ups_rates(Request $request)
@@ -188,15 +162,14 @@ class OrderItemsController extends Controller
         $order = Order::find($request->order_id);
         $response = UPSFacade::getRecipientRates($order, $request->service);
 
-        if($response->success == false)
-        {
-            return (Array)[
+        if ($response->success == false) {
+            return (array)[
                 'success' => false,
                 'error' => $response->error['response']['errors'][0]['message'] ?? 'server error, could not get rates',
             ];
         }
 
-        return (Array)[
+        return (array)[
             'success' => true,
             'total_amount' => number_format($response->data['RateResponse']['RatedShipment']['TotalCharges']['MonetaryValue'], 2),
         ];
@@ -208,16 +181,17 @@ class OrderItemsController extends Controller
         $response = FedExFacade::getRecipientRates($order, $request->service);
 
         if ($response->success == false) {
-            return (Array)[
+            return (array)[
                 'success' => false,
-                'error' => $response->error['response']['errors'][0]['message'] ?? $response->error['errors'][0]['code'].'-'.'server error, could not get rates',
+                'error' => $response->error['response']['errors'][0]['message'] ?? $response->error['errors'][0]['code'] . '-' . 'server error, could not get rates',
             ];
         }
 
-        return (Array)[
+        return (array)[
             'success' => true,
             'total_amount' => number_format($response->data['output']['rateReplyDetails'][0]['ratedShipmentDetails'][0]['totalNetFedExCharge'], 2),
         ];
     }
+
 
 }
