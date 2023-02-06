@@ -78,6 +78,7 @@
                 </div>
             </div>
             <hr>
+            <div class="row col-12" id="itemLimit"><h5 class="content-justify text-danger"><b>@lang('orders.order-details.Item Limit')</b></h5></div>
             <livewire:order.order-details.order-items :order-id="$order->id"/>
             <hr>
             <div class="row mt-1">
@@ -128,6 +129,7 @@
     const shippingServiceCodes = @json($shippingServiceCodes)
 
     $("#rateBtn").hide();
+    $("#itemLimit").hide();
     $('#shipping_service_id').on('change',function(){
         const service = $('#shipping_service_id option:selected').attr('data-service-code');
         
@@ -136,7 +138,12 @@
         );
         if(service == shippingServiceCodes.USPS_PRIORITY_INTERNATIONAL || service == shippingServiceCodes.USPS_FIRSTCLASS_INTERNATIONAL) {
             $("#rateBtn").show();
+            $("#itemLimit").hide();
+        }else if(service == 537 || service == 540 || service == 773) {
+            $("#itemLimit").show();
+            $("#rateBtn").hide();
         }else {
+            $("#itemLimit").hide();
             $("#rateBtn").hide();
         }
     })

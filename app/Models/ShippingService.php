@@ -335,4 +335,11 @@ class ShippingService extends Model
 
         return false;
     }
+    public function getIsSwedenPostAttribute()
+    {
+        if($this->service_sub_class == self::Prime5){
+            return true;
+        }
+        return false;
+    }
 }

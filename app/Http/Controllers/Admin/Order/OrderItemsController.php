@@ -110,6 +110,13 @@ class OrderItemsController extends Controller
                 return back()->withInput();
             }
         }
+
+        if($order->shippingService->is_geps || $order->shippingService->is_sweden_post) {
+            if(count($request->items) > 2) {
+                session()->flash('alert-danger', 'More than 3 Items are Not Allowed with the Selected Service');
+                return back()->withInput();
+            }
+        }
         /**
          * Sinerlog modification
          * Get total of items declared to check if them more than US$ 50 when Sinerlog Small Parcels was selected
