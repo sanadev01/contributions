@@ -66,10 +66,6 @@ class OrderItemsController extends Controller
             ]);
         }
         if($this->orderRepository->GePSService($request->shipping_service_id)){
-            if(count($request->items) > 2) {
-                session()->flash('alert-danger', 'More than 3 Items are Not Allowed with the Selected Service');
-                return back()->withInput();
-            }
             if($order->measurement_unit == "lbs/in" && $order->weight > 4.40) {
                 session()->flash('alert-danger', 'Parcel Weight cannot be more than 4.40 LBS. Please Update Your Parcel');
                 return back()->withInput();
@@ -94,7 +90,7 @@ class OrderItemsController extends Controller
             }
         }
 
-        if($order->shippingService->is_sweden_post) {
+        if($order->shippingService->is_geps || $order->shippingService->is_sweden_post) {
             if(count($request->items) > 2) {
                 session()->flash('alert-danger', 'More than 3 Items are Not Allowed with the Selected Service');
                 return back()->withInput();
