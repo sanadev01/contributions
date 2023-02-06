@@ -13,7 +13,6 @@ use App\Models\OrderTracking;
 use App\Models\PaymentInvoice;
 use App\Models\ShippingService;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use App\Repositories\OrderRepository;
 use App\Http\Requests\Orders\OrderDetails\CreateRequest;
 
@@ -44,24 +43,8 @@ class OrderItemsController extends Controller
         if ($error) {
             session()->flash($error);
         }
-
-        $countryConstants = [
-            'Brazil' => Country::Brazil,
-            'Chile' => Country::Chile,
-            'Colombia' => Country::COLOMBIA,
-            'US' => Country::US,
-        ];
-
-        $shippingServiceCodes = [
-            'USPS_PRIORITY' => ShippingService::USPS_PRIORITY,
-            'USPS_FIRSTCLASS' => ShippingService::USPS_FIRSTCLASS,
-            'USPS_PRIORITY_INTERNATIONAL' => ShippingService::USPS_PRIORITY_INTERNATIONAL,
-            'USPS_FIRSTCLASS_INTERNATIONAL' => ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,
-            'UPS_GROUND' => ShippingService::UPS_GROUND,
-            'FEDEX_GROUND' => ShippingService::FEDEX_GROUND,
-        ];
         
-        return view('admin.orders.order-details.index',compact('order','shippingServices', 'error', 'countryConstants', 'shippingServiceCodes'));
+        return view('admin.orders.order-details.index',compact('order','shippingServices', 'error','chileCountryId', 'usCountryId'));
     }
 
     /**
