@@ -19,7 +19,7 @@ class OrderItems extends Component
     {
         $this->orderId = $orderId;
         $this->order = Order::find($orderId);
-        
+
         $this->items = old('items', $this->order->items->toArray() );
 
         if ( count($this->items) <1 ){
