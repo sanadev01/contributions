@@ -16,9 +16,9 @@ class ProfileRepository
     public function store(Request $request)
     {   
         try{
-
-            $user = User::find(Auth::id());
-
+            $user = User::find(Auth::id()); 
+                ($request->order_webhook_url != null ) ? saveSetting('order_webhook_url', $request->order_webhook_url, $user->id) : saveSetting('order_webhook_url', 0, $user->id);
+                ($request->order_webhook_url_method != null ) ? saveSetting('order_webhook_url_method', $request->order_webhook_url_method, $user->id) : saveSetting('order_webhook_url_method', "POST", $user->id);
             $user->update([
                 'name' => $request->name,
                 'last_name' => $request->last_name,
