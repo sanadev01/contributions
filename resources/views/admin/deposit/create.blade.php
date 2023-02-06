@@ -129,6 +129,7 @@
                                         </div>
                                     @endadmin
                                 </div>
+                                @if(!Auth::user()->isAdmin())
                                 <hr>
                                 <div class=" d-flex   justify-content-center"> 
                                 <div class="row container text-center">
@@ -189,6 +190,7 @@
                                     </div>
                                 </div>
                                 </div>
+                                @endif
                                 <hr>
                                 <div class="controls row mb-1 ">
                                     <div class="col-sm-12">
