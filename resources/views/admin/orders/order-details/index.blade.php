@@ -78,6 +78,7 @@
                 </div>
             </div>
             <hr>
+            <div class="row col-12" id="itemLimit"><h5 class="content-justify text-danger"><b>@lang('orders.order-details.Item Limit')</b></h5></div>
             <livewire:order.order-details.order-items :order-id="$order->id"/>
             <hr>
             <div class="row mt-1">
@@ -126,6 +127,7 @@
 
 <script>
     $("#rateBtn").hide();
+    $("#itemLimit").hide();
     $('#shipping_service_id').on('change',function(){
         $('#user_declared_freight').val(
             parseFloat($('option:selected', this).attr("data-cost"))
@@ -133,7 +135,12 @@
         const service = $('#shipping_service_id option:selected').attr('data-service-code');
         if(service == 3442 || service == 3443) {
             $("#rateBtn").show();
+            $("#itemLimit").hide();
+        }else if(service == 537 || service == 540 || service == 773) {
+            $("#itemLimit").show();
+            $("#rateBtn").hide();
         }else {
+            $("#itemLimit").hide();
             $("#rateBtn").hide();
         }
     })
