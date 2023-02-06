@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Order;
+use App\Models\User;
 use App\Models\Country;
 use App\Facades\USPSFacade;
 use Illuminate\Http\Request;
@@ -14,7 +15,7 @@ use App\Services\USPS\USPSShippingService;
 use App\Services\FedEx\FedExShippingService;
 use App\Services\GePS\GePSShippingService;
 use App\Services\Calculators\WeightCalculator;
-use App\Models\User;
+use App\Services\Colombia\ColombiaPostalCodes;
 use App\Services\Order\UpdateOrderInvoice;
 
 class OrderRepository

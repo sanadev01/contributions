@@ -3,13 +3,17 @@
 namespace App\Http\Controllers\Admin\Order;
 
 use App\Models\Order;
+use App\Models\Country;
 use App\Models\Deposit;
 use App\Facades\UPSFacade;
 use App\Facades\USPSFacade;
 use App\Facades\FedExFacade;
 use Illuminate\Http\Request;
+use App\Models\OrderTracking;
+use App\Models\PaymentInvoice;
 use App\Models\ShippingService;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Repositories\OrderRepository;
 use App\Http\Requests\Orders\OrderDetails\CreateRequest;
 
@@ -40,8 +44,24 @@ class OrderItemsController extends Controller
         if ($error) {
             session()->flash($error);
         }
+
+        $countryConstants = [
+            'Brazil' => Country::Brazil,
+            'Chile' => Country::Chile,
+            'Colombia' => Country::COLOMBIA,
+            'US' => Country::US,
+        ];
+
+        $shippingServiceCodes = [
+            'USPS_PRIORITY' => ShippingService::USPS_PRIORITY,
+            'USPS_FIRSTCLASS' => ShippingService::USPS_FIRSTCLASS,
+            'USPS_PRIORITY_INTERNATIONAL' => ShippingService::USPS_PRIORITY_INTERNATIONAL,
+            'USPS_FIRSTCLASS_INTERNATIONAL' => ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,
+            'UPS_GROUND' => ShippingService::UPS_GROUND,
+            'FEDEX_GROUND' => ShippingService::FEDEX_GROUND,
+        ];
         
-        return view('admin.orders.order-details.index',compact('order','shippingServices', 'error','chileCountryId', 'usCountryId'));
+        return view('admin.orders.order-details.index',compact('order','shippingServices', 'error', 'countryConstants', 'shippingServiceCodes'));
     }
 
     /**
@@ -110,20 +130,22 @@ class OrderItemsController extends Controller
                 $sum_of_all_products = $sum_of_all_products + (optional($item)['value'] * optional($item)['quantity']);
             }
 
-                if ($sum_of_all_products > $shipping_service_data->max_sum_of_all_products) {
-                    session()->flash('alert-danger', 'The total amount of items declared must be lower or equal US$ 50.00 for selected shipping serivce.');
-                    return \back()->withInput();
-                }
+            if ($sum_of_all_products > $shipping_service_data->max_sum_of_all_products) {
+                session()->flash('alert-danger','The total amount of items declared must be lower or equal US$ 50.00 for selected shipping serivce.');
+                return \back()->withInput();
             }
- 
-            if ($this->orderRepository->updateShippingAndItems($request, $order)) { 
-                session()->flash('alert-success', 'orders.Order Placed');
-                if ($order->user->hasRole('wholesale') && $order->user->insurance == true) {
-                    return redirect()->route('admin.orders.order-invoice.index', $order); # code...
-                }
-                return redirect()->route('admin.orders.services.index', $order);
+
+        }
+
+        if ( $this->orderRepository->updateShippingAndItems($request,$order) ){
+            session()->flash('alert-success','orders.Order Placed');
+            if ($order->user->hasRole('wholesale') && $order->user->insurance == true)
+            {
+                return redirect()->route('admin.orders.order-invoice.index',$order);# code...
             }
-        return back()->withInput();
+            return \redirect()->route('admin.orders.services.index',$order);
+        }
+        return \back()->withInput();
     }
 
     public function uspsRates(Request $request)
@@ -155,6 +177,7 @@ class OrderItemsController extends Controller
             'success' => false,
             'message' => 'server error, could not get rates',
         ];
+
     }
 
     public function ups_rates(Request $request)
@@ -162,8 +185,9 @@ class OrderItemsController extends Controller
         $order = Order::find($request->order_id);
         $response = UPSFacade::getRecipientRates($order, $request->service);
 
-        if ($response->success == false) {
-            return (array)[
+        if($response->success == false)
+        {
+            return (Array)[
                 'success' => false,
                 'error' => $response->error['response']['errors'][0]['message'] ?? 'server error, could not get rates',
             ];
@@ -192,6 +216,5 @@ class OrderItemsController extends Controller
             'total_amount' => number_format($response->data['output']['rateReplyDetails'][0]['ratedShipmentDetails'][0]['totalNetFedExCharge'], 2),
         ];
     }
-
 
 }
