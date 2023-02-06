@@ -288,6 +288,16 @@ class User extends Authenticatable
         return $this->name . ' '. $this->last_name;
     }
     
+    public function getFullNameAttribute()
+    {
+        return $this->name . ' '. $this->last_name;
+    }
+
+    public function getPoboxNameAttribute()
+    {
+        return  $this->full_name.''.$this->pobox_number;
+    }
+    
     public function isActive(){
         return ($this->status == "active" || $this->status == NULL) ? true :false;
     }
@@ -306,7 +316,7 @@ class User extends Authenticatable
         return[
             self::GILBERTO_ACCOUNT_ID,
         ];
-    }
+    }   
     public function deposits()
     {
         return $this->hasMany(Deposit::class);
