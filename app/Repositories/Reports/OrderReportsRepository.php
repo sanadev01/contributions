@@ -13,10 +13,10 @@ class OrderReportsRepository
 {
     protected $error;
 
-    public function getShipmentReportOfUsers(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='asc')
+    public function getShipmentReportOfUsers(Request $request,$paginate = true,$pageSize=20,$orderBy = 'id',$orderType='asc')
     {
         $query = User::query();
-            $query->with(['orders']);
+            // $query->with(['orders']);
 
         if ( $request->name ){
             $query->where('name','LIKE',"%{$request->name}%")
