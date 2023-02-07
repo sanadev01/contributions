@@ -177,6 +177,8 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             
         });
         Route::get('export-orders', [App\Http\Controllers\Admin\Reports\OrderReportController::class,'download'])->name('reports.export-orders');
+        Route::get('unpaid-orders-report', [App\Http\Controllers\Admin\Reports\UnPaidOrdersController::class, 'index'])->name('reports.unpaid-orders');
+        Route::post('unpaid-orders-download', [App\Http\Controllers\Admin\Reports\UnPaidOrdersController::class, 'download'])->name('reports.unpaid-orders-download');
 
         Route::namespace('Inventory')->as('inventory.')->prefix('inventory')->group(function(){
             Route::resource('product', ProductController::class);
