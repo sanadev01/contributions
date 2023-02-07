@@ -12,10 +12,9 @@ use App\Mail\Admin\AutoCharge;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class NotifyTransaction extends Mailable
+class OrderNotification extends Mailable
 {
     use Queueable, SerializesModels;
-    public $deposit;
     public $preStatus;
     public $user;
     public $newStatus;
@@ -26,25 +25,16 @@ class NotifyTransaction extends Mailable
      *
      * @return void
      */
-    public function __construct($deposit , $preStatus, $user)
+    public function __construct($order , $preStatus, $user)
     {
-        $this->deposit = $deposit;
+        $this->order = $order;
         $this->preStatus = $preStatus;
         $this->user = $user;
 
-        $order = Order::find($this->deposit->order_id);
         if($order) {
             $order->refresh();
             $this->order = $order;
             $this->newStatus = $order->status_name;
-        }
-        if(setting('auto_charge', null, $order->user_id) && getBalance($order->user) < 200 ){
-            $charge = 200 - getBalance($order->user);
-            try {
-                \Mail::send(new AutoCharge(round($charge, 2), $order->user));
-            } catch (\Exception $ex) {
-                \Log::info('Notify Autocharge email send error: '.$ex->getMessage());
-            }
         }
 
     }
@@ -56,12 +46,8 @@ class NotifyTransaction extends Mailable
      */
     public function build()
     {
-        if(!$this->order){
-            $subject = "Transaction Update";
-        } else {
-            $subject = "Transaction Notification";        
-        }
-        return $this->markdown('email.admin.notify-transaction')
+        $subject = "Order Notification";    
+        return $this->markdown('email.admin.order-notification')
         ->to(
             config('hd.email.admin_email'),
             config('hd.email.admin_name'),
