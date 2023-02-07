@@ -45,7 +45,7 @@ class OrderCheckoutRepository
     {
         if($this->request->pay){
 
-            if(getBalance() < ($this->invoice->total_amount - $this->invoice->paid_amount)){
+            if(getBalance() < $this->invoice->total_amount){
                 session()->flash('alert-danger','Not Enough Balance. Please Recharge your account.');
                 return back();
             }
