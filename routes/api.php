@@ -21,15 +21,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('orders/recipient/update', [App\Http\Controllers\Api\Order\RecipientController::class, 'update'])->name('api.orders.recipient.update');
 Route::get('orders/recipient/zipcode', [App\Http\Controllers\Api\Order\RecipientController::class, 'zipcode'])->name('api.orders.recipient.zipcode');
+Route::post('orders/recipient/colombiaZipcode', [App\Http\Controllers\Api\Order\RecipientController::class, 'colombiaZipcode'])->name('api.orders.recipient.colombiaZipcode');
 
-// Route for getting chile regions from correios chile api
-Route::get('orders/recipient/chile_regions', [App\Http\Controllers\Api\Order\RecipientController::class, 'chileRegions'])->name('api.orders.recipient.chile_regions');
-Route::get('orders/recipient/chile_communes', [App\Http\Controllers\Api\Order\RecipientController::class, 'chileCommunes'])->name('api.orders.recipient.chile_comunes');
-Route::get('orders/recipient/normalize_address', [App\Http\Controllers\Api\Order\RecipientController::class, 'normalizeAddress'])->name('api.orders.recipient.normalize_address');
-
-// Route for getting chile regions from db
-Route::get('orders/recipient/hd_chile_regions', [App\Http\Controllers\Api\Order\RecipientController::class, 'hdChileRegions'])->name('api.orders.recipient.hd_chile_regions');
-Route::get('orders/recipient/hd_chile_comunes', [App\Http\Controllers\Api\Order\RecipientController::class, 'hdChileCommunes'])->name('api.orders.recipient.hd_chile_comunes');
 
 // Routes for usps
 Route::get('orders/recipient/us_address', [App\Http\Controllers\Api\Order\RecipientController::class, 'validate_USAddress'])->name('api.orders.recipient.us_address');
@@ -77,7 +70,7 @@ Route::prefix('v1')->group(function(){
             Route::get('us/calculator',DomesticLabelRateController::class);
             Route::get('status/{order}', StatusController::class);
             Route::get('cancel/{order}', CancelOrderController::class);
-           //Cancel Lable Route for GePS
+            //Cancel Label Route for GePS
             Route::get('cancel-label/{order}', [App\Http\Controllers\Api\PublicApi\OrderLabelController::class, 'cancelGePSLabel']);
         });
     
@@ -85,6 +78,11 @@ Route::prefix('v1')->group(function(){
         Route::get('country/{country}/states', StateController::class);
         Route::get('shipping-services/{country_code?}', ServicesController::class);
         Route::get('shcodes/{search?}', ShCodeController::class);
+        Route::get('hd-regions/{countryId}', RegionController::class)->name('api.hd-regions');
+        Route::get('hd-chile-communes', CommunesController::class)->name('api.hd-chile-communes');
+        Route::get('correios-chile-regions', CorreiosChleRegionController::class)->name('api.correios-chile-regions');
+        Route::get('correios-chile-communes', CorreiosChileCommuneController::class)->name('api.correios-chile-communes');
+        Route::get('correios-chile-normalize-address', CorreiosChileNormalizeAddressController::class)->name('api.correios-chile-normalize-address');
     });
 
 
