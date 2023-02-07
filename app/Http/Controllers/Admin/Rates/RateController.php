@@ -27,7 +27,10 @@ class RateController extends Controller
     public function create()
     {   
         $this->authorizeResource(Rate::class);
-        $shipping_services = ShippingService::all();
+        $shipping_services = ShippingService::get()->filter(function($shippingService, $key){
+            return !$shippingService->isOfUnitedStates();
+        });
+        
         return view('admin.rates.shipping-rates.create', compact('shipping_services'));
     }
 
@@ -35,7 +38,7 @@ class RateController extends Controller
     {   
         $this->authorizeResource(Rate::class);
         if ( $repository->store($request) ){
-            return  redirect()->route('admin.rates.shipping-rates.index');
+            return redirect()->route('admin.rates.shipping-rates.index');
         }
 
         
@@ -91,6 +94,21 @@ class RateController extends Controller
 
         $shipping_rate = Rate::findorfail($id);
         return view('admin.rates.shipping-rates.region.show', compact('shipping_rate'));
+    }
+
+    public function postNLCountryRates(RateRepository $repository, ShippingService $shipping_service)
+    {
+        $this->authorizeResource(Rate::class);
+        $postNLCountryRates = $repository->getPostNLCountryRates($shipping_service);
+        
+        return view('admin.rates.shipping-rates.country.index', compact('shipping_service', 'postNLCountryRates'));
+    }
+    public function showPostNLCountryRates($id)
+    {
+        $this->authorizeResource(Rate::class);
+
+        $shipping_rate = Rate::findorfail($id);
+        return view('admin.rates.shipping-rates.country.show', compact('shipping_rate'));
     }
 
 }
