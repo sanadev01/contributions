@@ -452,7 +452,12 @@
                             </a>
                         </li>
                         @endcan
-                       
+                        <li class="{{ $isActive(['admin.reports.unpaid-orders']) }}">
+                            <a href="{{ route('admin.reports.unpaid-orders') }}">
+                                <i class="icon_adjst feather icon-circle"></i>
+                                <span class="menu-title">Un Paid Orders Report</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li class="nav-item has-sub sidebar-group">
