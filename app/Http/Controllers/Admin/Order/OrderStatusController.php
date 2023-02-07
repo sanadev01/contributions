@@ -87,10 +87,12 @@ class OrderStatusController extends Controller
                     'is_paid' => $request->status >= Order::STATUS_PAYMENT_DONE ? true : false
                 ]);
 
-                //SendMailNotification 
                 DB::commit();
+                //SendMailNotification 
                 try{
-                $this->sendTransactionMail($deposit, $preStatus, $user);
+                    if(isset($deposit)) {
+                        $this->sendTransactionMail($deposit, $preStatus, $user);
+                    }
                 }
                 catch (Exception $e) {         
                 }
