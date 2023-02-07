@@ -31,8 +31,9 @@ class UnPaidOrdersReport extends AbstractExportService
         foreach ($this->trackings as $order) {
             $this->setCellValue('A'.$row, $order['user']['name'] );
             $this->setCellValue('B'.$row, $order['user']['pobox_number']);
-            $this->setCellValue('C'.$row, $order['corrios_tracking_code']);
-            $this->setCellValue('D'.$row, date('d-M-Y', strtotime($order['created_at'])));
+            $this->setCellValue('C'.$row, $order['warehouse_number']);
+            $this->setCellValue('D'.$row, $order['corrios_tracking_code']);
+            $this->setCellValue('E'.$row, date('d-M-Y', strtotime($order['order_date'])));
             $row++;
         }
 
@@ -49,13 +50,16 @@ class UnPaidOrdersReport extends AbstractExportService
         $this->setCellValue('B1', 'PoBox Number');
 
         $this->setColumnWidth('C', 20);
-        $this->setCellValue('C1', 'Tracking Code');
+        $this->setCellValue('C1', 'Warehouse #');
 
         $this->setColumnWidth('D', 20);
-        $this->setCellValue('D1', 'Create Date');
+        $this->setCellValue('D1', 'Tracking Code');
 
-        $this->setBackgroundColor('A1:D1', '2b5cab');
-        $this->setColor('A1:D1', 'FFFFFF');
+        $this->setColumnWidth('E', 20);
+        $this->setCellValue('E1', 'Create Date');
+
+        $this->setBackgroundColor('A1:E1', '2b5cab');
+        $this->setColor('A1:E1', 'FFFFFF');
 
         $this->currentRow++;
 

@@ -70,6 +70,7 @@
                                     <tr>
                                         <th>User Name</th>
                                         <th>Po Box Number</th>
+                                        <th>Warehouse #</th>
                                         <th>Tracking Code</th>
                                         <th>Create Date</th>
                                     </tr>
@@ -80,8 +81,9 @@
                                             <tr>
                                                 <td>{{ $order->user->name }}</td>
                                                 <td>{{ $order->user->pobox_number }}</td>
+                                                <td>{{ $order->warehouse_number }}</td>
                                                 <td>{{ $order->corrios_tracking_code }}</td>
-                                                <td>{{ date('d-M-Y', strtotime($order->created_at)) }}</td>
+                                                <td>{{ date('d-M-Y', strtotime($order->order_date)) }}</td>
                                             </tr>
                                         @endforeach
                                     @endif

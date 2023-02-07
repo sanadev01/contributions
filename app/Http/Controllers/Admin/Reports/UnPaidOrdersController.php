@@ -18,19 +18,18 @@ class UnPaidOrdersController extends Controller
      */
     public function index(Request $request)
     {     
-        $query = Order::with('user')->whereHas('user'); 
+        $query = Order::with('user')->whereHas('user')->where('status' , '>=', Order::STATUS_PAYMENT_DONE); 
 
         $startDate  = $request->start_date.' 00:00:00';
         $endDate    = $request->end_date.' 23:59:59';
         if ( $request->start_date ){
-            $query->where('created_at' , '>=',$startDate);
+            $query->where('order_date' , '>=',$startDate);
         }
         if ( $request->end_date ){
-            $query->where('created_at' , '<=',$endDate);
+            $query->where('order_date' , '<=',$endDate);
         }
 
-        $unPaidOrders = $query->where('status' , '>=', Order::STATUS_PAYMENT_DONE)
-        ->whereDoesntHave('deposits')->orderBy('id','desc')->get();
+        $unPaidOrders = $query->whereDoesntHave('deposits')->orderBy('id','desc')->get();
         return view('admin.reports.unpaid-orders-report', compact('unPaidOrders'));
     }
 
