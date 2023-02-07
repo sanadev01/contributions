@@ -311,6 +311,14 @@
                     </li>
                     @endcan
                     @admin
+                        <li class="{{ $isActive(['admin.reports.unpaid-orders']) }}">
+                            <a href="{{ route('admin.reports.unpaid-orders') }}">
+                                <i class="icon_adjst feather icon-circle"></i>
+                                <span class="menu-title">Un Paid Orders Report</span>
+                            </a>
+                        </li>
+                    @endadmin
+                    @admin
                         {{-- <li class="{{ $isActive(['admin.reports.audit-report.index','admin.reports.audit-report.show']) }}">
                             <a href="{{ route('admin.reports.audit-report.index') }}">
                                 <i class="icon_adjst feather icon-circle"></i>
