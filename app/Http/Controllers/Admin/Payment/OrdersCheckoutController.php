@@ -28,7 +28,7 @@ class OrdersCheckoutController extends Controller
             $stripeKey = setting('STRIPE_KEY', null, null, true);
         }
         $balance = getBalance();
-        $notEnoughBalance =  $balance < $invoice->differnceAmount();
+        $notEnoughBalance = getBalance() < $invoice->total_amount;
         
         return view('admin.payment-invoices.checkout',compact('invoice', 'paymentGateway', 'stripeKey','notEnoughBalance','balance'));
     }
