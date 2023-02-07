@@ -866,6 +866,9 @@ class Order extends Model implements Package
         }elseif($this->status == Order::STATUS_RELEASE) {
             return "RELEASE";
         }
+        elseif($this->status == Order::STATUS_SHIPPED) {
+            return "SHIPPED";
+        }
     }
 
 }

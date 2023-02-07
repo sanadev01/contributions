@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Admin\Order;
 
+use Exception;
 use App\Models\Order;
 use App\Models\Deposit;
 use Illuminate\Http\Request;
 use App\Models\PaymentInvoice;
-use App\Mail\Admin\NotifyTransaction;
-use App\Http\Controllers\Controller;
-use Exception;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Mail\Admin\NotifyTransaction;
+use App\Mail\Admin\OrderNotification;
 
 class OrderStatusController extends Controller
 {
@@ -69,9 +70,10 @@ class OrderStatusController extends Controller
                         if ($order) {
                             $order->deposits()->sync($deposit->id);
                         }
+                        $this->sendTransactionMail($deposit, $preStatus, $user);
                         
                     } else {
-                   return $this->rollback("Not Enough Balance. Please Add Balance to " . $order->user->name . ' ' . $order->user->pobox_number . " account.");
+                        return $this->rollback("Not Enough Balance. Please Add Balance to " . $order->user->name . ' ' . $order->user->pobox_number . " account.");
                     }
 
                 }
@@ -82,19 +84,28 @@ class OrderStatusController extends Controller
                     return $this->commit();
                 }
 
-                $order->update([
-                    'status' => $request->status,
-                    'is_paid' => $request->status >= Order::STATUS_PAYMENT_DONE ? true : false
-                ]);
+                if(in_array($request->status, [
+                    Order::STATUS_CANCEL, 
+                    Order::STATUS_REJECTED, 
+                    Order::STATUS_RELEASE, 
+                    Order::STATUS_PAYMENT_PENDING, 
+                    Order::STATUS_SHIPPED, 
+                    ]))
+                {
+                    $order->update([
+                        'status' => $request->status,
+                        'is_paid' => $request->status >= Order::STATUS_PAYMENT_DONE ? true : false
+                    ]);
+                    //SendOrderMailNotification 
+                    try {
+                        \Mail::send(new OrderNotification($order, $preStatus, $user));
+                    } catch (\Exception $ex) {
+                        \Log::info('Notify Transaction email send error: ' . $ex->getMessage());
+                    }
+                }
 
-                //SendMailNotification 
                 DB::commit();
-                try{
-                $this->sendTransactionMail($deposit, $preStatus, $user);
-                }
-                catch (Exception $e) {         
-                }
-
+                
                 return apiResponse(true, "Updated");
 
             }
