@@ -18,7 +18,9 @@ class UnPaidOrdersController extends Controller
      */
     public function index(Request $request)
     {     
-        $query = Order::with('user')->whereHas('user')->where('status' , '>=', Order::STATUS_PAYMENT_DONE); 
+        $query = Order::with('user')->whereHas('user')->whereHas('paymentInvoices', function($query){
+            return $query->where('last_four_digits', null);
+        })->where('status' , '>=', Order::STATUS_PAYMENT_DONE);  
 
         $startDate  = $request->start_date.' 00:00:00';
         $endDate    = $request->end_date.' 23:59:59';
