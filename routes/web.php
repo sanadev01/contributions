@@ -284,11 +284,34 @@ Route::get('permission',function($id = null){
     return Artisan::output();
 });
 
-Route::get('container-update/{id?}/new-id/{code?}',function($id, $newId){
-    $container = DB::table('container_order')->where('container_id', $id)->update([
-        'container_id' => $newId
-    ]);
-    return "New Container ID Updated";
+Route::get('container-update/{id?}',function($id){
+    $codes = [
+        'LB891283677SE',
+        'LB891281398SE',
+        'LB891285240SE',
+        'LB891261583SE',
+        'LB891300168SE',
+        'LB891282243SE',
+        'LB891260509SE',
+        'LB891281424SE',
+        'LB891256393SE',
+        'LB891283703SE',
+    ];
+    foreach($codes as $code) {
+        $orderId = Order::where('corrios_tracking_code', $code)->value('id');
+        if($orderId) {
+            $container = DB::table('container_order')->where('container_id', $id)->where('order_id', $orderId)->delete();
+        }else {
+            return "Error! Order Not Found..";
+        }
+    }
+    return "Orders Successfully Removed From Cotainer";
+});
+
+Route::get('container-info/{id?}/',function($id){
+    $container = Container::find($id);
+    $container->update(['unit_response_list', json_encode("cn35:JVBERi0xLjcKJcOiw6PDj8OTCjEgMCBvYmoKPDwKL1R5cGUgL1BhZ2VzCi9LaWRzIFszIDAgUl0KL0NvdW50IDEKL1Jlc291cmNlcyA8PCA+Pgo+PgplbmRvYmoKMiAwIG9iago8PAovVHlwZSAvQ2F0YWxvZwovUGFnZXMgMSAwIFIKL1BhZ2VNb2RlIC9Vc2VOb25lCj4+CmVuZG9iagozIDAgb2JqCjw8Ci9UeXBlIC9QYWdlCi9QYXJlbnQgMSAwIFIKL01lZGlhQm94IFswIDAgNDIwIDI5MF0KL0NvbnRlbnRzIDQgMCBSCi9SZXNvdXJjZXMgPDwgL0ZvbnQgPDwgL0Y1IDUgMCBSIC9GNiA2IDAgUiAvRjcgNyAwIFIgPj4gPj4gL1Byb2NTZXQgWy9QREYgL1RleHQgL0ltYWdlQ10gPj4KPj4KZW5kb2JqCjQgMCBvYmoKPDwKL0ZpbHRlciAvRmxhdGVEZWNvZGUKL0xlbmd0aCAxMDI5Cj4+CnN0cmVhbQp4nJWZQW8bNxBG7/4VPCZAknKGu+TStyixW7dFkBoCcsnFaG1HQRq3sg9tf31XkpUqel+AqQ3Ykpb7DfeBHD2Aln48+TMNOfmYU5n/57S+Tu/S53TyS9pdGev2gvXhy6XFMg3+Yr4pl/nv8rf03fmYhiktb9KTxeXTtPyYzpabUdamzbBS/xtmvhu2vvpn9YlDbToYWrdD365Xd+vVw9/P0svVmncczuExPOf67OyvP9bX9/cH47dTtlZRYHFZ8+ZnyOY52zC/K/Nb87HYgICRAWk/yNLmd32bdi8uv08ng6fekvuQxi3Am3SyoZw3o3YvHkdZbvMtQ3kcNL84+kSFD8eDVPYYSaqYQItkT5HsfjxoXmzHnxg+ARJRf4xQGkFpBJIRz6+qAYmqBiQqCUgqkIjsCkoVlCqQiPoVSGpklVRQqkBSI89f8fyiWgMSkdSApAFJi6ySFtlLDZQakKhsUGoRSg2UJiCZ8Pyi/hTZS1OE0gRKE5Co7AilKdJxJoCbQKlH9lIHOFGtA1wHpQ4kPbKXeqTjdCDpkY7bgURkWyamHFlNlkHFcqTrWAYqyxFWlrl+cmS1WCauHOk9ZpHmY0ZeRjgqnpvNIg3IjLwssrnM+OVlkSZkFuLlXEwe2WHmIV5OXs7F5JFeZE5eHvlmN+di8tBOK4RTQjutEE4J7bRCOCW000qkLVkhrxJpTFa4mIbQThvIi9KsKgqRDmmzhbzZKM4WMmcT6kxRNpqymgTtWVWkUVvIn40CbTRoWZFwQg5tIYk2WrSFNNro0UaRVhUp1zI+tL6EcdOvjYItK3IxCcUOCbXRqI1KrSZBzZbxXEy0ahkf6kxUbaNry3jyom2risLA6duqohBu6rWsSF4hwbaQYRsV2+jYKp7ereIp3kbNlvHkRfc2yrecBHnRteUkQp2JAu7CthnvFHCnbYuKTgF3YduqIng5bVtWjPByCrjMIi8KuIqngDsFXFWkgDsF3IVtq0mAl9O25SQAx0O27bRtFU8Bd9q2C7VWFSOdySngTtv2kG07bVtWDPGigDsFXMVTwJ0CLityMVHAZUXyom17yLadtq0qUsCdtu0h23batqwY6kwUcJlFXhRwp227sG0xCQq4mgQF3IVtq3i2Idq2h2zbadtO23aqtZxXaOWEbNtp2zKLO422vVimPr7Iqff9IUxN/+8Qx+vm/MZy/vYpzv6op/Es6s1durtJq4fr3+9PUzL/Ktm+cdO769Xth4f0/smH2/dPT3FHFVOZJbzvB+4P4sruhG7up+ujc7jh4AhsF/DD+fni6vb+16vPL99eHD9XacfDZ8coz7M/33xZ99OhfMVre8uXCm0/x9cXl2evlunnizc/Hcz0XwrRqlIKZW5kc3RyZWFtCmVuZG9iago1IDAgb2JqCjw8Ci9UeXBlIC9Gb250Ci9TdWJ0eXBlIC9UeXBlMQovTmFtZSAvRjUKL0Jhc2VGb250IC9IZWx2ZXRpY2EtQm9sZAovRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZwo+PgplbmRvYmoKNiAwIG9iago8PAovVHlwZSAvRm9udAovU3VidHlwZSAvVHlwZTEKL05hbWUgL0Y2Ci9CYXNlRm9udCAvSGVsdmV0aWNhCi9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nCj4+CmVuZG9iago3IDAgb2JqCjw8Ci9UeXBlIC9Gb250Ci9TdWJ0eXBlIC9UeXBlMQovTmFtZSAvRjcKL0Jhc2VGb250IC9IZWx2ZXRpY2EtQm9sZAovRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZwo+PgplbmRvYmoKeHJlZgowIDgKMDAwMDAwMDAxOSA2NTUzNSBmCjAwMDAwMDAwMTkgMDAwMDAgbgowMDAwMDAwMDkzIDAwMDAwIG4KMDAwMDAwMDE2MSAwMDAwMCBuCjAwMDAwMDAzNDAgMDAwMDAgbgowMDAwMDAxNDQyIDAwMDAwIG4KMDAwMDAwMTU1NCAwMDAwMCBuCjAwMDAwMDE2NjEgMDAwMDAgbgp0cmFpbGVyCjw8Ci9TaXplIDgKL1Jvb3QgMiAwIFIKPj4Kc3RhcnR4cmVmCjE3NzMKJSVFT0YK")]);
+    return "Status Code Updated";
 });
 
 Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container');
