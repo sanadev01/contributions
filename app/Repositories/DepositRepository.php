@@ -92,6 +92,10 @@ class DepositRepository
             $query->where('balance','LIKE',"%{$request->balance}%");
         }
 
+        if ( $request->filled('card') ){
+            $query->where('last_four_digits','LIKE',"%{$request->card}%");
+        }
+
         $query->orderBy($orderBy,$orderType);
         $query->latest('id');
 
