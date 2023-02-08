@@ -38,17 +38,17 @@ class RatesCalculator
     public function __construct(Order $order,ShippingService $service, $calculateOnVolumeMetricWeight = true, $originalRate = false )
     {
         $this->order = $order;
-        
+
         if ($service && $service->service_sub_class == ShippingService::AJ_Packet_Standard) {
-            
+
             $this->shippingService = ShippingService::where('service_sub_class', ShippingService::Packet_Standard)->first();
 
         }elseif($service && $service->service_sub_class == ShippingService::AJ_Packet_Express){
-            
+
             $this->shippingService = ShippingService::where('service_sub_class', ShippingService::Packet_Express)->first();
-        
+
         }else {
-            
+
             $this->shippingService = $service;
         }
 
@@ -57,11 +57,11 @@ class RatesCalculator
         if($this->recipient->commune_id != null)
         {
             $this->rates = $service->rates()->byRegion($this->recipient->country_id, optional($this->recipient->commune)->region->id)->first();
-        
+
         }else{
             $this->rates = $this->shippingService->rates()->byCountry($this->recipient->country_id)->first();
         }
-        
+
         $this->initializeDims();
 
         $this->weight = $calculateOnVolumeMetricWeight ? $this->calculateWeight($originalRate): $this->originalWeight;
@@ -88,20 +88,20 @@ class RatesCalculator
      */
     private function calculateWeight($originalRate)
     {
-        if ($this->order->weight_discount && $originalRate == false) 
+        if ($this->order->weight_discount && $originalRate == false)
         {
             $unit = ($this->order->measurement_unit == 'lbs/in') ? 'in' : 'cm';
-            
+
             $volumnWeight = WeightCalculator::getVolumnWeight($this->order->length, $this->order->width, $this->order->height, $unit);
-            
+
             $consideredWeight = $volumnWeight - $this->order->getOriginalWeight();
-            
+
             $volumnWeight = round($consideredWeight - $this->order->weight_discount, 2);
 
             $volumnWeight = $volumnWeight + $this->order->getOriginalWeight();
-            
+
             $volumnWeight = ($this->order->measurement_unit == 'lbs/in') ? UnitsConverter::poundToKg($volumnWeight) : $volumnWeight;
-            
+
             return $volumnWeight;
         }
 
@@ -138,7 +138,7 @@ class RatesCalculator
         if ( $weight<100 ){
             $weight = 100;
         }
-        
+
         $rates = collect($this->rates->data)->where('weight','<=',$weight)->sortByDesc('weight')->take(2);
         $secRate = [];
         foreach($rates as $rate){
@@ -155,7 +155,7 @@ class RatesCalculator
             $rate = $rate['leve'];
         }
 
-        
+
         if (! $addProfit) {
             return $rate;
         }
@@ -165,13 +165,13 @@ class RatesCalculator
     public function getProfitOn($cost)
     {
         $profitPackage = $this->getProfitPackage();
-        
+
         if ( !$profitPackage ){
             return 0;
         }
 
         $profitPercentage =  $this->getProfitSlabValue($profitPackage);
-        
+
         $profitAmount =  ($profitPercentage/100) * $cost ;
 
         return $profitAmount;
@@ -180,9 +180,9 @@ class RatesCalculator
     public function getProfitPackage()
     {
         $user = $this->order->user;
-        
+
         $shippingServiceId = $this->shippingService->id;
-        
+
         $profitSetting = $this->order->user->profitSettings()->where('user_id',$user->id)->where('service_id',$shippingServiceId)->first();
         if($profitSetting){
             $profitPackage =$profitSetting->profitPackage;
@@ -204,7 +204,7 @@ class RatesCalculator
             $weight = 100;
         }
         $profitSlab = collect($profitPackage->data)->where('max_weight','<=',$weight)->sortByDesc('min_weight')->first();
-       
+
         if ( !$profitSlab ){
             $profitSlab = collect($profitPackage->data)->where('max_weight','>=',29999)->first();
         }
@@ -212,7 +212,7 @@ class RatesCalculator
         if ( !$profitSlab ){
             return 0;
         }
-        
+
         return optional($profitSlab)['value'];
 
     }
@@ -225,6 +225,7 @@ class RatesCalculator
                 // self::$errors .= "Service not available for this Country <br>";
                 return false;
             }
+
             $profitSetting = $this->order->user->profitSettings->where('service_id',$this->shippingService->id)->first();
             if(!$profitSetting && !auth()->user()->isAdmin()){
                 return false;
@@ -245,7 +246,7 @@ class RatesCalculator
              * "width":["The width must be between 9 and 105."],
              * "length":["The length must be between 14 and 105."]
              */
-            
+
             /**
              * Express service
              * "weight":["The weight must be between 1 and 30000."]
@@ -266,19 +267,19 @@ class RatesCalculator
                 if($this->height < $this->shippingService->min_height_allowed || $this->height > $this->shippingService->max_height_allowed){
                     return false;
                 }
-        
+
                 if ($this->width < $this->shippingService->min_width_allowed || $this->width > $this->shippingService->max_width_allowed) {
                     return false;
                 }
-        
+
                 if ($this->length < $this->shippingService->min_length_allowed || $this->length > $this->shippingService->max_length_allowed) {
                     return false;
                 }
-        
+
                 if (($this->width + $this->height + $this->length) > $this->shippingService->max_sum_of_all_sides) {
                     return false;
                 }
-            }            
+            }
 
             return true;
         } catch (Exception $exception) {
