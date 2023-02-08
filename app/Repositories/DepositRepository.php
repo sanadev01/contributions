@@ -98,6 +98,7 @@ class DepositRepository
                             ->orWhere('name','LIKE',"%{$request->search}%")
                             ->orWhere('last_name','LIKE',"%{$request->search}%")
                             ->orWhere('email','LIKE',"%{$request->search}%")
+                            ->orWhere('last_four_digits','LIKE',"%{$request->search}%")
                             ->orWhere('id', $request->search);
             });
         }

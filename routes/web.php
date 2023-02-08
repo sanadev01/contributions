@@ -292,12 +292,10 @@ Route::get('permission',function($id = null){
     return Artisan::output();
 });
 
-Route::get('urbano-rates/{id?}',function($id){
-
-    $rates = Rate::find(70)->update([
-        'country_id' => 50,
-    ]);
-    return "Country Updated";
+Route::get('container-info/{id?}/',function($id){
+    $container = Container::where('dispatch_number', $id)->get();
+    dd($container);
+    return "Status Code Updated";
 });
 
 
