@@ -35,7 +35,7 @@ class ExportDepositReport extends AbstractExportService
 
         foreach ($this->deposits as $deposit) {
 
-            // $order = $deposit->getOrder($deposit->order_id);
+            //$order = $deposit->getOrder($deposit->order_id);
             $order = ($deposit->orders) ? $deposit->orders->first() : null;
             // $depositFirstOrder = $deposit->firstOrder();
             $depositFirstOrder = ($order) ? $order : null;
@@ -47,14 +47,15 @@ class ExportDepositReport extends AbstractExportService
             $this->setCellValue('E'.$row, ($depositFirstOrder && $depositFirstOrder->hasSecondLabel()) ? optional($depositFirstOrder)->us_api_tracking_code : optional($order)->corrios_tracking_code);
             $this->setCellValue('F'.$row, $deposit->created_at->format('m/d/Y'));
             $this->setCellValue('G'.$row, $deposit->amount);
-            $this->setCellValue('H'.$row, '');
+            $this->setCellValue('H'.$row, $this->getShippingCarrier($depositFirstOrder, $order));
             if (auth()->user()->isAdmin()) {
                 $this->setCellValue('I'.$row, '');
             }
-            $this->setCellValue('J'.$row, '');
-            $this->setCellValue('K'.$row, '');
+            $this->setCellValue('J'.$row, $order ? $order->length.'x'.$order->width.'x'.$order->height : '');
+            $this->setCellValue('K'.$row, $order ? $order->weight : '');
             $this->setCellValue('L'.$row, '');
             $this->setCellValue('M'.$row, $deposit->isCredit() ? 'Credit' : 'Debit');
+            $this->setCellValue('N'.$row, $deposit->description);
             $row++;
         }
 
@@ -104,8 +105,11 @@ class ExportDepositReport extends AbstractExportService
         $this->setColumnWidth('M', 20);
         $this->setCellValue('M1', 'Credit/Debit');
 
-        $this->setBackgroundColor('A1:M1', '2b5cab');
-        $this->setColor('A1:M1', 'FFFFFF');
+        $this->setColumnWidth('N', 20);
+        $this->setCellValue('N1', 'Description');
+
+        $this->setBackgroundColor('A1:N1', '2b5cab');
+        $this->setColor('A1:N1', 'FFFFFF');
 
         $this->currentRow++;
     }
@@ -126,7 +130,7 @@ class ExportDepositReport extends AbstractExportService
             }
         }
 
-        if ($order->shippingService) {
+        if (optional($order)->shippingService) {
             switch ($order->recipient->country_id) {
                 case ORDER::US:
                     if ($order->shippingService->sub_class_code == ShippingService::UPS_GROUND) {
@@ -141,14 +145,27 @@ class ExportDepositReport extends AbstractExportService
                         return 'Correios Chile';
                     break;
                 case ORDER::BRAZIL:
+                    if ($order->shippingService->sub_class_code == ShippingService::GePS || $order->shippingService->sub_class_code == ShippingService::GePS_EFormat) {
+                        return 'Global eParcel';
+                    }
+                    if ($order->shippingService->sub_class_code == ShippingService::Prime5) {
+                        return 'Prime5';
+                    }
+                    if (in_array($order->shippingService->sub_class_code, 
+                        [ShippingService::Packet_Standard, 
+                        ShippingService::Packet_Express, 
+                        ShippingService::AJ_Packet_Standard, 
+                        ShippingService::AJ_Packet_Express])) 
+                        {
                         return 'Correios Brazil';
+                    }
                     break;
                 default:
                     return ' ';
                    break;
             }
         }
-       return optional($order->shippingService)->name;
+       return optional(optional($order)->shippingService)->name;
     }
 
     private function getShippingCarrierCost($depositFirstOrder, $order)

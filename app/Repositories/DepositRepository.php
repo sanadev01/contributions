@@ -35,7 +35,9 @@ class DepositRepository
     {
         $query = Deposit::query();
 
-        $query->with('orders');
+        if ($paginate == false) {
+            $query->with('orders');
+        }
 
         if ( !Auth::user()->isAdmin() ){
             $query->where('user_id',Auth::id());
