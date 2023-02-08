@@ -8,9 +8,7 @@ class OrderResource extends JsonResource{
     {
        return [
             'warehouse_number' => $this->warehouse_number,
-            'corrios_tracking_code' => $this->corrios_tracking_code, 
-            'tax1' => optional($this->tax)->tax1,
-            'tax2' => optional($this->tax)->tax2,
+            'corrios_tracking_code' => $this->corrios_tracking_code,
        ];
     }
 

@@ -8,11 +8,11 @@ use App\Models\Deposit;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 
-class GetDepositController extends Controller
+class DepositController extends Controller
 {
     public function __invoke()
     {
-        $from = Request::get('from')??date('Y-01-m'); 
+        $from = Request::get('from')??date('Y-m-01'); 
         $to  = Request::get('to')??date('Y-m-d'); 
         $deposits = Deposit::with(['orders.tax','user'])->where('user_id',Auth::id())->filter($from,$to)->get();
         return response()->json([
