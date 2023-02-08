@@ -284,10 +284,11 @@ Route::get('permission',function($id = null){
     return Artisan::output();
 });
 
-Route::get('container-info/{id?}/',function($id){
-    $container = Container::where('dispatch_number', $id)->get();
-    dd($container);
-    return "Status Code Updated";
+Route::get('container-update/{id?}/new-id/{code?}',function($id, $newId){
+    $container = DB::table('container_order')->where('container_id', $id)->update([
+        'container_id' => $newId
+    ]);
+    return "New Container ID Updated";
 });
 
 Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container');
