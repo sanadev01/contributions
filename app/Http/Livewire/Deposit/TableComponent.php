@@ -13,7 +13,6 @@ class TableComponent extends Component
     protected $paginationTheme = 'bootstrap';
 
     public $pageSize = 50;
-    
     public $user;
     public $uuid;
     public $last_four_digits;
