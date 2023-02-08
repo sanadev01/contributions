@@ -35,7 +35,9 @@ class DepositRepository
     {
         $query = Deposit::query();
 
-        $query->with('orders');
+        if ($paginate == false) {
+            $query->with('orders');
+        }
 
         if ( !Auth::user()->isAdmin() ){
             $query->where('user_id',Auth::id());
@@ -90,8 +92,15 @@ class DepositRepository
             $query->where('balance','LIKE',"%{$request->balance}%");
         }
 
-        if ( $request->filled('card') ){
-            $query->where('last_four_digits','LIKE',"%{$request->card}%");
+        if ( $request->search ){
+            $query->whereHas('user',function($query) use($request) {
+                return $query->where('pobox_number',"%{$request->search}%")
+                            ->orWhere('name','LIKE',"%{$request->search}%")
+                            ->orWhere('last_name','LIKE',"%{$request->search}%")
+                            ->orWhere('email','LIKE',"%{$request->search}%")
+                            ->orWhere('last_four_digits','LIKE',"%{$request->search}%")
+                            ->orWhere('id', $request->search);
+            });
         }
 
         $query->orderBy($orderBy,$orderType);

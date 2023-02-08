@@ -46,6 +46,16 @@ class Deposit extends Model
         return $this->orders()->first();
     }
 
+    public function tax()
+    {
+        return $this->hasOne(Tax::class);
+    }
+    
+    public function getIsTaxAttribute()
+    {
+        return $this->tax!=null;
+    }
+
     public function hasOrder()
     {
         return $this->orders()->count();
@@ -88,7 +98,10 @@ class Deposit extends Model
 
     public static function getLiabilityBalance($user=null)
     {
-        $totalBalance= self::query()->sum('balance');
+        if($user){
+            $totalBalance= self::query()->where('user_id',$user ? $user->id:  Auth::id())->groupBy('user_id')->orderBy('created_at', 'desc')->sum('balance');
+        }
+        $totalBalance= self::query()->groupBy('user_id')->orderBy('created_at', 'desc')->sum('balance');
         if ( !$totalBalance ){
             return 0;
         }
