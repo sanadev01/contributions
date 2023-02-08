@@ -291,13 +291,6 @@ Route::get('container-update/{id?}/new-id/{code?}',function($id, $newId){
     return "New Container ID Updated";
 });
 
-Route::get('container-update/{id?}/new-id/{code?}',function($id, $newId){
-    $container = DB::table('container_order')->where('container_id', $id)->update([
-        'container_id' => $newId
-    ]);
-    return "New Container ID Updated";
-});
-
 Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container');
 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
