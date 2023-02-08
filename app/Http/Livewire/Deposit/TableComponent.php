@@ -29,6 +29,7 @@ class TableComponent extends Component
     public $description;
     public $balance;
     public $userId;
+    public $card;
     
     protected $listeners = [
         'user:updated' => 'updateUser',
@@ -92,6 +93,7 @@ class TableComponent extends Component
             'attachment' => $this->attachment,
             'description' => $this->description,
             'balance' => $this->balance,
+            'card' => $this->card,
         ]);
     }
 
