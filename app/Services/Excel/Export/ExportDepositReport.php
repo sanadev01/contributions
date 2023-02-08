@@ -37,7 +37,6 @@ class ExportDepositReport extends AbstractExportService
 
             //$order = $deposit->getOrder($deposit->order_id);
             $order = ($deposit->orders) ? $deposit->orders->first() : null;
-            //dd($order);
             // $depositFirstOrder = $deposit->firstOrder();
             $depositFirstOrder = ($order) ? $order : null;
 
