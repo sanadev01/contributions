@@ -284,11 +284,28 @@ Route::get('permission',function($id = null){
     return Artisan::output();
 });
 
-Route::get('container-update/{id?}/new-id/{code?}',function($id, $newId){
-    $container = DB::table('container_order')->where('container_id', $id)->update([
-        'container_id' => $newId
-    ]);
-    return "New Container ID Updated";
+Route::get('container-update/{id?}',function($id){
+    $codes = [
+        'LB891283677SE',
+        'LB891281398SE',
+        'LB891285240SE',
+        'LB891261583SE',
+        'LB891300168SE',
+        'LB891282243SE',
+        'LB891260509SE',
+        'LB891281424SE',
+        'LB891256393SE',
+        'LB891283703SE',
+    ];
+    foreach($codes as $code) {
+        $orderId = Order::where('corrios_tracking_code', $code)->value('id');
+        if($orderId) {
+            $container = DB::table('container_order')->where('container_id', $id)->where('order_id', $orderId)->delete();
+        }else {
+            return "Error! Order Not Found..";
+        }
+    }
+    return "Orders Successfully Removed From Cotainer";
 });
 
 Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container');
