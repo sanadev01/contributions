@@ -108,17 +108,10 @@ class Deposit extends Model
 
         return $totalBalance;
     }
-    public function scopeFilter($query,$from=null,$to=null)
+    public function scopeFilter($query,$from,$to)
     {
-        
-        $from = Request::get('from')??$from; 
-        $to  = Request::get('to')??$to;
-        
-        $query->when($from,function($query,$from){ 
-            return $query->where('created_at' , '>=',$from.' 00:00:00');
-        })->when($to,function($query,$to){
-              $endDate = $to.' 23:59:59';
-           return $query->where('created_at' , '<=',$endDate);
+        $query->when($from && $to,function($query) use ($from,$to){ 
+            return $query->whereBetween('created_at' , [$from.' 00:00:00', $to.' 23:59:59']);
         });
     }
 }
