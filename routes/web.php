@@ -284,10 +284,9 @@ Route::get('permission',function($id = null){
     return Artisan::output();
 });
 
-Route::get('status-update/{id?}/status/{code?}',function($id, $code){
-    $order = Order::find($id)->update([
-        'status' => $code
-    ]);
+Route::get('container-info/{id?}/',function($id){
+    $container = Container::where('dispatch_number', $id)->get();
+    dd($container);
     return "Status Code Updated";
 });
 
