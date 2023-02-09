@@ -55,7 +55,6 @@ class Deposit extends Model
 
     public function order()
     {
-        
         return $this->belongsTo(Order::class);
     }
 
@@ -108,17 +107,6 @@ class Deposit extends Model
         $query->when($from && $to,function($query) use ($from,$to){ 
             return $query->whereBetween('created_at' , [$from.' 00:00:00', $to.' 23:59:59']);
         });
-    }
-
-    public function getOrderTrackingCodeAttribute() 
-    {
-        $trackingCode = '';
-        if($this->hasOrder() && $this->firstOrder()->hasSecondLabel()) {
-            $trackingCode = $this->firstOrder()->us_api_tracking_code;
-        }elseif($this->order_id) {
-            $trackingCode = $this->order->corrios_tracking_code;
-        }
-        return $trackingCode;
     }
 
 }
