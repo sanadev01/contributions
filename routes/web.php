@@ -286,7 +286,7 @@ Route::get('permission',function($id = null){
 
 Route::get('container-info/{id?}/',function($id){
     $container = Container::find($id);
-    $file = 'SPHD20221220182530.pdf';
+    $file = "BR600000401200146003000125314.pdf";
     unlink(storage_path('app/labels/'.$file));
     return "File Deleted";
 });
