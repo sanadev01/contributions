@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\OrderAttribute;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Request;
@@ -9,6 +10,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 
 class Deposit extends Model
 {
+    use OrderAttribute;
     use LogsActivity;
     protected static $logAttributes = ['*'];
     protected static $logOnlyDirty = true;
@@ -49,6 +51,12 @@ class Deposit extends Model
     public function hasOrder()
     {
         return $this->orders()->count();
+    }
+
+    public function order()
+    {
+        
+        return $this->belongsTo(Order::class);
     }
 
     public static function chargeAmount($amount,Order $order=null,$description=null)
@@ -101,4 +109,16 @@ class Deposit extends Model
             return $query->whereBetween('created_at' , [$from.' 00:00:00', $to.' 23:59:59']);
         });
     }
+
+    public function getOrderTrackingCodeAttribute() 
+    {
+        $trackingCode = '';
+        if($this->hasOrder() && $this->firstOrder()->hasSecondLabel()) {
+            $trackingCode = $this->firstOrder()->us_api_tracking_code;
+        }elseif($this->order_id) {
+            $trackingCode = $this->order->corrios_tracking_code;
+        }
+        return $trackingCode;
+    }
+
 }

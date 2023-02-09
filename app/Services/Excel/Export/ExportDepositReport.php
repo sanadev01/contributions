@@ -34,56 +34,24 @@ class ExportDepositReport extends AbstractExportService
         $row = $this->currentRow;
 
         foreach ($this->deposits as $deposit) {
-            $depositOrder = $deposit->getOrder($deposit->order_id);
-            $trackingCode = '';
-            $warehouseNo = '';
-            $customerReference = '';
-            $recepientName = '';
-            $carrier = '';
-            $dimensions = '';
-            $weight = '';
             
-            //$order = $deposit->getOrder($deposit->order_id);
-            $order = ($deposit->orders) ? $deposit->orders->first() : null;
-            // $depositFirstOrder = $deposit->firstOrder();
-            $depositFirstOrder = ($order) ? $order : null;
-
-            if($deposit->hasOrder() && $deposit->firstOrder()->hasSecondLabel()) {
-                $trackingCode = $deposit->firstOrder()->us_api_tracking_code;
-            }elseif($deposit->order_id && $depositOrder) {
-                $trackingCode = $depositOrder->corrios_tracking_code;
-            }
-            if($deposit->order_id != null) {
-                if($depositOrder) {
-                    $warehouseNo = $depositOrder->warehouse_number;
-                    $customerReference = $depositOrder->customer_reference;
-                    $recepientName = optional($depositOrder->recipient)->fullName();
-                    $carrier = $this->getShippingCarrier($depositFirstOrder, $order);
-                    $dimensions = $depositOrder->length.'x'.$depositOrder->width.'x'.$depositOrder->height;
-                    $weight = $depositOrder->weight;
-                } else {
-                    $warehouseNo = $deposit->order_id.':'."Order Deleted";
-                    $customerReference = optional($order)->customer_reference;
-                    $recepientName = optional(optional($order)->recipient)->fullName();
-                    $carrier = $this->getShippingCarrier($depositFirstOrder, $order);
-                    $dimensions = $order->length.'x'.$order->width.'x'.$order->height;
-                    $weight = $order->weight;
-                }
-            }
+            $depositOrder = $deposit->order;            
+            $order = $deposit->orders ? $deposit->orders->first() : null;
+            $depositFirstOrder = $order?? null;
 
             $this->setCellValue('A'.$row, $deposit->uuid);
-            $this->setCellValue('B'.$row, $warehouseNo);
-            $this->setCellValue('C'.$row, $recepientName);
-            $this->setCellValue('D'.$row, $customerReference);
-            $this->setCellValue('E'.$row, $trackingCode);
+            $this->setCellValue('B'.$row, $deposit->order_warehouse_no);
+            $this->setCellValue('C'.$row, $deposit->order_recipient_name);
+            $this->setCellValue('D'.$row, $deposit->order_customer_reference);
+            $this->setCellValue('E'.$row, $deposit->order_tracking_code);
             $this->setCellValue('F'.$row, $deposit->created_at->format('m/d/Y'));
             $this->setCellValue('G'.$row, $deposit->amount);
             $this->setCellValue('H'.$row, $this->getShippingCarrier($depositFirstOrder, $depositOrder));
             if (auth()->user()->isAdmin()) {
                 $this->setCellValue('I'.$row, '');
             }
-            $this->setCellValue('J'.$row, $dimensions);
-            $this->setCellValue('K'.$row, $weight);
+            $this->setCellValue('J'.$row, $deposit->order_dimensions);
+            $this->setCellValue('K'.$row, $deposit->order_weight);
             $this->setCellValue('L'.$row, '');
             $this->setCellValue('M'.$row, $deposit->isCredit() ? 'Credit' : 'Debit');
             $this->setCellValue('N'.$row, $deposit->description);
