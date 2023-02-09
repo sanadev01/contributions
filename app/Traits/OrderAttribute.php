@@ -56,7 +56,7 @@ trait OrderAttribute{
         }
         return $dimensions;
     } 
-    
+
     public function getOrderWeightAttribute()
     {
         $weight = '';
@@ -68,6 +68,17 @@ trait OrderAttribute{
             $weight = $order->weight;
         }
         return $weight;
+    }
+
+    public function getOrderTrackingCodeAttribute() 
+    {
+        $trackingCode = '';
+        if($this->hasOrder() && $this->firstOrder()->hasSecondLabel()) {
+            $trackingCode = $this->firstOrder()->us_api_tracking_code;
+        }elseif($this->order_id) {
+            $trackingCode = $this->order->corrios_tracking_code;
+        }
+        return $trackingCode;
     }
 
 }
