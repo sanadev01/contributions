@@ -44,8 +44,4 @@ class AutoCharge extends Component
         }
     }
 
-    public function updating()
-    {
-        $this->resetPage();
-    }
 }
