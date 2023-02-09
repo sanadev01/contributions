@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Warehouse\Container;
 use App\Models\Warehouse\DeliveryBill;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Storage;
 use App\Services\StoreIntegrations\Shopify;
 use App\Http\Controllers\Admin\HomeController;
 use App\Services\Correios\Services\Brazil\Client;
@@ -287,8 +286,8 @@ Route::get('permission',function($id = null){
 
 Route::get('container-info/{id?}/',function($id){
     $container = Container::find($id);
-    $file = "BR600000401200146003000125314.pdf";
-    Storage::delete($file);
+    $file = 'SPHD20221220182530.pdf';
+    unlink(storage_path('app/labels/'.$file));
     return "File Deleted";
 });
 
