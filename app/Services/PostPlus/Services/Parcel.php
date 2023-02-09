@@ -24,6 +24,10 @@ class Parcel {
                   'parcelGrossWeight' => $order->weight,
                   'items' => $this->setItemsDetails($order),
                ],
+               'additionalInfo' => [
+                  'serviceCode' => "UZPO",
+                  'taxIdentification' => "TAXID",
+               ],
                //Recipient Information
                'receiver' => [
                   'name' => $order->recipient->getFullName(),
