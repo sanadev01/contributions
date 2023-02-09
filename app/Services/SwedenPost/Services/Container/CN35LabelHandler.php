@@ -15,6 +15,11 @@ class CN35LabelHandler
             return response()->json([ 'isSuccess' => false,  'message'  => "Only sweden container allowed!" ], 422);
         }
         
+        if($container->id == 3005) {
+            $cn35_base64 = json_decode($container->unit_response_list)->cn35;
+            return response()->json(['isSuccess' => true, 'output'   => self::getLabelPath($container, $cn35_base64),'message'  => 'Label created successfully']);
+        }
+
         if ($container->unit_response_list) {
             $cn35_base64 = json_decode($container->unit_response_list)->cn35;
             return response()->json(['isSuccess' => true, 'output'   => self::getLabelPath($container, $cn35_base64),'message'  => 'Label created successfully']);
