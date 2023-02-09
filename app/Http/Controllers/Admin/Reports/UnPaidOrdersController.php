@@ -21,13 +21,14 @@ class UnPaidOrdersController extends Controller
         $query = Order::with('user')->whereHas('user')->whereHas('paymentInvoices', function($query){
             return $query->where('last_four_digits', null);
         })->where('status' , '>=', Order::STATUS_PAYMENT_DONE);  
-
-        $startDate  = $request->start_date.' 00:00:00';
-        $endDate    = $request->end_date.' 23:59:59';
-        if ( $request->start_date ){
-            $query->where('order_date' , '>=',$startDate);
+        
+        if(!$request->start_date && !$request->end_date) {
+            $query->where('order_date' , '>=',"2023-01-01 00:00:00");
         }
-        if ( $request->end_date ){
+        else {
+            $startDate  = $request->start_date.' 00:00:00';
+            $endDate    = $request->end_date.' 23:59:59';
+            $query->where('order_date' , '>=',$startDate);
             $query->where('order_date' , '<=',$endDate);
         }
 
