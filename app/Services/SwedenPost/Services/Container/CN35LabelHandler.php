@@ -17,6 +17,8 @@ class CN35LabelHandler
         
         if($container->id == 3005) {
             $cn35_base64 = json_decode($container->unit_response_list)->cn35;
+            \Log::info('CN35 Base64');
+            \Log::info($cn35_base64);
             return response()->json(['isSuccess' => true, 'output'   => self::getLabelPath($container, $cn35_base64),'message'  => 'Label created successfully']);
         }
 
