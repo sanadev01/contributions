@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Events\AutoChargeAmountEvent;
 use App\Models\Order;
 use App\Events\OrderPaid;
+use App\Listeners\AutoChargeAmountListener;
 use App\Models\AffiliateSale;
 use App\Observers\OrderObserver;
 use Illuminate\Support\Facades\Event;

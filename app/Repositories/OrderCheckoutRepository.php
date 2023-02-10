@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Events\AutoChargeAmountEvent;
 use Stripe\Charge;
 use Stripe\Stripe;
 use Carbon\Carbon;
