@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Repositories;
+use App\Events\AutoChargeAmountEvent;
 use App\Http\Requests\Tax\TaxRequest;
 use App\Http\Requests\Tax\TaxUpdateRequest;
 use Exception;
@@ -60,8 +61,9 @@ class TaxRepository
     public function store(TaxRequest $request)
     {
         $insufficientBalanceMessages=[];
-        $depositedMessages=[]; 
-            foreach ($request->order_id as $orderId) {
+        $depositedMessages=[];
+        $user = null; 
+            foreach ($request->order_id as $orderId){
                     DB::beginTransaction();
                     try{
                         $order = Order::find($orderId); 
@@ -130,6 +132,9 @@ class TaxRepository
             if( count($insufficientBalanceMessages) > 0 )
                 return $depositedMessages+$insufficientBalanceMessages; 
             else{
+                if($user){
+                  AutoChargeAmountEvent::dispatch($user);
+                } 
                 return true; 
             }
            

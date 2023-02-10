@@ -33,10 +33,9 @@ class AutoChargeAmountListener
         $charge  = setting('charge', null, $user->id);
         $chargeLimit = setting('charge_limit', null, $user->id);
         $amount = setting('charge_amount', null, $user->id);
-        $billingInformationId = setting('charge_biling_information', null, auth()->id());
+        $billingInformationId = setting('charge_biling_information', null, $user->id);
         $billingInformation = $user->billingInformations()->where('id',$billingInformationId)->first();
-
-        if($charge && $user->current_balance < $chargeLimit  && $billingInformation){             
+        if($charge && $user->current_balance < $chargeLimit  && $billingInformation){
             $authorizeNetService = new AuthorizeNetService(); 
             $transactionID = PaymentInvoice::generateUUID('DP-');
             $response = $authorizeNetService->makeCreditCardPaymentWithoutInvoice($billingInformation,$transactionID,$amount,$user);
@@ -45,8 +44,8 @@ class AutoChargeAmountListener
                         'uuid' => $transactionID,
                         'transaction_id' => $response->data->getTransId(),
                         'amount' => $amount,
-                        'user_id' => Auth::id(),
-                        'balance' => Deposit::getCurrentBalance() + $amount,
+                        'user_id' => $user->id,
+                        'balance' => getBalance($user) + $amount,
                         'is_credit' => true,
                         'description' => 'Auto charged balance',
                         'last_four_digits' => substr($billingInformation->card_no,-4)

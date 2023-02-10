@@ -26,7 +26,7 @@
                     <option value="">Please Select</option>
                     @forelse (auth()->user()->billingInformations as $billingInfo)
                         <option value="{{ $billingInfo->id }}"
-                            {{ setting('charge_biling_information', null, auth()->id()) ? 'selected' : '' }}>
+                            {{ (setting('charge_biling_information', null, auth()->id())) ? 'selected' : '' }}>
                             **** **** **** {{ substr($billingInfo->card_no, -4) }}</option>
                     @empty
                         <option value="">No Record Found / Nenhum Registro Encontrado</option>

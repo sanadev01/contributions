@@ -29,7 +29,6 @@ class Deposit extends Model
         if ( !$lastTransaction ){
             return 0;
         }
-
         return $lastTransaction->balance;
     }
 
