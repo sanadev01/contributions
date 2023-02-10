@@ -16,11 +16,13 @@ class AutoChargeAmountListener
 {
     /**
      * Create the event listener.
+     *
      * @return void
      */
     public function __construct()
     { 
     }
+
     /**
      * Handle the event.
      *
@@ -33,9 +35,10 @@ class AutoChargeAmountListener
         $charge  = setting('charge', null, $user->id);
         $chargeLimit = setting('charge_limit', null, $user->id);
         $amount = setting('charge_amount', null, $user->id);
-        $billingInformationId = setting('charge_biling_information', null, $user->id);
+        $billingInformationId = setting('charge_biling_information', null,$user->id);
         $billingInformation = $user->billingInformations()->where('id',$billingInformationId)->first();
-        if($charge && $user->current_balance < $chargeLimit  && $billingInformation){
+
+        if($charge && $user->current_balance < $chargeLimit  && $billingInformation){         
             $authorizeNetService = new AuthorizeNetService(); 
             $transactionID = PaymentInvoice::generateUUID('DP-');
             $response = $authorizeNetService->makeCreditCardPaymentWithoutInvoice($billingInformation,$transactionID,$amount,$user);
@@ -45,7 +48,7 @@ class AutoChargeAmountListener
                         'transaction_id' => $response->data->getTransId(),
                         'amount' => $amount,
                         'user_id' => $user->id,
-                        'balance' => getBalance($user) + $amount,
+                        'balance' => Deposit::getCurrentBalance($user) + $amount,
                         'is_credit' => true,
                         'description' => 'Auto charged balance',
                         'last_four_digits' => substr($billingInformation->card_no,-4)
@@ -53,12 +56,13 @@ class AutoChargeAmountListener
                 $this->sendTransactionMail($deposit, $user->name);
             }   
         }
+        
     }
     private function sendTransactionMail($deposit, $user){
         try {
             Mail::send(new NotifyTransaction($deposit, null, $user));
         } catch (Exception $ex) {
-            Log::info('Auto charge Notify Transaction email send error: '.$ex->getMessage());
+            Log::info('Auto charge Notify Transaction email send error 4: '.$ex->getMessage());
         }
     }
 

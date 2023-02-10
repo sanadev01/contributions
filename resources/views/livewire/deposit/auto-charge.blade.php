@@ -26,7 +26,7 @@
                     <option value="">Please Select</option>
                     @forelse (auth()->user()->billingInformations as $billingInfo)
                         <option value="{{ $billingInfo->id }}"
-                            {{ (setting('charge_biling_information', null, auth()->id())) ? 'selected' : '' }}>
+                            {{ setting('charge_biling_information', null, auth()->id()) ? 'selected' : '' }}>
                             **** **** **** {{ substr($billingInfo->card_no, -4) }}</option>
                     @empty
                         <option value="">No Record Found / Nenhum Registro Encontrado</option>
@@ -53,3 +53,12 @@
     <hr>
     @include('layouts.livewire.loading')
 </div>
+<script>
+    window.addEventListener('alert', event => { 
+                 toastr[event.detail.type](event.detail.message, 
+                 event.detail.title ?? ''), toastr.options = {
+                        "closeButton": true,
+                        "progressBar": true,
+                    }
+                });
+    </script>

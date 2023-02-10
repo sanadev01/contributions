@@ -72,7 +72,7 @@ class OrderCheckoutRepository
                 try {
                     \Mail::send(new NotifyTransaction($deposit, $preStatus, $user));
                 } catch (\Exception $ex) {
-                    \Log::info('Notify Transaction email send error: '.$ex->getMessage());
+                    \Log::info('Pay Invoice Notify Transaction email send error: '.$ex->getMessage());
                 }
                 DB::commit();
                 AutoChargeAmountEvent::dispatch($this->invoice->orders()->first()->user);

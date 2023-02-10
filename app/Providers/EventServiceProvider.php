@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Events\AutoChargeAmountEvent;
 use App\Models\Order;
 use App\Events\OrderPaid;
+use App\Listeners\AutoChargeAmountListener;
 use App\Models\AffiliateSale;
 use App\Listeners\ExportOrder;
 use App\Events\OrderStatusUpdated;
@@ -15,8 +17,6 @@ use Illuminate\Auth\Events\Registered;
 use App\Observers\AffiliateSaleObserver;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use App\Events\AutoChargeAmountEvent;
-use App\Listeners\AutoChargeAmountListener;
 class EventServiceProvider extends ServiceProvider
 {
     /**
