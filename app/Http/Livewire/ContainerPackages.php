@@ -181,6 +181,10 @@ class ContainerPackages extends Component
                 return false;
             }
 
+            if($this->service == 'USPS Ground' && $order->shippingService->service_sub_class != $this->shippingServiceCodes['USPS_GROUND']) {
+                return false;
+            }
+
             return true;
         }
 
@@ -260,6 +264,7 @@ class ContainerPackages extends Component
             'FEDEX_GROUND' => ShippingService::FEDEX_GROUND,
             'PostNL' => ShippingService::PostNL,
             'GePS' => ShippingService::GePS,
+            'USPS_GROUND' => ShippingService::USPS_GROUND,
         ];
 
         return;

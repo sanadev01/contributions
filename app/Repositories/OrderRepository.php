@@ -93,6 +93,7 @@ class OrderRepository
                     ShippingService::USPS_FIRSTCLASS,
                     ShippingService::USPS_PRIORITY_INTERNATIONAL,
                     ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,
+                    ShippingService::USPS_GROUND
                 ];
             }
             if($request->carrier == 'UPS'){
@@ -436,7 +437,7 @@ class OrderRepository
 
         if ($request->type == 'domestic') {
             $orders->whereHas('shippingService', function($query) {
-                return $query->whereIn('service_sub_class', [ShippingService::USPS_PRIORITY,ShippingService::USPS_FIRSTCLASS,ShippingService::UPS_GROUND, ShippingService::FEDEX_GROUND]);
+                return $query->whereIn('service_sub_class', [ShippingService::USPS_PRIORITY,ShippingService::USPS_FIRSTCLASS,ShippingService::UPS_GROUND, ShippingService::FEDEX_GROUND, ShippingService::USPS_GROUND]);
             })->orWhereNotNull('us_api_tracking_code');
         }
 
@@ -568,6 +569,7 @@ class OrderRepository
             || $shippingServices->contains('service_sub_class', ShippingService::UPS_GROUND)
             || $shippingServices->contains('service_sub_class', ShippingService::GePS)
             || $shippingServices->contains('service_sub_class', ShippingService::GePS_EFormat)
+            || $shippingServices->contains('service_sub_class', ShippingService::USPS_GROUND)
             || $shippingServices->contains('service_sub_class', ShippingService::PostNL))
         {
             if(!setting('usps', null, User::ROLE_ADMIN))
@@ -577,7 +579,8 @@ class OrderRepository
                     return $shippingService->service_sub_class != ShippingService::USPS_PRIORITY
                         && $shippingService->service_sub_class != ShippingService::USPS_FIRSTCLASS
                         && $shippingService->service_sub_class != ShippingService::USPS_PRIORITY_INTERNATIONAL
-                        && $shippingService->service_sub_class != ShippingService::USPS_FIRSTCLASS_INTERNATIONAL;
+                        && $shippingService->service_sub_class != ShippingService::USPS_FIRSTCLASS_INTERNATIONAL
+                        && $shippingService->service_sub_class != ShippingService::USPS_GROUND;
                 });
             }
             if(!setting('ups', null, User::ROLE_ADMIN))

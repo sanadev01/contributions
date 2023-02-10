@@ -77,6 +77,7 @@
                                         <option value="FirstClass" {{ old('services_subclass_code') == 'FirstClass' ? 'selected': '' }}>FirstClass</option>
                                         <option value="Priority International" {{ old('services_subclass_code') == 'Priority International' ? 'selected': '' }}>Priority International</option>
                                         <option value="FirstClass International" {{ old('services_subclass_code') == 'FirstClass International' ? 'selected': '' }}>FirstClass International</option>
+                                        <option value="USPS Ground" {{ old('services_subclass_code') == 'USPS Ground' ? 'selected': '' }}>USPS Ground</option>
                                     </select>
                                     @error('services_subclass_code')
                                         <div class="help-block text-danger"> {{ $message }} </div>

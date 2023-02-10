@@ -59,6 +59,7 @@ class OrderItemsController extends Controller
             'USPS_FIRSTCLASS_INTERNATIONAL' => ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,
             'UPS_GROUND' => ShippingService::UPS_GROUND,
             'FEDEX_GROUND' => ShippingService::FEDEX_GROUND,
+            'FEDEX_GROUND' => ShippingService::USPS_GROUND,
         ];
         
         return view('admin.orders.order-details.index',compact('order','shippingServices', 'error', 'countryConstants', 'shippingServiceCodes'));
