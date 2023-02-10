@@ -39,6 +39,9 @@ class ExportDepositReport extends AbstractExportService
             $order = ($deposit->orders) ? $deposit->orders->first() : null;
             // $depositFirstOrder = $deposit->firstOrder();
             $depositFirstOrder = ($order) ? $order : null;
+            if($order == null && !$deposit->is_credit){
+                $order = $deposit->getOrder($deposit->order_id);
+            }
 
             $this->setCellValue('A'.$row, $deposit->uuid);
             $this->setCellValue('B'.$row, optional($order)->warehouse_number);
