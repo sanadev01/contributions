@@ -26,11 +26,7 @@
                     <option value="">Please Select</option>
                     @forelse (auth()->user()->billingInformations as $billingInfo)
                         <option value="{{ $billingInfo->id }}"
-<<<<<<< HEAD
                             {{ setting('charge_biling_information', null, auth()->id()) ? 'selected' : '' }}>
-=======
-                            {{ (setting('charge_biling_information', null, auth()->id())) ? 'selected' : '' }}>
->>>>>>> b490d8d3d85c519c81011defbe5c4fc08027f29d
                             **** **** **** {{ substr($billingInfo->card_no, -4) }}</option>
                     @empty
                         <option value="">No Record Found / Nenhum Registro Encontrado</option>
@@ -57,8 +53,6 @@
     <hr>
     @include('layouts.livewire.loading')
 </div>
-<<<<<<< HEAD
-
 <script>
     window.addEventListener('alert', event => { 
                  toastr[event.detail.type](event.detail.message, 
@@ -68,5 +62,3 @@
                     }
                 });
     </script>
-=======
->>>>>>> b490d8d3d85c519c81011defbe5c4fc08027f29d
