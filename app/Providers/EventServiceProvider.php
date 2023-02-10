@@ -27,6 +27,10 @@ class EventServiceProvider extends ServiceProvider
         OrderPaid::class =>[
             CalculateCommission::class, 
         ],
+        AutoChargeAmountEvent::class => [
+            AutoChargeAmountListener::class,
+
+        ],
     ];
 
     /**
