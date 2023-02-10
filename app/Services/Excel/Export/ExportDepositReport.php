@@ -34,24 +34,25 @@ class ExportDepositReport extends AbstractExportService
         $row = $this->currentRow;
 
         foreach ($this->deposits as $deposit) {
-            
-            $depositOrder = $deposit->order;            
-            $order = $deposit->orders ? $deposit->orders->first() : null;
-            $depositFirstOrder = $order?? null;
+
+            //$order = $deposit->getOrder($deposit->order_id);
+            $order = ($deposit->orders) ? $deposit->orders->first() : null;
+            // $depositFirstOrder = $deposit->firstOrder();
+            $depositFirstOrder = ($order) ? $order : null;
 
             $this->setCellValue('A'.$row, $deposit->uuid);
-            $this->setCellValue('B'.$row, $deposit->order_warehouse_no);
-            $this->setCellValue('C'.$row, $deposit->order_recipient_name);
-            $this->setCellValue('D'.$row, $deposit->order_customer_reference);
-            $this->setCellValue('E'.$row, $deposit->order_tracking_code);
+            $this->setCellValue('B'.$row, optional($order)->warehouse_number);
+            $this->setCellValue('C'.$row, optional(optional($order)->recipient)->fullName());
+            $this->setCellValue('D'.$row, optional($order)->customer_reference);
+            $this->setCellValue('E'.$row, ($depositFirstOrder && $depositFirstOrder->hasSecondLabel()) ? optional($depositFirstOrder)->us_api_tracking_code : optional($order)->corrios_tracking_code);
             $this->setCellValue('F'.$row, $deposit->created_at->format('m/d/Y'));
             $this->setCellValue('G'.$row, $deposit->amount);
-            $this->setCellValue('H'.$row, $this->getShippingCarrier($depositFirstOrder, $depositOrder));
+            $this->setCellValue('H'.$row, $this->getShippingCarrier($depositFirstOrder, $order));
             if (auth()->user()->isAdmin()) {
                 $this->setCellValue('I'.$row, '');
             }
-            $this->setCellValue('J'.$row, $deposit->order_dimensions);
-            $this->setCellValue('K'.$row, $deposit->order_weight);
+            $this->setCellValue('J'.$row, $order ? $order->length.'x'.$order->width.'x'.$order->height : '');
+            $this->setCellValue('K'.$row, $order ? $order->weight : '');
             $this->setCellValue('L'.$row, '');
             $this->setCellValue('M'.$row, $deposit->isCredit() ? 'Credit' : 'Debit');
             $this->setCellValue('N'.$row, $deposit->description);
@@ -113,7 +114,7 @@ class ExportDepositReport extends AbstractExportService
         $this->currentRow++;
     }
 
-    private function getShippingCarrier($depositFirstOrder, $depositOrder)
+    private function getShippingCarrier($depositFirstOrder, $order)
     {
         if ($depositFirstOrder && $depositFirstOrder->hasSecondLabel()) {
             switch ($depositFirstOrder->us_api_service) {
@@ -129,13 +130,13 @@ class ExportDepositReport extends AbstractExportService
             }
         }
 
-        if (optional($depositOrder)->shippingService) {
-            switch ($depositOrder->recipient->country_id) {
+        if (optional($order)->shippingService) {
+            switch ($order->recipient->country_id) {
                 case ORDER::US:
-                    if ($depositOrder->shippingService->sub_class_code == ShippingService::UPS_GROUND) {
+                    if ($order->shippingService->sub_class_code == ShippingService::UPS_GROUND) {
                         return 'UPS';
                     }
-                    if ($depositOrder->shippingService->sub_class_code == ShippingService::FEDEX_GROUND) {
+                    if ($order->shippingService->sub_class_code == ShippingService::FEDEX_GROUND) {
                         return 'FedEx';
                     }
                      return 'USPS';
@@ -144,13 +145,13 @@ class ExportDepositReport extends AbstractExportService
                         return 'Correios Chile';
                     break;
                 case ORDER::BRAZIL:
-                    if ($depositOrder->shippingService->sub_class_code == ShippingService::GePS || $depositOrder->shippingService->sub_class_code == ShippingService::GePS_EFormat) {
+                    if ($order->shippingService->sub_class_code == ShippingService::GePS || $order->shippingService->sub_class_code == ShippingService::GePS_EFormat) {
                         return 'Global eParcel';
                     }
-                    if ($depositOrder->shippingService->sub_class_code == ShippingService::Prime5) {
+                    if ($order->shippingService->sub_class_code == ShippingService::Prime5) {
                         return 'Prime5';
                     }
-                    if (in_array($depositOrder->shippingService->sub_class_code, 
+                    if (in_array($order->shippingService->sub_class_code, 
                         [ShippingService::Packet_Standard, 
                         ShippingService::Packet_Express, 
                         ShippingService::AJ_Packet_Standard, 
@@ -164,7 +165,7 @@ class ExportDepositReport extends AbstractExportService
                    break;
             }
         }
-       return optional(optional($depositOrder)->shippingService)->name;
+       return optional(optional($order)->shippingService)->name;
     }
 
     private function getShippingCarrierCost($depositFirstOrder, $order)
