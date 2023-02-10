@@ -98,7 +98,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'Priority International';
         }elseif($this->services_subclass_code == 'FirstClass International'){
             return 'FirstClass International';
-        }elseif($this->services_subclass_code == 'USPS Ground'){
+        }elseif($this->services_subclass_code == 'FirstClass International'){
             return 'USPS Ground';
         }else {
             return 'FirstClass';
@@ -139,13 +139,13 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 15;
         }
         elseif($this->services_subclass_code == '773'){
-            return 16;
+            return 11;
         }
         elseif($this->services_subclass_code == 'CO-NX'){
-            return 17;
+            return 12;
         }
         elseif($this->services_subclass_code == 'USPS Ground'){
-            return 18;
+            return 7;
         }
         // return $this->services_subclass_code == 'NX' ? 2 : 1;
     }
@@ -253,7 +253,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         }
 
         if ($this->services_subclass_code == 'Priority' || $this->services_subclass_code == 'FirstClass' ||
-            $this->services_subclass_code == 'Priority International' || $this->services_subclass_code == 'FirstClass International' || $this->services_subclass_code == 'USPS Ground') {
+            $this->services_subclass_code == 'Priority International' || $this->services_subclass_code == 'FirstClass International' || $this->services_subclass_code == 'FirstClass' || $this->services_subclass_code == 'USPS Ground') {
             return 'USPS-Container';
         }
 
