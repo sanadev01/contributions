@@ -48,6 +48,7 @@ class ShippingOrder {
                   'state' => $order->recipient->state->code,
                   'postcode' => cleanString($order->recipient->zipcode),
                   'country' => $order->recipient->country->code,
+                  'recipientTaxId'=>optional($order->recipient)->tax_id,
                   //Shipper Information
                   'shipperName' => $order->getSenderFullName(),
                   'shipperPhone' => ($order->sender_phone) ? $order->sender_phone : '+13058885191',
