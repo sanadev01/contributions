@@ -41,7 +41,16 @@ class AutoCharge extends Component
             saveSetting('charge_biling_information', $data['charge_biling_information'], $authId);
             saveSetting('charge', $isCharge, $authId);
             $this->charge = setting('charge', null, auth()->id());
+            $message = 'Auto Charge deActivate Successfully';
+            $type = 'info';
+            if($this->charge){
+                $message = 'Auto Charge activated Successfully';
+                $type = 'success';
+            }
+            $this->dispatchBrowserEvent('alert', ['type' => $type,  'message' => $message]);
+            return;
         }
+        $this->dispatchBrowserEvent('alert', ['type' => 'error',  'message' => 'Auto Charge Something Went Wrong']);
     }
 
 }
