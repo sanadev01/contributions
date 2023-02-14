@@ -2,7 +2,6 @@
 
 namespace App\Http\Livewire\Order;
 
-use Carbon\Carbon;
 use App\Models\Reports;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -29,7 +28,6 @@ class ExportOrder extends Component
             'reports' => $this->getQuery()
             
         ]);
-
     }
 
     public function download(Reports $report)
