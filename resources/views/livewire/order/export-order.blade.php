@@ -31,10 +31,10 @@
                         <td>{{ date('d-M-Y', strtotime($report->start_date)) }}</td>
                         <td>{{ date('d-M-Y', strtotime($report->end_date)) }}</td>
                         <td>
-                            @if($report->is_complete == '0')
-                                <button class="btn btn-warning btn-sm disabled">Processing..</button>
-                            @else
+                            @if($report->is_complete)
                                 <a href="javascript:void(0)"><button class="btn btn-success btn-sm pr-3" wire:click="download({{ $report->id }})">Download</button></a>
+                            @else
+                                <button class="btn btn-warning btn-sm disabled">Processing..</button>
                             @endif
                                 <a href="javascript:void(0)"><button type="" class="btn btn-danger btn-sm" wire:click="delete({{ $report->id }})">Delete</button></a>
                         </td>
