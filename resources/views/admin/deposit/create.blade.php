@@ -104,6 +104,7 @@
                                 </div>
                                 <hr>
                                 <div class="billingInfo-div" @admin @if(old('adminpay')) style="display: none" @endif @endadmin>
+                                    <livewire:deposit.auto-charge />
                                     <div class="grid-wrapper w-100">
                                         @foreach (auth()->user()->billingInformations as $billingInfo)
                                             <div class="card-wrapper h-auto my-2 w-100">
