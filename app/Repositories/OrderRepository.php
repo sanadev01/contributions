@@ -405,7 +405,7 @@ class OrderRepository
         }
         if ( $request->end_date ){
             $orders->where('order_date' , '<=',$endDate);
-        } 
+        }
         
         return $orders->orderBy('id')->get();
     }
