@@ -390,9 +390,8 @@ class OrderRepository
         ->has('user');
 
         if ($user->isUser()) {
-            $orders->where('user_id', Auth::id());
+            $orders->where('user_id', $user->id);
         }
-
         if ($request->type == 'domestic') {
             $orders->whereHas('shippingService', function($query) {
                 return $query->whereIn('service_sub_class', [ShippingService::USPS_PRIORITY,ShippingService::USPS_FIRSTCLASS,ShippingService::UPS_GROUND, ShippingService::FEDEX_GROUND]);
@@ -406,7 +405,7 @@ class OrderRepository
         }
         if ( $request->end_date ){
             $orders->where('order_date' , '<=',$endDate);
-        }
+        } 
         
         return $orders->orderBy('id')->get();
     }
