@@ -20,7 +20,7 @@ class Parcel {
                ],
                //Parcel Information
                'parcel' => [
-                  'type' => 'Registered',
+                  'type' => 'Prime',
                   'parcelGrossWeight' => $order->weight,
                   'items' => $this->setItemsDetails($order),
                ],

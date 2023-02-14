@@ -115,7 +115,8 @@ class OrderCheckoutRepository
                 return back();
             }
 
-            DB::transaction(function () {
+            DB::beginTransaction();
+
                 try {
 
                     $order = $this->invoice->orders->firstWhere('is_paid', false);
@@ -132,12 +133,13 @@ class OrderCheckoutRepository
                         'is_paid' => true,
                         'status' => Order::STATUS_PAYMENT_DONE
                     ]);
+                    DB::commit();
 
                 } catch (\Exception $ex) {
+                DB::rollBack(); 
                     session()->flash('alert-danger',$ex->getMessage());
                     return back();
-                }
-            });
+                } 
         }
 
         if(!$this->request->pay){

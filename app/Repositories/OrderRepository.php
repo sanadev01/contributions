@@ -389,12 +389,12 @@ class OrderRepository
         return $this->error;
     }
     
-    public function getOdersForExport($request)
+    public function getOdersForExport($request, $user)
     {
         $orders = Order::where('status','>=',Order::STATUS_ORDER)
         ->has('user');
 
-        if (Auth::user()->isUser()) {
+        if ($user->isUser()) {
             $orders->where('user_id', Auth::id());
         }
 

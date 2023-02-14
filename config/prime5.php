@@ -20,6 +20,8 @@ return [
             'userName' => 'HFFBagscanAPI',
             'password' => '13182a58e385abf1b02395288284902403ae89ccbf6fe0197388b99c83d083e4',
             'baseURL'  => 'https://api.directlink.com/'
+            ]
         ],
-    ]
-];
+    'trackUrl' => 'https://api.directlink.com/responseStatus?itemNumbers=',
+    'trackApiKey' => '8fcbd7946d1d0886f5e6bce32d54b199f14113fe70eed818316c69b22024ada7',
+    ];

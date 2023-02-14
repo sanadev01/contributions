@@ -43,8 +43,6 @@ Route::get('order-ups-sender-rates', [App\Http\Controllers\Admin\Order\OrderUPSL
 // Rates for FedEx
 Route::get('order-fedex-rates', [App\Http\Controllers\Admin\Order\OrderItemsController::class, 'fedExRates'])->name('api.fedExRates');
 
-Route::post('order/update/status',Api\OrderStatusController::class)->name('api.order.status.update');
-
 Route::post('update/inventory-order', Api\InventoryOrderUpdateController::class)->name('api.inventory.order.update');
 
 Route::prefix('v1')->middleware('auth:api')->group(function(){
@@ -66,6 +64,7 @@ Route::prefix('v1')->group(function(){
     
         // Authenticated Routes
         Route::middleware(['auth:api','checkPermission'])->group(function (){
+            Route::get('deposits',DepositController::class);
             Route::get('balance', BalanceController::class);
             Route::resource('parcels', 'ParcelController')->only('store','show','destroy','update');
             Route::get('parcel/{order}/cn23',OrderLabelController::class);

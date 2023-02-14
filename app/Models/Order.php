@@ -368,7 +368,7 @@ class Order extends Model implements Package
                 return 'Prime5';
 
             }
-            elseif(optional($this->shippingService)->service_sub_class == ShippingService::PostPlus){
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Prime || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_EMS){
 
                 return 'PostPlus';
 
@@ -788,6 +788,9 @@ class Order extends Model implements Package
             return "REJECTED";
         }elseif($this->status == Order::STATUS_RELEASE) {
             return "RELEASE";
+        }
+        elseif($this->status == Order::STATUS_SHIPPED) {
+            return "SHIPPED";
         }
     }
 

@@ -7,6 +7,7 @@ use App\Facades\UPSFacade;
 use App\Facades\USPSFacade;
 use App\Facades\FedExFacade;
 use Illuminate\Http\Request;
+use App\Models\ShippingService;
 use App\Http\Controllers\Controller;
 use App\Repositories\OrderRepository;
 use App\Http\Requests\Orders\OrderDetails\CreateRequest;
@@ -86,6 +87,12 @@ class OrderItemsController extends Controller
             }
             if($value > 400) {
                 session()->flash('alert-danger', 'Total Parcel Value cannot be more than $400');
+                return back()->withInput();
+            }
+        }
+        if(in_array($order->shipping_service_id, [ShippingService::GePS, ShippingService::GePS_EFormat, ShippingService::Prime5])  ) {
+            if(count($request->items) > 2) {
+                session()->flash('alert-danger', 'More than 3 Items are Not Allowed with the Selected Service');
                 return back()->withInput();
             }
         }

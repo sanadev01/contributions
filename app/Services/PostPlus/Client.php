@@ -14,16 +14,22 @@ use App\Services\Correios\Models\PackageError;
 
 class Client{
 
+    protected $host;
+    protected $baseUrl;
     protected $client;
 
-    private $apiKey = 'labelapitest1234567890';
-    private $baseUri = 'https://api.test.post-plus.io/api/v1';
+    protected $apiKey;
 
     public function __construct()
-    {
-        $this->client = new GuzzleClient([
-            'base_uri' => $this->baseUri
-        ]);
+    {   
+        if(app()->isProduction()){
+            $this->apiKey = config('postplus.production.x-api-key');
+        }else{ 
+            $this->apiKey = config('postplus.test.x-api-key');
+        }
+        $this->baseUri = config('postplus.base_uri');
+
+        $this->client = new GuzzleClient();
     } 
 
     private function getHeaders()
@@ -37,14 +43,13 @@ class Client{
     {
         $shippingRequest = (new Parcel())->getRequestBody($order);
         try {
-            $response = Http::withHeaders($this->getHeaders())->put('https://api.test.post-plus.io/api/v1/parcels', $shippingRequest);
+            $response = Http::withHeaders($this->getHeaders())->put("$this->baseUri/parcels", $shippingRequest);
             $data = json_decode($response);
-            //dd($data->errorDetails);
-            if($data->status->status == "Created") {
+            if(!$data->status->hasErrors && $data->status->status == "Created") {
                 $trackingNumber = $data->identifiers->parcelNr;
                 $printId = $data->prints[0]->id;
                 if($trackingNumber && $printId) {
-                    $getLabel = Http::withHeaders($this->getHeaders())->get("https://api.test.post-plus.io/api/v1/parcels/parcel-prints/get-many?ids=$printId&IncludeContents=true");
+                    $getLabel = Http::withHeaders($this->getHeaders())->get("$this->baseUri/parcels/parcel-prints/get-many?ids=$printId&IncludeContents=true");
                     $getLabelResponse = json_decode($getLabel);
                     if(!$getLabelResponse->prints[0]->hasErrors) {
                         $order->update([
@@ -60,12 +65,12 @@ class Client{
                         return $this->addOrderTracking($order);
                     }
                     if($getLabelResponse->prints[0]->hasErrors) {
-                        return new PackageError("Error while print label. Code: ".$getLabelResponse->prints[0]->hasErrors.' Description: '.$getLabelResponse->prints[0]->hasErrors);
+                        return new PackageError("Error while print label. Code: ".optional(optional($getLabelResponse)->prints)->errorDetails[0]);
                     }
                 }
             }
-            if($data->errorDetails) {
-                return new PackageError("Error while creating parcel. Code: ".$data->errorDetails[0]->code.' Description: '.$data->errorDetails[0]->detail);
+            else {
+                return new PackageError("Error while creating parcel. Description: ".optional(optional($data)->status)->errorDetails[0]);
             }
             return null;
         }catch (\Exception $exception){

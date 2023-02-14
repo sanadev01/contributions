@@ -2,16 +2,16 @@
 
 namespace App\Providers;
 
-use App\Models\AffiliateSale;
 use App\Models\Order;
 use App\Events\OrderPaid;
-use App\Listeners\CalculateCommission;
-use App\Observers\AffiliateSaleObserver;
+use App\Models\AffiliateSale;
 use App\Observers\OrderObserver;
+use Illuminate\Support\Facades\Event;
+use App\Listeners\CalculateCommission;
 use Illuminate\Auth\Events\Registered;
+use App\Observers\AffiliateSaleObserver;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
 {

@@ -1,8 +1,10 @@
 <?php
+
 namespace App\Services\SwedenPost\Services;
 
 use App\Models\Order;
 use App\Services\Common\PDFI\PDFRotate;
+
 class UpdateCN23Label
 {
     private $order;
@@ -28,15 +30,15 @@ class UpdateCN23Label
         $this->pdfi->useTemplate($tplId, 0, 0);
         $this->pdfi->SetFillColor(255, 255, 255);
         #######JERSEY
-        $this->pdfi->SetFont("Arial", "", 7);
-        $this->pdfi->SetFillColor(255, 255, 255);
-        $this->pdfi->Rect(13.2, 64.3, 7, 30, "F");
-        $this->pdfi->SetFont("Arial", "B", 5);
-        $this->pdfi->RotatedText(15, 93.5, 'Sender:', 90);
-        $this->pdfi->SetFont("Arial", "B", 5);
-        $this->pdfi->RotatedText(17, 93.5, $this->order->getSenderFullName(), 90);
-        $this->pdfi->SetFont("Arial", "", 5);
-        $this->pdfi->RotatedText(18.8, 93.5, $this->order->sender_email, 90);
+        // $this->pdfi->SetFont("Arial", "", 7);
+        // $this->pdfi->SetFillColor(255, 255, 255);
+        // $this->pdfi->Rect(13.2, 64.3, 7, 30, "F");
+        // $this->pdfi->SetFont("Arial", "B", 5);
+        // $this->pdfi->RotatedText(15, 93.5, 'Sender:', 90);
+        // $this->pdfi->SetFont("Arial", "B", 5);
+        // $this->pdfi->RotatedText(17, 93.5, $this->order->getSenderFullName(), 90);
+        // $this->pdfi->SetFont("Arial", "", 5);
+        // $this->pdfi->RotatedText(18.8, 93.5, $this->order->sender_email, 90);
 
         #######bill
         $this->pdfi->SetFont("Arial", "", 7);
@@ -44,14 +46,27 @@ class UpdateCN23Label
         $this->pdfi->RotatedText(50, 147, 'SHIPPING:', 90);
 
         $this->pdfi->SetFont("Arial", "B", 5);
-        $this->pdfi->RotatedText(50, 105, number_format($this->order->user_declared_freight,2,'.',','), 90);
+        $userDeclaredFreight = $this->order->user_declared_freight <= 0.01 ? 0 : $this->order->user_declared_freight;
+        $this->pdfi->RotatedText(50, 105, number_format($userDeclaredFreight, 2, '.', ','), 90);
 
-        
-        $this->pdfi->SetFillColor(255,255,255);
-        $this->pdfi->Rect(65, 99, 7,9, "F");
+        if ($this->order->recipient->tax_id) {
+            $this->pdfi->SetFont("Arial", "B", 8);
+            $this->pdfi->RotatedText(61, 89, 'CPF: ' . $this->order->recipient->tax_id, 90);
+        }  
+        // if ($this->order->warehouse_number) {
+        //     $this->pdfi->SetFont("Arial", "B", 8);
+        //     $warehouse_number = $this->order->warehouse_number;
+        //     $warhouse_length =  strlen($warehouse_number);
+        //     $length = $warhouse_length<9?$warhouse_length*1.65:$warhouse_length*1.85; 
+        //     $this->pdfi->RotatedText(58, $length , $warehouse_number, 90);
+        // }
+
+
+        $this->pdfi->SetFillColor(255, 255, 255);
+        $this->pdfi->Rect(65, 99, 7, 9, "F");
         $this->pdfi->SetFont("Arial", "B", 5);
-        $this->pdfi->RotatedText(68, 107, number_format($this->order->user_declared_freight+$this->order->order_value, 2, '.', ','), 90);
- 
+        $this->pdfi->RotatedText(68, 107, number_format($userDeclaredFreight + $this->order->order_value, 2, '.', ','), 90);
+
 
         $this->pdfi->Output($this->pdf_file, 'F');
         return true;
