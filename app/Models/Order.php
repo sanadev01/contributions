@@ -320,7 +320,7 @@ class Order extends Model implements Package
     {
         return $this->cn23 ? true: false;
     }
-
+ 
     public function hasSecondLabel()
     {
         return $this->us_api_response ? true: false;
