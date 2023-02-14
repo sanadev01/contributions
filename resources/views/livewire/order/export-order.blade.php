@@ -39,7 +39,9 @@
                     </td>
                 </tr>
             @empty
-                <tr><td colspan='5'>No Reports Found</td></tr>                
+                <tr>
+                    <td colspan="5" class="text-center h4 text-danger">No Record Found</td>
+                </tr>                
             @endforelse
         </tbody>
     </table>
