@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Repositories;
+use App\Events\AutoChargeAmountEvent;
 use App\Http\Requests\Tax\TaxRequest;
 use App\Http\Requests\Tax\TaxUpdateRequest;
 use Exception;
@@ -19,30 +20,30 @@ class TaxRepository
 
     protected $fileName;
 
-    public function get(Request $request, $paginate = true, $pageSize = 50 )
+    public function get(Request $request, $paginate = true, $pageSize = 50)
     {
         $query = Tax::has('user')->has('order');
 
-        if ( $request->search ){
-            $query->whereHas('user',function($query) use($request) {
+        if ($request->search) {
+            $query->whereHas('user', function ($query) use ($request) {
                 return $query->where('name', 'LIKE', "%{$request->search}%");
             });
-            $query->orWhereHas('order',function($query) use($request) {
+            $query->orWhereHas('order', function ($query) use ($request) {
                 return $query->where('warehouse_number', 'LIKE', "%{$request->search}%")
-                ->orWhere('corrios_tracking_code', 'LIKE', "%{$request->search}%");
+                    ->orWhere('corrios_tracking_code', 'LIKE', "%{$request->search}%");
             });
         }
-        
-        $startDate  = $request->start_date.' 00:00:00';
-        $endDate    = $request->end_date.' 23:59:59';
-        if ( $request->start_date ){
-            $query->where('created_at' , '>=',$startDate);
+
+        $startDate  = $request->start_date . ' 00:00:00';
+        $endDate    = $request->end_date . ' 23:59:59';
+        if ($request->start_date) {
+            $query->where('created_at', '>=', $startDate);
         }
-        if ( $request->end_date ){
-            $query->where('created_at' , '<=',$endDate);
+        if ($request->end_date) {
+            $query->where('created_at', '<=', $endDate);
         }
 
-        $taxes = $query->orderBy('id','desc');
+        $taxes = $query->orderBy('id', 'desc');
 
         return $paginate ? $taxes->paginate($pageSize) : $taxes->get();
     }
@@ -53,15 +54,16 @@ class TaxRepository
             'user_id' => 'required',
         ]);
         $trackingNumber = explode(',', preg_replace('/\s+/', '', $request->trackingNumbers));
-       
-        return Order::where('user_id',$request->user_id)->whereIn('corrios_tracking_code', $trackingNumber)->get();
+
+        return Order::where('user_id', $request->user_id)->whereIn('corrios_tracking_code', $trackingNumber)->get();
     }
 
     public function store(TaxRequest $request)
     {
         $insufficientBalanceMessages=[];
-        $depositedMessages=[]; 
-            foreach ($request->order_id as $orderId) {
+        $depositedMessages=[];
+        $user = null; 
+            foreach ($request->order_id as $orderId){
                     DB::beginTransaction();
                     try{
                         $order = Order::find($orderId); 
@@ -130,44 +132,46 @@ class TaxRepository
             if( count($insufficientBalanceMessages) > 0 )
                 return $depositedMessages+$insufficientBalanceMessages; 
             else{
+                if($user){
+                  AutoChargeAmountEvent::dispatch($user);
+                } 
                 return true; 
             }
            
     }
 
-    public function update(TaxUpdateRequest $request,Tax $tax)
+    public function update(TaxUpdateRequest $request, Tax $tax)
     {
-        try{
+        try {
             $deposit = $tax->deposit;
             $balance = Deposit::getCurrentBalance($tax->user);
-            $sellingUSD =  round($request->tax_payment/$request->selling_br,2);
+            $sellingUSD =  round($request->tax_payment / $request->selling_br, 2);
             $diffAmount = $sellingUSD - $tax->selling_usd;
-            
-            $buyingUSD  =  round($request->tax_payment/$request->buying_br,2);
-             
-            if($balance >= $diffAmount ) {
-                if($sellingUSD > $tax->selling_usd || $sellingUSD < $tax->selling_usd ) {
+
+            $buyingUSD  =  round($request->tax_payment / $request->buying_br, 2);
+
+            if ($balance >= $diffAmount) {
+                if ($sellingUSD > $tax->selling_usd || $sellingUSD < $tax->selling_usd) {
                     $deposit->decrement('balance', $diffAmount);
-                    $deposit->increment('amount', $diffAmount);            
+                    $deposit->increment('amount', $diffAmount);
                 }
                 //FILE UPLOAD
                 if ($request->hasFile('attachment')) {
-                    foreach ($deposit->depositAttchs as $attachedFile ) {
+                    foreach ($deposit->depositAttchs as $attachedFile) {
                         Storage::delete($attachedFile->getStoragePath());
                     }
                     $deposit->depositAttchs()->delete();
                     $attachs = $request->file('attachment');
-                    if($attachs){
-                        foreach($attachs as $attach){
-                                $document = Document::saveDocument($attach);
-                                $deposit->depositAttchs()->create([
-                                    'name' => $document->getClientOriginalName(),
-                                    'size' => $document->getSize(),
-                                    'type' => $document->getMimeType(),
-                                    'path' => $document->filename
-                                ]);
+                    if ($attachs) {
+                        foreach ($attachs as $attach) {
+                            $document = Document::saveDocument($attach);
+                            $deposit->depositAttchs()->create([
+                                'name' => $document->getClientOriginalName(),
+                                'size' => $document->getSize(),
+                                'type' => $document->getMimeType(),
+                                'path' => $document->filename
+                            ]);
                         }
-
                     }
                 }
                 $tax->update([
@@ -181,8 +185,8 @@ class TaxRepository
                 return true;
             }
             return false;
-        }catch(Exception $exception){
-            session()->flash('alert-danger','Error'.$exception->getMessage());
+        } catch (Exception $exception) {
+            session()->flash('alert-danger', 'Error' . $exception->getMessage());
             return null;
         }
     }
@@ -191,5 +195,4 @@ class TaxRepository
     {
         //
     }
-
 }

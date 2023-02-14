@@ -1,4 +1,4 @@
-<div @if(!$reports->first()->is_complete) wire:poll.30000ms @endif>
+<div @if($isComplete) wire:poll.30000ms @endif>
     <div class="row mb-2 no-print">
         <div class="col-1">
             <select class="form-control" wire:model="pageSize">
@@ -23,26 +23,26 @@
             </tr>
         </thead>
         <tbody>
-            @if($reports)
-                @foreach($reports as $report)
-                    <tr>
-                        <td>{{ $report->name }}</td>
-                        <td>{{ $report->user->name .' | '. $report->user->pobox_number }}</td>
-                        <td>{{ date('d-M-Y', strtotime($report->start_date)) }}</td>
-                        <td>{{ date('d-M-Y', strtotime($report->end_date)) }}</td>
-                        <td>
-                            @if($report->is_complete == '0')
-                                <button class="btn btn-warning btn-sm disabled">Processing..</button>
-                            @else
-                                <a href="javascript:void(0)"><button class="btn btn-success btn-sm pr-3" wire:click="download({{ $report->id }})">Download</button></a>
-                            @endif
-                                <a href="javascript:void(0)"><button type="" class="btn btn-danger btn-sm" wire:click="delete({{ $report->id }})">Delete</button></a>
-                        </td>
-                    </tr>
-                @endforeach
-            @else
-                <tr><td colspan='4'>No Reports Found</td></tr>
-            @endif
+            @forelse($reports as $report)
+                <tr>
+                    <td>{{ $report->name }}</td>
+                    <td>{{ $report->user->name .' | '. $report->user->pobox_number }}</td>
+                    <td>{{ date('d-M-Y', strtotime($report->start_date)) }}</td>
+                    <td>{{ date('d-M-Y', strtotime($report->end_date)) }}</td>
+                    <td>
+                        @if($report->is_complete)
+                            <a href="javascript:void(0)"><button class="btn btn-success btn-sm pr-3" wire:click="download({{ $report->id }})">Download</button></a>
+                        @else
+                            <button class="btn btn-warning btn-sm disabled">Processing..</button>
+                        @endif
+                            <a href="javascript:void(0)"><button type="" class="btn btn-danger btn-sm" wire:click="delete({{ $report->id }})">Delete</button></a>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="5" class="text-center h4 text-danger">No Record Found</td>
+                </tr>                
+            @endforelse
         </tbody>
     </table>
     <div class="d-flex justify-content-end my-2 pb-4 mx-2">

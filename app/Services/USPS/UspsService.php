@@ -446,7 +446,13 @@ class UspsService
                 break;
             case 'PriorityInternational':
                 return 'PriorityInternational';
-                break;    
+                break; 
+            case ShippingService::USPS_GROUND:
+                return 'ParcelSelect';
+                break;
+            case 'ParcelSelect':
+                return 'ParcelSelect';
+                break;     
             case ShippingService::USPS_FIRSTCLASS_INTERNATIONAL:
                 return 'FirstClassInternational';
                 break;               
