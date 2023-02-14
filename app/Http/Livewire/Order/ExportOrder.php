@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Order;
 
+use Carbon\Carbon;
 use App\Models\Reports;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -18,25 +19,15 @@ class ExportOrder extends Component
     public $pageSize = 50;
     public $sortAsc = false;
     public $sortBy = 'id';
-
-    public function mount()
-    {
-        $this->query = $this->getQuery();
-    }
+    public $isComplete;
 
     public function render()
     {
-        if (! $this->query) {
-            $this->query = $this->getQuery();
-        }
-
+        $date = date('Y-m-d').' 00:00:00';
+        $this->isComplete = $this->getQuery()->where('is_complete', false)->where('created_at', ">=" ,$date)->first();
         return view('livewire.order.export-order', [
-            'reports' => $this->query
-            ->orderBy(
-                $this->sortBy,
-                $this->sortAsc ? 'ASC' : 'DESC'
-            )
-            ->paginate($this->pageSize)
+            'reports' => $this->getQuery()
+            
         ]);
 
     }
@@ -62,7 +53,11 @@ class ExportOrder extends Component
         if (Auth::user()->isUser()) {
             $query->where('user_id', Auth::id());
         }
-        return $query;
+        $report = $query->orderBy(
+            $this->sortBy,
+            $this->sortAsc ? 'ASC' : 'DESC'
+        )->paginate($this->pageSize);
+        return $report;
     }
 
     public function updating()
