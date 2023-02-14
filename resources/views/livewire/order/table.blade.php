@@ -133,6 +133,7 @@
                             <option value="Chile">Correios Chile</option>
                             <option value="Global eParcel">Global eParcel</option>
                             <option value="Prime5">Prime5</option>
+                            <option value="Post Plus">Post Plus</option>
                         </select>
                     </th>
                     @admin<th></th>@endadmin

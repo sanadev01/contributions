@@ -1,6 +1,7 @@
 <?php
 namespace App\Services\PostPlus\Services;
 
+use App\Models\ShippingService;
 use App\Services\Converters\UnitsConverter;
  
 class Parcel { 
@@ -9,6 +10,15 @@ class Parcel {
 
    public function getRequestBody($order) {
 
+      if($order->shippingService->service_sub_class == ShippingService::Post_Plus_Registered) {
+         $type = 'Registered';
+         $serviceCode = 'UZPO';
+         $taxIdentification = 'TAXID';
+      } else {
+         $type = 'EMS';
+         $serviceCode = '';
+         $taxIdentification = '';
+      }
       $refNo = $order->customer_reference;
       $packet = [
                //Reference Information
@@ -20,13 +30,13 @@ class Parcel {
                ],
                //Parcel Information
                'parcel' => [
-                  'type' => 'Prime',
+                  'type' => $type,
                   'parcelGrossWeight' => $order->weight,
                   'items' => $this->setItemsDetails($order),
                ],
                'additionalInfo' => [
-                  'serviceCode' => "UZPO",
-                  'taxIdentification' => "TAXID",
+                  'serviceCode' => $serviceCode,
+                  'taxIdentification' => $taxIdentification,
                ],
                //Recipient Information
                'receiver' => [
