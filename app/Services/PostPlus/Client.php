@@ -42,11 +42,9 @@ class Client{
     public function createPackage(Package $order)
     {
         $shippingRequest = (new Parcel())->getRequestBody($order);
-        //dd($shippingRequest);
         try {
             $response = Http::withHeaders($this->getHeaders())->put("$this->baseUri/parcels", $shippingRequest);
             $data = json_decode($response);
-            //dd($data);
             if(!isset($data->errorDetails) && !$data->status->hasErrors && $data->status->status == "Created") {
                 $trackingNumber = $data->identifiers->parcelNr;
                 $printId = $data->prints[0]->id;
