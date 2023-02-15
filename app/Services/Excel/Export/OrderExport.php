@@ -36,7 +36,7 @@ class OrderExport extends AbstractExportService
         $this->setExcelHeaderRow();
 
         $row = $this->currentRow;
-        foreach ($this->orders as $order) { 
+        foreach ($this->orders as $order) {
             $user = $order->user;
             $this->setCellValue('A'.$row, $order->order_date);
             $this->setCellValue('B'.$row, $order->warehouse_number);
