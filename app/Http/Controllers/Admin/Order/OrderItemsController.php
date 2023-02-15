@@ -73,7 +73,8 @@ class OrderItemsController extends Controller
      */
     public function store(CreateRequest $request,Order $order)
     {
-        $shippingService = ShippingService::find($order->shipping_service_id);
+        $shippingService = $order->shippingService;
+        
         if ( !$order->recipient ){
             abort(404);
         }
