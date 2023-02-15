@@ -22,6 +22,7 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Repositories\ColombiaLabelRepository;
+use App\Repositories\PostPlusLabelRepository;
 use App\Repositories\POSTNLLabelRepository;
 
 class OrderLabelController extends Controller
@@ -111,6 +112,14 @@ class OrderLabelController extends Controller
                     $swedenPostLabelRepository = new SwedenPostLabelRepository();
                     $swedenPostLabelRepository->get($order);
                     $error = $swedenPostLabelRepository->getError();
+                    if ($error){
+                        return $this->rollback($error);
+                    }
+                }
+                if ($order->shippingService->isPostPlusService()) {
+                    $postPlusLabelRepository = new PostPlusLabelRepository();
+                    $postPlusLabelRepository->get($order);
+                    $error = $postPlusLabelRepository->getError();
                     if ($error){
                         return $this->rollback($error);
                     }

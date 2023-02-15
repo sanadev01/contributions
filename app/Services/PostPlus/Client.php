@@ -42,10 +42,12 @@ class Client{
     public function createPackage(Package $order)
     {
         $shippingRequest = (new Parcel())->getRequestBody($order);
+        //dd($shippingRequest);
         try {
             $response = Http::withHeaders($this->getHeaders())->put("$this->baseUri/parcels", $shippingRequest);
             $data = json_decode($response);
-            if(!$data->status->hasErrors && $data->status->status == "Created") {
+            //dd($data);
+            if(!isset($data->errorDetails) && !$data->status->hasErrors && $data->status->status == "Created") {
                 $trackingNumber = $data->identifiers->parcelNr;
                 $printId = $data->prints[0]->id;
                 if($trackingNumber && $printId) {
@@ -70,7 +72,10 @@ class Client{
                 }
             }
             else {
-                return new PackageError("Error while creating parcel. Description: ".optional(optional($data)->status)->errorDetails[0]);
+                if(isset($data->status->hasErrors)) {
+                    return new PackageError("Error while creating parcel. Description: ".optional(optional($data)->status)->errorDetails[0]);
+                }
+                return new PackageError("Error while creating parcel. Description: ".optional(optional($data)->errorDetails[0])->detail);
             }
             return null;
         }catch (\Exception $exception){
