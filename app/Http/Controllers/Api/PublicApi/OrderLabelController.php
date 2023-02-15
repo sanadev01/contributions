@@ -18,6 +18,7 @@ use App\Repositories\SwedenPostLabelRepository;
 use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
+use App\Repositories\PostPlusLabelRepository;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -108,6 +109,14 @@ class OrderLabelController extends Controller
                     $swedenPostLabelRepository = new SwedenPostLabelRepository();
                     $swedenPostLabelRepository->get($order);
                     $error = $swedenPostLabelRepository->getError();
+                    if ($error){
+                        return $this->rollback($error);
+                    }
+                }
+                if ($order->shippingService->isPostPlusService()) {
+                    $postPlusLabelRepository = new PostPlusLabelRepository();
+                    $postPlusLabelRepository->get($order);
+                    $error = $postPlusLabelRepository->getError();
                     if ($error){
                         return $this->rollback($error);
                     }
