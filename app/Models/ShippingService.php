@@ -40,6 +40,8 @@ class ShippingService extends Model
     const GePS = 537;
     const GePS_EFormat = 540;
     const Prime5 = 773;
+    const Post_Plus_Registered = 734;
+    const Post_Plus_EMS = 367;
     const USPS_GROUND = 05;
 
     
@@ -137,6 +139,14 @@ class ShippingService extends Model
     public function isSwedenPostService()
     {
         if($this->service_sub_class == self::Prime5){
+            return true;
+        }
+        return false;
+    }
+
+    public function isPostPlusService()
+    {
+        if($this->service_sub_class == self::Post_Plus_Registered|| $this->service_sub_class == self::Post_Plus_EMS){
             return true;
         }
         return false;

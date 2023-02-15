@@ -59,6 +59,7 @@ return [
         'Colombia' => 'Colombia',
         'GePS' => 'GePS',
         'Prime5' => 'Prime5',
+        'PostPlus' => 'Post Plus',
     ],
     'Affiliate' => [
         'menu' => 'Affiliate',

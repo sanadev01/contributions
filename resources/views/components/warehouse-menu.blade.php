@@ -91,6 +91,19 @@
                             <span class="menu-title">@lang('menu.Warehouse.Prime5')</span>
                         </a>
                     </li>
+                    <li class="{{ $isActive(['warehouse.postplus_containers.index','warehouse.postplus_containers.create','warehouse.postplus_containers.edit','warehouse.postplus_container.packages.index']) }}">
+                        <a href="{{ route('warehouse.postplus_containers.index') }}">
+                            <i class="feather icon-circle"></i>
+                            <span class="menu-title">@lang('menu.Warehouse.PostPlus')</span>
+                        </a>
+                    </li>
+                    
+                    <li class="{{ $isActive(['warehouse.chile_containers.index','warehouse.chile_containers.create','warehouse.chile_containers.edit','warehouse.chile_container.packages.index']) }}">
+                        <a href="{{ route('warehouse.chile_containers.index') }}">
+                            <i class="feather icon-circle"></i>
+                            <span class="menu-title">@lang('menu.Warehouse.Chile')</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
         @endadmin

@@ -251,6 +251,21 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">Post Plus<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="Post Plus">
+                                                <input type="checkbox" name="post_plus" id="post_plus" @if(setting('post_plus', null, \App\Models\User::ROLE_ADMIN)) checked @endif>
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <h4>Correios Settings</h4>
                                 <hr>
                                 <div class="controls row mb-1 align-items-center">
