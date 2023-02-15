@@ -434,28 +434,22 @@ class OrderRepository
     
     public function getOdersForExport($request, $user)
     {
-        $orders = Order::where('status','>=',Order::STATUS_ORDER)
-        ->has('user');
-
-        if ($user->isUser()) {
-            $orders->where('user_id', $user->id);
-        }
-        if ($request->type == 'domestic') {
-            $orders->whereHas('shippingService', function($query) {
-                return $query->whereIn('service_sub_class', [ShippingService::USPS_PRIORITY,ShippingService::USPS_FIRSTCLASS,ShippingService::UPS_GROUND, ShippingService::FEDEX_GROUND, ShippingService::USPS_GROUND]);
-            })->orWhereNotNull('us_api_tracking_code');
-        }
-
-        $startDate  = $request->start_date.' 00:00:00';
-        $endDate    = $request->end_date.' 23:59:59';
-        if ( $request->start_date ){
-            $orders->where('order_date' , '>=',$startDate);
-        }
-        if ( $request->end_date ){
-            $orders->where('order_date' , '<=',$endDate);
-        }
-
-        return $orders->orderBy('id')->get();
+        return Order::with(['user','shippingService'])->where('status','>=',Order::STATUS_ORDER)
+                    ->has('user')
+                    ->when($user->isUser(),function($query) use ($user){ 
+                        $query->where('user_id', $user->id);
+                    })->when($request->start_date,function($query,$startData){  
+                        $query->where('order_date' , '>=',$startData.' 00:00:00');
+                    })->when($request->end_date,function($query,$endData){  
+                        $query->where('order_date' , '<=',$endData.' 23:59:59');
+                    })->orderBy('id')->get();
+        
+        // if ($request->type == 'domestic') {
+        //     $orders->whereHas('shippingService', function($query) {
+        //         return $query->whereIn('service_sub_class', [ShippingService::USPS_PRIORITY,ShippingService::USPS_FIRSTCLASS,ShippingService::UPS_GROUND, ShippingService::FEDEX_GROUND]);
+        //     })->orWhereNotNull('us_api_tracking_code');
+        // } 
+          
     }
 
     public function setVolumetricDiscount($order)
