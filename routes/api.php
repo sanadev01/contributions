@@ -1,12 +1,6 @@
 <?php
 
-use App\Models\Order;
-use App\Models\Deposit;
 use Illuminate\Http\Request;
-use App\Models\PaymentInvoice;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -84,39 +78,6 @@ Route::prefix('v1')->group(function(){
             Route::get('us/calculator',DomesticLabelRateController::class);
             Route::get('status/{order}', StatusController::class);
             Route::get('cancel/{order}', CancelOrderController::class);
-            Route::get('refund', function(Request $request){
-               $orders = Order::whereIn('corrios_tracking_code', $request->trackings)->where('status', Order::STATUS_PAYMENT_DONE)->get();
-               $i = 0;
-               foreach($orders as $order) {
-                    DB::beginTransaction();
-                    try{
-                        $deposit = Deposit::create([
-                            'uuid'             => PaymentInvoice::generateUUID('DP-'),
-                            'amount'           => $order->gross_total,
-                            'user_id'          => $order->user_id,
-                            'order_id'         => $order->id,
-                            'last_four_digits' => 'credit from cancelation, refund '.$order->warehouse_number,
-                            'balance'          => Deposit::getCurrentBalance($order->user) + $order->gross_total,
-                            'is_credit'        => true,
-                        ]);
-                            $order->deposits()->sync($deposit->id);
-                            $order->update([
-                                    'status' => Order::STATUS_REFUND,
-                                    'is_paid' =>  false
-                                ]);
-                      
-                    DB::commit();
-                    $i++;
-                    }catch(\Exception $e){
-                        DB::rollBack(); 
-                        return apiResponse(true,$i." Order Refunded ".(count($orders) - $i). " Fail . Submit Again"); 
-     
-                    }
-                    
-                }
-                return apiResponse(true,$i." Order Refunded");
-
-            });
            //Cancel Lable Route for GePS
             Route::get('cancel-label/{order}', [App\Http\Controllers\Api\PublicApi\OrderLabelController::class, 'cancelGePSLabel']);
         });
