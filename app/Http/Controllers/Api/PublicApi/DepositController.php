@@ -12,14 +12,14 @@ class DepositController extends Controller
 {
     public function __invoke(Request $request)
     {
-        $from = $request->from ??date('Y-m-01'); 
-        $to  = $request->to  ??date('Y-m-d'); 
-        $deposits = Deposit::with(['orders.tax','user'])->where('user_id',Auth::id())->filter($from,$to)->get();
+        $startDate = $request->start_date ??date('Y-m-01'); 
+        $endDate  = $request->end_date  ??date('Y-m-d'); 
+        $deposits = Deposit::with(['orders.tax','user'])->where('user_id',Auth::id())->filter($startDate,$endDate)->get();
         return response()->json([
             'success' =>true,
             'filter' => [
-                'from' => $from,
-                'to' => $to
+                'start_date' => $startDate,
+                'end_date' => $endDate
             ],
             'deposits' => DepositResource::collection($deposits)
         ]);
