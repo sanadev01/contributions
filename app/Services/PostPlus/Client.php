@@ -24,10 +24,12 @@ class Client{
     {   
         if(app()->isProduction()){
             $this->apiKey = config('postplus.production.x-api-key');
+            $this->baseUri = config('postplus.production.base_uri');
+
         }else{ 
             $this->apiKey = config('postplus.test.x-api-key');
+            $this->baseUri = config('postplus.test.base_uri');
         }
-        $this->baseUri = config('postplus.base_uri');
 
         $this->client = new GuzzleClient();
     } 

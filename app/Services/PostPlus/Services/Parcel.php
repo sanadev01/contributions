@@ -12,12 +12,8 @@ class Parcel {
 
       if($order->shippingService->service_sub_class == ShippingService::Post_Plus_Registered) {
          $type = 'Registered';
-         $serviceCode = 'UZPO';
-         $taxIdentification = 'TAXID';
       } else {
          $type = 'EMS';
-         $serviceCode = '';
-         $taxIdentification = '';
       }
       $refNo = $order->customer_reference;
       $packet = [
@@ -35,8 +31,8 @@ class Parcel {
                   'items' => $this->setItemsDetails($order),
                ],
                'additionalInfo' => [
-                  'serviceCode' => $serviceCode,
-                  'taxIdentification' => $taxIdentification,
+                  'serviceCode' => "UZPO",
+                  'taxIdentification' => "TAXID",
                ],
                //Recipient Information
                'receiver' => [
@@ -64,9 +60,9 @@ class Parcel {
    private function setItemsDetails($order)
    {
         $items = [];
-        $singleItemWeight = UnitsConverter::kgToGrams($this->calulateItemWeight($order));
       
         if (count($order->items) >= 1) {
+         $totalQuantity = $order->items->sum('quantity');
             foreach ($order->items as $key => $item) {
                 $itemToPush = [];
                 $originCountryCode = optional($order->senderCountry)->code;
@@ -74,24 +70,13 @@ class Parcel {
                      'description' => $item->description,
                      'quantity' => (int)$item->quantity,
                      'valuePerItem' => $item->value,
-                     'weightPerItem' => round($this->calulateItemWeight($order), 2) - 0.05,
+                     'weightPerItem' => round($order->weight / $totalQuantity, 2) - 0.05,
                 ];
                array_push($items, $itemToPush);
             }
         }
-
         return $items;
    }
 
-   private function calulateItemWeight($order)
-   {
-        $orderTotalWeight = ($this->chargableWeight != null) ? (float)$this->chargableWeight : (float)$order->weight;
-        $itemWeight = 0;
-        if (count($order->items) > 1) {
-            $itemWeight = $orderTotalWeight / count($order->items);
-            return $itemWeight;
-        }
-        return $orderTotalWeight;
-   }
 
 }
