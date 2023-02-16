@@ -38,8 +38,8 @@ class ExportTax extends AbstractExportService
             $this->setCellValue('B'.$row, $order->warehouse_number);
             $this->setCellValue('C'.$row, $order->corrios_tracking_code);
             $this->setCellValue('D'.$row, $tax->tax_payment);
-            $this->setCellValue('E'.$row, $tax->buying_usd);
-            $this->setCellValue('F'.$row, $tax->selling_usd);
+            $this->setCellValue('E'.$row, $tax->selling_usd);
+            $this->setCellValue('F'.$row, $tax->buying_usd);
             $this->setCellValue('G'.$row, round($tax->selling_usd - $tax->buying_usd,2));
             $this->setCellValue('H'.$row, $tax->created_at);
             $row++;
