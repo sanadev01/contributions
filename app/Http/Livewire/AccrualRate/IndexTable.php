@@ -74,7 +74,14 @@ class IndexTable extends Component
             'name' => 'Mile Express',
             'value' => Package::SERVICE_CLASS_MILE_EXPRESS,
         ];
-        
+        $this->services[14] = [
+            'name' => 'Post Plus Registered',
+            'value' => Package::SERVICE_CLASS_Post_Plus_Registered,
+        ];
+        $this->services[15] = [
+            'name' => 'Post Plus EMS',
+            'value' => Package::SERVICE_CLASS_Post_Plus_EMS,
+        ];
         
         return $this->services;
     }
