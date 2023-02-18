@@ -307,7 +307,7 @@ class ParcelController extends Controller
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function show(Order $parcel)
+    public function show($id)
     {
         $parcel = Order::where('user_id',Auth::id())->where('id',$id)->first();
         if($parcel){
