@@ -95,10 +95,10 @@ class Deposit extends Model
 
         return $totalBalance;
     }
-    public function scopeFilter($query,$from,$to)
+    public function scopeFilter($query,$startDate,$endDate)
     {
-        $query->when($from && $to,function($query) use ($from,$to){ 
-            return $query->whereBetween('created_at' , [$from.' 00:00:00', $to.' 23:59:59']);
+        $query->when($startDate && $endDate,function($query) use ($startDate,$endDate){ 
+            return $query->whereBetween('created_at' , [$startDate.' 00:00:00', $endDate.' 23:59:59']);
         });
     }
 }

@@ -307,9 +307,13 @@ class ParcelController extends Controller
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function show(Order $parcel)
+    public function show($id)
     {
-        return apiResponse(true,"Get Parcel Data successfully", OrderResource::make($parcel) );
+        $parcel = Order::where('user_id',Auth::id())->where('id',$id)->first();
+        if($parcel){
+            return apiResponse(true,"Get Parcel Data successfully", OrderResource::make($parcel) );
+        }
+        return apiResponse(false,"The parcel doesn't exist", null );
     }
 
     /**
