@@ -300,12 +300,7 @@
                         @can('viewAny', App\Models\PaymentInvoice::class)
                             <li class="nav-item {{ $isActive(['admin.payment-invoices.index', 'admin.payment-invoices.edit']) }}">
                                 <a href="{{ route('admin.payment-invoices.index') }}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                        class="feather feather-dollar-sign">
-                                        <line x1="12" y1="1" x2="12" y2="23"></line>
-                                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                                    </svg>
+                                    <i class=" feather icon-circle"></i>
                                     <span class="menu-title" id="invoice">@lang('menu.payment-invoice')</span>
                                 </a>
                             </li>
@@ -313,54 +308,34 @@
                         @can('viewAny', App\Models\BillingInformation::class)
                             <li class="nav-item {{ $isActive(['admin.billing-information.index', 'admin.billing-information.edit', 'admin.billing-information.create']) }}">
                                 <a href="{{ route('admin.billing-information.index') }}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                        class="feather feather-alert-triangle">
-                                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
-                                        </path>
-                                        <line x1="12" y1="9" x2="12" y2="13"></line>
-                                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                                    </svg>
+                                    <i class=" feather icon-circle"></i>
                                     <span class="menu-title">@lang('menu.Billing Informations')</span>
                                 </a>
                             </li>
                             <li class="nav-item {{ $isActive(['admin.deposit.index', 'admin.deposit.edit', 'admin.deposit.create']) }}">
                                 <a href="{{ route('admin.deposit.index') }}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                        class="feather feather-credit-card">
-                                        <rect x="1" y="4" width="22" height="16" rx="2" ry="2">
-                                        </rect>
-                                        <line x1="1" y1="10" x2="23" y2="10"></line>
-                                    </svg>
+                                    <i class=" feather icon-circle"></i>
                                     <span class="menu-title">@lang('menu.Balance')</span>
                                 </a>
                             </li>
                         @endcan
                 
                         @admin
-                            <li
-                                class="nav-item {{ $isActive(['admin.liability.index', 'admin.liability.edit', 'admin.liability.create']) }} ml-2">
+                            <li class="nav-item {{ $isActive(['admin.liability.index', 'admin.liability.edit', 'admin.liability.create']) }}">
                                 <a href="{{ route('admin.liability.index') }}">
-                                    <img src="{{ asset('images/icon/liability.svg') }}" alt="HD Liability">
+                                    <i class=" feather icon-circle"></i>
                                     <span class="menu-title">@lang('HD Liability')</span>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ $isActive(['admin.tax.index']) }}">
+                                <a href="{{ route('admin.tax.index') }}">
+                                    <i class=" feather icon-circle"></i>
+                                    <span class="menu-title">Tax Payment</span>
                                 </a>
                             </li>
                         @endadmin
                     </ul>
                 </li>
-                @admin
-                    <li class="nav-item {{ $isActive(['admin.tax.index']) }}">
-                        <a href="{{ route('admin.tax.index') }}">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                class="feather feather-activity">
-                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-                            </svg>
-                            <span class="menu-title">Tax Payment</span>
-                        </a>
-                    </li>
-                @endadmin
                 <li class="sub-category"> <span class="text-white"
                         style="padding-left:16px; padding-top:15px; padding-bottom:8px">UTILITIES</span> </li>
                 @if (auth()->user()->isAdmin())
