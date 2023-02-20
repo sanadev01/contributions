@@ -24,6 +24,7 @@ return [
     'API Documents' => 'Documentos API',
     'Parcels' => 'Pacotes',
     'Rates' => 'Minhas tarifas',
+    'Accounting' => 'Contabilidade',
     'My Rates' => 'Minhas tarifas',
     'Profit Packages' => 'Pacotes de lucro',
     'Handling Services' => 'Serviços de Manuseio',
