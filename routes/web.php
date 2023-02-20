@@ -293,12 +293,6 @@ Route::get('permission',function($id = null){
     return Artisan::output();
 });
 
-Route::get('export-excel/{id?}/',function($id = null){
-    $makeExcel = new ExcelExport();
-    $makeExcel->handle();
-    return $makeExcel->download();
-});
-
 
 Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container');
 
