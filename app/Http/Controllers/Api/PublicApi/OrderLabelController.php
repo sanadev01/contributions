@@ -30,8 +30,6 @@ class OrderLabelController extends Controller
             return apiResponse(false,'Order not found',null,422);
         }
         $this->authorize('canPrintLableViaApi', $order);
-
-
         DB::beginTransaction();
         $isPayingFlag = false;
         try {

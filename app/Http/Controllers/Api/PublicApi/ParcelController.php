@@ -39,9 +39,7 @@ class ParcelController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(CreateRequest $request)
-    { 
-         
-
+    {
         Log::info('request Data');
         Log::info($request);
 

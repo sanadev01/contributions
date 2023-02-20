@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Repositories\Inventory\ProductRepository;
 use App\Http\Requests\Product\ProductCreateRequest;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -30,8 +31,11 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
+        if(Auth::id() !=$product->user_id){
+            return apiResponse(false,'Product not found',null,422);
+        }
         $this->authorize('view', $product);
-
+        
         return apiResponse(true, 'products', $product);
     }
 
