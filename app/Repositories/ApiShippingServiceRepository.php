@@ -10,6 +10,7 @@ use App\Models\ShippingService;
 class ApiShippingServiceRepository
 {
     public $error;
+    protected $currentUSDollar = 0.000266616;
 
     public function isAvalaible($shippingService, $volumeWeight)
     {
@@ -21,7 +22,8 @@ class ApiShippingServiceRepository
         if($shippingService->service_sub_class == ShippingService::USPS_PRIORITY || 
             $shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS || 
             $shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
-            $shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL)
+            $shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL ||
+            $shippingService->service_sub_class == ShippingService::USPS_GROUND)
         {
             if(!setting('usps', null, auth()->user()->id))
             {
@@ -81,7 +83,7 @@ class ApiShippingServiceRepository
             return false;
         }
 
-        if ($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS || $order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||  $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) 
+        if ($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS || $order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||  $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL || $order->shippingService->service_sub_class == ShippingService::USPS_GROUND) 
         {
             if(!setting('usps', null, $order->user->id))
             {

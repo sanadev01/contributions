@@ -8,9 +8,11 @@ use App\Repositories\UPSLabelRepository;
 use App\Repositories\GePSLabelRepository;
 use App\Repositories\USPSLabelRepository;
 use App\Repositories\FedExLabelRepository;
+use App\Repositories\PostPlusLabelRepository;
 use App\Repositories\SwedenPostLabelRepository;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
+use App\Repositories\ColombiaLabelRepository;
 
 class HandleCorreiosLabelsRepository
 {
@@ -42,22 +44,29 @@ class HandleCorreiosLabelsRepository
             if ($this->order->shippingService->isCorreiosService()) {
                 return $this->corriesBrazilLabel();
             }
+            if ($this->order->shippingService->isPostPlusService()) {
+                return $this->postPlusLabel();
+            }
             // if ($this->order->shippingService->is_milli_express) {
             //     return $this->mileExpressLabel();
             // }
+            if ($this->order->shippingService->is_milli_express) {
+                return $this->mileExpressLabel();
+            }
         }
         if ($this->order->recipient->country_id == Order::CHILE) {
 
             return $this->corrieosChileLabel();
         }
 
-        // if ($this->order->recipient->country_id == Order::COLOMBIA && $this->order->shippingService->isColombiaService()) {
-        //     return $this->colombiaLabel();
-        // }
+        if ($this->order->recipient->country_id == Order::COLOMBIA && $this->order->shippingService->isColombiaService()) {
+
+            return $this->colombiaLabel();
+        }
 
 
         if ($this->order->recipient->country_id == Order::US) {
-            if ($this->order->shippingService->is_usps_priority || $this->order->shippingService->is_usps_firstclass) {
+            if ($this->order->shippingService->is_usps_priority || $this->order->shippingService->is_usps_firstclass || $this->order->shippingService->is_usps_ground) {
                 return $this->uspsLabel();
             }
 
@@ -76,33 +85,33 @@ class HandleCorreiosLabelsRepository
             }
         }
 
-        // if($this->order->shippingService->isPostNLService()){
-        //     return $this->postNLLabel();
-        // }
+        if($this->order->shippingService->isPostNLService()){
+            return $this->postNLLabel();
+        }
+        
         return $this->corriesBrazilLabel();
-
     }
 
-    // public function colombiaLabel()
-    // {
-    //     $colombiaLabelRepository = new ColombiaLabelRepository($this->order);
-    //     $colombiaLabelRepository->run($this->order,$this->update); 
-    //     return $this->renderLabel($this->request, $this->order, $colombiaLabelRepository->getError());
-    // }
+    public function colombiaLabel()
+    {
+        $colombiaLabelRepository = new ColombiaLabelRepository($this->order);
+        $colombiaLabelRepository->run($this->order,$this->update); 
+        return $this->renderLabel($this->request, $this->order, $colombiaLabelRepository->getError());
+    }
 
-    // public function mileExpressLabel()
-    // {
-    //     $mileExpressLabelRepository = new MileExpressLabelRepository();
-    //     $mileExpressLabelRepository->run($this->order,$this->update); 
-    //     return $this->renderLabel($this->request, $this->order, $mileExpressLabelRepository->getError());
-    // }
+    public function mileExpressLabel()
+    {
+        $mileExpressLabelRepository = new MileExpressLabelRepository();
+        $mileExpressLabelRepository->run($this->order,$this->update); 
+        return $this->renderLabel($this->request, $this->order, $mileExpressLabelRepository->getError());
+    }
 
-    // public function postNLLabel()
-    // {
-    //     $postNLLabelRepository = new POSTNLLabelRepository();
-    //     $postNLLabelRepository->run($this->order,$this->update); 
-    //     return $this->renderLabel($this->request, $this->order, $postNLLabelRepository->getError());
-    // }
+    public function postNLLabel()
+    {
+        $postNLLabelRepository = new POSTNLLabelRepository();
+        $postNLLabelRepository->run($this->order,$this->update); 
+        return $this->renderLabel($this->request, $this->order, $postNLLabelRepository->getError());
+    }
 
     public function gepsLabel()
     {
@@ -151,6 +160,13 @@ class HandleCorreiosLabelsRepository
         $upsLabelRepository = new UPSLabelRepository(); 
         $upsLabelRepository->run($this->order,$this->update); 
         return $this->renderLabel($this->request, $this->order, $upsLabelRepository->getUPSErrors());
+    }
+
+    public function postPlusLabel()
+    {
+        $postPlusLabelRepository = new PostPlusLabelRepository(); 
+        $postPlusLabelRepository->run($this->order,$this->update); //by default consider false
+        return $this->renderLabel($this->request, $this->order, $postPlusLabelRepository->getError());
     }
 
     public function renderLabel($request, $order, $error)

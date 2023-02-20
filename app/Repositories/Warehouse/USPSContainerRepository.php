@@ -18,11 +18,7 @@ class USPSContainerRepository {
             $query->where('user_id',Auth::id());
         }
 
-        return $query->where(function($query) {
-			                    $query->where('services_subclass_code','Priority')
-						        ->orWhere('services_subclass_code','FirstClass');
-                            })->latest()->paginate();
-
+        return $query->whereIn('services_subclass_code', ['Priority','FirstClass', 'Priority International','FirstClass International', 'USPS Ground'])->latest()->paginate(50);
     }
 
     public function store($request)

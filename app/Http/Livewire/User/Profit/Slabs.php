@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\User\Profit;
 
+use App\Models\Rate;
 use App\Models\Order;
 use Livewire\Component;
 use App\Models\Recipient;
@@ -16,15 +17,20 @@ class Slabs extends Component
     public $slabs;
     public $profitPackage;
     public $profit;
+    public $costData;
 
     public function mount($profitId = null)
     {
         $this->slabs = old('slab',[]);
         if ( $profitId ){
             $profitPackage = ProfitPackage::find($profitId) ?? new ProfitPackage;
-            $this->slabs = array_unique(array_merge($profitPackage->data,$this->slabs),SORT_REGULAR);
+            $cost = Rate::where('shipping_service_id', $profitPackage->shipping_service_id)->first();
+            $slabs = array_unique(array_merge($profitPackage->data,$this->slabs),SORT_REGULAR);
             $this->profitPackage = $profitPackage;
-            
+            foreach ($slabs as $key => $slab) {
+                $result[] = array_merge($slab, $cost->data[$key]);
+            }
+            $this->slabs = $result;
         // $this->sale = $this->getSaleRate($this->profitPackage, $this->weight, true);
         // $this->shipping = $this->getSaleRate($this->profitPackage, $this->weight, false);
         }
@@ -42,7 +48,8 @@ class Slabs extends Component
         array_push($this->slabs,[
             'min_weight' => 0,
             'max_weight' => 0,
-            'value' => ''
+            'value' => '',
+            'leve' => ''
         ]);
     }
 
