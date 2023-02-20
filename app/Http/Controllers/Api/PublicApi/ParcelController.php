@@ -40,6 +40,8 @@ class ParcelController extends Controller
      */
     public function store(CreateRequest $request)
     { 
+         
+
         Log::info('request Data');
         Log::info($request);
 
@@ -328,7 +330,9 @@ class ParcelController extends Controller
         if ($parcel->isPaid()) {
             return apiResponse(false,'order can not be updated once payment has been paid');
         }
-
+        if(Auth::id() !=$parcel->user_id){
+            return apiResponse(false,'Order not found',null,422);
+        }
         $weight = optional($request->parcel)['weight']??0;
         $length = optional($request->parcel)['length']??0;
         $width = optional($request->parcel)['width']??0;
@@ -552,6 +556,10 @@ class ParcelController extends Controller
 
             $parcel->doCalculations();
 
+            
+        // dump(Auth::id());
+        // dump($parcel->user->id);
+
             DB::commit();
             return apiResponse(true,"Parcel Updated", OrderResource::make($parcel) );
 
@@ -569,6 +577,10 @@ class ParcelController extends Controller
      */
     public function destroy(Order $parcel,$soft = true)
     {
+        if(Auth::id() !=$parcel->user_id){
+            return apiResponse(false,'Order not found',null,422);
+        }
+        
         if ( $soft && $parcel->status < Order::STATUS_PAYMENT_DONE ){
             
             optional($parcel->affiliateSale)->delete();

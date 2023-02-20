@@ -64,12 +64,12 @@ function __default($value,$default)
     return $value ? $value : $default;
 }
 
-function apiResponse($success,$message,$data=null){
+function apiResponse($success,$message,$data=null,$statusCode=200){
     return response()->json([
         'success' => $success,
         'message' => $message,
         'data' => $data
-    ]);
+    ],$statusCode);
 }
 
 function generateRandomString($length = 30)
