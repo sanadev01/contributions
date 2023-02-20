@@ -36,7 +36,7 @@ class ProductController extends Controller
         }
         $this->authorize('view', $product);
         
-        return apiResponse(true, 'Product found', $product);
+        return apiResponse(true, 'product found', $product);
     }
 
     public function store(ProductCreateRequest $request)
