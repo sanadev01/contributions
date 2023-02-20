@@ -35,7 +35,6 @@ class ProductController extends Controller
             return apiResponse(false,'Product not found');
         }
         $this->authorize('view', $product);
-        
         return apiResponse(true, 'product found', $product);
     }
 
