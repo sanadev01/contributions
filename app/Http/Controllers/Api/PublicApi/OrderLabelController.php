@@ -27,7 +27,7 @@ class OrderLabelController extends Controller
     public function __invoke(Request $request, Order $order)
     {
         if(Auth::id() != $order->user_id){
-            return apiResponse(false,'Order not found',null,422);
+            return apiResponse(false,'Order not found');
         }
         $this->authorize('canPrintLableViaApi', $order);
         DB::beginTransaction();

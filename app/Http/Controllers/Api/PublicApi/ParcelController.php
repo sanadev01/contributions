@@ -277,7 +277,7 @@ class ParcelController extends Controller
     public function update(UpdateRequest $request, Order $parcel)
     {
         if(Auth::id() != $parcel->user_id){
-            return apiResponse(false,'Order not found',null,422);
+            return apiResponse(false,'Order not found');
         }
         if ($parcel->isPaid()) {
             return apiResponse(false,'order can not be updated once payment has been paid');
@@ -522,8 +522,8 @@ class ParcelController extends Controller
      */
     public function destroy(Order $parcel,$soft = true)
     {
-        if(Auth::id() !=$parcel->user_id){
-            return apiResponse(false,'Order not found',null,422);
+        if(Auth::id() != $parcel->user_id){
+            return apiResponse(false,'Order not found');
         }
         
         if ( $soft && $parcel->status < Order::STATUS_PAYMENT_DONE ){

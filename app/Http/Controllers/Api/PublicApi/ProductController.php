@@ -31,7 +31,7 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
-        if(Auth::id() !=$product->user_id){
+        if(Auth::id() != $product->user_id){
             return apiResponse(false,'Product not found');
         }
         $this->authorize('view', $product);
