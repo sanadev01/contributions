@@ -1,8 +1,16 @@
-<section class="card invoice-page">
-    <div class="col-12 row no-print justify-content-end">
-        <button class="btn btn-primary btn-print mb-1 mb-md-0 waves-effect waves-light" onclick="print('.invoice-page');"> <i class="feather icon-file-text"></i> Print</button>
-    </div>
-    <div id="invoice-template" class="card-body">
+<section class="card invoice-page">    
+    <div class="col-12 row justify-content-between">
+        <div class="py-0 mt-0 pl-3">
+            <p >Herco Freight Forwarding <br>
+                2200 NW 129th Ave Suite#100 <br>
+                Miami, FL 33182 DBA As </p>
+        </div>
+        <div class="no-print">
+          <button class="btn btn-primary btn-print mb-1 mb-md-0 waves-effect waves-light" onclick="print('.invoice-page');"> <i class="feather icon-file-text"></i> Print</button>
+        </div>
+    </div> 
+
+    <div id="invoice-template" class="card-body pt-0">
         <!-- Invoice Company Details -->
         <div id="invoice-company-details" class="row">
             <div class="col-sm-6 col-12 text-left pt-1">
