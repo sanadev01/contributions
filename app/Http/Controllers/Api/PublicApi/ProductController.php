@@ -32,11 +32,11 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         if(Auth::id() !=$product->user_id){
-            return apiResponse(false,'Product not found',null,422);
+            return apiResponse(false,'Product not found');
         }
         $this->authorize('view', $product);
         
-        return apiResponse(true, 'products', $product);
+        return apiResponse(true, 'Product found', $product);
     }
 
     public function store(ProductCreateRequest $request)

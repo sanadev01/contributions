@@ -43,55 +43,6 @@ class ParcelController extends Controller
         Log::info('request Data');
         Log::info($request);
 
-
-        // if (Country::where('code', 'BR')->first()->id == $request->recipient['country_id']) { 
-
-
-        //     Validator::validate($request->all(), [
-        //         'recipient.zipcode' => 'required',
-        //         'recipient.state_id' => 'required',
-        //     ]); ;
- 
-        //     $state = State::find($request->recipient['state_id']);
-             
-        //     $correios = new Client;
-        //     $response = $correios->zipcode()->find($request->recipient['zipcode']);
-            
-        //     if(optional($response)['error']){ 
-        //             return response()->json([
-        //                             "message"=>"The given data was invalid.",
-        //                             "errors" => [
-        //                                 'recipient.zipcode' => 'zip code not found / CEP não encontrado',
-        //                             ]
-        //                         ], 422);
-
-        //     }
-        //     $errors = [];
-        //     $replaceCharacter = array('Š'=>'S', 'š'=>'s', 'Ž'=>'Z', 'ž'=>'z', 'À'=>'A', 'Á'=>'A', 'Â'=>'A', 'Ã'=>'A', 'Ä'=>'A', 'Å'=>'A', 'Æ'=>'A', 'Ç'=>'C', 'È'=>'E', 'É'=>'E',
-        //                     'Ê'=>'E', 'Ë'=>'E', 'Ì'=>'I', 'Í'=>'I', 'Î'=>'I', 'Ï'=>'I', 'Ñ'=>'N', 'Ò'=>'O', 'Ó'=>'O', 'Ô'=>'O', 'Õ'=>'O', 'Ö'=>'O', 'Ø'=>'O', 'Ù'=>'U',
-        //                     'Ú'=>'U', 'Û'=>'U', 'Ü'=>'U', 'Ý'=>'Y', 'Þ'=>'B', 'ß'=>'Ss', 'à'=>'a', 'á'=>'a', 'â'=>'a', 'ã'=>'a', 'ä'=>'a', 'å'=>'a', 'æ'=>'a', 'ç'=>'c',
-        //                     'è'=>'e', 'é'=>'e', 'ê'=>'e', 'ë'=>'e', 'ì'=>'i', 'í'=>'i', 'î'=>'i', 'ï'=>'i', 'ð'=>'o', 'ñ'=>'n', 'ò'=>'o', 'ó'=>'o', 'ô'=>'o', 'õ'=>'o',
-        //                     'ö'=>'o', 'ø'=>'o', 'ù'=>'u', 'ú'=>'u', 'û'=>'u', 'ý'=>'y', 'þ'=>'b', 'ÿ'=>'y' );
-
-        //     if(strtr($response['uf'],$replaceCharacter) != strtr($state->code,$replaceCharacter)){ 
-        //         array_push($errors ,[ 'recipient.state_id' => 'According to your Zipcode the valid state is '.$response['uf']]);
-        //     }
-        //     if(strtr($response['city'],$replaceCharacter) != strtr($request->recipient['city'],$replaceCharacter)){ 
-        //         array_push($errors ,[ 'recipient.city' => 'According to your Zipcode the valid city is '.$response['city']]);
-        //     }
-        //     if(strtr($response['street'],$replaceCharacter)!= strtr($request->recipient['address'],$replaceCharacter)){ 
-        //         array_push($errors ,[ 'recipient.address' => 'According to your Zipcode the valid address is '.$response['street']]);
-        //     }
-        //     if(count($errors)){
-        //         return response()->json([
-        //             "message"=>"The given data was invalid.",
-        //             "errors" =>    $errors
-        //         ], 422);
-        //     }
-        // }
-
-
-
         $weight = optional($request->parcel)['weight']??0;
         $length = optional($request->parcel)['length']??0;
         $width = optional($request->parcel)['width']??0;
@@ -328,7 +279,7 @@ class ParcelController extends Controller
         if ($parcel->isPaid()) {
             return apiResponse(false,'order can not be updated once payment has been paid');
         }
-        if(Auth::id() !=$parcel->user_id){
+        if(Auth::id() != $parcel->user_id){
             return apiResponse(false,'Order not found',null,422);
         }
         $weight = optional($request->parcel)['weight']??0;
@@ -553,10 +504,6 @@ class ParcelController extends Controller
             }
 
             $parcel->doCalculations();
-
-            
-        // dump(Auth::id());
-        // dump($parcel->user->id);
 
             DB::commit();
             return apiResponse(true,"Parcel Updated", OrderResource::make($parcel) );
