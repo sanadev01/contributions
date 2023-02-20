@@ -148,6 +148,12 @@
                                     <span class="menu-title">@lang('HD Liability')</span>
                                 </a>
                             </li>
+                            <li class="nav-item {{ $isActive(['admin.tax.index']) }} ml-2">
+                                <a href="{{ route('admin.tax.index') }}">
+                                    <i class="icon_adjst feather icon-activity" style="color: #3db64c;"></i>
+                                    <span class="menu-title">Tax Payment</span>
+                                </a>
+                            </li>
                         @endadmin
                     @endcan
                 </ul>
@@ -452,14 +458,6 @@
                     <livewire:components.support-ticket/>
                 </a>
             </li>
-            @admin
-            <li class="nav-item {{ $isActive(['admin.tax.index']) }}">
-                <a href="{{ route('admin.tax.index') }}">
-                    <i class="icon_adjst feather icon-activity" style="color: #3db64c;"></i>
-                    <span class="menu-title">Tax Payment</span>
-                </a>
-            </li>
-            @endadmin
 
             @can('viewAny', Spatie\Activitylog\Models\Activity::class)
             <li class="nav-item {{ $isActive(['admin.activity.log.index']) }}">
