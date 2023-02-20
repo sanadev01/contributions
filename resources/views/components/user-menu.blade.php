@@ -390,7 +390,6 @@
                         </li>
                     </ul>
                 </li>
-            {{-- @endcan --}}
             {{-- Affiliate --}}
             @can('viewAny', App\Models\AffiliateSale::class)
                 <li class="nav-item has-sub sidebar-group">
@@ -453,29 +452,6 @@
                     <livewire:components.support-ticket/>
                 </a>
             </li>
-
-            {{-- @can('viewAny', App\Models\BillingInformation::class)
-               <li class="nav-item {{ $isActive(['admin.billing-information.index','admin.billing-information.edit','admin.billing-information.create']) }}">
-                <a href="{{ route('admin.billing-information.index') }}">
-                    <i class="icon_adjst feather icon-alert-triangle" style="color: #3db64c;"></i>
-                    <span class="menu-title">@lang('menu.Billing Informations')</span>
-                </a>
-            </li> 
-                <li class="nav-item {{ $isActive(['admin.deposit.index','admin.deposit.edit','admin.deposit.create']) }}">
-                    <a href="{{ route('admin.deposit.index') }}">
-                        <img src="{{ asset('images/icon/balance.svg') }}" alt="Balance">
-                        <span class="menu-title">@lang('menu.Balance')</span>
-                    </a>
-                </li> 
-                @admin
-                    <li class="nav-item {{ $isActive(['admin.liability.index','admin.liability.edit','admin.liability.create']) }}">
-                        <a href="{{ route('admin.liability.index') }}">
-                            <img src="{{ asset('images/icon/liability.svg') }}" alt="HD Liability">
-                            <span class="menu-title">@lang('HD Liability')</span>
-                        </a>
-                    </li>
-                @endadmin
-            @endcan --}}
             @admin
             <li class="nav-item {{ $isActive(['admin.tax.index']) }}">
                 <a href="{{ route('admin.tax.index') }}">
