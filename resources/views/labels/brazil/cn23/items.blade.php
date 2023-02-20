@@ -20,6 +20,7 @@
                 'totalQuantity' => $order->items->sum('quantity'),
                 'totalWeight' => $order->getOriginalWeight('kg'),
                 'totalValue' => $order->items()->sum(\DB::raw('quantity * value')),
+                'isSumplimentary' => false,
             ])
             
         </tbody>
