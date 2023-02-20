@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Repositories;
-
-use stdClass;
 use App\Models\Order;
 use App\Facades\UPSFacade;
 use App\Models\ShippingService;
@@ -10,9 +8,6 @@ use App\Facades\USPSTrackingFacade;
 use App\Facades\CorreiosChileTrackingFacade;
 use App\Facades\CorreiosBrazilTrackingFacade;
 use App\Services\SwedenPost\DirectLinkTrackingService;
-use Exception;
-use Illuminate\Support\Facades\Auth;
-
 class OrderTrackingRepository
 {
 
