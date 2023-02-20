@@ -19,8 +19,8 @@ class ProductController extends Controller
     
     public function index(Request $request)
     {
-        $products = $this->productRepository->get($request);
-
+        $productsQuery = $this->productRepository->get($request); 
+        $products = $productsQuery->get();
         if ($products->isEmpty()) {
            return apiResponse(false, 'no product found');
         }
@@ -32,7 +32,7 @@ class ProductController extends Controller
     {
         $this->authorize('view', $product);
 
-        return apiResponse(true, 'product found', $product);
+        return apiResponse(true, 'products', $product);
     }
 
     public function store(ProductCreateRequest $request)

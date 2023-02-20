@@ -11,6 +11,7 @@ use App\Facades\CorreiosChileTrackingFacade;
 use App\Facades\CorreiosBrazilTrackingFacade;
 use App\Services\SwedenPost\DirectLinkTrackingService;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class OrderTrackingRepository
 {
@@ -33,7 +34,7 @@ class OrderTrackingRepository
     {
         $trackingNumbers = explode(',', preg_replace('/\s+/', '', $this->trackingNumber));
 
-        $orders = Order::whereIn('corrios_tracking_code', $trackingNumbers)->get();
+        $orders = Order::whereIn('corrios_tracking_code', $trackingNumbers)->where('user_id',Auth::id())->get();
 
         $getTrackings = collect();
         if ($orders) {
