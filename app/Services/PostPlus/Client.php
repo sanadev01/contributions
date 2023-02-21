@@ -28,7 +28,7 @@ class Client{
 
         }else{ 
             $this->apiKey = config('postplus.test.x-api-key');
-            $this->baseUri = config('postplus.test.base_uri');
+            $this->baseUri = "https://api.post-plus.io/api/v1";
         }
 
         $this->client = new GuzzleClient();
@@ -37,7 +37,7 @@ class Client{
     private function getHeaders()
     {
         return [ 
-            'x-api-key' => $this->apiKey,
+            'x-api-key' => "ec62cb67628244e3b74acef4c374a3b3",
             'Content-Type' => 'application/json'
         ];
     }
@@ -47,6 +47,8 @@ class Client{
         try {
             $response = Http::withHeaders($this->getHeaders())->put("$this->baseUri/parcels", $shippingRequest);
             $data = json_decode($response);
+            \Log::info('postplus');
+            \Log::info($data);
             if(!$data->status->hasErrors && $data->status->status == "Created") {
                 $trackingNumber = $data->identifiers->parcelNr;
                 $printId = $data->prints[0]->id;
