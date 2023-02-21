@@ -28,7 +28,7 @@ class USPSShippingService
 
     public function isAvailableFor($shippingService)
     {
-        if(($shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS) && $this->weight <= $shippingService->max_weight_allowed)
+        if(($shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS || $shippingService->service_sub_class == ShippingService::USPS_GROUND) && $this->weight <= $shippingService->max_weight_allowed)
         {
             return true;
         }
