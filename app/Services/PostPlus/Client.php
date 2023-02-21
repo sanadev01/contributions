@@ -42,12 +42,13 @@ class Client{
         ];
     }
     public function createPackage(Package $order)
-    {
+    {   \Log::info('postplus url');
+        \Log::info($this->baseUri, $this->apiKey);
         $shippingRequest = (new Parcel())->getRequestBody($order);
         try {
             $response = Http::withHeaders($this->getHeaders())->put("$this->baseUri/parcels", $shippingRequest);
             $data = json_decode($response);
-            \Log::info('postplus');
+            \Log::info('postplus response');
             \Log::info($data);
             if(!$data->status->hasErrors && $data->status->status == "Created") {
                 $trackingNumber = $data->identifiers->parcelNr;
