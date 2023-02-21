@@ -458,6 +458,26 @@ class PermissionSeeder extends Seeder
                 'group' => 'Reports',
                 'description' => 'User can see Key Performance Indicator (KPI) Reports'
             ],
+            [
+                'slug' => 'view_tax',
+                'group' => 'Tax',
+                'description' => 'User can see tax'
+            ],
+            [
+                'slug' => 'create_tax',
+                'group' => 'Tax',
+                'description' => 'User can create tax'
+            ], 
+            [
+                'slug' => 'update_tax',
+                'group' => 'Tax',
+                'description' => 'User can update tax'
+            ], 
+            [
+                'slug' => 'refund_tax',
+                'group' => 'Tax',
+                'description' => 'User can refund tax'
+            ], 
         ];
     }
 }
