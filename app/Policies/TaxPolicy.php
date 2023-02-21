@@ -11,14 +11,7 @@ class TaxPolicy
 {
     use HandlesAuthorization, ByPassAdminCheck;
 
-  
-    /**
-     * Determine whether the Tax can view the model.
-     *
-     * @param  \App\Models\Tax$tax
-     * @param  \App\Product  $product
-     * @return mixed
-     */
+   
     public function view(User $user)
     {   
         return $user->hasPermission('view_tax');
