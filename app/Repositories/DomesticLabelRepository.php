@@ -71,7 +71,8 @@ class DomesticLabelRepository
             }
 
             if ($shippingService['service_sub_class'] == ShippingService::USPS_PRIORITY
-                || $shippingService['service_sub_class'] == ShippingService::USPS_FIRSTCLASS) 
+                || $shippingService['service_sub_class'] == ShippingService::USPS_FIRSTCLASS 
+                || $shippingService['service_sub_class'] == ShippingService::USPS_GROUND) 
             {
                 $this->getUSPSRates( $shippingService['service_sub_class']);
             }
@@ -108,7 +109,7 @@ class DomesticLabelRepository
             return false;
         }
 
-        if (request()->service == ShippingService::USPS_PRIORITY || request()->service == ShippingService::USPS_FIRSTCLASS) 
+        if (request()->service == ShippingService::USPS_PRIORITY || request()->service == ShippingService::USPS_FIRSTCLASS || request()->service == ShippingService::USPS_GROUND) 
         {
             if($this->uspsLabelRepository->getSecondaryLabel($order))
             {
@@ -141,7 +142,7 @@ class DomesticLabelRepository
 
         $uspsRateResponse = $this->uspsLabelRepository->getRatesForSender();
         if ($uspsRateResponse['success'] == true) {
-            return array_push($this->domesticRates, ['service' => ($service == ShippingService::USPS_PRIORITY) ? 'USPS Priority' : 'USPS FirstClass', 'service_code' => $service, 'cost' => $uspsRateResponse['total_amount']]);
+            return array_push($this->domesticRates, ['service' => ($service == ShippingService::USPS_PRIORITY) ?  'USPS Priority' : (($service == ShippingService::USPS_GROUND)? 'USPS Ground' : 'USPS FirstClass'), 'service_code' => $service, 'cost' => $uspsRateResponse['total_amount']]);
         }
     }
 
