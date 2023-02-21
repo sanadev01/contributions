@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Warehouse\Container;
 use App\Models\Warehouse\DeliveryBill;
 use Illuminate\Support\Facades\Artisan;
-use App\Services\Excel\Export\ExcelExport;
 use App\Services\StoreIntegrations\Shopify;
 use App\Http\Controllers\Admin\HomeController;
 use App\Services\Correios\Services\Brazil\Client;
@@ -285,11 +284,6 @@ Route::get('permission',function($id = null){
     return Artisan::output();
 });
 
-Route::get('export-excel/{id?}/',function($id = null){
-    $makeExcel = new ExcelExport();
-    $makeExcel->handle();
-    return $makeExcel->download();
-});
 
 Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container');
 
