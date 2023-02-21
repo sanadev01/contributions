@@ -38,16 +38,20 @@ class KPIReportsRepository
         if (Auth::user()->isUser()) {
             $orders->where('user_id', Auth::id());
         }
-        $startDate  = $request->start_date.' 00:00:00';
-        $endDate    = $request->end_date.' 23:59:59';
         if ( $request->start_date ){
+            $startDate  = $request->start_date.' 00:00:00';
             $orders->where('order_date','>=',$startDate);
         }
         if ( $request->end_date ){
+            $endDate    = $request->end_date.' 23:59:59';
             $orders->where('order_date','<=',$endDate);
         }
+        if ( $request->trackingNumbers ){
+            $trackNos = (explode(",",$request->trackingNumbers));
+            $orders->whereIn('corrios_tracking_code',$trackNos);
+        }
 
-        $orders = ($orders->with('user')->get()); 
+        $orders = ($orders->get()); 
         $codesUsers =  [];
         foreach($orders as $order) {
             $codesUsers[$order->corrios_tracking_code] = $order->user;

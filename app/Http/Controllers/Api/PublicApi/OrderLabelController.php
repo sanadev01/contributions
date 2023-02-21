@@ -27,6 +27,9 @@ class OrderLabelController extends Controller
 {
     public function __invoke(Request $request, Order $order)
     {
+        if(Auth::id() != $order->user_id){
+            return apiResponse(false,'Order not found');
+        }
         $this->authorize('canPrintLableViaApi', $order);
         DB::beginTransaction();
         $isPayingFlag = false;
@@ -69,7 +72,7 @@ class OrderLabelController extends Controller
 
             if ($order->recipient->country_id == Order::US) {
                 // For USPS
-                if ($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS) {
+                if ($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS || $order->shippingService->service_sub_class == ShippingService::USPS_GROUND) {
                     $uspsLabelRepository = new USPSLabelRepository();
                     $uspsLabelRepository->handle($order);
 

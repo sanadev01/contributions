@@ -34,7 +34,7 @@
                             <select class="form-control" name="year" id="DefaultSelect">
                                 <option value="">Select Year </option>
                                 @foreach( $years as $year )
-                                <option value="{{$year}}" @if($year == $year) selected @endif > {{$year}} </option>
+                                <option value="{{$year}}" @if($year == $currentYear) selected @endif > {{$year}} </option>
                                 @endforeach
                             </select>
                         </div>

@@ -25,7 +25,26 @@
                                     <form action="{{ route('admin.reports.kpi-report.index') }}" method="GET">
                                         @csrf
                                         <div class="row">
-                                            <div class="offset-4 col-md-3">
+                                            <div class="offset-1 col-md-1">
+                                                <div class="row mt-2 pr-0">
+                                                    <label>Tracking Codes</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="col-12">
+                                                    <div class="controls">
+                                                        <div class="col-md-12 ml-0 pl-0 pr-0">
+                                                            <textarea type="text" placeholder="Please Enter Tracking Codes" rows="1" 
+                                                            class="form-control"
+                                                                name="trackingNumbers">{{ old('trackingNumbers',request('trackingNumbers')) }}</textarea>
+                                                            @error('trackingNumbers')
+                                                                <div class="help-block text-danger"> {{ $message }} </div>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
                                                 <div class="row">
                                                     <div class="col-md-4 mt-2">
                                                         <label>Start Date</label>
@@ -35,7 +54,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-3">
+                                            <div class="col-md-2">
                                                 <div class="row">
                                                     <div class="col-md-4 mt-2 pl-0">
                                                         <label>End Date</label>

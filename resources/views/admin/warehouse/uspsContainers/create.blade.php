@@ -64,6 +64,7 @@
                                             <option value="">@lang('warehouse.containers.Distribution Service Class')</option>
                                             <option value="Priority" {{ old('services_subclass_code') == 'Priority' ? 'selected': '' }}>Priority</option>
                                             <option value="FirstClass" {{ old('services_subclass_code') == 'FirstClass' ? 'selected': '' }}>FirstClass</option>
+                                            <option value="USPS Ground" {{ old('services_subclass_code') == 'USPS Ground' ? 'selected': '' }}>USPS Ground</option>
                                         </select>
                                         @error('services_subclass_code')
                                             <div class="help-block text-danger"> {{ $message }} </div>

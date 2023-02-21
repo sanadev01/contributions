@@ -15,7 +15,7 @@ class RateRepository
 {
     public function get()
     {   
-        $rates = Rate::has('shippingService')->get();
+        $rates = Rate::has('shippingService')->get()->sortBy('shippingService.name');
 
         return $rates->unique('shipping_service_id');
     }

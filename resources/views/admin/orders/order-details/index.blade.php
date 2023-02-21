@@ -222,7 +222,7 @@
     $('#us_shipping_service').on('change',function(){
         const service = $('#us_shipping_service option:selected').attr('data-service-code');
         
-        if(service == 3440 || service == 3441) {
+        if(service == 3440 || service == 3441 || service == 05) {
 
            return getUspsRates();
 
