@@ -48,7 +48,7 @@ class Client{
             $response = Http::withHeaders($this->getHeaders())->put("$this->baseUri/parcels", $shippingRequest);
             $data = json_decode($response);
             \Log::info('postplus');
-            \Log::info('postplus');
+            \Log::info($data);
             if(!$data->status->hasErrors && $data->status->status == "Created") {
                 $trackingNumber = $data->identifiers->parcelNr;
                 $printId = $data->prints[0]->id;
