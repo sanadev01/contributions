@@ -52,7 +52,7 @@ class OrderItemsController extends Controller
      */
     public function store(CreateRequest $request,Order $order)
     {
-        $shippingService = $order->shippingService;
+        $shippingService = ShippingService::find($request->shipping_service_id);
 
         $this->authorize('editItems',$order);
 
