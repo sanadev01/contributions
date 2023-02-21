@@ -121,6 +121,22 @@ class OrderItemsController extends Controller
                 return back()->withInput();
             }
         }
+        if(in_array($shippingService->service_sub_class, [ShippingService::GePS, ShippingService::GePS_EFormat, ShippingService::Post_Plus_Registered])) {
+            if($order->measurement_unit == "lbs/in" && $order->weight > 4.40 || $order->measurement_unit == "kg/cm" && $order->weight > 2) {
+                session()->flash('alert-danger', 'Parcel Weight cannot be more than 4.40 LBS / 2 KG. Please Update Your Parcel');
+                return back()->withInput();
+            }
+            if($order->length+$order->width+$order->height > $shippingService->max_sum_of_all_sides) {
+                session()->flash('alert-danger', 'Maximun Pacakge Size: The sum of the length, width and height cannot not be greater than 90 cm (l + w + h <= 90). Please Update Your Parcel');
+                return back()->withInput();
+            }
+        }
+        if($shippingService->service_sub_class == ShippingService::Post_Plus_EMS) {
+            if($order->length+$order->width+$order->height > $shippingService->max_sum_of_all_sides) {
+                session()->flash('alert-danger', 'Maximun Pacakge Size: The sum of the length, width and height cannot not be greater than 300 cm (l + w + h <= 300). Please Update Your Parcel');
+                return back()->withInput();
+            }
+        }
         /**
          * Sinerlog modification
          * Get total of items declared to check if them more than US$ 50 when Sinerlog Small Parcels was selected

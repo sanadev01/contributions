@@ -18,17 +18,20 @@ use App\Repositories\SwedenPostLabelRepository;
 use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
+use App\Repositories\PostPlusLabelRepository;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Repositories\ColombiaLabelRepository;
-use App\Repositories\PostPlusLabelRepository;
 use App\Repositories\POSTNLLabelRepository;
 
 class OrderLabelController extends Controller
 {
     public function __invoke(Request $request, Order $order)
     {
+        if(Auth::id() != $order->user_id){
+            return apiResponse(false,'Order not found');
+        }
         $this->authorize('canPrintLableViaApi', $order);
         DB::beginTransaction();
         $isPayingFlag = false;

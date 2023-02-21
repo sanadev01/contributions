@@ -42,7 +42,7 @@ class Client{
         ];
     }
     public function createPackage(Package $order)
-    {
+    {  
         $shippingRequest = (new Parcel())->getRequestBody($order);
         try {
             $response = Http::withHeaders($this->getHeaders())->put("$this->baseUri/parcels", $shippingRequest);

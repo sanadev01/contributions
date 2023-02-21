@@ -31,6 +31,7 @@ use App\Models\TicketComment;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\Product;
+use App\Models\Tax;
 use App\Policies\ActivityPolicy;
 use App\Policies\AddressPolicy;
 use App\Policies\AffiliateSalePolicy;
@@ -60,6 +61,7 @@ use App\Policies\TicketPolicy;
 use App\Policies\TransactionPolicy;
 use App\Policies\UserPolicy;
 use App\Policies\ProductPolicy;
+use App\Policies\TaxPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -100,6 +102,7 @@ class AuthServiceProvider extends ServiceProvider
         AffiliateSale::class => AffiliateSalePolicy::class,
         Activity::class => ActivityPolicy::class,
         Product::class => ProductPolicy::class,
+        Tax::class => TaxPolicy::class,
     ];
 
     /**

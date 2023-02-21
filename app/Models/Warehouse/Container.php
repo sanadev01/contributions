@@ -94,6 +94,8 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'Global eParcel Prime';
         }elseif($this->services_subclass_code == '773'){
             return 'Prime5';
+        }elseif($this->services_subclass_code == 'USPS Ground'){
+            return 'USPS Ground';
         }elseif($this->services_subclass_code == '734'){
             return 'Post Plus';
         }elseif($this->services_subclass_code == 'Priority International'){
