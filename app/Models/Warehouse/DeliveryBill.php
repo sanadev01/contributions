@@ -79,4 +79,11 @@ class DeliveryBill extends Model
         }
     }
 
+    public function isPostPlus()
+    {
+        if($this->containers->first()->services_subclass_code == ShippingService::Post_Plus_Registered){
+            return true;
+        }
+    }
+
 }

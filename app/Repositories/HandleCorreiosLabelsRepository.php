@@ -8,6 +8,7 @@ use App\Repositories\UPSLabelRepository;
 use App\Repositories\GePSLabelRepository;
 use App\Repositories\USPSLabelRepository;
 use App\Repositories\FedExLabelRepository;
+use App\Repositories\PostPlusLabelRepository;
 use App\Repositories\SwedenPostLabelRepository;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
@@ -41,6 +42,9 @@ class HandleCorreiosLabelsRepository
             }
             if ($this->order->shippingService->isCorreiosService()) {
                 return $this->corriesBrazilLabel();
+            }
+            if ($this->order->shippingService->isPostPlusService()) {
+                return $this->postPlusLabel();
             }
             // if ($this->order->shippingService->is_milli_express) {
             //     return $this->mileExpressLabel();
@@ -151,6 +155,13 @@ class HandleCorreiosLabelsRepository
         $upsLabelRepository = new UPSLabelRepository(); 
         $upsLabelRepository->run($this->order,$this->update); 
         return $this->renderLabel($this->request, $this->order, $upsLabelRepository->getUPSErrors());
+    }
+
+    public function postPlusLabel()
+    {
+        $postPlusLabelRepository = new PostPlusLabelRepository(); 
+        $postPlusLabelRepository->run($this->order,$this->update); //by default consider false
+        return $this->renderLabel($this->request, $this->order, $postPlusLabelRepository->getError());
     }
 
     public function renderLabel($request, $order, $error)
