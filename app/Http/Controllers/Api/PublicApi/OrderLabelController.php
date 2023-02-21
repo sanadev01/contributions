@@ -23,7 +23,6 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Repositories\ColombiaLabelRepository;
-use App\Repositories\PostPlusLabelRepository;
 use App\Repositories\POSTNLLabelRepository;
 
 class OrderLabelController extends Controller
