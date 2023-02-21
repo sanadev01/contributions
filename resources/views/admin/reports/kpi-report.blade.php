@@ -112,7 +112,6 @@
                                                     <td>{{ optional($data)['numero'] }}</td>
                                                     <td><span>{{ optional($data)['categoria'] }}</span></td>
                                                     <td>{{ optional(optional(optional($data)['evento'])[count($data['evento'])-1])['data'] }}</td>
-                                                    <td>{{ optional(optional(optional($data)['evento'])[count($data['evento'])-1])['data'] }}</td>
                                                     <td>{{ optional(optional(optional($data)['evento'])[0])['data'] }}</td>
                                                     <td>{{ sortTrackingEvents($data, null)['diffDates'] }} </td>
                                                     <td>{{ optional(optional(optional($data)['evento'])[0])['descricao'] }}</td>
