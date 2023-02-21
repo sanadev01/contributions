@@ -12,7 +12,7 @@ class IndexTable extends Component
     public function render()
     {
         return view('livewire.accrual-rate.index-table', [
-            'services' => $this->getServices(),
+            'services' => collect($this->getServices())->sortBy('name')->toArray(),
         ]);
     }
 
@@ -57,6 +57,14 @@ class IndexTable extends Component
         $this->services[9] = [
             'name' => 'Prime5',
             'value' => Package::SERVICE_CLASS_Prime5,
+        ];
+        $this->services[10] = [
+            'name' => 'Post Plus Registered',
+            'value' => Package::SERVICE_CLASS_Post_Plus_Registered,
+        ];
+        $this->services[11] = [
+            'name' => 'Post Plus EMS',
+            'value' => Package::SERVICE_CLASS_Post_Plus_EMS,
         ];
         return $this->services;
     }

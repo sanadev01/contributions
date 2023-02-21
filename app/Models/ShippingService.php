@@ -35,6 +35,10 @@ class ShippingService extends Model
     const GePS = 537;
     const GePS_EFormat = 540;
     const Prime5 = 773;
+    const USPS_GROUND = 05;
+    const Post_Plus_Registered = 734;
+    const Post_Plus_EMS = 367;
+
 
     protected $guarded = [];
 
@@ -151,6 +155,14 @@ class ShippingService extends Model
         return false;
     }
 
+    public function isPostPlusService()
+    {
+        if($this->service_sub_class == self::Post_Plus_Registered|| $this->service_sub_class == self::Post_Plus_EMS){
+            return true;
+        }
+        return false;
+    }
+
     public function isGePSeFormatService()
     {
         if (collect($this->gepsShippingServices())->contains($this->service_sub_class)) {
@@ -185,7 +197,8 @@ class ShippingService extends Model
             self::USPS_PRIORITY_INTERNATIONAL, 
             self::USPS_FIRSTCLASS_INTERNATIONAL, 
             self::UPS_GROUND, 
-            self::FEDEX_GROUND
+            self::FEDEX_GROUND,
+            self::USPS_GROUND,
         ];
     }
 
@@ -195,7 +208,8 @@ class ShippingService extends Model
             self::USPS_PRIORITY, 
             self::USPS_FIRSTCLASS,
             self::UPS_GROUND, 
-            self::FEDEX_GROUND
+            self::FEDEX_GROUND,
+            self::USPS_GROUND,
         ];
     }
 
@@ -258,4 +272,9 @@ class ShippingService extends Model
         }
         return false;
     }
+    public function getIsUspsGroundAttribute()
+    { 
+        return $this->service_sub_class == ShippingService::USPS_GROUND;
+    }
+    
 }

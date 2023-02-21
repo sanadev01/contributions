@@ -52,6 +52,8 @@ class OrderItemsController extends Controller
      */
     public function store(CreateRequest $request,Order $order)
     {
+        $shippingService = $order->shippingService;
+
         $this->authorize('editItems',$order);
 
         if ( !$order->recipient ){
@@ -67,18 +69,6 @@ class OrderItemsController extends Controller
             ]);
         }
         if($this->orderRepository->GePSService($request->shipping_service_id)){
-            if($order->measurement_unit == "lbs/in" && $order->weight > 4.40) {
-                session()->flash('alert-danger', 'Parcel Weight cannot be more than 4.40 LBS. Please Update Your Parcel');
-                return back()->withInput();
-            }
-            if($order->measurement_unit == "kg/cm" && $order->weight > 2) {
-                session()->flash('alert-danger', 'Parcel Weight cannot be more than 2 KG. Please Update Your Parcel');
-                return back()->withInput();
-            }
-            if($order->length+$order->width+$order->height > 90) {
-                session()->flash('alert-danger', 'Maximun Pacakge Size: The sum of the length, width and height cannot not be greater than 90 cm (l + w + h <= 90). Please Update Your Parcel');
-                return back()->withInput();
-            }
             $value = 0;
             if (count($request->items) >= 1) {
                 foreach ($request->items as $key => $item) {
@@ -90,9 +80,25 @@ class OrderItemsController extends Controller
                 return back()->withInput();
             }
         }
-        if(in_array($order->shipping_service_id, [ShippingService::GePS, ShippingService::GePS_EFormat, ShippingService::Prime5])  ) {
+        if(in_array($shippingService->service_sub_class, [ShippingService::GePS, ShippingService::GePS_EFormat, ShippingService::Prime5])  ) {
             if(count($request->items) > 2) {
                 session()->flash('alert-danger', 'More than 3 Items are Not Allowed with the Selected Service');
+                return back()->withInput();
+            }
+        }
+        if(in_array($shippingService->service_sub_class, [ShippingService::GePS, ShippingService::GePS_EFormat, ShippingService::Post_Plus_Registered])) {
+            if($order->measurement_unit == "lbs/in" && $order->weight > 4.40 || $order->measurement_unit == "kg/cm" && $order->weight > 2) {
+                session()->flash('alert-danger', 'Parcel Weight cannot be more than 4.40 LBS / 2 KG. Please Update Your Parcel');
+                return back()->withInput();
+            }
+            if($order->length+$order->width+$order->height > $shippingService->max_sum_of_all_sides) {
+                session()->flash('alert-danger', 'Maximun Pacakge Size: The sum of the length, width and height cannot not be greater than 90 cm (l + w + h <= 90). Please Update Your Parcel');
+                return back()->withInput();
+            }
+        }
+        if($shippingService->service_sub_class == ShippingService::Post_Plus_EMS) {
+            if($order->length+$order->width+$order->height > $shippingService->max_sum_of_all_sides) {
+                session()->flash('alert-danger', 'Maximun Pacakge Size: The sum of the length, width and height cannot not be greater than 300 cm (l + w + h <= 300). Please Update Your Parcel');
                 return back()->withInput();
             }
         }

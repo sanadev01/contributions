@@ -18,6 +18,7 @@ use App\Repositories\SwedenPostLabelRepository;
 use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
+use App\Repositories\PostPlusLabelRepository;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -26,6 +27,9 @@ class OrderLabelController extends Controller
 {
     public function __invoke(Request $request, Order $order)
     {
+        if(Auth::id() != $order->user_id){
+            return apiResponse(false,'Order not found');
+        }
         $this->authorize('canPrintLableViaApi', $order);
         DB::beginTransaction();
         $isPayingFlag = false;
@@ -68,7 +72,7 @@ class OrderLabelController extends Controller
 
             if ($order->recipient->country_id == Order::US) {
                 // For USPS
-                if ($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS) {
+                if ($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS || $order->shippingService->service_sub_class == ShippingService::USPS_GROUND) {
                     $uspsLabelRepository = new USPSLabelRepository();
                     $uspsLabelRepository->handle($order);
 
@@ -108,6 +112,14 @@ class OrderLabelController extends Controller
                     $swedenPostLabelRepository = new SwedenPostLabelRepository();
                     $swedenPostLabelRepository->get($order);
                     $error = $swedenPostLabelRepository->getError();
+                    if ($error){
+                        return $this->rollback($error);
+                    }
+                }
+                if ($order->shippingService->isPostPlusService()) {
+                    $postPlusLabelRepository = new PostPlusLabelRepository();
+                    $postPlusLabelRepository->get($order);
+                    $error = $postPlusLabelRepository->getError();
                     if ($error){
                         return $this->rollback($error);
                     }

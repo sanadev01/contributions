@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Repositories\Inventory\ProductRepository;
 use App\Http\Requests\Product\ProductCreateRequest;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -19,8 +20,8 @@ class ProductController extends Controller
     
     public function index(Request $request)
     {
-        $products = $this->productRepository->get($request);
-
+        $productsQuery = $this->productRepository->get($request); 
+        $products = $productsQuery->get();
         if ($products->isEmpty()) {
            return apiResponse(false, 'no product found');
         }
@@ -30,8 +31,10 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
+        if(Auth::id() != $product->user_id){
+            return apiResponse(false,'Product not found');
+        }
         $this->authorize('view', $product);
-
         return apiResponse(true, 'product found', $product);
     }
 
