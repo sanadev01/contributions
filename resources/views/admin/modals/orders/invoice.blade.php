@@ -1,7 +1,7 @@
 <section class="card invoice-page">
     <div class="col-12 row justify-content-between">
         <div class="py-0 mt-0 pl-3">
-            <p>Herco Freight Forwarding <br>
+            <p class="mb-0">Herco Freight Forwarding <br>
                 2200 NW 129th Ave Suite#100 <br>
                 Miami, FL 33182 DBA As 
             </p>
