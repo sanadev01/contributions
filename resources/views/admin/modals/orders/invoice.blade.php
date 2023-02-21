@@ -1,4 +1,4 @@
-<section class="card invoice-page">    
+<section class="card invoice-page">
     <div class="col-12 row justify-content-between">
         <div class="py-0 mt-0 pl-3">
             <p>Herco Freight Forwarding <br>
