@@ -22,7 +22,7 @@ class TaxRepository
 
     public function get(Request $request, $paginate = true, $pageSize = 50)
     {
-        $query = Tax::has('user')->has('order');
+        $query = Tax::has('user');
 
         if ($request->search) {
             $query->whereHas('user', function ($query) use ($request) {
@@ -139,6 +139,7 @@ class TaxRepository
             }
            
     }
+ 
 
     public function update(TaxUpdateRequest $request, Tax $tax)
     {
@@ -189,8 +190,7 @@ class TaxRepository
             session()->flash('alert-danger', 'Error' . $exception->getMessage());
             return null;
         }
-    }
-
+    } 
     public function delete()
     {
         //

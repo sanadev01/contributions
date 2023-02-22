@@ -166,6 +166,9 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('tax', TaxController::class);
         });
 
+        Route::namespace('Adjustment')->group(function(){
+            Route::resource('adjustment', AdjustmentController::class)->except(['index','destroy']);
+        });
 
         Route::resource('roles', RoleController::class);
         Route::resource('roles.permissions', RolePermissionController::class);

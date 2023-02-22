@@ -8,12 +8,14 @@
                     <div class="card-header d-flex justify-content-end">
                         @section('title', __('tax.Manage Tax Services'))
                         @can('create', App\Models\HandlingService::class)
-                            <button type="btn" onclick="toggleOrderPageSearch()" id="orderSearch" class="btn btn-primary mr-1">
-                                <i class="feather icon-search"></i>
-                            </button>
-                            <a href="{{ route('admin.tax.create') }}" class="btn btn-primary">
-                                @lang('tax.Pay Tax')
-                            </a>
+                        <div>
+                        <a href="{{ route('admin.adjustment.create') }}" class="btn btn-success">
+                            @lang('tax.Adjustment')
+                        </a>
+                        <a href="{{ route('admin.tax.create') }}" class="btn btn-primary">
+                            @lang('tax.Pay Tax')
+                        </a>
+                        </div>
                         @endcan
                     </div></br>
                     <div class="table-responsive-md mt-1 mr-4 ml-4 mb-5">
@@ -34,8 +36,9 @@
                                         </div>
                                     </form>
                                 </div>
-                                <div class="col-md-6 pr-0">
-                                    <form action="{{ route('admin.reports.tax-report') }}" method="GET" class="d-flex justify-content-end text-right">
+                                <div class="col-md-6">
+                                    <form action="{{ route('admin.reports.tax-report') }}" method="GET">
+                                        <input type="hidden" class="form-control" name="search" value="{{ old('search',request('search')) }}">
                                         <div class="row col-md-12">
                                             <div class="col-md-2 text-right">
                                                 <label>Start Date</label>
@@ -71,6 +74,7 @@
                                     <th>@lang('tax.Herco Buying USD') </th>
                                     <th>@lang('tax.Herco Selling USD')</th>
                                     <th>@lang('Profit USD')</th>
+                                    <th>@lang('tax.Adjustment')</th>
                                     <th>@lang('tax.Receipt')</th>
                                     <th>@lang('tax.Action')</th>
                                 </tr>
@@ -80,21 +84,20 @@
                                 <tr>
                                     <td>{{ $tax->user->name }}</td>
                                     <td>
-                                        <span>
-                                            <a href="#" title="Click to see Shipment" data-toggle="modal"
-                                                data-target="#hd-modal"
-                                                data-url="{{ route('admin.modals.parcel.shipment-info', $tax->order_id) }}">
-                                                WRH#: {{ $tax->order->warehouse_number }}
+                                        <span> 
+                                            <a href="#" title="Click to see Shipment" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.parcel.shipment-info',$tax->order_id) }}">
+                                              {{  $tax->order?" WRH#".$tax->order->warehouse_number:""}} 
                                             </a>
                                         </span>
                                     </td>
-                                    <td>{{ $tax->order->corrios_tracking_code }}</td>
+                                    <td>{{ optional($tax->order)->corrios_tracking_code }}</td>
                                     <td>{{ $tax->tax_payment }}</td>
                                     <td>{{ $tax->buying_br }}</td>
                                     <td>{{ $tax->selling_br }}</td>
                                     <td>{{ $tax->buying_usd }}</td>
                                     <td>{{ $tax->selling_usd }}</td>
                                     <td>{{ ( $tax->selling_usd - $tax->buying_usd ) }}</td>
+                                    <td>{{  $tax->adjustment }}</td>
                                     <td>
                                         @if(optional($tax->deposit)->depositAttchs)
                                             @foreach ($tax->deposit->depositAttchs as $attachedFile )
@@ -107,7 +110,7 @@
                                         @endif
                                     </td>
                                     <td class="d-flex">
-                                        <a href="{{ route('admin.tax.edit',$tax->id) }}" class="btn btn-primary mr-2" title="Edit">
+                                        <a href="{{ $tax->adjustment ? route('admin.adjustment.edit',$tax->id):route('admin.tax.edit',$tax->id) }}" class="btn btn-primary mr-2" title="Edit">
                                             <i class="feather icon-edit"></i>
                                         </a>
                                     </td>
