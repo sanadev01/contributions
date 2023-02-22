@@ -19,6 +19,7 @@ use App\Services\Correios\Services\Brazil\Client;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
+use phpDocumentor\Reflection\DocBlock\DescriptionFactory;
 
 /*
 |--------------------------------------------------------------------------
@@ -167,7 +168,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         });
 
         Route::namespace('Adjustment')->group(function(){
-            Route::resource('adjustment', AdjustmentController::class);
+            Route::resource('adjustment', AdjustmentController::class)->except(['index','destroy']);
         });
 
         Route::resource('roles', RoleController::class);
