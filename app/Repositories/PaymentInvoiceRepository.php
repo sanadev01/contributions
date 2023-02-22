@@ -46,6 +46,9 @@ class PaymentInvoiceRepository
         if ( $request->search ){
             $query->where('last_four_digits','LIKE',"%{$request->search}%")
             ->orWhere('uuid','LIKE',"%{$request->search}%")
+             ->orWhereHas('orders',function($query) use ($request){
+                return $query->where('warehouse_number','LIKE',"%{$request->search}%")->orWhere('id',$request->search);
+              })
             ->orWhereHas('user',function($query) use($request) {
                 return $query->Where('name','LIKE',"%{$request->search}%");
             });

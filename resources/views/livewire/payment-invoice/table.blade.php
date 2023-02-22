@@ -28,7 +28,7 @@
                 @if ($this->search) style="display: flex !important;" @endif id="logSearch">
                 <div class="col-6 pl-2">
                     <label>Search</label>
-                    <input type="search" class="form-control" wire:model.defer="search">
+                    <input type="search" class="form-control" wire:model.defer="search" placeholder="Search invoice, by user name  and order id">
                 </div>
                 <div class="mt-1">
                     <button type="submit" class="btn btn-primary mt-4">

@@ -15,6 +15,7 @@ class Table extends Component
     public $search;
     public $user;
     public $uuid;
+    public $orderID;
     public $last_four_digits;
     public $type;
     public $is_paid;
@@ -43,6 +44,7 @@ class Table extends Component
         return (new PaymentInvoiceRepository)->get(request()->merge([
             'user' => $this->user,
             'uuid' => $this->uuid,
+            'orderID'=>$this->orderID,
             'last_four_digits' => $this->last_four_digits,
             'type' => $this->type,
             'is_paid' => $this->is_paid,
