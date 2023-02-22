@@ -6,32 +6,27 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">@lang('orders.Key Performance Indicator Report')</h4>
-                    </div>
+                    </div><br>
                     <div class="card-content">
                         <div class="card-body">
-                            <div class="row mb-4 no-print ">
-                                <div class="col-1">
-                                    <select class="form-control" wire:model="pageSize">
-                                        <option value="1">1</option>
-                                        <option value="5">5</option>
-                                        <option value="10">10</option>
-                                        <option value="20">20</option>
-                                        <option value="50">50</option>
-                                        <option value="100">100</option>
-                                        <option value="300">300</option>
-                                    </select>
+                            <div class="row col-12">
+                                <div class="offset-3 col-md-3">
+                                    <h5>Track Tracking Multiple</h5>
                                 </div>
-                                <div class="col-11 text-right">
+                                <div class="col-md-3 ml-5">
+                                    <h5>Search Per Date Range</h5>
+                                </div>
+                            </div>
+                            <div class="row mb-4 no-print">
+                                <div class="col-12 text-right">
                                     <form action="{{ route('admin.reports.kpi-report.index') }}" method="GET">
                                         @csrf
                                         <div class="row">
-                                            <div class="offset-1 col-md-1">
-                                                <div class="row mt-2 pr-0">
-                                                    <label>Tracking Codes</label>
-                                                </div>
+                                            <div class="col-md-3">
+                                                <input type="text" class="form-control" id="search" placeholder="Type to search">
                                             </div>
                                             <div class="col-md-3">
-                                                <div class="col-12">
+                                                <div class="col-12 p-0">
                                                     <div class="controls">
                                                         <div class="col-md-12 ml-0 pl-0 pr-0">
                                                             <textarea type="text" placeholder="Please Enter Tracking Codes" rows="3" 
@@ -76,7 +71,7 @@
                                                     <input type="hidden" name="order" value="{{ collect($trackings['return']['objeto']) }}">
                                                     <input type="hidden" name="trackingCodeUser" value="{{ collect($trackingCodeUser) }}">
                                                 @endif   
-                                                <div class="col-md-1 justify-content-end">
+                                                <div class="col-md-1">
                                                     <button class="btn btn-success" {{ !empty($trackings)? '' : 'disabled' }}  title="@lang('orders.import-excel.Download')">
                                                         <i class="fa fa-arrow-down"></i>
                                                     </button>
@@ -86,7 +81,7 @@
                                     
                                 </div>
                             </div>
-                            <table class="table mb-0 table-responsive-md">
+                            <table class="table mb-0 table-responsive-md" id="kpi-report">
                                 <thead>
                                     <tr>
                                         <th>User</th>
@@ -99,7 +94,6 @@
                                         <th>@lang('orders.Taxed')</th>
                                         <th>@lang('orders.Delivered')</th>
                                         <th>@lang('orders.Returned')</th>
-
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -127,7 +121,6 @@
                                     @endif
                                 </tbody>
                             </table>
-                            
                             @include('layouts.livewire.loading')
                         </div>
                     </div>
@@ -138,4 +131,16 @@
 @endsection
 @section('modal')
 <x-modal />
+@endsection
+@section('js')
+    <script>
+        var $rows = $('#kpi-report tr');
+        $('#search').keyup(function() {
+            var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+            $rows.show().filter(function() {
+                var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+                return !~text.indexOf(val);
+            }).hide();
+        });
+    </script>
 @endsection
