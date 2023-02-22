@@ -47,7 +47,7 @@ class KPIReportsRepository
             $orders->where('order_date','<=',$endDate);
         }
         if ( $request->trackingNumbers ){
-            $trackNos = (explode(",",$request->trackingNumbers));
+            $trackNos = (str_split($request->trackingNumbers,13));
             $orders->whereIn('corrios_tracking_code',$trackNos);
         }
 
