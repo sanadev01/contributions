@@ -94,7 +94,7 @@ return [
         'Charge-msg2' => 'for your parcel',
         'Proceed Order' => 'Proceed Order',
         'Decline' => 'Decline',
-        'Item Limit' => 'Please do not add more than 3 items.',
+        'Item Limit' => 'Please do not add more than 5 items.',
         
     ],
     'services' => [
