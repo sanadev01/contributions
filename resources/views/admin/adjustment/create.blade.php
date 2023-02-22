@@ -29,7 +29,7 @@
                                     <div class="form-group col-sm-6 col-md-3">
                                         <div class="controls">
                                             <label>  Ajustment.<span class="text-danger">*</span></label>
-                                            <input type="number" placeholder="Adjustment" rows="2" step=".01"
+                                            <input type="number" placeholder="Please enter adjustment price" rows="2" step=".01"
                                            class="form-control"
                                                 name="adjustment">{{ old('adjustment',request('adjustment')) }}</input>
                                             @error('adjustment')
