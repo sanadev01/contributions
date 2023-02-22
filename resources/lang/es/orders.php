@@ -82,7 +82,7 @@ return [
         'Charge-msg2' => 'para su paquete',
         'Proceed Order' => 'Continuar pedido',
         'Decline' => 'Rechazar',
-        'Item Limit' => 'Por favor, no agregue más de 3 artículos.',
+        'Item Limit' => 'Por favor, no agregue más de 5 artículos.',
 
     ],
     'services' => [
