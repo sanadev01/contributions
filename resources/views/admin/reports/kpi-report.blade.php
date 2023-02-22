@@ -1,5 +1,6 @@
 @extends('layouts.master')
 @section('page')
+<meta name="csrf-token" content="{{ csrf_token() }}">
     <section>
         <div class="row">
             <div class="col-12">

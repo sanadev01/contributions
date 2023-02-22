@@ -2,6 +2,7 @@
 namespace App\Http\Resources\Deposit;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\Deposit\OrderResource;
 use App\Models\Order;
 use Carbon\Carbon;
 

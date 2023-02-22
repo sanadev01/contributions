@@ -22,6 +22,8 @@ use App\Repositories\PostPlusLabelRepository;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Repositories\ColombiaLabelRepository;
+use App\Repositories\POSTNLLabelRepository;
 
 class OrderLabelController extends Controller
 {
@@ -52,6 +54,7 @@ class OrderLabelController extends Controller
             if ($order->shippingService->is_usps_priority_international || $order->shippingService->is_usps_firstclass_international) {
                 $uspsLabelRepository = new USPSLabelRepository();
                 $uspsLabelRepository->handle($order);
+
                 $error = $uspsLabelRepository->getUSPSErrors();
                 if (!$error) {
                     return $this->commit($order);
