@@ -472,12 +472,7 @@ class PermissionSeeder extends Seeder
                 'slug' => 'update_tax',
                 'group' => 'Tax',
                 'description' => 'User can update tax'
-            ], 
-            [
-                'slug' => 'refund_tax',
-                'group' => 'Tax',
-                'description' => 'User can refund tax'
-            ], 
+            ],
         ];
     }
 }
