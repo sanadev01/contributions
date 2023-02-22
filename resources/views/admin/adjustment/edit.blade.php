@@ -27,7 +27,7 @@
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('tax.Adjustment')<span class="text-danger">*</span></label>
                                     <div class="col-md-4">
-                                        <input type="number" step="0.01" class="form-control taxPayment" name="adjustment" value="{{ old('adjustment', $tax->adjustment) }}" placeholder="@lang('tax.adjustment')">
+                                        <input type="number" step="0.01" class="form-control taxPayment" name="adjustment" value="{{ old('adjustment', $tax->adjustment) }}" placeholder="Please enter adjustment price">
                                         <div class="help-block"></div>
                                     </div>
                                 </div>   
