@@ -47,7 +47,7 @@ class Client{
         try {
             $response = Http::withHeaders($this->getHeaders())->put("$this->baseUri/parcels", $shippingRequest);
             $data = json_decode($response);
-            if(optional(optional($data->status)->status) == "Created") {
+            if($data->references->printId) {
                 $trackingNumber = $data->identifiers->parcelNr;
                 $printId = $data->prints[0]->id;
                 if($trackingNumber && $printId) {
