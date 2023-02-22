@@ -49,7 +49,9 @@
                     <input type="search" wire:model.debounce.500ms="user" class="form-control">
                 </th>
                 @endadmin
-                <th></th>
+                <th>
+                    <input type="text" wire:model.debounce.500ms="orderID" class="form-control">
+                </th>
                 <th></th>
                 <th>
                     <input type="search" wire:model.debounce.500ms="last_four_digits" class="form-control">
