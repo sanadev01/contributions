@@ -35,7 +35,7 @@
                                                 <div class="col-12">
                                                     <div class="controls">
                                                         <div class="col-md-12 ml-0 pl-0 pr-0">
-                                                            <textarea type="text" placeholder="Please Enter Tracking Codes" rows="2" 
+                                                            <textarea type="text" placeholder="Please Enter Tracking Codes" rows="3" 
                                                             class="form-control"
                                                                 name="trackingNumbers">{{ old('trackingNumbers',request('trackingNumbers')) }}</textarea>
                                                             @error('trackingNumbers')
