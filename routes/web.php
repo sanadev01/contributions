@@ -19,7 +19,6 @@ use App\Services\Correios\Services\Brazil\Client;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
-use phpDocumentor\Reflection\DocBlock\DescriptionFactory;
 
 /*
 |--------------------------------------------------------------------------
