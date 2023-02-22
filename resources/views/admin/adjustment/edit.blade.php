@@ -47,32 +47,3 @@
         </div>
     </section>
 @endsection
-@section('js')
-    <script>
-        document.addEventListener('DOMContentLoaded', function () { 
-            
-            $('body').on('change','input.taxPayment ,input.sellingBRRate ,  input.buyingBRRate ',function(){ 
-                let sellingBRRate = $('input.sellingBRRate').val();
-                let  buyingBRRate = $('input.buyingBRRate').val(); 
- 
-                let taxPayment = $('input.taxPayment').val();
-
-                let buyingUSD = parseFloat(taxPayment) / parseFloat(buyingBRRate); 
-                let sellingUSD = parseFloat(taxPayment) / parseFloat(sellingBRRate);
-              
-                let profit = parseFloat(sellingUSD) - parseFloat(buyingUSD);
-
-                $(this).closest('.orders').find('.profit').val(
-                    isNaN(profit) ? 0 : (profit).toFixed(2)
-                );
-                $(this).closest('.orders').find('.sellingUSD').val(
-                    isNaN(sellingUSD)|| !isFinite(sellingUSD) ? 0 : (sellingUSD).toFixed(2)
-                );
-                $(this).closest('.orders').find('.buyingUSD').val(
-                    isNaN(buyingUSD) || !isFinite(buyingUSD)? 0 : (buyingUSD).toFixed(2) 
-                );
-
-            });
-        })
-    </script>
-@endsection

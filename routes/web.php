@@ -155,11 +155,11 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         Route::resource('shcode-export', ShCodeImportExportController::class)->only(['index', 'create','store']);
 
         Route::namespace('Tax')->group(function(){
-            Route::resource('tax', TaxController::class);
+            Route::resource('tax', TaxController::class)->except(['show','destroy']);
         });
 
         Route::namespace('Adjustment')->group(function(){
-            Route::resource('adjustment', AdjustmentController::class);
+            Route::resource('adjustment', AdjustmentController::class)->except(['index','show','destroy']);
         });
 
         Route::resource('roles', RoleController::class);
