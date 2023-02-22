@@ -132,10 +132,10 @@ class FedExService
                             'companyName' => 'HERCO SUITE#100'
                         ],
                         'address' => [
-                            'streetLines' => ['2200 NW 129TH AVE'],
+                            'streetLines' => ['8305 NW 116TH AVENUE'],
                             'city' => 'Miami',
                             'stateOrProvinceCode' => 'FL',
-                            'postalCode' => 33182,
+                            'postalCode' => 33178,
                             'countryCode' => 'US',
                         ],
                     ]
@@ -302,7 +302,7 @@ class FedExService
             'address' => [
                 'city' => 'Miami',
                 'stateOrProvinceCode' => 'FL',
-                'postalCode' => 33182,
+                'postalCode' => 33178,
                 'countryCode' => 'US',
             ]
         ];
