@@ -193,5 +193,8 @@
     .red{
         color:#ff5a5a
     }
+    .font-sans{
+        font-family: sans-serif;
+    }
 </style>
 @yield('custom-css')

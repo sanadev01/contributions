@@ -172,9 +172,9 @@ class DomesticLabelRepository
         $recipient->email = 'homedelivery@homedeliverybr.com';
         $recipient->country_id = Country::US;
         $recipient->state_id = State::FL;
-        $recipient->address = '2200 NW 129TH AVE';
+        $recipient->address = '8305 NW 116TH AVENUE';
         $recipient->city = 'Miami';
-        $recipient->zipcode = '33182';
+        $recipient->zipcode = '33178';
         $recipient->account_type = 'individual';
 
         return $recipient;
