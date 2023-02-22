@@ -73,8 +73,10 @@ class OrderItemsController extends Controller
      */
     public function store(CreateRequest $request,Order $order)
     {
-        $shippingService = $order->shippingService;
-        
+        $shippingService = ShippingService::find($request->shipping_service_id);
+
+        $this->authorize('editItems',$order);
+
         if ( !$order->recipient ){
             abort(404);
         }
@@ -100,8 +102,8 @@ class OrderItemsController extends Controller
             }
         }
         if(in_array($shippingService->service_sub_class, [ShippingService::GePS, ShippingService::GePS_EFormat, ShippingService::Prime5])  ) {
-            if(count($request->items) > 2) {
-                session()->flash('alert-danger', 'More than 3 Items are Not Allowed with the Selected Service');
+            if(count($request->items) > 4) {
+                session()->flash('alert-danger', 'More than 5 Items are Not Allowed with the Selected Service');
                 return back()->withInput();
             }
         }
