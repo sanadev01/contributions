@@ -29,13 +29,13 @@
                     <div class="card p-2">
                         <div class="card-header pb-0">
                             <h2 class="mb-2 text-center w-100">
-                                WorldWide Calculator
+                                World Wide Calculator
                             </h2>
                         </div>
                         <form action="{{route('us-calculator.store')}}" method="POST">
                             @csrf
 
-                            <div class="card-body">
+                            <div class="card-body font-sans">
                                 <div class="row justify-content-center">
                                     <div class="col-md-3">
                                         <div class="input-group">

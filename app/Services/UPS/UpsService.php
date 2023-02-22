@@ -118,10 +118,10 @@ class UpsService
                             'Number' => '+13058885191'
                         ],
                         'Address' => [
-                            'AddressLine' => '2200 NW 129TH AVE',
+                            'AddressLine' => '8305 NW 116TH AVENUE',
                             'City' => 'Miami',
                             'StateProvinceCode' => 'FL',
-                            'PostalCode' => '33182',
+                            'PostalCode' => '33178',
                             'CountryCode' => 'US',
                         ],
                     ],
@@ -702,10 +702,10 @@ class UpsService
         return [
             'Name' => 'HERCO SUITE#100',
             'Address' => [
-                'AddressLine' => '2200 NW 129TH AVE',
+                'AddressLine' => '8305 NW 116TH AVENUE',
                 'City' => 'Miami',
                 'StateProvinceCode' => 'FL',
-                'PostalCode' => '33182',
+                'PostalCode' => '33178',
                 'CountryCode' => 'US',
             ],
         ];

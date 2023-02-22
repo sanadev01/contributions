@@ -1024,5 +1024,8 @@
     .dropdown-menu.overlap-menu {
         right: 37px;
     }
+    .font-sans{
+        font-family: sans-serif;
+    }
 </style>
 @yield('custom-css')
