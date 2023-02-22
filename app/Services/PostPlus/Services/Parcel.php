@@ -32,7 +32,7 @@ class Parcel {
                ],
                'additionalInfo' => [
                   'serviceCode' => "UZPO",
-                  'taxIdentification' => ($order->recipient->tax_id) ? $order->recipient->tax_id: '',
+                  'taxIdentification' => "TAXID",
                ],
                //Recipient Information
                'receiver' => [
@@ -63,6 +63,7 @@ class Parcel {
       
         if (count($order->items) >= 1) {
          $totalQuantity = $order->items->sum('quantity');
+         $totalQuantity = $order->items->sum('quantity');
             foreach ($order->items as $key => $item) {
                 $itemToPush = [];
                 $originCountryCode = optional($order->senderCountry)->code;
@@ -77,6 +78,5 @@ class Parcel {
         }
         return $items;
    }
-
 
 }

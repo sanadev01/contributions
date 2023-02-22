@@ -53,7 +53,6 @@
     <hr>
     @include('layouts.livewire.loading')
 </div>
-
 <script>
     window.addEventListener('alert', event => { 
                  toastr[event.detail.type](event.detail.message, 

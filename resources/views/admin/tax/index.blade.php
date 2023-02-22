@@ -5,10 +5,8 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
-                        <h4 class="mb-0">
-                            @lang('tax.Manage Tax Services')
-                        </h4>
+                    <div class="card-header d-flex justify-content-end">
+                        @section('title', __('tax.Manage Tax Services'))
                         @can('create', App\Models\HandlingService::class)
                         <div>
                         <a href="{{ route('admin.adjustment.create') }}" class="btn btn-success">
@@ -20,8 +18,9 @@
                         </div>
                         @endcan
                     </div></br>
-                    <div class="table-responsive-md mt-1 mr-4 ml-4">
-                        <div class="filters p-2">
+                    <div class="table-responsive-md mt-1 mr-4 ml-4 mb-5">
+                        <div class="filters p-2" id="singleSearch"
+                            @if (old('search', request('search'))) style="display: block" @endif>
                             <div class="row">
                                 <div class="col-md-6">
                                     <form action="" method="GET">
@@ -54,7 +53,7 @@
                                                 <input type="date" class="form-control" name="end_date" >
                                             </div>
                                             <div class="col-md-2">
-                                                <button class="btn btn-primary">
+                                                <button class="btn btn-success">
                                                     Download
                                                 </button>
                                             </div>
@@ -63,7 +62,7 @@
                                 </div>
                             </div>
                         </div>
-                        <table class="table mb-0 table-responsive-md">
+                        <table class="table mb-0 table-bordered table-responsive-sm">
                             <thead>
                                 <tr>
                                     <th>@lang('tax.User Name')</th>
@@ -102,7 +101,9 @@
                                     <td>
                                         @if(optional($tax->deposit)->depositAttchs)
                                             @foreach ($tax->deposit->depositAttchs as $attachedFile )
+                                            <div class="{{$loop->first? '':'mt-2'}}"> 
                                                 <a target="_blank" href="{{ $attachedFile->getPath() }}">Download</a><br>
+                                            </div>
                                             @endforeach
                                         @else
                                             Not Found
@@ -122,8 +123,8 @@
                         {{ $taxes->links('pagination::bootstrap-4') }}
                     </div>
                 </div>
-
             </div>
+
         </div>
     </section>
 @endsection
