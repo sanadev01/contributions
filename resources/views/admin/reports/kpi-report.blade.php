@@ -1,4 +1,11 @@
 @extends('layouts.master')
+@section('css')
+    <style>
+        .dataTables_filter {
+            display: none;
+        }
+    </style>
+@endsection
 @section('page')
     <section>
         <div class="row">
@@ -151,6 +158,7 @@
                 $(this).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
             });
             var table = $('#kpi-report').DataTable({
+                "paging": false,
                 initComplete: function () {
                     this.api()
                         .columns()
@@ -164,7 +172,25 @@
                             });
                         });
                 },
+                "info": false
             });
+
+            var totalRecords = $('#kpi-report tbody').find('tr').length;
+            var taxed = 0;
+            var returned = 0;
+            var delivered = 0;
+            $("table > tbody > tr").each(function () {
+                if($(this).find('td').eq(7).text() == 'Yes' ){
+                  taxed++;  
+                }
+                if($(this).find('td').eq(8).text() == 'Yes' ){
+                  returned++;  
+                }
+                if($(this).find('td').eq(9).text() == 'Yes' ){
+                  delivered++;  
+                }
+            });
+            console.log([taxed, returned, delivered]);
         });
     </script>
 @endsection

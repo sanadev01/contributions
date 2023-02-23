@@ -36,8 +36,8 @@ class KPIReport extends AbstractExportService
                     $user = $this->trackingCodeUser[optional($data)['numero']];
                     if($user)
                     $this->setCellValue('A'.$row, $user['name'] .''. $user['last_name'] .' '. $user['pobox_number'] );
-
-                    $this->setCellValue('B'.$row, optional($data)['categoria']);
+                    
+                    $this->setCellValue('B'.$row, optional($data)['numero']);
                     $this->setCellValue('C'.$row, optional($data)['categoria']);
                     $this->setCellValue('D'.$row, optional(optional(optional($data)['evento'])[count($data['evento'])-1])['data']);
                     $this->setCellValue('E'.$row, optional(optional(optional($data)['evento'])[0])['data']);
