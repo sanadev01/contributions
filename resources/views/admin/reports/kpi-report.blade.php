@@ -25,64 +25,82 @@
                                 </div>
                             </div>
                             <div class="row mb-4 no-print">
-                                <div class="col-12 text-right">
-                                    <form action="{{ route('admin.reports.kpi-report.index') }}" method="GET">
-                                        @csrf
-                                        <div class="row">
-                                            <div class="col-md-3">
-                                                <div class="col-12 p-0">
-                                                    <div class="controls">
-                                                        <div class="col-md-12 ml-0 pl-0 pr-0">
-                                                            <textarea type="text" placeholder="Please Enter Tracking Codes" rows="3" 
-                                                            class="form-control"
-                                                                name="trackingNumbers">{{ old('trackingNumbers',request('trackingNumbers')) }}</textarea>
-                                                            @error('trackingNumbers')
-                                                                <div class="help-block text-danger"> {{ $message }} </div>
-                                                            @enderror
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="col-md-9">
+                                            <div class="row">
+                                                <form action="{{ route('admin.reports.kpi-report.index') }}" method="GET">
+                                                    @csrf
+                                                    <div class="col-md-12">
+                                                        <div class="col-md-3">
+                                                            <div class="col-12 p-0">
+                                                                <div class="controls">
+                                                                    <div class="col-md-12 ml-0 pl-0 pr-0">
+                                                                        <textarea type="text" placeholder="Please Enter Tracking Codes" rows="3" 
+                                                                        class="form-control"
+                                                                            name="trackingNumbers">{{ old('trackingNumbers',request('trackingNumbers')) }}</textarea>
+                                                                        @error('trackingNumbers')
+                                                                            <div class="help-block text-danger"> {{ $message }} </div>
+                                                                        @enderror
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="row">
+                                                                <div class="col-md-4 mt-2">
+                                                                    <label>Start Date</label>
+                                                                </div>
+                                                                <div class="col-md-8 pl-0 pr-0">
+                                                                    <input type="date" name="start_date" class="form-control" id="startDate" placeholder="mm/dd/yyyy">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="row">
+                                                                <div class="col-md-4 mt-2 pl-0">
+                                                                    <label>End Date</label>
+                                                                </div>
+                                                                <div class="col-md-8 pl-0">
+                                                                    <input type="date" name="end_date" class="form-control" id="endDate" placeholder="mm/dd/yyyy">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <button class="btn btn-primary btn-md">
+                                                                @lang('user.Search')
+                                                            </button>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="row">
-                                                    <div class="col-md-4 mt-2">
-                                                        <label>Start Date</label>
+                                                </form>
+                                                <form action="{{ route('admin.reports.kpi-report.store') }}" method="POST">
+                                                    @csrf
+                                                    @if($trackings)
+                                                        <input type="hidden" name="order" value="{{ collect($trackings['return']['objeto']) }}">
+                                                        <input type="hidden" name="trackingCodeUser" value="{{ collect($trackingCodeUser) }}">
+                                                    @endif   
+                                                    <div class="col-md-1">
+                                                        <button class="btn btn-success" {{ !empty($trackings)? '' : 'disabled' }}  title="@lang('orders.import-excel.Download')">
+                                                            <i class="fa fa-arrow-down"></i>
+                                                        </button>
                                                     </div>
-                                                    <div class="col-md-8 pl-0 pr-0">
-                                                        <input type="date" name="start_date" class="form-control" id="startDate" placeholder="mm/dd/yyyy">
-                                                    </div>
-                                                </div>
+                                                </form>
+                                                
                                             </div>
-                                            <div class="col-md-2">
-                                                <div class="row">
-                                                    <div class="col-md-4 mt-2 pl-0">
-                                                        <label>End Date</label>
-                                                    </div>
-                                                    <div class="col-md-8 pl-0">
-                                                        <input type="date" name="end_date" class="form-control" id="endDate" placeholder="mm/dd/yyyy">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-1">
-                                                <button class="btn btn-primary btn-md">
-                                                    @lang('user.Search')
-                                                </button>
-                                            </div>
-                                            </form>
-                                            <form action="{{ route('admin.reports.kpi-report.store') }}" method="POST">
-                                                @csrf
-                                                @if($trackings)
-                                                    <input type="hidden" name="order" value="{{ collect($trackings['return']['objeto']) }}">
-                                                    <input type="hidden" name="trackingCodeUser" value="{{ collect($trackingCodeUser) }}">
-                                                @endif   
-                                                <div class="col-md-1">
-                                                    <button class="btn btn-success" {{ !empty($trackings)? '' : 'disabled' }}  title="@lang('orders.import-excel.Download')">
-                                                        <i class="fa fa-arrow-down"></i>
-                                                    </button>
-                                                </div>
-                                            </form>
                                         </div>
-                                    
+                                        <div class="col-md-3">
+                                            <div class="row col-12">
+                                                <div class="col-6">
+                                                    <h4><span class="p-2 col-12 badge badge-primary mr-2 " id="total">Total Orders</span></h4>
+                                                    <h4><span class="p-2 col-12 badge badge-success mr-2 text-dark" id="delivered">Delivered</span></h4>
+                                                </div>
+                                                <div class="col-6">
+                                                    <h4><span class="p-2 badge badge-info mr-2 text-dark col-12" id="taxed">Taxed</span></h4>
+                                                    <h4><span class="p-2 badge badge-danger mr-2 col-12" id="returned">Returned</span></h4>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <table class="table mb-0 table-responsive-md" id="kpi-report">
@@ -190,7 +208,13 @@
                   delivered++;  
                 }
             });
-            console.log([taxed, returned, delivered]);
+            var taxOrder = (taxed / totalRecords * 100).toFixed(2);
+            var returnOrder = (returned / totalRecords * 100).toFixed(2); 
+            var deliveredOrder = (delivered / totalRecords * 100).toFixed(2);
+            $('#total').html('Total Orders: '+totalRecords);
+            $('#delivered').html('Delivered: '+ deliveredOrder + ' %');
+            $('#taxed').html('Taxed: '+ taxOrder + ' %');
+            $('#returned').html('Returned: '+ returnOrder + ' %');
         });
     </script>
 @endsection
