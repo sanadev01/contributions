@@ -1,4 +1,11 @@
 @extends('layouts.master')
+@section('css')
+    <style>
+        .dataTables_filter {
+            display: none;
+        }
+    </style>
+@endsection
 @section('page')
     <section>
         <div class="row">
@@ -10,10 +17,10 @@
                     <div class="card-content">
                         <div class="card-body">
                             <div class="row col-12">
-                                <div class="offset-3 col-md-3">
+                                <div class="col-md-3 p-0">
                                     <h5>Track Tracking Multiple</h5>
                                 </div>
-                                <div class="col-md-3 ml-5">
+                                <div class="col-md-3 p-0 ml-5">
                                     <h5>Search Per Date Range</h5>
                                 </div>
                             </div>
@@ -22,9 +29,6 @@
                                     <form action="{{ route('admin.reports.kpi-report.index') }}" method="GET">
                                         @csrf
                                         <div class="row">
-                                            <div class="col-md-3">
-                                                <input type="text" class="form-control" id="search" placeholder="Type to search">
-                                            </div>
                                             <div class="col-md-3">
                                                 <div class="col-12 p-0">
                                                     <div class="controls">
@@ -96,6 +100,20 @@
                                         <th>@lang('orders.Returned')</th>
                                     </tr>
                                 </thead>
+                                <tfoot class="search-header">
+                                    <tr>
+                                        <th>User</th>
+                                        <th>Tracking</th>
+                                        <th>Type Package</th>
+                                        <th>First Event</th>
+                                        <th>Last Event</th>
+                                        <th>Days Between</th>
+                                        <th>Last Event</th>
+                                        <th>Taxed</th>
+                                        <th>Delivered</th>
+                                        <th>Returned</th>
+                                    </tr>
+                                </tfoot>
                                 <tbody>
                                     @if($trackings)
                                         @foreach($trackings['return']['objeto'] as $data)
@@ -134,13 +152,45 @@
 @endsection
 @section('js')
     <script>
-        var $rows = $('#kpi-report tr');
-        $('#search').keyup(function() {
-            var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
-            $rows.show().filter(function() {
-                var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
-                return !~text.indexOf(val);
-            }).hide();
+        $(document).ready(function () {
+            $('#kpi-report tfoot th').each(function () {
+                var title = $(this).text();
+                $(this).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
+            });
+            var table = $('#kpi-report').DataTable({
+                "paging": false,
+                initComplete: function () {
+                    this.api()
+                        .columns()
+                        .every(function () {
+                            var that = this;
+        
+                            $('input', this.footer()).on('keyup change clear', function () {
+                                if (that.search() !== this.value) {
+                                    that.search(this.value).draw();
+                                }
+                            });
+                        });
+                },
+                "info": false
+            });
+
+            var totalRecords = $('#kpi-report tbody').find('tr').length;
+            var taxed = 0;
+            var returned = 0;
+            var delivered = 0;
+            $("table > tbody > tr").each(function () {
+                if($(this).find('td').eq(7).text() == 'Yes' ){
+                  taxed++;  
+                }
+                if($(this).find('td').eq(8).text() == 'Yes' ){
+                  returned++;  
+                }
+                if($(this).find('td').eq(9).text() == 'Yes' ){
+                  delivered++;  
+                }
+            });
+            console.log([taxed, returned, delivered]);
         });
     </script>
 @endsection
