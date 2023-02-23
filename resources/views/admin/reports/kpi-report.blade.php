@@ -83,7 +83,7 @@
                             </div>
                             <table class="table mb-0 table-responsive-md" id="kpi-report">
                                 <thead>
-                                    <tr>
+                                    {{-- <tr>
                                         <th>User</th>
                                         <th>@lang('orders.Tracking')</th>
                                         <th>@lang('orders.Type Package')</th>
@@ -94,6 +94,18 @@
                                         <th>@lang('orders.Taxed')</th>
                                         <th>@lang('orders.Delivered')</th>
                                         <th>@lang('orders.Returned')</th>
+                                    </tr> --}}
+                                    <tr>
+                                        <th>User</th>
+                                        <th>Tracking</th>
+                                        <th>Type Package</th>
+                                        <th>First Event</th>
+                                        <th>Last Event</th>
+                                        <th>Days Between</th>
+                                        <th>Last Event</th>
+                                        <th>Taxed</th>
+                                        <th>Delivered</th>
+                                        <th>Returned</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -134,13 +146,28 @@
 @endsection
 @section('js')
     <script>
-        var $rows = $('#kpi-report tr');
-        $('#search').keyup(function() {
-            var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
-            $rows.show().filter(function() {
-                var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
-                return !~text.indexOf(val);
-            }).hide();
+        $(document).ready(function () {
+            $('#kpi-report thead th').each(function () {
+                var title = $(this).text();
+                // console.log(text);
+                $(this).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
+            });
+        
+            var table = $('#kpi-report').DataTable({
+                initComplete: function () {
+                    this.api()
+                        .columns()
+                        .every(function () {
+                            var that = this;
+        
+                            $('input', this.footer()).on('keyup change clear', function () {
+                                if (that.search() !== this.value) {
+                                    that.search(this.value).draw();
+                                }
+                            });
+                        });
+                },
+            });
         });
     </script>
 @endsection
