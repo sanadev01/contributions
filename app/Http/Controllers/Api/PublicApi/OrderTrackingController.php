@@ -23,7 +23,7 @@ class OrderTrackingController extends Controller
     
                     $this->trackings = $this->trackings->toArray();
                     
-                    return apiResponse(true,'Order found', ['hdTrackings'=> $this->trackings, 'apiTrakings' => null ]);
+                    return apiResponse(true,'Order found', ['hdTrackings'=> $this->trackings, 'apiTrackings' => null ]);
                 }
                 if($response['service'] == 'USPS')
                 {
@@ -31,22 +31,22 @@ class OrderTrackingController extends Controller
     
                     $this->trackings = $this->trackings->toArray();
                     
-                    return apiResponse(true,'Order found',['hdTrackings'=> $this->trackings, 'apiTrakings' => null ]);
+                    return apiResponse(true,'Order found',['hdTrackings'=> $this->trackings, 'apiTrackings' => null ]);
                 }
                 if($response['service'] == 'Correios_Brazil')
                 {
                     $this->trackings = $response['trackings']->toArray();
                     $apiTracking = $response['api_trackings']->toArray(); 
-                    return apiResponse(true,'Order found',['hdTrackings'=> $this->trackings, 'apiTrakings' => $apiTracking]); 
+                    return apiResponse(true,'Order found',['hdTrackings'=> $this->trackings, 'apiTrackings' => $apiTracking]); 
                 }
                 
                 $this->trackings = $response['trackings']->toArray();
     
-                return apiResponse(true,'Order found',['hdTrackings'=> $this->trackings , 'apiTrakings' => null]);
+                return apiResponse(true,'Order found',['hdTrackings'=> $this->trackings , 'apiTrackings' => null]);
             }
         }
 
-        return apiResponse(false,'Order not found', ['hdTrackings'=> $this->trackings, 'apiTrakings' => null ]);
+        return apiResponse(false,'Order not found', ['hdTrackings'=> $this->trackings, 'apiTrackings' => null ]);
         
     }
 
