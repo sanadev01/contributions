@@ -1027,5 +1027,8 @@
     .font-sans{
         font-family: sans-serif;
     }
+    .search-header{
+        display: table-header-group;
+    }
 </style>
 @yield('custom-css')
