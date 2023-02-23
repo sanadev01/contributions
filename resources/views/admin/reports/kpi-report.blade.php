@@ -10,10 +10,10 @@
                     <div class="card-content">
                         <div class="card-body">
                             <div class="row col-12">
-                                <div class="offset-3 col-md-3">
+                                <div class="col-md-3 p-0">
                                     <h5>Track Tracking Multiple</h5>
                                 </div>
-                                <div class="col-md-3 ml-5">
+                                <div class="col-md-3 p-0 ml-5">
                                     <h5>Search Per Date Range</h5>
                                 </div>
                             </div>
@@ -22,9 +22,6 @@
                                     <form action="{{ route('admin.reports.kpi-report.index') }}" method="GET">
                                         @csrf
                                         <div class="row">
-                                            <div class="col-md-3">
-                                                <input type="text" class="form-control" id="search" placeholder="Type to search">
-                                            </div>
                                             <div class="col-md-3">
                                                 <div class="col-12 p-0">
                                                     <div class="controls">
@@ -83,7 +80,7 @@
                             </div>
                             <table class="table mb-0 table-responsive-md" id="kpi-report">
                                 <thead>
-                                    {{-- <tr>
+                                    <tr>
                                         <th>User</th>
                                         <th>@lang('orders.Tracking')</th>
                                         <th>@lang('orders.Type Package')</th>
@@ -94,7 +91,9 @@
                                         <th>@lang('orders.Taxed')</th>
                                         <th>@lang('orders.Delivered')</th>
                                         <th>@lang('orders.Returned')</th>
-                                    </tr> --}}
+                                    </tr>
+                                </thead>
+                                <tfoot class="search-header">
                                     <tr>
                                         <th>User</th>
                                         <th>Tracking</th>
@@ -107,7 +106,7 @@
                                         <th>Delivered</th>
                                         <th>Returned</th>
                                     </tr>
-                                </thead>
+                                </tfoot>
                                 <tbody>
                                     @if($trackings)
                                         @foreach($trackings['return']['objeto'] as $data)
@@ -147,12 +146,10 @@
 @section('js')
     <script>
         $(document).ready(function () {
-            $('#kpi-report thead th').each(function () {
+            $('#kpi-report tfoot th').each(function () {
                 var title = $(this).text();
-                // console.log(text);
                 $(this).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
             });
-        
             var table = $('#kpi-report').DataTable({
                 initComplete: function () {
                     this.api()
