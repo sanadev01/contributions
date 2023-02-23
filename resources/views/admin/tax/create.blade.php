@@ -201,26 +201,24 @@
                                                 </div>
                                             </div>
                                         @endif
-
-                                        @if($loop->last)
-                                        
-                                        <div class="row m-1 mt-3 orders font-weight-bold">
+                                        @if($loop->last) 
+                                        <div class="row m-1 mt-3 orders h4"">
                                             <div class="col-md-3"> 
                                             </div> 
                                             <div class="col-md-1 h4"> 
                                                 Total
                                             </div> 
-                                            <div class="col-md-2">
-                                               <p id="taxPaymentTotal" class="h4">0</p>
-                                            </div>
-                                            <div class="col-md-2" class="h4">
-                                               <p id="buyingUSDTotal">0</p> 
+                                            <div class="col-md-2" >
+                                               R$<span id="taxPaymentTotal">0</span>
                                             </div>
                                             <div class="col-md-2">
-                                               <p id="sellingUSDTotal" class="h4">0</p> 
+                                               US$ <span id="buyingUSDTotal">0</span> 
+                                            </div>
+                                            <div class="col-md-2">
+                                              US$ <span id="sellingUSDTotal">0</span> 
                                             </div>
                                             <div class="col-md-1">
-                                               <p id="profitTotal" class="h4">0</p> 
+                                              <span id="profitTotal">0</span> 
                                             </div>
                                             <div class="col-md-1"> 
                                             </div>
