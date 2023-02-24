@@ -295,11 +295,11 @@
             let sellingUSDTotal=0;
             var data = {!! json_encode($orders, JSON_HEX_TAG) !!};
             data.forEach(element => {
-                let taxPayment = $(`input[name="tax_payment[${element.id}]"]`).val();
-                  taxPaymentTotal = parseFloat(taxPaymentTotal) + parseFloat(taxPayment);
+                let taxPayment = parseFloat($(`input[name="tax_payment[${element.id}]"]`).val());
+                 taxPaymentTotal = parseFloat(taxPaymentTotal) + axPayment;
 
-                  buyingUSDTotal = buyingUSDTotal +  parseFloat(taxPayment) / parseFloat(buyingBRRate);
-                  sellingUSDTotal = sellingUSDTotal + parseFloat(taxPayment) / parseFloat(sellingBRRate);
+                  buyingUSDTotal = parseFloat(buyingUSDTotal) +  taxPayment / parseFloat(buyingBRRate);
+                  sellingUSDTotal = parseFloat(sellingUSDTotal) + taxPayment / parseFloat(sellingBRRate);
 
             });
              let  profitTotal = parseFloat(sellingUSDTotal) - parseFloat(buyingUSDTotal);
@@ -315,3 +315,4 @@
     });
 </script>
 @endsection
+
