@@ -70,6 +70,10 @@ class OrderStatusController extends Controller
                         if ($order) {
                             $order->deposits()->sync($deposit->id);
                         }
+                        $order->update([
+                            'status'  => $request->status,
+                            'is_paid' => true
+                        ]);
                         $this->sendTransactionMail($deposit, $preStatus, $user);
                         
                     } else {
