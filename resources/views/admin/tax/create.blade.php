@@ -245,73 +245,73 @@
     </section>
 @endsection
 @section('js')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
 
-            $('body').on('change', '.orders input.taxPayment ', function() {
-                let buyingBRRate = $('#buyingBRRate').val();
-                let sellingBRRate = $('#sellingBRRate').val();
-                let taxPayment = $(this).closest('.orders').find('.taxPayment').val(); 
+        $('body').on('change', '.orders input.taxPayment ', function() {
+            let buyingBRRate = $('#buyingBRRate').val();
+            let sellingBRRate = $('#sellingBRRate').val();
+            let taxPayment = $(this).closest('.orders').find('.taxPayment').val(); 
+            let buyingUSD = parseFloat(taxPayment) / parseFloat(buyingBRRate);
+            let sellingUSD = parseFloat(taxPayment) / parseFloat(sellingBRRate); 
+            let profit = parseFloat(sellingUSD) - parseFloat(buyingUSD);
+
+            $(this).closest('.orders').find('.profit').val(
+                isNaN(profit) ? 0 : (profit).toFixed(2)
+            );
+            $(this).closest('.orders').find('.sellingUSD').val(
+                isNaN(sellingUSD) || !isFinite(sellingUSD) ? 0 : (sellingUSD).toFixed(2)
+            );
+            $(this).closest('.orders').find('.buyingUSD').val(
+                isNaN(buyingUSD) || !isFinite(buyingUSD) ? 0 : (buyingUSD).toFixed(2)
+            );
+            calculateTotal()
+        });
+
+        $('body').on('change', 'input.buyingBRRate, input.sellingBRRate ', function() {
+            let buyingBRRate = $('#buyingBRRate').val();
+            let sellingBRRate = $('#sellingBRRate').val();
+            var data = {!! json_encode($orders, JSON_HEX_TAG) !!};
+            data.forEach(element => {
+                let taxPayment = $(`input[name="tax_payment[${element.id}]"]`).val();
+
                 let buyingUSD = parseFloat(taxPayment) / parseFloat(buyingBRRate);
-                let sellingUSD = parseFloat(taxPayment) / parseFloat(sellingBRRate); 
+                let sellingUSD = parseFloat(taxPayment) / parseFloat(sellingBRRate);
                 let profit = parseFloat(sellingUSD) - parseFloat(buyingUSD);
 
-                $(this).closest('.orders').find('.profit').val(
-                    isNaN(profit) ? 0 : (profit).toFixed(2)
-                );
-                $(this).closest('.orders').find('.sellingUSD').val(
-                    isNaN(sellingUSD) || !isFinite(sellingUSD) ? 0 : (sellingUSD).toFixed(2)
-                );
-                $(this).closest('.orders').find('.buyingUSD').val(
-                    isNaN(buyingUSD) || !isFinite(buyingUSD) ? 0 : (buyingUSD).toFixed(2)
-                );
-                calculateTotal()
+                $(`input[name="selling_usd[${element.id}]"]`).val(parseFloat(sellingUSD).toFixed(2));
+                $(`input[name="buying_usd[${element.id}]"]`).val(parseFloat(buyingUSD).toFixed(2));
+                $(`input[name="profit[${element.id}]"]`).val(parseFloat(profit).toFixed(2));
             });
-
-            $('body').on('change', 'input.buyingBRRate, input.sellingBRRate ', function() {
-                let buyingBRRate = $('#buyingBRRate').val();
-                let sellingBRRate = $('#sellingBRRate').val();
-                var data = {!! json_encode($orders, JSON_HEX_TAG) !!};
-                data.forEach(element => {
-                    let taxPayment = $(`input[name="tax_payment[${element.id}]"]`).val();
-
-                    let buyingUSD = parseFloat(taxPayment) / parseFloat(buyingBRRate);
-                    let sellingUSD = parseFloat(taxPayment) / parseFloat(sellingBRRate);
-                    let profit = parseFloat(sellingUSD) - parseFloat(buyingUSD);
-
-                    $(`input[name="selling_usd[${element.id}]"]`).val(sellingUSD);
-                    $(`input[name="buying_usd[${element.id}]"]`).val(buyingUSD);
-                    $(`input[name="profit[${element.id}]"]`).val(profit);
-                });
-                calculateTotal()
-            });
-
-          function calculateTotal(){
-                let buyingBRRate = $('#buyingBRRate').val();
-                let sellingBRRate = $('#sellingBRRate').val();
-
-                let taxPaymentTotal=0;
-                let buyingUSDTotal=0;
-                let sellingUSDTotal=0;
-                var data = {!! json_encode($orders, JSON_HEX_TAG) !!};
-                data.forEach(element => {
-                    let taxPayment = $(`input[name="tax_payment[${element.id}]"]`).val();
-                      taxPaymentTotal = taxPaymentTotal+ taxPayment;
-
-                      buyingUSDTotal = buyingUSDTotal +  parseFloat(taxPayment) / parseFloat(buyingBRRate);
-                      sellingUSDTotal = sellingUSDTotal + parseFloat(taxPayment) / parseFloat(sellingBRRate);
-
-                });
-                 let  profitTotal = parseFloat(sellingUSDTotal) - parseFloat(buyingUSDTotal);
-                if(!isNaN(taxPaymentTotal))
-                    $("#taxPaymentTotal").text(taxPaymentTotal);
-                if(!isNaN(buyingUSDTotal)) 
-                    $("#buyingUSDTotal").text(buyingUSDTotal);
-                if(!isNaN(sellingUSDTotal))
-                    $("#sellingUSDTotal").text(sellingUSDTotal); 
-                if(!isNaN(profitTotal))
-                $("#profitTotal").text(profitTotal);
-            }
+            calculateTotal()
         });
-    </script>
+
+      function calculateTotal(){
+            let buyingBRRate = $('#buyingBRRate').val();
+            let sellingBRRate = $('#sellingBRRate').val();
+
+            let taxPaymentTotal=0;
+            let buyingUSDTotal=0;
+            let sellingUSDTotal=0;
+            var data = {!! json_encode($orders, JSON_HEX_TAG) !!};
+            data.forEach(element => {
+                let taxPayment = $(`input[name="tax_payment[${element.id}]"]`).val();
+                  taxPaymentTotal = taxPaymentTotal+ taxPayment;
+
+                  buyingUSDTotal = buyingUSDTotal +  parseFloat(taxPayment) / parseFloat(buyingBRRate);
+                  sellingUSDTotal = sellingUSDTotal + parseFloat(taxPayment) / parseFloat(sellingBRRate);
+
+            });
+             let  profitTotal = parseFloat(sellingUSDTotal) - parseFloat(buyingUSDTotal);
+            if(!isNaN(taxPaymentTotal))
+                $("#taxPaymentTotal").text(parseFloat(taxPaymentTotal).toFixed(2));
+            if(!isNaN(buyingUSDTotal)) 
+                $("#buyingUSDTotal").text(parseFloat(buyingUSDTotal).toFixed(2));
+            if(!isNaN(sellingUSDTotal))
+                $("#sellingUSDTotal").text(parseFloat(sellingUSDTotal).toFixed(2)); 
+            if(!isNaN(profitTotal))
+            $("#profitTotal").text(parseFloat(profitTotal).toFixed(2));
+        }
+    });
+</script>
 @endsection
