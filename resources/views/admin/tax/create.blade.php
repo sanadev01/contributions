@@ -296,7 +296,7 @@
             var data = {!! json_encode($orders, JSON_HEX_TAG) !!};
             data.forEach(element => {
                 let taxPayment = parseFloat($(`input[name="tax_payment[${element.id}]"]`).val());
-                 taxPaymentTotal = parseFloat(taxPaymentTotal) + axPayment;
+                 taxPaymentTotal = parseFloat(taxPaymentTotal) + taxPayment;
 
                   buyingUSDTotal = parseFloat(buyingUSDTotal) +  taxPayment / parseFloat(buyingBRRate);
                   sellingUSDTotal = parseFloat(sellingUSDTotal) + taxPayment / parseFloat(sellingBRRate);
