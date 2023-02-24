@@ -23,10 +23,9 @@ class OrderStatusController extends Controller
         $user = $request->user;
         $preStatus = $order->status_name;
 
-        if ($order->status == Order::STATUS_REFUND) {
+        if ($order->status == Order::STATUS_REFUND || $order->status == Order::STATUS_SHIPPED) {
             return apiResponse(false, "You can't change status anymore");
-        }
-
+        } 
         DB::beginTransaction();
         try {
             if ($order) {
