@@ -81,6 +81,9 @@
                                                     <h4><span class="p-2 badge badge-info mr-2 text-dark col-12" id="taxed">Taxed</span></h4>
                                                     <h4><span class="p-2 badge badge-danger mr-2 col-12" id="returned">Returned</span></h4>
                                                 </div>
+                                                <div class="col-12">
+                                                    <h4><span class="p-2 badge badge-secondary mr-2 text-dark col-12" id="inProcess">Processing or In Transit</span></h4>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -194,10 +197,12 @@
             var taxOrder = (taxed / totalRecords * 100).toFixed(2);
             var returnOrder = (returned / totalRecords * 100).toFixed(2); 
             var deliveredOrder = (delivered / totalRecords * 100).toFixed(2);
+            var inTransit = (100 - (parseInt(taxOrder)+parseInt(returnOrder)+parseInt(deliveredOrder))).toFixed(2);
             $('#total').html('Total Orders: '+totalRecords);
             $('#delivered').html('Delivered: '+ deliveredOrder + ' %');
             $('#taxed').html('Taxed: '+ taxOrder + ' %');
             $('#returned').html('Returned: '+ returnOrder + ' %');
+            $('#inProcess').html('Processing or In Transit: '+ inTransit + ' %');
         });
     </script>
 @endsection
