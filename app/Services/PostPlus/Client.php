@@ -72,7 +72,7 @@ class Client{
                 }
             }
             else if (isset($data->status->hasErrors)){
-                return new PackageError("Error while creating parcel. Description: ".optional(optional($data)->status)->errorDetails[0]->detail);
+                return new PackageError("Error while creating parcel. Description: ".optional(optional($data)->status)->errorDetails[0]);
             }
             else {
                 return new PackageError("Error while creating parcel. Description: ".optional(optional($data)->errorDetails[0])->detail);
