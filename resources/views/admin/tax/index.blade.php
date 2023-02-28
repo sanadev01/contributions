@@ -110,7 +110,7 @@
                                         @endif
                                     </td>
                                     <td class="d-flex">
-                                        <a href="{{ $tax->adjustment ? route('admin.adjustment.edit',$tax->id):route('admin.tax.edit',$tax->id) }}" class="btn btn-primary mr-2" title="Edit">
+                                        <a href="{{ $tax->adjustment || $tax->adjustment==0 ? route('admin.adjustment.edit',$tax->id):route('admin.tax.edit',$tax->id) }}" class="btn btn-primary mr-2" title="Edit">
                                             <i class="feather icon-edit"></i>
                                         </a>
                                     </td>
