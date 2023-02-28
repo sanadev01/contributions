@@ -3,12 +3,9 @@
 namespace App\Http\Controllers\Admin\Adjustment;
 
 use App\Models\Tax;
-use Illuminate\Http\Request;
-use App\Repositories\TaxRepository;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Tax\TaxRequest;
-use App\Http\Requests\Tax\TaxUpdateRequest;
-use App\Models\Order;
+use Illuminate\Http\Request; 
+use App\Http\Controllers\Controller; 
+use App\Repositories\AdjustmentRepository; 
 
 class AdjustmentController extends Controller
 {
@@ -18,9 +15,14 @@ class AdjustmentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public $adjustmentRepository;
+    public function __construct()
+    {
+        $this->adjustmentRepository = new AdjustmentRepository();
+    }
     public function create()
-    { 
-        $this->authorize('create', Tax::class);  
+    {
+        $this->authorize('create', Tax::class);
         return view('admin.adjustment.create');
     }
 
@@ -33,19 +35,17 @@ class AdjustmentController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'adjustment' => 'required', 
-            'user_id' => 'required|numeric', 
-        ]); 
-        $this->authorize('create', Tax::class); 
-
-        Tax::create([
-            'user_id' => $request->user_id, 
-            'adjustment' => $request->adjustment, 
-        ]);     
-        
-        session()->flash('alert-success', 'Adjustment has been added successfully');
-
-        return redirect()->route('admin.tax.index'); 
+            'adjustment' => 'required|numeric|min:.001',
+            'user_id' => 'required|numeric',
+        ]);
+        $this->authorize('create', Tax::class);
+        $response = $this->adjustmentRepository->store($request);
+        if (is_bool($response) && $response) {
+            session()->flash('alert-success', 'Adjustment has been added successfully');
+            return redirect()->route('admin.tax.index');
+        } else {
+            return back()->withInput()->withErrors($response);
+        };
     }
 
     /**
@@ -66,10 +66,10 @@ class AdjustmentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
-    { 
+    {
         $tax = Tax::find($id);
-        $this->authorize('update',$tax);
-        return view('admin.adjustment.edit',compact('tax'));
+        $this->authorize('update', $tax);
+        return view('admin.adjustment.edit', compact('tax'));
     }
 
     /**
@@ -81,19 +81,19 @@ class AdjustmentController extends Controller
      */
     public function update(Request $request,  $id)
     {
-        
+
         $request->validate([
-            'adjustment' => 'required',  
-        ]); 
+            'adjustment' => 'required|numeric|min:0', 
+        ]);
         $tax = Tax::find($id);
 
         $this->authorize('update', $tax);
-        $tax->update([
-            'adjustment' => $request->adjustment, 
-        ]); 
-
+        $response = $this->adjustmentRepository->update($request, $tax); 
+        if ($response) {
             session()->flash('alert-success', 'Adjustment Updated');
             return redirect()->route('admin.tax.index');
-         
+        }
+        session()->flash('alert-danger', 'Error While Update Tax! Check Your Account Balance');
+        return back()->withInput();
     }
 }
