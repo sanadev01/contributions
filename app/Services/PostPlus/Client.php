@@ -47,7 +47,7 @@ class Client{
         try {
             $response = Http::withHeaders($this->getHeaders())->put("$this->baseUri/parcels", $shippingRequest);
             $data = json_decode($response);
-            if($data->references->printId) {
+            if(optional(optional($data)->references)->printId) {
                 $trackingNumber = $data->identifiers->parcelNr;
                 $printId = $data->prints[0]->id;
                 if($trackingNumber && $printId) {
@@ -72,7 +72,7 @@ class Client{
                 }
             }
             else if (isset($data->status->hasErrors)){
-                return new PackageError("Error while creating parcel. Description: ".optional(optional($data)->status)->errorDetails[0]);
+                return new PackageError("Error while creating parcel. Description: ".optional(optional($data)->status)->errorDetails[0]->detail);
             }
             else {
                 return new PackageError("Error while creating parcel. Description: ".optional(optional($data)->errorDetails[0])->detail);
