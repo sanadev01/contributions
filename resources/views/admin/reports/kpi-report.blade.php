@@ -171,37 +171,45 @@
                             $('input', this.footer()).on('keyup change clear', function () {
                                 if (that.search() !== this.value) {
                                     that.search(this.value).draw();
+                                    calculation();
                                 }
                             });
                         });
                 },
                 "info": false
             });
-
+            calculation();
+        });
+        
+        function calculation() {
             var totalRecords = $('#kpi-report tbody').find('tr').length;
             var taxed = 0;
             var returned = 0;
             var delivered = 0;
+            var inProcess = 0;
             $("table > tbody > tr").each(function () {
                 if($(this).find('td').eq(7).text() == 'Yes' ){
-                  taxed++;  
+                    taxed++;  
                 }
                 if($(this).find('td').eq(8).text() == 'Yes' ){
-                  returned++;  
+                    delivered++;  
                 }
                 if($(this).find('td').eq(9).text() == 'Yes' ){
-                  delivered++;  
+                    returned++;  
+                }
+                if($(this).find('td').eq(8).text() == 'No'){
+                    inProcess++;  
                 }
             });
             var taxOrder = (taxed / totalRecords * 100).toFixed(2);
-            var returnOrder = (returned / totalRecords * 100).toFixed(2); 
             var deliveredOrder = (delivered / totalRecords * 100).toFixed(2);
-            var inTransit = (100 - (parseInt(taxOrder)+parseInt(returnOrder)+parseInt(deliveredOrder))).toFixed(2);
+            var returnOrder = (returned / totalRecords * 100).toFixed(2); 
+            var inTransit = (inProcess / totalRecords * 100).toFixed(2);
             $('#total').html('Total Orders: '+totalRecords);
             $('#delivered').html('Delivered: '+ deliveredOrder + ' %');
             $('#taxed').html('Taxed: '+ taxOrder + ' %');
             $('#returned').html('Returned: '+ returnOrder + ' %');
             $('#inProcess').html('Processing or In Transit: '+ inTransit + ' %');
-        });
+        }
     </script>
 @endsection
