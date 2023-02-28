@@ -60,10 +60,10 @@ class UpdateCN23Label
                 $this->pdfi->RotatedText(66, 51, 'CPF: ' . $this->order->recipient->tax_id, 0);
             }
             //FOR REFERENCE NO
-            if ($this->order->customer_reference || $order->tracking_id) {
-                $this->pdfi->SetFont("Arial", "B", 8);
-                $this->pdfi->RotatedText(96, 51, 'Ref#: ' . ($this->order->customer_reference ? $this->order->customer_reference : $this->order->tracking_id).' HD-'.$this->order->id, 0);
-            }    
+            // if ($this->order->customer_reference || $order->tracking_id) {
+            //     $this->pdfi->SetFont("Arial", "B", 8);
+            //     $this->pdfi->RotatedText(96, 51, 'Ref#: ' . ($this->order->customer_reference ? $this->order->customer_reference : $this->order->tracking_id).' HD-'.$this->order->id, 0);
+            // }    
         }else {
             // initiate FPDI
             $this->pdfi = new PDFRotate('L', 'mm', array(147, 212.9));
