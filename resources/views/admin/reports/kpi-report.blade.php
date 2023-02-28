@@ -80,6 +80,9 @@
                                                     <h4><span class="p-2 badge badge-info mr-2 text-dark col-12" id="taxed">Taxed</span></h4>
                                                     <h4><span class="p-2 badge badge-danger mr-2 col-12" id="returned">Returned</span></h4>
                                                 </div>
+                                                <div class="col-12">
+                                                    <h4><span class="p-2 badge badge-secondary mr-2 text-dark col-12" id="inProcess">Processing or In Transit</span></h4>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -156,6 +159,7 @@
             $('#kpi-report tfoot th').each(function () {
                 var title = $(this).text();
                 $(this).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
+                
             });
             var table = $('#kpi-report').DataTable({
                 "paging": false,
@@ -168,13 +172,39 @@
                             $('input', this.footer()).on('keyup change clear', function () {
                                 if (that.search() !== this.value) {
                                     that.search(this.value).draw();
+                                    calculation();
                                 }
                             });
                         });
                 },
                 "info": false
             });
-
+            calculation();
+            // var totalRecords = $('#kpi-report tbody').find('tr').length;
+            // var taxed = 0;
+            // var returned = 0;
+            // var delivered = 0;
+            // $("table > tbody > tr").each(function () {
+            //     if($(this).find('td').eq(7).text() == 'Yes' ){
+            //       taxed++;  
+            //     }
+            //     if($(this).find('td').eq(8).text() == 'Yes' ){
+            //         delivered++;  
+            //     }
+            //     if($(this).find('td').eq(9).text() == 'Yes' ){
+            //         returned++;  
+            //     }
+            // });
+            // var taxOrder = (taxed / totalRecords * 100).toFixed(2);
+            // var returnOrder = (returned / totalRecords * 100).toFixed(2); 
+            // var deliveredOrder = (delivered / totalRecords * 100).toFixed(2);
+            // $('#total').html('Total Orders: '+totalRecords);
+            // $('#delivered').html('Delivered: '+ deliveredOrder + ' %');
+            // $('#taxed').html('Taxed: '+ taxOrder + ' %');
+            // $('#returned').html('Returned: '+ returnOrder + ' %');
+        });
+        function calculation(){
+            console.log('test');
             var totalRecords = $('#kpi-report tbody').find('tr').length;
             var taxed = 0;
             var returned = 0;
@@ -184,19 +214,21 @@
                   taxed++;  
                 }
                 if($(this).find('td').eq(8).text() == 'Yes' ){
-                  returned++;  
+                    delivered++;  
                 }
                 if($(this).find('td').eq(9).text() == 'Yes' ){
-                  delivered++;  
+                    returned++;  
                 }
             });
             var taxOrder = (taxed / totalRecords * 100).toFixed(2);
             var returnOrder = (returned / totalRecords * 100).toFixed(2); 
             var deliveredOrder = (delivered / totalRecords * 100).toFixed(2);
+            var inTransit = (100 - (parseInt(taxOrder)+parseInt(returnOrder)+parseInt(deliveredOrder))).toFixed(2);
             $('#total').html('Total Orders: '+totalRecords);
             $('#delivered').html('Delivered: '+ deliveredOrder + ' %');
             $('#taxed').html('Taxed: '+ taxOrder + ' %');
             $('#returned').html('Returned: '+ returnOrder + ' %');
-        });
+            $('#inProcess').html('Processing or In Transit: '+ inTransit + ' %');
+        }
     </script>
 @endsection
