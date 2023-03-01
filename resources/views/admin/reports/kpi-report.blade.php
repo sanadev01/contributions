@@ -22,7 +22,6 @@
                                         <div class="row col-md-9">
                                             <div class="col-md-10 pr-0">
                                                 <form class="row col-12 m-0 pr-0" action="{{ route('admin.reports.kpi-report.index') }}" method="GET">
-                                                    @csrf
                                                     <div class="row pr-0 col-12 mb-1">
                                                         <div class="col-md-4 p-0">
                                                             <h5>Search Per Date Range</h5>
@@ -60,7 +59,6 @@
                                             </div>
                                             <div class="col-md-2 pl-0 mt-5">
                                                 <form class="row col-12 pl-0 mt-4" action="{{ route('admin.reports.kpi-report.store') }}" method="POST">
-                                                    @csrf
                                                     @if($trackings)
                                                         <input type="hidden" name="order" value="{{ collect($trackings['return']['objeto']) }}">
                                                         <input type="hidden" name="trackingCodeUser" value="{{ collect($trackingCodeUser) }}">
