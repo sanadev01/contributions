@@ -59,6 +59,7 @@
                                             </div>
                                             <div class="col-md-2 pl-0 mt-5">
                                                 <form class="row col-12 pl-0 mt-4" action="{{ route('admin.reports.kpi-report.store') }}" method="POST">
+                                                    @csrf
                                                     @if($trackings)
                                                         <input type="hidden" name="order" value="{{ collect($trackings['return']['objeto']) }}">
                                                         <input type="hidden" name="trackingCodeUser" value="{{ collect($trackingCodeUser) }}">
