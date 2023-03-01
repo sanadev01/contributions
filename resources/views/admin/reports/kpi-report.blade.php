@@ -122,7 +122,7 @@
                                     @if($trackings)
                                         @foreach($trackings['return']['objeto'] as $data)
                                             @if(isset($data['evento']))
-                                            <tr>
+                                            <tr class="count">
                                                 @if(optional($data) && isset(optional($data)['numero']))
                                                     <td>{{ optional($trackingCodeUser[optional($data)['numero']])->pobox_name }}</td>
                                                     <td>{{ optional($data)['numero'] }}</td>
@@ -183,7 +183,7 @@
         });
         
         function calculation() {
-            var totalRecords = $('#kpi-report tbody').find('tr').length;
+            var totalRecords = $('#kpi-report tbody').find('tr.count').length;
             var taxed = 0;
             var returned = 0;
             var delivered = 0;
