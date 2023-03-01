@@ -55,7 +55,7 @@ class Trackings extends Component
             return 120;
         }
 
-        if ($tracking['status'] == 01 && $tracking['tipo'] == 'BDEBDIBDR') {
+        if ($tracking['status'] == 01 && ($tracking['tipo'] == 'BDEBDIBDR' || $tracking['tipo'] == 'BDI')) {
             return 130;
         }
 
