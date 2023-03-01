@@ -21,7 +21,7 @@ class DepositController extends Controller
                 'start_date' => $startDate,
                 'end_date' => $endDate
             ],
-            'deposits' => DepositResource::collection($deposits)
+            'data' => DepositResource::collection($deposits)
         ]);
     }
 }
