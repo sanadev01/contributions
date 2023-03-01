@@ -12,7 +12,8 @@
                     </div>
                     <div class="card-content">
                         <div class="card-body"> 
-                            <form class="form" action="{{ route('admin.adjustment.store') }}" method="POST">
+                            <form class="form" action="{{ route('admin.adjustment.store') }}" method="POST"
+                            enctype="multipart/form-data">
                                 @csrf
                                 <div class="row m-1">
                                     
@@ -36,6 +37,36 @@
                                                 <div class="help-block text-danger"> {{ $message }} </div>
                                             @enderror
                                         </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-6 col-md-3">
+                                        <div class="controls">
+                                            <label>  Reasone.<span class="text-danger">*</span></label>
+                                            
+                                            <textarea type="text" placeholder="Our customer service  applied wrong ex change rates to the customer" 
+                                            value="" rows="2" 
+                                            class="form-control"
+                                                name="reasone">{{ old('reasone','Our customer service  applied wrong ex change rates to the customer') }}</textarea>
+                                            @error('reasone')
+                                                <div class="help-block text-danger"> {{ $message }} </div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-1 mt-5">
+                                        <a class="btn pr-0" href='javascript:void(0)'>
+                                            <button class="btn btn-success btn-md" type="button"><i
+                                                    class="fa fa-upload"></i></button>
+                                            <input multiple type="file" name="attachment[]"
+                                            style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;'
+                                              size="40"
+                                                onchange='$("#upload-file-info").html($(this).value());'>
+                                        </a>
+                                    </div>                                    
+                                    <div class="row m-1 mt-3 orders">  
+                                        <div class="col-md-6">
+                                             <span class='float-right mr-5  label label-info' id="upload-file-info"></span>
+                                        </div> 
                                     </div>
                                     <div class="form-group col-sm-6 col-md-3">
                                         <button type="submit" class="btn btn-primary mt-5">Save</button>
