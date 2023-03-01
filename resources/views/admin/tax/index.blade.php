@@ -102,7 +102,7 @@
                                     <td>
                                         @if(optional($tax->deposit)->depositAttchs)
                                             @foreach ($tax->deposit->depositAttchs as $attachedFile )
-                                                <a target="_blank" href="{{ $attachedFile->getPath() }}">Download</a><br>
+                                                <a target="_blank" href="{{ $attachedFile->getPath() }}" data-toggle="tooltip" data-placement="top" title="{{ basename($attachedFile->getPath()) }}">Download</a><br>
                                             @endforeach
                                         @else
                                             Not Found
