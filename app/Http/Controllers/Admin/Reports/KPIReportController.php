@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 use App\Services\Excel\Export\KPIReport;
 use App\Repositories\Reports\KPIReportsRepository;
+use Exception;
 
 class KPIReportController extends Controller
 {
@@ -22,7 +23,13 @@ class KPIReportController extends Controller
         $trackings = [];
         $trackingCodeUser = [];
         if($request->start_date && $request->end_date || $request->trackingNumbers) {
+            try{ 
             $response = $kpiReportsRepository->get($request);
+            }
+            catch(Exception $e){
+                session()->flash('alert-danger', 'Error' . $e->getMessage());
+                return back(); 
+            }
             $trackings = $response['trackings'];
             $trackingCodeUser = $response['trackingCodeUser'];
         }
