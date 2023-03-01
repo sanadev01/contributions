@@ -27,7 +27,7 @@ class OrderStatusController extends Controller
             return apiResponse(false, "You can't change status anymore");
         } 
         if ( $order->status == Order::STATUS_SHIPPED) {
-            return apiResponse(false, "You can't change shipped order");
+            return apiResponse(false, "Order is already shipped");
         } 
         DB::beginTransaction();
         try {
