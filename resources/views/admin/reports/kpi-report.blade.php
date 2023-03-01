@@ -16,58 +16,58 @@
                     </div><br>
                     <div class="card-content">
                         <div class="card-body">
-                            <div class="row col-12">
-                                <div class="col-md-4 p-0">
-                                    <h5>Search Per Date Range</h5>
-                                </div>
-                                <div class="col-md-3 ml-0">
-                                    <h5>Track Tracking Multiple</h5>
-                                </div>
-                            </div>
                             <div class="row mb-4 no-print">
                                 <div class="col-12">
                                     <div class="row">
-                                        <div class="col-md-8">
-                                            <form class="row col-12 ustify-content-end" action="{{ route('admin.reports.kpi-report.index') }}" method="GET">
-                                                @csrf
-                                                <label class="mt-1 mr-3">Start Date</label>
-                                                <input type="date" name="start_date" id="startDate" placeholder="mm/dd/yyyy" class="form-control col-2 mr-5">
+                                        <div class="row col-md-9">
+                                            <div class="col-md-10 pr-0">
+                                                <form class="row col-12 m-0 pr-0" action="{{ route('admin.reports.kpi-report.index') }}" method="GET">
+                                                    <div class="row pr-0 col-12 mb-1">
+                                                        <div class="col-md-4 p-0">
+                                                            <h5>Search Per Date Range</h5>
+                                                        </div>
+                                                        <div class="col-md-3 ml-0">
+                                                            <h5>Track Tracking Multiple</h5>
+                                                        </div>
+                                                    </div>
+                                                    <label class="mt-1 mr-3">Start Date</label>
+                                                    <input type="date" name="start_date" id="startDate" placeholder="mm/dd/yyyy" class="form-control col-2 mr-5">
 
-                                                <label class="mt-1 mr-3">End Date</label>
-                                                <input type="date" name="end_date" id="endDate" placeholder="mm/dd/yyyy" class="form-control col-2 mr-5">
+                                                    <label class="mt-1 mr-3">End Date</label>
+                                                    <input type="date" name="end_date" id="endDate" placeholder="mm/dd/yyyy" class="form-control col-2 mr-5">
 
-                                                <div class="col-md-4">
-                                                    <div class="col-12 p-0">
-                                                        <div class="controls">
-                                                            <div class="col-md-12 ml-0 pl-0 pr-0">
-                                                                <textarea type="text" placeholder="Please Enter Tracking Codes" rows="3" 
-                                                                class="form-control"
-                                                                    name="trackingNumbers">{{ old('trackingNumbers',request('trackingNumbers')) }}</textarea>
-                                                                @error('trackingNumbers')
-                                                                    <div class="help-block text-danger"> {{ $message }} </div>
-                                                                @enderror
+                                                    <div class="col-md-4">
+                                                        <div class="col-12 p-0">
+                                                            <div class="controls">
+                                                                <div class="col-md-12 ml-0 pl-0 pr-0">
+                                                                    <textarea type="text" placeholder="Please Enter Tracking Codes" rows="3" 
+                                                                    class="form-control"
+                                                                        name="trackingNumbers">{{ old('trackingNumbers',request('trackingNumbers')) }}</textarea>
+                                                                    @error('trackingNumbers')
+                                                                        <div class="help-block text-danger"> {{ $message }} </div>
+                                                                    @enderror
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="col-md-1 mt-5">
-                                                    <button class="btn btn-primary btn-md">
-                                                        @lang('user.Search')
+                                                    <div class="col-md-1 mt-5">
+                                                        <button class="btn btn-primary btn-md">
+                                                            @lang('user.Search')
+                                                        </button>
+                                                    </div>
+                                                </form> 
+                                            </div>
+                                            <div class="col-md-2 pl-0 mt-5">
+                                                <form class="row col-12 pl-0 mt-4" action="{{ route('admin.reports.kpi-report.store') }}" method="POST">
+                                                    @if($trackings)
+                                                        <input type="hidden" name="order" value="{{ collect($trackings['return']['objeto']) }}">
+                                                        <input type="hidden" name="trackingCodeUser" value="{{ collect($trackingCodeUser) }}">
+                                                    @endif   
+                                                    <button class="btn btn-success m-0 mt-2" {{ !empty($trackings)? '' : 'disabled' }}  title="@lang('orders.import-excel.Download')">
+                                                        <i class="fa fa-arrow-down"></i>
                                                     </button>
-                                                </div>
-                                            </form> 
-                                        </div>
-                                        <div class="col-md-1 mt-5">
-                                            <form class="row col-12 ustify-content-end" action="{{ route('admin.reports.kpi-report.store') }}" method="POST">
-                                                @csrf
-                                                @if($trackings)
-                                                    <input type="hidden" name="order" value="{{ collect($trackings['return']['objeto']) }}">
-                                                    <input type="hidden" name="trackingCodeUser" value="{{ collect($trackingCodeUser) }}">
-                                                @endif   
-                                                <button class="btn btn-success m-0" {{ !empty($trackings)? '' : 'disabled' }}  title="@lang('orders.import-excel.Download')">
-                                                    <i class="fa fa-arrow-down"></i>
-                                                </button>
-                                            </form>
+                                                </form>
+                                            </div>
                                         </div>
                                         
                                         <div class="col-md-3 mt-3">
