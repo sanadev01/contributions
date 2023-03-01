@@ -28,7 +28,7 @@ class KPIReportController extends Controller
             }
             catch(Exception $e){
                 session()->flash('alert-danger', 'Error' . $e->getMessage());
-                return back()->withInput(); 
+                return back(); 
             }
             $trackings = $response['trackings'];
             $trackingCodeUser = $response['trackingCodeUser'];
