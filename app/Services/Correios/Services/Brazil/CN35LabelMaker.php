@@ -2,6 +2,7 @@
 
 namespace App\Services\Correios\Services\Brazil;
 
+use App\Models\Warehouse\Container;
 use App\Services\Correios\Contracts\HasLableExport;
 
 class CN35LabelMaker implements HasLableExport
@@ -23,7 +24,7 @@ class CN35LabelMaker implements HasLableExport
     private $OrderWeight;
     private $colombiaContainer = false;
 
-    public function __construct()
+    public function __construct(Container $container)
     {
         $this->companyName = '<img src="'.public_path('images/hd-1cm.png').'" style="height:1cm;display:block;position:absolute:top:0;left:0;"/>';
         $this->packetType = 'PACKET STANDARD';
@@ -31,6 +32,19 @@ class CN35LabelMaker implements HasLableExport
         $this->serialNumber = 1;
         $this->flightNumber = '';
         $this->dispatchDate = '';
+        $order = $container->orders->first();
+        
+        if($order){ 
+              $this->setType($order->getOriginalWeight('kg')); 
+        }
+        
+        $this->weight =  $container->getWeight();
+        $this->dispatchNumber = $container->dispatch_number;
+        $this->originAirpot = 'MIA';
+        $this->setService($container->getServiceCode());
+        $this->destinationAirport = $container->getDestinationAriport();        
+        $this->itemsCount = $container->getPiecesCount();
+        $this->unitCode = $container->getUnitCode();
     }
 
     public function setCompanyName($companyName)
