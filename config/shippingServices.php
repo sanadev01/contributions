@@ -26,6 +26,9 @@ return [
             537 => 'Global eParcel Prime',
             540 => 'Global eParcel Untracked Packet',
             773 => 'Prime5',
+            05 => 'USPS Ground',
+            734 => 'Post Plus Registered',
+            367 => 'Post Plus EMS',
         ]
     ]
 ];

@@ -4,7 +4,9 @@ namespace App\Repositories\Warehouse;
 
 use App\Models\Order;
 use App\Models\OrderTracking;
+use App\Services\GePS\Client;
 use App\Models\Warehouse\Container;
+use Illuminate\Support\Facades\Session;
 use App\Services\Excel\Import\TrackingsImportService;
 
 
@@ -28,14 +30,25 @@ class GePSContainerPackageRepository {
         if(!$container->orders()->where('order_id', $order->id)->first() && $error == null && $order->containers->isEmpty()) {
             $container->orders()->attach($order->id);
             $this->addOrderTracking($order);
+            $gepsClient = new Client();   
+            $response = $gepsClient->confirmShipment($order->corrios_tracking_code);
+            if (!$response['success']) {
+                Session::flash('alert-class', 'alert-info');
+                $message = "Order Added in the Container Successfully, But ".$response['message'];
+            }else{
+                Session::flash('alert-class', 'alert-success');
+                $message = 'Order Added in the Container Successfully';
+            }
             return [
-                'success' => true,
-                'message' => 'Order Scan Successfully!'
+                'success' => false,
+                'message' => $message
             ];
         }
+        Session::flash('alert-class', 'alert-danger');
         return [
             'success' => false,
-            'message' => $error
+            'message' => $error,
+
         ];
     }
 

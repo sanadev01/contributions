@@ -2,16 +2,17 @@
 
 use App\Models\Order;
 use App\Models\OrderTracking;
+use App\Models\CommissionSetting;
 use Illuminate\Support\Facades\DB;
 use App\Models\Warehouse\Container;
 use App\Models\Warehouse\DeliveryBill;
+use Illuminate\Support\Facades\Artisan;
 use App\Services\StoreIntegrations\Shopify;
 use App\Http\Controllers\Admin\HomeController;
 use App\Services\Correios\Services\Brazil\Client;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -93,6 +94,8 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::get('order/{order}/us-label', [OrderUSLabelController::class, 'index'])->name('order.us-label.index');
             Route::resource('orders.usps-label', OrderUSPSLabelController::class)->only('index','store');
             Route::resource('orders.ups-label', OrderUPSLabelController::class)->only('index','store');
+            Route::post('order/update/status',OrderStatusController::class)->name('order.update.status');
+
             Route::get('order-ups-label-cancel-pickup/{id?}', [\App\Http\Controllers\Admin\Order\OrderUPSLabelController::class, 'cancelUPSPickup'])->name('order.ups-label.cancel.pickup');
         });
         //Cancel Lable Route for GePS & Prime5
@@ -152,9 +155,12 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         Route::resource('shcode-export', ShCodeImportExportController::class)->only(['index', 'create','store']);
 
         Route::namespace('Tax')->group(function(){
-            Route::resource('tax', TaxController::class);
+            Route::resource('tax', TaxController::class)->except(['show','destroy']);
         });
 
+        Route::namespace('Adjustment')->group(function(){
+            Route::resource('adjustment', AdjustmentController::class)->except(['index','show','destroy']);
+        });
 
         Route::resource('roles', RoleController::class);
         Route::resource('roles.permissions', RolePermissionController::class);
@@ -169,9 +175,13 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('commission', CommissionReportController::class)->only(['index','show']);
             Route::resource('audit-report', AuditReportController::class)->only(['index','create']);
             Route::resource('anjun', AnjunReportController::class)->only(['index','create']);
+            Route::resource('kpi-report', KPIReportController::class)->only(['index','store']);
             Route::get('tax-report', TaxReportController::class)->name('tax-report');
-
+            
         });
+        Route::get('export-orders', [App\Http\Controllers\Admin\Reports\OrderReportController::class,'download'])->name('reports.export-orders');
+        Route::get('unpaid-orders-report', [App\Http\Controllers\Admin\Reports\UnPaidOrdersController::class, 'index'])->name('reports.unpaid-orders');
+        Route::post('unpaid-orders-download', [App\Http\Controllers\Admin\Reports\UnPaidOrdersController::class, 'download'])->name('reports.unpaid-orders-download');
 
         Route::namespace('Inventory')->as('inventory.')->prefix('inventory')->group(function(){
             Route::resource('product', ProductController::class);
@@ -254,59 +264,21 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
     return response()->download(storage_path("app/labels/{$order->us_api_tracking_code}.pdf"),"{$order->us_api_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.us-label.download');
 
-Route::get('test-label/{key}',function($key){
-
-    dd(Cache::forget($key));
-    $delivery = Container::find($id)->update([
-        'dispatch_number' => $dNo,
-        'unit_code' => null
-    ]);
+Route::get('test-label',function(){
     
-    // dd($order);
     $labelPrinter = new CN23LabelMaker();
-
-    $order = Order::find(90354);
+    
+    $order = Order::find(91232);
+    // dd($order);
     $labelPrinter->setOrder($order);
     $labelPrinter->setService(2);
     
     return $labelPrinter->download();
 });
 
-Route::get('order/apiresponse/{id?}',function($id){
-    $order = Order::find($id);
-    if($order) {
-        $tracking = OrderTracking::where('order_id', $order->id)->get();
-    }
-    dd($tracking, $order);
-});
-
-Route::get('truncate-response/{id?}',function($id){
-    $codes = [];
-    foreach($codes as $code) {
-        $order = DB::table('orders')->where('corrios_tracking_code', $code)->update([
-            'corrios_tracking_code' => null,
-            'cn23' => null,
-            'api_response' => null
-        ]);
-    }
-    return "API Response and Tracking Codes Truncated";
-});
-
-Route::get('container-update/{id?}/d/{dno?}/unit/{unit?}',function($id, $dNo, $unit){
-
-    $container = Container::find($id)->update([
-        'dispatch_number' => $dNo,
-        'unit_code' => $unit
-    ]);
-    return "Container Updated Successfully";
-});
-
-Route::get('dbill-update/{id?}/cn38/{cNo?}',function($id, $cNo){
-
-    $delivery = DeliveryBill::find($id)->update([
-        'cnd38_code' => $cNo
-    ]);
-    return "Delivery Bill CN38 Updated";
+Route::get('permission',function($id = null){
+    Artisan::call('db:seed --class=PermissionSeeder', ['--force' => true ]);
+    return Artisan::output();
 });
 
 Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container');

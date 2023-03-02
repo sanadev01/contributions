@@ -35,4 +35,9 @@ class ReportsPolicy
     {
         return $user->hasPermission('anjun-report');
     }
+
+    public function viewKPIReport(User $user)
+    {
+        return $user->hasPermission('kpi-report');
+    }
 }

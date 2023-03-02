@@ -35,38 +35,13 @@ class ContainerPackageRepository extends AbstractRepository
 
     public function addOrderToContainer(Container $container, string $barcode)
     {
+        $subString = strtolower(substr($barcode,0,2));
+        if(strtolower(substr($barcode,0,2)) == 'na' || strtolower(substr($barcode,0,2)) == 'xl'){
+            $subString = 'nx';
+        }
         if ($container->hasAnjunChinaService()) {
             return $this->toAnjunChinaContainer($container, $barcode);
-        } else {
-            return  $this->toCorrieosAnjunContainer($container, $barcode);
         }
-    }
-    public function toAnjunChinaContainer(Container $container, string $barcode)
-    {
-
-
-
-
-        $order = Order::where('corrios_tracking_code', strtoupper($barcode))->first();
-
-        if (!$order) {
-            return $this->validationError404($barcode,  'Order Not Found.');
-        }
-
-        if ($order->status < Order::STATUS_PAYMENT_DONE) {
-            return $this->validationError404($barcode, 'Please check the Order Status, either the order has been canceled, refunded or not yet paid');
-        }
-        if (!$container->hasAnjunChinaService()  || !$order->shippingService->isAnjunChinaService()) {
-
-            return $this->validationError404($barcode, 'Order does not belongs to this anjun china container Service. Please Check Packet Service');
-        }
-
-        return $this->updateContainer($container, $order, $barcode);
-    }
-    public function toCorrieosAnjunContainer(Container $container, string $barcode)
-    {
-        $subString = (strtolower(substr($barcode, 0, 2)) == 'na') ? 'nx' : strtolower(substr($barcode, 0, 2));
-
         $containerOrder = $container->orders->first();
         if ($containerOrder) {
             $client = new Client();
@@ -93,6 +68,24 @@ class ContainerPackageRepository extends AbstractRepository
         } 
         if (!$container->hasAnjunService() || !$order->shippingService->isAnjunService()) {
             return $this->validationError404($barcode, 'Order does not belongs to this container Service. Please Check Packet Service');
+        }
+
+        return $this->updateContainer($container, $order, $barcode);
+    }
+    public function toAnjunChinaContainer(Container $container, string $barcode)
+    {
+        $order = Order::where('corrios_tracking_code', strtoupper($barcode))->first();
+
+        if (!$order) {
+            return $this->validationError404($barcode,  'Order Not Found.');
+        }
+
+        if ($order->status < Order::STATUS_PAYMENT_DONE) {
+            return $this->validationError404($barcode, 'Please check the Order Status, either the order has been canceled, refunded or not yet paid');
+        }
+        if (!$container->hasAnjunChinaService()  || !$order->shippingService->isAnjunChinaService()) {
+
+            return $this->validationError404($barcode, 'Order does not belongs to this anjun china container Service. Please Check Packet Service');
         }
 
         return $this->updateContainer($container, $order, $barcode);

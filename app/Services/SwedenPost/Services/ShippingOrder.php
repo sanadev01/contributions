@@ -8,9 +8,10 @@ class ShippingOrder {
    protected $chargableWeight;
 
    public function getRequestBody($order) {
-
+      
       $batteryType = ""; 
       $batteryPacking = "";
+      $refNo = $order->customer_reference;
       if($order->measurement_unit == "lbs/in") { $uom = "LB"; } else { $uom = "KG"; }
       if($order->hasBattery()) {
          $batteryType = "Lithium Ion Polymer"; $batteryPacking = "Inside Equipment";
@@ -23,7 +24,7 @@ class ShippingOrder {
             'orders' => [
                [
                   //Parcel Information
-                  'referenceNo' => ($order->customer_reference) ? $order->customer_reference : '',
+                  'referenceNo' => ($refNo ? $refNo : $order->tracking_id).' HD-'.$order->id,
                   'trackingNo' => "",
                   'serviceCode' =>"DIRECT.LINK.US.L3",
                   'incoterm' => "DDU",
@@ -38,7 +39,7 @@ class ShippingOrder {
                   'batteryPacking' => $batteryPacking,
                   'facility'=> "EWR",
                   //Recipient Information
-                  'recipientName' => $order->recipient->getFullName().' '.$order->warehouse_number,
+                  'recipientName' => $order->recipient->getFullName(),
                   'phone' => ($order->recipient->phone) ? $order->recipient->phone: '',
                   'email' => ($order->recipient->email) ? $order->recipient->email: '',
                   'addressLine1' => $order->recipient->address.' '.$order->recipient->street_no,
@@ -47,14 +48,25 @@ class ShippingOrder {
                   'state' => $order->recipient->state->code,
                   'postcode' => cleanString($order->recipient->zipcode),
                   'country' => $order->recipient->country->code,
+                  'recipientTaxId'=>optional($order->recipient)->tax_id,
                   //Shipper Information
                   'shipperName' => $order->getSenderFullName(),
-                  'shipperPhone' => ($order->sender_phone) ? $order->sender_phone : '',
-                  'shipperAddressLine1' => "2200 NW 129TH AVE",
-                  'shipperCity' => "Miami",
-                  'shipperState' => "FL",
-                  'shipperPostcode' => "33182",
-                  'shipperCountry' => "US",
+                  'shipperPhone' => ($order->sender_phone) ? $order->sender_phone : '+13058885191',
+                  'shipperAddressLine1' => ($order->sender_address) ? $order->sender_address : "2200 NW 129TH AVE",
+                  'shipperCity' => ($order->sender_city) ? $order->sender_city : "Miami",
+                  'shipperState' => (optional($order->senderState())->code) ? optional($order->senderState())->code : "FL",
+                  'shipperPostcode' => ($order->sender_zipcode) ? $order->sender_zipcode : "33182",
+                  'shipperCountry' => (optional($order->senderCountry())->code) ? optional($order->senderCountry())->code : "US",
+                  //Parcel Return Information
+                  "returnOption" =>"",
+                  "returnName" => $order->getSenderFullName(),
+                  "returnAddressLine1" =>"2200 NW 129TH AVE",
+                  "returnAddressLine2" =>"",
+                  "returnAddressLine3" =>"",
+                  "returnCity" =>"Miami",
+                  "returnState" =>"FL",
+                  "returnPostcode" =>"33182",
+                  "returnCountry" =>"US",
                   //Parcel Items Information
                   'orderItems' => $this->setItemsDetails($order)
                ],
@@ -79,7 +91,7 @@ class ShippingOrder {
                   //   'weight' => round($this->calulateItemWeight($order), 2) - 0.05,
                     'itemNo' => "000".++$key,
                   //   'sku' => $item->sh_code.'-'.$order->id,
-                    'unitValue' => number_format($item->value),
+                    'unitValue' => $item->value,
                     'itemCount' => (int)$item->quantity,
                 ];
                array_push($items, $itemToPush);
@@ -99,4 +111,5 @@ class ShippingOrder {
         }
         return $orderTotalWeight;
    }
+
 }

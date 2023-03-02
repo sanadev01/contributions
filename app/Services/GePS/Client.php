@@ -105,7 +105,6 @@ class Client{
 
     public function createPackage($order)
     {   
-        return 'Something Went wrong on Global eParcel you need to wait...';
         //GET CONTAINER FOR PARCEL
 
         // $container = Container::where('services_subclass_code', ShippingService::GePS)
@@ -330,6 +329,38 @@ class Client{
                 return [
                     'success' => false,
                     'message' => $data->err ?? 'Something Went Wrong! Please Try Again..',
+                    'data' => null
+                ];
+            }
+            return [
+                'success' => true,
+                'data' => $data
+            ];
+        }catch (\GuzzleHttp\Exception\ClientException $e) {
+            return new PackageError($e->getResponse()->getBody()->getContents());
+        }
+        catch (\Exception $exception){
+            return new PackageError($exception->getMessage());
+        }
+    }
+
+    public function confirmShipment($trackCode)
+    {
+        $confirmRequest = [
+            'confirmshipment' => [
+                'tracknbr' => $trackCode
+            ],
+        ];
+        try {
+            $response = $this->client->post('https://globaleparcel.com/api.aspx',[
+                'headers' => $this->getKeys(),
+                'json' => $confirmRequest,
+                ]);
+            $data = json_decode($response->getBody()->getContents());
+            if (isset($data->err)) {
+                return [
+                    'success' => false,
+                    'message' => $data->error->context ?? 'Something Went Wrong! Please Try Again..',
                     'data' => null
                 ];
             }

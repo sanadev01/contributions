@@ -87,6 +87,8 @@
                                                     <span class="badge badge-secondary">G</span>
                                                 @elseif($deliveryBill->isSwedenPost())
                                                     <span class="badge badge-info text-white">D</span>
+                                                @elseif($deliveryBill->isPostPlus())
+                                                <span class="badge badge-warning text-black">P</span>
                                                 @else
                                                     <span class="badge badge-primary">H</span>
                                                 @endif

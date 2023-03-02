@@ -256,20 +256,23 @@
                         })
                     });
                 }else {
-
-                    $.post('{{route("api.order.status.update")}}',{
+                    @this.call('render')
+                    $.post('{{route("admin.order.update.status")}}',{
+                        _token: "{{ csrf_token() }}",
                         order_id: order.id,
                         status : status
                     })
                     .then(function(response){
-                        if ( response.success ){
-                            @this.call('render')
-                        }else{
-                            toastr.error(response.message)
-                        }
-                    }).catch(function(data){
+                    if ( response.success ){
+                        toastr.success(response.message)
+                        @this.call('render')
+                    }else{
                         toastr.error(response.message)
-                    })
+                        @this.call('render')
+                    }
+                }).catch(function(data){
+                    toastr.error(response.message)
+                })
                 }
             })
 

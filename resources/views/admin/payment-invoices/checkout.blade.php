@@ -27,17 +27,17 @@
                                 
                                 
                                     <div class="controls row mb-1 align-items-center">
-                                        <label class="col-md-3 text-md-right" style="font-size: 18px;" for="balance">Pay From HD Account (USD: {{ getBalance() }})<span class="text-danger"></span></label>
+                                        <label class="col-md-3 text-md-right" style="font-size: 18px;" for="balance">Pay From HD Account (USD: {{ $balance }})<span class="text-danger"></span></label>
                                         <div class="col-md-6">
                                             <div class="vs-checkbox-con vs-checkbox-primary" title="Pay By HD Account">
                                                 <input type="radio" name="pay" onclick="checkPay();" value="1" required
-                                                @if ( getBalance() < $invoice->total_amount) disabled  @endif class="col-md-1" id="balance">
+                                                @if ($notEnoughBalance ) disabled  @endif class="col-md-1" id="balance">
                                                 <span class="vs-checkbox vs-checkbox-lg">
                                                     <span class="vs-checkbox--check">
                                                         <i class="vs-icon feather icon-check"></i>
                                                     </span>
                                                 </span>
-                                                <span class="h3 mx-2 text-danger my-0 py-0">@if ( getBalance() < $invoice->total_amount) Not Enough Balance in HD account @endif</span>
+                                                <span class="h3 mx-2 text-danger my-0 py-0">@if ( $notEnoughBalance) Not Enough Balance in HD account @endif</span>
                                             </div>
                                         </div>
                                     </div>

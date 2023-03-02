@@ -25,7 +25,7 @@ use PrintOrderLabel;
         $this->request = $request;
     }
 
-    public function execute()
+    public function run()
     {
         $response = $this->get($this->order);  
         $this->order->refresh(); 
@@ -40,7 +40,7 @@ use PrintOrderLabel;
     {
         if ($order->getCN23()) {
             return $this->printLabel($order);
-        } else {
+        }else {
             return $this->update($order);
         }
     }

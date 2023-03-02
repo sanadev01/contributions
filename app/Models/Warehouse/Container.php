@@ -88,6 +88,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'Global eParcel Prime';
         }elseif($this->services_subclass_code == '773'){
             return 'Prime5';
+        }elseif($this->services_subclass_code == 'USPS Ground'){
+            return 'USPS Ground';
+        }elseif($this->services_subclass_code == '734'){
+            return 'Post Plus';
         }else {
             return 'FirstClass';
         }
@@ -118,6 +122,12 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         }
         elseif($this->services_subclass_code == '773'){
             return 11;
+        }
+        elseif($this->services_subclass_code == '05'){
+            return 12;
+        }
+        elseif($this->services_subclass_code == '734'){
+            return 13;
         }
         // return $this->services_subclass_code == 'NX' ? 2 : 1;
     }
@@ -201,5 +211,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     public function hasSwedenPostService()
     {
         return $this->services_subclass_code == ShippingService::Prime5;
+    }
+
+    public function hasPostPlusService()
+    {
+        return $this->services_subclass_code == ShippingService::Post_Plus_Registered || $this->services_subclass_code == ShippingService::Post_Plus_EMS;
     }
 }

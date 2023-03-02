@@ -12,7 +12,11 @@ class PaymentInvoiceRepository
 {
     public function get(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='asc')
     {
-        $query = PaymentInvoice::query();
+        $query = PaymentInvoice::query()->when($request->orderID,function($query,$orderID){
+                            return $query->whereHas('orders',function($query) use ($orderID){
+                                return $query->where('warehouse_number', 'like', '%'.$orderID.'%')->orWhere('id',$orderID);
+                        });
+                    });
 
         if ( !Auth::user()->isAdmin() ){
             $query->where('paid_by',Auth::id());

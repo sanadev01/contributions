@@ -114,14 +114,52 @@
                     </a>
                 </li>
             @endcan
-            @can('viewAny', App\Models\PaymentInvoice::class)
-                <li class="nav-item {{ $isActive(['admin.payment-invoices.index','admin.payment-invoices.edit']) }}">
-                    <a href="{{ route('admin.payment-invoices.index') }}">
-                        <img src="{{ asset('images/icon/payment.svg') }}" alt="payment">
-                        <span class="menu-title">@lang('menu.payment-invoice')</span>
-                    </a>
-                </li>
-            @endcan
+            <li class="nav-item has-sub sidebar-group">
+                <a href="#"> 
+                    <i class="icon_adjst fas fa-file-invoice" style="color: #3CB64B;"></i>
+                    <span class="menu-title" data-i18n="Dashboard">Accounting</span>
+                </a>
+                <ul class="menu-content"> 
+                    @can('viewAny', App\Models\PaymentInvoice::class)
+                    <li class="nav-item {{ $isActive(['admin.payment-invoices.index','admin.payment-invoices.edit']) }} ml-2">
+                        <a href="{{ route('admin.payment-invoices.index') }}">
+                            <i class="icon_adjst feather icon-circle"></i>
+                            <span class="menu-title">@lang('menu.payment-invoice')</span>
+                        </a>
+                    </li>
+                     @endcan
+                    @can('viewAny', App\Models\BillingInformation::class)
+                    <li class="nav-item {{ $isActive(['admin.billing-information.index','admin.billing-information.edit','admin.billing-information.create']) }}  ml-2">
+                        <a href="{{ route('admin.billing-information.index') }}">   
+                        <i class="icon_adjst feather icon-circle"></i>
+                        <span class="menu-title">@lang('menu.Billing Informations')</span>
+                        </a>
+                    </li> 
+                        <li class="nav-item {{ $isActive(['admin.deposit.index','admin.deposit.edit','admin.deposit.create']) }}  ml-2">
+                            <a href="{{ route('admin.deposit.index') }}">
+                                <i class="icon_adjst feather icon-circle"></i>
+                                <span class="menu-title">@lang('menu.Balance')</span>
+                            </a>
+                        </li>
+                        @admin
+                            <li class="nav-item {{ $isActive(['admin.liability.index','admin.liability.edit','admin.liability.create']) }} ml-2">
+                                <a href="{{ route('admin.liability.index') }}">
+                                    <i class="icon_adjst feather icon-circle"></i>
+                                    <span class="menu-title">@lang('HD Liability')</span>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ $isActive(['admin.tax.index']) }} ml-2">
+                                <a href="{{ route('admin.tax.index') }}">
+                                    <i class="icon_adjst feather icon-circle"></i>
+                                    <span class="menu-title">Tax Payment</span>
+                                </a>
+                            </li>
+                        @endadmin
+                    @endcan
+                </ul>
+            </li>
+
+
 
             @can('viewAny', App\Models\Connect::class)
                 <li class="nav-item {{ $isActive(['admin.connect.index']) }}">
@@ -302,6 +340,22 @@
                         </a>
                     </li>
                     @endcan
+                    @can('viewKPIReport', App\Models\Reports::class)
+                    <li class="{{ $isActive(['admin.reports.kpi-report.index']) }}">
+                        <a href="{{ route('admin.reports.kpi-report.index') }}">
+                            <i class="icon_adjst feather icon-circle"></i>
+                            <span class="menu-title">@lang('menu.Reports.KPI Report')</span>
+                        </a>
+                    </li>
+                    @endcan
+                    @admin
+                        <li class="{{ $isActive(['admin.reports.unpaid-orders']) }}">
+                            <a href="{{ route('admin.reports.unpaid-orders') }}">
+                                <i class="icon_adjst feather icon-circle"></i>
+                                <span class="menu-title">Un Paid Orders Report</span>
+                            </a>
+                        </li>
+                    @endadmin
                     @admin
                         {{-- <li class="{{ $isActive(['admin.reports.audit-report.index','admin.reports.audit-report.show']) }}">
                             <a href="{{ route('admin.reports.audit-report.index') }}">
@@ -342,7 +396,6 @@
                         </li>
                     </ul>
                 </li>
-            {{-- @endcan --}}
             {{-- Affiliate --}}
             @can('viewAny', App\Models\AffiliateSale::class)
                 <li class="nav-item has-sub sidebar-group">
@@ -405,40 +458,6 @@
                     <livewire:components.support-ticket/>
                 </a>
             </li>
-
-            @can('viewAny', App\Models\BillingInformation::class)
-            <li class="nav-item {{ $isActive(['admin.billing-information.index','admin.billing-information.edit','admin.billing-information.create']) }}">
-                <a href="{{ route('admin.billing-information.index') }}">
-                    <i class="icon_adjst feather icon-alert-triangle" style="color: #3db64c;"></i>
-                    <span class="menu-title">@lang('menu.Billing Informations')</span>
-                </a>
-            </li>
-            @endcan
-
-            @can('viewAny', App\Models\BillingInformation::class)
-                <li class="nav-item {{ $isActive(['admin.deposit.index','admin.deposit.edit','admin.deposit.create']) }}">
-                    <a href="{{ route('admin.deposit.index') }}">
-                        <img src="{{ asset('images/icon/balance.svg') }}" alt="Balance">
-                        <span class="menu-title">@lang('menu.Balance')</span>
-                    </a>
-                </li>
-                @admin
-                    <li class="nav-item {{ $isActive(['admin.liability.index','admin.liability.edit','admin.liability.create']) }}">
-                        <a href="{{ route('admin.liability.index') }}">
-                            <img src="{{ asset('images/icon/liability.svg') }}" alt="HD Liability">
-                            <span class="menu-title">@lang('HD Liability')</span>
-                        </a>
-                    </li>
-                @endadmin
-            @endcan
-            @admin
-            <li class="nav-item {{ $isActive(['admin.tax.index']) }}">
-                <a href="{{ route('admin.tax.index') }}">
-                    <i class="icon_adjst feather icon-activity" style="color: #3db64c;"></i>
-                    <span class="menu-title">Tax Payment</span>
-                </a>
-            </li>
-            @endadmin
 
             @can('viewAny', Spatie\Activitylog\Models\Activity::class)
             <li class="nav-item {{ $isActive(['admin.activity.log.index']) }}">

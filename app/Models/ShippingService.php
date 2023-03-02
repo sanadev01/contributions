@@ -36,6 +36,10 @@ class ShippingService extends Model
     const GePS = 537;
     const GePS_EFormat = 540;
     const Prime5 = 773;
+    const USPS_GROUND = 05;
+    const Post_Plus_Registered = 734;
+    const Post_Plus_EMS = 367;
+
 
     protected $guarded = [];
 
@@ -156,6 +160,14 @@ class ShippingService extends Model
         return false;
     }
 
+    public function isPostPlusService()
+    {
+        if($this->service_sub_class == self::Post_Plus_Registered|| $this->service_sub_class == self::Post_Plus_EMS){
+            return true;
+        }
+        return false;
+    }
+
     public function isGePSeFormatService()
     {
         if (collect($this->gepsShippingServices())->contains($this->service_sub_class)) {
@@ -190,7 +202,8 @@ class ShippingService extends Model
             self::USPS_PRIORITY_INTERNATIONAL, 
             self::USPS_FIRSTCLASS_INTERNATIONAL, 
             self::UPS_GROUND, 
-            self::FEDEX_GROUND
+            self::FEDEX_GROUND,
+            self::USPS_GROUND,
         ];
     }
 
@@ -200,7 +213,8 @@ class ShippingService extends Model
             self::USPS_PRIORITY, 
             self::USPS_FIRSTCLASS,
             self::UPS_GROUND, 
-            self::FEDEX_GROUND
+            self::FEDEX_GROUND,
+            self::USPS_GROUND,
         ];
     }
 
@@ -219,4 +233,53 @@ class ShippingService extends Model
             self::GePS_EFormat,
         ];
     }
+    public function getIsMilliExpressAttribute()
+    { 
+        return $this->service_sub_class == ShippingService::Mile_Express;
+    }
+    public function getIsUspsPriorityAttribute()
+    { 
+        return $this->service_sub_class == ShippingService::USPS_PRIORITY;
+    }
+    public function getIsUspsFirstclassAttribute()
+    { 
+        return $this->service_sub_class == ShippingService::USPS_FIRSTCLASS;
+    }
+
+    public function getIsUpsGroundAttribute()
+    {  
+        return $this->service_sub_class == ShippingService::UPS_GROUND;
+    }
+    public function getIsFedexGroundAttribute()
+    { 
+        return $this->service_sub_class == ShippingService::FEDEX_GROUND;
+    }
+    public function getIsUspsPriorityInternationalAttribute()
+    { 
+        return $this->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL;
+    }
+    public function getIsUspsFirstclassInternationalAttribute()
+    { 
+        return $this->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL;
+    }
+    public function getIsgepsAttribute()
+    {
+        if (collect($this->gepsShippingServices())->contains($this->service_sub_class)) {
+            return true;
+        }
+
+        return false;
+    }
+    public function getIsSwedenPostAttribute()
+    {
+        if($this->service_sub_class == self::Prime5){
+            return true;
+        }
+        return false;
+    }
+    public function getIsUspsGroundAttribute()
+    { 
+        return $this->service_sub_class == ShippingService::USPS_GROUND;
+    }
+    
 }

@@ -14,33 +14,39 @@ class OrderTrackingController extends Controller
     public function __invoke($search)
     {
         $order_tracking_repository = new OrderTrackingRepository($search);
-        $response = $order_tracking_repository->handle();
-
-        if( $response->success == true )
-        {
-            if($response->service == 'Correios_Chile')
-            {
-                $this->trackings = $this->getChileTrackings($response->chile_trackings, $response->trackings);
-
-                $this->trackings = $this->trackings->toArray();
+        $responses = $order_tracking_repository->handle();
+        foreach($responses as $response){
+            if( $response['success'] == true ){
+                if($response['service'] == 'Correios_Chile')
+                {
+                    $this->trackings = $this->getChileTrackings($response['chile_trackings'], $response['trackings']);
+    
+                    $this->trackings = $this->trackings->toArray();
+                    
+                    return apiResponse(true,'Order found', ['hdTrackings'=> $this->trackings, 'apiTrackings' => null ]);
+                }
+                if($response['service'] == 'USPS')
+                {
+                    $this->trackings = $this->getUSPSTrackings($response['usps_trackings'], $response['trackings']);
+    
+                    $this->trackings = $this->trackings->toArray();
+                    
+                    return apiResponse(true,'Order found',['hdTrackings'=> $this->trackings, 'apiTrackings' => null ]);
+                }
+                if($response['service'] == 'Correios_Brazil')
+                {
+                    $this->trackings = $response['trackings']->toArray();
+                    $apiTracking = $response['api_trackings']->toArray(); 
+                    return apiResponse(true,'Order found',['hdTrackings'=> $this->trackings, 'apiTrackings' => $apiTracking]); 
+                }
                 
-                return apiResponse(true,'Order found', $this->trackings);
+                $this->trackings = $response['trackings']->toArray();
+    
+                return apiResponse(true,'Order found',['hdTrackings'=> $this->trackings , 'apiTrackings' => null]);
             }
-            if($response->service == 'USPS')
-            {
-                $this->trackings = $this->getUSPSTrackings($response->usps_trackings, $response->trackings);
-
-                $this->trackings = $this->trackings->toArray();
-                
-                return apiResponse(true,'Order found', $this->trackings);
-            }
-
-            $this->trackings = $response->trackings->toArray();
-
-            return apiResponse(true,'Order found', $this->trackings);
         }
 
-        return apiResponse(false,'Order not found', $this->trackings);
+        return apiResponse(false,'Order not found', ['hdTrackings'=> $this->trackings, 'apiTrackings' => null ]);
         
     }
 

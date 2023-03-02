@@ -30,6 +30,21 @@ return [
     'Amount Customers Paid' => 'Amount Customers Paid',
     'Correios Anjun' => 'Correios (Anjun)',
     'Search By Name, Warehouse No. or Tracking Code' => 'Search By Name, Warehouse No. or Tracking Code',
+    'Key Performance Indicator Report' => 'Key Performance Indicator Report',
+    'Tracking' => 'Tracking',
+    'Type Package' => 'Type Package',
+    'First Event' => 'First Event',
+    'Last Event' => 'Last Event',
+    'Days Between' => 'Days Between',
+    'Last Event' => 'Last Event',
+    'Taxed' => 'Taxed',
+    'Delivered' => 'Delivered',
+    'Returned' => 'Returned',
+    'Report Name' => 'Report Name',
+    'From Date' => 'From Date',
+    'To Date' => 'To Date',
+    'Status' => 'Status',
+
 
     'recipient' => [
         'slect-from-list' => 'Select Address From List',
@@ -76,6 +91,8 @@ return [
         'Charge-msg2' => 'for your parcel',
         'Proceed Order' => 'Proceed Order',
         'Decline' => 'Decline',
+        'Item Limit' => 'Please do not add more than 5 items.',
+        
     ],
     'services' => [
         'handling-services' => 'Additional Services',

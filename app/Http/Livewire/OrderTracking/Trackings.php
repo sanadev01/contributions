@@ -55,7 +55,7 @@ class Trackings extends Component
             return 120;
         }
 
-        if ($tracking['status'] == 01 && $tracking['tipo'] == 'BDEBDIBDR') {
+        if ($tracking['status'] == 01 && ($tracking['tipo'] == 'BDEBDIBDR' || $tracking['tipo'] == 'BDI')) {
             return 130;
         }
 
@@ -114,6 +114,30 @@ class Trackings extends Component
             return 120;
         }
     }
+    
+    public function togglePrime5Status($tracking)
+    {
+        $lastTrack = last($tracking);
+        $status = $lastTrack['Id'];
+        if ($status == '11' || $status >= '14') {
+            return 80;
+        }
 
+        if ($status == '7' || $status == '4') {
+            return 90;
+        }
+
+        if ($status == '10') {
+            return 100;
+        }
+
+        if ($status == '8') {
+            return 110;
+        }
+
+        if ($status == '9') {
+            return 120;
+        }
+    }
 
 }

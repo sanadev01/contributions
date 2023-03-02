@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Request;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class Deposit extends Model
@@ -76,6 +77,9 @@ class Deposit extends Model
     {
         return $this->is_credit;
     }
+    public function getTypeAttribute(){
+        return $this->is_credit?'Credit':'Debit';
+    }
 
     public function getOrder($orderId)
     {
@@ -90,5 +94,11 @@ class Deposit extends Model
         }
 
         return $totalBalance;
+    }
+    public function scopeFilter($query,$startDate,$endDate)
+    {
+        $query->when($startDate && $endDate,function($query) use ($startDate,$endDate){ 
+            return $query->whereBetween('created_at' , [$startDate.' 00:00:00', $endDate.' 23:59:59']);
+        });
     }
 }

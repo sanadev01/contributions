@@ -193,5 +193,11 @@
     .red{
         color:#ff5a5a
     }
+    .font-sans{
+        font-family: sans-serif;
+    }
+    .search-header{
+        display: table-header-group;
+    }
 </style>
 @yield('custom-css')

@@ -20,7 +20,8 @@ class USPSContainerRepository {
 
         return $query->where(function($query) {
 			                    $query->where('services_subclass_code','Priority')
-						        ->orWhere('services_subclass_code','FirstClass');
+						        ->orWhere('services_subclass_code','FirstClass')
+                                ->orWhere('services_subclass_code','USPS Ground');
                             })->latest()->paginate();
 
     }

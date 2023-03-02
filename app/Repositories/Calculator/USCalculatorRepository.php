@@ -121,7 +121,8 @@ class USCalculatorRepository
         if($this->shippingServices->contains('service_sub_class', ShippingService::USPS_PRIORITY) 
             || $this->shippingServices->contains('service_sub_class', ShippingService::USPS_FIRSTCLASS)
             || $this->shippingServices->contains('service_sub_class', ShippingService::USPS_PRIORITY_INTERNATIONAL)
-            || $this->shippingServices->contains('service_sub_class', ShippingService::USPS_FIRSTCLASS_INTERNATIONAL))
+            || $this->shippingServices->contains('service_sub_class', ShippingService::USPS_FIRSTCLASS_INTERNATIONAL)
+            || $this->shippingServices->contains('service_sub_class', ShippingService::USPS_GROUND))
         {
             $this->getUSPSRates();
         }
@@ -149,7 +150,8 @@ class USCalculatorRepository
             if ($serviceRate['service_sub_class'] == ShippingService::USPS_PRIORITY || 
                 $serviceRate['service_sub_class'] == ShippingService::USPS_FIRSTCLASS ||
                 $serviceRate['service_sub_class'] == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
-                $serviceRate['service_sub_class'] == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) 
+                $serviceRate['service_sub_class'] == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL ||
+                $serviceRate['service_sub_class'] == ShippingService::USPS_GROUND) 
             {
                 $profit = $serviceRate['rate'] * ($this->uspsProfit / 100);
 
@@ -368,7 +370,8 @@ class USCalculatorRepository
         if ($this->order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || 
             $this->order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS ||
             $this->order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
-            $this->order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) 
+            $this->order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL ||
+            $this->order->shippingService->service_sub_class == ShippingService::USPS_GROUND) 
         {
             if ($this->tempOrder['to_herco'] && !$this->uspsLabelRepository->getPrimaryLabelForSender($this->order, $request)) {
                 $this->error = $this->uspsLabelRepository->getUSPSErrors();
@@ -566,7 +569,8 @@ class USCalculatorRepository
             return ($shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS || 
                     $shippingService->service_sub_class == ShippingService::USPS_PRIORITY || 
                     $shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
-                    $shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL);
+                    $shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL ||
+                    $shippingService->service_sub_class == ShippingService::USPS_GROUND);
         });
         
         if ($uspsServices->isEmpty()) {

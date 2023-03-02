@@ -18,6 +18,9 @@ use App\Http\Requests\Api\Parcel\CreateRequest;
 use App\Http\Requests\Api\Parcel\UpdateRequest;
 use App\Http\Resources\PublicApi\OrderResource;
 use App\Repositories\ApiShippingServiceRepository;
+use Illuminate\Support\Facades\Validator;
+use FlyingLuscas\Correios\Client;
+use Illuminate\Support\Facades\Log;
 
 class ParcelController extends Controller
 {
@@ -36,9 +39,10 @@ class ParcelController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(CreateRequest $request)
-    { 
-        \Log::info('request Data');
-        \Log::info($request);
+    {
+        Log::info('request Data');
+        Log::info($request);
+
         $weight = optional($request->parcel)['weight']??0;
         $length = optional($request->parcel)['length']??0;
         $width = optional($request->parcel)['width']??0;
@@ -48,6 +52,10 @@ class ParcelController extends Controller
 
         if (!$shippingService) {
             return apiResponse(false,'Shipping service not found.');
+        }
+
+        if (!$shippingService->active) {
+            return apiResponse(false,'Selected shipping service is currently not available.');
         }
 
         if (!setting('anjun_api', null, \App\Models\User::ROLE_ADMIN) && $shippingService->isAnjunService()) {
@@ -250,9 +258,13 @@ class ParcelController extends Controller
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function show(Order $parcel)
+    public function show($id)
     {
-        return apiResponse(true,"Get Parcel Data successfully", OrderResource::make($parcel) );
+        $parcel = Order::where('user_id',Auth::id())->where('id',$id)->first();
+        if($parcel){
+            return apiResponse(true,"Get Parcel Data successfully", OrderResource::make($parcel) );
+        }
+        return apiResponse(false,"The parcel doesn't exist", null );
     }
 
     /**
@@ -264,10 +276,12 @@ class ParcelController extends Controller
      */
     public function update(UpdateRequest $request, Order $parcel)
     {
+        if(Auth::id() != $parcel->user_id){
+            return apiResponse(false,'Order not found');
+        }
         if ($parcel->isPaid()) {
             return apiResponse(false,'order can not be updated once payment has been paid');
         }
-
         $weight = optional($request->parcel)['weight']??0;
         $length = optional($request->parcel)['length']??0;
         $width = optional($request->parcel)['width']??0;
@@ -508,6 +522,10 @@ class ParcelController extends Controller
      */
     public function destroy(Order $parcel,$soft = true)
     {
+        if(Auth::id() != $parcel->user_id){
+            return apiResponse(false,'Order not found');
+        }
+        
         if ( $soft && $parcel->status < Order::STATUS_PAYMENT_DONE ){
             
             optional($parcel->affiliateSale)->delete();

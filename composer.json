@@ -29,6 +29,8 @@
         "phpoffice/phpspreadsheet": "^1.14",
         "rap2hpoutre/laravel-log-viewer": "^1.7",
         "saqijaan/laravel-json-column-trait": "dev-master",
+        "setasign/fpdf": "^1.8",
+        "setasign/fpdi": "^2.3",
         "spatie/laravel-activitylog": "^3.16",
         "stripe/stripe-php": "^7.100",
         "yangyao/php-barcode": "dev-master"
