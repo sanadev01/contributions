@@ -25,17 +25,17 @@ class AdjustmentRepository
 
         DB::beginTransaction();
         try {
-            //    $deposit = Deposit::create([
-            //         'uuid' => PaymentInvoice::generateUUID('DP-'),
-            //         'amount' =>  $request->adjustment, 
-            //         'user_id' =>$request->user_id,
-            //         // 'order_id' => $order->id,
-            //         'balance' => $balance +  $request->adjustment,
-            //         'is_credit' => true,
-            //         'attachment' => '',
-            //         'last_four_digits' => 'Tax Adjustment',
-            //         'description' =>  $request->reasone,
-            //     ]);
+               $deposit = Deposit::create([
+                    'uuid' => PaymentInvoice::generateUUID('DP-'),
+                    'amount' =>  $request->adjustment, 
+                    'user_id' =>$request->user_id,
+                    // 'order_id' => $order->id,
+                    'balance' => $balance +  $request->adjustment,
+                    'is_credit' => true,
+                    'attachment' => '',
+                    'last_four_digits' => 'Tax Adjustment',
+                    'description' =>  $request->reasone,
+                ]);
             //upload files 
 
             if ($request->hasFile('attachment')) {
