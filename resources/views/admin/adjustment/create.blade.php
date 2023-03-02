@@ -41,12 +41,12 @@
 
                                     <div class="form-group col-sm-6 col-md-3">
                                         <div class="controls">
-                                            <label>  Reasone.<span class="text-danger">*</span></label>
+                                            <label>  Reason<span class="text-danger">*</span></label>
                                             
-                                            <textarea type="text" placeholder="Our customer service  applied wrong ex change rates to the customer" 
+                                            <textarea type="text" placeholder="Please enter reason" 
                                             value="" rows="2" 
                                             class="form-control"
-                                                name="reasone">{{ old('reasone','Our customer service  applied wrong ex change rates to the customer') }}</textarea>
+                                                name="reasone">{{ old('reasone') }}</textarea>
                                             @error('reasone')
                                                 <div class="help-block text-danger"> {{ $message }} </div>
                                             @enderror

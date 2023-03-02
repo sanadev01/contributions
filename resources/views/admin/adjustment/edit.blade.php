@@ -35,12 +35,12 @@
 
 
                                 <div class="controls row mb-1 align-items-center my-3">
-                                    <label class="col-md-3 text-md-right">Reasone<span class="text-danger">*</span></label>
+                                    <label class="col-md-3 text-md-right">Reason<span class="text-danger">*</span></label>
                                     <div class="col-md-4">
-                                        <textarea type="text" placeholder="Our customer service  applied wrong ex change rates to the customer" 
+                                        <textarea type="text" placeholder="Please enter reason" 
                                         value="" rows="2" 
                                         class="form-control"
-                                            name="reasone">{{ old('reasone','Our customer service  applied wrong ex change rates to the customer') }}</textarea>
+                                            name="reasone">{{ old('reasone') }}</textarea>
                                         <div class="help-block"></div>
                                     </div>
                                 </div>
