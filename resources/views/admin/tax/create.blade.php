@@ -133,7 +133,8 @@
                                                     <input type="text"
                                                         class="form-control
                                                         name="user_name[{{ $order->id }}]"
-                                                        value="{{ $order->user->name }}" required>
+                                                        
+                                                        value="{{ $order->user->name }}" readonly required>
                                                 </div>
                                                 <div class="col-md-2">
                                                     <input type="text"
