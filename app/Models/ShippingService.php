@@ -160,70 +160,9 @@ class ShippingService extends Model
         }
         return false;
     }
-    public function isCorreiosService()
-    {
-        if (collect($this->correiosShippingServices())->contains($this->service_sub_class)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public function isAnjunService()
-    {
-        if (collect($this->anjunShippingServices())->contains($this->service_sub_class)) {
-            return true;
-        }
-
-        return false;
-    }
     public function isAnjunChinaService()
     {
         return self::AJ_Standard_CN == $this->service_sub_class;
-    }
-
-    public function isMileExpressService()
-    {
-        if ($this->service_sub_class == self::Mile_Express) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public function isColombiaService()
-    {
-        if (collect($this->colombiaShippingServices())->contains($this->service_sub_class)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public function isPostNLService()
-    {
-        if (collect($this->postNLShippingServices())->contains($this->service_sub_class)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public function isCorreiosChileService()
-    {
-        if (collect($this->correiosChileShippingServices())->contains($this->service_sub_class)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public function isUSPSService()
-    {
-        if (collect($this->uspsShippingServices())->contains($this->service_sub_class)) {
-            return true;
-        }
-        return false;
     }
     public function isCorreiosService()
     {
