@@ -66,7 +66,7 @@ class AdjustmentRepository
             else
                 $diffAmount = $request->adjustment;
             if ($tax->adjustment < 0) {
-                session()->flash('alert-danger', 'The adjustment must be nagative');
+                session()->flash('alert-danger', 'The adjustment must be positive');
                 DB::rollBack();
                 return false;
             } 
