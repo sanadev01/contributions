@@ -121,8 +121,6 @@ class AdjustmentRepository
             }
             if ($request->hasFile('attachment') && $deposit) {
 
-
-
                 foreach ($request->attachment as $attach) {
                     $document = Document::saveDocument($attach);
                     $deposit->depositAttchs()->create([
@@ -133,6 +131,7 @@ class AdjustmentRepository
                     ]);
                 }
             } else {
+                DB::rollBack();
                 session()->flash('alert-danger', 'No change made.');
                 return false;
             }
