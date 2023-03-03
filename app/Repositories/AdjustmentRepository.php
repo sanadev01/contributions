@@ -25,16 +25,16 @@ class AdjustmentRepository
 
         DB::beginTransaction();
         try {
-               $deposit = Deposit::create([
-                    'uuid' => PaymentInvoice::generateUUID('DP-'),
-                    'amount' =>  $request->adjustment, 
-                    'user_id' =>$request->user_id,
-                    'balance' => $balance +  $request->adjustment,
-                    'is_credit' => true,
-                    'attachment' => '',
-                    'last_four_digits' => 'Tax Adjustment',
-                    'description' =>  $request->reasone,
-                ]);
+            $deposit = Deposit::create([
+                'uuid' => PaymentInvoice::generateUUID('DP-'),
+                'amount' =>  $request->adjustment,
+                'user_id' => $request->user_id,
+                'balance' => $balance +  $request->adjustment,
+                'is_credit' => true,
+                'attachment' => '',
+                'last_four_digits' => 'Tax Adjustment',
+                'description' =>  $request->reason,
+            ]);
             // upload files 
             if ($request->hasFile('attachment')) {
                 foreach ($request->attachment as $attach) {
@@ -73,55 +73,55 @@ class AdjustmentRepository
                 $diffAmount = $request->adjustment - $tax->adjustment;
             else
                 $diffAmount = $request->adjustment;
-            if ($diffAmount < 0 && $balance < -$diffAmount){
+            if ($diffAmount < 0 && $balance < -$diffAmount) {
                 DB::rollBack();
                 return false;
             }
-
             
-                $amount =  $diffAmount > 0 ? $diffAmount : -$diffAmount;
-                if ($diffAmount != 0 && $deposit) {
+            $amount =  $diffAmount > 0 ? $diffAmount : -$diffAmount;
+            if ($diffAmount != 0 && $deposit) {
 
-                    $deposit = Deposit::create([
-                        'uuid' => PaymentInvoice::generateUUID('DP-'),
-                        'amount' =>  $amount,
-                        'user_id' => $tax->user_id,
-                        'balance' => $balance +  $diffAmount,
-                        'is_credit' => $diffAmount > 0 ? true : false,
-                        'attachment' => '',
-                        'last_four_digits' => 'Tax Adjustment Edited',
-                        'description' => $request->reasone,
-                    ]);
-                    $tax->update([
-                        'user_id' => $tax->user_id,
-                        'adjustment' => $request->adjustment,
-                        'deposit_id' => $deposit->id,
-                    ]);
-
-                } elseif ($diffAmount != 0 && $deposit==null) {
-                    $deposit = Deposit::create([
-                        'uuid' => PaymentInvoice::generateUUID('DP-'),
-                        'amount' =>  $amount,
-                        'user_id' => $tax->user_id,
-                        'balance' => $balance + $amount,
-                        'is_credit' =>   true,
-                        'attachment' => '',
-                        'last_four_digits' => 'Tax Adjustment Edited',
-                        'description' => $request->reasone,
-                    ]);
-
-                    $tax->update([
-                        'user_id' => $tax->user_id,
-                        'adjustment' => $request->adjustment,
-                        'deposit_id' => $deposit->id,
-                    ]);
-                }
-
-            if ($request->hasFile('attachment')  && $deposit) {
-
-                $deposit->update([
-                    'description' => $request->reasone,
+                $deposit = Deposit::create([
+                    'uuid' => PaymentInvoice::generateUUID('DP-'),
+                    'amount' =>  $amount,
+                    'user_id' => $tax->user_id,
+                    'balance' => $balance +  $diffAmount,
+                    'is_credit' => $diffAmount > 0 ? true : false,
+                    'attachment' => '',
+                    'last_four_digits' => 'Tax Adjustment Edited',
+                    'description' => $request->reason,
                 ]);
+                $tax->update([
+                    'user_id' => $tax->user_id,
+                    'adjustment' => $request->adjustment,
+                    'deposit_id' => $deposit->id,
+                ]);
+            } elseif ($diffAmount != 0 && $deposit == null) {
+                $deposit = Deposit::create([
+                    'uuid' => PaymentInvoice::generateUUID('DP-'),
+                    'amount' =>  $amount,
+                    'user_id' => $tax->user_id,
+                    'balance' => $balance + $amount,
+                    'is_credit' =>   true,
+                    'attachment' => '',
+                    'last_four_digits' => 'Tax Adjustment Edited',
+                    'description' => $request->reason,
+                ]);
+
+                $tax->update([
+                    'user_id' => $tax->user_id,
+                    'adjustment' => $request->adjustment,
+                    'deposit_id' => $deposit->id,
+                ]);
+            }
+            if ($deposit) {
+                $deposit->update([
+                    'description' => $request->reason,
+                ]);
+            }
+            if ($request->hasFile('attachment') && $deposit) {
+
+
 
                 foreach ($request->attachment as $attach) {
                     $document = Document::saveDocument($attach);
@@ -132,9 +132,8 @@ class AdjustmentRepository
                         'path' => $document->filename
                     ]);
                 }
-            }
-            else{
-                session()->flash('alert-danger', 'No change made.');                
+            } else {
+                session()->flash('alert-danger', 'No change made.');
                 return false;
             }
             DB::commit();
