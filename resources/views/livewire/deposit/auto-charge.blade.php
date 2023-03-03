@@ -4,7 +4,7 @@
         <div class="row col-12">
             <div class="col-3">
                 <label>Auto charge Amount</label>
-                <input type="number" wire:model.defer="charge_amount" min="0" class="form-control">
+                <input type="number" wire:model.defer="charge_amount" min="0" class="form-control" id="chargeAmount">
                 @error('charge_amount')
                     <div class="text-danger">
                         {{ $message }}
@@ -14,7 +14,7 @@
             <div class="col-3">
                
                 <label>When Balance less than</label>
-                <input type="number" wire:model.defer="charge_limit" min="0" class="form-control">
+                <input type="number" wire:model.defer="charge_limit" min="0" class="form-control" id="balanceNumber">
                 @error('charge_limit')
                     <div class="text-danger">
                         {{ $message }}
@@ -23,7 +23,7 @@
             </div>
             <div class="col-3">
                 <label> Billing information</label>
-                <select class="form-control" wire:model="charge_biling_information" >
+                <select class="form-control" wire:model="charge_biling_information" id="billingInfo">
                     <option value="">Please Select</option>
                     @forelse (auth()->user()->billingInformations as $billingInfo)
                         <option value="{{ $billingInfo->id }}"
@@ -43,26 +43,25 @@
                 <label>Auto debit authorization apply towards account balance </label><br>
                 <input type="hidden" wire:model="charge">
                 <div class="btn-group btn-toggle" id="btn-toggle">
-                    <label class="AutoChargeSwitch" class="btn btn-primary" data-toggle="modal"
-                        data-target="#exampleModal">
-                        <input type="checkbox" @if ($charge) checked @endif>
+                    <label class="AutoChargeSwitch" class="btn btn-primary">
+                        <input type="checkbox" @if ($charge) checked @endif id="autoChargeSwitch">
                         <span class="AutoChargeSlider AutoChargeRound"></span>
                     </label>
                 </div>
 
 
-                {{-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                {{-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#termsModal">
                     Open Form
                 </button> --}}
 
                 <!-- Modal -->
-                <div wire:ignore.self class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
-                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div wire:ignore.self class="modal fade" id="termsModal" tabindex="-1" role="dialog"
+                    aria-labelledby="termsModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Billing Confirmation</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <h5 class="modal-title" id="termsModalLabel">Billing Confirmation</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeModal">
                                     <span aria-hidden="true close-btn">×</span>
                                 </button>
                             </div>
@@ -136,7 +135,7 @@
                                 
                             </div>
                             <div class="modal-footer">
-                                <div class="vs-checkbox-con vs-checkbox-danger"  >
+                                <div class="vs-checkbox-con vs-checkbox-danger" id="decline">
                                     <input type="checkbox"  class="bulk-container"  wire:click.prevent="dismiss()" data-dismiss="modal">
                                     <span class="vs-checkbox vs-checkbox-lg">
                                         <span class="vs-checkbox--check">
@@ -147,8 +146,8 @@
                                     <span class="h3 mx-2 text-primary my-0 py-0"></span>
                                     No
                                 </div>
-                                <div class="vs-checkbox-con vs-checkbox-primary" >
-                                    <input type="checkbox" class="bulk-container" wire:click.prevent="save()" data-dismiss="modal" >
+                                <div class="vs-checkbox-con vs-checkbox-primary" id="proceed">
+                                    <input type="checkbox" onclick="" class="bulk-container" wire:click.prevent="save()" data-dismiss="modal" id="save">
                                     <span class="vs-checkbox vs-checkbox-lg">
                                         <span class="vs-checkbox--check">
                                             <i class="vs-icon feather icon-check"></i> 
