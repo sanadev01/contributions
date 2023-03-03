@@ -40,7 +40,7 @@
                                         <textarea type="text" placeholder="Please enter reason" 
                                         value="" rows="2" 
                                         class="form-control"
-                                            name="reasone">{{ old('reasone') }}</textarea>
+                                            name="reason">{{ old('reason',$tax->deposit->description) }}</textarea>
                                         <div class="help-block"></div>
                                     </div>
                                 </div>

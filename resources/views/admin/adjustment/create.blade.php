@@ -46,8 +46,8 @@
                                             <textarea type="text" placeholder="Please enter reason" 
                                             value="" rows="2" 
                                             class="form-control"
-                                                name="reasone">{{ old('reasone') }}</textarea>
-                                            @error('reasone')
+                                                name="reason">{{ old('reason') }}</textarea>
+                                            @error('reason')
                                                 <div class="help-block text-danger"> {{ $message }} </div>
                                             @enderror
                                         </div>
