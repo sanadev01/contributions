@@ -1,21 +1,14 @@
 <?php
 
 namespace App\Repositories;
-
-use App\Events\AutoChargeAmountEvent;
-use App\Http\Requests\Tax\TaxRequest;
-use App\Http\Requests\Tax\TaxUpdateRequest;
 use Exception;
 use App\Models\Tax;
 use App\Models\User;
-use App\Models\Order;
 use App\Models\Deposit;
 use App\Models\Document;
 use Illuminate\Http\Request;
 use App\Models\PaymentInvoice;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
-
 class AdjustmentRepository
 {
     public function store(Request $request)
@@ -67,15 +60,13 @@ class AdjustmentRepository
         DB::beginTransaction();
         try {
             $balance = Deposit::getCurrentBalance($tax->user);
-
             $deposit = $tax->deposit;
             if ($deposit)
                 $diffAmount = $request->adjustment - $tax->adjustment;
             else
                 $diffAmount = $request->adjustment;
-
             if ($tax->adjustment < 0) {
-                session()->flash('alert-danger', 'The adjustment must be nagative');
+                session()->flash('alert-danger', 'The adjustment must be positive');
                 DB::rollBack();
                 return false;
             } 
@@ -83,42 +74,18 @@ class AdjustmentRepository
                 session()->flash('alert-danger', 'Error While Update Tax! Check Your Account Balance');
                 DB::rollBack();
                 return false;
-            } 
-
+            }
             $amount =  $diffAmount > 0 ? $diffAmount : -$diffAmount;
-            if ($diffAmount != 0 && $deposit) {
-                $deposit = Deposit::create([
-                    'uuid' => PaymentInvoice::generateUUID('DP-'),
-                    'amount' =>  $amount,
-                    'user_id' => $tax->user_id,
-                    'balance' => $balance +  $diffAmount,
-                    'is_credit' => $diffAmount > 0 ? true : false,
-                    'attachment' => '',
-                    'last_four_digits' => 'Tax Adjustment Edited',
-                    'description' => $request->reason,
-                ]);
-                $tax->update([
-                    'user_id' => $tax->user_id,
-                    'adjustment' => $request->adjustment,
-                    'deposit_id' => $deposit->id,
-                ]);
-            } elseif ($diffAmount != 0 && $deposit == null) {
-                $deposit = Deposit::create([
-                    'uuid' => PaymentInvoice::generateUUID('DP-'),
-                    'amount' =>  $amount,
-                    'user_id' => $tax->user_id,
-                    'balance' => $balance + $amount,
-                    'is_credit' =>   true,
-                    'attachment' => '',
-                    'last_four_digits' => 'Tax Adjustment Edited',
-                    'description' => $request->reason,
-                ]);
+            $isCredit =$diffAmount > 0 ? true : false;
 
-                $tax->update([
-                    'user_id' => $tax->user_id,
-                    'adjustment' => $request->adjustment,
-                    'deposit_id' => $deposit->id,
-                ]);
+            if ($diffAmount != 0 && $deposit) {
+                $deposit = $this->createTaxDeposit($tax,$amount,$diffAmount,$isCredit,$request->reason);
+                $this->updateTax($tax, $request->adjustment, $deposit->id);
+
+            } elseif ($diffAmount != 0 && $deposit == null) {
+                $deposit = $this->createTaxDeposit($tax,$amount,$amount,true,$request->reason);
+                $this->updateTax($tax, $request->adjustment, $deposit->id);
+
             }
             if ($deposit) {
                 $deposit->update([
@@ -126,7 +93,6 @@ class AdjustmentRepository
                 ]);
             }
             if ($request->hasFile('attachment') && $deposit) {
-
                 foreach ($request->attachment as $attach) {
                     $document = Document::saveDocument($attach);
                     $deposit->depositAttchs()->create([
@@ -137,7 +103,6 @@ class AdjustmentRepository
                     ]);
                 }
             } 
-            
             DB::commit();
             return true;
         } catch (Exception $exception) {
@@ -145,5 +110,27 @@ class AdjustmentRepository
             session()->flash('alert-danger', 'Error' . $exception->getMessage());
             return false;
         }
+    }
+    public function createTaxDeposit($tax,$amount,$diffrence,$isCredit,$description)
+    {
+        $balance = Deposit::getCurrentBalance($tax->user);
+        return Deposit::create([
+            'uuid' => PaymentInvoice::generateUUID('DP-'),
+            'amount' =>  $amount,
+            'user_id' => $tax->user_id,
+            'balance' => $balance + $diffrence,
+            'is_credit' =>   $isCredit,
+            'attachment' => '',
+            'last_four_digits' => 'Tax Adjustment Edited',
+            'description' => $description ,
+
+        ]);
+    }
+    public function updateTax($tax,$adjustment,$deposit_id)
+    {
+        $tax->update([ 
+            'adjustment' => $adjustment,
+            'deposit_id' => $deposit_id,
+        ]);
     }
 }
