@@ -24,8 +24,7 @@ class DepositController extends Controller
             'success' =>true,
             'filter' => [
                 'start_date' => $startDate,
-                'end_date' => $endDate,
-                'tracking_code'=> $request->tracking_code,
+                'end_date' => $endDate
             ],
             'deposits' => DepositResource::collection($deposits)
         ]);
