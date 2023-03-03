@@ -268,7 +268,7 @@ Route::get('test-label',function(){
     
     $labelPrinter = new CN23LabelMaker();
     
-    $order = Order::find(91232);
+    $order = Order::find(179250);
     // dd($order);
     $labelPrinter->setOrder($order);
     $labelPrinter->setService(2);
