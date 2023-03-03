@@ -156,6 +156,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
 
         Route::namespace('Tax')->group(function(){
             Route::resource('tax', TaxController::class)->except(['show','destroy']);
+            Route::post('refund-tax',[App\Http\Controllers\Admin\Tax\TaxController::class,'refund'])->name('refund-tax');
         });
 
         Route::namespace('Adjustment')->group(function(){
