@@ -73,14 +73,20 @@ class AdjustmentRepository
                 $diffAmount = $request->adjustment - $tax->adjustment;
             else
                 $diffAmount = $request->adjustment;
-            if ($diffAmount < 0 && $balance < -$diffAmount) {
+
+            if ($tax->adjustment < 0) {
+                session()->flash('alert-danger', 'The adjustment must be nagative');
                 DB::rollBack();
                 return false;
-            }
-            
+            } 
+            if ($balance < $diffAmount) {
+                session()->flash('alert-danger', 'Error While Update Tax! Check Your Account Balance');
+                DB::rollBack();
+                return false;
+            } 
+
             $amount =  $diffAmount > 0 ? $diffAmount : -$diffAmount;
             if ($diffAmount != 0 && $deposit) {
-
                 $deposit = Deposit::create([
                     'uuid' => PaymentInvoice::generateUUID('DP-'),
                     'amount' =>  $amount,
@@ -130,11 +136,8 @@ class AdjustmentRepository
                         'path' => $document->filename
                     ]);
                 }
-            } else {
-                DB::rollBack();
-                session()->flash('alert-danger', 'No change made.');
-                return false;
-            }
+            } 
+            
             DB::commit();
             return true;
         } catch (Exception $exception) {
