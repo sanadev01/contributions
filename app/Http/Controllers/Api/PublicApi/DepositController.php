@@ -14,11 +14,7 @@ class DepositController extends Controller
     {
         $startDate = $request->start_date ??date('Y-m-01'); 
         $endDate  = $request->end_date  ??date('Y-m-d'); 
-        $deposits = Deposit::with(['orders.tax','user'])->when($request->tracking_code,function($query,$tracking_code){
-            return $query->whereHas('orders',function($query) use($tracking_code){
-              return $query->where('corrios_tracking_code',$tracking_code);
-        });
-        })->where('user_id',Auth::id())->filter($startDate,$endDate)->get();
+        $deposits = Deposit::with(['orders.tax','user'])->where('user_id',Auth::id())->filter($startDate,$endDate)->get();
 
         return response()->json([
             'success' =>true,
