@@ -68,7 +68,7 @@
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_COLOMBIA_TRAYETOS}}">Colombia TRAYETOS</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Post_Plus_Registered}}">Post Plus Registered</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Post_Plus_EMS}}">Post Plus EMS</option>
-                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_GePS_EMS}}">Global eParcel EMS</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Parcel_Post}}">Parcel Post</option>
                                         </select>
                                         <div class="help-block"></div>
                                     </div>
