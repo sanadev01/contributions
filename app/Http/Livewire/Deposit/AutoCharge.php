@@ -14,7 +14,7 @@ class AutoCharge extends Component
     public $charge_amount;
     public $charge_limit;
     public $charge_biling_information;
-    public $selected_card_no;
+    public $selected_card;
     public $charge;
 
     public function mount()
@@ -27,13 +27,8 @@ class AutoCharge extends Component
 
     public function render()
     {
-        $this->selected_card_no = optional(auth()->user()->billingInformations->where('id', $this->charge_biling_information))->first()->card_no ?? '****';
+        $this->selected_card = optional(auth()->user()->billingInformations->where('id', $this->charge_biling_information))->first();
         return view('livewire.deposit.auto-charge');
-    }
-
-    public function dismiss()
-    {  
-        $this->render();
     }
     public function save()
     {
@@ -70,6 +65,6 @@ class AutoCharge extends Component
             $this->dispatchBrowserEvent('alert', ['type' => $type,  'message' => $message]);
             return;
         }
-        $this->dispatchBrowserEvent('alert', ['type' => 'error',  'message' => 'Auto Charge Something Went Wrong']);
+        $this->dispatchBrowserEvent('alert', ['type' => 'error',  'message' => 'Auto Charge Something Went Wrong']); 
     }
 }
