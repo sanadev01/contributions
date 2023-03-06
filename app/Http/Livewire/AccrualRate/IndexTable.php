@@ -66,6 +66,10 @@ class IndexTable extends Component
             'name' => 'Post Plus EMS',
             'value' => Package::SERVICE_CLASS_Post_Plus_EMS,
         ];
+        $this->services[12] = [
+            'name' => 'Global eParcel EMS',
+            'value' => Package::SERVICE_CLASS_GePS_EMS,
+        ];
         return $this->services;
     }
 }

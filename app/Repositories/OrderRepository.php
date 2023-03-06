@@ -115,6 +115,7 @@ class OrderRepository
                 $service = [
                     ShippingService::GePS,
                     ShippingService::GePS_EFormat,
+                    ShippingService::GePS_EMS,
                 ];
             }
             if($request->carrier == 'Prime5'){
@@ -533,7 +534,8 @@ class OrderRepository
             || $shippingServices->contains('service_sub_class', ShippingService::UPS_GROUND)
             || $shippingServices->contains('service_sub_class', ShippingService::GePS)
             || $shippingServices->contains('service_sub_class', ShippingService::GePS_EFormat)
-            || $shippingServices->contains('service_sub_class', ShippingService::USPS_GROUND))
+            || $shippingServices->contains('service_sub_class', ShippingService::USPS_GROUND)
+            || $shippingServices->contains('service_sub_class', ShippingService::GePS_EMS))
         {
             if(!setting('usps', null, User::ROLE_ADMIN))
             {

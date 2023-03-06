@@ -359,7 +359,7 @@ class Order extends Model implements Package
 
                 return 'Correios Chile';
 
-            }elseif(optional($this->shippingService)->service_sub_class == ShippingService::GePS || optional($this->shippingService)->service_sub_class == ShippingService::GePS_EFormat){
+            }elseif(optional($this->shippingService)->service_sub_class == ShippingService::GePS || optional($this->shippingService)->service_sub_class == ShippingService::GePS_EFormat || optional($this->shippingService)->service_sub_class == ShippingService::GePS_EMS){
 
                 return 'Global eParcel';
 
@@ -394,7 +394,8 @@ class Order extends Model implements Package
                 optional($this->shippingService)->service_sub_class == ShippingService::Prime5 ||
                 optional($this->shippingService)->service_sub_class == ShippingService::USPS_GROUND ||
                 optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Registered ||
-                optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_EMS) {
+                optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_EMS ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GePS_EMS) {
 
                 return $this->user_declared_freight;
             }
