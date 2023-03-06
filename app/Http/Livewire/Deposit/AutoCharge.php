@@ -2,14 +2,19 @@
 
 namespace App\Http\Livewire\Deposit;
 
+use App\Mail\Admin\AutoChargeChanged;
 use Livewire\Component;
 use App\Models\BillingInformation;
+use Exception;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class AutoCharge extends Component
 {
     public $charge_amount;
     public $charge_limit;
     public $charge_biling_information;
+    public $selected_card_no;
     public $charge;
 
     public function mount()
@@ -22,9 +27,14 @@ class AutoCharge extends Component
 
     public function render()
     {
+        $this->selected_card_no = optional(auth()->user()->billingInformations->where('id', $this->charge_biling_information))->first()->card_no ?? '****';
         return view('livewire.deposit.auto-charge');
     }
 
+    public function dismiss()
+    {  
+        $this->render();
+    }
     public function save()
     {
         $data = $this->validate([
@@ -43,14 +53,23 @@ class AutoCharge extends Component
             $this->charge = setting('charge', null, auth()->id());
             $message = 'Auto Charge deActivate Successfully';
             $type = 'info';
-            if($this->charge){
+            if ($this->charge) {
                 $message = 'Auto Charge activated Successfully';
                 $type = 'success';
+
             }
+            try {
+                Mail::send(new AutoChargeChanged());
+            } catch (Exception $ex) {
+                
+            $this->dispatchBrowserEvent('alert', ['type' =>  $type,  'message' => $ex->getMessage()]);
+            return;
+                // Log::info('Autocharge change setting email send error: '.$ex->getMessage());
+            }
+
             $this->dispatchBrowserEvent('alert', ['type' => $type,  'message' => $message]);
             return;
         }
         $this->dispatchBrowserEvent('alert', ['type' => 'error',  'message' => 'Auto Charge Something Went Wrong']);
     }
-
 }
