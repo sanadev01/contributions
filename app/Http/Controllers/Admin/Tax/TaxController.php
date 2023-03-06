@@ -10,9 +10,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Tax\TaxRequest;
 use App\Http\Requests\Tax\TaxUpdateRequest;
 use App\Models\Deposit;
+use App\Models\Document;
 use App\Models\PaymentInvoice;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class TaxController extends Controller
 {
@@ -113,11 +115,25 @@ class TaxController extends Controller
                 'is_credit' => true,
                 'attachment' => '',
                 'last_four_digits' => 'Tax refunded',
+                'description' => $request->reason,
             ]);
 
             $tax->update([
                   'deposit_id'=>$deposit->id,
             ]); 
+            // upload files 
+            if ($request->hasFile('attachment')) {
+                foreach ($request->attachment as $attach) {
+                    $document = Document::saveDocument($attach);
+                    $deposit->depositAttchs()->create([
+                        'name' => $document->getClientOriginalName(),
+                        'size' => $document->getSize(),
+                        'type' => $document->getMimeType(),
+                        'path' => $document->filename
+                    ]);
+                }
+            }
+
             DB::commit();
             $count++;
           }
