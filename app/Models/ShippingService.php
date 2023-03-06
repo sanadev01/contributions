@@ -44,6 +44,7 @@ class ShippingService extends Model
     const Post_Plus_Registered = 734;
     const Post_Plus_EMS = 367;
     const USPS_GROUND = 05;
+    const Parcel_Post = 541;
 
     
 
@@ -316,6 +317,7 @@ class ShippingService extends Model
         return [
             self::GePS,
             self::GePS_EFormat,
+            self::Parcel_Post,
         ];
     }
     public function getIsMilliExpressAttribute()
