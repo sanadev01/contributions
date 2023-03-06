@@ -38,7 +38,7 @@ class ShippingService extends Model
     const USPS_GROUND = 05;
     const Post_Plus_Registered = 734;
     const Post_Plus_EMS = 367;
-    const GePS_EMS = 541;
+    const Parcel_Post = 541;
 
 
     protected $guarded = [];
@@ -227,7 +227,7 @@ class ShippingService extends Model
         return [
             self::GePS,
             self::GePS_EFormat,
-            self::GePS_EMS,
+            self::Parcel_Post,
         ];
     }
     public function getIsMilliExpressAttribute()

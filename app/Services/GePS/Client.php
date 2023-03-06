@@ -148,7 +148,7 @@ class Client{
         }elseif($order->shippingService->service_sub_class == ShippingService::GePS_EFormat) {
             $serviceCode = "IM";
         }
-        elseif($order->shippingService->service_sub_class == ShippingService::GePS_EMS) {
+        elseif($order->shippingService->service_sub_class == ShippingService::Parcel_Post) {
             $serviceCode = "PR";
         }
         $packet =
