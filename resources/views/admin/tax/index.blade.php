@@ -5,10 +5,8 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
-                        <h4 class="mb-0">
-                            @lang('tax.Manage Tax Services')
-                        </h4>
+                    <div class="card-header d-flex justify-content-end">
+                        @section('title', __('tax.Manage Tax Services'))
                         @can('create', App\Models\HandlingService::class)
                         <div>
                         <a href="{{ route('admin.adjustment.create') }}" class="btn btn-success">
@@ -20,8 +18,9 @@
                         </div>
                         @endcan
                     </div></br>
-                    <div class="table-responsive-md mt-1 mr-4 ml-4">
-                        <div class="filters p-2">
+                    <div class="table-responsive-md mt-1 mr-4 ml-4 mb-5">
+                        <div class="filters p-2" id="singleSearch"
+                            @if (old('search', request('search'))) style="display: block" @endif>
                             <div class="row">
                                 <div class="col-md-6">
                                     <form action="" method="GET">
@@ -54,7 +53,7 @@
                                                 <input type="date" class="form-control" name="end_date" >
                                             </div>
                                             <div class="col-md-2">
-                                                <button class="btn btn-primary">
+                                                <button class="btn btn-success">
                                                     Download
                                                 </button>
                                             </div>
@@ -63,9 +62,16 @@
                                 </div>
                             </div>
                         </div>
-                        <table class="table mb-0 table-responsive-md">
+                        <table class="table mb-0 table-bordered table-responsive-sm">
                             <thead>
                                 <tr>
+                                    <th style="min-width: 100px;">
+                                        <select name="" id="bulk-actions" class="form-control">
+                                            <option value="clear">Clear All</option>
+                                            <option value="checkAll">Select All</option>
+                                            <option value="refund">Refund</option>
+                                        </select>
+                                    </th>
                                     <th>@lang('tax.User Name')</th>
                                     <th>@lang('tax.Warehouse No.')</th>
                                     <th>@lang('tax.Tracking Code')</th>
@@ -83,6 +89,27 @@
                             <tbody>
                                 @foreach($taxes as $tax)
                                 <tr>
+                                    <td>                            
+                                        @if(optional($tax->deposit)->last_four_digits != 'Tax refunded') 
+                                                  @if($tax->adjustment==null)
+                                                  <div class="vs-checkbox-con vs-checkbox-primary" title="@lang('orders.Bulk Print')">
+                                                    <input type="checkbox" name="taxes[]" class="bulk-taxes" value="{{$tax->id}}">
+                                                    <span class="vs-checkbox vs-checkbox-lg">
+                                                        <span class="vs-checkbox--check">
+                                                            <i class="vs-icon feather icon-check"></i>
+                                                        </span>
+                                                    </span>
+                                                    <span class="h3 mx-2 text-primary my-0 py-0"></span>
+                                                </div>
+                                                  </form>
+                                                  @endif
+                                      @elseif(optional($tax->deposit)->last_four_digits == 'Tax refunded')
+                                      <button  class="btn btn-danger mr-2">
+                                        <i class="feather icon-check"></i>
+                                    </button>
+                                      @endif
+                                    </td>
+
                                     <td>{{ $tax->user->name }}</td>
                                     <td>
                                         <span> 
@@ -109,9 +136,26 @@
                                         @endif
                                     </td>
                                     <td class="d-flex">
-                                        <a href="{{ $tax->adjustment ? route('admin.adjustment.edit',$tax->id):route('admin.tax.edit',$tax->id) }}" class="btn btn-primary mr-2" title="Edit">
+                                       
+                                          @if(optional($tax->deposit)->last_four_digits != 'Tax refunded') 
+                                          <a href="{{ $tax->adjustment ? route('admin.adjustment.edit',$tax->id):route('admin.tax.edit',$tax->id) }}" class="btn btn-primary mr-2" title="Edit">
                                             <i class="feather icon-edit"></i>
-                                        </a>
+                                         </a> 
+                                                    @if($tax->adjustment==null)
+                                                    <form action="{{ route('admin.refund-tax') }}" method="POST" onsubmit="return confirm('Are you Sure want to refund?');">
+                                                        @csrf
+                                                        <input type="hidden" name="taxes"" value='["{{$tax->id}}"]'>
+                                                        <button  class="btn btn-danger mr-2">
+                                                            <i class="feather icon-corner-down-left"></i>
+                                                        </button>
+                                                    </form>
+                                                    @endif
+                                        @elseif(optional($tax->deposit)->last_four_digits == 'Tax refunded')
+                                        <button  class="btn btn-danger mr-2">
+                                            <i class="feather icon-check"></i>
+                                        </button>
+                                        @endif
+                                        
                                     </td>
                                 </tr>
                                 @endforeach
@@ -122,11 +166,35 @@
                         {{ $taxes->links('pagination::bootstrap-4') }}
                     </div>
                 </div>
-
             </div>
+
         </div>
     </section>
+    <form action="{{ route('admin.refund-tax') }}" method="POST" id="admin-refund-tax" onsubmit="return confirm('Are you Sure want to refund?');">
+        @csrf
+        <input type="hidden" name="taxes" id="taxes" value="">
+    </form>
 @endsection
 @section('modal')
 <x-modal />
+@endsection
+
+@section('js')
+    <script>
+        $('body').on('change','#bulk-actions',function(){
+            if ( $(this).val() == 'clear' ){
+                $('.bulk-taxes').prop('checked',false)
+            }else if ( $(this).val() == 'checkAll' ){
+                $('.bulk-taxes').prop('checked',true)
+            }else if ( $(this).val() == 'refund' ){
+                var taxesIds = [];
+                $.each($(".bulk-taxes:checked"), function(){
+                    taxesIds.push($(this).val());
+                });
+ 
+                $('#admin-refund-tax #taxes').val(JSON.stringify(taxesIds));
+                $('#admin-refund-tax').submit();
+            }
+        })
+    </script>
 @endsection
