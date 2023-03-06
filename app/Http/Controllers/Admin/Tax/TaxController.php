@@ -107,6 +107,7 @@ class TaxController extends Controller
             $deposit = Deposit::create([
                 'uuid' => PaymentInvoice::generateUUID('DP-'),
                 'amount' =>  $tax->selling_usd,
+                'order_id' => $tax->order_id,
                 'user_id' => $tax->user_id,
                 'balance' => $balance +  $tax->selling_usd,
                 'is_credit' => true,
