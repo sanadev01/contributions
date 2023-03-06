@@ -28,8 +28,7 @@ class OrderStatusController extends Controller
         } 
         if ( $order->status == Order::STATUS_SHIPPED) {
             return apiResponse(false, "Order is already shipped");
-        }
-
+        } 
         DB::beginTransaction();
         try {
             if ($order) {
