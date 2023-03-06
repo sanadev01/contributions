@@ -227,7 +227,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     public function hasGePSService()
     {
-        return $this->services_subclass_code == ShippingService::GePS || $this->services_subclass_code == ShippingService::GePS_EFormat;
+        return $this->services_subclass_code == ShippingService::GePS || $this->services_subclass_code == ShippingService::GePS_EFormat || $this->services_subclass_code == ShippingService::GePS_EMS;
     }
 
     public function hasSwedenPostService()
