@@ -48,6 +48,8 @@ class ImportRates extends AbstractImportService
             $limit = 33;
         }elseif($this->shippingService->service_sub_class == ShippingService::Post_Plus_Registered){
             $limit = 22;
+        }elseif($this->shippingService->service_sub_class == ShippingService::Parcel_Post){
+            $limit = 63;
         }else{
             $limit = 70;
         }
