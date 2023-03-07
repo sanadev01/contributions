@@ -1,5 +1,4 @@
 @extends('layouts.master')
-
 @section('page')
     <section id="prealerts">
         <div class="row">
@@ -104,12 +103,11 @@
                                                   </form>
                                                   @endif
                                       @elseif(optional($tax->deposit)->last_four_digits == 'Tax refunded')
-                                      <button  class="btn btn-danger mr-2">
+                                      {{-- <button  class="btn btn-danger mr-2">
                                         <i class="feather icon-check"></i>
-                                    </button>
+                                    </button> --}}
                                       @endif
                                     </td>
-
                                     <td>{{ $tax->user->name }}</td>
                                     <td>
                                         <span> 
@@ -170,15 +168,60 @@
 
         </div>
     </section>
-    <form action="{{ route('admin.refund-tax') }}" method="POST" id="admin-refund-tax" onsubmit="return confirm('Are you Sure want to refund?');">
-        @csrf
-        <input type="hidden" name="taxes" id="taxes" value="">
-    </form>
 @endsection
 @section('modal')
+<!--Refun Reason Modal-->
+<div class="modal fade" id="refundModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><b>Add Reason for Tax Refund</b></h5>
+            </div>
+            <form action="{{ route('admin.refund-tax') }}" method="POST" id="admin-refund-tax" enctype="multipart/form-data">
+                @csrf
+                <input type="hidden" name="taxes" id="taxes" value="">
+                <div class="modal-body"><br>
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="projectinput1">Give Reason for Refund</label>
+                                <textarea class="form-control" name="reason", rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="projectinput1">Attach File</label>
+                                <input type="file" class="form-control" name="attachment[]" multiple required>
+                                @error('csv_file')
+                                    <div class="text-danger">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-10">
+                            <div class="alert alert-warning">
+                                <ol>
+                                    <li>@lang('shipping-rates.* Files larger than 15Mb are not allowed')</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success" id="proceedRefund">Refund Tax</button>
+                        <button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </form>    
+        </div>
+    </div>
+</div>
 <x-modal />
 @endsection
-
 @section('js')
     <script>
         $('body').on('change','#bulk-actions',function(){
@@ -191,9 +234,10 @@
                 $.each($(".bulk-taxes:checked"), function(){
                     taxesIds.push($(this).val());
                 });
+                $('#refundModal').modal('toggle');
  
                 $('#admin-refund-tax #taxes').val(JSON.stringify(taxesIds));
-                $('#admin-refund-tax').submit();
+                // $('#admin-refund-tax').submit();
             }
         })
     </script>
