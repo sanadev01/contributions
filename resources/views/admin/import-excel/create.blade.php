@@ -82,6 +82,8 @@
                                     <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_SRM}}">SRM</option>
                                     <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_GePS}}">GePS</option>
                                     <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Prime5}}">Prime5</option>
+                                    <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Post_Plus_Registered}}">Registered</option>
+                                    <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Post_Plus_EMS}}">EMS</option>
                                 </select>
                                 @error('service_id')
                                     <div class="text-danger">
