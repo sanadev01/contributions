@@ -27,8 +27,6 @@ class SwedenPostUnitRegisterController extends Controller
                 'unit_response_list' => json_encode(['cn35'=>$data->output]),
                 'response' => '1',
             ]); 
-    
-            $this->addOrderTracking($container);
             session()->flash('alert-success', $data->message);
             return back();
               
@@ -38,22 +36,4 @@ class SwedenPostUnitRegisterController extends Controller
         } 
     }
 
-    public function addOrderTracking($container)
-    {
-        $orders = $container->orders;
-
-        foreach ($orders as $order)
-        {
-            OrderTracking::create([
-                'order_id' => $order->id,
-                'status_code' => Order::STATUS_SHIPPED,
-                'type' => 'HD',
-                'description' => 'Parcel transfered to airline',
-                'country' => 'US',
-                'city' => 'Miami'
-            ]);
-        }
-
-        return true;
-    }
 }

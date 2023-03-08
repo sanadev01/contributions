@@ -43,7 +43,7 @@ class NotifyTransaction extends Mailable
             try {
                 \Mail::send(new AutoCharge(round($charge, 2), $order->user));
             } catch (\Exception $ex) {
-                \Log::info('Notify Transaction email send error: '.$ex->getMessage());
+                \Log::info('Notify Autocharge email send error: '.$ex->getMessage());
             }
         }
 

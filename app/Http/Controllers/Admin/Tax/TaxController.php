@@ -19,6 +19,7 @@ class TaxController extends Controller
      */
     public function index(TaxRepository $repository, Request $request)
     {
+        $this->authorize('view', Tax::class);
         $taxes = $repository->get($request);
         return view('admin.tax.index', compact('taxes'));
     }
@@ -30,6 +31,7 @@ class TaxController extends Controller
      */
     public function create(TaxRepository $repository, Request $request)
     {
+        $this->authorize('create', Tax::class);
         $orders = null;
         if($request->trackingNumbers) {
             $orders = $repository->getOrders($request);
@@ -45,6 +47,7 @@ class TaxController extends Controller
      */
     public function store(TaxRepository $repository, TaxRequest $request)
     {
+        $this->authorize('create', Tax::class);
         $response = $repository->store($request);
         if (is_bool($response) && $response) {
             session()->flash('alert-success', 'Tax has been added successfully');
@@ -55,16 +58,7 @@ class TaxController extends Controller
         };
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+  
 
     /**
      * Show the form for editing the specified resource.
@@ -74,6 +68,7 @@ class TaxController extends Controller
      */
     public function edit(Tax $tax)
     {
+        $this->authorize('update',$tax);
         return view('admin.tax.edit',compact('tax'));
     }
 
@@ -86,6 +81,7 @@ class TaxController extends Controller
      */
     public function update(TaxUpdateRequest $request, Tax $tax, TaxRepository $repository)
     {
+        $this->authorize('update', $tax);
         if ($repository->update($request, $tax)) {
             session()->flash('alert-success', 'Tax Transaction Updated');
             return redirect()->route('admin.tax.index');
@@ -95,14 +91,5 @@ class TaxController extends Controller
     }
 
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+     
 }

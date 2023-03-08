@@ -87,6 +87,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'Global eParcel Prime';
         }elseif($this->services_subclass_code == '773'){
             return 'Prime5';
+        }elseif($this->services_subclass_code == 'USPS Ground'){
+            return 'USPS Ground';
+        }elseif($this->services_subclass_code == '734'){
+            return 'Post Plus';
         }else {
             return 'FirstClass';
         }
@@ -118,8 +122,14 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         elseif($this->services_subclass_code == '773'){
             return 11;
         }
-        elseif($this->services_subclass_code == 'CO-NX'){
+        elseif($this->services_subclass_code == '05'){
             return 12;
+        }
+        elseif($this->services_subclass_code == '734'){
+            return 13;
+        }
+        elseif($this->services_subclass_code == 'CO-NX'){
+            return 14;
         }
         // return $this->services_subclass_code == 'NX' ? 2 : 1;
     }
@@ -190,7 +200,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     public function hasGePSService()
     {
-        return $this->services_subclass_code == ShippingService::GePS || $this->services_subclass_code == ShippingService::GePS_EFormat;
+        return $this->services_subclass_code == ShippingService::GePS || $this->services_subclass_code == ShippingService::GePS_EFormat || $this->services_subclass_code == ShippingService::Parcel_Post;
     }
 
     public function hasSwedenPostService()
@@ -198,10 +208,13 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         return $this->services_subclass_code == ShippingService::Prime5;
     }
 
+    public function hasPostPlusService()
+    {
+        return $this->services_subclass_code == ShippingService::Post_Plus_Registered || $this->services_subclass_code == ShippingService::Post_Plus_EMS;
+    }
+    
     public function hasColombiaService()
     {
         return $this->services_subclass_code == 'CO-NX';
     }
-
-    
 }

@@ -133,6 +133,7 @@
                             <option value="Chile">Correios Chile</option>
                             <option value="Global eParcel">Global eParcel</option>
                             <option value="Prime5">Prime5</option>
+                            <option value="Post Plus">Post Plus</option>
                         </select>
                     </th>
                     @admin<th></th>@endadmin
@@ -192,16 +193,20 @@
         window.addEventListener('DOMContentLoaded', () => {
             
             @this.on('updated-status',function(orderId,status){
-                $.post('{{route("api.order.status.update")}}',{
+                @this.call('render')
+                $.post('{{route("admin.order.update.status")}}',{
+                    _token: "{{ csrf_token() }}",
                     order_id: orderId,
                     status : status,
                     user: '{{auth()->user()->name}}'
                 })
                 .then(function(response){
                     if ( response.success ){
+                        toastr.success(response.message)
                         @this.call('render')
                     }else{
                         toastr.error(response.message)
+                        @this.call('render')
                     }
                 }).catch(function(data){
                     toastr.error(response.message)

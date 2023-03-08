@@ -40,6 +40,11 @@ return [
     'Taxed' => 'Taxed',
     'Delivered' => 'Delivered',
     'Returned' => 'Returned',
+    'Report Name' => 'Report Name',
+    'From Date' => 'From Date',
+    'To Date' => 'To Date',
+    'Status' => 'Status',
+
 
     'recipient' => [
         'slect-from-list' => 'Select Address From List',
@@ -86,6 +91,8 @@ return [
         'Charge-msg2' => 'for your parcel',
         'Proceed Order' => 'Proceed Order',
         'Decline' => 'Decline',
+        'Item Limit' => 'Please do not add more than 5 items.',
+        
     ],
     'services' => [
         'handling-services' => 'Additional Services',

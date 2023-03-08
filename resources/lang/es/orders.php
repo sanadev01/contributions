@@ -34,6 +34,10 @@ return [
     'Taxed' => 'Gravado',
     'Delivered' => 'Entregado',
     'Returned' => 'Devueltorojo',
+    'Report Name' => 'Reportar nombre',
+    'From Date' => 'Partir de la fecha',
+    'To Date' => 'Hasta la fecha',
+    'Status' => 'Estado',
     'recipient' => [
         'slect-from-list' => 'Seleccionar dirección de la lista',
         'Previous' => 'Previo', 
@@ -78,6 +82,8 @@ return [
         'Charge-msg2' => 'para su paquete',
         'Proceed Order' => 'Continuar pedido',
         'Decline' => 'Rechazar',
+        'Item Limit' => 'Por favor, no agregue más de 5 artículos.',
+
     ],
     'services' => [
         'handling-services' => 'Servicios adicionales',

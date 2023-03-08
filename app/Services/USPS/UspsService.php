@@ -334,10 +334,10 @@ class UspsService
     {
         return [
             'company_name' => 'HERCO SUITE#100 -'.$warehouse_number,
-            'line1' => '2200 NW 129TH AVE',
+            'line1' => '8305 NW 116TH AVENUE',
             'city' => 'Miami',
             'state_province' => 'FL',
-            'postal_code' => '33182',
+            'postal_code' => '33178',
             'phone_number' => '+13058885191',
             'sms' => '+17867024093',
             'email' => 'homedelivery@homedeliverybr.com',
@@ -446,7 +446,13 @@ class UspsService
                 break;
             case 'PriorityInternational':
                 return 'PriorityInternational';
-                break;    
+                break; 
+            case ShippingService::USPS_GROUND:
+                return 'ParcelSelect';
+                break;
+            case 'ParcelSelect':
+                return 'ParcelSelect';
+                break;     
             case ShippingService::USPS_FIRSTCLASS_INTERNATIONAL:
                 return 'FirstClassInternational';
                 break;               

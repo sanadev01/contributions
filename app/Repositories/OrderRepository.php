@@ -92,6 +92,7 @@ class OrderRepository
                     ShippingService::USPS_FIRSTCLASS,
                     ShippingService::USPS_PRIORITY_INTERNATIONAL,
                     ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,
+                    ShippingService::USPS_GROUND
                 ];
             }
             if($request->carrier == 'UPS'){
@@ -115,11 +116,18 @@ class OrderRepository
                 $service = [
                     ShippingService::GePS,
                     ShippingService::GePS_EFormat,
+                    ShippingService::Parcel_Post,
                 ];
             }
             if($request->carrier == 'Prime5'){
                 $service = [
                     ShippingService::Prime5, 
+                ];
+            }
+            if($request->carrier == 'Post Plus'){
+                $service = [
+                    ShippingService::Post_Plus_Registered,
+                    ShippingService::Post_Plus_EMS,
                 ];
             }
             $query->whereHas('shippingService', function ($query) use($service) {
@@ -389,20 +397,17 @@ class OrderRepository
         return $this->error;
     }
     
-    public function getOdersForExport($request)
+    public function getOdersForExport($request, $user)
     {
-        set_time_limit(800);
-        
         $orders = Order::where('status','>=',Order::STATUS_ORDER)
         ->has('user');
 
-        if (Auth::user()->isUser()) {
-            $orders->where('user_id', Auth::id());
+        if ($user->isUser()) {
+            $orders->where('user_id', $user->id);
         }
-
         if ($request->type == 'domestic') {
             $orders->whereHas('shippingService', function($query) {
-                return $query->whereIn('service_sub_class', [ShippingService::USPS_PRIORITY,ShippingService::USPS_FIRSTCLASS,ShippingService::UPS_GROUND, ShippingService::FEDEX_GROUND]);
+                return $query->whereIn('service_sub_class', [ShippingService::USPS_PRIORITY,ShippingService::USPS_FIRSTCLASS,ShippingService::UPS_GROUND, ShippingService::FEDEX_GROUND, ShippingService::USPS_GROUND]);
             })->orWhereNotNull('us_api_tracking_code');
         }
 
@@ -533,7 +538,9 @@ class OrderRepository
             || $shippingServices->contains('service_sub_class', ShippingService::USPS_FIRSTCLASS_INTERNATIONAL)
             || $shippingServices->contains('service_sub_class', ShippingService::UPS_GROUND)
             || $shippingServices->contains('service_sub_class', ShippingService::GePS)
-            || $shippingServices->contains('service_sub_class', ShippingService::GePS_EFormat))
+            || $shippingServices->contains('service_sub_class', ShippingService::GePS_EFormat)
+            || $shippingServices->contains('service_sub_class', ShippingService::USPS_GROUND)
+            || $shippingServices->contains('service_sub_class', ShippingService::Parcel_Post))
         {
             if(!setting('usps', null, User::ROLE_ADMIN))
             {
@@ -542,7 +549,8 @@ class OrderRepository
                     return $shippingService->service_sub_class != ShippingService::USPS_PRIORITY 
                         && $shippingService->service_sub_class != ShippingService::USPS_FIRSTCLASS
                         && $shippingService->service_sub_class != ShippingService::USPS_PRIORITY_INTERNATIONAL
-                        && $shippingService->service_sub_class != ShippingService::USPS_FIRSTCLASS_INTERNATIONAL;
+                        && $shippingService->service_sub_class != ShippingService::USPS_FIRSTCLASS_INTERNATIONAL
+                        && $shippingService->service_sub_class != ShippingService::USPS_GROUND;
                 });
             }
             if(!setting('ups', null, User::ROLE_ADMIN))

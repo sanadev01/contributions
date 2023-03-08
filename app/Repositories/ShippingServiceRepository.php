@@ -12,7 +12,7 @@ class ShippingServiceRepository
 {
     public function get()
     {   
-        $shippingservices = ShippingService::all();
+        $shippingservices = ShippingService::orderBy('name')->get();
         return $shippingservices;
     }
 

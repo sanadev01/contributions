@@ -82,6 +82,14 @@ class DeliveryBill extends Model
     /**
      * @return bool
      */
+    
+    public function isPostPlus()
+    {
+        if($this->containers->first()->services_subclass_code == ShippingService::Post_Plus_Registered){
+            return true;
+        }
+    }
+
     public function hasColombiaService()
     {
         if ($this->containers->first()->services_subclass_code == 'CO-NX') {

@@ -343,7 +343,8 @@ class Order extends Model implements Package
             if (optional($this->shippingService)->service_sub_class == ShippingService::USPS_PRIORITY ||
                 optional($this->shippingService)->service_sub_class == ShippingService::USPS_FIRSTCLASS ||
                 optional($this->shippingService)->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
-                optional($this->shippingService)->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
+                optional($this->shippingService)->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL ||
+                optional($this->shippingService)->service_sub_class == ShippingService::USPS_GROUND) {
 
                 return 'USPS';
 
@@ -359,7 +360,7 @@ class Order extends Model implements Package
 
                 return 'Correios Chile';
 
-            }elseif(optional($this->shippingService)->service_sub_class == ShippingService::GePS || optional($this->shippingService)->service_sub_class == ShippingService::GePS_EFormat){
+            }elseif(optional($this->shippingService)->service_sub_class == ShippingService::GePS || optional($this->shippingService)->service_sub_class == ShippingService::GePS_EFormat || optional($this->shippingService)->service_sub_class == ShippingService::Parcel_Post){
 
                 return 'Global eParcel';
 
@@ -371,6 +372,11 @@ class Order extends Model implements Package
             elseif(optional($this->shippingService)->service_sub_class == ShippingService::COLOMBIA_NACIONAL || optional($this->shippingService)->service_sub_class == ShippingService::COLOMBIA_TRAYETOS || optional($this->shippingService)->service_sub_class == ShippingService::COLOMBIA_URBANO){
 
                 return 'Colombia Service';
+            }
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Registered || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_EMS){
+
+                return 'PostPlus';
+
             }
             return 'Correios Brazil';
         }
@@ -389,7 +395,11 @@ class Order extends Model implements Package
                 optional($this->shippingService)->service_sub_class == ShippingService::FEDEX_GROUND ||
                 optional($this->shippingService)->service_sub_class == ShippingService::GePS ||
                 optional($this->shippingService)->service_sub_class == ShippingService::GePS_EFormat ||
-                optional($this->shippingService)->service_sub_class == ShippingService::Prime5) {
+                optional($this->shippingService)->service_sub_class == ShippingService::Prime5 ||
+                optional($this->shippingService)->service_sub_class == ShippingService::USPS_GROUND ||
+                optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Registered ||
+                optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_EMS ||
+                optional($this->shippingService)->service_sub_class == ShippingService::Parcel_Post) {
 
                 return $this->user_declared_freight;
             }
@@ -540,7 +550,8 @@ class Order extends Model implements Package
             ShippingService::USPS_PRIORITY_INTERNATIONAL,
             ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,
             ShippingService::UPS_GROUND,
-            ShippingService::FEDEX_GROUND
+            ShippingService::FEDEX_GROUND,
+            ShippingService::USPS_GROUND,
         ];
     }
 
@@ -702,7 +713,7 @@ class Order extends Model implements Package
 
         if ($this->weight_discount && $shippingService && !in_array($shippingService->service_sub_class, [
             ShippingService::USPS_PRIORITY, ShippingService::USPS_FIRSTCLASS,ShippingService::USPS_PRIORITY_INTERNATIONAL,
-            ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,ShippingService::UPS_GROUND,ShippingService::FEDEX_GROUND]))
+            ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,ShippingService::UPS_GROUND,ShippingService::FEDEX_GROUND, ShippingService::USPS_GROUND]))
         {
 
             $additionalServicesCost = $this->calculateAdditionalServicesCost($this->services);
@@ -746,7 +757,8 @@ class Order extends Model implements Package
         if ( $this->us_api_service == ShippingService::USPS_PRIORITY ||
             $this->us_api_service == ShippingService::USPS_FIRSTCLASS ||
             $this->us_api_service == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
-            $this->us_api_service == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL )
+            $this->us_api_service == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL ||
+            $this->us_api_service == ShippingService::USPS_GROUND )
         {
 
             return 'USPS';
@@ -786,6 +798,9 @@ class Order extends Model implements Package
             return "REJECTED";
         }elseif($this->status == Order::STATUS_RELEASE) {
             return "RELEASE";
+        }
+        elseif($this->status == Order::STATUS_SHIPPED) {
+            return "SHIPPED";
         }
     }
 

@@ -66,6 +66,12 @@
                             <span class="menu-title">@lang('menu.Warehouse.Prime5')</span>
                         </a>
                     </li>
+                    <li class="{{ $isActive(['warehouse.postplus_containers.index','warehouse.postplus_containers.create','warehouse.postplus_containers.edit','warehouse.postplus_container.packages.index']) }}">
+                        <a href="{{ route('warehouse.postplus_containers.index') }}">
+                            <i class="feather icon-circle"></i>
+                            <span class="menu-title">@lang('menu.Warehouse.PostPlus')</span>
+                        </a>
+                    </li>
                     <li class="{{ $isActive(['warehouse.colombia-containers.index','warehouse.colombia-containers.create','warehouse.colombia-containers.edit','warehouse.colombia-container.packages']) }}">
                         <a href="{{ route('warehouse.colombia-containers.index') }}">
                             <i class="feather icon-circle"></i>

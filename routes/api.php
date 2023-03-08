@@ -1,6 +1,10 @@
 <?php
 
+use App\Models\Deposit;
+use App\Models\Order;
+use App\Models\PaymentInvoice;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -44,8 +48,6 @@ Route::get('order-ups-sender-rates', [App\Http\Controllers\Admin\Order\OrderUPSL
 // Rates for FedEx
 Route::get('order-fedex-rates', [App\Http\Controllers\Admin\Order\OrderItemsController::class, 'fedExRates'])->name('api.fedExRates');
 
-Route::post('order/update/status',Api\OrderStatusController::class)->name('api.order.status.update');
-
 Route::post('update/inventory-order', Api\InventoryOrderUpdateController::class)->name('api.inventory.order.update');
 
 Route::prefix('v1')->middleware('auth:api')->group(function(){
@@ -67,6 +69,7 @@ Route::prefix('v1')->group(function(){
     
         // Authenticated Routes
         Route::middleware(['auth:api','checkPermission'])->group(function (){
+            Route::get('deposits',DepositController::class);
             Route::get('balance', BalanceController::class);
             Route::resource('parcels', 'ParcelController')->only('store','show','destroy','update');
             Route::get('parcel/{order}/cn23',OrderLabelController::class);
@@ -89,6 +92,43 @@ Route::prefix('v1')->group(function(){
         Route::get('shipping-services/{country_code?}', ServicesController::class);
         Route::get('shcodes/{search?}', ShCodeController::class);
     });
-
+    Route::get('refund-tracking-orders', function (Request $request) {
+    $orders = Order::whereIn('corrios_tracking_code', $request->trackings)->where('is_paid', true)->where('status', 70)->get();
+        $countRefunded = 0;
+        foreach ($orders as $order) {
+            try {
+                DB::beginTransaction();
+                $deposit = Deposit::create([
+                    'uuid' => PaymentInvoice::generateUUID('DP-'),
+                    'amount' => $order->gross_total,
+                    'user_id' => $order->user_id,
+                    'order_id' => $order->id,
+                    'last_four_digits' => 'credit from cancelation, refund ' . $order->warehouse_number,
+                    'balance' => Deposit::getCurrentBalance($order->user) + $order->gross_total,
+                    'is_credit' => true,
+                ]);
+                 $order->deposits()->sync($deposit->id);
+                $order->update([
+                    'status'  => Order::STATUS_REFUND,
+                    'is_paid' => false
+                ]);
+                $countRefunded++;
+                DB::commit();
+            } catch (Exception $e) {
+                DB::rollback();
+                return response()->json([
+                    'status' => false,
+                    'error' => $e->getMessage(),
+                    'refunded' => $countRefunded,
+                    'failed' => $orders->count() - $countRefunded
+                ]);
+            }
+        }
+        return response()->json([
+            'status' => true,
+            'refunded' => $countRefunded,
+            'failed' => $orders->count() - $countRefunded
+        ]);
+    });
 
 });

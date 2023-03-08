@@ -56,6 +56,17 @@ class AccrualRate extends Model
         if ( $this->service == Package::SERVICE_CLASS_Prime5 ){
             return "Prime5";
         }
+
+        if ( $this->service == Package::SERVICE_CLASS_Post_Plus_Registered ){
+            return "Post Plus Registered";
+        }
+        if ( $this->service == Package::SERVICE_CLASS_Post_Plus_EMS ){
+            return "Post Plus EMS";
+        }
+
+        if ( $this->service == Package::SERVICE_CLASS_Parcel_Post ){
+            return "Parcel Post";
+        }
         return '';
     }
 

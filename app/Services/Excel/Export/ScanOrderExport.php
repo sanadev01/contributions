@@ -86,7 +86,7 @@ class ScanOrderExport extends AbstractExportService
         $this->setCellValue('B3', 'Suite#100');
         $this->setCellValue('B4', 'Miami, FL 33182');
 
-        $this->setCellValue('B6', 'Recieved on:');
+        $this->setCellValue('B6', 'Report Date:');
         $this->setBold('B6', true);
         $this->setColor('B6', 'FF0D0D');
 
