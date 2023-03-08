@@ -99,7 +99,7 @@
                                                      <span class="p-1 display-3  col-12 badge badge-success mr-2 my-2 text-dark"
                                                             id="delivered">Delivered</span> 
                                                 </div>
-                                                <div class="col-6 col-xl-6 col-lg-12  col-md-6  col-sm-1">
+                                                <div class="col-6 col-xl-6 col-lg-12  col-md-6  col-sm-12">
                                                    <span class="p-1 display-3  badge badge-info mr-2 text-dark my-2 col-12"
                                                             id="taxed">Taxed</span> 
                                                      <span class="p-1 display-3 badge badge-danger mr-2 my-2 col-12"
@@ -144,29 +144,25 @@
                                     </tr>
                                 </tfoot>
                                 <tbody>
-                                    @if ($trackings)
-                                        @foreach ($trackings['return']['objeto'] as $data)
-                                            @if (isset($data['evento']))
-                                                <tr class="count">
-                                                    @if (optional($data) && isset(optional($data)['numero']))
-                                                        <td>{{ optional($trackingCodeUser[optional($data)['numero']])->pobox_name }}
-                                                        </td>
-                                                        <td>{{ optional($data)['numero'] }}</td>
-                                                        <td><span>{{ optional($data)['categoria'] }}</span></td>
-                                                        <td>{{ optional(optional(optional($data)['evento'])[count($data['evento']) - 1])['data'] }}
-                                                        </td>
-                                                        <td>{{ optional(optional(optional($data)['evento'])[0])['data'] }}
-                                                        </td>
-                                                        <td>{{ sortTrackingEvents($data, null)['diffDates'] }} </td>
-                                                        <td>{{ optional(optional(optional($data)['evento'])[0])['descricao'] }}
-                                                        </td>
-                                                        <td>{{ sortTrackingEvents($data, null)['taxed'] }}</td>
-                                                        <td>{{ sortTrackingEvents($data, null)['delivered'] }}</td>
-                                                        <td>{{ sortTrackingEvents($data, null)['returned'] }}</td>
-                                                    @else
-                                                        <td colspan='9'>No Trackings Found</td>
-                                                    @endif
-                                                </tr>
+                                    @if($trackings)
+                                        @foreach($trackings['return']['objeto'] as $data)
+                                            @if(isset($data['evento']))
+                                            <tr class="count">
+                                                @if(optional($data) && isset(optional($data)['numero']))
+                                                    <td>{{ optional($trackingCodeUser[optional($data)['numero']])->pobox_name }}</td>
+                                                    <td>{{ optional($data)['numero'] }}</td>
+                                                    <td><span>{{ optional($data)['categoria'] }}</span></td>
+                                                    <td>{{ optional(optional(optional($data)['evento'])[count($data['evento'])-1])['data'] }}</td>
+                                                    <td>{{ optional(optional(optional($data)['evento'])[0])['data'] }}</td>
+                                                    <td>{{ sortTrackingEvents($data, null)['diffDates'] }} </td>
+                                                    <td>{{ optional(optional(optional($data)['evento'])[0])['descricao'] }}</td>
+                                                    <td>{{ sortTrackingEvents($data, null)['taxed'] }}</td>
+                                                    <td>{{ sortTrackingEvents($data, null)['delivered'] }}</td>
+                                                    <td>{{ sortTrackingEvents($data, null)['returned'] }}</td>
+                                                @else
+                                                <td colspan='9'>No Trackings Found</td>
+                                                @endif
+                                            </tr>
                                             @endif
                                         @endforeach
                                     @endif
