@@ -23,21 +23,22 @@
                                         <div class="row col-lg-9">
                                             <div class="col-lg-10 col-sm-12">
                                                 <div class="row pr-0 col-12 mb-1">
-                                                    <div class="col-md-4 p-0">
+                                                    <div class="col-md-4 p-0 ml-4">
                                                         <h5>Search Per Date Range</h5>
                                                     </div>
                                                 </div>
                                                 <form class="row col-12 m-0 pr-0"
                                                     action="{{ route('admin.reports.kpi-report.index') }}" method="GET">
-                                                    <div class="col-lg-6 ">
+                                                    
+                                                    <div class="col-lg-5 col-md-5 ">
                                                         <div class="row">
                                                             
-                                                        <div class="col-lg-6 col-md-12">
+                                                        <div class="col-xl-6 col-lg-12 col-lg-6 col-lg-12 ">
                                                             <label class="">Start Date</label>
                                                             <input type="date" name="start_date" id="startDate"
                                                                 placeholder="mm/dd/yyyy" class="form-control ">
                                                         </div>
-                                                        <div class="col-lg-6 col-md-12">
+                                                        <div class="col-xl-6 col-lg-12 col-lg-6 col-lg-12">
                                                             <label>End Date</label>
                                                             <input type="date" name="end_date" id="endDate"
                                                                 placeholder="mm/dd/yyyy" class="form-control">
@@ -47,7 +48,7 @@
                                                     </div>
 
 
-                                                    <div class="col-lg-5">
+                                                    <div class="col-lg-5 col-lg-4">
                                                         <h5 class="my-2">Track Tracking Multiple</h5>
                                                         <div class="col-12 p-0">
                                                             <div class="controls">
@@ -62,8 +63,8 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-lg-1 p-0   d-flex align-items-end  mt-3 m-0">
-                                                        <button class="btn btn-primary btn-md ">
+                                                    <div class="col-lg-2 col-md-2  p-0   d-flex align-items-end  mt-3 m-0">
+                                                        <button class="btn btn-primary btn-md p-2">
                                                             @lang('user.Search')
                                                         </button>
                                                     </div>
@@ -72,7 +73,7 @@
 
 
                                             </div>
-                                            <div class="col-lg-2 col-sm-12 d-flex align-items-end">
+                                            <div class="col-lg-2 col-sm-12 d-flex align-items-end justify-content-center">
                                                 <form class="row col-12 pl-0"
                                                     action="{{ route('admin.reports.kpi-report.store') }}" method="POST">
                                                     @csrf
@@ -91,22 +92,22 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-lg-3 mt-3  d-flex align-items-end justify-content-center">
+                                        <div class="col-lg-3 d-flex align-items-end justify-content-center">
                                             <div class="row col-12">
-                                                <div class="col-6">
-                                                   <span class="p-2 display-3 col-12 badge badge-primary mr-2 my-2"
+                                                <div class="col-6 col-xl-6 col-lg-12  col-md-6  col-sm-12">
+                                                   <span class="p-1 display-3 col-12 badge badge-primary mr-2 my-2"
                                                             id="total">Total Orders</span> 
-                                                     <span class="p-2 display-3  col-12 badge badge-success mr-2 my-2 text-dark"
+                                                     <span class="p-1 display-3  col-12 badge badge-success mr-2 my-2 text-dark"
                                                             id="delivered">Delivered</span> 
                                                 </div>
-                                                <div class="col-6 m2-2">
-                                                   <span class="p-2 display-3  badge badge-info mr-2 text-dark my-2 col-12"
+                                                <div class="col-6 col-xl-6 col-lg-12  col-md-6  col-sm-12">
+                                                   <span class="p-1 display-3  badge badge-info mr-2 text-dark my-2 col-12"
                                                             id="taxed">Taxed</span> 
-                                                     <span class="p-2 display-3 badge badge-danger mr-2 my-2 col-12"
+                                                     <span class="p-1 display-3 badge badge-danger mr-2 my-2 col-12"
                                                             id="returned">Returned</span> 
                                                 </div>
                                                 <div class="col-12 mt-2">
-                                                    <span class="p-2 display-3 badge badge-secondary mr-2 text-dark col-12"
+                                                    <span class="p-1 display-3 badge badge-secondary mr-2 text-dark col-12"
                                                             id="inProcess">Processing or In Transit</span>
                                                 </div>
                                             </div>
