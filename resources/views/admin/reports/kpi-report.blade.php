@@ -20,7 +20,7 @@
                                 <div class="col-12">
                                     <div class="row">
                                         <div class="row col-lg-9">
-                                            <div class="col-lg-11 col-sm-12">
+                                            <div class="col-lg-10 col-sm-12">
                                                 <div class="row pr-0 col-12 mb-1">
                                                     <div class="col-md-4 p-0">
                                                         <h5>Search Per Date Range</h5>
@@ -71,7 +71,7 @@
 
 
                                             </div>
-                                            <div class="col-lg-1 col-sm-12 d-flex align-items-end justify-content-end">
+                                            <div class="col-lg-2 col-sm-12 d-flex align-items-end justify-content-end">
                                                 <form class="row col-12 pl-0  d-flex justify-content-end"
                                                     action="{{ route('admin.reports.kpi-report.store') }}" method="POST">
                                                     @csrf
