@@ -281,6 +281,13 @@ Route::get('permission',function($id = null){
     return Artisan::output();
 });
 
-Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container');
+Route::get('session-refresh/{slug?}', function($slug = null){
+    if($slug){
+        session()->forget('token');
+        return 'Correios Token refresh';
+    }
+    session()->forget('anjun_token');
+    return 'Anjun Token refresh';
+});
 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
