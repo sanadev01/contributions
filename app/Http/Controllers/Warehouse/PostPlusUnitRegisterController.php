@@ -1,12 +1,13 @@
 <?php
 
 namespace App\Http\Controllers\Warehouse;
+use Carbon\Carbon;
 use App\Models\Order;
-use App\Http\Controllers\Controller;
-use App\Models\Warehouse\Container;
 use Illuminate\Http\Request;
 use App\Models\OrderTracking;
-use Carbon\Carbon;
+use App\Models\Warehouse\Container;
+use App\Http\Controllers\Controller;
+use App\Services\PostPlus\PostPlusShipment;
 
 class PostPlusUnitRegisterController extends Controller
 {
@@ -17,14 +18,20 @@ class PostPlusUnitRegisterController extends Controller
             return back();
         }
 
-        $date = date('YmdHis', strtotime(Carbon::now()));
-        $code = "PPHD".''.$date;
+        $response =  (new PostPlusShipment($container))->create();
+        $data = $response->getData();
 
-        $container->update([
-            'unit_code' => $code,
-            'response' => '1',
-        ]);
-        session()->flash('alert-success','Package Registration success. You can print Label now');
-        return back();
+        if ($data->isSuccess){
+            $container->update([
+                'unit_response_list' => json_encode(['cn35'=>$data->output]),
+                'response' => '1',
+            ]); 
+            session()->flash('alert-success', $data->message);
+            return back();
+              
+        } else {
+            session()->flash('alert-danger',$data->message);
+            return back();
+        } 
     }
 }
