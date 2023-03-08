@@ -15,13 +15,10 @@ class CN35LabelHandler
             return response()->json([ 'isSuccess' => false,  'message'  => "Only post plus container allowed!" ], 422);
         }
 
-        if ($container->unit_response_list) {
-            $cn35_base64 = json_decode($container->unit_response_list)->cn35;
-            return response()->json(['isSuccess' => true, 'output'   => self::getLabelPath($container, $cn35_base64),'message'  => 'Label created successfully']);
-        }
-
-        $response =  (new PostPlusShipment($container))->getLabel();
+        $shipment = json_decode($container->unit_response_list)->cn35;
+        $response =  (new PostPlusShipment($container))->getLabel($shipment->id);
         $data = $response->getData();
+        dd($data);
 
         if ($data->isSuccess) {
             return response()->json(['isSuccess' => true,'output'   => self::getLabelPath($container, $data->output), 'message'  => $data->message]);

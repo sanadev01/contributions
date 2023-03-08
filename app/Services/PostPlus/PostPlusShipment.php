@@ -41,7 +41,7 @@ class PostPlusShipment
             $body = [
                 "type" => "AWB",
                 "terminalCode" => "PDL",
-                "shipmentNr" => '074-45916224',
+                "shipmentNr" => '133-45916161',
                 'arrivalInfo' => [
                     'transportNr' => $this->container->dispatch_number,
                     'originCountryCode' => "US",
@@ -99,33 +99,14 @@ class PostPlusShipment
     public function prepareShipment($id)
     {
         $url = $this->baseUri . "/shipments/$id/prepare";
-        $body = [];
+        $body = [ "" => '', ];
         $response = Http::withHeaders($this->getHeaders())->post($url, $body);
-        // $curl = curl_init();
-        //     curl_setopt_array($curl, array(
-        //         CURLOPT_URL => $url,
-        //         CURLOPT_RETURNTRANSFER => true,
-        //         CURLOPT_ENCODING => '',
-        //         CURLOPT_MAXREDIRS => 10,
-        //         CURLOPT_TIMEOUT => 0,
-        //         CURLOPT_FOLLOWLOCATION => true,
-        //         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        //         CURLOPT_CUSTOMREQUEST => 'post',
-        //         CURLOPT_POSTFIELDS => '',
-        //         CURLOPT_HTTPHEADER => $this->getHeaders(),
-        //     ));
-        //     $response = curl_exec($curl);
-        //     curl_close($curl);
-        // $response = $this->client->post($url,[
-        //     'headers' => $this->getHeaders(),
-        //     'json' => $body
-        // ]);
         $data= json_decode($response);
-        dd($url, $data, $id);
-        if ($response->successful() && $data->shipmentSubmitToken) {
+        // dd($url, $data, $id);
+        if ($response->successful() && optional($data)->shipmentSubmitToken) {
             return $this->submitShipment($data->shipmentSubmitToken, $id);
         } else {
-            return $this->responseUnprocessable($data->detail);
+            return $this->responseUnprocessable("No parcels in shipment");
         }
     }
 
@@ -137,8 +118,20 @@ class PostPlusShipment
         ];
         $response = Http::withHeaders($this->getHeaders())->post($url, $body);
         $data= json_decode($response);
-        if ($response->successful() && $data->status->status == "Manifested") {
-            return $this->getLabel($id);
+        if ($response->successful()) {
+            return $this->getShipmentDetails($id);
+        } else {
+            return $this->responseUnprocessable($data->detail);
+        }
+    }
+
+    public function getShipmentDetails($id)
+    {
+        $url = $this->baseUri . "/shipments/$id?IncludeBags=true&IncludeDocuments=true&IncludeManifestFiles=true";
+        $response = $this->client->get($url,['headers' => $this->getHeaders()]);
+        $data = json_decode($response->getBody()->getContents());
+        if ($data->bags) {
+            return $this->responseSuccessful($data, 'Shipment Created Successfully');
         } else {
             return $this->responseUnprocessable($data->detail);
         }
@@ -146,9 +139,11 @@ class PostPlusShipment
 
     public function getLabel($id)
     {
-        $url = $this->baseUri . "documents/shipments/$id/all-documents";
-        $body = [];
-        $response = Http::withHeaders($this->getHeaders())->get($url, $body);
+        $url = $this->baseUri . "/documents/shipments/$id/all-documents";
+        $response = $this->client->get($url,['headers' => $this->getHeaders()]);
+        // $response = Http::withHeaders($this->getHeaders())->get($url, $body);
+        $data = json_decode($response->getBody()->getContents());
+        dd($data);
         $data= json_decode($response);
         if ($response->successful()) {
             return $this->responseSuccessful($data, '');

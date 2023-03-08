@@ -20,10 +20,10 @@ class PostPlusUnitRegisterController extends Controller
 
         $response =  (new PostPlusShipment($container))->create();
         $data = $response->getData();
-
         if ($data->isSuccess){
             $container->update([
                 'unit_response_list' => json_encode(['cn35'=>$data->output]),
+                'unit_code' => $data->output->bags[0]->outboundBagNrs,
                 'response' => '1',
             ]); 
             session()->flash('alert-success', $data->message);
