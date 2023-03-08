@@ -21,7 +21,7 @@
                                 <div class="col-12">
                                     <div class="row">
                                         <div class="row col-lg-9">
-                                            <div class="col-lg-11 col-sm-12">
+                                            <div class="col-lg-10 col-sm-12">
                                                 <div class="row pr-0 col-12 mb-1">
                                                     <div class="col-md-4 p-0">
                                                         <h5>Search Per Date Range</h5>
@@ -72,7 +72,7 @@
 
 
                                             </div>
-                                            <div class="col-lg-1 col-sm-12 d-flex align-items-end justify-content-end">
+                                            <div class="col-lg-2 col-sm-12 d-flex align-items-end justify-content-end">
                                                 <form class="row col-12 pl-0  d-flex justify-content-end"
                                                     action="{{ route('admin.reports.kpi-report.store') }}" method="POST">
                                                     @csrf
@@ -82,7 +82,7 @@
                                                         <input type="hidden" name="trackingCodeUser"
                                                             value="{{ collect($trackingCodeUser) }}">
                                                     @endif
-                                                    <button class="btn btn-success mr-3 mt-3"
+                                                    <button class="btn btn-success pr-3 mr-3 mt-3"
                                                         {{ !empty($trackings) ? '' : 'disabled' }}
                                                         title="@lang('orders.import-excel.Download')">
                                                         <i class="fa fa-arrow-down"></i>
