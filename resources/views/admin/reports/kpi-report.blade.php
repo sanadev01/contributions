@@ -82,7 +82,7 @@
                                                         <input type="hidden" name="trackingCodeUser"
                                                             value="{{ collect($trackingCodeUser) }}">
                                                     @endif
-                                                    <button class="btn btn-success pr-3 mr-3 mt-3"
+                                                    <button class="btn btn-success mr-3 mt-3"
                                                         {{ !empty($trackings) ? '' : 'disabled' }}
                                                         title="@lang('orders.import-excel.Download')">
                                                         <i class="fa fa-arrow-down"></i>
