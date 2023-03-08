@@ -28,7 +28,7 @@
                                                 </div>
                                                 <form class="row col-12 m-0 pr-0"
                                                     action="{{ route('admin.reports.kpi-report.index') }}" method="GET">
-                                                    <div class="col-lg-5 ">
+                                                    <div class="col-lg-6 ">
                                                         <div class="row">
                                                             
                                                         <div class="col-lg-6 col-md-12">
@@ -61,8 +61,8 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-lg-2  d-flex align-items-end justify-content-end mt-3 ">
-                                                        <button class="btn btn-primary btn-md">
+                                                    <div class="col-lg-1 p-0   d-flex align-items-end  mt-3 m-0">
+                                                        <button class="btn btn-primary btn-md ">
                                                             @lang('user.Search')
                                                         </button>
                                                     </div>
@@ -71,8 +71,8 @@
 
 
                                             </div>
-                                            <div class="col-lg-2 col-sm-12 d-flex align-items-end justify-content-end">
-                                                <form class="row col-12 pl-0  d-flex justify-content-end"
+                                            <div class="col-lg-2 col-sm-12 d-flex align-items-end">
+                                                <form class="row col-12 pl-0"
                                                     action="{{ route('admin.reports.kpi-report.store') }}" method="POST">
                                                     @csrf
                                                     @if ($trackings)
