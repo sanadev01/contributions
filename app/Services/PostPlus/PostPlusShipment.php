@@ -2,6 +2,7 @@
 
 namespace App\Services\PostPlus;
 
+use Carbon\Carbon;
 use App\Models\Warehouse\Container;
 use Illuminate\Support\Facades\Http;
 use GuzzleHttp\Client as GuzzleClient;
@@ -10,6 +11,7 @@ class PostPlusShipment
 {
     protected $baseUri;
     protected $container;
+    protected $containers;
     protected $apiKey;
 
     public function __construct(Container $container)
@@ -22,7 +24,9 @@ class PostPlusShipment
             $this->baseUri = config('postplus.test.base_uri');
         }
         $this->container = $container;
+        $this->containers = Container::where('awb', $this->container->awb)->get();
         $this->client = new GuzzleClient(['verify' => false]);
+        
     }
 
     private function getHeaders()
@@ -35,19 +39,22 @@ class PostPlusShipment
 
     public function create()
     {
-        //dd($this->container->orders);
         $url = $this->baseUri . '/shipments';
-        if($this->container->awb) {
+        $weight = 0;
+        if($this->containers[0]->awb) {
+            foreach($this->containers as $package) {
+                $weight+= $package->getWeight();
+            }
             $body = [
                 "type" => "AWB",
                 "terminalCode" => "PDL",
-                "shipmentNr" => '133-45916161',
+                "shipmentNr" => $this->containers[0]->awb,
                 'arrivalInfo' => [
-                    'transportNr' => $this->container->dispatch_number,
+                    'transportNr' => $this->containers[0]->dispatch_number,
                     'originCountryCode' => "US",
-                    'totalWeight' => $this->container->getWeight(),
-                    'totalBags' => 1,
-                    'arrivalOn' => "2023-03-02 08:00:00",
+                    'totalWeight' => $weight,
+                    'totalBags' => count($this->containers),
+                    'arrivalOn' => Carbon::now()->addDay(),
                     'notes' => ''
                  ],
             ];
@@ -56,7 +63,7 @@ class PostPlusShipment
     
             if ($response->successful()) { 
                 if ($data->id) {
-                    return $this->addParcels($this->container->orders, $data->id);
+                    return $this->addParcels($data->id);
                 } else {
                     return $this->responseUnprocessable($data->detail);
                 }
@@ -69,26 +76,27 @@ class PostPlusShipment
         }
     }
 
-    public function addParcels($items, $id)
+    public function addParcels($id)
     {
         $codes = [];
-        foreach ($this->container->orders as $key => $item) {
-            $itemToPush = [];
-            $codesToPush = [
-                $item->corrios_tracking_code,
-            ];
-           array_push($codes, $codesToPush);
+        foreach ($this->containers as $key => $container) {
+            foreach ($container->orders as $key => $item) {
+                $itemToPush = [];
+                $codesToPush = [
+                    $item->corrios_tracking_code,
+                ];
+                array_push($codes, $codesToPush);
+            }
         }
         $parcels = implode(",", array_merge(...$codes));
         $url = $this->baseUri . '/parcels/update-references-many';
         $body = [
             "parcelNrs" =>  $parcels,
-            "updateBagNr" => $this->container->seal_no,
+            "updateBagNr" => $this->containers[0]->seal_no,
             "linkShipmentId" => $id
         ];
         $response = Http::withHeaders($this->getHeaders())->post($url, $body);
         $data= json_decode($response);
-        // dd($data);
         if ($response->successful() && !is_null($data->parcels)) {
             return $this->prepareShipment($id);
         } else {
@@ -102,11 +110,10 @@ class PostPlusShipment
         $body = [ "" => '', ];
         $response = Http::withHeaders($this->getHeaders())->post($url, $body);
         $data= json_decode($response);
-        // dd($url, $data, $id);
         if ($response->successful() && optional($data)->shipmentSubmitToken) {
             return $this->submitShipment($data->shipmentSubmitToken, $id);
         } else {
-            return $this->responseUnprocessable("No parcels in shipment");
+            return $this->responseUnprocessable($data->status->warningDetails[1]);
         }
     }
 
@@ -139,17 +146,14 @@ class PostPlusShipment
 
     public function getLabel($id)
     {
-        $url = $this->baseUri . "/documents/shipments/$id/all-documents";
-        $response = $this->client->get($url,['headers' => $this->getHeaders()]);
-        // $response = Http::withHeaders($this->getHeaders())->get($url, $body);
-        $data = json_decode($response->getBody()->getContents());
-        dd($data);
-        $data= json_decode($response);
-        if ($response->successful()) {
-            return $this->responseSuccessful($data, '');
-        } else {
-            return $this->responseUnprocessable($data->detail);
-        }
+        $url = $this->baseUri . "/documents/shipment-documents/$id";
+        return Http::withHeaders($this->getHeaders())->get($url);
+    }
+
+    public function getManifest($id)
+    {
+        $url = $this->baseUri . "/documents/shipments/$id/resulting-file?fileFormat=Csv";
+        return Http::withHeaders($this->getHeaders())->get($url);
     }
 
     public static function responseUnprocessable($message)

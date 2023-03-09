@@ -13,6 +13,7 @@ class PostPlusUnitRegisterController extends Controller
 {
     public function __invoke(Container $container)
     {
+        $containers = Container::where('awb', $container->awb)->get();
         if ($container->orders->isEmpty()) {
             session()->flash('alert-danger','Please add parcels to this container');
             return back();
@@ -21,11 +22,16 @@ class PostPlusUnitRegisterController extends Controller
         $response =  (new PostPlusShipment($container))->create();
         $data = $response->getData();
         if ($data->isSuccess){
-            $container->update([
-                'unit_response_list' => json_encode(['cn35'=>$data->output]),
-                'unit_code' => $data->output->bags[0]->outboundBagNrs,
-                'response' => '1',
-            ]); 
+
+            $updateShipment = (new PostPlusShipment($container))->getShipmentDetails($data->output->id);
+            $shipmentDetails = $updateShipment->getData();
+            foreach($containers as $package) {
+                $package->update([
+                    'unit_response_list' => json_encode(['cn35'=>$shipmentDetails->output]),
+                    'unit_code' => $shipmentDetails->output->bags[0]->outboundBagNrs,
+                    'response' => '1',
+                ]); 
+            }
             session()->flash('alert-success', $data->message);
             return back();
               

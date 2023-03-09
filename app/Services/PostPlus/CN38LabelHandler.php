@@ -4,17 +4,16 @@ namespace App\Services\PostPlus;
 
 use Barryvdh\DomPDF\PDF;
 use App\Models\Warehouse\Container;
+use App\Models\Warehouse\DeliveryBill;
 use Illuminate\Support\Facades\Storage;
 use App\Services\PostPlus\PostPlusShipment;
 
-class CN35LabelHandler
+class CN38LabelHandler
 {
 
-    public static function handle(Container $container, $requestId)
+    public static function handle(DeliveryBill $deliveryBill)
     {
-        if (!$container->hasPostPlusService()) {
-            return response()->json([ 'isSuccess' => false,  'message'  => "Only post plus container allowed!" ], 422);
-        }
+        $container = $deliveryBill->containers->first();
 
         $shipment = json_decode($container->unit_response_list)->cn35;
         if($shipment->id) {
@@ -30,16 +29,10 @@ class CN35LabelHandler
         }
 
         $updatedResponse = json_decode($container->unit_response_list)->cn35;
-        $response = (new PostPlusShipment($container))->getLabel($updatedResponse->documents[$requestId]->id);
+        $response = (new PostPlusShipment($container))->getLabel($updatedResponse->documents[0]->id);
 
         $streamFileData = $response->getBody()->getContents();
-        if($requestId == 3) {
-            $fileName = "{$container->awb}-CN31.pdf";
-        }else if($requestId == 2) {
-            $fileName = "{$container->awb}-CN33.pdf";
-        }else {
-            $fileName = "{$container->unit_code}-CN35.pdf";
-        }
+        $fileName = "{$container->awb}-CN38.pdf";
         $headers = [
             'Content-Type'        => 'application/octet-stream',
             'Content-Disposition' => 'attachment; filename=' . $fileName,
