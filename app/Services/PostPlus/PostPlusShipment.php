@@ -113,6 +113,7 @@ class PostPlusShipment
         if ($response->successful() && optional($data)->shipmentSubmitToken) {
             return $this->submitShipment($data->shipmentSubmitToken, $id);
         } else {
+            $this->deleteShipment($id);
             return $this->responseUnprocessable($data->status->warningDetails[1]);
         }
     }
@@ -138,7 +139,7 @@ class PostPlusShipment
         $response = $this->client->get($url,['headers' => $this->getHeaders()]);
         $data = json_decode($response->getBody()->getContents());
         if ($data->bags) {
-            return $this->responseSuccessful($data, 'Shipment Created Successfully');
+            return $this->responseSuccessful($data, 'Container registration is successfull. Please donwload CN35 Label after 5 Mins');
         } else {
             return $this->responseUnprocessable($data->detail);
         }
@@ -154,6 +155,12 @@ class PostPlusShipment
     {
         $url = $this->baseUri . "/documents/shipments/$id/resulting-file?fileFormat=Csv";
         return Http::withHeaders($this->getHeaders())->get($url);
+    }
+
+    public function deleteShipment($id)
+    {
+        $url = $this->baseUri . "/shipments/$id";
+        return Http::withHeaders($this->getHeaders())->delete($url);
     }
 
     public static function responseUnprocessable($message)

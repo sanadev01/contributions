@@ -1,12 +1,14 @@
 <?php
 
 namespace App\Http\Controllers\Warehouse;
+
 use Carbon\Carbon;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Models\OrderTracking;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
+use App\Models\Warehouse\DeliveryBill;
 use App\Services\PostPlus\PostPlusShipment;
 
 class PostPlusUnitRegisterController extends Controller
@@ -31,6 +33,41 @@ class PostPlusUnitRegisterController extends Controller
                     'unit_code' => $shipmentDetails->output->bags[0]->outboundBagNrs,
                     'response' => '1',
                 ]); 
+            }
+            
+            //Create Delivery Bill
+            $containerIds = [];
+            foreach ($containers as $key => $container) {
+                $idsToPush = [$container->id,];
+                array_push($containerIds, $idsToPush);
+            }
+            $idsArray = array_merge(...$containerIds);
+
+            $deliveryBill = DeliveryBill::create([
+                'name' => 'Delivery BillL: '.Carbon::now()->format('m-d-Y'),
+                'request_id' => $shipment->id,
+                'cnd38_code' => $container->awb,
+            ]);
+
+            $deliveryBill->containers()->sync($idsArray);
+
+            foreach($deliveryBill->containers()->get() as $bills){
+                $bills->orders()->update([
+                    'status' =>  Order::STATUS_SHIPPED,
+                    'api_tracking_status' => 'HD-Shipped',
+                ]);
+
+                foreach($bills->orders as $order)
+                { 
+                    OrderTracking::create([
+                        'order_id' => $order->id,
+                        'status_code' => Order::STATUS_SHIPPED,
+                        'type' => 'HD',
+                        'description' => 'Parcel transfered to airline',
+                        'country' => 'US',
+                        'city' => 'Miami'
+                    ]);
+                }
             }
             session()->flash('alert-success', $data->message);
             return back();

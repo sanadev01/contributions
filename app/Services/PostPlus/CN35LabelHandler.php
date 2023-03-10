@@ -2,7 +2,6 @@
 
 namespace App\Services\PostPlus;
 
-use Barryvdh\DomPDF\PDF;
 use App\Models\Warehouse\Container;
 use Illuminate\Support\Facades\Storage;
 use App\Services\PostPlus\PostPlusShipment;
@@ -18,9 +17,9 @@ class CN35LabelHandler
 
         $shipment = json_decode($container->unit_response_list)->cn35;
         if($shipment->id) {
+            //Check for Documents
             $updateShipment = (new PostPlusShipment($container))->getShipmentDetails($shipment->id);
             $shipmentDetails = $updateShipment->getData();
-            $containers = Container::where('awb', $container->awb)->get();
             foreach($containers as $package) {
                 $package->update([
                     'unit_response_list' => json_encode(['cn35'=>$shipmentDetails->output]),
@@ -49,4 +48,5 @@ class CN35LabelHandler
         Storage::put("labels/{$fileName}", $label);
         return $label;
     }
+
 }
