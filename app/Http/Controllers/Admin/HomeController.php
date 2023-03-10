@@ -24,16 +24,4 @@ class HomeController extends Controller
         return view('home',compact('orders'));
     }
     
-    public function findContainer(Container $container)
-    {
-        
-        if ($container) {
-            dump($container->toArray());
-
-            foreach($container->orders as $order){
-                echo $order->id ."=>" . $order->shippingService->name . "=>" . $order->corrios_tracking_code . "<br>";
-            }
-            
-        }
-    }
 }
