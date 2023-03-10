@@ -140,9 +140,9 @@ class HandleCorreiosLabelsRepository
     }
 
 
-    public function correiosOrAnjun()
-    {        
-        if(setting('china_anjun_api', null, User::ROLE_ADMIN)){
+    public function correiosOrAnjun($order)
+    {
+        if(setting('china_anjun_api', null, User::ROLE_ADMIN) && $order->shippingService->anjunShippingServices){
             return $this->anjunChinaLabel();
         }
         return $this->corriesBrazilLabel();
