@@ -133,7 +133,6 @@
                             <option value="Chile">Correios Chile</option>
                             <option value="Global eParcel">Global eParcel</option>
                             <option value="Prime5">Prime5</option>
-                            <option value="AJ_Standard_CN">Anjun China</option>
                             <option value="Post Plus">Post Plus</option>
                         </select>
                     </th>
