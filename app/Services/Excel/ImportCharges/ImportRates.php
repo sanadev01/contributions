@@ -39,7 +39,8 @@ class ImportRates extends AbstractImportService
             $limit = 75;
         }elseif($this->shippingService->service_sub_class == ShippingService::SRM){
             $limit = 7;
-        }elseif($this->shippingService->service_sub_class == ShippingService::GePS){
+        }elseif($this->shippingService->service_sub_class == ShippingService::GePS ||
+        $this->shippingService->service_sub_class == ShippingService::Post_Plus_Registered ){
             $limit = 27;
         }
         elseif($this->shippingService->service_sub_class == ShippingService::GePS_EFormat){
@@ -47,8 +48,8 @@ class ImportRates extends AbstractImportService
         }
         elseif($this->shippingService->service_sub_class == ShippingService::Prime5){
             $limit = 33;
-        }elseif($this->shippingService->service_sub_class == ShippingService::Post_Plus_Registered){
-            $limit = 22;
+        }elseif($this->shippingService->service_sub_class == ShippingService::Parcel_Post){
+            $limit = 63;
         }else{
             $limit = 70;
         }

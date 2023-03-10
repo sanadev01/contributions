@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Models\Rate;
 use App\Models\Order;
 use App\Http\Controllers\Controller;
 use App\Models\Warehouse\Container;
@@ -21,7 +22,7 @@ class HomeController extends Controller
     public function __invoke(DashboardRepository $dashboard)
     {
         $orders = $dashboard->getDashboardStats();
-        return view('home',compact('orders'));
+        return view('home',compact('orders'));   
     }
     
     public function findContainer(Container $container)

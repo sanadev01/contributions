@@ -273,16 +273,18 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
     return response()->download(storage_path("app/labels/{$order->us_api_tracking_code}.pdf"),"{$order->us_api_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.us-label.download');
 
-Route::get('test-label',function(){
+Route::get('test-label/{id}',function($id){
     
-    $labelPrinter = new CN23LabelMaker();
+    // $labelPrinter = new CN23LabelMaker();
     
-    $order = Order::find(179250);
+    $order = Order::find($id);
+    $order->status = 70;
+    $order->save();
     // dd($order);
-    $labelPrinter->setOrder($order);
-    $labelPrinter->setService(2);
+    // $labelPrinter->setOrder($order);
+    // $labelPrinter->setService(2);
     
-    return $labelPrinter->download();
+    // return $labelPrinter->download();
 });
 
 Route::get('permission',function($id = null){
