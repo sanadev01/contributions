@@ -34,7 +34,7 @@ class PostPlusUnitRegisterController extends Controller
                     'response' => '1',
                 ]); 
             }
-            
+
             //Create Delivery Bill
             $containerIds = [];
             foreach ($containers as $key => $container) {
@@ -45,7 +45,7 @@ class PostPlusUnitRegisterController extends Controller
 
             $deliveryBill = DeliveryBill::create([
                 'name' => 'Delivery BillL: '.Carbon::now()->format('m-d-Y'),
-                'request_id' => $shipment->id,
+                'request_id' => $shipmentDetails->output->id,
                 'cnd38_code' => $container->awb,
             ]);
 
@@ -59,14 +59,7 @@ class PostPlusUnitRegisterController extends Controller
 
                 foreach($bills->orders as $order)
                 { 
-                    OrderTracking::create([
-                        'order_id' => $order->id,
-                        'status_code' => Order::STATUS_SHIPPED,
-                        'type' => 'HD',
-                        'description' => 'Parcel transfered to airline',
-                        'country' => 'US',
-                        'city' => 'Miami'
-                    ]);
+                    $this->addOrderTracking($order->id);
                 }
             }
             session()->flash('alert-success', $data->message);
@@ -76,5 +69,19 @@ class PostPlusUnitRegisterController extends Controller
             session()->flash('alert-danger',$data->message);
             return back();
         } 
+    }
+
+    public function addOrderTracking($order_id)
+    {
+        OrderTracking::create([
+            'order_id' => $order_id,
+            'status_code' => Order::STATUS_SHIPPED,
+            'type' => 'HD',
+            'description' => 'Parcel transfered to airline',
+            'country' => 'US',
+            'city' => 'Miami'
+        ]);
+
+        return true;
     }
 }

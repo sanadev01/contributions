@@ -18,6 +18,7 @@ class CN35LabelHandler
         $shipment = json_decode($container->unit_response_list)->cn35;
         if($shipment->id) {
             //Check for Documents
+            $containers = Container::where('awb', $container->awb)->get();
             $updateShipment = (new PostPlusShipment($container))->getShipmentDetails($shipment->id);
             $shipmentDetails = $updateShipment->getData();
             foreach($containers as $package) {
@@ -29,24 +30,31 @@ class CN35LabelHandler
         }
 
         $updatedResponse = json_decode($container->unit_response_list)->cn35;
-        $response = (new PostPlusShipment($container))->getLabel($updatedResponse->documents[$requestId]->id);
+        if($updatedResponse->documents) {
+            
+            $response = (new PostPlusShipment($container))->getLabel($updatedResponse->documents[$requestId]->id);
+            $streamFileData = $response->getBody()->getContents();
+            if($requestId == 3) {
+                $fileName = "{$container->awb}-CN31.pdf";
+            }else if($requestId == 2) {
+                $fileName = "{$container->awb}-CN33.pdf";
+            }else {
+                $fileName = "{$container->unit_code}-CN35.pdf";
+            }
+            $headers = [
+                'Content-Type'        => 'application/octet-stream',
+                'Content-Disposition' => 'attachment; filename=' . $fileName,
+            ];
 
-        $streamFileData = $response->getBody()->getContents();
-        if($requestId == 3) {
-            $fileName = "{$container->awb}-CN31.pdf";
-        }else if($requestId == 2) {
-            $fileName = "{$container->awb}-CN33.pdf";
-        }else {
-            $fileName = "{$container->unit_code}-CN35.pdf";
+            $label = response( $streamFileData, 200, $headers );
+            Storage::put("labels/{$fileName}", $label);
+            return $label;
         }
-        $headers = [
-            'Content-Type'        => 'application/octet-stream',
-            'Content-Disposition' => 'attachment; filename=' . $fileName,
-        ];
-
-        $label = response( $streamFileData, 200, $headers );
-        Storage::put("labels/{$fileName}", $label);
-        return $label;
+        
+        else {
+            session()->flash('alert-danger','Unable to retrieve documents from Post Plus');
+            return back();
+        }
     }
 
 }
