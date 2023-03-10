@@ -25,8 +25,8 @@ class TaxRequest extends FormRequest
     {
         return [
             'order_id' => 'required',
-            'selling_br' => 'required|array', 
-            'buying_br' => 'required|array', 
+            'selling_br' => 'required', 
+            'buying_br' => 'required', 
             'selling_br.*' => 'required|numeric|gt:0', 
             'buying_br.*' => 'required|numeric|gt:0',
         ];
@@ -37,8 +37,6 @@ class TaxRequest extends FormRequest
             'order_id.required'=> 'No order Found!',
             'selling_br.required'=> 'selling rate is required!',
             'buying_br.required'=> 'buying rate is required!',
-            'selling_br.*.required'=> 'selling rate is required!',
-            'buying_br.*.required'=> 'buying rate is required!',
             'selling_br.*.gt'=> 'selling  rate must be greater than 0.',
             'buying_br.*.gt'=> 'buying rate must be greater than 0.', 
         ];

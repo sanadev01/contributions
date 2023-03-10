@@ -148,6 +148,9 @@ class Client{
         }elseif($order->shippingService->service_sub_class == ShippingService::GePS_EFormat) {
             $serviceCode = "IM";
         }
+        elseif($order->shippingService->service_sub_class == ShippingService::Parcel_Post) {
+            $serviceCode = "PR";
+        }
         $packet =
         [
             'shipment' => [
@@ -203,6 +206,7 @@ class Client{
             ]);
 
             $data = json_decode($response->getBody()->getContents());
+            \Log::info([$data]);
             if(isset($data->err)) {
                 return new PackageError($data->err);
             }

@@ -148,7 +148,7 @@ class ExportDepositReport extends AbstractExportService
                         return 'Correios Chile';
                     break;
                 case ORDER::BRAZIL:
-                    if ($order->shippingService->sub_class_code == ShippingService::GePS || $order->shippingService->sub_class_code == ShippingService::GePS_EFormat) {
+                    if ($order->shippingService->sub_class_code == ShippingService::GePS || $order->shippingService->sub_class_code == ShippingService::GePS_EFormat || $order->shippingService->sub_class_code == ShippingService::Parcel_Post) {
                         return 'Global eParcel';
                     }
                     if ($order->shippingService->sub_class_code == ShippingService::Prime5) {
