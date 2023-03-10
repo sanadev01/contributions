@@ -46,7 +46,7 @@ class HandleCorreiosLabelsRepository
 
         //    }
             if ($this->order->shippingService->isCorreiosService()) {
-                return $this->correiosOrAnjun();
+                return $this->correiosOrAnjun($this->order);
             }
             if ($this->order->shippingService->isPostPlusService()) {
                 return $this->postPlusLabel();
@@ -88,7 +88,7 @@ class HandleCorreiosLabelsRepository
         // if($this->order->shippingService->isPostNLService()){
         //     return $this->postNLLabel();
         // }
-        return $this->correiosOrAnjun();
+        return $this->correiosOrAnjun($this->order);
 
     }
 
@@ -135,9 +135,9 @@ class HandleCorreiosLabelsRepository
     }
 
 
-    public function correiosOrAnjun()
-    {        
-        if(setting('china_anjun_api', null, User::ROLE_ADMIN)){
+    public function correiosOrAnjun($order)
+    {
+        if(setting('china_anjun_api', null, User::ROLE_ADMIN) && $order->shippingService->anjunShippingServices){
             return $this->anjunChinaLabel();
         }
         return $this->corriesBrazilLabel();
