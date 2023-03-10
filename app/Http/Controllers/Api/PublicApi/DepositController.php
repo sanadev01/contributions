@@ -15,6 +15,7 @@ class DepositController extends Controller
         $startDate = $request->start_date ??date('Y-m-01'); 
         $endDate  = $request->end_date  ??date('Y-m-d'); 
         $deposits = Deposit::with(['orders.tax','user'])->where('user_id',Auth::id())->filter($startDate,$endDate)->get();
+
         return response()->json([
             'success' =>true,
             'filter' => [

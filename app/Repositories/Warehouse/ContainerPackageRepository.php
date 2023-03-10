@@ -36,7 +36,7 @@ class ContainerPackageRepository extends AbstractRepository
     public function addOrderToContainer(Container $container, string $barcode)
     {
         $subString = strtolower(substr($barcode,0,2));
-        if(strtolower(substr($barcode,0,2)) == 'na' || strtolower(substr($barcode,0,2)) == 'xl'){
+        if(strtolower(substr($barcode,0,2)) == 'na' || strtolower(substr($barcode,0,2)) == 'xl'|| strtolower(substr($barcode,0,2)) == 'nb'){
             $subString = 'nx';
         }
         if ($container->hasAnjunChinaService()) {
