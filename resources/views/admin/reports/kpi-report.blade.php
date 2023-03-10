@@ -178,24 +178,25 @@
     </section>
 @endsection
 @section('modal')
-<x-modal />
+    <x-modal />
 @endsection
 @section('js')
     <script>
-        $(document).ready(function () {
-            $('#kpi-report tfoot th').each(function () {
+        $(document).ready(function() {
+            $('#kpi-report tfoot th').each(function() {
                 var title = $(this).text();
-                $(this).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
+                $(this).html('<input type="text" class="form-control" placeholder="Search ' + title +
+                    '" />');
             });
             var table = $('#kpi-report').DataTable({
                 "paging": false,
-                initComplete: function () {
+                initComplete: function() {
                     this.api()
                         .columns()
-                        .every(function () {
+                        .every(function() {
                             var that = this;
-        
-                            $('input', this.footer()).on('keyup change clear', function () {
+
+                            $('input', this.footer()).on('keyup change clear', function() {
                                 if (that.search() !== this.value) {
                                     that.search(this.value).draw();
                                     calculation();
@@ -207,36 +208,36 @@
             });
             calculation();
         });
-        
+
         function calculation() {
             var totalRecords = $('#kpi-report tbody').find('tr.count').length;
             var taxed = 0;
             var returned = 0;
             var delivered = 0;
             var inProcess = 0;
-            $("table > tbody > tr").each(function () {
-                if($(this).find('td').eq(7).text() == 'Yes' ){
-                    taxed++;  
+            $("table > tbody > tr").each(function() {
+                if ($(this).find('td').eq(7).text() == 'Yes') {
+                    taxed++;
                 }
-                if($(this).find('td').eq(8).text() == 'Yes' ){
-                    delivered++;  
+                if ($(this).find('td').eq(8).text() == 'Yes') {
+                    delivered++;
                 }
-                if($(this).find('td').eq(9).text() == 'Yes' ){
-                    returned++;  
+                if ($(this).find('td').eq(9).text() == 'Yes') {
+                    returned++;
                 }
-                if($(this).find('td').eq(8).text() == 'No'){
-                    inProcess++;  
+                if ($(this).find('td').eq(8).text() == 'No') {
+                    inProcess++;
                 }
             });
             var taxOrder = (taxed / totalRecords * 100).toFixed(2);
             var deliveredOrder = (delivered / totalRecords * 100).toFixed(2);
-            var returnOrder = (returned / totalRecords * 100).toFixed(2); 
+            var returnOrder = (returned / totalRecords * 100).toFixed(2);
             var inTransit = (inProcess / totalRecords * 100).toFixed(2);
-            $('#total').html('Total Orders: '+totalRecords);
-            $('#delivered').html('Delivered: '+ deliveredOrder + ' %');
-            $('#taxed').html('Taxed: '+ taxOrder + ' %');
-            $('#returned').html('Returned: '+ returnOrder + ' %');
-            $('#inProcess').html('Processing or In Transit: '+ inTransit + ' %');
+            $('#total').html('Total Orders: ' + totalRecords);
+            $('#delivered').html('Delivered: ' + deliveredOrder + ' %');
+            $('#taxed').html('Taxed: ' + taxOrder + ' %');
+            $('#returned').html('Returned: ' + returnOrder + ' %');
+            $('#inProcess').html('Processing or In Transit: ' + inTransit + ' %');
         }
     </script>
 @endsection
