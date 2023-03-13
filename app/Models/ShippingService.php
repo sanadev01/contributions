@@ -178,7 +178,7 @@ class ShippingService extends Model
         return false;
     }
 
-    public function anjunShippingServices()
+    private function anjunShippingServices()
     {
         return [
             self::AJ_Packet_Standard, 
