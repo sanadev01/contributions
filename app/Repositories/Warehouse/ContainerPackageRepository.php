@@ -87,9 +87,18 @@ class ContainerPackageRepository extends AbstractRepository
         // if($subString != 'nb' && $subString != 'xl'){
         //     return $this->validationError404($barcode, 'Order does not belongs to this anjun china container Service. Please Check Packet Service');
         //  }
-        if (!$container->hasAnjunChinaService()  || !$order->shippingService->isAnjunChinaService()) {
+        if (!$order->shippingService->isAnjunChinaService()) {
 
             return $this->validationError404($barcode, 'Order does not belongs to this anjun china container Service. Please Check Packet Service');
+        }
+        
+        if ($container->hasAnjunChinaStandardService() && !$order->shippingService->isAnjunChinaStandardService()) {
+
+            return $this->validationError404($barcode, 'Order does not belongs to this anjun china standard container Service. Please Check Packet Service');
+        }
+        if ($container->hasAnjunChinaExpressService() && !$order->shippingService->isAnjunChinaExpressService()) {
+
+            return $this->validationError404($barcode, 'Order does not belongs to this anjun china container express Service. Please Check Packet Service');
         }
 
         return $this->updateContainer($container, $order, $barcode);

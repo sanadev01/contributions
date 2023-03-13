@@ -129,9 +129,10 @@ class OrderRepository
                     ShippingService::Post_Plus_EMS,
                 ];
             }
-            if($request->carrier == 'AJ_Standard_CN'){
+            if($request->carrier == 'Anjun China'){
                 $service = [
                     ShippingService::AJ_Standard_CN, 
+                    ShippingService::AJ_Express_CN, 
                 ];
             }
             $query->whereHas('shippingService', function ($query) use($service) {
@@ -624,7 +625,8 @@ class OrderRepository
 
             if(!setting('china_anjun_api', null, \App\Models\User::ROLE_ADMIN)){
                     $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
-                        return $shippingService->service_sub_class != ShippingService::AJ_Standard_CN;
+                        return $shippingService->service_sub_class != ShippingService::AJ_Standard_CN
+                         && $shippingService->service_sub_class != ShippingService::AJ_Express_CN;
                     });
             }
             

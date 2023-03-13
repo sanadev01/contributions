@@ -211,7 +211,7 @@
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right mt-4 h5" for="china_anjun_api">China Anjun Api<span class="text-danger"></span></label>
+                                    <label class="col-md-3 text-md-right mt-4 h5" for="china_anjun_api"> Anjun ChinaApi<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <div class="input-group">
                                             <div class="form-check">
