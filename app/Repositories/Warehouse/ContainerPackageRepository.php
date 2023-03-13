@@ -83,7 +83,7 @@ class ContainerPackageRepository extends AbstractRepository
         if ($order->status < Order::STATUS_PAYMENT_DONE) {
             return $this->validationError404($barcode, 'Please check the Order Status, either the order has been canceled, refunded or not yet paid');
         }
-        if (!$container->hasAnjunChinaService()  || !$order->shippingService->isAnjunChinaService()) {
+        if (!$container->hasAnjunChinaService()  || !$order->shippingService->isAnjunService()) {
 
             return $this->validationError404($barcode, 'Order does not belongs to this anjun china container Service. Please Check Packet Service');
         }
