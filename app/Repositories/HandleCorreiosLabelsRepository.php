@@ -94,7 +94,7 @@ class HandleCorreiosLabelsRepository
             return $this->postNLLabel();
         }
         
-        return $this->correiosOrAnjun();
+        return $this->correiosOrAnjun($this->order);
     }
 
     public function colombiaLabel()
