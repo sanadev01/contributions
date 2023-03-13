@@ -67,7 +67,8 @@
                                             <option value="XP">Packet Mini</option>
                                             <option value="AJ-NX">Anjun Packet Standard</option>
                                             <option value="AJ-IX">Anjun Packet Express</option>
-                                            <option value="AJ-CN">Anjun China</option>
+                                            <option value="AJC-NX">Anjun China Standard</option>
+                                            <option value="AJC-IX">Anjun China Express</option>
                                         </select>
                                     </th>
                                     
