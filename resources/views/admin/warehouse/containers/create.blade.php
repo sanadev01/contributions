@@ -27,38 +27,46 @@
                                 </div>
                             </div>
 
-                                <div class="controls row mb-1 align-items-center my-2">
-                                    <label class="col-md-3 text-md-right">@lang('warehouse.containers.Container Type')<span class="text-danger">*</span></label>
-                                    <div class="col-md-6">
-                                        <select class="form-control" name="unit_type" value="{{ old('unit_type') }}">
-                                            <option value="">@lang('warehouse.containers.Container Type')</option>
-                                            <option value="1" {{ old('unit_type') == '1' ? 'selected' : '' }}>BAG</option>
-                                            <option value="2" {{ old('unit_type') == '2' ? 'selected' : '' }}>BOX</option>
-                                        </select>
-                                        @error('unit_type')
-                                            <div class="help-block text-danger"> {{ $message }} </div>
-                                        @enderror
-                                    </div>
+                            <div class="controls row mb-1 align-items-center my-2">
+                                <label class="col-md-3 text-md-right">@lang('warehouse.containers.Container Type')<span
+                                        class="text-danger">*</span></label>
+                                <div class="col-md-6">
+                                    <select class="form-control" name="unit_type" value="{{ old('unit_type') }}">
+                                        <option value="">@lang('warehouse.containers.Container Type')</option>
+                                        <option value="1" {{ old('unit_type') == '1' ? 'selected' : '' }}>BAG
+                                        </option>
+                                        <option value="2" {{ old('unit_type') == '2' ? 'selected' : '' }}>BOX
+                                        </option>
+                                    </select>
+                                    @error('unit_type')
+                                        <div class="help-block text-danger"> {{ $message }} </div>
+                                    @enderror
                                 </div>
-                                <div class="controls row mb-1 align-items-center my-2">
-                                    <label class="col-md-3 text-md-right">@lang('warehouse.containers.Destination Airport')<span class="text-danger">*</span></label>
-                                    <div class="col-md-6">
-                                        <select class="form-control" name="destination_operator_name">
-                                            <option value="">@lang('warehouse.containers.Destination Airport')</option>
-                                            <option value="SAOD" {{ old('destination_operator_name') == 'SAOD' ? 'selected' : '' }}>GRU</option>
-                                            <option value="CRBA" {{ old('destination_operator_name') == 'CRBA' ? 'selected' : '' }}>CWB</option>
-                                        </select>
-                                        @error('destination_operator_name')
-                                            <div class="help-block text-danger"> {{ $message }} </div>
-                                        @enderror
-                                    </div>
+                            </div>
+                            <div class="controls row mb-1 align-items-center my-2">
+                                <label class="col-md-3 text-md-right">@lang('warehouse.containers.Destination Airport')<span
+                                        class="text-danger">*</span></label>
+                                <div class="col-md-6">
+                                    <select class="form-control" name="destination_operator_name">
+                                        <option value="">@lang('warehouse.containers.Destination Airport')</option>
+                                        <option value="SAOD"
+                                            {{ old('destination_operator_name') == 'SAOD' ? 'selected' : '' }}>GRU
+                                        </option>
+                                        <option value="CRBA"
+                                            {{ old('destination_operator_name') == 'CRBA' ? 'selected' : '' }}>CWB
+                                        </option>
+                                    </select>
+                                    @error('destination_operator_name')
+                                        <div class="help-block text-danger"> {{ $message }} </div>
+                                    @enderror
                                 </div>
-                                <div class="controls row mb-1 align-items-center my-2">
-                                    <label class="col-md-3 text-md-right">@lang('warehouse.containers.Distribution Service Class')<span class="text-danger">*</span></label>
-                                    <div class="col-md-6">
-                                        <select class="form-control" name="services_subclass_code">
-                                            <option value="">@lang('warehouse.containers.Distribution Service Class')</option>                                            
-                                            @if(setting('china_anjun_api', null, User::ROLE_ADMIN))                                            
+                            </div>
+                            <div class="controls row mb-1 align-items-center my-2">
+                                <label class="col-md-3 text-md-right">@lang('warehouse.containers.Distribution Service Class')<span class="text-danger">*</span></label>
+                                <div class="col-md-6">
+                                    <select class="form-control" name="services_subclass_code">
+                                        <option value="">@lang('warehouse.containers.Distribution Service Class')</option>                                            
+                                        @if(setting('china_anjun_api', null, User::ROLE_ADMIN))
                                             <option value="AJC-NX" {{ old('services_subclass_code') == 'AJC-NX' ? 'selected': '' }}>Anjun China Standard service</option> 
                                             <option value="AJC-IX" {{ old('services_subclass_code') == 'AJC-IX' ? 'selected': '' }}>Anjun China Express service</option> 
                                             @elseif(!setting('anjun_api', null,User::ROLE_ADMIN))
