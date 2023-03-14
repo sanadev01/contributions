@@ -155,9 +155,9 @@ class AffiliateSaleRepository
             $query->where('user_id', Auth::id());
         }
         
-        // if ($request->user_id) {
-        //     $query->where('user_id', $request->user_id);
-        // }
+        if ($request->user_id) {
+            $query->where('user_id', $request->user_id);
+        }
 
         $startDate = $request->start_date . ' 00:00:00';
         $endDate = $request->end_date.' 23:59:59';
