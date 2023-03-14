@@ -174,7 +174,7 @@ class ShippingService extends Model
 
     public function isMileExpressService()
     {
-        return self::AJ_Standard_CN == $this->service_sub_class || self::AJ_Express_CN == $this->service_sub_class;
+        return $this->service_sub_class == ShippingService::Mile_Express;
     }
     public function isAnjunChinaExpressService()
     {
@@ -182,11 +182,8 @@ class ShippingService extends Model
     }
     public function isAnjunChinaStandardService()
     {
-        if ($this->service_sub_class == self::Mile_Express) {
-            return true;
-        }
+        return self::AJ_Standard_CN  == $this->service_sub_class;
 
-        return false;
     }
 
     public function isColombiaService()
@@ -225,7 +222,7 @@ class ShippingService extends Model
     }
     public function isAnjunChinaService()
     {
-        return self::AJ_Standard_CN == $this->service_sub_class;
+        return self::AJ_Standard_CN == $this->service_sub_class || self::AJ_Express_CN == $this->service_sub_class;
     }
     public function isCorreiosService()
     {
