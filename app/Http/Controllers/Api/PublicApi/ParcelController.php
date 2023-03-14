@@ -75,6 +75,13 @@ class ParcelController extends Controller
                 $shippingService = ShippingService::where('service_sub_class', ShippingService::AJ_Packet_Express)->first();
             }
         }
+        
+        if($shippingService->is_anjun_china){
+          
+            if(orderProductsValue($request->products)< 5) {
+            return apiResponse(false, $shippingService->name.' parcel Value cannot be less than $5'); 
+            }
+        }
 
         if ( optional($request->parcel)['measurement_unit'] == 'kg/cm' ){
             $volumetricWeight = WeightCalculator::getVolumnWeight($length,$width,$height,'cm');

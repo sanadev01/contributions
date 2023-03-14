@@ -81,7 +81,7 @@ class OrderItemsController extends Controller
             abort(404);
         }
 
-        if($this->orderRepository->serviceRequireFreight($request->shipping_service_id)){
+        if($shippingService->isDomesticService()){
             $request->validate([
                 'user_declared_freight' => 'bail|required|gt:0',
             ], [
@@ -89,15 +89,15 @@ class OrderItemsController extends Controller
                 'user_declared_freight.gt' => __('validation.gt', ['attribute' => 'shipping service rate not availaible for this service']),
             ]);
         }
-        if($this->orderRepository->GePSService($request->shipping_service_id)){
-            $value = 0;
-            if (count($request->items) >= 1) {
-                foreach ($request->items as $key => $item) {
-                    $value += ($item['value'])*($item['quantity']);
-                }
-            }
-            if($value > 400) {
+        if($shippingService->is_geps){
+            if(orderProductsValue($request->items) > 400) {
                 session()->flash('alert-danger', 'Total Parcel Value cannot be more than $400');
+                return back()->withInput();
+            }
+        }
+        if($shippingService->is_anjun_china){ 
+            if(orderProductsValue($request->items) < 5) { 
+                session()->flash('alert-danger', 'Total Parcel Value cannot be less than $5');
                 return back()->withInput();
             }
         }

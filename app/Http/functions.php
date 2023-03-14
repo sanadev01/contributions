@@ -203,3 +203,13 @@ function responseSuccessful($output, $message)
         'message' =>  $message,
     ]);
 }
+function orderProductsValue($products)
+{
+    $value = 0;
+    if (count($products) >= 1) {
+        foreach ($products as $item) {
+            $value += ($item['value'])*($item['quantity']);
+        }
+    }
+    return $value;
+}
