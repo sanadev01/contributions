@@ -53,8 +53,7 @@ class CommissionReportTable extends Component
     }
 
     public function getRequestData()
-    {;
-        Carbon::now()->format('Y-m-d');
+    {
         return request()->merge([
             'name' => $this->name,
             'pobox_number' => $this->pobox_number,
