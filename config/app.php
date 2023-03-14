@@ -182,6 +182,8 @@ return [
         App\Providers\UPSServiceProvider::class,
         App\Providers\FedExServiceProvider::class,
         App\Providers\ChileServiceProvider::class,
+        App\Providers\MileExpressServiceProvider::class,
+        App\Providers\ColombiaServiceProvider::class,
 
     ],
 
@@ -197,7 +199,7 @@ return [
     */
 
     'aliases' => [
-
+        'User' => \App\Models\User::class,
         'App' => Illuminate\Support\Facades\App::class,
         'Arr' => Illuminate\Support\Arr::class,
         'Artisan' => Illuminate\Support\Facades\Artisan::class,
