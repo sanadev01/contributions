@@ -29,11 +29,6 @@ class ShippingService extends Model
     const Packet_Standard = 33162;
     const Packet_Express = 33170;
     const Packet_Mini = 33197;
-    const AJ_Standard_CN = 34166;
-    const AJ_Express_CN = 33174;
-    const Mile_Express = 33173;
-
-
     const AJ_Packet_Standard = 33164;
     const AJ_Packet_Express = 33172;
     const Brazil_Redispatch = 100;
@@ -144,18 +139,6 @@ class ShippingService extends Model
 
         return false;
     }
-    public function isAnjunChinaService()
-    {
-        return self::AJ_Standard_CN == $this->service_sub_class || self::AJ_Express_CN == $this->service_sub_class;
-    }
-    public function isAnjunChinaExpressService()
-    {
-        return self::AJ_Express_CN  == $this->service_sub_class;
-    }
-    public function isAnjunChinaStandardService()
-    {
-        return self::AJ_Standard_CN == $this->service_sub_class;
-    }
 
     public function isGePSService()
     {
@@ -249,10 +232,6 @@ class ShippingService extends Model
     }
     public function getIsMilliExpressAttribute()
     { 
-        return $this->service_sub_class == ShippingService::Mile_Express;
-    }
-    public function isMileExpressService()
-    {
         return $this->service_sub_class == ShippingService::Mile_Express;
     }
     public function getIsUspsPriorityAttribute()
