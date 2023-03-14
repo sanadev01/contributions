@@ -12,8 +12,10 @@ class Parcel {
 
       if($order->shippingService->service_sub_class == ShippingService::Post_Plus_Registered) {
          $type = 'Registered';
-      } else {
+      } elseif($order->shippingService->service_sub_class == ShippingService::Post_Plus_EMS) {
          $type = 'EMS';
+      } elseif($order->shippingService->service_sub_class == ShippingService::Post_Plus_Prime) {
+         $type = 'Prime';
       }
       $refNo = $order->customer_reference;
       $packet = [
