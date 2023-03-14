@@ -34,7 +34,7 @@ class Parcel {
                ],
                'additionalInfo' => [
                   'serviceCode' => "UZPO",
-                  'taxIdentification' => "TAXID",
+                  'taxIdentification' => ($order->recipient->tax_id) ? $order->recipient->tax_id: '',
                ],
                //Recipient Information
                'receiver' => [
