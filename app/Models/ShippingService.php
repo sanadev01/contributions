@@ -280,5 +280,21 @@ class ShippingService extends Model
     { 
         return $this->service_sub_class == ShippingService::USPS_GROUND;
     }
+
+    public function getIsAnjunChinaAttribute()
+    {
+        return self::AJ_Standard_CN == $this->service_sub_class || self::AJ_Express_CN == $this->service_sub_class;
+    }
+
+    public function getIsAnjunChinaExpressAttribute()
+    {
+        return self::AJ_Express_CN  == $this->service_sub_class;
+    }
+    
+    public function getIsAnjunChinaStandardAttribute()
+    {
+        return self::AJ_Standard_CN  == $this->service_sub_class;
+
+    }
     
 }

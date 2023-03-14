@@ -41,10 +41,6 @@ class HandleCorreiosLabelsRepository
                 
                 return $this->swedenPostLabel();
             }
-        //     if($this->order->shippingService->isAnjunChinaService()){
-        //         return $this->anjunChinaLabel();
-
-        //    }
             if ($this->order->shippingService->isCorreiosService()) {
                 return $this->correiosOrAnjun($this->order);
             }
@@ -138,7 +134,7 @@ class HandleCorreiosLabelsRepository
     public function correiosOrAnjun($order)
     {
         // if(setting('china_anjun_api', null, User::ROLE_ADMIN) && $order->shippingService->isAnjunService()){
-        if($order->shippingService->isAnjunChinaService()){
+        if($order->shippingService->is_anjun_china){
             return $this->anjunChinaLabel();
         }
         return $this->corriesBrazilLabel();
@@ -153,7 +149,10 @@ class HandleCorreiosLabelsRepository
     
     public function anjunChinaLabel()
     {
-        return (new AnjunLabelRepository($this->request,$this->order))->run(); 
+ 
+        $anjunLabelRepository = new AnjunLabelRepository();
+        $anjunLabelRepository->run($this->order,$this->update); 
+        return $this->renderLabel($this->request, $this->order,$anjunLabelRepository->getError());
     }
 
     public function uspsLabel()
