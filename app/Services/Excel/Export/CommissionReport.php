@@ -4,6 +4,7 @@ namespace App\Services\Excel\Export;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use App\Repositories\Reports\CommissionReportsRepository;
 
 class CommissionReport extends AbstractExportService
@@ -34,12 +35,16 @@ class CommissionReport extends AbstractExportService
         $commissionReportsRepository = new CommissionReportsRepository;
         $row = $this->currentRow;
         foreach ($this->users as $user) {
-            $reportByMonth = $commissionReportsRepository->getCommissionReportOfUserByMonth($user,$this->request);
-            $this->setCellValue('A'.$row, $user->pobox_number);
-            $this->setCellValue('B'.$row, $user->name);
-            $this->setCellValue('C'.$row, $user->email);
+
+            Auth::user()->isAdmin() ? $userInfo = $user : $userInfo = $user->referrer;
+
+            $this->setCellValue('A'.$row, $userInfo->pobox_number);
+            $this->setCellValue('B'.$row, $userInfo->name);
+            $this->setCellValue('C'.$row, $userInfo->email);
             $this->setCellValue('D'.$row, $user->sale_count);
             $this->setCellValue('E'.$row, round($user->commission,2));
+
+            $reportByMonth = $commissionReportsRepository->getCommissionReportOfUserByMonth($userInfo,$this->request);
             
             foreach($reportByMonth as $reportMonth){
                 if($reportMonth->month == 1){
