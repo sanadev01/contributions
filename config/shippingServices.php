@@ -36,6 +36,7 @@ return [
             05 => 'USPS Ground',
             87765 => 'PostNL',
             541 => 'Parcel Post',
+            777 => 'Post Plus Prime',
         ]
     ]
 ];

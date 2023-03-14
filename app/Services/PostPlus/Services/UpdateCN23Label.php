@@ -19,7 +19,7 @@ class UpdateCN23Label
     }
     public function run()
     {
-        if($this->order->shippingService->service_sub_class == ShippingService::Post_Plus_Registered) {
+        if($this->order->shippingService->service_sub_class == ShippingService::Post_Plus_Registered || $this->order->shippingService->service_sub_class == ShippingService::Post_Plus_Prime) {
             // initiate FPDI
             $this->pdfi = new PDFRotate('L', 'mm', array(152, 104));
             // $this->pdfi->setPrintHeader(false);
