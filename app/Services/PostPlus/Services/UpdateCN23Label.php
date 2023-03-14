@@ -34,14 +34,14 @@ class UpdateCN23Label
             $this->pdfi->SetFillColor(255, 255, 255);
             $this->pdfi->SetFont("Arial", "", 7);
             //FOR SENDER NAME & ADDRESS
-            $this->pdfi->SetFont("Arial", "B", 5);
-            $this->pdfi->RotatedText(60.7, 20, 'Sender:', 0);
-            $this->pdfi->SetFont("Arial", "B", 5);
-            $this->pdfi->RotatedText(60.7, 22, $this->order->getSenderFullName(), 0);
-            $this->pdfi->SetFont("Arial", "", 5);
-            $this->pdfi->RotatedText(60.7, 24, "2200 NW 129TH AVE", 0);
-            $this->pdfi->SetFont("Arial", "", 5);
-            $this->pdfi->RotatedText(60.7, 26, "United States 33182 Miami FL", 0);
+            // $this->pdfi->SetFont("Arial", "B", 5);
+            // $this->pdfi->RotatedText(60.7, 20, 'Sender:', 0);
+            // $this->pdfi->SetFont("Arial", "B", 5);
+            // $this->pdfi->RotatedText(60.7, 22, $this->order->getSenderFullName(), 0);
+            // $this->pdfi->SetFont("Arial", "", 5);
+            // $this->pdfi->RotatedText(60.7, 24, "2200 NW 129TH AVE", 0);
+            // $this->pdfi->SetFont("Arial", "", 5);
+            // $this->pdfi->RotatedText(60.7, 26, "United States 33182 Miami FL", 0);
             //FOR SHIPPING
             $this->pdfi->SetFont("Arial", "B", 5);
             $this->pdfi->RotatedText(4, 47.5, 'Shipping:', 00);
@@ -55,10 +55,10 @@ class UpdateCN23Label
             $this->pdfi->SetFont("Arial", "B", 5);
             $this->pdfi->RotatedText(44, 64, number_format($userDeclaredFreight + $this->order->order_value, 2, '.', ','), 0);
             //FOR CPF#
-            if ($this->order->recipient->tax_id) {
-                $this->pdfi->SetFont("Arial", "B", 8);
-                $this->pdfi->RotatedText(66, 51, 'CPF: ' . $this->order->recipient->tax_id, 0);
-            }
+            // if ($this->order->recipient->tax_id) {
+            //     $this->pdfi->SetFont("Arial", "B", 8);
+            //     $this->pdfi->RotatedText(66, 51, 'CPF: ' . $this->order->recipient->tax_id, 0);
+            // }
             //FOR REFERENCE NO
             // if ($this->order->customer_reference || $order->tracking_id) {
             //     $this->pdfi->SetFont("Arial", "B", 8);
