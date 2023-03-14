@@ -311,38 +311,38 @@ class OrderRepository
         return true;
     }
 
-    public function GePSService($shippingServiceId)
-    {
-        $shippingService =  ShippingService::find($shippingServiceId);
+    // public function GePSService($shippingServiceId)
+    // {
+    //     $shippingService =  ShippingService::find($shippingServiceId);
 
-        if ($shippingService->isGePSService()) {
-            return true;
-        }
+    //     if ($shippingService->isGePSService()) {
+    //         return true;
+    //     }
 
-        return false;
-    }
+    //     return false;
+    // }
 
-    public function GePSeFormatService($shippingServiceId)
-    {
-        $shippingService =  ShippingService::find($shippingServiceId);
+    // public function GePSeFormatService($shippingServiceId)
+    // {
+    //     $shippingService =  ShippingService::find($shippingServiceId);
 
-        if ($shippingService->isGePSeFormatService()) {
-            return true;
-        }
+    //     if ($shippingService->isGePSeFormatService()) {
+    //         return true;
+    //     }
 
-        return false;
-    }
+    //     return false;
+    // }
 
-    public function serviceRequireFreight($shippingServiceId)
-    {
-        $shippingService =  ShippingService::find($shippingServiceId);
+    // public function serviceRequireFreight($shippingServiceId)
+    // {
+    //     $shippingService =  ShippingService::find($shippingServiceId);
 
-        if ($shippingService->isDomesticService()) {
-            return true;
-        }
+    //     if ($shippingService->isDomesticService()) {
+    //         return true;
+    //     }
 
-        return false;
-    }
+    //     return false;
+    // }
 
     public function updateShippingAndItems(Request $request, Order $order)
     {
