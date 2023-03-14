@@ -38,8 +38,11 @@
                                         <option value="NX">Packet Standard</option>
                                         <option value="IX">Packet Express</option>
                                         <option value="XP">Packet Mini</option>
+                                        <option value="AJ-NX">Anjun Standard</option>
+                                        <option value="AJ-IX">Anjun Express</option>
+                                        <option value="AJC-NX">Anjun China Standard</option>
+                                        <option value="AJC-IX">Anjun China Express</option>
                                     </select>
-
                                 </div>
                                 <div class="mt-1">
                                     <button type="submit" class="btn btn-primary mt-4">

@@ -13,14 +13,17 @@
                 </a>
             </div>
         </div>
-        <div class="row my-3" id="dateSearch">
-            <div class="col-md-3">
-                <label for="">Start Date</label>
-                <input type="date" class="form-control" wire:model='start_date'>
-            </div>
-            <div class="col-md-3">
-                <label for="">End Date</label>
-                <input type="date" class="form-control" wire:model='end_date'>
+        <div class="row my-3" id="dateSearch" 
+            @if(!empty($start_date) || !empty($end_date)) style="display:block !important" @endif>
+            <div class="row col-12 pr-0">
+                <div class="col-md-3">
+                    <label for="">Start Date</label>
+                    <input type="date" class="form-control" wire:model='start_date'>
+                </div>
+                <div class="col-md-3">
+                    <label for="">End Date</label>
+                    <input type="date" class="form-control" wire:model='end_date'>
+                </div>
             </div>
         </div>
         <div class="mb-2 row col-md-12 pl-3 mb-3 {{ !$search ? 'hide' : '' }}" id="logSearch">

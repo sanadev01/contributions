@@ -382,12 +382,12 @@ class Order extends Model implements Package
 
                 return 'Prime5';
             }
-            elseif(optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Registered || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_EMS){
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Registered || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_EMS || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Prime){
 
                 return 'PostPlus';
 
             }
-            elseif(optional($this->shippingService)->service_sub_class == ShippingService::AJ_Standard_CN){
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::AJ_Standard_CN || (optional($this->shippingService)->service_sub_class == ShippingService::AJ_Express_CN)){
 
                 return 'Anjun China';
 
@@ -419,7 +419,8 @@ class Order extends Model implements Package
                 optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_EMS ||
                 optional($this->shippingService)->service_sub_class == ShippingService::USPS_GROUND ||
                 optional($this->shippingService)->service_sub_class == ShippingService::PostNL ||
-                optional($this->shippingService)->service_sub_class == ShippingService::Parcel_Post) {
+                optional($this->shippingService)->service_sub_class == ShippingService::Parcel_Post ||
+                optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Prime) {
 
                 return $this->user_declared_freight;
             }

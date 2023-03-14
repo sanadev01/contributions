@@ -29,7 +29,8 @@ class ShippingService extends Model
     const Packet_Standard = 33162;
     const Packet_Express = 33170;
     const Packet_Mini = 33197;
-    const AJ_Standard_CN = 34162;
+    const AJ_Standard_CN = 34166;
+    const AJ_Express_CN = 33174;
     const PostNL = 87765;
     const AJ_Packet_Standard = 33164;
     const AJ_Packet_Express = 33172;
@@ -45,6 +46,7 @@ class ShippingService extends Model
     const Post_Plus_EMS = 367;
     const USPS_GROUND = 05;
     const Parcel_Post = 541;
+    const Post_Plus_Prime = 777;
 
     
 
@@ -55,7 +57,7 @@ class ShippingService extends Model
     protected static $logOnlyDirty = true;
     protected static $submitEmptyLogs = false;
 
-    public $cacheCalculator = false;
+    public $cacheCalculator = false; 
 
 
     protected static $calculator;
@@ -148,7 +150,7 @@ class ShippingService extends Model
 
     public function isPostPlusService()
     {
-        if($this->service_sub_class == self::Post_Plus_Registered|| $this->service_sub_class == self::Post_Plus_EMS){
+        if($this->service_sub_class == self::Post_Plus_Registered|| $this->service_sub_class == self::Post_Plus_EMS || $this->service_sub_class == self::Post_Plus_Prime){
             return true;
         }
         return false;
@@ -159,18 +161,6 @@ class ShippingService extends Model
         if (collect($this->gepsShippingServices())->contains($this->service_sub_class)) {
             return true;
         }
-        return false;
-    }
-    public function isAnjunChinaService()
-    {
-        return self::AJ_Standard_CN == $this->service_sub_class;
-    }
-    public function isCorreiosService()
-    {
-        if (collect($this->correiosShippingServices())->contains($this->service_sub_class)) {
-            return true;
-        }
-
         return false;
     }
 
@@ -185,11 +175,16 @@ class ShippingService extends Model
 
     public function isMileExpressService()
     {
-        if ($this->service_sub_class == self::Mile_Express) {
-            return true;
-        }
+        return $this->service_sub_class == ShippingService::Mile_Express;
+    }
+    public function isAnjunChinaExpressService()
+    {
+        return self::AJ_Express_CN  == $this->service_sub_class;
+    }
+    public function isAnjunChinaStandardService()
+    {
+        return self::AJ_Standard_CN  == $this->service_sub_class;
 
-        return false;
     }
 
     public function isColombiaService()
@@ -222,6 +217,17 @@ class ShippingService extends Model
     public function isUSPSService()
     {
         if (collect($this->uspsShippingServices())->contains($this->service_sub_class)) {
+            return true;
+        }
+        return false;
+    }
+    public function isAnjunChinaService()
+    {
+        return self::AJ_Standard_CN == $this->service_sub_class || self::AJ_Express_CN == $this->service_sub_class;
+    }
+    public function isCorreiosService()
+    {
+        if (collect($this->correiosShippingServices())->contains($this->service_sub_class)) {
             return true;
         }
 

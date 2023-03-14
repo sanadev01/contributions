@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Reports;
 
+use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Repositories\Reports\CommissionReportsRepository;
@@ -23,6 +24,11 @@ class CommissionReportTable extends Component
     public $sortBy = 'commission';
     public $sortAsc = false;
     
+    public function mount()
+    {
+        $this->start_date = Carbon::now()->startOfYear()->format('Y-m-d');
+        $this->end_date = Carbon::now()->format('Y-m-d');
+    }
     public function render()
     {
         return view('livewire.reports.commission-report-table',[

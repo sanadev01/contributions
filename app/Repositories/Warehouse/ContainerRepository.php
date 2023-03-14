@@ -56,7 +56,9 @@ class ContainerRepository extends AbstractRepository{
           $query->where('seal_no', 'LIKE', '%' . $request->sealNo . '%');
         } 
         if($request->filled('packetType')){
-            $query->where('services_subclass_code', 'LIKE', '%' . $request->packetType . '%');
+            $packetType = [$request->packetType];
+        }else{
+           $packetType= ['NX','IX', 'XP','AJ-NX','AJ-IX','AJC-NX','AJC-IX']; 
         }
 
         if($request->filled('unitCode')){
@@ -71,17 +73,18 @@ class ContainerRepository extends AbstractRepository{
             return $query->whereIn('services_subclass_code', ['CO-NX'])->latest()->paginate(50);
         }
 
-        return $query->whereIn('services_subclass_code', ['NX','IX', 'XP','AJ-NX','AJ-IX','AJ-CN'])->latest()->paginate(50);
+        return $query->whereIn('services_subclass_code', $packetType)->latest()->paginate(50);
     }
 
     public function store(Request $request)
     {
         try { 
-            if (in_array($request->services_subclass_code, [Container::CONTAINER_ANJUN_NX, Container::CONTAINER_ANJUN_IX,Container::CHINA_CONTAINER_ANJUN_CN]) ) {
+            if (in_array($request->services_subclass_code, [Container::CONTAINER_ANJUN_NX, Container::CONTAINER_ANJUN_IX,Container::CONTAINER_ANJUNC_NX,Container::CONTAINER_ANJUNC_IX]) ) {
                 
                 $latestAnujnContainer = Container::where('services_subclass_code', Container::CONTAINER_ANJUN_NX)
                                                     ->orWhere('services_subclass_code', Container::CONTAINER_ANJUN_IX)
-                                                    ->orWhere('services_subclass_code', Container::CHINA_CONTAINER_ANJUN_CN)
+                                                    ->orWhere('services_subclass_code', Container::CONTAINER_ANJUNC_NX)
+                                                    ->orWhere('services_subclass_code', Container::CONTAINER_ANJUNC_IX)
                                                     ->latest()->first();
 
                 $anjunDispatchNumber = ($latestAnujnContainer->dispatch_number ) ? $latestAnujnContainer->dispatch_number + 1 : 295000;

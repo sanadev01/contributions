@@ -20,7 +20,8 @@ return [
             33171 => 'SL Express Modal',
             33198 => 'SL Small Parcels',
             33164 => 'AJ Packet Standard',
-            34162 => "AJ Standard CN",
+            34166 => "AJ China Standard",
+            33174 => "AJ China Express",
             33172 => 'AJ Packet Express',
             33173 => 'Mile Express',
             44162 => 'Colombia Urbano',
@@ -35,6 +36,7 @@ return [
             05 => 'USPS Ground',
             87765 => 'PostNL',
             541 => 'Parcel Post',
+            777 => 'Post Plus Prime',
         ]
     ]
 ];
