@@ -24,6 +24,11 @@ class CommissionReportTable extends Component
     public $sortBy = 'commission';
     public $sortAsc = false;
     
+    public function mount()
+    {
+        $this->start_date = Carbon::now()->startOfYear()->format('Y-m-d');
+        $this->end_date = Carbon::now()->format('Y-m-d');
+    }
     public function render()
     {
         return view('livewire.reports.commission-report-table',[
@@ -58,8 +63,8 @@ class CommissionReportTable extends Component
             'name' => $this->name,
             'pobox_number' => $this->pobox_number,
             'email' => $this->email,
-            'start_date' => $this->start_date ? $this->start_date : Carbon::now()->startOfYear()->format('Y-m-d'),
-            'end_date' => $this->end_date ? $this->end_date : Carbon::now()->format('Y-m-d'),
+            'start_date' => $this->start_date,
+            'end_date' => $this->end_date,
             'sort_by' => $this->sortBy,
             'search' => $this->search, 
             'sort_order' => $this->sortAsc ? 'asc' : 'desc'
