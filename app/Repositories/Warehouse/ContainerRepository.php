@@ -56,7 +56,9 @@ class ContainerRepository extends AbstractRepository{
           $query->where('seal_no', 'LIKE', '%' . $request->sealNo . '%');
         } 
         if($request->filled('packetType')){
-            $query->where('services_subclass_code', 'LIKE', '%' . $request->packetType . '%');
+            $packetType = [$request->packetType];
+        }else{
+           $packetType= ['NX','IX', 'XP','AJ-NX','AJ-IX','AJC-NX','AJC-IX']; 
         }
 
         if($request->filled('unitCode')){
@@ -71,7 +73,7 @@ class ContainerRepository extends AbstractRepository{
             return $query->whereIn('services_subclass_code', ['CO-NX'])->latest()->paginate(50);
         }
 
-        return $query->whereIn('services_subclass_code', ['NX','IX', 'XP','AJ-NX','AJ-IX','AJC-NX','AJC-IX'])->latest()->paginate(50);
+        return $query->whereIn('services_subclass_code', $packetType)->latest()->paginate(50);
     }
 
     public function store(Request $request)
