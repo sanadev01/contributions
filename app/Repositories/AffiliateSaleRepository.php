@@ -13,9 +13,7 @@ class AffiliateSaleRepository
 
         if (Auth::user()->isUser()) {
             $query->where('user_id', Auth::id())->where('referrer_id', $request->user_id);
-        }
-        
-        if ($request->user_id) {
+        }else {
             $query->where('user_id', $request->user_id);
         }
 
