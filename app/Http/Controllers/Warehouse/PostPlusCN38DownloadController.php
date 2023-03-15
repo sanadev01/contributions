@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Warehouse;
 
 use Illuminate\Http\Request;
-use App\Models\Warehouse\Container;
+use App\Models\Warehouse\DeliveryBill;
 use App\Http\Controllers\Controller;
-use App\Services\PostPlus\CN35LabelHandler;
+use App\Services\PostPlus\CN38LabelHandler;
 use Illuminate\Support\Facades\Response;
 
-class PostPlusCN35DownloadController extends Controller
+class PostPlusCN38DownloadController extends Controller
 {
     /**
      * Handle the incoming request.
@@ -16,9 +16,9 @@ class PostPlusCN35DownloadController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function __invoke(Container $container, $id)
+    public function __invoke(DeliveryBill $deliveryBill)
     {
-        return CN35LabelHandler::handle($container, $id);
+        return CN38LabelHandler::handle($deliveryBill);
     }
 
 }

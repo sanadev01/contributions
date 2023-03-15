@@ -46,6 +46,7 @@ class ShippingService extends Model
     const Post_Plus_EMS = 367;
     const USPS_GROUND = 05;
     const Parcel_Post = 541;
+    const Post_Plus_Prime = 777;
 
     
 
@@ -56,7 +57,7 @@ class ShippingService extends Model
     protected static $logOnlyDirty = true;
     protected static $submitEmptyLogs = false;
 
-    public $cacheCalculator = false;
+    public $cacheCalculator = false; 
 
 
     protected static $calculator;
@@ -149,7 +150,7 @@ class ShippingService extends Model
 
     public function isPostPlusService()
     {
-        if($this->service_sub_class == self::Post_Plus_Registered|| $this->service_sub_class == self::Post_Plus_EMS){
+        if($this->service_sub_class == self::Post_Plus_Registered|| $this->service_sub_class == self::Post_Plus_EMS || $this->service_sub_class == self::Post_Plus_Prime){
             return true;
         }
         return false;
