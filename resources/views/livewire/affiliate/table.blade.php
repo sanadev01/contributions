@@ -35,11 +35,11 @@
                         @csrf
                         <div class="form-group mb-2 col-4" style="float:left;margin-right:20px;">
                             <label>Start Date</label>
-                            <input type="date" name="start_date" class="form-control">
+                            <input type="date" name="start" class="form-control">
                         </div>
                         <div class="form-group mx-sm-3 mb-2 col-4" style="float:left;margin-right:20px;">
                             <label>End Date</label>
-                            <input type="date" name="end_date" class="form-control">
+                            <input type="date" name="end" class="form-control">
                         </div>
                         <button class="btn btn-success searchDateBtn waves-effect waves-light"
                             title="@lang('sales-commission.Download Sales')">

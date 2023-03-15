@@ -12,8 +12,12 @@ class AffiliateSaleRepository
         $query = AffiliateSale::has('user')->with('order')->has('order');
 
         if (Auth::user()->isUser()) {
-            $query->where('user_id', Auth::id())->where('referrer_id', $request->user_id);
-        }else {
+            $query->where('user_id', Auth::id());
+            if($request->user_id){
+                $query->where('referrer_id', $request->user_id);
+            }
+        }
+        if(Auth::user()->isAdmin() && $request->user_id){
             $query->where('user_id', $request->user_id);
         }
 
