@@ -3,12 +3,11 @@
 namespace App\Listeners;
 
 use App\Events\AutoChargeAmountEvent;
-use App\Mail\Admin\NotifyTransaction;
+use App\Mail\Admin\AutoChargeTransaction;
 use App\Models\Deposit;
 use App\Models\PaymentInvoice;
 use App\Services\PaymentServices\AuthorizeNetService;
 use Exception;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
@@ -53,16 +52,16 @@ class AutoChargeAmountListener
                         'description' => 'Auto charged balance',
                         'last_four_digits' => substr($billingInformation->card_no,-4)
                     ]); 
-                $this->sendTransactionMail($deposit, $user->name);
+                $this->sendTransactionMail($deposit);
             }   
         }
         
     }
-    private function sendTransactionMail($deposit, $user){
+    private function sendTransactionMail($deposit){
         try {
-            Mail::send(new NotifyTransaction($deposit, null, $user));
+            Mail::send(new AutoChargeTransaction($deposit));
         } catch (Exception $ex) {
-            Log::info('Auto charge Notify Transaction email send error 4: '.$ex->getMessage());
+            Log::info('NO#1 : Auto Charge Transaction email send error  '.$ex->getMessage());
         }
     }
 
