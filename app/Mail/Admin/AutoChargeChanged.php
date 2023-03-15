@@ -10,19 +10,20 @@ use Illuminate\Support\Facades\Auth;
 class AutoChargeChanged extends Mailable
 {
     use Queueable, SerializesModels; 
-    public $cardNo;
     public $user;
+    public $oldData;
+    public $newData;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($oldData,$newData)
     { 
-        $this->user = Auth::user();
-         $this->cardNo = "**** **** **** ". substr(optional(auth()->user()->billingInformations->where('id',setting('charge_biling_information', null,auth()->id()))->first())->card_no??"****" ,-4);
-
+       $this->user = Auth::user();
+       $this->oldData = $oldData;
+       $this->newData = $newData;
     }
 
     /**

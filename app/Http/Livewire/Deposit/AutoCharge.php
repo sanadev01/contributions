@@ -6,6 +6,7 @@ use App\Mail\Admin\AutoChargeChanged;
 use Livewire\Component;
 use App\Models\BillingInformation;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
@@ -38,6 +39,9 @@ class AutoCharge extends Component
             'charge_biling_information' => 'required',
             'charge'    => 'nullable',
         ]);
+
+        $user = Auth::user();
+        $oldData = getAutoChargeData($user);
         $authId = Auth()->id();
         $isCharge = setting('charge', null, auth()->id()) ? false : true;
         if (BillingInformation::where('user_id', $authId)->where('id', $data['charge_biling_information'])->exists()) {
@@ -45,7 +49,7 @@ class AutoCharge extends Component
             saveSetting('charge_limit', $data['charge_limit'], $authId);
             saveSetting('charge_biling_information', $data['charge_biling_information'], $authId);
             saveSetting('charge', $isCharge, $authId);
-            $this->charge = setting('charge', null, auth()->id());
+            $this->charge = setting('charge', null, $authId);
             $message = 'Auto Charge deActivate Successfully';
             $type = 'info';
             if ($this->charge) {
@@ -54,7 +58,7 @@ class AutoCharge extends Component
 
             }
             try {
-                Mail::send(new AutoChargeChanged());
+                 Mail::send(new AutoChargeChanged($oldData,getAutoChargeData($user)));
             } catch (Exception $ex) {
                 
             $this->dispatchBrowserEvent('alert', ['type' =>  $type,  'message' => $ex->getMessage()]);
