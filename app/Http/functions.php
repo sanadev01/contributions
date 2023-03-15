@@ -6,6 +6,7 @@ use App\Models\Deposit;
 use App\Models\State;
 use App\Models\Setting;
 use App\Models\ShippingService;
+use App\Models\User;
 use App\Services\Calculators\AbstractRateCalculator;
 use Carbon\Carbon;
 function countries()
@@ -185,5 +186,15 @@ function sortTrackingEvents($data)
         'returned' => $returned,
         'taxed' => $taxed,
         'diffDates' => $interval,
+    ];
+}
+
+function getAutoChargeData(User $user)
+{
+    return[
+        'status' => old('charge') ?? setting('charge', null, $user->id)?'Active':'Inactive',
+        'card'  => "**** **** **** ". substr(optional($user->billingInformations->where('id',setting('charge_biling_information', null,auth()->id()))->first())->card_no??"****" ,-4),
+        'amount' =>  setting('charge_amount', null, $user->id),
+        'limit' => setting('charge_limit', null, $user->id),
     ];
 }
