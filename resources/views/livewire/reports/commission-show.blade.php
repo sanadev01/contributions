@@ -40,13 +40,13 @@
                         <div class="form-group col-10 col-sm-6 col-md-3">
                             <div class="row">
                                 <label class="col-md-3 control-label">@lang('sales-commission.start date')</label>
-                                <input type="date" name="start_date" class="form-control col-md-8">
+                                <input type="date" name="start" class="form-control col-md-8">
                             </div>
                         </div>
                         <div class="form-group col-12 col-sm-6 col-md-3">
                             <div class="row">
                                 <label class="col-md-3 control-label">@lang('sales-commission.end date')</label>
-                                <input type="date" name="end_date" class="form-control col-md-8">
+                                <input type="date" name="end" class="form-control col-md-8">
                             </div>
                         </div>
                         <div class="form-group col-12 col-sm-6 col-md-3">

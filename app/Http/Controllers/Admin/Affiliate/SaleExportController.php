@@ -13,7 +13,7 @@ class SaleExportController extends Controller
     {
         // $sales = $affiliateSaleRepository->getSalesForExport($request);
         $sales = $affiliateSaleRepository->get($request, false);
-
+        dd($sales,$request);
         $exportService = new SaleExport($sales->sortByDesc('order.user_id'));
         return $exportService->handle();
     }
