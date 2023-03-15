@@ -38,8 +38,11 @@
                                         <option value="NX">Packet Standard</option>
                                         <option value="IX">Packet Express</option>
                                         <option value="XP">Packet Mini</option>
+                                        <option value="AJ-NX">Anjun Standard</option>
+                                        <option value="AJ-IX">Anjun Express</option>
+                                        <option value="AJC-NX">Anjun China Standard</option>
+                                        <option value="AJC-IX">Anjun China Express</option>
                                     </select>
-
                                 </div>
                                 <div class="mt-1">
                                     <button type="submit" class="btn btn-primary mt-4">
@@ -178,8 +181,7 @@
                                                                     <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
                                                                 </a>
 
-                                                                <a href="{{ route('warehouse.container.register', $container) }}"
-                                                                    class="dropdown-item w-100">
+                                                                <a href="{{  $container->hasAnjunChinaService()?route('warehouse.anjun.container.register',$container):route('warehouse.container.register',$container) }}" class="dropdown-item w-100">
                                                                     <i class="feather icon-box"></i> Register Unit
                                                                 </a>
                                                                 <a href="{{ route('warehouse.container.cancel', $container) }}"
@@ -199,10 +201,9 @@
                                                                 </form>
                                                             @endif
                                                             @if ($container->isRegistered())
-                                                                <a href="{{ route('warehouse.container.download', $container) }}"
-                                                                    class="dropdown-item w-100">
-                                                                    <i class="feather icon-box"></i> Get CN35
-                                                                </a>
+                                                            <a href="{{$container->hasAnjunChinaService()?route('warehouse.anjun.container.download',$container):route('warehouse.container.download',$container) }}" class="dropdown-item w-100">
+                                                                <i class="feather icon-box"></i> Get CN35
+                                                            </a>
                                                             @endif
                                                         </div>
                                                     </div>

@@ -4,6 +4,7 @@ return [
     'correios' => [
         'sub_classess' => [
             33162 => 'Packet Standard',
+            33162 => 'Packet Standard',
             33170 => 'Packet Express',
             33197 => 'Packet Mini',
             28 => 'SRP',
@@ -19,6 +20,8 @@ return [
             33171 => 'SL Express Modal',
             33198 => 'SL Small Parcels',
             33164 => 'AJ Packet Standard',
+            34166 => "AJ China Standard",
+            33174 => "AJ China Express",
             33172 => 'AJ Packet Express',
             33173 => 'Mile Express',
             44162 => 'Colombia Urbano',
@@ -32,7 +35,8 @@ return [
             367 => 'Post Plus EMS',
             05 => 'USPS Ground',
             87765 => 'PostNL',
-            541 => 'Global eParcel EMS',
+            541 => 'Parcel Post',
+            777 => 'Post Plus Prime',
         ]
     ]
 ];

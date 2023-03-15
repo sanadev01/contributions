@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Order;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Repositories\UPSLabelRepository;
 use App\Repositories\GePSLabelRepository;
@@ -13,7 +14,7 @@ use App\Repositories\SwedenPostLabelRepository;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
 use App\Repositories\ColombiaLabelRepository;
-
+use App\Repositories\AnjunLabelRepository;
 class HandleCorreiosLabelsRepository
 {
     public $order;
@@ -41,8 +42,12 @@ class HandleCorreiosLabelsRepository
                 
                 return $this->swedenPostLabel();
             }
+        //     if($this->order->shippingService->isAnjunChinaService()){
+        //         return $this->anjunChinaLabel();
+
+        //    }
             if ($this->order->shippingService->isCorreiosService()) {
-                return $this->corriesBrazilLabel();
+                return $this->correiosOrAnjun($this->order);
             }
             if ($this->order->shippingService->isPostPlusService()) {
                 return $this->postPlusLabel();
@@ -89,7 +94,7 @@ class HandleCorreiosLabelsRepository
             return $this->postNLLabel();
         }
         
-        return $this->corriesBrazilLabel();
+        return $this->correiosOrAnjun($this->order);
     }
 
     public function colombiaLabel()
@@ -134,11 +139,26 @@ class HandleCorreiosLabelsRepository
         return $this->renderLabel($this->request, $this->order, $corrieosChileLabelRepository->getChileErrors());
     }
 
+
+    public function correiosOrAnjun($order)
+    {
+        // if(setting('china_anjun_api', null, User::ROLE_ADMIN) && $order->shippingService->isAnjunService()){
+        if($order->shippingService->isAnjunChinaService()){
+            return $this->anjunChinaLabel();
+        }
+        return $this->corriesBrazilLabel();
+    }
+
     public function corriesBrazilLabel()
     {
         $corrieosBrazilLabelRepository = new CorrieosBrazilLabelRepository(); 
         $corrieosBrazilLabelRepository->run($this->order,$this->update); 
         return $this->renderLabel($this->request, $this->order,$corrieosBrazilLabelRepository->getError());
+    }
+    
+    public function anjunChinaLabel()
+    {
+        return (new AnjunLabelRepository($this->request,$this->order))->run(); 
     }
 
     public function uspsLabel()

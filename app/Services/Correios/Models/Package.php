@@ -26,7 +26,8 @@ class Package implements \App\Services\Correios\Contracts\Package
     const SERVICE_CLASS_Prime5 = 773;
     const SERVICE_CLASS_Post_Plus_Registered = 734;
     const SERVICE_CLASS_Post_Plus_EMS = 367;
-    const SERVICE_CLASS_GePS_EMS = 541;
+    const SERVICE_CLASS_Parcel_Post = 541;
+    const SERVICE_CLASS_Post_Plus_Prime = 777;
 
     public $customerControlCode = "";
     public $senderName = "HERCO";

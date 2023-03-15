@@ -65,8 +65,12 @@ class AccrualRate extends Model
             return "Post Plus EMS";
         }
 
-        if ( $this->service == Package::SERVICE_CLASS_GePS_EMS ){
-            return "Global eParcel EMS";
+        if ( $this->service == Package::SERVICE_CLASS_Parcel_Post ){
+            return "Parcel Post";
+        }
+
+        if ( $this->service == Package::SERVICE_CLASS_Post_Plus_Prime ){
+            return "Post Plus Prime";
         }
         return '';
     }

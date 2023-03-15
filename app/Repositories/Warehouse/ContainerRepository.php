@@ -39,6 +39,7 @@ class ContainerRepository extends AbstractRepository{
 
     public function get(Request $request)
     {
+        
         $query = Container::query();
 
         if ( !Auth::user()->isAdmin() ){
@@ -55,7 +56,9 @@ class ContainerRepository extends AbstractRepository{
           $query->where('seal_no', 'LIKE', '%' . $request->sealNo . '%');
         } 
         if($request->filled('packetType')){
-            $query->where('services_subclass_code', 'LIKE', '%' . $request->packetType . '%');
+            $packetType = [$request->packetType];
+        }else{
+           $packetType= ['NX','IX', 'XP','AJ-NX','AJ-IX','AJC-NX','AJC-IX']; 
         }
 
         if($request->filled('unitCode')){
@@ -70,17 +73,18 @@ class ContainerRepository extends AbstractRepository{
             return $query->whereIn('services_subclass_code', ['CO-NX'])->latest()->paginate(50);
         }
 
-        return $query->whereIn('services_subclass_code', ['NX','IX', 'XP','AJ-NX','AJ-IX'])->latest()->paginate(50);
+        return $query->whereIn('services_subclass_code', $packetType)->latest()->paginate(50);
     }
 
     public function store(Request $request)
     {
-        try {
-
-            if (in_array($request->services_subclass_code, [Container::CONTAINER_ANJUN_NX, Container::CONTAINER_ANJUN_IX]) ) {
+        try { 
+            if (in_array($request->services_subclass_code, [Container::CONTAINER_ANJUN_NX, Container::CONTAINER_ANJUN_IX,Container::CONTAINER_ANJUNC_NX,Container::CONTAINER_ANJUNC_IX]) ) {
                 
                 $latestAnujnContainer = Container::where('services_subclass_code', Container::CONTAINER_ANJUN_NX)
                                                     ->orWhere('services_subclass_code', Container::CONTAINER_ANJUN_IX)
+                                                    ->orWhere('services_subclass_code', Container::CONTAINER_ANJUNC_NX)
+                                                    ->orWhere('services_subclass_code', Container::CONTAINER_ANJUNC_IX)
                                                     ->latest()->first();
 
                 $anjunDispatchNumber = ($latestAnujnContainer->dispatch_number ) ? $latestAnujnContainer->dispatch_number + 1 : 295000;
@@ -109,7 +113,6 @@ class ContainerRepository extends AbstractRepository{
                 'services_subclass_code' => $request->services_subclass_code,
                 'unit_response_list' => ($request->services_subclass_code == Container::CONTAINER_MILE_EXPRESS) ? json_encode($mileExpressContinerData) : null,
             ]);
-
             $container->update([
                 'dispatch_number' => ($container->hasAnjunService()) ? $anjunDispatchNumber : $container->id,
             ]);

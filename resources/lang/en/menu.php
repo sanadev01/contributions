@@ -49,6 +49,9 @@ return [
     ],
     'Warehouse' => [
         'menu' => 'Warehouse',
+        'anjusnChina' => 'Anjun China',
+        'Correios' => 'Correios',
+        'Containers' => 'Containers',
         'Delivery Bill' => 'Delivery Bill',
         'Containers' => 'Containers',
         'Correios' => 'Correios',

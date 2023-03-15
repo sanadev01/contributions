@@ -25,8 +25,11 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     const CONTAINER_ANJUN_NX = 'AJ-NX';
     const CONTAINER_ANJUN_IX = 'AJ-IX';
-    const CONTAINER_MILE_EXPRESS = 'ML-EX';
+         const CONTAINER_MILE_EXPRESS = 'ML-EX';
     const CONTAINER_COLOMBIA = 'CO-NX';
+    const CONTAINER_ANJUNC_NX = 'AJC-NX';
+    const CONTAINER_ANJUNC_IX = 'AJC-IX';
+
 
     public function user()
     {
@@ -74,6 +77,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'SL Small Parcels';
         }elseif ($this->services_subclass_code == 'AJ-NX') {
             return 'AJ Packet Standard service';
+        }elseif ($this->services_subclass_code == 'AJC-NX') {
+            return 'China AJ Packet Standard service';
+        }elseif ($this->services_subclass_code == 'AJC-IX') {
+            return 'China AJ Packet Express service';
         }elseif ($this->services_subclass_code == 'AJ-IX') {
             return 'AJ Packet Express service';
         }elseif ($this->services_subclass_code == 'ML-EX') {
@@ -125,7 +132,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 6;
         }elseif($this->services_subclass_code == 'FirstClass'){
             return 7;
-        }elseif($this->services_subclass_code == 'AJ-NX') {
+        }elseif($this->services_subclass_code == 'AJC-NX') {
             return 8;
         }elseif($this->services_subclass_code == 'AJ-IX'){
             return 9;
@@ -154,6 +161,9 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         elseif($this->services_subclass_code == 'USPS Ground'){
             return 7;
         }
+        elseif( $this->services_subclass_code == 'AJC-IX') {
+            return 14;
+        } 
         // return $this->services_subclass_code == 'NX' ? 2 : 1;
     }
 
@@ -200,11 +210,11 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     public function getSubClassCode()
     {
-        if ($this->services_subclass_code == 'AJ-NX') {
+        if ($this->services_subclass_code == 'AJ-NX' ||$this->services_subclass_code == 'AJC-NX'){
             return 'NX';
         }
 
-        if ($this->services_subclass_code == 'AJ-IX') {
+        if ($this->services_subclass_code == 'AJ-IX' ||$this->services_subclass_code == 'AJC-IX'){
             return 'IX';
         }
 
@@ -216,10 +226,21 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     }
 
     public function hasAnjunService()
-    {
+    {  
         return $this->services_subclass_code == 'AJ-NX' || $this->services_subclass_code == 'AJ-IX';
+    } 
+    public function hasAnjunChinaService()
+    {  
+        return $this->services_subclass_code == 'AJC-NX' || $this->services_subclass_code == 'AJC-IX';
+    } 
+    public function hasAnjunChinaStandardService()
+    {  
+        return $this->services_subclass_code == 'AJC-NX';
+    } 
+    public function hasAnjunChinaExpressService()
+    {  
+        return $this->services_subclass_code == 'AJC-IX';
     }
-
     public function hasOrders()
     {
         return $this->orders->isNotEmpty();
@@ -227,7 +248,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     public function hasGePSService()
     {
-        return $this->services_subclass_code == ShippingService::GePS || $this->services_subclass_code == ShippingService::GePS_EFormat || $this->services_subclass_code == ShippingService::GePS_EMS;
+        return $this->services_subclass_code == ShippingService::GePS || $this->services_subclass_code == ShippingService::GePS_EFormat || $this->services_subclass_code == ShippingService::Parcel_Post;
     }
 
     public function hasSwedenPostService()
@@ -237,7 +258,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     public function hasPostPlusService()
     {
-        return $this->services_subclass_code == ShippingService::Post_Plus_Registered || $this->services_subclass_code == ShippingService::Post_Plus_EMS;
+        return $this->services_subclass_code == ShippingService::Post_Plus_Registered || $this->services_subclass_code == ShippingService::Post_Plus_EMS || $this->services_subclass_code == ShippingService::Post_Plus_Prime;
     }
     
     public function hasColombiaService()

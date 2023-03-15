@@ -117,7 +117,7 @@ class OrderRepository
                 $service = [
                     ShippingService::GePS,
                     ShippingService::GePS_EFormat,
-                    ShippingService::GePS_EMS,
+                    ShippingService::Parcel_Post,
                 ];
             }
             if($request->carrier == 'Prime5'){
@@ -129,6 +129,13 @@ class OrderRepository
                 $service = [
                     ShippingService::Post_Plus_Registered,
                     ShippingService::Post_Plus_EMS,
+                    ShippingService::Post_Plus_Prime,
+                ];
+            }
+            if($request->carrier == 'Anjun China'){
+                $service = [
+                    ShippingService::AJ_Standard_CN, 
+                    ShippingService::AJ_Express_CN, 
                 ];
             }
             $query->whereHas('shippingService', function ($query) use($service) {
@@ -576,7 +583,7 @@ class OrderRepository
             || $shippingServices->contains('service_sub_class', ShippingService::GePS)
             || $shippingServices->contains('service_sub_class', ShippingService::GePS_EFormat)
             || $shippingServices->contains('service_sub_class', ShippingService::USPS_GROUND)
-            || $shippingServices->contains('service_sub_class', ShippingService::GePS_EMS)
+            || $shippingServices->contains('service_sub_class', ShippingService::Parcel_Post)
             || $shippingServices->contains('service_sub_class', ShippingService::PostNL))
         {
             if(!setting('usps', null, User::ROLE_ADMIN))
@@ -642,18 +649,34 @@ class OrderRepository
                 });
             }
 
-            if(setting('anjun_api', null, \App\Models\User::ROLE_ADMIN)){
+            
+            if(setting('anjun_api', null, \App\Models\User::ROLE_ADMIN) || setting('china_anjun_api', null, \App\Models\User::ROLE_ADMIN)){
+                $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                    return $shippingService->service_sub_class != ShippingService::Packet_Standard 
+                        && $shippingService->service_sub_class != ShippingService::Packet_Express
+                        && $shippingService->service_sub_class != ShippingService::Packet_Mini;
+                });
+        }
+
+        if(!setting('anjun_api', null, \App\Models\User::ROLE_ADMIN) || setting('china_anjun_api', null, \App\Models\User::ROLE_ADMIN)){
+                $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                    return $shippingService->service_sub_class != ShippingService::AJ_Packet_Standard 
+                        && $shippingService->service_sub_class != ShippingService::AJ_Packet_Express;
+                });
+        }
+
+            if(setting('anjun_api', null, \App\Models\User::ROLE_ADMIN)  || setting('china_anjun_api', null, \App\Models\User::ROLE_ADMIN)){
                     $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
-                        return $shippingService->service_sub_class != ShippingService::Packet_Standard
+                        return $shippingService->service_sub_class != ShippingService::Packet_Standard 
                             && $shippingService->service_sub_class != ShippingService::Packet_Express
                             && $shippingService->service_sub_class != ShippingService::Packet_Mini;
                     });
             }
 
-            if(!setting('anjun_api', null, \App\Models\User::ROLE_ADMIN)){
+            if(!setting('china_anjun_api', null, \App\Models\User::ROLE_ADMIN)){
                     $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
-                        return $shippingService->service_sub_class != ShippingService::AJ_Packet_Standard
-                            && $shippingService->service_sub_class != ShippingService::AJ_Packet_Express;
+                        return $shippingService->service_sub_class != ShippingService::AJ_Standard_CN
+                         && $shippingService->service_sub_class != ShippingService::AJ_Express_CN;
                     });
             }
 

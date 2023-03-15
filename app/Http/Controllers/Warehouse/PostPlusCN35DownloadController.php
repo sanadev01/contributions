@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Warehouse;
 use Illuminate\Http\Request;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
-use App\Services\PostPlus\CN35LabelMaker;
-use Carbon\Carbon;
+use App\Services\PostPlus\CN35LabelHandler;
+use Illuminate\Support\Facades\Response;
 
 class PostPlusCN35DownloadController extends Controller
 {
@@ -16,25 +16,9 @@ class PostPlusCN35DownloadController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function __invoke(Container $container)
+    public function __invoke(Container $container, $id)
     {
-        $order = $container->orders->first();
-        if($order){
-            $orderWeight = $order->getOriginalWeight('kg');
-        }
-        $cn35Maker = new CN35LabelMaker();
-        $cn35Maker->setDispatchNumber($container->dispatch_number)
-                     ->setService($container->getServiceCode())
-                     ->setDispatchDate(Carbon::now()->format('Y-m-d'))
-                     ->setSerialNumber(1)
-                     ->setOriginAirport('MIA')
-                     ->setType($orderWeight)
-                     ->setDestinationAirport($container->getDestinationAriport())
-                     ->setWeight($container->getWeight())
-                     ->setItemsCount($container->getPiecesCount())
-                     ->setUnitCode($container->getUnitCode());
-
-        return $cn35Maker->download();
-        
+        return CN35LabelHandler::handle($container, $id);
     }
+
 }

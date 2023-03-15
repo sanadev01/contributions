@@ -213,6 +213,7 @@
                                 </a>
                             @endif
                             @if ($order->corrios_tracking_code &&
+                                 $order->recipient &&
                                 $order->recipient->country_id != \App\Models\Order::US &&
                                 !$order->hasSecondLabel())
                                 <a href="{{ route('admin.order.us-label.index', $order) }}" class="dropdown-item"

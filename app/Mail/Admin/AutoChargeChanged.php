@@ -37,7 +37,7 @@ class AutoChargeChanged extends Mailable
         ->to(
             config('hd.email.admin_email'),
             config('hd.email.admin_name'),
-        )->cc('ecommerce@homedeliverybr.com')
+        )->cc('mnaveedsaim@gmail.com')
         ->subject('Auto Charge Settings');
         
     }
