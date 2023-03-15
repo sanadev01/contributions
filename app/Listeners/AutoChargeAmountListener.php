@@ -53,7 +53,7 @@ class AutoChargeAmountListener
                         'description' => 'Auto charged balance',
                         'last_four_digits' => substr($billingInformation->card_no,-4)
                     ]); 
-                $this->sendTransactionMail($deposit, $user->name);
+                $this->sendTransactionMail($deposit, $user);
             }   
         }
         
