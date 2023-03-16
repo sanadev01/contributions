@@ -47,6 +47,7 @@ class UsLabelForm extends Component
     protected $listeners = [
         'searchedAddress' => 'searchAddress',
         'phoneNumber' => 'enteredPhoneNumber',
+        'saveAddress' => 'saveAddress',
     ];
 
     protected $rules = [
@@ -116,6 +117,11 @@ class UsLabelForm extends Component
     public function updatedsenderPhone()
     {
         $this->validate();
+    }
+
+    public function setAddress()
+    {
+        $this->saveAddress();
     }
 
     private function validateUSAddress()
@@ -243,7 +249,6 @@ class UsLabelForm extends Component
     private function saveAddress()
     {
         $existingAddress = Address::where([['user_id', $this->userId],['phone', $this->senderPhone]])->first();
-
         if (!$existingAddress) {
             Address::create([
                 'user_id' => $this->userId,
