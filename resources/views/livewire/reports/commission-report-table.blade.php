@@ -1,17 +1,29 @@
 <div>
     <div>
         <div class="row">
-            <div class="col-12 text-right mb-2">
+            <div class="col-10 text-right mb-2">
                 <button onclick="toggleLogsSearch()" class="mr-1 btn btn-primary waves-effect waves-light">
                     <i class="feather icon-search"></i>
                 </button>
                 <button type="btn" onclick="toggleDateSearch()" id="customSwitch8"
                     class="btn btn-primary mr-1 waves-effect waves-light"><i class="feather icon-filter"></i></button>
-                <a href="{{ $downloadLink }}" class="btn btn-primary" {{ !$downloadLink ? 'disabled' : '' }}
-                    target="_blank">
-                    Download
-                </a>
             </div>
+                <div class="col-md-1">
+                    <select class="form-control" wire:model="year">
+                        <option value="">Select Year </option>
+                        @foreach ($years as $year)
+                            <option value="{{ $year }}"
+                                @if ($year == $year) selected @endif>
+                                {{ $year }} </option>
+                        @endforeach
+                    </select>
+                </div> 
+                <div class="col-md-1">
+                    <a href="{{ $downloadLink }}" class="btn btn-primary" {{ !$downloadLink ? 'disabled' : '' }}
+                        target="_blank">
+                        Download
+                    </a>
+                </div>
         </div>
         <div class="row my-3" id="dateSearch" 
             @if(!empty($start_date) || !empty($end_date)) style="display:block !important" @endif>
