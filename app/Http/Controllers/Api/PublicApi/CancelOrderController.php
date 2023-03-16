@@ -1,8 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api\PublicApi;
-
-use DB;
+ 
 use Exception;
 use App\Models\Order;
 use App\Models\Deposit;
@@ -12,7 +11,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Admin\NotifyTransaction;
-
+use Illuminate\Support\Facades\DB;
 class CancelOrderController extends Controller
 {
     public function __invoke(Order $order)
@@ -22,16 +21,19 @@ class CancelOrderController extends Controller
         if(Auth::id() != $user->id){
             return apiResponse(false,'No order found');
         }
-        $preStatus = $order->status_name;  
-        
+        $preStatus = $order->status_name;
         if ( $order ){
             if($order->isShipped())
             {
-                $message = 'Order already shipped';
+              return apiResponse(false,"Order already shipped");
+            }
+            if(count($order->containers))
+            {
+              return apiResponse(false,"Order already in a container'");
             }
             else if ($order->isRefund())
             {
-                $message = "Order already refunded";
+              return apiResponse(false,"Order already refunded");
             }
             else if($order->isPaid()){
 
@@ -72,7 +74,7 @@ class CancelOrderController extends Controller
                 $order->update([
                     'status' => Order::STATUS_CANCEL,
                     'is_paid' =>  false
-                ]);  
+                ]);
                 $message = "Order Cancelled";
             }
             return apiResponse(true,$message); 
