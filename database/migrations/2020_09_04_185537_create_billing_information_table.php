@@ -26,7 +26,7 @@ class CreateBillingInformationTable extends Migration
             $table->string('state')->nullable();
             $table->string('zipcode')->nullable();
             $table->string('country')->nullable();
-            $table->timestamps();
+            $table->timestamps();   
         });
     }
 
