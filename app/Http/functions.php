@@ -1,13 +1,15 @@
 <?php
 
+use Carbon\Carbon;
 use App\Models\Order;
+use App\Models\State;
 use App\Models\Country;
 use App\Models\Deposit;
-use App\Models\State;
 use App\Models\Setting;
 use App\Models\ShippingService;
+use App\Models\User;
 use App\Services\Calculators\AbstractRateCalculator;
-use Carbon\Carbon;
+
 function countries()
 {
     $countries =  Country::all();
@@ -107,7 +109,6 @@ function getTotalBalance()
 {
     return Deposit::getLiabilityBalance();
 }
-
 function getParcelStatus($status)
 {
     if($status == Order::STATUS_PREALERT_TRANSIT) {
@@ -134,8 +135,7 @@ function getParcelStatus($status)
 
     return $message;
 }
-
-function sortTrackingEvents($data)
+function sortTrackingEvents($data, $report)
 {
     $delivered = "No";
     $returned = "No";
@@ -185,6 +185,16 @@ function sortTrackingEvents($data)
         'returned' => $returned,
         'taxed' => $taxed,
         'diffDates' => $interval,
+    ];
+}
+
+function getAutoChargeData(User $user)
+{
+    return[
+        'status' => old('charge') ?? setting('charge', null, $user->id)?'Active':'Inactive',
+        'card'  => "**** **** **** ". substr(optional($user->billingInformations->where('id',setting('charge_biling_information', null,auth()->id()))->first())->card_no??"****" ,-4),
+        'amount' =>  setting('charge_amount', null, $user->id),
+        'limit' => setting('charge_limit', null, $user->id),
     ];
 }
 
