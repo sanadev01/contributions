@@ -189,7 +189,7 @@
                         <div class="col-md-8">
                             <div class="form-group">
                                 <label for="projectinput1">Attach File</label>
-                                <input type="file" class="form-control" name="attachment[]" multiple required>
+                                <input type="file" class="form-control" name="attachment[]" multiple >
                                 @error('csv_file')
                                     <div class="text-danger">
                                         {{ $message }}
