@@ -160,12 +160,12 @@
                                 <i class="feather icon-x-square"></i>@lang('orders.actions.cancel')
                             </a>
                         @endif
-                        @if( $order->corrios_tracking_code && $order->recipient->country_id != \App\Models\Order::US && !$order->hasSecondLabel())
+                        @if( $order->corrios_tracking_code && $order->recipient->country_id != \App\Models\Order::US && !$order->hasSecondLabel() && !$order->isRefund())
                             <a href="{{ route('admin.order.us-label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
                                 <i class="feather icon-printer"></i>@lang('orders.actions.buy-us-label')
                             </a>
                         @endif
-                        @if($order->hasSecondLabel() && !$order->isTrashed() && !$order->isRefund())
+                        @if($order->hasSecondLabel() && !$order->isTrashed())
                             <a href="{{ route('admin.order.us-label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
                                 <i class="feather icon-printer"></i>@if($order->usLabelService() == \App\Models\ShippingService::UPS_GROUND)@lang('orders.actions.print-ups-label') @elseif($order->usLabelService() == \App\Models\ShippingService::FEDEX_GROUND) @lang('orders.actions.print-fedex-label') @else @lang('orders.actions.print-usps-label') @endif
                             </a>
