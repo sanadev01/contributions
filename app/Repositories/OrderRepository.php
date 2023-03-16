@@ -127,6 +127,7 @@ class OrderRepository
                 $service = [
                     ShippingService::Post_Plus_Registered,
                     ShippingService::Post_Plus_EMS,
+                    ShippingService::Post_Plus_Prime,
                 ];
             }
             $query->whereHas('shippingService', function ($query) use($service) {
