@@ -13,7 +13,6 @@ class AutoChargeChanged extends Mailable
     public $user;
     public $oldData;
     public $newData;
-    public $selectedCard;
 
     /**
      * Create a new message instance.
@@ -25,8 +24,6 @@ class AutoChargeChanged extends Mailable
        $this->user = Auth::user();
        $this->oldData = $oldData;
        $this->newData = $newData;
-       $this->selectedCard = $this->user->billingInformations->where('id',  setting('charge_biling_information', null, $this->user->id))->first();
-
     }
 
     /**
@@ -38,9 +35,9 @@ class AutoChargeChanged extends Mailable
     {
         return $this->markdown('email.admin.auto-charge-change')
         ->to(
-            $this->user->email
-        )->cc(config('hd.email.admin_email'))
-        ->subject('Auto Charge Settings');
-        
+           $this->user->email,
+           $this->user->full_name,
+        )->cc([ config('hd.email.admin_email'), 'mnaveedsaim@gmail.com'])
+        ->subject('Auto Charge Settings');   
     }
 }
