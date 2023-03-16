@@ -192,11 +192,7 @@
                         <div class="col-md-8">
                             <div class="form-group">
                                 <label for="projectinput1">Attach File</label>
-<<<<<<< HEAD
-                                <input type="file" class="form-control" name="attachment[]" multiple >
-=======
                                 <input type="file" class="form-control" name="attachment[]" multiple>
->>>>>>> 22d426b21d3e46351cf869914b9a8227de702a46
                                 @error('csv_file')
                                     <div class="text-danger">
                                         {{ $message }}
