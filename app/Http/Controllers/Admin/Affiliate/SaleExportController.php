@@ -11,9 +11,10 @@ class SaleExportController extends Controller
 {
     public function __invoke(Request $request, AffiliateSaleRepository $affiliateSaleRepository)
     {
-        $sales = $affiliateSaleRepository->getSalesForExport($request);
+        // $sales = $affiliateSaleRepository->getSalesForExport($request);
+        $sales = $affiliateSaleRepository->get($request, false);
         
-        $exportService = new SaleExport($sales);
+        $exportService = new SaleExport($sales->sortByDesc('order.user_id'));
         return $exportService->handle();
     }
 }
