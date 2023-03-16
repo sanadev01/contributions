@@ -29,7 +29,7 @@ class CancelOrderController extends Controller
             }
             if(count($order->containers))
             {
-              return apiResponse(false,"Order already in a container'");
+              return apiResponse(false,"Order already in a container");
             }
             else if ($order->isRefund())
             {
