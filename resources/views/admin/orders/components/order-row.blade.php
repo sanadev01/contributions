@@ -215,7 +215,7 @@
                             @if ($order->corrios_tracking_code &&
                                  $order->recipient &&
                                 $order->recipient->country_id != \App\Models\Order::US &&
-                                !$order->hasSecondLabel())
+                                !$order->hasSecondLabel() && && !$order->isRefund())
                                 <a href="{{ route('admin.order.us-label.index', $order) }}" class="dropdown-item"
                                     title="@lang('orders.actions.label')">
                                     <i class="feather icon-printer"></i>@lang('orders.actions.buy-us-label')
