@@ -140,14 +140,10 @@
                                           <a href="{{ $tax->adjustment ? route('admin.adjustment.edit',$tax->id):route('admin.tax.edit',$tax->id) }}" class="btn btn-primary mr-2" title="Edit">
                                             <i class="feather icon-edit"></i>
                                          </a> 
-                                                    @if($tax->adjustment==null)
-                                                    <form action="{{ route('admin.refund-tax') }}" method="POST" onsubmit="return confirm('Are you Sure want to refund?');">
-                                                        @csrf
-                                                        <input type="hidden" name="taxes"" value='["{{$tax->id}}"]'>
-                                                        <button  class="btn btn-danger mr-2">
+                                                    @if($tax->adjustment==null) 
+                                                        <button  class="btn btn-danger mr-2" onclick="return refund(['{{$tax->id}}']);">
                                                             <i class="feather icon-corner-down-left"></i>
-                                                        </button>
-                                                    </form>
+                                                        </button> 
                                                     @endif
                                         @elseif(optional($tax->deposit)->last_four_digits == 'Tax refunded')
                                         <button  class="btn btn-danger mr-2">
@@ -202,15 +198,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row justify-content-center">
-                        <div class="col-md-10">
-                            <div class="alert alert-warning">
-                                <ol>
-                                    <li>@lang('shipping-rates.* Files larger than 15Mb are not allowed')</li>
-                                </ol>
-                            </div>
-                        </div>
-                    </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-success" id="proceedRefund">Refund Tax</button>
                         <button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
@@ -233,12 +220,14 @@
                 var taxesIds = [];
                 $.each($(".bulk-taxes:checked"), function(){
                     taxesIds.push($(this).val());
-                });
-                $('#refundModal').modal('toggle');
- 
-                $('#admin-refund-tax #taxes').val(JSON.stringify(taxesIds));
-                // $('#admin-refund-tax').submit();
+                }); 
+                refund(taxesIds)
             }
         })
+        function refund(taxesIds){             
+                $('#refundModal').modal('toggle');
+                $('#admin-refund-tax #taxes').val(JSON.stringify(taxesIds));
+        }
+      
     </script>
 @endsection
