@@ -1,50 +1,39 @@
 <div>
     <div>
         <div class="row">
-            <div class="col-10 text-right mb-2">
+            <div class="col-12 text-right mb-2">
                 <button onclick="toggleLogsSearch()" class="mr-1 btn btn-primary waves-effect waves-light">
                     <i class="feather icon-search"></i>
                 </button>
                 <button type="btn" onclick="toggleDateSearch()" id="customSwitch8"
                     class="btn btn-primary mr-1 waves-effect waves-light"><i class="feather icon-filter"></i></button>
             </div>
-                <div class="col-md-1">
-                    <select class="form-control" wire:model="year">
-                        <option value="">Select Year </option>
-                        @foreach ($years as $year)
-                            <option value="{{ $year }}"
-                                @if ($year == $year) selected @endif>
-                                {{ $year }} </option>
-                        @endforeach
-                    </select>
-                </div> 
-                <div class="col-md-1">
-                    <a href="{{ $downloadLink }}" class="btn btn-primary" {{ !$downloadLink ? 'disabled' : '' }}
-                        target="_blank">
-                        Download
-                    </a>
-                </div>
         </div>
-        <div class="row my-3" id="dateSearch" 
-            @if(!empty($start_date) || !empty($end_date)) style="display:block !important" @endif>
-            <div class="row col-12 pr-0">
-                <div class="col-md-3">
-                    <label for="">Start Date</label>
-                    <input type="date" class="form-control" wire:model='start_date'>
-                </div>
-                <div class="col-md-3">
-                    <label for="">End Date</label>
-                    <input type="date" class="form-control" wire:model='end_date'>
-                </div>
+        <div class="my-3" @if( $year) style="display:flex !important" @endif id="dateSearch">
+            <div class="col-md-3">
+                <select class="form-control" wire:model="year">
+                    <option value="">Select Year </option>
+                    @foreach ($years as $year)
+                        <option value="{{ $year }}"
+                            @if ($year == $year) selected @endif>
+                            {{ $year }} </option>
+                    @endforeach
+                </select>
+            </div> 
+            <div class="col-md-1">
+                <a href="{{ $downloadLink }}" class="btn btn-primary" {{ !$downloadLink ? 'disabled' : '' }}
+                    target="_blank">
+                    Download
+                </a>
             </div>
         </div>
-        <div class="mb-2 row col-md-12 pl-3 mb-3 {{ !$search ? 'hide' : '' }}" id="logSearch">
-            <form class="col-12 d-flex pl-0" wire:submit.prevent="render">
-                <div class="col-6 pl-0">
+        <div class="row col-md-12 mb-2 pl-3 mb-3 @if( $start_date|| $end_date || $search) show @else hide @endif" id="logSearch">
+            <form class="col-md-6 d-flex pl-0" wire:submit.prevent="render">
+                <div class="col-12 pl-0">
                     <label>Search</label>
-                    <input type="search" class="form-control" wire:model.defer="search">
+                    <input type="search" class="form-control" wire:model.debounce.500ms="search">
                 </div>
-                <div class="mt-1">
+                {{-- <div class="mt-1">
                     <button type="submit" class="btn btn-primary mt-4">
                         <i class="fa fa-search"></i>
                     </button>
@@ -52,8 +41,18 @@
                         onclick="window.location.reload();">
                         <i class="fa fa-undo" data-bs-toggle="tooltip" title=""
                             data-bs-original-title="fa fa-undo" aria-label="fa fa-undo" aria-hidden="true"></i></button>
-                </div>
+                </div> --}}
             </form>
+            <div class="col-md-6 row pr-0">
+                <div class="col-md-4">
+                    <label for="">Start Date</label>
+                    <input type="date" class="form-control" wire:model.debounce.500ms='start_date'>
+                </div>
+                <div class="col-md-4">
+                    <label for="">End Date</label>
+                    <input type="date" class="form-control" wire:model.debounce.500ms='end_date'>
+                </div>
+            </div>
         </div>
         <div class="table-responsive order-table">
             <table class="table mb-0 table-bordered">

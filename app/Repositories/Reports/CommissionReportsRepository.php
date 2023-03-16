@@ -99,7 +99,8 @@ class CommissionReportsRepository
         $endDate    = $request->end_date.' 23:59:59';
         $affiliateSalesByMonth = $query->selectRaw(
             "count(*) as total, Month(created_at) as month"
-        )->groupBy('month')->whereBetween('created_at',[$startDate,$endDate])->orderBy('month','asc')->get();
+        )->groupBy('month')->whereYear('created_at','LIKE','%'.$request->year.'%')->orderBy('month','asc')->get();
+        // )->groupBy('month')->whereBetween('created_at',[$startDate,$endDate])->orderBy('month','asc')->get();
         return $affiliateSalesByMonth;
     }
 }
