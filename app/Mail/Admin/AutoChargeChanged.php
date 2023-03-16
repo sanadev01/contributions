@@ -38,9 +38,8 @@ class AutoChargeChanged extends Mailable
     {
         return $this->markdown('email.admin.auto-charge-change')
         ->to(
-            config('hd.email.admin_email'),
-            config('hd.email.admin_name'),
-        )->cc('ecommerce@homedeliverybr.com')
+            $this->user->email
+        )->cc(config('hd.email.admin_email'))
         ->subject('Auto Charge Settings');
         
     }
