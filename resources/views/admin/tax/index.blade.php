@@ -4,10 +4,13 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header d-flex justify-content-end">
+                    <div class="card-header d-flex justify-content-end pb-2">
                         @section('title', __('tax.Manage Tax Services'))
                         @can('create', App\Models\HandlingService::class)
                         <div>
+                        <button type="btn" onclick="toggleDateSearch()" id="customSwitch8"
+                            class="btn btn-primary mr-1 waves-effect waves-light"><i
+                                class="feather icon-filter"></i></button>
                         <a href="{{ route('admin.adjustment.create') }}" class="btn btn-success">
                             @lang('tax.Adjustment')
                         </a>
@@ -18,13 +21,13 @@
                         @endcan
                     </div></br>
                     <div class="table-responsive-md mt-1 mr-4 ml-4 mb-5">
-                        <div class="filters p-2" id="singleSearch"
+                        <div class="filters p-2" id="dateSearch"
                             @if (old('search', request('search'))) style="display: block" @endif>
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <form action="" method="GET">
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-8">
                                                 <input type="search" class="form-control" name="search" value="{{ old('search',request('search')) }}" placeholder="@lang('tax.Search By Name, Warehouse No. or Tracking Code')">
                                             </div>
                                             <div class="col-md-4">
@@ -35,7 +38,7 @@
                                         </div>
                                     </form>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-8">
                                     <form action="{{ route('admin.reports.tax-report') }}" method="GET">
                                         <input type="hidden" class="form-control" name="search" value="{{ old('search',request('search')) }}">
                                         <div class="row col-md-12">
@@ -189,7 +192,11 @@
                         <div class="col-md-8">
                             <div class="form-group">
                                 <label for="projectinput1">Attach File</label>
+<<<<<<< HEAD
                                 <input type="file" class="form-control" name="attachment[]" multiple >
+=======
+                                <input type="file" class="form-control" name="attachment[]" multiple>
+>>>>>>> 22d426b21d3e46351cf869914b9a8227de702a46
                                 @error('csv_file')
                                     <div class="text-danger">
                                         {{ $message }}
