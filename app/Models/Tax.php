@@ -23,5 +23,17 @@ class Tax extends Model
     {
         return $this->belongsTo(Deposit::class);
     }
+    public function getIsRefundedAttribute()
+    {
+        return optional($this->deposit)->last_four_digits == 'Tax refunded';
+    }
+    public function getIsTaxAttribute()
+    {
+        return !$this->is_refunded && !$this->is_adjustment;
+    }
+    public function getIsAdjustmentAttribute()
+    {
+        return  $this->adjustment != null;
+    }
 
 }
