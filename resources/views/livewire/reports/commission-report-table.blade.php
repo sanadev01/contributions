@@ -10,7 +10,7 @@
             </div>
         </div>
         <div class="my-3" @if( $year) style="display:flex !important" @endif id="dateSearch">
-            <div class="col-md-3">
+            <div class="col-md-3 pl-0">
                 <select class="form-control" wire:model="year">
                     <option value="">Select Year </option>
                     @foreach ($years as $year)
@@ -21,7 +21,7 @@
                 </select>
             </div> 
             <div class="col-md-1">
-                <a href="{{ $downloadLink }}" class="btn btn-primary" {{ !$downloadLink ? 'disabled' : '' }}
+                <a href="{{ $downloadLink }}&yearReport=1" class="btn btn-primary" {{ !$downloadLink ? 'disabled' : '' }}
                     target="_blank">
                     Download
                 </a>
@@ -42,6 +42,7 @@
                         <i class="fa fa-undo" data-bs-toggle="tooltip" title=""
                             data-bs-original-title="fa fa-undo" aria-label="fa fa-undo" aria-hidden="true"></i></button>
                 </div> --}}
+                
             </form>
             <div class="col-md-6 row pr-0">
                 <div class="col-md-4">
@@ -51,6 +52,12 @@
                 <div class="col-md-4">
                     <label for="">End Date</label>
                     <input type="date" class="form-control" wire:model.debounce.500ms='end_date'>
+                </div>
+                <div class="col-md-1 mt-4">
+                    <a href="{{ $downloadLink }}&yearReport=0" class="btn btn-primary mt-1" {{ !$downloadLink ? 'disabled' : '' }}
+                        target="_blank">
+                        Download
+                    </a>
                 </div>
             </div>
         </div>
