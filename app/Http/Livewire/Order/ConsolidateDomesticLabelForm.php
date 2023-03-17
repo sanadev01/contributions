@@ -180,6 +180,11 @@ class ConsolidateDomesticLabelForm extends Component
         $this->validate();
     }
 
+    public function setAddress()
+    {
+        $this->saveAddress();
+    }
+
     private function validateUSAddress()
     {
         $this->validate([
@@ -328,17 +333,17 @@ class ConsolidateDomesticLabelForm extends Component
 
         if (!$existingAddress) {
             Address::create([
-                            'user_id' => $this->userId,
-                            'first_name' => $this->firstName,
-                            'last_name' => $this->lastName,
-                            'phone' => $this->senderPhone,
-                            'address' => $this->senderAddress,
-                            'city' => $this->senderCity,
-                            'state_id' => State::where([['code', $this->senderState], ['country_id', Country::US]])->first()->id,
-                            'country_id' => Country::US,
-                            'zipcode' => $this->senderZipCode,
-                            'account_type' => 'individual',
-                        ]);
+                'user_id' => $this->userId,
+                'first_name' => $this->firstName,
+                'last_name' => $this->lastName,
+                'phone' => $this->senderPhone,
+                'address' => $this->senderAddress,
+                'city' => $this->senderCity,
+                'state_id' => State::where([['code', $this->senderState], ['country_id', Country::US]])->first()->id,
+                'country_id' => Country::US,
+                'zipcode' => $this->senderZipCode,
+                'account_type' => 'individual',
+            ]);
         }
 
         return;
