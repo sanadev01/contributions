@@ -194,7 +194,7 @@
         <div class="d-flex justify-content-end pr-0">
             {{ $users->links() }}
         </div>
-        @include('layouts.livewire.loading')
+        <!-- @include('layouts.livewire.loading') -->
     </div>
 
 </div>
