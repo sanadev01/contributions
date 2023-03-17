@@ -1,5 +1,4 @@
 @extends('layouts.master')
-
 @section('page')
     <section id="prealerts">
         <div class="row">
@@ -66,6 +65,13 @@
                         <table class="table mb-0 table-responsive-md">
                             <thead>
                                 <tr>
+                                    <th style="min-width: 100px;">
+                                        <select name="" id="bulk-actions" class="form-control">
+                                            <option value="clear">Clear All</option>
+                                            <option value="checkAll">Select All</option>
+                                            <option value="refund">Refund</option>
+                                        </select>
+                                    </th>
                                     <th>@lang('tax.User Name')</th>
                                     <th>@lang('tax.Warehouse No.')</th>
                                     <th>@lang('tax.Tracking Code')</th>
@@ -83,6 +89,26 @@
                             <tbody>
                                 @foreach($taxes as $tax)
                                 <tr>
+                                    <td>                            
+                                        @if(optional($tax->deposit)->last_four_digits != 'Tax refunded') 
+                                                  @if($tax->adjustment==null)
+                                                  <div class="vs-checkbox-con vs-checkbox-primary" title="@lang('orders.Bulk Print')">
+                                                    <input type="checkbox" name="taxes[]" class="bulk-taxes" value="{{$tax->id}}">
+                                                    <span class="vs-checkbox vs-checkbox-lg">
+                                                        <span class="vs-checkbox--check">
+                                                            <i class="vs-icon feather icon-check"></i>
+                                                        </span>
+                                                    </span>
+                                                    <span class="h3 mx-2 text-primary my-0 py-0"></span>
+                                                </div>
+                                                  </form>
+                                                  @endif
+                                      @elseif(optional($tax->deposit)->last_four_digits == 'Tax refunded')
+                                      {{-- <button  class="btn btn-danger mr-2">
+                                        <i class="feather icon-check"></i>
+                                    </button> --}}
+                                      @endif
+                                    </td>
                                     <td>{{ $tax->user->name }}</td>
                                     <td>
                                         <span> 
@@ -109,9 +135,22 @@
                                         @endif
                                     </td>
                                     <td class="d-flex">
-                                        <a href="{{ $tax->adjustment ? route('admin.adjustment.edit',$tax->id):route('admin.tax.edit',$tax->id) }}" class="btn btn-primary mr-2" title="Edit">
+                                       
+                                          @if(optional($tax->deposit)->last_four_digits != 'Tax refunded') 
+                                          <a href="{{ $tax->adjustment ? route('admin.adjustment.edit',$tax->id):route('admin.tax.edit',$tax->id) }}" class="btn btn-primary mr-2" title="Edit">
                                             <i class="feather icon-edit"></i>
-                                        </a>
+                                         </a> 
+                                                    @if($tax->adjustment==null) 
+                                                        <button  class="btn btn-danger mr-2" onclick="return refund(['{{$tax->id}}']);">
+                                                            <i class="feather icon-corner-down-left"></i>
+                                                        </button> 
+                                                    @endif
+                                        @elseif(optional($tax->deposit)->last_four_digits == 'Tax refunded')
+                                        <button  class="btn btn-danger mr-2">
+                                            <i class="feather icon-check"></i>
+                                        </button>
+                                        @endif
+                                        
                                     </td>
                                 </tr>
                                 @endforeach
@@ -122,11 +161,73 @@
                         {{ $taxes->links('pagination::bootstrap-4') }}
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
 @endsection
 @section('modal')
+<!--Refun Reason Modal-->
+<div class="modal fade" id="refundModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><b>Add Reason for Tax Refund</b></h5>
+            </div>
+            <form action="{{ route('admin.refund-tax') }}" method="POST" id="admin-refund-tax" enctype="multipart/form-data">
+                @csrf
+                <input type="hidden" name="taxes" id="taxes" value="">
+                <div class="modal-body"><br>
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="projectinput1">Give Reason for Refund</label>
+                                <textarea class="form-control" name="reason", rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="projectinput1">Attach File</label>
+                                <input type="file" class="form-control" name="attachment[]" multiple>
+                                @error('csv_file')
+                                    <div class="text-danger">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success" id="proceedRefund">Refund Tax</button>
+                        <button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </form>    
+        </div>
+    </div>
+</div>
 <x-modal />
+@endsection
+@section('js')
+    <script>
+        $('body').on('change','#bulk-actions',function(){
+            if ( $(this).val() == 'clear' ){
+                $('.bulk-taxes').prop('checked',false)
+            }else if ( $(this).val() == 'checkAll' ){
+                $('.bulk-taxes').prop('checked',true)
+            }else if ( $(this).val() == 'refund' ){
+                var taxesIds = [];
+                $.each($(".bulk-taxes:checked"), function(){
+                    taxesIds.push($(this).val());
+                }); 
+                refund(taxesIds)
+            }
+        })
+        function refund(taxesIds){             
+                $('#refundModal').modal('toggle');
+                $('#admin-refund-tax #taxes').val(JSON.stringify(taxesIds));
+        }
+      
+    </script>
 @endsection
