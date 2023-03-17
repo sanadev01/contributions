@@ -19,7 +19,6 @@ class TicketRepository
     {   
 
         $tickets = Ticket::query();
-
         $tickets->has('user')->withCount(['comments' => function($q){
             $q->where('read', '0')->where('user_id', '!=', auth()->id() ); 
         }]);
@@ -27,27 +26,16 @@ class TicketRepository
         if (!auth()->user()->isAdmin()) {
             $tickets->where('user_id', auth()->id());
         }
-
-        $tickets->when($request->filled('date'), function ($query) use ($request) {
-            return $query->where('created_at', 'LIKE', "%{$request->date}%");
-        });
-
-        $tickets->when($request->filled('pobox'), function ($query) use ($request) {
-            return $query->whereHas('user', function ($query) use ($request) {
-                return $query->where('pobox_number', 'like', '%'.$request->pobox.'%');
+        
+        $tickets->when($request->filled('searchTerm'), function ($query) use ($request) {
+            $query->whereHas('user', function ($query) use ($request) {
+                $query->where('name', 'LIKE', "%{$request->searchTerm}%");
             });
+            $query->orWhere('created_at', 'LIKE', '%'. $request->searchTerm . '%');
+            
+            $query->orWhere('open', 'LIKE', '%'. $request->searchTerm . '%');
+            $query->orWhere('subject', 'LIKE', '%'. $request->searchTerm . '%');
         });
-
-        $tickets->when($request->filled('user'), function ($query) use ($request) {
-            return $query->whereHas('user', function ($query) use ($request) {
-                return $query->where('name', 'like', '%'.$request->user.'%');
-            });
-        });
-
-        $tickets->when($request->filled('status'), function ($query) use ($request) {
-            return $query->where('open', $request->status);
-        });
-
         return $tickets->orderBy('id','DESC')->paginate(25);
     }
 

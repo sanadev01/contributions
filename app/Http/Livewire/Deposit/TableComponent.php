@@ -28,8 +28,7 @@ class TableComponent extends Component
     public $description;
     public $balance;
     public $userId;
-    public $card;
-    
+    public $search;
     protected $listeners = [
         'user:updated' => 'updateUser',
         'clear-search' => 'clearSearch',
@@ -92,7 +91,7 @@ class TableComponent extends Component
             'attachment' => $this->attachment,
             'description' => $this->description,
             'balance' => $this->balance,
-            'card' => $this->card,
+            'search'  => $this->search,
         ]);
     }
 

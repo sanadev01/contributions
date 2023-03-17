@@ -28,6 +28,12 @@ class CommissionReportsRepository
         } elseif ( $request->email)
         {
             $query->where('email','LIKE',"%{$request->email}%");
+        } else if( $request->search )
+        {
+            $query->where('name','LIKE',"%{$request->search}%")
+            ->orWhere('last_name','LIKE',"%{$request->search}%")
+            ->orWhere('pobox_number','LIKE',"%{$request->search}%")
+            ->orWhere('email','LIKE',"%{$request->search}%");
         }
 
         $query->withCount(['affiliateSales as sale_count'=> function($query) use ($request){
@@ -59,7 +65,7 @@ class CommissionReportsRepository
     public function getCommissionReportOfLoggedInUser(Request $request, $paginate = true, $pageSize = 50, $orderBy = 'id', $orderType = 'asc')
     {
         $query = CommissionSetting::where('user_id', Auth::id());
-        $query->with(['affiliateSales']);
+        // $query->with(['affiliateSales']);
         
         $query->withCount(['affiliateSales as sale_count'=> function($query) use ($request){
             

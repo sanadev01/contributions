@@ -12,8 +12,10 @@ class Parcel {
 
       if($order->shippingService->service_sub_class == ShippingService::Post_Plus_Registered) {
          $type = 'Registered';
-      } else {
+      } elseif($order->shippingService->service_sub_class == ShippingService::Post_Plus_EMS) {
          $type = 'EMS';
+      } elseif($order->shippingService->service_sub_class == ShippingService::Post_Plus_Prime) {
+         $type = 'Prime';
       }
       $refNo = $order->customer_reference;
       $packet = [
@@ -63,6 +65,7 @@ class Parcel {
       
         if (count($order->items) >= 1) {
          $totalQuantity = $order->items->sum('quantity');
+         $totalQuantity = $order->items->sum('quantity');
             foreach ($order->items as $key => $item) {
                 $itemToPush = [];
                 $originCountryCode = optional($order->senderCountry)->code;
@@ -78,6 +81,5 @@ class Parcel {
         }
         return $items;
    }
-
 
 }
