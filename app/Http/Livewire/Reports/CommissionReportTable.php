@@ -23,9 +23,14 @@ class CommissionReportTable extends Component
 
     public $sortBy = 'commission';
     public $sortAsc = false;
+    public $years;
+    public $year;
     
     public function render()
     {
+        $startYear = 2020;
+        $latestYear = date('Y'); 
+        $this->years = range( $latestYear, $startYear );
         return view('livewire.reports.commission-report-table',[
             'users' => $this->getReportData(),
             'downloadLink' => route('admin.reports.commission.index',http_build_query(
@@ -62,7 +67,8 @@ class CommissionReportTable extends Component
             'end_date' => $this->end_date,
             'sort_by' => $this->sortBy,
             'search' => $this->search, 
-            'sort_order' => $this->sortAsc ? 'asc' : 'desc'
+            'sort_order' => $this->sortAsc ? 'asc' : 'desc',
+            'year' => $this->year,
         ]);    
     }
 

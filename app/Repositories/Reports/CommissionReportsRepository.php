@@ -19,16 +19,7 @@ class CommissionReportsRepository
         $query = User::query();
             $query->with(['affiliateSales']);
 
-        if ( $request->name ){
-            $query->where('name','LIKE',"%{$request->name}%")
-                    ->orWhere('last_name','LIKE',"%{$request->name}%");
-        } elseif ( $request->pobox_number ) 
-        {
-            $query->where('pobox_number','LIKE',"%{$request->pobox_number}%");
-        } elseif ( $request->email)
-        {
-            $query->where('email','LIKE',"%{$request->email}%");
-        } else if( $request->search )
+        if( $request->search )
         {
             $query->where('name','LIKE',"%{$request->search}%")
             ->orWhere('last_name','LIKE',"%{$request->search}%")
@@ -37,22 +28,30 @@ class CommissionReportsRepository
         }
 
         $query->withCount(['affiliateSales as sale_count'=> function($query) use ($request){
-            
-            if ( $request->start_date ){
-                $query->where('created_at','>',$request->start_date);
-            }
+            if($request->yearReport){
+                $query->where('created_at','LIKE',$request->year.'%');
+            }else{
 
-            if ( $request->end_date ){
-                $query->where('created_at','<=',$request->end_date);
+                if ( $request->start_date ){
+                    $query->where('created_at','>',$request->start_date);
+                }
+                
+                if ( $request->end_date ){
+                    $query->where('created_at','<=',$request->end_date);
+                }
             }
 
         },'affiliateSales as commission' => function($query) use ($request) {
-            if ( $request->start_date ){
-                $query->where('created_at','>',$request->start_date);
-            }
-
-            if ( $request->end_date ){
-                $query->where('created_at','<=',$request->end_date);
+            if($request->yearReport){
+                $query->where('created_at','LIKE',$request->year.'%');
+            }else{
+                if ( $request->start_date ){
+                    $query->where('created_at','>',$request->start_date);
+                }
+                
+                if ( $request->end_date ){
+                    $query->where('created_at','<=',$request->end_date);
+                }
             }
 
             $query->select(DB::raw('sum(commission) as commission'));
@@ -68,22 +67,30 @@ class CommissionReportsRepository
         // $query->with(['affiliateSales']);
         
         $query->withCount(['affiliateSales as sale_count'=> function($query) use ($request){
-            
-            if ( $request->start_date ){
-                $query->where('created_at','>',$request->start_date);
-            }
+            if($request->yearReport){
+                $query->where('created_at','LIKE',$request->year.'%');
+            }else{
+                if ( $request->start_date ){
+                    $query->where('created_at','>',$request->start_date);
+                }
 
-            if ( $request->end_date ){
-                $query->where('created_at','<=',$request->end_date);
+                if ( $request->end_date ){
+                    $query->where('created_at','<=',$request->end_date);
+                }
             }
 
         },'affiliateSales as commission' => function($query) use ($request) {
-            if ( $request->start_date ){
-                $query->where('created_at','>',$request->start_date);
-            }
-
-            if ( $request->end_date ){
-                $query->where('created_at','<=',$request->end_date);
+            if($request->yearReport){
+                $query->where('created_at','LIKE',$request->year.'%');
+            }else{
+                
+                if ( $request->start_date ){
+                    $query->where('created_at','>',$request->start_date);
+                }
+                
+                if ( $request->end_date ){
+                    $query->where('created_at','<=',$request->end_date);
+                }
             }
 
             $query->select(DB::raw('sum(commission) as commission'));
@@ -95,11 +102,9 @@ class CommissionReportsRepository
     public function getCommissionReportOfUserByMonth(User $user, Request $request)
     {
         $query = $user->affiliateSales();
-        $startDate  = $request->start_date.' 00:00:00'; 
-        $endDate    = $request->end_date.' 23:59:59';
         $affiliateSalesByMonth = $query->selectRaw(
             "count(*) as total, Month(created_at) as month"
-        )->groupBy('month')->whereBetween('created_at',[$startDate,$endDate])->orderBy('month','asc')->get();
+        )->groupBy('month')->where('created_at','LIKE','%'.$request->year.'%')->orderBy('month','asc')->get();
         return $affiliateSalesByMonth;
     }
 }
