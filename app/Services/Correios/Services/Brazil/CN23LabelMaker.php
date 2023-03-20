@@ -49,7 +49,7 @@ class CN23LabelMaker implements HasLableExport
         $this->order->load('items');
         $this->setItems()->setSuplimentryItems();
 
-        if ($this->order->shippingService->isAnjunService()|| setting('anjun_api', null, User::ROLE_ADMIN) || setting('china_anjun_api', null, User::ROLE_ADMIN) || $this->order->shippingService->is_anjun_china) {
+        if ($this->order->shippingService->isAnjunService() || $this->order->shippingService->is_anjun_china) {
          
             $this->contractNumber = 'Contrato:  9912501700';
             $this->hasAnjunLabel = true;
