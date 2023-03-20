@@ -85,9 +85,9 @@ class Client{
             $serviceSubClassCode = 33227;
         }
         if($order->isWeightInKg()) {
-            $weight = UnitsConverter::kgToGrams($order->getWeight('kg'));
+            $weight = UnitsConverter::kgToGrams($order->getOriginalWeight('kg'));
         }else{
-            $kg = UnitsConverter::poundToKg($order->getWeight('lbs'));
+            $kg = UnitsConverter::poundToKg($order->getOriginalWeight('lbs'));
             $weight = UnitsConverter::kgToGrams($kg);
         }
 
