@@ -111,7 +111,7 @@ class ExportDepositReport extends AbstractExportService
 
 
         $this->setColumnWidth('N', 30);
-        $this->setCellValue('O1', 'Type');
+        $this->setCellValue('N1', 'Type');
 
         $this->setColumnWidth('O', 30);
         $this->setCellValue('O1', 'Description');
