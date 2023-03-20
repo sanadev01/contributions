@@ -128,6 +128,7 @@ class OrderRepository
                     ShippingService::Post_Plus_Registered,
                     ShippingService::Post_Plus_EMS,
                     ShippingService::Post_Plus_Prime,
+                    ShippingService::Post_Plus_Premium,
                 ];
             }
             $query->whereHas('shippingService', function ($query) use($service) {
