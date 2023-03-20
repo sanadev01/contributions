@@ -58,7 +58,8 @@ class ExportDepositReport extends AbstractExportService
             $this->setCellValue('K'.$row, $order ? $order->weight : '');
             $this->setCellValue('L'.$row, '');
             $this->setCellValue('M'.$row, $deposit->isCredit() ? 'Credit' : 'Debit');
-            $this->setCellValue('N'.$row, $deposit->description);
+            $this->setCellValue('N'.$row, intval($deposit->last_four_digits) && strlen($deposit->last_four_digits)==4  ? 'Card':$deposit->last_four_digits );
+            $this->setCellValue('O'.$row, $deposit->description);
             $row++;
         }
 
@@ -108,11 +109,15 @@ class ExportDepositReport extends AbstractExportService
         $this->setColumnWidth('M', 20);
         $this->setCellValue('M1', 'Credit/Debit');
 
-        $this->setColumnWidth('N', 20);
-        $this->setCellValue('N1', 'Description');
 
-        $this->setBackgroundColor('A1:N1', '2b5cab');
-        $this->setColor('A1:N1', 'FFFFFF');
+        $this->setColumnWidth('N', 30);
+        $this->setCellValue('O1', 'Type');
+
+        $this->setColumnWidth('O', 30);
+        $this->setCellValue('O1', 'Description');
+
+        $this->setBackgroundColor('A1:O1', '2b5cab');
+        $this->setColor('A1:O1', 'FFFFFF');
 
         $this->currentRow++;
     }
