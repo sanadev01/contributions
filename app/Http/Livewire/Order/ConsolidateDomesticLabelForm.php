@@ -344,6 +344,15 @@ class ConsolidateDomesticLabelForm extends Component
                 'zipcode' => $this->senderZipCode,
                 'account_type' => 'individual',
             ]);
+        } else {
+            $existingAddress->update([
+                'first_name' => $this->firstName,
+                'last_name' => $this->lastName,
+                'address' => $this->senderAddress,
+                'city' => $this->senderCity,
+                'state_id' => State::where([['code', $this->senderState], ['country_id', Country::US]])->first()->id,
+                'zipcode' => $this->senderZipCode,
+            ]);
         }
 
         return;
