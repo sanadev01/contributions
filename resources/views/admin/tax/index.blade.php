@@ -138,19 +138,19 @@
                                        
                                           @if(!$tax->is_refunded)  
                                             @if(!$tax->is_adjustment)
-                                                <a href="{{  route('admin.tax.edit',$tax->id) }}" class="btn btn-primary mr-2" title="Edit">
+                                                <a href="{{  route('admin.tax.edit',$tax->id) }}" title="Edit tax" class="btn btn-primary mr-2" title="Edit">
                                                     <i class="feather icon-edit"></i>
                                                 </a>
-                                                <button  class="btn btn-danger mr-2" onclick="return refund(['{{$tax->id}}']);">
+                                                <button  class="btn btn-danger mr-2"  title="Refund" onclick="return refund(['{{$tax->id}}']);">
                                                     <i class="feather icon-corner-down-left"></i>
                                                 </button>
                                             @else
-                                                <a href="{{  route('admin.adjustment.edit',$tax->id) }}" class="btn btn-primary mr-2" title="Edit">
+                                                <a href="{{  route('admin.adjustment.edit',$tax->id) }}" title="Edit adjustment" class="btn btn-primary mr-2" title="Edit">
                                                     <i class="feather icon-edit"></i>
                                                 </a>
                                             @endif
                                         @elseif($tax->is_refunded)
-                                        <button  class="btn btn-danger mr-2">
+                                        <button  class="btn btn-danger mr-2" title="Refunded">
                                             <i class="feather icon-check"></i>
                                         </button>
                                         @endif
