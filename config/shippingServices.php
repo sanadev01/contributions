@@ -27,6 +27,8 @@ return [
             05 => 'USPS Ground',
             734 => 'Post Plus Registered',
             367 => 'Post Plus EMS',
+            541 => 'Parcel Post',
+            777 => 'Post Plus Prime',
         ]
     ]
 ];

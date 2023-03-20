@@ -126,7 +126,7 @@
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-2">
                             <div class="input-group">
                                 <div class="vs-checkbox-con vs-checkbox-primary" title="pickup">
                                     <input type="checkbox" value="true" wire:model="pickupType" name="pickup" id="pickup_type">
@@ -137,6 +137,19 @@
                                     </span>
                                 </div>
                                 <label class="mt-2 h4 text-danger">Pick Up</label>
+                            </div>  
+                        </div>
+                        <div class="form-group col-md-3">
+                            <div class="input-group">
+                                <div class="vs-checkbox-con vs-checkbox-primary" title="save address">
+                                    <input type="checkbox" value="true" wire:click="setAddress" name="setAddress" id="setAddress">
+                                    <span class="vs-checkbox vs-checkbox-lg">
+                                        <span class="vs-checkbox--check">
+                                            <i class="vs-icon feather icon-check"></i>
+                                        </span>
+                                    </span>
+                                </div>
+                                <label class="mt-2 h4 text-danger">Save Address</label>
                             </div>  
                         </div>
                     </div>

@@ -156,6 +156,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
 
         Route::namespace('Tax')->group(function(){
             Route::resource('tax', TaxController::class)->except(['show','destroy']);
+            Route::post('refund-tax',[App\Http\Controllers\Admin\Tax\TaxController::class,'refund'])->name('refund-tax');
         });
 
         Route::namespace('Adjustment')->group(function(){
@@ -264,22 +265,18 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
     return response()->download(storage_path("app/labels/{$order->us_api_tracking_code}.pdf"),"{$order->us_api_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.us-label.download');
 
-Route::get('test-label/{key}',function($key){
-
-    dd(Cache::forget($key));
-    $delivery = Container::find($id)->update([
-        'dispatch_number' => $dNo,
-        'unit_code' => null
-    ]);
+Route::get('test-label/{id}',function($id){
     
+    // $labelPrinter = new CN23LabelMaker();
+    
+    $order = Order::find($id);
+    $order->status = 70;
+    $order->save();
     // dd($order);
-    $labelPrinter = new CN23LabelMaker();
-
-    $order = Order::find(90354);
-    $labelPrinter->setOrder($order);
-    $labelPrinter->setService(2);
+    // $labelPrinter->setOrder($order);
+    // $labelPrinter->setService(2);
     
-    return $labelPrinter->download();
+    // return $labelPrinter->download();
 });
 
 Route::get('permission',function($id = null){
@@ -287,6 +284,13 @@ Route::get('permission',function($id = null){
     return Artisan::output();
 });
 
-Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container');
+Route::get('session-refresh/{slug?}', function($slug = null){
+    if($slug){
+        session()->forget('token');
+        return 'Correios Token refresh';
+    }
+    session()->forget('anjun_token');
+    return 'Anjun Token refresh';
+});
 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');

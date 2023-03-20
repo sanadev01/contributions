@@ -9,6 +9,12 @@ use App\Repositories\TaxRepository;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tax\TaxRequest;
 use App\Http\Requests\Tax\TaxUpdateRequest;
+use App\Models\Deposit;
+use App\Models\Document;
+use App\Models\PaymentInvoice;
+use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class TaxController extends Controller
 {
@@ -33,7 +39,7 @@ class TaxController extends Controller
     {
         $this->authorize('create', Tax::class);
         $orders = null;
-        if($request->trackingNumbers) {
+        if ($request->trackingNumbers) {
             $orders = $repository->getOrders($request);
         }
         return view('admin.tax.create', compact('orders'));
@@ -52,13 +58,12 @@ class TaxController extends Controller
         if (is_bool($response) && $response) {
             session()->flash('alert-success', 'Tax has been added successfully');
             return redirect()->route('admin.tax.index');
-        }
-        else {
+        } else {
             return back()->withInput()->withErrors($response);
         };
     }
 
-  
+
 
     /**
      * Show the form for editing the specified resource.
@@ -68,8 +73,8 @@ class TaxController extends Controller
      */
     public function edit(Tax $tax)
     {
-        $this->authorize('update',$tax);
-        return view('admin.tax.edit',compact('tax'));
+        $this->authorize('update', $tax);
+        return view('admin.tax.edit', compact('tax'));
     }
 
     /**
@@ -90,6 +95,60 @@ class TaxController extends Controller
         return back()->withInput();
     }
 
+    public function refund(Request $request)
+    {
 
-     
+        $taxesIds = json_decode($request->taxes);
+        $count=0;
+        $error='';
+        foreach ($taxesIds as $id) {
+            $tax = Tax::find($id);
+          DB::beginTransaction();
+          try{
+            $balance = Deposit::getCurrentBalance($tax->user); 
+            $deposit = Deposit::create([
+                'uuid' => PaymentInvoice::generateUUID('DP-'),
+                'amount' =>  $tax->selling_usd,
+                'user_id' => $tax->user_id,
+                'order_id' => $tax->order_id,
+                 'balance' => $balance +  $tax->selling_usd,
+                'is_credit' => true,
+                'attachment' => '',
+                'last_four_digits' => 'Tax refunded',
+                'description' => $request->reason,
+            ]);
+
+            $tax->update([
+                  'deposit_id'=>$deposit->id,
+            ]); 
+            // upload files 
+            if ($request->hasFile('attachment')) {
+                foreach ($request->attachment as $attach) {
+                    $document = Document::saveDocument($attach);
+                    $deposit->depositAttchs()->create([
+                        'name' => $document->getClientOriginalName(),
+                        'size' => $document->getSize(),
+                        'type' => $document->getMimeType(),
+                        'path' => $document->filename
+                    ]);
+                }
+            }
+
+            DB::commit();
+            $count++;
+          }
+          catch(Exception $e) {  
+            $error = $e->getMessage();
+            DB::rollBack();
+          }
+        }
+
+        if($count)
+        session()->flash('alert-success', ($count>1?$count:'').' tax refunded.'.$error);
+        else
+        session()->flash('alert-danger', 'no tax refunded.Error '.$error);
+
+        return back();
+        
+    }
 }

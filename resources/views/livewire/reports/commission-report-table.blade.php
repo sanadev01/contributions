@@ -1,20 +1,42 @@
 <div>
     <div>
-        <div class="row">
-            <div class="col-12 text-right">
-                <a href="{{ $downloadLink }}" class="btn btn-primary" {{ !$downloadLink ? 'disabled': '' }} target="_blank">
-                    Download
-                </a>
+        <div class="row col-md-12 mb-2">
+            <div class="row col-md-6">
+                <div class="col-md-4">
+                    <label for="">Start Date</label>
+                    <input type="date" class="form-control" wire:model='start_date'>
+                </div>
+                <div class="col-md-4">
+                    <label for="">End Date</label>
+                    <input type="date" class="form-control" wire:model='end_date'>
+                </div>
+                <div class="mt-1">
+                    <div class="col-md-4 mt-4">
+                        <a href="{{ $downloadLink }}" class="btn btn-primary" {{ !$downloadLink ? 'disabled': '' }} target="_blank">
+                            Download
+                        </a>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="row my-3">
-            <div class="col-md-4">
-                <label for="">Start Date</label>
-                <input type="date" class="form-control" wire:model='start_date'>
-            </div>
-            <div class="col-md-4">
-                <label for="">End Date</label>
-                <input type="date" class="form-control" wire:model='end_date'>
+            <div class="offset-4 col-md-2 text-right mt-2">
+                <div class="row my-4" @if( $year) style="display:flex !important" @endif id="dateSearch">
+                    <div class="col-md-9 pl-0">
+                        <select class="form-control" wire:model="year">
+                            <option value="">Select Year </option>
+                            @foreach ($years as $year)
+                                <option value="{{ $year }}"
+                                    @if ($year == $year) selected @endif>
+                                    {{ $year }} </option>
+                            @endforeach
+                        </select>
+                    </div> 
+                    <div class="col-md-1">
+                        <a href="{{ $downloadLink }}&yearReport=1" class="btn btn-primary" {{ !$downloadLink ? 'disabled' : '' }}
+                            target="_blank">
+                            Download
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
         <table class="table mb-0" id="example">

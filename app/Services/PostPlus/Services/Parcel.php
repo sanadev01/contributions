@@ -12,8 +12,10 @@ class Parcel {
 
       if($order->shippingService->service_sub_class == ShippingService::Post_Plus_Registered) {
          $type = 'Registered';
-      } else {
+      } elseif($order->shippingService->service_sub_class == ShippingService::Post_Plus_EMS) {
          $type = 'EMS';
+      } elseif($order->shippingService->service_sub_class == ShippingService::Post_Plus_Prime) {
+         $type = 'Prime';
       }
       $refNo = $order->customer_reference;
       $packet = [
@@ -69,6 +71,7 @@ class Parcel {
                 $itemToPush = [
                      'description' => $item->description,
                      'quantity' => (int)$item->quantity,
+                     'hsCode' => $item->sh_code,
                      'valuePerItem' => $item->value,
                      'weightPerItem' => round($order->weight / $totalQuantity, 2) - 0.05,
                 ];

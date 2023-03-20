@@ -16,69 +16,98 @@
                     </div><br>
                     <div class="card-content">
                         <div class="card-body">
-                            <div class="row col-12">
-                                <div class="col-md-4 p-0">
-                                    <h5>Search Per Date Range</h5>
-                                </div>
-                                <div class="col-md-3 ml-0">
-                                    <h5>Track Tracking Multiple</h5>
-                                </div>
-                            </div>
                             <div class="row mb-4 no-print">
                                 <div class="col-12">
                                     <div class="row">
-                                        <div class="col-md-8">
-                                            <form class="row col-12 ustify-content-end" action="{{ route('admin.reports.kpi-report.index') }}" method="GET">
-                                                @csrf
-                                                <label class="mt-1 mr-3">Start Date</label>
-                                                <input type="date" name="start_date" id="startDate" placeholder="mm/dd/yyyy" class="form-control col-2 mr-5">
+                                        <div class="row col-lg-9">
+                                            <div class="col-lg-10 col-sm-12">
+                                                <div class="row pr-0 col-12 mb-1">
+                                                    <div class="col-md-4 p-0 ml-4">
+                                                        <h5>Search Per Date Range</h5>
+                                                    </div>
+                                                </div>
+                                                <form class="row col-12 m-0 pr-0"
+                                                    action="{{ route('admin.reports.kpi-report.index') }}" method="GET">
+                                                    
+                                                    <div class="col-lg-5 col-md-5 ">
+                                                        <div class="row">
+                                                            
+                                                        <div class="col-xl-6 col-lg-12 col-lg-6 col-lg-12 ">
+                                                            <label class="">Start Date</label>
+                                                            <input type="date" name="start_date" id="startDate"
+                                                                placeholder="mm/dd/yyyy" class="form-control ">
+                                                        </div>
+                                                        <div class="col-xl-6 col-lg-12 col-lg-6 col-lg-12">
+                                                            <label>End Date</label>
+                                                            <input type="date" name="end_date" id="endDate"
+                                                                placeholder="mm/dd/yyyy" class="form-control">
 
-                                                <label class="mt-1 mr-3">End Date</label>
-                                                <input type="date" name="end_date" id="endDate" placeholder="mm/dd/yyyy" class="form-control col-2 mr-5">
+                                                        </div>
+                                                        </div>
+                                                    </div>
 
-                                                <div class="col-md-4">
-                                                    <div class="col-12 p-0">
-                                                        <div class="controls">
-                                                            <div class="col-md-12 ml-0 pl-0 pr-0">
-                                                                <textarea type="text" placeholder="Please Enter Tracking Codes" rows="3" 
-                                                                class="form-control"
-                                                                    name="trackingNumbers">{{ old('trackingNumbers',request('trackingNumbers')) }}</textarea>
-                                                                @error('trackingNumbers')
-                                                                    <div class="help-block text-danger"> {{ $message }} </div>
-                                                                @enderror
+
+                                                    <div class="col-lg-5 col-lg-4">
+                                                        <h5 class="my-2">Track Tracking Multiple</h5>
+                                                        <div class="col-12 p-0">
+                                                            <div class="controls">
+                                                                <div class="col-md-12 ml-0 pl-0 pr-0">
+                                                                    <textarea type="text" placeholder="Please Enter Tracking Codes" rows="3" class="form-control"
+                                                                        name="trackingNumbers">{{ old('trackingNumbers', request('trackingNumbers')) }}</textarea>
+                                                                    @error('trackingNumbers')
+                                                                        <div class="help-block text-danger"> {{ $message }}
+                                                                        </div>
+                                                                    @enderror
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="col-md-1 mt-5">
-                                                    <button class="btn btn-primary btn-md">
-                                                        @lang('user.Search')
+                                                    <div class="col-lg-2 col-md-2  p-0   d-flex align-items-end  mt-3 m-0">
+                                                        <button class="btn btn-primary btn-md p-2">
+                                                            @lang('user.Search')
+                                                        </button>
+                                                    </div>
+
+                                                </form>
+
+
+                                            </div>
+                                            <div class="col-lg-2 col-sm-12 d-flex align-items-end justify-content-center">
+                                                <form class="row col-12 pl-0"
+                                                    action="{{ route('admin.reports.kpi-report.store') }}" method="POST">
+                                                    @csrf
+                                                    @if ($trackings)
+                                                        <input type="hidden" name="order"
+                                                            value="{{ collect($trackings['return']['objeto']) }}">
+                                                        <input type="hidden" name="trackingCodeUser"
+                                                            value="{{ collect($trackingCodeUser) }}">
+                                                    @endif
+                                                    <button class="btn btn-success mr-3 mt-3"
+                                                        {{ !empty($trackings) ? '' : 'disabled' }}
+                                                        title="@lang('orders.import-excel.Download')">
+                                                        <i class="fa fa-arrow-down"></i>
                                                     </button>
-                                                </div>
-                                            </form> 
+                                                </form>
+                                            </div>
                                         </div>
-                                        <div class="col-md-1 mt-5">
-                                            <form class="row col-12 ustify-content-end" action="{{ route('admin.reports.kpi-report.store') }}" method="POST">
-                                                @csrf
-                                                @if($trackings)
-                                                    <input type="hidden" name="order" value="{{ collect($trackings['return']['objeto']) }}">
-                                                    <input type="hidden" name="trackingCodeUser" value="{{ collect($trackingCodeUser) }}">
-                                                @endif   
-                                                <button class="btn btn-success m-0" {{ !empty($trackings)? '' : 'disabled' }}  title="@lang('orders.import-excel.Download')">
-                                                    <i class="fa fa-arrow-down"></i>
-                                                </button>
-                                            </form>
-                                        </div>
-                                        
-                                        <div class="col-md-3 mt-3">
+
+                                        <div class="col-lg-3 d-flex align-items-end justify-content-center">
                                             <div class="row col-12">
-                                                <div class="col-6">
-                                                    <h4><span class="p-2 col-12 badge badge-primary mr-2 " id="total">Total Orders</span></h4>
-                                                    <h4><span class="p-2 col-12 badge badge-success mr-2 text-dark" id="delivered">Delivered</span></h4>
+                                                <div class="col-6 col-xl-6 col-lg-12  col-md-6  col-sm-12">
+                                                   <span class="p-1 display-3 col-12 badge badge-primary mr-2 my-2"
+                                                            id="total">Total Orders</span> 
+                                                     <span class="p-1 display-3  col-12 badge badge-success mr-2 my-2 text-dark"
+                                                            id="delivered">Delivered</span> 
                                                 </div>
-                                                <div class="col-6">
-                                                    <h4><span class="p-2 badge badge-info mr-2 text-dark col-12" id="taxed">Taxed</span></h4>
-                                                    <h4><span class="p-2 badge badge-danger mr-2 col-12" id="returned">Returned</span></h4>
+                                                <div class="col-6 col-xl-6 col-lg-12  col-md-6  col-sm-12">
+                                                   <span class="p-1 display-3  badge badge-info mr-2 text-dark my-2 col-12"
+                                                            id="taxed">Taxed</span> 
+                                                     <span class="p-1 display-3 badge badge-danger mr-2 my-2 col-12"
+                                                            id="returned">Returned</span> 
+                                                </div>
+                                                <div class="col-12 mt-2">
+                                                    <span class="p-1 display-3 badge badge-secondary mr-2 text-dark col-12"
+                                                            id="inProcess">Processing or In Transit</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -118,7 +147,7 @@
                                     @if($trackings)
                                         @foreach($trackings['return']['objeto'] as $data)
                                             @if(isset($data['evento']))
-                                            <tr>
+                                            <tr class="count">
                                                 @if(optional($data) && isset(optional($data)['numero']))
                                                     <td>{{ optional($trackingCodeUser[optional($data)['numero']])->pobox_name }}</td>
                                                     <td>{{ optional($data)['numero'] }}</td>
@@ -148,55 +177,66 @@
     </section>
 @endsection
 @section('modal')
-<x-modal />
+    <x-modal />
 @endsection
 @section('js')
     <script>
-        $(document).ready(function () {
-            $('#kpi-report tfoot th').each(function () {
+        $(document).ready(function() {
+            $('#kpi-report tfoot th').each(function() {
                 var title = $(this).text();
-                $(this).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
+                $(this).html('<input type="text" class="form-control" placeholder="Search ' + title +
+                    '" />');
             });
             var table = $('#kpi-report').DataTable({
                 "paging": false,
-                initComplete: function () {
+                initComplete: function() {
                     this.api()
                         .columns()
-                        .every(function () {
+                        .every(function() {
                             var that = this;
-        
-                            $('input', this.footer()).on('keyup change clear', function () {
+
+                            $('input', this.footer()).on('keyup change clear', function() {
                                 if (that.search() !== this.value) {
                                     that.search(this.value).draw();
+                                    calculation();
                                 }
                             });
                         });
                 },
                 "info": false
             });
+            calculation();
+        });
 
-            var totalRecords = $('#kpi-report tbody').find('tr').length;
+        function calculation() {
+            var totalRecords = $('#kpi-report tbody').find('tr.count').length;
             var taxed = 0;
             var returned = 0;
             var delivered = 0;
-            $("table > tbody > tr").each(function () {
-                if($(this).find('td').eq(7).text() == 'Yes' ){
-                  taxed++;  
+            var inProcess = 0;
+            $("table > tbody > tr").each(function() {
+                if ($(this).find('td').eq(7).text() == 'Yes') {
+                    taxed++;
                 }
-                if($(this).find('td').eq(8).text() == 'Yes' ){
-                  returned++;  
+                if ($(this).find('td').eq(8).text() == 'Yes') {
+                    delivered++;
                 }
-                if($(this).find('td').eq(9).text() == 'Yes' ){
-                  delivered++;  
+                if ($(this).find('td').eq(9).text() == 'Yes') {
+                    returned++;
+                }
+                if ($(this).find('td').eq(8).text() == 'No') {
+                    inProcess++;
                 }
             });
             var taxOrder = (taxed / totalRecords * 100).toFixed(2);
-            var returnOrder = (returned / totalRecords * 100).toFixed(2); 
             var deliveredOrder = (delivered / totalRecords * 100).toFixed(2);
-            $('#total').html('Total Orders: '+totalRecords);
-            $('#delivered').html('Delivered: '+ deliveredOrder + ' %');
-            $('#taxed').html('Taxed: '+ taxOrder + ' %');
-            $('#returned').html('Returned: '+ returnOrder + ' %');
-        });
+            var returnOrder = (returned / totalRecords * 100).toFixed(2);
+            var inTransit = (inProcess / totalRecords * 100).toFixed(2);
+            $('#total').html('Total Orders: ' + totalRecords);
+            $('#delivered').html('Delivered: ' + deliveredOrder + ' %');
+            $('#taxed').html('Taxed: ' + taxOrder + ' %');
+            $('#returned').html('Returned: ' + returnOrder + ' %');
+            $('#inProcess').html('Processing or In Transit: ' + inTransit + ' %');
+        }
     </script>
 @endsection

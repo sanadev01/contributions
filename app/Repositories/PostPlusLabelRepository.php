@@ -8,6 +8,8 @@ use App\Services\PostPlus\Client;
 use Illuminate\Support\Facades\Storage;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Correios\Models\PackageError;
+use App\Services\PostPlus\Services\UpdateCN23Label;
+
 
 
 class PostPlusLabelRepository
@@ -43,8 +45,7 @@ class PostPlusLabelRepository
             $response = json_decode($order->api_response);
             $base64_pdf = $response->prints[0]->content;
             Storage::put("labels/{$order->corrios_tracking_code}.pdf", base64_decode($base64_pdf));
-
-            return true;
+            return (new UpdateCN23Label($order))->run(); 
         }
     }
 
