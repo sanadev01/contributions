@@ -13,6 +13,7 @@ class AutoChargeChanged extends Mailable
     public $user;
     public $oldData;
     public $newData;
+    public $selectedCard;
 
     /**
      * Create a new message instance.
@@ -24,6 +25,8 @@ class AutoChargeChanged extends Mailable
        $this->user = Auth::user();
        $this->oldData = $oldData;
        $this->newData = $newData;
+       $this->selectedCard = $this->user->billingInformations->where('id',  setting('charge_biling_information', null, $this->user->id))->first();
+
     }
 
     /**
