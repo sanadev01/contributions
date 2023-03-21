@@ -7,9 +7,9 @@
             </div>
         </div>
     @endadmin
-    <div class="row mb-2 no-print">
-        <div class="col-1">
-            <select class="form-control" wire:model="pageSize">
+    <div class="row col-12 mb-2 no-print">
+        <div class="col-1 mt-4">
+            <select class="form-control mt-1" wire:model="pageSize">
                 <option value="1">1</option>
                 <option value="5">5</option>
                 <option value="10">10</option>
@@ -20,17 +20,35 @@
             </select>
         </div>
         <div class="col-11 text-right">
-            <form action="{{ route('admin.affiliate.sale.exports') }}" method="GET" target="_blank">
+            <form action="{{ route('admin.affiliate.sale.exports') }}" method="GET" target="_blank" class="row col-12">
                 @csrf
-                <label>@lang('sales-commission.start date')</label>
-                <input type="date" name="start_date" class="from-control col-2">
+                <div class="col-2">
+                    <label class="pull-left">@lang('sales-commission.start date')</label>
+                    <input type="date" name="start" class="form-control">
+                </div>
 
-                <label>@lang('sales-commission.end date')</label>
-                <input type="date" name="end_date" class="from-control col-2">
 
-                <button class="btn btn-success" title="@lang('sales-commission.Download Sales')">
-                    @lang('sales-commission.Download Sales') <i class="fa fa-arrow-down"></i>
-                </button>
+                <div class="col-2">
+                    <label class="pull-left">@lang('sales-commission.end date')</label>
+                    <input type="date" name="end" class="form-control">
+                </div>
+                <div class="col-2">
+                    <label class="pull-left">@lang('parcel.User POBOX Number')</label>
+                    <livewire:components.search-user />
+                </div>
+                <div class="col-2">
+                    <label class="pull-left">@lang('Type')</label>
+                    <select type="text" name="status" class="form-control">
+                        <option value="">Select option</option>
+                        <option value="downlaod">Download Report</option>
+                        <option value="toPay">Pay Commissions</option>
+                    </select>
+                </div>
+                <div class="col-2 mt-4">
+                    <button class="btn btn-success mt-1 pull-left" title="@lang('sales-commission.Download Sales')">
+                        @lang('sales-commission.Download Sales') <i class="fa fa-arrow-down"></i>
+                    </button>
+                </div>
             </form>
         </div>
     </div>
