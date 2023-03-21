@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use App\Repositories\GDELabelRepository;
 use App\Repositories\UPSLabelRepository;
 use App\Repositories\GePSLabelRepository;
 use App\Repositories\USPSLabelRepository;
@@ -71,6 +72,10 @@ class HandleCorreiosLabelsRepository
 
             if ($this->order->shippingService->is_ups_ground) {
                 return $this->upsLabel();
+            }
+            
+            if ($this->order->shippingService->isGDEService()) {
+                return $this->GDELabel();
             }
         }
 
@@ -162,6 +167,13 @@ class HandleCorreiosLabelsRepository
         $postPlusLabelRepository = new PostPlusLabelRepository(); 
         $postPlusLabelRepository->run($this->order,$this->update); //by default consider false
         return $this->renderLabel($this->request, $this->order, $postPlusLabelRepository->getError());
+    }
+
+    public function GDELabel()
+    {
+        $gdeLabelRepository = new GDELabelRepository(); 
+        $gdeLabelRepository->run($this->order,$this->update);
+        return $this->renderLabel($this->request, $this->order, $gdeLabelRepository->getError());
     }
 
     public function renderLabel($request, $order, $error)

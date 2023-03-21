@@ -206,4 +206,9 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     {
         return $this->services_subclass_code == ShippingService::Post_Plus_Registered || $this->services_subclass_code == ShippingService::Post_Plus_EMS || $this->services_subclass_code == ShippingService::Post_Plus_Prime || $this->services_subclass_code == ShippingService::Post_Plus_Premium;
     }
+
+    public function hasGDEService()
+    {
+        return $this->services_subclass_code == ShippingService::GDE_Service;
+    }
 }
