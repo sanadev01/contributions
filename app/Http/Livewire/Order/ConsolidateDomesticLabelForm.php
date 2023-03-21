@@ -330,7 +330,7 @@ class ConsolidateDomesticLabelForm extends Component
     private function saveAddress()
     {
         $existingAddress = Address::where([['user_id', $this->userId],['phone', $this->senderPhone]])->first();
-
+        
         if (!$existingAddress) {
             Address::create([
                 'user_id' => $this->userId,

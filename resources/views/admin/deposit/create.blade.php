@@ -165,15 +165,15 @@
                                     </div>
                                     <hr>
                                 </div>
-                                <div class="row mt-4 p-4">
-                                    <div class="col-md-12 text-right">
-                                        <button class="btn btn-lg btn-success" type="submit">
-                                            <i class="feather icon-dollar-sign"></i> @lang('invoice.Pay')
-                                        </button>
-                                        <a href="{{ route('admin.deposit.index') }}" class="btn btn-lg btn-warning">
-                                            <i class="feather icon-x"></i> @lang('invoice.Cancel')
-                                        </a>
-                                    </div>
+                            </div>
+                            <div class="row mt-4 p-4">
+                                <div class="col-md-12 text-right">
+                                    <button class="btn btn-lg btn-success" type="submit">
+                                        <i class="feather icon-dollar-sign"></i> @lang('invoice.Pay')
+                                    </button>
+                                    <a href="{{ route('admin.deposit.index') }}" class="btn btn-lg btn-warning">
+                                        <i class="feather icon-x"></i> @lang('invoice.Cancel')
+                                    </a>
                                 </div>
                             </div>
                         </form>
