@@ -40,6 +40,7 @@ class ShippingService extends Model
     const Post_Plus_EMS = 367;
     const Parcel_Post = 541;
     const Post_Plus_Prime = 777;
+    const Post_Plus_Premium = 778;
 
 
     protected $guarded = [];
@@ -159,7 +160,7 @@ class ShippingService extends Model
 
     public function isPostPlusService()
     {
-        if($this->service_sub_class == self::Post_Plus_Registered|| $this->service_sub_class == self::Post_Plus_EMS || $this->service_sub_class == self::Post_Plus_Prime){
+        if($this->service_sub_class == self::Post_Plus_Registered|| $this->service_sub_class == self::Post_Plus_EMS || $this->service_sub_class == self::Post_Plus_Prime || $this->service_sub_class == self::Post_Plus_Premium){
             return true;
         }
         return false;

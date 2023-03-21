@@ -34,14 +34,14 @@ class UpdateCN23Label
             $this->pdfi->SetFillColor(255, 255, 255);
             $this->pdfi->SetFont("Arial", "", 7);
             //FOR SENDER NAME & ADDRESS
-            $this->pdfi->SetFont("Arial", "B", 5);
-            $this->pdfi->RotatedText(60.7, 20, 'Sender:', 0);
-            $this->pdfi->SetFont("Arial", "B", 5);
-            $this->pdfi->RotatedText(60.7, 22, $this->order->getSenderFullName(), 0);
-            $this->pdfi->SetFont("Arial", "", 5);
-            $this->pdfi->RotatedText(60.7, 24, "2200 NW 129TH AVE", 0);
-            $this->pdfi->SetFont("Arial", "", 5);
-            $this->pdfi->RotatedText(60.7, 26, "United States 33182 Miami FL", 0);
+            // $this->pdfi->SetFont("Arial", "B", 5);
+            // $this->pdfi->RotatedText(60.7, 20, 'Sender:', 0);
+            // $this->pdfi->SetFont("Arial", "B", 5);
+            // $this->pdfi->RotatedText(60.7, 22, $this->order->getSenderFullName(), 0);
+            // $this->pdfi->SetFont("Arial", "", 5);
+            // $this->pdfi->RotatedText(60.7, 24, "2200 NW 129TH AVE", 0);
+            // $this->pdfi->SetFont("Arial", "", 5);
+            // $this->pdfi->RotatedText(60.7, 26, "United States 33182 Miami FL", 0);
             //FOR SHIPPING
             $this->pdfi->SetFont("Arial", "B", 5);
             $this->pdfi->RotatedText(4, 47.5, 'Shipping:', 00);
@@ -55,16 +55,19 @@ class UpdateCN23Label
             $this->pdfi->SetFont("Arial", "B", 5);
             $this->pdfi->RotatedText(44, 64, number_format($userDeclaredFreight + $this->order->order_value, 2, '.', ','), 0);
             //FOR CPF#
-            if ($this->order->recipient->tax_id) {
-                $this->pdfi->SetFont("Arial", "B", 8);
-                $this->pdfi->RotatedText(66, 51, 'CPF: ' . $this->order->recipient->tax_id, 0);
-            }
+            // if ($this->order->recipient->tax_id) {
+            //     $this->pdfi->SetFont("Arial", "B", 8);
+            //     $this->pdfi->RotatedText(66, 51, 'CPF: ' . $this->order->recipient->tax_id, 0);
+            // }
             //FOR REFERENCE NO
             // if ($this->order->customer_reference || $order->tracking_id) {
             //     $this->pdfi->SetFont("Arial", "B", 8);
             //     $this->pdfi->RotatedText(96, 51, 'Ref#: ' . ($this->order->customer_reference ? $this->order->customer_reference : $this->order->tracking_id).' HD-'.$this->order->id, 0);
             // }    
-        }else {
+            $this->pdfi->Output($this->pdf_file, 'F');
+            return true;
+
+        } elseif ($this->order->shippingService->service_sub_class == ShippingService::Post_Plus_EMS) {
             // initiate FPDI
             if(count($this->order->items) > 5) {
                 $this->pdfi = new PDFRotate('P', 'mm', array(212.9, 275));
@@ -74,11 +77,13 @@ class UpdateCN23Label
                 $this->pdfi = new PDFRotate('L', 'mm', array(147, 212.9));
                 $this->textEMSLabel(118.7, 92.5, 135.8, 92.5, 136, 95.2, 12.5, 114.7, 133.8, 92.9, 117.8, 91.2, 118.7, 95.3);
             }
-            
+            $this->pdfi->Output($this->pdf_file, 'F');
+            return true;
+
+        } elseif($this->order->shippingService->service_sub_class == ShippingService::Post_Plus_Premium) {
+
+            return true;
         }
-        //OUTPUT
-        $this->pdfi->Output($this->pdf_file, 'F');
-        return true;
     }
     
     public function textEMSLabel($sw, $sh, $cw, $ch, $fw, $fh, $rw, $rh, $bw, $bh, $sbw, $sbh, $tvw, $tvh) {
@@ -95,14 +100,14 @@ class UpdateCN23Label
         $this->pdfi->SetFillColor(255, 255, 255);
         $this->pdfi->SetFont("Arial", "", 7);
         //FOR SENDER NAME & ADDRESS
-        $this->pdfi->SetFont("Arial", "B", 6);
-        $this->pdfi->RotatedText(60.7, 26.2, 'Sender:', 0);
-        $this->pdfi->SetFont("Arial", "B", 6);
-        $this->pdfi->RotatedText(60.7, 28, $this->order->getSenderFullName(), 0);
-        $this->pdfi->SetFont("Arial", "", 6);
-        $this->pdfi->RotatedText(60.7, 30, "2200 NW 129TH AVE", 0);
-        $this->pdfi->SetFont("Arial", "", 6);
-        $this->pdfi->RotatedText(60.7, 32, "United States 33182 Miami FL", 0);
+        // $this->pdfi->SetFont("Arial", "B", 6);
+        // $this->pdfi->RotatedText(60.7, 26.2, 'Sender:', 0);
+        // $this->pdfi->SetFont("Arial", "B", 6);
+        // $this->pdfi->RotatedText(60.7, 28, $this->order->getSenderFullName(), 0);
+        // $this->pdfi->SetFont("Arial", "", 6);
+        // $this->pdfi->RotatedText(60.7, 30, "2200 NW 129TH AVE", 0);
+        // $this->pdfi->SetFont("Arial", "", 6);
+        // $this->pdfi->RotatedText(60.7, 32, "United States 33182 Miami FL", 0);
         //FOR CPF#
         if ($this->order->recipient->tax_id) {
             $this->pdfi->SetFont("Arial", "B", 7);
@@ -124,9 +129,9 @@ class UpdateCN23Label
         $this->pdfi->SetFont("Arial", "B", 6);
         $this->pdfi->RotatedText($fw, $fh, number_format($userDeclaredFreight + $this->order->order_value, 2, '.', ','), 0);
         //FOR REFERENCE NO
-        if ($this->order->customer_reference || $order->tracking_id) {
-            $this->pdfi->SetFont("Arial", "B", 7);
-            $this->pdfi->RotatedText($rw, $rh, 'Ref#: ' . ($this->order->customer_reference ? $this->order->customer_reference : $this->order->tracking_id).' HD-'.$this->order->id, 0);
-        } 
+        // if ($this->order->customer_reference || $order->tracking_id) {
+        //     $this->pdfi->SetFont("Arial", "B", 7);
+        //     $this->pdfi->RotatedText($rw, $rh, 'Ref#: ' . ($this->order->customer_reference ? $this->order->customer_reference : $this->order->tracking_id).' HD-'.$this->order->id, 0);
+        // } 
     }
 }

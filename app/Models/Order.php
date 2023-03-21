@@ -369,7 +369,7 @@ class Order extends Model implements Package
                 return 'Prime5';
 
             }
-            elseif(optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Registered || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_EMS || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Prime){
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Registered || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_EMS || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Prime || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Premium){
 
                 return 'PostPlus';
 
@@ -396,7 +396,8 @@ class Order extends Model implements Package
                 optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Registered ||
                 optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_EMS ||
                 optional($this->shippingService)->service_sub_class == ShippingService::Parcel_Post ||
-                optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Prime) {
+                optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Prime ||
+                optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Premium) {
 
                 return $this->user_declared_freight;
             }

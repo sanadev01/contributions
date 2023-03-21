@@ -330,7 +330,7 @@ class ConsolidateDomesticLabelForm extends Component
     private function saveAddress()
     {
         $existingAddress = Address::where([['user_id', $this->userId],['phone', $this->senderPhone]])->first();
-
+        
         if (!$existingAddress) {
             Address::create([
                 'user_id' => $this->userId,
@@ -343,6 +343,15 @@ class ConsolidateDomesticLabelForm extends Component
                 'country_id' => Country::US,
                 'zipcode' => $this->senderZipCode,
                 'account_type' => 'individual',
+            ]);
+        } else {
+            $existingAddress->update([
+                'first_name' => $this->firstName,
+                'last_name' => $this->lastName,
+                'address' => $this->senderAddress,
+                'city' => $this->senderCity,
+                'state_id' => State::where([['code', $this->senderState], ['country_id', Country::US]])->first()->id,
+                'zipcode' => $this->senderZipCode,
             ]);
         }
 
