@@ -41,12 +41,14 @@
                     <select type="text" name="status" class="form-control">
                         <option value="">Select option</option>
                         <option value="downlaod">Download Report</option>
-                        <option value="toPay">Pay Commissions</option>
+                        @if(Auth::user()->isAdmin())
+                            <option value="toPay">Pay Commissions</option>
+                        @endif
                     </select>
                 </div>
                 <div class="col-2 mt-4">
-                    <button class="btn btn-success mt-1 pull-left" title="@lang('sales-commission.Download Sales')">
-                        @lang('sales-commission.Download Sales') <i class="fa fa-arrow-down"></i>
+                    <button class="btn btn-success mt-1 pull-left" title="@lang('sales-commission.Download Pay')">
+                        @lang('sales-commission.Download Pay') <i class="fa fa-arrow-down"></i>
                     </button>
                 </div>
             </form>

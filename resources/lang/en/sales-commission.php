@@ -12,7 +12,8 @@ return [
     'Type' => 'Type',
     'Commission' => 'Commission',
     'status' => 'Status',
-    'Download Sales' => 'Download / Pay',
+    'Download Sales' => 'Download Sales',
     'start date' => 'Start Date',
     'end date' => 'End Date',
+    'Download Pay' => 'Download / Pay',
 ];
