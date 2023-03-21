@@ -12,17 +12,21 @@ class AffiliateSaleRepository
         $query = AffiliateSale::has('user')->with('order')->has('order');
 
         if (Auth::user()->isUser()) {
-            if(\Route::currentRouteName() == 'admin.reports.commission.show'){
-                $query->where('user_id', Auth::id())->where('referrer_id', $request->user_id);
-                return $paginate ? $query->paginate($pageSize) : $query->get();
-            }else{
-                $query->where('user_id', Auth::id());
-                return $paginate ? $query->paginate($pageSize) : $query->get();
+            $query->where('user_id', Auth::id());
+            if($request->user_id){
+                $query->where('referrer_id', $request->user_id);
             }
         }
-        
-        if ($request->user_id) {
+        if(Auth::user()->isAdmin() && $request->user_id){
             $query->where('user_id', $request->user_id);
+        }
+        
+        if ( $request->status == 'paid' ){
+            $query->where('is_paid', true);
+        }
+        
+        if ( $request->status == 'unpaid' ){
+            $query->where('is_paid',false);
         }
 
         if ( $request->start ){
@@ -37,6 +41,12 @@ class AffiliateSaleRepository
             $query->where(function($query) use($endDate){
                 return $query->where('created_at','<=', $endDate);
             });
+        }
+
+        if($request->status == 'toPay'){
+            return $query->where('is_paid',false)->update([
+                'is_paid' => true
+            ]);
         }
 
         if ( $request->name ){

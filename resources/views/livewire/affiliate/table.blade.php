@@ -24,13 +24,13 @@
                 @csrf
                 <div class="col-2">
                     <label class="pull-left">@lang('sales-commission.start date')</label>
-                    <input type="date" name="start_date" class="form-control">
+                    <input type="date" name="start" class="form-control">
                 </div>
 
 
                 <div class="col-2">
                     <label class="pull-left">@lang('sales-commission.end date')</label>
-                    <input type="date" name="end_date" class="form-control">
+                    <input type="date" name="end" class="form-control">
                 </div>
                 <div class="col-2">
                     <label class="pull-left">@lang('parcel.User POBOX Number')</label>
@@ -38,9 +38,10 @@
                 </div>
                 <div class="col-2">
                     <label class="pull-left">@lang('Type')</label>
-                    <select type="text" name="type" class="form-control">
-                        <option value="pay">Pay Commissions</option>
+                    <select type="text" name="status" class="form-control">
+                        <option value="">Select option</option>
                         <option value="downlaod">Download Report</option>
+                        <option value="toPay">Pay Commissions</option>
                     </select>
                 </div>
                 <div class="col-2 mt-4">
