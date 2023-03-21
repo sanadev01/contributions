@@ -55,9 +55,11 @@
                                 </select>
                             </div>
                         </div>
-                        <button class="btn btn-success" title="@lang('sales-commission.Download Sales')">
-                            @lang('sales-commission.Download Sales') <i class="fa fa-arrow-down"></i>
-                        </button>
+                        <div class="form-group col-12 col-sm-6 col-md-3">
+                            <button class="btn btn-success col-4" title="@lang('sales-commission.Download Sales')">
+                                @lang('sales-commission.Download Sales') <i class="fa fa-arrow-down"></i>
+                            </button>
+                        </div>
                     </div>
                 </form>
             </div>
