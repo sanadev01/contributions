@@ -219,6 +219,10 @@
         } else if(service == 4)
         {
             return getFedExRates();
+        } else if (service == 4387) {
+            $('#user_declared_freight').val(
+                parseFloat($('option:selected', this).attr("data-cost"))
+            );
         }
         
     })
@@ -236,6 +240,11 @@
             
         } else if(service != undefined && service == 03) {
             return getUpsRates();
+            
+        } else if (service == 4387) {
+            $('#user_declared_freight').val(
+                parseFloat($('option:selected', this).attr("data-cost"))
+            );
         }
     })
    
