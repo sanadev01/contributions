@@ -703,6 +703,9 @@ class Order extends Model implements Package
 
     public function isInternational()
     {
+        if($this->shippingService->isGDEService()) {
+            return true;
+        }
         return $this->recipient->country->id != Country::US;
     }
 
