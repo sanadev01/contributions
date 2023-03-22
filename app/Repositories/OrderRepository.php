@@ -511,14 +511,9 @@ class OrderRepository
             $uspsShippingService = new USPSShippingService($order);
             $upsShippingService = new UPSShippingService($order);
             $fedExShippingService = new FedExShippingService($order);
-<<<<<<< HEAD
             $gdeShippingService = new GDEShippingService($order);
             
             foreach (ShippingService::query()->active()->get() as $shippingService) 
-=======
-
-            foreach ($shippingServicesWithoutRates as $shippingService)
->>>>>>> 71c94d8777216668d74b6b68ff481e42d8cb4c44
             {
                 if ($uspsShippingService->isAvailableFor($shippingService)) {
                     $shippingServices->push($shippingService);
