@@ -29,20 +29,28 @@ class ShippingService extends Model
     const Packet_Standard = 33162;
     const Packet_Express = 33170;
     const Packet_Mini = 33197;
+    const AJ_Standard_CN = 34166;
+    const AJ_Express_CN = 33174;
+    const PostNL = 87765;
     const AJ_Packet_Standard = 33164;
     const AJ_Packet_Express = 33172;
+    const Mile_Express = 33173;
+    const COLOMBIA_URBANO = 44162;
+    const COLOMBIA_NACIONAL = 44163;
+    const COLOMBIA_TRAYETOS = 44164;
     const Brazil_Redispatch = 100;
     const GePS = 537;
     const GePS_EFormat = 540;
     const Prime5 = 773;
-    const USPS_GROUND = 05;
     const Post_Plus_Registered = 734;
     const Post_Plus_EMS = 367;
+    const USPS_GROUND = 05;
     const Parcel_Post = 541;
     const Post_Plus_Prime = 777;
     const Post_Plus_Premium = 778;
     const GDE_Service = 4387;
 
+    
 
     protected $guarded = [];
 
@@ -76,6 +84,7 @@ class ShippingService extends Model
         $rate = round($this->getCalculator($order, $calculateOnVolumeMetricWeight)->getRate($withProfit),2);
         return $rate;
     }
+    
 
     public function getCalculator(Order $order, $calculateOnVolumeMetricWeight = true, $originalRate = false)
     {
@@ -97,7 +106,7 @@ class ShippingService extends Model
         $rate = round($this->getCalculator($order, $calculateOnVolumeMetricWeight, $originalRate)->getRate($withProfit),2);
         return $rate;
     }
-    
+
     public function isOfUnitedStates()
     {
         if (collect($this->usShippingServices())->contains($this->service_sub_class)) {
@@ -112,31 +121,13 @@ class ShippingService extends Model
         if (collect($this->domesticShippingServices())->contains($this->service_sub_class)) {
             return true;
         }
-        
+
         return false;
     }
 
     public function isInternationalService()
     {
         if (collect($this->internationalShippingServices())->contains($this->service_sub_class)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public function isCorreiosService()
-    {
-        if (collect($this->correiosShippingServices())->contains($this->service_sub_class)) {
-            return true;
-        }
-    
-        return false;
-    }
-
-    public function isAnjunService()
-    {
-        if (collect($this->anjunShippingServices())->contains($this->service_sub_class)) {
             return true;
         }
 
@@ -172,6 +163,75 @@ class ShippingService extends Model
         if (collect($this->gepsShippingServices())->contains($this->service_sub_class)) {
             return true;
         }
+        return false;
+    }
+
+    public function isAnjunService()
+    {
+        if (collect($this->anjunShippingServices())->contains($this->service_sub_class)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isMileExpressService()
+    {
+        return $this->service_sub_class == ShippingService::Mile_Express;
+    }
+    public function isAnjunChinaExpressService()
+    {
+        return self::AJ_Express_CN  == $this->service_sub_class;
+    }
+    public function isAnjunChinaStandardService()
+    {
+        return self::AJ_Standard_CN  == $this->service_sub_class;
+
+    }
+
+    public function isColombiaService()
+    {
+        if (collect($this->colombiaShippingServices())->contains($this->service_sub_class)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isPostNLService()
+    {
+        if (collect($this->postNLShippingServices())->contains($this->service_sub_class)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isCorreiosChileService()
+    {
+        if (collect($this->correiosChileShippingServices())->contains($this->service_sub_class)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isUSPSService()
+    {
+        if (collect($this->uspsShippingServices())->contains($this->service_sub_class)) {
+            return true;
+        }
+        return false;
+    }
+    public function isAnjunChinaService()
+    {
+        return self::AJ_Standard_CN == $this->service_sub_class || self::AJ_Express_CN == $this->service_sub_class;
+    }
+    public function isCorreiosService()
+    {
+        if (collect($this->correiosShippingServices())->contains($this->service_sub_class)) {
+            return true;
+        }
 
         return false;
     }
@@ -187,7 +247,7 @@ class ShippingService extends Model
     private function anjunShippingServices()
     {
         return [
-            self::AJ_Packet_Standard, 
+            self::AJ_Packet_Standard,
             self::AJ_Packet_Express,
         ];
     }
@@ -195,7 +255,7 @@ class ShippingService extends Model
     private function correiosShippingServices()
     {
         return [
-            self::Packet_Standard, 
+            self::Packet_Standard,
             self::Packet_Express,
             self::Packet_Mini,
         ];
@@ -217,7 +277,7 @@ class ShippingService extends Model
     private function domesticShippingServices()
     {
         return [
-            self::USPS_PRIORITY, 
+            self::USPS_PRIORITY,
             self::USPS_FIRSTCLASS,
             self::UPS_GROUND, 
             self::FEDEX_GROUND,
@@ -229,8 +289,43 @@ class ShippingService extends Model
     private function internationalShippingServices()
     {
         return [
-            self::USPS_PRIORITY_INTERNATIONAL, 
+            self::USPS_PRIORITY_INTERNATIONAL,
             self::USPS_FIRSTCLASS_INTERNATIONAL,
+        ];
+    }
+
+    private function colombiaShippingServices()
+    {
+        return [
+            self::COLOMBIA_URBANO,
+            self::COLOMBIA_NACIONAL,
+            self::COLOMBIA_TRAYETOS,
+        ];
+    }
+
+    private function postNLShippingServices()
+    {
+        return [
+            self::PostNL,
+        ];
+    }
+
+    private function uspsShippingServices()
+    {
+        return [
+            self::USPS_PRIORITY,
+            self::USPS_FIRSTCLASS,
+            self::USPS_PRIORITY_INTERNATIONAL,
+            self::USPS_FIRSTCLASS_INTERNATIONAL,
+            self::USPS_GROUND,
+        ];
+    }
+
+    private function correiosChileShippingServices()
+    {
+        return [
+            self::SRP,
+            self::SRM,
         ];
     }
 

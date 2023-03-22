@@ -20,6 +20,7 @@ class Table extends Component
     public $streetNo;
     public $city;
     public $state;
+    public $search;
 
     public $sortBy = 'first_name';
     public $sortAsc = true;
@@ -50,6 +51,7 @@ class Table extends Component
             'street_no' => $this->streetNo,
             'city' => $this->city,
             'state' => $this->state,
+            'search' => $this->search,
         ]),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc');
     }
 
