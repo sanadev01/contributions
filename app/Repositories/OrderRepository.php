@@ -14,6 +14,7 @@ use App\Services\UPS\UPSShippingService;
 use App\Services\USPS\USPSShippingService;
 use App\Services\FedEx\FedExShippingService;
 use App\Services\GePS\GePSShippingService;
+use App\Services\GDE\GDEShippingService;
 use App\Services\Calculators\WeightCalculator;
 use App\Services\Colombia\ColombiaPostalCodes;
 use App\Services\Order\UpdateOrderInvoice;
@@ -132,6 +133,9 @@ class OrderRepository
                     ShippingService::Post_Plus_Prime,
                     ShippingService::Post_Plus_Premium,
                 ];
+            }
+            if($request->carrier == 'GDE'){
+                $service = [ ShippingService::GDE_Service ];
             }
             if($request->carrier == 'Anjun China'){
                 $service = [
@@ -507,8 +511,9 @@ class OrderRepository
             $uspsShippingService = new USPSShippingService($order);
             $upsShippingService = new UPSShippingService($order);
             $fedExShippingService = new FedExShippingService($order);
-
-            foreach ($shippingServicesWithoutRates as $shippingService)
+            $gdeShippingService = new GDEShippingService($order);
+            
+            foreach (ShippingService::query()->active()->get() as $shippingService) 
             {
                 if ($uspsShippingService->isAvailableFor($shippingService)) {
                     $shippingServices->push($shippingService);
@@ -519,6 +524,10 @@ class OrderRepository
                 }
 
                 if ($fedExShippingService->isAvailableFor($shippingService)) {
+                    $shippingServices->push($shippingService);
+                }
+
+                if ($gdeShippingService->isAvailableFor($shippingService)) {
                     $shippingServices->push($shippingService);
                 }
             }

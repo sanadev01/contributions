@@ -48,6 +48,7 @@ class ShippingService extends Model
     const Parcel_Post = 541;
     const Post_Plus_Prime = 777;
     const Post_Plus_Premium = 778;
+    const GDE_Service = 4387;
 
     
 
@@ -235,6 +236,14 @@ class ShippingService extends Model
         return false;
     }
 
+    public function isGDEService()
+    {
+        if($this->service_sub_class == self::GDE_Service){
+            return true;
+        }
+        return false;
+    }
+
     private function anjunShippingServices()
     {
         return [
@@ -273,6 +282,7 @@ class ShippingService extends Model
             self::UPS_GROUND, 
             self::FEDEX_GROUND,
             self::USPS_GROUND,
+            self::GDE_Service,
         ];
     }
 
@@ -327,6 +337,7 @@ class ShippingService extends Model
             self::Parcel_Post,
         ];
     }
+    
     public function getIsMilliExpressAttribute()
     { 
         return $this->service_sub_class == ShippingService::Mile_Express;

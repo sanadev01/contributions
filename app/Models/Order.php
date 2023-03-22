@@ -387,6 +387,11 @@ class Order extends Model implements Package
                 return 'PostPlus';
 
             }
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::GDE_Service){
+
+                return 'GDE';
+
+            }
             elseif(optional($this->shippingService)->service_sub_class == ShippingService::AJ_Standard_CN || (optional($this->shippingService)->service_sub_class == ShippingService::AJ_Express_CN)){
 
                 return 'Anjun China';
@@ -421,7 +426,8 @@ class Order extends Model implements Package
                 optional($this->shippingService)->service_sub_class == ShippingService::PostNL ||
                 optional($this->shippingService)->service_sub_class == ShippingService::Parcel_Post ||
                 optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Prime ||
-                optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Premium) {
+                optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Premium ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GDE_Service) {
 
                 return $this->user_declared_freight;
             }
@@ -777,6 +783,9 @@ class Order extends Model implements Package
 
     public function isInternational()
     {
+        if($this->shippingService->isGDEService()) {
+            return true;
+        }
         return $this->recipient->country->id != Country::US;
     }
 

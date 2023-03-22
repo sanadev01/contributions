@@ -38,6 +38,7 @@ return [
             541 => 'Parcel Post',
             777 => 'Post Plus Prime',
             778 => 'Post Plus Premium',
+            4387 => 'GDE Service',
         ]
     ]
 ];

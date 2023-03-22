@@ -59,7 +59,11 @@
                         <select class="form-control selectpicker show-tick" data-live-search="true" name="shipping_service_id" id="us_shipping_service" required placeholder="Select Shipping Service">
                             <option value="">@lang('orders.order-details.Select Shipping Service')</option>
                             @foreach ($shippingServices as $shippingService)
-                                <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-service-code="{{$shippingService->service_sub_class}}">{{ "{$shippingService->name}"}}</option>
+                                @if($shippingService->isGDEService())
+                                    <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-cost="{{$shippingService->getRateFor($order)}}" data-services-cost="{{ $order->services()->sum('price') }}" data-service-code="{{$shippingService->service_sub_class}}">@if($shippingService->getRateFor($order)){{ "{$shippingService->name} - $". $shippingService->getRateFor($order) }}@else{{ $shippingService->name }}@endif</option>
+                                @else
+                                    <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-service-code="{{$shippingService->service_sub_class}}">{{ "{$shippingService->name}"}}</option>
+                                @endif
                             @endforeach
                         </select>
                         @endif
@@ -218,7 +222,11 @@
 
         } else if(service == shippingServiceCodes.FEDEX_GROUND)
         {
-            // return getFedExRates();
+            return getFedExRates();
+        } else if (service == 4387) {
+            $('#user_declared_freight').val(
+                parseFloat($('option:selected', this).attr("data-cost"))
+            );
         }
 
     })
@@ -236,6 +244,11 @@
             
         } else if(service == shippingServiceCodes.UPS_GROUND) {
             return getUpsRates();
+            
+        } else if (service == 4387) {
+            $('#user_declared_freight').val(
+                parseFloat($('option:selected', this).attr("data-cost"))
+            );
         }
     })
 
