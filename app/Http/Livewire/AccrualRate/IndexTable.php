@@ -75,7 +75,7 @@ class IndexTable extends Component
             'value' => Package::SERVICE_CLASS_Post_Plus_Prime,
         ];
         $this->services[14] = [
-            'name' => 'Post Plus Premium',
+            'name' => 'PrimeRIO',
             'value' => Package::SERVICE_CLASS_Post_Plus_Premium,
         ];
         return $this->services;

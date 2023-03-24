@@ -62,7 +62,7 @@
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Post_Plus_EMS}}">Post Plus EMS</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Parcel_Post}}">Parcel Post</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Post_Plus_Prime}}">Post Plus Prime</option>
-                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Post_Plus_Premium}}">Post Plus Premium</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Post_Plus_Premium}}">PrimeRIO</option>
                                         </select>
                                         <div class="help-block"></div>
                                     </div>
