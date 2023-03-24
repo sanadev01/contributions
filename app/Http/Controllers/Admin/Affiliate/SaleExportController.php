@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Admin\Affiliate;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Services\Excel\Export\SaleExport;
 use App\Repositories\AffiliateSaleRepository;
 
