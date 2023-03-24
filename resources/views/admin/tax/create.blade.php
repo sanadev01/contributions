@@ -65,6 +65,9 @@
                                             <div class="col-md-3">
                                                 <label><b> Herco (Selling) (R$)</b></label>
                                             </div>
+                                            <div class="col-md-3">
+                                                <label><b>Paid At</b></label>
+                                            </div>
                                         </div>
                                         <div class="row m-1 mb-4 orders">
                                             <div class="col-md-3">
@@ -75,6 +78,11 @@
                                             <div class="col-md-3">
                                                 <input type="number" class="form-control sellingBRRate" id="sellingBRRate"
                                                     min="0" name="selling_br" value="{{ old('selling_br') }}"
+                                                    step="0.01" required>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="date" class="form-control" id="createdAt"
+                                                    min="0" name="created_at" value="{{ old('created_at') }}"
                                                     step="0.01" required>
                                             </div>
                                         </div>

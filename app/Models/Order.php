@@ -259,7 +259,7 @@ class Order extends Model implements Package
         }
 
         if ( $unit == 'lbs' && !$this->isWeightInKg() ){
-            return round($weight);
+            return round($weight,2);
         }
 
         if ( $unit == 'lbs' && $this->isWeightInKg() ){
