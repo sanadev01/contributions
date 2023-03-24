@@ -74,7 +74,7 @@ class AccrualRate extends Model
         }
 
         if ( $this->service == Package::SERVICE_CLASS_Post_Plus_Premium){
-            return "Post Plus Premium";
+            return "PrimeRIO";
         }
         return '';
     }

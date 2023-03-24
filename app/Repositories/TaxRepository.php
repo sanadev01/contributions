@@ -12,6 +12,7 @@ use App\Models\Deposit;
 use App\Models\Document;
 use Illuminate\Http\Request;
 use App\Models\PaymentInvoice;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -87,6 +88,7 @@ class TaxRepository
                         'selling_br' => $request->selling_br,
                         'selling_usd' => $sellingUSD,
                         'buying_usd' => $buyingUSD,
+                        'created_at' => Carbon::createFromFormat('Y-m-d',  $request->created_at)->toDateTimeString(),
                     ]);
                     //deposite balance.
                     $deposit = Deposit::create([
@@ -176,6 +178,8 @@ class TaxRepository
                     'selling_usd' => $sellingUSD,
                     'buying_br' => $request->buying_br,
                     'selling_br' => $request->selling_br,
+                    'created_at' => Carbon::createFromFormat('Y-m-d',  $request->created_at)->toDateTimeString(),
+
                 ]);
 
                 return true;

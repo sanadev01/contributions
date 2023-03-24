@@ -15,4 +15,5 @@ return [
     'Download Sales' => 'Baixar Vendas',
     'start date' => 'Data de início',
     'end date' => 'Data final',
+    'Download Pay' => 'Baixar / Pagar',
 ];
