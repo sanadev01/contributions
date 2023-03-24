@@ -421,13 +421,13 @@
                             </li>
                         @endcan
                         @can('viewComissionReport', App\Models\Reports::class)
-                            <li
-                                class="{{ $isActive(['admin.reports.commission.index', 'admin.reports.commission.show']) }}">
-                                <a href="{{ route('admin.reports.commission.index') }}">
-                                    <i class="feather icon-circle"></i>
-                                    <span class="menu-title">@lang('menu.Reports.Commission Report')</span>
-                                </a>
-                            </li>
+                        <li
+                            class="{{ $isActive(['admin.reports.commission.index', 'admin.reports.commission.show']) }}">
+                            <a href="{{ route('admin.reports.commission.index') }}">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title">@lang('menu.Reports.Commission Report')</span>
+                            </a>
+                        </li>
                         @endcan
                         @can('viewKPIReport', App\Models\Reports::class)
                         <li class="{{ $isActive(['admin.reports.kpi-report.index']) }}">
@@ -436,12 +436,12 @@
                                 <span class="menu-title">@lang('menu.Reports.KPI Report')</span>
                             </a>
                         </li> 
-                        <li class="{{ $isActive(['admin.reports.kpi-report.index']) }}">
-                        <a href="{{ route('admin.reports.kpi-report-scan.index') }}">
-                            <i class="icon_adjst feather icon-circle"></i>
-                            <span class="menu-title">@lang('menu.Reports.Tax Report Scan')</span>
-                        </a>
-                    </li>
+                        <li class="{{ $isActive(['admin.reports.kpi-report-scan.index']) }}">
+                            <a href="{{  route('admin.reports.kpi-report-scan.index') }}">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title">@lang('menu.Reports.Tax Report Scan')</span>
+                            </a>
+                        </li>
                     @endcan
                         @admin
                         <li class="{{ $isActive(['admin.reports.unpaid-orders']) }}">
