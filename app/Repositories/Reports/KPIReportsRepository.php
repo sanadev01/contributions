@@ -37,7 +37,7 @@ class KPIReportsRepository
             });
 
         if ($request->user_id) {
-            $orders->orwhere('user_id', $request->user_id);
+            $orders->where('user_id', $request->user_id);
         }
         if (Auth::user()->isUser()) {
             $orders->where('user_id', Auth::id());
