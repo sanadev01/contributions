@@ -66,7 +66,7 @@
                                             </div>
                                             <div class="col-lg-2 col-sm-12 d-flex align-items-end justify-content-center">
                                                 <form class="row col-12 pl-0"
-                                                    action="{{ route('admin.reports.kpi-report.store') }}" method="POST">
+                                                    action="{{ route('admin.reports.kpi-report-scan.store') }}" method="POST">
                                                     @csrf
                                                     @if ($trackings)
                                                         <input type="hidden" name="order"
