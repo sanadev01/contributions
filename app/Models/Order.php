@@ -259,7 +259,7 @@ class Order extends Model implements Package
         }
 
         if ( $unit == 'lbs' && !$this->isWeightInKg() ){
-            return round($weight);
+            return round($weight,2);
         }
 
         if ( $unit == 'lbs' && $this->isWeightInKg() ){
@@ -382,9 +382,14 @@ class Order extends Model implements Package
 
                 return 'Prime5';
             }
-            elseif(optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Registered || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_EMS || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Prime){
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Registered || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_EMS || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Prime || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Premium){
 
                 return 'PostPlus';
+
+            }
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::GDE_Service){
+
+                return 'GDE';
 
             }
             elseif(optional($this->shippingService)->service_sub_class == ShippingService::AJ_Standard_CN || (optional($this->shippingService)->service_sub_class == ShippingService::AJ_Express_CN)){
@@ -420,7 +425,9 @@ class Order extends Model implements Package
                 optional($this->shippingService)->service_sub_class == ShippingService::USPS_GROUND ||
                 optional($this->shippingService)->service_sub_class == ShippingService::PostNL ||
                 optional($this->shippingService)->service_sub_class == ShippingService::Parcel_Post ||
-                optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Prime) {
+                optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Prime ||
+                optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Premium ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GDE_Service) {
 
                 return $this->user_declared_freight;
             }
@@ -776,6 +783,9 @@ class Order extends Model implements Package
 
     public function isInternational()
     {
+        if($this->shippingService->isGDEService()) {
+            return true;
+        }
         return $this->recipient->country->id != Country::US;
     }
 

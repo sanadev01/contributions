@@ -16,6 +16,8 @@ class Parcel {
          $type = 'EMS';
       } elseif($order->shippingService->service_sub_class == ShippingService::Post_Plus_Prime) {
          $type = 'Prime';
+      } elseif($order->shippingService->service_sub_class == ShippingService::Post_Plus_Premium) {
+         $type = 'Premium';
       }
       $refNo = $order->customer_reference;
       $packet = [

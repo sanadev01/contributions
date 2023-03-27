@@ -15,4 +15,5 @@ return [
     'Download Sales' => 'Download Sales',
     'start date' => 'Start Date',
     'end date' => 'End Date',
+    'Download Pay' => 'Download / Pay',
 ];

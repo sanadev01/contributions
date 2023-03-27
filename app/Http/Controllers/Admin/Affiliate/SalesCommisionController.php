@@ -24,11 +24,9 @@ class SalesCommisionController extends Controller
     {
         $this->authorizeResource(AffiliateSale::class);
         
-        foreach(json_decode($request->data) as $saleId){
-            $sale = AffiliateSale::find($saleId);
-            $sale->is_paid = true;
-            $sale->save();
-        }
+        AffiliateSale::whereIn('id',json_decode($request->data))->update([
+            'is_paid' => true
+        ]);
         session()->flash('alert-success','Commission has been paid');
         return redirect()->back();
     }

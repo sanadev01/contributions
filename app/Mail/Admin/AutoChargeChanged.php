@@ -10,18 +10,22 @@ use Illuminate\Support\Facades\Auth;
 class AutoChargeChanged extends Mailable
 {
     use Queueable, SerializesModels; 
-    public $cardNo;
     public $user;
+    public $oldData;
+    public $newData;
+    public $selectedCard;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($oldData,$newData)
     { 
-        $this->user = Auth::user();
-         $this->cardNo = "**** **** **** ". substr(optional(auth()->user()->billingInformations->where('id',setting('charge_biling_information', null,auth()->id()))->first())->card_no??"****" ,-4);
+       $this->user = Auth::user();
+       $this->oldData = $oldData;
+       $this->newData = $newData;
+       $this->selectedCard = $this->user->billingInformations->where('id',  setting('charge_biling_information', null, $this->user->id))->first();
 
     }
 
@@ -34,10 +38,9 @@ class AutoChargeChanged extends Mailable
     {
         return $this->markdown('email.admin.auto-charge-change')
         ->to(
-            config('hd.email.admin_email'),
-            config('hd.email.admin_name'),
-        )->cc('mnaveedsaim@gmail.com')
-        ->subject('Auto Charge Settings');
-        
+           $this->user->email,
+           $this->user->full_name,
+        )->cc([ config('hd.email.admin_email'), 'mnaveedsaim@gmail.com'])
+        ->subject('Auto Charge Settings');   
     }
 }

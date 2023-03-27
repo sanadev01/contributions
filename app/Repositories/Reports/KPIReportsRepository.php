@@ -24,7 +24,8 @@ class KPIReportsRepository
 
     public function get(Request $request)
     {
-        $orders = Order::with('user')->where('corrios_tracking_code','!=',null)->where('status', '>=', Order::STATUS_SHIPPED)
+        $orders = Order::with('user')
+        ->where('corrios_tracking_code','!=',null)->where('status', '>=', Order::STATUS_SHIPPED)
         ->whereHas('shippingService',function($orders) {
                 return $orders->whereIn('service_sub_class', [
                     ShippingService::Packet_Standard, 
@@ -35,6 +36,9 @@ class KPIReportsRepository
                     ShippingService::GePS]);
             });
 
+        if ($request->user_id) {
+            $orders->orwhere('user_id', $request->user_id);
+        }
         if (Auth::user()->isUser()) {
             $orders->where('user_id', Auth::id());
         }
@@ -53,7 +57,7 @@ class KPIReportsRepository
             $orders->whereIn('corrios_tracking_code',$splitNos);
         }
 
-        $orders = ($orders->get()); 
+        $orders = ($orders->get());  
         $codesUsers =  [];
         foreach($orders as $order) {
             $codesUsers[$order->corrios_tracking_code] = $order->user;

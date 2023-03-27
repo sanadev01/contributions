@@ -4,10 +4,13 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header d-flex justify-content-end">
+                    <div class="card-header d-flex justify-content-end pb-2">
                         @section('title', __('tax.Manage Tax Services'))
                         @can('create', App\Models\HandlingService::class)
                         <div>
+                        <button type="btn" onclick="toggleDateSearch()" id="customSwitch8"
+                            class="btn btn-primary mr-1 waves-effect waves-light"><i
+                                class="feather icon-filter"></i></button>
                         <a href="{{ route('admin.adjustment.create') }}" class="btn btn-success">
                             @lang('tax.Adjustment')
                         </a>
@@ -18,13 +21,13 @@
                         @endcan
                     </div></br>
                     <div class="table-responsive-md mt-1 mr-4 ml-4 mb-5">
-                        <div class="filters p-2" id="singleSearch"
+                        <div class="filters p-2" id="dateSearch"
                             @if (old('search', request('search'))) style="display: block" @endif>
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <form action="" method="GET">
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-8">
                                                 <input type="search" class="form-control" name="search" value="{{ old('search',request('search')) }}" placeholder="@lang('tax.Search By Name, Warehouse No. or Tracking Code')">
                                             </div>
                                             <div class="col-md-4">
@@ -35,7 +38,7 @@
                                         </div>
                                     </form>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-8">
                                     <form action="{{ route('admin.reports.tax-report') }}" method="GET">
                                         <input type="hidden" class="form-control" name="search" value="{{ old('search',request('search')) }}">
                                         <div class="row col-md-12">
@@ -71,6 +74,7 @@
                                             <option value="refund">Refund</option>
                                         </select>
                                     </th>
+                                    <th>@lang('parcel.Date')</th>
                                     <th>@lang('tax.User Name')</th>
                                     <th>@lang('tax.Warehouse No.')</th>
                                     <th>@lang('tax.Tracking Code')</th>
@@ -108,6 +112,7 @@
                                     </button> --}}
                                       @endif
                                     </td>
+                                    <td>{{ optional($tax->created_at)->format('m/d/Y') }}</td>
                                     <td>{{ $tax->user->name }}</td>
                                     <td>
                                         <span> 
@@ -135,26 +140,26 @@
                                     </td>
                                     <td class="d-flex">
                                        
-                                          @if(optional($tax->deposit)->last_four_digits != 'Tax refunded') 
-                                          <a href="{{ $tax->adjustment ? route('admin.adjustment.edit',$tax->id):route('admin.tax.edit',$tax->id) }}" class="btn btn-primary mr-2" title="Edit">
-                                            <i class="feather icon-edit"></i>
-                                         </a> 
-                                                    @if($tax->adjustment==null)
-                                                    <form action="{{ route('admin.refund-tax') }}" method="POST" onsubmit="return confirm('Are you Sure want to refund?');">
-                                                        @csrf
-                                                        <input type="hidden" name="taxes"" value='["{{$tax->id}}"]'>
-                                                        <button  class="btn btn-danger mr-2">
-                                                            <i class="feather icon-corner-down-left"></i>
-                                                        </button>
-                                                    </form>
-                                                    @endif
-                                        @elseif(optional($tax->deposit)->last_four_digits == 'Tax refunded')
-                                        <button  class="btn btn-danger mr-2">
-                                            <i class="feather icon-check"></i>
-                                        </button>
-                                        @endif
-                                        
-                                    </td>
+                                        @if(!$tax->is_refunded)  
+                                          @if(!$tax->is_adjustment)
+                                              <a href="{{  route('admin.tax.edit',$tax->id) }}" title="Edit tax" class="btn btn-primary mr-2" title="Edit">
+                                                  <i class="feather icon-edit"></i>
+                                              </a>
+                                              <button  class="btn btn-danger mr-2"  title="Refund" onclick="return refund(['{{$tax->id}}']);">
+                                                  <i class="feather icon-corner-down-left"></i>
+                                              </button>
+                                          @else
+                                              <a href="{{  route('admin.adjustment.edit',$tax->id) }}" title="Edit adjustment" class="btn btn-primary mr-2" title="Edit">
+                                                  <i class="feather icon-edit"></i>
+                                              </a>
+                                          @endif
+                                      @elseif($tax->is_refunded)
+                                      <button  class="btn btn-danger mr-2" title="Refunded">
+                                          <i class="feather icon-check"></i>
+                                      </button>
+                                      @endif
+                                      
+                                  </td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -193,21 +198,12 @@
                         <div class="col-md-8">
                             <div class="form-group">
                                 <label for="projectinput1">Attach File</label>
-                                <input type="file" class="form-control" name="attachment[]" multiple required>
+                                <input type="file" class="form-control" name="attachment[]" multiple>
                                 @error('csv_file')
                                     <div class="text-danger">
                                         {{ $message }}
                                     </div>
                                 @enderror
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row justify-content-center">
-                        <div class="col-md-10">
-                            <div class="alert alert-warning">
-                                <ol>
-                                    <li>@lang('shipping-rates.* Files larger than 15Mb are not allowed')</li>
-                                </ol>
                             </div>
                         </div>
                     </div>
@@ -233,12 +229,14 @@
                 var taxesIds = [];
                 $.each($(".bulk-taxes:checked"), function(){
                     taxesIds.push($(this).val());
-                });
-                $('#refundModal').modal('toggle');
- 
-                $('#admin-refund-tax #taxes').val(JSON.stringify(taxesIds));
-                // $('#admin-refund-tax').submit();
+                }); 
+                refund(taxesIds)
             }
         })
+        function refund(taxesIds){             
+                $('#refundModal').modal('toggle');
+                $('#admin-refund-tax #taxes').val(JSON.stringify(taxesIds));
+        }
+      
     </script>
 @endsection

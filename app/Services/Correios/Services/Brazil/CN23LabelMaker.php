@@ -4,6 +4,7 @@ namespace App\Services\Correios\Services\Brazil;
 
 use Exception;
 use App\Models\Order;
+use App\Models\User;
 use Picqer\Barcode\BarcodeGeneratorPNG;
 use App\Services\Correios\Contracts\HasLableExport;
 use App\Services\Correios\Models\Package;

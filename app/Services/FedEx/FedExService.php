@@ -324,7 +324,7 @@ class FedExService
         return [
             'address' => [
                 'city' => $request->sender_city,
-                'stateOrProvinceCode' => $request->sender_state ? $request->sender_state : $request->senderState->code,
+                'stateOrProvinceCode' => $request->sender_state ? $request->sender_state : optional($request->senderState)->code,
                 'postalCode' => $request->sender_zipcode,
                 'countryCode' => 'US',
             ]

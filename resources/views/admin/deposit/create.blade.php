@@ -104,9 +104,7 @@
                                 </div>
                                 <hr>
                                 <div class="billingInfo-div" @admin @if(old('adminpay')) style="display: none" @endif @endadmin>
-                                    <div>
                                       <livewire:deposit.auto-charge />
-                                    </div>
                                     <div class="grid-wrapper w-100">
                                         @foreach (auth()->user()->billingInformations as $billingInfo)
                                             <div class="card-wrapper h-auto my-2 w-100">
@@ -165,15 +163,15 @@
                                     </div>
                                     <hr>
                                 </div>
-                                <div class="row mt-4 p-4">
-                                    <div class="col-md-12 text-right">
-                                        <button class="btn btn-lg btn-success" type="submit">
-                                            <i class="feather icon-dollar-sign"></i> @lang('invoice.Pay')
-                                        </button>
-                                        <a href="{{ route('admin.deposit.index') }}" class="btn btn-lg btn-warning">
-                                            <i class="feather icon-x"></i> @lang('invoice.Cancel')
-                                        </a>
-                                    </div>
+                            </div>
+                            <div class="row mt-4 p-4">
+                                <div class="col-md-12 text-right">
+                                    <button class="btn btn-lg btn-success" type="submit">
+                                        <i class="feather icon-dollar-sign"></i> @lang('invoice.Pay')
+                                    </button>
+                                    <a href="{{ route('admin.deposit.index') }}" class="btn btn-lg btn-warning">
+                                        <i class="feather icon-x"></i> @lang('invoice.Cancel')
+                                    </a>
                                 </div>
                             </div>
                         </form>

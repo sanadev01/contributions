@@ -157,33 +157,29 @@
 
                             </div>
                             <div class="modal-footer">                                   
-                                    <button  onClick="printReport()" class="btn btn-info text-white" >
-                                        Print
-                                        <i class="vs-icon feather icon-printer"></i> 
-                                    </button>  
+                                <button  onClick="printReport()" class="btn btn-info text-white" >
+                                    Print <i class="vs-icon feather icon-printer"></i> 
+                                </button>  
                                 <div  id="decline">                                
                                     <button class="btn btn-danger" data-dismiss="modal">
                                         Cancel
                                     </button>
                                 </div>
                                 <div id="proceed">
-                                <button onclick="" class="btn btn-primary" wire:click.prevent="save()" data-dismiss="modal" id="save"> 
-                                    Agree
-                                </button>
+                                    <button onclick="" class="btn btn-primary" wire:click.prevent="save()" data-dismiss="modal" id="save"> 
+                                        Agree
+                                    </button>
                                 </div>
-
                             </div>
                         </div>
                     </div>
-
-
-
                 </div>
             </div>
         </div>
         <hr>
         @include('layouts.livewire.loading')
     </div>
+</div>
 
     <script>
         window.addEventListener('alert', event => {
