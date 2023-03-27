@@ -72,6 +72,7 @@
                                             <option value="refund">Refund</option>
                                         </select>
                                     </th>
+                                    <th>Paid At</th>
                                     <th>@lang('tax.User Name')</th>
                                     <th>@lang('tax.Warehouse No.')</th>
                                     <th>@lang('tax.Tracking Code')</th>
@@ -89,6 +90,7 @@
                             <tbody>
                                 @foreach($taxes as $tax)
                                 <tr>
+
                                     <td>                            
                                         @if(optional($tax->deposit)->last_four_digits != 'Tax refunded') 
                                                   @if($tax->adjustment==null)
@@ -109,6 +111,7 @@
                                     </button> --}}
                                       @endif
                                     </td>
+                                    <td>{{      \Carbon\Carbon::parse($tax->created_at)->format('m/d/Y')   }}</td>
                                     <td>{{ $tax->user->name }}</td>
                                     <td>
                                         <span> 
