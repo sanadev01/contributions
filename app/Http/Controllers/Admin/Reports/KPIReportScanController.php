@@ -10,19 +10,19 @@ use App\Services\Excel\Export\KPIReport;
 use App\Repositories\Reports\KPIReportsRepository;
 use Exception;
 
-class KPIReportController extends Controller
+class KPIReportScanController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
-    */
+    */ 
     public function index(Request $request, KPIReportsRepository $kpiReportsRepository)
     {
         $this->authorize('viewKPIReport',Reports::class);
         $trackings = [];
         $trackingCodeUser = [];
-        if($request->start_date && $request->end_date || $request->trackingNumbers) {
+        if($request->start_date && $request->end_date || $request->user_id) {
             try{ 
             $response = $kpiReportsRepository->get($request);
             }
@@ -32,9 +32,10 @@ class KPIReportController extends Controller
             }
             $trackings = $response['trackings'];
             $trackingCodeUser = $response['trackingCodeUser'];
-        }
-        return view('admin.reports.kpi-report', compact('trackings','trackingCodeUser'));
+        } 
+        return view('admin.reports.kpi-report-scan', compact('trackings','trackingCodeUser'));
     }
+
     public function store(Request $request)
     {
         if($request->order){
@@ -43,8 +44,8 @@ class KPIReportController extends Controller
 
            
             $exportService = new KPIReport($trackings,$trackingCodeUser);
-            return $exportService->handle();
+            return $exportService->handleByEvent('Aguardando pagamento');
         }
-    } 
+    }
    
 }

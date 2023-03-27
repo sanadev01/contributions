@@ -6,6 +6,7 @@ class KPIReport extends AbstractExportService
     private $trackings;
 
     private $currentRow = 1;
+    private $lastEvent = null;
     private $trackingCodeUser;
 
     public function __construct($trackings,$trackingCodeUser)
@@ -22,6 +23,12 @@ class KPIReport extends AbstractExportService
         return $this->download();
     }
 
+    public function handleByEvent($lastEvent)
+    {
+        $this->lastEvent = $lastEvent;
+        return $this->handle();
+    }
+
     private function prepareExcelSheet()
     {
         $taxed = 0;
@@ -31,8 +38,13 @@ class KPIReport extends AbstractExportService
         $this->setExcelHeaderRow();
         $row = $this->currentRow;
         foreach ($this->trackings as $data) {
+            
             if(isset($data['evento'])) {
-                if(optional($data) && isset(optional($data)['numero'])) { 
+                if($this->lastEvent && $this->lastEvent != optional(optional(optional($data)['evento'])[0])['descricao']){
+                    continue;
+                }
+
+                if(optional($data) && isset(optional($data)['numero'])) {
                     $user = $this->trackingCodeUser[optional($data)['numero']];
                     if($user)
                     $this->setCellValue('A'.$row, $user['name'] .''. $user['last_name'] .' '. $user['pobox_number'] );

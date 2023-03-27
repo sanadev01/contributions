@@ -42,6 +42,7 @@ return [
         'Tracking Report' => 'Tracking Report',
         'Orders Report' => 'Orders Report',
         'Commission Report' => 'Commission Report',
+        'Tax Report Scan' => 'Tax Report Scan',
         'Audit Report' => 'Audit Report',
         'Anjun Report' => 'Anjun Report',
         'KPI Report' => 'KPI Report',
