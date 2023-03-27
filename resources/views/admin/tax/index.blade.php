@@ -74,7 +74,7 @@
                                             <option value="refund">Refund</option>
                                         </select>
                                     </th>
-                                    <th>Paid At</th>
+                                    <th>@lang('parcel.Date')</th>
                                     <th>@lang('tax.User Name')</th>
                                     <th>@lang('tax.Warehouse No.')</th>
                                     <th>@lang('tax.Tracking Code')</th>
