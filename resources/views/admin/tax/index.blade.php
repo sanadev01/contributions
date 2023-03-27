@@ -90,7 +90,6 @@
                             <tbody>
                                 @foreach($taxes as $tax)
                                 <tr>
-
                                     <td>                            
                                         @if(optional($tax->deposit)->last_four_digits != 'Tax refunded') 
                                                   @if($tax->adjustment==null)
