@@ -110,7 +110,7 @@
                                     </button> --}}
                                       @endif
                                     </td>
-                                    <td>{{      \Carbon\Carbon::parse($tax->created_at)->format('m/d/Y')   }}</td>
+                                    <td>{{ optional($tax->created_at)->format('m/d/Y') }}</td>
                                     <td>{{ $tax->user->name }}</td>
                                     <td>
                                         <span> 
