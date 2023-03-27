@@ -75,14 +75,6 @@
                                         <div class="help-block"></div>
                                     </div>
                                 </div>
-                                
-                                <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">Paid At<span class="text-danger">*</span></label>
-                                    <div class="col-md-4">
-                                        <input type="date" class="form-control" name="created_at" value="{{ old('created_at',   \Carbon\Carbon::parse($tax->created_at)->format('Y-m-d') ) }}"  placeholder="yyyy--mm-dd" placeholder="Created At" >
-                                        <div class="help-block"></div>
-                                    </div>
-                                </div>
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('tax.Upload Receipt')<span class="text-danger">*</span></label>
                                     <div class="col-md-4">

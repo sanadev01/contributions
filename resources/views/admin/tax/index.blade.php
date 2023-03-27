@@ -74,6 +74,7 @@
                                             <option value="refund">Refund</option>
                                         </select>
                                     </th>
+                                    <th>@lang('parcel.Date')</th>
                                     <th>@lang('tax.User Name')</th>
                                     <th>@lang('tax.Warehouse No.')</th>
                                     <th>@lang('tax.Tracking Code')</th>
@@ -111,6 +112,7 @@
                                     </button> --}}
                                       @endif
                                     </td>
+                                    <td>{{ optional($tax->created_at)->format('m/d/Y') }}</td>
                                     <td>{{ $tax->user->name }}</td>
                                     <td>
                                         <span> 
