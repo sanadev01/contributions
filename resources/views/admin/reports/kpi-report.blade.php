@@ -78,24 +78,31 @@
 
         thead {
             background-color: #EEFAFA !important;
-        } 
+        }
+
         .table-striped>tbody>tr:nth-child(odd)>td,
         .table-striped>tbody>tr:nth-child(odd)>th {
             background-color: #fff;
         }
+
         body {
-             background-color:#F7FBFE !important;
+            background-color: #F7FBFE !important;
+        }
+        .dt{ 
+            font-weight: 700;
+            font-size: 2rem;
+           font:20px Arial, Helvetica, sans-serif;
         }
     </style>
 @endsection
 @section('page')
-    <section >
+    <section>
         <div class="row">
             <div class="col-12">
                 <div class="">
-                    <div>
+                    <div class="ml-3">
                         <dl>
-                            <dt class="h3 font-weight-bold">Welcome back , Marcio 👋</dt>
+                            <dt class="h3 font-weight-bold dt">Welcome back , {{ Auth::user()->full_name }} 👋</dt>
                             <dd class="display-5 font-weight-light">Your current kpi report is here</dd>
                         </dl>
                     </div>
@@ -103,31 +110,15 @@
                         <div class="row">
                             <div class="col-8">
                                 {{-- contanct us banner --}}
-                                <div class="row">
-                                    <div class="">
-                                        <div style="col-sm-12 position:relative;">
-                                            <div class="">
-                                                <div class="col-12 mt-3" style="height:7%" class="mt-3">
+                                <div class="row"style="col-12 position:relative;">
+                                                <div class="col-12 mt-3" style="height:7%" class="mt-3"><a href="#">
                                                     <img class="banner" src="{{ asset('images/kpi-banner.png') }}"
-                                                        width="100%" height="10%" alt="your-image">
-                                                    {{-- <div style="position:absolute;top:0;left:0;vertical-align: middle" class="d-flex justify-content-between align-items-center">
-                                                        
-                                                            <div class="  "> 
-                                                                <h4 class="text-left">Get Help from our support staff</h4>
-                                                            </div> 
-                                                            <div class=" ">
-
-                                                                <button>Contact Us</button>
-                                                            </div>  
-                                                    </div> --}}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                                        width="100%" height="10%" alt="your-image">  </a>
+                                                </div>  
                                 </div>
                                 {{-- contanct us banner end --}}
                                 {{-- orders details cards --}}
-                                <div class="row mt-5">
+                                <div class="row mt-3">
                                     <div class="col-md-3 col-sm-4">
                                         <div class="wrimagecard wrimagecard-topimage">
                                             <a href="#">
@@ -203,47 +194,54 @@
                                     <h4 class="text-center mt-0 pt-0  h5 font-weight-bold">
                                         Report Generator
                                     </h4>
+                                    <form   action="{{ route('admin.reports.kpi-report.index') }}" method="GET">
 
-
-                                    <label for="start-date" class="mb-0">Start Date</label><br>
-                                    <div class="input-group">
-                                        <input id="start-date" class="form-control py-2 rounded-2 mr-1 " type="date"
-                                            value="start date">
-
-                                    </div>
-
-                                    <label for="end-date " class="mt-2  mb-0""> End Date</label><br>
-                                    <div class="input-group">
-                                        <input id="end-date" class="form-control py-2 rounded-2 mr-1 " type="date"
-                                            value="end date">
-
-                                    </div>
-
-
-
-                                    <label for="start-date" class="mt-2 mb-0">Tracking Code</label><br>
-                                    <div class="input-group">
-                                        <textarea id="start-date" class="form-control py-2 rounded-2 mr-1 pr-5" value="tracking code"></textarea>
-                                        <span class="input-group-append">
-                                            <button class="btn rounded-pill border-0 ml-n5" type="button">
-                                                <i class="fa fa-search"></i>
-                                            </button>
-                                        </span>
-                                    </div>
-
-                                    <div class="d-flex justify-content-between mt-3">
-
-                                        <div>
-                                            <button type="button" class="btn btn-outline-success  px-3 py-1">Check
-                                                Details</button>
-                                        </div>
-                                        <div>
-                                            <button type="button" class="btn btn-success   px-3 py-1"> <i
-                                                    class="fa fa-download"></i> Download</button>
+                                        <label for="startDate" class="mb-0">Start Date</label><br>
+                                        <div class="input-group">
+                                            <input  class="form-control py-2 rounded-2 mr-1 " type="date" name="start_date" id="startDate"  value="start date">
 
                                         </div>
-                                    </div>
 
+                                        <label for="end-date " class="mt-2  mb-0""> End Date</label><br>
+                                        <div class="input-group">
+                                            <input name="end_date" id="endDate" class="form-control py-2 rounded-2 mr-1 " type="date" value="end date">
+
+                                        </div>
+
+
+
+                                        <label for="start-date" class="mt-2 mb-0">Tracking Code</label><br>
+                                        <div class="input-group">
+                                            {{-- <textarea id="start-date" class="form-control py-2 rounded-2 mr-1 pr-5" value="tracking code"></textarea> --}}
+                                            <textarea id="start-date" value="tracking code"  type="text" placeholder="Please Enter Tracking Codes" rows="1" class="form-control"                                                                        
+                                                name="trackingNumbers">{{ old('trackingNumbers', request('trackingNumbers')) }}</textarea>
+                                                @error('trackingNumbers')
+                                                    <div class="help-block text-danger">
+                                                        {{ $message }}
+                                                    </div>
+                                                @enderror
+                                            <span class="input-group-append">
+                                                <button class="btn rounded-pill border-0 ml-n5" type="button">
+                                                    <i class="fa fa-search"></i>
+                                                </button>
+                                            </span>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between mt-3">
+
+                                            <div>
+                                                <button type="button" class="btn btn-outline-success  px-3 py-1">Check
+                                                    Details</button>
+                                            </div>
+                                            
+                                            <div>
+                                                <button type="button" class="btn btn-success   px-3 py-1"> <i
+                                                        class="fa fa-download"></i> Download</button>
+
+                                            </div>
+                                        </div>
+
+                                    </form>
 
                                 </div>
                             </div>
