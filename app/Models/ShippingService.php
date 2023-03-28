@@ -121,7 +121,7 @@ class ShippingService extends Model
         if (collect($this->domesticShippingServices())->contains($this->service_sub_class)) {
             return true;
         }
-
+        
         return false;
     }
 
@@ -179,15 +179,6 @@ class ShippingService extends Model
     {
         return $this->service_sub_class == ShippingService::Mile_Express;
     }
-    public function isAnjunChinaExpressService()
-    {
-        return self::AJ_Express_CN  == $this->service_sub_class;
-    }
-    public function isAnjunChinaStandardService()
-    {
-        return self::AJ_Standard_CN  == $this->service_sub_class;
-
-    }
 
     public function isColombiaService()
     {
@@ -222,10 +213,6 @@ class ShippingService extends Model
             return true;
         }
         return false;
-    }
-    public function isAnjunChinaService()
-    {
-        return self::AJ_Standard_CN == $this->service_sub_class || self::AJ_Express_CN == $this->service_sub_class;
     }
     public function isCorreiosService()
     {
@@ -385,6 +372,22 @@ class ShippingService extends Model
     public function getIsUspsGroundAttribute()
     { 
         return $this->service_sub_class == ShippingService::USPS_GROUND;
+    }
+
+    public function getIsAnjunChinaAttribute()
+    {
+        return self::AJ_Standard_CN == $this->service_sub_class || self::AJ_Express_CN == $this->service_sub_class;
+    }
+
+    public function getIsAnjunChinaExpressAttribute()
+    {
+        return self::AJ_Express_CN  == $this->service_sub_class;
+    }
+    
+    public function getIsAnjunChinaStandardAttribute()
+    {
+        return self::AJ_Standard_CN  == $this->service_sub_class;
+
     }
     
 }

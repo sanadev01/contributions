@@ -54,7 +54,7 @@ class ContainerRepository extends AbstractRepository{
         } 
         if($request->filled('sealNo')){
           $query->where('seal_no', 'LIKE', '%' . $request->sealNo . '%');
-        } 
+        }
         if($request->filled('packetType')){
             $packetType = [$request->packetType];
         }else{

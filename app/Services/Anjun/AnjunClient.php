@@ -49,7 +49,7 @@ class AnjunClient
         $orderBody = [
             'username'   => $username,
             'password'   => $password,
-            "fuwu"       => '974',     //line code
+            "fuwu"       => $order->shippingService->is_anjun_express?'1905':'1906',
             'dp'         => '',        // store id
         ] + (new Package($order))->convertToChinese();
         try {
