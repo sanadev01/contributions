@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Warehouse;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
 use App\Repositories\Warehouse\SwedenPostContainerRepository;
-use App\Http\Requests\Warehouse\DirectLinkContainer\CreateContainerRequest;
-use App\Http\Requests\Warehouse\DirectLinkContainer\UpdateContainerRequest;
+use App\Http\Requests\Warehouse\SwedenPostContainer\CreateContainerRequest;
+use App\Http\Requests\Warehouse\SwedenPostContainer\UpdateContainerRequest;
 
 class SwedenPostContainerController extends Controller
 {
