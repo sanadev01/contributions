@@ -43,8 +43,8 @@ class KPIReportScanController extends Controller
             $trackingCodeUser =json_decode($request->trackingCodeUser, true);
 
            
-            $exportService = new KPIReport($trackings,$trackingCodeUser);
-            return $exportService->handleByEvent('Aguardando pagamento');
+            $exportService = new KPIReport($trackings,$trackingCodeUser, 'Aguardando pagamento');
+            return $exportService->handle();
         }
     }
    

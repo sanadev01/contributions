@@ -42,7 +42,7 @@ class KPIReportController extends Controller
             $trackingCodeUser =json_decode($request->trackingCodeUser, true);
 
            
-            $exportService = new KPIReport($trackings,$trackingCodeUser);
+            $exportService = new KPIReport($trackings,$trackingCodeUser, null);
             return $exportService->handle();
         }
     } 

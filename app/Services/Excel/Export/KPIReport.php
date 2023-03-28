@@ -6,11 +6,12 @@ class KPIReport extends AbstractExportService
     private $trackings;
 
     private $currentRow = 1;
-    private $lastEvent = null;
+    private $isAwaiting = null;
     private $trackingCodeUser;
 
-    public function __construct($trackings,$trackingCodeUser)
+    public function __construct($trackings,$trackingCodeUser, $isAwaiting)
     {
+        $this->isAwaiting = $isAwaiting;
         $this->trackings = $trackings;
         $this->trackingCodeUser = $trackingCodeUser;
         parent::__construct();
@@ -21,12 +22,6 @@ class KPIReport extends AbstractExportService
         $this->prepareExcelSheet();
 
         return $this->download();
-    }
-
-    public function handleByEvent($lastEvent)
-    {
-        $this->lastEvent = $lastEvent;
-        return $this->handle();
     }
 
     private function prepareExcelSheet()
@@ -40,34 +35,34 @@ class KPIReport extends AbstractExportService
         foreach ($this->trackings as $data) {
             
             if(isset($data['evento'])) {
-                if($this->lastEvent && $this->lastEvent != optional(optional(optional($data)['evento'])[0])['descricao']){
-                    continue;
-                }
-
-                if(optional($data) && isset(optional($data)['numero'])) {
-                    $user = $this->trackingCodeUser[optional($data)['numero']];
-                    if($user)
-                    $this->setCellValue('A'.$row, $user['name'] .''. $user['last_name'] .' '. $user['pobox_number'] );
+                if( $this->isAwaiting && optional(optional(optional($data)['evento'])[0])['descricao'] == $this->isAwaiting || !$this->isAwaiting){
                     
-                    $this->setCellValue('B'.$row, optional($data)['numero']);
-                    $this->setCellValue('C'.$row, optional($data)['categoria']);
-                    $this->setCellValue('D'.$row, optional(optional(optional($data)['evento'])[count($data['evento'])-1])['data']);
-                    $this->setCellValue('E'.$row, optional(optional(optional($data)['evento'])[0])['data']);
-                    $this->setCellValue('F'.$row, sortTrackingEvents($data, null)['diffDates']);
-                    $this->setCellValue('G'.$row, optional(optional(optional($data)['evento'])[0])['descricao']);
-                    $this->setCellValue('H'.$row, sortTrackingEvents($data, null)['taxed']);
-                    $this->setCellValue('I'.$row, sortTrackingEvents($data, null)['delivered']);
-                    $this->setCellValue('J'.$row, sortTrackingEvents($data, null)['returned']);
-                    $row++;
-                    if(sortTrackingEvents($data, null)['taxed']=='Yes'){
-                        $taxed++;
+
+                    if(optional($data) && isset(optional($data)['numero'])) {
+                        $user = $this->trackingCodeUser[optional($data)['numero']];
+                        if($user)
+                        $this->setCellValue('A'.$row, $user['name'] .''. $user['last_name'] .' '. $user['pobox_number'] );
+                        
+                        $this->setCellValue('B'.$row, optional($data)['numero']);
+                        $this->setCellValue('C'.$row, optional($data)['categoria']);
+                        $this->setCellValue('D'.$row, optional(optional(optional($data)['evento'])[count($data['evento'])-1])['data']);
+                        $this->setCellValue('E'.$row, optional(optional(optional($data)['evento'])[0])['data']);
+                        $this->setCellValue('F'.$row, sortTrackingEvents($data, null)['diffDates']);
+                        $this->setCellValue('G'.$row, optional(optional(optional($data)['evento'])[0])['descricao']);
+                        $this->setCellValue('H'.$row, sortTrackingEvents($data, null)['taxed']);
+                        $this->setCellValue('I'.$row, sortTrackingEvents($data, null)['delivered']);
+                        $this->setCellValue('J'.$row, sortTrackingEvents($data, null)['returned']);
+                        $row++;
+                        if(sortTrackingEvents($data, null)['taxed']=='Yes'){
+                            $taxed++;
+                        }
+                        if(sortTrackingEvents($data, null)['delivered']=='Yes'){
+                            $delivered++;
+                        }
+                        if(sortTrackingEvents($data, null)['returned']=='Yes'){
+                            $returned++;
+                        } 
                     }
-                    if(sortTrackingEvents($data, null)['delivered']=='Yes'){
-                        $delivered++;
-                    }
-                    if(sortTrackingEvents($data, null)['returned']=='Yes'){
-                        $returned++;
-                    } 
                 }
             }
         }

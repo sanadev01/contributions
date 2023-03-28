@@ -123,7 +123,8 @@ class OrderRepository
             }
             if($request->carrier == 'Prime5'){
                 $service = [
-                    ShippingService::Prime5, 
+                    ShippingService::Prime5,
+                    ShippingService::Prime5RIO, 
                 ];
             }
             if($request->carrier == 'Post Plus'){

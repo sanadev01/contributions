@@ -2,6 +2,7 @@
 
 namespace App\Services\SwedenPost\Services\Container;
 
+use App\Models\ShippingService;
 use App\Models\Warehouse\Container;
 use Illuminate\Support\Facades\Http;
 
@@ -28,13 +29,19 @@ class DirectLinkReceptacle
         $this->http = Http::withBasicAuth($this->userName, $this->password);
     }
 
-    public function create()
+    public function create($serviceCode)
     {
+        if($serviceCode == ShippingService::Prime5) {
+            $contentCode = "006";
+        }else if($serviceCode == ShippingService::Prime5RIO) {
+            $contentCode = "002";
+        }
+
         $url = $this->baseURL . 'bagscan?op=createReceptacle';
         $body = [
             "dlOfficeCode" => "600",
             "eventId" => "34",
-            "contentCode" => "006",
+            "contentCode" => $contentCode,
             "countryCode" => "BR",
             "receptacleType" => "01",
             "serviceCode" => "001"

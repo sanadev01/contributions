@@ -17,7 +17,7 @@ class SwedenPostContainerRepository
     {
         $query = Container::query();
         return $query->where(function ($query) {
-            $query->where('services_subclass_code', ShippingService::Prime5);
+            $query->whereIn('services_subclass_code', [ShippingService::Prime5,ShippingService::Prime5RIO]);
         })->latest()->paginate(50);
     }
 
@@ -37,7 +37,7 @@ class SwedenPostContainerRepository
                 'unit_type' => $request->unit_type,
                 'services_subclass_code' => $request->services_subclass_code
             ]);
-            $response =  (new DirectLinkReceptacle($container))->create();
+            $response =  (new DirectLinkReceptacle($container))->create($request->services_subclass_code);
             $data = $response->getData();
             if ($data->isSuccess) {
                 $container->update([

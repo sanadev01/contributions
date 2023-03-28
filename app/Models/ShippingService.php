@@ -48,6 +48,7 @@ class ShippingService extends Model
     const Parcel_Post = 541;
     const Post_Plus_Prime = 777;
     const Post_Plus_Premium = 778;
+    const Prime5RIO = 357;
     const GDE_Service = 4387;
 
     
@@ -144,7 +145,7 @@ class ShippingService extends Model
     }
     public function isSwedenPostService()
     {
-        if($this->service_sub_class == self::Prime5){
+        if($this->service_sub_class == self::Prime5 || $this->service_sub_class == self::Prime5RIO){
             return true;
         }
         return false;
@@ -364,7 +365,7 @@ class ShippingService extends Model
     }
     public function getIsSwedenPostAttribute()
     {
-        if($this->service_sub_class == self::Prime5){
+        if($this->service_sub_class == self::Prime5 || $this->service_sub_class == self::Prime5RIO){
             return true;
         }
         return false;

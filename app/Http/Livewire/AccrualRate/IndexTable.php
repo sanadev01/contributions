@@ -94,6 +94,10 @@ class IndexTable extends Component
             'name' => 'PrimeRIO',
             'value' => Package::SERVICE_CLASS_Post_Plus_Premium,
         ];
+        $this->services[15] = [
+            'name' => 'Prime5RIO',
+            'value' => Package::SERVICE_CLASS_Prime5RIO,
+        ];
         return $this->services;
     }
 }
