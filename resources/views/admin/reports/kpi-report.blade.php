@@ -6,7 +6,7 @@
         }
 
         .wrimagecard {
-            border: 2px solid rgba(46, 61, 73, 0.15);
+            border: 1px solid rgba(46, 61, 73, 0.15);
             margin-top: 0;
             margin-bottom: 1.5rem;
             text-align: left;
@@ -30,7 +30,7 @@
 
         a.wrimagecard:hover,
         .wrimagecard-topimage:hover {
-            box-shadow: 2px 4px 12px 6px rgba(46, 61, 73, 0.2);
+            box-shadow: 0px 0px 6px 1px rgba(46, 61, 73, 0.2);
         }
 
         .wrimagecard-topimage a {
@@ -46,50 +46,70 @@
             transition: color 0.3s ease;
         }
 
-        .banner {
-            border-radius: 10px;
+        .icon-color {
+            border-radius: 11px;
 
         }
 
+        .btn {
+            border-radius: 11px;
+        }
+
+        .banner {
+            border-radius: 11px;
+        }
+
         .filter-card {
-            padding: 25px;
-            border: 2px solid rgba(46, 61, 73, 0.15);
+            padding: 12px 25px;
+            border: 1px solid rgba(46, 61, 73, 0.15);
             margin-top: 0;
             margin-bottom: 1.5rem;
             text-align: left;
             position: relative;
             background: #fff;
-            box-shadow: 2px 2px 2px 2px rgba(46, 61, 73, 0.15);
+            box-shadow: 0px 0px 40px 1px rgba(120, 148, 171, 0.2);
             border-radius: 10px;
             transition: all 0.3s ease;
+        }
+
+        #filter-card:hover {
+            box-shadow: 2px 4px 12px 6px rgba(46, 61, 73, 0.2);
+        }
+
+        thead {
+            background-color: #EEFAFA !important;
+        } 
+        .table-striped>tbody>tr:nth-child(odd)>td,
+        .table-striped>tbody>tr:nth-child(odd)>th {
+            background-color: #fff;
+        }
+        body {
+             background-color:#F7FBFE !important;
         }
     </style>
 @endsection
 @section('page')
-    <section>
+    <section >
         <div class="row">
             <div class="col-12">
                 <div class="">
-
                     <div>
-                        <h3>Welcome back , Marcio</h3>
-                        <p>Your current kpi report here.</p>
+                        <dl>
+                            <dt class="h3 font-weight-bold">Welcome back , Marcio 👋</dt>
+                            <dd class="display-5 font-weight-light">Your current kpi report is here</dd>
+                        </dl>
                     </div>
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-8">
+                                {{-- contanct us banner --}}
                                 <div class="row">
-
-
-                                    <div class="col-sm-12">
-
-
-                                        <div style="position:relative;">
-                                            <div class="row col-12">
-                                                <div class="col-12" style="height:7%">
+                                    <div class="">
+                                        <div style="col-sm-12 position:relative;">
+                                            <div class="">
+                                                <div class="col-12 mt-3" style="height:7%" class="mt-3">
                                                     <img class="banner" src="{{ asset('images/kpi-banner.png') }}"
                                                         width="100%" height="10%" alt="your-image">
-
                                                     {{-- <div style="position:absolute;top:0;left:0;vertical-align: middle" class="d-flex justify-content-between align-items-center">
                                                         
                                                             <div class="  "> 
@@ -103,71 +123,107 @@
                                                 </div>
                                             </div>
                                         </div>
-
-
                                     </div>
-
-
-
-
-
                                 </div>
-                                <div class="container row mt-5">
-
-                                    @foreach (range(1, 4) as $key)
-                                        <div class="col-md-3 col-sm-4">
-                                            <div class="wrimagecard wrimagecard-topimage">
-                                                <a href="#">
-                                                    <div class="wrimagecard-topimage_header">
-                                                        <div style="background-color: rgba(22, 160, 133, 0.1)">
-                                                            <center><i class="fa fa-cubes" style="color:#16A085"></i>
-                                                            </center>
-                                                        </div>
+                                {{-- contanct us banner end --}}
+                                {{-- orders details cards --}}
+                                <div class="row mt-5">
+                                    <div class="col-md-3 col-sm-4">
+                                        <div class="wrimagecard wrimagecard-topimage">
+                                            <a href="#">
+                                                <div class="wrimagecard-topimage_header">
+                                                    <div class="icon-color" style="background-color: #EEFAFA">
+                                                        <center> <i class="fa fa-cubes" style="color:#284ed8"></i> </center>
                                                     </div>
-                                                    <div>
-                                                        <h2 class="text-center">{{ $key + 33 }}
-                                                            <div class="pull-right badge" id="WrControls"></div>
-                                                        </h2>
-
-                                                        <p class="text-center mt-0 pt-0">Description</p>
-                                                    </div>
-                                                </a>
-                                            </div>
+                                                </div>
+                                                <div>
+                                                    <p class="text-center font-weight-bold h3">123</p>
+                                                    <p class="text-center mt-0 pt-0">Total orders</p>
+                                                </div>
+                                            </a>
                                         </div>
-                                    @endforeach
+                                    </div>
+                                    <div class="col-md-3 col-sm-4">
+                                        <div class="wrimagecard wrimagecard-topimage">
+                                            <a href="#">
+                                                <div class="wrimagecard-topimage_header">
+                                                    <div class="icon-color" style="background-color: #FFF9EB">
+                                                        <center> <i class="fa fa-cubes" style="color:#a08e16"></i> </center>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <p class="text-center font-weight-bold h3">23 </p>
+                                                    <p class="text-center mt-0 pt-0">Taxed</p>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-4">
+                                        <div class="wrimagecard wrimagecard-topimage">
+                                            <a href="#">
+                                                <div class="wrimagecard-topimage_header">
+                                                    <div class="icon-color" style="background-color: #EEFAFA">
+                                                        <center><i class="fa fa-cubes" style="color:#16A085"></i> </center>
+                                                    </div>
+                                                </div>
+                                                <div>
 
+                                                    <p class="text-center font-weight-bold h3"> 123
+                                                    </p>
+
+                                                    <p class="text-center mt-0 pt-0">Delivered</p>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-4">
+                                        <div class="wrimagecard wrimagecard-topimage">
+                                            <a href="#">
+                                                <div class="wrimagecard-topimage_header">
+                                                    <div class="icon-color" style="background-color: #FBEFFB">
+                                                        <center><i class="fa fa-cubes" style="color:#dc341b"></i>
+                                                        </center>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <p class="text-center font-weight-bold h3"> 61
+                                                    </p>
+                                                    <p class="text-center mt-0 pt-0">Retured</p>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                                {{-- orders details cards end --}}
 
+                            </div>
+                            {{-- Report Generato --}}
                             <div class="col-4 ">
-                                <div class="filter-card  ">
-                                    <h4 class="text-center">
-                                        <bold> Report Generator</bold>
+                                <div class="filter-card" id="filter-card">
+                                    <h4 class="text-center mt-0 pt-0  h5 font-weight-bold">
+                                        Report Generator
                                     </h4>
 
 
-                                    <label for="start-date">Start Date</label><br>
+                                    <label for="start-date" class="mb-0">Start Date</label><br>
                                     <div class="input-group">
-                                        <input id="start-date" class="form-control py-2 rounded-pill mr-1 " type="date"
+                                        <input id="start-date" class="form-control py-2 rounded-2 mr-1 " type="date"
                                             value="start date">
 
                                     </div>
 
-
-
-                                    <label for="end-date " class="mt-3"> End Date</label><br>
+                                    <label for="end-date " class="mt-2  mb-0""> End Date</label><br>
                                     <div class="input-group">
-                                        <input id="end-date" class="form-control py-2 rounded-pill mr-1 " type="date"
+                                        <input id="end-date" class="form-control py-2 rounded-2 mr-1 " type="date"
                                             value="end date">
 
                                     </div>
 
 
 
-                                    <label for="start-date" class="mt-3">Tracking Code</label><br>
+                                    <label for="start-date" class="mt-2 mb-0">Tracking Code</label><br>
                                     <div class="input-group">
-                                        <textarea id="start-date" class="form-control py-2 rounded-2 mr-1 pr-5" value="tracking code">
-                                        </textarea>
+                                        <textarea id="start-date" class="form-control py-2 rounded-2 mr-1 pr-5" value="tracking code"></textarea>
                                         <span class="input-group-append">
                                             <button class="btn rounded-pill border-0 ml-n5" type="button">
                                                 <i class="fa fa-search"></i>
@@ -178,10 +234,12 @@
                                     <div class="d-flex justify-content-between mt-3">
 
                                         <div>
-                                            <button type="button" class="btn btn-outline-success p-2">Check Details</button>
+                                            <button type="button" class="btn btn-outline-success  px-3 py-1">Check
+                                                Details</button>
                                         </div>
                                         <div>
-                                            <button type="button" class="btn btn-success p-2">Download</button>
+                                            <button type="button" class="btn btn-success   px-3 py-1"> <i
+                                                    class="fa fa-download"></i> Download</button>
 
                                         </div>
                                     </div>
@@ -189,14 +247,145 @@
 
                                 </div>
                             </div>
+                            {{-- Report Generato end --}}
                         </div>
-                        <div class="row bg-danger">
-                            table
+                        {{-- table of kpi --}}
+                        <div>
+                            <table class="table p-0 table-responsive-md table-striped">
+                                <thead style="backgroud-color:#000">
+                                    <tr>
+                                        <th>User</th>
+                                        <th>@lang('orders.Tracking')</th>
+                                        <th>@lang('orders.Type Package')</th>
+                                        <th>@lang('orders.First Event')</th>
+                                        <th>@lang('orders.Last Event')</th>
+                                        <th>@lang('orders.Days Between')</th>
+                                        <th>@lang('orders.Last Event')</th>
+                                        <th>@lang('orders.Taxed')</th>
+                                        <th>@lang('orders.Delivered')</th>
+                                        <th>@lang('orders.Returned')</th>
+                                    </tr>
+                                </thead>
+                                {{-- <tfoot class="search-header">
+                                    <tr>
+                                        <th>User</th>
+                                        <th>Tracking</th>
+                                        <th>Type Package</th>
+                                        <th>First Event</th>
+                                        <th>Last Event</th>
+                                        <th>Days Between</th>
+                                        <th>Last Event</th>
+                                        <th>Taxed</th>
+                                        <th>Delivered</th>
+                                        <th>Returned</th>
+                                    </tr>
+                                </tfoot> --}}
+                                <tbody>
+                                    <tr>
+                                        <td>User</td>
+                                        <td>Tracking</td>
+                                        <td>Type Package</td>
+                                        <td>First Event</td>
+                                        <td>Last Event</td>
+                                        <td>Days Between</td>
+                                        <td>Last Event</td>
+                                        <td>Taxed</td>
+                                        <td>Delivered</td>
+                                        <td>Returned</td>
+                                    </tr>
+                                    <tr>
+                                        <td>User</td>
+                                        <td>Tracking</td>
+                                        <td>Type Package</td>
+                                        <td>First Event</td>
+                                        <td>Last Event</td>
+                                        <td>Days Between</td>
+                                        <td>Last Event</td>
+                                        <td>Taxed</td>
+                                        <td>Delivered</td>
+                                        <td>Returned</td>
+                                    </tr>
+                                    <tr>
+                                        <td>User</td>
+                                        <td>Tracking</td>
+                                        <td>Type Package</td>
+                                        <td>First Event</td>
+                                        <td>Last Event</td>
+                                        <td>Days Between</td>
+                                        <td>Last Event</td>
+                                        <td>Taxed</td>
+                                        <td>Delivered</td>
+                                        <td>Returned</td>
+                                    </tr>
+
+                                    @if ($trackings)
+                                        @foreach ($trackings['return']['objeto'] as $data)
+                                            @if (isset($data['evento']))
+                                                <tr class="count">
+                                                    @if (optional($data) && isset(optional($data)['numero']))
+                                                        <td>{{ optional($trackingCodeUser[optional($data)['numero']])->pobox_name }}
+                                                        </td>
+                                                        <td>{{ optional($data)['numero'] }}</td>
+                                                        <td><span>{{ optional($data)['categoria'] }}</span></td>
+                                                        <td>{{ optional(optional(optional($data)['evento'])[count($data['evento']) - 1])['data'] }}
+                                                        </td>
+                                                        <td>{{ optional(optional(optional($data)['evento'])[0])['data'] }}
+                                                        </td>
+                                                        <td>{{ sortTrackingEvents($data, null)['diffDates'] }} </td>
+                                                        <td>{{ optional(optional(optional($data)['evento'])[0])['descricao'] }}
+                                                        </td>
+                                                        <td>{{ sortTrackingEvents($data, null)['taxed'] }}</td>
+                                                        <td>{{ sortTrackingEvents($data, null)['delivered'] }}</td>
+                                                        <td>{{ sortTrackingEvents($data, null)['returned'] }}</td>
+                                                    @else
+                                                        <td colspan='9'>No Trackings Found</td>
+                                                    @endif
+                                                </tr>
+                                            @endif
+                                        @endforeach
+                                    @endif
+                                </tbody>
+                            </table>
+                            @include('layouts.livewire.loading')
+
+
+                            {{-- <div class="row d-flex justify-content-between">
+                                    <div>User</div>      
+                                     <div>@lang('orders.Tracking')</div>
+                                    <div>@lang('orders.Type Package')</div>
+                                    <div>@lang('orders.First Event')</div>
+                                    <div>@lang('orders.Last Event')</div>
+                                    <div>@lang('orders.Days Between')</div>
+                                    <div>@lang('orders.Last Event')</div>
+                                    <div>@lang('orders.Taxed')</div>
+                                    <div>@lang('orders.Delivered')</div>
+                                    <div>@lang('orders.Returned')</div>
+ 
+                                </div>
+                                
+                                        <div class="row d-flex justify-content-between">
+
+                                        <div>1</div>
+                                        <div>1</div>
+                                        <div>1</div>
+                                        <div>1</div>
+                                        <div>1</div>
+                                        <div>1</div>
+                                        <div>1</div>
+                                        <div>1</div>
+                                        <div>1</div>
+                                    
+                                        <div>1</div>
+                                        </div> --}}
+
+
+
+
                         </div>
 
                     </div>
                 </div>
-                <div class="card">
+                {{-- <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">@lang('orders.Key Performance Indicator Report')</h4>
                     </div><br>
@@ -303,8 +492,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <table class="table mb-0 table-responsive-md" id="kpi-report">
-                                <thead>
+                            <table class="table p-0 table-responsive-md" >
+                                <thead style="backgroud-color:#000">
                                     <tr>
                                         <th>User</th>
                                         <th>@lang('orders.Tracking')</th>
@@ -364,7 +553,7 @@
                             @include('layouts.livewire.loading')
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
     </section>
