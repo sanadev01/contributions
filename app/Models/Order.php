@@ -364,7 +364,7 @@ class Order extends Model implements Package
                 return 'Global eParcel';
 
             }
-            elseif(optional($this->shippingService)->service_sub_class == ShippingService::Prime5){
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::Prime5 || optional($this->shippingService)->service_sub_class == ShippingService::Prime5RIO){
 
                 return 'Prime5';
 
@@ -397,7 +397,8 @@ class Order extends Model implements Package
                 optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_EMS ||
                 optional($this->shippingService)->service_sub_class == ShippingService::Parcel_Post ||
                 optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Prime ||
-                optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Premium) {
+                optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Premium ||
+                optional($this->shippingService)->service_sub_class == ShippingService::Prime5RIO) {
 
                 return $this->user_declared_freight;
             }

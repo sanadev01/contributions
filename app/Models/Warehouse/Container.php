@@ -88,6 +88,8 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'USPS Ground';
         }elseif($this->services_subclass_code == '734'){
             return 'Post Plus';
+        }elseif($this->services_subclass_code == '357'){
+            return 'Prime5RIO';
         }else {
             return 'FirstClass';
         }
@@ -199,7 +201,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     public function hasSwedenPostService()
     {
-        return $this->services_subclass_code == ShippingService::Prime5;
+        return $this->services_subclass_code == ShippingService::Prime5 || $this->services_subclass_code == ShippingService::Prime5RIO;
     }
 
     public function hasPostPlusService()
