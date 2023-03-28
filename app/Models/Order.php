@@ -745,12 +745,14 @@ class Order extends Model implements Package
         return [
             ShippingService::AJ_Packet_Standard,
             ShippingService::AJ_Packet_Express,
+            ShippingService::AJ_Standard_CN,
+            ShippingService::AJ_Express_CN
         ];
     }
 
     public function getCorrespondenceServiceCode($serviceCode)
     {
-        return ($serviceCode == ShippingService::AJ_Packet_Express) ? ShippingService::Packet_Express : ShippingService::Packet_Standard;
+        return ($serviceCode == ShippingService::AJ_Packet_Express) || ($serviceCode == ShippingService::AJ_Express_CN) ? ShippingService::Packet_Express : ShippingService::Packet_Standard;
     }
 
     public function secondCarrierAervice()
