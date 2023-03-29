@@ -46,11 +46,6 @@
             transition: color 0.3s ease;
         }
 
-        .icon-color {
-            border-radius: 11px;
-
-        }
-
         .btn {
             border-radius: 11px;
         }
@@ -60,7 +55,7 @@
         }
 
         .filter-card {
-            padding: 12px 25px;
+            padding: 25px 25px;
             border: 1px solid rgba(46, 61, 73, 0.15);
             margin-top: 0;
             margin-bottom: 1.5rem;
@@ -72,12 +67,29 @@
             transition: all 0.3s ease;
         }
 
+        .table {
+            border: 1px solid rgba(46, 61, 73, 0.15);
+            box-shadow: 0px 0px 40px 1px rgba(120, 148, 171, 0.2);
+            border-radius: 10px;
+
+            transition: all 0.3s ease;
+        }
+
+        .icon-background {
+            padding: 15px 10px;
+            border-radius: 11px;
+
+        }
+
         #filter-card:hover {
             box-shadow: 2px 4px 12px 6px rgba(46, 61, 73, 0.2);
         }
 
+         
+
         thead {
-            background-color: #EEFAFA !important;
+            background-color: #eefafa !important;
+
         }
 
         .table-striped>tbody>tr:nth-child(odd)>td,
@@ -85,14 +97,21 @@
             background-color: #fff;
         }
 
-        body {
-            background-color: #F7FBFE !important;
+        .table-striped>tbody>tr:nth-child(even)>td,
+        .table-striped>tbody>tr:nth-child(even)>th {
+            background-color: #f7fbfe;
         }
-        .dt{ 
+
+        body {
+            background-color: #f7fbfe !important;
+        }
+
+        .dt {
             font-weight: 700;
             font-size: 2rem;
-           font:20px Arial, Helvetica, sans-serif;
+            font: 20px Arial, Helvetica, sans-serif;
         }
+        
     </style>
 @endsection
 @section('page')
@@ -107,24 +126,30 @@
                         </dl>
                     </div>
                     <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-8">
+                        <div class="row mt-3">
+                            <div class="col-lg-8 col-md-12  d-flex  flex-column  justify-content-between ">
                                 {{-- contanct us banner --}}
-                                <div class="row"style="col-12 position:relative;">
-                                                <div class="col-12 mt-3" style="height:7%" class="mt-3"><a href="#">
-                                                    <img class="banner" src="{{ asset('images/kpi-banner.png') }}"
-                                                        width="100%" height="10%" alt="your-image">  </a>
-                                                </div>  
+                                {{-- <div class="">
+
+                                </div> --}}
+                                <div class="">
+                                    <div class="row mt-0">
+                                        <div class="col-12 pb-xl-3 pb-2 h-50"><a href="#">
+                                                <img class="banner" src="{{ asset('images/kpi-banner.png') }}"
+                                                    width="100%" height="10%" alt="contact us"> </a>
+                                        </div>
+                                    </div>
                                 </div>
                                 {{-- contanct us banner end --}}
                                 {{-- orders details cards --}}
-                                <div class="row mt-3">
+                                <div class="row ">
                                     <div class="col-md-3 col-sm-4">
                                         <div class="wrimagecard wrimagecard-topimage">
                                             <a href="#">
                                                 <div class="wrimagecard-topimage_header">
-                                                    <div class="icon-color" style="background-color: #EEFAFA">
-                                                        <center> <i class="fa fa-cubes" style="color:#284ed8"></i> </center>
+                                                    <div class="icon-background" style="background-color: #EEFAFA">
+                                                        <center> <img src="{{ asset('app-assets/images/icons/chart.svg') }}"
+                                                                class="icon" width="40" height="40" /> </center>
                                                     </div>
                                                 </div>
                                                 <div>
@@ -138,8 +163,10 @@
                                         <div class="wrimagecard wrimagecard-topimage">
                                             <a href="#">
                                                 <div class="wrimagecard-topimage_header">
-                                                    <div class="icon-color" style="background-color: #FFF9EB">
-                                                        <center> <i class="fa fa-cubes" style="color:#a08e16"></i> </center>
+                                                    <div class="icon-background" style="background-color: #fff9eb">
+                                                        <center> <img src="{{ asset('app-assets/images/icons/tax.svg') }}"
+                                                                class="icon" width="40" height="40" /> </center>
+
                                                     </div>
                                                 </div>
                                                 <div>
@@ -153,8 +180,11 @@
                                         <div class="wrimagecard wrimagecard-topimage">
                                             <a href="#">
                                                 <div class="wrimagecard-topimage_header">
-                                                    <div class="icon-color" style="background-color: #EEFAFA">
-                                                        <center><i class="fa fa-cubes" style="color:#16A085"></i> </center>
+                                                    <div class="icon-background" style="background-color: #eefafa">
+                                                        <center> <img
+                                                                src="{{ asset('app-assets/images/icons/delivered.svg') }}"
+                                                                class="icon" width="40" height="40" /> </center>
+
                                                     </div>
                                                 </div>
                                                 <div>
@@ -171,9 +201,11 @@
                                         <div class="wrimagecard wrimagecard-topimage">
                                             <a href="#">
                                                 <div class="wrimagecard-topimage_header">
-                                                    <div class="icon-color" style="background-color: #FBEFFB">
-                                                        <center><i class="fa fa-cubes" style="color:#dc341b"></i>
-                                                        </center>
+                                                    <div class="icon-background" style="background-color: #fbeffb">
+                                                        <center> <img
+                                                                src="{{ asset('app-assets/images/icons/retured.svg') }}"
+                                                                class="icon" width="40" height="40" /> </center>
+
                                                     </div>
                                                 </div>
                                                 <div>
@@ -185,41 +217,39 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 {{-- orders details cards end --}}
 
                             </div>
-                            {{-- Report Generato --}}
-                            <div class="col-4 ">
+                            {{-- Report Report  --}}
+                            <div class="col-lg-4 col-md-12  d-flex  flex-column   justify-content-center">
                                 <div class="filter-card" id="filter-card">
                                     <h4 class="text-center mt-0 pt-0  h5 font-weight-bold">
                                         Report Generator
                                     </h4>
-                                    <form   action="{{ route('admin.reports.kpi-report.index') }}" method="GET">
+                                    <form action="{{ route('admin.reports.kpi-report.index') }}" method="GET">
 
-                                        <label for="startDate" class="mb-0">Start Date</label><br>
+                                        <label for="startDate " class="mt-xl-3 mt-lg-1 mb-0 ">Start Date</label><br>
                                         <div class="input-group">
-                                            <input  class="form-control py-2 rounded-2 mr-1 " type="date" name="start_date" id="startDate"  value="start date">
-
+                                            <input class="form-control py-2 rounded-3 mr-1 " type="date"
+                                                name="start_date" id="startDate" value="start date">
                                         </div>
 
-                                        <label for="end-date " class="mt-2  mb-0""> End Date</label><br>
+                                        <label for="end-date " class="mt-xl-3 mt-lg-1 mb-0 ""> End Date</label><br>
                                         <div class="input-group">
-                                            <input name="end_date" id="endDate" class="form-control py-2 rounded-2 mr-1 " type="date" value="end date">
-
+                                            <input name="end_date" id="endDate" class="form-control   rounded-5   "
+                                                type="date" value="end date">
                                         </div>
-
-
-
-                                        <label for="start-date" class="mt-2 mb-0">Tracking Code</label><br>
+                                        <label for="start-date" class="mt-xl-3 mt-lg-1 mb-0 ">Tracking Code</label><br>
                                         <div class="input-group">
                                             {{-- <textarea id="start-date" class="form-control py-2 rounded-2 mr-1 pr-5" value="tracking code"></textarea> --}}
-                                            <textarea id="start-date" value="tracking code"  type="text" placeholder="Please Enter Tracking Codes" rows="1" class="form-control"                                                                        
-                                                name="trackingNumbers">{{ old('trackingNumbers', request('trackingNumbers')) }}</textarea>
-                                                @error('trackingNumbers')
-                                                    <div class="help-block text-danger">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
+                                            <textarea id="start-date" value="tracking code" type="text" placeholder="Please Enter Tracking Codes" rows="1"
+                                                class="form-control rounded-3" name="trackingNumbers">{{ old('trackingNumbers', request('trackingNumbers')) }}</textarea>
+                                            @error('trackingNumbers')
+                                                <div class="help-block text-danger">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
                                             <span class="input-group-append">
                                                 <button class="btn rounded-pill border-0 ml-n5" type="button">
                                                     <i class="fa fa-search"></i>
@@ -230,12 +260,14 @@
                                         <div class="d-flex justify-content-between mt-3">
 
                                             <div>
-                                                <button type="button" class="btn btn-outline-success  px-3 py-1">Check
+                                                <button type="button"
+                                                    class="btn btn-outline-success  px-3 px-xxl-4  py-xxl-2 py-1">Check
                                                     Details</button>
                                             </div>
-                                            
+
                                             <div>
-                                                <button type="button" class="btn btn-success   px-3 py-1"> <i
+                                                <button type="button"
+                                                    class="btn btn-success   px-3 py-1  px-3 px-xxl-4  py-xxl-2 py-1"> <i
                                                         class="fa fa-download"></i> Download</button>
 
                                             </div>
@@ -248,10 +280,12 @@
                             {{-- Report Generato end --}}
                         </div>
                         {{-- table of kpi --}}
-                        <div>
-                            <table class="table p-0 table-responsive-md table-striped">
-                                <thead style="backgroud-color:#000">
-                                    <tr>
+                        <div class="row">
+                            <table
+                                class="table  table-borderless p-0 table-responsive-md table-striped  table-rounded "
+                                >
+                                <thead style="backgroud-color:#000" class=" border rounded-pill">
+                                    <tr class=" border rounded-pill">
                                         <th>User</th>
                                         <th>@lang('orders.Tracking')</th>
                                         <th>@lang('orders.Type Package')</th>
@@ -264,22 +298,8 @@
                                         <th>@lang('orders.Returned')</th>
                                     </tr>
                                 </thead>
-                                {{-- <tfoot class="search-header">
-                                    <tr>
-                                        <th>User</th>
-                                        <th>Tracking</th>
-                                        <th>Type Package</th>
-                                        <th>First Event</th>
-                                        <th>Last Event</th>
-                                        <th>Days Between</th>
-                                        <th>Last Event</th>
-                                        <th>Taxed</th>
-                                        <th>Delivered</th>
-                                        <th>Returned</th>
-                                    </tr>
-                                </tfoot> --}}
                                 <tbody>
-                                    <tr>
+                                      <tr>
                                         <td>User</td>
                                         <td>Tracking</td>
                                         <td>Type Package</td>
@@ -314,8 +334,8 @@
                                         <td>Taxed</td>
                                         <td>Delivered</td>
                                         <td>Returned</td>
-                                    </tr>
-
+                                    </tr>  
+ 
                                     @if ($trackings)
                                         @foreach ($trackings['return']['objeto'] as $data)
                                             @if (isset($data['evento']))
@@ -339,8 +359,15 @@
                                                         <td colspan='9'>No Trackings Found</td>
                                                     @endif
                                                 </tr>
+                                               
                                             @endif
-                                        @endforeach
+                                        @endforeach 
+                                    @else 
+                                    <tr>
+                                           <td colspan="10" class="text-center justify-center">No Trackings Found</td>
+                                            
+                                    </tr>
+                                             
                                     @endif
                                 </tbody>
                             </table>
