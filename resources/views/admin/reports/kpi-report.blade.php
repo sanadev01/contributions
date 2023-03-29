@@ -1,19 +1,6 @@
 @extends('layouts.master')  
 @section('css')
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/pages/kpi.css') }}"> 
-<style>
-    #kpiReportTable{
-        border-radius: 20px !important;
-    }
-    .filter-card input, .filter-card textarea {
-    border-radius: 10px;
-}
-
-#kpiReportTable tr:last-child td:first-child { border-bottom-left-radius: 10px; }
-#kpiReportTable tr:last-child td:last-child { border-bottom-right-radius: 10px; }
-#kpiReportTable tr:first-child th:first-child { border-top-left-radius: 10px; }
-#kpiReportTable tr:first-child th:last-child { border-top-right-radius: 10px;}
-    </style>
 @endsection
 @section('page')
     <section>
@@ -45,9 +32,9 @@
                                 {{-- orders details cards --}}
                                 <div class="row ">
                                     <div class="col-md-3 col-sm-4">
-                                        <div class="wrimagecard wrimagecard-topimage">
+                                        <div class="imagecard imagecard-topimage">
                                             <a href="#">
-                                                <div class="wrimagecard-topimage_header">
+                                                <div class="imagecard-topimage_header">
                                                     <div class="icon-background" style="background-color: #EEFAFA">
                                                         <center> <img src="{{ asset('app-assets/images/icons/chart.svg') }}"
                                                                 class="icon" width="40" height="40" /> </center>
@@ -61,9 +48,9 @@
                                         </div>
                                     </div>
                                     <div class="col-md-3 col-sm-4">
-                                        <div class="wrimagecard wrimagecard-topimage">
+                                        <div class="imagecard imagecard-topimage">
                                             <a href="#">
-                                                <div class="wrimagecard-topimage_header">
+                                                <div class="imagecard-topimage_header">
                                                     <div class="icon-background" style="background-color: #fff9eb">
                                                         <center> <img src="{{ asset('app-assets/images/icons/tax.svg') }}" class="icon" width="40" height="40" /> </center>
 
@@ -77,9 +64,9 @@
                                         </div>
                                     </div>
                                     <div class="col-md-3 col-sm-4">
-                                        <div class="wrimagecard wrimagecard-topimage">
+                                        <div class="imagecard imagecard-topimage">
                                             <a href="#">
-                                                <div class="wrimagecard-topimage_header">
+                                                <div class="imagecard-topimage_header">
                                                     <div class="icon-background" style="background-color: #eefafa">
                                                         <center> <img
                                                                 src="{{ asset('app-assets/images/icons/delivered.svg') }}"
@@ -99,9 +86,9 @@
                                         </div>
                                     </div>
                                     <div class="col-md-3 col-sm-4">
-                                        <div class="wrimagecard wrimagecard-topimage">
+                                        <div class="imagecard imagecard-topimage">
                                             <a href="#">
-                                                <div class="wrimagecard-topimage_header">
+                                                <div class="imagecard-topimage_header">
                                                     <div class="icon-background" style="background-color: #fbeffb">
                                                         <center> <img
                                                                 src="{{ asset('app-assets/images/icons/retured.svg') }}"
