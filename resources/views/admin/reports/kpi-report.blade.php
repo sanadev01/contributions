@@ -22,7 +22,7 @@
                                 </div> --}}
                                 <div class="">
                                     <div class="row mt-0">
-                                        <div class="col-12 pb-xl-3 pb-2 h-50"><a href="#">
+                                        <div class="col-12 pb-xl-3 pb-2 h-25"><a href="#">
                                                 <img class="banner" src="{{ asset('images/kpi-banner.png') }}"
                                                     width="100%" height="10%" alt="contact us"> </a>
                                         </div>
@@ -109,24 +109,24 @@
                             {{-- Report Report  --}}
                             <div class="col-lg-4 col-md-12  d-flex  flex-column   justify-content-center">
                                 <div class="filter-card" id="filter-card">
-                                    <h4 class="text-center mt-0 pt-0  h5 font-weight-bold">
+                                    <h4 class="text-center mt-0 pt-0  h6 font-weight-bold">
                                         Report Generator
                                     </h4>
                                     <form action="{{ route('admin.reports.kpi-report.index') }}" method="GET">
-                                        <label for="startDate " class="mt-xl-3 mt-lg-1 mb-0 ">Start Date</label><br>
+                                        <label for="startDate " class="mt-1 mb-0 ">Start Date</label><br>
                                         <div class="input-group">
                                             <input class="form-control py-2 rounded-3 mr-1 " type="date"
                                                 name="start_date" id="startDate" {{-- value="{{ \Carbon\Carbon::parse(request('start_date'))->format('Y-m-d')  }}" placeholder="yyyy/dd/mm" --}}>
                                         </div>
-                                        <label for="end-date" class="mt-xl-3 mt-lg-1 mb-0 ""> End Date</label><br>
+                                        <label for="end-date" class="mt-1 mb-0 ""> End Date</label><br>
                                         <div class="input-group">
                                             <input name="end_date" id="endDate" class="form-control rounded-5"
                                                 type="date">
                                         </div>
                                         <label for="start-date" class="mt-xl-3 mt-lg-1 mb-0 ">Tracking Code</label><br>
                                         <div class="input-group">
-                                            <textarea id="start-date" value="tracking code" type="text" placeholder="Please Enter Tracking Codes" rows="3"
-                                                class="form-control rounded-3" name="trackingNumbers">{{ old('trackingNumbers', request('trackingNumbers')) }}</textarea>
+                                            <textarea id="start-date" value="tracking code" type="text" placeholder="Please Enter Tracking Codes" rows="2"
+                                                class="form-control " name="trackingNumbers">{{ old('trackingNumbers', request('trackingNumbers')) }}</textarea>
                                             @error('trackingNumbers')
                                                 <div class="help-block text-danger">
                                                     {{ $message }}
