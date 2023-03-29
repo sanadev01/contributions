@@ -264,7 +264,7 @@
             $('#delivered').html(deliveredOrder );
             $('#taxed').html(taxOrder + ' %');
             $('#returned').html(returnOrder + ' %');
-            // $('#inProcess').html('Processing or In Transit: ' + inTransit + ' %');
+            $('#inProcess').html('Processing or In Transit: ' + inTransit + ' %');
         }
       </script>
 @endsection
