@@ -179,11 +179,7 @@ function responseSuccessful($output, $message)
 }
 function orderProductsValue($products)
 {
-    $value = 0;
-    if (count($products) >= 1) {
-        foreach ($products as $item) {
-            $value += ($item['value'])*($item['quantity']);
-        }
-    }
-    return $value;
+    return array_reduce($products,function($count,$product){
+           return  $count + ($product['value'])*($product['quantity']);
+    });
 }
