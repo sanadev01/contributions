@@ -9,7 +9,7 @@
                 <div class="">
                     <div class="ml-3">
                         <dl>
-                            <dt class="h3 font-weight-bold dt">Welcome back, {{ Auth::user()->full_name }} 👋</dt>
+                            <dt class=" font-weight-bold dt">Welcome back, {{ Auth::user()->full_name }} 👋</dt>
                             <dd class="display-5 font-weight-light dd">Your current kpi report is here</dd>
                         </dl>
                     </div>
@@ -41,7 +41,7 @@
                                                     </div>
                                                 </div>
                                                 <div>
-                                                    <p class="text-center font-weight-bold h3"  id="total">0</p>
+                                                    <p class="text-center font-weight-bold h4"  id="total">0</p>
                                                     <p class="text-center mt-0 pt-0">Total orders</p>
                                                 </div>
                                             </a>
@@ -57,7 +57,7 @@
                                                     </div>
                                                 </div>
                                                 <div>
-                                                    <p class="text-center font-weight-bold h3"  id="taxed">0 </p>
+                                                    <p class="text-center font-weight-bold h4"  id="taxed">0 </p>
                                                     <p class="text-center mt-0 pt-0">Taxed</p>
                                                 </div>
                                             </a>
@@ -70,14 +70,11 @@
                                                     <div class="icon-background" style="background-color: #eefafa">
                                                         <center> <img
                                                                 src="{{ asset('app-assets/images/icons/delivered.svg') }}"
-                                                                class="icon" width="40" height="40" /> </center>
-
+                                                                class="icon" width="40" height="40" /> </center> 
                                                     </div>
                                                 </div>
-                                                <div> 
-
-
-                                                    <p class="text-center font-weight-bold h3 "  id="delivered"> 0
+                                                <div>  
+                                                    <p class="text-center font-weight-bold h4 "  id="delivered"> 0
                                                     </p>
 
                                                     <p class="text-center mt-0 pt-0">Delivered</p>
@@ -97,7 +94,7 @@
                                                     </div>
                                                 </div>
                                                 <div>
-                                                    <p class="text-center font-weight-bold h3"  id="returned"> 0
+                                                    <p class="text-center font-weight-bold h4"  id="returned"> 0
                                                     </p>
                                                     <p class="text-center mt-0 pt-0">Retured</p>
                                                 </div>
@@ -128,7 +125,7 @@
                                         </div>
                                         <label for="start-date" class="mt-xl-3 mt-lg-1 mb-0 ">Tracking Code</label><br>
                                         <div class="input-group">
-                                            <textarea id="start-date" value="tracking code" type="text" placeholder="Please Enter Tracking Codes" rows="1"
+                                            <textarea id="start-date" value="tracking code" type="text" placeholder="Please Enter Tracking Codes" rows="3"
                                                 class="form-control rounded-3" name="trackingNumbers">{{ old('trackingNumbers', request('trackingNumbers')) }}</textarea>
                                             @error('trackingNumbers')
                                                 <div class="help-block text-danger">
@@ -141,7 +138,7 @@
                                                 </button>
                                             </span>
                                         </div>
-                                        <div class="d-flex justify-content-between mt-3">
+                                        <div class="d-flex justify-content-between mt-4">
                                             <div>
                                                 <button type="submit" class="btn btn-outline-success px-3 py-1">Check
                                                     Details</button>

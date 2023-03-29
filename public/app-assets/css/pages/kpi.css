@@ -108,6 +108,7 @@ body {
 }
 .filter-card input, .filter-card textarea {
 border-radius: 10px;
+resize: none;
 }
 
 #kpiReportTable tr:last-child td:first-child { border-bottom-left-radius: 10px; }
