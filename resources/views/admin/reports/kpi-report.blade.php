@@ -66,7 +66,6 @@
             border-radius: 10px;
             transition: all 0.3s ease;
         }
-
         .table {
             border: 1px solid rgba(46, 61, 73, 0.15);
             box-shadow: 0px 0px 40px 1px rgba(120, 148, 171, 0.2);
@@ -85,7 +84,7 @@
             box-shadow: 2px 4px 12px 6px rgba(46, 61, 73, 0.2);
         }
 
-         
+
 
         thead {
             background-color: #eefafa !important;
@@ -107,11 +106,18 @@
         }
 
         .dt {
-            font-weight: 700;
+            font-weight:700;
             font-size: 2rem;
-            font: 20px Arial, Helvetica, sans-serif;
+            color:#373b3e;
+            font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,'Open Sans','Helvetica Neue',sans-serif;
+            /* font: 20px Arial, Helvetica, sans-serif; */
         }
-        
+        .dd{
+            
+            font-weight:700;
+            font-size: 1.2rem;
+            color:#737778
+        }
     </style>
 @endsection
 @section('page')
@@ -122,7 +128,7 @@
                     <div class="ml-3">
                         <dl>
                             <dt class="h3 font-weight-bold dt">Welcome back , {{ Auth::user()->full_name }} 👋</dt>
-                            <dd class="display-5 font-weight-light">Your current kpi report is here</dd>
+                            <dd class="display-5 font-weight-light dd">Your current kpi report is here</dd>
                         </dl>
                     </div>
                     <div class="container-fluid">
@@ -153,7 +159,7 @@
                                                     </div>
                                                 </div>
                                                 <div>
-                                                    <p class="text-center font-weight-bold h3">123</p>
+                                                    <p class="text-center font-weight-bold h3"  id="total">0</p>
                                                     <p class="text-center mt-0 pt-0">Total orders</p>
                                                 </div>
                                             </a>
@@ -164,13 +170,12 @@
                                             <a href="#">
                                                 <div class="wrimagecard-topimage_header">
                                                     <div class="icon-background" style="background-color: #fff9eb">
-                                                        <center> <img src="{{ asset('app-assets/images/icons/tax.svg') }}"
-                                                                class="icon" width="40" height="40" /> </center>
+                                                        <center> <img src="{{ asset('app-assets/images/icons/tax.svg') }}" class="icon" width="40" height="40" /> </center>
 
                                                     </div>
                                                 </div>
                                                 <div>
-                                                    <p class="text-center font-weight-bold h3">23 </p>
+                                                    <p class="text-center font-weight-bold h3"  id="taxed">0 </p>
                                                     <p class="text-center mt-0 pt-0">Taxed</p>
                                                 </div>
                                             </a>
@@ -187,9 +192,10 @@
 
                                                     </div>
                                                 </div>
-                                                <div>
+                                                <div> 
 
-                                                    <p class="text-center font-weight-bold h3"> 123
+
+                                                    <p class="text-center font-weight-bold h3 "  id="delivered"> 0
                                                     </p>
 
                                                     <p class="text-center mt-0 pt-0">Delivered</p>
@@ -209,7 +215,7 @@
                                                     </div>
                                                 </div>
                                                 <div>
-                                                    <p class="text-center font-weight-bold h3"> 61
+                                                    <p class="text-center font-weight-bold h3"  id="returned"> 0
                                                     </p>
                                                     <p class="text-center mt-0 pt-0">Retured</p>
                                                 </div>
@@ -228,21 +234,18 @@
                                         Report Generator
                                     </h4>
                                     <form action="{{ route('admin.reports.kpi-report.index') }}" method="GET">
-
                                         <label for="startDate " class="mt-xl-3 mt-lg-1 mb-0 ">Start Date</label><br>
                                         <div class="input-group">
                                             <input class="form-control py-2 rounded-3 mr-1 " type="date"
-                                                name="start_date" id="startDate" value="start date">
+                                                name="start_date" id="startDate" {{-- value="{{ \Carbon\Carbon::parse(request('start_date'))->format('Y-m-d')  }}" placeholder="yyyy/dd/mm" --}}>
                                         </div>
-
-                                        <label for="end-date " class="mt-xl-3 mt-lg-1 mb-0 ""> End Date</label><br>
+                                        <label for="end-date" class="mt-xl-3 mt-lg-1 mb-0 ""> End Date</label><br>
                                         <div class="input-group">
-                                            <input name="end_date" id="endDate" class="form-control   rounded-5   "
-                                                type="date" value="end date">
+                                            <input name="end_date" id="endDate" class="form-control rounded-5"
+                                                type="date">
                                         </div>
                                         <label for="start-date" class="mt-xl-3 mt-lg-1 mb-0 ">Tracking Code</label><br>
                                         <div class="input-group">
-                                            {{-- <textarea id="start-date" class="form-control py-2 rounded-2 mr-1 pr-5" value="tracking code"></textarea> --}}
                                             <textarea id="start-date" value="tracking code" type="text" placeholder="Please Enter Tracking Codes" rows="1"
                                                 class="form-control rounded-3" name="trackingNumbers">{{ old('trackingNumbers', request('trackingNumbers')) }}</textarea>
                                             @error('trackingNumbers')
@@ -256,50 +259,51 @@
                                                 </button>
                                             </span>
                                         </div>
-
                                         <div class="d-flex justify-content-between mt-3">
-
                                             <div>
-                                                <button type="button"
-                                                    class="btn btn-outline-success  px-3 px-xxl-4  py-xxl-2 py-1">Check
+                                                <button type="submit" class="btn btn-outline-success px-3 py-1">Check
                                                     Details</button>
                                             </div>
-
                                             <div>
-                                                <button type="button"
-                                                    class="btn btn-success   px-3 py-1  px-3 px-xxl-4  py-xxl-2 py-1"> <i
-                                                        class="fa fa-download"></i> Download</button>
-
-                                            </div>
-                                        </div>
-
+                                    </form>
+                                    <form class="row col-12 p-0 m-0" action="{{ route('admin.reports.kpi-report.store') }}"
+                                        method="POST">
+                                        @csrf
+                                        @if ($trackings)
+                                            <input type="hidden" name="order"
+                                                value="{{ collect($trackings['return']['objeto']) }}">
+                                            <input type="hidden" name="trackingCodeUser"
+                                                value="{{ collect($trackingCodeUser) }}">
+                                        @endif 
+                                    <button type="submit" class="btn btn-success px-3 py-1 px-3 py-1" {{ !empty($trackings) ? '' : 'disabled' }}> <i class="fa fa-download"></i> Download </button> 
                                     </form>
 
                                 </div>
                             </div>
-                            {{-- Report Generato end --}}
+
                         </div>
-                        {{-- table of kpi --}}
-                        <div class="row">
-                            <table
-                                class="table  table-borderless p-0 table-responsive-md table-striped  table-rounded "
-                                >
-                                <thead style="backgroud-color:#000" class=" border rounded-pill">
-                                    <tr class=" border rounded-pill">
-                                        <th>User</th>
-                                        <th>@lang('orders.Tracking')</th>
-                                        <th>@lang('orders.Type Package')</th>
-                                        <th>@lang('orders.First Event')</th>
-                                        <th>@lang('orders.Last Event')</th>
-                                        <th>@lang('orders.Days Between')</th>
-                                        <th>@lang('orders.Last Event')</th>
-                                        <th>@lang('orders.Taxed')</th>
-                                        <th>@lang('orders.Delivered')</th>
-                                        <th>@lang('orders.Returned')</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                      <tr>
+                    </div>
+                    {{-- Report Generato end --}}
+                </div>
+                {{-- table of kpi --}}
+                <div class="row">
+                    <table class="table  table-borderless p-0 table-responsive-md table-striped  table-rounded " id="kpiReportTable">
+                        <thead style="backgroud-color:#000" class=" border rounded-pill">
+                            <tr class=" border rounded-pill">
+                                <th>User</th>
+                                <th>@lang('orders.Tracking')</th>
+                                <th>@lang('orders.Type Package')</th>
+                                <th>@lang('orders.First Event')</th>
+                                <th>@lang('orders.Last Event')</th>
+                                <th>@lang('orders.Days Between')</th>
+                                <th>@lang('orders.Last Event')</th>
+                                <th>@lang('orders.Taxed')</th>
+                                <th>@lang('orders.Delivered')</th>
+                                <th>@lang('orders.Returned')</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{-- <tr>
                                         <td>User</td>
                                         <td>Tracking</td>
                                         <td>Type Package</td>
@@ -334,47 +338,45 @@
                                         <td>Taxed</td>
                                         <td>Delivered</td>
                                         <td>Returned</td>
-                                    </tr>  
- 
-                                    @if ($trackings)
-                                        @foreach ($trackings['return']['objeto'] as $data)
-                                            @if (isset($data['evento']))
-                                                <tr class="count">
-                                                    @if (optional($data) && isset(optional($data)['numero']))
-                                                        <td>{{ optional($trackingCodeUser[optional($data)['numero']])->pobox_name }}
-                                                        </td>
-                                                        <td>{{ optional($data)['numero'] }}</td>
-                                                        <td><span>{{ optional($data)['categoria'] }}</span></td>
-                                                        <td>{{ optional(optional(optional($data)['evento'])[count($data['evento']) - 1])['data'] }}
-                                                        </td>
-                                                        <td>{{ optional(optional(optional($data)['evento'])[0])['data'] }}
-                                                        </td>
-                                                        <td>{{ sortTrackingEvents($data, null)['diffDates'] }} </td>
-                                                        <td>{{ optional(optional(optional($data)['evento'])[0])['descricao'] }}
-                                                        </td>
-                                                        <td>{{ sortTrackingEvents($data, null)['taxed'] }}</td>
-                                                        <td>{{ sortTrackingEvents($data, null)['delivered'] }}</td>
-                                                        <td>{{ sortTrackingEvents($data, null)['returned'] }}</td>
-                                                    @else
-                                                        <td colspan='9'>No Trackings Found</td>
-                                                    @endif
-                                                </tr>
-                                               
+                                    </tr>   --}}
+
+                            @if ($trackings)
+                                @foreach ($trackings['return']['objeto'] as $data)
+                                    @if (isset($data['evento']))
+                                        <tr class="count">
+                                            @if (optional($data) && isset(optional($data)['numero']))
+                                                <td>{{ optional($trackingCodeUser[optional($data)['numero']])->pobox_name }}
+                                                </td>
+                                                <td>{{ optional($data)['numero'] }}</td>
+                                                <td><span>{{ optional($data)['categoria'] }}</span></td>
+                                                <td>{{ optional(optional(optional($data)['evento'])[count($data['evento']) - 1])['data'] }}
+                                                </td>
+                                                <td>{{ optional(optional(optional($data)['evento'])[0])['data'] }}
+                                                </td>
+                                                <td>{{ sortTrackingEvents($data, null)['diffDates'] }} </td>
+                                                <td>{{ optional(optional(optional($data)['evento'])[0])['descricao'] }}
+                                                </td>
+                                                <td>{{ sortTrackingEvents($data, null)['taxed'] }}</td>
+                                                <td>{{ sortTrackingEvents($data, null)['delivered'] }}</td>
+                                                <td>{{ sortTrackingEvents($data, null)['returned'] }}</td>
+                                            @else
+                                                <td colspan='9'>No Trackings Found</td>
                                             @endif
-                                        @endforeach 
-                                    @else 
-                                    <tr>
-                                           <td colspan="10" class="text-center justify-center">No Trackings Found</td>
-                                            
-                                    </tr>
-                                             
+                                        </tr>
                                     @endif
-                                </tbody>
-                            </table>
-                            @include('layouts.livewire.loading')
+                                @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="10" class="text-center">No Trackings Found</td>
+
+                                </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                    @include('layouts.livewire.loading')
 
 
-                            {{-- <div class="row d-flex justify-content-between">
+                    {{-- <div class="row d-flex justify-content-between">
                                     <div>User</div>      
                                      <div>@lang('orders.Tracking')</div>
                                     <div>@lang('orders.Type Package')</div>
@@ -406,11 +408,13 @@
 
 
 
-                        </div>
-
-                    </div>
                 </div>
-                {{-- <div class="card">
+
+            </div>
+        </div> 
+
+
+        {{-- <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">@lang('orders.Key Performance Indicator Report')</h4>
                     </div><br>
@@ -579,7 +583,7 @@
                         </div>
                     </div>
                 </div> --}}
-            </div>
+        </div>
         </div>
     </section>
 @endsection
@@ -589,34 +593,34 @@
 @section('js')
     <script>
         $(document).ready(function() {
-            $('#kpi-report tfoot th').each(function() {
-                var title = $(this).text();
-                $(this).html('<input type="text" class="form-control" placeholder="Search ' + title +
-                    '" />');
-            });
-            var table = $('#kpi-report').DataTable({
-                "paging": false,
-                initComplete: function() {
-                    this.api()
-                        .columns()
-                        .every(function() {
-                            var that = this;
+            // $('#kpiReportTable  th').each(function() {
+            //     var title = $(this).text();
+            //     $(this).html('<input type="text" class="form-control" placeholder="Search ' + title +
+            //         '" />');
+            // });
+            // var table = $('#kpiReportTable').DataTable({
+            //     "paging": false,
+            //     initComplete: function() {
+            //         this.api()
+            //             .columns()
+            //             .every(function() {
+            //                 var that = this;
 
-                            $('input', this.footer()).on('keyup change clear', function() {
-                                if (that.search() !== this.value) {
-                                    that.search(this.value).draw();
-                                    calculation();
-                                }
-                            });
-                        });
-                },
-                "info": false
-            });
+            //                 $('input', this.footer()).on('keyup change clear', function() {
+            //                     if (that.search() !== this.value) {
+            //                         that.search(this.value).draw();
+            //                         calculation();
+            //                     }
+            //                 });
+            //             });
+            //     },
+            //     "info": false
+            // });
             calculation();
         });
 
         function calculation() {
-            var totalRecords = $('#kpi-report tbody').find('tr.count').length;
+            var totalRecords = $('#kpiReportTable tbody').find('tr.count').length;
             var taxed = 0;
             var returned = 0;
             var delivered = 0;
@@ -639,11 +643,11 @@
             var deliveredOrder = (delivered / totalRecords * 100).toFixed(2);
             var returnOrder = (returned / totalRecords * 100).toFixed(2);
             var inTransit = (inProcess / totalRecords * 100).toFixed(2);
-            $('#total').html('Total Orders: ' + totalRecords);
-            $('#delivered').html('Delivered: ' + deliveredOrder + ' %');
-            $('#taxed').html('Taxed: ' + taxOrder + ' %');
-            $('#returned').html('Returned: ' + returnOrder + ' %');
-            $('#inProcess').html('Processing or In Transit: ' + inTransit + ' %');
+            $('#total').html(totalRecords);
+            $('#delivered').html(deliveredOrder );
+            $('#taxed').html(taxOrder + ' %');
+            $('#returned').html(returnOrder + ' %');
+            // $('#inProcess').html('Processing or In Transit: ' + inTransit + ' %');
         }
-    </script>
+      </script>
 @endsection
