@@ -64,7 +64,6 @@ a.wrimagecard:hover,
     transition: all 0.3s ease;
 }
 .table {
-    border: 1px solid rgba(46, 61, 73, 0.15);
     box-shadow: 0px 0px 40px 1px rgba(120, 148, 171, 0.2);
     border-radius: 10px;
 
@@ -83,10 +82,10 @@ a.wrimagecard:hover,
 
 
 
-thead {
+ thead {
     background-color: #eefafa !important;
 
-}
+} 
 
 .table-striped>tbody>tr:nth-child(odd)>td,
 .table-striped>tbody>tr:nth-child(odd)>th {

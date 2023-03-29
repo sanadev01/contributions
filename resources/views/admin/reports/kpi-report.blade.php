@@ -1,6 +1,19 @@
 @extends('layouts.master')  
 @section('css')
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/pages/kpi.css') }}"> 
+<style>
+    #kpiReportTable{
+        border-radius: 20px !important;
+    }
+    .filter-card input, .filter-card textarea {
+    border-radius: 10px;
+}
+
+#kpiReportTable tr:last-child td:first-child { border-bottom-left-radius: 10px; }
+#kpiReportTable tr:last-child td:last-child { border-bottom-right-radius: 10px; }
+#kpiReportTable tr:first-child th:first-child { border-top-left-radius: 10px; }
+#kpiReportTable tr:first-child th:last-child { border-top-right-radius: 10px;}
+    </style>
 @endsection
 @section('page')
     <section>
@@ -9,7 +22,7 @@
                 <div class="">
                     <div class="ml-3">
                         <dl>
-                            <dt class="h3 font-weight-bold dt">Welcome back , {{ Auth::user()->full_name }} 👋</dt>
+                            <dt class="h3 font-weight-bold dt">Welcome back, {{ Auth::user()->full_name }} 👋</dt>
                             <dd class="display-5 font-weight-light dd">Your current kpi report is here</dd>
                         </dl>
                     </div>
@@ -169,9 +182,9 @@
                 </div>
                 {{-- table of kpi --}}
                 <div class="row">
-                    <table class="table  table-borderless p-0 table-responsive-md table-striped  table-rounded " id="kpiReportTable">
-                        <thead style="backgroud-color:#000" class=" border rounded-pill">
-                            <tr class=" border rounded-pill">
+                    <table class="table  table-borderless p-0 table-responsive-md table-striped  " id="kpiReportTable">
+                        <thead style="backgroud-color:#000" class="">
+                            <tr class="">
                                 <th>User</th>
                                 <th>@lang('orders.Tracking')</th>
                                 <th>@lang('orders.Type Package')</th>
