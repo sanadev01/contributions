@@ -6,12 +6,16 @@ class KPIReport extends AbstractExportService
     private $trackings;
 
     private $currentRow = 1;
+    private $isAwaiting = null;
     private $trackingCodeUser;
+    private $orderDates;
 
-    public function __construct($trackings,$trackingCodeUser)
+    public function __construct($trackings,$trackingCodeUser, $orderDates, $isAwaiting)
     {
+        $this->isAwaiting = $isAwaiting;
         $this->trackings = $trackings;
         $this->trackingCodeUser = $trackingCodeUser;
+        $this->orderDates = $orderDates;
         parent::__construct();
     }
 
@@ -31,31 +35,38 @@ class KPIReport extends AbstractExportService
         $this->setExcelHeaderRow();
         $row = $this->currentRow;
         foreach ($this->trackings as $data) {
+            
             if(isset($data['evento'])) {
-                if(optional($data) && isset(optional($data)['numero'])) { 
-                    $user = $this->trackingCodeUser[optional($data)['numero']];
-                    if($user)
-                    $this->setCellValue('A'.$row, $user['name'] .''. $user['last_name'] .' '. $user['pobox_number'] );
+                if( $this->isAwaiting && optional(optional(optional($data)['evento'])[0])['descricao'] == $this->isAwaiting || !$this->isAwaiting){
                     
-                    $this->setCellValue('B'.$row, optional($data)['numero']);
-                    $this->setCellValue('C'.$row, optional($data)['categoria']);
-                    $this->setCellValue('D'.$row, optional(optional(optional($data)['evento'])[count($data['evento'])-1])['data']);
-                    $this->setCellValue('E'.$row, optional(optional(optional($data)['evento'])[0])['data']);
-                    $this->setCellValue('F'.$row, sortTrackingEvents($data, null)['diffDates']);
-                    $this->setCellValue('G'.$row, optional(optional(optional($data)['evento'])[0])['descricao']);
-                    $this->setCellValue('H'.$row, sortTrackingEvents($data, null)['taxed']);
-                    $this->setCellValue('I'.$row, sortTrackingEvents($data, null)['delivered']);
-                    $this->setCellValue('J'.$row, sortTrackingEvents($data, null)['returned']);
-                    $row++;
-                    if(sortTrackingEvents($data, null)['taxed']=='Yes'){
-                        $taxed++;
+
+                    if(optional($data) && isset(optional($data)['numero'])) {
+                        $user = $this->trackingCodeUser[optional($data)['numero']];
+                        $date = $this->orderDates[optional($data)['numero']];
+                        if($user)
+                        $this->setCellValue('A'.$row, $user['name'] .''. $user['last_name'] .' '. $user['pobox_number'] );
+                        
+                        $this->setCellValue('B'.$row, optional($data)['numero']);
+                        $this->setCellValue('C'.$row, optional($data)['categoria']);
+                        $this->setCellValue('D'.$row, optional(optional(optional($data)['evento'])[count($data['evento'])-1])['data']);
+                        $this->setCellValue('E'.$row, optional(optional(optional($data)['evento'])[0])['data']);
+                        $this->setCellValue('F'.$row, sortTrackingEvents($data, null)['diffDates']);
+                        $this->setCellValue('G'.$row, optional(optional(optional($data)['evento'])[0])['descricao']);
+                        $this->setCellValue('H'.$row, sortTrackingEvents($data, null)['taxed']);
+                        $this->setCellValue('I'.$row, sortTrackingEvents($data, null)['delivered']);
+                        $this->setCellValue('J'.$row, sortTrackingEvents($data, null)['returned']);
+                        $this->setCellValue('K'.$row, optional($date)['order_date']);
+                        $row++;
+                        if(sortTrackingEvents($data, null)['taxed']=='Yes'){
+                            $taxed++;
+                        }
+                        if(sortTrackingEvents($data, null)['delivered']=='Yes'){
+                            $delivered++;
+                        }
+                        if(sortTrackingEvents($data, null)['returned']=='Yes'){
+                            $returned++;
+                        } 
                     }
-                    if(sortTrackingEvents($data, null)['delivered']=='Yes'){
-                        $delivered++;
-                    }
-                    if(sortTrackingEvents($data, null)['returned']=='Yes'){
-                        $returned++;
-                    } 
                 }
             }
         }
@@ -69,7 +80,7 @@ class KPIReport extends AbstractExportService
 
 
         $this->currentRow = $row;
-        $this->setBackgroundColor("A{$row}:J{$row}", 'adfb84');
+        $this->setBackgroundColor("A{$row}:K{$row}", 'adfb84');
     }
 
     private function setExcelHeaderRow()
@@ -104,8 +115,11 @@ class KPIReport extends AbstractExportService
         $this->setColumnWidth('J', 20);
         $this->setCellValue('J1', 'Returned');
 
-        $this->setBackgroundColor('A1:J1', '2b5cab');
-        $this->setColor('A1:J1', 'FFFFFF');
+        $this->setColumnWidth('K', 20);
+        $this->setCellValue('K1', 'Order Date');
+
+        $this->setBackgroundColor('A1:K1', '2b5cab');
+        $this->setColor('A1:K1', 'FFFFFF');
 
         $this->currentRow++;
 

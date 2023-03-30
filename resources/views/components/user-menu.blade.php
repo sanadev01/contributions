@@ -346,6 +346,12 @@
                             <i class="icon_adjst feather icon-circle"></i>
                             <span class="menu-title">@lang('menu.Reports.KPI Report')</span>
                         </a>
+                    </li> 
+                    <li class="{{ $isActive(['admin.reports.kpi-report-scan.index']) }}">
+                        <a href="{{ route('admin.reports.kpi-report-scan.index') }}">
+                            <i class="icon_adjst feather icon-circle"></i>
+                            <span class="menu-title">@lang('menu.Reports.Tax Report Scan')</span>
+                        </a>
                     </li>
                     @endcan
                     @admin
