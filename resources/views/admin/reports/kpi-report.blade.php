@@ -40,8 +40,8 @@
                                             </div>
                                             <div class="card-body">
                                                 <div>
-                                                    <h3 class="text-center font-weight-bold my-3 " id="chart">0 </h3>
-                                                    <p class="text-center display-5">Chart</p>
+                                                    <h3 class="text-center font-weight-bold my-3 " id="total">0 </h3>
+                                                    <p class="text-center display-5">Total Orders</p>
                                                 </div>
                                             </div>
                                         </div>
