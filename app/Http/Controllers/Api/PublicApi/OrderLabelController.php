@@ -103,6 +103,7 @@ class OrderLabelController extends Controller
             // For Correios,  Global eParcel Brazil and Sweden Post(Prime5)
             if ($order->recipient->country_id == Order::BRAZIL) {
                 if ($isPayingFlag) {
+                    $orders->push($order);
                     event(new OrderPaid($orders, true));
                 }
                 if ($order->shippingService->isGePSService()){

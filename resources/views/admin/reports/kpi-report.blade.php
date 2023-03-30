@@ -173,6 +173,7 @@
                     <table class="table  table-borderless p-0 table-responsive-md table-striped  " id="kpiReportTable">
                         <thead style="backgroud-color:#000" class="">
                             <tr class="">
+                                <th>Order Date</th>
                                 <th>User</th>
                                 <th>@lang('orders.Tracking')</th>
                                 <th>@lang('orders.Type Package')</th>
@@ -191,6 +192,7 @@
                                     @if (isset($data['evento']))
                                         <tr class="count">
                                             @if (optional($data) && isset(optional($data)['numero']))
+                                                <td>{{ optional($orderDates[optional($data)['numero']])->order_date }}</td>
                                                 <td>{{ optional($trackingCodeUser[optional($data)['numero']])->pobox_name }}
                                                 </td>
                                                 <td>{{ optional($data)['numero'] }}</td>
@@ -244,16 +246,16 @@
             var delivered = 0;
             var inProcess = 0;
             $("table > tbody > tr").each(function() {
-                if ($(this).find('td').eq(7).text() == 'Yes') {
+                if ($(this).find('td').eq(8).text() == 'Yes') {
                     taxed++;
                 }
-                if ($(this).find('td').eq(8).text() == 'Yes') {
+                if ($(this).find('td').eq(9).text() == 'Yes') {
                     delivered++;
                 }
-                if ($(this).find('td').eq(9).text() == 'Yes') {
+                if ($(this).find('td').eq(10).text() == 'Yes') {
                     returned++;
                 }
-                if ($(this).find('td').eq(8).text() == 'No') {
+                if ($(this).find('td').eq(9).text() == 'No') {
                     inProcess++;
                 }
             });
