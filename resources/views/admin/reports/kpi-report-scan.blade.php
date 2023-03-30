@@ -73,6 +73,8 @@
                                                             value="{{ collect($trackings['return']['objeto']) }}">
                                                         <input type="hidden" name="trackingCodeUser"
                                                             value="{{ collect($trackingCodeUser) }}">
+                                                        <input type="hidden" name="orderDates"
+                                                            value="{{ collect($orderDates) }}">
                                                     @endif
                                                     <button class="btn btn-success mr-3 mt-3"
                                                         {{ !empty($trackings) ? '' : 'disabled' }}
@@ -109,6 +111,7 @@
                             <table class="table mb-0 table-responsive-md" id="kpi-report">
                                 <thead>
                                     <tr>
+                                        <th>Order Date</th>
                                         <th>User</th>
                                         <th>@lang('orders.Tracking')</th>
                                         <th>@lang('orders.Type Package')</th>
@@ -123,6 +126,7 @@
                                 </thead>
                                 <tfoot class="search-header">
                                     <tr>
+                                        <th>Order Date</th>
                                         <th>User</th>
                                         <th>Tracking</th>
                                         <th>Type Package</th>
@@ -141,6 +145,7 @@
                                             @if(isset($data['evento']) && optional(optional(optional($data)['evento'])[0])['descricao']=='Aguardando pagamento')
                                             <tr class="count">
                                                 @if(optional($data) && isset(optional($data)['numero']))
+                                                    <td>{{ optional($orderDates[optional($data)['numero']])->order_date }}</td>
                                                     <td>{{ optional($trackingCodeUser[optional($data)['numero']])->pobox_name }}</td>
                                                     <td>{{ optional($data)['numero'] }}</td>
                                                     <td><span>{{ optional($data)['categoria'] }}</span></td>
@@ -207,16 +212,16 @@
             var delivered = 0;
             var inProcess = 0;
             $("table > tbody > tr").each(function() {
-                if ($(this).find('td').eq(7).text() == 'Yes') {
+                if ($(this).find('td').eq(8).text() == 'Yes') {
                     taxed++;
                 }
-                if ($(this).find('td').eq(8).text() == 'Yes') {
+                if ($(this).find('td').eq(9).text() == 'Yes') {
                     delivered++;
                 }
-                if ($(this).find('td').eq(9).text() == 'Yes') {
+                if ($(this).find('td').eq(10).text() == 'Yes') {
                     returned++;
                 }
-                if ($(this).find('td').eq(8).text() == 'No') {
+                if ($(this).find('td').eq(9).text() == 'No') {
                     inProcess++;
                 }
             });
